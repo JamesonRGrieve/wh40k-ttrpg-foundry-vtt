@@ -12,13 +12,13 @@
       )
       footerLabel=sourceReference
       footerIcon="fa-book"}}
-        <div class="wh40k-condition-meta">
-            <span class="wh40k-meta-item wh40k-meta-item--applies">
+        <div class="tw-flex tw-gap-[var(--wh40k-space-md)] tw-mb-[var(--wh40k-space-md)] tw-pb-[var(--wh40k-space-sm)] tw-border-b tw-border-[#d4c5a6]">
+            <span class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[12px] tw-font-semibold tw-text-[color:var(--wh40k-accent-info)]">
                 <i class="fas {{appliesToIcon}}"></i>
                 {{appliesToLabel}}
             </span>
             {{#if isTemporary}}
-                <span class="wh40k-meta-item wh40k-meta-item--duration">
+                <span class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[12px] tw-font-semibold tw-text-[#16a085]">
                     <i class="fas fa-clock"></i>
                     {{durationDisplay}}
                 </span>
@@ -26,21 +26,21 @@
         </div>
 
         {{#if effect}}
-            <div class="wh40k-condition-effect">
+            <div class="tw-mb-[var(--wh40k-space-md)] tw-bg-[color:rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-[var(--wh40k-radius-md)]">
                 <h4>Effect</h4>
                 {{{effect}}}
             </div>
         {{/if}}
 
         {{#if removal}}
-            <div class="wh40k-condition-removal">
+            <div class="tw-mb-[var(--wh40k-space-md)] tw-bg-[color:rgb(from_var(--wh40k-accent-info)_r_g_b_/_0.05)] tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-info)] tw-rounded-[var(--wh40k-radius-md)]">
                 <h4>Removal</h4>
                 {{{removal}}}
             </div>
         {{/if}}
 
         {{#if notes}}
-            <div class="wh40k-condition-notes">
+            <div class="tw-mt-[var(--wh40k-space-md)] tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-[rgba(148,163,184,0.1)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[12px] tw-italic tw-text-[#5a5a5a]">
                 <strong>Notes:</strong>
                 {{notes}}
             </div>

@@ -2,56 +2,56 @@
 {{!-- Base template for items that provide modifiers (talents, traits, conditions, injuries) --}}
 <div class="wh40k-item-sheet wh40k-talent-sheet wh40k-{{item.type}}-sheet">
   <form autocomplete="off">
-    
+
     {{!-- HEADER: Image + Name + Type Badge --}}
     {{> systems/wh40k-rpg/templates/item/panel/item-header.hbs}}
-    
+
     {{!-- MODIFIERS SUMMARY BAR (if has modifiers) --}}
     {{#if system.hasModifiers}}
     {{> systems/wh40k-rpg/templates/item/panel/modifiers-summary.hbs}}
     {{/if}}
-    
+
     {{!-- TAB NAVIGATION --}}
-    <nav class="wh40k-item-tabs" data-group="primary">
-      <button type="button" class="wh40k-item-tab active" data-tab="details" data-group="primary">
-        <i class="fas fa-info-circle"></i>
+    <nav class="tw-flex tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-flex-shrink-0" data-group="primary">
+      <button type="button" class="wh40k-item-tab active tw-px-[var(--wh40k-space-lg)] tw-py-[var(--wh40k-space-sm)] tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-sm)] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-transparent tw-mb-[-2px] tw-cursor-pointer tw-no-underline hover:tw-text-[color:var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="details" data-group="primary">
+        <i class="fas fa-info-circle tw-mr-[var(--wh40k-space-xs)]"></i>
         <span>Details</span>
       </button>
-      <button type="button" class="wh40k-item-tab" data-tab="modifiers" data-group="primary">
-        <i class="fas fa-sliders-h"></i>
+      <button type="button" class="wh40k-item-tab tw-px-[var(--wh40k-space-lg)] tw-py-[var(--wh40k-space-sm)] tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-sm)] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-transparent tw-mb-[-2px] tw-cursor-pointer tw-no-underline hover:tw-text-[color:var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="modifiers" data-group="primary">
+        <i class="fas fa-sliders-h tw-mr-[var(--wh40k-space-xs)]"></i>
         <span>Modifiers</span>
       </button>
-      <button type="button" class="wh40k-item-tab" data-tab="effects" data-group="primary">
-        <i class="fas fa-magic"></i>
+      <button type="button" class="wh40k-item-tab tw-px-[var(--wh40k-space-lg)] tw-py-[var(--wh40k-space-sm)] tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-sm)] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-transparent tw-mb-[-2px] tw-cursor-pointer tw-no-underline hover:tw-text-[color:var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="effects" data-group="primary">
+        <i class="fas fa-magic tw-mr-[var(--wh40k-space-xs)]"></i>
         <span>Effects</span>
       </button>
     </nav>
-    
+
     {{!-- TAB CONTENT --}}
-    <section class="wh40k-item-content">
-      
+    <section class="tw-flex-1 tw-min-h-0 tw-overflow-y-auto tw-overflow-x-hidden tw-p-[var(--wh40k-space-md)] tw-flex tw-flex-col tw-gap-[var(--wh40k-space-md)]">
+
       {{!-- DETAILS TAB --}}
-      <div class="wh40k-item-panel active" data-tab="details" data-group="primary">
+      <div class="tab active" data-tab="details" data-group="primary">
         {{!-- Type-specific content injected here via partial --}}
         {{> @partial-block}}
-        
+
         {{!-- DESCRIPTION --}}
         {{> systems/wh40k-rpg/templates/item/panel/description-panel.hbs}}
-        
+
         {{!-- SOURCE --}}
         {{> systems/wh40k-rpg/templates/item/panel/source-panel.hbs}}
       </div>
-      
+
       {{!-- MODIFIERS TAB --}}
-      <div class="wh40k-item-panel" data-tab="modifiers" data-group="primary">
+      <div class="tab" data-tab="modifiers" data-group="primary">
         {{> systems/wh40k-rpg/templates/item/panel/modifiers-panel.hbs}}
       </div>
-      
+
       {{!-- EFFECTS TAB --}}
-      <div class="wh40k-item-panel" data-tab="effects" data-group="primary">
+      <div class="tab" data-tab="effects" data-group="primary">
         {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
       </div>
-      
+
     </section>
   </form>
 </div>

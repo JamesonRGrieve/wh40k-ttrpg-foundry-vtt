@@ -1,4 +1,4 @@
-<div class="wh40k-item-sheet ship-weapon">
+<div class="wh40k-item-sheet ship-weapon tw-flex tw-flex-col tw-h-full">
     <form autocomplete="off">
         {{!-- Item Header (canonical partial) --}}
         {{> systems/wh40k-rpg/templates/item/panel/item-header.hbs
@@ -7,22 +7,22 @@
             typeIcon="fa-crosshairs"}}
 
         <!-- Tab Navigation -->
-        <nav class="wh40k-tabs" data-group="primary">
-            <a class="wh40k-tab active" data-tab="details" data-group="primary">
+        <nav class="wh40k-tabs tw-flex tw-flex-shrink-0" data-group="primary">
+            <a class="wh40k-tab active tw-cursor-pointer tw-uppercase" data-tab="details" data-group="primary">
                 <i class="fas fa-info-circle"></i> {{localize "WH40K.Item.Tabs.Details"}}
             </a>
-            <a class="wh40k-tab" data-tab="effects" data-group="primary">
+            <a class="wh40k-tab tw-cursor-pointer tw-uppercase" data-tab="effects" data-group="primary">
                 <i class="fas fa-magic"></i> {{localize "WH40K.Item.Tabs.Effects"}}
             </a>
         </nav>
 
         <!-- Tab Content -->
-        <section class="wh40k-tab-content">
+        <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-min-h-0">
             <!-- Details Tab -->
             <div class="tab active" data-tab="details" data-group="primary">
                 <!-- Weapon Properties -->
-                <div class="wh40k-panel">
-                    <div class="wh40k-panel__header">
+                <div class="wh40k-panel tw-mb-2">
+                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between">
                         <h3><i class="fas fa-crosshairs"></i> Weapon Properties</h3>
                     </div>
                     <div class="wh40k-panel__content">
@@ -32,14 +32,14 @@
                                 {{selectOptions weaponTypes selected=source.weaponType}}
                             </select>
                         </div>
-                        
+
                         <div class="form-group">
                             <label>{{localize "WH40K.ShipLocation"}}</label>
                             <select name="system.location">
                                 {{selectOptions locations selected=source.location}}
                             </select>
                         </div>
-                        
+
                         <div class="form-group">
                             <label>{{localize "WH40K.HullType"}}</label>
                             <select name="system.hullType" multiple>
@@ -47,7 +47,7 @@
                             </select>
                             <p class="hint">Hold Ctrl/Cmd to select multiple hull types</p>
                         </div>
-                        
+
                         <div class="form-group">
                             <label>{{localize "WH40K.Availability"}}</label>
                             <select name="system.availability">
@@ -58,12 +58,12 @@
                 </div>
 
                 <!-- Weapon Stats -->
-                <div class="wh40k-panel">
-                    <div class="wh40k-panel__header">
+                <div class="wh40k-panel tw-mb-2">
+                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between">
                         <h3><i class="fas fa-dice-d20"></i> Weapon Statistics</h3>
                     </div>
                     <div class="wh40k-panel__content">
-                        <div class="form-row">
+                        <div class="form-row tw-flex tw-gap-2">
                             <div class="form-group">
                                 <label>Strength</label>
                                 <input type="number" name="system.strength" value="{{source.strength}}" />
@@ -73,8 +73,8 @@
                                 <input type="text" name="system.damage" value="{{source.damage}}" placeholder="1d10+2" />
                             </div>
                         </div>
-                        
-                        <div class="form-row">
+
+                        <div class="form-row tw-flex tw-gap-2">
                             <div class="form-group">
                                 <label>Crit Rating</label>
                                 <input type="number" name="system.crit" value="{{source.crit}}" />
@@ -88,12 +88,12 @@
                 </div>
 
                 <!-- Resource Requirements -->
-                <div class="wh40k-panel">
-                    <div class="wh40k-panel__header">
+                <div class="wh40k-panel tw-mb-2">
+                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between">
                         <h3><i class="fas fa-battery-half"></i> Resource Requirements</h3>
                     </div>
                     <div class="wh40k-panel__content">
-                        <div class="form-row">
+                        <div class="form-row tw-flex tw-gap-2">
                             <div class="form-group">
                                 <label>Power</label>
                                 <input type="number" name="system.power" value="{{source.power}}" />
@@ -111,8 +111,8 @@
                 </div>
 
                 <!-- Special Qualities -->
-                <div class="wh40k-panel">
-                    <div class="wh40k-panel__header">
+                <div class="wh40k-panel tw-mb-2">
+                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between">
                         <h3><i class="fas fa-star"></i> Special Qualities</h3>
                     </div>
                     <div class="wh40k-panel__content">
@@ -122,18 +122,18 @@
                 </div>
 
                 <!-- Notes -->
-                <div class="wh40k-panel">
-                    <div class="wh40k-panel__header">
+                <div class="wh40k-panel tw-mb-2">
+                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between">
                         <h3><i class="fas fa-sticky-note"></i> Notes</h3>
                     </div>
                     <div class="wh40k-panel__content">
                         <textarea name="system.notes" rows="4">{{system.notes}}</textarea>
                     </div>
                 </div>
-                
+
                 <!-- Description -->
-                <div class="wh40k-panel">
-                    <div class="wh40k-panel__header">
+                <div class="wh40k-panel tw-mb-2">
+                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between">
                         <h3><i class="fas fa-scroll"></i> Description</h3>
                     </div>
                     <div class="wh40k-panel__content">

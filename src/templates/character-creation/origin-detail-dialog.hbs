@@ -1,33 +1,33 @@
 {{!-- Origin Detail Dialog Template --}}
-<div class="origin-detail-wrapper">
-    <div class="origin-detail-content">
+<div class="origin-detail-wrapper tw-flex tw-flex-col tw-h-full tw-overflow-hidden">
+    <div class="origin-detail-content tw-flex-1 tw-flex tw-flex-col tw-overflow-hidden tw-min-h-0">
 
         {{!-- Header --}}
-        <header class="origin-detail-header">
-        <img src="{{img}}" alt="{{name}}" class="origin-detail-img" />
-        <div class="origin-detail-info">
-            <h1 class="origin-detail-name">{{name}}</h1>
-            <div class="origin-detail-meta">
-                <span class="origin-step-badge">
+        <header class="origin-detail-header tw-flex tw-gap-[var(--wh40k-space-lg)] tw-p-[var(--wh40k-space-lg)] tw-bg-[linear-gradient(135deg,var(--wh40k-bronze-dark),rgba(0,0,0,0.9))] tw-border-b-2 tw-border-[var(--wh40k-gold)]">
+        <img src="{{img}}" alt="{{name}}" class="origin-detail-img tw-w-[100px] tw-h-[100px] tw-object-cover tw-border-[3px] tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-shadow-[0_4px_12px_rgba(0,0,0,0.5)]" />
+        <div class="origin-detail-info tw-flex-1 tw-flex tw-flex-col tw-justify-center">
+            <h1 class="origin-detail-name tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.8rem] tw-text-[color:var(--wh40k-gold)] tw-[text-shadow:0_2px_4px_rgba(0,0,0,0.5)]">{{name}}</h1>
+            <div class="origin-detail-meta tw-flex tw-gap-[var(--wh40k-space-sm)] tw-mt-[var(--wh40k-space-sm)] tw-flex-wrap">
+                <span class="origin-step-badge tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.8rem] tw-font-semibold tw-bg-[rgba(var(--wh40k-gold-rgb),0.2)] tw-border tw-border-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-gold)]">
                     <i class="fa-solid fa-route"></i>
                     {{stepLabel}}
                 </span>
                 {{#if isAdvanced}}
-                    <span class="origin-advanced-badge">
+                    <span class="origin-advanced-badge tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.8rem] tw-font-semibold tw-bg-[rgba(156,39,176,0.2)] tw-border tw-border-[#ce93d8] tw-text-[#ce93d8]">
                         <i class="fa-solid fa-star"></i>
                         {{localize "WH40K.OriginPath.Advanced"}}
                     </span>
                 {{/if}}
                 {{#if xpCost}}
-                    <span class="origin-xp-badge">
+                    <span class="origin-xp-badge tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.8rem] tw-font-semibold tw-bg-[rgba(33,150,243,0.2)] tw-border tw-border-[#64b5f6] tw-text-[#64b5f6]">
                         <i class="fa-solid fa-gem"></i>
                         {{xpCost}} XP
                     </span>
                 {{/if}}
             </div>
             {{#if hasSource}}
-                <div class="origin-source">
-                    <i class="fa-solid fa-book"></i>
+                <div class="origin-source tw-mt-[var(--wh40k-space-xs)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-italic">
+                    <i class="fa-solid fa-book tw-mr-[var(--wh40k-space-xs)]"></i>
                     {{#if source.book}}{{source.book}}{{/if}}
                     {{#if source.page}}, p.{{source.page}}{{/if}}
                 </div>
@@ -36,45 +36,45 @@
     </header>
 
     {{!-- Tab Navigation --}}
-    <nav class="origin-detail-tabs" data-group="primary">
-        <a class="origin-detail-tab active" data-tab="grants" data-group="primary">
-            <i class="fa-solid fa-gift"></i>
+    <nav class="origin-detail-tabs tw-flex tw-flex-shrink-0 tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]" data-group="primary">
+        <a class="origin-detail-tab active tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-lg)] tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-sm)] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-b-transparent tw--mb-[2px] tw-cursor-pointer tw-no-underline hover:tw-text-[color:var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="grants" data-group="primary">
+            <i class="fa-solid fa-gift tw-mr-[var(--wh40k-space-xs)]"></i>
             {{localize "WH40K.OriginPath.Grants"}}
         </a>
-        <a class="origin-detail-tab" data-tab="description" data-group="primary">
-            <i class="fa-solid fa-scroll"></i>
+        <a class="origin-detail-tab tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-lg)] tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-sm)] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-b-transparent tw--mb-[2px] tw-cursor-pointer tw-no-underline hover:tw-text-[color:var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="description" data-group="primary">
+            <i class="fa-solid fa-scroll tw-mr-[var(--wh40k-space-xs)]"></i>
             {{localize "WH40K.Description"}}
         </a>
-        <a class="origin-detail-tab" data-tab="choices" data-group="primary">
-            <i class="fa-solid fa-list-check"></i>
+        <a class="origin-detail-tab tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-lg)] tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-sm)] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-b-transparent tw--mb-[2px] tw-cursor-pointer tw-no-underline hover:tw-text-[color:var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="choices" data-group="primary">
+            <i class="fa-solid fa-list-check tw-mr-[var(--wh40k-space-xs)]"></i>
             {{localize "WH40K.OriginPath.ChoicesRequired"}}
         </a>
-        <a class="origin-detail-tab" data-tab="requirements" data-group="primary">
-            <i class="fa-solid fa-lock"></i>
+        <a class="origin-detail-tab tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-lg)] tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-sm)] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-b-transparent tw--mb-[2px] tw-cursor-pointer tw-no-underline hover:tw-text-[color:var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="requirements" data-group="primary">
+            <i class="fa-solid fa-lock tw-mr-[var(--wh40k-space-xs)]"></i>
             {{localize "WH40K.OriginPath.Requirements"}}
         </a>
     </nav>
 
     {{!-- Tab Content --}}
-    <section class="origin-detail-tab-content">
+    <section class="origin-detail-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0">
 
         {{!-- Grants Tab (default) --}}
         <div class="tab active" data-tab="grants" data-group="primary">
-            <section class="origin-detail-section origin-grants">
-                <div class="grants-grid">
+            <section class="origin-detail-section origin-grants tw-py-[var(--wh40k-space-md)] tw-px-[var(--wh40k-space-lg)] tw-border-b tw-border-[var(--wh40k-bronze)]">
+                <div class="grants-grid tw-grid tw-gap-[var(--wh40k-space-md)]">
                     {{!-- Characteristics --}}
                     {{#if hasCharacteristics}}
                         <div class="grants-category">
-                            <h3 class="category-header">
-                                <i class="fa-solid fa-chart-simple"></i>
+                            <h3 class="category-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px]">
+                                <i class="fa-solid fa-chart-simple tw-text-[0.9rem] tw-w-[18px] tw-text-center"></i>
                                 {{localize "WH40K.Characteristics"}}
                             </h3>
-                            <div class="grants-items">
+                            <div class="grants-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)]">
                                 {{#each characteristics}}
-                                    <div class="grant-tag {{#if positive}}positive{{else}}negative{{/if}}"
+                                    <div class="grant-tag {{#if positive}}positive tw-border-[#4caf50] tw-text-[#81c784]{{else}}negative tw-border-[var(--wh40k-accent-red)] tw-text-[#e57373]{{/if}} tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.8rem]"
                                          data-tooltip="{{label}}: {{#if positive}}+{{/if}}{{value}}">
-                                        <span class="tag-label">{{short}}</span>
-                                        <span class="tag-value">{{#if positive}}+{{/if}}{{value}}</span>
+                                        <span class="tag-label tw-font-medium">{{short}}</span>
+                                        <span class="tag-value tw-font-bold {{#if positive}}tw-text-[#4caf50]{{else}}tw-text-[color:var(--wh40k-accent-red)]{{/if}}">{{#if positive}}+{{/if}}{{value}}</span>
                                     </div>
                                 {{/each}}
                             </div>
@@ -84,23 +84,23 @@
                     {{!-- Starting Stats Formulas --}}
                     {{#if hasFormulas}}
                         <div class="grants-category">
-                            <h3 class="category-header">
-                                <i class="fa-solid fa-dice"></i>
+                            <h3 class="category-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px]">
+                                <i class="fa-solid fa-dice tw-text-[0.9rem] tw-w-[18px] tw-text-center"></i>
                                 {{localize "WH40K.OriginPath.StartingStats"}}
                             </h3>
-                            <div class="grants-items formula-items">
+                            <div class="grants-items formula-items tw-flex tw-flex-col tw-gap-[var(--wh40k-space-xs)]">
                                 {{#if woundsFormula}}
-                                    <div class="formula-tag" data-tooltip="Roll this formula to determine starting Wounds">
-                                        <i class="fa-solid fa-heart"></i>
-                                        <span class="formula-label">{{localize "WH40K.Wounds"}}:</span>
-                                        <code class="formula-value">{{woundsFormula}}</code>
+                                    <div class="formula-tag tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-w-full" data-tooltip="Roll this formula to determine starting Wounds">
+                                        <i class="fa-solid fa-heart tw-text-base tw-w-6 tw-text-center tw-text-[color:var(--wh40k-accent-red)]"></i>
+                                        <span class="formula-label tw-font-semibold tw-text-[color:var(--wh40k-text-light)]">{{localize "WH40K.Wounds"}}:</span>
+                                        <code class="formula-value tw-font-mono tw-bg-[rgba(0,0,0,0.3)] tw-py-[2px] tw-px-2 tw-rounded tw-text-[color:var(--wh40k-gold)]">{{woundsFormula}}</code>
                                     </div>
                                 {{/if}}
                                 {{#if fateFormula}}
-                                    <div class="formula-tag" data-tooltip="Roll this formula to determine starting Fate Points">
-                                        <i class="fa-solid fa-star"></i>
-                                        <span class="formula-label">{{localize "WH40K.Fate"}}:</span>
-                                        <code class="formula-value">{{fateFormula}}</code>
+                                    <div class="formula-tag tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-w-full" data-tooltip="Roll this formula to determine starting Fate Points">
+                                        <i class="fa-solid fa-star tw-text-base tw-w-6 tw-text-center tw-text-[color:var(--wh40k-gold)]"></i>
+                                        <span class="formula-label tw-font-semibold tw-text-[color:var(--wh40k-text-light)]">{{localize "WH40K.Fate"}}:</span>
+                                        <code class="formula-value tw-font-mono tw-bg-[rgba(0,0,0,0.3)] tw-py-[2px] tw-px-2 tw-rounded tw-text-[color:var(--wh40k-gold)]">{{fateFormula}}</code>
                                     </div>
                                 {{/if}}
                             </div>
@@ -110,15 +110,15 @@
                     {{!-- Skills --}}
                     {{#if hasSkills}}
                         <div class="grants-category">
-                            <h3 class="category-header">
-                                <i class="fa-solid fa-book-open"></i>
+                            <h3 class="category-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px]">
+                                <i class="fa-solid fa-book-open tw-text-[0.9rem] tw-w-[18px] tw-text-center"></i>
                                 {{localize "WH40K.Skills"}}
                             </h3>
-                            <div class="grants-items">
+                            <div class="grants-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)]">
                                 {{#each skills}}
-                                    <div class="grant-tag skill-tag" data-tooltip="{{displayName}} ({{levelLabel}})">
-                                        <span class="tag-label">{{displayName}}</span>
-                                        <span class="tag-level">{{levelLabel}}</span>
+                                    <div class="grant-tag skill-tag tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--wh40k-accent-info)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-light)]" data-tooltip="{{displayName}} ({{levelLabel}})">
+                                        <span class="tag-label tw-font-medium">{{displayName}}</span>
+                                        <span class="tag-level tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-muted)]">{{levelLabel}}</span>
                                     </div>
                                 {{/each}}
                             </div>
@@ -128,18 +128,18 @@
                     {{!-- Talents --}}
                     {{#if hasTalents}}
                         <div class="grants-category">
-                            <h3 class="category-header">
-                                <i class="fa-solid fa-star"></i>
+                            <h3 class="category-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px]">
+                                <i class="fa-solid fa-star tw-text-[0.9rem] tw-w-[18px] tw-text-center"></i>
                                 {{localize "WH40K.Talents"}}
                             </h3>
-                            <div class="grants-items">
+                            <div class="grants-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)]">
                                 {{#each talents}}
-                                    <div class="grant-tag talent-tag {{#if hasItem}}clickable{{/if}}"
+                                    <div class="grant-tag talent-tag {{#if hasItem}}clickable tw-cursor-pointer hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-px{{/if}} tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#f39c12] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-light)]"
                                          {{#if uuid}}data-action="openItem" data-uuid="{{uuid}}"{{/if}}
                                          data-tooltip="{{#if description}}{{{description}}}{{else}}{{name}}{{/if}}">
-                                        <i class="fa-solid fa-star"></i>
-                                        <span class="tag-label">{{name}}</span>
-                                        {{#if hasItem}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
+                                        <i class="fa-solid fa-star tw-text-[0.75rem] tw-opacity-80 tw-text-[#f39c12]"></i>
+                                        <span class="tag-label tw-font-medium">{{name}}</span>
+                                        {{#if hasItem}}<i class="fa-solid fa-external-link tag-link tw-text-[0.65rem] tw-opacity-50"></i>{{/if}}
                                     </div>
                                 {{/each}}
                             </div>
@@ -149,18 +149,18 @@
                     {{!-- Traits --}}
                     {{#if hasTraits}}
                         <div class="grants-category">
-                            <h3 class="category-header">
-                                <i class="fa-solid fa-dna"></i>
+                            <h3 class="category-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px]">
+                                <i class="fa-solid fa-dna tw-text-[0.9rem] tw-w-[18px] tw-text-center"></i>
                                 {{localize "WH40K.Traits"}}
                             </h3>
-                            <div class="grants-items">
+                            <div class="grants-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)]">
                                 {{#each traits}}
-                                    <div class="grant-tag trait-tag {{#if hasItem}}clickable{{/if}}"
+                                    <div class="grant-tag trait-tag {{#if hasItem}}clickable tw-cursor-pointer hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-px{{/if}} tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--wh40k-accent-psychic)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-light)]"
                                          {{#if uuid}}data-action="openItem" data-uuid="{{uuid}}"{{/if}}
                                          data-tooltip="{{#if description}}{{{description}}}{{else}}{{name}}{{/if}}">
-                                        <i class="fa-solid fa-dna"></i>
-                                        <span class="tag-label">{{name}}{{#if level}} ({{level}}){{/if}}</span>
-                                        {{#if hasItem}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
+                                        <i class="fa-solid fa-dna tw-text-[0.75rem] tw-opacity-80 tw-text-[color:var(--wh40k-accent-psychic)]"></i>
+                                        <span class="tag-label tw-font-medium">{{name}}{{#if level}} ({{level}}){{/if}}</span>
+                                        {{#if hasItem}}<i class="fa-solid fa-external-link tag-link tw-text-[0.65rem] tw-opacity-50"></i>{{/if}}
                                     </div>
                                 {{/each}}
                             </div>
@@ -170,18 +170,18 @@
                     {{!-- Equipment --}}
                     {{#if hasEquipment}}
                         <div class="grants-category">
-                            <h3 class="category-header">
-                                <i class="fa-solid fa-box"></i>
+                            <h3 class="category-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px]">
+                                <i class="fa-solid fa-box tw-text-[0.9rem] tw-w-[18px] tw-text-center"></i>
                                 {{localize "WH40K.Equipment"}}
                             </h3>
-                            <div class="grants-items">
+                            <div class="grants-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)]">
                                 {{#each equipment}}
-                                    <div class="grant-tag equipment-tag {{#if uuid}}clickable{{/if}}"
+                                    <div class="grant-tag equipment-tag {{#if uuid}}clickable tw-cursor-pointer hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-px{{/if}} tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--wh40k-accent-green)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-light)]"
                                          {{#if uuid}}data-action="openItem" data-uuid="{{uuid}}"{{/if}}
                                          data-tooltip="{{name}}{{#if (gt quantity 1)}} (×{{quantity}}){{/if}}">
-                                        <i class="fa-solid fa-box"></i>
-                                        <span class="tag-label">{{name}}</span>
-                                        {{#if (gt quantity 1)}}<span class="tag-qty">×{{quantity}}</span>{{/if}}
+                                        <i class="fa-solid fa-box tw-text-[0.75rem] tw-opacity-80 tw-text-[color:var(--wh40k-accent-green)]"></i>
+                                        <span class="tag-label tw-font-medium">{{name}}</span>
+                                        {{#if (gt quantity 1)}}<span class="tag-qty tw-text-[0.7rem] tw-text-[color:var(--wh40k-gold)]">×{{quantity}}</span>{{/if}}
                                     </div>
                                 {{/each}}
                             </div>
@@ -192,16 +192,16 @@
 
             {{!-- Special Abilities --}}
             {{#if hasSpecialAbilities}}
-                <section class="origin-detail-section origin-abilities">
-                    <h2 class="section-header">
-                        <i class="fa-solid fa-bolt"></i>
+                <section class="origin-detail-section origin-abilities tw-py-[var(--wh40k-space-md)] tw-px-[var(--wh40k-space-lg)] tw-border-b tw-border-[var(--wh40k-bronze)]">
+                    <h2 class="section-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-m-0 tw-mb-[var(--wh40k-space-md)] tw-font-[var(--wh40k-font-header)] tw-text-[1.1rem] tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[1px]">
+                        <i class="fa-solid fa-bolt tw-text-base"></i>
                         {{localize "WH40K.OriginPath.SpecialAbilities"}}
                     </h2>
-                    <div class="abilities-list">
+                    <div class="abilities-list tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
                         {{#each specialAbilities}}
-                            <div class="ability-item">
-                                <h4 class="ability-name">{{name}}</h4>
-                                <div class="ability-description">{{{description}}}</div>
+                            <div class="ability-item tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-sm)]">
+                                <h4 class="ability-name tw-m-0 tw-mb-[var(--wh40k-space-xs)] tw-text-[0.95rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)]">{{name}}</h4>
+                                <div class="ability-description tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)] tw-leading-[1.5]">{{{description}}}</div>
                             </div>
                         {{/each}}
                     </div>
@@ -212,34 +212,34 @@
         {{!-- Description Tab --}}
         <div class="tab" data-tab="description" data-group="primary">
             {{#if hasDescription}}
-                <section class="origin-detail-section origin-description">
-                    <div class="description-content">
+                <section class="origin-detail-section origin-description tw-py-[var(--wh40k-space-md)] tw-px-[var(--wh40k-space-lg)] tw-border-b tw-border-[var(--wh40k-bronze)] tw-bg-[rgba(0,0,0,0.2)]">
+                    <div class="description-content tw-text-[0.9rem] tw-leading-[1.6] tw-text-[color:var(--wh40k-text-light)]">
                         {{{description}}}
                     </div>
                 </section>
             {{else}}
-                <p class="origin-empty-tab">No description available.</p>
+                <p class="origin-empty-tab tw-text-center tw-text-[color:var(--wh40k-text-muted)] tw-italic tw-py-[var(--wh40k-space-xl)]">No description available.</p>
             {{/if}}
         </div>
 
         {{!-- Choices Tab --}}
         <div class="tab" data-tab="choices" data-group="primary">
             {{#if hasChoices}}
-                <section class="origin-detail-section origin-choices-preview">
-                    <div class="choices-list">
+                <section class="origin-detail-section origin-choices-preview tw-py-[var(--wh40k-space-md)] tw-px-[var(--wh40k-space-lg)] tw-border-b tw-border-[var(--wh40k-bronze)]">
+                    <div class="choices-list tw-flex tw-flex-col tw-gap-[var(--wh40k-space-md)]">
                         {{#each choices}}
-                            <div class="choice-preview">
-                                <div class="choice-header">
-                                    <span class="choice-type-badge">{{typeLabel}}</span>
-                                    <span class="choice-label">{{label}}</span>
-                                    <span class="choice-count">({{localize "WH40K.OriginPath.Choose"}} {{count}})</span>
+                            <div class="choice-preview tw-bg-[rgba(255,170,0,0.1)] tw-border tw-border-[rgba(255,170,0,0.3)] tw-rounded-[var(--wh40k-radius-md)] tw-p-[var(--wh40k-space-md)]">
+                                <div class="choice-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-sm)]">
+                                    <span class="choice-type-badge tw-py-[2px] tw-px-2 tw-bg-[rgba(255,170,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[#ffaa00]">{{typeLabel}}</span>
+                                    <span class="choice-label tw-font-semibold tw-text-[color:var(--wh40k-text-light)]">{{label}}</span>
+                                    <span class="choice-count tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-muted)]">({{localize "WH40K.OriginPath.Choose"}} {{count}})</span>
                                 </div>
-                                <div class="choice-options-preview">
+                                <div class="choice-options-preview tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-ml-[var(--wh40k-space-md)]">
                                     {{#each options}}
-                                        <div class="choice-option-preview">
-                                            <span class="option-label">{{label}}</span>
+                                        <div class="choice-option-preview tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)]">
+                                            <span class="option-label tw-font-semibold tw-text-[color:var(--wh40k-gold)] tw-text-[0.9rem]">{{label}}</span>
                                             {{#if description}}
-                                                <p class="option-description">{{description}}</p>
+                                                <p class="option-description tw-mt-[var(--wh40k-space-xs)] tw-mb-0 tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-muted)] tw-leading-[1.4]">{{description}}</p>
                                             {{/if}}
                                         </div>
                                     {{/each}}
@@ -249,38 +249,38 @@
                     </div>
                 </section>
             {{else}}
-                <p class="origin-empty-tab">No choices required for this origin.</p>
+                <p class="origin-empty-tab tw-text-center tw-text-[color:var(--wh40k-text-muted)] tw-italic tw-py-[var(--wh40k-space-xl)]">No choices required for this origin.</p>
             {{/if}}
         </div>
 
         {{!-- Requirements Tab --}}
         <div class="tab" data-tab="requirements" data-group="primary">
             {{#if hasRequirements}}
-                <section class="origin-detail-section origin-requirements">
-                    <div class="requirements-content">
+                <section class="origin-detail-section origin-requirements tw-py-[var(--wh40k-space-md)] tw-px-[var(--wh40k-space-lg)] tw-border-b tw-border-[var(--wh40k-bronze)]">
+                    <div class="requirements-content tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)]">
                         {{#if requirements.text}}
-                            <p class="requirement-text">{{requirements.text}}</p>
+                            <p class="requirement-text tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-italic">{{requirements.text}}</p>
                         {{/if}}
                         {{#if requirements.previousSteps.length}}
-                            <p class="requirement-item">
-                                <strong>{{localize "WH40K.OriginPath.RequiresPrevious"}}:</strong>
+                            <p class="requirement-item tw-my-[var(--wh40k-space-xs)]">
+                                <strong class="tw-text-[color:var(--wh40k-text-light)]">{{localize "WH40K.OriginPath.RequiresPrevious"}}:</strong>
                                 {{#each requirements.previousSteps}}
-                                    <span class="req-tag">{{this}}</span>
+                                    <span class="req-tag tw-inline-block tw-py-[2px] tw-px-[6px] tw-bg-[rgba(var(--wh40k-gold-rgb),0.2)] tw-border tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-gold)] tw-mx-[2px]">{{this}}</span>
                                 {{/each}}
                             </p>
                         {{/if}}
                         {{#if requirements.excludedSteps.length}}
-                            <p class="requirement-item">
-                                <strong>{{localize "WH40K.OriginPath.Excludes"}}:</strong>
+                            <p class="requirement-item tw-my-[var(--wh40k-space-xs)]">
+                                <strong class="tw-text-[color:var(--wh40k-text-light)]">{{localize "WH40K.OriginPath.Excludes"}}:</strong>
                                 {{#each requirements.excludedSteps}}
-                                    <span class="req-tag excluded">{{this}}</span>
+                                    <span class="req-tag excluded tw-inline-block tw-py-[2px] tw-px-[6px] tw-bg-[rgba(231,76,60,0.2)] tw-border tw-border-[var(--wh40k-accent-red)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-accent-red)] tw-mx-[2px]">{{this}}</span>
                                 {{/each}}
                             </p>
                         {{/if}}
                     </div>
                 </section>
             {{else}}
-                <p class="origin-empty-tab">No special requirements.</p>
+                <p class="origin-empty-tab tw-text-center tw-text-[color:var(--wh40k-text-muted)] tw-italic tw-py-[var(--wh40k-space-xl)]">No special requirements.</p>
             {{/if}}
         </div>
 
@@ -289,21 +289,21 @@
     </div>{{!-- .origin-detail-content --}}
 
     {{!-- Footer Actions (Always Visible) --}}
-    <footer class="origin-detail-footer">
-        <button type="button" class="detail-btn cancel-btn" data-action="cancel">
-            <i class="fa-solid fa-times"></i>
+    <footer class="origin-detail-footer tw-sticky tw-bottom-0 tw-flex tw-justify-end tw-gap-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-md)] tw-px-[var(--wh40k-space-lg)] tw-bg-[linear-gradient(180deg,rgba(0,0,0,0.8),var(--wh40k-bronze-dark))] tw-border-t-2 tw-border-[var(--wh40k-gold)] tw-z-[10]">
+        <button type="button" class="detail-btn cancel-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-lg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.95rem] tw-font-semibold tw-cursor-pointer tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[var(--wh40k-bronze)] tw-text-[color:var(--wh40k-text-light)] hover:tw-bg-[var(--wh40k-bronze)] hover:tw-border-[var(--wh40k-gold)]" data-action="cancel">
+            <i class="fa-solid fa-times tw-text-[0.9rem]"></i>
             {{localize "WH40K.Close"}}
         </button>
 
         {{#if allowSelection}}
             {{#if isSelected}}
-                <button type="button" class="detail-btn selected-btn" disabled>
-                    <i class="fa-solid fa-check"></i>
+                <button type="button" class="detail-btn selected-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-lg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.95rem] tw-font-semibold tw-bg-[rgba(76,175,80,0.2)] tw-border-2 tw-border-[#4caf50] tw-text-[#4caf50] tw-cursor-default" disabled>
+                    <i class="fa-solid fa-check tw-text-[0.9rem]"></i>
                     {{localize "WH40K.OriginPath.AlreadySelected"}}
                 </button>
             {{else}}
-                <button type="button" class="detail-btn confirm-btn" data-action="confirm">
-                    <i class="fa-solid fa-check"></i>
+                <button type="button" class="detail-btn confirm-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-lg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.95rem] tw-font-semibold tw-cursor-pointer tw-bg-[linear-gradient(135deg,var(--wh40k-gold),#b8860b)] tw-border-2 tw-border-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-panel-bg-solid)] hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_15px_rgba(var(--wh40k-gold-rgb),0.5)]" data-action="confirm">
+                    <i class="fa-solid fa-check tw-text-[0.9rem]"></i>
                     {{localize "WH40K.OriginPath.SelectThisOrigin"}}
                 </button>
             {{/if}}

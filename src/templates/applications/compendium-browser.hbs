@@ -1,22 +1,22 @@
-<form class="wh40k-compendium-browser">
-    <header class="browser-header">
-        <h1><i class="fas fa-search"></i> Rogue Trader Compendium Browser</h1>
-        <p>Browse, filter, and search through all Rogue Trader compendia</p>
+<form class="wh40k-compendium-browser tw-flex tw-flex-col tw-h-full">
+    <header class="browser-header tw-p-4 tw-bg-[rgba(0,0,0,0.3)] tw-border-b-2 tw-border-[var(--color-border-dark)]">
+        <h1 class="tw-m-0 tw-mb-2 tw-text-2xl tw-text-[color:var(--color-text-light)]"><i class="fas fa-search tw-mr-2 tw-text-[color:var(--color-warm-2)]"></i> Rogue Trader Compendium Browser</h1>
+        <p class="tw-m-0 tw-text-[color:var(--color-text-dark)] tw-text-[0.9rem]">Browse, filter, and search through all Rogue Trader compendia</p>
     </header>
 
-    <div class="browser-body">
-        <aside class="browser-sidebar">
+    <div class="browser-body tw-flex tw-flex-1 tw-overflow-hidden">
+        <aside class="browser-sidebar tw-w-[250px] tw-p-4 tw-bg-[rgba(0,0,0,0.2)] tw-border-r tw-border-[var(--color-border-dark)] tw-overflow-y-auto">
             <div class="filter-section">
-                <h3><i class="fas fa-filter"></i> Filters</h3>
-                
-                <div class="filter-group">
-                    <label for="search-input">Search</label>
-                    <input type="text" class="search-input" placeholder="Search by name..." value="{{filters.search}}">
+                <h3 class="tw-m-0 tw-mb-4 tw-text-[1.1rem] tw-text-[color:var(--color-text-light)] tw-border-b tw-border-[var(--color-border-dark)] tw-pb-2"><i class="fas fa-filter tw-mr-2"></i> Filters</h3>
+
+                <div class="filter-group tw-mb-4">
+                    <label for="search-input" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Search</label>
+                    <input type="text" class="search-input tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded" placeholder="Search by name..." value="{{filters.search}}">
                 </div>
 
-                <div class="filter-group">
-                    <label for="filter-source">Source</label>
-                    <select class="filter-source">
+                <div class="filter-group tw-mb-4">
+                    <label for="filter-source" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Source</label>
+                    <select class="filter-source tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
                         <option value="all">All Sources</option>
                         {{#each sources}}
                         <option value="{{this}}" {{#if (eq ../filters.source this)}}selected{{/if}}>{{this}}</option>
@@ -24,9 +24,9 @@
                     </select>
                 </div>
 
-                <div class="filter-group">
-                    <label for="filter-category">Category</label>
-                    <select class="filter-category">
+                <div class="filter-group tw-mb-4">
+                    <label for="filter-category" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Category</label>
+                    <select class="filter-category tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
                         <option value="all">All Categories</option>
                         {{#each categories}}
                         <option value="{{this}}" {{#if (eq ../filters.category this)}}selected{{/if}}>{{this}}</option>
@@ -34,22 +34,22 @@
                     </select>
                 </div>
 
-                <div class="filter-group">
-                    <label for="filter-group-by">Group By</label>
-                    <select class="filter-group-by">
+                <div class="filter-group tw-mb-4">
+                    <label for="filter-group-by" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Group By</label>
+                    <select class="filter-group-by tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
                         {{#each groupByOptions}}
                         <option value="{{value}}" {{#if (eq ../filters.groupBy value)}}selected{{/if}}>{{label}}</option>
                         {{/each}}
                     </select>
                 </div>
-                
+
                 {{#if hasArmourFilters}}
-                <div class="filter-divider"></div>
-                <h4 class="filter-subheader"><i class="fas fa-shield"></i> Armour Filters</h4>
-                
-                <div class="filter-group">
-                    <label for="filter-armour-type">Armour Type</label>
-                    <select class="filter-armour-type">
+                <div class="filter-divider tw-h-px tw-bg-[var(--color-border-dark)] tw-my-6"></div>
+                <h4 class="filter-subheader tw-m-0 tw-mb-4 tw-text-[0.95rem] tw-text-[color:var(--wh40k-color-gold)] tw-font-semibold"><i class="fas fa-shield tw-mr-2"></i> Armour Filters</h4>
+
+                <div class="filter-group tw-mb-4">
+                    <label for="filter-armour-type" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Armour Type</label>
+                    <select class="filter-armour-type tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
                         <option value="all">All Types</option>
                         {{#each armourTypes as |type key|}}
                         <option value="{{key}}" {{#if (eq ../filters.armourType key)}}selected{{/if}}>
@@ -58,15 +58,15 @@
                         {{/each}}
                     </select>
                 </div>
-                
-                <div class="filter-group">
-                    <label for="filter-min-ap">Minimum AP</label>
-                    <input type="number" class="filter-min-ap" min="0" max="20" value="{{filters.minAP}}" placeholder="Any">
+
+                <div class="filter-group tw-mb-4">
+                    <label for="filter-min-ap" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Minimum AP</label>
+                    <input type="number" class="filter-min-ap tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded" min="0" max="20" value="{{filters.minAP}}" placeholder="Any">
                 </div>
-                
-                <div class="filter-group">
-                    <label for="filter-coverage">Coverage</label>
-                    <select class="filter-coverage">
+
+                <div class="filter-group tw-mb-4">
+                    <label for="filter-coverage" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Coverage</label>
+                    <select class="filter-coverage tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
                         <option value="all" {{#if (eq filters.coverage "all")}}selected{{/if}}>All Coverage</option>
                         <option value="full" {{#if (eq filters.coverage "full")}}selected{{/if}}>Full Body</option>
                         <option value="partial" {{#if (eq filters.coverage "partial")}}selected{{/if}}>Partial</option>
@@ -75,12 +75,12 @@
                 {{/if}}
 
                 {{#if hasArmourModFilters}}
-                <div class="filter-divider"></div>
-                <h4 class="filter-subheader"><i class="fas fa-wrench"></i> Armour Modification Filters</h4>
-                
-                <div class="filter-group">
-                    <label for="filter-mod-type">Applies To</label>
-                    <select class="filter-mod-type">
+                <div class="filter-divider tw-h-px tw-bg-[var(--color-border-dark)] tw-my-6"></div>
+                <h4 class="filter-subheader tw-m-0 tw-mb-4 tw-text-[0.95rem] tw-text-[color:var(--wh40k-color-gold)] tw-font-semibold"><i class="fas fa-wrench tw-mr-2"></i> Armour Modification Filters</h4>
+
+                <div class="filter-group tw-mb-4">
+                    <label for="filter-mod-type" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">Applies To</label>
+                    <select class="filter-mod-type tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
                         <option value="all">All Armour Types</option>
                         {{#each armourTypesForMods as |type key|}}
                         <option value="{{key}}" {{#if (eq ../filters.modType key)}}selected{{/if}}>
@@ -89,107 +89,107 @@
                         {{/each}}
                     </select>
                 </div>
-                
-                <div class="filter-group">
-                    <label>
+
+                <div class="filter-group tw-mb-4">
+                    <label class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">
                         <input type="checkbox" class="filter-has-modifiers" {{#if filters.hasModifiers}}checked{{/if}}>
                         Has Stat Modifiers
                     </label>
                 </div>
-                
-                <div class="filter-group">
-                    <label>
+
+                <div class="filter-group tw-mb-4">
+                    <label class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">
                         <input type="checkbox" class="filter-has-properties" {{#if filters.hasProperties}}checked{{/if}}>
                         Adds/Removes Properties
                     </label>
                 </div>
                 {{/if}}
 
-                <button type="button" class="clear-filters" data-action="clearFilters">
-                    <i class="fas fa-times"></i> Clear Filters
+                <button type="button" class="clear-filters tw-w-full tw-p-2 tw-bg-[var(--color-cool-2)] tw-border-0 tw-text-white tw-rounded tw-cursor-pointer hover:tw-bg-[var(--color-cool-3)]" data-action="clearFilters">
+                    <i class="fas fa-times tw-mr-2"></i> Clear Filters
                 </button>
             </div>
         </aside>
 
-        <main class="browser-results">
-            <div class="results-header">
-                <h3>Results ({{results.length}} items)</h3>
+        <main class="browser-results tw-flex-1 tw-flex tw-flex-col tw-overflow-hidden">
+            <div class="results-header tw-p-4 tw-bg-[rgba(0,0,0,0.1)] tw-border-b tw-border-[var(--color-border-dark)]">
+                <h3 class="tw-m-0 tw-text-[1.1rem] tw-text-[color:var(--color-text-light)]">Results ({{results.length}} items)</h3>
             </div>
-            
-            <div class="results-list">
+
+            <div class="results-list tw-flex-1 tw-overflow-y-auto tw-p-4">
                 {{#if results.length}}
                     {{#each groupedResults}}
-                    <div class="results-group">
-                        <div class="results-group-header">
-                            <span class="results-group-title">{{label}}</span>
-                            <span class="results-group-count">{{items.length}}</span>
+                    <div class="results-group tw-mb-6">
+                        <div class="results-group-header tw-flex tw-items-center tw-justify-between tw-m-0 tw-mb-3 tw-py-1 tw-px-3 tw-border-l-[3px] tw-border-l-[var(--color-warm-2)] tw-bg-[rgba(0,0,0,0.25)] tw-text-[color:var(--color-text-light)]">
+                            <span class="results-group-title tw-text-[0.85rem] tw-uppercase tw-tracking-[0.08em]">{{label}}</span>
+                            <span class="results-group-count tw-text-[0.75rem] tw-py-[0.15rem] tw-px-2 tw-rounded-full tw-bg-[rgba(0,0,0,0.4)]">{{items.length}}</span>
                         </div>
                         {{#each items}}
-                        <div class="compendium-item compendium-item--{{type}}" data-uuid="{{uuid}}" draggable="true">
-                            <img src="{{img}}" alt="{{name}}" class="item-image" />
-                            <div class="item-details">
-                                <h4 class="item-name">{{name}}</h4>
-                                
+                        <div class="compendium-item compendium-item--{{type}} tw-flex tw-items-center tw-p-3 tw-mb-2 tw-bg-[rgba(0,0,0,0.2)] tw-border tw-border-[var(--color-border-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer hover:tw-bg-[rgba(0,0,0,0.4)] hover:tw-border-[var(--color-warm-2)]" data-uuid="{{uuid}}" draggable="true">
+                            <img src="{{img}}" alt="{{name}}" class="item-image tw-w-10 tw-h-10 tw-object-cover tw-rounded-[var(--wh40k-radius-md)] tw-mr-4 tw-border tw-border-[var(--color-border-dark)]" />
+                            <div class="item-details tw-flex-1">
+                                <h4 class="item-name tw-m-0 tw-mb-1 tw-text-base tw-text-[color:var(--color-text-light)]">{{name}}</h4>
+
                                 {{!-- Armour-specific metadata --}}
                                 {{#if armourData}}
-                                <div class="item-stats item-stats--armour">
-                                    <span class="stat-badge stat-badge--type stat-badge--{{armourData.type}}">
-                                        <i class="fas fa-shield"></i> {{armourData.typeLabel}}
+                                <div class="item-stats item-stats--armour tw-flex tw-gap-2 tw-my-2 tw-flex-wrap">
+                                    <span class="stat-badge stat-badge--type stat-badge--{{armourData.type}} tw-inline-flex tw-items-center tw-gap-[0.375rem] tw-py-1 tw-px-[0.625rem] tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.3)_0%,rgba(212,175,55,0.15)_100%)] tw-border tw-border-[rgba(212,175,55,0.5)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.75rem] tw-font-semibold tw-text-white">
+                                        <i class="fas fa-shield tw-text-[0.85rem] tw-opacity-90"></i> {{armourData.typeLabel}}
                                     </span>
-                                    <span class="stat-badge stat-badge--ap">
-                                        <i class="fas fa-shield-halved"></i> {{armourData.apSummary}}
+                                    <span class="stat-badge stat-badge--ap tw-inline-flex tw-items-center tw-gap-[0.375rem] tw-py-1 tw-px-[0.625rem] tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.2)_0%,rgba(212,175,55,0.1)_100%)] tw-border tw-border-[rgba(212,175,55,0.4)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.75rem] tw-font-bold tw-text-white tw-font-mono">
+                                        <i class="fas fa-shield-halved tw-text-[0.85rem] tw-opacity-90"></i> {{armourData.apSummary}}
                                     </span>
-                                    <span class="stat-badge stat-badge--coverage" title="Coverage: {{armourData.coverageIcons}}">
-                                        <i class="fas fa-person"></i> {{armourData.coverageIcons}}
+                                    <span class="stat-badge stat-badge--coverage tw-inline-flex tw-items-center tw-gap-[0.375rem] tw-py-1 tw-px-[0.625rem] tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.2)_0%,rgba(212,175,55,0.1)_100%)] tw-border tw-border-[rgba(212,175,55,0.4)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] tw-font-semibold tw-text-white tw-font-mono tw-tracking-[1px]" title="Coverage: {{armourData.coverageIcons}}">
+                                        <i class="fas fa-person tw-text-[0.85rem] tw-opacity-90"></i> {{armourData.coverageIcons}}
                                     </span>
                                     {{#if armourData.maxAgility}}
-                                    <span class="stat-badge stat-badge--agility">
-                                        <i class="fas fa-person-running"></i> Max {{armourData.maxAgility}}
+                                    <span class="stat-badge stat-badge--agility tw-inline-flex tw-items-center tw-gap-[0.375rem] tw-py-1 tw-px-[0.625rem] tw-bg-[linear-gradient(135deg,rgba(52,152,219,0.2)_0%,rgba(52,152,219,0.1)_100%)] tw-border tw-border-[rgba(52,152,219,0.4)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.75rem] tw-font-semibold tw-text-white">
+                                        <i class="fas fa-person-running tw-text-[0.85rem] tw-opacity-90"></i> Max {{armourData.maxAgility}}
                                     </span>
                                     {{/if}}
                                 </div>
                                 {{/if}}
-                                
+
                                 {{!-- Armour modification metadata --}}
                                 {{#if armourModData}}
-                                <div class="item-stats item-stats--armour-mod">
-                                    <span class="stat-badge stat-badge--restrictions">
-                                        <i class="fas fa-filter"></i> {{armourModData.restrictionLabel}}
+                                <div class="item-stats item-stats--armour-mod tw-flex tw-gap-2 tw-my-2 tw-flex-wrap">
+                                    <span class="stat-badge stat-badge--restrictions tw-inline-flex tw-items-center tw-gap-[0.375rem] tw-py-1 tw-px-[0.625rem] tw-bg-[linear-gradient(135deg,rgba(52,152,219,0.2)_0%,rgba(52,152,219,0.1)_100%)] tw-border tw-border-[rgba(52,152,219,0.4)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.75rem] tw-font-semibold tw-text-white">
+                                        <i class="fas fa-filter tw-text-[0.85rem] tw-opacity-90"></i> {{armourModData.restrictionLabel}}
                                     </span>
-                                    
+
                                     {{#each armourModData.modifierBadges}}
-                                    <span class="stat-badge stat-badge--modifier {{#unless positive}}stat-badge--negative{{/unless}}">
-                                        <i class="fas fa-{{#if positive}}arrow-up{{else}}arrow-down{{/if}}"></i>
+                                    <span class="stat-badge stat-badge--modifier {{#unless positive}}stat-badge--negative{{/unless}} tw-inline-flex tw-items-center tw-gap-[0.375rem] tw-py-1 tw-px-[0.625rem] tw-border tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.75rem] tw-font-semibold tw-text-white {{#if positive}}tw-bg-[linear-gradient(135deg,rgba(46,204,113,0.2)_0%,rgba(46,204,113,0.1)_100%)] tw-border-[rgba(46,204,113,0.4)]{{else}}tw-bg-[linear-gradient(135deg,rgba(231,76,60,0.2)_0%,rgba(231,76,60,0.1)_100%)] tw-border-[rgba(231,76,60,0.4)]{{/if}}">
+                                        <i class="fas fa-{{#if positive}}arrow-up{{else}}arrow-down{{/if}} tw-text-[0.85rem] tw-opacity-90"></i>
                                         {{label}}
                                     </span>
                                     {{/each}}
-                                    
+
                                     {{#if armourModData.hasProperties}}
-                                    <span class="stat-badge stat-badge--properties">
-                                        <i class="fas fa-tags"></i> {{armourModData.propertiesSummary}}
+                                    <span class="stat-badge stat-badge--properties tw-inline-flex tw-items-center tw-gap-[0.375rem] tw-py-1 tw-px-[0.625rem] tw-bg-[linear-gradient(135deg,rgba(155,89,182,0.2)_0%,rgba(155,89,182,0.1)_100%)] tw-border tw-border-[rgba(155,89,182,0.4)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.75rem] tw-font-semibold tw-text-white">
+                                        <i class="fas fa-tags tw-text-[0.85rem] tw-opacity-90"></i> {{armourModData.propertiesSummary}}
                                     </span>
                                     {{/if}}
                                 </div>
                                 {{/if}}
-                                
+
                                 {{!-- Weapon quality metadata --}}
                                 {{#if qualityData}}
-                                <div class="item-stats item-stats--quality">
+                                <div class="item-stats item-stats--quality tw-flex tw-flex-col tw-gap-[6px] tw-mt-[6px]">
                                     {{#if qualityData.hasLevel}}
-                                    <span class="stat-badge stat-badge--level">
-                                        <i class="fas fa-layer-group"></i> Has Level{{#if qualityData.level}} ({{qualityData.level}}){{/if}}
+                                    <span class="stat-badge stat-badge--level tw-bg-[rgba(75,192,115,0.15)] tw-border tw-border-[rgba(75,192,115,0.3)] tw-text-[#4bc073] tw-py-[3px] tw-px-2 tw-rounded tw-text-[11px] tw-font-semibold tw-self-start">
+                                        <i class="fas fa-layer-group tw-text-[10px] tw-mr-1"></i> Has Level{{#if qualityData.level}} ({{qualityData.level}}){{/if}}
                                     </span>
                                     {{/if}}
-                                    <p class="quality-description">{{qualityData.description}}</p>
+                                    <p class="quality-description tw-m-0 tw-text-[11px] tw-leading-[1.4] tw-text-[color:var(--wh40k-text-muted)] tw-italic tw-overflow-hidden tw-[-webkit-line-clamp:3] tw-[-webkit-box-orient:vertical] tw-[display:-webkit-box]">{{qualityData.description}}</p>
                                 </div>
                                 {{/if}}
-                                
-                                <div class="item-meta">
-                                    <span class="item-type">{{type}}</span>
+
+                                <div class="item-meta tw-flex tw-gap-2 tw-flex-wrap">
+                                    <span class="item-type tw-text-[0.75rem] tw-py-1 tw-px-2 tw-rounded tw-bg-[var(--color-cool-4)] tw-text-white">{{type}}</span>
                                 {{#if sourceLabel}}
-                                <span class="item-source">{{sourceLabel}}</span>
+                                <span class="item-source tw-text-[0.75rem] tw-py-1 tw-px-2 tw-rounded tw-bg-[var(--color-warm-4)] tw-text-white">{{sourceLabel}}</span>
                                 {{/if}}
-                                    <span class="item-pack">{{pack}}</span>
+                                    <span class="item-pack tw-text-[0.75rem] tw-py-1 tw-px-2 tw-rounded tw-bg-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)]">{{pack}}</span>
                                 </div>
                             </div>
                         </div>
@@ -197,9 +197,9 @@
                     </div>
                     {{/each}}
                 {{else}}
-                    <div class="no-results">
-                        <i class="fas fa-search"></i>
-                        <p>No items match your filters</p>
+                    <div class="no-results tw-text-center tw-p-12 tw-text-[color:var(--color-text-dark)]">
+                        <i class="fas fa-search tw-text-[3rem] tw-mb-4 tw-opacity-50 tw-block"></i>
+                        <p class="tw-text-[1.1rem]">No items match your filters</p>
                     </div>
                 {{/if}}
             </div>

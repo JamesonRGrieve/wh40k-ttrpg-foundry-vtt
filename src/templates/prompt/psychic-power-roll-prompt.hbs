@@ -1,23 +1,23 @@
 {{!-- Rogue Trader Psychic Power Roll Prompt - Modern Design --}}
 <div class="dialog-content">
-    <form class="wh40k-prompt wh40k-prompt--psychic" autocomplete="off">
+    <form class="wh40k-prompt wh40k-prompt--psychic tw-relative tw-font-ui tw-text-[color:var(--wh40k-text-primary)]" autocomplete="off">
         {{!-- Power Select or Info --}}
         {{#if powerSelect}}
-            <div class="wh40k-prompt__panel">
-                <h3 class="wh40k-prompt__section-title">Select Power</h3>
-                <div class="wh40k-prompt__weapon-list">
+            <div class="wh40k-prompt__panel tw-relative tw-mb-4">
+                <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Select Power</h3>
+                <div class="wh40k-prompt__weapon-list tw-flex tw-flex-col tw-gap-2">
                     {{#each psychicPowers as |power|}}
-                        <label class="wh40k-prompt__weapon-item {{#if power.isSelected}}wh40k-prompt__weapon-item--selected{{/if}}">
-                            <input class="wh40k-prompt__weapon-check weapon-select"
+                        <label class="wh40k-prompt__weapon-item tw-flex tw-items-center tw-gap-3 tw-cursor-pointer tw-rounded tw-p-3 {{#if power.isSelected}}wh40k-prompt__weapon-item--selected{{/if}}">
+                            <input class="wh40k-prompt__weapon-check weapon-select tw-flex-shrink-0"
                                 type="checkbox"
                                 data-dtype="Boolean"
                                 {{checked power.isSelected}}
                                 name="{{power.id}}" />
-                            <img class="wh40k-prompt__weapon-img" alt="{{power.name}}" src="{{power.img}}" />
-                            <div class="wh40k-prompt__weapon-info">
-                                <div class="wh40k-prompt__weapon-name">{{power.name}}</div>
+                            <img class="wh40k-prompt__weapon-img tw-w-10 tw-h-10 tw-flex-shrink-0 tw-rounded tw-object-cover" alt="{{power.name}}" src="{{power.img}}" />
+                            <div class="wh40k-prompt__weapon-info tw-flex-1 tw-min-w-0">
+                                <div class="wh40k-prompt__weapon-name tw-font-semibold tw-truncate">{{power.name}}</div>
                                 {{#if power.items}}
-                                    <div class="wh40k-prompt__weapon-details">
+                                    <div class="wh40k-prompt__weapon-details tw-text-[0.8rem] tw-truncate">
                                         {{#each power.items as |item|}}{{item.name}}{{#unless @last}}, {{/unless}}{{/each}}
                                     </div>
                                 {{/if}}
@@ -28,26 +28,26 @@
             </div>
         {{else}}
             {{!-- Power Header --}}
-            <div class="wh40k-prompt__panel">
-                <div class="wh40k-prompt__header">
-                    <img class="wh40k-prompt__icon" alt="{{power.name}}" src="{{power.img}}" />
-                    <div class="wh40k-prompt__title-group">
-                        <h2 class="wh40k-prompt__title">{{power.name}}</h2>
-                        <div class="wh40k-prompt__subtitle">{{this.sourceActor.name}}</div>
+            <div class="wh40k-prompt__panel tw-relative tw-mb-4">
+                <div class="wh40k-prompt__header tw-flex tw-items-center tw-gap-[14px] tw-mb-4 tw-pb-[14px]">
+                    <img class="wh40k-prompt__icon tw-w-12 tw-h-12 tw-flex-shrink-0 tw-rounded tw-object-cover" alt="{{power.name}}" src="{{power.img}}" />
+                    <div class="wh40k-prompt__title-group tw-flex-1 tw-min-w-0">
+                        <h2 class="wh40k-prompt__title tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-wider tw-m-0 tw-truncate">{{power.name}}</h2>
+                        <div class="wh40k-prompt__subtitle tw-text-[0.9rem] tw-text-[color:var(--wh40k-text-secondary)] tw-mt-1 tw-truncate">{{this.sourceActor.name}}</div>
                     </div>
                 </div>
-                
+
                 {{!-- Target Display --}}
-                <div class="wh40k-prompt__target">
-                    <span class="wh40k-prompt__target-label">Target ({{baseChar}})</span>
-                    <span class="wh40k-prompt__target-value">{{baseTarget}}</span>
-                    <span class="wh40k-prompt__target-percent">%</span>
+                <div class="wh40k-prompt__target tw-flex tw-items-center tw-justify-between tw-py-2">
+                    <span class="wh40k-prompt__target-label tw-text-[0.85rem]">Target ({{baseChar}})</span>
+                    <span class="wh40k-prompt__target-value tw-font-bold tw-text-[1.5rem] tw-text-gold">{{baseTarget}}</span>
+                    <span class="wh40k-prompt__target-percent tw-text-[0.85rem]">%</span>
                 </div>
-                
+
                 {{#each power.items as |item|}}
                     {{#if item.isAttackSpecial}}
-                        <div class="wh40k-prompt__field">
-                            <span class="wh40k-prompt__label">Special</span>
+                        <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                            <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Special</span>
                             <span class="wh40k-prompt__value">{{item.name}}</span>
                         </div>
                     {{/if}}
@@ -55,49 +55,49 @@
             </div>
 
             {{!-- Focus Power Section --}}
-            <div class="wh40k-prompt__panel">
-                <h3 class="wh40k-prompt__section-title">Focus Power</h3>
-                <div class="wh40k-prompt__field">
-                    <span class="wh40k-prompt__label">Psychic Rating</span>
-                    <input class="wh40k-prompt__input" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
+            <div class="wh40k-prompt__panel tw-relative tw-mb-4">
+                <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Focus Power</h3>
+                <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                    <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Psychic Rating</span>
+                    <input class="wh40k-prompt__input tw-text-right" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
                 </div>
                 {{#if this.modifiers.bonus}}
-                    <div class="wh40k-prompt__field">
-                        <span class="wh40k-prompt__label">Rating Bonus</span>
+                    <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                        <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Rating Bonus</span>
                         <span class="wh40k-prompt__value">+{{modifiers.bonus}}</span>
                     </div>
                 {{/if}}
-                <div class="wh40k-prompt__checkbox-field">
-                    <span class="wh40k-prompt__label">Has Psy Focus</span>
-                    <input class="wh40k-prompt__input" type="checkbox" data-dtype="Boolean" {{checked hasFocus}} name="hasFocus" />
+                <div class="wh40k-prompt__checkbox-field tw-flex tw-items-center tw-justify-between tw-py-2">
+                    <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Has Psy Focus</span>
+                    <input class="wh40k-prompt__input tw-cursor-pointer" type="checkbox" data-dtype="Boolean" {{checked hasFocus}} name="hasFocus" />
                 </div>
             </div>
 
             {{!-- Modifiers Section --}}
-            <div class="wh40k-prompt__panel">
-                <h3 class="wh40k-prompt__section-title">Modifiers</h3>
+            <div class="wh40k-prompt__panel tw-relative tw-mb-0">
+                <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Modifiers</h3>
                 {{#with this.modifiers}}
-                    <div class="wh40k-prompt__field">
-                        <span class="wh40k-prompt__label">Difficulty</span>
+                    <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                        <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Difficulty</span>
                         <select class="wh40k-prompt__select" name="modifiers.difficulty">
                             {{selectOptions @root.difficulties selected=difficulty}}
                         </select>
                     </div>
-                    <div class="wh40k-prompt__field">
-                        <span class="wh40k-prompt__label">Additional Modifier</span>
-                        <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
+                    <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                        <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Additional Modifier</span>
+                        <input class="wh40k-prompt__input tw-text-right" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
                     </div>
                 {{/with}}
-                
-                <div class="wh40k-prompt__divider"></div>
-                
-                <div class="wh40k-prompt__field">
-                    <span class="wh40k-prompt__label">Distance (m)</span>
-                    <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
+
+                <div class="wh40k-prompt__divider tw-my-3"></div>
+
+                <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                    <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Distance (m)</span>
+                    <input class="wh40k-prompt__input tw-text-right" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
                 </div>
-                <div class="wh40k-prompt__range-info">
-                    <span class="wh40k-prompt__range-label">{{rangeName}}</span>
-                    <span class="wh40k-prompt__range-value">Max: {{maxRange}}m</span>
+                <div class="wh40k-prompt__range-info tw-flex tw-justify-between tw-items-center tw-pt-1">
+                    <span class="wh40k-prompt__range-label tw-text-[0.85rem]">{{rangeName}}</span>
+                    <span class="wh40k-prompt__range-value tw-text-[0.85rem] tw-font-semibold">Max: {{maxRange}}m</span>
                 </div>
             </div>
         {{/if}}

@@ -1,74 +1,74 @@
 {{!-- Characteristic Setup Dialog Template --}}
-<form class="csd-form" autocomplete="off">
+<form class="tw-flex tw-flex-col tw-gap-4 tw-p-4" autocomplete="off">
     {{!-- Header Instructions --}}
-    <div class="csd-instructions">
-        <p>{{localize "WH40K.CharacteristicSetup.Instructions"}}</p>
+    <div class="tw-text-center tw-text-[color:var(--csd-bone,#e8dcc4)] tw-text-[0.9rem] tw-opacity-90 tw-py-2 tw-px-4 tw-bg-[rgba(36,107,131,0.1)] tw-rounded-[6px] tw-border tw-border-[rgba(36,107,131,0.2)]">
+        <p class="tw-m-0">{{localize "WH40K.CharacteristicSetup.Instructions"}}</p>
     </div>
 
     {{!-- Rolls Bank --}}
-    <section class="csd-section csd-rolls-bank" data-drop-zone="bank">
-        <h3 class="csd-section-header">
+    <section class="tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4" data-drop-zone="bank">
+        <h3 class="tw-flex tw-items-center tw-gap-2 tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)] tw-text-[color:rgba(36,107,131,1)] tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">
             <i class="fa-solid fa-dice-d20"></i>
             {{localize "WH40K.CharacteristicSetup.RollsBank"}}
         </h3>
-        <div class="csd-rolls-container">
+        <div class="tw-flex tw-flex-wrap tw-gap-2 tw-justify-center">
             {{#each rollsBank}}
-            <div class="csd-roll-chip {{#if isEmpty}}empty{{/if}} {{#if isAssigned}}assigned{{/if}}"
+            <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-[60px] tw-h-[65px] tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.2)] tw-to-[rgba(36,107,131,0.1)] tw-border-2 tw-border-[rgba(36,107,131,0.4)] tw-rounded-[var(--wh40k-radius-lg)] tw-cursor-pointer tw-relative {{#if isEmpty}}tw-border-dashed tw-opacity-60{{/if}} {{#if isAssigned}}tw-opacity-30 tw-cursor-not-allowed{{/if}}"
                  data-roll-index="{{index}}"
                  {{#unless isEmpty}}{{#unless isAssigned}}draggable="true"{{/unless}}{{/unless}}>
-                <span class="csd-roll-value">{{#if isEmpty}}—{{else}}{{value}}{{/if}}</span>
-                <span class="csd-roll-label">{{localize "WH40K.CharacteristicSetup.Roll"}} {{displayIndex}}</span>
+                <span class="tw-text-[1.4rem] tw-font-bold tw-text-[color:var(--csd-bone,#e8dcc4)] tw-leading-none">{{#if isEmpty}}—{{else}}{{value}}{{/if}}</span>
+                <span class="tw-text-[0.65rem] tw-text-[color:rgba(232,220,196,0.6)] tw-uppercase tw-mt-1 tw-font-bold">{{localize "WH40K.CharacteristicSetup.Roll"}} {{displayIndex}}</span>
             </div>
             {{/each}}
         </div>
-        <p class="csd-bank-hint">{{localize "WH40K.CharacteristicSetup.ClickToEdit"}}</p>
+        <p class="tw-text-center tw-text-[0.75rem] tw-text-[color:rgba(232,220,196,0.5)] tw-mt-2 tw-m-0 tw-italic">{{localize "WH40K.CharacteristicSetup.ClickToEdit"}}</p>
     </section>
 
     {{!-- Characteristics Grid --}}
-    <section class="csd-section csd-characteristics">
-        <h3 class="csd-section-header">
+    <section class="tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
+        <h3 class="tw-flex tw-items-center tw-gap-2 tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)] tw-text-[color:rgba(36,107,131,1)] tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">
             <i class="fa-solid fa-user-gear"></i>
             {{localize "WH40K.CharacteristicSetup.Characteristics"}}
         </h3>
-        <div class="csd-char-grid">
+        <div class="tw-flex tw-flex-col tw-gap-3">
             {{#each characteristicRows}}
-            <div class="csd-char-row">
+            <div class="tw-flex tw-gap-3 tw-justify-center">
                 {{#each this}}
-                <div class="csd-char-slot {{#if hasRoll}}has-roll{{else}}empty{{/if}}"
+                <div class="tw-flex-1 tw-bg-gradient-to-br tw-from-[rgba(36,107,131,0.15)] tw-to-[rgba(36,107,131,0.05)] tw-border-2 tw-border-[rgba(36,107,131,0.35)] tw-rounded-[var(--wh40k-radius-lg)] tw-p-3 {{#if hasRoll}}tw-border-[rgba(76,175,80,0.5)]{{/if}}"
                      data-characteristic="{{key}}">
-                    <div class="csd-char-header">
-                        <span class="csd-char-short">{{short}}</span>
-                        <span class="csd-char-name">{{label}}</span>
+                    <div class="tw-flex tw-items-baseline tw-gap-2 tw-mb-2 tw-pb-[0.35rem] tw-border-b tw-border-[rgba(36,107,131,0.2)]">
+                        <span class="tw-text-[1.1rem] tw-font-bold tw-text-[color:rgba(36,107,131,1)]">{{short}}</span>
+                        <span class="tw-text-[0.7rem] tw-text-[color:rgba(232,220,196,0.7)] tw-uppercase tw-tracking-[0.03em]">{{label}}</span>
                     </div>
-                    <div class="csd-char-body">
-                        <div class="csd-char-base">
+                    <div class="tw-flex tw-items-center tw-justify-center tw-gap-[0.4rem] tw-flex-wrap">
+                        <div class="tw-flex tw-flex-col tw-items-center">
                             {{#if @root.advancedMode}}
-                            <input type="number" class="csd-base-input" 
-                                   value="{{base}}" 
+                            <input type="number" class="tw-w-[40px] tw-h-[26px] tw-text-center tw-text-[1rem] tw-font-semibold tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[rgba(176,141,87,0.5)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--csd-bone,#e8dcc4)]"
+                                   value="{{base}}"
                                    data-characteristic="{{key}}"
                                    min="0" max="99">
                             {{else}}
-                            <span class="csd-base-value">{{base}}</span>
+                            <span class="tw-text-[1.1rem] tw-font-semibold tw-text-[color:var(--csd-bone,#e8dcc4)]">{{base}}</span>
                             {{/if}}
-                            <span class="csd-base-label">{{localize "WH40K.CharacteristicSetup.Base"}}</span>
+                            <span class="tw-text-[0.55rem] tw-text-[color:rgba(232,220,196,0.5)] tw-uppercase">{{localize "WH40K.CharacteristicSetup.Base"}}</span>
                         </div>
-                        <span class="csd-char-plus">+</span>
-                        <div class="csd-char-roll-slot">
+                        <span class="tw-text-[1rem] tw-font-bold tw-text-[color:rgba(232,220,196,0.6)]">+</span>
+                        <div class="tw-w-[45px] tw-h-[40px] tw-flex tw-items-center tw-justify-center">
                             {{#if hasRoll}}
-                            <div class="csd-assigned-roll" 
+                            <div class="tw-w-[40px] tw-h-[36px] tw-flex tw-items-center tw-justify-center tw-bg-gradient-to-br tw-from-[rgba(76,175,80,0.3)] tw-to-[rgba(76,175,80,0.15)] tw-border-2 tw-border-[rgba(76,175,80,0.6)] tw-rounded-[6px] tw-text-[1.2rem] tw-font-bold tw-text-[color:var(--csd-bone,#e8dcc4)] tw-cursor-grab"
                                  draggable="true"
                                  data-roll-index="{{assignedIndex}}"
                                  data-characteristic="{{key}}">
                                 {{rollValue}}
                             </div>
                             {{else}}
-                            <div class="csd-drop-zone">
-                                <i class="fa-solid fa-arrow-down"></i>
+                            <div class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-center tw-border-2 tw-border-dashed tw-border-[rgba(36,107,131,0.4)] tw-rounded-[6px] tw-bg-[rgba(0,0,0,0.2)]">
+                                <i class="fa-solid fa-arrow-down tw-text-[color:rgba(232,220,196,0.3)] tw-text-[1rem]"></i>
                             </div>
                             {{/if}}
                         </div>
-                        <span class="csd-char-equals">=</span>
-                        <div class="csd-char-total {{#if hasRoll}}has-value{{/if}}">
+                        <span class="tw-text-[1rem] tw-font-bold tw-text-[color:rgba(232,220,196,0.6)]">=</span>
+                        <div class="tw-min-w-[40px] tw-h-[36px] tw-flex tw-items-center tw-justify-center tw-bg-[rgba(36,107,131,0.2)] tw-border-2 tw-border-[rgba(36,107,131,0.4)] tw-rounded-[6px] tw-text-[1.3rem] tw-font-bold tw-text-[color:var(--csd-bone,#e8dcc4)] {{#if hasRoll}}tw-bg-[rgba(176,141,87,0.15)] tw-border-[rgba(176,141,87,0.5)] tw-text-[color:var(--csd-gold,#b08d57)]{{/if}}">
                             {{#if hasRoll}}{{total}}{{else}}??{{/if}}
                         </div>
                     </div>
@@ -80,8 +80,8 @@
     </section>
 
     {{!-- Advanced Mode Toggle --}}
-    <div class="csd-advanced-toggle">
-        <button type="button" class="csd-toggle-btn" data-action="toggleAdvanced">
+    <div class="tw-flex tw-items-center tw-gap-3">
+        <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-px-[1.25rem] tw-py-[0.6rem] tw-rounded-[6px] tw-text-[0.9rem] tw-font-semibold tw-cursor-pointer tw-bg-[rgba(36,107,131,0.2)] tw-border tw-border-[rgba(36,107,131,0.4)] tw-text-[color:var(--csd-bone,#e8dcc4)]" data-action="toggleAdvanced">
             <i class="fa-solid {{#if advancedMode}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
             {{#if advancedMode}}
             {{localize "WH40K.CharacteristicSetup.AdvancedModeOn"}}
@@ -89,32 +89,32 @@
             {{localize "WH40K.CharacteristicSetup.AdvancedModeOff"}}
             {{/if}}
         </button>
-        <span class="csd-toggle-hint">{{localize "WH40K.CharacteristicSetup.AdvancedHint"}}</span>
+        <span class="tw-text-[0.75rem] tw-text-[color:rgba(232,220,196,0.5)] tw-italic">{{localize "WH40K.CharacteristicSetup.AdvancedHint"}}</span>
     </div>
 
     {{!-- Preview Summary --}}
-    <section class="csd-section csd-preview">
-        <h3 class="csd-section-header">
+    <section class="tw-bg-[rgba(255,255,255,0.03)] tw-rounded-[var(--wh40k-radius-lg)] tw-border tw-border-[rgba(36,107,131,0.3)] tw-p-4">
+        <h3 class="tw-flex tw-items-center tw-gap-2 tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(36,107,131,0.3)] tw-text-[color:rgba(36,107,131,1)] tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">
             <i class="fa-solid fa-chart-bar"></i>
             {{localize "WH40K.CharacteristicSetup.Preview"}}
         </h3>
-        <div class="csd-preview-bar">
+        <div class="tw-flex tw-flex-wrap tw-gap-2">
             {{#each preview}}
-            <div class="csd-preview-stat {{#unless hasValue}}empty{{/unless}}">
-                <span class="csd-preview-label">{{short}}</span>
-                <span class="csd-preview-value">{{#if hasValue}}{{total}}{{else}}—{{/if}}</span>
+            <div class="tw-flex tw-flex-col tw-items-center {{#unless hasValue}}tw-opacity-40{{/unless}}">
+                <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[color:rgba(232,220,196,0.7)]">{{short}}</span>
+                <span class="tw-text-[0.9rem] tw-font-bold tw-text-[color:var(--csd-bone,#e8dcc4)]">{{#if hasValue}}{{total}}{{else}}—{{/if}}</span>
             </div>
             {{/each}}
         </div>
     </section>
 
     {{!-- Footer Actions --}}
-    <footer class="csd-footer">
-        <button type="button" class="csd-btn csd-btn-secondary" data-action="reset">
+    <footer class="tw-flex tw-justify-end tw-gap-4 tw-pt-4 tw-border-t tw-border-[rgba(36,107,131,0.2)]">
+        <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-px-[1.25rem] tw-py-[0.6rem] tw-rounded-[6px] tw-text-[0.9rem] tw-font-semibold tw-cursor-pointer tw-bg-[rgba(36,107,131,0.2)] tw-border tw-border-[rgba(36,107,131,0.4)] tw-text-[color:var(--csd-bone,#e8dcc4)]" data-action="reset">
             <i class="fa-solid fa-rotate-left"></i>
             {{localize "WH40K.CharacteristicSetup.Reset"}}
         </button>
-        <button type="button" class="csd-btn csd-btn-primary" data-action="apply" {{#unless canApply}}disabled{{/unless}}>
+        <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-px-[1.25rem] tw-py-[0.6rem] tw-rounded-[6px] tw-text-[0.9rem] tw-font-semibold tw-cursor-pointer tw-bg-gradient-to-br tw-from-[var(--csd-gold,#b08d57)] tw-to-[color-mix(in_srgb,var(--csd-gold,#b08d57),black_15%)] tw-border tw-border-[var(--csd-gold,#b08d57)] tw-text-[#1a1a24] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed" data-action="apply" {{#unless canApply}}disabled{{/unless}}>
             <i class="fa-solid fa-check"></i>
             {{localize "WH40K.CharacteristicSetup.Apply"}}
         </button>

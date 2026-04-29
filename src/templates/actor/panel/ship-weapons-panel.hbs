@@ -1,39 +1,39 @@
-<div class="wh40k-panel spacer wh40k-grid-col-6 wh40k-grid-row-2">
+<div class="wh40k-panel tw-col-span-6 tw-row-span-2 tw-pb-[5pt]">
     <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Weapons.Header"}}</h1>
-    <div class="wh40k-table--border">
-        <div class="table-row--head">
-            <div class="table-cell--span2">{{localize "WH40K.Starship.Weapons.Name"}}</div>
-            <div class="table-cell">{{localize "WH40K.Starship.Weapons.Location"}}</div>
-            <div class="table-cell">{{localize "WH40K.Starship.Weapons.Strength"}}</div>
-            <div class="table-cell">{{localize "WH40K.Starship.Weapons.Damage"}}</div>
-            <div class="table-cell">{{localize "WH40K.Starship.Weapons.Crit"}}</div>
-            <div class="table-cell">{{localize "WH40K.Starship.Weapons.Range"}}</div>
-            <div class="table-cell--last">
-                <label class="wh40k-control-button" data-action="itemCreate" data-type="shipWeapon">
-                    <span class="wh40k-control-button__span material-icons">add_circle</span>
+    <div class="tw-rounded-md tw-overflow-hidden tw-border tw-border-[rgba(74,55,40,0.15)]">
+        <div class="tw-grid tw-grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_auto] tw-px-1 tw-py-[6px] tw-text-[0.9em] tw-uppercase tw-tracking-[0.05em]">
+            <div class="tw-col-span-2 tw-px-1 tw-py-[6px] tw-whitespace-nowrap">{{localize "WH40K.Starship.Weapons.Name"}}</div>
+            <div class="tw-px-1 tw-py-[6px]">{{localize "WH40K.Starship.Weapons.Location"}}</div>
+            <div class="tw-px-1 tw-py-[6px]">{{localize "WH40K.Starship.Weapons.Strength"}}</div>
+            <div class="tw-px-1 tw-py-[6px]">{{localize "WH40K.Starship.Weapons.Damage"}}</div>
+            <div class="tw-px-1 tw-py-[6px]">{{localize "WH40K.Starship.Weapons.Crit"}}</div>
+            <div class="tw-px-1 tw-py-[6px]">{{localize "WH40K.Starship.Weapons.Range"}}</div>
+            <div class="tw-px-1 tw-py-[6px]">
+                <label class="tw-cursor-pointer tw-opacity-70 hover:tw-opacity-100 tw-transition-opacity" data-action="itemCreate" data-type="shipWeapon">
+                    <span class="material-icons tw-font-[Material_Icons] tw-not-italic tw-text-[12px] tw-leading-none tw-pt-[3px] tw-pl-[2px] tw-opacity-50">add_circle</span>
                 </label>
             </div>
         </div>
         {{#each actor.items as |item|}}
             {{#if item.isShipWeapon}}
-                <div class="table-row">
-                    <div class="table-cell--span2">
-                        <button class="item-name wh40k-item-button" data-item-id="{{item.id}}" type="button">
-                            <img class="wh40k-item-img" src="{{item.img}}" alt="{{item.name}}" />
+                <div class="tw-grid tw-grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_auto] tw-px-1">
+                    <div class="tw-col-span-2 tw-px-1 tw-py-[6px]">
+                        <button class="item-name tw-inline-flex tw-items-center tw-gap-[5px] tw-bg-none tw-border-none tw-cursor-pointer tw-p-[2px] tw-text-left hover:tw-bg-[rgba(0,0,0,0.05)]" data-item-id="{{item.id}}" type="button">
+                            <img class="tw-w-[20px] tw-h-[20px] tw-rounded-[var(--wh40k-radius-sm)] tw-object-contain tw-border-none" src="{{item.img}}" alt="{{item.name}}" />
                             {{item.name}}
                         </button>
                     </div>
-                    <div class="table-cell">{{item.system.locationLabel}}</div>
-                    <div class="table-cell">{{displayStrength item.system.strength}}</div>
-                    <div class="table-cell">{{item.system.damage}}</div>
-                    <div class="table-cell">{{displayCrit item.system.crit}}</div>
-                    <div class="table-cell">{{item.system.range}}</div>
-                    <div class="table-cell--last">
-                        <label class="wh40k-control-button wh40k-ship-weapon-fire" data-item-id="{{item.id}}" title="Fire Weapon">
-                            <span class="wh40k-control-button__span material-icons">gps_fixed</span>
+                    <div class="tw-px-1 tw-py-[6px]">{{item.system.locationLabel}}</div>
+                    <div class="tw-px-1 tw-py-[6px]">{{displayStrength item.system.strength}}</div>
+                    <div class="tw-px-1 tw-py-[6px]">{{item.system.damage}}</div>
+                    <div class="tw-px-1 tw-py-[6px]">{{displayCrit item.system.crit}}</div>
+                    <div class="tw-px-1 tw-py-[6px]">{{item.system.range}}</div>
+                    <div class="tw-px-1 tw-py-[6px] tw-flex tw-gap-1">
+                        <label class="tw-cursor-pointer tw-opacity-70 hover:tw-opacity-100 hover:tw-scale-110 tw-transition-all" data-item-id="{{item.id}}" title="Fire Weapon">
+                            <span class="material-icons tw-font-[Material_Icons] tw-not-italic tw-text-[12px] tw-leading-none tw-pt-[3px] tw-pl-[2px] tw-opacity-50">gps_fixed</span>
                         </label>
-                        <label class="wh40k-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="wh40k-control-button__span material-icons">delete</span>
+                        <label class="item-delete tw-cursor-pointer tw-opacity-70 hover:tw-opacity-100 hover:tw-scale-110 tw-transition-all" data-item-id="{{item.id}}">
+                            <span class="material-icons tw-font-[Material_Icons] tw-not-italic tw-text-[12px] tw-leading-none tw-pt-[3px] tw-pl-[2px] tw-opacity-50">delete</span>
                         </label>
                     </div>
                 </div>

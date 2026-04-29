@@ -1,23 +1,23 @@
 {{!-- Rogue Trader Weapon Roll Prompt - Modern Design --}}
 <div class="dialog-content">
-    <form class="wh40k-prompt wh40k-prompt--attack" autocomplete="off">
+    <form class="wh40k-prompt wh40k-prompt--attack tw-relative tw-font-ui tw-text-[color:var(--wh40k-text-primary)]" autocomplete="off">
         {{!-- Weapon Select or Info --}}
         {{#if weaponSelect}}
-            <div class="wh40k-prompt__panel">
-                <h3 class="wh40k-prompt__section-title">Select Weapons</h3>
-                <div class="wh40k-prompt__weapon-list">
+            <div class="wh40k-prompt__panel tw-relative tw-mb-4">
+                <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Select Weapons</h3>
+                <div class="wh40k-prompt__weapon-list tw-flex tw-flex-col tw-gap-2">
                     {{#each weapons as |weapon|}}
-                        <label class="wh40k-prompt__weapon-item {{#if weapon.isSelected}}wh40k-prompt__weapon-item--selected{{/if}}">
-                            <input class="wh40k-prompt__weapon-check weapon-select"
+                        <label class="wh40k-prompt__weapon-item tw-flex tw-items-center tw-gap-3 tw-cursor-pointer tw-rounded tw-p-3 {{#if weapon.isSelected}}wh40k-prompt__weapon-item--selected{{/if}}">
+                            <input class="wh40k-prompt__weapon-check weapon-select tw-flex-shrink-0"
                                 type="checkbox"
                                 data-dtype="Boolean"
                                 {{checked weapon.isSelected}}
                                 name="{{weapon.id}}" />
-                            <img class="wh40k-prompt__weapon-img" alt="{{weapon.name}}" src="{{weapon.img}}" />
-                            <div class="wh40k-prompt__weapon-info">
-                                <div class="wh40k-prompt__weapon-name">{{weapon.name}}</div>
+                            <img class="wh40k-prompt__weapon-img tw-w-10 tw-h-10 tw-flex-shrink-0 tw-rounded tw-object-cover" alt="{{weapon.name}}" src="{{weapon.img}}" />
+                            <div class="wh40k-prompt__weapon-info tw-flex-1 tw-min-w-0">
+                                <div class="wh40k-prompt__weapon-name tw-font-semibold tw-truncate">{{weapon.name}}</div>
                                 {{#if weapon.items}}
-                                    <div class="wh40k-prompt__weapon-details">
+                                    <div class="wh40k-prompt__weapon-details tw-text-[0.8rem] tw-truncate">
                                         {{#each weapon.items as |item|}}{{item.name}}{{#unless @last}}, {{/unless}}{{/each}}
                                     </div>
                                 {{/if}}
@@ -28,32 +28,32 @@
             </div>
         {{else}}
             {{!-- Weapon Header Panel --}}
-            <div class="wh40k-prompt__panel">
-                <div class="wh40k-prompt__header">
-                    <img class="wh40k-prompt__icon" alt="{{weapon.name}}" src="{{weapon.img}}" />
-                    <div class="wh40k-prompt__title-group">
-                        <h2 class="wh40k-prompt__title">{{weapon.name}}</h2>
-                        <div class="wh40k-prompt__subtitle">{{this.sourceActor.name}}</div>
+            <div class="wh40k-prompt__panel tw-relative tw-mb-4">
+                <div class="wh40k-prompt__header tw-flex tw-items-center tw-gap-[14px] tw-mb-4 tw-pb-[14px]">
+                    <img class="wh40k-prompt__icon tw-w-12 tw-h-12 tw-flex-shrink-0 tw-rounded tw-object-cover" alt="{{weapon.name}}" src="{{weapon.img}}" />
+                    <div class="wh40k-prompt__title-group tw-flex-1 tw-min-w-0">
+                        <h2 class="wh40k-prompt__title tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-wider tw-m-0 tw-truncate">{{weapon.name}}</h2>
+                        <div class="wh40k-prompt__subtitle tw-text-[0.9rem] tw-text-[color:var(--wh40k-text-secondary)] tw-mt-1 tw-truncate">{{this.sourceActor.name}}</div>
                     </div>
                 </div>
-                
+
                 {{!-- Target Display --}}
-                <div class="wh40k-prompt__target">
-                    <span class="wh40k-prompt__target-label">Target ({{baseChar}})</span>
-                    <span class="wh40k-prompt__target-value">{{baseTarget}}</span>
-                    <span class="wh40k-prompt__target-percent">%</span>
+                <div class="wh40k-prompt__target tw-flex tw-items-center tw-justify-between tw-py-2">
+                    <span class="wh40k-prompt__target-label tw-text-[0.85rem]">Target ({{baseChar}})</span>
+                    <span class="wh40k-prompt__target-value tw-font-bold tw-text-[1.5rem] tw-text-gold">{{baseTarget}}</span>
+                    <span class="wh40k-prompt__target-percent tw-text-[0.85rem]">%</span>
                 </div>
-                
+
                 {{#if weapon.usesAmmo}}
-                    <div class="wh40k-prompt__field">
-                        <span class="wh40k-prompt__label">Ammunition</span>
+                    <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                        <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Ammunition</span>
                         <span class="wh40k-prompt__value">{{ammoText}}</span>
                     </div>
                 {{/if}}
                 {{#each weapon.items as |item|}}
                     {{#if item.isAttackSpecial}}
-                        <div class="wh40k-prompt__field">
-                            <span class="wh40k-prompt__label">Special</span>
+                        <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                            <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Special</span>
                             <span class="wh40k-prompt__value">{{item.name}}</span>
                         </div>
                     {{/if}}
@@ -61,87 +61,87 @@
             </div>
 
             {{!-- Attack Options Panel --}}
-            <div class="wh40k-prompt__panel">
-                <h3 class="wh40k-prompt__section-title">Attack Options</h3>
-                <div class="wh40k-prompt__field">
-                    <span class="wh40k-prompt__label">Attack Type{{#if weapon.usesAmmo}} <small>(max {{fireRate}} hits)</small>{{/if}}</span>
+            <div class="wh40k-prompt__panel tw-relative tw-mb-4">
+                <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Attack Options</h3>
+                <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                    <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Attack Type{{#if weapon.usesAmmo}} <small>(max {{fireRate}} hits)</small>{{/if}}</span>
                     <select class="wh40k-prompt__select" name="action" id="action">
                         {{selectOptions actions selected=this.action}}
                     </select>
                 </div>
                 {{#if this.isCalledShot}}
-                    <div class="wh40k-prompt__field">
-                        <span class="wh40k-prompt__label">Called Shot Location</span>
+                    <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                        <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Called Shot Location</span>
                         <select class="wh40k-prompt__select" name="calledShotLocation" id="calledShotLocation">
                             {{selectOptions locations selected=this.calledShotLocation}}
                         </select>
                     </div>
                 {{/if}}
                 {{#if this.isLasWeapon}}
-                    <div class="wh40k-prompt__field">
-                        <span class="wh40k-prompt__label">Las Firing Mode</span>
+                    <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                        <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Las Firing Mode</span>
                         <select class="wh40k-prompt__select" name="lasMode" id="lasMode">
                             {{selectOptions (arrayToObject lasModes) selected=this.lasMode}}
                         </select>
                     </div>
                 {{/if}}
                 {{#if this.hasEyeOfVengeanceAvailable}}
-                    <div class="wh40k-prompt__checkbox-field">
-                        <span class="wh40k-prompt__label">Use Eye of Vengeance</span>
-                        <input class="wh40k-prompt__input" data-dtype="Boolean" type="checkbox" name="eyeOfVengeance" {{checked this.eyeOfVengeance}} />
+                    <div class="wh40k-prompt__checkbox-field tw-flex tw-items-center tw-justify-between tw-py-2">
+                        <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Use Eye of Vengeance</span>
+                        <input class="wh40k-prompt__input tw-cursor-pointer" data-dtype="Boolean" type="checkbox" name="eyeOfVengeance" {{checked this.eyeOfVengeance}} />
                     </div>
                 {{/if}}
             </div>
 
             {{!-- Modifiers Panel --}}
-            <div class="wh40k-prompt__panel">
-                <h3 class="wh40k-prompt__section-title">Modifiers</h3>
+            <div class="wh40k-prompt__panel tw-relative tw-mb-0">
+                <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Modifiers</h3>
                 {{#with this.modifiers}}
-                    <div class="wh40k-prompt__field">
-                        <span class="wh40k-prompt__label">Difficulty</span>
+                    <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                        <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Difficulty</span>
                         <select class="wh40k-prompt__select" data-dtype="Number" name="modifiers.difficulty">
                             {{selectOptions @root.difficulties selected=difficulty}}
                         </select>
                     </div>
                     {{#if @root.canAim}}
-                        <div class="wh40k-prompt__field">
-                            <span class="wh40k-prompt__label">Aim</span>
+                        <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                            <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Aim</span>
                             <select class="wh40k-prompt__select" data-dtype="Number" name="modifiers.aim">
                                 {{selectOptions @root.aims selected=aim}}
                             </select>
                         </div>
                     {{/if}}
-                    <div class="wh40k-prompt__field">
-                        <span class="wh40k-prompt__label">Additional Modifier</span>
-                        <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
+                    <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                        <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Additional Modifier</span>
+                        <input class="wh40k-prompt__input tw-text-right" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
                     </div>
                 {{/with}}
                 {{#if this.weapon.isRanged}}
-                    <div class="wh40k-prompt__divider"></div>
-                    <div class="wh40k-prompt__field">
-                        <span class="wh40k-prompt__label">Distance (m)</span>
-                        <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
+                    <div class="wh40k-prompt__divider tw-my-3"></div>
+                    <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                        <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Distance (m)</span>
+                        <input class="wh40k-prompt__input tw-text-right" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
                     </div>
-                    <div class="wh40k-prompt__range-info">
-                        <span class="wh40k-prompt__range-label">{{rangeName}}</span>
-                        <span class="wh40k-prompt__range-value {{#if (gt rangeBonus 0)}}wh40k-prompt__range-value--positive{{else if (lt rangeBonus 0)}}wh40k-prompt__range-value--negative{{else}}wh40k-prompt__range-value--neutral{{/if}}">{{#if (gt rangeBonus 0)}}+{{/if}}{{rangeBonus}}</span>
+                    <div class="wh40k-prompt__range-info tw-flex tw-justify-between tw-items-center tw-pt-1">
+                        <span class="wh40k-prompt__range-label tw-text-[0.85rem]">{{rangeName}}</span>
+                        <span class="wh40k-prompt__range-value tw-text-[0.85rem] tw-font-semibold {{#if (gt rangeBonus 0)}}wh40k-prompt__range-value--positive{{else if (lt rangeBonus 0)}}wh40k-prompt__range-value--negative{{else}}wh40k-prompt__range-value--neutral{{/if}}">{{#if (gt rangeBonus 0)}}+{{/if}}{{rangeBonus}}</span>
                     </div>
                     {{#if this.rangeModifiedBy}}
-                        <div class="wh40k-prompt__hint">
+                        <div class="wh40k-prompt__hint tw-flex tw-items-center tw-gap-1 tw-mt-2 tw-text-[0.85rem]">
                             <i class="fas fa-info-circle"></i>
                             Range modifier affected by {{this.rangeModifiedBy}}
                         </div>
                     {{/if}}
                     {{#if this.isMeltaRange}}
-                        <div class="wh40k-prompt__hint wh40k-prompt__hint--melta">
+                        <div class="wh40k-prompt__hint wh40k-prompt__hint--melta tw-flex tw-items-center tw-gap-1 tw-mt-2 tw-text-[0.85rem]">
                             <i class="fas fa-fire"></i>
                             Melta: Double penetration at this range
                         </div>
                     {{/if}}
                 {{/if}}
                 {{#if this.modifiers.attack}}
-                    <div class="wh40k-prompt__field">
-                        <span class="wh40k-prompt__label">Weapon Attack Mod</span>
+                    <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                        <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Weapon Attack Mod</span>
                         <span class="wh40k-prompt__value">{{modifiers.attack}}</span>
                     </div>
                 {{/if}}

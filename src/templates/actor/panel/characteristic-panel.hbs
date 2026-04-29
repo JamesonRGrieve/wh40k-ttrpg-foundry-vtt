@@ -1,22 +1,22 @@
 {{!-- Compact Characteristics Panel - Expandable Rows --}}
-<div class="wh40k-panel wh40k-char-panel">
+<div class="wh40k-panel">
     <h1 class="wh40k-panel-header">
         Characteristics
-        <button type="button" 
-                class="wh40k-char-setup-btn" 
+        <button type="button"
+                class="tw-inline-flex tw-items-center tw-justify-center tw-w-6 tw-h-6 tw-ml-auto tw-p-0 tw-bg-[rgba(36,107,131,0.2)] tw-border tw-border-[rgba(36,107,131,0.4)] tw-rounded tw-text-[rgba(36,107,131,0.8)] tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(36,107,131,0.4)] hover:tw-border-[rgba(36,107,131,0.6)] hover:tw-text-[#1a4f61] hover:tw-scale-110"
                 data-action="openCharacteristicSetup"
                 title="{{localize 'WH40K.CharacteristicSetup.OpenSetup'}}">
-            <i class="fa-solid fa-sliders"></i>
+            <i class="fa-solid fa-sliders tw-text-[0.8rem]"></i>
         </button>
     </h1>
-    <div class="wh40k-char-list">
+    <div class="tw-flex tw-flex-col tw-gap-[6px] tw-p-[6px]">
         {{#each actor.characteristics as |characteristic name|}}
             {{!-- Filter out Influence (Inf) - not a real RT characteristic --}}
             {{#unless (eq name "influence")}}
-            <details class="wh40k-char-item">
-                <summary class="wh40k-char-summary {{#if (gt this.originPathModifier 0)}}wh40k-char-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}wh40k-char-penalty{{/if}}">
+            <details class="tw-border tw-border-[rgba(74,55,40,0.15)] tw-rounded-md tw-bg-white/70 tw-overflow-hidden tw-transition-all hover:tw-border-[rgba(74,55,40,0.35)] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.1)] {{#if (gt this.originPathModifier 0)}}tw-bg-[rgba(0,128,0,0.15)]{{/if}}{{#if (lt this.originPathModifier 0)}}tw-bg-[rgba(139,0,0,0.15)]{{/if}}">
+                <summary class="tw-flex tw-items-center tw-justify-between tw-gap-[6px] tw-px-2 tw-py-[6px] tw-cursor-pointer tw-list-none tw-font-semibold tw-text-[#4a3728] hover:tw-bg-[rgba(74,55,40,0.05)] [&::-webkit-details-marker]:tw-hidden [&::marker]:tw-content-['']">
                     <span
-                        class="wh40k-char-name roll-characteristic actor-drag"
+                        class="roll-characteristic actor-drag tw-uppercase tw-tracking-[0.08em] tw-text-[#4a3728]"
                         data-item-type="characteristic"
                         data-item-id="{{name}}"
                         data-characteristic="{{name}}"
@@ -25,23 +25,23 @@
                         data-wh40k-tooltip="characteristic"
                         data-wh40k-tooltip-data="{{this.tooltipData}}"
                     >{{this.short}}</span>
-                    <button 
-                        type="button" 
-                        class="wh40k-stat-breakdown-btn"
+                    <button
+                        type="button"
+                        class="tw-inline-flex tw-items-center tw-justify-center tw-w-5 tw-h-5 tw-p-0 tw-bg-transparent tw-border-none tw-rounded tw-text-[color:var(--color-text-secondary,#94a3b8)] tw-cursor-pointer tw-transition-all tw-opacity-60 hover:tw-bg-[rgba(59,130,246,0.2)] hover:tw-text-[#93c5fd] hover:tw-opacity-100 hover:tw-scale-110"
                         data-action="showStatBreakdown"
                         data-stat-key="{{name}}"
                         title="Show stat breakdown">
-                        <i class="fa-solid fa-calculator"></i>
+                        <i class="fa-solid fa-calculator tw-text-[0.75rem]"></i>
                     </button>
-                    <span class="wh40k-char-total" title="Current total">{{this.total}}</span>
+                    <span class="tw-text-[0.95em] tw-text-[#2a1a0a] tw-font-bold" title="Current total">{{this.total}}</span>
                 </summary>
-                <div class="wh40k-char-controls">
+                <div class="tw-grid tw-grid-cols-1 tw-gap-[6px] tw-px-2 tw-pt-[6px] tw-pb-2 tw-border-t tw-border-[rgba(74,55,40,0.1)] tw-bg-white/90">
                     {{#if @root.editable}}
-                    <label class="wh40k-char-field">
-                        <span class="wh40k-char-field-label">Base</span>
+                    <label class="tw-grid tw-grid-cols-1 tw-gap-[2px] tw-text-[0.75em] tw-uppercase tw-tracking-[0.06em] tw-text-[#4a3728]">
+                        <span>Base</span>
                         <input
                             type="number"
-                            class="wh40k-char-direct-input"
+                            class="tw-border tw-border-[rgba(74,55,40,0.2)] tw-rounded tw-px-[6px] tw-py-1 tw-bg-white/90 tw-text-[0.9em] tw-text-center focus:tw-outline-none focus:tw-border-[rgba(74,55,40,0.4)]"
                             data-action="editCharacteristicField"
                             data-characteristic="{{name}}"
                             data-field="base"
@@ -53,14 +53,14 @@
                         />
                     </label>
                     {{else}}
-                    <label class="wh40k-char-field">
-                        <span class="wh40k-char-field-label">Base</span>
-                        <span class="wh40k-char-field-value">{{this.base}}</span>
+                    <label class="tw-grid tw-grid-cols-1 tw-gap-[2px] tw-text-[0.75em] tw-uppercase tw-tracking-[0.06em] tw-text-[#4a3728]">
+                        <span>Base</span>
+                        <span class="tw-text-[0.9em]">{{this.base}}</span>
                     </label>
                     {{/if}}
-                    <label class="wh40k-char-field">
-                        <span class="wh40k-char-field-label">Advances</span>
-                        <select class="wh40k-char-direct-input"
+                    <label class="tw-grid tw-grid-cols-1 tw-gap-[2px] tw-text-[0.75em] tw-uppercase tw-tracking-[0.06em] tw-text-[#4a3728]">
+                        <span>Advances</span>
+                        <select class="tw-border tw-border-[rgba(74,55,40,0.2)] tw-rounded tw-px-[6px] tw-py-1 tw-bg-white/90 tw-text-[0.9em] focus:tw-outline-none focus:tw-border-[rgba(74,55,40,0.4)]"
                             data-action="editCharacteristicField"
                             data-characteristic="{{name}}"
                             data-field="advance"
@@ -75,9 +75,9 @@
                         </select>
                     </label>
                     {{#if @root.editable}}
-                    <label class="wh40k-char-field">
-                        <span class="wh40k-char-field-label">Unnatural</span>
-                        <select class="wh40k-char-direct-input"
+                    <label class="tw-grid tw-grid-cols-1 tw-gap-[2px] tw-text-[0.75em] tw-uppercase tw-tracking-[0.06em] tw-text-[#4a3728]">
+                        <span>Unnatural</span>
+                        <select class="tw-border tw-border-[rgba(74,55,40,0.2)] tw-rounded tw-px-[6px] tw-py-1 tw-bg-white/90 tw-text-[0.9em] focus:tw-outline-none focus:tw-border-[rgba(74,55,40,0.4)]"
                             data-action="editCharacteristicField"
                             data-characteristic="{{name}}"
                             data-field="unnatural"
@@ -90,11 +90,11 @@
                         </select>
                     </label>
                     {{/if}}
-                    <label class="wh40k-char-field">
-                        <span class="wh40k-char-field-label">Modifier</span>
+                    <label class="tw-grid tw-grid-cols-1 tw-gap-[2px] tw-text-[0.75em] tw-uppercase tw-tracking-[0.06em] tw-text-[#4a3728]">
+                        <span>Modifier</span>
                         <input
                             type="number"
-                            class="wh40k-char-direct-input"
+                            class="tw-border tw-border-[rgba(74,55,40,0.2)] tw-rounded tw-px-[6px] tw-py-1 tw-bg-white/90 tw-text-[0.9em] tw-text-center focus:tw-outline-none focus:tw-border-[rgba(74,55,40,0.4)]"
                             data-action="editCharacteristicField"
                             data-characteristic="{{name}}"
                             data-field="modifier"
