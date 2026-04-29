@@ -1,102 +1,102 @@
 {{!-- Rogue Trader Psychic Action Card - Modern Design --}}
-<div class="wh40k-chat tw-font-ui">
-    <div class="wh40k-roll-card tw-relative tw-overflow-hidden tw-rounded-md">
+<div class="tw-font-ui">
+    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-gold tw-bg-[var(--wh40k-card-bg)] tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]">
         {{!-- Header --}}
-        <div class="wh40k-roll-card__header">
-            {{#if label}}<div class="wh40k-roll-card__actor">{{label}}</div>{{/if}}
+        <div class="tw-relative tw-px-4 tw-py-3 tw-bg-[linear-gradient(90deg,var(--wh40k-accent-overlay)_0%,transparent_100%)] tw-border-b tw-border-[var(--wh40k-border-color)]">
+            {{#if label}}<div class="tw-text-[0.75rem] tw-text-[var(--wh40k-card-muted)] tw-uppercase tw-tracking-[0.1em] tw-mb-1">{{label}}</div>{{/if}}
             {{#with rollData}}
-                <h2 class="wh40k-roll-card__title">{{name}}</h2>
-                {{#if action}}<div class="wh40k-roll-card__subtitle">{{action}}</div>{{/if}}
-                {{#if effectString}}<div class="wh40k-roll-card__subtitle">{{effectString}}</div>{{/if}}
+                <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em] tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{name}}</h2>
+                {{#if action}}<div class="tw-text-[0.85rem] tw-text-[var(--wh40k-card-text)] tw-mt-0.5 tw-opacity-90">{{action}}</div>{{/if}}
+                {{#if effectString}}<div class="tw-text-[0.85rem] tw-text-[var(--wh40k-card-text)] tw-mt-0.5 tw-opacity-90">{{effectString}}</div>{{/if}}
             {{/with}}
         </div>
-        
+
         {{!-- Body --}}
-        <div class="wh40k-roll-card__body">
+        <div class="tw-px-4 tw-py-3">
             {{#with rollData}}
                 {{!-- Modifiers Breakdown --}}
-                <div class="wh40k-roll-card__row">
-                    <span class="wh40k-roll-card__label">Base</span>
-                    <span class="wh40k-roll-card__value">{{baseTarget}}</span>
+                <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
+                    <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">Base</span>
+                    <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{baseTarget}}</span>
                 </div>
-                
+
                 {{#each activeModifiers}}
-                    <div class="wh40k-roll-card__row wh40k-roll-card__row--modifier">
-                        <span class="wh40k-roll-card__label">{{@key}}</span>
-                        <span class="wh40k-roll-card__value {{#if (gt this 0)}}wh40k-roll-card__value--positive{{else if (lt this 0)}}wh40k-roll-card__value--negative{{/if}}">
+                    <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem] tw-pl-3 tw-border-l-2 tw-border-l-[var(--wh40k-border-color)] tw-ml-1">
+                        <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{@key}}</span>
+                        <span class="tw-font-semibold {{#if (gt this 0)}}tw-text-[var(--wh40k-success-secondary)]{{else if (lt this 0)}}wh40k-roll-card__value--negative tw-text-[var(--wh40k-danger-secondary)]{{else}}tw-text-[var(--wh40k-card-text)]{{/if}}">
                             {{#if (gt this 0)}}+{{/if}}{{this}}
                         </span>
                     </div>
                 {{/each}}
-                
+
                 {{!-- Target Number --}}
-                <div class="wh40k-roll-card__target">
-                    <span class="wh40k-roll-card__label">Target</span>
-                    <span class="wh40k-roll-card__value">{{modifiedTarget}}</span>
+                <div class="tw-flex tw-justify-between tw-items-center tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-accent-overlay)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md">
+                    <span class="tw-text-[var(--wh40k-card-muted)] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">Target</span>
+                    <span class="tw-text-[1.2rem] tw-font-bold tw-text-gold">{{modifiedTarget}}</span>
                 </div>
-                
+
                 {{!-- Effects --}}
                 {{#each @root.effectOutput as |effect|}}
-                    <div class="wh40k-roll-card__effect">
-                        <span class="wh40k-roll-card__effect-name">{{effect.name}}</span>
-                        <span class="wh40k-roll-card__effect-desc">{{effect.effect}}</span>
+                    <div class="tw-flex tw-items-start tw-gap-[var(--wh40k-space-sm)] tw-py-1.5 tw-text-[0.85rem]">
+                        <span class="tw-font-semibold tw-text-gold tw-shrink-0">{{effect.name}}</span>
+                        <span class="tw-text-[var(--wh40k-card-text)] tw-opacity-90">{{effect.effect}}</span>
                     </div>
                 {{/each}}
-                
+
                 {{!-- Opposed Roll --}}
                 {{#if isOpposed}}
-                    <div class="wh40k-roll-card__row">
-                        <span class="wh40k-roll-card__label">Opposed {{opposedChar}}</span>
-                        <span class="wh40k-roll-card__value">{{opposedRoll.total}} vs {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}} DoS){{/if}}</span>
+                    <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
+                        <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">Opposed {{opposedChar}}</span>
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{opposedRoll.total}} vs {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}} DoS){{/if}}</span>
                     </div>
                 {{/if}}
-                
+
                 {{!-- Degrees & Result --}}
                 {{#if success}}
-                    <div class="wh40k-roll-card__degrees wh40k-roll-card__degrees--success">
-                        <span class="wh40k-roll-card__degrees-count">{{dos}}</span>
-                        <span class="wh40k-roll-card__degrees-label">Degrees of Success</span>
+                    <div class="tw-flex tw-justify-center tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md">
+                        <span class="tw-text-[1.5rem] tw-font-bold tw-text-[var(--wh40k-success-secondary)]">{{dos}}</span>
+                        <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">Degrees of Success</span>
                     </div>
-                    <div class="wh40k-roll-card__result wh40k-roll-card__result--success">
-                        <div class="wh40k-roll-card__result-label">Power Manifested</div>
-                        <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
+                    <div class="tw-relative tw-text-center tw-p-4 tw-my-3 tw-rounded-md tw-bg-[var(--wh40k-success-bg)] tw-border-2 tw-border-[var(--wh40k-success-primary)] tw-shadow-[0_0_20px_var(--wh40k-card-success-glow),inset_0_0_30px_rgba(45,138,78,0.1)]">
+                        <div class="tw-font-display tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.15em] tw-mb-1 tw-text-[var(--wh40k-success-secondary)]">Power Manifested</div>
+                        <div class="tw-text-[2.5rem] tw-font-bold tw-leading-none tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium)]">{{roll.total}}</div>
                     </div>
                 {{else}}
-                    <div class="wh40k-roll-card__degrees wh40k-roll-card__degrees--failure">
-                        <span class="wh40k-roll-card__degrees-count">{{dof}}</span>
-                        <span class="wh40k-roll-card__degrees-label">Degrees of Failure</span>
+                    <div class="tw-flex tw-justify-center tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md">
+                        <span class="tw-text-[1.5rem] tw-font-bold tw-text-[var(--wh40k-danger-secondary)]">{{dof}}</span>
+                        <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">Degrees of Failure</span>
                     </div>
-                    <div class="wh40k-roll-card__result wh40k-roll-card__result--failure">
-                        <div class="wh40k-roll-card__result-label">Power Failed</div>
-                        <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
+                    <div class="tw-relative tw-text-center tw-p-4 tw-my-3 tw-rounded-md tw-bg-[var(--wh40k-danger-bg)] tw-border-2 tw-border-[var(--wh40k-danger-primary)] tw-shadow-[0_0_20px_var(--wh40k-card-fail-glow),inset_0_0_30px_rgba(168,50,50,0.1)]">
+                        <div class="tw-font-display tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.15em] tw-mb-1 tw-text-[var(--wh40k-danger-secondary)]">Power Failed</div>
+                        <div class="tw-text-[2.5rem] tw-font-bold tw-leading-none tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium)]">{{roll.total}}</div>
                     </div>
                 {{/if}}
-                
+
                 {{!-- Controls --}}
-                <div class="wh40k-roll-card__controls">
+                <div class="tw-flex tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
                     {{#if success}}
-                        <button class="wh40k-roll-card__btn wh40k-roll-card__btn--damage roll-control__hide-control" data-toggle="{{@root.id}}">
-                            <span class="material-icons">bolt</span>
+                        <button class="roll-control__hide-control tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-toggle="{{@root.id}}">
+                            <span class="material-icons tw-text-[16px]">bolt</span>
                             <span>Effect</span>
                         </button>
                     {{else}}
-                        <button class="wh40k-roll-card__btn wh40k-roll-card__btn--disabled">
-                            <span class="material-icons">bolt</span>
+                        <button class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-not-allowed tw-whitespace-nowrap tw-opacity-40">
+                            <span class="material-icons tw-text-[16px]">bolt</span>
                             <span>Effect</span>
                         </button>
                     {{/if}}
-                    <button class="wh40k-roll-card__btn wh40k-roll-card__btn--fate roll-control__fate-reroll" data-roll-id="{{@root.id}}">
-                        <span class="material-icons">casino</span>
+                    <button class="roll-control__fate-reroll tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-powers-bg)] tw-border tw-border-[var(--wh40k-powers-border)] tw-rounded-md tw-text-[var(--wh40k-powers-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(106,32,144,0.2)] hover:tw-border-[var(--wh40k-powers-primary)] hover:tw-shadow-[0_0_12px_rgba(106,32,144,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
+                        <span class="material-icons tw-text-[16px]">casino</span>
                         <span>Re-roll</span>
                     </button>
                 </div>
             {{/with}}
-            
+
             {{!-- Collapsible Effect --}}
             {{#if rollData.success}}
-                <div id="{{@root.id}}" class="wh40k-roll-card__collapse" hidden>
-                    <div class="wh40k-roll-card__divider wh40k-roll-card__divider--ornate"></div>
-                    <div class="wh40k-roll-card__text">{{{psychicEffect}}}</div>
+                <div id="{{@root.id}}" class="tw-mt-2" hidden>
+                    <div class="tw-relative tw-h-3 tw-my-2.5 tw-opacity-50 [&::before]:tw-content-['⬥'] [&::before]:tw-absolute [&::before]:tw-left-1/2 [&::before]:tw-top-1/2 [&::before]:-tw-translate-x-1/2 [&::before]:-tw-translate-y-1/2 [&::before]:tw-text-gold [&::before]:tw-text-[10px] [&::after]:tw-content-[''] [&::after]:tw-absolute [&::after]:tw-top-1/2 [&::after]:tw-left-[10%] [&::after]:tw-right-[10%] [&::after]:tw-h-px [&::after]:tw-bg-[linear-gradient(90deg,transparent_0%,var(--wh40k-card-gold)_30%,transparent_48%,transparent_52%,var(--wh40k-card-gold)_70%,transparent_100%)]"></div>
+                    <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-l-gold tw-rounded-r tw-text-[0.85rem] tw-leading-relaxed tw-max-h-[150px] tw-overflow-y-auto">{{{psychicEffect}}}</div>
                 </div>
             {{/if}}
         </div>

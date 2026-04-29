@@ -1,82 +1,82 @@
 {{!-- Rogue Trader Item Card Chat Template - Modern Design --}}
-<div class="wh40k-chat tw-font-ui">
-    <div class="wh40k-item-card tw-relative tw-overflow-hidden tw-rounded-md {{#if isWeapon}}wh40k-item-card--weapon{{/if}}{{#if isArmour}}wh40k-item-card--armour{{/if}}{{#if isTalent}}wh40k-item-card--talent{{/if}}{{#if isPsychicPower}}wh40k-item-card--power{{/if}}{{#if isShipComponent}}wh40k-item-card--component{{/if}}" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" {{#if actor}}data-actor-id="{{actor._id}}" data-actor-uuid="{{actor.uuid}}"{{/if}}>
+<div class="tw-font-ui">
+    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-bronze)] tw-bg-[var(--wh40k-panel-bg-solid)] tw-font-ui tw-text-[var(--wh40k-text-dark)] tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium)]" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" {{#if actor}}data-actor-id="{{actor._id}}" data-actor-uuid="{{actor.uuid}}"{{/if}}>
         {{!-- Header --}}
-        <div class="wh40k-item-card__header">
-            <img class="wh40k-item-card__image" src="{{item.img}}" alt="{{item.name}}" />
-            <div class="wh40k-item-card__title-group">
-                <h2 class="wh40k-item-card__name">{{item.name}}</h2>
-                <span class="wh40k-item-card__type">{{itemTypeLabel}}</span>
+        <div class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-border-b tw-border-[var(--wh40k-border-color)] {{#if isWeapon}}tw-bg-[linear-gradient(135deg,var(--wh40k-wounds-bg)_0%,transparent_100%)] tw-border-b-[var(--wh40k-wounds-border)]{{else if isArmour}}tw-bg-[linear-gradient(135deg,var(--wh40k-skills-bg)_0%,transparent_100%)] tw-border-b-[var(--wh40k-skills-border)]{{else if isTalent}}tw-bg-[linear-gradient(135deg,var(--wh40k-talents-bg)_0%,transparent_100%)] tw-border-b-[var(--wh40k-talents-border)]{{else if isPsychicPower}}tw-bg-[linear-gradient(135deg,var(--wh40k-powers-bg)_0%,transparent_100%)] tw-border-b-[var(--wh40k-powers-border)]{{else if isShipComponent}}tw-bg-[linear-gradient(135deg,var(--wh40k-equipment-bg)_0%,transparent_100%)] tw-border-b-[var(--wh40k-equipment-border)]{{else}}tw-bg-[linear-gradient(135deg,var(--wh40k-accent-overlay)_0%,transparent_100%)]{{/if}}">
+            <img class="tw-w-12 tw-h-12 tw-rounded-md tw-object-cover tw-flex-shrink-0 tw-border-2 tw-border-[var(--wh40k-bronze)] tw-shadow-[0_2px_6px_var(--wh40k-shadow-medium)]" src="{{item.img}}" alt="{{item.name}}" />
+            <div class="tw-flex-1 tw-min-w-0">
+                <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-m-0 tw-leading-tight tw-shadow-[0_1px_0_var(--wh40k-text-shadow)]">{{item.name}}</h2>
+                <span class="tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.1em] tw-mt-0.5 tw-block">{{itemTypeLabel}}</span>
             </div>
         </div>
-        
+
         {{!-- Body --}}
-        <div class="wh40k-item-card__body">
-            <div class="wh40k-item-card__divider"></div>
-            
+        <div class="tw-p-3">
+            <div class="tw-h-px tw-my-2.5 tw-bg-[linear-gradient(90deg,transparent_0%,var(--wh40k-border-color)_20%,var(--wh40k-border-color)_80%,transparent_100%)]"></div>
+
             {{#if item.system.category}}
-                <div class="wh40k-item-card__field">
-                    <span class="wh40k-item-card__label">Category</span>
-                    <span class="wh40k-item-card__value">{{item.system.category}}</span>
+                <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-py-1 tw-text-base">
+                    <span class="tw-font-semibold tw-flex-shrink-0 tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Category</span>
+                    <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.category}}</span>
                 </div>
             {{/if}}
 
             {{#if item.system.requirements}}
-                <div class="wh40k-item-card__field">
-                    <span class="wh40k-item-card__label">Requirements</span>
-                    <span class="wh40k-item-card__value">{{item.system.requirements}}</span>
+                <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-py-1 tw-text-base">
+                    <span class="tw-font-semibold tw-flex-shrink-0 tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Requirements</span>
+                    <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.requirements}}</span>
                 </div>
             {{/if}}
 
             {{#if item.system.effect}}
-                <div class="wh40k-item-card__section">
-                    <h3 class="wh40k-item-card__section-title">Effect</h3>
-                    <div class="wh40k-item-card__description">{{{item.system.effect}}}</div>
+                <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                    <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">Effect</h3>
+                    <div class="tw-text-base tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{{item.system.effect}}}</div>
                 </div>
             {{/if}}
 
             {{#if item.system.benefit}}
-                <div class="wh40k-item-card__section">
-                    <h3 class="wh40k-item-card__section-title">Benefit</h3>
-                    <div class="wh40k-item-card__description">{{{item.system.benefit}}}</div>
+                <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                    <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">Benefit</h3>
+                    <div class="tw-text-base tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{{item.system.benefit}}}</div>
                 </div>
             {{/if}}
 
             {{!-- Weapon Stats --}}
             {{#if isWeapon}}
-                <div class="wh40k-item-card__stats">
-                    <div class="wh40k-item-card__stat">
-                        <span class="wh40k-item-card__stat-name">Class</span>
-                        <span class="wh40k-item-card__stat-value">{{item.system.class}}</span>
+                <div class="tw-grid tw-grid-cols-2 tw-gap-1.5 tw-p-2.5 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Class</span>
+                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.class}}</span>
                     </div>
-                    <div class="wh40k-item-card__stat">
-                        <span class="wh40k-item-card__stat-name">Type</span>
-                        <span class="wh40k-item-card__stat-value">{{item.system.type}}</span>
+                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Type</span>
+                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.type}}</span>
                     </div>
-                    <div class="wh40k-item-card__stat">
-                        <span class="wh40k-item-card__stat-name">Damage</span>
-                        <span class="wh40k-item-card__stat-value">{{#if item.system.damageLabel}}{{item.system.damageLabel}}{{else}}{{item.system.damage.formula}}{{#if item.system.damage.bonus}}+{{item.system.damage.bonus}}{{/if}} {{item.system.damage.type}}{{/if}}</span>
+                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Damage</span>
+                        <span class="tw-text-[var(--wh40k-text-dark)]">{{#if item.system.damageLabel}}{{item.system.damageLabel}}{{else}}{{item.system.damage.formula}}{{#if item.system.damage.bonus}}+{{item.system.damage.bonus}}{{/if}} {{item.system.damage.type}}{{/if}}</span>
                     </div>
-                    <div class="wh40k-item-card__stat">
-                        <span class="wh40k-item-card__stat-name">Pen</span>
-                        <span class="wh40k-item-card__stat-value">{{#if item.system.damage.penetration}}{{item.system.damage.penetration}}{{else}}{{item.system.penetration}}{{/if}}</span>
+                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Pen</span>
+                        <span class="tw-text-[var(--wh40k-text-dark)]">{{#if item.system.damage.penetration}}{{item.system.damage.penetration}}{{else}}{{item.system.penetration}}{{/if}}</span>
                     </div>
                     {{#if item.system.range}}
-                        <div class="wh40k-item-card__stat">
-                            <span class="wh40k-item-card__stat-name">Range</span>
-                            <span class="wh40k-item-card__stat-value">{{item.system.range}}</span>
+                        <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                            <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Range</span>
+                            <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.range}}</span>
                         </div>
                     {{/if}}
                     {{#if item.system.rof}}
-                        <div class="wh40k-item-card__stat">
-                            <span class="wh40k-item-card__stat-name">RoF</span>
-                            <span class="wh40k-item-card__stat-value">{{item.system.rof}}</span>
+                        <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                            <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">RoF</span>
+                            <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.rof}}</span>
                         </div>
                     {{/if}}
                     {{#if item.system.special}}
-                        <div class="wh40k-item-card__stat wh40k-item-card__stat--full">
-                            <span class="wh40k-item-card__stat-name">Special</span>
-                            <span class="wh40k-item-card__stat-value">{{item.system.special}}</span>
+                        <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm tw-col-span-2">
+                            <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Special</span>
+                            <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.special}}</span>
                         </div>
                     {{/if}}
                 </div>
@@ -84,116 +84,116 @@
 
             {{!-- Navigator Power Stats --}}
             {{#if isNavigatorPower}}
-                <div class="wh40k-item-card__stats">
-                    <div class="wh40k-item-card__stat">
-                        <span class="wh40k-item-card__stat-name">Use Time</span>
-                        <span class="wh40k-item-card__stat-value">{{item.system.useTime}}</span>
+                <div class="tw-grid tw-grid-cols-2 tw-gap-1.5 tw-p-2.5 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Use Time</span>
+                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.useTime}}</span>
                     </div>
-                    <div class="wh40k-item-card__stat">
-                        <span class="wh40k-item-card__stat-name">Range</span>
-                        <span class="wh40k-item-card__stat-value">{{item.system.range}}</span>
+                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Range</span>
+                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.range}}</span>
                     </div>
-                    <div class="wh40k-item-card__stat">
-                        <span class="wh40k-item-card__stat-name">Test</span>
-                        <span class="wh40k-item-card__stat-value">{{item.system.test}}</span>
+                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Test</span>
+                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.test}}</span>
                     </div>
-                    <div class="wh40k-item-card__stat">
-                        <span class="wh40k-item-card__stat-name">Sustain</span>
-                        <span class="wh40k-item-card__stat-value">{{item.system.sustain}}</span>
+                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Sustain</span>
+                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.sustain}}</span>
                     </div>
                 </div>
                 {{#if item.system.novice}}
-                    <div class="wh40k-item-card__section">
-                        <h3 class="wh40k-item-card__section-title">Novice</h3>
-                        <div class="wh40k-item-card__description">{{item.system.novice}}</div>
+                    <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                        <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">Novice</h3>
+                        <div class="tw-text-base tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{item.system.novice}}</div>
                     </div>
                 {{/if}}
                 {{#if item.system.adept}}
-                    <div class="wh40k-item-card__section">
-                        <h3 class="wh40k-item-card__section-title">Adept</h3>
-                        <div class="wh40k-item-card__description">{{item.system.adept}}</div>
+                    <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                        <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">Adept</h3>
+                        <div class="tw-text-base tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{item.system.adept}}</div>
                     </div>
                 {{/if}}
                 {{#if item.system.master}}
-                    <div class="wh40k-item-card__section">
-                        <h3 class="wh40k-item-card__section-title">Master</h3>
-                        <div class="wh40k-item-card__description">{{item.system.master}}</div>
+                    <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                        <h3 class="tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">Master</h3>
+                        <div class="tw-text-base tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{item.system.master}}</div>
                     </div>
                 {{/if}}
             {{/if}}
 
             {{!-- Ship Component Stats --}}
             {{#if isShipComponent}}
-                <div class="wh40k-item-card__stats">
-                    <div class="wh40k-item-card__stat">
-                        <span class="wh40k-item-card__stat-name">Type</span>
-                        <span class="wh40k-item-card__stat-value">{{item.system.componentType}}</span>
+                <div class="tw-grid tw-grid-cols-2 tw-gap-1.5 tw-p-2.5 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Type</span>
+                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.componentType}}</span>
                     </div>
-                    <div class="wh40k-item-card__stat">
-                        <span class="wh40k-item-card__stat-name">Hull</span>
-                        <span class="wh40k-item-card__stat-value">{{item.system.hullType}}</span>
+                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Hull</span>
+                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.hullType}}</span>
                     </div>
-                    <div class="wh40k-item-card__stat">
-                        <span class="wh40k-item-card__stat-name">Power</span>
-                        <span class="wh40k-item-card__stat-value">{{item.system.powerUsage}}</span>
+                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Power</span>
+                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.powerUsage}}</span>
                     </div>
-                    <div class="wh40k-item-card__stat">
-                        <span class="wh40k-item-card__stat-name">Space</span>
-                        <span class="wh40k-item-card__stat-value">{{item.system.spaceUsage}}</span>
+                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Space</span>
+                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.spaceUsage}}</span>
                     </div>
-                    <div class="wh40k-item-card__stat">
-                        <span class="wh40k-item-card__stat-name">SP Cost</span>
-                        <span class="wh40k-item-card__stat-value">{{item.system.spCost}}</span>
+                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">SP Cost</span>
+                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.spCost}}</span>
                     </div>
                 </div>
             {{/if}}
 
             {{!-- Generic Description --}}
             {{#if item.system.description.value}}
-                <div class="wh40k-item-card__section">
-                    <div class="wh40k-item-card__description">{{{item.system.description.value}}}</div>
+                <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-text-base tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{{item.system.description.value}}}</div>
                 </div>
             {{/if}}
         </div>
 
         {{!-- Properties/Qualities Tags --}}
         {{#if item.system.qualities}}
-            <div class="wh40k-item-card__properties">
+            <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-px-3 tw-py-2 tw-border-t tw-border-[var(--wh40k-border-color-light)]">
                 {{#each item.system.qualities as |quality|}}
-                    <span class="wh40k-item-card__property-tag">{{quality.name}}</span>
+                    <span class="tw-inline-block tw-px-2 tw-py-0.75 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded tw-text-[var(--wh40k-bronze)]">{{quality.name}}</span>
                 {{/each}}
             </div>
         {{/if}}
 
         {{!-- Footer --}}
         {{#if item.system.source}}
-            <div class="wh40k-item-card__footer">
-                <span class="wh40k-item-card__source">{{item.system.source}}</span>
+            <div class="tw-px-3 tw-py-2 tw-border-t tw-border-[var(--wh40k-border-color-light)] tw-text-right">
+                <span class="tw-text-xs tw-italic tw-text-[var(--wh40k-text-muted)]">{{item.system.source}}</span>
             </div>
         {{/if}}
 
         {{!-- Action Buttons --}}
         {{#if hasActions}}
-            <div class="wh40k-item-card__actions">
+            <div class="tw-flex tw-gap-1.5 tw-px-3 tw-py-2.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color-light)] tw-justify-center">
                 {{#if isRollable}}
-                    <button type="button" class="wh40k-item-card__btn wh40k-item-card__btn--roll" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="roll">
-                        <i class="fas fa-dice-d20"></i>
+                    <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-skills-primary)_0%,var(--wh40k-skills-secondary)_100%)] tw-border tw-border-[var(--wh40k-skills-primary)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="roll">
+                        <i class="fas fa-dice-d20 tw-text-[12px]"></i>
                         Roll
                     </button>
                 {{/if}}
                 {{#if isWeapon}}
-                    <button type="button" class="wh40k-item-card__btn wh40k-item-card__btn--attack" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="attack">
-                        <i class="fas fa-crosshairs"></i>
+                    <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-red)_0%,var(--wh40k-red-dark)_100%)] tw-border tw-border-[var(--wh40k-red-dark)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="attack">
+                        <i class="fas fa-crosshairs tw-text-[12px]"></i>
                         Attack
                     </button>
-                    <button type="button" class="wh40k-item-card__btn wh40k-item-card__btn--damage" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="rollDamage">
-                        <i class="fas fa-burst"></i>
+                    <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-gold)_0%,var(--wh40k-gold-dark)_100%)] tw-border tw-border-[var(--wh40k-gold-dark)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="rollDamage">
+                        <i class="fas fa-burst tw-text-[12px]"></i>
                         Damage
                     </button>
                 {{/if}}
                 {{#if isUsable}}
-                    <button type="button" class="wh40k-item-card__btn wh40k-item-card__btn--use" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="useItem">
-                        <i class="fas fa-hand-sparkles"></i>
+                    <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-powers-primary)_0%,var(--wh40k-powers-secondary)_100%)] tw-border tw-border-[var(--wh40k-powers-primary)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="useItem">
+                        <i class="fas fa-hand-sparkles tw-text-[12px]"></i>
                         Use
                     </button>
                 {{/if}}
