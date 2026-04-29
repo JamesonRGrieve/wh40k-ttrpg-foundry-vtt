@@ -28,7 +28,8 @@ test.describe('Storybook integration', () => {
     test('renders the composed DH2 character sheet story', async ({ page }) => {
         await page.goto('/iframe.html?id=actor-character-sheets--dark-heresy-2-biography');
 
-        await expect(page.locator('input[name="system.rank"]')).toBeVisible();
+        await expect(page.locator('input[value="Acolyte Vex"]').first()).toBeVisible();
+        await expect(page.locator('input[name="system.bio.gender"]')).toHaveValue('Non-binary');
         await expect(page.getByText('Character Journal')).toBeVisible();
         await expect(page.locator('[data-item-id="journal-1"]').first()).toBeAttached();
     });

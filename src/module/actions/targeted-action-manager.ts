@@ -149,7 +149,9 @@ export class TargetedActionManager {
         if (!rollData) return;
 
         // Weapon
-        const weapons = weapon ? [weapon] : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'weapon' && item.system.equipped) as WH40KItem[]);
+        const weapons = weapon
+            ? [weapon]
+            : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'weapon' && item.system.equipped === true) as WH40KItem[]);
         if (!weapons || weapons.length === 0) {
             ui.notifications.warn('Actor must have an equipped weapon!');
             return;

@@ -1,28 +1,29 @@
 {{!-- Armour Modification Properties Tab --}}
 <div class="wh40k-tab-content wh40k-armour-mod-properties" data-tab="properties">
-    <div class="wh40k-properties-grid">
+    <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-6">
         {{!-- Added Properties Column --}}
-        <div class="wh40k-properties-column wh40k-properties-column--added">
-            <header class="wh40k-properties-header">
-                <h3>
-                    <i class="fas fa-plus-circle"></i>
+        <div class="wh40k-properties-column wh40k-properties-column--added tw-rounded-lg tw-overflow-hidden tw-border tw-border-[rgba(212,197,166,0.15)]" style="background: rgba(255,255,255,0.02)">
+            <header class="wh40k-properties-header tw-px-5 tw-py-4 tw-border-b-2 tw-border-[rgba(46,204,113,0.3)]" style="background: linear-gradient(135deg,rgba(46,204,113,0.15) 0%,rgba(46,204,113,0.05) 100%)">
+                <h3 class="tw-flex tw-items-center tw-gap-2.5 tw-text-base tw-font-bold tw-m-0" style="color: rgba(255,255,255,0.95)">
+                    <i class="fas fa-plus-circle tw-text-[var(--wh40k-accent-green-bright)]"></i>
                     {{localize "WH40K.Modification.AddedProperties"}}
                 </h3>
             </header>
-            
-            <div class="wh40k-properties-list">
+
+            <div class="wh40k-properties-list tw-p-4 tw-min-h-[200px]">
                 {{#each addedPropertiesArray}}
-                    <div class="wh40k-property-tag wh40k-property-tag--added">
-                        <div class="wh40k-property-info">
-                            <span class="wh40k-property-label">{{label}}</span>
+                    <div class="wh40k-property-tag wh40k-property-tag--added tw-flex tw-items-start tw-gap-3 tw-px-4 tw-py-3.5 tw-mb-2 tw-rounded-md tw-border tw-border-[rgba(212,197,166,0.2)]" style="background: rgba(255,255,255,0.04)">
+                        <div class="wh40k-property-info tw-flex-1">
+                            <span class="wh40k-property-label tw-font-semibold tw-text-sm" style="color: rgba(255,255,255,0.9)">{{label}}</span>
                             {{#if description}}
-                                <span class="wh40k-property-desc">{{description}}</span>
+                                <span class="wh40k-property-desc tw-block tw-text-xs tw-mt-1" style="color: rgba(255,255,255,0.5)">{{description}}</span>
                             {{/if}}
                         </div>
-                        <button type="button" 
-                                class="wh40k-property-remove" 
-                                data-action="removeProperty" 
-                                data-property="{{key}}" 
+                        <button type="button"
+                                class="wh40k-property-remove tw-flex tw-items-center tw-justify-center tw-w-6 tw-h-6 tw-rounded-full tw-border-0 tw-cursor-pointer tw-text-xs tw-transition-all tw-shrink-0 hover:tw-bg-[rgba(239,68,68,0.2)] hover:tw-text-[#fca5a5]"
+                                style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.4)"
+                                data-action="removeProperty"
+                                data-property="{{key}}"
                                 data-list="added"
                                 data-tooltip="Remove property"
                                 {{disabled (not ../isEditable)}}>
@@ -30,25 +31,25 @@
                         </button>
                     </div>
                 {{else}}
-                    <p class="wh40k-empty-state">
-                        <i class="fas fa-info-circle"></i>
+                    <p class="wh40k-empty-state tw-text-center tw-p-4 tw-italic" style="color: rgba(255,255,255,0.4)">
+                        <i class="fas fa-info-circle tw-mr-2"></i>
                         No properties added
                     </p>
                 {{/each}}
             </div>
-            
+
             {{#if isEditable}}
-                <div class="wh40k-property-add">
-                    <label class="wh40k-field-label">Add Property</label>
-                    <select class="wh40k-property-select" data-add-list="added">
+                <div class="wh40k-property-add tw-flex tw-flex-col tw-gap-2 tw-p-4 tw-border-t tw-border-[rgba(212,197,166,0.15)]">
+                    <label class="wh40k-field-label tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Add Property</label>
+                    <select class="wh40k-property-select tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-bg-[var(--wh40k-bg-primary)]" data-add-list="added">
                         <option value="">-- Select Property --</option>
                         {{#each availablePropertiesArray}}
                             <option value="{{key}}">{{label}}</option>
                         {{/each}}
                     </select>
-                    <button type="button" 
-                            class="wh40k-property-add-button" 
-                            data-action="addProperty" 
+                    <button type="button"
+                            class="wh40k-property-add-button wh40k-btn wh40k-btn-primary"
+                            data-action="addProperty"
                             data-property=""
                             data-list="added">
                         <i class="fas fa-plus"></i>
@@ -57,29 +58,30 @@
                 </div>
             {{/if}}
         </div>
-        
+
         {{!-- Removed Properties Column --}}
-        <div class="wh40k-properties-column wh40k-properties-column--removed">
-            <header class="wh40k-properties-header">
-                <h3>
-                    <i class="fas fa-minus-circle"></i>
+        <div class="wh40k-properties-column wh40k-properties-column--removed tw-rounded-lg tw-overflow-hidden tw-border tw-border-[rgba(212,197,166,0.15)]" style="background: rgba(255,255,255,0.02)">
+            <header class="wh40k-properties-header tw-px-5 tw-py-4 tw-border-b-2 tw-border-[rgba(231,76,60,0.3)]" style="background: linear-gradient(135deg,rgba(231,76,60,0.15) 0%,rgba(231,76,60,0.05) 100%)">
+                <h3 class="tw-flex tw-items-center tw-gap-2.5 tw-text-base tw-font-bold tw-m-0" style="color: rgba(255,255,255,0.95)">
+                    <i class="fas fa-minus-circle tw-text-[var(--wh40k-accent-red)]"></i>
                     {{localize "WH40K.Modification.RemovedProperties"}}
                 </h3>
             </header>
-            
-            <div class="wh40k-properties-list">
+
+            <div class="wh40k-properties-list tw-p-4 tw-min-h-[200px]">
                 {{#each removedPropertiesArray}}
-                    <div class="wh40k-property-tag wh40k-property-tag--removed">
-                        <div class="wh40k-property-info">
-                            <span class="wh40k-property-label">{{label}}</span>
+                    <div class="wh40k-property-tag wh40k-property-tag--removed tw-flex tw-items-start tw-gap-3 tw-px-4 tw-py-3.5 tw-mb-2 tw-rounded-md tw-border tw-border-[rgba(212,197,166,0.2)]" style="background: rgba(255,255,255,0.04)">
+                        <div class="wh40k-property-info tw-flex-1">
+                            <span class="wh40k-property-label tw-font-semibold tw-text-sm" style="color: rgba(255,255,255,0.9)">{{label}}</span>
                             {{#if description}}
-                                <span class="wh40k-property-desc">{{description}}</span>
+                                <span class="wh40k-property-desc tw-block tw-text-xs tw-mt-1" style="color: rgba(255,255,255,0.5)">{{description}}</span>
                             {{/if}}
                         </div>
-                        <button type="button" 
-                                class="wh40k-property-remove" 
-                                data-action="removeProperty" 
-                                data-property="{{key}}" 
+                        <button type="button"
+                                class="wh40k-property-remove tw-flex tw-items-center tw-justify-center tw-w-6 tw-h-6 tw-rounded-full tw-border-0 tw-cursor-pointer tw-text-xs tw-transition-all tw-shrink-0 hover:tw-bg-[rgba(239,68,68,0.2)] hover:tw-text-[#fca5a5]"
+                                style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.4)"
+                                data-action="removeProperty"
+                                data-property="{{key}}"
                                 data-list="removed"
                                 data-tooltip="Remove property"
                                 {{disabled (not ../isEditable)}}>
@@ -87,25 +89,25 @@
                         </button>
                     </div>
                 {{else}}
-                    <p class="wh40k-empty-state">
-                        <i class="fas fa-info-circle"></i>
+                    <p class="wh40k-empty-state tw-text-center tw-p-4 tw-italic" style="color: rgba(255,255,255,0.4)">
+                        <i class="fas fa-info-circle tw-mr-2"></i>
                         No properties removed
                     </p>
                 {{/each}}
             </div>
-            
+
             {{#if isEditable}}
-                <div class="wh40k-property-add">
-                    <label class="wh40k-field-label">Remove Property</label>
-                    <select class="wh40k-property-select" data-add-list="removed">
+                <div class="wh40k-property-add tw-flex tw-flex-col tw-gap-2 tw-p-4 tw-border-t tw-border-[rgba(212,197,166,0.15)]">
+                    <label class="wh40k-field-label tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Remove Property</label>
+                    <select class="wh40k-property-select tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-bg-[var(--wh40k-bg-primary)]" data-add-list="removed">
                         <option value="">-- Select Property --</option>
                         {{#each availablePropertiesArray}}
                             <option value="{{key}}">{{label}}</option>
                         {{/each}}
                     </select>
-                    <button type="button" 
-                            class="wh40k-property-add-button" 
-                            data-action="addProperty" 
+                    <button type="button"
+                            class="wh40k-property-add-button wh40k-btn wh40k-btn-primary"
+                            data-action="addProperty"
                             data-property=""
                             data-list="removed">
                         <i class="fas fa-minus"></i>
@@ -116,6 +118,20 @@
         </div>
     </div>
 </div>
+
+<script>
+// Wire up the select dropdowns to the add buttons
+document.querySelectorAll('.wh40k-property-select').forEach(select => {
+    select.addEventListener('change', (e) => {
+        const list = e.target.dataset.addList;
+        const button = e.target.parentElement.querySelector(`[data-list="${list}"]`);
+        if (button) {
+            button.dataset.property = e.target.value;
+            button.disabled = !e.target.value;
+        }
+    });
+});
+</script>
 
 <script>
 // Wire up the select dropdowns to the add buttons

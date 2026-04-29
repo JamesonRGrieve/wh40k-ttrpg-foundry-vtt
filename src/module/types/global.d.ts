@@ -125,7 +125,9 @@ export interface WH40KRollConfig {
 export interface WH40KItemModifiers {
     characteristics?: Record<string, number>;
     skills?: Record<string, number>;
-    other?: Array<{ key: string; value: number }>;
+    combat?: Record<string, number>;
+    resources?: { wounds?: number; fate?: number; [key: string]: unknown };
+    other?: Array<{ key: string; value: number; label?: string }>;
     wounds?: number;
     fate?: number;
     talents?: string[];
@@ -540,9 +542,9 @@ declare global {
     }
 
     interface HooksAPI {
-        on(event: string, fn: HookCallback): number;
-        once(event: string, fn: HookCallback): number;
-        off(event: string, fn: HookCallback | number): void;
+        on<T extends Function>(event: string, fn: T): number;
+        once<T extends Function>(event: string, fn: T): number;
+        off(event: string, fn: HookCallback | number | Function): void;
         call(event: string, ...args: unknown[]): boolean;
         callAll(event: string, ...args: unknown[]): boolean;
     }
@@ -622,11 +624,35 @@ declare global {
         updateEmbeddedDocuments(type: string, data: Record<string, unknown>[], options?: Record<string, unknown>): Promise<FoundryDocumentBase[]>;
         deleteEmbeddedDocuments(type: string, ids: string[], options?: Record<string, unknown>): Promise<FoundryDocumentBase[]>;
         getEmbeddedDocument(type: string, id: string, options?: Record<string, unknown>): FoundryDocumentBase | undefined;
+        getEmbeddedCollection(type: string): foundry.utils.Collection<any>;
+    }
+
+    interface ActiveEffect extends FoundryDocumentBase {
+        name: string;
+        disabled: boolean;
+        icon?: string;
+        duration: {
+            seconds?: number;
+            rounds?: number;
+            turns?: number;
+            startRound?: number;
+            startTurn?: number;
+            startTime?: number;
+        };
+        changes: Array<{ key: string; value: string | number; mode: number; priority?: number }>;
+        origin?: string;
+        isTemporary: boolean;
+        sourceName: string;
+    }
+
+    interface FoundryConfig extends Record<string, unknown> {
+        wh40k: import('../config.ts').WH40KSystemConfig;
+        WH40K: import('../config.ts').WH40KSystemConfig;
     }
 
     interface ActorBase extends FoundryDocumentBase {
         items: foundry.utils.Collection<ItemBase>;
-        effects: foundry.utils.Collection<unknown>;
+        effects: foundry.utils.Collection<ActiveEffect>;
         prototypeToken: Record<string, unknown>;
         getActiveTokens(linked?: boolean, document?: boolean): Token[];
         getRollData(): Record<string, unknown>;
@@ -634,8 +660,59 @@ declare global {
 
     interface ItemBase extends FoundryDocumentBase {
         actor: ActorBase | null;
-        effects: foundry.utils.Collection<unknown>;
+        effects: foundry.utils.Collection<ActiveEffect>;
         getRollData(): Record<string, unknown>;
+        toChat(): Promise<unknown>;
+    }
+
+    interface Combatant {
+        id: string;
+        actor: WH40KBaseActor | null;
+        token: Token | null;
+        initiative: number | null;
+        defeated: boolean;
+        hidden: boolean;
+    }
+
+    interface Combat {
+        id: string;
+        round: number;
+        turn: number | null;
+        turns: Combatant[];
+        combatants: foundry.utils.Collection<Combatant>;
+        active: boolean;
+    }
+
+    interface TokenDocument {
+        id: string;
+        name: string;
+        actor: WH40KBaseActor | null;
+        hidden: boolean;
+        x: number;
+        y: number;
+        elevation: number;
+        update(data: Record<string, unknown>, options?: Record<string, unknown>): Promise<this>;
+    }
+
+    interface Token {
+        id: string;
+        name: string;
+        actor: WH40KBaseActor | null;
+        document: TokenDocument;
+        controlled: boolean;
+    }
+
+    interface Canvas {
+        tokens: {
+            controlled: Token[];
+            get(id: string): Token | undefined;
+            placeables: Token[];
+        };
+        grid: {
+            size: number;
+            distance: number;
+            measurePath(waypoints: any[], options?: any): { distance: number } | number;
+        } | null;
     }
 
     interface ActorClass {
@@ -664,7 +741,7 @@ declare global {
     let game: ReadyGame;
     let canvas: Canvas;
     let ui: UI;
-    let CONFIG: Record<string, any>;
+    let CONFIG: FoundryConfig;
     let Hooks: HooksAPI;
     let Actor: ActorClass;
     let Item: ItemClass;
@@ -675,12 +752,6 @@ declare global {
     let renderTemplate: (template: string, data: Record<string, unknown>) => Promise<string>;
     let Hit: unknown;
     let AssignDamageData: unknown;
-
-    // Extend CONFIG with wh40k system config (both cases used in codebase)
-    namespace CONFIG {
-        let wh40k: import('../config.ts').WH40KSystemConfig;
-        let WH40K: import('../config.ts').WH40KSystemConfig;
-    }
 }
 
 export interface WH40KBaseActorDocument extends WH40KBaseActor {

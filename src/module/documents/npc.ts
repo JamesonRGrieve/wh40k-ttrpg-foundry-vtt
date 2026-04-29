@@ -1,6 +1,7 @@
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.ts';
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import type NPCData from '../data/actor/npc.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 
@@ -11,6 +12,8 @@ import { WH40KBaseActor } from './base-actor.ts';
  * @extends {WH40KBaseActor}
  */
 export class WH40KNPC extends WH40KBaseActor {
+    declare system: NPCData;
+
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
@@ -89,7 +92,8 @@ export class WH40KNPC extends WH40KBaseActor {
         };
 
         // If horde type, show magnitude instead of wounds
-        if (data.system?.type === 'horde' || data.system?.type === 'swarm') {
+        const systemData = data.system as Record<string, unknown> | undefined;
+        if (systemData?.type === 'horde' || systemData?.type === 'swarm') {
             initData['token.bar1'] = { attribute: 'horde.magnitude' };
         }
 
@@ -125,7 +129,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {string} [flavor] - Optional flavor text.
      * @returns {Promise<Roll>}
      */
-    async rollCharacteristic(characteristicKey, flavor): Promise<void> {
+    async rollCharacteristic(characteristicKey: string, flavor?: string): Promise<void> {
         const char = this.system.characteristics[characteristicKey];
         if (!char) {
             ui.notifications.warn(`Unknown characteristic: ${characteristicKey}`);
@@ -147,7 +151,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {number} weaponIndex - Index of the weapon in the simple weapons array.
      * @returns {Promise<Roll>}
      */
-    async rollSimpleWeapon(weaponIndex): Promise<void> {
+    async rollSimpleWeapon(weaponIndex: number): Promise<void> {
         const weapons = this.system.weapons?.simple || [];
         const weapon = weapons[weaponIndex];
         if (!weapon) {
@@ -217,7 +221,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {string} [flavor] - Optional flavor text.
      * @returns {Promise<Roll>}
      */
-    async rollSkill(skillName, flavor): Promise<unknown> {
+    async rollSkill(skillName: string, flavor?: string): Promise<unknown> {
         const target = this.system.getSkillTarget(skillName);
         const skill = this.system.trainedSkills[skillName];
         const skillLabel = skill?.name || skillName;
@@ -246,7 +250,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {boolean} [options.ignoreToughness=false] - Whether to ignore toughness bonus.
      * @returns {Promise<Actor>}
      */
-    async applyDamage(amount, location = 'body', options: Record<string, unknown> = {}): Promise<unknown> {
+    async applyDamage(amount: number, location = 'body', options: Record<string, unknown> = {}): Promise<unknown> {
         const { ignoreArmour = false, ignoreToughness = false } = options;
 
         // Mark actor as hit this round (for Good armour bonus tracking)
@@ -285,7 +289,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {number} amount - Amount of wounds to heal.
      * @returns {Promise<Actor>}
      */
-    healWounds(amount): unknown {
+    healWounds(amount: number): unknown {
         const newWounds = Math.min(this.system.wounds.max, this.system.wounds.value + amount);
         return (this as any).update({ 'system.wounds.value': newWounds });
     }
@@ -299,7 +303,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {number} newThreatLevel - The new threat level (1-30).
      * @returns {Promise<Actor>}
      */
-    scaleToThreat(newThreatLevel): unknown {
+    scaleToThreat(newThreatLevel: number): unknown {
         const currentThreat = this.threatLevel;
         const diff = newThreatLevel - currentThreat;
 
@@ -314,7 +318,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {number} factor - The scaling factor (e.g., 1.2 for +20%, 0.8 for -20%).
      * @returns {Promise<Actor>}
      */
-    adjustStatsByPercent(factor): void {
+    adjustStatsByPercent(factor: number): void {
         const updates = {};
 
         // Scale characteristics
@@ -485,7 +489,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {string} [source] - Source of the damage.
      * @returns {Promise<Actor>}
      */
-    applyMagnitudeDamage(amount, source = ''): unknown {
+    applyMagnitudeDamage(amount: number, source = ''): unknown {
         if (typeof this.system.applyMagnitudeDamage === 'function') {
             return this.system.applyMagnitudeDamage(amount, source);
         }
@@ -499,7 +503,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {string} [source] - Source of the restoration.
      * @returns {Promise<Actor>}
      */
-    restoreMagnitude(amount, source = ''): unknown {
+    restoreMagnitude(amount: number, source = ''): unknown {
         if (typeof this.system.restoreMagnitude === 'function') {
             return this.system.restoreMagnitude(amount, source);
         }

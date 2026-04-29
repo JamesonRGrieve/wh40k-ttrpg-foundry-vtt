@@ -1,8 +1,8 @@
 {
   "totals": {
     "any": 9,
-    "asAny": 827,
-    "tsExpectError": 19,
+    "asAny": 559,
+    "tsExpectError": 9,
     "tsIgnore": 0
   },
   "byDir": {
@@ -14,8 +14,8 @@
     },
     "applications": {
       "any": 3,
-      "asAny": 722,
-      "tsExpectError": 19,
+      "asAny": 454,
+      "tsExpectError": 9,
       "tsIgnore": 0
     },
     "canvas": {

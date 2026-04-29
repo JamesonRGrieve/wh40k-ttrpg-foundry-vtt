@@ -9,6 +9,154 @@
  * - Scaling formulas for balanced NPC creation
  */
 
+/* -------------------------------------------- */
+/*  Internal shape interfaces                   */
+/* -------------------------------------------- */
+
+interface ThreatTier {
+    name: string;
+    minThreat: number;
+    maxThreat: number;
+    charMin: number;
+    charMax: number;
+    woundsBase: number;
+    woundsMult: number;
+    armourBase: number;
+    skillBonus: number;
+}
+
+interface RoleProfile {
+    name: string;
+    description: string;
+    primaryStats: string[];
+    secondaryStats: string[];
+    skills: string[];
+    weaponPreset: string;
+}
+
+interface WeaponDefinition {
+    name: string;
+    damage: string;
+    pen: number;
+    range: string;
+    rof: string;
+    clip: number;
+    reload: string;
+    special: string;
+    class: string;
+}
+
+interface EquipmentPreset {
+    name: string;
+    description: string;
+    weapons: WeaponDefinition[];
+    armour: number;
+}
+
+interface NPCCharacteristic {
+    label: string;
+    short: string;
+    base: number;
+    modifier: number;
+    unnatural: number;
+    total: number;
+    bonus: number;
+}
+
+interface NPCCharacteristics {
+    [key: string]: NPCCharacteristic;
+}
+
+interface NPCSkillEntry {
+    name: string;
+    characteristic: string;
+    trained: boolean;
+    plus10: boolean;
+    plus20: boolean;
+    bonus: number;
+}
+
+interface NPCSkills {
+    [key: string]: NPCSkillEntry;
+}
+
+interface NPCArmourLocations {
+    head: number;
+    body: number;
+    leftArm: number;
+    rightArm: number;
+    leftLeg: number;
+    rightLeg: number;
+}
+
+interface NPCArmourData {
+    mode: string;
+    total: number;
+    locations: NPCArmourLocations;
+}
+
+interface NPCWeapon {
+    name: string;
+    damage: string;
+    pen: number;
+    range: string;
+    rof: string;
+    clip: number;
+    reload: string;
+    special: string;
+    class: string;
+}
+
+interface NPCWeaponsData {
+    mode: string;
+    simple: NPCWeapon[];
+}
+
+interface NPCWounds {
+    max: number;
+    value: number;
+    critical: number;
+}
+
+interface NPCMovement {
+    half: number;
+    full: number;
+    charge: number;
+    run: number;
+}
+
+interface NPCSystemData {
+    faction: unknown;
+    subfaction: string;
+    allegiance: string;
+    role: unknown;
+    type: unknown;
+    threatLevel: unknown;
+    characteristics: NPCCharacteristics;
+    wounds: NPCWounds;
+    movement: NPCMovement;
+    size: number;
+    initiative: { characteristic: string; base: string; bonus: number };
+    trainedSkills: NPCSkills;
+    weapons: NPCWeaponsData;
+    armour: NPCArmourData;
+    specialAbilities: string;
+    customStats: Record<string, unknown>;
+    pinnedAbilities: unknown[];
+    template: string;
+    quickNotes: string;
+    tags: unknown[];
+    description: string;
+    tactics: string;
+    source: string;
+    horde: Record<string, unknown>;
+    [key: string]: unknown;
+}
+
+interface ScaleUpdates {
+    [key: string]: unknown;
+}
+
 /**
  * Threat Calculator utility class.
  * All methods are static - no instantiation needed.
@@ -23,7 +171,7 @@ export default class ThreatCalculator {
      * Each tier defines the characteristic range and multipliers.
      * @type {Object<string, Object>}
      */
-    static THREAT_TIERS = {
+    static THREAT_TIERS: Record<string, ThreatTier> = {
         minor: {
             name: 'Minor',
             minThreat: 1,
@@ -85,7 +233,7 @@ export default class ThreatCalculator {
      * Role definitions with characteristic focus and skill sets.
      * @type {Object<string, Object>}
      */
-    static ROLE_PROFILES = {
+    static ROLE_PROFILES: Record<string, RoleProfile> = {
         bruiser: {
             name: 'Bruiser',
             description: 'Close combat specialist',
@@ -140,7 +288,7 @@ export default class ThreatCalculator {
      * Equipment presets for weapon loadouts.
      * @type {Object<string, Object>}
      */
-    static EQUIPMENT_PRESETS = {
+    static EQUIPMENT_PRESETS: Record<string, EquipmentPreset> = {
         melee: {
             name: 'Melee',
             description: 'Melee weapons with medium armor',
@@ -199,7 +347,7 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level (1-30).
      * @returns {Object} The tier configuration.
      */
-    static getTier(threatLevel: number): unknown {
+    static getTier(threatLevel: number): ThreatTier {
         for (const tier of Object.values(this.THREAT_TIERS)) {
             if (threatLevel >= tier.minThreat && threatLevel <= tier.maxThreat) {
                 return tier;
@@ -225,7 +373,7 @@ export default class ThreatCalculator {
      */
     static getTierInfo(threatLevel: number): Record<string, unknown> {
         const tier = this.getTier(threatLevel);
-        const colors = {
+        const colors: Record<string, string> = {
             Minor: '#4caf50',
             Standard: '#2196f3',
             Tough: '#ff9800',
@@ -234,7 +382,7 @@ export default class ThreatCalculator {
         };
         return {
             label: tier.name,
-            color: colors[tier.name] || '#666',
+            color: colors[tier.name] ?? '#666',
         };
     }
 
@@ -248,9 +396,9 @@ export default class ThreatCalculator {
      * @param {string} role - The NPC role (bruiser, sniper, etc.).
      * @returns {Object} Characteristics object ready for NPC system data.
      */
-    static generateCharacteristics(threatLevel: number, role: string = 'specialist'): Record<string, unknown> {
+    static generateCharacteristics(threatLevel: number, role: string = 'specialist'): NPCCharacteristics {
         const tier = this.getTier(threatLevel);
-        const profile = this.ROLE_PROFILES[role] || this.ROLE_PROFILES.specialist;
+        const profile = this.ROLE_PROFILES[role] ?? this.ROLE_PROFILES.specialist;
 
         // Calculate position within tier (0.0 to 1.0)
         const tierRange = tier.maxThreat - tier.minThreat;
@@ -259,7 +407,7 @@ export default class ThreatCalculator {
         // Base value interpolated between tier min and max
         const baseValue = Math.round(tier.charMin + (tier.charMax - tier.charMin) * positionInTier);
 
-        const characteristics = {};
+        const characteristics: NPCCharacteristics = {};
         const allStats = [
             'weaponSkill',
             'ballisticSkill',
@@ -273,7 +421,7 @@ export default class ThreatCalculator {
             'influence',
         ];
 
-        const labels = {
+        const labels: Record<string, string> = {
             weaponSkill: 'Weapon Skill',
             ballisticSkill: 'Ballistic Skill',
             strength: 'Strength',
@@ -286,7 +434,7 @@ export default class ThreatCalculator {
             influence: 'Influence',
         };
 
-        const shorts = {
+        const shorts: Record<string, string> = {
             weaponSkill: 'WS',
             ballisticSkill: 'BS',
             strength: 'S',
@@ -319,8 +467,8 @@ export default class ThreatCalculator {
             value = Math.max(10, Math.min(99, value));
 
             characteristics[stat] = {
-                label: labels[stat],
-                short: shorts[stat],
+                label: labels[stat] ?? stat,
+                short: shorts[stat] ?? stat,
                 base: value,
                 modifier: 0,
                 unnatural: 0,
@@ -338,7 +486,7 @@ export default class ThreatCalculator {
      * @param {string} type - The NPC type (troop, elite, etc.).
      * @returns {Object} Wounds object for NPC system data.
      */
-    static generateWounds(threatLevel: number, type: string = 'troop'): Record<string, unknown> {
+    static generateWounds(threatLevel: number, type: string = 'troop'): NPCWounds {
         const tier = this.getTier(threatLevel);
 
         // Base wounds from tier
@@ -350,7 +498,7 @@ export default class ThreatCalculator {
         wounds += Math.round(positionInTier * 5);
 
         // Adjust by type
-        const typeMultipliers = {
+        const typeMultipliers: Record<string, number> = {
             troop: 0.8,
             elite: 1.2,
             master: 1.5,
@@ -361,7 +509,7 @@ export default class ThreatCalculator {
             xenos: 1.1,
         };
 
-        wounds = Math.round(wounds * (typeMultipliers[type] || 1.0));
+        wounds = Math.round(wounds * (typeMultipliers[type] ?? 1.0));
 
         return {
             max: wounds,
@@ -376,11 +524,11 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level.
      * @returns {Object} Trained skills object for NPC system data.
      */
-    static generateSkills(role: string, threatLevel: number): Record<string, unknown> {
-        const profile = this.ROLE_PROFILES[role] || this.ROLE_PROFILES.specialist;
+    static generateSkills(role: string, threatLevel: number): NPCSkills {
+        const profile = this.ROLE_PROFILES[role] ?? this.ROLE_PROFILES.specialist;
         const tier = this.getTier(threatLevel);
 
-        const skills = {};
+        const skills: NPCSkills = {};
 
         // Add role-specific skills
         for (const skillName of profile.skills) {
@@ -389,7 +537,7 @@ export default class ThreatCalculator {
             if (threatLevel >= 11) level = 'plus10';
             if (threatLevel >= 21) level = 'plus20';
 
-            const charMap = {
+            const charMap: Record<string, string> = {
                 acrobatics: 'agility',
                 athletics: 'strength',
                 awareness: 'perception',
@@ -423,7 +571,7 @@ export default class ThreatCalculator {
 
             skills[skillName] = {
                 name: skillName,
-                characteristic: charMap[skillName] || 'perception',
+                characteristic: charMap[skillName] ?? 'perception',
                 trained: true,
                 plus10: level === 'plus10' || level === 'plus20',
                 plus20: level === 'plus20',
@@ -464,14 +612,14 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level.
      * @returns {Object} Weapons object for NPC system data.
      */
-    static generateWeapons(preset: unknown, threatLevel: number): unknown[] {
-        const equipment = this.EQUIPMENT_PRESETS[preset] || this.EQUIPMENT_PRESETS.mixed;
+    static generateWeapons(preset: string, threatLevel: number): NPCWeaponsData {
+        const equipment = this.EQUIPMENT_PRESETS[preset] ?? this.EQUIPMENT_PRESETS.mixed;
 
         // Scale weapon damage based on threat
         const damageBonus = Math.floor(threatLevel / 5);
         const penBonus = Math.floor(threatLevel / 10);
 
-        const weapons = equipment.weapons.map((w) => ({
+        const weapons: NPCWeapon[] = equipment.weapons.map((w) => ({
             ...w,
             damage: this._scaleDamage(w.damage, damageBonus),
             pen: w.pen + penBonus,
@@ -489,8 +637,8 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level.
      * @returns {Object} Armour object for NPC system data.
      */
-    static generateArmour(preset: unknown, threatLevel: number): Record<string, unknown> {
-        const equipment = this.EQUIPMENT_PRESETS[preset] || this.EQUIPMENT_PRESETS.mixed;
+    static generateArmour(preset: string, threatLevel: number): NPCArmourData {
+        const equipment = this.EQUIPMENT_PRESETS[preset] ?? this.EQUIPMENT_PRESETS.mixed;
 
         // Scale armour based on threat
         const armourBonus = Math.floor(threatLevel / 5);
@@ -515,7 +663,7 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level.
      * @returns {Object} Movement object for NPC system data.
      */
-    static generateMovement(threatLevel: number): Record<string, unknown> {
+    static generateMovement(threatLevel: number): NPCMovement {
         // Base movement increases slightly with threat
         const base = 3 + Math.floor(threatLevel / 10);
 
@@ -579,7 +727,7 @@ export default class ThreatCalculator {
      * @param {boolean} [config.isHorde] - Whether this is a horde.
      * @returns {Object} Complete system data object.
      */
-    static generateNPCData(config: Record<string, unknown>): Record<string, unknown> {
+    static generateNPCData(config: Record<string, unknown>): NPCSystemData {
         const { threatLevel = 5, role = 'specialist', type = 'troop', preset = 'mixed', faction = '', isHorde = false } = config;
 
         const actualType = isHorde ? 'horde' : type;
@@ -591,18 +739,18 @@ export default class ThreatCalculator {
             role: role,
             type: actualType,
             threatLevel: threatLevel,
-            characteristics: this.generateCharacteristics(threatLevel, role),
-            wounds: this.generateWounds(threatLevel, actualType),
-            movement: this.generateMovement(threatLevel),
+            characteristics: this.generateCharacteristics(threatLevel as number, role as string),
+            wounds: this.generateWounds(threatLevel as number, actualType as string),
+            movement: this.generateMovement(threatLevel as number),
             size: 4,
             initiative: {
                 characteristic: 'agility',
                 base: '1d10',
                 bonus: 0,
             },
-            trainedSkills: this.generateSkills(role, threatLevel),
-            weapons: this.generateWeapons(preset, threatLevel),
-            armour: this.generateArmour(preset, threatLevel),
+            trainedSkills: this.generateSkills(role as string, threatLevel as number),
+            weapons: this.generateWeapons(preset as string, threatLevel as number),
+            armour: this.generateArmour(preset as string, threatLevel as number),
             specialAbilities: '',
             customStats: {
                 enabled: false,
@@ -623,7 +771,7 @@ export default class ThreatCalculator {
             description: '',
             tactics: '',
             source: '',
-            horde: this.generateHorde(isHorde || actualType === 'horde' || actualType === 'swarm', threatLevel),
+            horde: this.generateHorde(Boolean(isHorde) || actualType === 'horde' || actualType === 'swarm', threatLevel as number),
         };
     }
 
@@ -644,14 +792,14 @@ export default class ThreatCalculator {
      * @param {boolean} options.scaleArmour - Scale armour values.
      * @returns {Object} Updated system data with scaled values.
      */
-    static scaleToThreat(currentData: unknown, currentThreat: unknown, newThreat: unknown, options: Record<string, unknown> = {}): Record<string, unknown> {
+    static scaleToThreat(currentData: NPCSystemData, currentThreat: number, newThreat: number, options: Record<string, unknown> = {}): ScaleUpdates {
         const { scaleCharacteristics = true, scaleWounds = true, scaleSkills = true, scaleWeapons = true, scaleArmour = true } = options;
 
         // Calculate scaling factor (5% per threat level difference)
         const diff = newThreat - currentThreat;
         const scaleFactor = 1 + diff * 0.05;
 
-        const updates = {};
+        const updates: ScaleUpdates = {};
 
         // Scale characteristics
         if (scaleCharacteristics) {
@@ -707,8 +855,9 @@ export default class ThreatCalculator {
         updates['threatLevel'] = Math.max(1, Math.min(30, newThreat));
 
         // Scale horde magnitude if applicable
-        if (currentData.horde?.enabled) {
-            const newMag = Math.round(currentData.horde.magnitude.max * scaleFactor);
+        const horde = currentData.horde as { enabled?: boolean; magnitude?: { max: number } } | undefined;
+        if (horde?.enabled) {
+            const newMag = Math.round((horde.magnitude?.max ?? 0) * scaleFactor);
             updates['horde.magnitude.max'] = Math.max(10, newMag);
             updates['horde.magnitude.current'] = Math.max(10, newMag);
         }
@@ -724,16 +873,21 @@ export default class ThreatCalculator {
      * @param {Object} options - Scaling options.
      * @returns {Object} Preview object with current and new values.
      */
-    static previewScaling(currentData: unknown, currentThreat: unknown, newThreat: unknown, options: Record<string, unknown> = {}): Record<string, unknown> {
+    static previewScaling(
+        currentData: NPCSystemData,
+        currentThreat: number,
+        newThreat: number,
+        options: Record<string, unknown> = {},
+    ): Record<string, unknown> {
         const updates = this.scaleToThreat(currentData, currentThreat, newThreat, options);
 
-        const preview = {
+        const preview: Record<string, unknown> = {
             threatLevel: {
                 current: currentThreat,
                 new: newThreat,
                 change: newThreat - currentThreat,
             },
-            characteristics: {},
+            characteristics: {} as Record<string, unknown>,
             wounds: {
                 current: currentData.wounds.max,
                 new: updates['wounds.max'] ?? currentData.wounds.max,
@@ -746,8 +900,8 @@ export default class ThreatCalculator {
 
         // Add characteristic previews
         for (const [key, char] of Object.entries(currentData.characteristics)) {
-            const newBase = updates[`characteristics.${key}.base`] ?? char.base;
-            preview.characteristics[key] = {
+            const newBase = (updates[`characteristics.${key}.base`] as number | undefined) ?? char.base;
+            (preview.characteristics as Record<string, unknown>)[key] = {
                 label: char.label,
                 short: char.short,
                 current: char.base,
@@ -770,7 +924,7 @@ export default class ThreatCalculator {
      * @returns {string} Scaled damage string.
      * @private
      */
-    static _scaleDamage(damage: unknown, bonus: number): unknown {
+    static _scaleDamage(damage: string, bonus: number): string {
         if (bonus === 0) return damage;
 
         // Parse existing damage string
@@ -790,7 +944,7 @@ export default class ThreatCalculator {
      * Get all available roles.
      * @returns {Array<{key: string, name: string, description: string}>}
      */
-    static getRoles(): Record<string, unknown> {
+    static getRoles(): { key: string; name: string; description: string }[] {
         return Object.entries(this.ROLE_PROFILES).map(([key, profile]) => ({
             key,
             name: profile.name,
@@ -802,7 +956,7 @@ export default class ThreatCalculator {
      * Get all available equipment presets.
      * @returns {Array<{key: string, name: string, description: string}>}
      */
-    static getPresets(): Record<string, unknown> {
+    static getPresets(): { key: string; name: string; description: string }[] {
         return Object.entries(this.EQUIPMENT_PRESETS).map(([key, preset]) => ({
             key,
             name: preset.name,
@@ -814,7 +968,7 @@ export default class ThreatCalculator {
      * Get all NPC types.
      * @returns {Array<{key: string, name: string}>}
      */
-    static getTypes(): Record<string, unknown> {
+    static getTypes(): { key: string; name: string }[] {
         return [
             { key: 'troop', name: 'Troop' },
             { key: 'elite', name: 'Elite' },

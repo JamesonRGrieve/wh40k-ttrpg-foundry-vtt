@@ -6,15 +6,19 @@
 // baseline. Run `pnpm animation:ratchet:update` to lower the baseline after
 // genuine reductions.
 
-import { readFileSync, existsSync } from 'node:fs';
-import { execSync } from 'node:child_process';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 const COVERAGE = '.animation-coverage.json';
 const BASELINE = '.animation-baseline';
 
-execSync('node scripts/animation-coverage.mjs', { stdio: 'pipe' });
-
-const current = JSON.parse(readFileSync(COVERAGE, 'utf8')).animationDeclarations;
+const MONOLITH = 'src/css/wh40k-rpg.css';
+const text = readFileSync(MONOLITH, 'utf8');
+const current = (text.match(/^\s*animation(?:-name)?\s*:/gm) ?? []).length;
+writeFileSync(COVERAGE, JSON.stringify({
+    generatedAt: new Date().toISOString(),
+    monolith: MONOLITH,
+    animationDeclarations: current,
+}, null, 2) + '\n');
 
 if (!existsSync(BASELINE)) {
     console.error(`No ${BASELINE} found. Run \`pnpm animation:ratchet:update\` once to seed it.`);
