@@ -58,3 +58,4 @@ stories/**/*.js.map
 .claude/
 .aider.chat.history.md
 .aider.input.history
+.aider*
