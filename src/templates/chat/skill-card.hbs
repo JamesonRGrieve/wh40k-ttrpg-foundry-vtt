@@ -1,19 +1,19 @@
 {{! Skill Chat Card }}
-<div class="wh40k-chat-card wh40k-chat-card--skill tw-p-2">
+<div class="tw-p-2">
     <header class="tw-flex tw-items-center tw-gap-2">
         <img class="tw-w-8 tw-h-8 tw-rounded tw-object-cover" src="{{skill.img}}" alt="{{skill.name}}" />
         <div class="tw-flex-1">
             <h3 class="tw-m-0 tw-text-base tw-font-bold">{{skill.name}}</h3>
             <div class="tw-flex tw-flex-wrap tw-gap-1 tw-mt-1">
-                <span class="wh40k-badge wh40k-badge--{{skill.system.skillType}}">
+                <span class="wh40k-badge">
                     {{skill.system.skillTypeLabel}}
                 </span>
-                <span class="wh40k-badge wh40k-badge--characteristic">
+                <span class="wh40k-badge">
                     {{skill.system.characteristicLabel}}
                     ({{skill.system.characteristicAbbr}})
                 </span>
                 {{#if skill.system.isBasic}}
-                    <span class="wh40k-badge wh40k-badge--basic">
+                    <span class="wh40k-badge">
                         <i class="fas fa-check-circle"></i>
                         Can Use Untrained
                     </span>

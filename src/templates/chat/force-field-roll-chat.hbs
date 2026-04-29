@@ -1,55 +1,55 @@
 {{! Rogue Trader Force Field Roll Card - Modern Design }}
-<div class="wh40k-chat tw-font-ui">
-    <div class="wh40k-roll-card tw-relative tw-overflow-hidden tw-rounded-md">
+<div class="tw-font-ui tw-text-[color:var(--wh40k-text-dark)] [&_*]:tw-box-border">
+    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-2 tw-border-[color:var(--wh40k-gold)] tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]">
         {{! Header }}
-        <div class="wh40k-roll-card__header">
-            <div class="wh40k-roll-card__actor">{{actor.name}}</div>
-            <h2 class="wh40k-roll-card__title">{{forceField.name}}</h2>
-            <div class="wh40k-roll-card__subtitle">Force Field Activation</div>
+        <div class="tw-relative tw-px-4 tw-py-3 tw-bg-[linear-gradient(90deg,var(--wh40k-accent-overlay)_0%,transparent_100%)] tw-border-b tw-border-[color:var(--wh40k-border-color)]">
+            <div class="tw-text-xs tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.1em] tw-mb-1">{{actor.name}}</div>
+            <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[0.05em] tw-m-0 tw-[text-shadow:0_2px_4px_var(--wh40k-shadow-medium)]">{{forceField.name}}</h2>
+            <div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)] tw-mt-0.5 tw-opacity-90">Force Field Activation</div>
             {{#if isManualRoll}}
-                <div class="wh40k-roll-card__manual-badge"><i class="fas fa-hand-paper"></i> Player Rolled</div>
+                <div class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-2.5 tw-py-[3px] tw-mt-1.5 tw-bg-[rgba(168,85,247,0.15)] tw-border tw-border-[rgba(168,85,247,0.4)] tw-rounded-sm tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#c084fc]"><i class="fas fa-hand-paper tw-text-[0.65rem]"></i> Player Rolled</div>
             {{/if}}
         </div>
 
         {{! Body }}
-        <div class="wh40k-roll-card__body">
+        <div class="tw-px-4 tw-py-3">
             {{#if isTargetOnly}}
-                <div class="wh40k-roll-card__row">
-                    <span class="wh40k-roll-card__label">Protection Rating</span>
-                    <span class="wh40k-roll-card__value">{{protectionRating}}</span>
+                <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
+                    <span class="tw-text-[color:var(--wh40k-text-muted)] tw-font-medium">Protection Rating</span>
+                    <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-dark)]">{{protectionRating}}</span>
                 </div>
-                <div class="wh40k-roll-card__target-only">
+                <div class="tw-text-center tw-px-3 tw-py-2 tw-my-2 tw-bg-[rgba(201,162,39,0.08)] tw-border tw-border-dashed tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-text-[0.8rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
                     Target posted - awaiting physical dice roll
                 </div>
             {{else}}
                 {{#if overload}}
-                    <div class="wh40k-roll-card__fury">
-                        <div class="wh40k-roll-card__fury-title">⚠ Field Overload! ⚠</div>
-                        <div class="wh40k-roll-card__fury-effect">The field ceases to function until recharged or repaired (Very Hard Tech-Use test required).</div>
+                    <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-fate-bg)] tw-border-2 tw-border-[#ffd700] tw-rounded-md tw-text-center">
+                        <div class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[#ffd700] tw-uppercase tw-tracking-[0.15em] tw-[text-shadow:0_0_10px_rgba(255,215,0,0.5)]">⚠ Field Overload! ⚠</div>
+                        <div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)] tw-mt-2 tw-leading-[1.4]">The field ceases to function until recharged or repaired (Very Hard Tech-Use test required).</div>
                     </div>
                 {{/if}}
 
                 {{#if success}}
-                    <div class="wh40k-roll-card__result wh40k-roll-card__result--success">
-                        <div class="wh40k-roll-card__result-label">Field Activated</div>
-                        <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
+                    <div class="tw-relative tw-text-center tw-p-4 tw-my-3 tw-rounded-md tw-bg-[var(--wh40k-success-bg)] tw-border-2 tw-border-[color:var(--wh40k-success-primary)] tw-shadow-[0_0_20px_var(--wh40k-card-success-glow),inset_0_0_30px_rgba(45,138,78,0.1)]">
+                        <div class="tw-font-display tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.15em] tw-mb-1 tw-text-[color:var(--wh40k-success-secondary)]">Field Activated</div>
+                        <div class="tw-text-[2.5rem] tw-font-bold tw-leading-none tw-[text-shadow:0_2px_8px_var(--wh40k-shadow-medium)]">{{roll.total}}</div>
                     </div>
-                    <div class="wh40k-roll-card__text">
+                    <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-l-[color:var(--wh40k-gold)] tw-rounded-r tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto [&_p]:tw-m-0 [&_p]:tw-mb-2 [&_p:last-child]:tw-mb-0">
                         <p>The field activates successfully! Attack is nullified.</p>
                     </div>
                 {{else}}
-                    <div class="wh40k-roll-card__result wh40k-roll-card__result--failure">
-                        <div class="wh40k-roll-card__result-label">Field Failed</div>
-                        <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
+                    <div class="tw-relative tw-text-center tw-p-4 tw-my-3 tw-rounded-md tw-bg-[var(--wh40k-danger-bg)] tw-border-2 tw-border-[color:var(--wh40k-danger-primary)] tw-shadow-[0_0_20px_var(--wh40k-card-fail-glow),inset_0_0_30px_rgba(168,50,50,0.1)]">
+                        <div class="tw-font-display tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.15em] tw-mb-1 tw-text-[color:var(--wh40k-danger-secondary)]">Field Failed</div>
+                        <div class="tw-text-[2.5rem] tw-font-bold tw-leading-none tw-[text-shadow:0_2px_8px_var(--wh40k-shadow-medium)]">{{roll.total}}</div>
                     </div>
-                    <div class="wh40k-roll-card__text">
+                    <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-l-[color:var(--wh40k-gold)] tw-rounded-r tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto [&_p]:tw-m-0 [&_p]:tw-mb-2 [&_p:last-child]:tw-mb-0">
                         <p>The field fails to protect and the attack proceeds as normal.</p>
                     </div>
                 {{/if}}
 
                 {{#if forceField.system.description}}
-                    <div class="wh40k-roll-card__divider"></div>
-                    <div class="wh40k-roll-card__text">{{forceField.system.description}}</div>
+                    <div class="tw-h-px tw-bg-[linear-gradient(90deg,transparent_0%,var(--wh40k-gold)_20%,var(--wh40k-gold)_80%,transparent_100%)] tw-my-2.5 tw-opacity-50"></div>
+                    <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-l-[color:var(--wh40k-gold)] tw-rounded-r tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto [&_p]:tw-m-0 [&_p]:tw-mb-2 [&_p:last-child]:tw-mb-0">{{forceField.system.description}}</div>
                 {{/if}}
             {{/if}}{{! end isTargetOnly else }}
         </div>
