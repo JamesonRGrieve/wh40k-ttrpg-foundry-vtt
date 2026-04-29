@@ -1,0 +1,39 @@
+{{!--
+    Collapsible panel scaffold — outer wrapper, clickable header with chevron toggle, and body.
+    Used by panels that need expand/collapse via the CollapsiblePanelMixin (data-action="togglePanel").
+
+    Block-partial usage:
+        (#>) systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs
+            panelId="my-panel"
+            label="My Panel"
+            icon="fa-brain"
+            accentBg="linear-gradient(135deg,rgb(from #7c3aed r g b / 0.2) 0%,rgb(from #7c3aed r g b / 0.08) 100%)"
+            accentBorder="rgb(from #7c3aed r g b / 0.4)"
+            accentIcon="#7c3aed"
+            rootClass="tw-col-auto"
+            bodyClass=""
+            ... body markup ...
+        (/) systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs
+
+    Hash arguments:
+        panelId       — id used by CollapsiblePanelMixin to track expand/collapse state (required).
+        label         — header title text (required).
+        icon          — Font Awesome icon class without "fa-" prefix (e.g. "fa-brain"). Optional.
+        accentBg      — optional CSS gradient/color string for header background.
+        accentBorder  — optional CSS color string for header bottom border.
+        accentIcon    — optional CSS color string for the header icon color.
+        rootClass     — extra utility classes appended to the outer panel div.
+        bodyClass     — extra utility classes on the body container.
+--}}
+<div class="tw-group tw-relative tw-overflow-hidden tw-rounded-lg tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-panel-bg)] tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)] tw-mb-[var(--wh40k-space-md)]{{#if rootClass}} {{rootClass}}{{/if}}" data-panel-id="{{panelId}}">
+    <header class="tw-flex tw-flex-row tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-w-full tw-box-border tw-min-w-0 tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-border-b tw-border-solid tw-border-b-[var(--wh40k-border-color-light)] tw-bg-[linear-gradient(180deg,rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.15)_0%,rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.05)_100%)] tw-transition-[box-shadow,background] tw-duration-200 tw-ease-linear tw-cursor-pointer tw-select-none hover:tw-bg-[linear-gradient(180deg,rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)_0%,rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)_100%)]" data-action="togglePanel" data-panel-id="{{panelId}}"
+        {{#if accentBg}}style="background: {{accentBg}};{{#if accentBorder}} border-bottom-color: {{accentBorder}};{{/if}}"{{/if}}>
+        <span class="tw-flex tw-flex-1 tw-min-w-0 tw-flex-row tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap tw-font-[var(--wh40k-font-display,'Modesto_Condensed',serif)] tw-text-[1.1rem] tw-font-semibold tw-tracking-[0.02em] tw-text-[var(--wh40k-text-dark)] [&>i]:tw-flex-shrink-0 [&>i]:tw-text-[var(--wh40k-accent-gold)]">
+            {{#if icon}}<i class="fas {{icon}}"{{#if accentIcon}} style="color: {{accentIcon}};"{{/if}}></i> {{/if}}{{label}}
+        </span>
+        <i class="fas fa-chevron-down tw-flex-shrink-0 tw-ml-auto tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)] tw-transition-transform tw-duration-200 tw-ease-linear group-[.collapsed]:tw-rotate-[-90deg]"></i>
+    </header>
+    <div class="tw-p-[var(--wh40k-space-md)] tw-bg-[var(--wh40k-panel-body-bg)] group-[.collapsed]:tw-hidden{{#if bodyClass}} {{bodyClass}}{{/if}}">
+        {{> @partial-block}}
+    </div>
+</div>
