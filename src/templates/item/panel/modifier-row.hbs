@@ -14,16 +14,16 @@
   @param {String} icon - Font Awesome icon class (optional)
 --}}
 
-<div class="wh40k-modifier-row tw-flex tw-items-center tw-justify-between tw-rounded-sm tw-px-2 tw-py-1 tw-transition-colors {{#if uuid}}wh40k-modifier-row--clickable tw-cursor-pointer hover:tw-bg-[rgba(59,130,246,0.1)]{{/if}}"
+<div class="tw-flex tw-items-center tw-justify-between tw-rounded-sm tw-px-2 tw-py-1 tw-transition-colors {{#if uuid}}tw-cursor-pointer hover:tw-bg-[rgba(59,130,246,0.1)]{{/if}}"
      {{#if uuid}}data-action="viewItem" data-uuid="{{uuid}}"{{/if}}>
-  <div class="wh40k-modifier-row__source tw-flex tw-flex-1 tw-items-center tw-gap-1 tw-text-sm tw-text-[var(--color-text-secondary)]">
+  <div class="tw-flex tw-flex-1 tw-items-center tw-gap-1 tw-text-sm tw-text-[var(--color-text-secondary)]">
     {{#if icon}}
     <i class="{{icon}} tw-text-[0.9em] tw-opacity-70"></i>
     {{/if}}
-    <span class="wh40k-modifier-row__name tw-font-medium">{{source}}</span>
+    <span class="tw-font-medium">{{source}}</span>
   </div>
-  
-  <div class="wh40k-modifier-row__value tw-min-w-10 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-center tw-font-semibold tw-font-mono {{#if (gt value 0)}}wh40k-modifier-row__value--positive tw-bg-[rgba(74,222,128,0.1)] tw-text-[var(--wh40k-stat-positive)]{{else if (lt value 0)}}wh40k-modifier-row__value--negative tw-bg-[rgba(248,113,113,0.1)] tw-text-[var(--wh40k-stat-negative)]{{else}}tw-text-[var(--color-text-primary)]{{/if}}">
+
+  <div class="tw-min-w-10 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-center tw-font-semibold tw-font-mono {{#if (gt value 0)}}tw-bg-[rgba(74,222,128,0.1)] tw-text-[var(--wh40k-stat-positive)]{{else if (lt value 0)}}tw-bg-[rgba(248,113,113,0.1)] tw-text-[var(--wh40k-stat-negative)]{{else}}tw-text-[var(--color-text-primary)]{{/if}}">
     {{signedNumber value}}
   </div>
 </div>

@@ -1,53 +1,53 @@
 {{! Rogue Trader Assign Damage Card - Modern Design }}
-<div class="wh40k-chat tw-font-ui">
-    <div class="wh40k-roll-card tw-relative tw-overflow-hidden tw-rounded-md">
+<div class="tw-font-ui">
+    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-card-border)] tw-bg-[var(--wh40k-card-bg)] tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]">
         {{! Header }}
-        <div class="wh40k-roll-card__header">
-            <div class="wh40k-roll-card__actor">{{this.actor.name}}</div>
-            {{#if hasDamage}}<h2 class="wh40k-roll-card__title">{{this.hit.location}} Hit</h2>{{else}}<h2 class="wh40k-roll-card__title">Damage Applied</h2>{{/if}}
+        <div class="tw-relative tw-px-4 tw-py-3 tw-bg-gradient-to-r tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color)]">
+            <div class="tw-text-xs tw-text-[var(--wh40k-card-muted)] tw-uppercase tw-tracking-widest tw-mb-1">{{this.actor.name}}</div>
+            {{#if hasDamage}}<h2 class="tw-font-display tw-text-lg tw-font-semibold tw-text-[var(--wh40k-card-gold)] tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{this.hit.location}} Hit</h2>{{else}}<h2 class="tw-font-display tw-text-lg tw-font-semibold tw-text-[var(--wh40k-card-gold)] tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">Damage Applied</h2>{{/if}}
         </div>
 
         {{! Body }}
-        <div class="wh40k-roll-card__body">
+        <div class="tw-px-4 tw-py-3">
             {{! Current Status }}
-            <div class="wh40k-roll-card__row">
-                <span class="wh40k-roll-card__label">Wounds</span>
-                <span class="wh40k-roll-card__value">{{this.actor.system.wounds.value}} / {{this.actor.system.wounds.max}}</span>
+            <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
+                <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">Wounds</span>
+                <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{this.actor.system.wounds.value}} / {{this.actor.system.wounds.max}}</span>
             </div>
-            <div class="wh40k-roll-card__row">
-                <span class="wh40k-roll-card__label">Fatigue</span>
-                <span class="wh40k-roll-card__value">{{this.actor.system.fatigue.value}} / {{this.actor.system.fatigue.max}}</span>
+            <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
+                <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">Fatigue</span>
+                <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{this.actor.system.fatigue.value}} / {{this.actor.system.fatigue.max}}</span>
             </div>
-            <div class="wh40k-roll-card__row">
-                <span class="wh40k-roll-card__label">Critical Wounds</span>
-                <span class="wh40k-roll-card__value">{{this.actor.system.wounds.critical}}</span>
+            <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
+                <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">Critical Wounds</span>
+                <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{this.actor.system.wounds.critical}}</span>
             </div>
 
-            <div class="wh40k-roll-card__divider"></div>
+            <div class="tw-h-px tw-bg-gradient-to-r tw-from-transparent tw-via-[var(--wh40k-card-gold)] tw-to-transparent tw-my-2.5 tw-opacity-50"></div>
 
             {{! Damage Taken }}
             {{#if this.hasDamage}}
-                <div class="wh40k-roll-card__damage">
-                    <div class="wh40k-roll-card__damage-header">
-                        <span class="wh40k-roll-card__damage-title">Wounds Taken</span>
-                        <span class="wh40k-roll-card__damage-location">{{this.hit.location}}</span>
+                <div class="tw-p-3 tw-my-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md">
+                    <div class="tw-flex tw-justify-between tw-items-center tw-mb-2 tw-pb-2 tw-border-b tw-border-[var(--wh40k-wounds-border)]">
+                        <span class="tw-font-display tw-text-sm tw-text-[var(--wh40k-wounds-secondary)] tw-uppercase tw-tracking-widest">Wounds Taken</span>
+                        <span class="tw-text-xs tw-px-2 tw-py-0.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded tw-text-[var(--wh40k-card-muted)]">{{this.hit.location}}</span>
                     </div>
-                    <div class="wh40k-roll-card__damage-value">{{this.damageTaken}}</div>
-                    <div class="wh40k-roll-card__damage-type">{{this.hit.damageType}}</div>
+                    <div class="tw-text-center tw-text-3xl tw-font-bold tw-text-[var(--wh40k-wounds-secondary)] tw-shadow-[0_0_10px_rgba(139,0,0,0.5)]">{{this.damageTaken}}</div>
+                    <div class="tw-text-center tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-card-muted)] tw-mt-1">{{this.hit.damageType}}</div>
                 </div>
             {{/if}}
 
             {{#if this.hasFatigueDamage}}
-                <div class="wh40k-roll-card__notice">
-                    <span class="wh40k-roll-card__notice-label">Fatigue</span>
-                    <span class="wh40k-roll-card__notice-value">+{{this.fatigueTaken}}</span>
+                <div class="tw-flex tw-justify-between tw-items-center tw-px-3.5 tw-py-2.5 tw-my-2 tw-bg-[var(--wh40k-warning-bg)] tw-border-l-[3px] tw-border-l-[var(--wh40k-warning-primary)] tw-rounded-r">
+                    <span class="tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-warning-secondary)]">Fatigue</span>
+                    <span class="tw-text-lg tw-font-bold tw-text-[var(--wh40k-card-text)]">+{{this.fatigueTaken}}</span>
                 </div>
             {{/if}}
 
             {{#if this.hasCriticalDamage}}
-                <div class="wh40k-roll-card__fury">
-                    <div class="wh40k-roll-card__fury-title">⚠ Critical Damage: {{this.criticalDamageTaken}} ⚠</div>
-                    <div class="wh40k-roll-card__fury-effect">{{this.criticalEffect}}</div>
+                <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-fate-bg)] tw-border-2 tw-border-[var(--wh40k-gold-bright)] tw-rounded-md tw-text-center">
+                    <div class="tw-font-display tw-text-base tw-font-bold tw-text-[var(--wh40k-gold-bright)] tw-uppercase tw-tracking-widest tw-shadow-[0_0_10px_rgba(255,215,0,0.5)]">⚠ Critical Damage: {{this.criticalDamageTaken}} ⚠</div>
+                    <div class="tw-text-sm tw-text-[var(--wh40k-card-text)] tw-mt-2 tw-leading-snug">{{this.criticalEffect}}</div>
                 </div>
             {{/if}}
         </div>
