@@ -31,21 +31,21 @@
 --}}
 <div class="wh40k-chat-card {{cardClass}}{{#if outerExtraClass}} {{outerExtraClass}}{{/if}}">
     {{#if (or image iconClass title badges)}}
-    <header class="wh40k-card__header{{#unless (eq legacyClasses false)}} wh40k-card-header{{/unless}}">
+    <header class="wh40k-card__header{{#unless (eq legacyClasses false)}} wh40k-card-header{{/unless}} tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-3 tw-border-b tw-border-[rgba(0,0,0,0.1)]">
         {{#if image}}
-            <img class="wh40k-card__icon{{#unless (eq legacyClasses false)}} wh40k-card-icon{{/unless}}" src="{{image}}" alt="{{#if imageAlt}}{{imageAlt}}{{else}}{{title}}{{/if}}" />
+            <img class="wh40k-card__icon{{#unless (eq legacyClasses false)}} wh40k-card-icon{{/unless}} tw-w-12 tw-h-12 tw-rounded-full tw-border-2 tw-border-[rgba(255,255,255,0.8)] tw-object-cover tw-shrink-0" src="{{image}}" alt="{{#if imageAlt}}{{imageAlt}}{{else}}{{title}}{{/if}}" />
         {{else if iconClass}}
-            <div class="wh40k-card__icon-wrapper{{#unless (eq legacyClasses false)}} wh40k-card-icon-wrapper{{/unless}}">
+            <div class="wh40k-card__icon-wrapper{{#unless (eq legacyClasses false)}} wh40k-card-icon-wrapper{{/unless}} tw-w-10 tw-h-10 tw-flex tw-items-center tw-justify-center tw-rounded-full tw-shrink-0">
                 <i class="fas {{iconClass}} wh40k-card__icon{{#unless (eq legacyClasses false)}} wh40k-card-icon{{/unless}}"></i>
             </div>
         {{/if}}
-        <div class="wh40k-card__title-area{{#unless (eq legacyClasses false)}} wh40k-card-title-area{{/unless}}">
-            <h3 class="wh40k-card__title{{#unless (eq legacyClasses false)}} wh40k-card-title{{/unless}}">{{title}}</h3>
+        <div class="wh40k-card__title-area{{#unless (eq legacyClasses false)}} wh40k-card-title-area{{/unless}} tw-flex-1 tw-min-w-0">
+            <h3 class="wh40k-card__title{{#unless (eq legacyClasses false)}} wh40k-card-title{{/unless}} tw-m-0 tw-text-[18px] tw-font-bold">{{title}}</h3>
             {{#if subtitle}}
-                <div class="wh40k-card__subtitle{{#unless (eq legacyClasses false)}} wh40k-card-subtitle{{/unless}}">{{subtitle}}</div>
+                <div class="wh40k-card__subtitle{{#unless (eq legacyClasses false)}} wh40k-card-subtitle{{/unless}} tw-text-[12px] tw-uppercase tw-tracking-[0.5px] tw-opacity-90">{{subtitle}}</div>
             {{/if}}
             {{#if badges.length}}
-                <div class="wh40k-card__badges{{#unless (eq legacyClasses false)}} wh40k-card-badges{{/unless}}">
+                <div class="wh40k-card__badges{{#unless (eq legacyClasses false)}} wh40k-card-badges{{/unless}} tw-flex tw-gap-[var(--wh40k-space-xs)] tw-mt-[var(--wh40k-space-xs)] tw-flex-wrap">
                     {{#each badges as |badge|}}
                         {{#if badge.label}}
                         <span class="wh40k-badge{{#if badge.class}} {{badge.class}}{{/if}}">
@@ -60,13 +60,13 @@
     </header>
     {{/if}}
 
-    <div class="wh40k-card__body{{#unless (eq legacyClasses false)}} wh40k-card-body{{/unless}}">
+    <div class="wh40k-card__body{{#unless (eq legacyClasses false)}} wh40k-card-body{{/unless}} tw-p-3">
         {{> @partial-block}}
     </div>
 
     {{#if footerLabel}}
-    <footer class="wh40k-card__footer{{#unless (eq legacyClasses false)}} wh40k-card-footer{{/unless}}">
-        <span class="wh40k-card__source{{#unless (eq legacyClasses false)}} wh40k-source-ref{{/unless}}">
+    <footer class="wh40k-card__footer{{#unless (eq legacyClasses false)}} wh40k-card-footer{{/unless}} tw-px-3 tw-py-2 tw-border-t tw-border-[#d4c5a6]">
+        <span class="wh40k-card__source{{#unless (eq legacyClasses false)}} wh40k-source-ref{{/unless}} tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[11px] tw-text-[#7a7a7a]">
             {{#if footerIcon}}<i class="fas {{footerIcon}}"></i>{{/if}}
             {{footerLabel}}
         </span>

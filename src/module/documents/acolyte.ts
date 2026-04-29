@@ -4,13 +4,77 @@ import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.ts
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { D100Roll } from '../dice/_module.ts';
+import type { ActionData } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 import type { WH40KItem } from './item.ts';
-import type { WH40KItemDocument } from '../types/global.d.ts';
+import type {
+    WH40KItemDocument,
+    WH40KActorSystemData,
+    WH40KFatigue,
+    WH40KFate,
+    WH40KPsy,
+    WH40KActorBio,
+    WH40KExperience,
+    WH40KEncumbrance,
+    WH40KBackpack,
+    WH40KArmourLocation,
+    WH40KSkill,
+} from '../types/global.d.ts';
 
-const SKILL_ALIASES = {
+/** Typed shape of the modifierSources object on a character actor's system data. */
+interface CharacterModifierSources {
+    characteristics: Record<string, Array<{ value: number }>>;
+    skills: Record<string, Array<{ value: number }>>;
+    combat: Record<string, Array<{ value: number }>>;
+    wounds: Array<{ value: number }>;
+    fate: Array<{ value: number }>;
+    movement: Array<{ value: number; label?: string }>;
+}
+
+/**
+ * Narrowed system-data type for character (acolyte) actors.
+ * Intersects WH40KActorSystemData with the character-specific overrides so the
+ * acolyte document can access required fields without undefined guards.
+ * The more-specific field types shadow the optional/looser types from the base.
+ */
+type WH40KCharacterSystemData = WH40KActorSystemData & {
+    insanity: number;
+    corruption: number;
+    fatigue: WH40KFatigue;
+    fate: WH40KFate;
+    psy: WH40KPsy;
+    bio: WH40KActorBio;
+    experience: WH40KExperience;
+    aptitudes: string[];
+    armour: Record<string, WH40KArmourLocation>;
+    encumbrance: WH40KEncumbrance;
+    backgroundEffects: unknown[];
+    originPath: Record<string, unknown>;
+    backpack: WH40KBackpack;
+    modifierSources: CharacterModifierSources;
+    totalWoundsModifier: number;
+    totalFateModifier: number;
+    _getTotalCharacteristicModifier(charKey: string): number;
+    _getTotalSkillModifier(skillKey: string): number;
+    _getTotalCombatModifier(combatKey: string): number;
+};
+
+/** Interface representing a resolved D100Roll result used in opposed tests. */
+interface D100RollResult {
+    isSuccess: boolean;
+    degreesOfSuccess: number;
+}
+
+/** Interface representing a skill entry (specialist skill speciality). */
+interface SkillEntry {
+    name?: string;
+    label?: string;
+    current?: number;
+}
+
+const SKILL_ALIASES: Record<string, string> = {
     navigate: 'navigation',
 };
 
@@ -21,58 +85,46 @@ const SKILL_ALIASES = {
  * @extends {WH40KBaseActor}
  */
 export class WH40KAcolyte extends WH40KBaseActor {
+    declare system: WH40KCharacterSystemData;
+
     /* -------------------------------------------- */
     /*  Getters                                     */
     /* -------------------------------------------- */
 
-    get backpack(): Record<string, unknown> {
+    get backpack(): WH40KBackpack {
         return this.system.backpack;
     }
-    get skills(): Record<
-        string,
-        {
-            label?: string;
-            characteristic: string;
-            advanced?: boolean;
-            basic?: boolean;
-            trained: boolean;
-            plus10: boolean;
-            plus20: boolean;
-            bonus: number;
-            current: number;
-            entries?: unknown[];
-        }
-    > {
+    get skills(): Record<string, WH40KSkill> {
         return this.system.skills;
     }
-    get fatigue(): { value: number; max: number } {
+    get fatigue(): WH40KFatigue {
         return this.system.fatigue;
     }
-    get fate(): { value: number; max: number; total?: number; rolled?: boolean } {
+    get fate(): WH40KFate {
         return this.system.fate;
     }
-    get psy(): Record<string, unknown> {
+    get psy(): WH40KPsy {
         return this.system.psy;
     }
-    get bio(): Record<string, string> {
+    get bio(): WH40KActorBio {
         return this.system.bio;
     }
-    get experience(): { used: number; total: number; available: number } {
+    get experience(): WH40KExperience {
         return this.system.experience;
     }
-    get insanity(): { value: number } {
+    get insanity(): number {
         return this.system.insanity;
     }
-    get corruption(): { value: number } {
+    get corruption(): number {
         return this.system.corruption;
     }
-    get aptitudes(): Set<string> {
+    get aptitudes(): string[] {
         return this.system.aptitudes;
     }
-    get armour(): Record<string, { value: number; total: number; toughnessBonus: number; traitBonus: number }> {
+    get armour(): Record<string, WH40KArmourLocation> {
         return this.system.armour;
     }
-    get encumbrance(): import('../types/global.d.ts').WH40KEncumbrance {
+    get encumbrance(): WH40KEncumbrance {
         return this.system.encumbrance;
     }
     get backgroundEffects(): unknown[] {
@@ -81,16 +133,16 @@ export class WH40KAcolyte extends WH40KBaseActor {
     get originPath(): Record<string, unknown> {
         return this.system.originPath;
     }
-    get originPathItems(): Item[] {
+    get originPathItems(): WH40KItem[] {
         return this.items.filter((item: WH40KItem) => item.isOriginPath);
     }
-    get navigatorPowers(): Item[] {
+    get navigatorPowers(): WH40KItem[] {
         return this.items.filter((item: WH40KItem) => item.isNavigatorPower);
     }
-    get shipRoles(): Item[] {
+    get shipRoles(): WH40KItem[] {
         return this.items.filter((item: WH40KItem) => item.isShipRole);
     }
-    get conditions(): Item[] {
+    get conditions(): WH40KItem[] {
         return this.items.filter((item: WH40KItem) => item.isCondition);
     }
 
@@ -105,9 +157,9 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @override
      */
     prepareData(): void {
-        // Initialize defaults before DataModel runs
-        if (this.system.corruption == null) this.system.corruption = 0;
-        if (this.system.insanity == null) this.system.insanity = 0;
+        // Initialize defaults before DataModel runs (cast through unknown for legacy migration paths)
+        if ((this.system as Record<string, unknown>).corruption == null) (this.system as Record<string, unknown>).corruption = 0;
+        if ((this.system as Record<string, unknown>).insanity == null) (this.system as Record<string, unknown>).insanity = 0;
 
         // Let the DataModel do base preparation first
         super.prepareData();
@@ -128,7 +180,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @returns {number} The total modifier
      */
     getTotalCharacteristicModifier(charKey: string): number {
-        return this.system._getTotalCharacteristicModifier?.(charKey) ?? 0;
+        return this.system._getTotalCharacteristicModifier(charKey);
     }
 
     /**
@@ -137,7 +189,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @returns {number} The total modifier
      */
     getTotalSkillModifier(skillKey: string): number {
-        return this.system._getTotalSkillModifier?.(skillKey) ?? 0;
+        return this.system._getTotalSkillModifier(skillKey);
     }
 
     /**
@@ -146,7 +198,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @returns {number} The total modifier
      */
     getTotalCombatModifier(combatKey: string): number {
-        return this.system._getTotalCombatModifier?.(combatKey) ?? 0;
+        return this.system._getTotalCombatModifier(combatKey);
     }
 
     /**
@@ -154,7 +206,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @returns {number} The total wounds modifier
      */
     getTotalWoundsModifier(): number {
-        return this.system.totalWoundsModifier ?? 0;
+        return this.system.totalWoundsModifier;
     }
 
     /**
@@ -162,7 +214,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @returns {number} The total fate modifier
      */
     getTotalFateModifier(): number {
-        return this.system.totalFateModifier ?? 0;
+        return this.system.totalFateModifier;
     }
 
     /**
@@ -170,8 +222,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @returns {number} The total movement modifier
      */
     getTotalMovementModifier(): number {
-        const sources = this.system.modifierSources?.movement || [];
-        return sources.reduce((total, src) => total + (src.value || 0), 0);
+        const sources = this.system.modifierSources.movement;
+        return sources.reduce((total: number, src: { value: number }) => total + (src.value || 0), 0);
     }
 
     /* -------------------------------------------- */
@@ -191,15 +243,17 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const modifiers = [];
 
         // Collect from all modifier-providing items
-        const modifierItems = this.items.filter(
-            (item: WH40KItemDocument) =>
-                item.isTalent ||
-                item.isTrait ||
-                item.isCondition ||
+        const modifierItems = this.items.filter((item: WH40KItem) => {
+            const doc = item as WH40KItemDocument;
+            return !!(
+                doc.isTalent ||
+                doc.isTrait ||
+                doc.isCondition ||
                 (item.type === 'armour' && item.system.equipped) ||
                 (item.type === 'cybernetic' && item.system.equipped) ||
-                (item.type === 'gear' && item.system.equipped),
-        );
+                (item.type === 'gear' && item.system.equipped)
+            );
+        });
 
         for (const item of modifierItems) {
             const situationalModifiers = (item.system.modifiers as Record<string, unknown> | undefined)?.['situational'] as Record<string, unknown> | undefined;
@@ -334,16 +388,21 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // Calculate damage with Strength Bonus for melee/thrown weapons
         const isMelee = weapon.system.melee || weapon.system.isMeleeWeapon;
         const isThrown = weapon.system.class === 'thrown';
-        const isGrenade = weapon.system.special?.includes('grenade');
+        const special = weapon.system.special as string | string[] | undefined;
+        const isGrenade = Array.isArray(special) ? special.includes('grenade') : typeof special === 'string' && special.includes('grenade');
 
         // Add SB for melee weapons and thrown weapons (except grenades)
         const includeStrengthBonus = isMelee || (isThrown && !isGrenade);
         const strengthBonus = includeStrengthBonus ? this.system.characteristics.strength.bonus : 0;
 
         // Build damage object with SB included
+        // weapon.system.damage can be a string formula or an object with formula/bonus fields
+        const rawDamage = weapon.system.damage as { formula?: string; value?: string; bonus?: number } | string | undefined;
+        const damageFormula = typeof rawDamage === 'string' ? rawDamage : rawDamage?.formula ?? rawDamage?.value ?? '';
+        const damageBonus = typeof rawDamage === 'object' && rawDamage !== null ? rawDamage.bonus ?? 0 : 0;
         const damageData = {
-            formula: weapon.system.damage.formula,
-            bonus: (weapon.system.damage.bonus || 0) + strengthBonus,
+            formula: damageFormula,
+            bonus: damageBonus + strengthBonus,
         };
 
         await prepareDamageRoll({
@@ -354,8 +413,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
             targetActor: () => {
                 const targetedObjects = game.user.targets;
                 if (targetedObjects && targetedObjects.size > 0) {
-                    const target = targetedObjects.values().next().value;
-                    return target.actor;
+                    const target = targetedObjects.values().next().value as Token | undefined;
+                    return target?.actor;
                 }
                 return undefined;
             },
@@ -414,20 +473,25 @@ export class WH40KAcolyte extends WH40KBaseActor {
                     ui.notifications.warn('Actor must have force field equipped and activated!');
                     return;
                 }
-                await prepareUnifiedRoll(new ForceFieldData(this, item as unknown));
+                await prepareUnifiedRoll(new ForceFieldData(this, item) as unknown as ActionData);
                 return;
             default:
                 await DHBasicActionManager.sendItemVocalizeChat({
                     actor: this.name ?? '',
                     name: item.name ?? '',
                     type: item.type?.toUpperCase() ?? '',
-                    description: await TextEditor.enrichHTML(item.system.benefit ?? item.system.description ?? '', {
-                        rollData: {
-                            actor: this,
-                            item: item,
-                            pr: this.psy.rating,
+                    description: await TextEditor.enrichHTML(
+                        (typeof item.system.benefit === 'string' ? item.system.benefit : null) ??
+                            (typeof item.system.description === 'string' ? item.system.description : item.system.description?.value) ??
+                            '',
+                        {
+                            rollData: {
+                                actor: this,
+                                item: item,
+                                pr: this.psy.rating,
+                            },
                         },
-                    }),
+                    ),
                 });
         }
     }
@@ -459,9 +523,9 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /**
      * Perform a quick characteristic check without dialog
      * @param {string} characteristic - The characteristic key
-     * @returns {Promise<D100Roll|null>} The evaluated roll
+     * @returns {Promise<D100RollResult|null>} The evaluated roll
      */
-    async rollCharacteristicCheck(characteristic: string): Promise<unknown> {
+    async rollCharacteristicCheck(characteristic: string): Promise<D100RollResult | null> {
         const char = this.getCharacteristicFuzzy(characteristic);
         if (!char) {
             game.wh40k.error('Unable to perform characteristic test. Could not find provided characteristic.', characteristic);
@@ -475,22 +539,22 @@ export class WH40KAcolyte extends WH40KBaseActor {
             configure: false,
         });
 
-        return roll;
+        return roll as D100RollResult | null;
     }
 
     /**
      * Perform a quick d100 check against a target number
      * @param {number} targetNumber - The target number
-     * @returns {Promise<D100Roll>} The evaluated roll
+     * @returns {Promise<D100RollResult|null>} The evaluated roll
      */
-    async rollCheck(targetNumber: number): Promise<unknown> {
+    async rollCheck(targetNumber: number): Promise<D100RollResult | null> {
         const roll = await D100Roll.evaluate({
             actor: this,
             target: targetNumber,
             configure: false,
         });
 
-        return roll;
+        return roll as D100RollResult | null;
     }
 
     /**
@@ -512,7 +576,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {D100Roll} rollCheckTarget - The target actor's roll
      * @returns {Object} The opposed test result
      */
-    opposedTest(rollCheckSource: unknown, rollCheckTarget: unknown): unknown {
+    opposedTest(rollCheckSource: D100RollResult | null | undefined, rollCheckTarget: D100RollResult | null | undefined): unknown {
         if (!rollCheckSource) return null;
 
         if (rollCheckTarget) {
@@ -554,14 +618,15 @@ export class WH40KAcolyte extends WH40KBaseActor {
         return undefined;
     }
 
-    _findSpecialistSkill(skill: Record<string, unknown>, specialityName: string | number): unknown {
+    _findSpecialistSkill(skill: WH40KSkill, specialityName: string | number): SkillEntry | undefined {
         if (!Array.isArray(skill?.entries)) return undefined;
-        if (Number.isInteger(specialityName)) return skill.entries[specialityName];
+        const entries = skill.entries as SkillEntry[];
+        if (Number.isInteger(specialityName)) return entries[specialityName as number];
 
         const index = Number.parseInt(String(specialityName), 10);
-        if (!Number.isNaN(index) && skill.entries[index]) return skill.entries[index];
+        if (!Number.isNaN(index) && entries[index]) return entries[index];
 
-        return skill.entries.find((entry) => entry.name?.toLowerCase() === `${specialityName}`.toLowerCase());
+        return entries.find((entry) => entry.name?.toLowerCase() === `${specialityName}`.toLowerCase());
     }
 
     _resolveSkillName(skillName: string): string {

@@ -1,79 +1,80 @@
 {{!-- Origin Path Choice Dialog Template --}}
-<div class="origin-choice-dialog-content">
-    
+<div class="origin-choice-dialog-content tw-flex tw-flex-col tw-gap-[var(--wh40k-space-md)] tw-p-[var(--wh40k-space-md)]">
+
     {{!-- Item Header --}}
-    <div class="choice-header">
-        <img src="{{itemImg}}" alt="{{itemName}}" class="item-img" />
-        <div class="item-info">
-            <h3 class="item-name">{{itemName}}</h3>
-            <p class="choice-instruction">{{localize "WH40K.OriginPath.ChoicesRequired"}}</p>
+    <div class="choice-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[var(--wh40k-space-md)] tw-bg-[linear-gradient(90deg,var(--wh40k-bronze-dark),var(--wh40k-bronze))] tw-border-2 tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)]">
+        <img src="{{itemImg}}" alt="{{itemName}}" class="item-img tw-w-16 tw-h-16 tw-rounded-[var(--wh40k-radius-sm)] tw-border-2 tw-border-[var(--wh40k-gold)] tw-object-cover" />
+        <div class="item-info tw-flex-1">
+            <h3 class="item-name tw-m-0 tw-font-[var(--wh40k-font-heading)] tw-text-[1.25rem] tw-text-[color:var(--wh40k-gold)] tw-[text-shadow:0_0_4px_rgba(201,162,39,0.5)]">{{itemName}}</h3>
+            <p class="choice-instruction tw-m-0 tw-mt-1 tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.9rem]">{{localize "WH40K.OriginPath.ChoicesRequired"}}</p>
         </div>
     </div>
 
     {{!-- Choices List --}}
-    <div class="choices-list">
+    <div class="choices-list tw-flex tw-flex-col tw-gap-[var(--wh40k-space-xl)] tw-max-h-[60vh] tw-overflow-y-auto tw-pr-[var(--wh40k-space-xs)]">
         {{#each choices as |choice|}}
-            <div class="choice-group">
-                <div class="choice-group-header">
-                    <span class="choice-type-badge">{{choice.typeLabel}}</span>
-                    <span class="choice-text">{{choice.label}}</span>
+            <div class="choice-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-md)]">
+                <div class="choice-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-bg-[var(--wh40k-panel-bg)] tw-border-l-4 tw-border-l-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-sm)]">
+                    <span class="choice-type-badge tw-inline-block tw-py-[0.2rem] tw-px-[0.6rem] tw-bg-[var(--wh40k-gold)] tw-text-[var(--wh40k-bg-dark)] tw-text-[0.75rem] tw-font-bold tw-uppercase tw-rounded-[var(--wh40k-radius-xs)]">{{choice.typeLabel}}</span>
+                    <span class="choice-text tw-flex-1 tw-font-semibold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-primary)]">{{choice.label}}</span>
                     {{#if (gt choice.remaining 0)}}
-                        <span class="choice-remaining">
+                        <span class="choice-remaining tw-text-[0.85rem] tw-text-[color:var(--wh40k-crimson)] tw-font-semibold tw-italic">
                             ({{choice.remaining}} {{localize "WH40K.OriginPath.Remaining"}})
                         </span>
                     {{else}}
-                        <i class="fa-solid fa-check-circle choice-complete"></i>
+                        <i class="fa-solid fa-check-circle choice-complete tw-text-[color:var(--wh40k-success)] tw-text-[1.1rem]"></i>
                     {{/if}}
                 </div>
-                
+
                 {{!-- Card-based options --}}
-                <div class="choice-options-cards">
+                <div class="choice-options-cards tw-grid tw-grid-cols-[repeat(auto-fill,minmax(280px,1fr))] tw-gap-[var(--wh40k-space-md)] tw-px-[var(--wh40k-space-xs)]">
                     {{#each choice.options as |option|}}
-                        <div class="choice-card {{#if option.selected}}selected{{/if}} {{#if option.pendingSpec}}pending-spec{{/if}} {{#if option.disabled}}disabled{{/if}}"
+                        <div class="choice-card {{#if option.selected}}selected tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.15),rgba(201,162,39,0.05))] tw-border-[var(--wh40k-gold)] tw-border-[3px] tw-shadow-[0_0_15px_rgba(201,162,39,0.4)]{{/if}} {{#if option.pendingSpec}}pending-spec tw-border-[var(--wh40k-gold)] tw-shadow-[0_0_10px_rgba(201,162,39,0.2)]{{/if}} {{#if option.disabled}}disabled tw-opacity-50 tw-cursor-not-allowed tw-grayscale-[0.5]{{/if}} tw-relative tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-md)] tw-bg-[var(--wh40k-input-bg)] tw-border-2 tw-border-[var(--wh40k-border-color)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-min-h-[160px] hover:tw-bg-[var(--wh40k-input-bg-hover)] hover:tw-border-[var(--wh40k-gold)] hover:tw-shadow-[0_0_12px_rgba(201,162,39,0.3)] hover:tw--translate-y-[2px]"
                              data-action="toggleOption"
                              data-choice="{{../choiceKey}}"
                              data-option="{{option.value}}"
                              {{#if option.disabled}}disabled{{/if}}>
 
-                            <div class="choice-card-header">
-                                <span class="option-checkbox">
+                            <div class="choice-card-header tw-flex tw-items-start tw-gap-[var(--wh40k-space-sm)] tw-relative">
+                                <span class="option-checkbox tw-flex-shrink-0 tw-mt-[2px]">
                                     {{#if option.selected}}
-                                        <i class="fa-solid fa-check-square"></i>
+                                        <i class="fa-solid fa-check-square tw-text-[1.2rem] tw-text-[color:var(--wh40k-gold)]"></i>
                                     {{else if option.pendingSpec}}
-                                        <i class="fa-solid fa-caret-down"></i>
+                                        <i class="fa-solid fa-caret-down tw-text-[1.2rem] tw-text-[color:var(--wh40k-text-muted)]"></i>
                                     {{else}}
-                                        <i class="fa-regular fa-square"></i>
+                                        <i class="fa-regular fa-square tw-text-[1.2rem] tw-text-[color:var(--wh40k-text-muted)]"></i>
                                     {{/if}}
                                 </span>
-                                <h4 class="option-label">
+                                <h4 class="option-label tw-flex-1 tw-m-0 tw-text-base tw-font-semibold tw-font-[var(--wh40k-font-heading)] tw-text-[color:var(--wh40k-text-light)] tw-leading-[1.3]">
                                     {{option.label}}
                                     {{#if option.chosenSpecialization}}
-                                        <span class="chosen-spec">({{option.chosenSpecialization}})</span>
+                                        <span class="chosen-spec tw-font-normal tw-text-[color:var(--wh40k-gold)] tw-text-[0.9em]">({{option.chosenSpecialization}})</span>
                                     {{/if}}
                                 </h4>
                                 {{#if option.selected}}
-                                    <i class="fa-solid fa-check choice-checkmark"></i>
+                                    <i class="fa-solid fa-check choice-checkmark tw-absolute tw-top-[-4px] tw-right-[-4px] tw-w-6 tw-h-6 tw-flex tw-items-center tw-justify-center tw-bg-[var(--wh40k-success)] tw-text-white tw-rounded-full tw-text-[0.8rem] tw-shadow-[0_2px_8px_rgba(76,175,80,0.4)] tw-z-[5]"></i>
                                 {{/if}}
                             </div>
 
                             {{#if option.statBlock}}
-                                <p class="option-stat-block">{{option.statBlock}}</p>
+                                <p class="option-stat-block tw-m-0 tw-py-1 tw-px-2 tw-text-[0.8rem] tw-font-mono tw-text-[color:var(--wh40k-gold)] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-tracking-[0.02em]">{{option.statBlock}}</p>
                             {{/if}}
                             {{#if option.description}}
-                                <div class="option-description">{{{option.description}}}</div>
+                                <div class="option-description tw-m-0 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)] tw-leading-[1.4]">{{{option.description}}}</div>
                             {{/if}}
 
                             {{!-- Specialization dropdown (shown when option selected or pending) --}}
                             {{#if option.hasSpecializations}}
                                 {{#if (or option.pendingSpec option.selected)}}
-                                    <div class="specialization-select" onclick="event.stopPropagation()">
-                                        <label class="spec-label">
-                                            <i class="fa-solid fa-crosshairs"></i>
+                                    <div class="specialization-select tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-mt-[var(--wh40k-space-xs)] tw-bg-[rgba(0,0,0,0.3)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[var(--wh40k-bronze)]" onclick="event.stopPropagation()">
+                                        <label class="spec-label tw-text-[0.8rem] tw-text-[color:var(--wh40k-gold)] tw-font-semibold tw-whitespace-nowrap">
+                                            <i class="fa-solid fa-crosshairs tw-mr-1"></i>
                                             {{localize "WH40K.OriginPath.Choose"}}:
                                         </label>
                                         <select data-action="selectSpecialization"
                                                 data-choice="{{../choiceKey}}"
-                                                data-option="{{option.value}}">
+                                                data-option="{{option.value}}"
+                                                class="tw-flex-1 tw-py-[0.35rem] tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-xs)] tw-text-[color:var(--wh40k-text-light)] tw-text-[0.9rem] tw-cursor-pointer focus:tw-outline-none focus:tw-border-[var(--wh40k-gold)]">
                                             <option value="">-- Select --</option>
                                             {{#each option.specializations as |spec|}}
                                                 <option value="{{spec}}" {{#if (eq spec ../chosenSpecialization)}}selected{{/if}}>{{spec}}</option>
@@ -85,8 +86,8 @@
 
                             {{!-- View Item Sheet Button (if applicable) --}}
                             {{#if option.uuid}}
-                                <button type="button" class="view-item-btn" data-action="viewItem" data-uuid="{{option.uuid}}" data-tooltip="{{localize 'WH40K.OriginPath.ViewDetails'}}">
-                                    <i class="fa-solid fa-eye"></i>
+                                <button type="button" class="view-item-btn tw-absolute tw-top-[var(--wh40k-space-xs)] tw-right-[var(--wh40k-space-xs)] tw-w-8 tw-h-8 tw-flex tw-items-center tw-justify-center tw-bg-[rgba(0,0,0,0.7)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-full tw-text-[color:var(--wh40k-gold)] tw-cursor-pointer tw-opacity-0 tw-z-[10] hover:tw-bg-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-bg-dark)] hover:tw-border-[var(--wh40k-gold)] hover:tw-scale-110" data-action="viewItem" data-uuid="{{option.uuid}}" data-tooltip="{{localize 'WH40K.OriginPath.ViewDetails'}}">
+                                    <i class="fa-solid fa-eye tw-text-[0.85rem]"></i>
                                 </button>
                             {{/if}}
                         </div>
@@ -97,18 +98,18 @@
     </div>
 
     {{!-- Footer Actions --}}
-    <div class="choice-footer">
-        <button type="button" class="cancel-button" data-action="cancel">
-            <i class="fa-solid fa-times"></i>
+    <div class="choice-footer tw-flex tw-justify-end tw-gap-[var(--wh40k-space-md)] tw-pt-[var(--wh40k-space-md)] tw-mt-[var(--wh40k-space-md)] tw-border-t-2 tw-border-[var(--wh40k-bronze)]">
+        <button type="button" class="cancel-button tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-3 tw-px-6 tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-input-bg)] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-[var(--wh40k-bronze)] hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-[var(--wh40k-crimson)] hover:tw-text-[color:var(--wh40k-crimson)]" data-action="cancel">
+            <i class="fa-solid fa-times tw-text-[1.1rem]"></i>
             {{localize "WH40K.Cancel"}}
         </button>
-        
-        <button 
-            type="submit" 
-            class="confirm-button" 
+
+        <button
+            type="submit"
+            class="confirm-button tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-3 tw-px-6 tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-bg-dark)] tw-border-0 disabled:tw-opacity-50 disabled:tw-cursor-not-allowed hover:tw-bg-[var(--wh40k-gold-hover)] hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_12px_rgba(201,162,39,0.4)]"
             data-action="confirm"
             {{#unless allChoicesComplete}}disabled{{/unless}}>
-            <i class="fa-solid fa-check"></i>
+            <i class="fa-solid fa-check tw-text-[1.1rem]"></i>
             {{localize "WH40K.OriginPath.ConfirmChoices"}}
         </button>
     </div>

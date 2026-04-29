@@ -1,74 +1,74 @@
 {{!-- Encounter Builder Application --}}
-<div class="encounter-builder-content">
+<div class="encounter-builder-content tw-flex tw-flex-col tw-h-full tw-gap-4">
   {{!-- Header with Party Settings --}}
-  <header class="encounter-header">
+  <header class="encounter-header tw-bg-[var(--color-bg-option)] tw-p-3 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--color-border-light-tertiary)]">
     <div class="party-config">
-      <h3><i class="fa-solid fa-users"></i> {{localize "WH40K.NPC.Encounter.PartySettings"}}</h3>
-      <div class="party-fields">
-        <div class="form-group">
-          <label>{{localize "WH40K.NPC.Encounter.PartySize"}}</label>
-          <input type="number" name="partyCount" value="{{party.count}}" min="1" max="10"/>
+      <h3 class="tw-m-0 tw-mb-2 tw-text-[0.9rem] tw-text-[color:var(--wh40k-color-accent,var(--wh40k-color-gold))]"><i class="fa-solid fa-users tw-mr-2"></i> {{localize "WH40K.NPC.Encounter.PartySettings"}}</h3>
+      <div class="party-fields tw-flex tw-gap-6">
+        <div class="form-group tw-flex tw-items-center tw-gap-2">
+          <label class="tw-text-[0.85rem] tw-whitespace-nowrap">{{localize "WH40K.NPC.Encounter.PartySize"}}</label>
+          <input type="number" name="partyCount" value="{{party.count}}" min="1" max="10" class="tw-w-[60px] tw-py-1 tw-px-2 tw-border tw-border-[var(--color-border-light-tertiary)] tw-rounded tw-text-center"/>
         </div>
-        <div class="form-group">
-          <label>{{localize "WH40K.NPC.Encounter.PartyLevel"}}</label>
-          <input type="number" name="partyLevel" value="{{party.averageLevel}}" min="1" max="30"/>
+        <div class="form-group tw-flex tw-items-center tw-gap-2">
+          <label class="tw-text-[0.85rem] tw-whitespace-nowrap">{{localize "WH40K.NPC.Encounter.PartyLevel"}}</label>
+          <input type="number" name="partyLevel" value="{{party.averageLevel}}" min="1" max="30" class="tw-w-[60px] tw-py-1 tw-px-2 tw-border tw-border-[var(--color-border-light-tertiary)] tw-rounded tw-text-center"/>
         </div>
       </div>
     </div>
   </header>
 
   {{!-- Main Content Grid --}}
-  <div class="encounter-main">
+  <div class="encounter-main tw-flex-1 tw-grid tw-grid-cols-[1fr_280px] tw-gap-4 tw-min-h-0 tw-overflow-hidden">
     {{!-- NPC List --}}
-    <section class="npc-list-section">
-      <div class="section-header">
-        <h3><i class="fa-solid fa-skull"></i> {{localize "WH40K.NPC.Encounter.Enemies"}}</h3>
-        <button type="button" data-action="addNPC" class="icon-button" title="{{localize "WH40K.NPC.Encounter.AddNPC"}}">
+    <section class="npc-list-section tw-flex tw-flex-col tw-min-h-0 tw-overflow-hidden">
+      <div class="section-header tw-flex tw-justify-between tw-items-center tw-mb-2">
+        <h3 class="tw-m-0 tw-text-base"><i class="fa-solid fa-skull tw-mr-2 tw-text-[color:var(--wh40k-color-accent,var(--wh40k-color-gold))]"></i> {{localize "WH40K.NPC.Encounter.Enemies"}}</h3>
+        <button type="button" data-action="addNPC" class="icon-button tw-py-1 tw-px-2 tw-bg-[var(--wh40k-color-accent,var(--wh40k-color-gold))] tw-text-white tw-border-0 tw-rounded tw-cursor-pointer hover:tw-brightness-110" title="{{localize "WH40K.NPC.Encounter.AddNPC"}}">
           <i class="fa-solid fa-plus"></i>
         </button>
       </div>
 
       {{!-- Drop Zone --}}
-      <div class="encounter-drop-zone">
-        <i class="fa-solid fa-hand-pointer"></i>
+      <div class="encounter-drop-zone tw-p-4 tw-border-2 tw-border-dashed tw-border-[var(--color-border-light-tertiary)] tw-rounded-[var(--wh40k-radius-md)] tw-text-center tw-text-[color:var(--color-text-light-6)] tw-mb-2">
+        <i class="fa-solid fa-hand-pointer tw-text-2xl tw-mb-1 tw-block"></i>
         <span>{{localize "WH40K.NPC.Encounter.DropHere"}}</span>
       </div>
 
       {{!-- NPC Table --}}
       {{#if hasNPCs}}
-      <table class="npc-table">
-        <thead>
+      <table class="npc-table tw-flex-1 tw-overflow-auto tw-border tw-border-[var(--color-border-light-tertiary)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.85rem]">
+        <thead class="tw-sticky tw-top-0 tw-bg-[var(--color-bg-btn)] tw-z-[1]">
           <tr>
-            <th class="img"></th>
-            <th class="name">{{localize "WH40K.NPC.Name"}}</th>
-            <th class="threat">{{localize "WH40K.NPC.ThreatLevel"}}</th>
-            <th class="count">{{localize "WH40K.NPC.Encounter.Count"}}</th>
-            <th class="total">{{localize "WH40K.NPC.Encounter.Total"}}</th>
-            <th class="actions"></th>
+            <th class="img tw-w-10 tw-p-2 tw-text-left tw-font-bold tw-border-b tw-border-[var(--color-border-light-tertiary)]"></th>
+            <th class="name tw-p-2 tw-text-left tw-font-bold tw-border-b tw-border-[var(--color-border-light-tertiary)]">{{localize "WH40K.NPC.Name"}}</th>
+            <th class="threat tw-w-[60px] tw-p-2 tw-text-center tw-font-bold tw-border-b tw-border-[var(--color-border-light-tertiary)]">{{localize "WH40K.NPC.ThreatLevel"}}</th>
+            <th class="count tw-w-20 tw-p-2 tw-text-center tw-font-bold tw-border-b tw-border-[var(--color-border-light-tertiary)]">{{localize "WH40K.NPC.Encounter.Count"}}</th>
+            <th class="total tw-w-[60px] tw-p-2 tw-text-center tw-font-bold tw-border-b tw-border-[var(--color-border-light-tertiary)]">{{localize "WH40K.NPC.Encounter.Total"}}</th>
+            <th class="actions tw-w-10 tw-p-2 tw-border-b tw-border-[var(--color-border-light-tertiary)]"></th>
           </tr>
         </thead>
         <tbody>
           {{#each npcs}}
-          <tr>
-            <td class="img">
-              <img src="{{img}}" alt="{{name}}" data-action="openNPC" data-uuid="{{uuid}}"/>
+          <tr class="hover:tw-bg-[var(--color-bg-hover)]">
+            <td class="img tw-py-[0.4rem] tw-px-2 tw-align-middle">
+              <img src="{{img}}" alt="{{name}}" data-action="openNPC" data-uuid="{{uuid}}" class="tw-w-8 tw-h-8 tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer hover:tw-scale-110"/>
             </td>
-            <td class="name">
-              <a data-action="openNPC" data-uuid="{{uuid}}">{{name}}</a>
+            <td class="name tw-py-[0.4rem] tw-px-2 tw-align-middle">
+              <a data-action="openNPC" data-uuid="{{uuid}}" class="tw-text-inherit tw-no-underline hover:tw-text-[color:var(--wh40k-color-accent,var(--wh40k-color-gold))]">{{name}}</a>
             </td>
-            <td class="threat">{{threat}}</td>
-            <td class="count">
-              <button type="button" data-action="adjustCount" data-index="{{index}}" data-delta="-1">
+            <td class="threat tw-py-[0.4rem] tw-px-2 tw-align-middle tw-text-center tw-font-bold">{{threat}}</td>
+            <td class="count tw-py-[0.4rem] tw-px-2 tw-align-middle tw-text-center">
+              <button type="button" data-action="adjustCount" data-index="{{index}}" data-delta="-1" class="tw-py-[0.15rem] tw-px-[0.4rem] tw-bg-[var(--color-bg-btn)] tw-border tw-border-[var(--color-border-light-tertiary)] tw-rounded tw-cursor-pointer tw-text-[0.7rem] hover:tw-bg-[var(--color-bg-hover)]">
                 <i class="fa-solid fa-minus"></i>
               </button>
-              <span>{{count}}</span>
-              <button type="button" data-action="adjustCount" data-index="{{index}}" data-delta="1">
+              <span class="tw-inline-block tw-min-w-[1.5rem] tw-text-center tw-font-bold">{{count}}</span>
+              <button type="button" data-action="adjustCount" data-index="{{index}}" data-delta="1" class="tw-py-[0.15rem] tw-px-[0.4rem] tw-bg-[var(--color-bg-btn)] tw-border tw-border-[var(--color-border-light-tertiary)] tw-rounded tw-cursor-pointer tw-text-[0.7rem] hover:tw-bg-[var(--color-bg-hover)]">
                 <i class="fa-solid fa-plus"></i>
               </button>
             </td>
-            <td class="total">{{totalThreat}}</td>
-            <td class="actions">
-              <button type="button" data-action="removeNPC" data-index="{{index}}" class="icon-button danger" title="{{localize "Remove"}}">
+            <td class="total tw-py-[0.4rem] tw-px-2 tw-align-middle tw-text-center tw-font-bold">{{totalThreat}}</td>
+            <td class="actions tw-py-[0.4rem] tw-px-2 tw-align-middle">
+              <button type="button" data-action="removeNPC" data-index="{{index}}" class="icon-button danger tw-p-1 tw-bg-transparent tw-border-0 tw-cursor-pointer tw-text-[color:var(--color-text-light-6)] hover:tw-text-[#ef4444]" title="{{localize "Remove"}}">
                 <i class="fa-solid fa-trash"></i>
               </button>
             </td>
@@ -77,85 +77,85 @@
         </tbody>
       </table>
       {{else}}
-      <p class="empty-message">{{localize "WH40K.NPC.Encounter.NoEnemies"}}</p>
+      <p class="empty-message tw-text-center tw-text-[color:var(--color-text-light-6)] tw-italic tw-p-4">{{localize "WH40K.NPC.Encounter.NoEnemies"}}</p>
       {{/if}}
     </section>
 
     {{!-- Metrics Panel --}}
-    <aside class="encounter-metrics">
+    <aside class="encounter-metrics tw-flex tw-flex-col tw-gap-3 tw-overflow-auto">
       {{!-- Difficulty Rating --}}
-      <div class="metric-card difficulty" style="border-color: {{difficultyColor}};">
-        <h4>{{localize "WH40K.NPC.Encounter.Difficulty"}}</h4>
-        <div class="difficulty-badge" style="background-color: {{difficultyColor}};">
+      <div class="metric-card difficulty tw-bg-[var(--color-bg-option)] tw-border-2 tw-border-[var(--color-border-light-tertiary)] tw-rounded-[var(--wh40k-radius-md)] tw-p-3" style="border-color: {{difficultyColor}};">
+        <h4 class="tw-m-0 tw-mb-2 tw-text-[0.85rem] tw-text-[color:var(--color-text-light-6)]">{{localize "WH40K.NPC.Encounter.Difficulty"}}</h4>
+        <div class="difficulty-badge tw-py-[0.4rem] tw-px-3 tw-rounded-[var(--wh40k-radius-md)] tw-text-center tw-font-bold tw-text-base tw-text-white tw-[text-shadow:0_1px_2px_rgba(0,0,0,0.3)]" style="background-color: {{difficultyColor}};">
           {{difficultyLabel}}
         </div>
-        <p class="ratio">{{localize "WH40K.NPC.Encounter.ThreatRatio"}}: {{threatRatio}}x</p>
+        <p class="ratio tw-mt-2 tw-mb-0 tw-text-[0.8rem] tw-text-center tw-text-[color:var(--color-text-light-6)]">{{localize "WH40K.NPC.Encounter.ThreatRatio"}}: {{threatRatio}}x</p>
       </div>
 
       {{!-- Threat Summary --}}
-      <div class="metric-card threat-summary">
-        <h4>{{localize "WH40K.NPC.Encounter.ThreatSummary"}}</h4>
-        <dl>
-          <dt>{{localize "WH40K.NPC.Encounter.EnemyThreat"}}</dt>
-          <dd>{{totalThreat}}</dd>
-          <dt>{{localize "WH40K.NPC.Encounter.PartyThreat"}}</dt>
-          <dd>{{partyThreat}}</dd>
-          <dt>{{localize "WH40K.NPC.Encounter.TotalEnemies"}}</dt>
-          <dd>{{totalNPCs}}</dd>
+      <div class="metric-card threat-summary tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-light-tertiary)] tw-rounded-[var(--wh40k-radius-md)] tw-p-3">
+        <h4 class="tw-m-0 tw-mb-2 tw-text-[0.85rem] tw-text-[color:var(--color-text-light-6)]">{{localize "WH40K.NPC.Encounter.ThreatSummary"}}</h4>
+        <dl class="tw-m-0 tw-grid tw-grid-cols-[1fr_auto] tw-gap-y-1 tw-gap-x-2 tw-text-[0.85rem]">
+          <dt class="tw-text-[color:var(--color-text-light-6)]">{{localize "WH40K.NPC.Encounter.EnemyThreat"}}</dt>
+          <dd class="tw-m-0 tw-font-bold tw-text-right">{{totalThreat}}</dd>
+          <dt class="tw-text-[color:var(--color-text-light-6)]">{{localize "WH40K.NPC.Encounter.PartyThreat"}}</dt>
+          <dd class="tw-m-0 tw-font-bold tw-text-right">{{partyThreat}}</dd>
+          <dt class="tw-text-[color:var(--color-text-light-6)]">{{localize "WH40K.NPC.Encounter.TotalEnemies"}}</dt>
+          <dd class="tw-m-0 tw-font-bold tw-text-right">{{totalNPCs}}</dd>
         </dl>
       </div>
 
       {{!-- Action Economy --}}
-      <div class="metric-card action-economy">
-        <h4>{{localize "WH40K.NPC.Encounter.ActionEconomy"}}</h4>
-        <div class="action-comparison">
-          <div class="party-actions">
-            <span class="label">{{localize "WH40K.NPC.Encounter.Party"}}</span>
-            <span class="value">{{actionEconomy.partyActions}}</span>
+      <div class="metric-card action-economy tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-light-tertiary)] tw-rounded-[var(--wh40k-radius-md)] tw-p-3">
+        <h4 class="tw-m-0 tw-mb-2 tw-text-[0.85rem] tw-text-[color:var(--color-text-light-6)]">{{localize "WH40K.NPC.Encounter.ActionEconomy"}}</h4>
+        <div class="action-comparison tw-flex tw-justify-between tw-items-center tw-gap-2">
+          <div class="party-actions tw-text-center tw-flex-1">
+            <span class="label tw-block tw-text-[0.7rem] tw-text-[color:var(--color-text-light-6)]">{{localize "WH40K.NPC.Encounter.Party"}}</span>
+            <span class="value tw-text-2xl tw-font-bold">{{actionEconomy.partyActions}}</span>
           </div>
-          <span class="vs">vs</span>
-          <div class="enemy-actions">
-            <span class="label">{{localize "WH40K.NPC.Encounter.Enemies"}}</span>
-            <span class="value">{{actionEconomy.enemyActions}}</span>
+          <span class="vs tw-text-[color:var(--color-text-light-6)] tw-font-bold">vs</span>
+          <div class="enemy-actions tw-text-center tw-flex-1">
+            <span class="label tw-block tw-text-[0.7rem] tw-text-[color:var(--color-text-light-6)]">{{localize "WH40K.NPC.Encounter.Enemies"}}</span>
+            <span class="value tw-text-2xl tw-font-bold">{{actionEconomy.enemyActions}}</span>
           </div>
         </div>
-        <p class="advantage" style="color: {{actionEconomy.advantage.color}};">
+        <p class="advantage tw-mt-2 tw-mb-0 tw-text-center tw-font-bold tw-text-[0.85rem]" style="color: {{actionEconomy.advantage.color}};">
           {{actionEconomy.advantage.text}}
         </p>
       </div>
 
       {{!-- Saved Templates --}}
-      <div class="metric-card templates">
-        <h4>{{localize "WH40K.NPC.Encounter.Templates"}}</h4>
+      <div class="metric-card templates tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-light-tertiary)] tw-rounded-[var(--wh40k-radius-md)] tw-p-3">
+        <h4 class="tw-m-0 tw-mb-2 tw-text-[0.85rem] tw-text-[color:var(--color-text-light-6)]">{{localize "WH40K.NPC.Encounter.Templates"}}</h4>
         {{#if hasTemplates}}
-        <ul class="template-list">
+        <ul class="template-list tw-m-0 tw-p-0 tw-list-none">
           {{#each templates}}
-          <li>
-            <button type="button" data-action="loadTemplate" data-index="{{@index}}">
+          <li class="tw-mb-1">
+            <button type="button" data-action="loadTemplate" data-index="{{@index}}" class="tw-w-full tw-py-[0.3rem] tw-px-2 tw-bg-[var(--color-bg-btn)] tw-border tw-border-[var(--color-border-light-tertiary)] tw-rounded tw-text-left tw-cursor-pointer tw-text-[0.8rem] hover:tw-bg-[var(--color-bg-hover)]">
               {{name}}
             </button>
           </li>
           {{/each}}
         </ul>
         {{else}}
-        <p class="empty-message">{{localize "WH40K.NPC.Encounter.NoTemplates"}}</p>
+        <p class="empty-message tw-text-[0.8rem] tw-text-[color:var(--color-text-light-6)] tw-italic tw-m-0">{{localize "WH40K.NPC.Encounter.NoTemplates"}}</p>
         {{/if}}
       </div>
     </aside>
   </div>
 
   {{!-- Footer Actions --}}
-  <footer class="encounter-footer">
-    <button type="button" data-action="clearAll" class="secondary">
-      <i class="fa-solid fa-broom"></i>
+  <footer class="encounter-footer tw-flex tw-gap-2 tw-pt-3 tw-border-t tw-border-[var(--color-border-light-tertiary)]">
+    <button type="button" data-action="clearAll" class="secondary tw-flex-1 tw-p-2 tw-bg-[var(--color-bg-btn)]">
+      <i class="fa-solid fa-broom tw-mr-2"></i>
       {{localize "WH40K.NPC.Encounter.ClearAll"}}
     </button>
-    <button type="button" data-action="saveTemplate" class="secondary">
-      <i class="fa-solid fa-floppy-disk"></i>
+    <button type="button" data-action="saveTemplate" class="secondary tw-flex-1 tw-p-2 tw-bg-[var(--color-bg-btn)]">
+      <i class="fa-solid fa-floppy-disk tw-mr-2"></i>
       {{localize "WH40K.NPC.Encounter.SaveTemplate"}}
     </button>
-    <button type="button" data-action="deployToCombat" class="primary" {{#unless hasCombat}}title="{{localize "WH40K.NPC.Encounter.NoCombat"}}"{{/unless}}>
-      <i class="fa-solid fa-swords"></i>
+    <button type="button" data-action="deployToCombat" class="primary tw-flex-1 tw-p-2 tw-bg-[var(--wh40k-color-accent,var(--wh40k-color-gold))] tw-text-white hover:tw-brightness-110" {{#unless hasCombat}}title="{{localize "WH40K.NPC.Encounter.NoCombat"}}"{{/unless}}>
+      <i class="fa-solid fa-swords tw-mr-2"></i>
       {{localize "WH40K.NPC.Encounter.Deploy"}}
     </button>
   </footer>
