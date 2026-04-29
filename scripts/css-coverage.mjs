@@ -131,10 +131,13 @@ const JS_HOOKS = new Set([
     'wh40k-nav-item',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
-// Tokens like `-bar-container`, `-bar-fill`, `-percent` are artifacts of stripping the
-// leading `{{someVar}}` from a class attr like `{{cssPrefix}}-bar-container`. They start
-// with a hyphen and contain only word characters and hyphens — not valid CSS class names.
-const HBS_FRAGMENT_RE = /^-[a-z][a-z0-9-]*$/;
+// Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
+// class attr. Two forms:
+//   Leading-strip:  `{{cssPrefix}}-bar-container` → `-bar-container`  (starts with hyphen)
+//   Trailing-strip: `wh40k-{{key}}-badge`         → `wh40k-`          (ends with hyphen)
+// Neither form is a valid CSS class name (CSS identifiers cannot start or end with a
+// bare hyphen in this way), so they are safely exempt from the non-tw check.
+const HBS_FRAGMENT_RE = /^-[a-z][a-z0-9-]*$|^[a-z][a-z0-9-]+-$/;
 
 /** Return true when a bare utility string is a Tailwind utility (any polarity). */
 function isTwBare(s) {
