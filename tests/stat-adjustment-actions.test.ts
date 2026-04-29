@@ -8,39 +8,48 @@
  * when value is N decrements to N-1).
  */
 
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const ORIGINAL_GAME = (globalThis as Record<string, unknown>).game;
 const ORIGINAL_FOUNDRY = (globalThis as Record<string, unknown>).foundry;
 
-beforeAll(() => {
-    (globalThis as Record<string, unknown>).game = {
-        i18n: { localize: (k: string) => k, format: (k: string) => k },
-        user: { isGM: true },
-    };
-    (globalThis as Record<string, unknown>).foundry = {
-        utils: {
-            getProperty: (obj: Record<string, unknown>, path: string) => {
-                return path.split('.').reduce<unknown>((acc, key) => {
-                    if (acc && typeof acc === 'object' && key in (acc as Record<string, unknown>)) {
-                        return (acc as Record<string, unknown>)[key];
-                    }
-                    return undefined;
-                }, obj);
-            },
+class FakeApplicationV2 {}
+const fakeHandlebarsApplicationMixin = <T extends new (...args: any[]) => object>(Base: T): T => class extends Base {} as T;
+
+(globalThis as Record<string, unknown>).game = {
+    i18n: { localize: (k: string) => k, format: (k: string) => k },
+    user: { isGM: true },
+};
+(globalThis as Record<string, unknown>).foundry = {
+    applications: {
+        api: {
+            ApplicationV2: FakeApplicationV2,
+            HandlebarsApplicationMixin: fakeHandlebarsApplicationMixin,
         },
-    };
-});
+    },
+    utils: {
+        getProperty: (obj: Record<string, unknown>, path: string) => {
+            return path.split('.').reduce<unknown>((acc, key) => {
+                if (acc && typeof acc === 'object' && key in (acc as Record<string, unknown>)) {
+                    return (acc as Record<string, unknown>)[key];
+                }
+                return undefined;
+            }, obj);
+        },
+    },
+};
 
 afterAll(() => {
     (globalThis as Record<string, unknown>).game = ORIGINAL_GAME;
     (globalThis as Record<string, unknown>).foundry = ORIGINAL_FOUNDRY;
 });
 
-import * as StatActions from '../src/module/applications/api/stat-adjustment-actions.ts';
-import type { StatAdjustmentHost } from '../src/module/applications/api/stat-adjustment-actions.ts';
+const StatActions = await import('../src/module/applications/api/stat-adjustment-actions.ts');
+type StatAdjustmentHost = import('../src/module/applications/api/stat-adjustment-actions.ts').StatAdjustmentHost;
 
-function makeHost(systemOverrides: Record<string, unknown> = {}): StatAdjustmentHost & { _updates: Record<string, unknown>[]; _notifies: Array<[string, string]> } {
+function makeHost(
+    systemOverrides: Record<string, unknown> = {},
+): StatAdjustmentHost & { _updates: Record<string, unknown>[]; _notifies: Array<[string, string]> } {
     const host = {
         _updates: [] as Record<string, unknown>[],
         _notifies: [] as Array<[string, string]>,
@@ -78,7 +87,7 @@ function btn(dataset: Record<string, string>): HTMLElement {
     return el;
 }
 
-const ev = () => ({ stopPropagation: vi.fn() }) as unknown as Event;
+const ev = () => ({ stopPropagation: vi.fn() } as unknown as Event);
 
 describe('increment / decrement / adjustStat', () => {
     let host: ReturnType<typeof makeHost>;

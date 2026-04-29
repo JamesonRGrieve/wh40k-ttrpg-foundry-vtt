@@ -21,6 +21,7 @@ import editInputSrc from '../src/templates/actor/partial/vital-edit-input.hbs?ra
 import quickAdjustSrc from '../src/templates/actor/partial/vital-quick-adjust.hbs?raw';
 
 initializeStoryHandlebars();
+Handlebars.registerHelper('isExpanded', () => false);
 
 const shellTemplate = Handlebars.compile(shellSrc);
 const quickControlsTemplate = Handlebars.compile(quickControlsSrc);
@@ -190,7 +191,9 @@ describe('vital-panel-shell partial', () => {
     it('emits the panel header with the configured key/label/icon and a chevron toggle', () => {
         // Register inner partial-block so the shell compiles in isolation.
         Handlebars.registerPartial('test-shell', shellSrc);
-        const wrapped = Handlebars.compile('{{#> test-shell key="wounds" label="Wounds" icon="fa-heart-broken" actor=actor rootStateClass=rootStateClass}}<div class="body">body</div>{{/test-shell}}');
+        const wrapped = Handlebars.compile(
+            '{{#> test-shell key="wounds" label="Wounds" icon="fa-heart-broken" actor=actor rootStateClass=rootStateClass}}<div class="body">body</div>{{/test-shell}}',
+        );
         const html = wrapped({ actor: { id: 'a1', flags: {} }, rootStateClass: 'wh40k-wounds-warning' });
         const root = dom(html);
         const header = root.querySelector('.wh40k-panel-header');

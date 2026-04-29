@@ -1,23 +1,23 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
     label=(iff actor.encumbrance.encumbered "Encumbrance (overweight)" "Encumbrance")
     rootClass=(concat "tw-col-auto " (isError actor.encumbrance.encumbered))}}
-    <div class="wh40k-field__wrapper">
-        <span class="wh40k-field__header">Current Enc.</span>
-        <span class="wh40k-field__span">{{actor.encumbrance.value}}</span>
+    <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-m-0.5 tw-bg-white/50 tw-rounded-md tw-border tw-border-black/10">
+        <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Current Enc.</span>
+        <span class="tw-font-bold">{{actor.encumbrance.value}}</span>
     </div>
-    <div class="wh40k-field__wrapper">
-        <span class="wh40k-field__header">Max Enc.</span>
-        <span class="wh40k-field__span">{{actor.encumbrance.max}}</span>
+    <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-m-0.5 tw-bg-white/50 tw-rounded-md tw-border tw-border-black/10">
+        <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Max Enc.</span>
+        <span class="tw-font-bold">{{actor.encumbrance.max}}</span>
     </div>
     {{#if actor.backpack.hasBackpack}}
         {{#unless actor.backpack.isCombatVest}}
-            <div class="wh40k-field__wrapper">
-                <span class="wh40k-field__header">Backpack Current Enc.</span>
-                <span class="wh40k-field__span">{{actor.encumbrance.backpack_value}}</span>
+            <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-m-0.5 tw-bg-white/50 tw-rounded-md tw-border tw-border-black/10">
+                <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Backpack Current Enc.</span>
+                <span class="tw-font-bold">{{actor.encumbrance.backpack_value}}</span>
             </div>
-            <div class="wh40k-field__wrapper">
-                <span class="wh40k-field__header">Backpack Max Enc.</span>
-                <span class="wh40k-field__span">{{actor.encumbrance.backpack_max}}</span>
+            <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-m-0.5 tw-bg-white/50 tw-rounded-md tw-border tw-border-black/10">
+                <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Backpack Max Enc.</span>
+                <span class="tw-font-bold">{{actor.encumbrance.backpack_max}}</span>
             </div>
         {{/unless}}
     {{/if}}

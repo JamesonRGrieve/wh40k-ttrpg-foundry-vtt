@@ -7,35 +7,35 @@
                 {{localize "WH40K.Modification.Restrictions"}}
             </h3>
         </header>
-        
+
         <div class="wh40k-panel-body">
-            <p class="wh40k-help-text">
+            <p class="wh40k-help-text tw-px-4 tw-py-3 tw-mb-4 tw-text-sm tw-rounded-md tw-border-l-[3px] tw-border-[var(--wh40k-accent-info)]" style="background: rgba(52,152,219,0.1); color: rgba(255,255,255,0.7)">
                 {{localize "WH40K.Modification.RestrictionsHelp"}}
             </p>
-            
-            <div class="wh40k-restriction-grid">
+
+            <div class="wh40k-restriction-grid tw-grid tw-gap-3 tw-py-4" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))">
                 {{#each armourTypesArray}}
-                    <label class="wh40k-restriction-item {{#if selected}}selected{{/if}}">
-                        <input type="checkbox" 
-                               data-action="toggleArmourType" 
+                    <label class="wh40k-restriction-item tw-relative tw-flex tw-items-center tw-gap-3 tw-px-4 tw-py-3.5 tw-rounded-lg tw-border-2 tw-cursor-pointer tw-select-none tw-transition-all {{#if selected}}tw-border-gold tw-shadow-[0_0_0_1px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]{{else}}tw-border-[rgba(212,197,166,0.2)] hover:tw-border-[rgba(212,175,55,0.5)] hover:tw--translate-y-px{{/if}}" style="{{#if selected}}background: linear-gradient(135deg,rgba(212,175,55,0.2) 0%,rgba(212,175,55,0.1) 100%){{else}}background: rgba(255,255,255,0.03){{/if}}">
+                        <input class="wh40k-restriction-check tw-shrink-0 tw-w-5 tw-h-5 tw-m-0 tw-cursor-pointer" type="checkbox"
+                               data-action="toggleArmourType"
                                data-type="{{key}}"
                                {{checked selected}}
                                {{disabled (eq key "any")}}>
-                        <span class="wh40k-restriction-label">{{label}}</span>
-                        <i class="fas fa-check wh40k-restriction-check"></i>
+                        <span class="wh40k-restriction-label tw-flex-1 tw-font-semibold tw-text-[0.9rem] {{#if selected}}tw-text-white{{else}}tw-text-[rgba(255,255,255,0.7)]{{/if}} tw-transition-colors">{{label}}</span>
+                        {{#if selected}}<i class="fas fa-check tw-absolute tw-top-1.5 tw-right-1.5 tw-text-xs tw-text-gold"></i>{{/if}}
                     </label>
                 {{/each}}
             </div>
-            
+
             {{#if (eq armourTypesArray.length 0)}}
-                <p class="wh40k-empty-state">
-                    <i class="fas fa-exclamation-triangle"></i>
+                <p class="wh40k-empty-state tw-text-center tw-p-4 tw-italic" style="color: rgba(255,255,255,0.5)">
+                    <i class="fas fa-exclamation-triangle tw-mr-2"></i>
                     No armour types configured
                 </p>
             {{/if}}
         </div>
     </div>
-    
+
     <div class="wh40k-panel wh40k-panel--source">
         <header class="wh40k-panel-header">
             <h3>
@@ -43,22 +43,22 @@
                 {{localize "WH40K.Source.Book"}}
             </h3>
         </header>
-        
+
         <div class="wh40k-panel-body">
-            <div class="wh40k-field-row">
-                <div class="wh40k-field">
-                    <label class="wh40k-field-label">{{localize "WH40K.Availability.Label"}}</label>
-                    <select name="system.availability" class="wh40k-field-select">
+            <div class="wh40k-field-row tw-flex tw-gap-4">
+                <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
+                    <label class="wh40k-field-label tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Availability.Label"}}</label>
+                    <select name="system.availability" class="wh40k-field-select tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-bg-[var(--wh40k-bg-primary)]">
                         {{selectOptions dh.availabilities selected=source.availability labelAttr="label" blank=""}}
                     </select>
                 </div>
-                
-                <div class="wh40k-field">
-                    <label class="wh40k-field-label">{{localize "WH40K.Source.Book"}}</label>
-                    <input type="text" 
-                           name="system.source" 
-                           value="{{source.source}}" 
-                           class="wh40k-field-input"
+
+                <div class="wh40k-field tw-flex tw-flex-col tw-gap-1 tw-flex-1">
+                    <label class="wh40k-field-label tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Source.Book"}}</label>
+                    <input type="text"
+                           name="system.source"
+                           value="{{source.source}}"
+                           class="wh40k-field-input tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-bg-[var(--wh40k-bg-primary)] tw-w-full"
                            placeholder="Core Rulebook, p. 123">
                 </div>
             </div>

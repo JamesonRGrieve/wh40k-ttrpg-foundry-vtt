@@ -53,34 +53,37 @@ type SkillLike = Partial<
         showFavorite: boolean;
         isGranted: boolean;
     }
-> &
-    Record<string, unknown>;
+> & { trainingLevel: number } & Record<string, unknown>;
 type CharacteristicLike = WH40KCharacteristic;
 type TalentLike = WH40KItem & {
     system: WH40KItem['system'] & {
-        tier?: number;
-        tierLabel?: string;
-        category?: string;
-        categoryLabel?: string;
-        fullName?: string;
-        aptitudes?: string[];
-        prerequisitesLabel?: string;
-        hasPrerequisites?: boolean;
-        cost?: number;
-        benefit?: unknown;
-        description?: unknown;
+        tier: number | string;
+        tierLabel: string;
+        category: string;
+        categoryLabel: string;
+        fullName: string;
+        aptitudes: string[];
+        prerequisitesLabel: string;
+        hasPrerequisites: boolean;
+        cost: number;
+        benefit: unknown;
+        description: unknown;
+        [key: string]: unknown;
     };
-    tierLabel?: string;
+    tierLabel: string;
+    [key: string]: unknown;
 };
 type TraitLike = WH40KItem & {
     system: WH40KItem['system'] & {
-        fullName?: string;
-        category?: string;
-        categoryLabel?: string;
-        hasLevel?: boolean;
-        level?: number;
-        isVariable?: boolean;
+        fullName: string;
+        category: string;
+        categoryLabel: string;
+        hasLevel: boolean;
+        level: number;
+        isVariable: boolean;
+        [key: string]: unknown;
     };
+    [key: string]: unknown;
 };
 type TraitGroup = { category: string; categoryLabel: string; traits: Record<string, unknown>[] };
 type TalentDisplay = Record<string, unknown> & {
@@ -2240,9 +2243,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     static async #spendXPAdvance(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const charKey = target.dataset.characteristic;
         if (!charKey) return;
-        const char = this.actor.system.characteristics[charKey] as
-            | (WH40KCharacteristic & { nextAdvanceCost: number; advance?: number })
-            | undefined;
+        const char = this.actor.system.characteristics[charKey] as (WH40KCharacteristic & { nextAdvanceCost: number; advance?: number }) | undefined;
 
         if (!char) {
             (ui as any).notifications.error('Invalid characteristic!');

@@ -82,15 +82,26 @@ type CategorizedItems = {
 
 type WeaponLike = WH40KItem & {
     system: WH40KItem['system'] & {
-        equipped?: boolean;
-        activated?: boolean;
-        class?: string;
-        type?: string;
-        clip?: { max?: number; value?: number };
-        ammoPercentage?: number;
-        effectiveClipMax?: number;
+        equipped: boolean;
+        activated: boolean;
+        class: string;
+        type: string;
+        clip: { max: number; value: number };
+        ammoPercentage: number;
+        effectiveClipMax: number;
+        [key: string]: unknown;
     };
-    ammoPercent?: number;
+    ammoPercent: number;
+    [key: string]: unknown;
+};
+
+type TalentLike = WH40KItem & {
+    system: WH40KItem['system'] & {
+        tier: number | string;
+        category: string;
+        [key: string]: unknown;
+    };
+    [key: string]: unknown;
 };
 
 type UtilityMenuOption = {
@@ -1194,25 +1205,21 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Add ammo percentage to weapons
         ([sheetContext.primaryWeapon, sheetContext.secondaryWeapon, sheetContext.sidearm].filter(Boolean) as WeaponLike[]).forEach((w) => {
-            if (w.system?.clip?.max) {
-                w.ammoPercent = w.system.ammoPercentage ?? Math.round((w.system.clip.value / w.system.effectiveClipMax) * 100);
+            const clip = w.system.clip;
+            if (clip?.max && w.system.effectiveClipMax) {
+                w.ammoPercent = w.system.ammoPercentage ?? Math.round((clip.value / w.system.effectiveClipMax) * 100);
             }
         });
 
         // Prepare active effects data
-        sheetContext.effects = this.actor.effects.map((effect: foundry.documents.BaseActiveEffect) => {
-            const activeEffect = effect as foundry.documents.BaseActiveEffect & {
-                label?: string;
-                sourceName?: string;
-                changes?: unknown[];
-            };
+        sheetContext.effects = this.actor.effects.map((effect: ActiveEffect) => {
             return {
                 id: effect.id,
-                label: activeEffect.label || effect.name,
+                label: effect.name,
                 icon: effect.icon,
                 disabled: effect.disabled,
-                sourceName: activeEffect.sourceName,
-                changes: (activeEffect.changes || []) as unknown[],
+                sourceName: effect.sourceName,
+                changes: effect.changes || [],
                 document: effect,
             };
         });
@@ -1228,21 +1235,17 @@ export default class CharacterSheet extends BaseActorSheet {
         };
 
         // Extract combat talents for display in combat actions panel
-        const talents = this.actor.items.filter((i) => (i.type as string) === 'talent');
+        const talents = this.actor.items.filter((i) => i.type === 'talent') as TalentLike[];
         sheetContext.combatTalents = talents
-            .filter((t) => {
-                const sys = t.system as WH40KItemSystemData & { category?: string };
-                return sys?.category === 'combat';
-            })
+            .filter((t) => t.system.category === 'combat')
             .map((t) => {
-                const sys = t.system as WH40KItemSystemData & { category?: string; tier?: number | string };
                 return {
                     id: t.id,
                     name: t.name,
                     img: t.img,
                     system: {
-                        tier: sys.tier,
-                        category: sys.category,
+                        tier: t.system.tier,
+                        category: t.system.category,
                     },
                 };
             });

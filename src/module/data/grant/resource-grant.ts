@@ -1,5 +1,45 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import BaseGrantData from './base-grant.ts';
+import BaseGrantData, { GrantApplicationResult, GrantRestoreData, GrantSummary } from './base-grant.ts';
+
+/**
+ * A single resource configuration within a resource grant.
+ */
+interface ResourceConfig {
+    type: string;
+    formula: string;
+    optional: boolean;
+    additive: boolean;
+}
+
+/**
+ * State stored per resource type after application.
+ */
+interface ResourceAppliedState {
+    formula: string;
+    rolledValue: number;
+    additive: boolean;
+    previousValue: number;
+    previousMax: number | null;
+    newValue: number;
+    newMax: number | null;
+}
+
+/**
+ * Data shape returned by reverse() for resource grants.
+ */
+interface ResourceRestoreData {
+    resources: Record<string, ResourceAppliedState>;
+}
+
+/**
+ * Definition of a resource type and its actor paths.
+ */
+interface ResourceDefinition {
+    label: string;
+    valuePath: string;
+    maxPath: string | null;
+    affectsMax: boolean;
+}
 
 /**
  * Grant that provides resource bonuses to an actor.
@@ -13,14 +53,14 @@ export default class ResourceGrantData extends BaseGrantData {
     /*  Static Properties                           */
     /* -------------------------------------------- */
 
-    static TYPE = 'resource';
-    static ICON = 'icons/svg/aura.svg';
+    static override TYPE = 'resource';
+    static override ICON = 'icons/svg/aura.svg';
 
     /**
      * Valid resource types and their paths.
      * @type {object}
      */
-    static RESOURCES = {
+    static RESOURCES: Record<string, ResourceDefinition> = {
         wounds: {
             label: 'WH40K.Resource.Wounds',
             valuePath: 'system.wounds.value',
@@ -47,12 +87,16 @@ export default class ResourceGrantData extends BaseGrantData {
         },
     };
 
+    /** Property declarations */
+    declare resources: ResourceConfig[];
+    declare applied: Record<string, ResourceAppliedState>;
+
     /* -------------------------------------------- */
     /*  Schema Definition                           */
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -89,11 +133,11 @@ export default class ResourceGrantData extends BaseGrantData {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _applyGrant(actor: WH40KBaseActor, data: Record<string, unknown>, options: Record<string, unknown>, result: Record<string, unknown>): Promise<void> {
+    override async _applyGrant(actor: WH40KBaseActor, data: GrantRestoreData, options: Record<string, unknown>, result: GrantApplicationResult): Promise<void> {
         const ctor = this.constructor as typeof ResourceGrantData;
-        const updates = {};
-        const selectedResources = data.selected ?? this.resources.map((r) => r.type);
-        const rolledValues = data.rolledValues ?? {};
+        const updates: Record<string, unknown> = {};
+        const selectedResources = (data.selected as string[]) ?? this.resources.map((r) => r.type);
+        const rolledValues = (data.rolledValues as Record<string, number>) ?? {};
 
         for (const resourceConfig of this.resources) {
             const { type, formula, optional: resOptional, additive } = resourceConfig;
@@ -112,15 +156,15 @@ export default class ResourceGrantData extends BaseGrantData {
             const value = rolledValues[type] ?? (await this._evaluateFormula(formula, actor));
             if (value === 0) continue;
 
-            const currentValue = foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0;
-            let currentMax = null;
+            const currentValue = (foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0) as number;
+            let currentMax: number | null = null;
             if (resourceDef.affectsMax && resourceDef.maxPath) {
-                currentMax = foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0;
+                currentMax = (foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0) as number;
             }
 
             const isAdditive = additive !== false;
-            const newValue = isAdditive ? Number(currentValue) + value : value;
-            const newMax = currentMax !== null ? (isAdditive ? Number(currentMax) + value : value) : null;
+            const newValue = isAdditive ? currentValue + value : value;
+            const newMax = currentMax !== null ? (isAdditive ? currentMax + value : value) : null;
 
             updates[resourceDef.valuePath] = newValue;
             if (resourceDef.affectsMax && resourceDef.maxPath) {
@@ -146,12 +190,12 @@ export default class ResourceGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    async reverse(actor, appliedState): Promise<unknown> {
+    override async reverse(actor: WH40KBaseActor, appliedState: Record<string, unknown>): Promise<ResourceRestoreData> {
         const ctor = this.constructor as typeof ResourceGrantData;
-        const restoreData = { resources: {} };
-        const updates = {};
+        const restoreData: ResourceRestoreData = { resources: {} };
+        const updates: Record<string, unknown> = {};
 
-        for (const [type, state] of Object.entries(appliedState) as [string, any][]) {
+        for (const [type, state] of Object.entries(appliedState) as [string, ResourceAppliedState][]) {
             const resourceDef = ctor.RESOURCES[type];
             if (!resourceDef) continue;
 
@@ -182,12 +226,12 @@ export default class ResourceGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    async restore(actor, restoreData): Promise<unknown> {
+    override async restore(actor: WH40KBaseActor, restoreData: ResourceRestoreData): Promise<GrantApplicationResult> {
         const ctor = this.constructor as typeof ResourceGrantData;
         const result = this._initResult();
-        const updates = {};
+        const updates: Record<string, unknown> = {};
 
-        for (const [type, state] of Object.entries(restoreData.resources ?? {}) as [string, any][]) {
+        for (const [type, state] of Object.entries(restoreData.resources ?? {}) as [string, ResourceAppliedState][]) {
             const resourceDef = ctor.RESOURCES[type];
             if (!resourceDef) continue;
 
@@ -207,7 +251,7 @@ export default class ResourceGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    getAutomaticValue(): Record<string, unknown> | false {
+    override getAutomaticValue(): Record<string, unknown> | false {
         // Resources with formulas typically need user confirmation
         // Only auto-apply if all are flat values
         if (this.optional) return false;
@@ -222,7 +266,7 @@ export default class ResourceGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    async getSummary(): Promise<unknown> {
+    override async getSummary(): Promise<GrantSummary> {
         const ctor = this.constructor as typeof ResourceGrantData;
         const summary = await super.getSummary();
         summary.icon = ctor.ICON;
@@ -252,7 +296,7 @@ export default class ResourceGrantData extends BaseGrantData {
      * @returns {Promise<number>}
      * @private
      */
-    async _evaluateFormula(formula, actor): Promise<unknown> {
+    async _evaluateFormula(formula: string, actor: WH40KBaseActor): Promise<number> {
         if (!formula) return 0;
 
         // Trim and normalize
@@ -276,7 +320,7 @@ export default class ResourceGrantData extends BaseGrantData {
         let processedFormula = normalizedFormula;
 
         // Replace TB, WPB, etc. with actual bonus values
-        const charAbbreviations = {
+        const charAbbreviations: Record<string, string> = {
             TB: 'toughness',
             SB: 'strength',
             AB: 'agility',
@@ -290,8 +334,8 @@ export default class ResourceGrantData extends BaseGrantData {
 
         for (const [abbr, charKey] of Object.entries(charAbbreviations)) {
             const regex = new RegExp(`(\\d*)x?${abbr}`, 'gi');
-            processedFormula = processedFormula.replace(regex, (match, multiplier) => {
-                const bonus = actor?.system?.characteristics?.[charKey]?.bonus ?? 0;
+            processedFormula = processedFormula.replace(regex, (match, multiplier: string) => {
+                const bonus = (actor?.system as { characteristics?: Record<string, { bonus?: number }> })?.characteristics?.[charKey]?.bonus ?? 0;
                 const mult = parseInt(multiplier) || 1;
                 return String(bonus * mult);
             });
@@ -300,7 +344,7 @@ export default class ResourceGrantData extends BaseGrantData {
         // Evaluate dice formula
         try {
             const roll = await new Roll(processedFormula).evaluate();
-            return roll.total;
+            return roll.total ?? 0;
         } catch (err) {
             console.error(`ResourceGrantData: Failed to evaluate formula "${normalizedFormula}" (processed: "${processedFormula}"):`, err);
             return 0;
@@ -314,9 +358,9 @@ export default class ResourceGrantData extends BaseGrantData {
      * @returns {Promise<number>}
      * @private
      */
-    async _evaluateLookupTable(formula): Promise<unknown> {
+    async _evaluateLookupTable(formula: string): Promise<number> {
         // Parse entries: "(1-4|=2),(5-7|=3),(8-10|=4)"
-        const entries = [];
+        const entries: Array<{ min: number; max: number; value: number }> = [];
         const entryPattern = /\((\d+)-(\d+)\|=(\d+)\)/g;
         let match;
 
@@ -335,7 +379,7 @@ export default class ResourceGrantData extends BaseGrantData {
 
         // Roll 1d10
         const roll = await new Roll('1d10').evaluate();
-        const rolled = roll.total;
+        const rolled = roll.total ?? 0;
 
         // Find matching entry
         for (const entry of entries) {

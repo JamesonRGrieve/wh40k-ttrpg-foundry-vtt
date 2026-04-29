@@ -10,9 +10,83 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { findSkillUuid } from '../../helpers/skill-uuid-helper.ts';
 import { getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+import type { ApplicationV2Ctor } from '../api/application-types.ts';
+const { ApplicationV2, HandlebarsApplicationMixin } = (
+    foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor; HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T } }
+).api;
 
-export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(ApplicationV2 as any) {
+/** A single selectable option within a choice. */
+interface ChoiceOption {
+    value?: string;
+    name?: string;
+    label?: string;
+    description?: string;
+    specializations?: string[] | null;
+    specialization?: string;
+    grants?: {
+        talents?: Array<{ uuid?: string; name?: string }>;
+        skills?: Array<{ uuid?: string; name?: string; specialization?: string } | string>;
+        traits?: Array<{ uuid?: string }>;
+        equipment?: Array<{ uuid?: string }>;
+    };
+    uuid?: string;
+    [key: string]: unknown;
+}
+
+/** A raw choice entry from the item's grants (before deduplication). */
+interface RawChoice {
+    type?: string;
+    label?: string;
+    name?: string;
+    count?: number;
+    options?: Array<ChoiceOption | string>;
+    [key: string]: unknown;
+}
+
+/** A processed choice entry with a disambiguated key. */
+interface PendingChoice extends RawChoice {
+    label: string;
+    count: number;
+    options: ChoiceOption[];
+    _key: string;
+}
+
+/** Tracks which option is waiting for a specialization to be selected. */
+interface PendingSpecOption {
+    choiceKey: string;
+    optionValue: string;
+}
+
+export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    /** The origin path item with grants/choices. */
+    item: WH40KItem;
+
+    /** The character actor. */
+    actor: WH40KBaseActor;
+
+    /** Processed choices with unique keys. */
+    pendingChoices: PendingChoice[];
+
+    /** Current selections keyed by choice._key, values are composite option strings. */
+    selections: Map<string, Set<string>>;
+
+    /** Chosen specialization per option, keyed by `choiceKey::optionValue`. */
+    specializationSelections: Map<string, string>;
+
+    /** Promise resolver invoked when the user confirms or cancels. */
+    _resolvePromise: ((value: Record<string, string[]> | null) => void) | null;
+
+    /** The option currently waiting for a specialization choice, or null. */
+    _pendingSpecOption: PendingSpecOption | null;
+
+    /** Saved scroll position before re-render, restored in _onRender. */
+    _savedScrollTop: number;
+
+    /** Inherited from ApplicationV2 — re-declared so the mixin return type exposes it. */
+    declare render: (force?: boolean, options?: Record<string, unknown>) => unknown;
+
+    /** Inherited from ApplicationV2 — re-declared so the mixin return type exposes it. */
+    declare close: (options?: Record<string, unknown>) => Promise<void>;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'origin-choice-dialog'],

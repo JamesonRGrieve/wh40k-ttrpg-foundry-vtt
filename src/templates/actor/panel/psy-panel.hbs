@@ -2,26 +2,26 @@
     label="Psyker"
     icon="fa-brain"
     rootClass="wh40k-psy-panel"}}
-    <div class="wh40k-vital-edit-grid">
-        <label class="wh40k-vital-edit-field">
-            <span class="wh40k-edit-label">Psy Rating</span>
+    <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-mb-2">
+        <label class="tw-flex tw-flex-col tw-gap-1">
+            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-flex tw-items-center tw-gap-1">Psy Rating</span>
             <input type="number" data-dtype="Number" class="wh40k-vital-input" name="system.psy.rating" value="{{actor.psy.rating}}" min="0" />
         </label>
-        <label class="wh40k-vital-edit-field">
-            <span class="wh40k-edit-label">Sustained</span>
+        <label class="tw-flex tw-flex-col tw-gap-1">
+            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-flex tw-items-center tw-gap-1">Sustained</span>
             <input type="number" data-dtype="Number" class="wh40k-vital-input" name="system.psy.sustained" value="{{actor.psy.sustained}}" min="0" />
         </label>
     </div>
-    <div class="wh40k-vital-edit-grid">
-        <label class="wh40k-vital-edit-field">
-            <span class="wh40k-edit-label">Psyker Class</span>
+    <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-mb-2">
+        <label class="tw-flex tw-flex-col tw-gap-1">
+            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-flex tw-items-center tw-gap-1">Psyker Class</span>
             <input type="text" class="wh40k-vital-input" name="system.psy.class" value="{{actor.psy.class}}" placeholder="e.g. Biomancer" />
         </label>
-        <label class="wh40k-vital-edit-field wh40k-checkbox-field">
-            <span class="wh40k-edit-label">Has Psy Focus</span>
-            <div class="wh40k-checkbox-wrapper">
+        <label class="tw-flex tw-flex-col tw-gap-1">
+            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-flex tw-items-center tw-gap-1">Has Psy Focus</span>
+            <div class="tw-flex tw-items-center tw-gap-2 tw-h-9 tw-px-2 tw-cursor-pointer">
                 <input {{checked actor.psy.hasFocus}} data-dtype="Boolean" type="checkbox" name="system.psy.hasFocus" class="wh40k-checkbox" />
-                <span class="wh40k-checkbox-label">{{#if actor.psy.hasFocus}}Yes{{else}}No{{/if}}</span>
+                <span class="tw-text-sm tw-font-semibold">{{#if actor.psy.hasFocus}}Yes{{else}}No{{/if}}</span>
             </div>
         </label>
     </div>
