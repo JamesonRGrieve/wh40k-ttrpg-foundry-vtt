@@ -345,7 +345,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             zone.classList.add('wh40k-drag-over');
             if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
 
-            const textEl = zone.querySelector('.wh40k-dropzone-text');
+            const textEl = zone.querySelector('[data-dropzone-text]');
             if (textEl) {
                 const type = _activeDragType ?? this._draggedItem?.item?.type ?? null;
                 textEl.textContent = type && DROP_ZONE_LABELS[type] ? DROP_ZONE_LABELS[type] : DROP_ZONE_DEFAULT_LABEL;
@@ -364,7 +364,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             zone.classList.remove('drop-hover');
             zone.classList.remove('wh40k-drag-over');
 
-            const textEl = zone.querySelector('.wh40k-dropzone-text');
+            const textEl = zone.querySelector('[data-dropzone-text]');
             if (textEl) textEl.textContent = 'Drag and Drop from Compendium to Add';
         }
 

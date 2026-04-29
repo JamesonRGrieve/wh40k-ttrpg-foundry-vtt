@@ -1,13 +1,13 @@
-<div class="wh40k-panel wh40k-panel-bonuses tw-col-span-2">
-    <h1 class="wh40k-panel-header">Bonuses</h1>
-    <div class="wh40k-bonusestable--border tw-rounded-md tw-overflow-hidden tw-border tw-border-solid tw-border-[rgba(74,55,40,0.15)]">
-        <div class="table-row--head tw-grid tw-grid-cols-[1fr_0.5fr_3rem] tw-p-[6px_4px] tw-text-[0.9em] tw-uppercase tw-tracking-[0.05em]">
+<div class="tw-col-span-2 tw-relative tw-overflow-hidden tw-rounded-lg tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-mb-[12px] tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)] tw-border-l-[3px] tw-border-l-solid tw-border-l-[rgba(160,120,24,0.65)]">
+    <h1 class="tw-flex tw-flex-row tw-items-center tw-gap-[8px] tw-px-3 tw-py-2 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-text-[1.1rem] tw-font-semibold tw-tracking-[0.02em]" style="background:linear-gradient(180deg,rgba(160,120,24,0.1) 0%,transparent 100%);color:var(--wh40k-text-dark);">Bonuses</h1>
+    <div class="tw-rounded-md tw-overflow-hidden tw-border tw-border-solid tw-border-[rgba(74,55,40,0.15)]">
+        <div class="tw-grid tw-grid-cols-[1fr_0.5fr_3rem] tw-p-[6px_4px] tw-text-[0.9em] tw-uppercase tw-tracking-[0.05em]">
             <div class="tw-p-[6px_4px]">Name</div>
             <div class="tw-p-[6px_4px]">Source</div>
             <div class="tw-p-[6px_4px]">Source</div>
         </div>
         {{#each actor.backgroundEffects.abilities as | ability |}}
-            <div class="table-row tw-grid tw-grid-cols-[1fr_0.5fr_3rem] tw-transition-colors tw-duration-200 hover:tw-bg-[rgba(218,165,32,0.08)] tw-border-b tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
+            <div class="tw-grid tw-grid-cols-[1fr_0.5fr_3rem] tw-transition-colors tw-duration-200 hover:tw-bg-[rgba(218,165,32,0.08)] tw-border-b tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
                 <div class="tw-p-[6px_4px]">
                     {{> systems/wh40k-rpg/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' ability.source) text=ability.name}}
                 </div>
@@ -15,11 +15,11 @@
                     <span>{{ability.source}}</span>
                 </div>
                 <div class="tw-p-[6px_4px]">
-                    <label class="wh40k-control-button bonus-vocalize" data-bonus-name="{{ability.name}}">
-                        <span class="wh40k-control-button__span material-icons">{{defaultVal icon 'record_voice_over'}}</span>
+                    <label class="tw-cursor-pointer" data-bonus-name="{{ability.name}}">
+                        <span class="{{concat 'material-icons'}}">{{defaultVal icon 'record_voice_over'}}</span>
                     </label>
                 </div>
-                <div class="table-cell--description description_{{ability.source}} tw-col-span-3 tw-bg-[rgba(255,250,240,0.5)] tw-px-3 tw-py-2 tw-border-l-[3px] tw-border-l-solid tw-border-l-[rgba(218,165,32,0.4)]" {{hideIfNot
+                <div class="{{concat 'description_' ability.source}} tw-col-span-3 tw-bg-[rgba(255,250,240,0.5)] tw-px-3 tw-py-2 tw-border-l-[3px] tw-border-l-solid tw-border-l-[rgba(218,165,32,0.4)]" {{hideIfNot
                     (isExpanded (concat 'description_' ability.source ))}}>
                     <span>{{ability.benefit}}</span>
                 </div>

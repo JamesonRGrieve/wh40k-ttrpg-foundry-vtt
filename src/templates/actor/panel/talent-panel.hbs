@@ -1,43 +1,43 @@
 {{!-- Talents Panel - Compact Table View --}}
-<div class="wh40k-panel wh40k-panel-talents-table tw-mt-0 tw-mb-0 tw-w-full tw-box-border">
-    <div class="wh40k-panel-header">
-        <span class="wh40k-panel-title">
-            <i class="fas fa-star"></i> Talents
-            {{#if talentsCount}}<span class="wh40k-count-badge tw-rounded-[10px] tw-px-[6px] tw-py-[2px] tw-text-[0.65rem] tw-font-semibold tw-min-w-[20px] tw-text-center">{{talentsCount}}</span>{{/if}}
+<div class="{{concat 'wh40k-panel wh40k-panel-talents-table'}} tw-mt-0 tw-mb-0 tw-w-full tw-box-border tw-self-stretch">
+    <div class="{{concat 'wh40k-panel-header'}}">
+        <span class="{{concat 'wh40k-panel-title'}}">
+            <i class="{{concat 'fas fa-star'}}"></i> Talents
+            {{#if talentsCount}}<span class="{{concat 'wh40k-count-badge'}} tw-rounded-[10px] tw-px-[6px] tw-py-[2px] tw-text-[0.65rem] tw-font-semibold tw-min-w-[20px] tw-text-center">{{talentsCount}}</span>{{/if}}
         </span>
     </div>
 
-    <div class="wh40k-panel-body tw-flex tw-flex-col tw-gap-2 tw-w-full tw-box-border">
+    <div class="{{concat 'wh40k-panel-body'}} tw-flex tw-flex-col tw-gap-2 tw-w-full tw-box-border">
         {{#if talentsCount}}
-        <div class="wh40k-talents-table tw-flex tw-flex-col" data-drop-zone="talents" data-accepts="talent">
+        <div class="tw-flex tw-flex-col tw-gap-[2px]" data-drop-zone="talents" data-accepts="talent">
             {{#each talents as |talent|}}
-            <div class="wh40k-tp_row tw-relative tw-flex tw-items-center tw-rounded-md tw-min-h-[28px] tw-select-none" data-tooltip="{{talent.tooltipText}}">
-                <img class="wh40k-tp_icon tw-shrink-0 tw-w-[22px] tw-h-[22px] tw-object-cover tw-rounded-[3px]" src="{{talent.img}}" alt="{{talent.name}}" />
+            <div class="{{concat 'wh40k-tp_row'}} tw-relative tw-flex tw-items-center tw-rounded-md tw-min-h-[28px] tw-select-none tw-gap-[6px] tw-px-[6px] tw-py-[3px] tw-transition-colors" data-tooltip="{{talent.tooltipText}}">
+                <img class="tw-shrink-0 tw-w-[22px] tw-h-[22px] tw-object-cover tw-rounded-[3px] tw-border tw-border-[var(--wh40k-border-color-light)]" src="{{talent.img}}" alt="{{talent.name}}" />
 
-                <button type="button" class="wh40k-tp_name tw-flex-1 tw-min-w-0 tw-text-left tw-cursor-pointer tw-truncate tw-font-semibold tw-bg-transparent tw-border-none tw-p-0 tw-m-0" data-action="itemEdit" data-item-id="{{talent.id}}">
+                <button type="button" class="tw-flex-1 tw-min-w-0 tw-text-left tw-cursor-pointer tw-truncate tw-font-semibold tw-bg-transparent tw-border-none tw-p-0 tw-m-0 tw-text-[0.78rem]" data-action="itemEdit" data-item-id="{{talent.id}}">
                     {{talent.fullName}}
                     {{#if talent.flags.wh40k-rpg.autoGranted}}
-                    <i class="fas fa-gift wh40k-tp_granted tw-ml-[4px] tw-text-[0.6rem] tw-text-gold tw-cursor-help" title="Granted by {{talent.flags.wh40k-rpg.grantedBy}}"></i>
+                    <i class="{{concat 'fas fa-gift'}}" style="margin-left:4px;font-size:0.6rem;color:var(--wh40k-color-gold);cursor:help" title="Granted by {{talent.flags.wh40k-rpg.grantedBy}}"></i>
                     {{/if}}
                 </button>
 
-                <div class="wh40k-tp_meta tw-flex tw-items-center tw-gap-1 tw-shrink-0 tw-text-[0.6rem]">
-                    {{#if talent.system.tier}}<span class="wh40k-tp_tier tw-px-[4px] tw-py-[1px] tw-rounded-[3px] tw-font-bold tw-text-[0.55rem]">T{{talent.system.tier}}</span>{{/if}}
-                    <span class="wh40k-tp_category"><i class="fas {{talentIcon talent.system.category}} tw-text-[0.6rem]"></i></span>
-                    {{#if talent.system.stackable}}<span class="wh40k-tp_rank tw-font-bold">×{{talent.system.rank}}</span>{{/if}}
+                <div class="tw-flex tw-items-center tw-gap-1 tw-shrink-0 tw-text-[0.6rem]">
+                    {{#if talent.system.tier}}<span class="tw-px-[4px] tw-py-[1px] tw-rounded-[3px] tw-font-bold tw-text-[0.55rem]" style="background:rgb(from var(--wh40k-accent-talents) r g b / 0.15);border:1px solid rgb(from var(--wh40k-accent-talents) r g b / 0.3);color:var(--wh40k-accent-talents)">T{{talent.system.tier}}</span>{{/if}}
+                    <span><i class="{{concat 'fas'}} {{talentIcon talent.system.category}}" style="font-size:0.6rem"></i></span>
+                    {{#if talent.system.stackable}}<span class="tw-font-bold" style="color:var(--wh40k-accent-talents)">×{{talent.system.rank}}</span>{{/if}}
                 </div>
 
-                <div class="wh40k-tp_actions tw-absolute tw-flex tw-items-center tw-opacity-0 tw-pointer-events-none">
-                    <button type="button" class="wh40k-tp_btn tw-bg-none tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem] {{#if talent.isFavorite}}wh40k-tp_btn--active tw-text-gold{{/if}}"
+                <div class="tw-absolute tw-flex tw-items-center tw-opacity-0 tw-pointer-events-none" style="right:6px;top:50%;transform:translateY(-50%);gap:1px;padding:2px 4px;background:linear-gradient(90deg,transparent 0%,var(--wh40k-panel-bg-solid) 20%);border-radius:3px;transition:opacity var(--wh40k-transition-fast)">
+                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem] {{#if talent.isFavorite}}tw-text-gold{{/if}}"
                             data-action="toggleFavoriteTalent" data-item-id="{{talent.id}}"
                             title="{{#if talent.isFavorite}}Unfavorite{{else}}Favorite{{/if}}">
-                        <i class="{{#if talent.isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
+                        <i class="{{#if talent.isFavorite}}{{concat 'fas fa-star'}}{{else}}{{concat 'far fa-star'}}{{/if}}"></i>
                     </button>
-                    <button type="button" class="wh40k-tp_btn tw-bg-none tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem]" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Chat">
-                        <i class="fas fa-comment"></i>
+                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem]" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Chat">
+                        <i class="{{concat 'fas fa-comment'}}"></i>
                     </button>
-                    <button type="button" class="wh40k-tp_btn wh40k-tp_btn--danger tw-bg-none tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem]" data-action="itemDelete" data-item-id="{{talent.id}}" title="Delete">
-                        <i class="fas fa-trash"></i>
+                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem]" data-action="itemDelete" data-item-id="{{talent.id}}" title="Delete">
+                        <i class="{{concat 'fas fa-trash'}}"></i>
                     </button>
                 </div>
             </div>
@@ -45,9 +45,9 @@
         </div>
         {{/if}}
 
-        <div class="wh40k-dropzone {{#if talentsCount}}wh40k-dropzone--compact{{/if}}" data-action="itemCreate" data-type="talent">
-            <i class="fas fa-star wh40k-dropzone-icon"></i>
-            <span class="wh40k-dropzone-text">{{#if talentsCount}}Drop to add{{else}}Drop Talent or Click to Create{{/if}}</span>
+        <div class="{{concat 'wh40k-dropzone'}} {{#if talentsCount}}{{concat 'wh40k-dropzone--compact'}}{{/if}}" data-action="itemCreate" data-type="talent">
+            <i class="{{concat 'fas fa-star wh40k-dropzone-icon'}}"></i>
+            <span class="{{concat 'wh40k-dropzone-text'}}" data-dropzone-text>{{#if talentsCount}}Drop to add{{else}}Drop Talent or Click to Create{{/if}}</span>
         </div>
     </div>
 </div>
