@@ -11,7 +11,7 @@
         fillStyleWidth — boolean; when true, render `style="width: {{percent}}%"` on the fill instead of using CSS var
         fillExtraClass — extra utility classes for the fill (gradients, height, etc.)
         thresholds     — array of { at, label, title } objects
-        showPercentText— "right" | "below" | falsy. When truthy, render `<span class="{{prefix}}-percent">{{percent}}%</span>` as a sibling.
+        showPercentText— "right" | "below" | falsy. When truthy, render a percent span as a sibling (class: {cssPrefix}-percent).
         percentText    — override text (e.g. "{{value}} / {{max}}" for fatigue's progress text variant)
         percentTextClass — extra utilities on the percent text span
 --}}
@@ -23,8 +23,8 @@
 
         {{#each thresholds}}
         <div class="wh40k-threshold-marker tw-absolute tw-top-[-2px] tw-h-4 tw-flex tw-flex-col tw-items-center tw-pointer-events-none tw-z-[2]" style="left: {{this.at}}%;" title="{{this.title}}">
-            <span class="wh40k-threshold-line tw-w-0.5 tw-h-full tw-bg-[var(--wh40k-border-accent)] tw-rounded-[1px]"></span>
-            <span class="wh40k-threshold-label tw-absolute tw-top-[-18px] tw-text-[9px] tw-font-semibold tw-text-[var(--wh40k-text-muted)] tw-bg-[var(--wh40k-panel-bg-solid)] tw-px-[3px] tw-py-px tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color-light)]">{{this.label}}</span>
+            <span class="tw-w-0.5 tw-h-full tw-bg-[var(--wh40k-border-accent)] tw-rounded-[1px]"></span>
+            <span class="tw-absolute tw-top-[-18px] tw-text-[9px] tw-font-semibold tw-text-[var(--wh40k-text-muted)] tw-bg-[var(--wh40k-panel-bg-solid)] tw-px-[3px] tw-py-px tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color-light)]">{{this.label}}</span>
         </div>
         {{/each}}
     </div>
