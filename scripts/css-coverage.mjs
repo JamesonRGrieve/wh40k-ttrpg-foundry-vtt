@@ -114,6 +114,9 @@ const JS_HOOKS = new Set([
     'wh40k-panel-count',
     // tests/vital-partials.test.ts queries threshold markers by class name — test selector
     'wh40k-threshold-marker',
+    // tests/vital-partials.test.ts queries panel chevron and badge label by class — test selectors
+    'wh40k-panel-chevron',
+    'wh40k-badge-label',
     // Google Material Icons library — third-party icon font, not project CSS
     'material-icons',
     'material-icons-outlined',
