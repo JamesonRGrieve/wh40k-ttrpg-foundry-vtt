@@ -20,11 +20,9 @@ initializeStoryHandlebars();
 
 Handlebars.registerPartial('panel-test', panelSrc);
 
-const wrap = (innerBody: string) =>
-    Handlebars.compile(`{{#> panel-test ${'label="Armour" icon="fa-shield-alt"'} }}${innerBody}{{/panel-test}}`);
+const wrap = (innerBody: string) => Handlebars.compile(`{{#> panel-test ${'label="Armour" icon="fa-shield-alt"'} }}${innerBody}{{/panel-test}}`);
 
-const wrapWith = (hashLiteral: string, innerBody: string) =>
-    Handlebars.compile(`{{#> panel-test ${hashLiteral}}}${innerBody}{{/panel-test}}`);
+const wrapWith = (hashLiteral: string, innerBody: string) => Handlebars.compile(`{{#> panel-test ${hashLiteral}}}${innerBody}{{/panel-test}}`);
 
 function dom(html: string): HTMLElement {
     const root = document.createElement('div');
@@ -70,16 +68,20 @@ describe('panel.hbs block-partial', () => {
         expect(withCount.querySelector('.wh40k-panel-count')?.textContent).toBe('3');
     });
 
-    it('does not collapse to a single class when no extra classes are given', () => {
-        // Trailing whitespace in the class string is harmless but a stray leading space could imply
-        // an empty extra class slot. Pin the no-extras case to a tight class list.
+    it('contains tw-* utilities and structural hook classes when no extra classes are given', () => {
+        // After Tailwind migration the elements carry both the structural JS-hook class
+        // (wh40k-panel, wh40k-panel-header, wh40k-panel-body) and tw-* utilities.
+        // Verify hook classes are present and no stray empty-string class tokens appear.
         const html = wrapWith('label="X"', 'body')({});
         const root = dom(html);
         const panel = root.querySelector('.wh40k-panel') as HTMLElement;
-        expect(panel.className.trim()).toBe('wh40k-panel');
+        expect(panel.classList.contains('wh40k-panel')).toBe(true);
+        expect([...panel.classList].some((c) => c.startsWith('tw-'))).toBe(true);
         const header = root.querySelector('.wh40k-panel-header') as HTMLElement;
-        expect(header.className.trim()).toBe('wh40k-panel-header');
+        expect(header.classList.contains('wh40k-panel-header')).toBe(true);
+        expect([...header.classList].some((c) => c.startsWith('tw-'))).toBe(true);
         const body = root.querySelector('.wh40k-panel-body') as HTMLElement;
-        expect(body.className.trim()).toBe('wh40k-panel-body');
+        expect(body.classList.contains('wh40k-panel-body')).toBe(true);
+        expect([...body.classList].some((c) => c.startsWith('tw-'))).toBe(true);
     });
 });
