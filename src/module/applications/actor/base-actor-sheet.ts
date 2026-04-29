@@ -3,11 +3,12 @@
  * Based on dnd5e's BaseActorSheet pattern for Foundry V13+
  */
 
-import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
 import WH40K from '../../config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
 import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KWounds, WH40KInitiative, WH40KMovement } from '../../types/global.d.ts';
+import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import CollapsiblePanelMixin from '../api/collapsible-panel-mixin.ts';
 import ContextMenuMixin from '../api/context-menu-mixin.ts';
@@ -21,7 +22,6 @@ import VisualFeedbackMixin from '../api/visual-feedback-mixin.ts';
 import WhatIfMixin from '../api/what-if-mixin.ts';
 import { ActiveModifiersMixin, ItemPreviewMixin } from '../components/_module.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
-import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
 // import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 
 type AnyApplicationV2Ctor = ApplicationV2Ctor;
@@ -229,8 +229,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             addSpecialistSkill: BaseActorSheet.#addSpecialistSkill,
             deleteSpecialization: BaseActorSheet.#deleteSpecialization,
             viewSkillInfo: BaseActorSheet.#viewSkillInfo,
-            togglePanel: (BaseActorSheet as any)._onTogglePanel,
-            applyPreset: (BaseActorSheet as any)._onApplyPreset,
+            togglePanel: (BaseActorSheet as unknown as { _onTogglePanel: (event: Event, target: HTMLElement) => Promise<void> })._onTogglePanel,
+            applyPreset: (BaseActorSheet as unknown as { _onApplyPreset: (event: Event, target: HTMLElement) => Promise<void> })._onApplyPreset,
             spendXPAdvance: BaseActorSheet.#spendXPAdvance,
             editCharacteristic: BaseActorSheet.#editCharacteristic,
         },
@@ -895,9 +895,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // all talents, traits, and origin paths for skill grants
         const items = this.actor.items;
         for (const item of items) {
-            if (!(item.system as any)?.grants?.skills) continue;
+            if (!(item.system as Record<string, unknown>)?.grants?.skills) continue;
 
-            const skillGrants = (item.system as any).grants.skills || [];
+            const skillGrants = ((item.system as Record<string, unknown>).grants as Record<string, unknown>).skills || [];
             for (const grant of skillGrants) {
                 const grantName = grant.name || grant;
                 if (grantName.toLowerCase() === skillData.label?.toLowerCase()) {
@@ -1796,7 +1796,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 console.log('WH40K | itemDelete: Successfully deleted item', itemId);
             } catch (err) {
                 console.error('WH40K | itemDelete: Error deleting item', err);
-                (ui as any).notifications.error(`Failed to delete ${item.name}`);
+                ui.notifications.error(`Failed to delete ${item.name}`);
             }
         }
     }
@@ -1831,7 +1831,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             console.log('WH40K | itemVocalize: Successfully sent to chat');
         } catch (err) {
             console.error('WH40K | itemVocalize: Error sending item to chat', err);
-            (ui as any).notifications.error(`Failed to send ${item.name} to chat`);
+            ui.notifications.error(`Failed to send ${item.name} to chat`);
         }
     }
 
@@ -1877,7 +1877,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     // static async #effectCreate(event, target) {
     //     const effect = await EffectCreationDialog.show(this.actor);
     //     if (effect) {
-    //         (ui as any).notifications.info(`Created effect: ${effect.name}`);
+    //         ui.notifications.info(`Created effect: ${effect.name}`);
     //     }
     // }
 
@@ -2022,13 +2022,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (!skillKey) return;
         const skill = this.actor.system.skills?.[skillKey];
         if (!skill) {
-            (ui as any).notifications.warn('Skill not specified.');
+            ui.notifications.warn('Skill not specified.');
             return;
         }
 
         // Check if skill is specialist type
         if (!Array.isArray(skill.entries)) {
-            (ui as any).notifications.error(`${skill.label} is not a specialist skill.`);
+            ui.notifications.error(`${skill.label} is not a specialist skill.`);
             return;
         }
 
@@ -2053,7 +2053,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Check if specialization already exists
         const existing = skill.entries.find((e: { name?: string }) => e.name?.toLowerCase() === name.toLowerCase());
         if (existing) {
-            (ui as any).notifications.warn(`${skill.label} (${name}) already exists.`);
+            ui.notifications.warn(`${skill.label} (${name}) already exists.`);
             return;
         }
 
@@ -2076,7 +2076,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             [`system.skills.${skillKey}.entries`]: entries,
         });
 
-        (ui as any).notifications.info(`Added ${skill.label} (${name}) specialization.`);
+        ui.notifications.info(`Added ${skill.label} (${name}) specialization.`);
     }
 
     /* -------------------------------------------- */
@@ -2140,7 +2140,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const skillPackNames = ['wh40k-rpg.dh2-core-stats-skills', 'wh40k-rpg.rt-core-items-skills', 'wh40k-rpg.dw-core-items-skills'];
         const pack = skillPackNames.map((n) => game.packs.get(n)).find((p) => p);
         if (!pack) {
-            (ui as any).notifications.warn('Skills compendium not found.');
+            ui.notifications.warn('Skills compendium not found.');
             return;
         }
 
@@ -2153,7 +2153,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         });
 
         if (!entry) {
-            (ui as any).notifications.info(`No compendium entry found for ${skill.label}.`);
+            ui.notifications.info(`No compendium entry found for ${skill.label}.`);
             return;
         }
 
@@ -2175,7 +2175,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Check if this item type is supported
         const ctor = this.constructor as typeof BaseActorSheet;
         if (ctor.unsupportedItemTypes.has(item.type)) {
-            (ui as any).notifications.warn(
+            ui.notifications.warn(
                 game.i18n.format('WH40K.Warning.InvalidItem', {
                     itemType: game.i18n.localize(CONFIG.Item.typeLabels[item.type]),
                     actorType: game.i18n.localize(CONFIG.Actor.typeLabels[this.actor.type]),
@@ -2246,7 +2246,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const char = this.actor.system.characteristics[charKey] as (WH40KCharacteristic & { nextAdvanceCost: number; advance?: number }) | undefined;
 
         if (!char) {
-            (ui as any).notifications.error('Invalid characteristic!');
+            ui.notifications.error('Invalid characteristic!');
             return;
         }
 
@@ -2255,13 +2255,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Check if enough XP
         if (available < cost) {
-            (ui as any).notifications.warn(`Not enough XP! Need ${cost}, have ${available}.`);
+            ui.notifications.warn(`Not enough XP! Need ${cost}, have ${available}.`);
             return;
         }
 
         // Check if already maxed
         if ((char.advance || 0) >= 5) {
-            (ui as any).notifications.warn(`${char.label} is already at maximum advancement!`);
+            ui.notifications.warn(`${char.label} is already at maximum advancement!`);
             return;
         }
 
@@ -2295,7 +2295,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const newBonus = Math.floor(newTotal / 10) * (char.unnatural || 1);
 
         // Success notification
-        (ui as any).notifications.info(`${char.label} advanced to ${newTotal}! (−${cost} XP)`);
+        ui.notifications.info(`${char.label} advanced to ${newTotal}! (−${cost} XP)`);
 
         // Trigger characteristic change animation
         if (this.animateCharacteristicChange) {
@@ -2343,7 +2343,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         const char = this.actor.system.characteristics[charKey];
         if (!char) {
-            (ui as any).notifications.error('Invalid characteristic!');
+            ui.notifications.error('Invalid characteristic!');
             return;
         }
 
@@ -2412,7 +2412,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 [`system.characteristics.${charKey}.unnatural`]: parseInt(result.unnatural) || 1,
             });
 
-            (ui as any).notifications.info(`${char.label} updated successfully!`);
+            ui.notifications.info(`${char.label} updated successfully!`);
         }
     }
 }

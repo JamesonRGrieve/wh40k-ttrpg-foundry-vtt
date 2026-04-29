@@ -1,19 +1,27 @@
 {{!-- Starship History Tab --}}
-<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
-    <div class="wh40k-panel spacer wh40k-grid-col-6 wh40k-grid-row-1">
-        <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.History.MachineSpirit"}}</h1>
-        <textarea class="wh40k-header__textarea" name="system.machineSpiritOddities" rows="3">{{system.machineSpiritOddities}}</textarea>
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} tw-hidden tw-flex-col tw-gap-3 tw-p-3 {{#if tab.active}}tw-flex{{/if}}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    <div class="wh40k-panel tw-relative tw-overflow-hidden tw-mb-0 tw-rounded-lg tw-border tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-panel-bg)] tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)]">
+        <h1 class="wh40k-panel-header tw-flex tw-flex-row tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-w-full tw-box-border tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-bg-gradient-to-b tw-from-[rgba(var(--wh40k-accent-gold),0.15)] tw-to-[rgba(var(--wh40k-accent-gold),0.05)] tw-transition-all tw-duration-200">{{localize "WH40K.Starship.History.MachineSpirit"}}</h1>
+        <div class="wh40k-panel-body tw-p-3">
+            <textarea class="tw-w-full tw-border tw-border-[rgba(74,55,40,0.2)] tw-rounded-md tw-px-2 tw-py-1.5 tw-bg-white/70 focus:tw-outline-none focus:tw-border-[rgba(74,55,40,0.4)]" name="system.machineSpiritOddities" rows="3">{{system.machineSpiritOddities}}</textarea>
+        </div>
     </div>
-    <div class="wh40k-panel spacer wh40k-grid-col-6 wh40k-grid-row-1">
-        <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.History.PastHistory"}}</h1>
-        <textarea class="wh40k-header__textarea" name="system.pastHistory" rows="3">{{system.pastHistory}}</textarea>
+    <div class="wh40k-panel tw-relative tw-overflow-hidden tw-mb-0 tw-rounded-lg tw-border tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-panel-bg)] tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)]">
+        <h1 class="wh40k-panel-header tw-flex tw-flex-row tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-w-full tw-box-border tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-bg-gradient-to-b tw-from-[rgba(var(--wh40k-accent-gold),0.15)] tw-to-[rgba(var(--wh40k-accent-gold),0.05)] tw-transition-all tw-duration-200">{{localize "WH40K.Starship.History.PastHistory"}}</h1>
+        <div class="wh40k-panel-body tw-p-3">
+            <textarea class="tw-w-full tw-border tw-border-[rgba(74,55,40,0.2)] tw-rounded-md tw-px-2 tw-py-1.5 tw-bg-white/70 focus:tw-outline-none focus:tw-border-[rgba(74,55,40,0.4)]" name="system.pastHistory" rows="3">{{system.pastHistory}}</textarea>
+        </div>
     </div>
-    <div class="wh40k-panel spacer wh40k-grid-col-6 wh40k-grid-row-1">
-        <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.History.Complications"}}</h1>
-        <textarea class="wh40k-header__textarea" name="system.complications" rows="3">{{system.complications}}</textarea>
+    <div class="wh40k-panel tw-relative tw-overflow-hidden tw-mb-0 tw-rounded-lg tw-border tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-panel-bg)] tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)]">
+        <h1 class="wh40k-panel-header tw-flex tw-flex-row tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-w-full tw-box-border tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-bg-gradient-to-b tw-from-[rgba(var(--wh40k-accent-gold),0.15)] tw-to-[rgba(var(--wh40k-accent-gold),0.05)] tw-transition-all tw-duration-200">{{localize "WH40K.Starship.History.Complications"}}</h1>
+        <div class="wh40k-panel-body tw-p-3">
+            <textarea class="tw-w-full tw-border tw-border-[rgba(74,55,40,0.2)] tw-rounded-md tw-px-2 tw-py-1.5 tw-bg-white/70 focus:tw-outline-none focus:tw-border-[rgba(74,55,40,0.4)]" name="system.complications" rows="3">{{system.complications}}</textarea>
+        </div>
     </div>
-    <div class="wh40k-panel spacer wh40k-grid-col-6 wh40k-grid-row-2">
-        <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.History.Notes"}}</h1>
-        <textarea class="wh40k-header__textarea" name="system.notes" rows="6">{{system.notes}}</textarea>
+    <div class="wh40k-panel tw-relative tw-overflow-hidden tw-mb-0 tw-rounded-lg tw-border tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-panel-bg)] tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)]">
+        <h1 class="wh40k-panel-header tw-flex tw-flex-row tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-w-full tw-box-border tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-bg-gradient-to-b tw-from-[rgba(var(--wh40k-accent-gold),0.15)] tw-to-[rgba(var(--wh40k-accent-gold),0.05)] tw-transition-all tw-duration-200">{{localize "WH40K.Starship.History.Notes"}}</h1>
+        <div class="wh40k-panel-body tw-p-3">
+            <textarea class="tw-w-full tw-border tw-border-[rgba(74,55,40,0.2)] tw-rounded-md tw-px-2 tw-py-1.5 tw-bg-white/70 focus:tw-outline-none focus:tw-border-[rgba(74,55,40,0.4)]" name="system.notes" rows="6">{{system.notes}}</textarea>
+        </div>
     </div>
 </section>

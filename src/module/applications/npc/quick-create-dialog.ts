@@ -1,5 +1,5 @@
-import ThreatCalculator from './threat-calculator.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
+import ThreatCalculator from './threat-calculator.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 

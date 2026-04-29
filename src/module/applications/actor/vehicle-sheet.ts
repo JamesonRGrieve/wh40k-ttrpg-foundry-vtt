@@ -106,7 +106,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const context = {
             ...(await super._prepareContext(options)),
             isVehicle: true,
-            isShip: (this.actor.system as any).primaryUse === 'ship',
+            isShip: (this.actor.system as Record<string, unknown>).primaryUse === 'ship',
         };
 
         // Vehicle-specific context
@@ -132,20 +132,24 @@ export default class VehicleSheet extends BaseActorSheet {
      * @protected
      */
     _prepareVehicleStats(context: Record<string, unknown>): Record<string, unknown> {
-        const sys = (context.system as any) ?? {};
+        const sys = (context.system as Record<string, unknown>) ?? {};
 
         return {
             size: sys.size || 4,
             speed: {
-                cruising: sys.speed?.cruising || 0,
-                tactical: sys.speed?.tactical || 0,
-                notes: sys.speed?.notes || '',
+                cruising: (sys.speed as Record<string, unknown>)?.cruising || 0,
+                tactical: (sys.speed as Record<string, unknown>)?.tactical || 0,
+                notes: (sys.speed as Record<string, unknown>)?.notes || '',
             },
             handling: sys.handling || 0,
             structure: {
-                value: sys.wounds?.value || 0,
-                max: sys.wounds?.max || 0,
-                percent: Math.round(((sys.wounds?.value || 0) / Math.max(1, sys.wounds?.max || 1)) * 100),
+                value: (sys.wounds as Record<string, unknown>)?.value || 0,
+                max: (sys.wounds as Record<string, unknown>)?.max || 0,
+                percent: Math.round(
+                    ((((sys.wounds as Record<string, unknown>)?.value || 0) as number) /
+                        Math.max(1, ((sys.wounds as Record<string, unknown>)?.max || 1) as number)) *
+                        100,
+                ),
             },
             hull: sys.hull || 0,
             manoeuvrability: this._calculateManoeuvrability(sys),
@@ -161,13 +165,13 @@ export default class VehicleSheet extends BaseActorSheet {
      * @protected
      */
     _prepareCrewStats(context: Record<string, unknown>): Record<string, unknown> {
-        const sys = (context.system as any) ?? {};
+        const sys = (context.system as Record<string, unknown>) ?? {};
 
         return {
-            required: sys.crew?.required || 1,
-            rating: sys.crew?.rating || 30,
-            morale: sys.crew?.morale || 50,
-            notes: sys.crew?.notes || '',
+            required: (sys.crew as Record<string, unknown>)?.required || 1,
+            rating: (sys.crew as Record<string, unknown>)?.rating || 30,
+            morale: (sys.crew as Record<string, unknown>)?.morale || 50,
+            notes: (sys.crew as Record<string, unknown>)?.notes || '',
         };
     }
 
@@ -179,7 +183,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @returns {number} Calculated manoeuvrability.
      * @protected
      */
-    _calculateManoeuvrability(system: any): number {
+    _calculateManoeuvrability(system: Record<string, unknown>): number {
         // Example: Handling - (Size modifier)
         const handling = system.handling || 0;
         const sizeMod = Math.floor((system.size || 4) / 2);
@@ -195,10 +199,10 @@ export default class VehicleSheet extends BaseActorSheet {
      * @protected
      */
     _prepareCharacteristics(context: Record<string, unknown>): Record<string, unknown>[] {
-        const chars = (context.system as any).characteristics || {};
+        const chars = ((context.system as Record<string, unknown>).characteristics as Record<string, Record<string, unknown>>) || {};
         const charArray = [];
 
-        for (const [key, char] of Object.entries(chars) as any) {
+        for (const [key, char] of Object.entries(chars) as [string, Record<string, unknown>][]) {
             charArray.push({
                 key,
                 label: char.label,
@@ -229,7 +233,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const components: any[] = [];
         const other: any[] = [];
 
-        for (const item of (context as any).items as WH40KItem[]) {
+        for (const item of (context.items as WH40KItem[]) ?? []) {
             switch (item.type) {
                 case 'weapon':
                 case 'shipWeapon':
@@ -264,7 +268,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @protected
      */
     _prepareTabs(): Record<string, unknown>[] {
-        return (this.constructor as any).TABS.map((tab: HandlebarsApplicationV14.TabDescriptor) => ({
+        return (this.constructor as unknown as { TABS: HandlebarsApplicationV14.TabDescriptor[] }).TABS.map((tab: HandlebarsApplicationV14.TabDescriptor) => ({
             id: tab.tab,
             tab: tab.tab,
             group: tab.group,
@@ -283,7 +287,9 @@ export default class VehicleSheet extends BaseActorSheet {
         // Add tab metadata for all tab parts
         const tabParts = ['overview', 'combat', 'crew', 'components', 'notes'];
         if (tabParts.includes(partId)) {
-            const tabConfig = (this.constructor as any).TABS.find((t: HandlebarsApplicationV14.TabDescriptor) => t.tab === partId);
+            const tabConfig = (this.constructor as unknown as { TABS: HandlebarsApplicationV14.TabDescriptor[] }).TABS.find(
+                (t: HandlebarsApplicationV14.TabDescriptor) => t.tab === partId,
+            );
             partContext.tab = {
                 id: partId,
                 group: tabConfig?.group || 'primary',
@@ -309,7 +315,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const char = target.dataset.characteristic;
         if (!char) return;
 
-        await (this.actor as any).rollCharacteristic(char);
+        await this.actor.rollCharacteristic(char);
     }
 
     /* -------------------------------------------- */
@@ -325,7 +331,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const spec = target.dataset.specialization;
         if (!skill) return;
 
-        await (this.actor as any).rollSkill(skill, spec);
+        await (this.actor as unknown as { rollSkill(skill: string, spec: string | undefined): Promise<void> }).rollSkill(skill, spec);
     }
 
     /* -------------------------------------------- */
@@ -343,7 +349,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const item = this.actor.items.get(itemId);
         if (!item) return;
 
-        await (item as any).roll();
+        await (item as unknown as { roll(): Promise<void> }).roll();
     }
 
     /* -------------------------------------------- */
@@ -355,7 +361,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {HTMLElement} target - The target element.
      */
     static async #rollInitiative(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
-        await (this.actor as any).rollInitiative({ createCombatants: true });
+        await (this.actor as unknown as { rollInitiative(options: Record<string, unknown>): Promise<void> }).rollInitiative({ createCombatants: true });
     }
 
     /* -------------------------------------------- */
@@ -368,8 +374,8 @@ export default class VehicleSheet extends BaseActorSheet {
      */
     static async #adjustStructure(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const delta = parseInt(target.dataset.delta ?? '0', 10) || 0;
-        const current = (this.actor.system as any).wounds.value;
-        const max = (this.actor.system as any).wounds.max;
+        const current = this.actor.system.wounds.value;
+        const max = this.actor.system.wounds.max;
 
         const newValue = Math.max(0, Math.min(max, current + delta));
         await this.actor.update({ 'system.wounds.value': newValue });
@@ -385,8 +391,8 @@ export default class VehicleSheet extends BaseActorSheet {
      */
     static async #repairDamage(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const amount = parseInt(target.dataset.amount ?? '1', 10) || 1;
-        const current = (this.actor.system as any).wounds.value;
-        const max = (this.actor.system as any).wounds.max;
+        const current = this.actor.system.wounds.value;
+        const max = this.actor.system.wounds.max;
 
         const newValue = Math.min(max, current + amount);
         await this.actor.update({ 'system.wounds.value': newValue });
@@ -404,7 +410,7 @@ export default class VehicleSheet extends BaseActorSheet {
      */
     static async #modifyCrew(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const delta = parseInt(target.dataset.delta ?? '0', 10) || 0;
-        const current = (this.actor.system as any).crew?.rating || 30;
+        const current = (this.actor.system.crew as Record<string, number> | undefined)?.rating ?? 30;
 
         const newValue = Math.max(1, Math.min(100, current + delta));
         await this.actor.update({ 'system.crew.rating': newValue });
@@ -420,7 +426,7 @@ export default class VehicleSheet extends BaseActorSheet {
      */
     static async #adjustCrewMorale(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const delta = parseInt(target.dataset.delta ?? '0', 10) || 0;
-        const current = (this.actor.system as any).crew?.morale || 50;
+        const current = (this.actor.system.crew as Record<string, number> | undefined)?.morale ?? 50;
 
         const newValue = Math.max(0, Math.min(100, current + delta));
         await this.actor.update({ 'system.crew.morale': newValue });

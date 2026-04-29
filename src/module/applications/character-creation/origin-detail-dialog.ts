@@ -103,8 +103,8 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         const system = this.origin.system as Record<string, unknown>;
-        const grants = (system?.grants as Record<string, any>) || {};
-        const modifiers = (system?.modifiers as any)?.characteristics || {};
+        const grants = (system?.grants as Record<string, unknown>) || {};
+        const modifiers = ((system?.modifiers as Record<string, unknown>)?.characteristics as Record<string, number>) || {};
 
         context.origin = this.origin;
         context.allowSelection = this.allowSelection;
@@ -119,12 +119,13 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         context.isAdvanced = (system?.isAdvancedOrigin as boolean) || false;
 
         // Description - parse HTML properly
-        context.description = (system?.description as any)?.value || '';
+        context.description = ((system?.description as Record<string, unknown>)?.value as string) || '';
         context.hasDescription = !!context.description;
 
         // Source info
         context.source = system?.source || {};
-        context.hasSource = !!((context.source as any).book || (context.source as any).page);
+        const source = context.source as Record<string, unknown>;
+        context.hasSource = !!(source.book || source.page);
 
         // Characteristic modifiers
         context.characteristics = [];
@@ -139,7 +140,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
                 });
             }
         }
-        context.hasCharacteristics = (context.characteristics as any[]).length > 0;
+        context.hasCharacteristics = (context.characteristics as unknown[]).length > 0;
 
         // Wounds/Fate formulas
         context.woundsFormula = grants.woundsFormula || null;
@@ -154,15 +155,15 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             levelLabel: getTrainingLabel(skill.level),
             displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
-        context.hasSkills = (context.skills as any[]).length > 0;
+        context.hasSkills = (context.skills as unknown[]).length > 0;
 
         // Talents
         context.talents = await this._prepareTalents(grants.talents || []);
-        context.hasTalents = (context.talents as any[]).length > 0;
+        context.hasTalents = (context.talents as unknown[]).length > 0;
 
         // Traits
         context.traits = await this._prepareTraits(grants.traits || []);
-        context.hasTraits = (context.traits as any[]).length > 0;
+        context.hasTraits = (context.traits as unknown[]).length > 0;
 
         // Equipment
         context.equipment = (grants.equipment || []).map((item: any) => ({
@@ -170,11 +171,11 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             quantity: item.quantity || 1,
             uuid: item.uuid || null,
         }));
-        context.hasEquipment = (context.equipment as any[]).length > 0;
+        context.hasEquipment = (context.equipment as unknown[]).length > 0;
 
         // Special Abilities
         context.specialAbilities = grants.specialAbilities || [];
-        context.hasSpecialAbilities = (context.specialAbilities as any[]).length > 0;
+        context.hasSpecialAbilities = (context.specialAbilities as unknown[]).length > 0;
 
         // Choices
         context.choices = (grants.choices || []).map((choice: any) => ({
@@ -188,14 +189,15 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
                 description: opt.description || '',
             })),
         }));
-        context.hasChoices = (context.choices as any[]).length > 0;
+        context.hasChoices = (context.choices as unknown[]).length > 0;
 
         // Requirements
         context.requirements = system?.requirements || {};
+        const requirements = context.requirements as Record<string, unknown>;
         context.hasRequirements = !!(
-            (context.requirements as any).text ||
-            (context.requirements as any).previousSteps?.length ||
-            (context.requirements as any).excludedSteps?.length
+            requirements.text ||
+            (requirements.previousSteps as unknown[] | undefined)?.length ||
+            (requirements.excludedSteps as unknown[] | undefined)?.length
         );
 
         return context;
@@ -317,7 +319,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         if (!uuid) return;
 
         try {
-            const item = (await fromUuid(uuid)) as any;
+            const item = (await fromUuid(uuid)) as unknown as { sheet?: { render(force: boolean): void } } | null;
             if (item?.sheet) {
                 item.sheet.render(true);
             }

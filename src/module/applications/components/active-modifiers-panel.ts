@@ -15,8 +15,8 @@
  * - Toggle optional modifiers on/off
  */
 
-import type { WH40KBaseActorDocument, WH40KItemModifiers } from '../../types/global.d.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KBaseActorDocument, WH40KItemModifiers } from '../../types/global.d.ts';
 
 interface ModifierEntry {
     id: string;

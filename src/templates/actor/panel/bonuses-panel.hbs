@@ -1,25 +1,25 @@
-<div class="wh40k-panel wh40k-panel-bonuses wh40k-grid-col-2 wh40k-grid-row-1">
+<div class="wh40k-panel wh40k-panel-bonuses tw-col-span-2">
     <h1 class="wh40k-panel-header">Bonuses</h1>
-    <div class="wh40k-table--border wh40k-bonusestable--border">
-        <div class="table-row--head">
-            <div class="table-cell">Name</div>
-            <div class='table-cell'>Source</div>
-            <div class="table-cell--last">Source</div>
+    <div class="wh40k-bonusestable--border tw-rounded-md tw-overflow-hidden tw-border tw-border-solid tw-border-[rgba(74,55,40,0.15)]">
+        <div class="table-row--head tw-grid tw-grid-cols-[1fr_0.5fr_3rem] tw-p-[6px_4px] tw-text-[0.9em] tw-uppercase tw-tracking-[0.05em]">
+            <div class="tw-p-[6px_4px]">Name</div>
+            <div class="tw-p-[6px_4px]">Source</div>
+            <div class="tw-p-[6px_4px]">Source</div>
         </div>
         {{#each actor.backgroundEffects.abilities as | ability |}}
-            <div class="table-row">
-                <div class="table-cell">
+            <div class="table-row tw-grid tw-grid-cols-[1fr_0.5fr_3rem] tw-transition-colors tw-duration-200 hover:tw-bg-[rgba(218,165,32,0.08)] tw-border-b tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
+                <div class="tw-p-[6px_4px]">
                     {{> systems/wh40k-rpg/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' ability.source) text=ability.name}}
                 </div>
-                <div class="table-cell">
+                <div class="tw-p-[6px_4px]">
                     <span>{{ability.source}}</span>
                 </div>
-                <div class="table-cell--last">
+                <div class="tw-p-[6px_4px]">
                     <label class="wh40k-control-button bonus-vocalize" data-bonus-name="{{ability.name}}">
                         <span class="wh40k-control-button__span material-icons">{{defaultVal icon 'record_voice_over'}}</span>
                     </label>
                 </div>
-                <div class="table-cell--description description_{{ability.source}}" {{hideIfNot
+                <div class="table-cell--description description_{{ability.source}} tw-col-span-3 tw-bg-[rgba(255,250,240,0.5)] tw-px-3 tw-py-2 tw-border-l-[3px] tw-border-l-solid tw-border-l-[rgba(218,165,32,0.4)]" {{hideIfNot
                     (isExpanded (concat 'description_' ability.source ))}}>
                     <span>{{ability.benefit}}</span>
                 </div>

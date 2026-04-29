@@ -10,11 +10,11 @@
  * - Preview content renders below the item row
  */
 
-import type { WH40KItem } from '../../documents/item.ts';
-import QuickActionsBar from './quick-actions-bar.ts';
-import type { default as WeaponDataModel } from '../../data/item/weapon.ts';
 import type { default as ArmourDataModel } from '../../data/item/armour.ts';
+import type { default as WeaponDataModel } from '../../data/item/weapon.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KItemModifiers } from '../../types/global.d.ts';
+import QuickActionsBar from './quick-actions-bar.ts';
 
 /**
  * Mixin that adds item preview card functionality to actor sheets
@@ -49,16 +49,18 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             const itemRow = this.element.querySelector(`[data-item-id="${itemId}"]`) as HTMLElement | null;
             if (!itemRow) return;
 
-            const instance = this as any;
-            // Check if preview is already open
-            const isOpen = instance.#openPreviews.has(itemId);
+            // Check if preview is already open.
+            // this: any is declared on the function signature (Foundry action handler
+            // pattern); the private fields are in-scope because this static method is
+            // defined inside the mixin's class body.
+            const isOpen = this.#openPreviews.has(itemId);
 
             if (isOpen) {
                 // Close preview
-                instance.#closePreview(itemId);
+                this.#closePreview(itemId);
             } else {
                 // Open preview
-                instance.#openPreview(item as WH40KItem, itemRow);
+                this.#openPreview(item as WH40KItem, itemRow);
             }
         }
 
@@ -174,8 +176,9 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          */
         #generateWeaponPreview(item: WH40KItem): string {
             const sys = item.system as WeaponDataModel;
-            const damage = (sys as any).damage as { formula?: string };
-            const stats = (sys as any).stats as { penetration?: number; range?: string; rof?: string };
+            const sysRec = sys as unknown as Record<string, unknown>;
+            const damage = sysRec.damage as { formula?: string };
+            const stats = sysRec.stats as { penetration?: number; range?: string; rof?: string };
 
             return `
                 <div class="wh40k-weapon-preview-stats">
@@ -202,13 +205,13 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
                     <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
                         <i class="fa-solid fa-box tw-text-[var(--wh40k-stat-neutral)]"></i>
                         <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">Clip</span>
-                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${(sys as any).clip?.current || 0}/${
-                (sys as any).clip?.max || 0
-            }</span>
+                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${
+                            (sysRec.clip as Record<string, unknown> | undefined)?.current || 0
+                        }/${(sysRec.clip as Record<string, unknown> | undefined)?.max || 0}</span>
                     </div>
                 </div>
-                ${this.#generateQualitiesHTML((sys as any).qualities)}
-                ${(sys as any).description ? `<div class="wh40k-item-preview-description">${(sys as any).description}</div>` : ''}
+                ${this.#generateQualitiesHTML(sysRec.qualities)}
+                ${sysRec.description ? `<div class="wh40k-item-preview-description">${String(sysRec.description)}</div>` : ''}
             `;
         }
 
@@ -217,7 +220,8 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          */
         #generateArmourPreview(item: WH40KItem): string {
             const sys = item.system as ArmourDataModel;
-            const locations = (sys as any).locations;
+            const sysRec = sys as unknown as Record<string, unknown>;
+            const locations = (sysRec.locations as Record<string, number | undefined>) ?? {};
 
             return `
                 <div class="wh40k-armour-preview-locations">
@@ -252,8 +256,8 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
                             : ''
                     }
                 </div>
-                ${this.#generateQualitiesHTML(Array.from((sys as any).properties))}
-                ${(sys as any).description ? `<div class="wh40k-item-preview-description">${(sys as any).description}</div>` : ''}
+                ${this.#generateQualitiesHTML(Array.from((sysRec.properties as Iterable<unknown>) ?? []))}
+                ${sysRec.description ? `<div class="wh40k-item-preview-description">${String(sysRec.description)}</div>` : ''}
             `;
         }
 
@@ -261,7 +265,12 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          * Generate talent preview
          */
         #generateTalentPreview(item: WH40KItem): string {
-            const sys = item.system as any;
+            interface TalentSys {
+                prerequisites?: { text?: string };
+                benefit?: string;
+                modifiers?: WH40KItemModifiers;
+            }
+            const sys = item.system as unknown as TalentSys;
 
             let content = '';
 
@@ -291,7 +300,11 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          * Generate trait preview
          */
         #generateTraitPreview(item: WH40KItem): string {
-            const sys = item.system as any;
+            interface TraitSys {
+                level?: string | number;
+                description?: string;
+            }
+            const sys = item.system as unknown as TraitSys;
 
             let content = '';
 
@@ -310,13 +323,19 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          * Generate condition preview
          */
         #generateConditionPreview(item: WH40KItem): string {
-            const sys = item.system as any;
+            interface ConditionSys {
+                nature?: string;
+                duration?: string | number;
+                stacks?: number;
+                description?: string;
+            }
+            const sys = item.system as unknown as ConditionSys;
 
             let content = `
                 <div class="wh40k-condition-preview-meta">
                     ${sys.nature ? `<span class="wh40k-badge wh40k-badge--${sys.nature}">${sys.nature}</span>` : ''}
                     ${sys.duration ? `<span class="wh40k-badge">Duration: ${sys.duration}</span>` : ''}
-                    ${sys.stacks > 1 ? `<span class="wh40k-badge">×${sys.stacks}</span>` : ''}
+                    ${(sys.stacks ?? 0) > 1 ? `<span class="wh40k-badge">×${sys.stacks}</span>` : ''}
                 </div>
             `;
 
@@ -331,7 +350,12 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          * Generate gear preview
          */
         #generateGearPreview(item: WH40KItem): string {
-            const sys = item.system as any;
+            interface GearSys {
+                quantity?: number;
+                uses?: { current: number; max: number };
+                description?: string;
+            }
+            const sys = item.system as unknown as GearSys;
 
             let content = '';
 
@@ -354,7 +378,13 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          * Generate power preview
          */
         #generatePowerPreview(item: WH40KItem): string {
-            const sys = item.system as any;
+            interface PowerSys {
+                cost?: number | string;
+                range?: string;
+                sustained?: boolean;
+                description?: string;
+            }
+            const sys = item.system as unknown as PowerSys;
 
             let content = '';
 
@@ -381,10 +411,10 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          * Generate generic preview
          */
         #generateGenericPreview(item: WH40KItem): string {
-            const sys = item.system as any;
+            const sys = item.system as Record<string, unknown>;
 
             if (sys.description) {
-                return `<div class="wh40k-item-preview-description">${sys.description}</div>`;
+                return `<div class="wh40k-item-preview-description">${String(sys.description)}</div>`;
             }
 
             return '<div class="wh40k-item-preview-empty">No additional details available.</div>';
@@ -396,11 +426,11 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
         #generateQualitiesHTML(qualities: unknown): string {
             if (!qualities) return '';
 
-            let qualitiesArray: any[] = [];
+            let qualitiesArray: unknown[] = [];
             if (Array.isArray(qualities)) {
                 qualitiesArray = qualities;
             } else if (typeof qualities === 'object') {
-                qualitiesArray = Object.entries(qualities)
+                qualitiesArray = Object.entries(qualities as Record<string, unknown>)
                     .filter(([_, value]) => value)
                     .map(([key]) => key);
             }
@@ -409,8 +439,8 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
 
             const tagsHTML = qualitiesArray
                 .map((q) => {
-                    const name = typeof q === 'string' ? q : (q as any).name || q;
-                    return `<span class="wh40k-badge">${name}</span>`;
+                    const name = typeof q === 'string' ? q : (q as Record<string, unknown>)?.name ?? q;
+                    return `<span class="wh40k-badge">${String(name)}</span>`;
                 })
                 .join('');
 
