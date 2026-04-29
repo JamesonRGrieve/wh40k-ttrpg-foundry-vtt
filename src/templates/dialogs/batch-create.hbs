@@ -16,8 +16,8 @@
   {{!-- Threat Level --}}
   <div class="tw-form-group">
     <label>{{localize "WH40K.NPC.ThreatLevel"}}</label>
-    <div class="tw-flex tw-items-center tw-gap-4 [&>input[type=range]]:tw-flex-1 [&>input[type=range]]:tw-accent-[var(--wh40k-color-accent,var(--wh40k-color-gold))]">
-      <input type="range" name="threatLevel" value="{{state.threatLevel}}" min="1" max="30" step="1"/>
+    <div class="tw-flex tw-items-center tw-gap-4">
+      <input type="range" name="threatLevel" value="{{state.threatLevel}}" min="1" max="30" step="1" class="tw-flex-1 tw-accent-[var(--wh40k-color-accent,var(--wh40k-color-gold))]"/>
       <span class="tw-min-w-[2rem] tw-text-center tw-font-bold tw-text-lg">{{state.threatLevel}}</span>
     </div>
     <p class="tw-text-[0.8rem] tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))] tw-italic tw-mt-1">{{tierName}}</p>
@@ -74,17 +74,17 @@
   {{/if}}
 
   {{!-- Options --}}
-  <fieldset class="tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-rounded-md tw-p-3 tw-m-0 [&>legend]:tw-px-2 [&>legend]:tw-font-bold [&>legend]:tw-text-base [&>.tw-form-group]:tw-mb-2 [&>.tw-form-group:last-child]:tw-mb-0">
-    <legend>{{localize "WH40K.NPC.BatchCreate.Options"}}</legend>
+  <fieldset class="tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-rounded-md tw-p-3 tw-m-0">
+    <legend class="tw-px-2 tw-font-bold tw-text-base">{{localize "WH40K.NPC.BatchCreate.Options"}}</legend>
 
-    <div class="tw-form-group tw-form-group--checkbox">
+    <div class="tw-form-group tw-form-group--checkbox tw-mb-2">
       <label>
         <input type="checkbox" name="isHorde" {{#if state.isHorde}}checked{{/if}}/>
         {{localize "WH40K.NPC.EnableHordeMode"}}
       </label>
     </div>
 
-    <div class="tw-form-group tw-form-group--checkbox">
+    <div class="tw-form-group tw-form-group--checkbox tw-mb-2">
       <label>
         <input type="checkbox" name="randomize" {{#if state.randomize}}checked{{/if}}/>
         {{localize "WH40K.NPC.BatchCreate.RandomizeStats"}}
@@ -92,10 +92,10 @@
     </div>
 
     {{#if state.randomize}}
-    <div class="tw-form-group tw-form-group--indent">
+    <div class="tw-form-group tw-form-group--indent tw-mb-2">
       <label>{{localize "WH40K.NPC.BatchCreate.RandomizeAmount"}}</label>
-      <div class="tw-flex tw-items-center tw-gap-4 [&>input[type=range]]:tw-flex-1 [&>input[type=range]]:tw-accent-[var(--wh40k-color-accent,var(--wh40k-color-gold))]">
-        <input type="range" name="randomizeAmount" value="{{state.randomizeAmount}}" min="5" max="30" step="5"/>
+      <div class="tw-flex tw-items-center tw-gap-4">
+        <input type="range" name="randomizeAmount" value="{{state.randomizeAmount}}" min="5" max="30" step="5" class="tw-flex-1 tw-accent-[var(--wh40k-color-accent,var(--wh40k-color-gold))]"/>
         <span>±{{state.randomizeAmount}}%</span>
       </div>
     </div>
@@ -111,19 +111,19 @@
   </fieldset>
 
   {{!-- Preview --}}
-  <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-rounded-md tw-p-3 [&>h4]:tw-m-0 [&>h4]:tw-mb-2 [&>h4]:tw-text-base [&>h4]:tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))]">
-    <h4>{{localize "WH40K.NPC.Preview"}}</h4>
-    <ul class="tw-m-0 tw-p-0 tw-list-none tw-flex tw-flex-wrap tw-gap-2 [&>li]:tw-bg-[var(--color-bg-btn)] [&>li]:tw-px-2 [&>li]:tw-py-1 [&>li]:tw-rounded-sm [&>li]:tw-text-[0.85rem]">
+  <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-rounded-md tw-p-3">
+    <h4 class="tw-m-0 tw-mb-2 tw-text-base tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))]">{{localize "WH40K.NPC.Preview"}}</h4>
+    <ul class="tw-m-0 tw-p-0 tw-list-none tw-flex tw-flex-wrap tw-gap-2">
       {{#each previewNames}}
-      <li>{{this}}</li>
+      <li class="tw-bg-[var(--color-bg-btn)] tw-px-2 tw-py-1 tw-rounded-sm tw-text-[0.85rem]">{{this}}</li>
       {{/each}}
     </ul>
   </div>
 
   {{!-- Buttons --}}
-  <footer class="tw-flex tw-pt-3 tw-gap-2 [&>button]:tw-flex-1">
+  <footer class="tw-flex tw-pt-3 tw-gap-2">
     {{#each buttons}}
-    <button type="{{type}}" {{#if action}}data-action="{{action}}"{{/if}} class="{{cssClass}}">
+    <button type="{{type}}" {{#if action}}data-action="{{action}}"{{/if}} class="tw-flex-1 {{cssClass}}">
       <i class="{{icon}}"></i>
       {{localize label}}
     </button>

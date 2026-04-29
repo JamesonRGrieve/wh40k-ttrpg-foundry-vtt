@@ -1,8 +1,8 @@
 {{! Difficulty Calculator Dialog Template }}
-<form class="wh40k-difficulty-calculator tw-flex tw-flex-col tw-gap-6 tw-p-4 tw-max-h-[80vh] tw-overflow-y-auto">
+<form class="tw-flex tw-flex-col tw-gap-6 tw-p-4 tw-max-h-[80vh] tw-overflow-y-auto">
     {{! NPC Info }}
-    <section class="wh40k-panel">
-        <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-4 tw-p-4 tw-bg-[var(--color-bg-secondary)] tw-rounded-lg">
+    <section class="tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-solid tw-border-[var(--wh40k-bronze)] tw-rounded-md tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)] tw-relative before:tw-content-[''] before:tw-absolute before:tw-inset-0 before:tw-bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(212,175,55,0.02)_2px,rgba(212,175,55,0.02)_4px)] before:tw-pointer-events-none before:tw-rounded-md">
+        <header class="tw-flex tw-items-center tw-gap-4 tw-p-4 tw-bg-[var(--color-bg-secondary)] tw-rounded-lg">
             <img src="{{npc.img}}" alt="{{npc.name}}" class="tw-w-[60px] tw-h-[60px] tw-rounded-lg tw-border-2 tw-border-solid tw-border-[var(--color-border-secondary)] tw-object-cover" />
             <div class="tw-flex-1">
                 <h3 class="tw-m-0 tw-mb-1 tw-text-[1.4rem] tw-text-[var(--color-text-light-primary)]">{{npc.name}}</h3>
@@ -18,7 +18,7 @@
     </section>
 
     {{! Quantity Input }}
-    <section class="wh40k-panel tw-p-4">
+    <section class="tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-solid tw-border-[var(--wh40k-bronze)] tw-rounded-md tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)] tw-relative before:tw-content-[''] before:tw-absolute before:tw-inset-0 before:tw-bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(212,175,55,0.02)_2px,rgba(212,175,55,0.02)_4px)] before:tw-pointer-events-none before:tw-rounded-md tw-p-4">
         <label class="tw-flex tw-flex-col tw-gap-2">
             <span class="tw-font-semibold tw-text-base tw-text-[var(--color-text-light-secondary)] tw-uppercase tw-tracking-[0.5px]">Number of Enemies</span>
             <input type="number" name="quantity" value="{{quantity}}" min="1"
@@ -28,8 +28,8 @@
     </section>
 
     {{! Party Composition }}
-    <section class="wh40k-panel">
-        <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] [&>h4]:tw-m-0 [&>h4]:tw-text-[1.1rem] [&>h4]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
+    <section class="tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-solid tw-border-[var(--wh40k-bronze)] tw-rounded-md tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)] tw-relative before:tw-content-[''] before:tw-absolute before:tw-inset-0 before:tw-bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(212,175,55,0.02)_2px,rgba(212,175,55,0.02)_4px)] before:tw-pointer-events-none before:tw-rounded-md">
+        <header class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] [&>h4]:tw-m-0 [&>h4]:tw-text-[1.1rem] [&>h4]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
             <i class="fa-solid fa-users"></i>
             <h4>Party Composition</h4>
         </header>
@@ -66,8 +66,8 @@
     </section>
 
     {{! Threat Analysis }}
-    <section class="wh40k-panel">
-        <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] [&>h4]:tw-m-0 [&>h4]:tw-text-[1.1rem] [&>h4]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
+    <section class="tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-solid tw-border-[var(--wh40k-bronze)] tw-rounded-md tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)] tw-relative before:tw-content-[''] before:tw-absolute before:tw-inset-0 before:tw-bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(212,175,55,0.02)_2px,rgba(212,175,55,0.02)_4px)] before:tw-pointer-events-none before:tw-rounded-md">
+        <header class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] [&>h4]:tw-m-0 [&>h4]:tw-text-[1.1rem] [&>h4]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
             <i class="fa-solid fa-chart-line"></i>
             <h4>Threat Analysis</h4>
         </header>

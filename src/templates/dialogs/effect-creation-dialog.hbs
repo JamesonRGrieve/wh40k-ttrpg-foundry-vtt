@@ -57,10 +57,10 @@
             </div>
             <div class="tw-grid tw-grid-cols-3 tw-gap-2 tw-mt-2">
                 {{#each conditions as |condition|}}
-                    <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1 tw-p-3 tw-bg-black/30 tw-border-2 tw-border-solid tw-rounded-lg tw-cursor-pointer tw-transition-all hover:-tw-translate-y-0.5 {{#if (eq condition.nature 'harmful')}}tw-border-red-500/30 hover:tw-bg-red-500/15 hover:tw-border-[var(--wh40k-accent-red)] hover:tw-shadow-[0_4px_16px_rgba(231,76,60,0.3)] [&>.condition-icon]:tw-text-[var(--wh40k-accent-red)]{{else if (eq condition.nature 'beneficial')}}tw-border-green-500/30 hover:tw-bg-green-500/15 hover:tw-border-[var(--wh40k-accent-green-bright)] hover:tw-shadow-[0_4px_16px_rgba(46,204,113,0.3)] [&>.condition-icon]:tw-text-[var(--wh40k-accent-green-bright)]{{else}}tw-border-transparent{{/if}}"
+                    <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1 tw-p-3 tw-bg-black/30 tw-border-2 tw-border-solid tw-rounded-lg tw-cursor-pointer tw-transition-all hover:tw-translate-y-[-2px] {{#if (eq condition.nature 'harmful')}}tw-border-red-500/30 hover:tw-bg-red-500/15 hover:tw-border-[var(--wh40k-accent-red)] hover:tw-shadow-[0_4px_16px_rgba(231,76,60,0.3)]{{else if (eq condition.nature 'beneficial')}}tw-border-green-500/30 hover:tw-bg-green-500/15 hover:tw-border-[var(--wh40k-accent-green-bright)] hover:tw-shadow-[0_4px_16px_rgba(46,204,113,0.3)]{{else}}tw-border-transparent{{/if}}"
                          data-action="selectCondition"
                          data-condition-id="{{condition.id}}">
-                        <i class="{{condition.icon}} condition-icon tw-text-3xl"></i>
+                        <i class="{{condition.icon}} tw-text-3xl {{#if (eq condition.nature 'harmful')}}tw-text-[var(--wh40k-accent-red)]{{else if (eq condition.nature 'beneficial')}}tw-text-[var(--wh40k-accent-green-bright)]{{/if}}"></i>
                         <span class="tw-text-white/90 tw-text-[0.85rem] tw-font-semibold tw-text-center">{{condition.name}}</span>
                     </div>
                 {{/each}}
