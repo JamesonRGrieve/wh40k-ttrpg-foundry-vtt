@@ -9,7 +9,7 @@
             <i class="fa-solid fa-wand-magic-sparkles"></i>
             Active Modifiers
         </span>
-        <span class="wh40k-modifier-count">
+        <span class="tw-inline-flex tw-items-center tw-justify-center tw-min-w-[24px] tw-h-6 tw-px-2 tw-bg-[rgba(168,85,247,0.2)] tw-rounded-full tw-text-[0.85em] tw-font-semibold tw-text-[#a855f7]">
             {{add (add (add (add modifiers.conditions.length modifiers.talents.length) modifiers.traits.length) modifiers.equipment.length) modifiers.effects.length}}
         </span>
     </div>
@@ -17,28 +17,28 @@
     {{#unless modifiers.collapsed}}
     <div class="wh40k-panel-body">
         {{#if (or modifiers.conditions.length modifiers.talents.length modifiers.traits.length modifiers.equipment.length modifiers.effects.length)}}
-            <div class="wh40k-modifiers-list">
+            <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-lg)]">
                 {{!-- Conditions --}}
                 {{#if modifiers.conditions.length}}
-                <div class="wh40k-modifier-group">
-                    <div class="wh40k-modifier-group-header">
-                        <i class="fa-solid fa-exclamation-triangle"></i>
+                <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
+                        <i class="fa-solid fa-exclamation-triangle tw-opacity-80"></i>
                         Conditions
                     </div>
                     {{#each modifiers.conditions as |mod|}}
-                    <div class="wh40k-modifier-item wh40k-modifier-item--condition wh40k-modifier-item--{{mod.nature}}">
-                        <div class="wh40k-modifier-item-icon">
-                            <img src="{{mod.img}}" alt="{{mod.name}}" />
+                    <div class="wh40k-modifier-item wh40k-modifier-item--condition wh40k-modifier-item--{{mod.nature}} tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-[rgba(245,158,11,0.6)] tw-rounded-[var(--wh40k-radius-md)]">
+                        <div class="tw-shrink-0 tw-w-10 tw-h-10 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-overflow-hidden">
+                            <img src="{{mod.img}}" alt="{{mod.name}}" class="tw-w-full tw-h-full tw-object-cover" />
                         </div>
-                        <div class="wh40k-modifier-item-content">
-                            <button type="button" class="wh40k-modifier-item-name" data-action="viewModifierSource" data-item-id="{{mod.id}}">
+                        <div class="tw-flex-1 tw-flex tw-flex-col tw-gap-[var(--wh40k-space-xs)] tw-min-w-0">
+                            <button type="button" class="tw-flex tw-items-center tw-gap-[6px] tw-bg-transparent tw-border-0 tw-p-0 tw-text-[1em] tw-font-semibold tw-text-[color:var(--wh40k-text-primary,#fff)] tw-text-left tw-cursor-pointer" data-action="viewModifierSource" data-item-id="{{mod.id}}">
                                 {{mod.name}}
                                 {{#if (gt mod.stacks 1)}}
-                                <span class="wh40k-modifier-stacks">×{{mod.stacks}}</span>
+                                <span class="tw-inline-flex tw-items-center tw-justify-center tw-px-[6px] tw-py-[2px] tw-bg-[rgba(245,158,11,0.3)] tw-rounded-[10px] tw-text-[0.8em] tw-font-semibold tw-text-[#f59e0b]">×{{mod.stacks}}</span>
                                 {{/if}}
                             </button>
-                            <div class="wh40k-modifier-item-description">{{mod.description}}</div>
-                            <div class="wh40k-modifier-item-duration">{{mod.duration}}</div>
+                            <div class="tw-text-[0.9em] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-leading-[1.4]">{{mod.description}}</div>
+                            <div class="tw-text-[0.85em] tw-text-[color:var(--wh40k-text-disabled,rgba(255,255,255,0.5))] tw-italic">{{mod.duration}}</div>
                         </div>
                     </div>
                     {{/each}}
@@ -47,26 +47,26 @@
 
                 {{!-- Talents --}}
                 {{#if modifiers.talents.length}}
-                <div class="wh40k-modifier-group">
-                    <div class="wh40k-modifier-group-header">
-                        <i class="fa-solid fa-graduation-cap"></i>
+                <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
+                        <i class="fa-solid fa-graduation-cap tw-opacity-80"></i>
                         Talents
                     </div>
                     {{#each modifiers.talents as |mod|}}
-                    <div class="wh40k-modifier-item wh40k-modifier-item--talent {{#unless mod.active}}wh40k-modifier-item--inactive{{/unless}}">
-                        <div class="wh40k-modifier-item-icon">
-                            <img src="{{mod.img}}" alt="{{mod.name}}" />
+                    <div class="wh40k-modifier-item wh40k-modifier-item--talent {{#unless mod.active}}wh40k-modifier-item--inactive{{/unless}} tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-[rgba(168,85,247,0.6)] tw-rounded-[var(--wh40k-radius-md)] {{#unless mod.active}}tw-opacity-50{{/unless}}">
+                        <div class="tw-shrink-0 tw-w-10 tw-h-10 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-overflow-hidden">
+                            <img src="{{mod.img}}" alt="{{mod.name}}" class="tw-w-full tw-h-full tw-object-cover" />
                         </div>
-                        <div class="wh40k-modifier-item-content">
-                            <button type="button" class="wh40k-modifier-item-name" data-action="viewModifierSource" data-item-id="{{mod.id}}">
+                        <div class="tw-flex-1 tw-flex tw-flex-col tw-gap-[var(--wh40k-space-xs)] tw-min-w-0">
+                            <button type="button" class="tw-flex tw-items-center tw-gap-[6px] tw-bg-transparent tw-border-0 tw-p-0 tw-text-[1em] tw-font-semibold tw-text-[color:var(--wh40k-text-primary,#fff)] tw-text-left tw-cursor-pointer" data-action="viewModifierSource" data-item-id="{{mod.id}}">
                                 {{mod.name}}
                             </button>
-                            <div class="wh40k-modifier-item-description">{{mod.description}}</div>
-                            <div class="wh40k-modifier-item-duration">{{mod.duration}}</div>
+                            <div class="tw-text-[0.9em] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-leading-[1.4]">{{mod.description}}</div>
+                            <div class="tw-text-[0.85em] tw-text-[color:var(--wh40k-text-disabled,rgba(255,255,255,0.5))] tw-italic">{{mod.duration}}</div>
                         </div>
                         {{#if mod.canToggle}}
-                        <button type="button" class="wh40k-modifier-item-toggle" data-action="toggleModifier" data-item-id="{{mod.id}}" title="{{#if mod.active}}Deactivate{{else}}Activate{{/if}}">
-                            <i class="fa-solid {{#if mod.active}}fa-toggle-on{{else}}fa-toggle-off{{/if}}"></i>
+                        <button type="button" class="tw-shrink-0 tw-w-9 tw-h-9 tw-flex tw-items-center tw-justify-center tw-bg-[rgba(0,0,0,0.2)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-cursor-pointer" data-action="toggleModifier" data-item-id="{{mod.id}}" title="{{#if mod.active}}Deactivate{{else}}Activate{{/if}}">
+                            <i class="fa-solid {{#if mod.active}}fa-toggle-on{{else}}fa-toggle-off{{/if}} tw-text-[1.2em]"></i>
                         </button>
                         {{/if}}
                     </div>
@@ -76,22 +76,22 @@
 
                 {{!-- Traits --}}
                 {{#if modifiers.traits.length}}
-                <div class="wh40k-modifier-group">
-                    <div class="wh40k-modifier-group-header">
-                        <i class="fa-solid fa-dna"></i>
+                <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
+                        <i class="fa-solid fa-dna tw-opacity-80"></i>
                         Traits
                     </div>
                     {{#each modifiers.traits as |mod|}}
-                    <div class="wh40k-modifier-item wh40k-modifier-item--trait">
-                        <div class="wh40k-modifier-item-icon">
-                            <img src="{{mod.img}}" alt="{{mod.name}}" />
+                    <div class="wh40k-modifier-item wh40k-modifier-item--trait tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-[rgba(59,130,246,0.6)] tw-rounded-[var(--wh40k-radius-md)]">
+                        <div class="tw-shrink-0 tw-w-10 tw-h-10 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-overflow-hidden">
+                            <img src="{{mod.img}}" alt="{{mod.name}}" class="tw-w-full tw-h-full tw-object-cover" />
                         </div>
-                        <div class="wh40k-modifier-item-content">
-                            <button type="button" class="wh40k-modifier-item-name" data-action="viewModifierSource" data-item-id="{{mod.id}}">
+                        <div class="tw-flex-1 tw-flex tw-flex-col tw-gap-[var(--wh40k-space-xs)] tw-min-w-0">
+                            <button type="button" class="tw-flex tw-items-center tw-gap-[6px] tw-bg-transparent tw-border-0 tw-p-0 tw-text-[1em] tw-font-semibold tw-text-[color:var(--wh40k-text-primary,#fff)] tw-text-left tw-cursor-pointer" data-action="viewModifierSource" data-item-id="{{mod.id}}">
                                 {{mod.name}}
                             </button>
-                            <div class="wh40k-modifier-item-description">{{mod.description}}</div>
-                            <div class="wh40k-modifier-item-duration">{{mod.duration}}</div>
+                            <div class="tw-text-[0.9em] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-leading-[1.4]">{{mod.description}}</div>
+                            <div class="tw-text-[0.85em] tw-text-[color:var(--wh40k-text-disabled,rgba(255,255,255,0.5))] tw-italic">{{mod.duration}}</div>
                         </div>
                     </div>
                     {{/each}}
@@ -100,22 +100,22 @@
 
                 {{!-- Equipment --}}
                 {{#if modifiers.equipment.length}}
-                <div class="wh40k-modifier-group">
-                    <div class="wh40k-modifier-group-header">
-                        <i class="fa-solid fa-shield"></i>
+                <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
+                        <i class="fa-solid fa-shield tw-opacity-80"></i>
                         Equipment
                     </div>
                     {{#each modifiers.equipment as |mod|}}
-                    <div class="wh40k-modifier-item wh40k-modifier-item--equipment">
-                        <div class="wh40k-modifier-item-icon">
-                            <img src="{{mod.img}}" alt="{{mod.name}}" />
+                    <div class="wh40k-modifier-item wh40k-modifier-item--equipment tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-[rgba(100,116,139,0.6)] tw-rounded-[var(--wh40k-radius-md)]">
+                        <div class="tw-shrink-0 tw-w-10 tw-h-10 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-overflow-hidden">
+                            <img src="{{mod.img}}" alt="{{mod.name}}" class="tw-w-full tw-h-full tw-object-cover" />
                         </div>
-                        <div class="wh40k-modifier-item-content">
-                            <button type="button" class="wh40k-modifier-item-name" data-action="viewModifierSource" data-item-id="{{mod.id}}">
+                        <div class="tw-flex-1 tw-flex tw-flex-col tw-gap-[var(--wh40k-space-xs)] tw-min-w-0">
+                            <button type="button" class="tw-flex tw-items-center tw-gap-[6px] tw-bg-transparent tw-border-0 tw-p-0 tw-text-[1em] tw-font-semibold tw-text-[color:var(--wh40k-text-primary,#fff)] tw-text-left tw-cursor-pointer" data-action="viewModifierSource" data-item-id="{{mod.id}}">
                                 {{mod.name}}
                             </button>
-                            <div class="wh40k-modifier-item-description">{{mod.description}}</div>
-                            <div class="wh40k-modifier-item-duration">{{mod.duration}}</div>
+                            <div class="tw-text-[0.9em] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-leading-[1.4]">{{mod.description}}</div>
+                            <div class="tw-text-[0.85em] tw-text-[color:var(--wh40k-text-disabled,rgba(255,255,255,0.5))] tw-italic">{{mod.duration}}</div>
                         </div>
                     </div>
                     {{/each}}
@@ -124,24 +124,24 @@
 
                 {{!-- Active Effects --}}
                 {{#if modifiers.effects.length}}
-                <div class="wh40k-modifier-group">
-                    <div class="wh40k-modifier-group-header">
-                        <i class="fa-solid fa-sparkles"></i>
+                <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
+                        <i class="fa-solid fa-sparkles tw-opacity-80"></i>
                         Effects
                     </div>
                     {{#each modifiers.effects as |mod|}}
-                    <div class="wh40k-modifier-item wh40k-modifier-item--effect {{#unless mod.active}}wh40k-modifier-item--inactive{{/unless}}">
-                        <div class="wh40k-modifier-item-icon">
-                            <img src="{{mod.img}}" alt="{{mod.name}}" />
+                    <div class="wh40k-modifier-item wh40k-modifier-item--effect {{#unless mod.active}}wh40k-modifier-item--inactive{{/unless}} tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-[rgba(236,72,153,0.6)] tw-rounded-[var(--wh40k-radius-md)] {{#unless mod.active}}tw-opacity-50{{/unless}}">
+                        <div class="tw-shrink-0 tw-w-10 tw-h-10 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-overflow-hidden">
+                            <img src="{{mod.img}}" alt="{{mod.name}}" class="tw-w-full tw-h-full tw-object-cover" />
                         </div>
-                        <div class="wh40k-modifier-item-content">
-                            <div class="wh40k-modifier-item-name">{{mod.name}}</div>
-                            <div class="wh40k-modifier-item-description">{{mod.description}}</div>
-                            <div class="wh40k-modifier-item-duration">{{mod.duration}}</div>
+                        <div class="tw-flex-1 tw-flex tw-flex-col tw-gap-[var(--wh40k-space-xs)] tw-min-w-0">
+                            <div class="tw-flex tw-items-center tw-gap-[6px] tw-text-[1em] tw-font-semibold tw-text-[color:var(--wh40k-text-primary,#fff)]">{{mod.name}}</div>
+                            <div class="tw-text-[0.9em] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-leading-[1.4]">{{mod.description}}</div>
+                            <div class="tw-text-[0.85em] tw-text-[color:var(--wh40k-text-disabled,rgba(255,255,255,0.5))] tw-italic">{{mod.duration}}</div>
                         </div>
                         {{#if mod.canToggle}}
-                        <button type="button" class="wh40k-modifier-item-toggle" data-action="toggleModifier" data-item-id="{{mod.id}}" title="{{#if mod.active}}Deactivate{{else}}Activate{{/if}}">
-                            <i class="fa-solid {{#if mod.active}}fa-toggle-on{{else}}fa-toggle-off{{/if}}"></i>
+                        <button type="button" class="tw-shrink-0 tw-w-9 tw-h-9 tw-flex tw-items-center tw-justify-center tw-bg-[rgba(0,0,0,0.2)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-cursor-pointer" data-action="toggleModifier" data-item-id="{{mod.id}}" title="{{#if mod.active}}Deactivate{{else}}Activate{{/if}}">
+                            <i class="fa-solid {{#if mod.active}}fa-toggle-on{{else}}fa-toggle-off{{/if}} tw-text-[1.2em]"></i>
                         </button>
                         {{/if}}
                     </div>
@@ -150,9 +150,9 @@
                 {{/if}}
             </div>
         {{else}}
-            <div class="wh40k-modifiers-empty">
-                <i class="fa-solid fa-circle-info"></i>
-                <p>No active modifiers</p>
+            <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-md)] tw-py-8 tw-px-4 tw-text-[color:var(--wh40k-text-disabled,rgba(255,255,255,0.4))] tw-text-center">
+                <i class="fa-solid fa-circle-info tw-text-[2em] tw-opacity-50"></i>
+                <p class="tw-m-0 tw-text-[0.95em] tw-italic">No active modifiers</p>
             </div>
         {{/if}}
     </div>

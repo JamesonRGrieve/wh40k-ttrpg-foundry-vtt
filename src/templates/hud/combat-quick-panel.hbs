@@ -1,17 +1,17 @@
 {{!-- Combat Quick Panel Template --}}
-<div class="combat-panel-content data-[opacity=high]:tw-opacity-90 data-[opacity=medium]:tw-opacity-70 data-[opacity=low]:tw-opacity-50" data-opacity="{{opacityKey}}">
-    
+<div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 data-[opacity=high]:tw-opacity-90 data-[opacity=medium]:tw-opacity-70 data-[opacity=low]:tw-opacity-50" data-opacity="{{opacityKey}}">
+
     {{!-- Header: Initiative --}}
-    <div class="combat-panel-section initiative-section">
-        <h3><i class="fas fa-bolt"></i> Initiative</h3>
-        <div class="initiative-row">
+    <div class="tw-bg-black/30 tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-rounded-[var(--wh40k-radius-md)] tw-p-2">
+        <h3 class="tw-m-0 tw-mb-2 tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))] tw-text-[0.9rem] tw-font-bold tw-uppercase"><i class="fas fa-bolt"></i> Initiative</h3>
+        <div class="tw-flex tw-items-center tw-gap-2">
             {{#if initiative.rolled}}
-                <span class="initiative-value">{{initiative.value}}</span>
-                <button type="button" class="initiative-reroll" data-action="rollInitiative" data-tooltip="Re-roll">
+                <span class="tw-font-bold tw-text-[color:var(--wh40k-bone,#e8dcc8)]">{{initiative.value}}</span>
+                <button type="button" class="tw-bg-[var(--wh40k-iron,#3e3e3e)] tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-cursor-pointer tw-p-2 hover:tw-bg-[var(--wh40k-bronze,#cd7f32)] hover:tw-border-[color:var(--wh40k-gold,var(--wh40k-color-gold))]" data-action="rollInitiative" data-tooltip="Re-roll">
                     <i class="fas fa-dice"></i>
                 </button>
             {{else}}
-                <button type="button" class="initiative-roll-btn" data-action="rollInitiative">
+                <button type="button" class="tw-flex-1 tw-bg-[var(--wh40k-iron,#3e3e3e)] tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-cursor-pointer tw-p-2 tw-font-bold hover:tw-bg-[var(--wh40k-bronze,#cd7f32)] hover:tw-border-[color:var(--wh40k-gold,var(--wh40k-color-gold))]" data-action="rollInitiative">
                     <i class="fas fa-dice"></i> Roll Initiative
                 </button>
             {{/if}}
@@ -19,114 +19,114 @@
     </div>
 
     {{!-- Vitals --}}
-    <div class="combat-panel-section vitals-section">
-        <div class="vital-row wounds-row {{#if wounds.critical}}critical{{else if wounds.low}}low{{/if}}">
-            <span class="vital-label">HP:</span>
-            <div class="vital-bar">
-                <div class="vital-bar-fill" style="width: {{wounds.percentage}}%"></div>
+    <div class="tw-bg-black/30 tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-rounded-[var(--wh40k-radius-md)] tw-p-2">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-mb-1 vital-row wounds-row {{#if wounds.critical}}critical{{else if wounds.low}}low{{/if}}">
+            <span class="tw-w-[60px] tw-text-[color:var(--wh40k-bone,#e8dcc8)]">HP:</span>
+            <div class="tw-flex-1 tw-h-4 tw-bg-black/50 tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-rounded-[var(--wh40k-radius-sm)] tw-overflow-hidden">
+                <div class="tw-h-full" style="width: {{wounds.percentage}}%; background: linear-gradient(90deg, #4caf50, #8bc34a)"></div>
             </div>
-            <span class="vital-value">{{wounds.value}}/{{wounds.max}}</span>
+            <span class="tw-w-[50px] tw-text-right tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-font-bold">{{wounds.value}}/{{wounds.max}}</span>
         </div>
-        
-        <div class="vital-row fatigue-row {{#if fatigue.exhausted}}exhausted{{/if}}">
-            <span class="vital-label">Fatigue:</span>
-            <div class="vital-bar">
-                <div class="vital-bar-fill" style="width: {{fatigue.percentage}}%"></div>
+
+        <div class="tw-flex tw-items-center tw-gap-2 tw-mb-1 vital-row fatigue-row {{#if fatigue.exhausted}}exhausted{{/if}}">
+            <span class="tw-w-[60px] tw-text-[color:var(--wh40k-bone,#e8dcc8)]">Fatigue:</span>
+            <div class="tw-flex-1 tw-h-4 tw-bg-black/50 tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-rounded-[var(--wh40k-radius-sm)] tw-overflow-hidden">
+                <div class="tw-h-full" style="width: {{fatigue.percentage}}%; background: linear-gradient(90deg, #4caf50, #8bc34a)"></div>
             </div>
-            <span class="vital-value">{{fatigue.value}}/{{fatigue.max}}</span>
+            <span class="tw-w-[50px] tw-text-right tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-font-bold">{{fatigue.value}}/{{fatigue.max}}</span>
         </div>
     </div>
 
     {{!-- Primary Weapon --}}
-    <div class="combat-panel-section weapon-section">
-        <h3><i class="fas fa-crosshairs"></i> Primary Weapon</h3>
-        
+    <div class="tw-bg-black/30 tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-rounded-[var(--wh40k-radius-md)] tw-p-2">
+        <h3 class="tw-m-0 tw-mb-2 tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))] tw-text-[0.9rem] tw-font-bold tw-uppercase"><i class="fas fa-crosshairs"></i> Primary Weapon</h3>
+
         {{#if weapon.none}}
-            <div class="no-weapon">
+            <div class="tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-opacity-60">
                 <i class="fas fa-exclamation-triangle"></i>
                 No weapon equipped
             </div>
         {{else}}
-            <div class="weapon-info">
-                <img src="{{weapon.img}}" alt="{{weapon.name}}" class="weapon-icon" />
-                <div class="weapon-details">
-                    <div class="weapon-name">{{weapon.name}}</div>
-                    <div class="weapon-stats">
-                        <span class="weapon-damage">{{weapon.damage}}</span>
-                        <span class="weapon-pen">Pen {{weapon.penetration}}</span>
+            <div class="tw-flex tw-gap-2 tw-mb-2">
+                <img src="{{weapon.img}}" alt="{{weapon.name}}" class="tw-w-10 tw-h-10 tw-border tw-border-[color:var(--wh40k-gold,var(--wh40k-color-gold))] tw-rounded-[var(--wh40k-radius-sm)]" />
+                <div class="tw-flex-1">
+                    <div class="tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-font-bold">{{weapon.name}}</div>
+                    <div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))]">
+                        <span>{{weapon.damage}}</span>
+                        <span>Pen {{weapon.penetration}}</span>
                     </div>
                 </div>
             </div>
-            
+
             {{!-- Rate of Fire Buttons --}}
-            <div class="attack-buttons">
+            <div class="tw-flex tw-gap-2 tw-mb-2">
                 {{#if weapon.rateOfFire.single}}
-                    <button type="button" class="attack-btn standard-attack" data-action="standardAttack" data-tooltip="Standard Attack">
+                    <button type="button" class="attack-btn standard-attack tw-flex-1 tw-p-2 tw-bg-[var(--wh40k-bronze,#cd7f32)] tw-border tw-border-[color:var(--wh40k-gold,var(--wh40k-color-gold))] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-font-bold tw-cursor-pointer hover:tw-bg-[var(--wh40k-gold,var(--wh40k-color-gold))]" data-action="standardAttack" data-tooltip="Standard Attack">
                         <i class="fas fa-bullseye"></i> Standard
                     </button>
                 {{/if}}
-                
+
                 {{#if weapon.rateOfFire.semiAuto}}
-                    <button type="button" class="attack-btn semi-auto-attack" data-action="semiAutoAttack" data-tooltip="Semi-Auto Burst">
+                    <button type="button" class="attack-btn semi-auto-attack tw-flex-1 tw-p-2 tw-bg-[var(--wh40k-bronze,#cd7f32)] tw-border tw-border-[color:var(--wh40k-gold,var(--wh40k-color-gold))] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-font-bold tw-cursor-pointer hover:tw-bg-[var(--wh40k-gold,var(--wh40k-color-gold))]" data-action="semiAutoAttack" data-tooltip="Semi-Auto Burst">
                         <i class="fas fa-burst"></i> Semi
                     </button>
                 {{/if}}
-                
+
                 {{#if weapon.rateOfFire.fullAuto}}
-                    <button type="button" class="attack-btn full-auto-attack" data-action="fullAutoAttack" data-tooltip="Full Auto">
+                    <button type="button" class="attack-btn full-auto-attack tw-flex-1 tw-p-2 tw-bg-[var(--wh40k-bronze,#cd7f32)] tw-border tw-border-[color:var(--wh40k-gold,var(--wh40k-color-gold))] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-font-bold tw-cursor-pointer hover:tw-bg-[var(--wh40k-gold,var(--wh40k-color-gold))]" data-action="fullAutoAttack" data-tooltip="Full Auto">
                         <i class="fas fa-fire"></i> Full
                     </button>
                 {{/if}}
             </div>
-            
+
             {{!-- Ammo Bar --}}
             {{#if weapon.clip}}
-                <div class="ammo-row {{#if weapon.ammo.low}}low{{/if}}">
-                    <span class="ammo-label">Ammo:</span>
-                    <div class="ammo-bar">
-                        <div class="ammo-bar-fill" style="width: {{weapon.ammo.percentage}}%"></div>
+                <div class="tw-flex tw-items-center tw-gap-2 ammo-row {{#if weapon.ammo.low}}low{{/if}}">
+                    <span class="tw-text-[color:var(--wh40k-bone,#e8dcc8)]">Ammo:</span>
+                    <div class="tw-flex-1 tw-h-4 tw-bg-black/50 tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-rounded-[var(--wh40k-radius-sm)] tw-overflow-hidden">
+                        <div class="tw-h-full" style="width: {{weapon.ammo.percentage}}%; background: linear-gradient(90deg, #4caf50, #8bc34a)"></div>
                     </div>
-                    <span class="ammo-value">{{weapon.ammo.current}}/{{weapon.ammo.max}}</span>
+                    <span class="tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-font-bold">{{weapon.ammo.current}}/{{weapon.ammo.max}}</span>
                 </div>
             {{/if}}
         {{/if}}
     </div>
 
     {{!-- Reactions --}}
-    <div class="combat-panel-section reactions-section">
-        <h3><i class="fas fa-shield-alt"></i> Reactions ({{reactions.remaining}})</h3>
-        <div class="reaction-buttons">
-            <button type="button" 
-                    class="reaction-btn dodge-btn" 
+    <div class="tw-bg-black/30 tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-rounded-[var(--wh40k-radius-md)] tw-p-2">
+        <h3 class="tw-m-0 tw-mb-2 tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))] tw-text-[0.9rem] tw-font-bold tw-uppercase"><i class="fas fa-shield-alt"></i> Reactions ({{reactions.remaining}})</h3>
+        <div class="tw-flex tw-gap-2 tw-flex-wrap">
+            <button type="button"
+                    class="tw-flex-1 tw-p-2 tw-bg-[var(--wh40k-iron,#3e3e3e)] tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-cursor-pointer hover:not-disabled:tw-bg-[var(--wh40k-bronze,#cd7f32)] hover:not-disabled:tw-border-[color:var(--wh40k-gold,var(--wh40k-color-gold))] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
                     data-action="dodge"
                     {{#unless reactions.dodge.available}}disabled{{/unless}}
                     data-tooltip="{{reactions.dodge.label}}">
                 <i class="fas fa-wind"></i> Dodge
                 {{#if reactions.dodge.available}}
-                    <span class="reaction-target">({{reactions.dodge.target}})</span>
+                    <span class="tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))]">({{reactions.dodge.target}})</span>
                 {{/if}}
             </button>
-            
-            <button type="button" 
-                    class="reaction-btn parry-btn" 
+
+            <button type="button"
+                    class="tw-flex-1 tw-p-2 tw-bg-[var(--wh40k-iron,#3e3e3e)] tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-cursor-pointer hover:not-disabled:tw-bg-[var(--wh40k-bronze,#cd7f32)] hover:not-disabled:tw-border-[color:var(--wh40k-gold,var(--wh40k-color-gold))] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
                     data-action="parry"
                     {{#unless reactions.parry.available}}disabled{{/unless}}
                     data-tooltip="{{reactions.parry.label}}">
                 <i class="fas fa-hand-paper"></i> Parry
                 {{#if reactions.parry.available}}
-                    <span class="reaction-target">({{reactions.parry.target}})</span>
+                    <span class="tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))]">({{reactions.parry.target}})</span>
                 {{/if}}
             </button>
         </div>
     </div>
 
     {{!-- Quick Actions --}}
-    <div class="combat-panel-section actions-section">
-        <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
-        <div class="quick-actions">
+    <div class="tw-bg-black/30 tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-rounded-[var(--wh40k-radius-md)] tw-p-2">
+        <h3 class="tw-m-0 tw-mb-2 tw-text-[color:var(--wh40k-gold,var(--wh40k-color-gold))] tw-text-[0.9rem] tw-font-bold tw-uppercase"><i class="fas fa-bolt"></i> Quick Actions</h3>
+        <div class="tw-flex tw-gap-2 tw-flex-wrap">
             {{#each actions}}
-                <button type="button" 
-                        class="action-btn" 
+                <button type="button"
+                        class="action-btn tw-flex-1 tw-p-2 tw-bg-[var(--wh40k-iron,#3e3e3e)] tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-cursor-pointer hover:not-disabled:tw-bg-[var(--wh40k-bronze,#cd7f32)] hover:not-disabled:tw-border-[color:var(--wh40k-gold,var(--wh40k-color-gold))] disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
                         data-action="{{this.action}}"
                         {{#if this.disabled}}disabled{{/if}}
                         data-tooltip="{{this.tooltip}}">
@@ -138,8 +138,8 @@
     </div>
 
     {{!-- Footer: Opacity Toggle --}}
-    <div class="combat-panel-footer">
-        <button type="button" class="opacity-toggle-btn" data-action="toggleOpacity" data-tooltip="Toggle Opacity">
+    <div class="tw-flex tw-justify-end">
+        <button type="button" class="tw-bg-[var(--wh40k-iron,#3e3e3e)] tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-cursor-pointer tw-p-2 hover:tw-bg-[var(--wh40k-bronze,#cd7f32)]" data-action="toggleOpacity" data-tooltip="Toggle Opacity">
             <i class="fas fa-eye"></i>
         </button>
     </div>

@@ -1,4 +1,5 @@
 import CreatureTemplate from './templates/creature.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
 
@@ -297,7 +298,7 @@ export default class CharacterData extends CreatureTemplate {
     }
 
     /** @inheritDoc */
-    static override _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions = {}): void {
+    static override _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown> = {}): void {
         super._cleanData?.(source, options);
         CharacterData.#cleanExperience(source);
         CharacterData.#cleanMentalState(source);
@@ -407,10 +408,10 @@ export default class CharacterData extends CreatureTemplate {
         const actor = this.parent;
         if (!actor?.items) return;
 
-        const originItems = actor.items.filter((item) => item.isOriginPath);
+        const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
 
         // Map step keys (camelCase from schema) to items — covers all game systems
-        const stepMap = {
+        const stepMap: Record<string, WH40KItem | null> = {
             // Rogue Trader
             homeWorld: null,
             birthright: null,
@@ -440,7 +441,7 @@ export default class CharacterData extends CreatureTemplate {
 
         for (const item of originItems) {
             // Get step from system data (camelCase like "homeWorld", "career")
-            const step = item.system?.step || item.flags?.rt?.step || '';
+            const step: string = String(item.system?.step || (item.flags?.rt as Record<string, unknown> | undefined)?.step || '');
             if (Object.prototype.hasOwnProperty.call(stepMap, step)) {
                 stepMap[step] = item;
             }
@@ -537,7 +538,7 @@ export default class CharacterData extends CreatureTemplate {
      * @private
      */
     _getStepLabel(step: string): string {
-        const labels = {
+        const labels: Record<string, string> = {
             // RT
             homeWorld: 'Home World',
             birthright: 'Birthright',
@@ -569,7 +570,7 @@ export default class CharacterData extends CreatureTemplate {
      * @protected
      */
     _computeExperienceSpent(): void {
-        const actor = this.parent as foundry.abstract.Document;
+        const actor = this.parent;
         if (!actor?.items || !this.experience) return;
 
         this.experience.spentCharacteristics = 0;
@@ -629,7 +630,7 @@ export default class CharacterData extends CreatureTemplate {
         const actor = this.parent;
         if (!actor?.items) return;
 
-        const originItems = actor.items.filter((item) => item.isOriginPath);
+        const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
         const tb = this.characteristics?.toughness?.bonus ?? 0;
 
         let computedMax = 0;

@@ -1,63 +1,64 @@
 {{!-- Enhanced Skill Test Roll Dialog --}}
 {{!-- Showcase feature demonstrating ApplicationV2 capabilities --}}
 
-<form class="enhanced-skill-roll" autocomplete="off">
+<form class="enhanced-skill-roll tw-p-4 tw-text-[color:var(--wh40k-bone,#e8dcc8)]" autocomplete="off">
     {{!-- Header with skill name and base target --}}
-    <header class="roll-header">
-        <h3 class="skill-name">{{skillName}}</h3>
-        <div class="base-target">
-            <span class="label">Base Target:</span>
-            <span class="value">{{baseTarget}}</span>
+    <header class="roll-header tw-text-center tw-mb-6 tw-pb-4 tw-border-b-2 tw-border-[rgba(212,175,55,0.3)]">
+        <h3 class="skill-name tw-font-display tw-text-2xl tw-m-0 tw-mb-2 tw-text-gold tw-uppercase tw-tracking-widest">{{skillName}}</h3>
+        <div class="base-target tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-[1.1rem]">
+            <span class="label tw-text-[rgba(232,220,200,0.7)]">Base Target:</span>
+            <span class="value tw-font-bold tw-text-[1.3rem] tw-text-gold">{{baseTarget}}</span>
         </div>
     </header>
 
     {{!-- Difficulty Selection --}}
-    <section class="difficulty-section">
-        <h4 class="section-title">Difficulty</h4>
-        <div class="difficulty-grid">
+    <section class="difficulty-section tw-mb-6">
+        <h4 class="section-title tw-font-display tw-text-base tw-m-0 tw-mb-3 tw-text-gold tw-uppercase tw-tracking-wide tw-border-b tw-border-[rgba(212,175,55,0.2)] tw-pb-1">Difficulty</h4>
+        <div class="difficulty-grid tw-grid tw-grid-cols-3 tw-gap-2">
             {{#each difficulties}}
             <button
                 type="button"
-                class="difficulty-btn {{cssClass}} data-[flash=true]:tw-animate-flash-gold"
+                class="difficulty-btn {{cssClass}} tw-flex tw-flex-col tw-items-center tw-justify-center tw-cursor-pointer tw-rounded-md tw-min-h-[70px] data-[flash=true]:tw-animate-flash-gold"
                 data-action="selectDifficulty"
                 data-modifier="{{modifier}}"
                 data-tooltip="{{description}}"
                 data-tooltip-direction="UP"
             >
                 <i class="fas {{icon}}"></i>
-                <span class="diff-label">{{label}}</span>
-                <span class="diff-mod">{{#if (gt modifier 0)}}+{{/if}}{{modifier}}</span>
+                <span class="diff-label tw-text-[0.75rem] tw-font-semibold tw-mb-[0.15rem]">{{label}}</span>
+                <span class="diff-mod tw-text-[0.9rem] tw-font-bold tw-text-gold">{{#if (gt modifier 0)}}+{{/if}}{{modifier}}</span>
             </button>
             {{/each}}
         </div>
     </section>
 
     {{!-- Common Modifiers --}}
-    <section class="modifiers-section">
-        <h4 class="section-title">Common Modifiers</h4>
-        <div class="common-modifiers">
+    <section class="modifiers-section tw-mb-6">
+        <h4 class="section-title tw-font-display tw-text-base tw-m-0 tw-mb-3 tw-text-gold tw-uppercase tw-tracking-wide tw-border-b tw-border-[rgba(212,175,55,0.2)] tw-pb-1">Common Modifiers</h4>
+        <div class="common-modifiers tw-flex tw-flex-col tw-gap-2">
             {{#each commonModifiers}}
-            <label class="modifier-checkbox">
+            <label class="modifier-checkbox tw-flex tw-items-start tw-gap-3 tw-p-3 tw-rounded-md tw-cursor-pointer">
                 <input
                     type="checkbox"
                     data-action="toggleModifier"
                     data-modifier-key="{{key}}"
                     {{#if checked}}checked{{/if}}
+                    class="tw-mt-1 tw-cursor-pointer"
                 />
-                <span class="modifier-label">
+                <span class="modifier-label tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-font-semibold">
                     {{label}}
-                    <span class="modifier-value">({{#if (gt value 0)}}+{{/if}}{{value}})</span>
+                    <span class="modifier-value tw-text-gold tw-font-bold">({{#if (gt value 0)}}+{{/if}}{{value}})</span>
                 </span>
-                <span class="modifier-description">{{description}}</span>
+                <span class="modifier-description tw-block tw-text-[0.85rem] tw-text-[rgba(232,220,200,0.6)] tw-italic tw-mt-1">{{description}}</span>
             </label>
             {{/each}}
         </div>
     </section>
 
     {{!-- Custom Modifier --}}
-    <section class="custom-section">
-        <h4 class="section-title">Custom Modifier</h4>
-        <div class="custom-modifier">
+    <section class="custom-section tw-mb-6">
+        <h4 class="section-title tw-font-display tw-text-base tw-m-0 tw-mb-3 tw-text-gold tw-uppercase tw-tracking-wide tw-border-b tw-border-[rgba(212,175,55,0.2)] tw-pb-1">Custom Modifier</h4>
+        <div class="custom-modifier tw-flex tw-flex-col tw-gap-2">
             <input
                 type="number"
                 id="customModifier"
@@ -65,41 +66,42 @@
                 value="{{customModifier}}"
                 data-action="updateCustom"
                 placeholder="0"
+                class="tw-w-full tw-p-3 tw-rounded-md tw-text-[1.1rem] tw-font-bold tw-text-center tw-text-[color:var(--wh40k-bone,#e8dcc8)]"
             />
-            <span class="custom-hint">Enter additional bonus/penalty</span>
+            <span class="custom-hint tw-text-[0.85rem] tw-text-[rgba(232,220,200,0.6)] tw-italic tw-text-center">Enter additional bonus/penalty</span>
         </div>
     </section>
 
     {{!-- Final Target Calculation --}}
-    <section class="calculation-section">
-        <div class="calculation-breakdown">
-            <div class="calc-line">
-                <span class="calc-label">Base Target:</span>
-                <span class="calc-value">{{baseTarget}}</span>
+    <section class="calculation-section tw-mb-6 tw-p-4 tw-rounded-md tw-border-2 tw-border-[rgba(212,175,55,0.3)]">
+        <div class="calculation-breakdown tw-mb-3">
+            <div class="calc-line tw-flex tw-justify-between tw-py-1 tw-text-[0.95rem]">
+                <span class="calc-label tw-text-[rgba(232,220,200,0.7)]">Base Target:</span>
+                <span class="calc-value tw-font-bold tw-text-gold">{{baseTarget}}</span>
             </div>
             {{#if (ne difficultyMod 0)}}
-            <div class="calc-line modifier">
-                <span class="calc-label">Difficulty:</span>
-                <span class="calc-value">{{#if (gt difficultyMod 0)}}+{{/if}}{{difficultyMod}}</span>
+            <div class="calc-line modifier tw-flex tw-justify-between tw-py-1 tw-text-[0.95rem] tw-text-[rgba(232,220,200,0.8)]">
+                <span class="calc-label tw-text-[rgba(232,220,200,0.7)]">Difficulty:</span>
+                <span class="calc-value tw-font-bold tw-text-gold">{{#if (gt difficultyMod 0)}}+{{/if}}{{difficultyMod}}</span>
             </div>
             {{/if}}
             {{#if (ne commonMod 0)}}
-            <div class="calc-line modifier">
-                <span class="calc-label">Common Mods:</span>
-                <span class="calc-value">{{#if (gt commonMod 0)}}+{{/if}}{{commonMod}}</span>
+            <div class="calc-line modifier tw-flex tw-justify-between tw-py-1 tw-text-[0.95rem] tw-text-[rgba(232,220,200,0.8)]">
+                <span class="calc-label tw-text-[rgba(232,220,200,0.7)]">Common Mods:</span>
+                <span class="calc-value tw-font-bold tw-text-gold">{{#if (gt commonMod 0)}}+{{/if}}{{commonMod}}</span>
             </div>
             {{/if}}
             {{#if (ne customModifier 0)}}
-            <div class="calc-line modifier">
-                <span class="calc-label">Custom:</span>
-                <span class="calc-value">{{#if (gt customModifier 0)}}+{{/if}}{{customModifier}}</span>
+            <div class="calc-line modifier tw-flex tw-justify-between tw-py-1 tw-text-[0.95rem] tw-text-[rgba(232,220,200,0.8)]">
+                <span class="calc-label tw-text-[rgba(232,220,200,0.7)]">Custom:</span>
+                <span class="calc-value tw-font-bold tw-text-gold">{{#if (gt customModifier 0)}}+{{/if}}{{customModifier}}</span>
             </div>
             {{/if}}
         </div>
 
-        <div class="final-target">
-            <span class="final-label">Final Target:</span>
-            <span class="final-value {{#if (gt finalTarget baseTarget)}}increased{{else if (lt finalTarget baseTarget)}}decreased{{/if}}">
+        <div class="final-target tw-flex tw-justify-between tw-items-center tw-pt-3 tw-border-t-2 tw-border-[rgba(212,175,55,0.5)] tw-text-[1.2rem]">
+            <span class="final-label tw-font-bold tw-text-[color:var(--wh40k-bone,#e8dcc8)]">Final Target:</span>
+            <span class="final-value tw-text-[1.5rem] tw-font-bold {{#if (gt finalTarget baseTarget)}}increased tw-text-[#4ade80]{{else if (lt finalTarget baseTarget)}}decreased tw-text-[#f87171]{{/if}}">
                 {{finalTarget}}
             </span>
         </div>
@@ -107,20 +109,20 @@
 
     {{!-- Recent Rolls (if any) --}}
     {{#if hasRecentRolls}}
-    <section class="recent-section">
-        <h4 class="section-title">Recent Rolls</h4>
-        <div class="recent-rolls">
+    <section class="recent-section tw-mb-6">
+        <h4 class="section-title tw-font-display tw-text-base tw-m-0 tw-mb-3 tw-text-gold tw-uppercase tw-tracking-wide tw-border-b tw-border-[rgba(212,175,55,0.2)] tw-pb-1">Recent Rolls</h4>
+        <div class="recent-rolls tw-flex tw-gap-2 tw-flex-wrap">
             {{#each recentRolls}}
             <button
                 type="button"
-                class="recent-btn"
+                class="recent-btn tw-flex-1 tw-min-w-[120px] tw-flex tw-justify-between tw-items-center tw-p-2 tw-rounded-md tw-cursor-pointer tw-text-[color:var(--wh40k-bone,#e8dcc8)]"
                 data-action="rollRepeat"
                 data-modifier="{{modifier}}"
                 data-tooltip="Roll {{name}} with {{#if (gt modifier 0)}}+{{/if}}{{modifier}} modifier"
                 data-tooltip-direction="UP"
             >
-                <span class="recent-name">{{name}}</span>
-                <span class="recent-mod">{{#if (gt modifier 0)}}+{{/if}}{{modifier}}</span>
+                <span class="recent-name tw-text-[0.85rem] tw-opacity-80">{{name}}</span>
+                <span class="recent-mod tw-font-bold tw-text-gold">{{#if (gt modifier 0)}}+{{/if}}{{modifier}}</span>
             </button>
             {{/each}}
         </div>
@@ -128,19 +130,19 @@
     {{/if}}
 
     {{!-- Action Buttons --}}
-    <footer class="roll-footer">
-        <button type="button" class="roll-btn" data-action="roll">
+    <footer class="roll-footer tw-flex tw-gap-4 tw-mb-2">
+        <button type="button" class="roll-btn tw-flex-1 tw-p-4 tw-font-display tw-text-[1.1rem] tw-font-bold tw-uppercase tw-tracking-wide tw-rounded-md tw-cursor-pointer tw-text-[color:var(--wh40k-black,#0a0a0a)]" data-action="roll">
             <i class="fas fa-dice-d20"></i>
             Roll Test
         </button>
-        <button type="button" class="cancel-btn" data-action="cancel">
+        <button type="button" class="cancel-btn tw-flex-1 tw-p-4 tw-font-display tw-text-[1.1rem] tw-font-bold tw-uppercase tw-tracking-wide tw-rounded-md tw-cursor-pointer tw-text-[color:var(--wh40k-bone,#e8dcc8)]" data-action="cancel">
             Cancel
         </button>
     </footer>
 
     {{!-- Keyboard Hint --}}
-    <div class="keyboard-hint">
+    <div class="keyboard-hint tw-text-center tw-text-[0.75rem] tw-text-[rgba(232,220,200,0.5)] tw-italic">
         <i class="fas fa-keyboard"></i>
-        Press <kbd>Enter</kbd> to roll
+        Press <kbd class="tw-px-1 tw-rounded tw-font-mono tw-text-[0.7rem] tw-mx-1">Enter</kbd> to roll
     </div>
 </form>

@@ -1,44 +1,44 @@
 {{! Rogue Trader Force Field Prompt - Modern Design }}
 <div class="dialog-content">
-    <form class="wh40k-prompt" autocomplete="off">
+    <form class="wh40k-prompt tw-relative tw-font-ui tw-text-[color:var(--wh40k-text-primary)]" autocomplete="off">
         {{! Character & Field Info }}
-        <div class="wh40k-prompt__panel">
-            <div class="wh40k-prompt__header">
-                <img class="wh40k-prompt__icon" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
-                <div class="wh40k-prompt__title-group">
-                    <h2 class="wh40k-prompt__title">Force Field</h2>
-                    <div class="wh40k-prompt__subtitle">{{this.forceField.name}}</div>
+        <div class="wh40k-prompt__panel tw-relative tw-mb-4">
+            <div class="wh40k-prompt__header tw-flex tw-items-center tw-gap-[14px] tw-mb-4 tw-pb-[14px]">
+                <img class="wh40k-prompt__icon tw-w-12 tw-h-12 tw-flex-shrink-0 tw-rounded tw-object-cover" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
+                <div class="wh40k-prompt__title-group tw-flex-1 tw-min-w-0">
+                    <h2 class="wh40k-prompt__title tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-wider tw-m-0 tw-truncate">Force Field</h2>
+                    <div class="wh40k-prompt__subtitle tw-text-[0.9rem] tw-text-[color:var(--wh40k-text-secondary)] tw-mt-1 tw-truncate">{{this.forceField.name}}</div>
                 </div>
             </div>
 
-            <div class="wh40k-prompt__field">
-                <span class="wh40k-prompt__label">Character</span>
+            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Character</span>
                 <span class="wh40k-prompt__value">{{this.actor.name}}</span>
             </div>
-            <div class="wh40k-prompt__field">
-                <span class="wh40k-prompt__label">Quality</span>
+            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Quality</span>
                 <span class="wh40k-prompt__value">{{this.forceField.system.protectionRating}}</span>
             </div>
-            <div class="wh40k-prompt__field">
-                <span class="wh40k-prompt__label">Activated</span>
+            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Activated</span>
                 <span class="wh40k-prompt__value">{{this.forceField.system.activated}}</span>
             </div>
-            <div class="wh40k-prompt__field">
-                <span class="wh40k-prompt__label">Overloaded</span>
+            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Overloaded</span>
                 <span class="wh40k-prompt__value">{{this.forceField.system.overloaded}}</span>
             </div>
         </div>
 
         {{! Protection Settings }}
-        <div class="wh40k-prompt__panel">
-            <h3 class="wh40k-prompt__section-title">Protection</h3>
-            <div class="wh40k-prompt__field">
-                <span class="wh40k-prompt__label">Rating</span>
-                <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="protectionRating" value="{{this.protectionRating}}" />
+        <div class="wh40k-prompt__panel tw-relative tw-mb-0">
+            <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Protection</h3>
+            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Rating</span>
+                <input class="wh40k-prompt__input tw-text-right" type="number" data-dtype="Number" name="protectionRating" value="{{this.protectionRating}}" />
             </div>
-            <div class="wh40k-prompt__field">
-                <span class="wh40k-prompt__label">Overload</span>
-                <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="overloadRating" value="{{this.overloadRating}}" />
+            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Overload</span>
+                <input class="wh40k-prompt__input tw-text-right" type="number" data-dtype="Number" name="overloadRating" value="{{this.overloadRating}}" />
             </div>
         </div>
     </form>

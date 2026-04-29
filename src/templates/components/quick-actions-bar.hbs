@@ -1,40 +1,40 @@
-{{!-- 
+{{!--
   Quick Actions Bar Partial
   Standardized action buttons for items
-  
+
   Usage:
-  {{> "systems/wh40k-rpg/templates/components/quick-actions-bar.hbs" 
+  {{> "systems/wh40k-rpg/templates/components/quick-actions-bar.hbs"
       item=item
       compact=false
       inSheet=false}}
-  
+
   @param {Item} item - The item to generate actions for
   @param {Boolean} compact - Use compact mode (icons only)
   @param {Boolean} inSheet - Rendering in item sheet vs character sheet
 --}}
 
 {{#if item}}
-<div class="wh40k-quick-actions-bar {{#if compact}}wh40k-quick-actions-bar--compact{{/if}}">
+<div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-item-spacing-xs)] tw-p-[var(--wh40k-item-spacing-sm)] tw-bg-[var(--wh40k-item-panel-bg)] tw-border-t tw-border-[var(--wh40k-item-panel-border)] {{#if compact}}tw-gap-[var(--wh40k-item-spacing-xs)] tw-p-[var(--wh40k-item-spacing-xs)]{{/if}}">
   {{!-- Weapon Actions --}}
   {{#if (eq item.type "weapon")}}
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--primary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-gradient-to-br tw-from-[var(--wh40k-gold)] tw-to-[var(--wh40k-gold-dark)] tw-border-[var(--wh40k-gold-dark)] tw-text-white"
             data-action="itemRoll"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Attack'}}">
       <i class="fa-solid fa-crosshairs"></i>
       {{#unless compact}}<span>{{localize "WH40K.Action.Attack"}}</span>{{/unless}}
     </button>
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--primary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-gradient-to-br tw-from-[var(--wh40k-gold)] tw-to-[var(--wh40k-gold-dark)] tw-border-[var(--wh40k-gold-dark)] tw-text-white"
             data-action="rollDamage"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Damage'}}">
       <i class="fa-solid fa-burst"></i>
       {{#unless compact}}<span>{{localize "WH40K.Action.Damage"}}</span>{{/unless}}
     </button>
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--secondary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-[rgba(100,100,120,0.25)] tw-border-[rgba(100,100,120,0.4)] tw-text-[color:var(--color-text-secondary)]"
             data-action="reloadWeapon"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Reload'}}">
@@ -45,8 +45,8 @@
 
   {{!-- Armour Actions --}}
   {{#if (eq item.type "armour")}}
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--primary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-gradient-to-br tw-from-[var(--wh40k-gold)] tw-to-[var(--wh40k-gold-dark)] tw-border-[var(--wh40k-gold-dark)] tw-text-white"
             data-action="toggleEquip"
             data-item-id="{{item.id}}"
             title="{{#if system.equipped}}{{localize 'WH40K.Action.Unequip'}}{{else}}{{localize 'WH40K.Action.Equip'}}{{/if}}">
@@ -60,8 +60,8 @@
   {{!-- Talent Actions --}}
   {{#if (eq item.type "talent")}}
     {{#if system.isRollable}}
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--primary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-gradient-to-br tw-from-[var(--wh40k-gold)] tw-to-[var(--wh40k-gold-dark)] tw-border-[var(--wh40k-gold-dark)] tw-text-white"
             data-action="itemRoll"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Roll'}}">
@@ -69,8 +69,8 @@
       {{#unless compact}}<span>{{localize "WH40K.Action.Roll"}}</span>{{/unless}}
     </button>
     {{/if}}
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--secondary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-[rgba(100,100,120,0.25)] tw-border-[rgba(100,100,120,0.4)] tw-text-[color:var(--color-text-secondary)]"
             data-action="toggleFavorite"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Favorite'}}">
@@ -82,8 +82,8 @@
   {{!-- Trait Actions --}}
   {{#if (eq item.type "trait")}}
     {{#if system.rollable}}
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--primary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-gradient-to-br tw-from-[var(--wh40k-gold)] tw-to-[var(--wh40k-gold-dark)] tw-border-[var(--wh40k-gold-dark)] tw-text-white"
             data-action="itemRoll"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Roll'}}">
@@ -95,16 +95,16 @@
 
   {{!-- Consumable Actions --}}
   {{#if (or (eq item.type "consumable") (eq item.type "drug") (and (eq item.type "gear") system.consumable))}}
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--primary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-gradient-to-br tw-from-[var(--wh40k-gold)] tw-to-[var(--wh40k-gold-dark)] tw-border-[var(--wh40k-gold-dark)] tw-text-white"
             data-action="useItem"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Use'}}">
       <i class="fa-solid fa-flask"></i>
       {{#unless compact}}<span>{{localize "WH40K.Action.Use"}}</span>{{/unless}}
     </button>
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--secondary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-[rgba(100,100,120,0.25)] tw-border-[rgba(100,100,120,0.4)] tw-text-[color:var(--color-text-secondary)]"
             data-action="adjustQuantity"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Adjust'}}">
@@ -115,24 +115,24 @@
 
   {{!-- Condition Actions --}}
   {{#if (eq item.type "condition")}}
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--secondary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-[rgba(100,100,120,0.25)] tw-border-[rgba(100,100,120,0.4)] tw-text-[color:var(--color-text-secondary)]"
             data-action="stackCondition"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Stack'}}">
       <i class="fa-solid fa-plus"></i>
       {{#unless compact}}<span>{{localize "WH40K.Action.Stack"}}</span>{{/unless}}
     </button>
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--secondary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-[rgba(100,100,120,0.25)] tw-border-[rgba(100,100,120,0.4)] tw-text-[color:var(--color-text-secondary)]"
             data-action="reduceCondition"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Reduce'}}">
       <i class="fa-solid fa-minus"></i>
       {{#unless compact}}<span>{{localize "WH40K.Action.Reduce"}}</span>{{/unless}}
     </button>
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--danger" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-[rgba(239,68,68,0.2)] tw-border-[rgba(239,68,68,0.3)] tw-text-[#fca5a5]"
             data-action="removeCondition"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Remove'}}">
@@ -143,16 +143,16 @@
 
   {{!-- Critical Injury Actions --}}
   {{#if (eq item.type "criticalInjury")}}
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--primary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-gradient-to-br tw-from-[var(--wh40k-gold)] tw-to-[var(--wh40k-gold-dark)] tw-border-[var(--wh40k-gold-dark)] tw-text-white"
             data-action="rollSeverity"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.RollSeverity'}}">
       <i class="fa-solid fa-dice"></i>
       {{#unless compact}}<span>{{localize "WH40K.Action.RollSeverity"}}</span>{{/unless}}
     </button>
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--secondary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-[rgba(100,100,120,0.25)] tw-border-[rgba(100,100,120,0.4)] tw-text-[color:var(--color-text-secondary)]"
             data-action="treatInjury"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Treat'}}">
@@ -163,8 +163,8 @@
 
   {{!-- Psychic Power Actions --}}
   {{#if (or (eq item.type "psychicPower") (eq item.type "navigatorPower"))}}
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--primary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-gradient-to-br tw-from-[var(--wh40k-gold)] tw-to-[var(--wh40k-gold-dark)] tw-border-[var(--wh40k-gold-dark)] tw-text-white"
             data-action="manifestPower"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Manifest'}}">
@@ -175,8 +175,8 @@
 
   {{!-- Ammunition Actions --}}
   {{#if (eq item.type "ammunition")}}
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--primary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-gradient-to-br tw-from-[var(--wh40k-gold)] tw-to-[var(--wh40k-gold-dark)] tw-border-[var(--wh40k-gold-dark)] tw-text-white"
             data-action="loadAmmo"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Load'}}">
@@ -187,8 +187,8 @@
 
   {{!-- Universal Actions --}}
   {{#unless inSheet}}
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--secondary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-[rgba(100,100,120,0.25)] tw-border-[rgba(100,100,120,0.4)] tw-text-[color:var(--color-text-secondary)]"
             data-action="postToChat"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.PostToChat'}}">
@@ -199,8 +199,8 @@
 
   {{#if inSheet}}
     {{#if item.isOwner}}
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--secondary" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-[rgba(100,100,120,0.25)] tw-border-[rgba(100,100,120,0.4)] tw-text-[color:var(--color-text-secondary)]"
             data-action="editItem"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Edit'}}">
@@ -212,8 +212,8 @@
 
   {{#unless inSheet}}
     {{#if item.isOwner}}
-    <button type="button" 
-            class="wh40k-quick-action wh40k-quick-action--danger" 
+    <button type="button"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-[rgba(239,68,68,0.2)] tw-border-[rgba(239,68,68,0.3)] tw-text-[#fca5a5]"
             data-action="deleteItem"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Delete'}}">
