@@ -1,80 +1,80 @@
 {{! Rogue Trader Damage Roll Card - Rich Hit-by-Hit Display }}
-<div class="wh40k-chat tw-font-ui">
-    <div class="wh40k-roll-card tw-relative tw-overflow-hidden tw-rounded-md">
+<div class="tw-font-ui">
+    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-card-border)] tw-bg-[var(--wh40k-card-bg)] tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]">
         {{! Header }}
-        <div class="wh40k-roll-card__header">
-            <div class="wh40k-roll-card__actor">Damage Roll</div>
-            <h2 class="wh40k-roll-card__title">{{weaponName}}</h2>
+        <div class="tw-relative tw-px-4 tw-py-3 tw-bg-[linear-gradient(90deg,var(--wh40k-accent-overlay)_0%,transparent_100%)] tw-border-b tw-border-[var(--wh40k-border-color)]">
+            <div class="tw-text-xs tw-text-[var(--wh40k-card-muted)] tw-uppercase tw-tracking-[0.1em] tw-mb-1">Damage Roll</div>
+            <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[var(--wh40k-card-gold)] tw-uppercase tw-tracking-[0.05em] tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{weaponName}}</h2>
         </div>
 
         {{! Body }}
-        <div class="wh40k-roll-card__body">
+        <div class="tw-px-4 tw-py-3">
             {{#if psychicEffect}}
-                <div class="wh40k-roll-card__divider wh40k-roll-card__divider--ornate"></div>
-                <div class="wh40k-roll-card__text">{{{psychicEffect}}}</div>
+                <div class="tw-relative tw-h-3 tw-my-2.5 tw-opacity-50 tw-bg-transparent before:tw-content-['⬥'] before:tw-absolute before:tw-left-1/2 before:tw-top-1/2 before:tw-translate-x-[-50%] before:tw-translate-y-[-50%] before:tw-text-[var(--wh40k-card-gold)] before:tw-text-[10px] after:tw-content-[''] after:tw-absolute after:tw-top-1/2 after:tw-left-[10%] after:tw-right-[10%] after:tw-h-px after:tw-bg-[linear-gradient(90deg,transparent_0%,var(--wh40k-card-gold)_30%,transparent_48%,transparent_52%,var(--wh40k-card-gold)_70%,transparent_100%)]"></div>
+                <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-[var(--wh40k-card-gold)] tw-rounded-[0_4px_4px_0] tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto">{{{psychicEffect}}}</div>
             {{/if}}
 
             {{#each hits as |hit|}}
-                <div class="wh40k-roll-card__hit">
-                    <div class="wh40k-roll-card__hit-header">
-                        <span class="wh40k-roll-card__hit-number">{{inc @index}}</span>
-                        <span class="wh40k-roll-card__hit-location">{{hit.location}}</span>
+                <div class="tw-my-3 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md">
+                    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+                        <span class="tw-w-6 tw-h-6 tw-flex tw-items-center tw-justify-center tw-bg-[var(--wh40k-card-gold)] tw-text-[var(--color-bg-primary)] tw-font-bold tw-text-[0.8rem] tw-rounded-full">{{inc @index}}</span>
+                        <span class="tw-text-[0.85rem] tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-card-text)]">{{hit.location}}</span>
                     </div>
 
-                    <div class="wh40k-roll-card__row">
-                        <span class="wh40k-roll-card__label">Formula</span>
-                        <span class="wh40k-roll-card__value">{{hit.damageRoll.formula}}</span>
+                    <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
+                        <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">Formula</span>
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{hit.damageRoll.formula}}</span>
                     </div>
-                    <div class="wh40k-roll-card__row">
-                        <span class="wh40k-roll-card__label">Base Damage</span>
-                        <span class="wh40k-roll-card__value">{{hit.damageRoll.result}}</span>
+                    <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
+                        <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">Base Damage</span>
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{hit.damageRoll.result}}</span>
                     </div>
                     {{#each modifiers}}
-                        <div class="wh40k-roll-card__row wh40k-roll-card__row--modifier">
-                            <span class="wh40k-roll-card__label">{{@key}}</span>
-                            <span class="wh40k-roll-card__value">{{this}}</span>
+                        <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem] tw-pl-3 tw-border-l-2 tw-border-[var(--wh40k-border-color)] tw-ml-1">
+                            <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{@key}}</span>
+                            <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{this}}</span>
                         </div>
                     {{/each}}
 
                     {{! Damage Display }}
-                    <div class="wh40k-roll-card__damage">
-                        <div class="wh40k-roll-card__damage-header">
-                            <span class="wh40k-roll-card__damage-title">Damage</span>
-                            <span class="wh40k-roll-card__damage-location">{{hit.location}}</span>
+                    <div class="tw-p-3 tw-my-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md">
+                        <div class="tw-flex tw-justify-between tw-items-center tw-mb-2 tw-pb-2 tw-border-b tw-border-[var(--wh40k-wounds-border)]">
+                            <span class="tw-font-display tw-text-[0.9rem] tw-text-[var(--wh40k-wounds-secondary)] tw-uppercase tw-tracking-[0.1em]">Damage</span>
+                            <span class="tw-text-[0.8rem] tw-px-2 tw-py-0.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-[3px] tw-text-[var(--wh40k-card-muted)]">{{hit.location}}</span>
                         </div>
-                        <div class="wh40k-roll-card__damage-value">{{hit.totalDamage}}</div>
-                        <div class="wh40k-roll-card__damage-type">{{hit.damageType}}</div>
+                        <div class="tw-text-center tw-text-[2rem] tw-font-bold tw-text-[var(--wh40k-wounds-secondary)] tw-shadow-[0_0_10px_rgba(139,0,0,0.5)]">{{hit.totalDamage}}</div>
+                        <div class="tw-text-center tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-text-[var(--wh40k-card-muted)] tw-mt-1">{{hit.damageType}}</div>
                     </div>
 
                     {{! Penetration }}
-                    <div class="wh40k-roll-card__notice">
-                        <span class="wh40k-roll-card__notice-label">Penetration</span>
-                        <span class="wh40k-roll-card__notice-value">{{hit.totalPenetration}}</span>
+                    <div class="tw-flex tw-justify-between tw-items-center tw-px-3.5 tw-py-2.5 tw-my-2 tw-bg-[var(--wh40k-warning-bg)] tw-border-l-[3px] tw-border-[var(--wh40k-warning-primary)] tw-rounded-[0_4px_4px_0]">
+                        <span class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-warning-secondary)]">Penetration</span>
+                        <span class="tw-text-[1.1rem] tw-font-bold tw-text-[var(--wh40k-card-text)]">{{hit.totalPenetration}}</span>
                     </div>
 
                     {{! Effects }}
                     {{#each hit.effects as |effect|}}
-                        <div class="wh40k-roll-card__effect">
-                            <span class="wh40k-roll-card__effect-name">{{effect.name}}</span>
-                            <span class="wh40k-roll-card__effect-desc">{{effect.effect}}</span>
+                        <div class="tw-flex tw-items-start tw-gap-2 tw-py-1.5 tw-text-[0.85rem]">
+                            <span class="tw-font-semibold tw-text-[var(--wh40k-card-gold)] tw-shrink-0">{{effect.name}}</span>
+                            <span class="tw-text-[var(--wh40k-card-text)] tw-opacity-90">{{effect.effect}}</span>
                         </div>
                     {{/each}}
 
                     {{! Righteous Fury }}
                     {{#each hit.righteousFury as |fury|}}
                         {{#if fury.confirmed}}
-                            <div class="wh40k-roll-card__fury wh40k-roll-card__fury--confirmed">
-                                <div class="wh40k-roll-card__fury-title">⚡ Righteous Fury Confirmed! ⚡</div>
-                                <div class="wh40k-roll-card__fury-bonus">
-                                    <span class="wh40k-roll-card__fury-label">Bonus Damage:</span>
-                                    <span class="wh40k-roll-card__fury-value">+{{fury.bonusDamage}}</span>
+                            <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-fate-bg)] tw-border-2 tw-border-[var(--wh40k-gold-bright)] tw-rounded-md tw-text-center tw-animate-[fury-glow_1.5s_ease-in-out_infinite_alternate]">
+                                <div class="tw-font-display tw-text-base tw-font-bold tw-text-[var(--wh40k-gold-bright)] tw-uppercase tw-tracking-[0.15em] tw-shadow-[0_0_10px_rgba(255,215,0,0.5)]">⚡ Righteous Fury Confirmed! ⚡</div>
+                                <div class="tw-flex tw-justify-center tw-items-center tw-gap-2 tw-my-2 tw-py-1.5 tw-px-3 tw-bg-[rgba(255,215,0,0.1)] tw-rounded-[3px]">
+                                    <span class="tw-text-[0.85rem] tw-text-[var(--wh40k-text-medium)] tw-font-semibold">Bonus Damage:</span>
+                                    <span class="tw-text-[1.1rem] tw-font-bold tw-text-[var(--wh40k-gold-bright)]">+{{fury.bonusDamage}}</span>
                                 </div>
-                                <div class="wh40k-roll-card__fury-effect">Critical Level {{fury.critRoll.total}}: {{fury.effect}}</div>
+                                <div class="tw-text-[0.85rem] tw-text-[var(--wh40k-card-text)] tw-mt-2 tw-leading-[1.4]">Critical Level {{fury.critRoll.total}}: {{fury.effect}}</div>
                             </div>
                         {{else}}
-                            <div class="wh40k-roll-card__fury wh40k-roll-card__fury--not-confirmed">
-                                <div class="wh40k-roll-card__fury-title">⚡ Righteous Fury (Not Confirmed)</div>
-                                <div class="wh40k-roll-card__fury-text">
+                            <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-panel-bg)] tw-border-2 tw-border-[var(--wh40k-text-muted)] tw-rounded-md tw-text-center">
+                                <div class="tw-font-display tw-text-base tw-font-bold tw-text-[var(--wh40k-text-medium)] tw-uppercase tw-tracking-[0.15em]">⚡ Righteous Fury (Not Confirmed)</div>
+                                <div class="tw-text-[0.85rem] tw-text-[var(--wh40k-text-muted)] tw-mt-1.5 tw-italic">
                                     Rolled
                                     {{fury.dieResult}}
                                     (threshold:
@@ -86,9 +86,9 @@
 
                     {{! Assign Damage Button }}
                     {{#if @root.targetActor}}
-                        <div class="wh40k-roll-card__controls">
+                        <div class="tw-flex tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
                             <button
-                                class="wh40k-roll-card__btn wh40k-roll-card__btn--damage roll-control__assign-damage"
+                                class="roll-control__assign-damage tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap tw-transition-all hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0"
                                 data-location="{{hit.location}}"
                                 data-total-damage="{{hit.totalDamage}}"
                                 data-total-penetration="{{hit.totalPenetration}}"

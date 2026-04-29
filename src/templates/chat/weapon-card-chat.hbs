@@ -2,124 +2,132 @@
   Rogue Trader Weapon Chat Card - Modern Compact Design
   For vocalizing weapon items to chat with full stats and action buttons.
 --}}
-<div class="wh40k-chat tw-font-ui">
-  <div class="wh40k-weapon-card tw-relative tw-overflow-hidden tw-rounded-md" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" {{#if actor}}data-actor-id="{{actor._id}}" data-actor-uuid="{{actor.uuid}}"{{/if}}>
-    
+<div class="tw-font-ui">
+  <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-combat-border)] tw-bg-[var(--wh40k-panel-bg-solid)]" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" {{#if actor}}data-actor-id="{{actor._id}}" data-actor-uuid="{{actor.uuid}}"{{/if}}>
+
     {{!-- Header --}}
-    <div class="wh40k-weapon-card__header">
-      <img class="wh40k-weapon-card__image" src="{{item.img}}" alt="{{item.name}}" />
-      <div class="wh40k-weapon-card__title">
-        <h2 class="wh40k-weapon-card__name">{{item.name}}</h2>
-        <div class="wh40k-weapon-card__meta">
-          <span class="wh40k-weapon-card__class">{{item.system.classLabel}}</span>
-          <span class="wh40k-weapon-card__divider">•</span>
-          <span class="wh40k-weapon-card__type">{{item.system.typeLabel}}</span>
+    <div class="tw-flex tw-items-center tw-gap-2.5 tw-px-3 tw-py-2.5 tw-bg-[linear-gradient(135deg,var(--wh40k-combat-bg)_0%,transparent_100%)] tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+      <img class="tw-w-10 tw-h-10 tw-border-2 tw-border-bronze tw-rounded-md tw-object-cover" src="{{item.img}}" alt="{{item.name}}" />
+      <div class="tw-flex-1 tw-min-w-0">
+        <h2 class="tw-m-0 tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-bronze tw-leading-tight">{{item.name}}</h2>
+        <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-x-1 tw-mt-0.5 tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.03em]">
+          <span>{{item.system.classLabel}}</span>
+          <span class="tw-text-[var(--wh40k-border-color)]">•</span>
+          <span>{{item.system.typeLabel}}</span>
           {{#if (ne item.system.craftsmanship "common")}}
-          <span class="wh40k-weapon-card__divider">•</span>
-          <span class="wh40k-weapon-card__craft wh40k-weapon-card__craft--{{item.system.craftsmanship}}">{{item.system.craftsmanshipLabel}}</span>
+          <span class="tw-text-[var(--wh40k-border-color)]">•</span>
+          {{#if (eq item.system.craftsmanship "poor")}}
+          <span class="tw-font-semibold tw-text-crimson">{{item.system.craftsmanshipLabel}}</span>
+          {{else if (eq item.system.craftsmanship "good")}}
+          <span class="tw-font-semibold tw-text-success">{{item.system.craftsmanshipLabel}}</span>
+          {{else}}
+          <span class="tw-font-semibold tw-text-gold">{{item.system.craftsmanshipLabel}}</span>
+          {{/if}}
           {{/if}}
         </div>
       </div>
     </div>
-    
+
     {{!-- Stats Grid --}}
-    <div class="wh40k-weapon-card__stats">
+    <div class="tw-grid tw-grid-cols-2 tw-gap-px tw-p-px tw-bg-[var(--wh40k-border-color-light)]">
       {{!-- Row 1: Damage & Pen --}}
-      <div class="wh40k-weapon-card__stat wh40k-weapon-card__stat--damage">
-        <span class="wh40k-weapon-card__stat-label">Damage</span>
-        <span class="wh40k-weapon-card__stat-value">{{item.system.damageLabel}}</span>
+      <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[var(--wh40k-panel-bg)]">
+        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Damage</span>
+        <span class="tw-font-display tw-text-[0.95rem] tw-font-bold tw-text-[#dc143c]">{{item.system.damageLabel}}</span>
       </div>
-      <div class="wh40k-weapon-card__stat wh40k-weapon-card__stat--pen">
-        <span class="wh40k-weapon-card__stat-label">Pen</span>
-        <span class="wh40k-weapon-card__stat-value">{{item.system.damage.penetration}}</span>
+      <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[var(--wh40k-panel-bg)]">
+        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Pen</span>
+        <span class="tw-font-display tw-text-[0.95rem] tw-font-bold tw-text-gold">{{item.system.damage.penetration}}</span>
       </div>
-      
+
       {{!-- Row 2: Range & RoF (ranged only) --}}
       {{#if item.system.isRangedWeapon}}
-      <div class="wh40k-weapon-card__stat wh40k-weapon-card__stat--range">
-        <span class="wh40k-weapon-card__stat-label">Range</span>
-        <span class="wh40k-weapon-card__stat-value">{{item.system.rangeLabel}}</span>
+      <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[var(--wh40k-panel-bg)]">
+        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Range</span>
+        <span class="tw-font-display tw-text-[0.95rem] tw-font-bold tw-text-[var(--wh40k-text-dark)]">{{item.system.rangeLabel}}</span>
       </div>
-      <div class="wh40k-weapon-card__stat wh40k-weapon-card__stat--rof">
-        <span class="wh40k-weapon-card__stat-label">RoF</span>
-        <span class="wh40k-weapon-card__stat-value">{{item.system.rateOfFireLabel}}</span>
+      <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[var(--wh40k-panel-bg)]">
+        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">RoF</span>
+        <span class="tw-font-display tw-text-[0.95rem] tw-font-bold tw-text-[var(--wh40k-text-dark)]">{{item.system.rateOfFireLabel}}</span>
       </div>
       {{/if}}
-      
+
       {{!-- Clip (if uses ammo) --}}
       {{#if item.system.usesAmmo}}
-      <div class="wh40k-weapon-card__stat wh40k-weapon-card__stat--clip">
-        <span class="wh40k-weapon-card__stat-label">Clip</span>
-        <span class="wh40k-weapon-card__stat-value">{{item.system.clip.value}}/{{item.system.effectiveClipMax}}</span>
+      <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[var(--wh40k-panel-bg)]">
+        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Clip</span>
+        <span class="tw-font-display tw-text-[0.95rem] tw-font-bold tw-text-[var(--wh40k-text-dark)]">{{item.system.clip.value}}/{{item.system.effectiveClipMax}}</span>
       </div>
-      <div class="wh40k-weapon-card__stat wh40k-weapon-card__stat--reload">
-        <span class="wh40k-weapon-card__stat-label">Reload</span>
-        <span class="wh40k-weapon-card__stat-value">{{item.system.reloadLabel}}</span>
+      <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[var(--wh40k-panel-bg)]">
+        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">Reload</span>
+        <span class="tw-font-display tw-text-[0.95rem] tw-font-bold tw-text-[var(--wh40k-text-dark)]">{{item.system.reloadLabel}}</span>
       </div>
       {{/if}}
     </div>
-    
+
     {{!-- Craftsmanship Modifiers --}}
     {{#if (or item.system.craftsmanshipModifiers.toHit item.system.craftsmanshipModifiers.damage)}}
-    <div class="wh40k-weapon-card__craft-mods">
-      <i class="fas fa-hammer"></i>
+    <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-bg-[rgba(212,175,55,0.1)] tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-text-[0.8rem]">
+      <i class="fas fa-hammer tw-text-gold"></i>
       {{#if item.system.craftsmanshipModifiers.toHit}}
-      <span class="wh40k-weapon-card__mod {{#if (gt item.system.craftsmanshipModifiers.toHit 0)}}wh40k-weapon-card__mod--positive{{else}}wh40k-weapon-card__mod--negative{{/if}}">
-        {{#if (gt item.system.craftsmanshipModifiers.toHit 0)}}+{{/if}}{{item.system.craftsmanshipModifiers.toHit}} to Hit
-      </span>
+      {{#if (gt item.system.craftsmanshipModifiers.toHit 0)}}
+      <span class="tw-font-semibold tw-text-[#4ade80]">+{{item.system.craftsmanshipModifiers.toHit}} to Hit</span>
+      {{else}}
+      <span class="tw-font-semibold tw-text-[#dc143c]">{{item.system.craftsmanshipModifiers.toHit}} to Hit</span>
+      {{/if}}
       {{/if}}
       {{#if item.system.craftsmanshipModifiers.damage}}
-      <span class="wh40k-weapon-card__mod wh40k-weapon-card__mod--positive">
+      <span class="tw-font-semibold tw-text-[#4ade80]">
         +{{item.system.craftsmanshipModifiers.damage}} Damage
       </span>
       {{/if}}
     </div>
     {{/if}}
-    
+
     {{!-- Qualities --}}
     {{#if item.system.effectiveSpecial.size}}
-    <div class="wh40k-weapon-card__qualities">
+    <div class="tw-flex tw-flex-wrap tw-gap-1 tw-px-3 tw-py-2 tw-border-b tw-border-[var(--wh40k-border-color-light)]">
       {{#each item.system.qualitiesArray as |quality|}}
-      <span class="wh40k-weapon-card__quality" data-tooltip="{{quality.description}}">
+      <span class="tw-inline-block tw-px-1.5 tw-py-0.5 tw-bg-[var(--wh40k-talents-bg)] tw-border tw-border-[var(--wh40k-talents-border)] tw-rounded tw-text-[0.7rem] tw-font-semibold tw-text-[var(--wh40k-talents-primary)]" data-tooltip="{{quality.description}}">
         {{quality.label}}{{#if quality.level}} ({{quality.level}}){{/if}}
       </span>
       {{/each}}
     </div>
     {{/if}}
-    
+
     {{!-- Description (if exists) --}}
     {{#if item.system.description.value}}
-    <div class="wh40k-weapon-card__description">
+    <div class="tw-px-3 tw-py-2.5 tw-text-[0.85rem] tw-leading-snug tw-text-[var(--wh40k-text-medium)] tw-border-b tw-border-[var(--wh40k-border-color-light)]">
       {{{item.system.description.value}}}
     </div>
     {{/if}}
-    
+
     {{!-- Action Buttons --}}
     {{#if hasActions}}
-    <div class="wh40k-weapon-card__actions">
-      <button type="button" class="wh40k-weapon-card__btn wh40k-weapon-card__btn--attack" data-action="attack" data-item-uuid="{{item.uuid}}">
+    <div class="tw-flex tw-gap-1.5 tw-px-3 tw-py-2.5 tw-justify-center">
+      <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-3.5 tw-py-1.5 tw-border tw-rounded-md tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[linear-gradient(135deg,var(--wh40k-red)_0%,var(--wh40k-red-dark)_100%)] tw-border-[var(--wh40k-red-dark)] tw-text-white hover:tw-bg-[linear-gradient(135deg,var(--wh40k-red-bright)_0%,var(--wh40k-red)_100%)] hover:-tw-translate-y-px hover:tw-shadow-[0_3px_8px_rgba(139,0,0,0.4)]" data-action="attack" data-item-uuid="{{item.uuid}}">
         <i class="fas fa-crosshairs"></i>
         Attack
       </button>
-      <button type="button" class="wh40k-weapon-card__btn wh40k-weapon-card__btn--damage" data-action="rollDamage" data-item-uuid="{{item.uuid}}">
+      <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-3.5 tw-py-1.5 tw-border tw-rounded-md tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[linear-gradient(135deg,var(--wh40k-gold)_0%,var(--wh40k-gold-dark)_100%)] tw-border-[var(--wh40k-gold-dark)] tw-text-white hover:tw-bg-[linear-gradient(135deg,var(--wh40k-gold-bright)_0%,var(--wh40k-gold)_100%)] hover:-tw-translate-y-px hover:tw-shadow-[0_3px_8px_rgba(212,175,55,0.4)]" data-action="rollDamage" data-item-uuid="{{item.uuid}}">
         <i class="fas fa-burst"></i>
         Damage
       </button>
       {{#if item.system.usesAmmo}}
-      <button type="button" class="wh40k-weapon-card__btn wh40k-weapon-card__btn--reload" data-action="reload" data-item-uuid="{{item.uuid}}">
+      <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-3.5 tw-py-1.5 tw-border tw-rounded-md tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[var(--wh40k-btn-bg)] tw-border-[var(--wh40k-border-color)] tw-text-[var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:-tw-translate-y-px" data-action="reload" data-item-uuid="{{item.uuid}}">
         <i class="fas fa-rotate-right"></i>
         Reload
       </button>
       {{/if}}
     </div>
     {{/if}}
-    
+
     {{!-- Footer --}}
     {{#if item.system.source}}
-    <div class="wh40k-weapon-card__footer">
-      <span class="wh40k-weapon-card__source">{{item.system.source}}</span>
+    <div class="tw-px-3 tw-py-1.5 tw-border-t tw-border-[var(--wh40k-border-color-light)] tw-text-right">
+      <span class="tw-text-[0.7rem] tw-italic tw-text-[var(--wh40k-text-muted)]">{{item.system.source}}</span>
     </div>
     {{/if}}
-    
+
   </div>
 </div>
