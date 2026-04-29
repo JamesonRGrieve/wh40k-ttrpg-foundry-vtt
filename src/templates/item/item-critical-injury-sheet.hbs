@@ -1,39 +1,39 @@
-{{!-- 
+{{!--
   Rogue Trader Critical Injury Item Sheet - V2 Redesign
   Matches weapon/armour sheet patterns with modern ApplicationV2 structure
 --}}
-<div class="wh40k-critical-injury-sheet">
-  <form autocomplete="off">
-    
+<div class="wh40k-critical-injury-sheet tw-flex tw-flex-col tw-h-full">
+  <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
+
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact injury identity with inline stats
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="wh40k-injury-header">
-      <div class="wh40k-injury-header__image" data-action="editImage" data-edit="img">
-        <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="wh40k-injury-header__image-overlay">
+    <header class="wh40k-injury-header tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0">
+      <div class="wh40k-injury-header__image tw-relative tw-w-16 tw-h-16 tw-shrink-0 tw-rounded-md tw-overflow-hidden tw-cursor-pointer" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
+        <div class="wh40k-injury-header__image-overlay tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/60 tw-opacity-0 hover:tw-opacity-100 tw-transition-opacity">
           <i class="fas {{item.system.damageTypeIcon}}"></i>
         </div>
       </div>
-      
-      <div class="wh40k-injury-header__info">
-        <input type="text" class="wh40k-injury-header__name" name="name" value="{{item.name}}" placeholder="Critical Injury Name" />
-        
-        <div class="wh40k-injury-header__meta">
-          <span class="wh40k-injury-badge wh40k-injury-badge--damage wh40k-injury-badge--{{item.system.damageType}}" title="Damage Type">
+
+      <div class="wh40k-injury-header__info tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
+        <input type="text" class="wh40k-injury-header__name tw-font-display tw-text-xl tw-text-gold tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" value="{{item.name}}" placeholder="Critical Injury Name" />
+
+        <div class="wh40k-injury-header__meta tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
+          <span class="wh40k-injury-badge wh40k-injury-badge--damage wh40k-injury-badge--{{item.system.damageType}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Damage Type">
             <i class="fas {{item.system.damageTypeIcon}}"></i>
             {{item.system.damageTypeLabel}}
           </span>
-          <span class="wh40k-injury-badge wh40k-injury-badge--location" title="Body Location">
+          <span class="wh40k-injury-badge wh40k-injury-badge--location tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Body Location">
             <i class="fas {{item.system.bodyPartIcon}}"></i>
             {{item.system.bodyPartLabel}}
           </span>
-          <span class="wh40k-injury-badge wh40k-injury-badge--severity wh40k-injury-badge--{{item.system.severityClass}}" title="Severity Level">
+          <span class="wh40k-injury-badge wh40k-injury-badge--severity wh40k-injury-badge--{{item.system.severityClass}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Severity Level">
             <i class="fas fa-chart-line"></i>
             Severity {{item.system.severity}}
           </span>
           {{#if item.system.isPermanent}}
-          <span class="wh40k-injury-badge wh40k-injury-badge--permanent" title="Permanent Injury">
+          <span class="wh40k-injury-badge wh40k-injury-badge--permanent tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Permanent Injury">
             <i class="fas fa-infinity"></i>
             Permanent
           </span>
@@ -46,32 +46,32 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          SEVERITY INDICATOR: Visual slider showing severity 1-10
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-injury-severity">
-      <div class="wh40k-injury-severity__header">
-        <i class="fas fa-chart-line"></i>
+    <div class="wh40k-injury-severity tw-p-3 tw-shrink-0">
+      <div class="wh40k-injury-severity__header tw-flex tw-items-center tw-gap-2 tw-mb-2 tw-text-sm">
+        <i class="fas fa-chart-line tw-text-gold"></i>
         <span>Severity Level</span>
       </div>
-      <div class="wh40k-injury-severity__slider">
-        <input type="range" 
-               name="system.severity" 
-               min="1" 
-               max="10" 
-               value="{{item.system.severity}}" 
+      <div class="wh40k-injury-severity__slider tw-flex tw-flex-col tw-gap-1">
+        <input type="range"
+               name="system.severity"
+               min="1"
+               max="10"
+               value="{{item.system.severity}}"
                data-dtype="Number"
                data-action="changeSeverity"
-               class="wh40k-injury-severity__input" />
-        <div class="wh40k-injury-severity__labels">
-          <span class="wh40k-injury-severity__label wh40k-injury-severity__label--min">Minor (1)</span>
-          <span class="wh40k-injury-severity__label wh40k-injury-severity__label--current">
+               class="wh40k-injury-severity__input tw-w-full" />
+        <div class="wh40k-injury-severity__labels tw-flex tw-justify-between tw-text-xs">
+          <span class="wh40k-injury-severity__label wh40k-injury-severity__label--min tw-opacity-70">Minor (1)</span>
+          <span class="wh40k-injury-severity__label wh40k-injury-severity__label--current tw-font-semibold tw-text-gold">
             <strong>{{item.system.severity}}</strong>
           </span>
-          <span class="wh40k-injury-severity__label wh40k-injury-severity__label--max">Fatal (10)</span>
+          <span class="wh40k-injury-severity__label wh40k-injury-severity__label--max tw-opacity-70">Fatal (10)</span>
         </div>
-        <div class="wh40k-injury-severity__zones">
-          <span class="wh40k-injury-severity__zone wh40k-injury-severity__zone--minor" title="Minor (1-3)"></span>
-          <span class="wh40k-injury-severity__zone wh40k-injury-severity__zone--moderate" title="Moderate (4-6)"></span>
-          <span class="wh40k-injury-severity__zone wh40k-injury-severity__zone--severe" title="Severe (7-9)"></span>
-          <span class="wh40k-injury-severity__zone wh40k-injury-severity__zone--fatal" title="Fatal (10)"></span>
+        <div class="wh40k-injury-severity__zones tw-flex tw-gap-px tw-h-1.5 tw-rounded-full tw-overflow-hidden">
+          <span class="wh40k-injury-severity__zone wh40k-injury-severity__zone--minor tw-flex-1 tw-bg-success/50" title="Minor (1-3)"></span>
+          <span class="wh40k-injury-severity__zone wh40k-injury-severity__zone--moderate tw-flex-1 tw-bg-warning/50" title="Moderate (4-6)"></span>
+          <span class="wh40k-injury-severity__zone wh40k-injury-severity__zone--severe tw-flex-1 tw-bg-crimson/50" title="Severe (7-9)"></span>
+          <span class="wh40k-injury-severity__zone wh40k-injury-severity__zone--fatal tw-flex-[0.33] tw-bg-crimson" title="Fatal (10)"></span>
         </div>
       </div>
     </div>
@@ -79,12 +79,12 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs wh40k-tabs--injury wh40k-injury-tabs" data-group="primary">
-      <button type="button" class="wh40k-tab wh40k-injury-tab active" data-tab="details" data-group="primary">
+    <nav class="wh40k-tabs wh40k-tabs--injury wh40k-injury-tabs tw-flex tw-shrink-0" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-injury-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="details" data-group="primary">
         <i class="fas fa-info-circle"></i>
         <span>Details</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-injury-tab" data-tab="description" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-injury-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="description" data-group="primary">
         <i class="fas fa-book"></i>
         <span>Description</span>
       </button>
@@ -93,44 +93,44 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-injury-content wh40k-tab-content wh40k-tab-content--injury scrollable">
-      
+    <div class="wh40k-injury-content wh40k-tab-content wh40k-tab-content--injury scrollable tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-2">
+
       {{!-- DETAILS TAB --}}
       <div class="wh40k-injury-panel tab active" data-tab="details" data-group="primary">
-        
+
         {{!-- Basic Properties --}}
-        <div class="wh40k-injury-section">
-          <div class="wh40k-injury-section__header">
-            <i class="fas fa-cog"></i>
-            <h3>Injury Properties</h3>
+        <div class="wh40k-injury-section tw-mb-3">
+          <div class="wh40k-injury-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-cog tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Injury Properties</h3>
           </div>
-          <div class="wh40k-injury-section__body">
-            <div class="wh40k-field-grid wh40k-field-grid--2col">
-              <div class="wh40k-field">
-                <label>Damage Type</label>
-                <select name="system.damageType">
+          <div class="wh40k-injury-section__body tw-p-3">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Damage Type</label>
+                <select name="system.damageType" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
                   <option value="impact" {{#if (eq item.system.damageType "impact")}}selected{{/if}}>Impact</option>
                   <option value="rending" {{#if (eq item.system.damageType "rending")}}selected{{/if}}>Rending</option>
                   <option value="explosive" {{#if (eq item.system.damageType "explosive")}}selected{{/if}}>Explosive</option>
                   <option value="energy" {{#if (eq item.system.damageType "energy")}}selected{{/if}}>Energy</option>
                 </select>
               </div>
-              <div class="wh40k-field">
-                <label>Body Location</label>
-                <select name="system.bodyPart">
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Body Location</label>
+                <select name="system.bodyPart" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
                   <option value="head" {{#if (eq item.system.bodyPart "head")}}selected{{/if}}>Head</option>
                   <option value="arm" {{#if (eq item.system.bodyPart "arm")}}selected{{/if}}>Arm</option>
                   <option value="body" {{#if (eq item.system.bodyPart "body")}}selected{{/if}}>Body</option>
                   <option value="leg" {{#if (eq item.system.bodyPart "leg")}}selected{{/if}}>Leg</option>
                 </select>
               </div>
-              <div class="wh40k-field">
-                <label>Severity (1-10)</label>
-                <input type="number" name="system.severity" value="{{item.system.severity}}" 
-                       data-dtype="Number" min="1" max="10" />
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Severity (1-10)</label>
+                <input type="number" name="system.severity" value="{{item.system.severity}}"
+                       data-dtype="Number" min="1" max="10" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
-              <div class="wh40k-field wh40k-field--checkbox">
-                <label>
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm">
                   <input type="checkbox" name="system.permanent" {{checked item.system.permanent}} />
                   <span>Permanent Injury</span>
                 </label>
@@ -140,19 +140,19 @@
         </div>
 
         {{!-- Effect --}}
-        <div class="wh40k-injury-section">
-          <div class="wh40k-injury-section__header">
-            <i class="fas fa-file-medical"></i>
-            <h3>Injury Effect (Severity {{item.system.severity}})</h3>
+        <div class="wh40k-injury-section tw-mb-3">
+          <div class="wh40k-injury-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-file-medical tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Injury Effect (Severity {{item.system.severity}})</h3>
           </div>
-          <div class="wh40k-injury-section__body wh40k-injury-section__body--editor">
+          <div class="wh40k-injury-section__body wh40k-injury-section__body--editor tw-p-2">
             {{#if inEditMode}}
               {{#each item.system.availableSeverities as |sev|}}
                 {{#with (lookup ../item.system.effects sev) as |effect|}}
-                  <div class="wh40k-severity-effect-editor">
-                    <label><strong>Severity {{sev}}:</strong></label>
+                  <div class="wh40k-severity-effect-editor tw-mb-3">
+                    <label class="tw-text-sm tw-font-medium tw-block tw-mb-1"><strong>Severity {{sev}}:</strong></label>
                     {{editor effect.text target=(concat "system.effects." sev ".text") button=true editable=../editable engine="prosemirror"}}
-                    <label>
+                    <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm tw-mt-1">
                       <input type="checkbox" name="system.effects.{{sev}}.permanent" {{checked effect.permanent}} />
                       <span>Permanent</span>
                     </label>
@@ -161,21 +161,21 @@
               {{/each}}
             {{else}}
               <div class="wh40k-description-content">{{{item.system.currentEffect}}}</div>
-              <div class="wh40k-injury-severity-preview">
-                <p><em>This injury has effects for all severity levels 1-10. Change the severity slider to preview different effects.</em></p>
+              <div class="wh40k-injury-severity-preview tw-mt-2">
+                <p class="tw-text-xs tw-italic tw-opacity-70"><em>This injury has effects for all severity levels 1-10. Change the severity slider to preview different effects.</em></p>
               </div>
             {{/if}}
           </div>
         </div>
 
         {{!-- Notes --}}
-        <div class="wh40k-injury-section">
-          <div class="wh40k-injury-section__header">
-            <i class="fas fa-sticky-note"></i>
-            <h3>GM Notes</h3>
+        <div class="wh40k-injury-section tw-mb-3">
+          <div class="wh40k-injury-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-sticky-note tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">GM Notes</h3>
           </div>
-          <div class="wh40k-injury-section__body">
-            <textarea name="system.notes" rows="3" placeholder="Treatment details, duration, special circumstances...">{{item.system.notes}}</textarea>
+          <div class="wh40k-injury-section__body tw-p-3">
+            <textarea name="system.notes" rows="3" placeholder="Treatment details, duration, special circumstances..." class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
           </div>
         </div>
 
@@ -183,14 +183,14 @@
 
       {{!-- DESCRIPTION TAB --}}
       <div class="wh40k-injury-panel tab" data-tab="description" data-group="primary">
-        
+
         {{!-- Full Description --}}
-        <div class="wh40k-injury-section">
-          <div class="wh40k-injury-section__header">
-            <i class="fas fa-book"></i>
-            <h3>Description</h3>
+        <div class="wh40k-injury-section tw-mb-3">
+          <div class="wh40k-injury-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-book tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Description</h3>
           </div>
-          <div class="wh40k-injury-section__body wh40k-injury-section__body--editor">
+          <div class="wh40k-injury-section__body wh40k-injury-section__body--editor tw-p-2">
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -200,27 +200,27 @@
         </div>
 
         {{!-- Source --}}
-        <div class="wh40k-injury-section">
-          <div class="wh40k-injury-section__header">
-            <i class="fas fa-book-open"></i>
-            <h3>Source</h3>
+        <div class="wh40k-injury-section tw-mb-3">
+          <div class="wh40k-injury-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-book-open tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Source</h3>
           </div>
-          <div class="wh40k-injury-section__body">
-            <div class="wh40k-field-grid wh40k-field-grid--3col">
-              <div class="wh40k-field">
-                <label>Source Book</label>
-                <input type="text" name="system.source.book" value="{{source.source.book}}" 
-                       placeholder="Rogue Trader Core" />
+          <div class="wh40k-injury-section__body tw-p-3">
+            <div class="tw-grid tw-grid-cols-3 tw-gap-3">
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Source Book</label>
+                <input type="text" name="system.source.book" value="{{source.source.book}}"
+                       placeholder="Rogue Trader Core" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
-              <div class="wh40k-field">
-                <label>Page</label>
-                <input type="text" name="system.source.page" value="{{source.source.page}}" 
-                       placeholder="254" />
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Page</label>
+                <input type="text" name="system.source.page" value="{{source.source.page}}"
+                       placeholder="254" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
-              <div class="wh40k-field">
-                <label>Custom Reference</label>
-                <input type="text" name="system.source.custom" value="{{source.source.custom}}" 
-                       placeholder="Homebrew" />
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Custom Reference</label>
+                <input type="text" name="system.source.custom" value="{{source.source.custom}}"
+                       placeholder="Homebrew" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
             </div>
           </div>

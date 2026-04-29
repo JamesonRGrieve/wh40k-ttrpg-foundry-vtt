@@ -1,10 +1,12 @@
-<div class="wh40k-panel spacer wh40k-grid-col-3">
+<div class="wh40k-panel tw-col-span-3">
     <h1 class="wh40k-panel-header">
-        <i class="fas fa-shield-alt"></i>
-        {{localize "WH40K.Vehicle.Armour"}}
+        <span class="wh40k-panel-title">
+            <i class="fas fa-shield-alt"></i>
+            {{localize "WH40K.Vehicle.Armour"}}
+        </span>
     </h1>
-    <div class="wh40k-vehicle-armour-grid">
-        <div class="wh40k-armour-facing">
+    <div class="tw-grid tw-grid-cols-3 tw-gap-2 tw-p-2">
+        <div class="tw-flex tw-flex-col tw-gap-1">
             <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Armour.Front"}}</span>
             <div class="wh40k-field__wrapper">
                 <input
@@ -17,14 +19,14 @@
                 />
                 <input
                     type="text"
-                    class="wh40k-field__input wh40k-field__descriptor"
+                    class="wh40k-field__input tw-italic tw-opacity-70"
                     name="system.armour.front.descriptor"
                     value="{{source.armour.front.descriptor}}"
                     placeholder="Descriptor"
                 />
             </div>
         </div>
-        <div class="wh40k-armour-facing">
+        <div class="tw-flex tw-flex-col tw-gap-1">
             <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Armour.Side"}}</span>
             <div class="wh40k-field__wrapper">
                 <input
@@ -37,14 +39,14 @@
                 />
                 <input
                     type="text"
-                    class="wh40k-field__input wh40k-field__descriptor"
+                    class="wh40k-field__input tw-italic tw-opacity-70"
                     name="system.armour.side.descriptor"
                     value="{{source.armour.side.descriptor}}"
                     placeholder="Descriptor"
                 />
             </div>
         </div>
-        <div class="wh40k-armour-facing">
+        <div class="tw-flex tw-flex-col tw-gap-1">
             <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Armour.Rear"}}</span>
             <div class="wh40k-field__wrapper">
                 <input
@@ -57,7 +59,7 @@
                 />
                 <input
                     type="text"
-                    class="wh40k-field__input wh40k-field__descriptor"
+                    class="wh40k-field__input tw-italic tw-opacity-70"
                     name="system.armour.rear.descriptor"
                     value="{{source.armour.rear.descriptor}}"
                     placeholder="Descriptor"
@@ -65,7 +67,7 @@
             </div>
         </div>
     </div>
-    <div class="wh40k-armour-summary">
+    <div class="tw-flex tw-items-center tw-gap-1.5 tw-px-2 tw-pb-2 tw-flex-wrap tw-text-xs tw-rounded-md">
         <strong>Summary:</strong>
         {{system.armourSummary}}
     </div>

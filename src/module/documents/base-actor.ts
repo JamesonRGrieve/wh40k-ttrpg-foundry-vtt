@@ -180,6 +180,14 @@ export class WH40KBaseActor extends Actor {
         }
     }
 
+    /**
+     * Roll an item action (weapon attack, psychic power, etc.) by item ID.
+     * Override in subclasses with item-type-specific behavior.
+     */
+    async rollItem(_itemId: string): Promise<void> {
+        // Base implementation does nothing; subclasses override.
+    }
+
     async rollCharacteristic(characteristicName: string, override?: string): Promise<void> {
         const characteristic = this.characteristics[characteristicName];
 

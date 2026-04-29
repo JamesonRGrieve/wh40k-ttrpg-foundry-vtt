@@ -13,7 +13,75 @@
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import StatBlockValidator from '../../utils/stat-block-validator.ts';
 import TextPatternExtractor from '../../utils/text-pattern-extractor.ts';
-import ThreatCalculator from './threat-calculator.ts';
+import ThreatCalculator, {
+    type NPCArmourData,
+    type NPCArmourLocations,
+    type NPCMovement,
+    type NPCSkillEntry,
+    type NPCSkills,
+    type NPCSystemData,
+    type NPCWeapon,
+} from './threat-calculator.ts';
+
+/** Shape of a parsed actor data object ready for Actor.create(). */
+interface ParsedActorData {
+    name: string;
+    img: string;
+    type: string;
+    system: NPCSystemData;
+    items: Array<{ name: string; type: string; system: Record<string, unknown> }>;
+}
+
+/** Result returned by parseJSON / parseText / parse. */
+interface ParseResult {
+    data: ParsedActorData | null;
+    errors: string[];
+    warnings: string[];
+    info: string[];
+}
+
+/** Result returned by _parseCharacteristics. */
+interface CharacteristicParseResult {
+    values: Record<string, number>;
+    unnaturalValues: Record<string, number>;
+    hasValues: boolean;
+}
+
+/** Result returned by _parseSkills. */
+interface SkillsParseResult {
+    trainedSkills: NPCSkills;
+    hasEntries: boolean;
+}
+
+/** Result returned by _parseTraitEntry. */
+interface TraitEntry {
+    name: string;
+    value: string | null;
+    numericValue: number | null;
+    level: number | null;
+    notes: string;
+    displayName: string;
+}
+
+/** Result returned by _parseTraits. */
+interface TraitsParseResult {
+    items: Array<{ name: string; type: string; system: Record<string, unknown> }>;
+    parsedTraits: TraitEntry[];
+}
+
+/** Result returned by _parseSkillEntry. */
+interface SkillEntryParseResult {
+    name: string;
+    specialization: string | null;
+    characteristic: string | null;
+    level: string;
+}
+
+/** Result returned by _parseNameWithSpecializations. */
+interface ParsedNameResult {
+    baseName: string;
+    specializations: string[];
+}
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -131,7 +199,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * Characteristic short to key mapping.
      * @type {Object}
      */
-    static CHAR_MAP = {
+    static CHAR_MAP: Record<string, string> = {
         'WS': 'weaponSkill',
         'BS': 'ballisticSkill',
         'S': 'strength',
@@ -174,31 +242,31 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * Parsed data preview.
      * @type {Object|null}
      */
-    #parsedData = null;
+    #parsedData: ParsedActorData | null = null;
 
     /**
      * Parse errors.
      * @type {Array<string>}
      */
-    #errors = [];
+    #errors: string[] = [];
 
     /**
      * Parse warnings.
      * @type {Array<string>}
      */
-    #warnings = [];
+    #warnings: string[] = [];
 
     /**
      * Parse info messages.
      * @type {Array<string>}
      */
-    #info = [];
+    #info: string[] = [];
 
     /**
      * Promise resolver.
      * @type {Function|null}
      */
-    #resolve = null;
+    #resolve: ((value: unknown) => void) | null = null;
 
     /**
      * Whether submission occurred.
@@ -211,8 +279,8 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
-        const context: unknown = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        const context: Record<string, unknown> = await super._prepareContext(options);
         const parsedData = this.#parsedData;
         const previewSkills = parsedData?.system?.trainedSkills ? Object.values(parsedData.system.trainedSkills) : [];
         const previewTalents = parsedData?.items?.filter((item) => item.type === 'talent') ?? [];
@@ -282,7 +350,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} input - Raw input text.
      * @returns {Object} Parsed NPC data with validation.
      */
-    static parse(input: string): Record<string, unknown> {
+    static parse(input: string): ParseResult {
         const trimmed = input.trim();
 
         if (!trimmed) {
@@ -294,7 +362,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             };
         }
 
-        let parseResult;
+        let parseResult: ParseResult;
 
         // Detect JSON
         if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
@@ -322,8 +390,8 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} input - JSON string.
      * @returns {Object} Parsed data with validation.
      */
-    static parseJSON(input: string): Record<string, unknown> {
-        const result = {
+    static parseJSON(input: string): ParseResult {
+        const result: ParseResult = {
             data: null,
             errors: [],
             warnings: [],
@@ -331,25 +399,25 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         };
 
         try {
-            const parsed = JSON.parse(input);
+            const parsed = JSON.parse(input) as Record<string, unknown>;
 
             // Check if it's a full actor export
             if (parsed.system && parsed.type) {
                 result.data = {
-                    name: parsed.name || 'Imported NPC',
-                    img: parsed.img || 'icons/svg/mystery-man.svg',
-                    type: parsed.type === 'npcV2' ? 'npcV2' : 'npcV2',
-                    system: parsed.system,
-                    items: parsed.items || [],
+                    name: (parsed.name as string) || 'Imported NPC',
+                    img: (parsed.img as string) || 'icons/svg/mystery-man.svg',
+                    type: 'npcV2',
+                    system: parsed.system as NPCSystemData,
+                    items: (parsed.items as Array<{ name: string; type: string; system: Record<string, unknown> }>) || [],
                 };
             }
             // Check if it's just system data
             else if (parsed.characteristics || parsed.threatLevel) {
                 result.data = {
-                    name: parsed.name || 'Imported NPC',
+                    name: (parsed.name as string) || 'Imported NPC',
                     img: 'icons/svg/mystery-man.svg',
                     type: 'npcV2',
-                    system: parsed,
+                    system: parsed as unknown as NPCSystemData,
                     items: [],
                 };
             } else {
@@ -366,7 +434,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                 }
             }
         } catch (err) {
-            result.errors.push(`Invalid JSON: ${err.message}`);
+            result.errors.push(`Invalid JSON: ${(err as Error).message}`);
         }
 
         return result;
@@ -377,8 +445,8 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} input - Text input.
      * @returns {Object} Parsed data with validation.
      */
-    static parseText(input: string): Record<string, unknown> {
-        const result = {
+    static parseText(input: string): ParseResult {
+        const result: ParseResult = {
             data: null,
             errors: [],
             warnings: [],
@@ -495,7 +563,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return TextPatternExtractor.splitLines(input);
     }
 
-    static _extractName(lines: string[], input: string): unknown {
+    static _extractName(lines: string[], input: string): string {
         if (lines.length === 0) return 'Imported NPC';
         const firstLine = lines[0];
         if (this._looksLikeCharacteristicHeader(firstLine)) {
@@ -513,8 +581,8 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return TextPatternExtractor.looksLikeHeader(line, required);
     }
 
-    static _parseCharacteristics(lines: string[], input: string): unknown {
-        const result = {
+    static _parseCharacteristics(lines: string[], input: string): CharacteristicParseResult {
+        const result: CharacteristicParseResult = {
             values: {},
             unnaturalValues: {},
             hasValues: false,
@@ -580,14 +648,14 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         }
     }
 
-    static _parseWounds(input: string): unknown {
+    static _parseWounds(input: string): number | null {
         const match = input.match(this.PATTERNS.wounds);
         if (!match) return null;
         const value = parseInt(match[1], 10);
         return Number.isNaN(value) ? null : value;
     }
 
-    static _parseMovement(input: string): unknown {
+    static _parseMovement(input: string): NPCMovement | null {
         const match = input.match(this.PATTERNS.movement);
         if (match) {
             const values = [match[1], match[2], match[3], match[4]].filter((value) => value).map((value) => parseInt(value, 10));
@@ -611,18 +679,18 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         const namedMatches = [...input.matchAll(this.PATTERNS.movementNamed)];
         if (namedMatches.length > 0) {
-            const movement: unknown = {};
+            const movement: Partial<NPCMovement> = {};
             for (const match of namedMatches) {
-                movement[match[1].toLowerCase()] = parseInt(match[2], 10);
+                (movement as Record<string, number>)[match[1].toLowerCase()] = parseInt(match[2], 10);
             }
-            if (movement.half && movement.full && movement.charge && movement.run) {
-                return movement;
+            if (movement.half !== undefined && movement.full !== undefined && movement.charge !== undefined && movement.run !== undefined) {
+                return movement as NPCMovement;
             }
         }
         return null;
     }
 
-    static _parseArmour(text: string): unknown {
+    static _parseArmour(text: string): NPCArmourData | null {
         if (!text) return null;
         const normalized = text.replace(/\./g, ' ');
         const locations = this._parseArmourLocations(normalized);
@@ -645,7 +713,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return null;
     }
 
-    static _parseArmourLocations(text: string): unknown {
+    static _parseArmourLocations(text: string): NPCArmourLocations | null {
         const matches = [...text.matchAll(this.PATTERNS.armourByLocation)];
         if (matches.length === 0) return null;
         const locations = {
@@ -676,7 +744,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return locations;
     }
 
-    static _parseThreatLevel(input: string): unknown {
+    static _parseThreatLevel(input: string): number | null {
         const match = input.match(this.PATTERNS.threat);
         if (match) {
             const value = parseInt(match[1], 10);
@@ -696,10 +764,10 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return null;
     }
 
-    static _parseSkills(text: string): unknown {
+    static _parseSkills(text: string | null): SkillsParseResult {
         if (!text) return { trainedSkills: {}, hasEntries: false };
         const entries = this._splitList(text);
-        const trainedSkills = {};
+        const trainedSkills: NPCSkills = {};
 
         for (const entry of entries) {
             const cleaned = this._cleanEntry(entry);
@@ -723,10 +791,10 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return { trainedSkills, hasEntries: Object.keys(trainedSkills).length > 0 };
     }
 
-    static _parseTalents(text: string): unknown {
+    static _parseTalents(text: string | null): Array<{ name: string; type: string; system: Record<string, unknown> }> {
         if (!text) return [];
         const entries = this._splitList(text);
-        const items = [];
+        const items: Array<{ name: string; type: string; system: Record<string, unknown> }> = [];
 
         for (const entry of entries) {
             const cleaned = this._cleanEntry(entry);
@@ -749,8 +817,8 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return items;
     }
 
-    static _parseTraits(text: string): unknown {
-        const result = {
+    static _parseTraits(text: string | null): TraitsParseResult {
+        const result: TraitsParseResult = {
             items: [],
             parsedTraits: [],
         };
@@ -805,10 +873,10 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         }
     }
 
-    static _parseWeapons(text: string): unknown {
+    static _parseWeapons(text: string | null): NPCWeapon[] {
         if (!text) return [];
         const entries = this._splitList(text);
-        const weapons = [];
+        const weapons: NPCWeapon[] = [];
 
         for (const entry of entries) {
             const cleaned = this._cleanEntry(entry);
@@ -909,7 +977,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return 'basic';
     }
 
-    static _parseSkillEntry(entry: unknown): unknown {
+    static _parseSkillEntry(entry: string): SkillEntryParseResult {
         const bonusMatch = entry.match(/\+\s*(\d+)/);
         const bonusValue = bonusMatch ? parseInt(bonusMatch[1], 10) : 0;
         let level = 'trained';
@@ -917,8 +985,8 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         else if (bonusValue >= 10) level = 'plus10';
 
         const groups = [...entry.matchAll(/\(([^)]+)\)/g)].map((match) => match[1].trim());
-        let characteristic = null;
-        let specialization = null;
+        let characteristic: string | null = null;
+        let specialization: string | null = null;
         if (groups.length > 0) {
             const lastGroup = groups[groups.length - 1];
             if (this.CHAR_MAP[lastGroup] || this.CHAR_MAP[this._normalizeShortCharacteristic(lastGroup)]) {
@@ -945,7 +1013,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         };
     }
 
-    static _parseTraitEntry(entry: unknown): unknown {
+    static _parseTraitEntry(entry: string): TraitEntry {
         const match = entry.match(/^(.+?)(?:\s*\(([^)]+)\))?$/);
         const name = match ? match[1].trim() : entry.trim();
         const value = match && match[2] ? match[2].trim() : null;
@@ -984,7 +1052,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         };
     }
 
-    static _parseNameWithSpecializations(name: string): unknown {
+    static _parseNameWithSpecializations(name: string): ParsedNameResult {
         const match = name.match(/^(.+?)\s*\(([^)]+)\)$/);
         if (!match) {
             return { baseName: name, specializations: [] };
@@ -998,8 +1066,8 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return { baseName, specializations };
     }
 
-    static _extractSection(lines: string[], label: string): unknown {
-        return TextPatternExtractor.extractSection(lines, label, this.SECTION_HEADERS);
+    static _extractSection(lines: string[], label: string): string | null {
+        return TextPatternExtractor.extractSection(lines, label, this.SECTION_HEADERS) as string | null;
     }
 
     static _isSectionHeader(line: string): boolean {
@@ -1014,44 +1082,44 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return TextPatternExtractor.cleanEntry(entry);
     }
 
-    static _extractValueTokens(line: string): unknown {
-        return TextPatternExtractor.extractValueTokens(line);
+    static _extractValueTokens(line: string): string[] {
+        return TextPatternExtractor.extractValueTokens(line) as string[];
     }
 
-    static _extractParentheticalNumbers(line: string): unknown {
-        return TextPatternExtractor.extractParentheticalNumbers(line);
+    static _extractParentheticalNumbers(line: string): Array<number | null> {
+        return TextPatternExtractor.extractParentheticalNumbers(line) as Array<number | null>;
     }
 
-    static _parseNumericValue(value: unknown): unknown {
-        return TextPatternExtractor.parseNumericValue(value);
+    static _parseNumericValue(value: string): number {
+        return TextPatternExtractor.parseNumericValue(value) as number;
     }
 
-    static _toSkillKey(text: string, capitalize: boolean = false): unknown {
-        return TextPatternExtractor.toKey(text, capitalize);
+    static _toSkillKey(text: string, capitalize: boolean = false): string {
+        return TextPatternExtractor.toKey(text, capitalize) as string;
     }
 
-    static _extractSkillSectionFallback(input: string): unknown {
+    static _extractSkillSectionFallback(input: string): string {
         const match = input.match(this.PATTERNS.skillList);
         return match ? match[1].trim() : '';
     }
 
-    static _extractWeaponSectionFallback(input: string): unknown {
+    static _extractWeaponSectionFallback(input: string): string {
         const match = input.match(this.PATTERNS.weaponList);
         return match ? match[1].trim() : '';
     }
 
-    static _characteristicKeyFromShort(short: string): unknown {
+    static _characteristicKeyFromShort(short: string): string | null {
         if (!short) return null;
         const normalized = this._normalizeShortCharacteristic(short);
-        if (normalized === 'A') return this.CHAR_MAP.Ag;
-        return this.CHAR_MAP[normalized] || this.CHAR_MAP[short] || null;
+        if (normalized === 'A') return this.CHAR_MAP['Ag'] ?? null;
+        return this.CHAR_MAP[normalized] ?? this.CHAR_MAP[short] ?? null;
     }
 
     static _normalizeShortCharacteristic(short: string): string {
         return short.replace(/\./g, '').replace(/\s+/g, '');
     }
 
-    static _unnaturalCharacteristicKey(name: string): unknown {
+    static _unnaturalCharacteristicKey(name: string): string | null {
         const lowered = name.toLowerCase();
         if (lowered.includes('strength')) return 'strength';
         if (lowered.includes('toughness')) return 'toughness';

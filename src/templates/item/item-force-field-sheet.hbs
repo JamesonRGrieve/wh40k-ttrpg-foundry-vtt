@@ -1,50 +1,50 @@
-{{!-- 
+{{!--
   Rogue Trader Force Field Item Sheet - V2 Complete Redesign
   Matches weapon sheet pattern with modern ApplicationV2 structure
 --}}
-<div class="wh40k-forcefield-sheet">
-  <form autocomplete="off">
-    
+<div class="wh40k-forcefield-sheet tw-flex tw-flex-col tw-h-full">
+  <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
+
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact force field identity with status
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="wh40k-forcefield-header">
-      <div class="wh40k-forcefield-header__image" data-action="editImage" data-edit="img">
-        <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="wh40k-forcefield-header__image-overlay">
+    <header class="wh40k-forcefield-header tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0">
+      <div class="wh40k-forcefield-header__image tw-relative tw-w-16 tw-h-16 tw-shrink-0 tw-rounded-md tw-overflow-hidden tw-cursor-pointer" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
+        <div class="wh40k-forcefield-header__image-overlay tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/60 tw-opacity-0 hover:tw-opacity-100 tw-transition-opacity">
           <i class="fas fa-edit"></i>
         </div>
       </div>
-      
-      <div class="wh40k-forcefield-header__info">
-        <input type="text" class="wh40k-forcefield-header__name" name="name" value="{{item.name}}" placeholder="Force Field Name" />
-        
-        <div class="wh40k-forcefield-header__meta">
-          <span class="wh40k-forcefield-badge wh40k-forcefield-badge--status {{#if system.overloaded}}wh40k-forcefield-badge--overloaded{{else if system.activated}}wh40k-forcefield-badge--active{{else}}wh40k-forcefield-badge--inactive{{/if}}" 
+
+      <div class="wh40k-forcefield-header__info tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
+        <input type="text" class="wh40k-forcefield-header__name tw-font-display tw-text-xl tw-text-gold tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" value="{{item.name}}" placeholder="Force Field Name" />
+
+        <div class="wh40k-forcefield-header__meta tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
+          <span class="wh40k-forcefield-badge wh40k-forcefield-badge--status {{#if system.overloaded}}wh40k-forcefield-badge--overloaded{{else if system.activated}}wh40k-forcefield-badge--active{{else}}wh40k-forcefield-badge--inactive{{/if}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs"
                 title="Status">
             <i class="fas {{#if system.overloaded}}fa-exclamation-triangle{{else if system.activated}}fa-shield{{else}}fa-shield-slash{{/if}}"></i>
             {{system.statusLabel}}
           </span>
-          <span class="wh40k-forcefield-badge wh40k-forcefield-badge--protection" title="Protection Rating">
+          <span class="wh40k-forcefield-badge wh40k-forcefield-badge--protection tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Protection Rating">
             <i class="fas fa-percent"></i>
             {{system.protectionRating}}%
           </span>
           {{#if (ne system.craftsmanship "common")}}
-          <span class="wh40k-forcefield-badge wh40k-forcefield-badge--craft wh40k-forcefield-badge--{{system.craftsmanship}}" title="Craftsmanship">
+          <span class="wh40k-forcefield-badge wh40k-forcefield-badge--craft wh40k-forcefield-badge--{{system.craftsmanship}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Craftsmanship">
             <i class="fas fa-hammer"></i>
             {{system.craftsmanshipLabel}}
           </span>
           {{/if}}
         </div>
       </div>
-      
-      <div class="wh40k-forcefield-header__equipped">
-        <label class="wh40k-toggle-equipped" title="Toggle Equipped">
-          <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
-          <span class="wh40k-toggle-equipped__indicator">
+
+      <div class="wh40k-forcefield-header__equipped tw-shrink-0">
+        <label class="wh40k-toggle-equipped tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" title="Toggle Equipped">
+          <input type="checkbox" name="system.equipped" {{checked system.equipped}} class="tw-sr-only" />
+          <span class="wh40k-toggle-equipped__indicator tw-inline-flex tw-items-center tw-justify-center tw-w-6 tw-h-6">
             <i class="fas {{#if system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
           </span>
-          <span class="wh40k-toggle-equipped__label">{{#if system.equipped}}Equipped{{else}}Stowed{{/if}}</span>
+          <span class="wh40k-toggle-equipped__label tw-text-xs">{{#if system.equipped}}Equipped{{else}}Stowed{{/if}}</span>
         </label>
       </div>
     </header>
@@ -52,34 +52,34 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          STAT BAR: Key force field statistics
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-forcefield-stats">
-      <div class="wh40k-forcefield-stat wh40k-forcefield-stat--rating">
-        <div class="wh40k-forcefield-stat__icon">
+    <div class="wh40k-forcefield-stats tw-flex tw-flex-wrap tw-gap-2 tw-p-2 tw-shrink-0">
+      <div class="wh40k-forcefield-stat wh40k-forcefield-stat--rating tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
+        <div class="wh40k-forcefield-stat__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold">
           <i class="fas fa-shield-alt"></i>
         </div>
-        <div class="wh40k-forcefield-stat__content">
-          <span class="wh40k-forcefield-stat__label">Rating</span>
-          <span class="wh40k-forcefield-stat__value">{{system.protectionRating}}</span>
+        <div class="wh40k-forcefield-stat__content tw-flex tw-flex-col">
+          <span class="wh40k-forcefield-stat__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Rating</span>
+          <span class="wh40k-forcefield-stat__value tw-font-semibold">{{system.protectionRating}}</span>
         </div>
       </div>
-      
-      <div class="wh40k-forcefield-stat wh40k-forcefield-stat--overload">
-        <div class="wh40k-forcefield-stat__icon">
+
+      <div class="wh40k-forcefield-stat wh40k-forcefield-stat--overload tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
+        <div class="wh40k-forcefield-stat__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold">
           <i class="fas fa-bolt"></i>
         </div>
-        <div class="wh40k-forcefield-stat__content">
-          <span class="wh40k-forcefield-stat__label">Overload</span>
-          <span class="wh40k-forcefield-stat__value">{{system.overloadThreshold}}+</span>
+        <div class="wh40k-forcefield-stat__content tw-flex tw-flex-col">
+          <span class="wh40k-forcefield-stat__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Overload</span>
+          <span class="wh40k-forcefield-stat__value tw-font-semibold">{{system.overloadThreshold}}+</span>
         </div>
       </div>
-      
-      <div class="wh40k-forcefield-stat wh40k-forcefield-stat--weight">
-        <div class="wh40k-forcefield-stat__icon">
+
+      <div class="wh40k-forcefield-stat wh40k-forcefield-stat--weight tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
+        <div class="wh40k-forcefield-stat__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold">
           <i class="fas fa-weight-hanging"></i>
         </div>
-        <div class="wh40k-forcefield-stat__content">
-          <span class="wh40k-forcefield-stat__label">Weight</span>
-          <span class="wh40k-forcefield-stat__value">{{system.weight}}kg</span>
+        <div class="wh40k-forcefield-stat__content tw-flex tw-flex-col">
+          <span class="wh40k-forcefield-stat__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Weight</span>
+          <span class="wh40k-forcefield-stat__value tw-font-semibold">{{system.weight}}kg</span>
         </div>
       </div>
     </div>
@@ -87,16 +87,16 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs wh40k-tabs--force-field wh40k-forcefield-tabs" data-group="primary">
-      <button type="button" class="wh40k-tab wh40k-forcefield-tab active" data-tab="stats" data-group="primary">
+    <nav class="wh40k-tabs wh40k-tabs--force-field wh40k-forcefield-tabs tw-flex tw-shrink-0" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-forcefield-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="stats" data-group="primary">
         <i class="fas fa-chart-bar"></i>
         <span>Stats</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-forcefield-tab" data-tab="description" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-forcefield-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="description" data-group="primary">
         <i class="fas fa-scroll"></i>
         <span>Info</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-forcefield-tab" data-tab="effects" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-forcefield-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="effects" data-group="primary">
         <i class="fas fa-magic"></i>
         <span>Effects</span>
       </button>
@@ -105,38 +105,38 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="wh40k-forcefield-content wh40k-tab-content wh40k-tab-content--force-field">
-      
+    <section class="wh40k-forcefield-content wh40k-tab-content wh40k-tab-content--force-field tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-2">
+
       {{!-- STATS TAB --}}
       <div class="wh40k-forcefield-panel tab active" data-tab="stats" data-group="primary">
-      
+
       {{!-- Status Controls --}}
-      <div class="wh40k-forcefield-section">
-        <div class="wh40k-forcefield-section__header">
-          <i class="fas fa-toggle-on"></i>
-          <h3>Status Controls</h3>
+      <div class="wh40k-forcefield-section tw-mb-3">
+        <div class="wh40k-forcefield-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+          <i class="fas fa-toggle-on tw-opacity-70"></i>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Status Controls</h3>
         </div>
-        <div class="wh40k-forcefield-section__body">
-          <div class="wh40k-forcefield-toggles">
-            <label class="wh40k-checkbox wh40k-checkbox--large">
+        <div class="wh40k-forcefield-section__body tw-p-3">
+          <div class="wh40k-forcefield-toggles tw-flex tw-flex-col tw-gap-2">
+            <label class="wh40k-checkbox wh40k-checkbox--large tw-flex tw-items-center tw-gap-3 tw-cursor-pointer tw-p-2 tw-rounded-md">
               <input type="checkbox" name="system.activated" {{checked system.activated}} />
-              <span class="wh40k-checkbox__indicator">
+              <span class="wh40k-checkbox__indicator tw-inline-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-md tw-text-lg">
                 <i class="fas fa-shield"></i>
               </span>
-              <span class="wh40k-checkbox__label">
-                <strong>Activated</strong>
-                <small>Force field is currently active and providing protection</small>
+              <span class="wh40k-checkbox__label tw-flex tw-flex-col">
+                <strong class="tw-text-sm">Activated</strong>
+                <small class="tw-text-xs tw-opacity-70">Force field is currently active and providing protection</small>
               </span>
             </label>
-            
-            <label class="wh40k-checkbox wh40k-checkbox--large wh40k-checkbox--danger">
+
+            <label class="wh40k-checkbox wh40k-checkbox--large wh40k-checkbox--danger tw-flex tw-items-center tw-gap-3 tw-cursor-pointer tw-p-2 tw-rounded-md">
               <input type="checkbox" name="system.overloaded" {{checked system.overloaded}} />
-              <span class="wh40k-checkbox__indicator">
+              <span class="wh40k-checkbox__indicator tw-inline-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-md tw-text-lg">
                 <i class="fas fa-exclamation-triangle"></i>
               </span>
-              <span class="wh40k-checkbox__label">
-                <strong>Overloaded</strong>
-                <small>Force field has overloaded and is temporarily disabled</small>
+              <span class="wh40k-checkbox__label tw-flex tw-flex-col">
+                <strong class="tw-text-sm">Overloaded</strong>
+                <small class="tw-text-xs tw-opacity-70">Force field has overloaded and is temporarily disabled</small>
               </span>
             </label>
           </div>
@@ -144,72 +144,72 @@
       </div>
 
       {{!-- Protection Settings --}}
-      <div class="wh40k-forcefield-section">
-        <div class="wh40k-forcefield-section__header">
-          <i class="fas fa-shield-halved"></i>
-          <h3>Protection Settings</h3>
+      <div class="wh40k-forcefield-section tw-mb-3">
+        <div class="wh40k-forcefield-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+          <i class="fas fa-shield-halved tw-opacity-70"></i>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Protection Settings</h3>
         </div>
-        <div class="wh40k-forcefield-section__body">
-          <div class="wh40k-field-row">
-            <div class="wh40k-field">
-              <label>
+        <div class="wh40k-forcefield-section__body tw-p-3">
+          <div class="tw-flex tw-gap-3 tw-mb-3">
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
+              <label class="tw-text-sm tw-font-medium">
                 Protection Rating
-                <small>Roll equal to or under this to be protected</small>
+                <small class="tw-font-normal tw-opacity-70 tw-block">Roll equal to or under this to be protected</small>
               </label>
-              <div class="wh40k-field-with-unit">
-                <input type="number" name="system.protectionRating" value="{{source.protectionRating}}" 
-                       data-dtype="Number" min="0" max="100" />
-                <span class="wh40k-field-unit">%</span>
+              <div class="tw-flex tw-items-center tw-gap-1">
+                <input type="number" name="system.protectionRating" value="{{source.protectionRating}}"
+                       data-dtype="Number" min="0" max="100" class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+                <span class="tw-text-sm tw-opacity-70">%</span>
               </div>
             </div>
-            <div class="wh40k-field">
-              <label>
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
+              <label class="tw-text-sm tw-font-medium">
                 Overload Threshold
-                <small>Roll this or higher on hit to overload</small>
+                <small class="tw-font-normal tw-opacity-70 tw-block">Roll this or higher on hit to overload</small>
               </label>
-              <div class="wh40k-field-with-unit">
-                <input type="number" name="system.overloadThreshold" value="{{source.overloadThreshold}}" 
-                       data-dtype="Number" min="0" max="100" />
-                <span class="wh40k-field-unit">+</span>
+              <div class="tw-flex tw-items-center tw-gap-1">
+                <input type="number" name="system.overloadThreshold" value="{{source.overloadThreshold}}"
+                       data-dtype="Number" min="0" max="100" class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+                <span class="tw-text-sm tw-opacity-70">+</span>
               </div>
             </div>
           </div>
-          <div class="wh40k-field">
-            <label>
+          <div class="tw-flex tw-flex-col tw-gap-1">
+            <label class="tw-text-sm tw-font-medium">
               Overload Duration
-              <small>How long does the field stay disabled?</small>
+              <small class="tw-font-normal tw-opacity-70"> — How long does the field stay disabled?</small>
             </label>
-            <input type="text" name="system.overloadDuration" value="{{source.overloadDuration}}" 
-                   placeholder="1d5 rounds" />
+            <input type="text" name="system.overloadDuration" value="{{source.overloadDuration}}"
+                   placeholder="1d5 rounds" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
           </div>
         </div>
       </div>
 
       {{!-- Physical Properties --}}
-      <div class="wh40k-forcefield-section">
-        <div class="wh40k-forcefield-section__header">
-          <i class="fas fa-cog"></i>
-          <h3>Physical Properties</h3>
+      <div class="wh40k-forcefield-section tw-mb-3">
+        <div class="wh40k-forcefield-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+          <i class="fas fa-cog tw-opacity-70"></i>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Physical Properties</h3>
         </div>
-        <div class="wh40k-forcefield-section__body">
-          <div class="wh40k-field-row">
-            <div class="wh40k-field">
-              <label>Weight (kg)</label>
-              <input type="number" name="system.weight" value="{{source.weight}}" 
-                     data-dtype="Number" min="0" step="0.1" />
+        <div class="wh40k-forcefield-section__body tw-p-3">
+          <div class="tw-flex tw-gap-3 tw-mb-3">
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
+              <label class="tw-text-sm tw-font-medium">Weight (kg)</label>
+              <input type="number" name="system.weight" value="{{source.weight}}"
+                     data-dtype="Number" min="0" step="0.1" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
             </div>
             {{#unless hideThroneGelt}}
-            <div class="wh40k-field">
-              <label>Cost (Thrones)</label>
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
+              <label class="tw-text-sm tw-font-medium">Cost (Thrones)</label>
               <input type="number" name="system.cost.dh2.homebrew.throneGelt" value="{{source.cost.dh2.homebrew.throneGelt}}"
-                     data-dtype="Number" min="0" />
+                     data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
             </div>
             {{/unless}}
           </div>
-          <div class="wh40k-field-row">
-            <div class="wh40k-field">
-              <label>Availability</label>
-              <select name="system.availability">
+          <div class="tw-flex tw-gap-3">
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
+              <label class="tw-text-sm tw-font-medium">Availability</label>
+              <select name="system.availability" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
                 <option value="ubiquitous" {{#if (eq system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
                 <option value="abundant" {{#if (eq system.availability "abundant")}}selected{{/if}}>Abundant</option>
                 <option value="plentiful" {{#if (eq system.availability "plentiful")}}selected{{/if}}>Plentiful</option>
@@ -223,9 +223,9 @@
                 <option value="unique" {{#if (eq system.availability "unique")}}selected{{/if}}>Unique</option>
               </select>
             </div>
-            <div class="wh40k-field">
-              <label>Craftsmanship</label>
-              <select name="system.craftsmanship">
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
+              <label class="tw-text-sm tw-font-medium">Craftsmanship</label>
+              <select name="system.craftsmanship" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
                 <option value="poor" {{#if (eq system.craftsmanship "poor")}}selected{{/if}}>Poor</option>
                 <option value="common" {{#if (eq system.craftsmanship "common")}}selected{{/if}}>Common</option>
                 <option value="good" {{#if (eq system.craftsmanship "good")}}selected{{/if}}>Good</option>
@@ -242,12 +242,12 @@
       <div class="wh40k-forcefield-panel tab" data-tab="description" data-group="primary">
 
       {{!-- Effect --}}
-      <div class="wh40k-forcefield-section">
-        <div class="wh40k-forcefield-section__header">
-          <i class="fas fa-bolt"></i>
-          <h3>Effect</h3>
+      <div class="wh40k-forcefield-section tw-mb-3">
+        <div class="wh40k-forcefield-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+          <i class="fas fa-bolt tw-opacity-70"></i>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Effect</h3>
         </div>
-        <div class="wh40k-forcefield-section__body wh40k-forcefield-section__body--editor">
+        <div class="wh40k-forcefield-section__body wh40k-forcefield-section__body--editor tw-p-2">
           {{#if inEditMode}}
           {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
           {{else}}
@@ -257,12 +257,12 @@
       </div>
 
       {{!-- Description --}}
-      <div class="wh40k-forcefield-section">
-        <div class="wh40k-forcefield-section__header">
-          <i class="fas fa-book"></i>
-          <h3>Description</h3>
+      <div class="wh40k-forcefield-section tw-mb-3">
+        <div class="wh40k-forcefield-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+          <i class="fas fa-book tw-opacity-70"></i>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Description</h3>
         </div>
-        <div class="wh40k-forcefield-section__body wh40k-forcefield-section__body--editor">
+        <div class="wh40k-forcefield-section__body wh40k-forcefield-section__body--editor tw-p-2">
           {{#if inEditMode}}
           {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
           {{else}}
@@ -272,25 +272,25 @@
       </div>
 
       {{!-- Notes --}}
-      <div class="wh40k-forcefield-section">
-        <div class="wh40k-forcefield-section__header">
-          <i class="fas fa-sticky-note"></i>
-          <h3>Notes</h3>
+      <div class="wh40k-forcefield-section tw-mb-3">
+        <div class="wh40k-forcefield-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+          <i class="fas fa-sticky-note tw-opacity-70"></i>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Notes</h3>
         </div>
-        <div class="wh40k-forcefield-section__body">
-          <textarea name="system.notes" rows="4" placeholder="GM notes, special rules, etc.">{{system.notes}}</textarea>
+        <div class="wh40k-forcefield-section__body tw-p-3">
+          <textarea name="system.notes" rows="4" placeholder="GM notes, special rules, etc." class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{system.notes}}</textarea>
         </div>
       </div>
 
       {{!-- Source --}}
-      <div class="wh40k-forcefield-section">
-        <div class="wh40k-forcefield-section__header">
-          <i class="fas fa-book-open"></i>
-          <h3>Source</h3>
+      <div class="wh40k-forcefield-section tw-mb-3">
+        <div class="wh40k-forcefield-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+          <i class="fas fa-book-open tw-opacity-70"></i>
+          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Source</h3>
         </div>
-        <div class="wh40k-forcefield-section__body">
-          <input type="text" name="system.source" value="{{source.source}}" 
-                 placeholder="Rogue Trader Core Rulebook, pg. 123" />
+        <div class="wh40k-forcefield-section__body tw-p-3">
+          <input type="text" name="system.source" value="{{source.source}}"
+                 placeholder="Rogue Trader Core Rulebook, pg. 123" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
         </div>
       </div>
 

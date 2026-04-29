@@ -1,43 +1,43 @@
-{{!-- 
+{{!--
   Rogue Trader Origin Path Item Sheet - Modern Tabbed Redesign
   Character creation lifepath configuration with tabbed interface
 --}}
-<div class="wh40k-origin-sheet">
-  <form autocomplete="off">
-    
+<div class="wh40k-origin-sheet tw-flex tw-flex-col tw-h-full">
+  <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
+
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact identity with step badge
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="wh40k-origin-header">
-      <div class="wh40k-origin-header__image" data-action="editImage" data-edit="img">
-        <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="wh40k-origin-header__image-overlay">
+    <header class="wh40k-origin-header tw-flex tw-items-start tw-gap-3 tw-p-3 tw-shrink-0">
+      <div class="wh40k-origin-header__image tw-relative tw-w-16 tw-h-16 tw-shrink-0 tw-rounded-md tw-overflow-hidden tw-cursor-pointer" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
+        <div class="wh40k-origin-header__image-overlay tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/60 tw-opacity-0 hover:tw-opacity-100 tw-transition-opacity">
           <i class="fas fa-edit"></i>
         </div>
       </div>
-      
-      <div class="wh40k-origin-header__info">
-        <input type="text" class="wh40k-origin-header__name" name="name" value="{{item.name}}" placeholder="Origin Path Name" />
-        
-        <div class="wh40k-origin-header__meta">
+
+      <div class="wh40k-origin-header__info tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
+        <input type="text" class="wh40k-origin-header__name tw-font-display tw-text-xl tw-text-gold tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" value="{{item.name}}" placeholder="Origin Path Name" />
+
+        <div class="wh40k-origin-header__meta tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
           {{!-- Step Badge --}}
-          <span class="wh40k-origin-badge wh40k-origin-badge--step wh40k-origin-badge--step{{item.system.stepIndex}}" title="{{item.system.stepLabel}}">
+          <span class="wh40k-origin-badge wh40k-origin-badge--step wh40k-origin-badge--step{{item.system.stepIndex}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{item.system.stepLabel}}">
             <i class="fas fa-map-signs"></i>
             {{item.system.stepLabel}}
           </span>
-          
+
           {{!-- Step Index Badge --}}
-          <span class="wh40k-origin-badge wh40k-origin-badge--index" title="Order in path">
+          <span class="wh40k-origin-badge wh40k-origin-badge--index tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Order in path">
             <i class="fas fa-sort-numeric-up"></i>
             Step {{add item.system.stepIndex 1}}
           </span>
         </div>
-        
+
         {{!-- Step Configuration --}}
-        <div class="wh40k-origin-header__config">
-          <div class="wh40k-config-field">
-            <label>Step Type</label>
-            <select name="system.step" class="wh40k-config-select">
+        <div class="wh40k-origin-header__config tw-flex tw-gap-2 tw-mt-1">
+          <div class="wh40k-config-field tw-flex tw-flex-col tw-gap-1 tw-flex-1">
+            <label class="tw-text-xs tw-opacity-70">Step Type</label>
+            <select name="system.step" class="wh40k-config-select tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
               <option value="homeWorld" {{#if (eq item.system.step "homeWorld")}}selected{{/if}}>Home World</option>
               <option value="birthright" {{#if (eq item.system.step "birthright")}}selected{{/if}}>Birthright</option>
               <option value="lureOfTheVoid" {{#if (eq item.system.step "lureOfTheVoid")}}selected{{/if}}>Lure of the Void</option>
@@ -48,10 +48,10 @@
               <option value="eliteAdvance" {{#if (eq item.system.step "eliteAdvance")}}selected{{/if}}>Elite Advance</option>
             </select>
           </div>
-          
-          <div class="wh40k-config-field">
-            <label>Step Index</label>
-            <input type="number" name="system.stepIndex" value="{{item.system.stepIndex}}" min="0" max="8" class="wh40k-config-input" />
+
+          <div class="wh40k-config-field tw-flex tw-flex-col tw-gap-1 tw-w-20">
+            <label class="tw-text-xs tw-opacity-70">Step Index</label>
+            <input type="number" name="system.stepIndex" value="{{item.system.stepIndex}}" min="0" max="8" class="wh40k-config-input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
           </div>
         </div>
       </div>
@@ -60,20 +60,20 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-origin-tabs" data-group="primary">
-      <button type="button" class="wh40k-origin-tab active" data-tab="grants" data-group="primary">
+    <nav class="wh40k-origin-tabs tw-flex tw-shrink-0" data-group="primary">
+      <button type="button" class="wh40k-origin-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="grants" data-group="primary">
         <i class="fas fa-gift"></i>
         <span>Grants</span>
       </button>
-      <button type="button" class="wh40k-origin-tab" data-tab="requirements" data-group="primary">
+      <button type="button" class="wh40k-origin-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="requirements" data-group="primary">
         <i class="fas fa-lock"></i>
         <span>Requirements</span>
       </button>
-      <button type="button" class="wh40k-origin-tab" data-tab="choices" data-group="primary">
+      <button type="button" class="wh40k-origin-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="choices" data-group="primary">
         <i class="fas fa-question-circle"></i>
         <span>Choices</span>
       </button>
-      <button type="button" class="wh40k-origin-tab" data-tab="description" data-group="primary">
+      <button type="button" class="wh40k-origin-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="description" data-group="primary">
         <i class="fas fa-book"></i>
         <span>Description</span>
       </button>
@@ -82,100 +82,100 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="wh40k-origin-content">
-      
+    <section class="wh40k-origin-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-2">
+
       {{!-- GRANTS TAB --}}
       <div class="wh40k-origin-panel active" data-tab="grants" data-group="primary">
-        
+
         {{!-- Characteristic Modifiers --}}
-        <div class="wh40k-origin-section">
-          <h3 class="wh40k-section-title">
-            <i class="fas fa-dumbbell"></i> {{localize "WH40K.CharacteristicModifiers"}}
+        <div class="wh40k-origin-section tw-mb-3">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+            <i class="fas fa-dumbbell tw-text-gold"></i> {{localize "WH40K.CharacteristicModifiers"}}
           </h3>
-          
-          <div class="wh40k-characteristics-grid">
-            <div class="wh40k-char-field">
-              <label class="wh40k-char-label">WS</label>
-              <input type="number" name="system.modifiers.characteristics.weaponSkill" value="{{item.system.modifiers.characteristics.weaponSkill}}" class="wh40k-char-input" placeholder="0" />
+
+          <div class="wh40k-characteristics-grid tw-grid tw-grid-cols-[repeat(9,1fr)] tw-gap-1">
+            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="wh40k-char-label tw-text-xs tw-opacity-70">WS</label>
+              <input type="number" name="system.modifiers.characteristics.weaponSkill" value="{{item.system.modifiers.characteristics.weaponSkill}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field">
-              <label class="wh40k-char-label">BS</label>
-              <input type="number" name="system.modifiers.characteristics.ballisticSkill" value="{{item.system.modifiers.characteristics.ballisticSkill}}" class="wh40k-char-input" placeholder="0" />
+            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="wh40k-char-label tw-text-xs tw-opacity-70">BS</label>
+              <input type="number" name="system.modifiers.characteristics.ballisticSkill" value="{{item.system.modifiers.characteristics.ballisticSkill}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field">
-              <label class="wh40k-char-label">S</label>
-              <input type="number" name="system.modifiers.characteristics.strength" value="{{item.system.modifiers.characteristics.strength}}" class="wh40k-char-input" placeholder="0" />
+            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="wh40k-char-label tw-text-xs tw-opacity-70">S</label>
+              <input type="number" name="system.modifiers.characteristics.strength" value="{{item.system.modifiers.characteristics.strength}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field">
-              <label class="wh40k-char-label">T</label>
-              <input type="number" name="system.modifiers.characteristics.toughness" value="{{item.system.modifiers.characteristics.toughness}}" class="wh40k-char-input" placeholder="0" />
+            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="wh40k-char-label tw-text-xs tw-opacity-70">T</label>
+              <input type="number" name="system.modifiers.characteristics.toughness" value="{{item.system.modifiers.characteristics.toughness}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field">
-              <label class="wh40k-char-label">Ag</label>
-              <input type="number" name="system.modifiers.characteristics.agility" value="{{item.system.modifiers.characteristics.agility}}" class="wh40k-char-input" placeholder="0" />
+            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="wh40k-char-label tw-text-xs tw-opacity-70">Ag</label>
+              <input type="number" name="system.modifiers.characteristics.agility" value="{{item.system.modifiers.characteristics.agility}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field">
-              <label class="wh40k-char-label">Int</label>
-              <input type="number" name="system.modifiers.characteristics.intelligence" value="{{item.system.modifiers.characteristics.intelligence}}" class="wh40k-char-input" placeholder="0" />
+            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="wh40k-char-label tw-text-xs tw-opacity-70">Int</label>
+              <input type="number" name="system.modifiers.characteristics.intelligence" value="{{item.system.modifiers.characteristics.intelligence}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field">
-              <label class="wh40k-char-label">Per</label>
-              <input type="number" name="system.modifiers.characteristics.perception" value="{{item.system.modifiers.characteristics.perception}}" class="wh40k-char-input" placeholder="0" />
+            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="wh40k-char-label tw-text-xs tw-opacity-70">Per</label>
+              <input type="number" name="system.modifiers.characteristics.perception" value="{{item.system.modifiers.characteristics.perception}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field">
-              <label class="wh40k-char-label">WP</label>
-              <input type="number" name="system.modifiers.characteristics.willpower" value="{{item.system.modifiers.characteristics.willpower}}" class="wh40k-char-input" placeholder="0" />
+            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="wh40k-char-label tw-text-xs tw-opacity-70">WP</label>
+              <input type="number" name="system.modifiers.characteristics.willpower" value="{{item.system.modifiers.characteristics.willpower}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field">
-              <label class="wh40k-char-label">Fel</label>
-              <input type="number" name="system.modifiers.characteristics.fellowship" value="{{item.system.modifiers.characteristics.fellowship}}" class="wh40k-char-input" placeholder="0" />
+            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="wh40k-char-label tw-text-xs tw-opacity-70">Fel</label>
+              <input type="number" name="system.modifiers.characteristics.fellowship" value="{{item.system.modifiers.characteristics.fellowship}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
           </div>
         </div>
-        
+
         {{!-- Other Bonuses --}}
-        <div class="wh40k-origin-section">
-          <h3 class="wh40k-section-title">
-            <i class="fas fa-heart"></i> {{localize "WH40K.OtherBonuses"}}
+        <div class="wh40k-origin-section tw-mb-3">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+            <i class="fas fa-heart tw-text-gold"></i> {{localize "WH40K.OtherBonuses"}}
           </h3>
-          
-          <div class="wh40k-bonuses-grid">
-            <div class="wh40k-bonus-field">
-              <label class="wh40k-bonus-label">Wounds</label>
-              <input type="number" name="system.grants.wounds" value="{{item.system.grants.wounds}}" class="wh40k-bonus-input" placeholder="0" />
+
+          <div class="wh40k-bonuses-grid tw-flex tw-flex-wrap tw-gap-3">
+            <div class="wh40k-bonus-field tw-flex tw-flex-col tw-gap-1">
+              <label class="wh40k-bonus-label tw-text-xs tw-opacity-70">Wounds</label>
+              <input type="number" name="system.grants.wounds" value="{{item.system.grants.wounds}}" class="wh40k-bonus-input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-w-20" placeholder="0" />
             </div>
-            
-            <div class="wh40k-bonus-field">
-              <label class="wh40k-bonus-label">Fate Threshold</label>
-              <input type="number" name="system.grants.fateThreshold" value="{{item.system.grants.fateThreshold}}" min="0" class="wh40k-bonus-input" placeholder="0" />
+
+            <div class="wh40k-bonus-field tw-flex tw-flex-col tw-gap-1">
+              <label class="wh40k-bonus-label tw-text-xs tw-opacity-70">Fate Threshold</label>
+              <input type="number" name="system.grants.fateThreshold" value="{{item.system.grants.fateThreshold}}" min="0" class="wh40k-bonus-input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-w-20" placeholder="0" />
             </div>
-            
-            <div class="wh40k-bonus-field wh40k-bonus-field--checkbox">
-              <label class="wh40k-bonus-label-inline">
+
+            <div class="wh40k-bonus-field wh40k-bonus-field--checkbox tw-flex tw-flex-col tw-justify-end">
+              <label class="wh40k-bonus-label-inline tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm">
                 <input type="checkbox" name="system.grants.blessedByEmperor" {{checked item.system.grants.blessedByEmperor}} />
                 <span>Blessed by Emperor</span>
               </label>
             </div>
           </div>
         </div>
-        
+
         {{!-- Skills Granted --}}
-        <div class="wh40k-origin-section">
-          <h3 class="wh40k-section-title">
-            <i class="fas fa-graduation-cap"></i> {{localize "WH40K.SkillsGranted"}}
+        <div class="wh40k-origin-section tw-mb-3">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+            <i class="fas fa-graduation-cap tw-text-gold"></i> {{localize "WH40K.SkillsGranted"}}
           </h3>
-          
+
           {{#if item.system.grants.skills.length}}
-          <div class="wh40k-grants-list">
+          <div class="wh40k-grants-list tw-flex tw-flex-col tw-gap-1">
             {{#each item.system.grants.skills as |skill index|}}
-            <div class="wh40k-grant-card wh40k-grant-card--skill">
-              <div class="wh40k-grant-card__content">
-                <span class="wh40k-grant-name">{{skill.name}}</span>
+            <div class="wh40k-grant-card wh40k-grant-card--skill tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+              <div class="wh40k-grant-card__content tw-flex tw-items-center tw-gap-1 tw-flex-1">
+                <span class="wh40k-grant-name tw-font-medium">{{skill.name}}</span>
                 {{#if skill.specialization}}
-                <span class="wh40k-grant-spec">({{skill.specialization}})</span>
+                <span class="wh40k-grant-spec tw-opacity-70">({{skill.specialization}})</span>
                 {{/if}}
               </div>
-              <span class="wh40k-grant-badge wh40k-grant-badge--{{skill.level}}">
+              <span class="wh40k-grant-badge wh40k-grant-badge--{{skill.level}} tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold">
                 {{#if (eq skill.level "trained")}}T{{/if}}
                 {{#if (eq skill.level "plus10")}}+10{{/if}}
                 {{#if (eq skill.level "plus20")}}+20{{/if}}
@@ -184,123 +184,123 @@
             {{/each}}
           </div>
           {{else}}
-          <div class="wh40k-empty-state wh40k-empty-state--compact">
-            <i class="fas fa-graduation-cap"></i>
-            <p>No skills granted</p>
+          <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
+            <i class="fas fa-graduation-cap tw-opacity-40"></i>
+            <p class="tw-m-0">No skills granted</p>
           </div>
           {{/if}}
         </div>
-        
+
         {{!-- Talents Granted --}}
-        <div class="wh40k-origin-section">
-          <h3 class="wh40k-section-title">
-            <i class="fas fa-star"></i> {{localize "WH40K.TalentsGranted"}}
+        <div class="wh40k-origin-section tw-mb-3">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+            <i class="fas fa-star tw-text-gold"></i> {{localize "WH40K.TalentsGranted"}}
           </h3>
-          
+
           {{#if item.system.grants.talents.length}}
-          <div class="wh40k-grants-list">
+          <div class="wh40k-grants-list tw-flex tw-flex-col tw-gap-1">
             {{#each item.system.grants.talents as |talent index|}}
-            <div class="wh40k-grant-card wh40k-grant-card--talent">
-              <div class="wh40k-grant-card__content">
-                <span class="wh40k-grant-name">{{talent.name}}</span>
+            <div class="wh40k-grant-card wh40k-grant-card--talent tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+              <div class="wh40k-grant-card__content tw-flex tw-items-center tw-gap-1 tw-flex-1">
+                <span class="wh40k-grant-name tw-font-medium">{{talent.name}}</span>
                 {{#if talent.specialization}}
-                <span class="wh40k-grant-spec">({{talent.specialization}})</span>
+                <span class="wh40k-grant-spec tw-opacity-70">({{talent.specialization}})</span>
                 {{/if}}
               </div>
-              <i class="fas fa-star wh40k-grant-icon"></i>
+              <i class="fas fa-star wh40k-grant-icon tw-text-gold tw-opacity-70"></i>
             </div>
             {{/each}}
           </div>
           {{else}}
-          <div class="wh40k-empty-state wh40k-empty-state--compact">
-            <i class="fas fa-star"></i>
-            <p>No talents granted</p>
+          <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
+            <i class="fas fa-star tw-opacity-40"></i>
+            <p class="tw-m-0">No talents granted</p>
           </div>
           {{/if}}
         </div>
-        
+
         {{!-- Traits Granted --}}
-        <div class="wh40k-origin-section">
-          <h3 class="wh40k-section-title">
-            <i class="fas fa-shield-alt"></i> {{localize "WH40K.TraitsGranted"}}
+        <div class="wh40k-origin-section tw-mb-3">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+            <i class="fas fa-shield-alt tw-text-gold"></i> {{localize "WH40K.TraitsGranted"}}
           </h3>
-          
+
           {{#if item.system.grants.traits.length}}
-          <div class="wh40k-grants-list">
+          <div class="wh40k-grants-list tw-flex tw-flex-col tw-gap-1">
             {{#each item.system.grants.traits as |trait index|}}
-            <div class="wh40k-grant-card wh40k-grant-card--trait">
-              <div class="wh40k-grant-card__content">
-                <span class="wh40k-grant-name">{{trait.name}}</span>
+            <div class="wh40k-grant-card wh40k-grant-card--trait tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+              <div class="wh40k-grant-card__content tw-flex tw-items-center tw-gap-1 tw-flex-1">
+                <span class="wh40k-grant-name tw-font-medium">{{trait.name}}</span>
                 {{#if trait.level}}
-                <span class="wh40k-grant-level">({{trait.level}})</span>
+                <span class="wh40k-grant-level tw-opacity-70">({{trait.level}})</span>
                 {{/if}}
               </div>
-              <i class="fas fa-shield-alt wh40k-grant-icon"></i>
+              <i class="fas fa-shield-alt wh40k-grant-icon tw-text-gold tw-opacity-70"></i>
             </div>
             {{/each}}
           </div>
           {{else}}
-          <div class="wh40k-empty-state wh40k-empty-state--compact">
-            <i class="fas fa-shield-alt"></i>
-            <p>No traits granted</p>
+          <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
+            <i class="fas fa-shield-alt tw-opacity-40"></i>
+            <p class="tw-m-0">No traits granted</p>
           </div>
           {{/if}}
         </div>
-        
+
         {{!-- Aptitudes Granted --}}
-        <div class="wh40k-origin-section">
-          <h3 class="wh40k-section-title">
-            <i class="fas fa-brain"></i> {{localize "WH40K.AptitudesGranted"}}
+        <div class="wh40k-origin-section tw-mb-3">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+            <i class="fas fa-brain tw-text-gold"></i> {{localize "WH40K.AptitudesGranted"}}
           </h3>
-          
+
           {{#if item.system.grants.aptitudes.length}}
-          <div class="wh40k-aptitudes-display">
+          <div class="wh40k-aptitudes-display tw-flex tw-flex-wrap tw-gap-1">
             {{#each item.system.grants.aptitudes as |apt|}}
-            <span class="wh40k-aptitude-tag">{{apt}}</span>
+            <span class="wh40k-aptitude-tag tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs">{{apt}}</span>
             {{/each}}
           </div>
           {{else}}
-          <div class="wh40k-empty-state wh40k-empty-state--compact">
-            <i class="fas fa-brain"></i>
-            <p>No aptitudes granted</p>
+          <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
+            <i class="fas fa-brain tw-opacity-40"></i>
+            <p class="tw-m-0">No aptitudes granted</p>
           </div>
           {{/if}}
         </div>
-        
+
         {{!-- Equipment Granted --}}
         {{#if item.system.grants.equipment.length}}
-        <div class="wh40k-origin-section">
-          <h3 class="wh40k-section-title">
-            <i class="fas fa-toolbox"></i> {{localize "WH40K.EquipmentGranted"}}
+        <div class="wh40k-origin-section tw-mb-3">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+            <i class="fas fa-toolbox tw-text-gold"></i> {{localize "WH40K.EquipmentGranted"}}
           </h3>
-          
-          <div class="wh40k-grants-list">
+
+          <div class="wh40k-grants-list tw-flex tw-flex-col tw-gap-1">
             {{#each item.system.grants.equipment as |equip index|}}
-            <div class="wh40k-grant-card wh40k-grant-card--equipment">
-              <div class="wh40k-grant-card__content">
-                <span class="wh40k-grant-name">{{equip.name}}</span>
+            <div class="wh40k-grant-card wh40k-grant-card--equipment tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+              <div class="wh40k-grant-card__content tw-flex tw-items-center tw-gap-1 tw-flex-1">
+                <span class="wh40k-grant-name tw-font-medium">{{equip.name}}</span>
                 {{#if (gt equip.quantity 1)}}
-                <span class="wh40k-grant-qty">×{{equip.quantity}}</span>
+                <span class="wh40k-grant-qty tw-opacity-70">×{{equip.quantity}}</span>
                 {{/if}}
               </div>
-              <i class="fas fa-toolbox wh40k-grant-icon"></i>
+              <i class="fas fa-toolbox wh40k-grant-icon tw-text-gold tw-opacity-70"></i>
             </div>
             {{/each}}
           </div>
         </div>
         {{/if}}
-        
+
         {{!-- Special Abilities --}}
         {{#if item.system.grants.specialAbilities.length}}
-        <div class="wh40k-origin-section">
-          <h3 class="wh40k-section-title">
-            <i class="fas fa-bolt"></i> {{localize "WH40K.SpecialAbilities"}}
+        <div class="wh40k-origin-section tw-mb-3">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+            <i class="fas fa-bolt tw-text-gold"></i> {{localize "WH40K.SpecialAbilities"}}
           </h3>
-          
+
           {{#each item.system.grants.specialAbilities as |ability index|}}
-          <div class="wh40k-ability-card">
-            <h4 class="wh40k-ability-name">{{ability.name}}</h4>
-            <div class="wh40k-ability-description">
+          <div class="wh40k-ability-card tw-mb-2 tw-p-2 tw-rounded-md">
+            <h4 class="wh40k-ability-name tw-m-0 tw-mb-1 tw-text-sm tw-font-semibold tw-text-gold">{{ability.name}}</h4>
+            <div class="wh40k-ability-description tw-text-sm tw-opacity-80">
               {{{ability.description}}}
             </div>
           </div>
@@ -308,39 +308,39 @@
         </div>
         {{/if}}
       </div>
-      
+
       {{!-- REQUIREMENTS TAB --}}
       <div class="wh40k-origin-panel" data-tab="requirements" data-group="primary">
         {{#if item.system.hasRequirements}}
           {{!-- Text Requirements --}}
           {{#if item.system.requirements.text}}
-          <div class="wh40k-origin-section">
-            <h3 class="wh40k-section-title">
-              <i class="fas fa-file-alt"></i> Text Description
+          <div class="wh40k-origin-section tw-mb-3">
+            <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+              <i class="fas fa-file-alt tw-text-gold"></i> Text Description
             </h3>
-            
-            <div class="wh40k-property">
-              <label class="wh40k-property-label">Requirements</label>
-              <textarea name="system.requirements.text" rows="3" class="wh40k-property-textarea" placeholder="e.g., Must have Void Born homeworld">{{item.system.requirements.text}}</textarea>
+
+            <div class="wh40k-property tw-flex tw-flex-col tw-gap-1">
+              <label class="wh40k-property-label tw-text-xs tw-opacity-70">Requirements</label>
+              <textarea name="system.requirements.text" rows="3" class="wh40k-property-textarea tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y" placeholder="e.g., Must have Void Born homeworld">{{item.system.requirements.text}}</textarea>
             </div>
-            
-            <div class="wh40k-requirement-display">
-              <p>{{item.system.requirements.text}}</p>
+
+            <div class="wh40k-requirement-display tw-mt-2 tw-text-sm tw-p-2 tw-rounded-sm">
+              <p class="tw-m-0">{{item.system.requirements.text}}</p>
             </div>
           </div>
           {{/if}}
-          
+
           {{!-- Previous Steps Required --}}
           {{#if item.system.requirements.previousSteps.length}}
-          <div class="wh40k-origin-section">
-            <h3 class="wh40k-section-title">
-              <i class="fas fa-check-circle"></i> Required Previous Steps
+          <div class="wh40k-origin-section tw-mb-3">
+            <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+              <i class="fas fa-check-circle tw-text-gold"></i> Required Previous Steps
             </h3>
-            
-            <div class="wh40k-requirement-list">
-              <p class="wh40k-requirement-note">Character must have ONE of these:</p>
+
+            <div class="wh40k-requirement-list tw-flex tw-flex-col tw-gap-1">
+              <p class="wh40k-requirement-note tw-m-0 tw-mb-1 tw-text-xs tw-italic tw-opacity-70">Character must have ONE of these:</p>
               {{#each item.system.requirements.previousSteps as |step|}}
-              <div class="wh40k-requirement-tag wh40k-requirement-tag--required">
+              <div class="wh40k-requirement-tag wh40k-requirement-tag--required tw-inline-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-text-success">
                 <i class="fas fa-check"></i>
                 {{step}}
               </div>
@@ -348,18 +348,18 @@
             </div>
           </div>
           {{/if}}
-          
+
           {{!-- Excluded Steps --}}
           {{#if item.system.requirements.excludedSteps.length}}
-          <div class="wh40k-origin-section">
-            <h3 class="wh40k-section-title">
-              <i class="fas fa-ban"></i> Excluded Steps
+          <div class="wh40k-origin-section tw-mb-3">
+            <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+              <i class="fas fa-ban tw-text-gold"></i> Excluded Steps
             </h3>
-            
-            <div class="wh40k-requirement-list">
-              <p class="wh40k-requirement-note">Character cannot have ANY of these:</p>
+
+            <div class="wh40k-requirement-list tw-flex tw-flex-col tw-gap-1">
+              <p class="wh40k-requirement-note tw-m-0 tw-mb-1 tw-text-xs tw-italic tw-opacity-70">Character cannot have ANY of these:</p>
               {{#each item.system.requirements.excludedSteps as |step|}}
-              <div class="wh40k-requirement-tag wh40k-requirement-tag--excluded">
+              <div class="wh40k-requirement-tag wh40k-requirement-tag--excluded tw-inline-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-text-crimson">
                 <i class="fas fa-times"></i>
                 {{step}}
               </div>
@@ -368,35 +368,35 @@
           </div>
           {{/if}}
         {{else}}
-        <div class="wh40k-empty-state">
-          <i class="fas fa-unlock"></i>
-          <p>No requirements defined</p>
-          <p class="wh40k-field-hint">This origin path is available to all characters</p>
+        <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-italic tw-rounded-md">
+          <i class="fas fa-unlock tw-opacity-40 tw-text-3xl tw-mb-2"></i>
+          <p class="tw-m-0 tw-text-sm">No requirements defined</p>
+          <p class="wh40k-field-hint tw-m-0 tw-text-xs tw-opacity-70 tw-mt-1">This origin path is available to all characters</p>
         </div>
         {{/if}}
       </div>
-      
+
       {{!-- CHOICES TAB --}}
       <div class="wh40k-origin-panel" data-tab="choices" data-group="primary">
         {{#if item.system.grants.choices.length}}
           {{#each item.system.grants.choices as |choice index|}}
-          <div class="wh40k-origin-section">
-            <h3 class="wh40k-section-title">
-              <i class="fas fa-random"></i> {{choice.label}}
+          <div class="wh40k-origin-section tw-mb-3">
+            <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+              <i class="fas fa-random tw-text-gold"></i> {{choice.label}}
             </h3>
-            
-            <div class="wh40k-choice-info">
-              <span class="wh40k-choice-badge wh40k-choice-badge--{{choice.type}}">
+
+            <div class="wh40k-choice-info tw-flex tw-items-center tw-gap-2 tw-mb-2">
+              <span class="wh40k-choice-badge wh40k-choice-badge--{{choice.type}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
                 <i class="fas {{#if (eq choice.type "skill")}}fa-graduation-cap{{else if (eq choice.type "talent")}}fa-star{{else if (eq choice.type "characteristic")}}fa-dumbbell{{else}}fa-toolbox{{/if}}"></i>
                 {{capitalize choice.type}}
               </span>
-              <span class="wh40k-choice-count">Choose {{choice.count}}</span>
+              <span class="wh40k-choice-count tw-text-xs tw-opacity-70">Choose {{choice.count}}</span>
             </div>
-            
-            <div class="wh40k-choice-options">
+
+            <div class="wh40k-choice-options tw-flex tw-flex-col tw-gap-1">
               {{#each choice.options as |option|}}
-              <div class="wh40k-choice-option">
-                <i class="fas fa-circle"></i>
+              <div class="wh40k-choice-option tw-flex tw-items-center tw-gap-2 tw-text-sm tw-px-2 tw-py-0.5">
+                <i class="fas fa-circle tw-text-xs tw-opacity-50"></i>
                 {{option}}
               </div>
               {{/each}}
@@ -404,26 +404,26 @@
           </div>
           {{/each}}
         {{else}}
-        <div class="wh40k-empty-state">
-          <i class="fas fa-question-circle"></i>
-          <p>No player choices required</p>
-          <p class="wh40k-field-hint">All grants are automatic</p>
+        <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-italic tw-rounded-md">
+          <i class="fas fa-question-circle tw-opacity-40 tw-text-3xl tw-mb-2"></i>
+          <p class="tw-m-0 tw-text-sm">No player choices required</p>
+          <p class="wh40k-field-hint tw-m-0 tw-text-xs tw-opacity-70 tw-mt-1">All grants are automatic</p>
         </div>
         {{/if}}
       </div>
-      
+
       {{!-- DESCRIPTION TAB --}}
       <div class="wh40k-origin-panel" data-tab="description" data-group="primary">
         {{!-- Effect Text --}}
-        <div class="wh40k-origin-section">
-          <h3 class="wh40k-section-title">
-            <i class="fas fa-magic"></i> Effect Text
+        <div class="wh40k-origin-section tw-mb-3">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+            <i class="fas fa-magic tw-text-gold"></i> Effect Text
           </h3>
-          
-          <p class="wh40k-field-hint" style="margin-bottom: 0.75rem;">
+
+          <p class="wh40k-field-hint tw-m-0 tw-mb-3 tw-text-xs tw-italic tw-opacity-70">
             <i class="fas fa-info-circle"></i> Brief mechanical summary or flavor text
           </p>
-          
+
           <div class="wh40k-editor-container">
             {{#if inEditMode}}
             {{editor system.effectText target="system.effectText" button=true editable=editable engine="prosemirror"}}
@@ -432,17 +432,17 @@
             {{/if}}
           </div>
         </div>
-        
+
         {{!-- Description --}}
-        <div class="wh40k-origin-section">
-          <h3 class="wh40k-section-title">
-            <i class="fas fa-book"></i> Description
+        <div class="wh40k-origin-section tw-mb-3">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+            <i class="fas fa-book tw-text-gold"></i> Description
           </h3>
-          
-          <p class="wh40k-field-hint" style="margin-bottom: 0.75rem;">
+
+          <p class="wh40k-field-hint tw-m-0 tw-mb-3 tw-text-xs tw-italic tw-opacity-70">
             <i class="fas fa-info-circle"></i> Full lore and background information
           </p>
-          
+
           <div class="wh40k-editor-container">
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
@@ -451,30 +451,30 @@
             {{/if}}
           </div>
         </div>
-        
+
         {{!-- Notes --}}
-        <div class="wh40k-origin-section">
-          <h3 class="wh40k-section-title">
-            <i class="fas fa-sticky-note"></i> Notes
+        <div class="wh40k-origin-section tw-mb-3">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+            <i class="fas fa-sticky-note tw-text-gold"></i> Notes
           </h3>
-          
+
           <div class="wh40k-property">
-            <textarea name="system.notes" rows="4" class="wh40k-property-textarea" placeholder="GM notes, balance considerations, etc.">{{item.system.notes}}</textarea>
+            <textarea name="system.notes" rows="4" class="wh40k-property-textarea tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y" placeholder="GM notes, balance considerations, etc.">{{item.system.notes}}</textarea>
           </div>
         </div>
-        
+
         {{!-- Source --}}
-        <div class="wh40k-origin-section">
-          <h3 class="wh40k-section-title">
-            <i class="fas fa-book-bookmark"></i> Source
+        <div class="wh40k-origin-section tw-mb-3">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+            <i class="fas fa-book-bookmark tw-text-gold"></i> Source
           </h3>
-          
+
           <div class="wh40k-property">
-            <input type="text" name="system.source" value="{{item.system.source}}" class="wh40k-property-input" placeholder="Core Rulebook, pg. XX" />
+            <input type="text" name="system.source" value="{{item.system.source}}" class="wh40k-property-input tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" placeholder="Core Rulebook, pg. XX" />
           </div>
         </div>
       </div>
-      
+
     </section>{{!-- .wh40k-origin-content --}}
   </form>
 </div>{{!-- .wh40k-origin-sheet --}}

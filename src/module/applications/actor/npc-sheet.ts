@@ -7,6 +7,7 @@
  */
 
 import type { WH40KNPC } from '../../documents/npc.ts';
+import type { WH40KCharacteristic } from '../../types/global.d.ts';
 import type { SidebarHeaderField } from '../../config/game-systems/types.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
@@ -14,6 +15,7 @@ import StatBlockExporter from '../npc/stat-block-exporter.ts';
 import StatBlockParser from '../npc/stat-block-parser.ts';
 import NPCThreatScalerDialog from '../npc/threat-scaler-dialog.ts';
 import CharacterSheet from './character-sheet.ts';
+import type { SkillLike } from './base-actor-sheet.ts';
 
 /** Typed shape of a prepared item entry on the NPC sheet context. */
 type NPCItemContext = {
@@ -130,6 +132,9 @@ export default class NPCSheet extends CharacterSheet {
 
     /** NPC sheets default to EDIT mode for GM convenience. */
     _mode = 2;
+
+    /** Sheet display mode constants (PLAY=1, EDIT=2). */
+    static MODES = { PLAY: 1, EDIT: 2 } as const;
 
     /** The actor cast to its NPC document type for NPC-specific API access. */
     protected get npcActor(): WH40KNPC {
@@ -967,8 +972,8 @@ export default class NPCSheet extends CharacterSheet {
     static async #rollInitiative(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         // Roll initiative using the system's initiative formula
-        const initChar = this.actor.system.initiative.characteristic;
-        const char = this.actor.system.characteristics[initChar];
+        const initChar = this.npcActor.system.initiative.characteristic;
+        const char = this.npcActor.system.characteristics[initChar];
         if (!char) return;
 
         const formula = `1d10 + ${char.bonus}`;
@@ -990,9 +995,9 @@ export default class NPCSheet extends CharacterSheet {
      */
     static async #toggleArmourMode(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const currentMode = this.actor.system.armour?.mode || 'simple';
+        const currentMode = this.npcActor.system.armour?.mode || 'simple';
         const newMode = currentMode === 'simple' ? 'locations' : 'simple';
-        await this.actor.system.switchArmourMode(newMode);
+        await this.npcActor.system.switchArmourMode(newMode);
     }
 
     /* -------------------------------------------- */
@@ -1029,7 +1034,7 @@ export default class NPCSheet extends CharacterSheet {
                 { key: 'stealth', name: 'Stealth' },
                 { key: 'survival', name: 'Survival' },
                 { key: 'techUse', name: 'Tech-Use' },
-            ].filter((s) => !this.actor.system.trainedSkills[s.key]);
+            ].filter((s) => !this.npcActor.system.trainedSkills[s.key]);
 
             const options = skills.map((s) => `<option value="${s.key}">${s.name}</option>`).join('');
 
@@ -1061,11 +1066,11 @@ export default class NPCSheet extends CharacterSheet {
                         label: 'Add Skill',
                         icon: 'fa-solid fa-plus',
                         default: true,
-                        callback: async (event, button, _dialog) => {
-                            const form = button.form;
+                        callback: async (_event: Event, button: HTMLButtonElement, _dialog: foundry.applications.api.DialogV2) => {
+                            const form = (button as HTMLButtonElement & { form: HTMLFormElement }).form;
                             const skill = (form.querySelector('[name="skill"]') as HTMLSelectElement).value;
                             const level = (form.querySelector('[name="level"]') as HTMLSelectElement).value;
-                            await this.actor.system.addTrainedSkill(skill, null, level);
+                            await this.npcActor.system.addTrainedSkill(skill, null, level);
                         },
                     },
                     {
@@ -1078,7 +1083,7 @@ export default class NPCSheet extends CharacterSheet {
             void dialog.render(true);
             return;
         }
-        await this.actor.system.addTrainedSkill(skillKey);
+        await this.npcActor.system.addTrainedSkill(skillKey);
     }
 
     /* -------------------------------------------- */
@@ -1092,7 +1097,7 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
-        await this.actor.system.removeSkill(skillKey);
+        await this.npcActor.system.removeSkill(skillKey);
     }
 
     /* -------------------------------------------- */
@@ -1108,11 +1113,11 @@ export default class NPCSheet extends CharacterSheet {
         const level = target.dataset.level;
         if (!skillKey || !level) return;
 
-        const currentSkills = foundry.utils.deepClone(this.actor.system.trainedSkills) || {};
+        const currentSkills = foundry.utils.deepClone(this.npcActor.system.trainedSkills) || {};
         const currentState = currentSkills[skillKey];
 
         // Skill characteristic mapping
-        const skillCharMap = {
+        const skillCharMap: Record<string, string> = {
             acrobatics: 'agility',
             athletics: 'strength',
             awareness: 'perception',
@@ -1215,11 +1220,11 @@ export default class NPCSheet extends CharacterSheet {
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
 
-        const currentSkills = foundry.utils.deepClone(this.actor.system.trainedSkills) || {};
+        const currentSkills = foundry.utils.deepClone(this.npcActor.system.trainedSkills) || {};
         const current = currentSkills[skillKey];
 
         // Skill characteristic mapping
-        const skillCharMap = {
+        const skillCharMap: Record<string, string> = {
             acrobatics: 'agility',
             athletics: 'strength',
             awareness: 'perception',
@@ -1281,7 +1286,7 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const itemId = target.dataset.itemId;
         if (!itemId) return;
-        await this.actor.system.pinAbility(itemId);
+        await this.npcActor.system.pinAbility(itemId);
     }
 
     /* -------------------------------------------- */
@@ -1295,7 +1300,7 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const itemId = target.dataset.itemId;
         if (!itemId) return;
-        await this.actor.system.unpinAbility(itemId);
+        await this.npcActor.system.unpinAbility(itemId);
     }
 
     /* -------------------------------------------- */
@@ -1310,7 +1315,7 @@ export default class NPCSheet extends CharacterSheet {
         const fp = new FilePicker({
             type: 'image',
             current: this.actor.img,
-            callback: (path) => {
+            callback: (path: string) => {
                 this.actor.update({ img: path });
             },
         });
@@ -1326,11 +1331,11 @@ export default class NPCSheet extends CharacterSheet {
      */
     static async #setupToken(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const npc = this.actor;
+        const npc = this.npcActor;
         const updates: Record<string, unknown> = {};
 
         // Size-based dimensions
-        const sizeMap = {
+        const sizeMap: Record<number, number> = {
             1: 0.5, // Miniscule
             2: 0.75, // Tiny
             3: 1, // Small
@@ -1342,8 +1347,8 @@ export default class NPCSheet extends CharacterSheet {
             9: 4, // Gargantuan
             10: 4, // Colossal
         };
-        updates.width = sizeMap[npc.system.size] || 1;
-        updates.height = sizeMap[npc.system.size] || 1;
+        updates.width = sizeMap[npc.system.size] ?? 1;
+        updates.height = sizeMap[npc.system.size] ?? 1;
 
         // Type-based vision/detection
         if (npc.system.type === 'daemon' || npc.system.type === 'xenos') {
@@ -1377,7 +1382,7 @@ export default class NPCSheet extends CharacterSheet {
      */
     static async #duplicateNPC(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await this.actor.duplicate();
+        await this.npcActor.duplicate();
         ui.notifications.info(`Created copy of ${this.actor.name}`);
     }
 
@@ -1405,7 +1410,7 @@ export default class NPCSheet extends CharacterSheet {
     static async #calculateDifficulty(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const { DifficultyCalculatorDialog: DiffCalcDialog } = game.wh40k.npc;
-        await DiffCalcDialog.show(this.actor);
+        await DiffCalcDialog.show(this.npcActor);
     }
 
     /* -------------------------------------------- */
@@ -1417,7 +1422,7 @@ export default class NPCSheet extends CharacterSheet {
      */
     static async #saveCombatPreset(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await CombatPresetDialog.savePreset(this.actor);
+        await CombatPresetDialog.savePreset(this.npcActor);
     }
 
     /* -------------------------------------------- */
@@ -1429,7 +1434,7 @@ export default class NPCSheet extends CharacterSheet {
      */
     static async #loadCombatPreset(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await CombatPresetDialog.loadPreset(this.actor);
+        await CombatPresetDialog.loadPreset(this.npcActor);
     }
 
     /* -------------------------------------------- */
@@ -1491,7 +1496,7 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const amount = parseInt(target.dataset.amount || '1', 10);
         const location = target.dataset.location || 'body';
-        await this.actor.applyDamage(amount, location);
+        await this.npcActor.applyDamage(amount, location);
     }
 
     /* -------------------------------------------- */
@@ -1504,7 +1509,7 @@ export default class NPCSheet extends CharacterSheet {
     static async #healWounds(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const amount = parseInt(target.dataset.amount || '1', 10);
-        await this.actor.healWounds(amount);
+        await this.npcActor.healWounds(amount);
     }
 
     /* -------------------------------------------- */
@@ -1533,9 +1538,9 @@ export default class NPCSheet extends CharacterSheet {
                     action: 'add',
                     label: 'Add',
                     default: true,
-                    callback: async (event, button, _dialog) => {
+                    callback: async (_event: Event, button: HTMLButtonElement, _dialog: foundry.applications.api.DialogV2) => {
                         const form = button.form;
-                        const tag = (form.querySelector('[name="tag"]') as HTMLInputElement).value.trim();
+                        const tag = (form!.querySelector('[name="tag"]') as HTMLInputElement).value.trim();
                         if (tag) {
                             const tags = [...((this.actor.system.tags as string[] | undefined) || []), tag];
                             await this.actor.update({ 'system.tags': tags });
@@ -1579,7 +1584,7 @@ export default class NPCSheet extends CharacterSheet {
         if (!sectionId) return;
 
         // Find the section to toggle
-        const section = this.element.querySelector(`[data-section-id="${sectionId}"]`);
+        const section = this.element.querySelector(`[data-section-id="${sectionId}"]`) as HTMLElement | null;
         if (!section) return;
 
         // Toggle hidden attribute
@@ -1651,8 +1656,8 @@ export default class NPCSheet extends CharacterSheet {
     static async #setTransactionMode(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const mode = (target.dataset.mode as 'none' | 'barter' | 'requisition' | undefined) ?? 'none';
-        await TransactionManager.setMode(this.actor, mode);
-        ui.notifications.info(`${this.actor.name} source mode set to ${mode}.`);
+        await TransactionManager.setMode(this.npcActor as unknown as Actor, mode);
+        ui.notifications.info(`${this.npcActor.name} source mode set to ${mode}.`);
         await this.render(false);
     }
 
@@ -1723,7 +1728,7 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const input = this.element.querySelector('[data-custom-damage]') as HTMLInputElement | null;
         const amount = parseInt(input?.value || '1', 10);
-        await this.actor.applyDamage(amount, 'body');
+        await this.npcActor.applyDamage(amount, 'body');
     }
 
     /* -------------------------------------------- */
@@ -1737,7 +1742,7 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const input = this.element.querySelector('[data-custom-damage]') as HTMLInputElement | null;
         const amount = parseInt(input?.value || '1', 10);
-        await this.actor.healWounds(amount);
+        await this.npcActor.healWounds(amount);
     }
 
     /* -------------------------------------------- */
@@ -1751,7 +1756,7 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const combatant = game.combat?.getCombatantByActor(this.actor.id);
         if (combatant) {
-            await game.combat.rollInitiative([combatant.id]);
+            await game.combat!.rollInitiative([combatant.id]);
         }
     }
 
@@ -1776,8 +1781,8 @@ export default class NPCSheet extends CharacterSheet {
         }
         await game.combat.createEmbeddedDocuments('Combatant', [
             {
-                actorId: this.actor.id,
-                tokenId: this.actor.token?.id,
+                actorId: this.npcActor.id,
+                tokenId: (this.npcActor as unknown as Actor).token?.id,
             } as unknown as Record<string, unknown>,
         ]);
     }
@@ -1793,7 +1798,7 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const combatant = game.combat?.getCombatantByActor(this.actor.id);
         if (combatant) {
-            await game.combat.deleteEmbeddedDocuments('Combatant', [combatant.id]);
+            await game.combat!.deleteEmbeddedDocuments('Combatant', [combatant.id]);
         }
     }
 
@@ -1835,7 +1840,7 @@ export default class NPCSheet extends CharacterSheet {
      * @override
      */
     _prepareSkills(context: Record<string, unknown>): void {
-        const actor: unknown = this.actor;
+        const actor = this.npcActor;
         const characteristics = actor.system?.characteristics ?? {};
         const trainedSkills = actor.system?.trainedSkills ?? {};
 
@@ -1864,9 +1869,9 @@ export default class NPCSheet extends CharacterSheet {
             ['techUse', 'Tech-Use', 'Int'],
         ];
 
-        const standard: Array<[string, Record<string, unknown>]> = BASIC_SKILLS.map(([key, label, charShort]) => {
+        const standard: Array<[string, SkillLike]> = BASIC_SKILLS.map(([key, label, charShort]) => {
             const t = trainedSkills[key];
-            const skill: Record<string, unknown> = {
+            const skill: SkillLike = {
                 label,
                 characteristic: charShort,
                 trained: !!t?.trained,
@@ -1878,17 +1883,17 @@ export default class NPCSheet extends CharacterSheet {
             };
             // Compute current target (½ char when untrained, full char + training bonus otherwise).
             const charKey = this._charShortToKey(charShort);
-            const charTotal = ((characteristics[charKey] as Record<string, unknown> | undefined)?.total as number) ?? 0;
-            const level = skill['plus20'] ? 3 : skill['plus10'] ? 2 : skill['trained'] ? 1 : 0;
+            const charTotal = characteristics[charKey]?.total ?? 0;
+            const level = skill.plus20 ? 3 : skill.plus10 ? 2 : skill.trained ? 1 : 0;
             const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;
-            skill['current'] = level > 0 ? charTotal + trainingBonus + (skill['bonus'] as number) : Math.floor(charTotal / 2) + (skill['bonus'] as number);
+            skill.current = level > 0 ? charTotal + trainingBonus + (skill.bonus ?? 0) : Math.floor(charTotal / 2) + (skill.bonus ?? 0);
             // Defer to the parent helper for trainingIndicators, breakdown, tooltipData, isGranted, etc.
-            this._augmentSkillData(key, skill, characteristics);
+            this._augmentSkillData(key, skill, characteristics as unknown as Record<string, WH40KCharacteristic>);
             return [key, skill];
         });
 
         // Sort alphabetically by label — matches PC behavior.
-        standard.sort((a, b) => a[1].label.localeCompare(b[1].label, game.i18n.lang));
+        standard.sort((a, b) => (a[1].label ?? '').localeCompare(b[1].label ?? '', game.i18n.lang));
 
         const splitIndex = Math.ceil(standard.length / 2);
         const standardColumns = [standard.slice(0, splitIndex), standard.slice(splitIndex)];
@@ -1903,7 +1908,7 @@ export default class NPCSheet extends CharacterSheet {
         };
         // Back-compat for any older code paths that read these.
         context.skills = Object.fromEntries(standard);
-        context.trainedSkillsList = standard.filter(([, d]) => d.trainingLevel > 0);
+        context.trainedSkillsList = standard.filter(([, d]) => (d.trainingLevel ?? 0) > 0);
     }
 
     /**

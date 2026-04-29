@@ -1,7 +1,7 @@
 {
   "totals": {
     "any": 9,
-    "asAny": 175,
+    "asAny": 177,
     "tsExpectError": 9,
     "tsIgnore": 0
   },
@@ -38,7 +38,7 @@
     },
     "data": {
       "any": 3,
-      "asAny": 29,
+      "asAny": 31,
       "tsExpectError": 0,
       "tsIgnore": 0
     },

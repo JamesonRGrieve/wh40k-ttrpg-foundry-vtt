@@ -4,13 +4,59 @@ import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-loca
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
 import { calculateQualityPenetrationModifiers, calculateExoticQualityDamageModifiers, getRighteousFuryThreshold } from '../rules/weapon-quality-effects.ts';
 
+/**
+ * Minimal interface for the attackData parameter passed to Hit calculation methods.
+ * ActionData satisfies this interface at runtime; we can't import ActionData here
+ * without creating a circular dependency (action-data imports Hit from this file).
+ */
+/** Shape of item.system for action items used in damage calculations. */
+interface ActionItemSystem {
+    effectiveDamageFormula?: string;
+    effectivePenetration?: unknown;
+    damage?: { formula?: string; type?: string; penetration?: number };
+    damageType?: string;
+    penetration?: unknown;
+    [key: string]: unknown;
+}
+
+/** Minimal action item shape needed for damage calculation. */
+interface ActionItemLike {
+    system: ActionItemSystem;
+    isMelee: boolean;
+    isRanged: boolean;
+}
+
+interface AttackDataLike {
+    rollData: {
+        weapon?: ActionItemLike;
+        power?: ActionItemLike;
+        sourceActor: {
+            getCharacteristicFuzzy: (key: string) => { bonus: number };
+            hasTalent: (name: string) => boolean;
+            hasTalentFuzzyWords: (words: string | string[], extra?: string) => boolean;
+        };
+        targetActor?: unknown;
+        roll: { total: number } | null;
+        isCalledShot?: boolean;
+        calledShotLocation?: string;
+        action: string;
+        rangeName: string;
+        attackSpecials: { name: string; level?: number }[];
+        dos: number;
+        eyeOfVengeance: boolean;
+        hasAttackSpecial: (name: string) => boolean;
+        getAttackSpecial: (name: string) => { level: number };
+    };
+    damageData?: { targetActor?: unknown };
+}
+
 export class DamageData {
     template = '';
-    sourceActor;
-    targetActor;
+    sourceActor: unknown = undefined;
+    targetActor: unknown = undefined;
 
     additionalHits = 0;
-    hits = [];
+    hits: Hit[] = [];
 
     reset() {
         this.hits = [];
@@ -24,30 +70,30 @@ export class Hit {
     totalFatigue = 0;
 
     damage = 0;
-    damageRoll;
+    damageRoll: Roll | undefined = undefined;
     damageType = 'Impact';
-    modifiers = {};
+    modifiers: Record<string, number> = {};
     totalDamage = 0;
 
     dos = 0;
 
     penetration = 0;
     hasPenetrationRoll = false;
-    penetrationRoll;
-    penetrationModifiers = {};
+    penetrationRoll: Roll | undefined = undefined;
+    penetrationModifiers: Record<string, number> = {};
     totalPenetration = 0;
 
-    specials = [];
-    effects = [];
-    righteousFury = [];
-    scatter = {};
+    specials: unknown[] = [];
+    effects: { name: string; effect: string }[] = [];
+    righteousFury: { roll: Roll; effect: string }[] = [];
+    scatter: Record<string, unknown> = {};
 
     /**
      * @param attackData
      * @param hitNumber
      * @returns {Promise<Hit>}
      */
-    static async createHit(attackData, hitNumber) {
+    static async createHit(attackData: AttackDataLike, hitNumber: number) {
         const hit = new Hit();
         await hit._calculateDamage(attackData);
         hit._totalDamage();
@@ -56,15 +102,17 @@ export class Hit {
         await hit._calculateSpecials(attackData);
 
         if (attackData.rollData.isCalledShot) {
-            hit.location = attackData.rollData.calledShotLocation;
+            hit.location = attackData.rollData.calledShotLocation ?? 'Body';
         } else {
-            const initialHit = getHitLocationForRoll(attackData.rollData.roll.total);
-            hit.location = additionalHitLocations()[initialHit][hitNumber <= 5 ? hitNumber : 5];
+            const roll = attackData.rollData.roll;
+            const initialHit = getHitLocationForRoll(roll?.total ?? 0) ?? 'Body';
+            const locationTable = additionalHitLocations() as Record<string, Record<number, string>>;
+            hit.location = locationTable[initialHit]?.[hitNumber <= 5 ? hitNumber : 5] ?? 'Body';
         }
 
         // Determine Righteous Fury Effects
         for (const righteousFury of hit.righteousFury) {
-            righteousFury.effect = await getCriticalDamage(hit.damageType, hit.location, righteousFury.roll.total);
+            righteousFury.effect = (await getCriticalDamage(hit.damageType, hit.location, righteousFury.roll.total)) ?? '';
         }
 
         return hit;
@@ -82,7 +130,7 @@ export class Hit {
      * @param attackData {AttackData}
      * @returns {Promise<void>}
      */
-    async _calculateDamage(attackData) {
+    async _calculateDamage(attackData: AttackDataLike) {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
@@ -107,12 +155,12 @@ export class Hit {
 
         if (attackData.rollData.hasAttackSpecial('Tearing')) {
             game.wh40k.log('Modifying dice due to tearing');
-            this.damageRoll.terms
-                .filter((term) => term instanceof foundry.dice.terms.Die)
+            (this.damageRoll.terms as unknown[])
+                .filter((term): term is foundry.dice.terms.Die => term instanceof foundry.dice.terms.Die)
                 .forEach((die) => {
                     if (die.modifiers.includes('kh')) return;
-                    die.modifiers.push(`kh${die.number}`);
-                    die.number += 1;
+                    die.modifiers.push(`kh${die.number ?? 0}`);
+                    die.number = (die.number ?? 0) + 1;
                 });
         }
 
@@ -121,12 +169,13 @@ export class Hit {
 
         this.damage = this.damageRoll.total;
 
-        for (const term of this.damageRoll.terms) {
-            if (!term.results) continue;
-            for (const result of term.results) {
+        for (const term of this.damageRoll.terms as unknown[]) {
+            const termAny = term as { results?: { discarded?: boolean; active?: boolean; result?: number }[] };
+            if (!termAny.results) continue;
+            for (const result of termAny.results) {
                 game.wh40k.log('_calculateDamage result:', result);
                 if (result.discarded || !result.active) continue;
-                if (result.result >= righteousFuryThreshold) {
+                if ((result.result ?? 0) >= righteousFuryThreshold) {
                     // Righteous fury hit
                     const righteousFuryRoll = new Roll('1d5', {});
                     await righteousFuryRoll.evaluate();
@@ -146,15 +195,17 @@ export class Hit {
 
                 if (attackData.rollData.hasAttackSpecial('Primitive')) {
                     const primitive = attackData.rollData.getAttackSpecial('Primitive');
-                    if (result.result > primitive.level) {
-                        this.modifiers['primitive'] = primitive.level - result.result;
+                    const dieResult = result.result ?? 0;
+                    if (dieResult > primitive.level) {
+                        this.modifiers['primitive'] = primitive.level - dieResult;
                     }
                 }
 
                 if (attackData.rollData.hasAttackSpecial('Proven')) {
                     const proven = attackData.rollData.getAttackSpecial('Proven');
-                    if (result.result < proven.level) {
-                        this.modifiers['proven'] = proven.level - result.result;
+                    const dieResult = result.result ?? 0;
+                    if (dieResult < proven.level) {
+                        this.modifiers['proven'] = proven.level - dieResult;
                     }
                 }
             }
@@ -259,20 +310,20 @@ export class Hit {
         }
     }
 
-    async _calculatePenetration(attackData) {
+    async _calculatePenetration(attackData: AttackDataLike) {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
 
         const rollFormula = actionItem.system.effectivePenetration ?? actionItem.system.damage?.penetration ?? actionItem.system.penetration;
-        if (Number.isInteger(rollFormula)) {
+        if (typeof rollFormula === 'number' && Number.isInteger(rollFormula)) {
             this.penetration = rollFormula;
         } else if (rollFormula === '') {
             this.penetration = 0;
         } else {
             this.hasPenetrationRoll = true;
             try {
-                this.penetrationRoll = new Roll(rollFormula, attackData.rollData);
+                this.penetrationRoll = new Roll(String(rollFormula), attackData.rollData);
                 await this.penetrationRoll.evaluate();
                 this.penetration = this.penetrationRoll.total;
             } catch {
@@ -326,7 +377,7 @@ export class Hit {
         });
 
         // Apply quality modifiers (merge with existing to avoid duplication)
-        for (const [key, value] of Object.entries(qualityPenModifiers)) {
+        for (const [key, value] of Object.entries(qualityPenModifiers as Record<string, number>)) {
             const lowerKey = key.toLowerCase();
             // Only apply if not already applied via attackSpecials
             if (!this.penetrationModifiers[lowerKey]) {
@@ -337,7 +388,7 @@ export class Hit {
         await calculateWeaponModifiersPenetrationBonuses(attackData, this);
     }
 
-    async _calculateSpecials(attackData) {
+    async _calculateSpecials(attackData: AttackDataLike) {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
@@ -360,13 +411,13 @@ export class Hit {
         for (const special of attackData.rollData.attackSpecials) {
             switch (special.name.toLowerCase()) {
                 case 'blast':
-                    this.addEffect(special.name, `Everyone within ${special.level}m of the location is hit!`);
+                    this.addEffect(special.name, `Everyone within ${special.level ?? 0}m of the location is hit!`);
                     break;
                 case 'concussive':
                     this.addEffect(
                         special.name,
                         `Target must pass Toughness test with ${
-                            special.level * -10
+                            (special.level ?? 0) * -10
                         } or be Stunned for 1 round per DoF. If the attack did more damage than the targets Strength Bonus, it is knocked Prone!`,
                     );
                     break;
@@ -379,11 +430,13 @@ export class Hit {
                 case 'crippling':
                     this.addEffect(
                         special.name,
-                        `If the target suffers a wound it is considered crippled. If they take more than a half action on a turn, they suffer ${special.level} damage not reduced by Armour or Toughness!`,
+                        `If the target suffers a wound it is considered crippled. If they take more than a half action on a turn, they suffer ${
+                            special.level ?? 0
+                        } damage not reduced by Armour or Toughness!`,
                     );
                     break;
                 case 'felling':
-                    this.addEffect(special.name, `The targets unnatural toughness is reduced by ${special.level} while calculating wounds!`);
+                    this.addEffect(special.name, `The targets unnatural toughness is reduced by ${special.level ?? 0} while calculating wounds!`);
                     break;
                 case 'flame':
                     this.addEffect(special.name, `The target must make an Agility test or be set on fire!`);
@@ -392,10 +445,13 @@ export class Hit {
                     this.addEffect(special.name, `This attack deals additional damage equal to the targets Armour points on the struck location!`);
                     break;
                 case 'hallucinogenic':
-                    this.addEffect(special.name, `A creature stuck by this much make a toughness test with ${special.level * -10} or suffer a delusion!`);
+                    this.addEffect(
+                        special.name,
+                        `A creature stuck by this much make a toughness test with ${(special.level ?? 0) * -10} or suffer a delusion!`,
+                    );
                     break;
                 case 'haywire':
-                    this.addEffect(special.name, `Everything within ${special.level * -10}m suffers the Haywire Field at strength [[1d10]]!`);
+                    this.addEffect(special.name, `Everything within ${(special.level ?? 0) * -10}m suffers the Haywire Field at strength [[1d10]]!`);
                     break;
                 case 'indirect': {
                     const bs = sourceActor.getCharacteristicFuzzy('ballisticSkill').bonus;
@@ -412,16 +468,18 @@ export class Hit {
                     this.addEffect(
                         special.name,
                         `Target must pass Agility test with ${
-                            special.level * -10
+                            (special.level ?? 0) * -10
                         } or become immobilised. An immobilised target can attempt no actions other than trying to escape. As a Full Action, they can make a Strength or Agility test with ${
-                            special.level * -10
+                            (special.level ?? 0) * -10
                         } to burst free or wriggle out.`,
                     );
                     break;
                 case 'toxic':
                     this.addEffect(
                         special.name,
-                        `Target must pass Toughness test with ${special.level * -10} or suffer [[1d10]] ${actionItem.system.damageType} damage.`,
+                        `Target must pass Toughness test with ${(special.level ?? 0) * -10} or suffer [[1d10]] ${
+                            actionItem.system.damageType ?? 'Impact'
+                        } damage.`,
                     );
                     break;
                 case 'warp':
@@ -431,7 +489,7 @@ export class Hit {
         }
     }
 
-    addEffect(name, effect) {
+    addEffect(name: string, effect: string) {
         this.effects.push({
             name: name,
             effect: effect,

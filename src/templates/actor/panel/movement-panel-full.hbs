@@ -11,104 +11,104 @@
     </div>
 
     <div class="wh40k-panel-body">
-        
+
         {{!-- Movement Speeds - Always Visible --}}
-        <div class="wh40k-mobility-speeds">
-            <div class="wh40k-speed-box wh40k-speed-half" data-action="setMovementMode" data-movement-type="half"
+        <div class="wh40k-mobility-speeds tw-grid tw-gap-2 tw-mb-3" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="wh40k-speed-box wh40k-speed-half tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-cursor-pointer tw-rounded-[6px]" data-action="setMovementMode" data-movement-type="half"
                  title="Click to set Half Move as active movement mode">
-                <i class="fas fa-walking"></i>
-                <div class="wh40k-speed-data">
-                    <span class="wh40k-speed-value">{{system.movement.half}}</span>
-                    <span class="wh40k-speed-unit">m</span>
+                <i class="fas fa-walking tw-text-[1.2rem]"></i>
+                <div class="wh40k-speed-data tw-flex tw-items-baseline">
+                    <span class="wh40k-speed-value tw-font-alt tw-text-[1.5rem] tw-font-bold tw-leading-none">{{system.movement.half}}</span>
+                    <span class="wh40k-speed-unit tw-text-[0.75rem] tw-font-medium">m</span>
                 </div>
-                <span class="wh40k-speed-label">Half</span>
+                <span class="wh40k-speed-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">Half</span>
             </div>
-            
-            <div class="wh40k-speed-box wh40k-speed-full" data-action="setMovementMode" data-movement-type="full"
+
+            <div class="wh40k-speed-box wh40k-speed-full tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-cursor-pointer tw-rounded-[6px]" data-action="setMovementMode" data-movement-type="full"
                  title="Click to set Full Move as active movement mode">
-                <i class="fas fa-shoe-prints"></i>
-                <div class="wh40k-speed-data">
-                    <span class="wh40k-speed-value">{{system.movement.full}}</span>
-                    <span class="wh40k-speed-unit">m</span>
+                <i class="fas fa-shoe-prints tw-text-[1.2rem]"></i>
+                <div class="wh40k-speed-data tw-flex tw-items-baseline">
+                    <span class="wh40k-speed-value tw-font-alt tw-text-[1.5rem] tw-font-bold tw-leading-none">{{system.movement.full}}</span>
+                    <span class="wh40k-speed-unit tw-text-[0.75rem] tw-font-medium">m</span>
                 </div>
-                <span class="wh40k-speed-label">Full</span>
+                <span class="wh40k-speed-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">Full</span>
             </div>
-            
-            <div class="wh40k-speed-box wh40k-speed-charge" data-action="setMovementMode" data-movement-type="charge"
+
+            <div class="wh40k-speed-box wh40k-speed-charge tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-cursor-pointer tw-rounded-[6px]" data-action="setMovementMode" data-movement-type="charge"
                  title="Click to set Charge as active movement mode">
-                <i class="fas fa-running"></i>
-                <div class="wh40k-speed-data">
-                    <span class="wh40k-speed-value">{{system.movement.charge}}</span>
-                    <span class="wh40k-speed-unit">m</span>
+                <i class="fas fa-running tw-text-[1.2rem]"></i>
+                <div class="wh40k-speed-data tw-flex tw-items-baseline">
+                    <span class="wh40k-speed-value tw-font-alt tw-text-[1.5rem] tw-font-bold tw-leading-none">{{system.movement.charge}}</span>
+                    <span class="wh40k-speed-unit tw-text-[0.75rem] tw-font-medium">m</span>
                 </div>
-                <span class="wh40k-speed-label">Charge</span>
+                <span class="wh40k-speed-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">Charge</span>
             </div>
-            
-            <div class="wh40k-speed-box wh40k-speed-run" data-action="setMovementMode" data-movement-type="run"
+
+            <div class="wh40k-speed-box wh40k-speed-run tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-cursor-pointer tw-rounded-[6px]" data-action="setMovementMode" data-movement-type="run"
                  title="Click to set Run as active movement mode">
-                <i class="fas fa-wind"></i>
-                <div class="wh40k-speed-data">
-                    <span class="wh40k-speed-value">{{system.movement.run}}</span>
-                    <span class="wh40k-speed-unit">m</span>
+                <i class="fas fa-wind tw-text-[1.2rem]"></i>
+                <div class="wh40k-speed-data tw-flex tw-items-baseline">
+                    <span class="wh40k-speed-value tw-font-alt tw-text-[1.5rem] tw-font-bold tw-leading-none">{{system.movement.run}}</span>
+                    <span class="wh40k-speed-unit tw-text-[0.75rem] tw-font-medium">m</span>
                 </div>
-                <span class="wh40k-speed-label">Run</span>
+                <span class="wh40k-speed-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">Run</span>
             </div>
         </div>
 
         {{!-- Expanded Details --}}
         <div class="wh40k-panel-details mobility_details" {{hideIfNot (isExpanded 'mobility_details' actor)}}>
-            
+
             {{!-- Athletics Section --}}
-            <div class="wh40k-mobility-section">
-                <div class="wh40k-section-header">
-                    <i class="fas fa-person-hiking"></i>
-                    <span>Athletics</span>
+            <div class="wh40k-mobility-section tw-mb-[var(--wh40k-space-md)] tw-rounded-[6px]">
+                <div class="wh40k-section-header tw-flex tw-items-center tw-border-b tw-border-solid tw-mb-[var(--wh40k-space-sm)] tw-pb-[var(--wh40k-space-xs)]">
+                    <i class="fas fa-person-hiking tw-text-[0.85rem] tw-text-gold"></i>
+                    <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">Athletics</span>
                 </div>
-                <div class="wh40k-athletics-grid">
-                    <div class="wh40k-athletic-stat">
-                        <span class="wh40k-athletic-label">Leap Vertical</span>
-                        <span class="wh40k-athletic-value">{{system.movement.leapVertical}}m</span>
+                <div class="wh40k-athletics-grid tw-grid tw-gap-2" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="wh40k-athletic-stat tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1 tw-rounded-md">
+                        <span class="wh40k-athletic-label tw-text-[0.65rem] tw-font-medium tw-text-center">Leap Vertical</span>
+                        <span class="wh40k-athletic-value tw-font-alt tw-text-[1.1rem] tw-font-bold">{{system.movement.leapVertical}}m</span>
                     </div>
-                    <div class="wh40k-athletic-stat">
-                        <span class="wh40k-athletic-label">Leap Horizontal</span>
-                        <span class="wh40k-athletic-value">{{system.movement.leapHorizontal}}m</span>
+                    <div class="wh40k-athletic-stat tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1 tw-rounded-md">
+                        <span class="wh40k-athletic-label tw-text-[0.65rem] tw-font-medium tw-text-center">Leap Horizontal</span>
+                        <span class="wh40k-athletic-value tw-font-alt tw-text-[1.1rem] tw-font-bold">{{system.movement.leapHorizontal}}m</span>
                     </div>
-                    <div class="wh40k-athletic-stat">
-                        <span class="wh40k-athletic-label">Jump Height</span>
-                        <span class="wh40k-athletic-value">{{system.movement.jump}}cm</span>
+                    <div class="wh40k-athletic-stat tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1 tw-rounded-md">
+                        <span class="wh40k-athletic-label tw-text-[0.65rem] tw-font-medium tw-text-center">Jump Height</span>
+                        <span class="wh40k-athletic-value tw-font-alt tw-text-[1.1rem] tw-font-bold">{{system.movement.jump}}cm</span>
                     </div>
                 </div>
             </div>
 
             {{!-- Carrying Capacity Section --}}
-            <div class="wh40k-mobility-section">
-                <div class="wh40k-section-header">
-                    <i class="fas fa-weight-hanging"></i>
-                    <span>Carrying Capacity</span>
+            <div class="wh40k-mobility-section tw-mb-[var(--wh40k-space-md)] tw-rounded-[6px]">
+                <div class="wh40k-section-header tw-flex tw-items-center tw-border-b tw-border-solid tw-mb-[var(--wh40k-space-sm)] tw-pb-[var(--wh40k-space-xs)]">
+                    <i class="fas fa-weight-hanging tw-text-[0.85rem] tw-text-gold"></i>
+                    <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">Carrying Capacity</span>
                 </div>
-                <div class="wh40k-carrying-grid">
-                    <div class="wh40k-carry-stat">
-                        <span class="wh40k-carry-label">Lift</span>
-                        <span class="wh40k-carry-value">{{system.lifting.lift}}<span class="wh40k-carry-unit">kg</span></span>
+                <div class="wh40k-carrying-grid tw-grid tw-gap-2" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="wh40k-carry-stat tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1 tw-rounded-md">
+                        <span class="wh40k-carry-label tw-text-[0.65rem] tw-font-medium tw-text-center">Lift</span>
+                        <span class="wh40k-carry-value tw-font-alt tw-text-[1.1rem] tw-font-bold">{{system.lifting.lift}}<span class="wh40k-carry-unit tw-text-[0.7rem] tw-font-normal tw-ml-[2px]">kg</span></span>
                     </div>
-                    <div class="wh40k-carry-stat">
-                        <span class="wh40k-carry-label">Carry</span>
-                        <span class="wh40k-carry-value">{{system.lifting.carry}}<span class="wh40k-carry-unit">kg</span></span>
+                    <div class="wh40k-carry-stat tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1 tw-rounded-md">
+                        <span class="wh40k-carry-label tw-text-[0.65rem] tw-font-medium tw-text-center">Carry</span>
+                        <span class="wh40k-carry-value tw-font-alt tw-text-[1.1rem] tw-font-bold">{{system.lifting.carry}}<span class="wh40k-carry-unit tw-text-[0.7rem] tw-font-normal tw-ml-[2px]">kg</span></span>
                     </div>
-                    <div class="wh40k-carry-stat">
-                        <span class="wh40k-carry-label">Push/Drag</span>
-                        <span class="wh40k-carry-value">{{system.lifting.push}}<span class="wh40k-carry-unit">kg</span></span>
+                    <div class="wh40k-carry-stat tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1 tw-rounded-md">
+                        <span class="wh40k-carry-label tw-text-[0.65rem] tw-font-medium tw-text-center">Push/Drag</span>
+                        <span class="wh40k-carry-value tw-font-alt tw-text-[1.1rem] tw-font-bold">{{system.lifting.push}}<span class="wh40k-carry-unit tw-text-[0.7rem] tw-font-normal tw-ml-[2px]">kg</span></span>
                     </div>
                 </div>
             </div>
 
             {{!-- Size --}}
-            <div class="wh40k-mobility-section wh40k-size-section">
-                <div class="wh40k-section-header">
-                    <i class="fas fa-arrows-alt"></i>
-                    <span>Size</span>
+            <div class="wh40k-mobility-section wh40k-size-section tw-rounded-[6px] tw-p-[var(--wh40k-space-md)]">
+                <div class="wh40k-section-header tw-flex tw-items-center tw-border-b tw-border-solid tw-mb-[var(--wh40k-space-sm)] tw-pb-[var(--wh40k-space-xs)]">
+                    <i class="fas fa-arrows-alt tw-text-[0.85rem] tw-text-gold"></i>
+                    <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">Size</span>
                 </div>
-                <select name="system.size" data-dtype="Number" class="wh40k-size-select">
+                <select name="system.size" data-dtype="Number" class="wh40k-size-select tw-w-full tw-text-[0.85rem] tw-font-semibold tw-text-center tw-rounded-md tw-cursor-pointer">
                     <option value="1" {{#if (eq system.size 1)}}selected{{/if}}>Miniscule</option>
                     <option value="2" {{#if (eq system.size 2)}}selected{{/if}}>Puny</option>
                     <option value="3" {{#if (eq system.size 3)}}selected{{/if}}>Scrawny</option>

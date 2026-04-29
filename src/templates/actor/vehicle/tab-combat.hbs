@@ -1,49 +1,49 @@
 {{!-- Vehicle Combat Tab --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
-    <div class="wh40k-vehicle-combat">
-        
+    <div class="tw-flex tw-flex-col tw-gap-4">
+
         {{!-- Weapons List --}}
-        <div class="wh40k-vehicle-panel wh40k-vehicle-weapons">
-            <h3 class="wh40k-vehicle-panel-title">
-                <i class="fas fa-crosshairs"></i>
+        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-crosshairs tw-text-gold"></i>
                 Weapons
             </h3>
-            <div class="wh40k-vehicle-weapons-list">
+            <div class="tw-flex tw-flex-col tw-gap-2">
                 {{#each weapons}}
-                <div class="wh40k-vehicle-weapon-item" data-item-id="{{this._id}}">
-                    <div class="wh40k-vehicle-weapon-name" data-action="rollWeapon" data-item-id="{{this._id}}">
+                <div class="tw-flex tw-justify-between tw-items-center tw-px-3 tw-py-3 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px] tw-transition-all" data-item-id="{{this._id}}">
+                    <div class="tw-font-bold tw-cursor-pointer hover:tw-text-gold" data-action="rollWeapon" data-item-id="{{this._id}}">
                         {{this.name}}
                     </div>
-                    <div class="wh40k-vehicle-weapon-stats">
+                    <div class="tw-flex tw-gap-4 tw-text-[0.85rem] tw-text-[#888]">
                         <span>{{this.system.damage}}</span>
                         <span>{{this.system.range}}m</span>
                     </div>
                 </div>
                 {{else}}
-                <div class="wh40k-vehicle-empty">No weapons equipped</div>
+                <div class="tw-py-8 tw-text-center tw-text-[#888] tw-italic">No weapons equipped</div>
                 {{/each}}
             </div>
         </div>
 
         {{!-- Traits --}}
-        <div class="wh40k-vehicle-panel wh40k-vehicle-traits">
-            <h3 class="wh40k-vehicle-panel-title">
-                <i class="fas fa-shield-alt"></i>
+        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-shield-alt tw-text-gold"></i>
                 Vehicle Traits
             </h3>
-            <div class="wh40k-vehicle-traits-list">
+            <div class="tw-flex tw-flex-col tw-gap-3">
                 {{#each vehicleTraits}}
-                <div class="wh40k-vehicle-trait-item">
-                    <strong>{{this.name}}</strong>
+                <div class="tw-px-3 tw-py-3 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px]">
+                    <strong class="tw-text-gold">{{this.name}}</strong>
                     {{#if this.system.description}}
-                    <p>{{{this.system.description}}}</p>
+                    <p class="tw-mt-2 tw-text-[0.85rem] tw-text-[#888]">{{{this.system.description}}}</p>
                     {{/if}}
                 </div>
                 {{else}}
-                <div class="wh40k-vehicle-empty">No traits</div>
+                <div class="tw-py-8 tw-text-center tw-text-[#888] tw-italic">No traits</div>
                 {{/each}}
             </div>
         </div>
-        
+
     </div>
 </section>

@@ -47,13 +47,42 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     // Derived in prepareDerivedData()
     declare _modificationModifiers: { damage: number; penetration: number; toHit: number; range: number; weight: number };
 
+    // Properties from PhysicalItemTemplate
+    declare craftsmanship: string;
+    declare weight: number;
+
+    // Properties from EquippableTemplate
+    declare equipped: boolean;
+    declare inShipStorage: boolean;
+
+    // Properties from DamageTemplate
+    declare damage: { formula: string; type: string; bonus: number; penetration: number };
+    declare special: Set<string>;
+
+    // Properties from AttackTemplate
+    declare attack: {
+        type: string;
+        characteristic: string;
+        modifier: number;
+        range: { value: number; units: string; special: string };
+        rateOfFire: { single: boolean; semi: number; full: number };
+    };
+
+    // Getters from DamageTemplate
+    declare damageLabel: string;
+
+    // Getters from AttackTemplate
+    declare rangeLabel: string;
+    declare rateOfFireLabel: string;
+
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            identifier: new (IdentifierField as any)({ required: true, blank: true }) as foundry.data.fields.StringField,
 
             // Weapon classification (usage pattern only)
             class: new fields.StringField({
@@ -175,7 +204,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     static #migrateSpecial(source: Record<string, unknown>): void {
         if (!Array.isArray(source.special)) {
-            source.special = source.special ? Array.from(source.special) : [];
+            source.special = source.special ? Array.from(source.special as Iterable<unknown>) : [];
         }
     }
 
@@ -185,7 +214,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     static #migrateClass(source: Record<string, unknown>): void {
         const techTypeValues = ['chain', 'power', 'shock', 'force'];
-        if (source.class && techTypeValues.includes(source.class)) {
+        if (source.class && techTypeValues.includes(source.class as string)) {
             source.type = source.class;
             source.class = 'melee';
         }
@@ -236,7 +265,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         this.clip = foundry.utils.mergeObject({ max: 0, value: 0, type: '' }, (resolveLineVariant(this.clip, lineKey) as Record<string, unknown>) ?? {}, {
             inplace: false,
         }) as typeof this.clip;
-        this.reload = (resolveLineVariant(this.reload as unknown, lineKey) as string) ?? '-';
+        (this as Record<string, unknown>)['reload'] = (resolveLineVariant((this as Record<string, unknown>)['reload'], lineKey) as string) ?? '-';
         this.requiredTraining = (resolveLineVariant(this.requiredTraining as unknown, lineKey) as string) ?? '';
         this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';
     }
@@ -342,8 +371,8 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      *
      * @type {Set<string>}
      */
-    get effectiveSpecial() {
-        const qualities = new Set(this.special || []);
+    get effectiveSpecial(): Set<string> {
+        const qualities = new Set<string>(this.special ?? []);
 
         // Add craftsmanship-derived qualities for RANGED weapons only
         // Melee weapons get toHit/damage modifiers instead
@@ -533,7 +562,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * For ranged weapons only.
      * @type {object}
      */
-    get effectiveRange(): Record<string, unknown> {
+    get effectiveRange(): Record<string, unknown> | null {
         if (!this.attack?.range) return null;
 
         const baseRange = this.attack.range.value || 0;
@@ -561,7 +590,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {Actor} actor - The actor to check
      * @returns {boolean} - True if actor has required training (or no training required)
      */
-    hasRequiredTraining(actor): boolean {
+    hasRequiredTraining(_actor: unknown): boolean {
         // If no training requirement, always return true
         if (!this.requiredTraining) return true;
 
@@ -578,7 +607,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Returns an array of {mode, label, rof, modifier, description} objects.
      * @type {Array<{mode: string, label: string, rof: number, modifier: number, description: string, actionType: string}>}
      */
-    get availableFireModes(): string[] {
+    get availableFireModes(): Array<{ mode: string; label: string; rof: number; modifier: number; description: string; actionType: string }> {
         if (!this.isRangedWeapon) return [];
 
         const modes = [];
@@ -631,7 +660,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {string} mode - Fire mode: 'single', 'semi', or 'full'
      * @returns {number} - Effective rate of fire
      */
-    getEffectiveRoF(mode): number {
+    getEffectiveRoF(mode: string): number {
         const rof = this.attack.rateOfFire;
         const hasStorm = this.effectiveSpecial.has('storm');
 
@@ -652,7 +681,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get reloadLabel() {
-        const labels = {
+        const labels: Record<string, string> = {
             '-': '-',
             'free': game.i18n.localize('WH40K.Reload.Free'),
             'half': game.i18n.localize('WH40K.Reload.Half'),
@@ -681,7 +710,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         }
 
         // Customised halves reload time
-        const reloadMap = {
+        const reloadMap: Record<string, string> = {
             '3-full': '2-full',
             '2-full': 'full',
             'full': 'half',
@@ -698,7 +727,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get effectiveReloadLabel() {
-        const labels = {
+        const labels: Record<string, string> = {
             '-': '-',
             'free': game.i18n.localize('WH40K.Reload.Free'),
             'half': game.i18n.localize('WH40K.Reload.Half'),
@@ -737,9 +766,9 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     /** @override */
     get chatProperties(): string[] {
         const props = [
-            ...PhysicalItemTemplate.prototype.chatProperties.call(this),
-            ...AttackTemplate.prototype.chatProperties.call(this),
-            ...DamageTemplate.prototype.chatProperties.call(this),
+            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
+            ...((Object.getOwnPropertyDescriptor(AttackTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
+            ...((Object.getOwnPropertyDescriptor(DamageTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
         ];
 
         props.unshift(`${this.classLabel} (${this.typeLabel})`);
@@ -791,7 +820,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get classIcon() {
-        const icons = {
+        const icons: Record<string, string> = {
             melee: 'fa-sword',
             pistol: 'fa-gun',
             basic: 'fa-crosshairs',
@@ -807,7 +836,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get typeIcon() {
-        const icons = {
+        const icons: Record<string, string> = {
             'primitive': 'fa-axe',
             'las': 'fa-laser-pointer',
             'solid-projectile': 'fa-crosshairs',
@@ -862,7 +891,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get jam threshold for ranged weapons.
      * @type {number|null}
      */
-    get jamThreshold(): number {
+    get jamThreshold(): number | null {
         if (this.isMeleeWeapon) return null;
 
         const qualities = this.effectiveSpecial;
@@ -999,7 +1028,19 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {Item} ammoItem - The ammunition item to load
      * @returns {Promise<Item>} - The updated weapon
      */
-    async loadAmmo(ammoItem): Promise<unknown> {
+    async loadAmmo(ammoItem: {
+        type: string;
+        name: string;
+        uuid: string;
+        update: (data: Record<string, unknown>) => Promise<unknown>;
+        system: {
+            clipModifier?: number;
+            quantity?: number;
+            modifiers?: { damage?: number; penetration?: number; range?: number };
+            addedQualities?: Set<string>;
+            removedQualities?: Set<string>;
+        };
+    }): Promise<unknown> {
         if (!ammoItem || ammoItem.type !== 'ammunition') {
             ui.notifications.warn('Invalid ammunition item');
             return this.parent;
@@ -1029,7 +1070,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         };
 
         // Deduct rounds from inventory
-        const roundsToLoad = actor ? Math.min(effectiveMax, ammoItem.system.quantity) : effectiveMax;
+        const roundsToLoad = actor ? Math.min(effectiveMax, ammoItem.system.quantity ?? effectiveMax) : effectiveMax;
         if (actor && ammoItem.system.quantity !== undefined) {
             await ammoItem.update({ 'system.quantity': ammoItem.system.quantity - roundsToLoad });
         }
@@ -1083,7 +1124,25 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @returns {Promise<void>}
      * @private
      */
-    async _returnRoundsToInventory(actor, rounds: number): Promise<void> {
+    async _returnRoundsToInventory(
+        actor: {
+            items: {
+                find: (
+                    pred: (i: {
+                        uuid: string;
+                        type: string;
+                        name: string;
+                        system: { quantity: number };
+                        update: (d: Record<string, unknown>) => Promise<unknown>;
+                    }) => boolean,
+                ) =>
+                    | { uuid: string; type: string; name: string; system: { quantity: number }; update: (d: Record<string, unknown>) => Promise<unknown> }
+                    | undefined;
+            };
+            createEmbeddedDocuments: (type: string, data: unknown[]) => Promise<unknown>;
+        },
+        rounds: number,
+    ): Promise<void> {
         if (rounds <= 0 || !this.loadedAmmo?.uuid) return;
 
         // Try to find the ammo item by UUID first
@@ -1099,7 +1158,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         } else {
             // Last resort: create a new ammo item with the returned rounds
             try {
-                const sourceItem = await fromUuid(this.loadedAmmo.uuid);
+                const sourceItem = (await fromUuid(this.loadedAmmo.uuid)) as { toObject: () => { system: { quantity: number } } } | null;
                 if (sourceItem) {
                     const itemData = sourceItem.toObject();
                     itemData.system.quantity = rounds;

@@ -2,32 +2,32 @@
      Compact inline display of active modifiers for quick reference
      Shows at top of talent/trait/condition sheets when hasModifiers is true
 --}}
-<div class="wh40k-modifiers-summary">
-  <div class="wh40k-modifiers-summary__header">
+<div class="tw-flex tw-flex-col tw-gap-1.5">
+  <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">
     <i class="fas fa-sliders-h"></i>
     <span>Active Modifiers</span>
   </div>
-  
-  <div class="wh40k-modifiers-summary__list">
+
+  <div class="tw-flex tw-flex-wrap tw-gap-1">
     {{#each system.modifiersList}}
-    <span class="wh40k-modifier-badge wh40k-modifier-badge--{{type}} {{#if (gt value 0)}}wh40k-modifier-badge--positive{{else}}wh40k-modifier-badge--negative{{/if}}" 
+    <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-rounded-md tw-text-xs tw-font-semibold {{#if (gt value 0)}}tw-bg-success/20 tw-text-success{{else}}tw-bg-failure/20 tw-text-failure{{/if}}"
           title="{{label}}">
-      <span class="wh40k-modifier-badge__label">{{label}}</span>
-      <span class="wh40k-modifier-badge__value">{{signedNumber value}}</span>
+      <span>{{label}}</span>
+      <span class="tw-font-display">{{signedNumber value}}</span>
     </span>
     {{/each}}
-    
+
     {{!-- Show situational indicator if present --}}
     {{#if system.hasSituationalModifiers}}
-    <span class="wh40k-modifier-badge wh40k-modifier-badge--situational" 
+    <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-rounded-md tw-text-xs tw-font-semibold tw-bg-warning/20 tw-text-warning"
           title="Has situational modifiers">
       <i class="fas fa-exclamation-triangle"></i>
       <span>Situational</span>
     </span>
     {{/if}}
-    
+
     {{#unless system.modifiersList.length}}
-    <span class="wh40k-modifiers-summary__empty">
+    <span class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-italic tw-text-gray-400">
       <i class="fas fa-info-circle"></i>
       No active modifiers
     </span>

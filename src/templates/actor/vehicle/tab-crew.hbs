@@ -1,48 +1,48 @@
 {{!-- Vehicle Crew Tab --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
-    <div class="wh40k-vehicle-crew">
-        
+    <div class="tw-flex tw-flex-col tw-gap-4">
+
         {{!-- Crew Stats --}}
-        <div class="wh40k-vehicle-panel wh40k-vehicle-crew-stats">
-            <h3 class="wh40k-vehicle-panel-title">
-                <i class="fas fa-users"></i>
+        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-users tw-text-gold"></i>
                 Crew Information
             </h3>
-            <div class="wh40k-vehicle-crew-grid">
-                <div class="wh40k-vehicle-crew-item">
-                    <label>Required Crew</label>
-                    <input type="number" name="system.crew.required" value="{{crewStats.required}}" min="0" />
+            <div class="tw-grid tw-grid-cols-[repeat(auto-fit,minmax(200px,1fr))] tw-gap-4">
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">Required Crew</label>
+                    <input type="number" name="system.crew.required" value="{{crewStats.required}}" min="0" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
                 </div>
-                <div class="wh40k-vehicle-crew-item">
-                    <label>Crew Rating</label>
-                    <div class="wh40k-vehicle-crew-controls">
-                        <button type="button" data-action="modifyCrew" data-delta="-5" title="-5">
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">Crew Rating</label>
+                    <div class="tw-flex tw-items-center tw-gap-2">
+                        <button type="button" class="tw-px-2 tw-py-1 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-cursor-pointer tw-rounded-[3px] hover:tw-border-gold" data-action="modifyCrew" data-delta="-5" title="-5">
                             <i class="fas fa-minus"></i>
                         </button>
-                        <input type="number" name="system.crew.rating" value="{{crewStats.rating}}" min="1" max="100" />
-                        <button type="button" data-action="modifyCrew" data-delta="5" title="+5">
+                        <input type="number" name="system.crew.rating" value="{{crewStats.rating}}" min="1" max="100" class="tw-flex-1 tw-text-center tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
+                        <button type="button" class="tw-px-2 tw-py-1 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-cursor-pointer tw-rounded-[3px] hover:tw-border-gold" data-action="modifyCrew" data-delta="5" title="+5">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
                 </div>
-                <div class="wh40k-vehicle-crew-item">
-                    <label>Morale</label>
-                    <div class="wh40k-vehicle-crew-controls">
-                        <button type="button" data-action="adjustCrewMorale" data-delta="-5" title="-5">
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">Morale</label>
+                    <div class="tw-flex tw-items-center tw-gap-2">
+                        <button type="button" class="tw-px-2 tw-py-1 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-cursor-pointer tw-rounded-[3px] hover:tw-border-gold" data-action="adjustCrewMorale" data-delta="-5" title="-5">
                             <i class="fas fa-minus"></i>
                         </button>
-                        <input type="number" name="system.crew.morale" value="{{crewStats.morale}}" min="0" max="100" />
-                        <button type="button" data-action="adjustCrewMorale" data-delta="5" title="+5">
+                        <input type="number" name="system.crew.morale" value="{{crewStats.morale}}" min="0" max="100" class="tw-flex-1 tw-text-center tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
+                        <button type="button" class="tw-px-2 tw-py-1 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-cursor-pointer tw-rounded-[3px] hover:tw-border-gold" data-action="adjustCrewMorale" data-delta="5" title="+5">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
                 </div>
-                <div class="wh40k-vehicle-crew-item wh40k-vehicle-crew-item--wide">
-                    <label>Notes</label>
-                    <textarea name="system.crew.notes" rows="3">{{crewStats.notes}}</textarea>
+                <div class="tw-flex tw-flex-col tw-gap-1 tw-col-span-2">
+                    <label class="tw-text-[0.8rem] tw-text-[#888] tw-uppercase">Notes</label>
+                    <textarea name="system.crew.notes" rows="3" class="tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]">{{crewStats.notes}}</textarea>
                 </div>
             </div>
         </div>
-        
+
     </div>
 </section>

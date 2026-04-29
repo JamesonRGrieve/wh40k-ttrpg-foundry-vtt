@@ -18,17 +18,17 @@
   @param {String} accentColor - CSS color for left border (optional)
 --}}
 
-<div class="wh40k-expandable-wrapper" data-expandable-id="{{id}}">
-  <div class="wh40k-expandable {{#if expanded}}wh40k-expandable--expanded{{/if}}" 
+<div class="tw-flex tw-flex-col" data-expandable-id="{{id}}">
+  <div class="wh40k-expandable {{#if expanded}}wh40k-expandable--expanded{{/if}}"
        data-action="toggleExpandable"
        data-target-id="{{id}}">
     {{#if icon}}
     <i class="{{icon}}"></i>
     {{/if}}
-    <span class="wh40k-expandable__title">{{title}}</span>
+    <span class="tw-flex-1">{{title}}</span>
   </div>
-  
-  <div class="wh40k-expansion-panel {{#if expanded}}wh40k-expansion-panel--open{{/if}}" 
+
+  <div class="wh40k-expansion-panel {{#if expanded}}wh40k-expansion-panel--open{{/if}}"
        data-panel-id="{{id}}"
        {{#if accentColor}}style="--wh40k-accent: {{accentColor}}"{{/if}}>
     {{{content}}}

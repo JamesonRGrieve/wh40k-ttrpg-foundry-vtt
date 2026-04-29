@@ -63,11 +63,11 @@ interface NPCCharacteristic {
     bonus: number;
 }
 
-interface NPCCharacteristics {
+export interface NPCCharacteristics {
     [key: string]: NPCCharacteristic;
 }
 
-interface NPCSkillEntry {
+export interface NPCSkillEntry {
     name: string;
     characteristic: string;
     trained: boolean;
@@ -76,11 +76,11 @@ interface NPCSkillEntry {
     bonus: number;
 }
 
-interface NPCSkills {
+export interface NPCSkills {
     [key: string]: NPCSkillEntry;
 }
 
-interface NPCArmourLocations {
+export interface NPCArmourLocations {
     head: number;
     body: number;
     leftArm: number;
@@ -89,13 +89,13 @@ interface NPCArmourLocations {
     rightLeg: number;
 }
 
-interface NPCArmourData {
+export interface NPCArmourData {
     mode: string;
     total: number;
     locations: NPCArmourLocations;
 }
 
-interface NPCWeapon {
+export interface NPCWeapon {
     name: string;
     damage: string;
     pen: number;
@@ -107,25 +107,25 @@ interface NPCWeapon {
     class: string;
 }
 
-interface NPCWeaponsData {
+export interface NPCWeaponsData {
     mode: string;
     simple: NPCWeapon[];
 }
 
-interface NPCWounds {
+export interface NPCWounds {
     max: number;
     value: number;
     critical: number;
 }
 
-interface NPCMovement {
+export interface NPCMovement {
     half: number;
     full: number;
     charge: number;
     run: number;
 }
 
-interface NPCSystemData {
+export interface NPCSystemData {
     faction: unknown;
     subfaction: string;
     allegiance: string;
