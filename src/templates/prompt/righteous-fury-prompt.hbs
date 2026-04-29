@@ -1,9 +1,9 @@
 {{!-- Righteous Fury Confirmation Prompt --}}
-<form class="wh40k-form">
+<form>
     <div class="tw-p-6">
         <div class="tw-text-center tw-mb-6">
             <div class="tw-text-5xl tw-mb-2 tw-leading-none tw-animate-fury-pulse">⚡</div>
-            <h2 class="tw-font-display tw-text-xl tw-font-bold tw-text-[var(--wh40k-gold-bright)] tw-uppercase tw-tracking-[0.15em] tw-m-0 [text-shadow:0_0_10px_rgba(255,215,0,0.5)]">Righteous Fury!</h2>
+            <h2 class="tw-font-display tw-text-xl tw-font-bold tw-text-[var(--wh40k-gold-bright)] tw-uppercase tw-tracking-[0.15em] tw-m-0 tw-[text-shadow:0_0_10px_rgba(255,215,0,0.5)]">Righteous Fury!</h2>
         </div>
 
         <div class="tw-text-center">
@@ -16,7 +16,7 @@
                 </p>
 
                 <div class="tw-flex tw-justify-center tw-gap-4 tw-mt-6 [&>button]:tw-min-w-[150px]">
-                    <button type="button" class="wh40k-btn wh40k-btn--primary" data-action="roll">
+                    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-3 tw-py-[6px] tw-text-sm tw-font-medium tw-rounded tw-border tw-border-[rgba(59,130,246,0.5)] tw-bg-[var(--color-accent,#3b82f6)] tw-text-[var(--color-text-primary)] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out hover:tw-bg-[#2563eb] hover:tw-shadow-[0_2px_8px_rgba(59,130,246,0.3)] hover:tw-translate-y-[-1px] active:tw-translate-y-0 disabled:tw-opacity-50 disabled:tw-cursor-not-allowed" data-action="roll">
                         <i class="fas fa-dice-d20"></i>
                         Roll Confirmation
                     </button>
@@ -28,7 +28,7 @@
                 </div>
 
                 {{#if success}}
-                    <div class="tw-mt-4 [&>h3]:tw-font-display [&>h3]:tw-text-[1.3rem] [&>h3]:tw-font-bold [&>h3]:tw-text-[var(--wh40k-gold-bright)] [&>h3]:tw-uppercase [&>h3]:tw-tracking-[0.1em] [&>h3]:tw-m-0 [&>h3]:tw-mb-3 [&>h3]:[text-shadow:0_0_10px_rgba(255,215,0,0.5)] [&>p]:tw-text-[var(--wh40k-text-dark)]">
+                    <div class="tw-mt-4 [&>h3]:tw-font-display [&>h3]:tw-text-[1.3rem] [&>h3]:tw-font-bold [&>h3]:tw-text-[var(--wh40k-gold-bright)] [&>h3]:tw-uppercase [&>h3]:tw-tracking-[0.1em] [&>h3]:tw-m-0 [&>h3]:tw-mb-3 [&>h3]:tw-[text-shadow:0_0_10px_rgba(255,215,0,0.5)] [&>p]:tw-text-[var(--wh40k-text-dark)]">
                         <h3>⚡ Confirmed! ⚡</h3>
                         <p class="tw-text-sm tw-my-2">Additional d10 damage and critical effect!</p>
                         {{#if (gt dos 0)}}
@@ -43,7 +43,7 @@
                 {{/if}}
 
                 <div class="tw-flex tw-justify-center tw-gap-4 tw-mt-6 [&>button]:tw-min-w-[150px]">
-                    <button type="button" class="wh40k-btn wh40k-btn--primary" data-action="cancel">
+                    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-3 tw-py-[6px] tw-text-sm tw-font-medium tw-rounded tw-border tw-border-[rgba(59,130,246,0.5)] tw-bg-[var(--color-accent,#3b82f6)] tw-text-[var(--color-text-primary)] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out hover:tw-bg-[#2563eb] hover:tw-shadow-[0_2px_8px_rgba(59,130,246,0.3)] hover:tw-translate-y-[-1px] active:tw-translate-y-0 disabled:tw-opacity-50 disabled:tw-cursor-not-allowed" data-action="cancel">
                         <i class="fas fa-check"></i>
                         Continue
                     </button>

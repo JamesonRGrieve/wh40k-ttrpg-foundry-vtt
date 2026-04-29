@@ -1,27 +1,27 @@
 {{!-- Add XP Dialog Template --}}
-<div class="wh40k-dialog-content tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]">
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]">
 
     {{!-- Current XP Display --}}
-    <div class="wh40k-dialog-section tw-mb-5">
-        <div class="wh40k-xp-current-display tw-flex tw-items-center tw-justify-center tw-gap-3 tw-p-4 tw-bg-gradient-to-br tw-from-[rgba(0,0,0,0.3)] tw-to-[rgba(0,0,0,0.2)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-[6px]">
-            <span class="wh40k-xp-label tw-text-[0.9rem] tw-font-medium tw-text-[#9a9a8a]">Current Total XP:</span>
-            <span class="wh40k-xp-value tw-text-[1.5rem] tw-font-bold tw-text-gold tw-shadow-[0_0_12px_rgba(201,162,39,0.3)] tw-tabular-nums">{{currentTotal}}</span>
+    <div class="tw-mb-5">
+        <div class="tw-flex tw-items-center tw-justify-center tw-gap-3 tw-p-4 tw-bg-gradient-to-br tw-from-[rgba(0,0,0,0.3)] tw-to-[rgba(0,0,0,0.2)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-[6px]">
+            <span class="tw-text-[0.9rem] tw-font-medium tw-text-[#9a9a8a]">Current Total XP:</span>
+            <span class="tw-text-[1.5rem] tw-font-bold tw-text-gold tw-shadow-[0_0_12px_rgba(201,162,39,0.3)] tw-tabular-nums">{{currentTotal}}</span>
         </div>
     </div>
 
     {{!-- XP Input --}}
-    <div class="wh40k-dialog-section tw-mb-5">
-        <label class="wh40k-dialog-label tw-flex tw-flex-col tw-gap-2">
-            <span class="wh40k-dialog-label-text tw-text-[0.85rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em]">XP to Add/Subtract:</span>
+    <div class="tw-mb-5">
+        <label class="tw-flex tw-flex-col tw-gap-2">
+            <span class="tw-text-[0.85rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em]">XP to Add/Subtract:</span>
             <input type="number"
                    name="xpAmount"
                    value="{{xpAmount}}"
                    data-dtype="Number"
-                   class="wh40k-dialog-input tw-w-full tw-px-4 tw-py-3 tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[1rem] tw-font-medium tw-text-center"
+                   class="tw-w-full tw-px-4 tw-py-3 tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[1rem] tw-font-medium tw-text-center"
                    placeholder="0"
                    step="1" />
         </label>
-        <p class="wh40k-dialog-hint tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-bg-[rgba(42,90,139,0.1)] tw-border tw-border-[rgba(42,90,139,0.2)] tw-rounded-md tw-text-[0.8rem] tw-text-[#9a9a8a] tw-leading-[1.4] tw-m-0">
+        <p class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-bg-[rgba(42,90,139,0.1)] tw-border tw-border-[rgba(42,90,139,0.2)] tw-rounded-md tw-text-[0.8rem] tw-text-[#9a9a8a] tw-leading-[1.4] tw-m-0">
             <i class="fas fa-info-circle tw-text-[#5dade2] tw-shrink-0"></i>
             Enter a positive number to add XP, or negative to subtract.
         </p>
@@ -29,30 +29,30 @@
 
     {{!-- Preview New Total --}}
     {{#if (ne xpAmount 0)}}
-    <div class="wh40k-dialog-section wh40k-xp-preview tw-mb-5 tw-mt-5">
-        <div class="wh40k-xp-preview-box tw-flex tw-flex-col tw-items-center tw-gap-3 tw-p-4 tw-rounded-[6px] tw-border {{#if isAddition}}wh40k-xp-preview--positive tw-bg-gradient-to-br tw-from-[rgba(42,139,74,0.15)] tw-to-[rgba(42,139,74,0.05)] tw-border-[rgba(74,222,128,0.4)]{{else}}wh40k-xp-preview--negative tw-bg-gradient-to-br tw-from-[rgba(139,42,42,0.15)] tw-to-[rgba(139,42,42,0.05)] tw-border-[rgba(248,113,113,0.4)]{{/if}}">
-            <div class="wh40k-xp-preview-change tw-flex tw-items-center tw-gap-2 tw-text-[1.1rem] tw-font-semibold {{#if isAddition}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
+    <div class="tw-mb-5 tw-mt-5">
+        <div class="tw-flex tw-flex-col tw-items-center tw-gap-3 tw-p-4 tw-rounded-[6px] tw-border {{#if isAddition}}tw-bg-gradient-to-br tw-from-[rgba(42,139,74,0.15)] tw-to-[rgba(42,139,74,0.05)] tw-border-[rgba(74,222,128,0.4)]{{else}}tw-bg-gradient-to-br tw-from-[rgba(139,42,42,0.15)] tw-to-[rgba(139,42,42,0.05)] tw-border-[rgba(248,113,113,0.4)]{{/if}}">
+            <div class="tw-flex tw-items-center tw-gap-2 tw-text-[1.1rem] tw-font-semibold {{#if isAddition}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
                 <i class="fas {{#if isAddition}}fa-arrow-up{{else}}fa-arrow-down{{/if}}"></i>
                 {{#if isAddition}}+{{else}}-{{/if}}{{absAmount}} XP
             </div>
-            <div class="wh40k-xp-preview-result tw-flex tw-items-center tw-gap-2.5 tw-px-4 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-rounded-md">
-                <span class="wh40k-xp-preview-label tw-text-[0.85rem] tw-font-medium tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em]">New Total:</span>
-                <span class="wh40k-xp-preview-value tw-text-[1.3rem] tw-font-bold tw-text-gold tw-shadow-[0_0_12px_rgba(201,162,39,0.3)] tw-tabular-nums">{{newTotal}}</span>
+            <div class="tw-flex tw-items-center tw-gap-2.5 tw-px-4 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-rounded-md">
+                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em]">New Total:</span>
+                <span class="tw-text-[1.3rem] tw-font-bold tw-text-gold tw-shadow-[0_0_12px_rgba(201,162,39,0.3)] tw-tabular-nums">{{newTotal}}</span>
             </div>
         </div>
     </div>
     {{/if}}
 
     {{!-- Action Buttons --}}
-    <div class="wh40k-dialog-buttons tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(201,162,39,0.2)]">
+    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(201,162,39,0.2)]">
         <button type="button"
-                class="wh40k-dialog-button wh40k-dialog-button--primary tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)]"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)]"
                 data-action="apply"
                 {{#if (eq xpAmount 0)}}disabled{{/if}}>
             <i class="fas fa-check"></i> Apply
         </button>
         <button type="button"
-                class="wh40k-dialog-button wh40k-dialog-button--secondary tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]"
                 data-action="cancel">
             <i class="fas fa-times"></i> Cancel
         </button>

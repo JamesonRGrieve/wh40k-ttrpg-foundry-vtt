@@ -1,8 +1,8 @@
 {{! Journal Entries Section }}
 <div class="tw-mt-3">
     <div class="tw-flex tw-items-center tw-justify-between tw-mb-2 tw-pb-1">
-        <span class="tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide wh40k-section-title"><i class="fas fa-book"></i> Journal Entries</span>
-        <button type="button" class="wh40k-add-btn" data-action="itemCreate" data-type="journalEntry" title="Add Journal Entry">
+        <span class="tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[0.85rem] tw-text-[color:var(--color-text-secondary)] [&>i]:tw-text-[color:var(--wh40k-accent-bio)]"><i class="fas fa-book"></i> Journal Entries</span>
+        <button type="button" class="tw-bg-transparent tw-border tw-border-[var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-px-2 tw-py-1 tw-rounded-md tw-transition-all tw-text-[0.75rem] hover:tw-bg-[var(--wh40k-panel-bg-translucent)] hover:tw-border-[var(--wh40k-accent-bio)] hover:tw-text-[color:var(--wh40k-accent-bio)]" data-action="itemCreate" data-type="journalEntry" title="Add Journal Entry">
             <i class="fas fa-plus"></i>
         </button>
     </div>
@@ -10,21 +10,21 @@
     {{#if journalEntries.length}}
         <div class="tw-flex tw-flex-col tw-gap-1">
             {{#each journalEntries as |entry|}}
-                <div class="wh40k-journal-entry" data-item-id="{{entry.id}}">
+                <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg-solid)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-bio)] tw-rounded-md tw-transition-all hover:tw-bg-[var(--wh40k-panel-bg)] hover:tw-border-[var(--wh40k-border-color)] hover:tw-shadow-[0_1px_3px_var(--wh40k-shadow-soft)]" data-item-id="{{entry.id}}">
                     <div class="tw-flex tw-items-center tw-gap-2">
-                        <button type="button" class="wh40k-entry-name" data-action="itemEdit" data-item-id="{{entry.id}}" title="Click to edit">
+                        <button type="button" class="tw-flex-1 tw-cursor-pointer tw-text-left tw-font-semibold tw-text-[0.875rem] tw-text-[color:var(--wh40k-text-dark)] tw-bg-transparent tw-border-none tw-p-0 hover:tw-text-[color:var(--wh40k-accent-bio)] hover:tw-underline" data-action="itemEdit" data-item-id="{{entry.id}}" title="Click to edit">
                             {{entry.name}}
                         </button>
-                        <span class="tw-text-[0.7rem] tw-whitespace-nowrap">
+                        <span class="tw-text-[0.7rem] tw-whitespace-nowrap tw-text-[color:var(--wh40k-text-muted)]">
                             {{#if entry.system.time}}{{entry.system.time}}{{/if}}
                             {{#if entry.system.place}}{{#if entry.system.time}} · {{/if}}{{entry.system.place}}{{/if}}
                         </span>
-                        <button type="button" class="wh40k-entry-delete" data-action="itemDelete" data-item-id="{{entry.id}}" title="Delete">
+                        <button type="button" class="tw-bg-transparent tw-border tw-border-transparent tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-px-[6px] tw-py-[2px] tw-rounded tw-transition-all tw-text-[0.75rem] hover:tw-text-[color:var(--wh40k-wounds-secondary)] hover:tw-bg-[var(--wh40k-wounds-bg)] hover:tw-border-[var(--wh40k-wounds-border)]" data-action="itemDelete" data-item-id="{{entry.id}}" title="Delete">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
                     {{#if entry.system.description}}
-                        <div class="wh40k-entry-preview">
+                        <div class="tw-mt-[var(--wh40k-space-xs)] tw-pt-[var(--wh40k-space-xs)] tw-border-t tw-border-[var(--wh40k-border-color-light)] tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-secondary)] tw-italic tw-leading-[1.4]">
                             {{truncate entry.system.description 150}}
                         </div>
                     {{/if}}
@@ -32,7 +32,7 @@
             {{/each}}
         </div>
     {{else}}
-        <div class="wh40k-empty-state">
+        <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-py-10 tw-px-5 tw-text-center tw-text-[color:var(--wh40k-text-muted)] [&>i]:tw-text-[2.5rem] [&>i]:tw-mb-3 [&>i]:tw-opacity-30 [&>p]:tw-my-1 [&>p]:tw-text-[0.9rem]">
             <i class="fas fa-book-open"></i>
             <p>No journal entries yet</p>
         </div>

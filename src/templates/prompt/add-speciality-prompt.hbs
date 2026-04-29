@@ -1,16 +1,16 @@
 {{! Add Specialist Skill - Single Page with Cascading Dropdowns }}
-<form class="wh40k-specialist-prompt" autocomplete="off">
-    <div class="wh40k-specialist-prompt__header">
-        <img class="wh40k-specialist-prompt__icon" alt="{{actor.name}}" src="{{actor.img}}" />
-        <div class="wh40k-specialist-prompt__info">
-            <div class="wh40k-specialist-prompt__label">Add Specialist Skill</div>
+<form class="tw-p-0" autocomplete="off">
+    <div class="tw-flex tw-items-center tw-gap-[14px] tw-p-5 tw-bg-gradient-to-br tw-from-[rgba(201,162,39,0.08)] tw-to-[rgba(0,0,0,0.15)] tw-border-b tw-border-[rgba(201,162,39,0.2)]">
+        <img class="tw-w-12 tw-h-12 tw-border-2 tw-border-gold tw-rounded-[6px] tw-object-cover tw-shrink-0 tw-shadow-[0_2px_8px_rgba(0,0,0,0.4)]" alt="{{actor.name}}" src="{{actor.img}}" />
+        <div class="tw-flex-1 tw-min-w-0">
+            <div class="tw-text-[0.85rem] tw-text-[#9a9a8a] tw-mt-0.5">Add Specialist Skill</div>
         </div>
     </div>
 
-    <div class="wh40k-specialist-prompt__body">
-        <div class="wh40k-specialist-prompt__field-group">
-            <label class="wh40k-specialist-prompt__field-label">Skill Type</label>
-            <select class="wh40k-prompt__select" id="skill-select">
+    <div class="tw-p-5">
+        <div class="tw-mb-4">
+            <label class="tw-block tw-text-[0.8rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em] tw-mb-2">Skill Type</label>
+            <select class="tw-w-full tw-min-h-[40px] tw-px-[14px] tw-py-[10px] tw-pr-8 tw-bg-[rgba(0,0,0,0.3)] tw-bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Cpath%20fill%3D%27%23c9a227%27%20d%3D%27M6%208L1%203h10z%27/%3E%3C/svg%3E')] tw-bg-no-repeat tw-bg-[right_12px_center] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px] tw-leading-[1.2] focus:tw-outline-none focus:tw-border-gold focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)]" id="skill-select">
                 <option value="">-- Choose a skill --</option>
                 {{#each specialistSkills}}
                     <option value="{{this.key}}" {{#if (eq this.key ../preSelectedSkillKey)}}selected{{/if}}>{{this.label}} ({{this.characteristic}})</option>
@@ -18,9 +18,9 @@
             </select>
         </div>
 
-        <div class="wh40k-specialist-prompt__field-group {{#unless specializations.length}}tw-hidden{{/unless}}" id="specialization-group">
-            <label class="wh40k-specialist-prompt__field-label">Specialization</label>
-            <select class="wh40k-prompt__select" id="specialization-select">
+        <div class="tw-mb-4 {{#unless specializations.length}}tw-hidden{{/unless}}" id="specialization-group">
+            <label class="tw-block tw-text-[0.8rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em] tw-mb-2">Specialization</label>
+            <select class="tw-w-full tw-min-h-[40px] tw-px-[14px] tw-py-[10px] tw-pr-8 tw-bg-[rgba(0,0,0,0.3)] tw-bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Cpath%20fill%3D%27%23c9a227%27%20d%3D%27M6%208L1%203h10z%27/%3E%3C/svg%3E')] tw-bg-no-repeat tw-bg-[right_12px_center] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px] tw-leading-[1.2] focus:tw-outline-none focus:tw-border-gold focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)]" id="specialization-select">
                 <option value="">-- Select a specialization --</option>
                 {{#each specializations}}
                     <option value="{{this}}">{{this}}</option>
@@ -28,18 +28,18 @@
             </select>
         </div>
 
-        <div class="wh40k-specialist-prompt__field-group">
-            <label class="wh40k-specialist-prompt__field-label">Or enter custom name</label>
-            <input class="wh40k-prompt__input" type="text" id="custom-specialization" placeholder="e.g., Imperium, Stellar, Imperial Navy" />
+        <div class="tw-mb-4">
+            <label class="tw-block tw-text-[0.8rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em] tw-mb-2">Or enter custom name</label>
+            <input class="tw-w-full tw-px-[14px] tw-py-[10px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[120px] focus:tw-outline-none focus:tw-border-gold focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[rgba(0,0,0,0.4)] hover:tw-border-[rgba(255,255,255,0.15)]" type="text" id="custom-specialization" placeholder="e.g., Imperium, Stellar, Imperial Navy" />
         </div>
     </div>
 
-    <div class="dialog-buttons">
-        <button type="button" data-action="add" class="default">
+    <div class="tw-flex tw-gap-2.5 tw-px-5 tw-py-4 tw-bg-gradient-to-b tw-from-[rgba(0,0,0,0.2)] tw-to-[rgba(0,0,0,0.4)] tw-border-t tw-border-[rgba(201,162,39,0.2)]">
+        <button type="button" data-action="add" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-transition-all tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:tw-shadow-[0_6px_20px_rgba(201,162,39,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] hover:tw-bg-gradient-to-br hover:tw-from-[#d4ad32] hover:tw-to-[#9a7818] hover:-tw-translate-y-0.5">
             <i class="fas fa-plus"></i>
             Add
         </button>
-        <button type="button" data-action="cancel" data-button="cancel">
+        <button type="button" data-action="cancel" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-transition-all tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)] hover:tw-bg-[rgba(255,255,255,0.1)] hover:tw-text-[rgba(255,255,255,0.9)] hover:tw-border-[rgba(255,255,255,0.25)]">
             <i class="fas fa-times"></i>
             Cancel
         </button>
