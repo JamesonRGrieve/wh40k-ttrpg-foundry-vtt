@@ -3,8 +3,8 @@
 
   {{!-- Save Mode --}}
   {{#if (eq mode "save")}}
-    <section class="wh40k-panel">
-      <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] [&>h3]:tw-m-0 [&>h3]:tw-text-lg [&>h3]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
+    <section class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden tw-mb-4 tw-shadow-md tw-relative">
+      <header class="tw-flex tw-flex-row tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-gradient-to-b tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.15)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.05)] tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-w-full tw-box-border [&>h3]:tw-m-0 [&>h3]:tw-text-lg [&>h3]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
         <i class="fa-solid fa-save"></i>
         <h3>Save Combat Preset</h3>
       </header>
@@ -44,7 +44,7 @@
           <div class="tw-flex tw-justify-end tw-pt-4 tw-border-t-2 tw-border-solid tw-border-[var(--color-border-secondary)]">
             <button
               type="button"
-              class="wh40k-btn wh40k-btn--primary"
+              class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-3 tw-py-1.5 tw-text-sm tw-font-medium tw-rounded-sm tw-border tw-border-solid tw-border-[rgba(59,130,246,0.5)] tw-bg-[var(--color-accent,#3b82f6)] tw-text-[var(--color-text-primary)] tw-cursor-pointer tw-transition-all hover:tw-bg-blue-600 hover:tw-shadow-[0_2px_8px_rgba(59,130,246,0.3)] disabled:tw-opacity-50 disabled:tw-cursor-not-allowed"
               data-action="saveNew"
             >
               <i class="fa-solid fa-save"></i> Save Preset
@@ -57,8 +57,8 @@
 
   {{!-- Load Mode --}}
   {{#if (eq mode "load")}}
-    <section class="wh40k-panel">
-      <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] [&>h3]:tw-m-0 [&>h3]:tw-text-lg [&>h3]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
+    <section class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden tw-mb-4 tw-shadow-md tw-relative">
+      <header class="tw-flex tw-flex-row tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-gradient-to-b tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.15)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.05)] tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-w-full tw-box-border [&>h3]:tw-m-0 [&>h3]:tw-text-lg [&>h3]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
         <i class="fa-solid fa-download"></i>
         <h3>Load Combat Preset</h3>
       </header>
@@ -89,9 +89,9 @@
                   <p class="tw-mb-2 tw-text-base tw-text-[var(--color-text-light-secondary)] tw-italic">{{this.description}}</p>
                 {{/if}}
                 <div class="tw-flex tw-gap-2 tw-flex-wrap">
-                  <span class="wh40k-badge wh40k-badge--small">Threat {{this.threatLevel}}</span>
-                  <span class="wh40k-badge wh40k-badge--small">{{this.type}}</span>
-                  {{#if this.faction}}<span class="wh40k-badge wh40k-badge--small">{{this.faction}}</span>{{/if}}
+                  <span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">Threat {{this.threatLevel}}</span>
+                  <span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">{{this.type}}</span>
+                  {{#if this.faction}}<span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">{{this.faction}}</span>{{/if}}
                 </div>
               </div>
             {{/each}}
@@ -100,7 +100,7 @@
           <div class="tw-flex tw-justify-end tw-pt-4 tw-border-t-2 tw-border-solid tw-border-[var(--color-border-secondary)]">
             <button
               type="button"
-              class="wh40k-btn wh40k-btn--primary"
+              class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-3 tw-py-1.5 tw-text-sm tw-font-medium tw-rounded-sm tw-border tw-border-solid tw-border-[rgba(59,130,246,0.5)] tw-bg-[var(--color-accent,#3b82f6)] tw-text-[var(--color-text-primary)] tw-cursor-pointer tw-transition-all hover:tw-bg-blue-600 hover:tw-shadow-[0_2px_8px_rgba(59,130,246,0.3)] disabled:tw-opacity-50 disabled:tw-cursor-not-allowed"
               data-action="loadSelected"
               {{#unless selectedPreset}}disabled{{/unless}}
             >
@@ -119,13 +119,13 @@
 
   {{!-- Library Mode --}}
   {{#if (eq mode "library")}}
-    <section class="wh40k-panel">
-      <header class="wh40k-panel-header tw-flex tw-items-center tw-p-4 tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] [&>h3]:tw-m-0 [&>h3]:tw-flex-1 [&>h3]:tw-text-lg [&>h3]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
+    <section class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden tw-mb-4 tw-shadow-md tw-relative">
+      <header class="tw-flex tw-flex-row tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-gradient-to-b tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.15)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.05)] tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-w-full tw-box-border [&>h3]:tw-m-0 [&>h3]:tw-flex-1 [&>h3]:tw-text-lg [&>h3]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
         <h3>Preset Library</h3>
         <i class="fa-solid fa-bookmark"></i>
         <button
           type="button"
-          class="wh40k-btn wh40k-btn--icon"
+          class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-medium tw-rounded-sm tw-border tw-border-solid tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-text-[var(--color-text-primary)] tw-cursor-pointer tw-transition-all tw-min-w-[32px] hover:tw-bg-[rgba(100,100,120,0.5)] hover:tw--translate-y-px disabled:tw-opacity-50 disabled:tw-cursor-not-allowed"
           data-action="importPreset"
           data-tooltip="Import Preset from JSON"
         >
@@ -146,16 +146,16 @@
                     <p class="tw-mb-2 tw-text-base tw-text-[var(--color-text-light-secondary)] tw-italic">{{this.description}}</p>
                   {{/if}}
                   <div class="tw-flex tw-gap-2 tw-flex-wrap">
-                    <span class="wh40k-badge wh40k-badge--small">Threat {{this.threatLevel}}</span>
-                    <span class="wh40k-badge wh40k-badge--small">{{this.type}}</span>
-                    {{#if this.role}}<span class="wh40k-badge wh40k-badge--small">{{this.role}}</span>{{/if}}
-                    {{#if this.faction}}<span class="wh40k-badge wh40k-badge--small">{{this.faction}}</span>{{/if}}
+                    <span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">Threat {{this.threatLevel}}</span>
+                    <span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">{{this.type}}</span>
+                    {{#if this.role}}<span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">{{this.role}}</span>{{/if}}
+                    {{#if this.faction}}<span class="wh40k-badge tw-text-xs tw-px-2 tw-py-0.5">{{this.faction}}</span>{{/if}}
                   </div>
                 </div>
                 <div class="tw-flex tw-gap-2 tw-items-start">
                   <button
                     type="button"
-                    class="wh40k-btn wh40k-btn--icon"
+                    class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-medium tw-rounded-sm tw-border tw-border-solid tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-text-[var(--color-text-primary)] tw-cursor-pointer tw-transition-all tw-min-w-[32px] hover:tw-bg-[rgba(100,100,120,0.5)] hover:tw--translate-y-px disabled:tw-opacity-50 disabled:tw-cursor-not-allowed"
                     data-action="exportPreset"
                     data-preset-id="{{this.id}}"
                     data-tooltip="Export as JSON"
@@ -164,7 +164,7 @@
                   </button>
                   <button
                     type="button"
-                    class="wh40k-btn wh40k-btn--icon wh40k-btn--danger"
+                    class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-medium tw-rounded-sm tw-border tw-border-solid tw-border-[rgba(239,68,68,0.3)] tw-bg-[rgba(239,68,68,0.2)] tw-text-[#fca5a5] tw-cursor-pointer tw-transition-all tw-min-w-[32px] hover:tw-bg-[rgba(239,68,68,0.3)] hover:tw-border-[rgba(239,68,68,0.5)] disabled:tw-opacity-50 disabled:tw-cursor-not-allowed"
                     data-action="deletePreset"
                     data-preset-id="{{this.id}}"
                     data-tooltip="Delete Preset"
