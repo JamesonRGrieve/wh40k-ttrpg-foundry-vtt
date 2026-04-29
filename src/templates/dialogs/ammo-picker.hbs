@@ -6,15 +6,15 @@
 
     <div class="tw-flex tw-flex-col tw-gap-2 tw-max-h-[400px] tw-overflow-y-auto">
         {{#each ammoItems as |ammo|}}
-        <label class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-rounded-md tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--color-bg-hover)] hover:tw-border-[var(--wh40k-color-accent,var(--wh40k-color-gold))] [&>input[type=radio]:checked~*]:tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))] {{#if ammo.isCurrentlyLoaded}}tw-bg-[rgba(201,162,39,0.1)] tw-border-[var(--wh40k-color-accent,var(--wh40k-color-gold))]{{/if}}" data-uuid="{{ammo.uuid}}">
+        <label class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-rounded-md tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--color-bg-hover)] hover:tw-border-[var(--wh40k-color-accent,var(--wh40k-color-gold))] {{#if ammo.isCurrentlyLoaded}}tw-bg-[rgba(201,162,39,0.1)] tw-border-[var(--wh40k-color-accent,var(--wh40k-color-gold))]{{/if}}" data-uuid="{{ammo.uuid}}">
             <input type="radio" name="selectedAmmo" value="{{ammo.uuid}}" {{#if @first}}checked{{/if}} />
             <img class="tw-w-8 tw-h-8 tw-rounded-sm tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-shrink-0" src="{{ammo.img}}" alt="{{ammo.name}}" width="32" height="32" />
             <div class="tw-flex tw-flex-col tw-flex-1 tw-min-w-0 tw-gap-0.5">
-                <span class="tw-flex tw-items-center tw-gap-2 tw-font-semibold tw-text-base">
+                <span class="tw-flex tw-items-center tw-gap-2 tw-font-semibold tw-text-base {{#if ammo.isCurrentlyLoaded}}tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))]{{/if}}">
                     {{ammo.name}}
                     {{#if ammo.isCurrentlyLoaded}}<span class="tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-bg-[var(--wh40k-color-accent,var(--wh40k-color-gold))] tw-text-[#0a0a0f] tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.05em]">loaded</span>{{/if}}
                 </span>
-                <span class="tw-flex tw-items-center tw-gap-2 tw-text-xs tw-text-[var(--color-text-light-6,#aaa)]">
+                <span class="tw-flex tw-items-center tw-gap-2 tw-text-xs tw-text-[var(--color-text-light-6,#aaa)] {{#if ammo.isCurrentlyLoaded}}tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))]{{/if}}">
                     <span>{{ammo.quantity}} rounds</span>
                     {{#if ammo.modifierSummary}}<span class="tw-italic">{{ammo.modifierSummary}}</span>{{/if}}
                 </span>
@@ -23,12 +23,12 @@
         {{/each}}
     </div>
 
-    <footer class="tw-flex tw-gap-2 tw-pt-3 tw-border-t tw-border-solid tw-border-[var(--color-border-light-tertiary)] [&>button]:tw-flex-1 [&>button]:tw-flex [&>button]:tw-items-center [&>button]:tw-justify-center [&>button]:tw-gap-2 [&>button]:tw-p-2 [&>button]:tw-rounded-md [&>button]:tw-font-semibold [&>button]:tw-cursor-pointer [&>button]:tw-transition-all">
-        <button type="button" class="tw-bg-white/5 tw-border tw-border-solid tw-border-white/15 tw-text-white/70 hover:tw-bg-white/10 hover:tw-text-white/90 hover:tw-border-white/25" data-action="cancel">
+    <footer class="tw-flex tw-gap-2 tw-pt-3 tw-border-t tw-border-solid tw-border-[var(--color-border-light-tertiary)]">
+        <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-p-2 tw-rounded-md tw-font-semibold tw-cursor-pointer tw-transition-all tw-bg-white/5 tw-border tw-border-solid tw-border-white/15 tw-text-white/70 hover:tw-bg-white/10 hover:tw-text-white/90 hover:tw-border-white/25" data-action="cancel">
             <i class="fas fa-times"></i>
             Cancel
         </button>
-        <button type="button" class="tw-bg-gradient-to-br tw-from-[var(--wh40k-color-gold)] tw-to-[#8b6914] tw-text-[#0a0a0f] tw-border-0 hover:tw-from-[#d4ad32] hover:tw-to-[#9a7818]" data-action="selectAmmo" autofocus>
+        <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-p-2 tw-rounded-md tw-font-semibold tw-cursor-pointer tw-transition-all tw-bg-gradient-to-br tw-from-[var(--wh40k-color-gold)] tw-to-[#8b6914] tw-text-[#0a0a0f] tw-border-0 hover:tw-from-[#d4ad32] hover:tw-to-[#9a7818]" data-action="selectAmmo" autofocus>
             <i class="fas fa-arrow-up-from-bracket"></i>
             Load
         </button>

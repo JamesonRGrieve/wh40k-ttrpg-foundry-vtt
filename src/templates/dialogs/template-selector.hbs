@@ -54,7 +54,7 @@
                     {{/if}}
                 </div>
                 <div class="tw-flex tw-gap-1">
-                    <button type="button" class="wh40k-btn wh40k-btn-icon" data-action="viewTemplate"
+                    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-bg-transparent tw-border-none tw-text-[var(--color-text-secondary,#888)] tw-rounded-sm tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--color-bg-tertiary,#333)] hover:tw-text-[var(--color-text-primary,#eee)] [&>i]:tw-text-[0.75rem]" data-action="viewTemplate"
                             data-uuid="{{template.uuid}}" data-tooltip="{{localize 'WH40K.View'}}">
                         <i class="fas fa-eye"></i>
                     </button>
@@ -103,10 +103,10 @@
 
     {{!-- Dialog Footer --}}
     <footer class="tw-flex tw-justify-end tw-gap-2 tw-p-4 tw-border-t tw-border-solid tw-border-[var(--wh40k-border-color,#444)]">
-        <button type="button" class="wh40k-btn" data-action="cancel">
+        <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-3 tw-py-1.5 tw-text-sm tw-font-medium tw-rounded-md tw-border tw-border-solid tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-text-[var(--color-text-primary,#eee)] tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(100,100,120,0.5)] hover:tw--translate-y-px disabled:tw-opacity-50 disabled:tw-cursor-not-allowed" data-action="cancel">
             {{localize "WH40K.Cancel"}}
         </button>
-        <button type="submit" class="wh40k-btn wh40k-btn-primary" {{#unless selectedTemplate}}disabled{{/unless}}>
+        <button type="submit" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-3 tw-py-1.5 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-rounded-md tw-border tw-border-solid tw-border-[var(--wh40k-gold-dark,#a07830)] tw-bg-gradient-to-br tw-from-gold tw-to-gold-dark tw-text-white tw-cursor-pointer tw-transition-all tw-shadow-sm hover:tw--translate-y-px hover:tw-shadow-md disabled:tw-opacity-50 disabled:tw-cursor-not-allowed" {{#unless selectedTemplate}}disabled{{/unless}}>
             <i class="fas fa-user-plus"></i>
             {{localize "WH40K.NPC.Template.CreateNPC"}}
         </button>

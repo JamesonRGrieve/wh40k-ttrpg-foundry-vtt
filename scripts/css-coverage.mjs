@@ -89,6 +89,16 @@ const JS_HOOKS = new Set([
     // primary-sheet-mixin.ts / talent-editor-dialog.ts / character-sheet.ts toggle
     // this class on tab buttons and tab content panels via classList.toggle('active', …)
     'active',
+    // tests/item-header-partial.test.ts queries these by class name — test selectors
+    'wh40k-item-header__image',
+    'wh40k-item-header__name',
+    'wh40k-badge--type',
+    'wh40k-badge--tier',
+    'wh40k-badge--category',
+    // tests/storybook-templates.test.ts queries this by class name — test selector
+    'wh40k-roll-card__value--negative',
+    // tests query modifier count badge by class name — test selector
+    'wh40k-modifier-count',
     // Google Material Icons library — third-party icon font, not project CSS
     'material-icons',
     'material-icons-outlined',
@@ -98,18 +108,44 @@ const JS_HOOKS = new Set([
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 
+/** Return true when a bare utility string is a Tailwind utility (any polarity). */
+function isTwBare(s) {
+    return s.startsWith('tw-') || s.startsWith('-tw-') || s.startsWith('!tw-');
+}
+
+/**
+ * Find the last colon that is at bracket-depth 0 in `token`.
+ * This is the variant-separator colon for all Tailwind variant forms:
+ *   - `hover:tw-bg-gold`           (plain word variant)
+ *   - `[&>label]:tw-block`         (arbitrary selector variant)
+ *   - `data-[active=true]:tw-ring` (data-attribute variant)
+ * Returns the index, or -1 if none found at depth 0.
+ */
+function lastTopLevelColon(token) {
+    let depth = 0;
+    let lastColon = -1;
+    for (let i = 0; i < token.length; i++) {
+        const ch = token[i];
+        if (ch === '[') depth++;
+        else if (ch === ']') depth--;
+        else if (ch === ':' && depth === 0) lastColon = i;
+    }
+    return lastColon;
+}
+
 function isTwOrExempt(token) {
-    // Check raw token first (handles `tw-text-[color:var(--foo)]` where the colon
-    // is inside brackets, not a variant separator).
-    if (token.startsWith('tw-')) return true;
-    // Strip optional Tailwind variant prefix (e.g. `hover:`, `focus:`, `active:`, `dh2e:`)
-    // Only strip a prefix colon that appears before any `[` bracket — colons inside
-    // arbitrary-value brackets (e.g. `tw-text-[color:var(--x)]`) are not variant separators.
-    const bracketPos = token.indexOf('[');
-    const colonPos = token.indexOf(':');
-    const hasVariantColon = colonPos !== -1 && (bracketPos === -1 || colonPos < bracketPos);
-    const bare = hasVariantColon ? token.slice(colonPos + 1) : token;
-    if (bare.startsWith('tw-')) return true;
+    // Fast path: raw token is already a Tailwind utility (also handles
+    // `tw-text-[color:var(--foo)]` where the colon is inside brackets).
+    if (isTwBare(token)) return true;
+
+    // Strip one Tailwind variant prefix by finding the last colon at bracket-depth 0.
+    // This handles all variant forms: `hover:`, `[&>label]:`, `data-[active=true]:`, etc.
+    const sep = lastTopLevelColon(token);
+    if (sep !== -1) {
+        const bare = token.slice(sep + 1);
+        if (isTwBare(bare)) return true;
+    }
+
     if (FA_RE.test(token)) return true;
     if (JS_HOOKS.has(token)) return true;
     if (ROLL_CONTROL_RE.test(token)) return true;

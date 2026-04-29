@@ -2,21 +2,22 @@
 {{! ApplicationV2 replacement for Dialog.confirm() }}
 
 <div class="tw-p-5 tw-text-[var(--wh40k-text-primary,#e8e4d9)] tw-font-ui">
-    <div class="tw-text-md tw-leading-[1.6] tw-text-[var(--wh40k-text-primary,#e8e4d9)] tw-p-4 tw-bg-black/20 tw-border tw-border-solid tw-border-[#c9a227]/20 tw-rounded-md tw-mb-5 [&>p]:tw-mb-[0.75em] [&>p:last-child]:tw-mb-0 [&_strong]:tw-text-[var(--wh40k-accent-gold)] [&_strong]:tw-font-semibold [&_em]:tw-text-[var(--wh40k-text-secondary,#9a9a8a)]">
+    <div class="tw-text-md tw-leading-[1.6] tw-text-[var(--wh40k-text-primary,#e8e4d9)] tw-p-4 tw-bg-black/20 tw-border tw-border-solid tw-border-[#c9a227]/20 tw-rounded-md tw-mb-5"
+         style="& > p { margin-bottom: 0.75em; } & > p:last-child { margin-bottom: 0; } & strong { color: var(--wh40k-accent-gold); font-weight: 600; } & em { color: var(--wh40k-text-secondary, #9a9a8a); }">
         {{{content}}}
     </div>
 
     <footer class="tw-flex tw-gap-2.5 tw-pt-4 tw-border-t tw-border-solid tw-border-amber-500/20">
         <button type="button"
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-p-3 tw-rounded-md tw-cursor-pointer tw-border tw-border-solid tw-border-white/15 tw-bg-white/5 tw-text-white/70 tw-font-ui tw-text-base tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-transition-all hover:tw-bg-white/10 hover:tw-text-white/90 hover:tw-border-white/25 [&>i]:tw-text-sm"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-p-3 tw-rounded-md tw-cursor-pointer tw-border tw-border-solid tw-border-white/15 tw-bg-white/5 tw-text-white/70 tw-font-ui tw-text-base tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-transition-all hover:tw-bg-white/10 hover:tw-text-white/90 hover:tw-border-white/25"
                 data-action="cancel">
-            <i class="fas fa-times"></i>
+            <i class="fas fa-times tw-text-sm"></i>
             {{cancelLabel}}
         </button>
         <button type="button"
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-p-3 tw-rounded-md tw-cursor-pointer tw-border-0 tw-bg-gradient-to-br tw-from-[var(--wh40k-color-gold)] tw-to-[#8b6914] tw-text-[#0a0a0f] tw-font-ui tw-text-base tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] tw-transition-all hover:tw-from-[#d4ad32] hover:tw-to-[#9a7818] hover:tw-shadow-[0_6px_20px_rgba(201,162,39,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] hover:-tw-translate-y-0.5 active:tw-translate-y-0 active:tw-shadow-[0_2px_8px_rgba(201,162,39,0.3)] [&>i]:tw-text-sm"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-p-3 tw-rounded-md tw-cursor-pointer tw-border-0 tw-bg-gradient-to-br tw-from-[var(--wh40k-color-gold)] tw-to-[#8b6914] tw-text-[#0a0a0f] tw-font-ui tw-text-base tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] tw-transition-all hover:tw-from-[#d4ad32] hover:tw-to-[#9a7818] hover:tw-shadow-[0_6px_20px_rgba(201,162,39,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] hover:tw-translate-y-[-2px] active:tw-translate-y-0 active:tw-shadow-[0_2px_8px_rgba(201,162,39,0.3)]"
                 data-action="confirm" autofocus>
-            <i class="fas fa-check"></i>
+            <i class="fas fa-check tw-text-sm"></i>
             {{confirmLabel}}
         </button>
     </footer>
