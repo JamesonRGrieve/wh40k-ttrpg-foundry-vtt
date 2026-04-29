@@ -5,12 +5,12 @@
  * Supports characteristic advances, skills, and talents based on career.
  */
 
-import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { getCareerAdvancements, getNextCharacteristicCost, getCareerKeyFromName, TIER_ORDER } from '../../config/advancements/index.ts';
-import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-based-system-config.ts';
-import type { Prerequisite } from '../../config/game-systems/types.ts';
+import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import type { Prerequisite } from '../../config/game-systems/types.ts';
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { getAvailableXP, spendXP, canAfford } from '../../utils/xp-transaction.ts';

@@ -1,13 +1,10 @@
-{{! Vehicle Special Rules Panel }}
-<div class="wh40k-panel spacer wh40k-grid-col-6">
-    <h1 class="wh40k-panel-header">
-        <i class="fas fa-scroll"></i>
-        {{localize "WH40K.Vehicle.SpecialRules"}}
-    </h1>
-    <div class="wh40k-special-rules-section">
-        <div class="wh40k-editor">
-            {{editor system.specialRules target="system.specialRules" button=true editable=editable}}
-        </div>
-        <small class="wh40k-field__hint">{{localize "WH40K.Vehicle.SpecialRules.Hint"}}</small>
+{{!-- Vehicle Special Rules Panel --}}
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
+    label=(localize "WH40K.Vehicle.SpecialRules")
+    icon="fa-scroll"
+    rootClass="tw-col-auto"}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5">
+        {{editor system.specialRules target="system.specialRules" button=true editable=editable}}
+        <small class="tw-text-sm tw-opacity-60 tw-italic">{{localize "WH40K.Vehicle.SpecialRules.Hint"}}</small>
     </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

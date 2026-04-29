@@ -191,7 +191,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
         );
 
         for (const item of modifierItems) {
-            const situational = (item.system as any)?.modifiers?.situational?.[type];
+            const situationalModifiers = (item.system.modifiers as Record<string, unknown> | undefined)?.['situational'] as Record<string, unknown> | undefined;
+            const situational = situationalModifiers?.[type];
             if (!situational || !Array.isArray(situational)) continue;
 
             for (const mod of situational) {
@@ -387,14 +388,14 @@ export class WH40KAcolyte extends WH40KBaseActor {
                         await this.rollCharacteristic('weaponSkill', item.name ?? undefined);
                     }
                 } else {
-                    await DHTargetedActionManager.performWeaponAttack(this, null, item as any);
+                    await DHTargetedActionManager.performWeaponAttack(this, null, item);
                 }
                 return;
             case 'psychicPower':
                 if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
                     await this.rollCharacteristic('willpower', item.name ?? undefined);
                 } else {
-                    await DHTargetedActionManager.performPsychicAttack(this, null, item as any);
+                    await DHTargetedActionManager.performPsychicAttack(this, null, item);
                 }
                 return;
             case 'forceField':
@@ -402,7 +403,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
                     ui.notifications.warn('Actor must have force field equipped and activated!');
                     return;
                 }
-                await prepareUnifiedRoll(new ForceFieldData(this, item as any));
+                await prepareUnifiedRoll(new ForceFieldData(this, item as unknown));
                 return;
             default:
                 await DHBasicActionManager.sendItemVocalizeChat({
@@ -425,7 +426,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {string} itemId - The item ID
      */
     async damageItem(itemId: string): Promise<void> {
-        const item = this.items.get(itemId) as any;
+        const item = this.items.get(itemId);
+        if (!item) return;
         switch (item.type) {
             case 'weapon':
                 await this.rollWeaponDamage(item);
@@ -488,7 +490,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     async opposedCharacteristicTest(targetActor: Actor | null, characteristic: string): Promise<unknown> {
         const sourceRoll = await this.rollCharacteristicCheck(characteristic);
-        const targetRoll = targetActor ? await (targetActor as any).rollCharacteristicCheck(characteristic) : null;
+        const wh40kTarget = targetActor as unknown as WH40KAcolyte | null;
+        const targetRoll = wh40kTarget ? await wh40kTarget.rollCharacteristicCheck(characteristic) : null;
         return this.opposedTest(sourceRoll, targetRoll);
     }
 
@@ -567,15 +570,15 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     hasTalent(talent: string): boolean {
-        return !!(this.items as any).filter((i: { type: string }) => i.type === 'talent').find((t: { name: string }) => t.name === talent);
+        return !!this.items.filter((i) => i.type === 'talent').find((t) => t.name === talent);
     }
 
     hasTalentFuzzyWords(words: string[]): boolean {
-        return !!(this.items as any)
-            .filter((i: { type: string }) => i.type === 'talent')
-            .find((t: { name: string }) => {
+        return !!this.items
+            .filter((i) => i.type === 'talent')
+            .find((t) => {
                 for (const word of words) {
-                    if (!t.name.includes(word)) return false;
+                    if (!(t.name ?? '').includes(word)) return false;
                 }
                 return true;
             });
@@ -586,7 +589,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     async spendFate(): Promise<void> {
-        await (this as any).update({
+        await this.update({
             'system.fate.value': this.system.fate.value - 1,
         });
     }

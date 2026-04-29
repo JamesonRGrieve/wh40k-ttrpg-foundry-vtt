@@ -1,6 +1,6 @@
-import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { TransactionManager } from '../../transactions/transaction-manager.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 

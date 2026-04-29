@@ -964,11 +964,11 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollInitiative(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollInitiative(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         // Roll initiative using the system's initiative formula
-        const initChar = (this as any).actor.system.initiative.characteristic;
-        const char = (this as any).actor.system.characteristics[initChar];
+        const initChar = this.actor.system.initiative.characteristic;
+        const char = this.actor.system.characteristics[initChar];
         if (!char) return;
 
         const formula = `1d10 + ${char.bonus}`;
@@ -976,8 +976,8 @@ export default class NPCSheet extends CharacterSheet {
         await roll.evaluate();
 
         await roll.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
-            flavor: 'Initiative Roll' as any,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            flavor: 'Initiative Roll',
         });
     }
 
@@ -1002,7 +1002,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #addTrainedSkill(event: Event, target: HTMLElement): Promise<void> {
+    static async #addTrainedSkill(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         if (!skillKey) {
@@ -1029,7 +1029,7 @@ export default class NPCSheet extends CharacterSheet {
                 { key: 'stealth', name: 'Stealth' },
                 { key: 'survival', name: 'Survival' },
                 { key: 'techUse', name: 'Tech-Use' },
-            ].filter((s) => !(this as any).actor.system.trainedSkills[s.key]);
+            ].filter((s) => !this.actor.system.trainedSkills[s.key]);
 
             const options = skills.map((s) => `<option value="${s.key}">${s.name}</option>`).join('');
 
@@ -1065,7 +1065,7 @@ export default class NPCSheet extends CharacterSheet {
                             const form = button.form;
                             const skill = (form.querySelector('[name="skill"]') as HTMLSelectElement).value;
                             const level = (form.querySelector('[name="level"]') as HTMLSelectElement).value;
-                            await (this as any).actor.system.addTrainedSkill(skill, null, level);
+                            await this.actor.system.addTrainedSkill(skill, null, level);
                         },
                     },
                     {
@@ -1078,7 +1078,7 @@ export default class NPCSheet extends CharacterSheet {
             void dialog.render(true);
             return;
         }
-        await (this as any).actor.system.addTrainedSkill(skillKey);
+        await this.actor.system.addTrainedSkill(skillKey);
     }
 
     /* -------------------------------------------- */
@@ -1102,13 +1102,13 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #setSkillLevel(event: Event, target: HTMLElement): Promise<void> {
+    static async #setSkillLevel(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         const level = target.dataset.level;
         if (!skillKey || !level) return;
 
-        const currentSkills = foundry.utils.deepClone((this as any).actor.system.trainedSkills) || {};
+        const currentSkills = foundry.utils.deepClone(this.actor.system.trainedSkills) || {};
         const currentState = currentSkills[skillKey];
 
         // Skill characteristic mapping
@@ -1140,7 +1140,7 @@ export default class NPCSheet extends CharacterSheet {
         switch (level) {
             case 'untrained':
                 // Remove the skill entirely using Foundry's deletion syntax
-                await (this as any).actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
+                await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
                 return; // Early return - we've already updated
             case 'trained':
                 // Add skill at trained level
@@ -1199,7 +1199,7 @@ export default class NPCSheet extends CharacterSheet {
                 break;
         }
 
-        await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
+        await this.actor.update({ 'system.trainedSkills': currentSkills });
     }
 
     /* -------------------------------------------- */
@@ -1210,12 +1210,12 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #cycleSkillLevel(event: Event, target: HTMLElement): Promise<void> {
+    static async #cycleSkillLevel(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
 
-        const currentSkills = foundry.utils.deepClone((this as any).actor.system.trainedSkills) || {};
+        const currentSkills = foundry.utils.deepClone(this.actor.system.trainedSkills) || {};
         const current = currentSkills[skillKey];
 
         // Skill characteristic mapping
@@ -1255,18 +1255,18 @@ export default class NPCSheet extends CharacterSheet {
                 plus20: false,
                 bonus: 0,
             };
-            await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
+            await this.actor.update({ 'system.trainedSkills': currentSkills });
         } else if (current.trained && !current.plus10 && !current.plus20) {
             // Trained → +10
             currentSkills[skillKey] = { ...current, plus10: true, plus20: false };
-            await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
+            await this.actor.update({ 'system.trainedSkills': currentSkills });
         } else if (current.plus10 && !current.plus20) {
             // +10 → +20
             currentSkills[skillKey] = { ...current, plus10: true, plus20: true };
-            await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
+            await this.actor.update({ 'system.trainedSkills': currentSkills });
         } else {
             // +20 → Untrained (remove)
-            await (this as any).actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
+            await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
         }
     }
 
@@ -1305,13 +1305,13 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static #editImage(event: Event, target: HTMLElement): void {
+    static #editImage(this: NPCSheet, event: Event, target: HTMLElement): void {
         event.preventDefault();
         const fp = new FilePicker({
             type: 'image',
-            current: (this as any).actor.img,
+            current: this.actor.img,
             callback: (path) => {
-                (this as any).actor.update({ img: path });
+                this.actor.update({ img: path });
             },
         });
         void fp.render(true);
@@ -1324,9 +1324,9 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #setupToken(event: Event, target: HTMLElement): Promise<void> {
+    static async #setupToken(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const npc = (this as any).actor;
+        const npc = this.actor;
         const updates: Record<string, unknown> = {};
 
         // Size-based dimensions
@@ -1514,7 +1514,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static #addTag(event: Event, target: HTMLElement): void {
+    static #addTag(this: NPCSheet, event: Event, target: HTMLElement): void {
         event.preventDefault();
         const content = `
       <form>
@@ -1537,8 +1537,8 @@ export default class NPCSheet extends CharacterSheet {
                         const form = button.form;
                         const tag = (form.querySelector('[name="tag"]') as HTMLInputElement).value.trim();
                         if (tag) {
-                            const tags = [...((this as any).actor.system.tags || []), tag];
-                            await (this as any).actor.update({ 'system.tags': tags });
+                            const tags = [...((this.actor.system.tags as string[] | undefined) || []), tag];
+                            await this.actor.update({ 'system.tags': tags });
                         }
                     },
                 },
@@ -1573,13 +1573,13 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static #toggleEditSection(event: Event, target: HTMLElement): void {
+    static #toggleEditSection(this: NPCSheet, event: Event, target: HTMLElement): void {
         event.preventDefault();
         const sectionId = target.dataset.target;
         if (!sectionId) return;
 
         // Find the section to toggle
-        const section = (this as any).element.querySelector(`[data-section-id="${sectionId}"]`);
+        const section = this.element.querySelector(`[data-section-id="${sectionId}"]`);
         if (!section) return;
 
         // Toggle hidden attribute
@@ -1596,15 +1596,15 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleEditMode(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleEditMode(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const { MODES } = this.constructor as any;
-        (this as any)._mode = (this as any)._mode === MODES.EDIT ? MODES.PLAY : MODES.EDIT;
+        const { MODES } = this.constructor as typeof NPCSheet;
+        this._mode = this._mode === MODES.EDIT ? MODES.PLAY : MODES.EDIT;
         // Keep header slide-toggle in sync if present
-        const headerToggle = (this as any).element.querySelector('.window-header .mode-slider');
-        if (headerToggle) headerToggle.checked = (this as any)._mode === MODES.EDIT;
-        await (this as any).submit();
-        (this as any).render();
+        const headerToggle = this.element.querySelector('.window-header .mode-slider') as HTMLInputElement | null;
+        if (headerToggle) headerToggle.checked = this._mode === MODES.EDIT;
+        await this.submit();
+        this.render();
     }
 
     /* -------------------------------------------- */
@@ -1663,25 +1663,25 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleFavoriteSkill(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleFavoriteSkill(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
 
-        const currentFavorites = (this as any).actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
+        const currentFavorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) || [];
         const isFavorite = currentFavorites.includes(skillKey);
 
         if (isFavorite) {
-            await (this as any).actor.setFlag(
+            await this.actor.setFlag(
                 'wh40k-rpg',
                 'favoriteSkills',
                 currentFavorites.filter((k) => k !== skillKey),
             );
         } else {
-            await (this as any).actor.setFlag('wh40k-rpg', 'favoriteSkills', [...currentFavorites, skillKey]);
+            await this.actor.setFlag('wh40k-rpg', 'favoriteSkills', [...currentFavorites, skillKey]);
         }
 
-        await (this as any).render({ parts: ['overview', 'skills'] });
+        await this.render({ parts: ['overview', 'skills'] });
     }
 
     /* -------------------------------------------- */
@@ -1691,25 +1691,25 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleFavoriteTalent(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleFavoriteTalent(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 
-        const currentFavorites = (this as any).actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
+        const currentFavorites = (this.actor.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | undefined) || [];
         const isFavorite = currentFavorites.includes(itemId);
 
         if (isFavorite) {
-            await (this as any).actor.setFlag(
+            await this.actor.setFlag(
                 'wh40k-rpg',
                 'favoriteTalents',
                 currentFavorites.filter((id) => id !== itemId),
             );
         } else {
-            await (this as any).actor.setFlag('wh40k-rpg', 'favoriteTalents', [...currentFavorites, itemId]);
+            await this.actor.setFlag('wh40k-rpg', 'favoriteTalents', [...currentFavorites, itemId]);
         }
 
-        await (this as any).render({ parts: ['overview', 'abilities'] });
+        await this.render({ parts: ['overview', 'abilities'] });
     }
 
     /* -------------------------------------------- */
@@ -1719,11 +1719,11 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #applyCustomDamage(event: Event, target: HTMLElement): Promise<void> {
+    static async #applyCustomDamage(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const input = (this as any).element.querySelector('[data-custom-damage]');
+        const input = this.element.querySelector('[data-custom-damage]') as HTMLInputElement | null;
         const amount = parseInt(input?.value || '1', 10);
-        await (this as any).actor.applyDamage(amount, 'body');
+        await this.actor.applyDamage(amount, 'body');
     }
 
     /* -------------------------------------------- */
@@ -1733,11 +1733,11 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #healCustomWounds(event: Event, target: HTMLElement): Promise<void> {
+    static async #healCustomWounds(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const input = (this as any).element.querySelector('[data-custom-damage]');
+        const input = this.element.querySelector('[data-custom-damage]') as HTMLInputElement | null;
         const amount = parseInt(input?.value || '1', 10);
-        await (this as any).actor.healWounds(amount);
+        await this.actor.healWounds(amount);
     }
 
     /* -------------------------------------------- */
@@ -1762,23 +1762,23 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #addToCombat(event: Event, target: HTMLElement): Promise<void> {
+    static async #addToCombat(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         if (!game.combat) {
             ui.notifications.warn('No active combat encounter.');
             return;
         }
         // Prevent duplicate combatants
-        const existing = game.combat.getCombatantByActor((this as any).actor.id);
+        const existing = game.combat.getCombatantByActor(this.actor.id);
         if (existing) {
-            ui.notifications.info(`${(this as any).actor.name} is already in combat.`);
+            ui.notifications.info(`${this.actor.name} is already in combat.`);
             return;
         }
         await game.combat.createEmbeddedDocuments('Combatant', [
             {
-                actorId: (this as any).actor.id,
-                tokenId: (this as any).actor.token?.id,
-            } as any,
+                actorId: this.actor.id,
+                tokenId: this.actor.token?.id,
+            } as unknown as Record<string, unknown>,
         ]);
     }
 
@@ -1864,9 +1864,9 @@ export default class NPCSheet extends CharacterSheet {
             ['techUse', 'Tech-Use', 'Int'],
         ];
 
-        const standard: Array<[string, any]> = BASIC_SKILLS.map(([key, label, charShort]) => {
+        const standard: Array<[string, Record<string, unknown>]> = BASIC_SKILLS.map(([key, label, charShort]) => {
             const t = trainedSkills[key];
-            const skill: unknown = {
+            const skill: Record<string, unknown> = {
                 label,
                 characteristic: charShort,
                 trained: !!t?.trained,
@@ -1877,13 +1877,13 @@ export default class NPCSheet extends CharacterSheet {
                 hidden: false,
             };
             // Compute current target (½ char when untrained, full char + training bonus otherwise).
-            const charKey = (this as any)._charShortToKey(charShort);
-            const charTotal = characteristics[charKey]?.total ?? 0;
-            const level = skill.plus20 ? 3 : skill.plus10 ? 2 : skill.trained ? 1 : 0;
+            const charKey = this._charShortToKey(charShort);
+            const charTotal = ((characteristics[charKey] as Record<string, unknown> | undefined)?.total as number) ?? 0;
+            const level = skill['plus20'] ? 3 : skill['plus10'] ? 2 : skill['trained'] ? 1 : 0;
             const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;
-            skill.current = level > 0 ? charTotal + trainingBonus + skill.bonus : Math.floor(charTotal / 2) + skill.bonus;
+            skill['current'] = level > 0 ? charTotal + trainingBonus + (skill['bonus'] as number) : Math.floor(charTotal / 2) + (skill['bonus'] as number);
             // Defer to the parent helper for trainingIndicators, breakdown, tooltipData, isGranted, etc.
-            (this as any)._augmentSkillData(key, skill, characteristics);
+            this._augmentSkillData(key, skill, characteristics);
             return [key, skill];
         });
 
