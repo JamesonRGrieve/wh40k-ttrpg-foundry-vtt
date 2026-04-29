@@ -1,7 +1,7 @@
 {
   "totals": {
     "any": 9,
-    "asAny": 559,
+    "asAny": 175,
     "tsExpectError": 9,
     "tsIgnore": 0
   },
@@ -14,7 +14,7 @@
     },
     "applications": {
       "any": 3,
-      "asAny": 454,
+      "asAny": 127,
       "tsExpectError": 9,
       "tsIgnore": 0
     },
@@ -50,7 +50,7 @@
     },
     "documents": {
       "any": 0,
-      "asAny": 36,
+      "asAny": 0,
       "tsExpectError": 0,
       "tsIgnore": 0
     },
@@ -116,7 +116,7 @@
     },
     "utils": {
       "any": 2,
-      "asAny": 25,
+      "asAny": 4,
       "tsExpectError": 0,
       "tsIgnore": 0
     }
