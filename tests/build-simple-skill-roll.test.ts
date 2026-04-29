@@ -19,6 +19,7 @@ const ORIGINAL_ACTOR = (globalThis as Record<string, unknown>).Actor;
 const ORIGINAL_CONST = (globalThis as Record<string, unknown>).CONST;
 
 class FakeApplicationV2 {}
+const fakeHandlebarsApplicationMixin = <T extends new (...args: any[]) => object>(Base: T): T => class extends Base {} as T;
 class FakeActor {
     declare system: unknown;
     declare items: unknown;
@@ -32,6 +33,7 @@ class FakeActor {
     applications: {
         api: {
             ApplicationV2: FakeApplicationV2,
+            HandlebarsApplicationMixin: fakeHandlebarsApplicationMixin,
         },
         handlebars: {
             renderTemplate: async () => '',
@@ -163,15 +165,19 @@ describe('_buildSimpleSkillRoll — PC (acolyte) paths honour situational modifi
             situationalKey: 'weaponSkill',
         });
 
-        assertShape(result, {
-            actorName: 'Acolyte Vex',
-            nameOverride: 'Weapon Skill Test',
-            type: 'Characteristic',
-            rollKey: 'weaponSkill',
-            baseTarget: 42,
-            modifierBaseline: 0,
-            situational: 5,
-        }, actor);
+        assertShape(
+            result,
+            {
+                actorName: 'Acolyte Vex',
+                nameOverride: 'Weapon Skill Test',
+                type: 'Characteristic',
+                rollKey: 'weaponSkill',
+                baseTarget: 42,
+                modifierBaseline: 0,
+                situational: 5,
+            },
+            actor,
+        );
     });
 
     it('rollCharacteristic with flavorOverride: nameOverride wins over the default label', () => {
@@ -189,14 +195,18 @@ describe('_buildSimpleSkillRoll — PC (acolyte) paths honour situational modifi
             nameOverride: 'Lasgun Snap-Shot',
         });
 
-        assertShape(result, {
-            actorName: 'Acolyte Vex',
-            nameOverride: 'Lasgun Snap-Shot',
-            type: 'Characteristic',
-            rollKey: 'ballisticSkill',
-            baseTarget: 35,
-            modifierBaseline: 0,
-        }, actor);
+        assertShape(
+            result,
+            {
+                actorName: 'Acolyte Vex',
+                nameOverride: 'Lasgun Snap-Shot',
+                type: 'Characteristic',
+                rollKey: 'ballisticSkill',
+                baseTarget: 35,
+                modifierBaseline: 0,
+            },
+            actor,
+        );
     });
 
     it('rollSkill: emits type="Skill" and pulls from skill situational modifiers', () => {
@@ -215,15 +225,19 @@ describe('_buildSimpleSkillRoll — PC (acolyte) paths honour situational modifi
             situationalKey: 'dodge',
         });
 
-        assertShape(result, {
-            actorName: 'Acolyte Vex',
-            nameOverride: 'Dodge Test',
-            type: 'Skill',
-            rollKey: 'dodge',
-            baseTarget: 50,
-            modifierBaseline: 0,
-            situational: 20,
-        }, actor);
+        assertShape(
+            result,
+            {
+                actorName: 'Acolyte Vex',
+                nameOverride: 'Dodge Test',
+                type: 'Skill',
+                rollKey: 'dodge',
+                baseTarget: 50,
+                modifierBaseline: 0,
+                situational: 20,
+            },
+            actor,
+        );
     });
 
     it('rollSkill specialist: label can carry "Skill: Specialty" composition', () => {
@@ -289,14 +303,18 @@ describe('_buildSimpleSkillRoll — NPC paths skip situational lookup entirely',
             target: 35,
         });
 
-        assertShape(result, {
-            actorName: 'Cultist',
-            nameOverride: 'Weapon Skill Test',
-            type: 'Characteristic',
-            rollKey: 'weaponSkill',
-            baseTarget: 35,
-            modifierBaseline: 0,
-        }, actor);
+        assertShape(
+            result,
+            {
+                actorName: 'Cultist',
+                nameOverride: 'Weapon Skill Test',
+                type: 'Characteristic',
+                rollKey: 'weaponSkill',
+                baseTarget: 35,
+                modifierBaseline: 0,
+            },
+            actor,
+        );
     });
 
     it('rollCharacteristic with flavor: nameOverride wins', () => {
@@ -320,14 +338,18 @@ describe('_buildSimpleSkillRoll — NPC paths skip situational lookup entirely',
             target: 35,
         });
 
-        assertShape(result, {
-            actorName: 'Heavy Cultist',
-            nameOverride: 'Autogun Attack',
-            type: 'Attack',
-            rollKey: 'ballisticSkill',
-            baseTarget: 35,
-            modifierBaseline: 0,
-        }, actor);
+        assertShape(
+            result,
+            {
+                actorName: 'Heavy Cultist',
+                nameOverride: 'Autogun Attack',
+                type: 'Attack',
+                rollKey: 'ballisticSkill',
+                baseTarget: 35,
+                modifierBaseline: 0,
+            },
+            actor,
+        );
     });
 
     it('rollSkill on NPC: type="Skill", no situational lookup', () => {
@@ -343,14 +365,18 @@ describe('_buildSimpleSkillRoll — NPC paths skip situational lookup entirely',
             target: 45,
         });
 
-        assertShape(result, {
-            actorName: 'Scholar Cultist',
-            nameOverride: 'Awareness Test',
-            type: 'Skill',
-            rollKey: 'awareness',
-            baseTarget: 45,
-            modifierBaseline: 0,
-        }, actor);
+        assertShape(
+            result,
+            {
+                actorName: 'Scholar Cultist',
+                nameOverride: 'Awareness Test',
+                type: 'Skill',
+                rollKey: 'awareness',
+                baseTarget: 45,
+                modifierBaseline: 0,
+            },
+            actor,
+        );
     });
 });
 

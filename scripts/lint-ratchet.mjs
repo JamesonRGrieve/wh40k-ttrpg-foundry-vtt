@@ -11,16 +11,18 @@
  *   node scripts/lint-ratchet.mjs --update   # rewrite baseline to current count
  */
 import { execSync } from 'node:child_process';
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, unlinkSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { tmpdir } from 'node:os';
 
 const BASELINE_PATH = resolve(process.cwd(), '.eslint-warning-baseline');
 const args = process.argv.slice(2);
 const updateMode = args.includes('--update');
 
 let lintOutput;
+const lintOutputPath = resolve(tmpdir(), `wh40k-eslint-${process.pid}.json`);
 try {
-    lintOutput = execSync('pnpm exec eslint src/module/ --ext .ts --format json', {
+    execSync(`/bin/bash -lc './node_modules/.bin/eslint src/module/ --ext .ts --format json > "${lintOutputPath}"'`, {
         encoding: 'utf8',
         stdio: ['ignore', 'pipe', 'pipe'],
         maxBuffer: 64 * 1024 * 1024,
@@ -28,7 +30,19 @@ try {
 } catch (err) {
     // ESLint exits non-zero when warnings exist with --max-warnings 0, but with the
     // default config it only exits non-zero on errors. Either way the JSON is on stdout.
-    lintOutput = err.stdout?.toString() || '';
+    if (existsSync(lintOutputPath)) {
+        lintOutput = readFileSync(lintOutputPath, 'utf8');
+    } else {
+        lintOutput = err.stdout?.toString() || '';
+    }
+}
+
+if (!lintOutput && existsSync(lintOutputPath)) {
+    lintOutput = readFileSync(lintOutputPath, 'utf8');
+}
+
+if (existsSync(lintOutputPath)) {
+    unlinkSync(lintOutputPath);
 }
 
 let results;

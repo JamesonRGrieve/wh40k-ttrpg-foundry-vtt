@@ -16,13 +16,13 @@
             {{#each rituals as |ritual|}}
             <div class="wh40k-power-card wh40k-ritual-card item-drag" data-item-id="{{ritual.id}}" data-ritual-type="{{ritual.system.type}}" draggable="true">
                 {{!-- Ritual Header --}}
-                <div class="wh40k-power-card-header">
+                <div class="tw-flex tw-items-center tw-gap-2 tw-p-2">
                     <img class="wh40k-power-icon" src="{{ritual.img}}" alt="{{ritual.name}}" />
-                    <div class="wh40k-power-info">
+                    <div class="tw-flex-1 tw-min-w-0">
                         <button type="button" class="wh40k-power-name" data-action="itemEdit" data-item-id="{{ritual.id}}" title="Edit Ritual">
                             {{ritual.name}}
                         </button>
-                        <div class="wh40k-power-meta">
+                        <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-mt-0.5">
                             <span class="wh40k-ritual-type wh40k-type-{{ritual.system.type}}">
                                 {{#if (eq ritual.system.type "prayer")}}
                                 <i class="fas fa-praying-hands"></i>
@@ -41,7 +41,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="wh40k-power-card-actions">
+                    <div class="tw-flex tw-gap-0.5 tw-shrink-0">
                         <button type="button" class="wh40k-power-btn wh40k-btn-roll" data-action="rollRitual" data-item-id="{{ritual.id}}" title="Perform Ritual">
                             <i class="fas fa-dice-d20"></i>
                         </button>
@@ -55,17 +55,17 @@
                 </div>
                 
                 {{!-- Ritual Stats Row --}}
-                <div class="wh40k-power-stats">
-                    <div class="wh40k-power-stat">
+                <div class="tw-flex tw-flex-wrap tw-gap-2 tw-px-3 tw-py-1">
+                    <div class="tw-flex tw-flex-col tw-gap-px tw-min-w-[80px]">
                         <span class="wh40k-stat-label">Test</span>
                         <span class="wh40k-stat-value">{{ritual.system.testLabel}}</span>
                     </div>
-                    <div class="wh40k-power-stat">
+                    <div class="tw-flex tw-flex-col tw-gap-px tw-min-w-[80px]">
                         <span class="wh40k-stat-label">Action</span>
                         <span class="wh40k-stat-value">{{ritual.system.activationLabel}}</span>
                     </div>
                     {{#if ritual.system.test.threshold}}
-                    <div class="wh40k-power-stat">
+                    <div class="tw-flex tw-flex-col tw-gap-px tw-min-w-[80px]">
                         <span class="wh40k-stat-label">Threshold</span>
                         <span class="wh40k-stat-value">{{ritual.system.test.threshold}} DoS</span>
                     </div>

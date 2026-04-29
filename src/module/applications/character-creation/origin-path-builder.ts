@@ -11,8 +11,10 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
-import type { WH40KItemSystemData, WH40KItemModifiers } from '../../types/global.d.ts';
+import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
+import type { GameSystemId, OriginStepConfig, OriginStepDef } from '../../config/game-systems/types.ts';
 import WH40K from '../../config.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
@@ -23,26 +25,35 @@ import OriginDetailDialog from './origin-detail-dialog.ts';
 import OriginPathChoiceDialog from './origin-path-choice-dialog.ts';
 import OriginRollDialog from './origin-roll-dialog.ts';
 
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const { ApplicationV2, HandlebarsApplicationMixin } = (foundry.applications as unknown as { api: typeof foundry.applications.api }).api;
 
 /**
- * Narrowed view of an origin-path item's system data, plus the actor-system
- * fields the builder reads off `this.actor.system`, plus the compendium
- * index-entry shapes the equipment loader reads off `entry.system`.
+ * Union view covering all shapes this builder reads from system data:
+ *   - origin-path item system fields  (item.system)
+ *   - actor system fields             (actor.system)
+ *   - compendium index entry fields   (entry.system)
  *
- * Only fields actually accessed by this file are listed; the underlying
- * `WH40KItemSystemData` index signature (`[key: string]: unknown`) covers
- * anything else through narrow downstream casts. We omit fields whose
- * shape diverges (`cost`, `grants`) from `WH40KItemSystemData` so the
- * override compiles without `as unknown as ...`.
+ * Defined as a plain interface with an index signature so it is structurally
+ * compatible with both WH40KItemSystemData and WH40KActorSystemData — both of
+ * which the builder casts to this type at various call sites. Without the index
+ * signature the compiler rejects the cast because the two DataModel base classes
+ * (ItemDataModel vs ActorDataModel) are otherwise structurally incompatible.
  */
-type OriginPathSystemData = Omit<WH40KItemSystemData, 'cost' | 'grants'> & {
-    selectedChoices?: Record<string, string[]>;
-    rollResults?: Record<string, { rolled?: number; breakdown?: string } | undefined>;
+interface OriginPathSystemData {
+    [key: string]: unknown;
+    // Origin-path item fields
+    step?: string;
+    identifier?: string;
+    availability?: string;
+    clip?: { current?: number; max?: number };
+    weaponTypes?: string[];
+    description?: { value?: string; chat?: string; summary?: string };
     requirements?: { text?: string };
     activeModifiers?: Array<Record<string, unknown>>;
     homebrew?: { throneGelt?: string; thrones?: string };
     modifiers?: WH40KItemModifiers;
+    selectedChoices?: Record<string, string[]>;
+    rollResults?: Record<string, { rolled?: number; breakdown?: string } | undefined>;
     grants?: {
         characteristics?: Record<string, number>;
         skills?: Array<Record<string, unknown>>;
@@ -53,15 +64,49 @@ type OriginPathSystemData = Omit<WH40KItemSystemData, 'cost' | 'grants'> & {
         woundsFormula?: string;
         fateFormula?: string;
     };
-    // Actor-system shaped fields (the builder also runs `actor.system as OriginPathSystemData`)
+    // Actor-system shaped fields (also read via `actor.system as OriginPathSystemData`)
     originPath?: { divination?: string };
     throneGelt?: number;
     influence?: number;
-    characteristics?: Record<string, { base?: number; bonus?: number }>;
+    characteristics?: Record<string, WH40KCharacteristic>;
     skills?: Record<string, { entries?: unknown[] } & Record<string, unknown>>;
     // Compendium index-entry shape (also read via `entry.system as OriginPathSystemData`)
     cost?: { dh2?: { homebrew?: { requisition?: number; throneGelt?: number } } };
+}
+
+/**
+ * NormalizedOrigin augmented with runtime metadata fields set by _itemToSelectionData.
+ * `_id` and `_sourceUuid` are not part of the normalized schema but are attached to
+ * selection objects at runtime for compendium source tracking.
+ */
+type NormalizedOriginWithMeta = NormalizedOrigin & {
+    _id?: string;
+    _sourceUuid?: string | null;
 };
+
+/**
+ * Shape of a single card inside a step layout produced by OriginChartLayout.
+ */
+interface StepLayoutCard {
+    origin: NormalizedOrigin;
+    isSelected: boolean;
+    isDisabled: boolean;
+    isValidNext: boolean;
+    isAdvanced: boolean;
+    xpCost: number;
+    hasChoices: boolean;
+}
+
+/**
+ * Shape of one step entry returned by OriginChartLayout.computeFullChart().
+ */
+interface StepLayout {
+    stepKey: string;
+    stepIndex: number;
+    cards: StepLayoutCard[];
+    maxPosition: number;
+    hasSelection: boolean;
+}
 
 /**
  * Direction modes for origin path creation
@@ -76,8 +121,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     declare close: () => Promise<void>;
     declare actor: WH40KBaseActor;
     declare gameSystem: string;
-    declare registryConfig: Record<string, unknown>;
-    declare systemConfig: Record<string, unknown>;
+    declare registryConfig: BaseSystemConfig;
+    declare systemConfig: OriginStepConfig;
     declare currentStepIndex: number;
     declare guidedMode: boolean;
     declare direction: string;
@@ -85,8 +130,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     declare showCharacteristics: boolean;
     declare showEquipment: boolean;
     declare selections: Map<string, NormalizedOrigin>;
-    declare previewedOrigin: NormalizedOrigin | null;
-    declare lineageSelection: NormalizedOrigin | null;
+    declare previewedOrigin: NormalizedOriginWithMeta | null;
+    declare lineageSelection: NormalizedOriginWithMeta | null;
     declare allOrigins: NormalizedOrigin[];
     declare lineageOrigins: NormalizedOrigin[];
     declare equipmentItems: Array<Record<string, unknown>>;
@@ -176,8 +221,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this.actor = actor;
         this.gameSystem = (options.gameSystem as string) || 'rt';
         // System config from registry — used for labels, ranks, and step config
-        this.registryConfig = SystemConfigRegistry.get(this.gameSystem);
-        this.systemConfig = this.registryConfig.getOriginStepConfig() as Record<string, unknown>;
+        this.registryConfig = SystemConfigRegistry.get(this.gameSystem as GameSystemId);
+        this.systemConfig = this.registryConfig.getOriginStepConfig();
         this.currentStepIndex = 0;
         this.guidedMode = true;
         this.direction = DIRECTION.FORWARD; // Forward or backward
@@ -245,7 +290,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             this._charAssignments[key] = assignments[key] ?? null;
             this._charCustomBases[key] = customBases[key] ?? defaultBase;
         }
-        this._charAdvancedMode = (customBases.enabled as boolean) ?? false;
+        this._charAdvancedMode = !!customBases.enabled;
 
         const persistedMode = genData.mode;
         this._charGenMode = persistedMode === 'point-buy' || persistedMode === 'roll' ? persistedMode : 'roll-pool-hb';
@@ -441,11 +486,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _itemToSelectionData(item: WH40KItem): NormalizedOrigin {
-        const data = item.toObject ? item.toObject() : foundry.utils.deepClone(item);
+        const rawData = item.toObject ? item.toObject() : foundry.utils.deepClone(item);
+        const data = rawData as Record<string, unknown>;
         // Store original uuid for reference to compendium item
-        data._sourceUuid = item.parent === this.actor ? item.flags?.core?.sourceId || data._sourceUuid || item.uuid : item.uuid || data._sourceUuid;
+        data._sourceUuid =
+            item.parent === this.actor
+                ? (item.flags as Record<string, Record<string, unknown>>)?.core?.sourceId || data._sourceUuid || item.uuid
+                : item.uuid || data._sourceUuid;
         // Store actor item id if this is an existing actor item
-        (data as any)._actorItemId = item.parent === this.actor ? item.id : null;
+        data._actorItemId = item.parent === this.actor ? item.id : null;
 
         const normalized = normalizeOrigin(data);
         // Ensure choice and roll fields are available for builder state
@@ -536,8 +585,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const currentStep = this.currentStep;
         // Get origins for current step
-        let currentOrigins = [];
-        let selectedItem = null;
+        let currentOrigins: Record<string, unknown>[] = [];
+        let selectedItem: NormalizedOriginWithMeta | null = null;
 
         if (this.showEquipment) {
             currentOrigins = [];
@@ -558,7 +607,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             // Find the step layout matching current step
             const stepIndex = this.systemConfig.coreSteps.findIndex((s) => s.key === currentStep.key);
-            const stepLayout = chartLayout.steps[stepIndex];
+            const stepLayout = (chartLayout as { steps: StepLayout[] }).steps[stepIndex];
             currentOrigins = this._prepareOriginsForStep(stepLayout);
             // Use previewed origin if available, otherwise use confirmed selection
             selectedItem = this.previewedOrigin || this.selections.get(currentStep.step);
@@ -569,9 +618,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // System-aware values for template
         const journeyTitleKey = `WH40K.OriginPath.JourneyTitle.${this.gameSystem}`;
         const journeyTitle = game.i18n.localize(journeyTitleKey);
-        const hasOptionalStep = !!this.systemConfig.optionalStep;
-        const optionalStepLabel = hasOptionalStep ? this._getLocalizedStepLabel(this.systemConfig.optionalStep.key) : '';
-        const optionalStepIcon = this.systemConfig.optionalStep?.icon ?? 'fa-crown';
+        const optionalStep = this.systemConfig.optionalStep;
+        const hasOptionalStep = !!optionalStep;
+        const optionalStepLabel = optionalStep ? this._getLocalizedStepLabel(optionalStep.key) : '';
+        const optionalStepIcon = optionalStep?.icon ?? 'fa-crown';
 
         const isDH2 = this.gameSystem === 'dh2e';
         const ruleset = WH40KSettings.getRuleset();
@@ -597,7 +647,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             journeyTitle: journeyTitle !== journeyTitleKey ? journeyTitle : game.i18n.localize('WH40K.OriginPath.YourJourney'),
             hasOptionalStep: hasOptionalStep,
             optionalStepLabel: optionalStepLabel,
-            optionalStepDesc: hasOptionalStep ? this._getLocalizedStepDescription(this.systemConfig.optionalStep.descKey) : '',
+            optionalStepDesc: optionalStep ? this._getLocalizedStepDescription(optionalStep.descKey) : '',
             optionalStepIcon: optionalStepIcon,
 
             // Step navigation
@@ -763,8 +813,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _getInfluenceMod(): number {
         let mod = 0;
         for (const [, selection] of this.selections) {
-            const sys = this._getSelectionSystem(selection);
-            const others = sys?.modifiers?.other || [];
+            const sys = this._getSelectionSystem(selection) as OriginPathSystemData;
+            const others = (sys?.modifiers?.other || []) as Array<{ name?: string; key?: string; value?: number }>;
             for (const m of others) {
                 if (m.name === 'Influence') mod += m.value || 0;
             }
@@ -887,7 +937,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             const system = this._getSelectionSystem(selection);
             const sys = system as OriginPathSystemData;
-            const sourceName = selection.name || (sys?.identifier as string) || this._getLocalizedStepLabel(((system?.system as OriginPathSystemData | undefined)?.step) || '');
+            const sourceName =
+                selection.name ||
+                String(sys?.identifier ?? '') ||
+                this._getLocalizedStepLabel(String((system?.system as OriginPathSystemData | undefined)?.step ?? ''));
             const modifiers = sys?.modifiers?.characteristics || {};
 
             for (const [key, value] of Object.entries(modifiers)) {
@@ -999,8 +1052,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _getContextualInfluenceMod(): number {
         let mod = 0;
         for (const selection of this._getSelectionsForDerivedCalculations()) {
-            const sys = this._getSelectionSystem(selection);
-            const others = sys?.modifiers?.other || [];
+            const sys = this._getSelectionSystem(selection) as OriginPathSystemData;
+            const others = (sys?.modifiers?.other || []) as Array<{ name?: string; key?: string; value?: number }>;
             for (const entry of others) {
                 if (entry.name === 'Influence') mod += entry.value || 0;
             }
@@ -1584,7 +1637,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Array}
      * @private
      */
-    _prepareOriginsForStep(stepLayout: Record<string, unknown>): Record<string, unknown>[] {
+    _prepareOriginsForStep(stepLayout: StepLayout | undefined): Record<string, unknown>[] {
         if (!stepLayout?.cards) return [];
 
         return this._dedupeOriginsByIdentity(stepLayout.cards.map((card) => card.origin))
@@ -1611,21 +1664,21 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     badges: card.hasChoices || origin.hasChoices || card.isAdvanced || card.xpCost > 0,
                 };
             })
-            .filter(Boolean);
+            .filter(Boolean) as Record<string, unknown>[];
     }
 
-    _dedupeOriginsByIdentity(origins: unknown[]): unknown[] {
+    _dedupeOriginsByIdentity<T extends NormalizedOrigin>(origins: T[]): T[] {
         const seen = new Set<string>();
         return origins.filter((origin) => {
             const key = [
                 origin?.uuid,
-                origin?._sourceUuid,
+                (origin as NormalizedOriginWithMeta)?._sourceUuid,
                 origin?.id,
-                origin?.system?.step && origin?.system?.identifier ? `${origin.system.step}:${origin.system.identifier}` : null,
+                origin?.system?.step && origin?.system?.identifier ? `${String(origin.system.step)}:${String(origin.system.identifier)}` : null,
             ].find(Boolean);
             if (!key) return true;
             if (seen.has(key)) return false;
-            seen.add(key);
+            seen.add(String(key));
             return true;
         });
     }

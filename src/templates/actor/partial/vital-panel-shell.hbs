@@ -3,10 +3,7 @@
     Used by wounds, fatigue, fate, corruption, insanity panels.
 
     Block-partial usage:
-        {{#> vital-panel-shell key="wounds" label="Wounds" icon="fa-heart-broken"
-             actor=actor rootStateClass=(my-state-class)}}
-            {{!-- body content --}}
-        {{/vital-panel-shell}}
+        Block partial with key / label / icon hashes and nested body content.
 
     Optional `badge` hash: { stateClass, icon, label, tooltip }. When provided,
     a degree-badge (corruption / insanity style) renders in the header.

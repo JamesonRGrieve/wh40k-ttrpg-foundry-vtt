@@ -15,19 +15,19 @@
 
     {{! Main Fields }}
     <div class="wh40k-item-sheet__panel">
-        <div class="wh40k-item-sheet__field-row">
-            <div class="wh40k-item-sheet__checkbox-field">
+        <div class="wh40k-item-sheet__field-row tw-flex tw-gap-4 tw-mb-3">
+            <div class="wh40k-item-sheet__checkbox-field tw-flex tw-items-center tw-gap-2">
                 <input class="wh40k-item-sheet__input" name="system.hasLevel" type="checkbox" data-dtype="Boolean" {{checked item.system.hasLevel}} />
                 <label class="wh40k-item-sheet__label">Has Level</label>
             </div>
-            <div class="wh40k-item-sheet__checkbox-field">
+            <div class="wh40k-item-sheet__checkbox-field tw-flex tw-items-center tw-gap-2">
                 <input class="wh40k-item-sheet__input" name="system.enabled" type="checkbox" data-dtype="Boolean" {{checked item.system.enabled}} />
                 <label class="wh40k-item-sheet__label">Enabled</label>
             </div>
         </div>
 
-        <div class="wh40k-item-sheet__field-row">
-            <div class="wh40k-item-sheet__field">
+        <div class="wh40k-item-sheet__field-row tw-flex tw-gap-4">
+            <div class="wh40k-item-sheet__field tw-flex tw-flex-col tw-gap-1">
                 <label class="wh40k-item-sheet__label">Level</label>
                 {{#if item.system.hasLevel}}
                     <input class="wh40k-item-sheet__input" name="system.level" type="number" data-dtype="Number" value="{{item.system.level}}" />
@@ -35,7 +35,7 @@
                     <input class="wh40k-item-sheet__input" type="text" value="N/A" disabled />
                 {{/if}}
             </div>
-            <div class="wh40k-item-sheet__field">
+            <div class="wh40k-item-sheet__field tw-flex tw-flex-col tw-gap-1 tw-flex-1">
                 <label class="wh40k-item-sheet__label">Source</label>
                 <input class="wh40k-item-sheet__input" name="system.source" type="text" value="{{item.system.source}}" />
             </div>
@@ -43,10 +43,10 @@
     </div>
 
     {{! Description }}
-    <div class="wh40k-item-sheet__description">
-        <div class="wh40k-item-sheet__field">
+    <div class="wh40k-item-sheet__description tw-p-4">
+        <div class="wh40k-item-sheet__field tw-flex tw-flex-col tw-gap-1">
             <label class="wh40k-item-sheet__label">Description</label>
-            <textarea class="wh40k-item-sheet__textarea" name="system.description.value">{{item.system.description.value}}</textarea>
+            <textarea class="wh40k-item-sheet__textarea tw-w-full tw-p-2 tw-rounded tw-border tw-border-[rgba(255,255,255,0.1)] tw-bg-[rgba(0,0,0,0.2)] tw-text-[var(--color-text-primary)]" name="system.description.value">{{item.system.description.value}}</textarea>
         </div>
     </div>
 </form>

@@ -59,7 +59,8 @@
     "dist/",
     "node_modules/",
     "gulpfile.js",
-    "src/packs/"
+    "src/packs/",
+    "src/module/**/*.stories.ts"
   ],
   "overrides": [
     {

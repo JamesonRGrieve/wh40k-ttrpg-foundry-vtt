@@ -1,6 +1,6 @@
 {
-  "tailwind-only": 2,
-  "mixed": 91,
-  "css-only": 128,
-  "total": 221
+  "tailwind-only": 6,
+  "mixed": 116,
+  "css-only": 98,
+  "total": 220
 }

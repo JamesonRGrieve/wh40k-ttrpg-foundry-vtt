@@ -4,18 +4,7 @@
     family (talent / trait / condition / critical-injury / movement / etc).
 
     Block-partial usage:
-        {{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
-              cardClass="wh40k-talent-card"
-              outerExtraClass="tw-overflow-hidden tw-rounded-md"
-              image=item.img
-              imageAlt=item.name
-              title=item.name
-              subtitle=subtitleString
-              badges=badgeArray
-              footerLabel="..."
-              legacyClasses=true}}
-            {{!-- body content for {{> @partial-block}} slot --}}
-        {{/chat-card-shell}}
+        Block partial with body content supplied through the partial-block slot.
 
     Required hash params:
         cardClass        — class for the outer card div (e.g. "wh40k-talent-card")
@@ -34,7 +23,7 @@
                            ones for back-compat with already-rendered chat
                            messages (default true).
 
-    Body content is delivered via {{> @partial-block}}.
+    Body content is delivered via the partial-block slot.
 
     Inline-partial slots (override via {{#*inline "<name>"}}…{{/inline}}):
         header           — replaces the entire header block

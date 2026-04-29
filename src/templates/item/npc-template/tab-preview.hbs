@@ -1,17 +1,17 @@
 {{! NPC Template - Preview Tab }}
 <section class="tab-content tab-preview" data-tab="preview" data-group="primary">
     {{! Threat Selector }}
-    <div class="wh40k-panel preview-controls">
+    <div class="wh40k-panel">
         <header class="wh40k-panel-header">
             <h3><i class="fas fa-eye"></i> {{localize "WH40K.NPC.Template.PreviewSettings"}}</h3>
         </header>
         <div class="wh40k-panel-content">
-            <div class="preview-threat-control">
+            <div class="preview-threat-control tw-flex tw-items-center tw-gap-4">
                 <label>{{localize "WH40K.NPC.Template.PreviewAtThreat"}}</label>
-                <input type="range" min="1" max="30" value="{{previewThreat}}" class="threat-slider" data-action="updatePreview" />
-                <span class="threat-value">{{previewThreat}}</span>
+                <input class="threat-slider tw-flex-1" type="range" min="1" max="30" value="{{previewThreat}}" data-action="updatePreview" />
+                <span class="tw-text-2xl tw-font-bold tw-min-w-[40px] tw-text-center">{{previewThreat}}</span>
             </div>
-            <div class="preview-actions">
+            <div class="preview-actions tw-mt-4 tw-text-right">
                 <button type="button" class="wh40k-btn wh40k-btn-primary" data-action="createFromPreview">
                     <i class="fas fa-user-plus"></i>
                     {{localize "WH40K.NPC.Template.CreateNPC"}}
@@ -21,21 +21,21 @@
     </div>
 
     {{! Preview Stat Block }}
-    <div class="wh40k-panel preview-statblock">
+    <div class="wh40k-panel">
         <header class="wh40k-panel-header">
-            <h3>{{item.name}} <span class="threat-badge">{{localize "WH40K.NPC.ThreatLevel"}} {{previewThreat}}</span></h3>
+            <h3>{{item.name}} <span class="tw-text-sm tw-px-2 tw-py-0.5 tw-rounded-md tw-ml-2" style="background: var(--wh40k-warning)">{{localize "WH40K.NPC.ThreatLevel"}} {{previewThreat}}</span></h3>
         </header>
         <div class="wh40k-panel-content">
             {{! Characteristics Preview }}
-            <div class="preview-section">
-                <h4>{{localize "WH40K.Characteristics"}}</h4>
-                <div class="preview-characteristics">
+            <div class="preview-section tw-mb-4 tw-pb-4 tw-border-b tw-border-[var(--wh40k-border-color)] last:tw-border-b-0">
+                <h4 class="tw-text-sm tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)] tw-mb-2">{{localize "WH40K.Characteristics"}}</h4>
+                <div class="preview-characteristics tw-flex tw-flex-wrap tw-gap-3">
                     {{#each previewData.characteristics as |char key|}}
-                        <div class="preview-char">
-                            <span class="char-label">{{char.short}}</span>
-                            <span class="char-value">{{char.value}}</span>
+                        <div class="tw-text-center tw-p-2 tw-rounded-md tw-min-w-[50px]" style="background: var(--wh40k-bg-secondary)">
+                            <span class="tw-block tw-text-[0.625rem] tw-font-bold tw-uppercase">{{char.short}}</span>
+                            <span class="tw-block tw-text-xl tw-font-bold">{{char.value}}</span>
                             {{#if char.unnatural}}
-                                <span class="char-unnatural">({{char.unnatural}})</span>
+                                <span class="tw-text-xs tw-text-[var(--wh40k-warning)]">({{char.unnatural}})</span>
                             {{/if}}
                         </div>
                     {{/each}}
@@ -43,31 +43,31 @@
             </div>
 
             {{! Vitals Preview }}
-            <div class="preview-section">
-                <h4>{{localize "WH40K.NPC.Template.VitalStats"}}</h4>
-                <div class="preview-vitals">
+            <div class="preview-section tw-mb-4 tw-pb-4 tw-border-b tw-border-[var(--wh40k-border-color)]">
+                <h4 class="tw-text-sm tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)] tw-mb-2">{{localize "WH40K.NPC.Template.VitalStats"}}</h4>
+                <div class="preview-vitals tw-flex tw-gap-8">
                     <div class="vital">
-                        <span class="vital-label">{{localize "WH40K.Wounds"}}</span>
-                        <span class="vital-value">{{previewData.wounds}}</span>
+                        <span class="tw-text-xs tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Wounds"}}</span>
+                        <span class="tw-text-xl tw-font-bold tw-ml-2">{{previewData.wounds}}</span>
                     </div>
                     <div class="vital">
-                        <span class="vital-label">{{localize "WH40K.Movement"}}</span>
-                        <span class="vital-value">{{previewData.movement}}</span>
+                        <span class="tw-text-xs tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Movement"}}</span>
+                        <span class="tw-text-xl tw-font-bold tw-ml-2">{{previewData.movement}}</span>
                     </div>
                     <div class="vital">
-                        <span class="vital-label">{{localize "WH40K.NPC.Armour"}}</span>
-                        <span class="vital-value">{{previewData.armour}}</span>
+                        <span class="tw-text-xs tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Armour"}}</span>
+                        <span class="tw-text-xl tw-font-bold tw-ml-2">{{previewData.armour}}</span>
                     </div>
                 </div>
             </div>
 
             {{! Skills Preview }}
             {{#if (gt previewData.skills.length 0)}}
-                <div class="preview-section">
-                    <h4>{{localize "WH40K.Skills"}}</h4>
-                    <div class="preview-skills">
+                <div class="preview-section tw-mb-4 tw-pb-4 tw-border-b tw-border-[var(--wh40k-border-color)]">
+                    <h4 class="tw-text-sm tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)] tw-mb-2">{{localize "WH40K.Skills"}}</h4>
+                    <div class="preview-skills tw-flex tw-flex-wrap tw-gap-2">
                         {{#each previewData.skills as |skill|}}
-                            <span class="skill-tag">{{skill.name}} {{skill.target}}</span>
+                            <span class="tw-px-2 tw-py-1 tw-rounded-md tw-text-sm" style="background: var(--wh40k-bg-secondary)">{{skill.name}} {{skill.target}}</span>
                         {{/each}}
                     </div>
                 </div>
@@ -75,15 +75,15 @@
 
             {{! Weapons Preview }}
             {{#if (gt previewData.weapons.length 0)}}
-                <div class="preview-section">
-                    <h4>{{localize "WH40K.Weapons"}}</h4>
+                <div class="preview-section tw-mb-4 tw-pb-4 tw-border-b tw-border-[var(--wh40k-border-color)]">
+                    <h4 class="tw-text-sm tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)] tw-mb-2">{{localize "WH40K.Weapons"}}</h4>
                     <div class="preview-weapons">
                         {{#each previewData.weapons as |weapon|}}
-                            <div class="preview-weapon">
-                                <span class="weapon-name">{{weapon.name}}</span>
-                                <span class="weapon-stats">{{weapon.damage}} Pen {{weapon.pen}}</span>
+                            <div class="preview-weapon tw-flex tw-gap-4 tw-py-2 tw-border-b tw-border-dashed tw-border-[var(--wh40k-border-color)]">
+                                <span class="tw-font-medium">{{weapon.name}}</span>
+                                <span class="tw-text-[var(--wh40k-text-muted)]">{{weapon.damage}} Pen {{weapon.pen}}</span>
                                 {{#if weapon.special}}
-                                    <span class="weapon-special">{{weapon.special}}</span>
+                                    <span class="tw-text-sm tw-italic">{{weapon.special}}</span>
                                 {{/if}}
                             </div>
                         {{/each}}
@@ -93,14 +93,14 @@
 
             {{! Talents & Traits Preview }}
             {{#if (or (gt previewData.talents.length 0) (gt previewData.traits.length 0))}}
-                <div class="preview-section">
-                    <h4>{{localize "WH40K.NPC.Template.TalentsAndTraits"}}</h4>
-                    <div class="preview-abilities">
+                <div class="preview-section tw-mb-4 tw-pb-4 tw-border-b tw-border-[var(--wh40k-border-color)]">
+                    <h4 class="tw-text-sm tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)] tw-mb-2">{{localize "WH40K.NPC.Template.TalentsAndTraits"}}</h4>
+                    <div class="preview-abilities tw-flex tw-flex-wrap tw-gap-2">
                         {{#each previewData.talents as |talent|}}
-                            <span class="ability-tag talent">{{talent.name}}</span>
+                            <span class="ability-tag tw-px-2 tw-py-1 tw-rounded-md tw-text-sm" style="background: var(--wh40k-accent-color-light)">{{talent.name}}</span>
                         {{/each}}
                         {{#each previewData.traits as |trait|}}
-                            <span class="ability-tag trait">{{trait.name}}{{#if trait.level}} ({{trait.level}}){{/if}}</span>
+                            <span class="ability-tag tw-px-2 tw-py-1 tw-rounded-md tw-text-sm" style="background: var(--wh40k-success-light)">{{trait.name}}{{#if trait.level}} ({{trait.level}}){{/if}}</span>
                         {{/each}}
                     </div>
                 </div>
@@ -108,8 +108,8 @@
 
             {{! Special Abilities Preview }}
             {{#if previewData.specialAbilities}}
-                <div class="preview-section">
-                    <h4>{{localize "WH40K.NPC.Template.SpecialAbilities"}}</h4>
+                <div class="preview-section tw-mb-4">
+                    <h4 class="tw-text-sm tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)] tw-mb-2">{{localize "WH40K.NPC.Template.SpecialAbilities"}}</h4>
                     <div class="preview-special-abilities">
                         {{{previewData.specialAbilities}}}
                     </div>

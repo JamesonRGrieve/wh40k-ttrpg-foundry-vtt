@@ -153,7 +153,7 @@ export class BasicActionManager {
             // Generate new ID for action data
             actionData.id = uuid();
             // Use a FP
-            await sourceActor!.spendFate();
+            await sourceActor?.spendFate?.();
             // Refund Initial Resources
             await actionData.refundResources();
             // Reset
@@ -174,11 +174,11 @@ export class BasicActionManager {
         const damageType = div.dataset.damageType;
 
         const hitData = new Hit();
-        hitData.location = location;
+        hitData.location = location ?? 'Body';
         (hitData as any).totalDamage = totalDamage;
         (hitData as any).totalPenetration = totalPenetration;
         (hitData as any).totalFatigue = totalFatigue;
-        hitData.damageType = damageType;
+        hitData.damageType = damageType ?? 'Impact';
 
         const targetUuid = div.dataset.targetUuid;
 
@@ -190,7 +190,7 @@ export class BasicActionManager {
         } else {
             const targetedObjects = game.user.targets;
             if (targetedObjects && targetedObjects.size > 0) {
-                const token = targetedObjects.values().next().value as TokenDocument;
+                const token = targetedObjects.values().next().value as Token;
                 targetActor = token.actor as WH40KBaseActorDocument | undefined;
             }
         }

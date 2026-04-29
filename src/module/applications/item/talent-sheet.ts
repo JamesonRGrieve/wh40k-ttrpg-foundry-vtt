@@ -10,6 +10,7 @@
  */
 
 import BaseItemSheet from './base-item-sheet.ts';
+import type TalentData from '../../data/item/talent.ts';
 
 /**
  * Redesigned sheet for talent items with modern ApplicationV2 patterns.
@@ -76,7 +77,7 @@ export default class TalentSheet extends BaseItemSheet {
     /** @inheritDoc */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const system = this.item.system;
+        const system = this.item.system as unknown as TalentData;
 
         // Tab state
         context.tabs = this._getTabs();
@@ -95,7 +96,11 @@ export default class TalentSheet extends BaseItemSheet {
         context.tierOptions = this._getTierOptions(system.tier);
 
         // Determine effects tab section order (sections with data first)
-        context.effectsSectionOrder = this._getEffectsSectionOrder(context.modifiersData, context.situationalData, context.grantsData);
+        context.effectsSectionOrder = this._getEffectsSectionOrder(
+            context.modifiersData as Record<string, unknown>,
+            context.situationalData as Record<string, unknown>,
+            context.grantsData as Record<string, unknown>,
+        );
 
         return context;
     }
@@ -108,9 +113,8 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared talent data
      * @protected
      */
-    _prepareTalentData(system: Record<string, unknown>): Record<string, unknown> {
+    _prepareTalentData(system: TalentData): Record<string, unknown> {
         // Get source reference properly (not the object)
-        const sourceReference = system.sourceReference || '';
         const sourceBook = system.source?.book || '';
         const sourcePage = system.source?.page || '';
 
@@ -129,7 +133,7 @@ export default class TalentSheet extends BaseItemSheet {
             specialization: system.specialization || '',
             notes: system.notes || '',
             // Source fields
-            source: sourceReference,
+            source: sourceBook ? `${sourceBook} p.${sourcePage}` : '',
             sourceBook: sourceBook,
             sourcePage: sourcePage,
             // Benefit field
@@ -149,15 +153,15 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared prerequisites data
      * @protected
      */
-    _preparePrerequisitesData(system: Record<string, unknown>): Record<string, unknown> {
-        const prereqs = system.prerequisites || {};
+    _preparePrerequisitesData(system: TalentData): Record<string, unknown> {
+        const prereqs = system.prerequisites || { text: '', characteristics: {}, skills: [], talents: [] };
         const chars = prereqs.characteristics || {};
         const skills = prereqs.skills || [];
         const talents = prereqs.talents || [];
 
         // Format characteristics requirements
         const characteristicReqs = Object.entries(chars)
-            .filter(([_, value]) => value > 0)
+            .filter(([_, value]) => (value as number) > 0)
             .map(([key, value]) => ({
                 key,
                 label: this._getCharacteristicLabel(key),
@@ -170,10 +174,10 @@ export default class TalentSheet extends BaseItemSheet {
             hasText: !!(prereqs.text && prereqs.text.trim()),
             characteristics: characteristicReqs,
             hasCharacteristics: characteristicReqs.length > 0,
-            skills: skills.filter((s) => s),
-            hasSkills: skills.filter((s) => s).length > 0,
-            talents: talents.filter((t) => t),
-            hasTalents: talents.filter((t) => t).length > 0,
+            skills: (skills as string[]).filter((s: string) => s),
+            hasSkills: (skills as string[]).filter((s: string) => s).length > 0,
+            talents: (talents as string[]).filter((t: string) => t),
+            hasTalents: (talents as string[]).filter((t: string) => t).length > 0,
             hasAny: system.hasPrerequisites ?? false,
             label: system.prerequisitesLabel || '',
         };
@@ -187,8 +191,8 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared modifiers data
      * @protected
      */
-    _prepareModifiersData(system: Record<string, unknown>): Record<string, unknown> {
-        const mods = system.modifiers || {};
+    _prepareModifiersData(system: TalentData): Record<string, unknown> {
+        const mods = system.modifiers || ({} as TalentData['modifiers']);
 
         // Characteristic modifiers
         const charMods = Object.entries(mods.characteristics || {})
@@ -198,7 +202,7 @@ export default class TalentSheet extends BaseItemSheet {
                 label: this._getCharacteristicLabel(key),
                 short: this._getCharacteristicShort(key),
                 value,
-                positive: value > 0,
+                positive: (value as number) > 0,
             }));
 
         // Skill modifiers
@@ -208,33 +212,33 @@ export default class TalentSheet extends BaseItemSheet {
                 key,
                 label: this._formatSkillLabel(key),
                 value,
-                positive: value > 0,
+                positive: (value as number) > 0,
             }));
 
         // Combat modifiers
-        const combat = mods.combat || {};
+        const combat = mods.combat || ({} as TalentData['modifiers']['combat']);
         const combatMods = Object.entries(combat)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
                 label: this._formatCombatLabel(key),
                 value,
-                positive: value > 0,
+                positive: (value as number) > 0,
             }));
 
         // Resource modifiers
-        const resources = mods.resources || {};
+        const resources = mods.resources || ({} as TalentData['modifiers']['resources']);
         const resourceMods = Object.entries(resources)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
                 label: this._formatResourceLabel(key),
                 value,
-                positive: value > 0,
+                positive: (value as number) > 0,
             }));
 
         // Other modifiers
-        const otherMods = (mods.other || []).map((mod) => ({
+        const otherMods = (mods.other || []).map((mod: { key: string; label: string; value: number; mode: string }) => ({
             ...mod,
             positive: mod.value > 0,
         }));
@@ -264,10 +268,10 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared grants data
      * @protected
      */
-    _prepareGrantsData(system: Record<string, unknown>): Record<string, unknown> {
-        const grants = system.grants || {};
+    _prepareGrantsData(system: TalentData): Record<string, unknown> {
+        const grants = system.grants || ({ skills: [], talents: [], traits: [], specialAbilities: [] } as TalentData['grants']);
 
-        const skills = (grants.skills || []).map((skill) => ({
+        const skills = (grants.skills || []).map((skill: { name: string; specialization: string; level: string }) => ({
             name: skill.name,
             specialization: skill.specialization || null,
             level: skill.level || 'trained',
@@ -275,21 +279,21 @@ export default class TalentSheet extends BaseItemSheet {
             displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
 
-        const talents = (grants.talents || []).map((talent) => ({
+        const talents = (grants.talents || []).map((talent: { name: string; specialization: string; uuid: string }) => ({
             name: talent.name,
             specialization: talent.specialization || null,
             uuid: talent.uuid || null,
             hasLink: !!talent.uuid,
         }));
 
-        const traits = (grants.traits || []).map((trait) => ({
+        const traits = (grants.traits || []).map((trait: { name: string; level: number; uuid: string }) => ({
             name: trait.name,
             level: trait.level || null,
             uuid: trait.uuid || null,
             hasLink: !!trait.uuid,
         }));
 
-        const specialAbilities = (grants.specialAbilities || []).map((ability) => ({
+        const specialAbilities = (grants.specialAbilities || []).map((ability: { name: string; description: string }) => ({
             name: ability.name,
             description: ability.description || '',
         }));
@@ -317,10 +321,10 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared situational data
      * @protected
      */
-    _prepareSituationalData(system: Record<string, unknown>): Record<string, unknown> {
-        const situational = system.modifiers?.situational || {};
+    _prepareSituationalData(system: TalentData): Record<string, unknown> {
+        const situational = system.modifiers?.situational || ({ characteristics: [], skills: [], combat: [] } as TalentData['modifiers']['situational']);
 
-        const characteristics = (situational.characteristics || []).map((mod) => ({
+        const characteristics = (situational.characteristics || []).map((mod: { key: string; value: number; condition: string }) => ({
             key: mod.key,
             label: this._getCharacteristicLabel(mod.key),
             value: mod.value,
@@ -329,7 +333,7 @@ export default class TalentSheet extends BaseItemSheet {
             positive: mod.value > 0,
         }));
 
-        const skills = (situational.skills || []).map((mod) => ({
+        const skills = (situational.skills || []).map((mod: { key: string; value: number; condition: string }) => ({
             key: mod.key,
             label: this._formatSkillLabel(mod.key),
             value: mod.value,
@@ -338,7 +342,7 @@ export default class TalentSheet extends BaseItemSheet {
             positive: mod.value > 0,
         }));
 
-        const combat = (situational.combat || []).map((mod) => ({
+        const combat = (situational.combat || []).map((mod: { key: string; value: number; condition: string }) => ({
             key: mod.key,
             label: this._formatCombatLabel(mod.key),
             value: mod.value,
@@ -368,8 +372,8 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared roll config data
      * @protected
      */
-    _prepareRollConfigData(system: Record<string, unknown>): Record<string, unknown> {
-        const config = system.rollConfig || {};
+    _prepareRollConfigData(system: TalentData): Record<string, unknown> {
+        const config = system.rollConfig || ({ characteristic: '', skill: '', modifier: 0, description: '' } as TalentData['rollConfig']);
         return {
             characteristic: config.characteristic || '',
             characteristicLabel: config.characteristic ? this._getCharacteristicLabel(config.characteristic) : '',
@@ -466,7 +470,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _getCharacteristicLabel(key: string): string {
-        const labels = {
+        const labels: Record<string, string> = {
             weaponSkill: 'Weapon Skill',
             ballisticSkill: 'Ballistic Skill',
             strength: 'Strength',
@@ -488,7 +492,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _getCharacteristicShort(key: string): string {
-        const shorts = {
+        const shorts: Record<string, string> = {
             weaponSkill: 'WS',
             ballisticSkill: 'BS',
             strength: 'S',
@@ -524,7 +528,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _formatCombatLabel(key: string): string {
-        const labels = {
+        const labels: Record<string, string> = {
             attack: 'Attack Bonus',
             damage: 'Damage Bonus',
             penetration: 'Penetration',
@@ -542,7 +546,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _formatResourceLabel(key: string): string {
-        const labels = {
+        const labels: Record<string, string> = {
             wounds: 'Wounds',
             fate: 'Fate Points',
             insanity: 'Insanity Threshold',
@@ -557,8 +561,8 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {string} Formatted label
      * @protected
      */
-    _getTrainingLabel(level: number): string {
-        const labels = {
+    _getTrainingLabel(level: string): string {
+        const labels: Record<string, string> = {
             trained: 'Trained',
             plus10: '+10',
             plus20: '+20',
@@ -573,7 +577,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _getCharacteristicIcon(key: string): string {
-        const icons = {
+        const icons: Record<string, string> = {
             weaponSkill: 'fa-solid fa-sword',
             ballisticSkill: 'fa-solid fa-crosshairs',
             strength: 'fa-solid fa-dumbbell',
@@ -595,7 +599,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _getSkillIcon(key: string): string {
-        const icons = {
+        const icons: Record<string, string> = {
             // Combat skills
             dodge: 'fa-solid fa-shield-halved',
             parry: 'fa-solid fa-shield',
@@ -675,7 +679,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _getCombatIcon(key: string): string {
-        const icons = {
+        const icons: Record<string, string> = {
             attack: 'fa-solid fa-crosshairs',
             damage: 'fa-solid fa-burst',
             penetration: 'fa-solid fa-arrow-up-right-dots',
@@ -706,16 +710,16 @@ export default class TalentSheet extends BaseItemSheet {
      */
     _setupTalentTabs(): void {
         const tabs = this.element.querySelectorAll('.wh40k-talent-tabs .wh40k-talent-tab');
-        const switchTab = (tabName) => {
+        const switchTab = (tabName: string | undefined) => {
             if (!tabName) return;
 
             // Update active tab button
-            tabs.forEach((t) => t.classList.toggle('active', t.dataset.tab === tabName));
+            tabs.forEach((t) => t.classList.toggle('active', (t as HTMLElement).dataset.tab === tabName));
 
             // Show/hide panels
             const panels = this.element.querySelectorAll('.wh40k-talent-panel');
             panels.forEach((panel) => {
-                panel.classList.toggle('active', panel.dataset.tab === tabName);
+                panel.classList.toggle('active', (panel as HTMLElement).dataset.tab === tabName);
             });
 
             // Update tab group state
@@ -726,7 +730,7 @@ export default class TalentSheet extends BaseItemSheet {
         tabs.forEach((tab) => {
             tab.addEventListener('click', (event) => {
                 event.preventDefault();
-                switchTab(tab.dataset.tab);
+                switchTab((tab as HTMLElement).dataset.tab);
             });
         });
 
@@ -735,7 +739,7 @@ export default class TalentSheet extends BaseItemSheet {
         if (bannerLink) {
             bannerLink.addEventListener('click', (event) => {
                 event.preventDefault();
-                switchTab(bannerLink.dataset.tab);
+                switchTab((bannerLink as HTMLElement).dataset.tab);
             });
         }
     }
@@ -796,8 +800,8 @@ export default class TalentSheet extends BaseItemSheet {
         if (!uuid) return;
 
         try {
-            const item = await fromUuid(uuid);
-            if (item) {
+            const item = (await fromUuid(uuid)) as { sheet?: { render: (force: boolean) => void } } | null;
+            if (item?.sheet) {
                 item.sheet.render(true);
             }
         } catch (err) {
@@ -816,7 +820,7 @@ export default class TalentSheet extends BaseItemSheet {
     static async #adjustRank(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.item.system.stackable) return;
 
-        const delta = parseInt(target.dataset.delta, 10);
+        const delta = parseInt(target.dataset.delta ?? '', 10);
         if (isNaN(delta)) return;
 
         const currentRank = this.item.system.rank || 1;
@@ -842,7 +846,7 @@ export default class TalentSheet extends BaseItemSheet {
         const dialog = new TalentEditorDialog({
             item: this.item,
             initialSection: section,
-        });
+        }) as unknown as { render: (force: boolean) => Promise<void> };
         await dialog.render(true);
     }
 
@@ -866,7 +870,7 @@ export default class TalentSheet extends BaseItemSheet {
 
         await ChatMessage.create({
             content,
-            speaker: ChatMessage.getSpeaker({ actor: this.item.actor }),
+            speaker: ChatMessage.getSpeaker({ actor: this.item.actor ?? undefined }),
         });
     }
 }

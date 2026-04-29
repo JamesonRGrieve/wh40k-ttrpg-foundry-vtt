@@ -7,12 +7,114 @@
  */
 
 import type { WH40KNPC } from '../../documents/npc.ts';
+import type { SidebarHeaderField } from '../../config/game-systems/types.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
 import StatBlockParser from '../npc/stat-block-parser.ts';
 import NPCThreatScalerDialog from '../npc/threat-scaler-dialog.ts';
 import CharacterSheet from './character-sheet.ts';
+
+/** Typed shape of a prepared item entry on the NPC sheet context. */
+type NPCItemContext = {
+    type: string;
+    id: string;
+    [key: string]: unknown;
+};
+
+/** Typed shape of a hit-location entry on the NPC sheet context. */
+type NPCHitLocation = {
+    key: string;
+    label: string;
+    short?: string;
+    range?: string;
+    value: number;
+    dr?: number;
+    [key: string]: unknown;
+};
+
+/** Typed shape of context.horde on the NPC sheet. */
+type NPCHordeContext = {
+    enabled?: unknown;
+    magnitude?: number;
+    magnitudeMax?: number;
+    magnitudePercent?: number;
+    damageMultiplier?: number;
+    sizeModifier?: number;
+    isHorde?: unknown;
+    destroyed?: boolean;
+    barClass?: string;
+    [key: string]: unknown;
+};
+
+/**
+ * Typed projection of `context.system` as set by `_prepareContext` /
+ * CharacterSheet.  Only the fields NPCSheet actually reads are listed;
+ * the index signature keeps the type open for additional fields.
+ */
+type NPCSystemContext = {
+    characteristics: Record<
+        string,
+        {
+            label: string;
+            short: string;
+            base: number;
+            modifier: number;
+            unnatural: number;
+            total: number;
+            bonus: number;
+        }
+    >;
+    trainedSkills: Record<
+        string,
+        {
+            name?: string;
+            characteristic?: string;
+            trained?: boolean;
+            plus10?: boolean;
+            plus20?: boolean;
+            bonus?: number;
+        }
+    >;
+    trainedSkillsList?: Array<Record<string, unknown>>;
+    horde?: {
+        enabled?: unknown;
+        magnitude?: { current?: number; max?: number };
+        damageMultiplier?: number;
+        sizeModifier?: number;
+    };
+    armour: {
+        mode: string;
+        total: number;
+        locations?: {
+            head?: number;
+            body?: number;
+            leftArm?: number;
+            rightArm?: number;
+            leftLeg?: number;
+            rightLeg?: number;
+            [key: string]: number | undefined;
+        };
+    };
+    wounds?: { value?: number; max?: number; critical?: number };
+    movement?: Record<string, unknown>;
+    initiative?: Record<string, unknown>;
+    isHorde?: boolean;
+    magnitudePercent?: number;
+    hordeDestroyed?: boolean;
+    pinnedAbilities?: string[];
+    tags?: string[];
+    source?: string;
+    template?: string;
+    specialAbilities?: unknown;
+    threatTier?: unknown;
+    threatLevel?: unknown;
+    type?: string;
+    role?: string;
+    faction?: string;
+    getSkillTarget?: (key: string) => number | string;
+    [key: string]: unknown;
+};
 
 /**
  * Actor sheet for npc type actors.
@@ -22,17 +124,17 @@ import CharacterSheet from './character-sheet.ts';
  * @extends {CharacterSheet}
  */
 export default class NPCSheet extends CharacterSheet {
-    declare actor: WH40KNPC;
-    declare document: WH40KNPC;
-    declare element: HTMLElement;
-    declare position: { top: number; left: number; width: number; height: number };
     declare isEditable: boolean;
     declare _notify: (message: string, type?: string) => void;
     declare render: (options?: Record<string, unknown> | boolean) => Promise<unknown>;
-    declare submit: (options?: Record<string, unknown>) => Promise<unknown>;
 
     /** NPC sheets default to EDIT mode for GM convenience. */
     _mode = 2;
+
+    /** The actor cast to its NPC document type for NPC-specific API access. */
+    protected get npcActor(): WH40KNPC {
+        return this.actor as unknown as WH40KNPC;
+    }
 
     /* -------------------------------------------- */
     /*  Static Configuration                        */
@@ -114,8 +216,8 @@ export default class NPCSheet extends CharacterSheet {
      * _npc-sheet.css so NPCs read --npc-accent-primary while PCs keep gold.
      * @override
      */
-    static PARTS = (() => {
-        const parent = CharacterSheet.PARTS as Record<string, { template: string; container?: { classes?: string[]; id?: string }; scrollable?: string[] }>;
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = (() => {
+        const parent = CharacterSheet.PARTS;
         return {
             header: parent.header,
             tabs: parent.tabs,
@@ -128,7 +230,7 @@ export default class NPCSheet extends CharacterSheet {
                 container: { classes: ['wh40k-body'], id: 'tab-body' },
                 scrollable: [''],
             },
-        };
+        } as Record<string, ApplicationV2Config.PartConfiguration>;
     })();
 
     /* -------------------------------------------- */
@@ -197,7 +299,7 @@ export default class NPCSheet extends CharacterSheet {
             heavy: 'Heavy',
             thrown: 'Thrown',
         };
-        context.transactionProfile = TransactionManager.getProfile(this.actor);
+        context.transactionProfile = TransactionManager.getProfile(this.actor as unknown as Actor);
 
         // NPC-flavoured preparation on top of the PC context.
         this._prepareCharacteristicsContext(context);
@@ -208,14 +310,15 @@ export default class NPCSheet extends CharacterSheet {
         return context;
     }
 
-    protected _getSidebarHeaderFields(_gameSystem: string) {
-        const threatTier = (this.actor.system?.threatTier ?? {}) as { color?: string; label?: string };
+    protected _getSidebarHeaderFields(_gameSystem: string): SidebarHeaderField[] {
+        const npcActor = this.actor as unknown as WH40KNPC;
+        const threatTier = (npcActor.system?.threatTier ?? {}) as { color?: string; label?: string };
         return [
             {
                 label: 'Threat',
                 name: 'system.threatLevel',
-                type: 'number',
-                value: this.actor.system?.threatLevel ?? 1,
+                type: 'number' as const,
+                value: npcActor.system?.threatLevel ?? 1,
                 min: 1,
                 max: 30,
                 icon: 'fa-solid fa-skull',
@@ -229,8 +332,8 @@ export default class NPCSheet extends CharacterSheet {
             {
                 label: 'Type',
                 name: 'system.type',
-                type: 'select',
-                value: this.actor.system?.type ?? 'troop',
+                type: 'select' as const,
+                value: npcActor.system?.type ?? 'troop',
                 options: {
                     troop: 'Troop',
                     elite: 'Elite',
@@ -245,8 +348,8 @@ export default class NPCSheet extends CharacterSheet {
             {
                 label: 'Role',
                 name: 'system.role',
-                type: 'select',
-                value: this.actor.system?.role ?? 'bruiser',
+                type: 'select' as const,
+                value: npcActor.system?.role ?? 'bruiser',
                 options: {
                     bruiser: 'Bruiser',
                     sniper: 'Sniper',
@@ -259,8 +362,8 @@ export default class NPCSheet extends CharacterSheet {
             {
                 label: 'Faction',
                 name: 'system.faction',
-                type: 'text',
-                value: this.actor.system?.faction ?? '',
+                type: 'text' as const,
+                value: npcActor.system?.faction ?? '',
                 placeholder: 'Faction',
             },
         ];
@@ -275,7 +378,8 @@ export default class NPCSheet extends CharacterSheet {
      * @protected
      */
     _prepareCharacteristicsContext(context: Record<string, unknown>): void {
-        const chars = context.system.characteristics || {};
+        const sys = context.system as NPCSystemContext;
+        const chars = sys.characteristics || {};
         const charArray = [];
 
         // Define the 9 characteristics for NPCs (exclude Influence)
@@ -309,7 +413,8 @@ export default class NPCSheet extends CharacterSheet {
      */
     _prepareWeaponsContext(context: Record<string, unknown>): void {
         // Embedded weapons (from items dragged onto the NPC)
-        context.embeddedWeapons = context.items.filter((i) => i.type === 'weapon');
+        const items = context.items as NPCItemContext[];
+        context.embeddedWeapons = items.filter((i) => i.type === 'weapon');
     }
 
     /* -------------------------------------------- */
@@ -320,23 +425,25 @@ export default class NPCSheet extends CharacterSheet {
      * @protected
      */
     _prepareHordeContext(context: Record<string, unknown>): void {
-        const horde = context.system.horde || {};
-        const isHorde = context.system.isHorde;
+        const sys = context.system as NPCSystemContext;
+        const horde = sys.horde ?? {};
+        const isHorde = sys.isHorde;
 
-        context.horde = {
+        const hordeCtx: NPCHordeContext = {
             enabled: horde.enabled,
             magnitude: horde.magnitude?.current ?? 30,
             magnitudeMax: horde.magnitude?.max ?? 30,
-            magnitudePercent: context.system.magnitudePercent ?? 100,
+            magnitudePercent: (sys.magnitudePercent as number | undefined) ?? 100,
             damageMultiplier: horde.damageMultiplier ?? 1,
             sizeModifier: horde.sizeModifier ?? 0,
             isHorde,
-            destroyed: context.system.hordeDestroyed ?? false,
+            destroyed: sys.hordeDestroyed ?? false,
         };
 
         // Magnitude bar styling
-        const pct = context.horde.magnitudePercent;
-        context.horde.barClass = pct > 66 ? 'high' : pct > 33 ? 'medium' : 'low';
+        const pct = hordeCtx.magnitudePercent ?? 100;
+        hordeCtx.barClass = pct > 66 ? 'high' : pct > 33 ? 'medium' : 'low';
+        context.horde = hordeCtx;
     }
 
     /* -------------------------------------------- */
@@ -403,25 +510,28 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareOverviewContext(context: Record<string, unknown>): void {
+    _prepareOverviewContext(context: Record<string, unknown>, _options: Record<string, unknown> = {}): Record<string, unknown> {
+        const sys = context.system as NPCSystemContext;
+
         // Ensure items array exists
         if (!context.items) {
             context.items = Array.from(this.actor.items);
         }
+        const items = context.items as NPCItemContext[];
 
         // Pinned abilities for overview
-        const pinnedIds = context.system.pinnedAbilities || [];
-        context.pinnedAbilities = context.items.filter((i) => pinnedIds.includes(i.id) && (i.type === 'talent' || i.type === 'trait'));
+        const pinnedIds = sys.pinnedAbilities ?? [];
+        context.pinnedAbilities = items.filter((i) => pinnedIds.includes(i.id as string) && (i.type === 'talent' || i.type === 'trait'));
 
         // Favorite Skills
         const favoriteSkillKeys = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
         context.favoriteSkills = favoriteSkillKeys
             .map((key: string) => {
-                const skillData = context.system.trainedSkills[key];
+                const skillData = sys.trainedSkills[key];
                 if (!skillData) return null;
 
                 // Get characteristic for this skill
-                const charMap = {
+                const charMap: Record<string, string> = {
                     acrobatics: 'agility',
                     athletics: 'strength',
                     awareness: 'perception',
@@ -444,9 +554,9 @@ export default class NPCSheet extends CharacterSheet {
                     survival: 'perception',
                     techUse: 'intelligence',
                 };
-                const charKey = charMap[key] || 'intelligence';
-                const char = context.system.characteristics[charKey];
-                const target = context.system.getSkillTarget ? context.system.getSkillTarget(key) : char.total;
+                const charKey = charMap[key] ?? 'intelligence';
+                const char = sys.characteristics[charKey];
+                const target = sys.getSkillTarget ? sys.getSkillTarget(key) : char.total;
 
                 return {
                     key,
@@ -460,40 +570,42 @@ export default class NPCSheet extends CharacterSheet {
 
         // Favorite Talents
         const favoriteTalentIds = (this.actor.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | undefined) ?? [];
-        context.favoriteTalents = context.items.filter((i) => favoriteTalentIds.includes(i.id) && i.type === 'talent');
+        context.favoriteTalents = items.filter((i) => favoriteTalentIds.includes(i.id as string) && i.type === 'talent');
 
         // Armour data
         context.armour = {
-            mode: context.system.armour.mode,
-            isSimple: context.system.armour.mode === 'simple',
-            isLocations: context.system.armour.mode === 'locations',
-            total: context.system.armour.total,
-            locations: context.system.armour.locations,
+            mode: sys.armour.mode,
+            isSimple: sys.armour.mode === 'simple',
+            isLocations: sys.armour.mode === 'locations',
+            total: sys.armour.total,
+            locations: sys.armour.locations,
         };
 
         // Hit locations for location-based armour
         context.hitLocations = [
-            { key: 'head', label: 'Head', value: context.system.armour.locations?.head ?? 0 },
-            { key: 'body', label: 'Body', value: context.system.armour.locations?.body ?? 0 },
-            { key: 'leftArm', label: 'Left Arm', value: context.system.armour.locations?.leftArm ?? 0 },
-            { key: 'rightArm', label: 'Right Arm', value: context.system.armour.locations?.rightArm ?? 0 },
-            { key: 'leftLeg', label: 'Left Leg', value: context.system.armour.locations?.leftLeg ?? 0 },
-            { key: 'rightLeg', label: 'Right Leg', value: context.system.armour.locations?.rightLeg ?? 0 },
+            { key: 'head', label: 'Head', value: sys.armour.locations?.head ?? 0 },
+            { key: 'body', label: 'Body', value: sys.armour.locations?.body ?? 0 },
+            { key: 'leftArm', label: 'Left Arm', value: sys.armour.locations?.leftArm ?? 0 },
+            { key: 'rightArm', label: 'Right Arm', value: sys.armour.locations?.rightArm ?? 0 },
+            { key: 'leftLeg', label: 'Left Leg', value: sys.armour.locations?.leftLeg ?? 0 },
+            { key: 'rightLeg', label: 'Right Leg', value: sys.armour.locations?.rightLeg ?? 0 },
         ];
 
         // Combat summary
         context.combatSummary = {
-            initiative: context.system.initiative,
-            dodge: context.system.getSkillTarget ? context.system.getSkillTarget('dodge') : '—',
-            parry: context.system.getSkillTarget ? context.system.getSkillTarget('parry') : '—',
-            armour: context.system.armour.mode === 'simple' ? context.system.armour.total : 'By Location',
+            initiative: sys.initiative,
+            dodge: sys.getSkillTarget ? sys.getSkillTarget('dodge') : '—',
+            parry: sys.getSkillTarget ? sys.getSkillTarget('parry') : '—',
+            armour: sys.armour.mode === 'simple' ? sys.armour.total : 'By Location',
         };
 
         // Toughness bonus for armor display
-        context.toughnessBonus = context.system.characteristics?.toughness?.bonus ?? 0;
+        context.toughnessBonus = sys.characteristics?.toughness?.bonus ?? 0;
 
         // Threat tier
-        context.threatTier = context.system.threatTier;
+        context.threatTier = sys.threatTier;
+
+        return context;
     }
 
     /* -------------------------------------------- */
@@ -504,13 +616,14 @@ export default class NPCSheet extends CharacterSheet {
      * @protected
      */
     _prepareCombatContext(context: Record<string, unknown>): void {
-        const tb = context.system.characteristics?.toughness?.bonus ?? 0;
+        const sys = context.system as NPCSystemContext;
+        const tb = sys.characteristics?.toughness?.bonus ?? 0;
         context.toughnessBonus = tb;
 
         // Armour data
-        const armourMode = context.system.armour?.mode || 'simple';
-        const armourTotal = context.system.armour?.total ?? 0;
-        const locs = context.system.armour?.locations || {};
+        const armourMode = sys.armour?.mode ?? 'simple';
+        const armourTotal = sys.armour?.total ?? 0;
+        const locs: Record<string, number | undefined> = sys.armour?.locations ?? {};
         context.armour = {
             mode: armourMode,
             isSimple: armourMode === 'simple',
@@ -520,8 +633,8 @@ export default class NPCSheet extends CharacterSheet {
         };
 
         // Hit locations with roll ranges (always show, use total AP for simple mode)
-        const getAP = (key) => (armourMode === 'simple' ? armourTotal : locs[key] ?? 0);
-        context.hitLocations = [
+        const getAP = (key: string) => (armourMode === 'simple' ? armourTotal : locs[key] ?? 0);
+        const hitLocations: NPCHitLocation[] = [
             { key: 'head', label: 'Head', short: 'Head', range: '01–10', value: getAP('head'), dr: getAP('head') + tb },
             { key: 'body', label: 'Body', short: 'Body', range: '31–70', value: getAP('body'), dr: getAP('body') + tb },
             { key: 'leftArm', label: 'Left Arm', short: 'L.Arm', range: '21–30', value: getAP('leftArm'), dr: getAP('leftArm') + tb },
@@ -529,35 +642,39 @@ export default class NPCSheet extends CharacterSheet {
             { key: 'leftLeg', label: 'Left Leg', short: 'L.Leg', range: '86–00', value: getAP('leftLeg'), dr: getAP('leftLeg') + tb },
             { key: 'rightLeg', label: 'Right Leg', short: 'R.Leg', range: '71–85', value: getAP('rightLeg'), dr: getAP('rightLeg') + tb },
         ];
+        context.hitLocations = hitLocations;
 
         // Keyed map for body silhouette template access
-        context.hitLocMap = {};
-        for (const loc of context.hitLocations) {
-            context.hitLocMap[loc.key] = loc;
+        const hitLocMap: Record<string, NPCHitLocation> = {};
+        for (const loc of hitLocations) {
+            hitLocMap[loc.key] = loc;
         }
+        context.hitLocMap = hitLocMap;
 
         // Movement
-        context.movement = context.system.movement;
+        context.movement = sys.movement;
 
         // Combat summary (skill targets for action cards)
         context.combatSummary = {
-            dodge: context.system.getSkillTarget ? context.system.getSkillTarget('dodge') : '—',
-            parry: context.system.getSkillTarget ? context.system.getSkillTarget('parry') : '—',
+            dodge: sys.getSkillTarget ? sys.getSkillTarget('dodge') : '—',
+            parry: sys.getSkillTarget ? sys.getSkillTarget('parry') : '—',
         };
 
         // Gear items (non-weapon embedded items for inventory section)
         if (!context.items) {
             context.items = Array.from(this.actor.items);
         }
-        context.gearItems = context.items.filter((i) => !['weapon', 'talent', 'trait', 'psychicPower', 'specialAbility'].includes(i.type));
+        const items = context.items as NPCItemContext[];
+        context.gearItems = items.filter((i) => !['weapon', 'talent', 'trait', 'psychicPower', 'specialAbility'].includes(i.type));
 
         // All items for inventory table (weapons, armour, gear, ammo, cybernetics, etc.)
-        context.allItems = context.items.filter(
+        context.allItems = items.filter(
             (i) => !['talent', 'trait', 'psychicPower', 'specialAbility', 'condition', 'criticalInjury', 'mutation'].includes(i.type),
         );
 
         // Flag for weapon rows in actions grid (used for empty state)
-        context.combatWeaponRows = (context.embeddedWeapons?.length ?? 0) > 0;
+        const embeddedWeapons = context.embeddedWeapons as NPCItemContext[] | undefined;
+        context.combatWeaponRows = (embeddedWeapons?.length ?? 0) > 0;
     }
 
     /* -------------------------------------------- */
@@ -568,8 +685,9 @@ export default class NPCSheet extends CharacterSheet {
      * @protected
      */
     _prepareSkillsContext(context: Record<string, unknown>): void {
+        const sys = context.system as NPCSystemContext;
         // Get trained skills list from data model
-        context.trainedSkillsList = context.system.trainedSkillsList || [];
+        context.trainedSkillsList = sys.trainedSkillsList ?? [];
 
         // Get favorite skills
         const favoriteSkillKeys = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
@@ -600,7 +718,7 @@ export default class NPCSheet extends CharacterSheet {
         ];
 
         // Characteristic key mapping
-        const charKeyMap = {
+        const charKeyMap: Record<string, string> = {
             WS: 'weaponSkill',
             BS: 'ballisticSkill',
             S: 'strength',
@@ -615,9 +733,9 @@ export default class NPCSheet extends CharacterSheet {
 
         // Build basic skills list with training states
         context.basicSkillsList = allBasicSkills.map((skill) => {
-            const trainedData = context.system.trainedSkills?.[skill.key];
-            const charKey = charKeyMap[skill.char] || 'intelligence';
-            const charData = context.system.characteristics[charKey];
+            const trainedData = sys.trainedSkills?.[skill.key];
+            const charKey = charKeyMap[skill.char] ?? 'intelligence';
+            const charData = sys.characteristics[charKey];
             const isTrained = !!trainedData;
 
             // Calculate target
@@ -660,16 +778,17 @@ export default class NPCSheet extends CharacterSheet {
         });
 
         // Trained skill count for display
-        context.trainedSkillCount = context.basicSkillsList.filter((s) => s.isTrained).length;
+        const basicSkillsList = context.basicSkillsList as Array<{ isTrained: boolean; key: string; [key: string]: unknown }>;
+        context.trainedSkillCount = basicSkillsList.filter((s) => s.isTrained).length;
 
         // Mark favorite status on trained skills list
-        context.trainedSkillsList = context.trainedSkillsList.map((skill) => ({
+        context.trainedSkillsList = (context.trainedSkillsList as Array<Record<string, unknown>>).map((skill) => ({
             ...skill,
-            isFavorite: favoriteSkillKeys.includes(skill.key),
+            isFavorite: favoriteSkillKeys.includes(skill.key as string),
         }));
 
         // Skills by category for quick-add
-        const trainedKeys = Object.keys(context.system.trainedSkills || {});
+        const trainedKeys = Object.keys(sys.trainedSkills ?? {});
 
         context.combatSkills = allBasicSkills.filter((s) => s.category === 'combat').map((s) => ({ ...s, added: trainedKeys.includes(s.key) }));
 
@@ -687,35 +806,40 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareAbilitiesContext(context: Record<string, unknown>): void {
+    _prepareAbilitiesContext(context: Record<string, unknown>, _options: Record<string, unknown> = {}): Record<string, unknown> {
+        const sys = context.system as NPCSystemContext;
+
         // Ensure items array exists
         if (!context.items) {
             context.items = Array.from(this.actor.items);
         }
+        const items = context.items as NPCItemContext[];
 
-        const pinnedIds = context.system.pinnedAbilities || [];
+        const pinnedIds = sys.pinnedAbilities ?? [];
 
         // Talents
-        context.talents = context.items
+        context.talents = items
             .filter((i) => i.type === 'talent')
             .map((t) => ({
                 ...t,
-                isPinned: pinnedIds.includes(t.id),
+                isPinned: pinnedIds.includes(t.id as string),
             }));
 
         // Traits
-        context.traits = context.items
+        context.traits = items
             .filter((i) => i.type === 'trait')
             .map((t) => ({
                 ...t,
-                isPinned: pinnedIds.includes(t.id),
+                isPinned: pinnedIds.includes(t.id as string),
             }));
 
         // Psychic powers
-        context.psychicPowers = context.items.filter((i) => i.type === 'psychicPower');
+        context.psychicPowers = items.filter((i) => i.type === 'psychicPower');
 
         // Other abilities (special abilities from HTML field)
-        context.hasSpecialAbilities = !!context.system.specialAbilities;
+        context.hasSpecialAbilities = !!sys.specialAbilities;
+
+        return context;
     }
 
     /* -------------------------------------------- */
@@ -725,15 +849,19 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareNotesContext(context: Record<string, unknown>): void {
+    _prepareNotesContext(context: Record<string, unknown>, _options: Record<string, unknown> = {}): Record<string, unknown> {
+        const sys = context.system as NPCSystemContext;
+
         // Tags
-        context.tags = context.system.tags || [];
+        context.tags = sys.tags ?? [];
 
         // Source reference
-        context.source = context.system.source || '';
+        context.source = sys.source ?? '';
 
         // Template info
-        context.templateUuid = context.system.template || '';
+        context.templateUuid = sys.template ?? '';
+
+        return context;
     }
 
     /* -------------------------------------------- */
@@ -747,7 +875,7 @@ export default class NPCSheet extends CharacterSheet {
      */
     static async #toggleHordeMode(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await this.actor.system.toggleHordeMode();
+        await this.npcActor.system.toggleHordeMode();
     }
 
     /* -------------------------------------------- */
@@ -761,7 +889,7 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const charKey = target.dataset.characteristic;
         if (!charKey) return;
-        await this.actor.rollCharacteristic(charKey);
+        await this.npcActor.rollCharacteristic(charKey);
     }
 
     /* -------------------------------------------- */
@@ -799,7 +927,7 @@ export default class NPCSheet extends CharacterSheet {
     static async #applyMagnitudeDamage(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const amount = parseInt(target.dataset.amount || '1', 10);
-        await this.actor.system.applyMagnitudeDamage(amount, 'Manual');
+        await this.npcActor.system.applyMagnitudeDamage(amount, 'Manual');
     }
 
     /* -------------------------------------------- */
@@ -812,7 +940,7 @@ export default class NPCSheet extends CharacterSheet {
     static async #restoreMagnitude(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const amount = parseInt(target.dataset.amount || '1', 10);
-        await this.actor.system.restoreMagnitude(amount, 'Manual');
+        await this.npcActor.system.restoreMagnitude(amount, 'Manual');
     }
 
     /* -------------------------------------------- */
@@ -1785,8 +1913,9 @@ export default class NPCSheet extends CharacterSheet {
      */
     _prepareItems(context: Record<string, unknown>): void {
         // NPCSheet uses simplified item system
-        context.talents = context.items.filter((i) => i.type === 'talent');
-        context.traits = context.items.filter((i) => i.type === 'trait');
+        const items = context.items as NPCItemContext[];
+        context.talents = items.filter((i) => i.type === 'talent');
+        context.traits = items.filter((i) => i.type === 'trait');
     }
 
     /* -------------------------------------------- */

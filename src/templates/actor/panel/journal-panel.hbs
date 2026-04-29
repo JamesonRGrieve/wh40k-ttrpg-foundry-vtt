@@ -1,21 +1,21 @@
 {{! Journal Entries Section }}
-<div class="wh40k-journal-entries-section">
-    <div class="wh40k-section-header">
-        <span class="wh40k-section-title"><i class="fas fa-book"></i> Journal Entries</span>
+<div class="tw-mt-3">
+    <div class="tw-flex tw-items-center tw-justify-between tw-mb-2 tw-pb-1">
+        <span class="tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide wh40k-section-title"><i class="fas fa-book"></i> Journal Entries</span>
         <button type="button" class="wh40k-add-btn" data-action="itemCreate" data-type="journalEntry" title="Add Journal Entry">
             <i class="fas fa-plus"></i>
         </button>
     </div>
 
     {{#if journalEntries.length}}
-        <div class="wh40k-journal-list">
+        <div class="tw-flex tw-flex-col tw-gap-1">
             {{#each journalEntries as |entry|}}
                 <div class="wh40k-journal-entry" data-item-id="{{entry.id}}">
-                    <div class="wh40k-entry-header">
+                    <div class="tw-flex tw-items-center tw-gap-2">
                         <button type="button" class="wh40k-entry-name" data-action="itemEdit" data-item-id="{{entry.id}}" title="Click to edit">
                             {{entry.name}}
                         </button>
-                        <span class="wh40k-entry-meta">
+                        <span class="tw-text-[0.7rem] tw-whitespace-nowrap">
                             {{#if entry.system.time}}{{entry.system.time}}{{/if}}
                             {{#if entry.system.place}}{{#if entry.system.time}} · {{/if}}{{entry.system.place}}{{/if}}
                         </span>

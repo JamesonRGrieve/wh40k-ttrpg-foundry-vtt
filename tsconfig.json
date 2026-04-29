@@ -8,6 +8,7 @@
     "rootDir": "src",
     "declaration": false,
     "sourceMap": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
 
     "allowJs": false,
 

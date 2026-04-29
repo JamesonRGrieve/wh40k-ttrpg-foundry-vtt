@@ -1,9 +1,30 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import BaseGrantData from './base-grant.ts';
+import BaseGrantData, { GrantApplicationResult, GrantRestoreData, GrantSummary } from './base-grant.ts';
 import CharacteristicGrantData from './characteristic-grant.ts';
 import ItemGrantData from './item-grant.ts';
 import ResourceGrantData from './resource-grant.ts';
 import SkillGrantData from './skill-grant.ts';
+
+/**
+ * A single selectable option within a choice grant.
+ */
+interface ChoiceOption {
+    label: string;
+    description: string;
+    grants: Array<Record<string, unknown>>;
+}
+
+/**
+ * Extended summary shape for ChoiceGrantData.
+ */
+interface ChoiceGrantSummary extends GrantSummary {
+    choiceCount: number;
+    options: Array<{
+        label: string;
+        description: string;
+        grants: GrantSummary[];
+    }>;
+}
 
 /**
  * Grant that presents choices to the player.
@@ -16,8 +37,8 @@ export default class ChoiceGrantData extends BaseGrantData {
     /*  Static Properties                           */
     /* -------------------------------------------- */
 
-    static TYPE = 'choice';
-    static ICON = 'icons/svg/clockwork.svg';
+    static override TYPE = 'choice';
+    static override ICON = 'icons/svg/clockwork.svg';
 
     /**
      * Registry of grant types that can be used in choices.
@@ -30,12 +51,18 @@ export default class ChoiceGrantData extends BaseGrantData {
         resource: ResourceGrantData,
     };
 
+    /** Property declarations */
+    declare count: number;
+    declare options: ChoiceOption[];
+    declare allowDuplicates: boolean;
+    declare applied: Record<string, unknown>;
+
     /* -------------------------------------------- */
     /*  Schema Definition                           */
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -70,19 +97,19 @@ export default class ChoiceGrantData extends BaseGrantData {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    _initResult(): Record<string, unknown> {
+    override _initResult(): GrantApplicationResult {
         return { success: true, applied: { selectedOptions: [], grantResults: {} }, notifications: [], errors: [] };
     }
 
     /** @inheritDoc */
-    async _applyGrant(actor: WH40KBaseActor, data: Record<string, unknown>, options: Record<string, unknown>, result: Record<string, unknown>): Promise<void> {
+    override async _applyGrant(actor: WH40KBaseActor, data: GrantRestoreData, options: Record<string, unknown>, result: GrantApplicationResult): Promise<void> {
         const choiceOptions = this.options ?? [];
         if (choiceOptions.length === 0) {
             result.notifications.push('Choice grant has no options to apply');
             return;
         }
 
-        const selectedOptions = data.selected ?? [];
+        const selectedOptions = (data.selected as string[]) ?? [];
 
         if (selectedOptions.length < this.count && !this.optional) {
             result.errors.push(`Must select ${this.count} options, only ${selectedOptions.length} selected`);
@@ -97,6 +124,8 @@ export default class ChoiceGrantData extends BaseGrantData {
             }
         }
 
+        const appliedResult = result.applied as { selectedOptions: string[]; grantResults: Record<string, unknown> };
+
         for (const optionLabel of selectedOptions) {
             const option = choiceOptions.find((o) => o.label === optionLabel);
             if (!option) {
@@ -104,16 +133,15 @@ export default class ChoiceGrantData extends BaseGrantData {
                 continue;
             }
 
-            result.applied.selectedOptions.push(optionLabel);
+            appliedResult.selectedOptions.push(optionLabel);
             result.notifications.push(`Selected: ${optionLabel}`);
 
             const grants = option.grants ?? [];
             for (let i = 0; i < grants.length; i++) {
                 const grantConfig = grants[i];
 
-                const grantResults = result.applied.grantResults;
                 const grantResult = await this._applySubGrant(actor, grantConfig, data, options);
-                grantResults[`${optionLabel}:${i}`] = {
+                appliedResult.grantResults[`${optionLabel}:${i}`] = {
                     type: grantConfig.type,
                     applied: grantResult.applied,
                 };
@@ -124,15 +152,16 @@ export default class ChoiceGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    async reverse(actor, appliedState): Promise<unknown> {
+    override async reverse(actor: WH40KBaseActor, appliedState: Record<string, unknown>): Promise<unknown> {
         const ctor = this.constructor as typeof ChoiceGrantData;
-        const restoreData = {
-            selectedOptions: appliedState.selectedOptions ?? [],
+        const restoreData: { selectedOptions: string[]; grantResults: Record<string, unknown> } = {
+            selectedOptions: (appliedState.selectedOptions as string[]) ?? [],
             grantResults: {},
         };
 
         // Reverse each applied grant in reverse order
-        for (const [grantKey, grantEntry] of Object.entries(appliedState.grantResults ?? {})) {
+        const grantResults = (appliedState.grantResults ?? {}) as Record<string, Record<string, unknown>>;
+        for (const [grantKey, grantEntry] of Object.entries(grantResults)) {
             const [optionLabel, indexStr] = grantKey.split(':');
             const index = parseInt(indexStr);
 
@@ -140,44 +169,49 @@ export default class ChoiceGrantData extends BaseGrantData {
             if (!option || !option.grants[index]) continue;
 
             const grantConfig = option.grants[index];
-            const GrantClass = ctor.GRANT_TYPES[grantConfig.type];
+            const grantType = grantConfig.type as keyof typeof ctor.GRANT_TYPES;
+            const GrantClass = ctor.GRANT_TYPES[grantType];
             if (!GrantClass) continue;
 
-            const grantApplied = (grantEntry as Record<string, unknown>)?.applied;
+            const grantApplied = grantEntry?.applied as Record<string, unknown>;
 
-            const grant = new GrantClass(grantConfig);
+            const grant: BaseGrantData = new GrantClass(grantConfig as ConstructorParameters<typeof GrantClass>[0]);
             const reverseData = await grant.reverse(actor, grantApplied);
-            restoreData.grantResults[grantKey] = reverseData;
+            restoreData.grantResults[grantKey] = reverseData as Record<string, unknown>;
         }
 
         return restoreData;
     }
 
     /** @inheritDoc */
-    getAutomaticValue(): boolean {
+    override getAutomaticValue(): false {
         // Choices always require user interaction
         return false;
     }
 
     /** @inheritDoc */
-    async getSummary(): Promise<any> {
+    override async getSummary(): Promise<ChoiceGrantSummary> {
         const ctor = this.constructor as typeof ChoiceGrantData;
-        const summary = await super.getSummary();
-        summary.icon = ctor.ICON;
-        summary.choiceCount = this.count;
-        summary.options = [];
+        const baseSummary = await super.getSummary();
+        const summary: ChoiceGrantSummary = {
+            ...baseSummary,
+            icon: ctor.ICON,
+            choiceCount: this.count,
+            options: [],
+        };
 
         for (const option of this.options) {
-            const optionSummary = {
+            const optionSummary: { label: string; description: string; grants: GrantSummary[] } = {
                 label: option.label,
                 description: option.description,
                 grants: [],
             };
 
             for (const grantConfig of option.grants) {
-                const GrantClass = ctor.GRANT_TYPES[grantConfig.type];
+                const grantType = grantConfig.type as keyof typeof ctor.GRANT_TYPES;
+                const GrantClass = ctor.GRANT_TYPES[grantType];
                 if (GrantClass) {
-                    const grant = new GrantClass(grantConfig);
+                    const grant = new GrantClass(grantConfig as ConstructorParameters<typeof GrantClass>[0]);
                     const grantSummary = await grant.getSummary();
                     optionSummary.grants.push(grantSummary);
                 }
@@ -190,7 +224,7 @@ export default class ChoiceGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    validateGrant(): void {
+    override validateGrant(): string[] {
         const ctor = this.constructor as typeof ChoiceGrantData;
         const errors = super.validateGrant();
 
@@ -209,9 +243,10 @@ export default class ChoiceGrantData extends BaseGrantData {
         for (const option of options) {
             const grants = option.grants ?? [];
             for (const grantConfig of grants) {
-                const GrantClass = ctor.GRANT_TYPES[grantConfig.type];
+                const grantType = grantConfig.type as keyof typeof ctor.GRANT_TYPES;
+                const GrantClass = ctor.GRANT_TYPES[grantType];
                 if (!GrantClass) {
-                    errors.push(`Unknown grant type "${grantConfig.type}" in option "${option.label}"`);
+                    errors.push(`Unknown grant type "${grantConfig.type as string}" in option "${option.label}"`);
                 }
             }
         }
@@ -232,31 +267,38 @@ export default class ChoiceGrantData extends BaseGrantData {
      * @returns {Promise<GrantApplicationResult>}
      * @private
      */
-    _applySubGrant(actor, grantConfig, data, options): unknown {
+    _applySubGrant(
+        actor: WH40KBaseActor,
+        grantConfig: Record<string, unknown>,
+        data: GrantRestoreData,
+        options: Record<string, unknown>,
+    ): Promise<GrantApplicationResult> | GrantApplicationResult {
         const ctor = this.constructor as typeof ChoiceGrantData;
-        const GrantClass = ctor.GRANT_TYPES[grantConfig.type];
+        const grantType = grantConfig.type as keyof typeof ctor.GRANT_TYPES;
+        const GrantClass = ctor.GRANT_TYPES[grantType];
         if (!GrantClass) {
             return {
                 success: false,
                 applied: {},
                 notifications: [],
-                errors: [`Unknown grant type: ${grantConfig.type}`],
+                errors: [`Unknown grant type: ${grantConfig.type as string}`],
             };
         }
 
         // Ensure grant config has required fields with defaults
         const fullConfig = {
-            _id: grantConfig._id || foundry.utils.randomID(),
+            _id: (grantConfig._id as string) || foundry.utils.randomID(),
             type: grantConfig.type,
-            optional: grantConfig.optional ?? false,
+            optional: (grantConfig.optional as boolean) ?? false,
             ...grantConfig,
         };
 
-        const grant = new GrantClass(fullConfig);
+        const grant = new GrantClass(fullConfig as ConstructorParameters<typeof GrantClass>[0]);
 
         // Pass through any sub-grant specific data
-        const subData = data.subGrants?.[grantConfig._id] ?? {};
+        const subData = (data as Record<string, unknown>).subGrants as Record<string, GrantRestoreData> | undefined;
+        const subGrantData = subData?.[grantConfig._id as string] ?? ({} as GrantRestoreData);
 
-        return grant.apply(actor, subData, options);
+        return grant.apply(actor, subGrantData, options);
     }
 }
