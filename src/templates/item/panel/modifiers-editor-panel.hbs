@@ -6,22 +6,22 @@
 
   {{!-- Modifier Type Tabs --}}
   <nav class="tw-flex tw-gap-1 tw-border-b tw-border-solid tw-border-black/10 tw-mb-2" data-group="modifiers">
-    <button type="button" class="wh40k-modifiers-tab tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent active" data-tab="basic" data-group="modifiers">
+    <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent active" data-tab="basic" data-group="modifiers">
       <i class="fas fa-plus-circle"></i>
       <span>Basic</span>
     </button>
-    <button type="button" class="wh40k-modifiers-tab tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent" data-tab="situational" data-group="modifiers">
+    <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent" data-tab="situational" data-group="modifiers">
       <i class="fas fa-exclamation-triangle"></i>
       <span>Situational</span>
     </button>
-    <button type="button" class="wh40k-modifiers-tab tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent" data-tab="advanced" data-group="modifiers">
+    <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent" data-tab="advanced" data-group="modifiers">
       <i class="fas fa-cog"></i>
       <span>Advanced</span>
     </button>
   </nav>
 
   {{!-- Basic Modifiers Tab --}}
-  <div class="wh40k-modifiers-content tw-flex tw-flex-col tw-gap-3 active" data-tab="basic" data-group="modifiers">
+  <div class="tw-flex tw-flex-col tw-gap-3 active" data-tab="basic" data-group="modifiers">
 
     {{!-- Characteristic Modifiers --}}
     <div class="tw-flex tw-flex-col tw-gap-1.5">
@@ -61,7 +61,7 @@
                  value="{{this}}"
                  placeholder="0" />
           <button type="button"
-                  class="wh40k-btn-control wh40k-btn-control--remove"
+                  class="tw-inline-flex tw-h-7 tw-w-7 tw-items-center tw-justify-center tw-rounded-md tw-border tw-border-[var(--color-border-secondary)] tw-bg-[var(--wh40k-btn-bg)] tw-text-crimson tw-font-bold tw-cursor-pointer hover:tw-scale-[1.08] hover:tw-shadow-[0_2px_6px_var(--wh40k-shadow-soft)]"
                   data-action="removeSkillModifier"
                   data-skill="{{@key}}"
                   title="Remove">
@@ -70,7 +70,7 @@
         </div>
         {{/each}}
 
-        <button type="button" class="wh40k-btn-secondary wh40k-btn-add tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start" data-action="addSkillModifier">
+        <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start tw-cursor-pointer tw-rounded-md tw-border tw-border-dashed tw-border-[var(--color-border-secondary,#444)] tw-bg-transparent tw-px-2.5 tw-py-1.5 tw-text-xs tw-text-[var(--color-text-light-primary,#f0f0f0)] hover:tw-border-[var(--wh40k-accent-gold)] hover:tw-text-[var(--wh40k-accent-gold)]" data-action="addSkillModifier">
           <i class="fas fa-plus"></i>
           Add Skill Modifier
         </button>
@@ -180,7 +180,7 @@
   </div>
 
   {{!-- Situational Modifiers Tab --}}
-  <div class="wh40k-modifiers-content tw-flex tw-flex-col tw-gap-3" data-tab="situational" data-group="modifiers">
+  <div class="tw-flex tw-flex-col tw-gap-3" data-tab="situational" data-group="modifiers">
     <div class="tw-flex tw-items-start tw-gap-2 tw-p-2 tw-bg-blue-900/15 tw-border tw-border-solid tw-border-blue-800/30 tw-rounded-md">
       <i class="fas fa-info-circle tw-text-blue-400 tw-flex-shrink-0 tw-mt-0.5"></i>
       <p class="tw-m-0 tw-text-sm">Situational modifiers apply only when specific conditions are met. Use the condition field to describe when each modifier applies.</p>
@@ -213,7 +213,7 @@
                  value="{{value}}"
                  placeholder="0" />
           <button type="button"
-                  class="wh40k-btn-control wh40k-btn-control--remove"
+                  class="tw-inline-flex tw-h-7 tw-w-7 tw-items-center tw-justify-center tw-rounded-md tw-border tw-border-[var(--color-border-secondary)] tw-bg-[var(--wh40k-btn-bg)] tw-text-crimson tw-font-bold tw-cursor-pointer hover:tw-scale-[1.08] hover:tw-shadow-[0_2px_6px_var(--wh40k-shadow-soft)]"
                   data-action="removeSituationalModifier"
                   data-type="characteristics"
                   data-index="{{@index}}"
@@ -224,7 +224,7 @@
         {{/each}}
 
         <button type="button"
-                class="wh40k-btn-secondary wh40k-btn-add tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start"
+                class="tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start tw-cursor-pointer tw-rounded-md tw-border tw-border-dashed tw-border-[var(--color-border-secondary,#444)] tw-bg-transparent tw-px-2.5 tw-py-1.5 tw-text-xs tw-text-[var(--color-text-light-primary,#f0f0f0)] hover:tw-border-[var(--wh40k-accent-gold)] hover:tw-text-[var(--wh40k-accent-gold)]"
                 data-action="addSituationalModifier"
                 data-type="characteristics">
           <i class="fas fa-plus"></i>
@@ -238,7 +238,7 @@
   </div>
 
   {{!-- Advanced Tab (Other modifiers) --}}
-  <div class="wh40k-modifiers-content tw-flex tw-flex-col tw-gap-3" data-tab="advanced" data-group="modifiers">
+  <div class="tw-flex tw-flex-col tw-gap-3" data-tab="advanced" data-group="modifiers">
     <div class="tw-flex tw-items-start tw-gap-2 tw-p-2 tw-bg-blue-900/15 tw-border tw-border-solid tw-border-blue-800/30 tw-rounded-md">
       <i class="fas fa-info-circle tw-text-blue-400 tw-flex-shrink-0 tw-mt-0.5"></i>
       <p class="tw-m-0 tw-text-sm">Advanced modifiers for custom effects not covered by standard categories.</p>
@@ -276,7 +276,7 @@
             <option value="downgrade" {{selected (eq mode "downgrade")}}>Downgrade</option>
           </select>
           <button type="button"
-                  class="wh40k-btn-control wh40k-btn-control--remove"
+                  class="tw-inline-flex tw-h-7 tw-w-7 tw-items-center tw-justify-center tw-rounded-md tw-border tw-border-[var(--color-border-secondary)] tw-bg-[var(--wh40k-btn-bg)] tw-text-crimson tw-font-bold tw-cursor-pointer hover:tw-scale-[1.08] hover:tw-shadow-[0_2px_6px_var(--wh40k-shadow-soft)]"
                   data-action="removeOtherModifier"
                   data-index="{{@index}}"
                   title="Remove">
@@ -286,7 +286,7 @@
         {{/each}}
 
         <button type="button"
-                class="wh40k-btn-secondary wh40k-btn-add tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start"
+                class="tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start tw-cursor-pointer tw-rounded-md tw-border tw-border-dashed tw-border-[var(--color-border-secondary,#444)] tw-bg-transparent tw-px-2.5 tw-py-1.5 tw-text-xs tw-text-[var(--color-text-light-primary,#f0f0f0)] hover:tw-border-[var(--wh40k-accent-gold)] hover:tw-text-[var(--wh40k-accent-gold)]"
                 data-action="addOtherModifier">
           <i class="fas fa-plus"></i>
           Add Custom Modifier

@@ -1,57 +1,57 @@
 {{! Rogue Trader Ship Weapon Fire Card - Modern Design }}
-<div class="wh40k-chat tw-font-ui">
-    <div class="wh40k-item-card wh40k-item-card--weapon tw-relative tw-overflow-hidden tw-rounded-md">
+<div class="tw-font-ui">
+    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-bronze tw-bg-[var(--wh40k-panel-bg-solid)] tw-font-ui tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium)]">
         {{! Header }}
-        <div class="wh40k-item-card__header">
-            <img class="wh40k-item-card__image" src="{{weapon.img}}" alt="{{weapon.name}}" />
-            <div class="wh40k-item-card__title-group">
-                <h2 class="wh40k-item-card__name">{{weapon.name}}</h2>
-                <span class="wh40k-item-card__type">{{weapon.system.weaponType}} • {{weapon.system.location}}</span>
+        <div class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-bg-[linear-gradient(135deg,var(--wh40k-wounds-bg)_0%,transparent_100%)] tw-border-b tw-border-[var(--wh40k-wounds-border)]">
+            <img class="tw-w-12 tw-h-12 tw-border-2 tw-border-bronze tw-rounded-md tw-object-cover tw-flex-shrink-0 tw-shadow-[0_2px_6px_var(--wh40k-shadow-medium)]" src="{{weapon.img}}" alt="{{weapon.name}}" />
+            <div class="tw-flex-1 tw-min-w-0">
+                <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-bronze tw-m-0 tw-leading-tight tw-text-shadow-[0_1px_0_var(--wh40k-text-shadow)]">{{weapon.name}}</h2>
+                <span class="tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.1em] tw-mt-[2px] tw-block">{{weapon.system.weaponType}} • {{weapon.system.location}}</span>
             </div>
         </div>
 
         {{! Body }}
-        <div class="wh40k-item-card__body">
-            <div class="wh40k-item-card__stats">
-                <div class="wh40k-item-card__stat">
-                    <span class="wh40k-item-card__stat-name">Strength</span>
-                    <span class="wh40k-item-card__stat-value">{{weapon.system.strength}}</span>
+        <div class="tw-p-3">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-1 tw-p-[10px] tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-text-[0.85rem]">
+                    <span class="tw-font-semibold tw-text-bronze after:content-[':']">Strength</span>
+                    <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.strength}}</span>
                 </div>
-                <div class="wh40k-item-card__stat">
-                    <span class="wh40k-item-card__stat-name">Damage</span>
-                    <span class="wh40k-item-card__stat-value">{{weapon.system.damage}}</span>
+                <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-text-[0.85rem]">
+                    <span class="tw-font-semibold tw-text-bronze after:content-[':']">Damage</span>
+                    <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.damage}}</span>
                 </div>
-                <div class="wh40k-item-card__stat">
-                    <span class="wh40k-item-card__stat-name">Crit Rating</span>
-                    <span class="wh40k-item-card__stat-value">{{weapon.system.critRating}}</span>
+                <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-text-[0.85rem]">
+                    <span class="tw-font-semibold tw-text-bronze after:content-[':']">Crit Rating</span>
+                    <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.critRating}}</span>
                 </div>
-                <div class="wh40k-item-card__stat">
-                    <span class="wh40k-item-card__stat-name">Range</span>
-                    <span class="wh40k-item-card__stat-value">{{weapon.system.range}}</span>
+                <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-text-[0.85rem]">
+                    <span class="tw-font-semibold tw-text-bronze after:content-[':']">Range</span>
+                    <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.range}}</span>
                 </div>
             </div>
 
             {{#if weapon.system.special}}
-                <div class="wh40k-item-card__field">
-                    <span class="wh40k-item-card__label">Special</span>
-                    <span class="wh40k-item-card__value">{{weapon.system.special}}</span>
+                <div class="tw-flex tw-items-baseline tw-gap-1 tw-py-1 tw-text-[0.9rem]">
+                    <span class="tw-font-semibold tw-text-bronze tw-flex-shrink-0 after:content-[':']">Special</span>
+                    <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.special}}</span>
                 </div>
             {{/if}}
         </div>
 
         {{! Actions }}
-        <div class="wh40k-item-card__actions">
-            <button class="wh40k-item-card__btn wh40k-item-card__btn--attack wh40k-ship-attack-roll" data-weapon-id="{{weapon._id}}" data-crew-rating="{{crewRating}}">
-                <span class="material-icons">casino</span>
+        <div class="tw-flex tw-gap-1 tw-p-[10px_12px] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color-light)] tw-justify-center">
+            <button class="tw-flex tw-items-center tw-gap-[6px] tw-py-2 tw-px-4 tw-bg-[linear-gradient(135deg,var(--wh40k-red)_0%,var(--wh40k-red-dark)_100%)] tw-border tw-border-[var(--wh40k-red-dark)] tw-rounded-md tw-text-white tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:tw-shadow-[0_2px_8px_rgba(139,0,0,0.4)] hover:tw-translate-y-[-1px]" data-weapon-id="{{weapon._id}}" data-crew-rating="{{crewRating}}">
+                <span class="material-icons tw-text-sm">casino</span>
                 Hit (Crew:
                 {{crewRating}})
             </button>
             <button
-                class="wh40k-item-card__btn wh40k-item-card__btn--damage wh40k-ship-damage-roll"
+                class="tw-flex tw-items-center tw-gap-[6px] tw-py-2 tw-px-4 tw-bg-[linear-gradient(135deg,var(--wh40k-gold)_0%,var(--wh40k-gold-dark)_100%)] tw-border tw-border-[var(--wh40k-gold-dark)] tw-rounded-md tw-text-white tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:tw-shadow-[0_2px_8px_rgba(218,165,32,0.4)] hover:tw-translate-y-[-1px]"
                 data-damage="{{weapon.system.damage}}"
                 data-strength="{{weapon.system.strength}}"
             >
-                <span class="material-icons">whatshot</span>
+                <span class="material-icons tw-text-sm">whatshot</span>
                 Damage
             </button>
         </div>

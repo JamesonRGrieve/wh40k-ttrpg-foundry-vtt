@@ -1,27 +1,27 @@
 {{! Rogue Trader Item Vocalize Card - Modern Comprehensive Design }}
-<div class="wh40k-chat wh40k-vocalize-card tw-font-ui">
-    <div class="wh40k-item-card wh40k-item-card--vocalize tw-relative tw-overflow-hidden tw-rounded-md">
+<div class="tw-font-ui">
+    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-bronze tw-bg-[var(--wh40k-panel-bg-solid)] tw-font-ui tw-shadow-[0_4px_16px_rgba(0,0,0,0.2)]">
         {{! Header with Image }}
-        <div class="wh40k-item-card__header">
+        <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-3 tw-bg-[linear-gradient(135deg,var(--wh40k-accent-overlay)_0%,transparent_100%)] tw-border-b tw-border-[var(--wh40k-border-color)]">
             {{#if img}}
-                <img class="wh40k-item-card__image" src="{{img}}" alt="{{name}}" />
+                <img class="tw-w-12 tw-h-12 tw-border-2 tw-border-bronze tw-rounded-md tw-object-cover tw-shrink-0 tw-shadow-[0_2px_6px_var(--wh40k-shadow-medium)]" src="{{img}}" alt="{{name}}" />
             {{else}}
-                <div class="wh40k-item-card__image wh40k-item-card__image--placeholder">
-                    <i class="fas fa-scroll"></i>
+                <div class="tw-w-12 tw-h-12 tw-flex tw-items-center tw-justify-center tw-border-2 tw-border-bronze tw-rounded-md tw-shrink-0 tw-bg-[linear-gradient(135deg,var(--wh40k-accent-overlay),transparent)]">
+                    <i class="fas fa-scroll tw-text-[1.5rem] tw-text-bronze tw-opacity-60"></i>
                 </div>
             {{/if}}
-            <div class="wh40k-item-card__title-group">
-                <h2 class="wh40k-item-card__name">{{name}}</h2>
-                <div class="wh40k-item-card__meta">
+            <div class="tw-flex-1 tw-min-w-0">
+                <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-bronze tw-m-0 tw-leading-[1.2] tw-shadow-[0_1px_0_var(--wh40k-text-shadow)]">{{name}}</h2>
+                <div class="tw-flex tw-items-center tw-gap-1.5 tw-mt-1">
                     {{#if actor}}
-                        <span class="wh40k-item-card__actor">{{actor}}</span>
-                        <span class="wh40k-item-card__separator">•</span>
+                        <span class="tw-text-[0.7rem] tw-text-[var(--wh40k-text-muted)] tw-font-semibold">{{actor}}</span>
+                        <span class="tw-text-[0.7rem] tw-text-[var(--wh40k-border-color)]">•</span>
                     {{/if}}
-                    <span class="wh40k-item-card__type">{{type}}</span>
+                    <span class="tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.1em]">{{type}}</span>
                 </div>
             </div>
             {{#if itemTypeLabel}}
-                <span class="wh40k-meta-badge wh40k-meta-badge--{{itemType}}">
+                <span class="tw-inline-flex tw-items-center tw-gap-[3px] tw-px-[var(--wh40k-space-sm)] tw-py-[2px] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-text-xs tw-text-[var(--wh40k-text-muted)]">
                     {{#if itemIcon}}<i class="{{itemIcon}}"></i>{{/if}}
                     {{itemTypeLabel}}
                 </span>
@@ -29,26 +29,26 @@
         </div>
 
         {{! Body }}
-        <div class="wh40k-item-card__body">
+        <div class="tw-p-3">
             {{! Quick Stats Row (if available) }}
             {{#if stats}}
-                <div class="wh40k-item-card__quick-stats">
+                <div class="tw-flex tw-gap-[var(--wh40k-space-md)] tw-flex-wrap tw-mb-[var(--wh40k-space-sm)]">
                     {{#each stats as |stat|}}
-                        <div class="wh40k-quick-stat">
-                            <span class="wh40k-quick-stat__label">{{stat.label}}</span>
-                            <span class="wh40k-quick-stat__value">{{stat.value}}</span>
+                        <div class="tw-flex tw-flex-col tw-gap-[2px] tw-px-[10px] tw-py-[6px] tw-bg-[var(--wh40k-accent-overlay)] tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color-light)]">
+                            <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.5px] tw-text-[var(--wh40k-text-muted)]">{{stat.label}}</span>
+                            <span class="tw-text-[0.9rem] tw-font-bold tw-text-bronze tw-font-alt">{{stat.value}}</span>
                         </div>
                     {{/each}}
                 </div>
-                <div class="wh40k-item-card__divider"></div>
+                <div class="tw-h-px tw-bg-[linear-gradient(90deg,transparent_0%,var(--wh40k-border-color)_20%,var(--wh40k-border-color)_80%,transparent_100%)] tw-my-[10px]"></div>
             {{/if}}
 
             {{! Properties/Traits (if available) }}
             {{#if properties}}
-                <div class="wh40k-item-card__properties">
+                <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-px-3 tw-py-2 tw-border-t tw-border-[var(--wh40k-border-color-light)]">
                     {{#each properties as |prop|}}
-                        <span class="wh40k-property-tag">
-                            {{#if prop.icon}}<i class="{{prop.icon}}"></i>{{/if}}
+                        <span class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-2 tw-py-1 tw-text-[0.7rem] tw-font-semibold tw-bg-[rgba(212,175,55,0.12)] tw-border tw-border-[rgba(212,175,55,0.3)] tw-rounded-sm tw-text-bronze">
+                            {{#if prop.icon}}<i class="{{prop.icon}} tw-text-[0.75rem] tw-text-[var(--wh40k-accent-gold)]"></i>{{/if}}
                             {{prop.label}}
                         </span>
                     {{/each}}
@@ -57,58 +57,58 @@
 
             {{! Description }}
             {{#if description}}
-                <div class="wh40k-item-card__section">
-                    <div class="wh40k-item-card__description">{{{description}}}</div>
+                <div class="tw-my-[10px] tw-p-[10px] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-text-[0.9rem] tw-leading-[1.5] tw-text-[var(--wh40k-text-dark)]">{{{description}}}</div>
                 </div>
             {{/if}}
 
             {{! Special Effect }}
             {{#if effect}}
-                <div class="wh40k-item-card__section wh40k-item-card__section--effect">
-                    <h3 class="wh40k-item-card__section-title">
-                        <i class="fas fa-sparkles"></i>
+                <div class="tw-my-[10px] tw-p-[10px] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                    <h3 class="tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-[var(--wh40k-accent-psychic)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+                        <i class="fas fa-sparkles tw-text-[var(--wh40k-accent-psychic)]"></i>
                         Effect
                     </h3>
-                    <div class="wh40k-item-card__effect-text">{{{effect}}}</div>
+                    <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,rgba(106,32,144,0.08),transparent)] tw-border-l-[3px] tw-border-[rgba(106,32,144,0.4)] tw-rounded-[0_var(--wh40k-radius-sm)_var(--wh40k-radius-sm)_0]">{{{effect}}}</div>
                 </div>
             {{/if}}
 
             {{! Benefit }}
             {{#if benefit}}
-                <div class="wh40k-item-card__section wh40k-item-card__section--benefit">
-                    <h3 class="wh40k-item-card__section-title">
-                        <i class="fas fa-plus-circle"></i>
+                <div class="tw-my-[10px] tw-p-[10px] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                    <h3 class="tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-[var(--wh40k-accent-green)] tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-mb-1.5 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+                        <i class="fas fa-plus-circle tw-text-[var(--wh40k-accent-green)]"></i>
                         Benefit
                     </h3>
-                    <div class="wh40k-item-card__benefit-text">{{{benefit}}}</div>
+                    <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,rgba(75,192,115,0.08),transparent)] tw-border-l-[3px] tw-border-[rgba(75,192,115,0.4)] tw-rounded-[0_var(--wh40k-radius-sm)_var(--wh40k-radius-sm)_0]">{{{benefit}}}</div>
                 </div>
             {{/if}}
 
             {{! Requirements }}
             {{#if requirements}}
-                <div class="wh40k-item-card__requirements">
-                    <span class="wh40k-requirements__label">
-                        <i class="fas fa-exclamation-triangle"></i>
+                <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-mt-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,rgba(230,126,34,0.1),transparent)] tw-border-l-[3px] tw-border-[rgba(230,126,34,0.5)] tw-rounded-[0_var(--wh40k-radius-sm)_var(--wh40k-radius-sm)_0] tw-text-[0.8rem]">
+                    <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-font-bold tw-text-[#e67e22]">
+                        <i class="fas fa-exclamation-triangle tw-text-[0.75rem]"></i>
                         Requirements:
                     </span>
-                    <span class="wh40k-requirements__text">{{requirements}}</span>
+                    <span class="tw-text-[var(--wh40k-text-secondary)]">{{requirements}}</span>
                 </div>
             {{/if}}
         </div>
 
         {{! Footer }}
         {{#if source}}
-            <div class="wh40k-item-card__footer">
-                <i class="fas fa-book"></i>
-                <span class="wh40k-item-card__source">{{source}}</span>
+            <div class="tw-flex tw-items-center tw-gap-1.5 tw-justify-end tw-p-[8px_12px] tw-border-t tw-border-[var(--wh40k-border-color-light)]">
+                <i class="fas fa-book tw-text-[0.7rem] tw-text-[var(--wh40k-text-muted)]"></i>
+                <span class="tw-text-xs tw-italic tw-text-[var(--wh40k-text-muted)]">{{source}}</span>
             </div>
         {{/if}}
 
         {{! Action Button (Open Sheet) }}
         {{#if itemUuid}}
-            <div class="wh40k-item-card__actions">
-                <button type="button" class="wh40k-item-card__btn wh40k-item-card__btn--sheet" data-uuid="{{itemUuid}}" data-action="openItemSheet">
-                    <i class="fas fa-scroll-old"></i>
+            <div class="tw-flex tw-gap-[var(--wh40k-space-sm)] tw-p-[10px_12px] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color-light)] tw-justify-center">
+                <button type="button" class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-4 tw-py-2 tw-flex-1 tw-bg-[linear-gradient(135deg,var(--wh40k-bronze),var(--wh40k-bronze-dark))] tw-border tw-border-bronze tw-rounded-md tw-text-white tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-uuid="{{itemUuid}}" data-action="openItemSheet">
+                    <i class="fas fa-scroll-old tw-text-[12px]"></i>
                     View Details
                 </button>
             </div>

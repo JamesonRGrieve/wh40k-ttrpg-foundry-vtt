@@ -1,80 +1,80 @@
 {{!-- Rogue Trader Combat Action Card - For vocalizing actions to chat --}}
-<div class="wh40k-chat wh40k-combat-action-card tw-font-ui">
-    <div class="wh40k-item-card wh40k-item-card--combat-action tw-relative tw-overflow-hidden tw-rounded-md">
+<div class="tw-font-ui">
+    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-bronze)] tw-bg-[var(--wh40k-panel-bg-solid)] tw-text-[var(--wh40k-text-dark)] tw-shadow-[0_4px_16px_rgba(0,0,0,0.2)]">
         {{!-- Header with Image --}}
-        <div class="wh40k-item-card__header">
+        <div class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-bg-gradient-to-br tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color)]">
             {{#if img}}
-            <img class="wh40k-item-card__image" src="{{img}}" alt="{{name}}" />
+            <img class="tw-w-12 tw-h-12 tw-rounded-md tw-object-cover tw-flex-shrink-0 tw-border-2 tw-border-[var(--wh40k-bronze)] tw-shadow-[0_2px_6px_var(--wh40k-shadow-medium)]" src="{{img}}" alt="{{name}}" />
             {{else}}
-            <div class="wh40k-item-card__image wh40k-item-card__image--placeholder">
-                <i class="fas fa-fist-raised"></i>
+            <div class="tw-w-12 tw-h-12 tw-rounded-md tw-flex tw-items-center tw-justify-center tw-flex-shrink-0 tw-border-2 tw-border-[var(--wh40k-bronze)] tw-bg-gradient-to-br tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent">
+                <i class="fas fa-fist-raised tw-text-2xl tw-text-[var(--wh40k-bronze)] tw-opacity-60"></i>
             </div>
             {{/if}}
-            <div class="wh40k-item-card__title-group">
-                <h2 class="wh40k-item-card__name">{{name}}</h2>
-                <div class="wh40k-item-card__meta">
+            <div class="tw-flex-1 tw-min-w-0">
+                <h2 class="tw-font-display tw-text-lg tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-m-0 tw-leading-tight tw-shadow-[0_1px_0_var(--wh40k-text-shadow)]">{{name}}</h2>
+                <div class="tw-flex tw-items-center tw-gap-1.5 tw-mt-1">
                     {{#if actor}}
-                    <span class="wh40k-item-card__actor">{{actor}}</span>
-                    <span class="wh40k-item-card__separator">•</span>
+                    <span class="tw-text-[0.7rem] tw-text-[var(--wh40k-text-muted)] tw-font-semibold">{{actor}}</span>
+                    <span class="tw-text-[0.7rem] tw-text-[var(--wh40k-border-color)]">•</span>
                     {{/if}}
-                    <span class="wh40k-item-card__type">Combat Action</span>
+                    <span class="tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-uppercase tw-tracking-widest">Combat Action</span>
                 </div>
             </div>
-            <span class="wh40k-meta-badge wh40k-meta-badge--action">
-                <i class="fas fa-clock"></i>
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-text-xs tw-text-[var(--wh40k-text-muted)]">
+                <i class="fas fa-clock tw-text-[10px] tw-opacity-70"></i>
                 {{actionType}}
             </span>
         </div>
-        
+
         {{!-- Body --}}
-        <div class="wh40k-item-card__body">
+        <div class="tw-p-3">
             {{!-- Quick Stats Row --}}
             {{#if (or attackModifier subtypes)}}
-            <div class="wh40k-item-card__quick-stats">
+            <div class="tw-flex tw-gap-3 tw-flex-wrap tw-mb-2">
                 {{#if attackModifier}}
-                <div class="wh40k-quick-stat {{#if (gt attackModifier 0)}}wh40k-quick-stat--positive{{else}}wh40k-quick-stat--negative{{/if}}">
-                    <span class="wh40k-quick-stat__label">Attack</span>
-                    <span class="wh40k-quick-stat__value">{{attackModifier}}</span>
+                <div class="tw-flex tw-flex-col tw-gap-0.5 tw-px-2.5 tw-py-1.5 tw-bg-[var(--wh40k-accent-overlay)] tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color-light)] {{#if (gt attackModifier 0)}}tw-border-[var(--wh40k-success-primary)]{{else}}tw-border-[var(--wh40k-danger-primary)]{{/if}}">
+                    <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-text-muted)]">Attack</span>
+                    <span class="tw-text-sm tw-font-bold tw-text-[var(--wh40k-bronze)] tw-font-alt">{{attackModifier}}</span>
                 </div>
                 {{/if}}
                 {{#if subtypes}}
-                <div class="wh40k-quick-stat">
-                    <span class="wh40k-quick-stat__label">Type</span>
-                    <span class="wh40k-quick-stat__value">{{subtypes}}</span>
+                <div class="tw-flex tw-flex-col tw-gap-0.5 tw-px-2.5 tw-py-1.5 tw-bg-[var(--wh40k-accent-overlay)] tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color-light)]">
+                    <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-text-muted)]">Type</span>
+                    <span class="tw-text-sm tw-font-bold tw-text-[var(--wh40k-bronze)] tw-font-alt">{{subtypes}}</span>
                 </div>
                 {{/if}}
             </div>
-            <div class="wh40k-item-card__divider"></div>
+            <div class="tw-h-px tw-bg-gradient-to-r tw-from-transparent tw-via-[var(--wh40k-border-color)] tw-to-transparent tw-my-2.5"></div>
             {{/if}}
-            
+
             {{!-- Description --}}
             {{#if description}}
-            <div class="wh40k-item-card__section">
-                <div class="wh40k-item-card__description">{{{description}}}</div>
+            <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                <div class="tw-text-sm tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{{description}}}</div>
             </div>
             {{/if}}
-            
+
             {{!-- Summary (if different from description) --}}
             {{#if summary}}
-            <div class="wh40k-item-card__section wh40k-item-card__section--summary">
-                <div class="wh40k-item-card__summary">{{{summary}}}</div>
+            <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+                <div class="tw-text-sm tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{{summary}}}</div>
             </div>
             {{/if}}
         </div>
-        
+
         {{!-- Footer --}}
         {{#if source}}
-        <div class="wh40k-item-card__footer">
-            <i class="fas fa-book"></i>
-            <span class="wh40k-item-card__source">{{source}}</span>
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-justify-end tw-px-3 tw-py-2 tw-border-t tw-border-[var(--wh40k-border-color-light)]">
+            <i class="fas fa-book tw-text-[0.7rem] tw-text-[var(--wh40k-text-muted)]"></i>
+            <span class="tw-text-xs tw-italic tw-text-[var(--wh40k-text-muted)]">{{source}}</span>
         </div>
         {{/if}}
-        
+
         {{!-- Action Button (Open Sheet) --}}
         {{#if itemUuid}}
-        <div class="wh40k-item-card__actions">
-            <button type="button" class="wh40k-item-card__btn wh40k-item-card__btn--sheet" data-uuid="{{itemUuid}}" data-action="openItemSheet">
-                <i class="fas fa-scroll-old"></i>
+        <div class="tw-flex tw-gap-1 tw-p-2.5 tw-justify-center tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color-light)]">
+            <button type="button" class="tw-flex tw-flex-1 tw-items-center tw-justify-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-gradient-to-br tw-from-[var(--wh40k-bronze)] tw-to-[var(--wh40k-bronze-dark)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-md tw-text-white tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer tw-transition-all hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_rgba(0,0,0,0.3)]" data-uuid="{{itemUuid}}" data-action="openItemSheet">
+                <i class="fas fa-scroll-old tw-text-[12px]"></i>
                 View Details
             </button>
         </div>

@@ -1,56 +1,56 @@
 {{! Rogue Trader Burning Card - Modern Design }}
-<div class="wh40k-chat tw-font-ui">
-    <div class="wh40k-roll-card tw-relative tw-overflow-hidden tw-rounded-md">
+<div class="tw-font-ui">
+    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]">
         {{! Header }}
-        <div class="wh40k-roll-card__header">
-            <div class="wh40k-roll-card__actor">{{actor.name}}</div>
-            <h2 class="wh40k-roll-card__title">On Fire!</h2>
-            <div class="wh40k-roll-card__subtitle">Critical Condition</div>
+        <div class="tw-relative tw-px-4 tw-py-3 tw-bg-gradient-to-r tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color)]">
+            <div class="tw-text-xs tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-widest tw-mb-1">{{actor.name}}</div>
+            <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em] tw-m-0 tw-[text-shadow:0_2px_4px_var(--wh40k-shadow-medium)]">On Fire!</h2>
+            <div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)] tw-mt-0.5 tw-opacity-90">Critical Condition</div>
         </div>
 
         {{! Body }}
-        <div class="wh40k-roll-card__body">
-            <div class="wh40k-roll-card__damage">
-                <div class="wh40k-roll-card__damage-header">
-                    <span class="wh40k-roll-card__damage-title">Fire Damage</span>
+        <div class="tw-px-4 tw-py-3">
+            <div class="tw-p-3 tw-my-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md">
+                <div class="tw-flex tw-justify-between tw-items-center tw-mb-2 tw-pb-2 tw-border-b tw-border-[var(--wh40k-wounds-border)]">
+                    <span class="tw-font-display tw-text-[0.9rem] tw-text-[color:var(--wh40k-wounds-secondary)] tw-uppercase tw-tracking-[0.1em]">Fire Damage</span>
                 </div>
-                <div class="wh40k-roll-card__damage-value">{{damage}}</div>
-                <div class="wh40k-roll-card__damage-type">Energy (ignores Armour)</div>
+                <div class="tw-text-center tw-text-[2rem] tw-font-bold tw-text-[color:var(--wh40k-wounds-secondary)] tw-[text-shadow:0_0_10px_rgba(139,0,0,0.5)]">{{damage}}</div>
+                <div class="tw-text-center tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted)] tw-mt-1">Energy (ignores Armour)</div>
             </div>
 
-            <div class="wh40k-roll-card__notice">
-                <span class="wh40k-roll-card__notice-label">Fatigue</span>
-                <span class="wh40k-roll-card__notice-value">+1</span>
+            <div class="tw-flex tw-justify-between tw-items-center tw-px-[14px] tw-py-[10px] tw-my-2 tw-bg-[var(--wh40k-warning-bg)] tw-border-l-[3px] tw-border-l-[var(--wh40k-warning-primary)] tw-rounded-r-[4px]">
+                <span class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-warning-secondary)]">Fatigue</span>
+                <span class="tw-text-[1.1rem] tw-font-bold tw-text-[color:var(--wh40k-text-dark)]">+1</span>
             </div>
 
             {{#if success}}
-                <div class="wh40k-roll-card__result wh40k-roll-card__result--success">
-                    <div class="wh40k-roll-card__result-label">WP Success</div>
-                    <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
+                <div class="tw-relative tw-text-center tw-p-4 tw-my-3 tw-rounded-md tw-bg-[var(--wh40k-success-bg)] tw-border-2 tw-border-[var(--wh40k-success-primary)] tw-shadow-[0_0_20px_var(--wh40k-card-success-glow),inset_0_0_30px_rgba(45,138,78,0.1)]">
+                    <div class="tw-font-display tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.15em] tw-mb-1 tw-text-[color:var(--wh40k-success-secondary)]">WP Success</div>
+                    <div class="tw-text-[2.5rem] tw-font-bold tw-leading-none tw-[text-shadow:0_2px_8px_var(--wh40k-shadow-medium)]">{{roll.total}}</div>
                 </div>
-                <div class="wh40k-roll-card__text">
-                    <p>You may take actions as normal despite the flames.</p>
+                <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-gold tw-rounded-r-[4px] tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto">
+                    <p class="tw-m-0 tw-mb-2 last:tw-mb-0">You may take actions as normal despite the flames.</p>
                 </div>
             {{else}}
-                <div class="wh40k-roll-card__result wh40k-roll-card__result--failure">
-                    <div class="wh40k-roll-card__result-label">WP Failed</div>
-                    <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
+                <div class="tw-relative tw-text-center tw-p-4 tw-my-3 tw-rounded-md tw-bg-[var(--wh40k-danger-bg)] tw-border-2 tw-border-[var(--wh40k-danger-primary)] tw-shadow-[0_0_20px_var(--wh40k-card-fail-glow),inset_0_0_30px_rgba(168,50,50,0.1)]">
+                    <div class="tw-font-display tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.15em] tw-mb-1 tw-text-[color:var(--wh40k-danger-secondary)]">WP Failed</div>
+                    <div class="tw-text-[2.5rem] tw-font-bold tw-leading-none tw-[text-shadow:0_2px_8px_var(--wh40k-shadow-medium)]">{{roll.total}}</div>
                 </div>
-                <div class="wh40k-roll-card__text">
-                    <p>You can only flail in agony and scream!</p>
+                <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-gold tw-rounded-r-[4px] tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto">
+                    <p class="tw-m-0 tw-mb-2 last:tw-mb-0">You can only flail in agony and scream!</p>
                 </div>
             {{/if}}
 
-            <div class="wh40k-roll-card__controls">
+            <div class="tw-flex tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
                 <button
-                    class="wh40k-roll-card__btn wh40k-roll-card__btn--damage roll-control__apply-damage"
+                    class="roll-control__apply-damage tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[color:var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all tw-duration-[var(--wh40k-transition-base)] tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)]"
                     data-type="Energy"
                     data-ignore-armour="true"
                     data-uuid="{{actor.uuid}}"
                     data-damage="{{damage}}"
                     data-fatigue="1"
                 >
-                    <span class="material-icons">api</span>
+                    <span class="material-icons tw-text-[16px]">api</span>
                     <span>Apply Damage</span>
                 </button>
             </div>

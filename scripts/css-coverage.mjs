@@ -70,7 +70,32 @@ const CLASS_ATTR_RE = /class(?:Name)?\s*=\s*"([^"]*)"|class(?:Name)?\s*=\s*'([^'
  * Anything else is treated as a project CSS class (hasNonTw = true).
  */
 const FA_RE = /^fa[rsbldt]$|^fa-(solid|regular|brands|light|thin|duotone)$|^fa-/;
-const JS_HOOKS = new Set(['sheet-control__hide-control']);
+// basic-action-manager.ts queries all roll-control__* selectors by class name
+const ROLL_CONTROL_RE = /^roll-control__/;
+const JS_HOOKS = new Set([
+    'sheet-control__hide-control',
+    // expandable-tooltip-mixin.ts queries and toggles these classes by name
+    'wh40k-expandable',
+    'wh40k-expandable--expanded',
+    'wh40k-expansion-panel',
+    'wh40k-expansion-panel--open',
+    // item-preview-card.ts renders stat-pill elements by class name
+    'wh40k-stat-pill',
+    'wh40k-stat-pill__icon',
+    'wh40k-stat-pill__value',
+    'wh40k-stat-pill__label',
+    // item-preview-card.ts renders badge elements by class name
+    'wh40k-badge',
+    // primary-sheet-mixin.ts / talent-editor-dialog.ts / character-sheet.ts toggle
+    // this class on tab buttons and tab content panels via classList.toggle('active', …)
+    'active',
+    // Google Material Icons library — third-party icon font, not project CSS
+    'material-icons',
+    'material-icons-outlined',
+    'material-icons-round',
+    'material-icons-sharp',
+    'material-icons-two-tone',
+]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 
 function isTwOrExempt(token) {
@@ -87,6 +112,7 @@ function isTwOrExempt(token) {
     if (bare.startsWith('tw-')) return true;
     if (FA_RE.test(token)) return true;
     if (JS_HOOKS.has(token)) return true;
+    if (ROLL_CONTROL_RE.test(token)) return true;
     if (SECTION_ID_RE.test(token)) return true;
     return false;
 }
