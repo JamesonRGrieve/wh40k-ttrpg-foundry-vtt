@@ -2,82 +2,82 @@
   Rogue Trader Armour Chat Card - Modern Compact Design
   For vocalizing armour items to chat with coverage and protection info.
 --}}
-<div class="wh40k-chat tw-font-ui">
-  <div class="wh40k-armour-card tw-relative tw-overflow-hidden tw-rounded-md" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" {{#if actor}}data-actor-id="{{actor._id}}" data-actor-uuid="{{actor.uuid}}"{{/if}}>
-    
+<div class="tw-font-ui">
+  <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-bronze)] tw-bg-[var(--wh40k-panel-bg-solid)] tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium)]" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" {{#if actor}}data-actor-id="{{actor._id}}" data-actor-uuid="{{actor.uuid}}"{{/if}}>
+
     {{!-- Header --}}
-    <div class="wh40k-armour-card__header">
-      <img class="wh40k-armour-card__image" src="{{item.img}}" alt="{{item.name}}" />
-      <div class="wh40k-armour-card__title">
-        <h2 class="wh40k-armour-card__name">{{item.name}}</h2>
-        <div class="wh40k-armour-card__meta">
-          <span class="wh40k-armour-card__type">{{item.system.typeLabel}}</span>
+    <div class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-border-b tw-border-[var(--wh40k-border-color)] tw-bg-gradient-to-br tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent">
+      <img class="tw-w-12 tw-h-12 tw-rounded-md tw-object-cover tw-flex-shrink-0 tw-border-2 tw-border-[var(--wh40k-bronze)] tw-shadow-[0_2px_6px_var(--wh40k-shadow-medium)]" src="{{item.img}}" alt="{{item.name}}" />
+      <div class="tw-flex-1 tw-min-w-0">
+        <h2 class="tw-font-display tw-text-lg tw-font-semibold tw-text-[var(--wh40k-bronze)] tw-m-0 tw-leading-tight tw-shadow-[0_1px_0_var(--wh40k-text-shadow)]">{{item.name}}</h2>
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-mt-1">
+          <span class="tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-uppercase tw-tracking-widest">{{item.system.typeLabel}}</span>
           {{#if (ne item.system.craftsmanship "common")}}
-          <span class="wh40k-armour-card__divider">•</span>
-          <span class="wh40k-armour-card__craft wh40k-armour-card__craft--{{item.system.craftsmanship}}">{{item.system.craftsmanshipLabel}}</span>
+          <span class="tw-text-xs tw-text-[var(--wh40k-border-color)]">•</span>
+          <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-brass)]">{{item.system.craftsmanshipLabel}}</span>
           {{/if}}
         </div>
       </div>
     </div>
-    
+
     {{!-- Coverage Visual --}}
-    <div class="wh40k-armour-card__coverage">
+    <div class="tw-flex tw-flex-wrap tw-gap-1 tw-p-2 tw-border-b tw-border-[var(--wh40k-border-color-light)]">
       {{#each item.system.locationArray as |loc|}}
-      <div class="wh40k-armour-card__location {{#if loc.covered}}wh40k-armour-card__location--covered{{/if}}">
-        <span class="wh40k-armour-card__location-label">{{loc.abbr}}</span>
-        <span class="wh40k-armour-card__location-ap">{{loc.ap}}</span>
+      <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-text-xs {{#if loc.covered}}tw-bg-[var(--wh40k-accent-overlay)] tw-border-[var(--wh40k-bronze)] tw-text-[var(--wh40k-text-dark)]{{else}}tw-bg-transparent tw-border-[var(--wh40k-border-color-light)] tw-text-[var(--wh40k-text-muted)] tw-opacity-50{{/if}}">
+        <span class="tw-font-semibold tw-uppercase tw-tracking-wide">{{loc.abbr}}</span>
+        <span class="tw-font-bold">{{loc.ap}}</span>
       </div>
       {{/each}}
     </div>
-    
+
     {{!-- Stats --}}
-    <div class="wh40k-armour-card__stats">
-      <div class="wh40k-armour-card__stat">
-        <span class="wh40k-armour-card__stat-label">Coverage</span>
-        <span class="wh40k-armour-card__stat-value">{{item.system.coverageLabel}}</span>
+    <div class="tw-grid tw-grid-cols-2 tw-gap-1 tw-p-3">
+      <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
+        <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">Coverage</span>
+        <span class="tw-font-semibold tw-text-[var(--wh40k-text-dark)]">{{item.system.coverageLabel}}</span>
       </div>
-      <div class="wh40k-armour-card__stat">
-        <span class="wh40k-armour-card__stat-label">Max AP</span>
-        <span class="wh40k-armour-card__stat-value">{{item.system.maxAP}}</span>
+      <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
+        <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">Max AP</span>
+        <span class="tw-font-semibold tw-text-[var(--wh40k-text-dark)]">{{item.system.maxAP}}</span>
       </div>
       {{#if item.system.maxAgility}}
-      <div class="wh40k-armour-card__stat">
-        <span class="wh40k-armour-card__stat-label">Max Ag</span>
-        <span class="wh40k-armour-card__stat-value">{{item.system.maxAgility}}</span>
+      <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
+        <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">Max Ag</span>
+        <span class="tw-font-semibold tw-text-[var(--wh40k-text-dark)]">{{item.system.maxAgility}}</span>
       </div>
       {{/if}}
       {{#if item.system.weight}}
-      <div class="wh40k-armour-card__stat">
-        <span class="wh40k-armour-card__stat-label">Weight</span>
-        <span class="wh40k-armour-card__stat-value">{{item.system.weightLabel}}</span>
+      <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
+        <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">Weight</span>
+        <span class="tw-font-semibold tw-text-[var(--wh40k-text-dark)]">{{item.system.weightLabel}}</span>
       </div>
       {{/if}}
     </div>
-    
+
     {{!-- Properties --}}
     {{#if item.system.hasProperties}}
-    <div class="wh40k-armour-card__properties">
+    <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-px-3 tw-py-2 tw-border-t tw-border-[var(--wh40k-border-color-light)]">
       {{#each item.system.propertiesArray as |prop|}}
-      <span class="wh40k-armour-card__property" data-tooltip="{{prop.description}}">
+      <span class="tw-inline-block tw-px-2 tw-py-0.5 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded tw-text-[var(--wh40k-bronze)]" data-tooltip="{{prop.description}}">
         {{prop.label}}
       </span>
       {{/each}}
     </div>
     {{/if}}
-    
+
     {{!-- Description (if exists) --}}
     {{#if item.system.description.value}}
-    <div class="wh40k-armour-card__description">
+    <div class="tw-px-3 tw-py-2 tw-text-sm tw-leading-relaxed tw-text-[var(--wh40k-text-dark)] tw-border-t tw-border-[var(--wh40k-border-color-light)]">
       {{{item.system.description.value}}}
     </div>
     {{/if}}
-    
+
     {{!-- Footer --}}
     {{#if item.system.source}}
-    <div class="wh40k-armour-card__footer">
-      <span class="wh40k-armour-card__source">{{item.system.source}}</span>
+    <div class="tw-px-3 tw-py-2 tw-border-t tw-border-[var(--wh40k-border-color-light)] tw-text-right">
+      <span class="tw-text-xs tw-italic tw-text-[var(--wh40k-text-muted)]">{{item.system.source}}</span>
     </div>
     {{/if}}
-    
+
   </div>
 </div>

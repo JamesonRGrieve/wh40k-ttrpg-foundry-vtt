@@ -5,19 +5,19 @@
       iconClass=icon
       title=actor
       subtitle=(concat "Movement: " movementLabel)}}
-        <div class="wh40k-movement-display tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-2">
-            <div class="wh40k-movement-value tw-flex tw-items-baseline tw-gap-1">
-                <span class="wh40k-movement-distance tw-font-alt tw-text-2xl tw-font-bold tw-leading-none tw-text-gold-dark">{{distance}}</span>
-                <span class="wh40k-movement-unit tw-text-[0.85rem] tw-font-semibold tw-lowercase tw-text-[color:var(--wh40k-text-muted)]">meters</span>
+        <div class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-2">
+            <div class="tw-flex tw-items-baseline tw-gap-1">
+                <span class="tw-font-alt tw-text-2xl tw-font-bold tw-leading-none tw-text-gold-dark">{{distance}}</span>
+                <span class="tw-text-[0.85rem] tw-font-semibold tw-lowercase tw-text-[color:var(--wh40k-text-muted)]">meters</span>
             </div>
-            <div class="wh40k-badge wh40k-badge--{{movementType}} tw-inline-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1.5 tw-rounded-md tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.5px]">
+            <div class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1.5 tw-rounded-md tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.5px]">
                 <i class="fas {{icon}}"></i>
                 {{movementLabel}}
             </div>
         </div>
 
         {{#if description}}
-            <div class="wh40k-movement-description tw-px-3 tw-py-2 tw-bg-[rgba(138,122,106,0.08)] tw-border-l-[3px] tw-border-l-[rgba(138,122,106,0.3)] tw-rounded-md tw-text-sm tw-leading-[1.5] tw-text-[color:var(--wh40k-text-medium)]">
+            <div class="tw-px-3 tw-py-2 tw-bg-[rgba(138,122,106,0.08)] tw-border-l-[3px] tw-border-l-[rgba(138,122,106,0.3)] tw-rounded-md tw-text-sm tw-leading-[1.5] tw-text-[color:var(--wh40k-text-medium)]">
                 {{{description}}}
             </div>
         {{/if}}
