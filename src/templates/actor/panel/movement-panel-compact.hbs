@@ -5,53 +5,53 @@
     label="Movement"
     icon="fa-running"
     rootClass="wh40k-panel-movement-compact"}}
-    <div class="wh40k-movement-modern-compact tw-flex tw-flex-col">
+    <div class="tw-flex tw-flex-col tw-gap-[8px]">
         {{! Half Move }}
-        <div class="wh40k-move-modern-cell wh40k-move-half tw-relative tw-flex tw-items-center tw-rounded-[6px] tw-overflow-hidden">
-            <div class="wh40k-move-modern-icon tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2]">
-                <i class="fas fa-walking"></i>
+        <div class="tw-relative tw-flex tw-items-center tw-gap-[12px] tw-px-3 tw-py-[10px] tw-rounded-[6px] tw-overflow-hidden tw-transition-all tw-border tw-border-solid hover:tw-translate-x-[2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)]" style="background:var(--color-bg-option);border-color:var(--color-border-light);">
+            <div class="tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2] tw-text-[0.9rem]" style="background:linear-gradient(135deg,rgba(from var(--wh40k-accent-green-bright,#4caf50) r g b/0.15) 0%,rgba(from var(--wh40k-accent-green-bright,#4caf50) r g b/0.05) 100%);color:var(--wh40k-accent-green,#388e3c);">
+                <i class="{{concat 'fas fa-walking'}}"></i>
             </div>
-            <div class="wh40k-move-modern-content tw-flex tw-items-baseline tw-flex-1 tw-z-[2]">
-                <span class="wh40k-move-modern-label tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px]">Half</span>
-                <span class="wh40k-move-modern-value tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none">{{system.movement.half}}<span class="wh40k-move-unit tw-text-[0.8rem] tw-font-normal tw-ml-[2px]">m</span></span>
+            <div class="tw-flex tw-items-baseline tw-flex-1 tw-z-[2] tw-gap-[8px]">
+                <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px]" style="color:var(--wh40k-text-muted);">Half</span>
+                <span class="tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none" style="color:var(--color-text-primary);">{{system.movement.half}}<span class="tw-text-[0.8rem] tw-font-normal tw-ml-[2px]" style="color:var(--wh40k-text-muted);">m</span></span>
             </div>
-            <div class="wh40k-move-modern-bar tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1]" style="--move-percent: 25%;"></div>
+            <div class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1] tw-transition-[width]" style="width:25%;background:linear-gradient(90deg,rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.08) 0%,rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.02) 100%);border-right:2px solid rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.2);"></div>
         </div>
 
         {{! Full Move }}
-        <div class="wh40k-move-modern-cell wh40k-move-full tw-relative tw-flex tw-items-center tw-rounded-[6px] tw-overflow-hidden">
-            <div class="wh40k-move-modern-icon tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2]">
-                <i class="fas fa-shoe-prints"></i>
+        <div class="tw-relative tw-flex tw-items-center tw-gap-[12px] tw-px-3 tw-py-[10px] tw-rounded-[6px] tw-overflow-hidden tw-transition-all tw-border tw-border-solid hover:tw-translate-x-[2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)]" style="background:var(--color-bg-option);border-color:var(--color-border-light);">
+            <div class="tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2] tw-text-[0.9rem]" style="background:linear-gradient(135deg,rgba(from var(--wh40k-accent-info,#3498db) r g b/0.15) 0%,rgba(from var(--wh40k-accent-info,#3498db) r g b/0.05) 100%);color:#2980b9;">
+                <i class="{{concat 'fas fa-shoe-prints'}}"></i>
             </div>
-            <div class="wh40k-move-modern-content tw-flex tw-items-baseline tw-flex-1 tw-z-[2]">
-                <span class="wh40k-move-modern-label tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px]">Full</span>
-                <span class="wh40k-move-modern-value tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none">{{system.movement.full}}<span class="wh40k-move-unit tw-text-[0.8rem] tw-font-normal tw-ml-[2px]">m</span></span>
+            <div class="tw-flex tw-items-baseline tw-flex-1 tw-z-[2] tw-gap-[8px]">
+                <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px]" style="color:var(--wh40k-text-muted);">Full</span>
+                <span class="tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none" style="color:var(--color-text-primary);">{{system.movement.full}}<span class="tw-text-[0.8rem] tw-font-normal tw-ml-[2px]" style="color:var(--wh40k-text-muted);">m</span></span>
             </div>
-            <div class="wh40k-move-modern-bar tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1]" style="--move-percent: 50%;"></div>
+            <div class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1] tw-transition-[width]" style="width:50%;background:linear-gradient(90deg,rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.08) 0%,rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.02) 100%);border-right:2px solid rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.2);"></div>
         </div>
 
         {{! Charge }}
-        <div class="wh40k-move-modern-cell wh40k-move-charge tw-relative tw-flex tw-items-center tw-rounded-[6px] tw-overflow-hidden">
-            <div class="wh40k-move-modern-icon tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2]">
-                <i class="fas fa-running"></i>
+        <div class="tw-relative tw-flex tw-items-center tw-gap-[12px] tw-px-3 tw-py-[10px] tw-rounded-[6px] tw-overflow-hidden tw-transition-all tw-border tw-border-solid hover:tw-translate-x-[2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)]" style="background:var(--color-bg-option);border-color:var(--color-border-light);">
+            <div class="tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2] tw-text-[0.9rem]" style="background:linear-gradient(135deg,rgba(243,156,18,0.15) 0%,rgba(243,156,18,0.05) 100%);color:#e67e22;">
+                <i class="{{concat 'fas fa-running'}}"></i>
             </div>
-            <div class="wh40k-move-modern-content tw-flex tw-items-baseline tw-flex-1 tw-z-[2]">
-                <span class="wh40k-move-modern-label tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px]">Charge</span>
-                <span class="wh40k-move-modern-value tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none">{{system.movement.charge}}<span class="wh40k-move-unit tw-text-[0.8rem] tw-font-normal tw-ml-[2px]">m</span></span>
+            <div class="tw-flex tw-items-baseline tw-flex-1 tw-z-[2] tw-gap-[8px]">
+                <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px]" style="color:var(--wh40k-text-muted);">Charge</span>
+                <span class="tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none" style="color:var(--color-text-primary);">{{system.movement.charge}}<span class="tw-text-[0.8rem] tw-font-normal tw-ml-[2px]" style="color:var(--wh40k-text-muted);">m</span></span>
             </div>
-            <div class="wh40k-move-modern-bar tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1]" style="--move-percent: 75%;"></div>
+            <div class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1] tw-transition-[width]" style="width:75%;background:linear-gradient(90deg,rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.08) 0%,rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.02) 100%);border-right:2px solid rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.2);"></div>
         </div>
 
         {{! Run }}
-        <div class="wh40k-move-modern-cell wh40k-move-run tw-relative tw-flex tw-items-center tw-rounded-[6px] tw-overflow-hidden">
-            <div class="wh40k-move-modern-icon tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2]">
-                <i class="fas fa-wind"></i>
+        <div class="tw-relative tw-flex tw-items-center tw-gap-[12px] tw-px-3 tw-py-[10px] tw-rounded-[6px] tw-overflow-hidden tw-transition-all tw-border tw-border-solid hover:tw-translate-x-[2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)]" style="background:var(--color-bg-option);border-color:var(--color-border-light);">
+            <div class="tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2] tw-text-[0.9rem]" style="background:linear-gradient(135deg,rgba(from var(--wh40k-accent-red,#c0392b) r g b/0.15) 0%,rgba(from var(--wh40k-accent-red,#c0392b) r g b/0.05) 100%);color:#c0392b;">
+                <i class="{{concat 'fas fa-wind'}}"></i>
             </div>
-            <div class="wh40k-move-modern-content tw-flex tw-items-baseline tw-flex-1 tw-z-[2]">
-                <span class="wh40k-move-modern-label tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px]">Run</span>
-                <span class="wh40k-move-modern-value tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none">{{system.movement.run}}<span class="wh40k-move-unit tw-text-[0.8rem] tw-font-normal tw-ml-[2px]">m</span></span>
+            <div class="tw-flex tw-items-baseline tw-flex-1 tw-z-[2] tw-gap-[8px]">
+                <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px]" style="color:var(--wh40k-text-muted);">Run</span>
+                <span class="tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none" style="color:var(--color-text-primary);">{{system.movement.run}}<span class="tw-text-[0.8rem] tw-font-normal tw-ml-[2px]" style="color:var(--wh40k-text-muted);">m</span></span>
             </div>
-            <div class="wh40k-move-modern-bar tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1]" style="--move-percent: 100%;"></div>
+            <div class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1] tw-transition-[width]" style="width:100%;background:linear-gradient(90deg,rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.08) 0%,rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.02) 100%);border-right:2px solid rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.2);"></div>
         </div>
     </div>
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

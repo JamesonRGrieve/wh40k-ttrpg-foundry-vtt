@@ -3,7 +3,7 @@
     rootStateClass=(iff (eq system.fate.value 0) "wh40k-fate-empty-state")}}
 
     {{!-- Main Display: Rosette Pips + Counter --}}
-    <div class="wh40k-fate-display">
+    <div class="tw-flex tw-flex-col tw-gap-1 tw-items-center">
         {{> systems/wh40k-rpg/templates/actor/partial/vital-quick-controls
             wrapperClass="wh40k-fate-tracker tw-flex tw-items-center tw-justify-between tw-mb-2"
             cssPrefix="wh40k-fate"
@@ -15,20 +15,20 @@
             maxValue=system.fate.max}}
 
         {{!-- Rosette Pip Display --}}
-        <div class="wh40k-fate-pips tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-mb-2">
+        <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-mb-2 tw-py-1">
             {{#if (gt system.fate.max 0)}}
                 {{#each (range 1 system.fate.max) as |index|}}
                     <button type="button"
-                            class="wh40k-fate-pip {{#if (lte index ../system.fate.value)}}wh40k-fate-pip--filled{{/if}}"
+                            class="tw-size-[42px] tw-p-0 tw-bg-transparent tw-border-none tw-cursor-pointer tw-relative tw-flex tw-items-center tw-justify-center {{#if (lte index ../system.fate.value)}}tw-animate-gentle-glow{{/if}}"
                             data-action="setFateStar"
                             data-fate-index="{{index}}"
                             title="Fate Point {{index}}{{#if (lte index ../system.fate.value)}} (Available — click to spend){{else}} (Spent — click to restore){{/if}}">
-                        <i class="fas fa-skull"></i>
+                        <i class="{{concat 'fas' ' fa-skull'}}"></i>
                     </button>
                 {{/each}}
             {{else}}
-                <div class="wh40k-fate-none tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-gray-500">
-                    <i class="far fa-circle"></i>
+                <div class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-gray-500 tw-opacity-60">
+                    <i class="{{concat 'far' ' fa-circle'}}"></i>
                     <span>No Fate Points</span>
                 </div>
             {{/if}}
@@ -37,24 +37,24 @@
         {{!-- Stat Breakdown Button --}}
         <button
             type="button"
-            class="wh40k-stat-breakdown-btn wh40k-stat-breakdown-btn--compact tw-mx-auto tw-block"
+            class="tw-inline-flex tw-items-center tw-justify-center tw-size-5 tw-p-0 tw-bg-transparent tw-border-none tw-rounded-[3px] tw-text-[color:var(--color-text-secondary,#94a3b8)] tw-cursor-pointer tw-opacity-60 tw-absolute tw-top-2 tw-right-2 tw-z-10"
             data-action="showStatBreakdown"
             data-stat-key="fate"
             title="Show fate calculation">
-            <i class="fa-solid fa-calculator"></i>
+            <i class="{{concat 'fa-solid' ' fa-calculator'}} tw-text-xs"></i>
         </button>
     </div>
 
     {{!-- Edit Mode (Expandable) --}}
-    <div class="wh40k-panel-details fate_details tw-mt-2" {{hideIfNot (isExpanded 'fate_details' actor)}}>
+    <div class="tw-mt-2 tw-px-2 tw-py-1.5 tw-bg-black/[.02] tw-border-t tw-border-[color:var(--wh40k-border-color-light)]" {{hideIfNot (isExpanded 'fate_details' actor)}}>
 
         {{!-- Quick Edit Section --}}
-        <div class="wh40k-fate-edit-section">
-            <div class="wh40k-fate-edit-header">
-                <i class="fas fa-cog"></i> Edit Fate Points
+        <div class="tw-p-2 tw-bg-[color:var(--wh40k-panel-bg-translucent)] tw-border tw-border-[color:var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-1">
+            <div class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-medium)] tw-mb-1 tw-flex tw-items-center tw-gap-[6px]">
+                <i class="{{concat 'fas' ' fa-cog'}}"></i> Edit Fate Points
             </div>
 
-            <div class="wh40k-fate-edit-grid">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-2">
                 {{> systems/wh40k-rpg/templates/actor/partial/vital-edit-input
                     name="system.fate.max"
                     label="Max Fate Points"
@@ -74,22 +74,22 @@
         </div>
 
         {{!-- About Fate Info Section --}}
-        <div class="wh40k-fate-edit-section">
-            <div class="wh40k-fate-info-box tw-flex tw-gap-3 tw-bg-[rgba(0,0,0,0.1)] tw-p-3 tw-rounded-md">
-                <i class="fas fa-book-open tw-text-gold tw-text-xl"></i>
-                <div class="wh40k-info-content tw-text-sm tw-space-y-1">
-                    <strong>About Fate Points</strong>
-                    <p>Fate Points represent the Emperor's favor and divine protection. They can be spent to alter destiny in critical moments.</p>
+        <div class="tw-p-2 tw-bg-[color:var(--wh40k-panel-bg-translucent)] tw-border tw-border-[color:var(--wh40k-border-color-light)] tw-rounded-lg">
+            <div class="tw-flex tw-gap-3 tw-bg-[rgba(0,0,0,0.1)] tw-p-3 tw-rounded-md tw-border-l-[3px] tw-border-l-[color:var(--wh40k-fate-border)]">
+                <i class="{{concat 'fas' ' fa-book-open'}} tw-text-gold tw-text-xl tw-shrink-0 tw-mt-0.5"></i>
+                <div class="tw-flex tw-flex-col tw-gap-[6px] tw-text-[color:var(--wh40k-text-muted)]">
+                    <strong class="tw-text-[0.8rem] tw-font-bold tw-text-[color:var(--wh40k-text-medium)] tw-uppercase tw-tracking-[0.03em]">About Fate Points</strong>
+                    <p class="tw-text-[0.75rem] tw-leading-snug tw-m-0">Fate Points represent the Emperor's favor and divine protection. They can be spent to alter destiny in critical moments.</p>
 
-                    <strong>Uses of Fate:</strong>
-                    <ul class="tw-list-disc tw-pl-4">
+                    <strong class="tw-text-[0.8rem] tw-font-bold tw-text-[color:var(--wh40k-text-medium)] tw-uppercase tw-tracking-[0.03em]">Uses of Fate:</strong>
+                    <ul class="tw-list-disc tw-pl-4 tw-text-[0.75rem] tw-leading-[1.5] tw-m-0">
                         <li><strong>Reroll a Test:</strong> Reroll any failed test, keeping the second result</li>
                         <li><strong>Avoid Death:</strong> When reduced to 0 wounds, spend a Fate Point to survive with 1 wound instead</li>
                         <li><strong>Divine Intervention:</strong> Call upon the Emperor's grace for a minor miracle at the GM's discretion</li>
                         <li><strong>Righteous Fury:</strong> Confirm a Righteous Fury result automatically</li>
                     </ul>
 
-                    <p class="wh40k-fate-warning tw-text-crimson"><i class="fas fa-fire"></i> <strong>Burning Fate:</strong> Permanently spending a Fate Point (reducing your maximum) can achieve truly miraculous results, but this should only be done in the direst circumstances.</p>
+                    <p class="tw-text-crimson tw-mt-[6px] tw-px-1 tw-py-0.5 tw-bg-[color:var(--wh40k-wounds-bg)] tw-border-l-2 tw-border-l-[color:var(--wh40k-wounds-secondary)] tw-rounded-[3px] tw-text-[0.75rem]"><i class="{{concat 'fas' ' fa-fire'}}"></i> <strong class="tw-text-[color:var(--wh40k-wounds-secondary)]">Burning Fate:</strong> Permanently spending a Fate Point (reducing your maximum) can achieve truly miraculous results, but this should only be done in the direst circumstances.</p>
                 </div>
             </div>
         </div>

@@ -1,70 +1,58 @@
 {{!-- Psy Rating Panel V2 - Modern Psyker Control Center --}}
-<div class="wh40k-panel wh40k-panel-psy-rating">
-    <header class="wh40k-panel-header" data-action="togglePanel" data-panel-id="psy-rating">
-        <span class="wh40k-panel-title">
-            <i class="fas fa-brain"></i>
-            Psy Rating
-        </span>
-        <i class="fas fa-chevron-down wh40k-panel-toggle"></i>
-    </header>
-    <div class="wh40k-panel-body">
-        {{!-- Psy Rating Display --}}
-        <div class="wh40k-psy-display tw-flex tw-rounded-md tw-mb-[var(--wh40k-space-md)]">
-            <div class="wh40k-psy-current tw-shrink-0 tw-flex tw-items-center tw-justify-center">
-                <div class="wh40k-psy-value tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-[80px] tw-h-[80px] tw-rounded-full">
-                    <span class="wh40k-psy-number tw-text-[2rem] tw-font-bold tw-leading-none">{{system.psy.currentRating}}</span>
-                    <span class="wh40k-psy-label tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-mt-[2px]">Available PR</span>
-                </div>
-            </div>
-            <div class="wh40k-psy-stats tw-flex-1 tw-flex tw-flex-col tw-justify-center">
-                <div class="wh40k-psy-stat">
-                    <label class="tw-flex tw-items-center">
-                        <span class="wh40k-stat-label tw-text-[0.8rem] tw-font-semibold tw-min-w-[70px]">Rating</span>
-                        <input type="number" name="system.psy.rating" value="{{system.psy.rating}}" min="0" max="10" class="wh40k-psy-input tw-w-[60px] tw-text-center tw-rounded-md tw-font-semibold" data-dtype="Number" />
-                    </label>
-                </div>
-                <div class="wh40k-psy-stat">
-                    <label class="tw-flex tw-items-center">
-                        <span class="wh40k-stat-label tw-text-[0.8rem] tw-font-semibold tw-min-w-[70px]">Sustained</span>
-                        <input type="number" name="system.psy.sustained" value="{{system.psy.sustained}}" min="0" class="wh40k-psy-input tw-w-[60px] tw-text-center tw-rounded-md tw-font-semibold" data-dtype="Number" />
-                    </label>
-                </div>
+{{#> systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs
+    panelId="psy-rating"
+    label="Psy Rating"
+    icon="fa-brain"
+    accentBg="linear-gradient(135deg,rgb(from #7c3aed r g b / 0.2) 0%,rgb(from #7c3aed r g b / 0.08) 100%)"
+    accentBorder="rgb(from #7c3aed r g b / 0.4)"
+    accentIcon="#7c3aed"}}
+
+    {{!-- Psy Rating Display --}}
+    <div class="tw-flex tw-gap-3 tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-mb-3">
+        <div class="tw-shrink-0 tw-flex tw-items-center tw-justify-center">
+            <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-[80px] tw-h-[80px] tw-rounded-full tw-p-3 tw-bg-[linear-gradient(135deg,rgb(from_#7c3aed_r_g_b_/_0.25)_0%,rgb(from_#7c3aed_r_g_b_/_0.1)_100%)] tw-border-2 tw-border-[rgb(from_#7c3aed_r_g_b_/_0.5)]">
+                <span class="tw-text-[2rem] tw-font-bold tw-leading-none tw-text-[#7c3aed]">{{system.psy.currentRating}}</span>
+                <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-mt-[2px] tw-text-[var(--wh40k-text-muted)]">Available PR</span>
             </div>
         </div>
-
-        {{!-- Psyker Details --}}
-        <div class="wh40k-psy-details tw-flex tw-flex-col tw-mb-[var(--wh40k-space-md)]">
-            <div class="wh40k-psy-detail-row tw-flex tw-items-center">
-                <label class="wh40k-psy-detail tw-flex-1 tw-flex tw-flex-col">
-                    <span class="wh40k-detail-label tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em]">Psyker Type</span>
-                    <select name="system.psy.class" class="wh40k-psy-select tw-flex-1 tw-rounded-md tw-cursor-pointer">
-                        <option value="bound" {{#if (eq system.psy.class "bound")}}selected{{/if}}>Bound</option>
-                        <option value="unbound" {{#if (eq system.psy.class "unbound")}}selected{{/if}}>Unbound</option>
-                        <option value="ascended" {{#if (eq system.psy.class "ascended")}}selected{{/if}}>Ascended</option>
-                    </select>
-                </label>
-            </div>
-            <div class="wh40k-psy-detail-row tw-flex tw-items-center">
-                <label class="wh40k-psy-checkbox-row tw-flex tw-items-center tw-cursor-pointer tw-rounded-md">
-                    <input type="checkbox" name="system.psy.hasFocus" {{checked system.psy.hasFocus}} data-dtype="Boolean" class="wh40k-checkbox tw-w-[16px] tw-h-[16px]" />
-                    <span class="wh40k-checkbox-label tw-text-[0.8rem] tw-flex tw-items-center">
-                        <i class="fas fa-gem"></i>
-                        Psy Focus
-                    </span>
-                </label>
-            </div>
-        </div>
-
-        {{!-- Quick Actions --}}
-        <div class="wh40k-psy-actions tw-flex">
-            <button type="button" class="wh40k-psy-action-btn tw-flex-1 tw-flex tw-items-center tw-justify-center tw-rounded-md tw-font-semibold tw-cursor-pointer tw-text-[0.8rem]" data-action="rollPhenomena" title="Roll Psychic Phenomena">
-                <i class="fas fa-bolt"></i>
-                <span>Phenomena</span>
-            </button>
-            <button type="button" class="wh40k-psy-action-btn wh40k-btn-danger tw-flex-1 tw-flex tw-items-center tw-justify-center tw-rounded-md tw-font-semibold tw-cursor-pointer tw-text-[0.8rem]" data-action="rollPerils" title="Roll Perils of the Warp">
-                <i class="fas fa-skull"></i>
-                <span>Perils</span>
-            </button>
+        <div class="tw-flex-1 tw-flex tw-flex-col tw-justify-center tw-gap-2">
+            <label class="tw-flex tw-items-center tw-gap-2">
+                <span class="tw-text-[0.8rem] tw-font-semibold tw-text-[var(--wh40k-text-secondary)] tw-min-w-[70px]">Rating</span>
+                <input type="number" name="system.psy.rating" value="{{system.psy.rating}}" min="0" max="10" class="tw-w-[60px] tw-text-center tw-rounded-md tw-font-semibold tw-px-[8px] tw-py-[4px] tw-border tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-input-bg)] tw-text-[var(--wh40k-text-dark)] tw-text-[0.9rem]" data-dtype="Number" />
+            </label>
+            <label class="tw-flex tw-items-center tw-gap-2">
+                <span class="tw-text-[0.8rem] tw-font-semibold tw-text-[var(--wh40k-text-secondary)] tw-min-w-[70px]">Sustained</span>
+                <input type="number" name="system.psy.sustained" value="{{system.psy.sustained}}" min="0" class="tw-w-[60px] tw-text-center tw-rounded-md tw-font-semibold tw-px-[8px] tw-py-[4px] tw-border tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-input-bg)] tw-text-[var(--wh40k-text-dark)] tw-text-[0.9rem]" data-dtype="Number" />
+            </label>
         </div>
     </div>
-</div>
+
+    {{!-- Psyker Details --}}
+    <div class="tw-flex tw-flex-col tw-gap-2 tw-mb-3">
+        <label class="tw-flex-1 tw-flex tw-flex-col tw-gap-[2px]">
+            <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[var(--wh40k-text-muted)]">Psyker Type</span>
+            <select name="system.psy.class" class="tw-flex-1 tw-rounded-md tw-cursor-pointer tw-px-[10px] tw-py-[6px] tw-border tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-input-bg)] tw-text-[var(--wh40k-text-dark)] tw-text-[0.85rem]">
+                <option value="bound" {{#if (eq system.psy.class "bound")}}selected{{/if}}>Bound</option>
+                <option value="unbound" {{#if (eq system.psy.class "unbound")}}selected{{/if}}>Unbound</option>
+                <option value="ascended" {{#if (eq system.psy.class "ascended")}}selected{{/if}}>Ascended</option>
+            </select>
+        </label>
+        <label class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer tw-px-[8px] tw-py-[4px] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-md">
+            <input type="checkbox" name="system.psy.hasFocus" {{checked system.psy.hasFocus}} data-dtype="Boolean" class="tw-w-[16px] tw-h-[16px]" />
+            <span class="tw-text-[0.8rem] tw-flex tw-items-center tw-gap-1 tw-text-[var(--wh40k-text-secondary)]">
+                Psy Focus
+            </span>
+        </label>
+    </div>
+
+    {{!-- Quick Actions --}}
+    <div class="tw-flex tw-gap-2">
+        <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1 tw-px-[12px] tw-py-[8px] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-bg-[var(--wh40k-btn-bg)] tw-text-[var(--wh40k-text-secondary)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer" data-action="rollPhenomena" title="Roll Psychic Phenomena">
+            Phenomena
+        </button>
+        <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1 tw-px-[12px] tw-py-[8px] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-bg-[var(--wh40k-btn-bg)] tw-text-[var(--wh40k-text-secondary)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer" data-action="rollPerils" title="Roll Perils of the Warp">
+            Perils
+        </button>
+    </div>
+
+{{/systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs}}
