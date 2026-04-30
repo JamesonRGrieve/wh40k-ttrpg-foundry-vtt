@@ -1,5 +1,5 @@
 export function damageTypeDropdown() {
-    const dropdown = {};
+    const dropdown: Record<string, string> = {};
     damageType().forEach((i) => {
         dropdown[i.name] = i.name;
     });
