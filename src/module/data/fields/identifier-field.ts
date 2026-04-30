@@ -23,8 +23,14 @@ export default class IdentifierField extends (foundry.data as any).fields.String
 
     /* -------------------------------------------- */
 
+    constructor(options?: Record<string, unknown>) {
+        super(options);
+    }
+
+    /* -------------------------------------------- */
+
     /** @inheritdoc */
-    protected override _validateType(value: string): void {
+    protected _validateType(value: string): void {
         if (value === '') return;
 
         // Permissive validation - allows letters (any case), numbers, underscores, and hyphens

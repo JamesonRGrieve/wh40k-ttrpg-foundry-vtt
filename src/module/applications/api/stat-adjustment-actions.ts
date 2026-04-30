@@ -22,6 +22,7 @@
  * `ChatMessage` / `foundry.utils.getProperty` from the runtime.
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 
 /**
@@ -256,7 +257,7 @@ async function spendFateImpl(this: Host, _event: Event, target: HTMLElement): Pr
     await this._updateSystemField('system.fate.value', currentFate - 1);
 
     await ChatMessage.create({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor as unknown as Actor }),
+        speaker: ChatMessage.getSpeaker({ actor: this.actor as unknown as WH40KBaseActor }),
         content: `
             <div class="wh40k-fate-spend-message">
                 <div style="display: flex; align-items: center; gap: 8px; padding: 12px; background: rgba(196, 135, 29, 0.1); border-left: 3px solid #c4871d; border-radius: 4px;">

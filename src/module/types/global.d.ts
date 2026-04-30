@@ -792,7 +792,6 @@ export interface WH40KItemDocument extends WH40KItem {
     isMalignancy: boolean;
     isMutation: boolean;
     isSpecialAbility: boolean;
-    flags: Record<string, unknown>;
     getFlag(scope: string, key: string): unknown;
     setFlag(scope: string, key: string, value: unknown): Promise<unknown>;
     update(data: Record<string, unknown>, options?: Record<string, unknown>): Promise<unknown>;
