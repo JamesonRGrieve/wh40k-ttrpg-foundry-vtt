@@ -55,7 +55,7 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+        static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
             return {
                 ...super.defineSchema(),
                 horde: new SchemaField({
@@ -93,7 +93,7 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        static override _migrateData(source: Record<string, unknown>): void {
+        static _migrateData(source: Record<string, unknown>): void {
             super._migrateData?.(source);
             // Ensure horde object exists
             source.horde ??= {

@@ -11,6 +11,7 @@ import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
 import { getMaterializedItemSource, remapSubmitDataToVariantPaths } from '../../utils/item-variant-utils.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KItemDocument } from '../../types/global.d.ts';
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -26,7 +27,7 @@ const { ItemSheetV2 } = foundry.applications.sheets;
  * - StatBreakdownMixin (stat calculation breakdowns)
  */
 export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2 as any)))) {
-    declare document: WH40KItem;
+    declare document: WH40KItemDocument;
 
     constructor(options: Partial<ApplicationV2.Options> = {}) {
         super(options);
@@ -98,7 +99,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /**
      * Convenience access to the item.
      */
-    get item(): WH40KItem {
+    get item(): WH40KItemDocument {
         return this.document;
     }
 

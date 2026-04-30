@@ -12,7 +12,6 @@ import BaseActorSheet from './base-actor-sheet.ts';
  */
 export default class StarshipSheet extends BaseActorSheet {
     declare actor: WH40KStarship;
-    declare document: WH40KStarship;
 
     /** @override */
     static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
@@ -160,7 +159,7 @@ export default class StarshipSheet extends BaseActorSheet {
      * @inheritDoc
      */
     async _preparePartContext(partId: string, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-        const partContext = await super._preparePartContext(partId, context, options);
+        const partContext = await super._preparePartContext(partId, context, options as unknown as Record<string, unknown>);
 
         // Add tab metadata for tab parts
         const tabParts = ['stats', 'components', 'weapons', 'crew', 'history'];

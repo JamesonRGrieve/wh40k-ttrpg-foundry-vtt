@@ -271,7 +271,7 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {boolean} [options.deterministic]  Force deterministic values for die terms.
      * @returns {object}
      */
-    override getRollData({ deterministic = false } = {}): Record<string, unknown> {
+    getRollData({ deterministic = false } = {}): Record<string, unknown> {
         const actor = (this.parent as WH40KItem).actor;
         const actorRollData = actor?.getRollData({ deterministic }) ?? {};
         return { ...actorRollData, item: this.toObject() };

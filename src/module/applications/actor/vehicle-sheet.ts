@@ -16,7 +16,6 @@ import BaseActorSheet from './base-actor-sheet.ts';
  */
 export default class VehicleSheet extends BaseActorSheet {
     declare actor: WH40KVehicle;
-    declare document: WH40KVehicle;
 
     /* -------------------------------------------- */
     /*  Static Configuration                        */
@@ -103,7 +102,7 @@ export default class VehicleSheet extends BaseActorSheet {
 
     /** @inheritDoc */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-        const context = {
+        const context: Record<string, unknown> = {
             ...(await super._prepareContext(options)),
             isVehicle: true,
             isShip: (this.actor.system as Record<string, unknown>).primaryUse === 'ship',
@@ -185,8 +184,8 @@ export default class VehicleSheet extends BaseActorSheet {
      */
     _calculateManoeuvrability(system: Record<string, unknown>): number {
         // Example: Handling - (Size modifier)
-        const handling = system.handling || 0;
-        const sizeMod = Math.floor((system.size || 4) / 2);
+        const handling = (system.handling as number) || 0;
+        const sizeMod = Math.floor(((system.size as number) || 4) / 2);
         return handling - sizeMod;
     }
 
@@ -212,7 +211,7 @@ export default class VehicleSheet extends BaseActorSheet {
                 unnatural: char.unnatural,
                 total: char.total,
                 bonus: char.bonus,
-                hasUnnatural: (char.unnatural || 0) >= 2,
+                hasUnnatural: ((char.unnatural as number) || 0) >= 2,
             });
         }
 
@@ -282,7 +281,7 @@ export default class VehicleSheet extends BaseActorSheet {
 
     /** @inheritDoc */
     async _preparePartContext(partId: string, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-        const partContext = await super._preparePartContext(partId, context, options);
+        const partContext = await super._preparePartContext(partId, context, options as unknown as Record<string, unknown>);
 
         // Add tab metadata for all tab parts
         const tabParts = ['overview', 'combat', 'crew', 'components', 'notes'];

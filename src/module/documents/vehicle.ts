@@ -2,7 +2,7 @@ import { DHTargetedActionManager } from '../actions/targeted-action-manager.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 
 export class WH40KVehicle extends WH40KBaseActor {
-    async _preCreate(data, options, user): Promise<unknown> {
+    async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: unknown): Promise<void> {
         await super._preCreate(data, options, user);
         const initData = {
             'token.bar1': { attribute: 'integrity' },

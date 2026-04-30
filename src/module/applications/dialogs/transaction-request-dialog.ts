@@ -124,7 +124,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
                 cost: (item.system as any)?.cost?.value ?? 0,
                 selected: item.id === selectedItem?.id,
             })),
-            selectedItem,
+            selectedItem: selectedItem as unknown as WH40KItem | null,
             quantity: this.quantity,
             influenceBurn: this.influenceBurn,
             quote,

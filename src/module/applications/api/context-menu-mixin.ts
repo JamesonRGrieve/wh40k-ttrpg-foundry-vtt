@@ -395,7 +395,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                 (Bonus: ${char.bonus})
             </div>`;
             await ChatMessage.create({
-                speaker: ChatMessage.getSpeaker({ actor: this.actor as unknown as Actor }),
+                speaker: ChatMessage.getSpeaker({ actor: this.actor as WH40KBaseActor }),
                 content,
             });
         }
