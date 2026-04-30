@@ -1,5 +1,3 @@
-import type { WH40KBaseActor } from "../../actor/actor";
-
 /**
  * Encumbrance calculation utilities for character actors.
  * Extracts weight/carry capacity logic from the main actor document.
@@ -19,7 +17,7 @@ const ENCUMBRANCE_TABLE = [0.9, 2.25, 4.5, 9, 18, 27, 36, 45, 56, 67, 78, 90, 11
  * @param {Actor} actor - The actor to compute encumbrance for
  * @returns {object} Encumbrance data with current, max, and encumbered flags
  */
-export function computeEncumbrance(actor: WH40KBaseActor) {
+export function computeEncumbrance(actor) {
     let currentWeight = 0;
     let backpackWeight = 0;
     const backpack = actor.system.backpack;
@@ -75,7 +73,7 @@ export function computeEncumbrance(actor: WH40KBaseActor) {
  * @param {number} bonus - Combined Strength + Toughness bonus
  * @returns {number} Maximum carry capacity in kg
  */
-export function getCarryCapacity(bonus: number) {
+export function getCarryCapacity(bonus) {
     const index = Math.max(0, Math.min(bonus, ENCUMBRANCE_TABLE.length - 1));
     return ENCUMBRANCE_TABLE[index];
 }
