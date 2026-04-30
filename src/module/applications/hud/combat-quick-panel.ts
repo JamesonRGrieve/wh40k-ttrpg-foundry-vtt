@@ -616,7 +616,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     static async #aim(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
         // Apply aim effect (+10 to next attack)
         await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor as Actor }),
+            speaker: ChatMessage.getSpeaker({ actor: this.actor ?? undefined }),
             content: `<p><strong>${this.actor?.name}</strong> takes aim (+10 to next attack)</p>`,
             flavor: 'Aim Action',
         } as Record<string, unknown>);
@@ -696,7 +696,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
         // TODO: Implement consumable use logic
         await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor as Actor }),
+            speaker: ChatMessage.getSpeaker({ actor: this.actor ?? undefined }),
             content: `<p><strong>${this.actor?.name}</strong> uses ${item.name}</p>`,
         } as Record<string, unknown>);
 

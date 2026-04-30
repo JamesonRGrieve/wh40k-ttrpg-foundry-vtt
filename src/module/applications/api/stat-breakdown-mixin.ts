@@ -12,7 +12,7 @@
  */
 
 import type { AnyApplicationV2, ApplicationV2Ctor } from './application-types.ts';
-import type { WH40KBaseActorDocument } from '../../types/global.d.ts';
+import type { WH40KBaseActorDocument, WH40KItemDocument } from '../../types/global.d.ts';
 
 interface ModifierEntry {
     value: number;
@@ -47,7 +47,7 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
          */
         #activePopover: HTMLElement | null = null;
 
-        declare document: WH40KBaseActorDocument;
+        declare document: WH40KBaseActorDocument | WH40KItemDocument;
 
         /**
          * Add stat breakdown action handlers

@@ -581,6 +581,7 @@ declare global {
         //   const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api
         // call compiles without 'Property api does not exist' errors.
         class ApplicationV2 {
+            constructor(options?: Record<string, unknown>);
             get element(): HTMLElement;
             render(options?: boolean | Record<string, unknown>): Promise<unknown>;
             close(options?: Record<string, unknown>): Promise<unknown>;

@@ -220,6 +220,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         };
         await proto._onFirstRender?.call(this, context, options);
     }
+    async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        const proto = Object.getPrototypeOf(BaseActorSheet.prototype) as {
+            _preparePartContext?: (this: BaseActorSheet, partId: string, context: Record<string, unknown>, options: Record<string, unknown>) => Promise<Record<string, unknown>>;
+        };
+        return (await proto._preparePartContext?.call(this, partId, context, options)) ?? {};
+    }
 
     // CollapsiblePanelMixin static action handlers
     static _onTogglePanel: (event: Event, target: HTMLElement) => Promise<void>;
