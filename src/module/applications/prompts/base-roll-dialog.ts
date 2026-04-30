@@ -75,14 +75,14 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
     /** @inheritDoc */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // Initialize roll data on first render
-        if (!this.initialized && this.rollData.initialize) {
-            this.rollData.initialize();
+        if (!this.initialized && typeof this.rollData.initialize === 'function') {
+            (this.rollData.initialize as () => void)();
             this.initialized = true;
         }
 
         // Update roll data if it has an update method
-        if (this.rollData.update) {
-            await this.rollData.update();
+        if (typeof this.rollData.update === 'function') {
+            await (this.rollData.update as () => Promise<void>)();
         }
 
         const context = (await super._prepareContext(options)) as Record<string, unknown>;
@@ -117,8 +117,8 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
         const data = foundry.utils.expandObject(formData.object);
         this._updateRollData(data);
 
-        if (this.rollData.update) {
-            await this.rollData.update();
+        if (typeof this.rollData.update === 'function') {
+            await (this.rollData.update as () => Promise<void>)();
         }
     }
 
