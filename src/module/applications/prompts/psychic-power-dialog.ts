@@ -71,8 +71,8 @@ export default class PsychicPowerDialog extends BaseRollDialog {
      * @protected
      */
     async _onPowerSelectChange(event: Event): Promise<void> {
-        this.rollData.selectPower?.((event.target as HTMLInputElement).name);
-        await this.rollData.update?.();
+        if (typeof this.rollData.selectPower === 'function') (this.rollData.selectPower as (name: string) => void)((event.target as HTMLInputElement).name);
+        if (typeof this.rollData.update === 'function') await (this.rollData.update as () => Promise<void>)();
         void this.render();
     }
 
