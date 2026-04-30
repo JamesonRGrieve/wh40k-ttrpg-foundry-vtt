@@ -3,7 +3,7 @@ import { hitLocationNames } from './hit-locations.ts';
 /**
  * @param rollData {WeaponRollData}
  */
-export function calculateCombatActionModifier(rollData) {
+export function calculateCombatActionModifier(rollData: WeaponRollData) {
     const currentAction = rollData.actions[rollData.action];
 
     game.wh40k.log('calculateCombatActionModifier', currentAction);
@@ -27,7 +27,7 @@ export function calculateCombatActionModifier(rollData) {
 /**
  * @param rollData {WeaponRollData}
  */
-export function updateAvailableCombatActions(rollData) {
+export function updateAvailableCombatActions(rollData: WeaponRollData) {
     const actions = allCombatActions()
         .filter((action) => action.subtype.includes('Attack'))
         .filter((action) => {
