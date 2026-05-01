@@ -3,13 +3,28 @@
  * Handles checking if an actor has the required Weapon Training talent for a weapon.
  */
 
+import type { WH40KBaseActorDocument, WH40KItemDocument } from '../types/global.d.ts';
+
+type WeaponTrainingTalent = WH40KItemDocument & { type: string; name: string };
+type WeaponTrainingWeapon = WH40KItemDocument & {
+    system: WH40KItemDocument['system'] & {
+        requiredTraining?: string;
+        special?: string;
+    };
+};
+
+type WeaponTrainingResult = {
+    trained: boolean;
+    talent: WeaponTrainingTalent | null;
+};
+
 /**
  * Check if an actor has the required weapon training for a weapon.
  * @param {WH40KActor} actor - The actor using the weapon
  * @param {WH40KItem} weapon - The weapon being used
  * @returns {{trained: boolean, talent: WH40KItem|null}} Training status and talent if found
  */
-export function checkWeaponTraining(actor, weapon) {
+export function checkWeaponTraining(actor: WH40KBaseActorDocument, weapon: WeaponTrainingWeapon): WeaponTrainingResult {
     if (!actor || !weapon) {
         return { trained: true, talent: null }; // Default to trained if missing data
     }
@@ -28,10 +43,10 @@ export function checkWeaponTraining(actor, weapon) {
     }
 
     // Search actor's talents for matching Weapon Training
-    const talents = actor.items.filter((item) => item.type === 'talent');
+    const talents = Array.from(actor.items).filter((item) => item.type === 'talent') as WeaponTrainingTalent[];
 
     // Look for exact match first (e.g., "Weapon Training (Las)")
-    const exactMatch = talents.find((talent) => {
+    const exactMatch = talents.find((talent: WeaponTrainingTalent) => {
         const name = talent.name.toLowerCase();
         const required = requiredTraining.toLowerCase();
 
@@ -63,7 +78,7 @@ export function checkWeaponTraining(actor, weapon) {
     }
 
     // Check for universal weapon training talents (if any exist in system)
-    const universalTraining = talents.find((talent) => {
+    const universalTraining = talents.find((talent: WeaponTrainingTalent) => {
         const name = talent.name.toLowerCase();
         return name === 'weapon training' || name === 'weapon master' || name.includes('all weapons');
     });
@@ -84,7 +99,7 @@ export function checkWeaponTraining(actor, weapon) {
  * @param {WH40KItem} weapon - The weapon being used
  * @returns {number} The modifier to apply (-20 or 0)
  */
-export function getWeaponTrainingModifier(actor, weapon) {
+export function getWeaponTrainingModifier(actor: WH40KBaseActorDocument, weapon: WeaponTrainingWeapon): number {
     const { trained } = checkWeaponTraining(actor, weapon);
     return trained ? 0 : -20;
 }
@@ -96,7 +111,7 @@ export function getWeaponTrainingModifier(actor, weapon) {
  * @param {WH40KItem} weapon - The weapon being used
  * @returns {string} Description of training status
  */
-export function getWeaponTrainingDescription(actor, weapon) {
+export function getWeaponTrainingDescription(actor: WH40KBaseActorDocument, weapon: WeaponTrainingWeapon): string {
     const { trained, talent } = checkWeaponTraining(actor, weapon);
 
     if (trained && talent) {

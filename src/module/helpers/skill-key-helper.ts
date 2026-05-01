@@ -7,6 +7,8 @@
  * All 51 WH40K RPG skills + 3 compatibility skills (athletics, parry, stealth).
  */
 
+import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+
 export class SkillKeyHelper {
     /**
      * Complete mapping of all skill display names to internal keys.
@@ -251,6 +253,10 @@ export class SkillKeyHelper {
         stealth: false,
     };
 
+    static #lookupKey(value: string): string {
+        return this.SKILL_NAME_TO_KEY[value as keyof typeof SkillKeyHelper.SKILL_NAME_TO_KEY] ?? value;
+    }
+
     /* -------------------------------------------- */
     /*  Primary Methods                             */
     /* -------------------------------------------- */
@@ -267,13 +273,13 @@ export class SkillKeyHelper {
      * SkillKeyHelper.nameToKey("Chem-Use")     // → "chemUse"
      * SkillKeyHelper.nameToKey("Unknown")      // → "unknown" (fallback)
      */
-    static nameToKey(name) {
+    static nameToKey(name: string): string {
         if (!name || typeof name !== 'string') {
             console.warn(`SkillKeyHelper: Invalid skill name:`, name);
             return '';
         }
 
-        const key = this.SKILL_NAME_TO_KEY[name];
+        const key = this.SKILL_NAME_TO_KEY[name as keyof typeof SkillKeyHelper.SKILL_NAME_TO_KEY];
         if (key) return key;
 
         // Fallback: slugify the name
@@ -294,8 +300,8 @@ export class SkillKeyHelper {
      * @example
      * SkillKeyHelper.keyToName("commonLore")  // → "Common Lore"
      */
-    static keyToName(key) {
-        return this.SKILL_KEY_TO_NAME[key] || key;
+    static keyToName(key: string): string {
+        return this.SKILL_KEY_TO_NAME[key as keyof typeof SkillKeyHelper.SKILL_KEY_TO_NAME] || key;
     }
 
     /**
@@ -309,7 +315,7 @@ export class SkillKeyHelper {
      * SkillKeyHelper.validateKey("awareness", actor)  // → true
      * SkillKeyHelper.validateKey("invalid", actor)    // → false
      */
-    static validateKey(key, actor) {
+    static validateKey(key: string, actor: WH40KBaseActorDocument): boolean {
         if (!actor?.system?.skills) return false;
         return Object.prototype.hasOwnProperty.call(actor.system.skills, key);
     }
@@ -326,8 +332,8 @@ export class SkillKeyHelper {
      * SkillKeyHelper.isSpecialist("Common Lore")   // → true
      * SkillKeyHelper.isSpecialist("awareness")     // → false
      */
-    static isSpecialist(keyOrName) {
-        const key = this.SKILL_NAME_TO_KEY[keyOrName] || keyOrName;
+    static isSpecialist(keyOrName: string): boolean {
+        const key = this.#lookupKey(keyOrName);
         return this.SPECIALIST_KEYS.has(key);
     }
 
@@ -341,9 +347,9 @@ export class SkillKeyHelper {
      * SkillKeyHelper.getCharacteristic("dodge")      // → "Ag"
      * SkillKeyHelper.getCharacteristic("Medicae")    // → "Int"
      */
-    static getCharacteristic(keyOrName) {
-        const key = this.SKILL_NAME_TO_KEY[keyOrName] || keyOrName;
-        return this.SKILL_CHARACTERISTICS[key] || null;
+    static getCharacteristic(keyOrName: string): string | null {
+        const key = this.#lookupKey(keyOrName);
+        return this.SKILL_CHARACTERISTICS[key as keyof typeof SkillKeyHelper.SKILL_CHARACTERISTICS] || null;
     }
 
     /**
@@ -356,9 +362,9 @@ export class SkillKeyHelper {
      * SkillKeyHelper.isAdvanced("acrobatics")  // → true
      * SkillKeyHelper.isAdvanced("awareness")   // → false
      */
-    static isAdvanced(keyOrName) {
-        const key = this.SKILL_NAME_TO_KEY[keyOrName] || keyOrName;
-        return this.SKILL_TYPES[key] ?? false;
+    static isAdvanced(keyOrName: string): boolean {
+        const key = this.#lookupKey(keyOrName);
+        return this.SKILL_TYPES[key as keyof typeof SkillKeyHelper.SKILL_TYPES] ?? false;
     }
 
     /* -------------------------------------------- */
@@ -407,8 +413,8 @@ export class SkillKeyHelper {
      * SkillKeyHelper.findSkillsByCharacteristic("Ag")
      * // → [{key: "acrobatics", name: "Acrobatics"}, {key: "dodge", name: "Dodge"}, ...]
      */
-    static findSkillsByCharacteristic(charShort) {
-        const results = [];
+    static findSkillsByCharacteristic(charShort: string): Array<{ key: string; name: string }> {
+        const results: Array<{ key: string; name: string }> = [];
         for (const [key, char] of Object.entries(this.SKILL_CHARACTERISTICS)) {
             if (char === charShort) {
                 results.push({ key, name: this.keyToName(key) });
@@ -433,9 +439,15 @@ export class SkillKeyHelper {
      * //   isSpecialist: true
      * // }
      */
-    static getSkillMetadata(keyOrName) {
-        const key = this.SKILL_NAME_TO_KEY[keyOrName] || keyOrName;
-        if (!this.SKILL_KEY_TO_NAME[key]) return null;
+    static getSkillMetadata(keyOrName: string): {
+        key: string;
+        name: string;
+        characteristic: string | null;
+        isAdvanced: boolean;
+        isSpecialist: boolean;
+    } | null {
+        const key = this.#lookupKey(keyOrName);
+        if (!this.SKILL_KEY_TO_NAME[key as keyof typeof SkillKeyHelper.SKILL_KEY_TO_NAME]) return null;
 
         return {
             key,

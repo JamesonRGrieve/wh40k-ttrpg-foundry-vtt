@@ -1,14 +1,36 @@
 import { calculateAmmoAttackSpecials } from './ammo.ts';
 import { calculateWeaponModifiersAttackSpecials } from './weapon-modifiers.ts';
 import { applyQualityModifiersToRollData } from './weapon-quality-effects.ts';
+import type { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.ts';
+import type { WH40KItemDocument } from '../types/global.d.ts';
 
-export async function updateAttackSpecials(rollData) {
-    rollData.attackSpecials = [];
+type AttackSpecialLike = {
+    name: string;
+    level?: unknown;
+};
+
+type AttackSpecialCarrier = WH40KItemDocument & {
+    isAttackSpecial: boolean;
+    system: WH40KItemDocument['system'] & {
+        enabled?: boolean;
+        level?: unknown;
+    };
+};
+
+type AttackSpecialRollData = RollData & {
+    attackSpecials: AttackSpecialLike[];
+};
+
+type AttackSpecialSourceRollData = WeaponRollData | PsychicRollData;
+
+export async function updateAttackSpecials(rollData: AttackSpecialSourceRollData): Promise<void> {
+    const mutableRollData = rollData as AttackSpecialSourceRollData & AttackSpecialRollData;
+    mutableRollData.attackSpecials = [];
     const actionItem = rollData.weapon ?? rollData.power;
     if (!actionItem) return;
-    for (const i of actionItem.items) {
+    for (const i of actionItem.items as unknown as AttackSpecialCarrier[]) {
         if (i.isAttackSpecial && (i.system.equipped || i.system.enabled)) {
-            rollData.attackSpecials.push({
+            mutableRollData.attackSpecials.push({
                 name: i.name,
                 level: i.system.level,
             });
@@ -16,23 +38,23 @@ export async function updateAttackSpecials(rollData) {
     }
 
     // Las Variable Setting
-    if (rollData.lasMode) {
+    if ('lasMode' in rollData && rollData.lasMode) {
         switch (rollData.lasMode) {
             case 'Standard':
                 break;
             case 'Overload':
-                rollData.attackSpecials.findSplice((i) => i.name === 'Reliable');
-                rollData.attackSpecials.push({
+                mutableRollData.attackSpecials.findSplice((i: AttackSpecialLike) => i.name === 'Reliable');
+                mutableRollData.attackSpecials.push({
                     name: 'Unreliable',
                     level: true,
                 });
-                rollData.attackSpecials.push({
+                mutableRollData.attackSpecials.push({
                     name: rollData.lasMode,
                     level: true,
                 });
                 break;
             case 'Overcharge':
-                rollData.attackSpecials.push({
+                mutableRollData.attackSpecials.push({
                     name: rollData.lasMode,
                     level: true,
                 });
@@ -50,13 +72,13 @@ export async function updateAttackSpecials(rollData) {
 /**
  * @param rollData {RollData}
  */
-export function calculateAttackSpecialAttackBonuses(rollData) {
+export function calculateAttackSpecialAttackBonuses(rollData: RollData): void {
     // Reset Attack Specials
     rollData.specialModifiers = {};
     const actionItem = rollData.weapon ?? rollData.power;
     if (!actionItem) return;
 
-    for (const item of actionItem.items) {
+    for (const item of actionItem.items as unknown as AttackSpecialCarrier[]) {
         if (!item.isAttackSpecial) continue;
         switch (item.name) {
             case 'Scatter':
@@ -90,7 +112,7 @@ export function calculateAttackSpecialAttackBonuses(rollData) {
     applyQualityModifiersToRollData(rollData);
 }
 
-export function attackSpecials() {
+export function attackSpecials(): Array<{ name: string; hasLevel: boolean }> {
     return [
         {
             name: 'Accurate',
