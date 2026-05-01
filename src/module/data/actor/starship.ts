@@ -188,7 +188,7 @@ export default class StarshipData extends ActorDataModel {
         let spaceUsed = 0;
 
         // Track stat modifiers from components
-        const componentModifiers = {
+        const componentModifiers: Record<string, number> = {
             speed: 0,
             manoeuvrability: 0,
             detection: 0,
