@@ -37,26 +37,35 @@
         "lines": 277,
         "errors": {
           "TS2740": 1,
-          "TS2554": 1,
           "TS7006": 1,
           "TS18048": 8
         },
-        "total": 11,
-        "strategy": "TS18048 / TS18047 / TS2531 / TS2532 \u2014 Possibly null/undefined.; TS2740; TS2554"
+        "total": 10,
+        "strategy": "TS18048 / TS18047 / TS2531 / TS2532 \u2014 Possibly null/undefined.; TS2740; TS7006 \u2014 Parameter implicitly has 'any' type."
+      },
+      {
+        "file": "src/module/data/item/ship-upgrade.ts",
+        "lines": 183,
+        "errors": {
+          "TS2740": 1,
+          "TS7006": 1,
+          "TS18048": 6
+        },
+        "total": 8,
+        "strategy": "TS18048 / TS18047 / TS2531 / TS2532 \u2014 Possibly null/undefined.; TS2740; TS7006 \u2014 Parameter implicitly has 'any' type."
       },
       {
         "file": "src/module/data/item/ship-weapon.ts",
         "lines": 283,
         "errors": {
           "TS2740": 1,
-          "TS2554": 1,
           "TS18046": 1,
           "TS7053": 1,
           "TS7006": 1,
           "TS18048": 16
         },
-        "total": 21,
-        "strategy": "TS18048 / TS18047 / TS2531 / TS2532 \u2014 Possibly null/undefined.; TS2740; TS2554"
+        "total": 20,
+        "strategy": "TS18048 / TS18047 / TS2531 / TS2532 \u2014 Possibly null/undefined.; TS2740; TS18046 \u2014 Variable is of type 'unknown'."
       },
       {
         "file": "src/module/data/shared/activation-template.ts",
@@ -361,28 +370,21 @@
       },
       {
         "file": "src/module/applications/actor/starship-sheet.ts",
-        "lines": 221,
+        "lines": 220,
         "errors": {
-          "TS2416": 2,
-          "TS2339": 1,
-          "TS2551": 1,
-          "TS2322": 1
+          "TS2339": 1
         },
-        "total": 5,
-        "strategy": "TS2416; TS2339 \u2014 Property does not exist on type.; TS2551 \u2014 Property doesn't exist, did you mean X?"
+        "total": 1,
+        "strategy": "TS2339 \u2014 Property does not exist on type."
       },
       {
         "file": "src/module/applications/actor/vehicle-sheet.ts",
-        "lines": 474,
+        "lines": 473,
         "errors": {
-          "TS2416": 2,
-          "TS2339": 5,
-          "TS2362": 2,
-          "TS2365": 1,
-          "TS2551": 1
+          "TS2339": 1
         },
-        "total": 11,
-        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2416; TS2362"
+        "total": 1,
+        "strategy": "TS2339 \u2014 Property does not exist on type."
       },
       {
         "file": "src/module/applications/api/application-v2-mixin.ts",
@@ -468,25 +470,22 @@
         "file": "src/module/applications/api/what-if-mixin.ts",
         "lines": 401,
         "errors": {
-          "TS2345": 1,
-          "TS2740": 1,
-          "TS2531": 1
+          "TS2345": 1
         },
-        "total": 3,
-        "strategy": "TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2740; TS2531"
+        "total": 1,
+        "strategy": "TS2345 \u2014 Argument of type X is not assignable to parameter type Y."
       },
       {
         "file": "src/module/applications/character-creation/origin-detail-dialog.ts",
         "lines": 362,
         "errors": {
-          "TS2554": 1,
           "TS2345": 3,
           "TS18046": 1,
           "TS2339": 3,
           "TS2322": 1
         },
-        "total": 9,
-        "strategy": "TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2339 \u2014 Property does not exist on type.; TS2554"
+        "total": 8,
+        "strategy": "TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2339 \u2014 Property does not exist on type.; TS18046 \u2014 Variable is of type 'unknown'."
       },
       {
         "file": "src/module/applications/components/active-modifiers-panel.ts",
@@ -529,44 +528,40 @@
         "lines": 434,
         "errors": {
           "TS2322": 3,
-          "TS2554": 1,
           "TS2345": 1,
           "TS2740": 1
         },
-        "total": 6,
-        "strategy": "TS2322 \u2014 Type X is not assignable to type Y.; TS2554; TS2345 \u2014 Argument of type X is not assignable to parameter type Y."
+        "total": 5,
+        "strategy": "TS2322 \u2014 Type X is not assignable to type Y.; TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2740"
       },
       {
         "file": "src/module/applications/dialogs/ammo-picker-dialog.ts",
         "lines": 194,
         "errors": {
-          "TS2554": 1,
-          "TS2345": 1,
+          "TS2345": 2,
           "TS2322": 1
         },
         "total": 3,
-        "strategy": "TS2554; TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2322 \u2014 Type X is not assignable to type Y."
+        "strategy": "TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2322 \u2014 Type X is not assignable to type Y."
       },
       {
         "file": "src/module/applications/dialogs/characteristic-setup-dialog.ts",
         "lines": 485,
         "errors": {
-          "TS2554": 1,
-          "TS2345": 2
+          "TS2345": 3
         },
         "total": 3,
-        "strategy": "TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2554"
+        "strategy": "TS2345 \u2014 Argument of type X is not assignable to parameter type Y."
       },
       {
         "file": "src/module/applications/dialogs/confirmation-dialog.ts",
         "lines": 158,
         "errors": {
-          "TS2554": 1,
-          "TS2345": 1,
+          "TS2345": 2,
           "TS2322": 1
         },
         "total": 3,
-        "strategy": "TS2554; TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2322 \u2014 Type X is not assignable to type Y."
+        "strategy": "TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2322 \u2014 Type X is not assignable to type Y."
       },
       {
         "file": "src/module/applications/dialogs/create-actor-dialog.ts",
@@ -583,13 +578,12 @@
         "lines": 387,
         "errors": {
           "TS2322": 2,
-          "TS2554": 1,
+          "TS2345": 2,
           "TS18046": 7,
-          "TS2698": 1,
-          "TS2345": 1
+          "TS2698": 1
         },
         "total": 12,
-        "strategy": "TS18046 \u2014 Variable is of type 'unknown'.; TS2322 \u2014 Type X is not assignable to type Y.; TS2554"
+        "strategy": "TS18046 \u2014 Variable is of type 'unknown'.; TS2322 \u2014 Type X is not assignable to type Y.; TS2345 \u2014 Argument of type X is not assignable to parameter type Y."
       },
       {
         "file": "src/module/applications/dialogs/transaction-request-dialog.ts",
@@ -597,28 +591,24 @@
         "errors": {
           "TS2353": 1,
           "TS2322": 9,
-          "TS2554": 1,
-          "TS2345": 2,
-          "TS2740": 1
+          "TS2345": 3
         },
-        "total": 14,
+        "total": 13,
         "strategy": "TS2322 \u2014 Type X is not assignable to type Y.; TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2353 \u2014 Object literal may only specify known properties."
       },
       {
         "file": "src/module/applications/hud/combat-quick-panel.ts",
         "lines": 792,
         "errors": {
-          "TS2554": 1,
           "TS2322": 1,
           "TS2531": 9,
           "TS2769": 1,
           "TS2339": 10,
           "TS2532": 1,
           "TS18047": 4,
-          "TS2740": 2,
           "TS7006": 1
         },
-        "total": 30,
+        "total": 27,
         "strategy": "TS2339 \u2014 Property does not exist on type.; TS2531; TS18047"
       },
       {
@@ -652,16 +642,15 @@
       },
       {
         "file": "src/module/applications/item/base-item-sheet.ts",
-        "lines": 409,
+        "lines": 410,
         "errors": {
           "TS2339": 5,
-          "TS2416": 1,
           "TS2833": 1,
           "TS18046": 1,
           "TS18049": 1
         },
-        "total": 9,
-        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2416; TS2833"
+        "total": 8,
+        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2833; TS18046 \u2014 Variable is of type 'unknown'."
       },
       {
         "file": "src/module/applications/item/container-item-sheet.ts",
@@ -728,25 +717,32 @@
         "file": "src/module/applications/npc/batch-create-dialog.ts",
         "lines": 477,
         "errors": {
-          "TS2554": 1,
           "TS2345": 2,
           "TS2367": 3,
           "TS2322": 1
         },
-        "total": 7,
-        "strategy": "TS2367 \u2014 Comparison has no overlap between types.; TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2554"
+        "total": 6,
+        "strategy": "TS2367 \u2014 Comparison has no overlap between types.; TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2322 \u2014 Type X is not assignable to type Y."
+      },
+      {
+        "file": "src/module/applications/npc/combat-preset-dialog.ts",
+        "lines": 459,
+        "errors": {
+          "TS2345": 1
+        },
+        "total": 1,
+        "strategy": "TS2345 \u2014 Argument of type X is not assignable to parameter type Y."
       },
       {
         "file": "src/module/applications/npc/difficulty-calculator-dialog.ts",
         "lines": 248,
         "errors": {
-          "TS2554": 1,
           "TS2345": 1,
           "TS2339": 2,
           "TS7006": 1
         },
-        "total": 5,
-        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2554; TS2345 \u2014 Argument of type X is not assignable to parameter type Y."
+        "total": 4,
+        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS7006 \u2014 Parameter implicitly has 'any' type."
       },
       {
         "file": "src/module/applications/npc/encounter-builder.ts",
@@ -768,24 +764,22 @@
         "file": "src/module/applications/npc/quick-create-dialog.ts",
         "lines": 481,
         "errors": {
-          "TS2554": 1,
           "TS2345": 2,
           "TS2352": 1,
           "TS2367": 1,
           "TS2322": 1
         },
-        "total": 6,
-        "strategy": "TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2554; TS2352 \u2014 Type conversion may be a mistake (neither type overlaps)."
+        "total": 5,
+        "strategy": "TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2352 \u2014 Type conversion may be a mistake (neither type overlaps).; TS2367 \u2014 Comparison has no overlap between types."
       },
       {
         "file": "src/module/applications/npc/stat-block-exporter.ts",
         "lines": 462,
         "errors": {
-          "TS2554": 1,
           "TS2345": 2
         },
-        "total": 3,
-        "strategy": "TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2554"
+        "total": 2,
+        "strategy": "TS2345 \u2014 Argument of type X is not assignable to parameter type Y."
       },
       {
         "file": "src/module/applications/npc/template-selector.ts",
@@ -802,13 +796,12 @@
         "file": "src/module/applications/npc/threat-scaler-dialog.ts",
         "lines": 475,
         "errors": {
-          "TS2554": 1,
           "TS2345": 2,
           "TS18046": 6,
           "TS2322": 2,
           "TS2367": 5
         },
-        "total": 16,
+        "total": 15,
         "strategy": "TS18046 \u2014 Variable is of type 'unknown'.; TS2367 \u2014 Comparison has no overlap between types.; TS2345 \u2014 Argument of type X is not assignable to parameter type Y."
       },
       {
@@ -830,6 +823,17 @@
         },
         "total": 3,
         "strategy": "TS2571 \u2014 Object is of type 'unknown'.; TS7006 \u2014 Parameter implicitly has 'any' type."
+      },
+      {
+        "file": "src/module/applications/prompts/base-roll-dialog.ts",
+        "lines": 182,
+        "errors": {
+          "TS2322": 2,
+          "TS2353": 1,
+          "TS2345": 1
+        },
+        "total": 4,
+        "strategy": "TS2322 \u2014 Type X is not assignable to type Y.; TS2353 \u2014 Object literal may only specify known properties.; TS2345 \u2014 Argument of type X is not assignable to parameter type Y."
       },
       {
         "file": "src/module/applications/prompts/damage-roll-dialog.ts",
@@ -884,6 +888,16 @@
         "strategy": "TS2339 \u2014 Property does not exist on type.; TS2571 \u2014 Object is of type 'unknown'.; TS7006 \u2014 Parameter implicitly has 'any' type."
       },
       {
+        "file": "src/module/applications/prompts/psychic-power-dialog.ts",
+        "lines": 139,
+        "errors": {
+          "TS2322": 1,
+          "TS7006": 1
+        },
+        "total": 2,
+        "strategy": "TS2322 \u2014 Type X is not assignable to type Y.; TS7006 \u2014 Parameter implicitly has 'any' type."
+      },
+      {
         "file": "src/module/applications/prompts/simple-roll-dialog.ts",
         "lines": 76,
         "errors": {
@@ -904,6 +918,16 @@
         },
         "total": 5,
         "strategy": "TS2322 \u2014 Type X is not assignable to type Y.; TS2353 \u2014 Object literal may only specify known properties.; TS2314"
+      },
+      {
+        "file": "src/module/applications/prompts/weapon-attack-dialog.ts",
+        "lines": 146,
+        "errors": {
+          "TS2322": 1,
+          "TS7006": 1
+        },
+        "total": 2,
+        "strategy": "TS2322 \u2014 Type X is not assignable to type Y.; TS7006 \u2014 Parameter implicitly has 'any' type."
       },
       {
         "file": "src/module/config/game-systems/aptitude-based-system-config.ts",
@@ -962,6 +986,26 @@
         "strategy": "TS2322 \u2014 Type X is not assignable to type Y."
       },
       {
+        "file": "src/module/data/abstract/item-data-model.ts",
+        "lines": 327,
+        "errors": {
+          "TS2339": 1,
+          "TS18046": 1,
+          "TS2554": 1
+        },
+        "total": 3,
+        "strategy": "TS2339 \u2014 Property does not exist on type.; TS18046 \u2014 Variable is of type 'unknown'.; TS2554"
+      },
+      {
+        "file": "src/module/data/actor/mixins/horde-template.ts",
+        "lines": 231,
+        "errors": {
+          "TS2339": 2
+        },
+        "total": 2,
+        "strategy": "TS2339 \u2014 Property does not exist on type."
+      },
+      {
         "file": "src/module/data/fields/formula-field.ts",
         "lines": 57,
         "errors": {
@@ -997,14 +1041,13 @@
         "lines": 392,
         "errors": {
           "TS2740": 1,
-          "TS2554": 1,
           "TS18046": 6,
           "TS2339": 9,
           "TS7006": 4,
           "TS7034": 1,
           "TS7005": 1
         },
-        "total": 23,
+        "total": 22,
         "strategy": "TS2339 \u2014 Property does not exist on type.; TS18046 \u2014 Variable is of type 'unknown'.; TS7006 \u2014 Parameter implicitly has 'any' type."
       },
       {
@@ -1014,11 +1057,10 @@
           "TS7006": 4,
           "TS2352": 1,
           "TS2740": 1,
-          "TS2554": 1,
           "TS7053": 5,
           "TS2339": 8
         },
-        "total": 20,
+        "total": 19,
         "strategy": "TS2339 \u2014 Property does not exist on type.; TS7053 \u2014 Element implicitly has 'any' type because expression; TS7006 \u2014 Parameter implicitly has 'any' type."
       },
       {
@@ -1045,11 +1087,10 @@
         "lines": 197,
         "errors": {
           "TS2740": 1,
-          "TS2554": 1,
           "TS2339": 6,
           "TS7053": 2
         },
-        "total": 10,
+        "total": 9,
         "strategy": "TS2339 \u2014 Property does not exist on type.; TS7053 \u2014 Element implicitly has 'any' type because expression; TS2740"
       },
       {
@@ -1057,11 +1098,10 @@
         "lines": 196,
         "errors": {
           "TS2740": 1,
-          "TS2554": 1,
           "TS2339": 4,
           "TS7053": 2
         },
-        "total": 8,
+        "total": 7,
         "strategy": "TS2339 \u2014 Property does not exist on type.; TS7053 \u2014 Element implicitly has 'any' type because expression; TS2740"
       },
       {
@@ -1069,12 +1109,11 @@
         "lines": 298,
         "errors": {
           "TS2740": 1,
-          "TS2554": 1,
           "TS2339": 4,
           "TS7006": 2,
           "TS18046": 2
         },
-        "total": 10,
+        "total": 9,
         "strategy": "TS2339 \u2014 Property does not exist on type.; TS7006 \u2014 Parameter implicitly has 'any' type.; TS18046 \u2014 Variable is of type 'unknown'."
       },
       {
@@ -1082,12 +1121,11 @@
         "lines": 342,
         "errors": {
           "TS2740": 1,
-          "TS2554": 1,
           "TS7006": 1,
           "TS2339": 14
         },
-        "total": 17,
-        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2740; TS2554"
+        "total": 16,
+        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2740; TS7006 \u2014 Parameter implicitly has 'any' type."
       },
       {
         "file": "src/module/data/item/journal-entry.ts",
@@ -1099,19 +1137,28 @@
         "strategy": "TS2339 \u2014 Property does not exist on type."
       },
       {
+        "file": "src/module/data/item/navigator-power.ts",
+        "lines": 123,
+        "errors": {
+          "TS2740": 1,
+          "TS2339": 2
+        },
+        "total": 3,
+        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2740"
+      },
+      {
         "file": "src/module/data/item/origin-path.ts",
         "lines": 559,
         "errors": {
           "TS2740": 1,
-          "TS2554": 1,
           "TS2339": 13,
           "TS7053": 1,
           "TS2538": 1,
           "TS2322": 1,
           "TS7006": 1
         },
-        "total": 19,
-        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2740; TS2554"
+        "total": 18,
+        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2740; TS7053 \u2014 Element implicitly has 'any' type because expression"
       },
       {
         "file": "src/module/data/item/peer-enemy.ts",
@@ -1127,36 +1174,32 @@
         "lines": 167,
         "errors": {
           "TS2740": 1,
-          "TS2554": 1,
           "TS2339": 3
         },
-        "total": 5,
-        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2740; TS2554"
+        "total": 4,
+        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2740"
+      },
+      {
+        "file": "src/module/data/item/ritual.ts",
+        "lines": 124,
+        "errors": {
+          "TS2740": 1,
+          "TS2339": 2
+        },
+        "total": 3,
+        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2740"
       },
       {
         "file": "src/module/data/item/ship-role.ts",
         "lines": 196,
         "errors": {
           "TS2740": 1,
-          "TS2554": 1,
           "TS7034": 1,
           "TS7005": 1,
           "TS7053": 1
         },
-        "total": 5,
-        "strategy": "TS2740; TS2554; TS7034"
-      },
-      {
-        "file": "src/module/data/item/ship-upgrade.ts",
-        "lines": 183,
-        "errors": {
-          "TS2740": 1,
-          "TS2554": 1,
-          "TS7006": 1,
-          "TS18048": 6
-        },
-        "total": 9,
-        "strategy": "TS18048 / TS18047 / TS2531 / TS2532 \u2014 Possibly null/undefined.; TS2740; TS2554"
+        "total": 4,
+        "strategy": "TS2740; TS7034; TS7005 / TS7034 \u2014 Variable implicitly has 'any' / 'any[]' type."
       },
       {
         "file": "src/module/data/item/storage-location.ts",
@@ -1166,6 +1209,39 @@
         },
         "total": 3,
         "strategy": "TS2339 \u2014 Property does not exist on type."
+      },
+      {
+        "file": "src/module/data/item/talent.ts",
+        "lines": 423,
+        "errors": {
+          "TS2740": 1,
+          "TS2339": 1,
+          "TS2322": 1
+        },
+        "total": 3,
+        "strategy": "TS2740; TS2339 \u2014 Property does not exist on type.; TS2322 \u2014 Type X is not assignable to type Y."
+      },
+      {
+        "file": "src/module/data/item/trait.ts",
+        "lines": 176,
+        "errors": {
+          "TS2740": 1,
+          "TS2339": 1,
+          "TS2322": 1
+        },
+        "total": 3,
+        "strategy": "TS2740; TS2339 \u2014 Property does not exist on type.; TS2322 \u2014 Type X is not assignable to type Y."
+      },
+      {
+        "file": "src/module/data/item/weapon-modification.ts",
+        "lines": 177,
+        "errors": {
+          "TS2740": 1,
+          "TS7053": 1,
+          "TS2339": 1
+        },
+        "total": 3,
+        "strategy": "TS2740; TS7053 \u2014 Element implicitly has 'any' type because expression; TS2339 \u2014 Property does not exist on type."
       },
       {
         "file": "src/module/data/shared/damage-template.ts",
@@ -1296,29 +1372,25 @@
         "file": "src/module/documents/starship.ts",
         "lines": 191,
         "errors": {
-          "TS2416": 1,
-          "TS7006": 4,
-          "TS2355": 1,
-          "TS2322": 15,
+          "TS2322": 13,
           "TS18046": 1,
-          "TS7053": 2
+          "TS7053": 2,
+          "TS7006": 1
         },
-        "total": 24,
-        "strategy": "TS2322 \u2014 Type X is not assignable to type Y.; TS7006 \u2014 Parameter implicitly has 'any' type.; TS7053 \u2014 Element implicitly has 'any' type because expression"
+        "total": 17,
+        "strategy": "TS2322 \u2014 Type X is not assignable to type Y.; TS7053 \u2014 Element implicitly has 'any' type because expression; TS18046 \u2014 Variable is of type 'unknown'."
       },
       {
         "file": "src/module/documents/vehicle.ts",
         "lines": 88,
         "errors": {
-          "TS2416": 1,
-          "TS7006": 4,
-          "TS2355": 1,
           "TS2322": 13,
           "TS2532": 3,
+          "TS7006": 1,
           "TS18048": 3
         },
-        "total": 25,
-        "strategy": "TS2322 \u2014 Type X is not assignable to type Y.; TS7006 \u2014 Parameter implicitly has 'any' type.; TS2532"
+        "total": 20,
+        "strategy": "TS2322 \u2014 Type X is not assignable to type Y.; TS2532; TS18048 / TS18047 / TS2531 / TS2532 \u2014 Possibly null/undefined."
       },
       {
         "file": "src/module/enrichers.ts",
@@ -1497,7 +1569,7 @@
     "3": [
       {
         "file": "src/module/applications/actor/base-actor-sheet.ts",
-        "lines": 2435,
+        "lines": 2441,
         "errors": {
           "TS2339": 7,
           "TS2488": 1,
@@ -1518,11 +1590,10 @@
         "lines": 479,
         "errors": {
           "TS2556": 1,
-          "TS2345": 1,
-          "TS2740": 1
+          "TS2345": 1
         },
-        "total": 3,
-        "strategy": "TS2556; TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2740"
+        "total": 2,
+        "strategy": "TS2556; TS2345 \u2014 Argument of type X is not assignable to parameter type Y."
       },
       {
         "file": "src/module/applications/api/drag-drop-api-mixin.ts",
@@ -1532,15 +1603,6 @@
         },
         "total": 1,
         "strategy": "TS2707"
-      },
-      {
-        "file": "src/module/applications/api/stat-adjustment-actions.ts",
-        "lines": 276,
-        "errors": {
-          "TS2740": 1
-        },
-        "total": 1,
-        "strategy": "TS2740"
       },
       {
         "file": "src/module/applications/item/talent-editor-dialog.ts",
@@ -1557,11 +1619,10 @@
         "lines": 876,
         "errors": {
           "TS2551": 2,
-          "TS2339": 6,
-          "TS2322": 1
+          "TS2339": 6
         },
-        "total": 9,
-        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2551 \u2014 Property doesn't exist, did you mean X?; TS2322 \u2014 Type X is not assignable to type Y."
+        "total": 8,
+        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2551 \u2014 Property doesn't exist, did you mean X?"
       },
       {
         "file": "src/module/applications/item/weapon-sheet.ts",
@@ -1571,16 +1632,6 @@
         },
         "total": 1,
         "strategy": "TS2416"
-      },
-      {
-        "file": "src/module/applications/npc/combat-preset-dialog.ts",
-        "lines": 459,
-        "errors": {
-          "TS2554": 1,
-          "TS2345": 1
-        },
-        "total": 2,
-        "strategy": "TS2554; TS2345 \u2014 Argument of type X is not assignable to parameter type Y."
       },
       {
         "file": "src/module/applications/npc/stat-block-parser.ts",
@@ -1594,56 +1645,10 @@
           "TS7006": 1,
           "TS18048": 3,
           "TS2339": 4,
-          "TS2554": 1,
           "TS2322": 2
         },
-        "total": 38,
+        "total": 37,
         "strategy": "TS18046 \u2014 Variable is of type 'unknown'.; TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2339 \u2014 Property does not exist on type."
-      },
-      {
-        "file": "src/module/applications/prompts/base-roll-dialog.ts",
-        "lines": 182,
-        "errors": {
-          "TS2322": 2,
-          "TS2353": 1,
-          "TS2349": 3,
-          "TS2345": 1
-        },
-        "total": 7,
-        "strategy": "TS2349; TS2322 \u2014 Type X is not assignable to type Y.; TS2353 \u2014 Object literal may only specify known properties."
-      },
-      {
-        "file": "src/module/applications/prompts/psychic-power-dialog.ts",
-        "lines": 139,
-        "errors": {
-          "TS2322": 1,
-          "TS2349": 2,
-          "TS7006": 1
-        },
-        "total": 4,
-        "strategy": "TS2349; TS2322 \u2014 Type X is not assignable to type Y.; TS7006 \u2014 Parameter implicitly has 'any' type."
-      },
-      {
-        "file": "src/module/applications/prompts/weapon-attack-dialog.ts",
-        "lines": 146,
-        "errors": {
-          "TS2322": 1,
-          "TS2349": 2,
-          "TS7006": 1
-        },
-        "total": 4,
-        "strategy": "TS2349; TS2322 \u2014 Type X is not assignable to type Y.; TS7006 \u2014 Parameter implicitly has 'any' type."
-      },
-      {
-        "file": "src/module/canvas/ruler.ts",
-        "lines": 60,
-        "errors": {
-          "TS2416": 3,
-          "TS2694": 4,
-          "TS2345": 4
-        },
-        "total": 11,
-        "strategy": "TS2694; TS2345 \u2014 Argument of type X is not assignable to parameter type Y.; TS2416"
       },
       {
         "file": "src/module/config.ts",
@@ -1656,18 +1661,6 @@
         "strategy": "TS18046 \u2014 Variable is of type 'unknown'.; TS7006 \u2014 Parameter implicitly has 'any' type."
       },
       {
-        "file": "src/module/data/abstract/item-data-model.ts",
-        "lines": 327,
-        "errors": {
-          "TS2339": 1,
-          "TS18046": 1,
-          "TS4113": 1,
-          "TS2554": 1
-        },
-        "total": 4,
-        "strategy": "TS2339 \u2014 Property does not exist on type.; TS18046 \u2014 Variable is of type 'unknown'.; TS4113"
-      },
-      {
         "file": "src/module/data/abstract/system-data-model.ts",
         "lines": 295,
         "errors": {
@@ -1676,16 +1669,6 @@
         },
         "total": 2,
         "strategy": "TS2554; TS2345 \u2014 Argument of type X is not assignable to parameter type Y."
-      },
-      {
-        "file": "src/module/data/actor/mixins/horde-template.ts",
-        "lines": 231,
-        "errors": {
-          "TS4113": 2,
-          "TS2339": 2
-        },
-        "total": 4,
-        "strategy": "TS4113; TS2339 \u2014 Property does not exist on type."
       },
       {
         "file": "src/module/data/actor/npc.ts",
@@ -1701,184 +1684,106 @@
         "strategy": "TS2322 \u2014 Type X is not assignable to type Y.; TS2339 \u2014 Property does not exist on type.; TS7053 \u2014 Element implicitly has 'any' type because expression"
       },
       {
-        "file": "src/module/data/fields/identifier-field.ts",
-        "lines": 53,
-        "errors": {
-          "TS4113": 1
-        },
-        "total": 1,
-        "strategy": "TS4113"
-      },
-      {
         "file": "src/module/data/item/ammunition.ts",
         "lines": 178,
         "errors": {
           "TS2740": 1,
-          "TS2554": 1,
           "TS2339": 1
         },
-        "total": 3,
-        "strategy": "TS2740; TS2554; TS2339 \u2014 Property does not exist on type."
+        "total": 2,
+        "strategy": "TS2740; TS2339 \u2014 Property does not exist on type."
       },
       {
         "file": "src/module/data/item/cybernetic.ts",
         "lines": 169,
         "errors": {
           "TS2740": 1,
-          "TS2554": 1,
           "TS2339": 1
         },
-        "total": 3,
-        "strategy": "TS2740; TS2554; TS2339 \u2014 Property does not exist on type."
+        "total": 2,
+        "strategy": "TS2740; TS2339 \u2014 Property does not exist on type."
       },
       {
         "file": "src/module/data/item/malignancy.ts",
         "lines": 51,
         "errors": {
-          "TS2740": 1,
-          "TS2554": 1
+          "TS2740": 1
         },
-        "total": 2,
-        "strategy": "TS2740; TS2554"
+        "total": 1,
+        "strategy": "TS2740"
       },
       {
         "file": "src/module/data/item/mental-disorder.ts",
         "lines": 81,
         "errors": {
-          "TS2740": 1,
-          "TS2554": 1
+          "TS2740": 1
         },
-        "total": 2,
-        "strategy": "TS2740; TS2554"
+        "total": 1,
+        "strategy": "TS2740"
       },
       {
         "file": "src/module/data/item/mutation.ts",
         "lines": 83,
         "errors": {
-          "TS2740": 1,
-          "TS2554": 1
+          "TS2740": 1
         },
-        "total": 2,
-        "strategy": "TS2740; TS2554"
-      },
-      {
-        "file": "src/module/data/item/navigator-power.ts",
-        "lines": 123,
-        "errors": {
-          "TS2740": 1,
-          "TS2554": 1,
-          "TS2339": 2
-        },
-        "total": 4,
-        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2740; TS2554"
+        "total": 1,
+        "strategy": "TS2740"
       },
       {
         "file": "src/module/data/item/order.ts",
         "lines": 129,
         "errors": {
-          "TS2740": 1,
-          "TS2554": 1
+          "TS2740": 1
         },
-        "total": 2,
-        "strategy": "TS2740; TS2554"
-      },
-      {
-        "file": "src/module/data/item/ritual.ts",
-        "lines": 124,
-        "errors": {
-          "TS2740": 1,
-          "TS2554": 1,
-          "TS2339": 2
-        },
-        "total": 4,
-        "strategy": "TS2339 \u2014 Property does not exist on type.; TS2740; TS2554"
+        "total": 1,
+        "strategy": "TS2740"
       },
       {
         "file": "src/module/data/item/skill.ts",
         "lines": 199,
         "errors": {
           "TS2740": 1,
-          "TS2554": 1,
           "TS7053": 1
         },
-        "total": 3,
-        "strategy": "TS2740; TS2554; TS7053 \u2014 Element implicitly has 'any' type because expression"
+        "total": 2,
+        "strategy": "TS2740; TS7053 \u2014 Element implicitly has 'any' type because expression"
       },
       {
         "file": "src/module/data/item/special-ability.ts",
         "lines": 51,
         "errors": {
-          "TS2740": 1,
-          "TS2554": 1
+          "TS2740": 1
         },
-        "total": 2,
-        "strategy": "TS2740; TS2554"
-      },
-      {
-        "file": "src/module/data/item/talent.ts",
-        "lines": 423,
-        "errors": {
-          "TS2740": 1,
-          "TS2554": 1,
-          "TS2339": 1,
-          "TS2322": 1
-        },
-        "total": 4,
-        "strategy": "TS2740; TS2554; TS2339 \u2014 Property does not exist on type."
-      },
-      {
-        "file": "src/module/data/item/trait.ts",
-        "lines": 176,
-        "errors": {
-          "TS2740": 1,
-          "TS2554": 1,
-          "TS2339": 1,
-          "TS2322": 1
-        },
-        "total": 4,
-        "strategy": "TS2740; TS2554; TS2339 \u2014 Property does not exist on type."
+        "total": 1,
+        "strategy": "TS2740"
       },
       {
         "file": "src/module/data/item/vehicle-trait.ts",
         "lines": 119,
         "errors": {
-          "TS2740": 1,
-          "TS2554": 1
+          "TS2740": 1
         },
-        "total": 2,
-        "strategy": "TS2740; TS2554"
+        "total": 1,
+        "strategy": "TS2740"
       },
       {
         "file": "src/module/data/item/vehicle-upgrade.ts",
         "lines": 178,
         "errors": {
-          "TS2740": 1,
-          "TS2554": 1
+          "TS2740": 1
         },
-        "total": 2,
-        "strategy": "TS2740; TS2554"
-      },
-      {
-        "file": "src/module/data/item/weapon-modification.ts",
-        "lines": 177,
-        "errors": {
-          "TS2740": 1,
-          "TS2554": 1,
-          "TS7053": 1,
-          "TS2339": 1
-        },
-        "total": 4,
-        "strategy": "TS2740; TS2554; TS7053 \u2014 Element implicitly has 'any' type because expression"
+        "total": 1,
+        "strategy": "TS2740"
       },
       {
         "file": "src/module/data/item/weapon-quality.ts",
         "lines": 77,
         "errors": {
-          "TS2740": 1,
-          "TS2554": 1
+          "TS2740": 1
         },
-        "total": 2,
-        "strategy": "TS2740; TS2554"
+        "total": 1,
+        "strategy": "TS2740"
       },
       {
         "file": "src/module/documents/item.ts",
@@ -1928,11 +1833,11 @@
     ]
   },
   "summary": {
-    "tier1_files": 34,
-    "tier1_errors": 330,
-    "tier2_files": 102,
-    "tier2_errors": 911,
-    "tier3_files": 38,
-    "tier3_errors": 307
+    "tier1_files": 35,
+    "tier1_errors": 336,
+    "tier2_files": 112,
+    "tier2_errors": 882,
+    "tier3_files": 24,
+    "tier3_errors": 235
   }
 }

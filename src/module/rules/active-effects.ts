@@ -1,26 +1,69 @@
 import { roll1d100, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
+import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+
+type ActiveEffectChatContext = {
+    template: string;
+    actor: WH40KBaseActorDocument;
+    roll?: Roll;
+    target?: number;
+    success?: boolean;
+    damage?: number;
+};
+
+type EffectChange = {
+    key: string;
+    mode: number;
+    value: number | string;
+};
+
+type EffectOptions = Record<string, unknown> & {
+    name?: string;
+    icon?: string;
+    duration?: Record<string, unknown>;
+    origin?: string;
+    flags?: Record<string, unknown>;
+    changes?: EffectChange[];
+};
+
+type EffectDataInput = {
+    name: string;
+    icon?: string;
+    changes?: EffectChange[];
+    disabled?: boolean;
+    origin?: string;
+    duration?: Record<string, unknown>;
+    flags?: Record<string, unknown>;
+};
+
+type ConditionDefinition = {
+    name: string;
+    icon: string;
+    changes: EffectChange[];
+    flags: Record<string, unknown>;
+};
 
 /* -------------------------------------------- */
 /*  Combat Effects                              */
 /* -------------------------------------------- */
 
-export async function handleBleeding(actor) {
-    const context = {
+export async function handleBleeding(actor: WH40KBaseActorDocument): Promise<void> {
+    const context: ActiveEffectChatContext = {
         template: 'systems/wh40k-rpg/templates/chat/bleeding-chat.hbs',
         actor: actor,
     };
     await sendActiveEffectMessage(context);
 }
 
-export async function handleOnFire(actor) {
-    const context: unknown = {
+export async function handleOnFire(actor: WH40KBaseActorDocument): Promise<void> {
+    const context: ActiveEffectChatContext = {
         template: 'systems/wh40k-rpg/templates/chat/burning-chat.hbs',
         actor: actor,
         roll: await roll1d100(),
         target: actor.characteristics.willpower.total,
     };
-    const rollTotal = context.roll.total;
-    context.success = rollTotal === 1 || (rollTotal <= context.target && rollTotal !== 100);
+    const rollTotal = context.roll?.total ?? 0;
+    const target = context.target ?? 0;
+    context.success = rollTotal === 1 || (rollTotal <= target && rollTotal !== 100);
 
     const damageRoll = new Roll('1d10', {});
     await damageRoll.evaluate();
@@ -28,8 +71,8 @@ export async function handleOnFire(actor) {
     await sendActiveEffectMessage(context);
 }
 
-export async function sendActiveEffectMessage(activeContext) {
-    const html = await foundry.applications.handlebars.renderTemplate(activeContext.template, activeContext);
+export async function sendActiveEffectMessage(activeContext: ActiveEffectChatContext): Promise<void> {
+    const html = await foundry.applications.handlebars.renderTemplate(activeContext.template, activeContext as unknown as Record<string, unknown>);
     const chatData: Record<string, unknown> = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
@@ -53,7 +96,7 @@ export async function sendActiveEffectMessage(activeContext) {
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}     The created effect
  */
-export async function createEffect(actor, effectData, options: Record<string, unknown> = {}) {
+export async function createEffect(actor: WH40KBaseActorDocument, effectData: EffectDataInput, options: Record<string, unknown> = {}): Promise<unknown> {
     const data = {
         name: effectData.name,
         icon: effectData.icon ?? 'icons/svg/aura.svg',
@@ -75,7 +118,12 @@ export async function createEffect(actor, effectData, options: Record<string, un
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
-export async function createCharacteristicEffect(actor, characteristic, value, options: Record<string, unknown> = {}) {
+export async function createCharacteristicEffect(
+    actor: WH40KBaseActorDocument,
+    characteristic: string,
+    value: number,
+    options: EffectOptions = {},
+): Promise<unknown> {
     const charLabel = game.i18n.localize(`WH40K.Characteristic.${characteristic.capitalize()}`);
     const name = options.name ?? `${charLabel} ${value > 0 ? '+' : ''}${value}`;
 
@@ -103,7 +151,7 @@ export async function createCharacteristicEffect(actor, characteristic, value, o
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
-export async function createSkillEffect(actor, skill, value, options: Record<string, unknown> = {}) {
+export async function createSkillEffect(actor: WH40KBaseActorDocument, skill: string, value: number, options: EffectOptions = {}): Promise<unknown> {
     const skillLabel = game.i18n.localize(`WH40K.Skill.${skill}`);
     const name = options.name ?? `${skillLabel} ${value > 0 ? '+' : ''}${value}`;
 
@@ -131,7 +179,7 @@ export async function createSkillEffect(actor, skill, value, options: Record<str
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
-export async function createCombatEffect(actor, type, value, options: Record<string, unknown> = {}) {
+export async function createCombatEffect(actor: WH40KBaseActorDocument, type: string, value: number, options: EffectOptions = {}): Promise<unknown> {
     const typeLabel = game.i18n.localize(`WH40K.Combat.${type.capitalize()}`);
     const name = options.name ?? `${typeLabel} ${value > 0 ? '+' : ''}${value}`;
 
@@ -158,9 +206,9 @@ export async function createCombatEffect(actor, type, value, options: Record<str
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
-export async function createConditionEffect(actor, condition, options: Record<string, unknown> = {}) {
+export async function createConditionEffect(actor: WH40KBaseActorDocument, condition: string, options: EffectOptions = {}): Promise<unknown> {
     // Predefined conditions with their effects
-    const conditions = {
+    const conditions: Record<string, ConditionDefinition> = {
         stunned: {
             name: 'Stunned',
             icon: 'icons/svg/daze.svg',
@@ -217,7 +265,7 @@ export async function createConditionEffect(actor, condition, options: Record<st
         },
     };
 
-    const conditionData = conditions[condition.toLowerCase()];
+    const conditionData = conditions[condition.toLowerCase() as keyof typeof conditions];
     if (!conditionData) {
         ui.notifications.warn(`Unknown condition: ${condition}`);
         return null;
@@ -240,7 +288,13 @@ export async function createConditionEffect(actor, condition, options: Record<st
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
-export async function createTemporaryEffect(actor, name, changes, rounds, options: Record<string, unknown> = {}) {
+export async function createTemporaryEffect(
+    actor: WH40KBaseActorDocument,
+    name: string,
+    changes: EffectChange[],
+    rounds: number,
+    options: EffectOptions = {},
+): Promise<unknown> {
     const combat = game.combat;
 
     return await createEffect(actor, {
@@ -263,9 +317,9 @@ export async function createTemporaryEffect(actor, name, changes, rounds, option
  * @param {Function} filter             Filter function
  * @returns {Promise<void>}
  */
-export async function removeEffects(actor, filter) {
+export async function removeEffects(actor: WH40KBaseActorDocument, filter: (effect: ActiveEffect) => boolean): Promise<void> {
     const effects = actor.effects.filter(filter);
-    const ids = effects.map((e) => e.id);
+    const ids = effects.map((e: ActiveEffect) => e.id).filter((id): id is string => Boolean(id));
     if (ids.length) {
         await actor.deleteEmbeddedDocuments('ActiveEffect', ids);
     }
@@ -277,8 +331,8 @@ export async function removeEffects(actor, filter) {
  * @param {string} name                 Effect name
  * @returns {Promise<void>}
  */
-export async function removeEffectByName(actor, name) {
-    await removeEffects(actor, (e) => e.name === name);
+export async function removeEffectByName(actor: WH40KBaseActorDocument, name: string): Promise<void> {
+    await removeEffects(actor, (e: ActiveEffect) => e.name === name);
 }
 
 /**
@@ -287,7 +341,7 @@ export async function removeEffectByName(actor, name) {
  * @param {string} effectId             Effect ID
  * @returns {Promise<void>}
  */
-export async function toggleEffect(actor, effectId) {
+export async function toggleEffect(actor: WH40KBaseActorDocument, effectId: string): Promise<void> {
     const effect = actor.effects.get(effectId);
     if (effect) {
         await effect.update({ disabled: !effect.disabled });
