@@ -1,9 +1,30 @@
 import { calculateRangeModifier } from '../utils/range-calculator.ts';
+import type { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.ts';
+
+type RangeAnnotatedRollData = RollData & {
+    rangeBracket?: string;
+    rangeModifiedBy?: string;
+    isMeltaRange?: boolean;
+};
+
+type WeaponRangeSystem = {
+    range?: string | number;
+    attack?: {
+        range?: {
+            value?: string | number;
+        };
+    };
+    effectiveSpecial?: Set<string>;
+};
+
+type PsychicPowerRangeSystem = {
+    range?: string | number;
+};
 
 /**
  * @param rollData {WeaponRollData}
  */
-function calculateWeaponMaxRange(rollData) {
+async function calculateWeaponMaxRange(rollData: WeaponRollData): Promise<void> {
     const weapon = rollData.weapon;
     if (!weapon) {
         rollData.maxRange = 0;
@@ -16,17 +37,18 @@ function calculateWeaponMaxRange(rollData) {
     }
 
     // Get base range from weapon
-    let range;
-    const weaponRange = weapon.system.attack?.range?.value || weapon.system.range;
+    let range = 0;
+    const weaponSystem = weapon.system as WeaponRangeSystem;
+    const weaponRange = weaponSystem.attack?.range?.value || weaponSystem.range;
 
     if (Number.isInteger(weaponRange)) {
-        range = weaponRange;
+        range = Number(weaponRange);
     } else if (weaponRange === '' || weaponRange === 'N/A') {
         range = 0;
     } else {
         try {
-            const rangeCalculation = new Roll(String(weaponRange), rollData);
-            rangeCalculation.evaluateSync();
+            const rangeCalculation = new Roll(String(weaponRange), rollData as unknown as Record<string, unknown>);
+            await rangeCalculation.evaluate({ async: false });
             range = rangeCalculation.total ?? 0;
         } catch {
             ui.notifications.warn('Range formula failed - setting to 0');
@@ -55,21 +77,22 @@ function calculateWeaponMaxRange(rollData) {
 /**
  * @param rollData {PsychicRollData}
  */
-async function calculatePsychicAbilityMaxRange(rollData) {
+async function calculatePsychicAbilityMaxRange(rollData: PsychicRollData): Promise<void> {
     const data = rollData;
     if (!data.power) {
         data.maxRange = 0;
         return;
     }
 
-    let range;
-    if (Number.isInteger(data.power.system.range)) {
-        range = data.power.system.range;
-    } else if (data.power.system.range === '') {
+    const powerSystem = data.power.system as PsychicPowerRangeSystem;
+    let range = 0;
+    if (Number.isInteger(powerSystem.range)) {
+        range = Number(powerSystem.range);
+    } else if (powerSystem.range === '') {
         range = 0;
     } else {
         try {
-            const rangeCalculation = new Roll(data.power.system.range, data);
+            const rangeCalculation = new Roll(String(powerSystem.range ?? ''), data as unknown as Record<string, unknown>);
             await rangeCalculation.evaluate();
             range = rangeCalculation.total ?? 0;
         } catch {
@@ -85,12 +108,13 @@ async function calculatePsychicAbilityMaxRange(rollData) {
  * Calculate range bracket and bonus using the new range calculator system.
  * @param rollData {RollData}
  */
-function calculateRangeNameAndBonus(rollData) {
+function calculateRangeNameAndBonus(rollData: RollData): void {
+    const mutableRollData = rollData as RangeAnnotatedRollData;
     if (rollData.weapon && rollData.weapon.isMelee) {
         rollData.rangeName = 'Melee';
         rollData.rangeBonus = 0;
-        rollData.rangeBracket = 'melee';
-        rollData.isMeltaRange = false;
+        mutableRollData.rangeBracket = 'melee';
+        mutableRollData.isMeltaRange = false;
         return;
     }
 
@@ -98,7 +122,7 @@ function calculateRangeNameAndBonus(rollData) {
     const maxRange = rollData.maxRange ?? 0;
 
     // Get weapon qualities if available
-    const weaponQualities = rollData.weapon?.system?.effectiveSpecial || new Set();
+    const weaponQualities = ((rollData.weapon?.system as WeaponRangeSystem | undefined)?.effectiveSpecial ?? new Set<string>()) as Set<string>;
 
     // Use new range calculator
     const rangeInfo = calculateRangeModifier({
@@ -111,15 +135,16 @@ function calculateRangeNameAndBonus(rollData) {
     // Store range information in rollData
     rollData.rangeName = rangeInfo.label;
     rollData.rangeBonus = rangeInfo.modifier;
-    rollData.rangeBracket = rangeInfo.bracket;
-    rollData.rangeModifiedBy = rangeInfo.modifiedBy;
-    rollData.isMeltaRange = rangeInfo.isMeltaRange;
+    mutableRollData.rangeBracket = rangeInfo.bracket;
+    mutableRollData.rangeModifiedBy = rangeInfo.modifiedBy ?? undefined;
+    mutableRollData.isMeltaRange = rangeInfo.isMeltaRange;
 }
 
 /**
  * @param rollData {WeaponRollData}
  */
-export async function calculateWeaponRange(rollData) {
+export async function calculateWeaponRange(rollData: WeaponRollData): Promise<void> {
+    const mutableRollData = rollData as WeaponRollData & RangeAnnotatedRollData;
     await calculateWeaponMaxRange(rollData);
     calculateRangeNameAndBonus(rollData);
 
@@ -128,7 +153,7 @@ export async function calculateWeaponRange(rollData) {
         const aiming = rollData.modifiers['aim'] > 0;
         if (aiming && (rollData.hasWeaponModification('Telescopic Sight') || rollData.hasWeaponModification('Omni-Scope'))) {
             rollData.rangeBonus = 0;
-            rollData.rangeModifiedBy = 'telescopic-sight';
+            mutableRollData.rangeModifiedBy = 'telescopic-sight';
         }
     }
 }
@@ -136,7 +161,7 @@ export async function calculateWeaponRange(rollData) {
 /**
  * @param rollData {PsychicRollData}
  */
-export async function calculatePsychicPowerRange(rollData) {
+export async function calculatePsychicPowerRange(rollData: PsychicRollData): Promise<void> {
     await calculatePsychicAbilityMaxRange(rollData);
     calculateRangeNameAndBonus(rollData);
     // Ignore Bonus for Psychic Powers

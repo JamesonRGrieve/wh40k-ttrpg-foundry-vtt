@@ -6,6 +6,49 @@
  *
  * Uses CONFIG.WH40K.craftsmanshipRules as single source of truth.
  */
+
+type Craftsmanship = 'poor' | 'common' | 'good' | 'best' | 'exceptional' | string;
+type CraftsmanshipItemType = 'weapon' | 'armour' | 'gear' | 'forceField' | string | undefined;
+
+type CraftsmanshipItem = {
+    craftsmanship?: Craftsmanship;
+    melee?: boolean;
+    isMeleeWeapon?: boolean;
+    parent?: {
+        type?: CraftsmanshipItemType;
+    };
+};
+
+type CraftsmanshipModifierSet = {
+    toHit?: number;
+    damage?: number;
+    agility?: number;
+    armourBonus?: number;
+    firstAttackBonus?: number;
+    weight?: number;
+    overloadRange?: [number, number];
+    qualities?: string[];
+    removeQualities?: string[];
+};
+
+type WeaponCraftsmanshipRules = {
+    melee: Record<string, CraftsmanshipModifierSet>;
+    ranged: Record<string, CraftsmanshipModifierSet>;
+};
+
+type CraftsmanshipRules = {
+    weapon: WeaponCraftsmanshipRules;
+    armour: Record<string, CraftsmanshipModifierSet>;
+    gear: Record<string, CraftsmanshipModifierSet>;
+    forceField: Record<string, CraftsmanshipModifierSet>;
+};
+
+type ConfigWithCraftsmanshipRules = {
+    WH40K?: {
+        craftsmanshipRules?: CraftsmanshipRules;
+    };
+};
+
 export default class CraftsmanshipHelper {
     /**
      * Get craftsmanship modifiers for any item type.
@@ -24,9 +67,9 @@ export default class CraftsmanshipHelper {
      * CraftsmanshipHelper.getModifiers(armour)
      * // Returns: { armourBonus: 1, weight: 0.5 } (for Best)
      */
-    static getModifiers(item) {
+    static getModifiers(item: CraftsmanshipItem): CraftsmanshipModifierSet {
         const craftsmanship = item.craftsmanship ?? 'common';
-        const rules = CONFIG.WH40K.craftsmanshipRules;
+        const rules = (CONFIG as ConfigWithCraftsmanshipRules).WH40K?.craftsmanshipRules;
 
         if (!rules) {
             console.warn('WH40K | craftsmanshipRules not found in CONFIG');
@@ -58,7 +101,7 @@ export default class CraftsmanshipHelper {
      * @returns {object} - Modifiers object
      * @private
      */
-    static #getWeaponModifiers(weapon, craftsmanship, weaponRules) {
+    static #getWeaponModifiers(weapon: CraftsmanshipItem, craftsmanship: Craftsmanship, weaponRules: WeaponCraftsmanshipRules): CraftsmanshipModifierSet {
         const isMelee = weapon.melee || weapon.isMeleeWeapon;
         const subType = isMelee ? 'melee' : 'ranged';
         return weaponRules[subType][craftsmanship] ?? {};
@@ -75,9 +118,9 @@ export default class CraftsmanshipHelper {
      * CraftsmanshipHelper.getWeaponQualities(poorRangedWeapon)
      * // Returns: Set(['unreliable'])
      */
-    static getWeaponQualities(weapon) {
+    static getWeaponQualities(weapon: CraftsmanshipItem): Set<string> {
         const craftsmanship = weapon.craftsmanship ?? 'common';
-        const rules = CONFIG.WH40K.craftsmanshipRules?.weapon;
+        const rules = (CONFIG as ConfigWithCraftsmanshipRules).WH40K?.craftsmanshipRules?.weapon;
 
         if (!rules) return new Set();
 
@@ -100,9 +143,9 @@ export default class CraftsmanshipHelper {
      * CraftsmanshipHelper.getRemoveQualities(bestRangedWeapon)
      * // Returns: Set(['unreliable', 'overheats'])
      */
-    static getRemoveQualities(weapon) {
+    static getRemoveQualities(weapon: CraftsmanshipItem): Set<string> {
         const craftsmanship = weapon.craftsmanship ?? 'common';
-        const rules = CONFIG.WH40K.craftsmanshipRules?.weapon;
+        const rules = (CONFIG as ConfigWithCraftsmanshipRules).WH40K?.craftsmanshipRules?.weapon;
 
         if (!rules) return new Set();
 
@@ -127,7 +170,7 @@ export default class CraftsmanshipHelper {
      * CraftsmanshipHelper.applyWeaponQualities(goodWeapon, qualities);
      * // qualities is now Set(['scatter']) - unreliable removed
      */
-    static applyWeaponQualities(weapon, qualities) {
+    static applyWeaponQualities(weapon: CraftsmanshipItem, qualities: Set<string>): Set<string> {
         // Only ranged weapons get craftsmanship qualities
         const isMelee = weapon.melee || weapon.isMeleeWeapon;
         if (isMelee) return qualities;
@@ -167,7 +210,7 @@ export default class CraftsmanshipHelper {
      * @param {ItemDataModel} item - Item data model
      * @returns {boolean} - True if craftsmanship is not 'common'
      */
-    static hasCraftsmanshipEffects(item) {
+    static hasCraftsmanshipEffects(item: CraftsmanshipItem): boolean {
         const craftsmanship = item.craftsmanship ?? 'common';
         return craftsmanship !== 'common';
     }
@@ -182,9 +225,9 @@ export default class CraftsmanshipHelper {
      * CraftsmanshipHelper.getForceFieldOverloadRange(poorField)
      * // Returns: [1, 20]
      */
-    static getForceFieldOverloadRange(forceField) {
+    static getForceFieldOverloadRange(forceField: CraftsmanshipItem): [number, number] {
         const craftsmanship = forceField.craftsmanship ?? 'common';
-        const rules = CONFIG.WH40K.craftsmanshipRules?.forceField;
+        const rules = (CONFIG as ConfigWithCraftsmanshipRules).WH40K?.craftsmanshipRules?.forceField;
 
         if (!rules) return [1, 10]; // Default to common
 
@@ -199,7 +242,7 @@ export default class CraftsmanshipHelper {
      * @param {number} roll - Protection roll result (1-100)
      * @returns {boolean} - True if roll is in overload range
      */
-    static isOverloadRoll(forceField, roll) {
+    static isOverloadRoll(forceField: CraftsmanshipItem, roll: number): boolean {
         const [min, max] = this.getForceFieldOverloadRange(forceField);
         return roll >= min && roll <= max;
     }
@@ -215,7 +258,7 @@ export default class CraftsmanshipHelper {
      * CraftsmanshipHelper.getEffectSummary(bestMeleeWeapon)
      * // Returns: ['+10 to attack', '+1 damage']
      */
-    static getEffectSummary(item) {
+    static getEffectSummary(item: CraftsmanshipItem): string[] {
         const modifiers = this.getModifiers(item);
         const effects = [];
         const itemType = item.parent?.type;

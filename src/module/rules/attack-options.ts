@@ -4,6 +4,44 @@
  * Used by the unified roll dialog weapon panel to render selectable cards.
  */
 
+import type { WH40KItemDocument } from '../types/global.d.ts';
+
+type AttackOptionWeapon = WH40KItemDocument & {
+    isRanged: boolean;
+    system: WH40KItemDocument['system'] & {
+        attack?: {
+            rateOfFire?: {
+                semi?: number;
+                full?: number;
+            };
+        };
+    };
+};
+
+type AttackModeOption = {
+    key: string;
+    label: string;
+    actionName: string;
+    actionCost: string | null;
+    modifier: number;
+    icon: string;
+    tooltip: string;
+    default?: boolean;
+    requires?: (weapon: AttackOptionWeapon) => boolean;
+};
+
+type AttackModeAvailability = AttackModeOption & {
+    available: boolean;
+};
+
+type SituationalModifierOption = {
+    key: string;
+    label: string;
+    modifier: number;
+    icon: string;
+    tooltip: string;
+};
+
 // ──────────────────────────────────────────────
 // Attack Modes
 // ──────────────────────────────────────────────
@@ -12,7 +50,7 @@
  * Ranged attack mode options.
  * Each mode maps to an existing combat action by `actionName`.
  */
-export const RANGED_ATTACK_MODES = [
+export const RANGED_ATTACK_MODES: AttackModeOption[] = [
     {
         key: 'standard',
         label: 'Standard Attack',
@@ -76,7 +114,7 @@ export const RANGED_ATTACK_MODES = [
 /**
  * Melee standard attack mode options.
  */
-export const MELEE_ATTACK_MODES = [
+export const MELEE_ATTACK_MODES: AttackModeOption[] = [
     {
         key: 'standard',
         label: 'Standard Attack',
@@ -128,7 +166,7 @@ export const MELEE_ATTACK_MODES = [
 /**
  * Melee special options (collapsible section).
  */
-export const MELEE_SPECIAL_OPTIONS = [
+export const MELEE_SPECIAL_OPTIONS: AttackModeOption[] = [
     {
         key: 'feint',
         label: 'Feint',
@@ -171,7 +209,15 @@ export const MELEE_SPECIAL_OPTIONS = [
 // Aim Options
 // ──────────────────────────────────────────────
 
-export const AIM_OPTIONS = [
+export const AIM_OPTIONS: Array<{
+    key: string;
+    label: string;
+    actionCost: string | null;
+    modifier: number;
+    icon: string;
+    tooltip: string;
+    default?: boolean;
+}> = [
     {
         key: 'none',
         label: 'No Aim',
@@ -206,7 +252,7 @@ export const AIM_OPTIONS = [
 /**
  * Situational modifiers for ranged attacks (multi-select).
  */
-export const RANGED_SITUATIONAL_MODIFIERS = [
+export const RANGED_SITUATIONAL_MODIFIERS: SituationalModifierOption[] = [
     {
         key: 'prone',
         label: 'Prone',
@@ -254,7 +300,7 @@ export const RANGED_SITUATIONAL_MODIFIERS = [
 /**
  * Situational modifiers for melee attacks (multi-select).
  */
-export const MELEE_SITUATIONAL_MODIFIERS = [
+export const MELEE_SITUATIONAL_MODIFIERS: SituationalModifierOption[] = [
     {
         key: 'proneTarget',
         label: 'Prone Target',
@@ -301,7 +347,7 @@ export const MELEE_SITUATIONAL_MODIFIERS = [
  * @param {Item} weapon - The weapon item
  * @returns {Array} Attack modes with `available` flag set
  */
-export function getAvailableAttackModes(weapon) {
+export function getAvailableAttackModes(weapon: AttackOptionWeapon): AttackModeAvailability[] {
     const modes = weapon.isRanged ? RANGED_ATTACK_MODES : MELEE_ATTACK_MODES;
     return modes.map((mode) => ({
         ...mode,
@@ -313,7 +359,7 @@ export function getAvailableAttackModes(weapon) {
  * Get melee special options with availability.
  * @returns {Array} Special options (always available for melee weapons)
  */
-export function getMeleeSpecialOptions() {
+export function getMeleeSpecialOptions(): AttackModeAvailability[] {
     return MELEE_SPECIAL_OPTIONS.map((opt) => ({
         ...opt,
         available: true,
@@ -325,7 +371,7 @@ export function getMeleeSpecialOptions() {
  * @param {boolean} isRanged - Whether the weapon is ranged
  * @returns {Array} Situational modifier options
  */
-export function getSituationalModifiers(isRanged) {
+export function getSituationalModifiers(isRanged: boolean): SituationalModifierOption[] {
     return isRanged ? RANGED_SITUATIONAL_MODIFIERS : MELEE_SITUATIONAL_MODIFIERS;
 }
 
@@ -335,7 +381,7 @@ export function getSituationalModifiers(isRanged) {
  * @param {boolean} isRanged - Whether the weapon is ranged
  * @returns {string|null} The combat action name, or null
  */
-export function getActionNameForMode(modeKey, isRanged) {
+export function getActionNameForMode(modeKey: string, isRanged: boolean): string | null {
     const allModes = [...(isRanged ? RANGED_ATTACK_MODES : MELEE_ATTACK_MODES), ...MELEE_SPECIAL_OPTIONS];
     return allModes.find((m) => m.key === modeKey)?.actionName ?? null;
 }
@@ -345,7 +391,7 @@ export function getActionNameForMode(modeKey, isRanged) {
  * @param {string} aimKey - The aim option key
  * @returns {number} Modifier value
  */
-export function getAimModifier(aimKey) {
+export function getAimModifier(aimKey: string): number {
     return AIM_OPTIONS.find((a) => a.key === aimKey)?.modifier ?? 0;
 }
 
@@ -355,7 +401,7 @@ export function getAimModifier(aimKey) {
  * @param {boolean} isRanged - Whether the weapon is ranged
  * @returns {string} The card key (e.g., "standard")
  */
-export function getAttackModeKeyForAction(actionName, isRanged) {
+export function getAttackModeKeyForAction(actionName: string, isRanged: boolean): string {
     const modes = isRanged ? RANGED_ATTACK_MODES : MELEE_ATTACK_MODES;
     const found = modes.find((m) => m.actionName === actionName);
     if (found) return found.key;
@@ -371,7 +417,7 @@ export function getAttackModeKeyForAction(actionName, isRanged) {
  * @param {number} modifier - The aim modifier value
  * @returns {string} The aim key
  */
-export function getAimKeyForModifier(modifier) {
+export function getAimKeyForModifier(modifier: number): string {
     const found = AIM_OPTIONS.find((a) => a.modifier === modifier);
     return found?.key ?? 'none';
 }
@@ -381,6 +427,6 @@ export function getAimKeyForModifier(modifier) {
  * @param {string} key - Attack mode key
  * @returns {boolean}
  */
-export function isMeleeSpecialOption(key) {
+export function isMeleeSpecialOption(key: string): boolean {
     return MELEE_SPECIAL_OPTIONS.some((opt) => opt.key === key);
 }
