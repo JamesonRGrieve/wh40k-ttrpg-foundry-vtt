@@ -236,6 +236,20 @@ def file_log(filepath: str, attempt: int, outcome: str, content: str) -> None:
         f.write(content)
 
 
+def check_vllm() -> bool:
+    """Return True if the vLLM models endpoint is reachable."""
+    import urllib.request
+    try:
+        req = urllib.request.Request(
+            "http://198.51.100.9/v1/models",
+            headers={"Authorization": "Bearer dummy"},
+        )
+        urllib.request.urlopen(req, timeout=5)
+        return True
+    except Exception:
+        return False
+
+
 def run_tsc() -> list[str]:
     """Run tsc --noEmit, return all error lines."""
     result = subprocess.run(
@@ -406,14 +420,34 @@ def build_prompt(filepath: str, file_error_lines: list[str]) -> str:
 - NEVER add `@ts-ignore` or `@ts-expect-error`.
 - NEVER change logic, control flow, or runtime behavior.
 - NEVER remove or rename existing code.
-- NEVER add new imports unless absolutely necessary for a type annotation.
+- **NEVER invent imports. NEVER add new imports.** Use only types that are
+  ALREADY imported in the file or are GLOBAL builtins (string, number, boolean,
+  Record, Array, Promise, Map, Set, Date, Error, Event, HTMLElement, etc.).
+- **JSDoc type hints are NOT proof a type exists.** If you see `@param x {{Foo}}`
+  in a comment but `Foo` is not in the file's import list, `Foo` does NOT exist
+  in scope. Do NOT use `Foo` in your TypeScript annotation. The JSDoc is stale
+  documentation — ignore it for type purposes.
+- **The CORRECT fallback for unknown object types is `Record<string, unknown>`**.
+  This is always available, requires no imports, and accepts any object. Use it
+  whenever you would otherwise reach for an unimported domain type like
+  `RollData`, `WeaponRollData`, `Actor`, `WH40KItem`, etc. Examples:
+    `function fn(rollData)`        →  `function fn(rollData: Record<string, unknown>)`
+    `function fn(actor)`           →  `function fn(actor: Record<string, unknown>)`
+    `function fn(item, options)`   →  `function fn(item: Record<string, unknown>, options: Record<string, unknown>)`
+- **For primitive params, use the primitive type directly**:
+    `function fn(roll)` where roll is used as a number → `function fn(roll: number)`
+    `function fn(name)` where name is concatenated to strings → `function fn(name: string)`
+- Verify before you write: scan the existing `import` statements at the top
+  of the file. Only types appearing there OR global builtins are safe to use.
 - Keep changes minimal — only touch lines with errors or their immediate context.
 - When adding a type annotation to a parameter, look at how it's used in the
   function body to infer the correct type.
 - When multiple errors share a root cause (e.g., a variable declared without a
   type that's used in several places), fix the root cause once.
 - Prefer type narrowing (guards, instanceof, typeof) over type assertions (as).
-- Do NOT introduce new ESLint warnings (unused imports, unused variables, etc.)."""
+- Do NOT introduce new ESLint warnings (unused imports, unused variables, etc.).
+- Your output MUST reduce the number of TypeScript errors. Don't trade one
+  error for another — if you can't fix an error cleanly, leave it alone."""
 
 
 def git_checkout_file(filepath: str) -> None:
@@ -456,17 +490,69 @@ def save_progress(progress: dict) -> None:
         json.dump(progress, f, indent=2)
 
 
+SYSTEM_PROMPT = """\
+You are a TypeScript expert fixing compiler errors. You will be given a file's full \
+source and a list of TypeScript compiler errors. Output ONLY the complete corrected \
+file, inside a single ```typescript ... ``` fence. No explanation, no other text.\
+"""
+
+def call_model(filepath: str, file_errors: list[str]) -> str:
+    """Call vLLM directly via OpenAI streaming. Returns the raw model response."""
+    from openai import OpenAI
+    source = (ROOT / filepath).read_text()
+    user_msg = (
+        build_prompt(filepath, file_errors)
+        + f"\n\n## Full file source\n\n```typescript\n{source}\n```"
+        + "\n\nOutput the complete corrected file inside a single ```typescript fence."
+    )
+
+    client = OpenAI(
+        api_key="dummy",
+        base_url="http://198.51.100.9/v1",
+        timeout=180,
+        max_retries=0,  # don't retry — connection errors mean the server OOM'd
+    )
+    chunks = []
+    with client.chat.completions.create(
+        model=MODEL_NAME.removeprefix("openai/"),
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_msg},
+        ],
+        max_tokens=8192,
+        temperature=0.1,
+        stream=True,
+    ) as stream:
+        for chunk in stream:
+            delta = chunk.choices[0].delta.content or ""
+            chunks.append(delta)
+    return "".join(chunks)
+
+
+def apply_model_output(filepath: str, output: str) -> bool:
+    """Extract the typescript fence from model output and write the file."""
+    # Extract content between ```typescript ... ```
+    m = re.search(r"```typescript\n(.*?)```", output, re.DOTALL)
+    if not m:
+        # Fallback: try ```ts or bare ```
+        m = re.search(r"```(?:ts)?\n(.*?)```", output, re.DOTALL)
+    if not m:
+        return False
+    new_content = m.group(1)
+    if not new_content.strip():
+        return False
+    (ROOT / filepath).write_text(new_content)
+    return True
+
+
 def process_file(
     filepath: str,
-    model: "Model",
+    model: object,
     progress: dict,
     tsc_baseline: int,
     lint_baseline: int,
 ) -> tuple[int, int]:
     """Fix one file. Returns (new_tsc_count, new_lint_count)."""
-    from aider.coders import Coder
-    from aider.io import InputOutput
-
     if filepath in progress["completed"] or filepath in progress["skipped"]:
         log(f"  SKIP {filepath} (already processed)")
         return tsc_baseline, lint_baseline
@@ -487,43 +573,38 @@ def process_file(
     for attempt in range(1, MAX_RETRIES + 1):
         log(f"    attempt {attempt}/{MAX_RETRIES}")
 
-        prompt = build_prompt(filepath, file_errors)
+        # Wait for server to be reachable (up to 10 minutes)
+        for wait_attempt in range(5):
+            if check_vllm():
+                break
+            log(f"    vLLM unreachable, waiting 120s... ({wait_attempt+1}/5)")
+            time.sleep(120)
+        else:
+            log(f"    vLLM unreachable after retries, aborting file")
+            progress["failed"].append(filepath)
+            save_progress(progress)
+            return tsc_baseline, lint_baseline
 
-        # Log the prompt
-        file_log(filepath, attempt, "prompt", prompt)
-
-        io = InputOutput(yes=True, input_history_file="/dev/null")
-        aider_output = ""
+        model_output = ""
         try:
-            coder = Coder.create(
-                main_model=model,
-                edit_format="diff",
-                io=io,
-                fnames=[str(ROOT / filepath)],
-                auto_commits=False,
-                dirty_commits=False,
-                auto_lint=False,
-                auto_test=False,
-                stream=False,
-                use_git=True,
-                map_tokens=2048,
-                verbose=False,
-            )
-
-            aider_output = coder.run(with_message=prompt) or ""
+            model_output = call_model(filepath, file_errors)
         except Exception as e:
-            log(f"    aider error: {e}")
-            file_log(filepath, attempt, "error", f"Exception: {e}\n\n{aider_output}")
-            git_checkout_file(filepath)
+            log(f"    model error: {e}, waiting 120s before next attempt")
+            file_log(filepath, attempt, "error", f"Exception: {e}")
+            time.sleep(120)
             continue
 
-        # Capture the diff before checking
-        diff = git_diff_file(filepath)
-        if not diff.strip():
-            log(f"    no changes produced")
+        file_log(filepath, attempt, "raw-output", model_output)
+
+        applied = apply_model_output(filepath, model_output)
+        if not applied:
+            log(f"    no valid typescript fence in output")
             file_log(filepath, attempt, "nochange",
-                     f"PROMPT:\n{prompt}\n\nAIDER OUTPUT:\n{aider_output}\n\nDIFF:\n(none)")
+                     f"PROMPT:\n{build_prompt(filepath, file_errors)}\n\nOUTPUT:\n{model_output}")
             continue
+
+        # Capture the applied diff for logging
+        diff = git_diff_file(filepath)
 
         # Check TSC ratchet
         new_errors = run_tsc()
@@ -534,18 +615,24 @@ def process_file(
         new_lint = get_eslint_warning_count()
         lint_delta = new_lint - lint_baseline
 
-        # Build detailed log
+        # Per-file error sets (compare error codes before/after)
         new_file_errors = [l for l in new_errors if l.startswith(filepath + "(")]
+        code_re = re.compile(r"error (TS\d+):")
+        before_codes = {code_re.search(l).group(1) for l in file_errors if code_re.search(l)}
+        after_codes = {code_re.search(l).group(1) for l in new_file_errors if code_re.search(l)}
+        new_codes = after_codes - before_codes  # error codes that DIDN'T exist before
+
+        # Build detailed log
         log_content = (
             f"FILE: {filepath}\n"
             f"ATTEMPT: {attempt}\n"
             f"TSC: {current_tsc} → {new_tsc} (Δ{tsc_delta:+d})\n"
-            f"  file errors before: {len(file_errors)}\n"
-            f"  file errors after:  {len(new_file_errors)}\n"
+            f"  file errors before: {len(file_errors)} {sorted(before_codes)}\n"
+            f"  file errors after:  {len(new_file_errors)} {sorted(after_codes)}\n"
+            f"  new error codes:    {sorted(new_codes) if new_codes else '(none)'}\n"
             f"LINT: {lint_baseline} → {new_lint} (Δ{lint_delta:+d})\n"
-            f"\n{'='*60}\nPROMPT:\n{'='*60}\n{prompt}\n"
-            f"\n{'='*60}\nAIDER OUTPUT:\n{'='*60}\n{aider_output}\n"
-            f"\n{'='*60}\nDIFF:\n{'='*60}\n{diff}\n"
+            f"\n{'='*60}\nMODEL OUTPUT:\n{'='*60}\n{model_output}\n"
+            f"\n{'='*60}\nAPPLIED DIFF:\n{'='*60}\n{diff}\n"
         )
 
         if new_file_errors:
@@ -554,8 +641,16 @@ def process_file(
                 + "\n".join(new_file_errors) + "\n"
             )
 
-        # Accept if neither ratchet regressed
-        if tsc_delta <= 0 and lint_delta <= 0:
+        # Accept ONLY if all of:
+        # - TSC count strictly decreased (no zero-delta "shuffles")
+        # - Lint did not increase
+        # - No new error code appeared (rejects fabricated imports / wrong type names)
+        accepted = (
+            tsc_delta < 0
+            and lint_delta <= 0
+            and not new_codes
+        )
+        if accepted:
             fixed_tsc = current_tsc - new_tsc
             log(f"    OK: TSC {current_tsc}→{new_tsc} (fixed {fixed_tsc}), lint {lint_baseline}→{new_lint}")
             file_log(filepath, attempt, "success", log_content)
@@ -570,10 +665,14 @@ def process_file(
             reasons = []
             if tsc_delta > 0:
                 reasons.append(f"TSC +{tsc_delta}")
+            elif tsc_delta == 0:
+                reasons.append("TSC unchanged (no real progress)")
             if lint_delta > 0:
                 reasons.append(f"lint +{lint_delta}")
+            if new_codes:
+                reasons.append(f"new codes {sorted(new_codes)}")
             reason_str = ", ".join(reasons)
-            log(f"    REGRESS ({reason_str}), rollback")
+            log(f"    REJECT ({reason_str}), rollback")
             file_log(filepath, attempt, "regress", log_content)
             git_checkout_file(filepath)
 
@@ -584,8 +683,6 @@ def process_file(
 
 
 def main() -> None:
-    from aider.models import Model
-
     parser = argparse.ArgumentParser(description="Auto-fix TSC errors with aider")
     parser.add_argument(
         "--scrape", action="store_true",
@@ -649,8 +746,6 @@ def main() -> None:
     log(f"ESLint warning baseline: {current_lint}")
     save_progress(progress)
 
-    model = Model(MODEL_NAME)
-
     attempted = 0
     limit = args.limit or float("inf")
 
@@ -671,7 +766,7 @@ def main() -> None:
                 attempted += 1
 
             current_tsc, current_lint = process_file(
-                filepath, model, progress, current_tsc, current_lint,
+                filepath, None, progress, current_tsc, current_lint,
             )
 
         if attempted >= limit:

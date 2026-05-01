@@ -20,6 +20,68 @@ export const DIRECTION = {
     BACKWARD: 'backward',
 };
 
+type Direction = typeof DIRECTION[keyof typeof DIRECTION];
+
+type OriginLike = {
+    id?: string;
+    _id?: string;
+    uuid?: string;
+    name: string;
+    img?: string;
+    _sourceUuid?: string;
+    system?: {
+        step?: string;
+        pathPositions?: number[];
+        allPositions?: number[];
+        positions?: number[];
+        primaryPosition?: number;
+        identifier?: string;
+        xpCost?: number;
+        isAdvancedOrigin?: boolean;
+        hasChoices?: boolean;
+        requirements?: {
+            previousSteps?: string[];
+            excludedSteps?: string[];
+        };
+    };
+};
+
+type OriginSelectionMap = Map<string, OriginLike>;
+
+type OriginCard = {
+    origin: OriginLike;
+    id: string;
+    uuid?: string;
+    name: string;
+    img?: string;
+    position: number;
+    gridColumn: number;
+    gridRow: number;
+    isSelected: boolean;
+    isSelectable: boolean;
+    isValidNext: boolean;
+    isDisabled: boolean;
+    isMultiPosition: boolean;
+    allPositions: number[];
+    xpCost: number;
+    isAdvanced: boolean;
+    hasChoices: boolean;
+};
+
+type StepLayout = {
+    stepKey: string;
+    stepIndex: number;
+    stepLabel: string;
+    cards: OriginCard[];
+    maxPosition: number;
+    hasSelection: boolean;
+};
+
+type ChartLayout = {
+    steps: StepLayout[];
+    maxColumns: number;
+};
+
 export class OriginChartLayout {
     /**
      * Compute layout data for all origins grouped by step.
@@ -30,8 +92,14 @@ export class OriginChartLayout {
      * @param {string[]} stepKeys - Ordered step keys for this game system (required)
      * @returns {Object} Layout data organized by step
      */
-    static computeFullChart(allOrigins, currentSelections, guidedMode = true, direction = DIRECTION.FORWARD, stepKeys: string[]) {
-        const layout = {
+    static computeFullChart(
+        allOrigins: OriginLike[],
+        currentSelections: OriginSelectionMap,
+        guidedMode = true,
+        direction: Direction = DIRECTION.FORWARD,
+        stepKeys: string[],
+    ): ChartLayout {
+        const layout: ChartLayout = {
             steps: [],
             maxColumns: 0,
         };
@@ -59,8 +127,8 @@ export class OriginChartLayout {
      * @returns {Object}
      * @private
      */
-    static _groupByStep(origins) {
-        const groups = {};
+    static _groupByStep(origins: OriginLike[]): Record<string, OriginLike[]> {
+        const groups: Record<string, OriginLike[]> = {};
 
         for (const origin of origins) {
             const step = origin.system?.step;
@@ -72,7 +140,7 @@ export class OriginChartLayout {
 
         // Sort each group by primary position
         for (const step in groups) {
-            groups[step].sort((a, b) => {
+            groups[step]?.sort((a: OriginLike, b: OriginLike) => {
                 const posA = a.system?.primaryPosition || 4;
                 const posB = b.system?.primaryPosition || 4;
                 return posA - posB;
@@ -88,11 +156,11 @@ export class OriginChartLayout {
      * @returns {number[]}
      * @private
      */
-    static _getPositions(origin) {
+    static _getPositions(origin: OriginLike | null | undefined): number[] {
         const positions = origin?.system?.pathPositions ?? origin?.system?.allPositions ?? origin?.system?.positions;
 
         if (Array.isArray(positions) && positions.length > 0) {
-            return [...positions].sort((a, b) => a - b);
+            return [...positions].sort((a: number, b: number) => a - b);
         }
 
         return [4];
@@ -104,7 +172,7 @@ export class OriginChartLayout {
      * @param {Item|object|null} lastSelection
      * @returns {number[]}
      */
-    static resolvePathPositions(origin, lastSelection) {
+    static resolvePathPositions(origin: OriginLike, lastSelection: OriginLike | null): number[] {
         const originPositions = this._getPositions(origin);
 
         if (!lastSelection) {
@@ -112,6 +180,7 @@ export class OriginChartLayout {
         }
 
         const allowedPositions = this._getAllowedPositions(lastSelection);
+        if (!allowedPositions) return originPositions;
         const resolved = originPositions.filter((position) => allowedPositions.has(position));
 
         return resolved.length > 0 ? resolved : originPositions;
@@ -132,13 +201,21 @@ export class OriginChartLayout {
      * @returns {Object}
      * @private
      */
-    static _computeStepLayout(origins, stepIndex, stepKey, currentSelections, guidedMode, direction = DIRECTION.FORWARD, stepOrder: string[]) {
+    static _computeStepLayout(
+        origins: OriginLike[],
+        stepIndex: number,
+        stepKey: string,
+        currentSelections: OriginSelectionMap,
+        guidedMode: boolean,
+        direction: Direction = DIRECTION.FORWARD,
+        stepOrder: string[],
+    ): StepLayout {
         const selectedOrigin = currentSelections.get(stepKey);
 
         const lastSelection = this._getLastSelection(stepIndex, currentSelections, direction, stepOrder);
         const allowedPositions = this._getAllowedPositions(lastSelection);
 
-        const cards = [];
+        const cards: OriginCard[] = [];
         let maxPosition = 0;
         const seenOrigins = new Set();
 
@@ -156,7 +233,10 @@ export class OriginChartLayout {
                     Boolean,
                 ),
             );
-            const isSelected = selectedIds.has(originId) || selectedIds.has(origin.uuid) || selectedIds.has(origin.system?.identifier);
+            const isSelected =
+                selectedIds.has(originId) ||
+                (origin.uuid ? selectedIds.has(origin.uuid) : false) ||
+                (origin.system?.identifier ? selectedIds.has(origin.system.identifier) : false);
             const isSelectable = this._isSelectable(origin, lastSelection, allowedPositions, guidedMode);
             const isValidNext = this._isPositionAllowed(origin, allowedPositions);
 
@@ -201,10 +281,10 @@ export class OriginChartLayout {
      * @returns {Set<number>}
      * @private
      */
-    static _getAllowedPositions(lastSelection) {
+    static _getAllowedPositions(lastSelection: OriginLike | null): Set<number> | null {
         if (!lastSelection) return null;
 
-        const allowed = new Set();
+        const allowed = new Set<number>();
         const positions = this._getPositions(lastSelection);
 
         for (const pos of positions) {
@@ -227,21 +307,21 @@ export class OriginChartLayout {
      * @returns {boolean}
      * @private
      */
-    static _isSelectable(origin, lastSelection, allowedPositions, guidedMode) {
+    static _isSelectable(origin: OriginLike, lastSelection: OriginLike | null, allowedPositions: Set<number> | null, guidedMode: boolean): boolean {
         if (!guidedMode) return true;
         if (!lastSelection) return true;
 
         const requirements = origin.system?.requirements;
         const lastId = lastSelection.system?.identifier;
 
-        if (requirements?.previousSteps?.length > 0) {
-            if (!requirements.previousSteps.includes(lastId)) {
+        if (lastId && (requirements?.previousSteps?.length ?? 0) > 0) {
+            if (!requirements?.previousSteps?.includes(lastId)) {
                 return false;
             }
         }
 
-        if (requirements?.excludedSteps?.length > 0) {
-            if (requirements.excludedSteps.includes(lastId)) {
+        if (lastId && (requirements?.excludedSteps?.length ?? 0) > 0) {
+            if (requirements?.excludedSteps?.includes(lastId)) {
                 return false;
             }
         }
@@ -256,7 +336,7 @@ export class OriginChartLayout {
      * @returns {boolean}
      * @private
      */
-    static _isPositionAllowed(origin, allowedPositions) {
+    static _isPositionAllowed(origin: OriginLike, allowedPositions: Set<number> | null): boolean {
         if (!allowedPositions) return true;
 
         const originPositions = this._getPositions(origin);
@@ -277,12 +357,12 @@ export class OriginChartLayout {
      * @returns {Item|null}
      * @private
      */
-    static _getLastSelection(stepIndex, currentSelections, direction, stepOrder: string[]) {
+    static _getLastSelection(stepIndex: number, currentSelections: OriginSelectionMap, direction: Direction, stepOrder: string[]): OriginLike | null {
         if (direction === DIRECTION.FORWARD) {
             for (let i = stepIndex - 1; i >= 0; i--) {
                 const prevStepKey = stepOrder[i];
-                if (currentSelections.has(prevStepKey)) {
-                    return currentSelections.get(prevStepKey);
+                if (prevStepKey && currentSelections.has(prevStepKey)) {
+                    return currentSelections.get(prevStepKey) ?? null;
                 }
             }
             return null;
@@ -290,8 +370,8 @@ export class OriginChartLayout {
 
         for (let i = stepIndex + 1; i < stepOrder.length; i++) {
             const nextStepKey = stepOrder[i];
-            if (currentSelections.has(nextStepKey)) {
-                return currentSelections.get(nextStepKey);
+            if (nextStepKey && currentSelections.has(nextStepKey)) {
+                return currentSelections.get(nextStepKey) ?? null;
             }
         }
 
@@ -304,7 +384,7 @@ export class OriginChartLayout {
      * @returns {string}
      * @private
      */
-    static _getStepLabel(stepKey) {
+    static _getStepLabel(stepKey: string): string {
         const key = `WH40K.OriginPath.${stepKey.charAt(0).toUpperCase() + stepKey.slice(1)}`;
         return game.i18n.localize(key);
     }
