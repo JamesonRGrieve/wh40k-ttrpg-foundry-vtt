@@ -12,8 +12,8 @@ interface RighteousFuryDialogOptions {
     target?: number;
     weaponName?: string;
     isMelee?: boolean;
-    onConfirm?: Function;
-    onFail?: Function;
+    onConfirm?: () => void | Promise<void>;
+    onFail?: () => void | Promise<void>;
 }
 
 /**
@@ -75,49 +75,49 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
      * The actor performing the RF
      * @type {Actor}
      */
-    actor;
+    actor?: Actor;
 
     /**
      * The characteristic to test (WS or BS)
      * @type {string}
      */
-    characteristic;
+    characteristic?: string;
 
     /**
      * Target number for confirmation
      * @type {number}
      */
-    target;
+    target?: number;
 
     /**
      * Name of the weapon
      * @type {string}
      */
-    weaponName;
+    weaponName?: string;
 
     /**
      * Is this a melee weapon?
      * @type {boolean}
      */
-    isMelee;
+    isMelee?: boolean;
 
     /**
      * Callback for successful confirmation
      * @type {Function}
      */
-    onConfirm;
+    onConfirm?: () => void | Promise<void>;
 
     /**
      * Callback for failed confirmation
      * @type {Function}
      */
-    onFail;
+    onFail?: () => void | Promise<void>;
 
     /**
      * The confirmation roll result
      * @type {Roll|null}
      */
-    confirmationRoll;
+    confirmationRoll: Roll | null;
 
     /**
      * Was the confirmation successful?
@@ -166,13 +166,15 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
         // Create confirmation roll (d100)
         this.confirmationRoll = new Roll('1d100', {});
         await this.confirmationRoll.evaluate();
+        const rollTotal = this.confirmationRoll.total ?? 0;
+        const targetNumber = this.target ?? 0;
 
         // Check success
-        this.success = this.confirmationRoll.total <= this.target;
+        this.success = rollTotal <= targetNumber;
 
         if (this.success) {
             // Calculate degrees of success
-            this.dos = Math.floor(this.target / 10) - Math.floor(this.confirmationRoll.total / 10);
+            this.dos = Math.floor(targetNumber / 10) - Math.floor(rollTotal / 10);
         }
 
         // Re-render to show result
@@ -206,8 +208,8 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
  * @param {object} options - Dialog options
  * @returns {Promise<boolean>} - True if confirmed, false if failed
  */
-export async function promptRighteousFury(options) {
-    return new Promise((resolve) => {
+export async function promptRighteousFury(options: RighteousFuryDialogOptions): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
         const dialog = new RighteousFuryDialog({
             ...options,
             onConfirm: () => resolve(true),

@@ -21,18 +21,18 @@
     "src/module/utils/prerequisite-validator.ts",
     "src/module/utils/roll-table-utils.ts",
     "src/module/rolls/force-field-data.ts",
-    "src/module/rules/combat-actions.ts"
-  ],
-  "failed": [
+    "src/module/rules/combat-actions.ts",
     "src/module/rules/attack-specials.ts",
-    "src/module/applications/prompts/righteous-fury-dialog.ts",
-    "src/module/rules/range.ts",
-    "src/module/rules/weapon-training.ts",
-    "src/module/helpers/craftsmanship-helper.ts",
     "src/module/rolls/roll-helpers.ts",
+    "src/module/rules/range.ts",
+    "src/module/applications/prompts/righteous-fury-dialog.ts",
+    "src/module/helpers/craftsmanship-helper.ts",
     "src/module/rules/ammo.ts",
     "src/module/rules/attack-options.ts",
-    "src/module/helpers/skill-key-helper.ts",
+    "src/module/rules/weapon-training.ts",
+    "src/module/helpers/skill-key-helper.ts"
+  ],
+  "failed": [
     "src/module/documents/token.ts",
     "src/module/rules/weapon-quality-effects.ts",
     "src/module/utils/origin-chart-layout.ts",

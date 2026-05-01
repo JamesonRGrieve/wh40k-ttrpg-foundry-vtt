@@ -2,6 +2,10 @@
 /*  Ammo Effects Table                          */
 /* -------------------------------------------- */
 
+import type { ActionData } from '../rolls/action-data.ts';
+import type { WeaponRollData } from '../rolls/roll-data.ts';
+import type { WH40KItemDocument } from '../types/global.d.ts';
+
 type AttackSpecialEffect = {
     remove?: string;
     add?: { name: string; level: unknown };
@@ -20,6 +24,39 @@ type AmmoEffects = {
     damageModifiers?: Record<string, number>;
     penetrationModifiers?: Record<string, number>;
     fireRate?: number;
+};
+
+type AmmoItem = WH40KItemDocument & {
+    usesAmmo: boolean;
+    system: WH40KItemDocument['system'] & {
+        loadedAmmo?: { name?: string };
+        clip: { value: number };
+        effectiveClipMax?: number;
+        attack?: {
+            rateOfFire?: {
+                full?: number;
+                semi?: number;
+            };
+        };
+    };
+};
+
+type AmmoRollData = WeaponRollData & {
+    weapon: AmmoItem;
+    attackSpecials: Array<{ name: string; level?: unknown }>;
+};
+
+type AmmoActionData = ActionData & {
+    rollData: AmmoRollData & {
+        ammoUsed: number;
+    };
+};
+
+type AmmoHit = {
+    addEffect: (key: string, description: string) => void;
+    damageType?: string;
+    modifiers: Record<string, number>;
+    penetrationModifiers: Record<string, number>;
 };
 
 /**
@@ -68,7 +105,7 @@ const AMMO_EFFECTS: Record<string, AmmoEffects> = {
 /*  Ammo Utility Functions                      */
 /* -------------------------------------------- */
 
-export function ammoText(item) {
+export function ammoText(item: AmmoItem): string | undefined {
     game.wh40k.log('ammoText', item);
     if (item.usesAmmo) {
         const name = item.system.loadedAmmo?.name || 'Standard';
@@ -78,7 +115,7 @@ export function ammoText(item) {
     return undefined;
 }
 
-export async function useAmmo(actionData) {
+export async function useAmmo(actionData: AmmoActionData): Promise<void> {
     const actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (!actionItem) return;
     if (actionItem.usesAmmo) {
@@ -98,7 +135,7 @@ export async function useAmmo(actionData) {
     }
 }
 
-export async function refundAmmo(actionData) {
+export async function refundAmmo(actionData: AmmoActionData): Promise<void> {
     const actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (actionItem.usesAmmo) {
         await actionItem.update({
@@ -114,7 +151,7 @@ export async function refundAmmo(actionData) {
 /**
  * @param rollData {WeaponRollData}
  */
-export function calculateAmmoAttackBonuses(rollData) {
+export function calculateAmmoAttackBonuses(rollData: AmmoRollData): void {
     const ammoName = rollData.weapon.system.loadedAmmo?.name;
     if (!ammoName) return;
     const effects = AMMO_EFFECTS[ammoName];
@@ -124,14 +161,14 @@ export function calculateAmmoAttackBonuses(rollData) {
     }
 }
 
-export function calculateAmmoAttackSpecials(rollData) {
+export function calculateAmmoAttackSpecials(rollData: AmmoRollData): void {
     const ammoName = rollData.weapon.system.loadedAmmo?.name;
     if (!ammoName) return;
     game.wh40k.log('calculateAmmoAttackSpecials', ammoName);
     const effects = AMMO_EFFECTS[ammoName];
     if (!effects?.attackSpecials) return;
     for (const spec of effects.attackSpecials) {
-        if (spec.remove) rollData.attackSpecials.findSplice((i) => i.name === spec.remove);
+        if (spec.remove) rollData.attackSpecials.findSplice((i: { name: string }) => i.name === spec.remove);
         if (spec.add) rollData.attackSpecials.push(spec.add);
     }
 }
@@ -140,7 +177,7 @@ export function calculateAmmoAttackSpecials(rollData) {
 /*  Hit Phase                                   */
 /* -------------------------------------------- */
 
-export function calculateAmmoSpecials(actionData, hit) {
+export function calculateAmmoSpecials(actionData: AmmoActionData, hit: AmmoHit): void {
     const ammoName = actionData.rollData.weapon.system.loadedAmmo?.name;
     if (!ammoName) return;
     const effects = AMMO_EFFECTS[ammoName];
@@ -155,7 +192,7 @@ export function calculateAmmoSpecials(actionData, hit) {
  * @param actionData {WeaponAttackData}
  * @param hit {Hit}
  */
-export function calculateAmmoDamageBonuses(actionData, hit) {
+export function calculateAmmoDamageBonuses(actionData: AmmoActionData, hit: AmmoHit): void {
     const ammoName = actionData.rollData.weapon.system.loadedAmmo?.name;
     if (!ammoName) return;
     const effects = AMMO_EFFECTS[ammoName];
@@ -169,7 +206,7 @@ export function calculateAmmoDamageBonuses(actionData, hit) {
  * @param actionData {actionData}
  * @param hit {Hit}
  */
-export function calculateAmmoPenetrationBonuses(actionData, hit) {
+export function calculateAmmoPenetrationBonuses(actionData: AmmoActionData, hit: AmmoHit): void {
     const ammoName = actionData.rollData.weapon.system.loadedAmmo?.name;
     if (!ammoName) return;
     const effects = AMMO_EFFECTS[ammoName];
@@ -186,7 +223,7 @@ export function calculateAmmoPenetrationBonuses(actionData, hit) {
 /**
  * @param rollData {WeaponRollData}
  */
-export function calculateAmmoInformation(rollData) {
+export function calculateAmmoInformation(rollData: AmmoRollData): void {
     const availableAmmo = rollData.weapon.system.clip.value;
 
     if (!rollData.weapon.usesAmmo) {
@@ -213,10 +250,11 @@ export function calculateAmmoInformation(rollData) {
     let fireRate = 1;
 
     if (rollData.action === 'Full Auto Burst' || rollData.action === 'Semi-Auto Burst') {
+        const rateOfFire = rollData.weapon.system.attack?.rateOfFire;
         if (rollData.action === 'Full Auto Burst') {
-            fireRate = rollData.weapon.system.attack.rateOfFire.full;
+            fireRate = rateOfFire?.full ?? 0;
         } else if (rollData.action === 'Semi-Auto Burst') {
-            fireRate = rollData.weapon.system.attack.rateOfFire.semi;
+            fireRate = rateOfFire?.semi ?? 0;
         }
         if (rollData.hasAttackSpecial('Storm')) {
             fireRate *= 2;
@@ -238,5 +276,5 @@ export function calculateAmmoInformation(rollData) {
     rollData.ammoPerShot = ammoPerShot;
     rollData.fireRate = fireRate;
     rollData.ammoUsed = fireRate * ammoPerShot;
-    rollData.ammoText = ammoText(rollData.weapon);
+    rollData.ammoText = ammoText(rollData.weapon) ?? '';
 }
