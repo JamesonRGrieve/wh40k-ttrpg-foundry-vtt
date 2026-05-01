@@ -24,7 +24,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Order category
             category: new fields.StringField({

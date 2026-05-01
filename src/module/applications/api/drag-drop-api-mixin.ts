@@ -58,7 +58,7 @@ export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T) {
         _defaultDropBehavior(event: DragEvent, data: Record<string, unknown>): string {
             if (!data?.uuid || typeof data.uuid !== 'string') return 'copy';
             const d = foundry.utils.parseUuid(data.uuid);
-            const doc = (this as any).document as foundry.abstract.Document;
+            const doc = (this as any).document as { uuid: string };
             const t = foundry.utils.parseUuid(doc.uuid);
             const base = d.embedded?.length ? 'document' : 'primary';
             const dId = d[`${base}Id`] as string;

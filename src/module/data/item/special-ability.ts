@@ -21,7 +21,7 @@ export default class SpecialAbilityData extends ItemDataModel.mixin(DescriptionT
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Benefit/effect description
             benefit: new fields.HTMLField({ required: true, blank: true }),

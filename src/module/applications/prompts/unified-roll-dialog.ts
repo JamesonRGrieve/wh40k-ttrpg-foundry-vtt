@@ -27,8 +27,21 @@ import { RANGE_BRACKETS, calculateTokenDistance } from '../../utils/range-calcul
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import { RollData } from '../../rolls/roll-data.ts';
+import type { WH40KItemDocument } from '../../types/global.d.ts';
 
 const { ApplicationV2 } = (foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor } }).api;
+
+type AttackOptionWeaponLike = WH40KItemDocument & {
+    isRanged: boolean;
+    system: WH40KItemDocument['system'] & {
+        attack?: {
+            rateOfFire?: {
+                semi?: number;
+                full?: number;
+            };
+        };
+    };
+};
 
 /**
  * Unified dialog for configuring all roll types.
@@ -603,7 +616,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // Card-based attack modes
         const isRanged = !!rd.weapon?.isRanged;
         const attackModes = rd.weapon
-            ? getAvailableAttackModes(rd.weapon).map((m) => ({
+            ? getAvailableAttackModes(rd.weapon as unknown as AttackOptionWeaponLike).map((m) => ({
                   ...m,
                   isSelected: this._attackModeKey === m.key,
                   modifierLabel: m.modifier >= 0 ? `+${m.modifier}` : `${m.modifier}`,

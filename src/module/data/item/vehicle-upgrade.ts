@@ -26,7 +26,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Upgrade type (Standard, Integral, Custom)
             upgradeType: new fields.StringField({

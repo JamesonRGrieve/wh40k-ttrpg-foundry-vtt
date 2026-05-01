@@ -21,7 +21,7 @@ export default class MalignancyData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Effect description
             effect: new fields.HTMLField({ required: true, blank: true }),

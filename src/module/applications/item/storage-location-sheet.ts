@@ -8,7 +8,7 @@ import defineSimpleItemSheet from './define-simple-item-sheet.ts';
 /** Sheet for storage location items (containers/bags/backpacks). */
 const StorageLocationSheet = defineSimpleItemSheet({
     className: 'StorageLocationSheet',
-    baseClass: ContainerItemSheet,
+    baseClass: ContainerItemSheet as typeof ContainerItemSheet & typeof import('./base-item-sheet.ts').default,
     classes: ['wh40k-rpg', 'storage-location'],
     template: 'systems/wh40k-rpg/templates/item/item-storage-location-sheet.hbs',
     width: 550,

@@ -1,4 +1,5 @@
 import { handleBleeding, handleOnFire } from '../rules/active-effects.ts';
+import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 export class CombatActionManager {
     combatTurnHook: number | undefined;
@@ -53,9 +54,9 @@ export class CombatActionManager {
             for (const effect of currentCombatant.actor.effects) {
                 // On Fire!
                 if (effect.name === 'Burning') {
-                    await handleOnFire(currentCombatant.actor);
+                    await handleOnFire(currentCombatant.actor as WH40KBaseActorDocument);
                 } else if (effect.name === 'Bleeding') {
-                    await handleBleeding(currentCombatant.actor);
+                    await handleBleeding(currentCombatant.actor as WH40KBaseActorDocument);
                 }
             }
         }

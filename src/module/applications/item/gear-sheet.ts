@@ -85,7 +85,7 @@ export default class GearSheet extends BaseItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #onConsumeUse(event: Event, target: HTMLElement): Promise<void> {
+    static async #onConsumeUse(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.item.system.consume();
     }
 }

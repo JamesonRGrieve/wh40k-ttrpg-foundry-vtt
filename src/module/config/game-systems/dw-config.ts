@@ -29,7 +29,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
     }
 
     resolveCareerKey(actor: WH40KBaseActor): string | null {
-        return actor.system?.originPath?.speciality ?? null;
+        return (actor.system?.originPath?.speciality as string | undefined) ?? null;
     }
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
