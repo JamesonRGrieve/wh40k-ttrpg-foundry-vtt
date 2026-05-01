@@ -1,6 +1,21 @@
 import { WH40K as WH40K_BASE } from '../config.ts';
 
-export const WH40K: Record<string, unknown> = {};
+type OriginPathStep = {
+    key: string;
+    label: string;
+    choiceGroup: string;
+};
+
+type Wh40KUiState = {
+    expanded: string[];
+    toggleExpanded: (name: string) => void;
+};
+
+type Wh40KRulesConfig = Record<string, unknown> & {
+    ui: Wh40KUiState;
+};
+
+export const WH40K: Wh40KRulesConfig = {} as Wh40KRulesConfig;
 
 // Merge the comprehensive config from config.mjs
 Object.assign(WH40K, WH40K_BASE);
@@ -14,7 +29,7 @@ WH40K.originPath = {
         { key: 'trialsAndTravails', label: 'Trials and Travails', choiceGroup: 'origin.trials-and-travails' },
         { key: 'motivation', label: 'Motivation', choiceGroup: 'origin.motivation' },
         { key: 'career', label: 'Career', choiceGroup: 'origin.career' },
-    ],
+    ] as OriginPathStep[],
     compendium: 'wh40k-rpg.rt-items-origin-path',
 };
 
@@ -100,7 +115,7 @@ WH40K.ship = {
 };
 
 WH40K.ui = {
-    toggleExpanded: function (name) {
+    toggleExpanded(name: string): void {
         if (WH40K.ui.expanded.includes(name)) {
             const index = WH40K.ui.expanded.indexOf(name);
             if (index > -1) {
@@ -113,11 +128,11 @@ WH40K.ui = {
     expanded: [],
 };
 
-export function toggleUIExpanded(name) {
-    CONFIG.wh40k.ui.toggleExpanded(name);
+export function toggleUIExpanded(name: string): void {
+    (CONFIG.wh40k as unknown as Wh40KRulesConfig).ui.toggleExpanded(name);
 }
 
-export function fieldMatch(val1, val2) {
+export function fieldMatch(val1: string, val2: string): boolean {
     if (!val1 || !val2) return false;
     const one = val1.replace(/\s/g, '');
     const two = val2.replace(/\s/g, '');

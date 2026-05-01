@@ -256,10 +256,12 @@ export function calculateRangeModifier(options: RangeCalculationOptions): RangeC
  */
 export function calculateTokenDistance(token1: Token | null | undefined, token2: Token | null | undefined): number {
     if (!token1 || !token2) return 0;
+    const grid = canvas.grid;
+    if (!grid) return 0;
 
     // Measure path distance using Foundry's grid system
-    const pathDistance = canvas.grid.measurePath([token1, token2], {});
-    let distance = pathDistance.distance || 0;
+    const pathDistance = grid.measurePath([token1, token2], {});
+    let distance = typeof pathDistance === 'number' ? pathDistance : pathDistance.distance || 0;
 
     // Account for elevation difference (3D distance)
     if (token1.document && token2.document) {
