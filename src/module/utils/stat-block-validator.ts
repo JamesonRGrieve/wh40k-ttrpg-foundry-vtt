@@ -225,16 +225,17 @@ export default class StatBlockValidator {
 
         if (!hasAny) {
             result.warnings.push('No movement rates found. Using defaults.');
+            return;
         }
 
         // Validate logical relationships
-        if (movement.half > movement.full) {
+        if (movement.half !== undefined && movement.full !== undefined && movement.half > movement.full) {
             result.warnings.push('Half move is greater than full move');
         }
-        if (movement.full > movement.charge) {
+        if (movement.full !== undefined && movement.charge !== undefined && movement.full > movement.charge) {
             result.warnings.push('Full move is greater than charge');
         }
-        if (movement.charge > movement.run) {
+        if (movement.charge !== undefined && movement.run !== undefined && movement.charge > movement.run) {
             result.warnings.push('Charge is greater than run');
         }
     }
