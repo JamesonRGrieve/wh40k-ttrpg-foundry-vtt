@@ -5,6 +5,38 @@
  * Provides validation and atomic updates to actor experience.
  */
 
+import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+
+type TransactionResult = {
+    success: boolean;
+    error?: string;
+    newAvailable?: number;
+};
+
+type XPPurchase = {
+    cost: number;
+    reason: string;
+};
+
+type XPSummary = {
+    total: number;
+    used: number;
+    available: number;
+    spentOnCharacteristics: number;
+    spentOnSkills: number;
+    spentOnTalents: number;
+    spentOnPsychicPowers: number;
+};
+
+type ExperienceLike = {
+    total?: number;
+    used?: number;
+    spentCharacteristics?: number;
+    spentSkills?: number;
+    spentTalents?: number;
+    spentPsychicPowers?: number;
+};
+
 /**
  * @typedef {Object} TransactionResult
  * @property {boolean} success - Whether the transaction succeeded
@@ -17,7 +49,7 @@
  * @param {Actor} actor - The actor to check
  * @returns {number} Available XP
  */
-export function getAvailableXP(actor) {
+export function getAvailableXP(actor: WH40KBaseActorDocument): number {
     const experience = actor.system?.experience;
     if (!experience) return 0;
 
@@ -31,7 +63,7 @@ export function getAvailableXP(actor) {
  * @param {number} cost - The XP cost
  * @returns {boolean}
  */
-export function canAfford(actor, cost) {
+export function canAfford(actor: WH40KBaseActorDocument, cost: number): boolean {
     return getAvailableXP(actor) >= cost;
 }
 
@@ -44,7 +76,7 @@ export function canAfford(actor, cost) {
  * @param {string} [reason] - Optional reason for the transaction (for logging)
  * @returns {Promise<TransactionResult>}
  */
-export async function spendXP(actor, cost, reason = '') {
+export async function spendXP(actor: WH40KBaseActorDocument, cost: number, reason = ''): Promise<TransactionResult> {
     // Validate inputs
     if (!actor) {
         return { success: false, error: 'No actor provided' };
@@ -68,7 +100,8 @@ export async function spendXP(actor, cost, reason = '') {
 
     try {
         // Calculate new used value
-        const currentUsed = actor.system.experience.used ?? 0;
+        const experience = actor.system.experience as ExperienceLike | undefined;
+        const currentUsed = experience?.used ?? 0;
         const newUsed = currentUsed + cost;
 
         // Update the actor
@@ -102,7 +135,7 @@ export async function spendXP(actor, cost, reason = '') {
  * @param {Array<{cost: number, reason: string}>} purchases - Array of purchases
  * @returns {Promise<TransactionResult>}
  */
-export async function spendXPBatch(actor, purchases) {
+export async function spendXPBatch(actor: WH40KBaseActorDocument, purchases: XPPurchase[]): Promise<TransactionResult> {
     if (!actor || !purchases?.length) {
         return { success: false, error: 'Invalid arguments' };
     }
@@ -122,7 +155,8 @@ export async function spendXPBatch(actor, purchases) {
     }
 
     try {
-        const currentUsed = actor.system.experience.used ?? 0;
+        const experience = actor.system.experience as ExperienceLike | undefined;
+        const currentUsed = experience?.used ?? 0;
         const newUsed = currentUsed + totalCost;
 
         await actor.update({
@@ -131,7 +165,7 @@ export async function spendXPBatch(actor, purchases) {
 
         // Log all purchases
         const reasons = purchases
-            .map((p) => p.reason)
+            .map((p: XPPurchase) => p.reason)
             .filter(Boolean)
             .join(', ');
         console.log(`XP Batch Transaction: ${actor.name} spent ${totalCost} XP on [${reasons}]. Available: ${available - totalCost}`);
@@ -154,8 +188,8 @@ export async function spendXPBatch(actor, purchases) {
  * @param {Actor} actor - The actor to check
  * @returns {Object} Summary of XP allocation
  */
-export function getXPSummary(actor) {
-    const exp = actor.system?.experience ?? {};
+export function getXPSummary(actor: WH40KBaseActorDocument): XPSummary {
+    const exp = (actor.system?.experience as ExperienceLike | undefined) ?? {};
 
     return {
         total: exp.total ?? 0,
@@ -173,7 +207,7 @@ export function getXPSummary(actor) {
  * @param {Array<{cost: number}>} advancements - List of advancements
  * @returns {number} Total cost
  */
-export function calculateTotalCost(advancements) {
+export function calculateTotalCost(advancements: Array<{ cost: number }>): number {
     if (!advancements?.length) return 0;
-    return advancements.reduce((sum, adv) => sum + (adv.cost ?? 0), 0);
+    return advancements.reduce((sum: number, adv: { cost: number }) => sum + (adv.cost ?? 0), 0);
 }

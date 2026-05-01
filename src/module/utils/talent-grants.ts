@@ -6,6 +6,7 @@
  */
 
 import { GrantsProcessor, GRANT_MODE } from './grants-processor.ts';
+import type { WH40KBaseActorDocument, WH40KItemDocument } from '../types/global.d.ts';
 
 /**
  * Process grants from a newly added talent.
@@ -16,7 +17,7 @@ import { GrantsProcessor, GRANT_MODE } from './grants-processor.ts';
  * @param {number} [depth=0] - Current recursion depth (prevents infinite loops)
  * @returns {Promise<void>}
  */
-export async function processTalentGrants(talent, actor, depth = 0) {
+export async function processTalentGrants(talent: WH40KItemDocument, actor: WH40KBaseActorDocument, depth = 0): Promise<void> {
     if (!talent || talent.type !== 'talent') return;
     if (!actor) return;
 
@@ -41,7 +42,7 @@ export async function processTalentGrants(talent, actor, depth = 0) {
  * @param {WH40KActor} actor - The actor losing the talent
  * @returns {Promise<void>}
  */
-export async function handleTalentRemoval(talent, actor) {
+export async function handleTalentRemoval(talent: WH40KItemDocument, actor: WH40KBaseActorDocument): Promise<void> {
     // Forward to unified handler
     const { handleGrantRemoval } = await import('./grants-processor.ts');
     await handleGrantRemoval(talent, actor);
