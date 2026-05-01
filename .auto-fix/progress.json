@@ -30,14 +30,13 @@
     "src/module/rules/ammo.ts",
     "src/module/rules/attack-options.ts",
     "src/module/rules/weapon-training.ts",
-    "src/module/helpers/skill-key-helper.ts"
-  ],
-  "failed": [
+    "src/module/helpers/skill-key-helper.ts",
     "src/module/documents/token.ts",
     "src/module/rules/weapon-quality-effects.ts",
     "src/module/utils/origin-chart-layout.ts",
     "src/module/rules/active-effects.ts"
   ],
+  "failed": [],
   "skipped": [],
   "start_errors": 1446
 }
