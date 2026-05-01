@@ -26,6 +26,10 @@ type ActorDataModelClass = {
     shimData?: (source: Record<string, unknown>, options?: Record<string, unknown>) => Record<string, unknown>;
 };
 
+type ActorConfigLike = {
+    dataModels: Record<string, ActorDataModelClass | undefined>;
+};
+
 type ActorSourceData = Record<string, unknown> & {
     _id?: string;
     type: string;
@@ -140,7 +144,8 @@ export function buildConvertedActorSource(actor: ActorDirectoryLike, targetSyste
 
     const source = foundry.utils.deepClone(actor.toObject()) as ActorSourceData;
     const targetType = getConvertedActorType(targetSystem, kind);
-    const targetDataModel = CONFIG.Actor.dataModels[targetType] as ActorDataModelClass | undefined;
+    const actorConfig = CONFIG.Actor as ActorConfigLike;
+    const targetDataModel = actorConfig.dataModels[targetType];
     if (!targetDataModel) {
         throw new Error(`Missing actor data model for target type ${targetType}`);
     }

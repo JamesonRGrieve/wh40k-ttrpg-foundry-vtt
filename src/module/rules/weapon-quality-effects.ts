@@ -21,7 +21,54 @@
  * - Coordinates with range system for Melta
  */
 
-// rolls/roll-data types used implicitly via JSDoc
+import type { WeaponRollData } from '../rolls/roll-data.ts';
+import type { WH40KBaseActorDocument, WH40KItemDocument, WH40KItemSystemData } from '../types/global.d.ts';
+
+type AttackSpecialLike = {
+    name?: string;
+};
+
+type QualityItem = {
+    name?: string;
+    items?: Iterable<unknown>;
+    isAttackSpecial?: boolean;
+    system?: WH40KItemSystemData & {
+        enabled?: boolean;
+        special?: Set<string>;
+        effectiveSpecial?: Set<string>;
+    };
+};
+
+type QualityActor = WH40KBaseActorDocument & {
+    system: WH40KBaseActorDocument['system'] & {
+        species?: string;
+        traits?: Array<{ name?: string }>;
+        psyker?: {
+            psyRating?: number;
+        };
+        characteristics?: {
+            strength?: {
+                bonus?: number;
+            };
+        };
+    };
+};
+
+type PenetrationContext = {
+    weapon?: QualityItem | null;
+    rangeName?: string;
+    basePenetration?: number;
+};
+
+type ExoticDamageContext = {
+    weapon?: QualityItem | null;
+    actor?: QualityActor | null;
+    target?: QualityActor | null;
+};
+
+type QualityModifierMap = Record<string, number>;
+type QualityDamageModifierMap = Record<string, number | string>;
+type QualitySummaryContext = 'attack' | 'parry' | 'damage' | 'penetration' | 'righteous-fury' | 'all';
 
 /* -------------------------------------------- */
 /*  Quality Effect Constants                    */
@@ -118,7 +165,7 @@ export const WEAPON_QUALITY_EFFECTS = {
  * @param {string} qualityName - Quality name to check (case-insensitive)
  * @returns {boolean} True if weapon has the quality
  */
-export function weaponHasQuality(weapon, qualityName) {
+export function weaponHasQuality(weapon: QualityItem | null | undefined, qualityName: string): boolean {
     if (!weapon) return false;
 
     const normalizedName = qualityName.toLowerCase();
@@ -135,9 +182,9 @@ export function weaponHasQuality(weapon, qualityName) {
 
     // Check embedded attackSpecial items
     if (weapon.items) {
-        for (const item of weapon.items) {
+        for (const item of weapon.items as Iterable<WH40KItemDocument>) {
             if (item.isAttackSpecial && item.name?.toLowerCase() === normalizedName) {
-                return item.system?.equipped || item.system?.enabled || true;
+                return true;
             }
         }
     }
@@ -153,9 +200,9 @@ export function weaponHasQuality(weapon, qualityName) {
  * @param {string} qualityName - Quality name to check
  * @returns {boolean} True if the quality is present in attackSpecials
  */
-export function rollDataHasQuality(rollData, qualityName) {
+export function rollDataHasQuality(rollData: WeaponRollData, qualityName: string): boolean {
     if (!rollData?.attackSpecials) return false;
-    return rollData.attackSpecials.some((s) => s.name?.toLowerCase() === qualityName.toLowerCase());
+    return rollData.attackSpecials.some((s: AttackSpecialLike) => s.name?.toLowerCase() === qualityName.toLowerCase());
 }
 
 /* -------------------------------------------- */
@@ -169,8 +216,8 @@ export function rollDataHasQuality(rollData, qualityName) {
  * @param {WeaponRollData} rollData - The weapon roll data
  * @returns {Object} Object with modifier entries { qualityName: value }
  */
-export function calculateQualityAttackModifiers(rollData) {
-    const modifiers = {};
+export function calculateQualityAttackModifiers(rollData: WeaponRollData): QualityModifierMap {
+    const modifiers: QualityModifierMap = {};
     const weapon = rollData.weapon;
     if (!weapon) return modifiers;
 
@@ -199,7 +246,7 @@ export function calculateQualityAttackModifiers(rollData) {
  * @param {Item} weapon - The weapon being used to parry
  * @returns {number} Total parry modifier (can be positive, negative, or 0)
  */
-export function getWeaponParryModifier(weapon) {
+export function getWeaponParryModifier(weapon: QualityItem | null | undefined): number {
     if (!weapon) return 0;
 
     let totalModifier = 0;
@@ -233,7 +280,7 @@ export function getWeaponParryModifier(weapon) {
  * @param {Item} weapon - The weapon to check
  * @returns {boolean} True if weapon can be used to parry
  */
-export function canWeaponParry(weapon) {
+export function canWeaponParry(weapon: QualityItem | null | undefined): boolean {
     if (!weapon) return false;
     return !weaponHasQuality(weapon, 'unwieldy');
 }
@@ -245,7 +292,7 @@ export function canWeaponParry(weapon) {
  * @param {Item} attackerWeapon - The weapon being parried against
  * @returns {number} Penalty to apply to defender's parry test
  */
-export function getAttackerWeaponParryPenalty(attackerWeapon) {
+export function getAttackerWeaponParryPenalty(attackerWeapon: QualityItem | null | undefined): number {
     if (!attackerWeapon) return 0;
 
     // Fast: Enemies suffer -20 to parry this weapon
@@ -270,8 +317,8 @@ export function getAttackerWeaponParryPenalty(attackerWeapon) {
  * @param {number} damageContext.basePenetration - Base penetration value
  * @returns {Object} Object with penetration modifiers { qualityName: value }
  */
-export function calculateQualityPenetrationModifiers(damageContext) {
-    const modifiers = {};
+export function calculateQualityPenetrationModifiers(damageContext: PenetrationContext): QualityModifierMap {
+    const modifiers: QualityModifierMap = {};
     const { weapon, rangeName, basePenetration } = damageContext;
 
     if (!weapon || basePenetration === undefined) return modifiers;
@@ -279,7 +326,7 @@ export function calculateQualityPenetrationModifiers(damageContext) {
     // Melta: Double penetration at short range (Point Blank or Short Range)
     if (weaponHasQuality(weapon, 'melta')) {
         const shortRanges = ['Point Blank', 'Short Range'];
-        if (shortRanges.includes(rangeName)) {
+        if (shortRanges.includes(rangeName ?? '')) {
             // Add the base penetration again to double it
             modifiers['Melta'] = basePenetration;
         }
@@ -303,8 +350,8 @@ export function calculateQualityPenetrationModifiers(damageContext) {
  * @param {number} damageContext.baseDamage - Base damage value
  * @returns {Object} Object with damage modifiers { qualityName: value }
  */
-export function calculateExoticQualityDamageModifiers(damageContext) {
-    const modifiers = {};
+export function calculateExoticQualityDamageModifiers(damageContext: ExoticDamageContext): QualityDamageModifierMap {
+    const modifiers: QualityDamageModifierMap = {};
     const { weapon, actor, target } = damageContext;
 
     if (!weapon || !actor) return modifiers;
@@ -320,7 +367,9 @@ export function calculateExoticQualityDamageModifiers(damageContext) {
     // Witch-Edge: Eldar wielders add Strength Bonus twice (total: 2x SB)
     // Note: Standard SB is already added for melee weapons, so we add it once more
     if (weaponHasQuality(weapon, 'witch-edge')) {
-        const isEldar = actor.system?.species?.toLowerCase().includes('eldar') || actor.system?.traits?.some((t) => t.name?.toLowerCase().includes('eldar'));
+        const isEldar =
+            actor.system?.species?.toLowerCase().includes('eldar') ||
+            actor.system?.traits?.some((t: { name?: string }) => t.name?.toLowerCase().includes('eldar'));
         if (isEldar && weapon.system?.isMeleeWeapon) {
             const strengthBonus = actor.system?.characteristics?.strength?.bonus || 0;
             modifiers['Witch-Edge (Extra SB)'] = strengthBonus;
@@ -330,7 +379,7 @@ export function calculateExoticQualityDamageModifiers(damageContext) {
     // Daemonbane: +2d10 damage against Daemons
     if (weaponHasQuality(weapon, 'daemonbane') && target) {
         const isDaemon =
-            target.system?.traits?.some((t) => t.name?.toLowerCase().includes('daemon') || t.name?.toLowerCase().includes('daemonic')) ||
+            target.system?.traits?.some((t: { name?: string }) => t.name?.toLowerCase().includes('daemon') || t.name?.toLowerCase().includes('daemonic')) ||
             target.system?.species?.toLowerCase().includes('daemon');
 
         if (isDaemon) {
@@ -349,7 +398,7 @@ export function calculateExoticQualityDamageModifiers(damageContext) {
  * @param {Item} armor - The armor item (if any)
  * @returns {boolean} True if weapon ignores this armor
  */
-export function weaponIgnoresArmor(weapon, armor) {
+export function weaponIgnoresArmor(weapon: QualityItem | null | undefined, armor: QualityItem | null | undefined): boolean {
     if (!weapon || !armor) return false;
 
     // Warp Weapon: Ignores non-warded armor
@@ -369,7 +418,7 @@ export function weaponIgnoresArmor(weapon, armor) {
  * @param {Item} weapon - The weapon item
  * @returns {number} RF threshold (standard is 10)
  */
-export function getRighteousFuryThreshold(weapon) {
+export function getRighteousFuryThreshold(weapon: QualityItem | null | undefined): number {
     if (!weapon) return 10; // Standard RF threshold
 
     // Gauss: RF on 9-10
@@ -392,7 +441,7 @@ export function getRighteousFuryThreshold(weapon) {
  * @param {number} dieResult - The d10 damage die result
  * @returns {boolean} True if this triggers RF
  */
-export function checkRighteousFury(weapon, dieResult) {
+export function checkRighteousFury(weapon: QualityItem | null | undefined, dieResult: number): boolean {
     const threshold = getRighteousFuryThreshold(weapon);
     return dieResult >= threshold;
 }
@@ -407,7 +456,7 @@ export function checkRighteousFury(weapon, dieResult) {
  *
  * @param {WeaponRollData} rollData - The weapon roll data
  */
-export function applyQualityModifiersToRollData(rollData) {
+export function applyQualityModifiersToRollData(rollData: WeaponRollData): void {
     if (!rollData?.weapon) return;
 
     // Get quality modifiers
@@ -429,13 +478,13 @@ export function applyQualityModifiersToRollData(rollData) {
  * @param {string} context - Context for summary ('attack', 'parry', 'damage', 'all')
  * @returns {string[]} Array of quality effect descriptions
  */
-export function getWeaponQualitySummary(weapon, context = 'all') {
-    const summary = [];
+export function getWeaponQualitySummary(weapon: QualityItem | null | undefined, context: QualitySummaryContext = 'all'): string[] {
+    const summary: string[] = [];
 
     if (!weapon) return summary;
 
     // Filter qualities by context
-    const relevantQualities = Object.entries(WEAPON_QUALITY_EFFECTS).filter(([key, def]) => {
+    const relevantQualities = Object.entries(WEAPON_QUALITY_EFFECTS).filter(([_key, def]) => {
         if (context === 'all') return true;
         return def.type === context;
     });
