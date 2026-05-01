@@ -102,14 +102,16 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData?.(source, options);
         // Ensure power and space are numbers
-        if (typeof source.power === 'string') {
-            source.power = parseInt(source.power) || 0;
-        }
-        if (typeof source.space === 'string') {
-            source.space = parseInt(source.space) || 0;
+        if (source) {
+            if (typeof source.power === 'string') {
+                source.power = parseInt(source.power) || 0;
+            }
+            if (typeof source.space === 'string') {
+                source.space = parseInt(source.space) || 0;
+            }
         }
     }
 
