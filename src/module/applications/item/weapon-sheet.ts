@@ -36,8 +36,10 @@ interface WeaponSheetContext extends Record<string, unknown> {
 export default class WeaponSheet extends ContainerItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
+        ...ContainerItemSheet.DEFAULT_OPTIONS,
         classes: ['wh40k-rpg', 'sheet', 'item', 'weapon', 'wh40k-weapon-sheet-v3'],
         actions: {
+            ...ContainerItemSheet.DEFAULT_OPTIONS.actions,
             reload: WeaponSheet.#onReload,
             addModification: WeaponSheet.#onAddModification,
             rollAttack: WeaponSheet.#rollAttack,
@@ -63,7 +65,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             resizable: true,
             icon: 'fa-solid fa-gun',
         },
-    };
+    } satisfies typeof ContainerItemSheet.DEFAULT_OPTIONS & Partial<ApplicationV2Config.DefaultOptions>;
 
     /* -------------------------------------------- */
 
@@ -710,7 +712,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @returns {Promise<boolean>}
      * @private
      */
-    async _onDropModification(modItem: any): Promise<unknown> {
+    async _onDropModification(modItem: any): Promise<boolean> {
         // Validate
         if (!this._canAddModification(modItem)) {
             return false;
@@ -897,7 +899,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @returns {Promise<boolean>}
      * @private
      */
-    async _onDropAmmunition(ammoItem: any): Promise<unknown> {
+    async _onDropAmmunition(ammoItem: any): Promise<boolean> {
         // Validate ammunition compatibility
         if (!this._canLoadAmmunition(ammoItem)) {
             return false;
@@ -939,7 +941,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _onDrop(event: DragEvent): Promise<unknown> {
+    async _onDrop(event: DragEvent): Promise<boolean> {
         event.preventDefault();
 
         let data: { type?: string; uuid?: string };

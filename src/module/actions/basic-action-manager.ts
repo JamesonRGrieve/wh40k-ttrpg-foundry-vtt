@@ -256,7 +256,7 @@ export class BasicActionManager {
         if (!sourceActor) return;
 
         const hitData = new Hit();
-        const assignData = new AssignDamageData(sourceActor, hitData);
+        const assignData = new AssignDamageData(sourceActor as unknown as ActorLike, hitData);
         await prepareAssignDamageRoll(assignData);
     }
 

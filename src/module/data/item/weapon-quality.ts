@@ -21,7 +21,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Does this quality have a level/rating?
             hasLevel: new fields.BooleanField({ required: true, initial: false }),

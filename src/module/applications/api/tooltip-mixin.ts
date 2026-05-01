@@ -60,7 +60,7 @@ export default function TooltipMixin<T extends ApplicationV2Ctor>(Base: T) {
          * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
         prepareSkillTooltip(key: string, skill: WH40KSkill, characteristics: Record<string, WH40KCharacteristic>): string {
-            const actorUuid = this.document?.uuid || null;
+            const actorUuid = this.document?.uuid ?? undefined;
             return prepareSkillTooltipData(key, skill, characteristics, actorUuid);
         }
 

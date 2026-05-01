@@ -123,7 +123,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
 
         // Get options
         const roles = ThreatCalculator.getRoles();
@@ -174,7 +174,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
-        void super._onRender(context, options);
+        void super._onRender(context, options as never);
 
         const form = this.element;
 
@@ -258,11 +258,11 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         this.#state.type = data.type || 'troop';
         this.#state.preset = data.preset || 'mixed';
         this.#state.faction = data.faction || '';
-        this.#state.isHorde = data.isHorde === true || data.isHorde === 'true';
-        this.#state.randomize = data.randomize === true || data.randomize === 'true';
+        this.#state.isHorde = data.isHorde === true;
+        this.#state.randomize = data.randomize === true;
         this.#state.randomizeAmount = parseInt(String(data.randomizeAmount), 10) || 10;
         this.#state.folder = data.folder || '';
-        this.#state.openSheets = data.openSheets === true || data.openSheets === 'true';
+        this.#state.openSheets = data.openSheets === true;
 
         // Create the NPCs
         const actors = await this._createNPCs();
@@ -384,7 +384,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             this.#resolve([]);
         }
 
-        return super.close(options);
+        void super.close(options);
     }
 
     /* -------------------------------------------- */

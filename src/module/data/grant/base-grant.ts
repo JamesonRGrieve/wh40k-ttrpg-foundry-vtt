@@ -121,7 +121,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      * @type {WH40KBaseActor|null}
      */
     get actor(): WH40KBaseActor | null {
-        return this.item?.actor ?? null;
+        return (this.item?.actor as WH40KBaseActor | null | undefined) ?? null;
     }
 
     /**

@@ -23,7 +23,7 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
     }
 
     resolveCareerKey(actor: WH40KBaseActor): string | null {
-        return actor.system?.originPath?.career ?? null;
+        return (actor.system?.originPath?.career as string | undefined) ?? null;
     }
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {

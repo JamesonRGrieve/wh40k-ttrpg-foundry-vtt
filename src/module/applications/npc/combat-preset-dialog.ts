@@ -272,7 +272,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
     /** @override */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
 
         context.mode = this.#state.mode;
         context.npc = this.#state.npc

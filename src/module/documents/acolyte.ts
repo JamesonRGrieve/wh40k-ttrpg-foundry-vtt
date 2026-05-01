@@ -473,7 +473,12 @@ export class WH40KAcolyte extends WH40KBaseActor {
                     ui.notifications.warn('Actor must have force field equipped and activated!');
                     return;
                 }
-                await prepareUnifiedRoll(new ForceFieldData(this, item) as unknown as ActionData);
+                await prepareUnifiedRoll(
+                    new ForceFieldData(
+                        this as unknown as import('../types/global.d.ts').WH40KBaseActorDocument,
+                        item as unknown as ConstructorParameters<typeof ForceFieldData>[1],
+                    ) as unknown as ActionData,
+                );
                 return;
             default:
                 await DHBasicActionManager.sendItemVocalizeChat({

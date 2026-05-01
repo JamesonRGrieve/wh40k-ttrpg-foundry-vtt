@@ -49,7 +49,7 @@ export default class VehicleSheet extends BaseActorSheet {
 
     /** @override */
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
-        ...BaseActorSheet.PARTS,
+        ...((BaseActorSheet as typeof BaseActorSheet & { PARTS?: Record<string, ApplicationV2Config.PartConfiguration> }).PARTS ?? {}),
         header: {
             template: 'systems/wh40k-rpg/templates/actor/vehicle/header.hbs',
         },

@@ -146,7 +146,7 @@ export class ReloadActionManager {
         if (actor) {
             // Step 1: Return remaining rounds to inventory
             if (previousValue > 0 && system.hasLoadedAmmo) {
-                await system._returnRoundsToInventory(actor, previousValue);
+                await system._returnRoundsToInventory(actor as Parameters<WeaponData['_returnRoundsToInventory']>[0], previousValue);
             }
 
             // Step 2: Select ammo type
