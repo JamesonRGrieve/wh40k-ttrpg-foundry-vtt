@@ -3,6 +3,16 @@
  * Extracts weight/carry capacity logic from the main actor document.
  */
 
+import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+
+type BackpackLike = {
+    hasBackpack?: boolean;
+    isCombatVest?: boolean;
+    weight?: {
+        max?: number;
+    };
+};
+
 /**
  * Encumbrance lookup table (S+T bonus -> carry capacity in kg)
  * Index corresponds to S+T bonus value (0-20)
@@ -17,10 +27,17 @@ const ENCUMBRANCE_TABLE = [0.9, 2.25, 4.5, 9, 18, 27, 36, 45, 56, 67, 78, 90, 11
  * @param {Actor} actor - The actor to compute encumbrance for
  * @returns {object} Encumbrance data with current, max, and encumbered flags
  */
-export function computeEncumbrance(actor) {
+export function computeEncumbrance(actor: WH40KBaseActorDocument): {
+    max: number;
+    value: number;
+    encumbered: boolean;
+    backpack_max: number;
+    backpack_value: number;
+    backpack_encumbered: boolean;
+} {
     let currentWeight = 0;
     let backpackWeight = 0;
-    const backpack = actor.system.backpack;
+    const backpack = actor.system.backpack as BackpackLike | undefined;
     const backpackMax = backpack?.hasBackpack ? backpack.weight?.max ?? 0 : 0;
 
     // Filter out storage location items and ship-stowed items
@@ -73,9 +90,9 @@ export function computeEncumbrance(actor) {
  * @param {number} bonus - Combined Strength + Toughness bonus
  * @returns {number} Maximum carry capacity in kg
  */
-export function getCarryCapacity(bonus) {
+export function getCarryCapacity(bonus: number): number {
     const index = Math.max(0, Math.min(bonus, ENCUMBRANCE_TABLE.length - 1));
-    return ENCUMBRANCE_TABLE[index];
+    return ENCUMBRANCE_TABLE[index] ?? ENCUMBRANCE_TABLE[ENCUMBRANCE_TABLE.length - 1]!;
 }
 
 export { ENCUMBRANCE_TABLE };

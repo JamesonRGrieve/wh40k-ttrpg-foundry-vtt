@@ -1,10 +1,22 @@
 import { hitLocationNames } from './hit-locations.ts';
+import type { WeaponRollData } from '../rolls/roll-data.ts';
+
+type CombatAction = {
+    name: string;
+    type: string[];
+    subtype: string[];
+    description: string;
+    attack?: {
+        modifier: number;
+    };
+};
 
 /**
  * @param rollData {WeaponRollData}
  */
-export function calculateCombatActionModifier(rollData) {
-    const currentAction = rollData.actions[rollData.action];
+export function calculateCombatActionModifier(rollData: WeaponRollData): void {
+    const actions = rollData.actions as Record<string, string>;
+    const currentAction = actions[rollData.action];
 
     game.wh40k.log('calculateCombatActionModifier', currentAction);
     if (rollData.action === 'Called Shot') {
@@ -16,7 +28,7 @@ export function calculateCombatActionModifier(rollData) {
         rollData.isCalledShot = false;
     }
 
-    const actionInfo = allCombatActions().find((action) => action.name === currentAction);
+    const actionInfo = allCombatActions().find((action: CombatAction) => action.name === currentAction);
     if (actionInfo && actionInfo.attack?.modifier) {
         rollData.modifiers['attack'] = actionInfo.attack.modifier;
     } else {
@@ -27,7 +39,8 @@ export function calculateCombatActionModifier(rollData) {
 /**
  * @param rollData {WeaponRollData}
  */
-export function updateAvailableCombatActions(rollData) {
+export function updateAvailableCombatActions(rollData: WeaponRollData): void {
+    const weaponAttack = rollData.weapon.system.attack as { rateOfFire?: { semi?: number; full?: number } } | undefined;
     const actions = allCombatActions()
         .filter((action) => action.subtype.includes('Attack'))
         .filter((action) => {
@@ -43,30 +56,34 @@ export function updateAvailableCombatActions(rollData) {
     }
 
     if (rollData.weapon.isRanged) {
-        const rof = rollData.weapon.system.attack?.rateOfFire;
-        if (!rof || rof.semi <= 0) {
+        const rof = weaponAttack?.rateOfFire;
+        if (!rof || (rof.semi ?? 0) <= 0) {
             actions.findSplice((action) => action.name === 'Semi-Auto Burst');
             actions.findSplice((action) => action.name === 'Suppressing Fire - Semi');
         }
-        if (!rof || rof.full <= 0) {
+        if (!rof || (rof.full ?? 0) <= 0) {
             actions.findSplice((action) => action.name === 'Full Auto Burst');
             actions.findSplice((action) => action.name === 'Suppressing Fire - Full');
         }
     }
 
     rollData.actions = {};
-    rollData.combatActionInformation = actions;
+    const actionsByName = rollData.actions as Record<string, string>;
+    rollData.combatActionInformation = actions as unknown as Record<string, unknown>;
     for (const action of actions) {
-        rollData.actions[action.name] = action.name;
+        actionsByName[action.name] = action.name;
     }
 
     // If action no longer exists -- set to first available
-    if (!Object.keys(rollData.actions).find((a) => a === rollData.action)) {
-        rollData.action = rollData.actions[Object.keys(rollData.actions)[0]];
+    if (!Object.keys(actionsByName).find((a) => a === rollData.action)) {
+        const firstAction = actionsByName[Object.keys(actionsByName)[0] ?? ''];
+        if (firstAction) {
+            rollData.action = firstAction;
+        }
     }
 }
 
-function allCombatActions() {
+function allCombatActions(): CombatAction[] {
     return [
         {
             name: 'Standard Attack',

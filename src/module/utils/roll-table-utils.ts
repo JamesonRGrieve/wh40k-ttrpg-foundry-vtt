@@ -1,5 +1,14 @@
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 
+type RollTableResult = Awaited<ReturnType<RollTable['roll']>>;
+type RollTableDialog = HTMLDialogElement & {
+    querySelector(selectors: string): HTMLInputElement | HTMLSelectElement | null;
+};
+type RollTableRollOptions = {
+    displayChat?: boolean;
+    roll?: Roll | null;
+};
+
 /**
  * Roll Table Utilities for WH40K RPG
  * Provides integration with Foundry VTT's RollTable system for:
@@ -21,15 +30,15 @@ export class RollTableUtils {
      * @param {Roll} [options.roll] - Optional pre-rolled Roll object
      * @returns {Promise<TableResult | null>} The table result
      */
-    static async rollTable(tableName: string, options: Record<string, any> = {}) {
+    static async rollTable(tableName: string, options: RollTableRollOptions = {}): Promise<RollTableResult | null> {
         const { displayChat = true, roll = null } = options;
 
         // Find the table in world tables first, then compendiums
-        let table = game.tables.getName(tableName) as RollTable;
+        let table: RollTable | null = game.tables.getName(tableName) as RollTable | null;
 
         if (!table) {
             // Search in compendium packs
-            table = (await this.findTableInCompendiums(tableName)) as RollTable;
+            table = await this.findTableInCompendiums(tableName);
         }
 
         if (!table) {
@@ -57,7 +66,7 @@ export class RollTableUtils {
      * @param {string} tableName - The name of the table to find
      * @returns {Promise<RollTable|null>} The found table or null
      */
-    static async findTableInCompendiums(tableName: string) {
+    static async findTableInCompendiums(tableName: string): Promise<RollTable | null> {
         for (const pack of game.packs) {
             if (pack.documentName !== 'RollTable') continue;
 
@@ -65,7 +74,8 @@ export class RollTableUtils {
             const entry = index.find((e) => e.name === tableName);
 
             if (entry) {
-                return await pack.getDocument(entry._id);
+                const document = await pack.getDocument(entry._id);
+                return document as unknown as RollTable;
             }
         }
         return null;
@@ -149,7 +159,7 @@ export class RollTableUtils {
      * @param {string} godName - Optional god name to filter results
      * @returns {Promise<TableResult>}
      */
-    static async rollGiftOfTheGods(godName = null) {
+    static async rollGiftOfTheGods(godName: string | null = null): Promise<RollTableResult | null> {
         const tableName = godName ? `Gifts of ${godName}` : 'Gifts of the Gods';
         return await this.rollTable(tableName, { displayChat: true });
     }
@@ -161,7 +171,7 @@ export class RollTableUtils {
      * @param {number} severity - The critical damage value
      * @returns {Promise<TableResult>}
      */
-    static async rollCriticalInjury(damageType, location, severity) {
+    static async rollCriticalInjury(damageType: string, location: string, severity: number): Promise<RollTableResult | null> {
         const tableName = `Critical ${damageType} - ${location}`;
         const roll = new Roll(`${severity}`);
         await roll.evaluate();
@@ -208,9 +218,12 @@ export class RollTableUtils {
             ok: {
                 icon: 'fas fa-dice',
                 label: 'Roll',
-                callback: async (event, button, dialog) => {
-                    const tableName = dialog.querySelector('[name="tableName"]').value;
-                    const modifier = parseInt(dialog.querySelector('[name="modifier"]').value) || 0;
+                callback: async (_event: Event, _button: HTMLButtonElement, dialog: Element) => {
+                    const dialogElement = dialog as RollTableDialog;
+                    const tableField = dialogElement.querySelector('[name="tableName"]') as HTMLSelectElement | null;
+                    const modifierField = dialogElement.querySelector('[name="modifier"]') as HTMLInputElement | null;
+                    const tableName = tableField?.value ?? '';
+                    const modifier = parseInt(modifierField?.value ?? '0', 10) || 0;
 
                     if (modifier !== 0) {
                         const roll = new Roll(`1d100 + ${modifier}`);

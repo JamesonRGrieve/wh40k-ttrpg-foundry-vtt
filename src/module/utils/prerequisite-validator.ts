@@ -5,6 +5,31 @@
  * Returns validation results with human-readable failure reasons.
  */
 
+import type { WH40KBaseActorDocument, WH40KSkill, WH40KSkillEntry } from '../types/global.d.ts';
+
+type Prerequisite = {
+    type: 'characteristic' | 'skill' | 'talent';
+    key: string;
+    value?: number;
+};
+
+type ValidationResult = {
+    valid: boolean;
+    unmet: string[];
+};
+
+type SinglePrerequisiteResult = {
+    valid: boolean;
+    reason?: string;
+};
+
+type CharacteristicAbbreviation = keyof typeof CHAR_ABBREVIATIONS;
+type ConfigCharacteristicLabel = {
+    abbreviation?: string;
+};
+
+type SkillLike = WH40KSkill | WH40KSkillEntry;
+
 /**
  * @typedef {Object} Prerequisite
  * @property {'characteristic'|'skill'|'talent'} type - Type of prerequisite
@@ -42,9 +67,9 @@ const CHAR_ABBREVIATIONS = {
  * @param {string} key - Input key (e.g., 'Fel', 'fellowship', 'Fellowship')
  * @returns {string} Normalized key (e.g., 'fellowship')
  */
-function normalizeCharacteristicKey(key) {
+function normalizeCharacteristicKey(key: string): string {
     const lower = key.toLowerCase();
-    return CHAR_ABBREVIATIONS[lower] ?? lower;
+    return lower in CHAR_ABBREVIATIONS ? CHAR_ABBREVIATIONS[lower as CharacteristicAbbreviation] : lower;
 }
 
 /**
@@ -53,16 +78,16 @@ function normalizeCharacteristicKey(key) {
  * @param {Prerequisite[]} prerequisites - Array of prerequisites to check
  * @returns {ValidationResult} Validation result
  */
-export function checkPrerequisites(actor, prerequisites) {
+export function checkPrerequisites(actor: WH40KBaseActorDocument, prerequisites: Prerequisite[]): ValidationResult {
     if (!prerequisites || prerequisites.length === 0) {
         return { valid: true, unmet: [] };
     }
 
-    const unmet = [];
+    const unmet: string[] = [];
 
     for (const prereq of prerequisites) {
         const result = checkSinglePrerequisite(actor, prereq);
-        if (!result.valid) {
+        if (!result.valid && result.reason) {
             unmet.push(result.reason);
         }
     }
@@ -79,7 +104,7 @@ export function checkPrerequisites(actor, prerequisites) {
  * @param {Prerequisite} prereq - The prerequisite to check
  * @returns {{valid: boolean, reason?: string}}
  */
-function checkSinglePrerequisite(actor, prereq) {
+function checkSinglePrerequisite(actor: WH40KBaseActorDocument, prereq: Prerequisite): SinglePrerequisiteResult {
     switch (prereq.type) {
         case 'characteristic':
             return checkCharacteristicPrereq(actor, prereq);
@@ -99,7 +124,7 @@ function checkSinglePrerequisite(actor, prereq) {
  * @param {Prerequisite} prereq
  * @returns {{valid: boolean, reason?: string}}
  */
-function checkCharacteristicPrereq(actor, prereq) {
+function checkCharacteristicPrereq(actor: WH40KBaseActorDocument, prereq: Prerequisite): SinglePrerequisiteResult {
     const charKey = normalizeCharacteristicKey(prereq.key);
     const characteristic = actor.system?.characteristics?.[charKey];
 
@@ -118,7 +143,7 @@ function checkCharacteristicPrereq(actor, prereq) {
     }
 
     // Get display name for the characteristic
-    const charConfig = CONFIG.wh40k?.characteristics?.[charKey];
+    const charConfig = CONFIG.wh40k?.characteristics?.[charKey] as ConfigCharacteristicLabel | undefined;
     const charLabel = charConfig?.abbreviation ?? prereq.key;
 
     return {
@@ -137,9 +162,9 @@ function checkCharacteristicPrereq(actor, prereq) {
  * @param {Prerequisite} prereq
  * @returns {{valid: boolean, reason?: string}}
  */
-function checkSkillPrereq(actor, prereq) {
+function checkSkillPrereq(actor: WH40KBaseActorDocument, prereq: Prerequisite): SinglePrerequisiteResult {
     const skillName = prereq.key;
-    const requiredLevel = prereq.value ?? 'trained'; // 'trained', 'plus10', or 'plus20'
+    const requiredLevel = prereq.value === 20 ? 'plus20' : prereq.value === 10 ? 'plus10' : 'trained';
 
     // Find the skill on the actor
     const skill = findSkill(actor, skillName);
@@ -173,7 +198,7 @@ function checkSkillPrereq(actor, prereq) {
  * @param {Prerequisite} prereq
  * @returns {{valid: boolean, reason?: string}}
  */
-function checkTalentPrereq(actor, prereq) {
+function checkTalentPrereq(actor: WH40KBaseActorDocument, prereq: Prerequisite): SinglePrerequisiteResult {
     const talentName = prereq.key.toLowerCase();
 
     // Check if actor has the talent as an item
@@ -196,7 +221,7 @@ function checkTalentPrereq(actor, prereq) {
  * @param {string} skillName - Skill name, optionally with specialization in parentheses
  * @returns {Object|null} The skill object or null
  */
-function findSkill(actor, skillName) {
+function findSkill(actor: WH40KBaseActorDocument, skillName: string): SkillLike | null {
     const skills = actor.system?.skills;
     if (!skills) return null;
 
@@ -220,7 +245,9 @@ function findSkill(actor, skillName) {
 
     // For specialist skills, find the entry
     if (skill.entries) {
-        return skill.entries.find((entry) => entry.name?.toLowerCase() === specialization || entry.slug?.toLowerCase() === specialization);
+        return (
+            skill.entries.find((entry: WH40KSkillEntry) => entry.name.toLowerCase() === specialization || entry.slug.toLowerCase() === specialization) ?? null
+        );
     }
 
     return null;
@@ -231,9 +258,9 @@ function findSkill(actor, skillName) {
  * @param {string} name - Skill display name
  * @returns {string} System skill key
  */
-function getSkillKey(name) {
+function getSkillKey(name: string): string {
     // Common mappings
-    const mappings = {
+    const mappings: Record<string, string> = {
         'common lore': 'commonLore',
         'scholastic lore': 'scholasticLore',
         'forbidden lore': 'forbiddenLore',
@@ -262,7 +289,7 @@ function getSkillKey(name) {
  * @param {string} requiredLevel - 'trained', 'plus10', or 'plus20'
  * @returns {boolean}
  */
-function checkSkillLevel(skill, requiredLevel) {
+function checkSkillLevel(skill: SkillLike, requiredLevel: 'trained' | 'plus10' | 'plus20'): boolean {
     switch (requiredLevel) {
         case 'plus20':
             return skill.plus20 === true;
@@ -280,7 +307,7 @@ function checkSkillLevel(skill, requiredLevel) {
  * @param {string} prereqString - Raw prerequisite string
  * @returns {Prerequisite|null}
  */
-export function parsePrerequisiteString(prereqString) {
+export function parsePrerequisiteString(prereqString: string): Prerequisite | null {
     if (!prereqString || prereqString.trim() === '') {
         return null;
     }

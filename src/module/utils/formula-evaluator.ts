@@ -13,6 +13,26 @@
  * - "(1-8|=3),(9-10|=4)" - Roll 1d10: 1-8=3 fate, 9-10=4 fate
  */
 
+import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+
+type CharacteristicBonusKey =
+    | 'toughness'
+    | 'willpower'
+    | 'strength'
+    | 'agility'
+    | 'intelligence'
+    | 'perception'
+    | 'fellowship'
+    | 'weaponSkill'
+    | 'ballisticSkill'
+    | 'influence';
+
+type FateCondition = {
+    min: number;
+    max: number;
+    value: number;
+};
+
 /**
  * Evaluate a wounds formula with characteristic bonus references.
  *
@@ -20,7 +40,7 @@
  * @param {Actor} actor - The actor to evaluate for (provides characteristic bonuses)
  * @returns {number} Evaluated wounds value
  */
-export function evaluateWoundsFormula(formula, actor) {
+export function evaluateWoundsFormula(formula: string, actor: WH40KBaseActorDocument): number {
     if (!formula || typeof formula !== 'string') {
         return 0;
     }
@@ -34,7 +54,7 @@ export function evaluateWoundsFormula(formula, actor) {
         let evaluated = trimmedFormula;
 
         // Map of characteristic abbreviations to their full names
-        const charMap = {
+        const charMap: Record<string, CharacteristicBonusKey> = {
             TB: 'toughness',
             WB: 'willpower',
             SB: 'strength',
@@ -51,9 +71,9 @@ export function evaluateWoundsFormula(formula, actor) {
         for (const [abbr, charName] of Object.entries(charMap)) {
             // Match patterns like "2xTB" or "TB" (with or without multiplier)
             const regex = new RegExp(`(\\d+)x${abbr}|${abbr}`, 'gi');
-            evaluated = evaluated.replace(regex, (match, multiplier) => {
+            evaluated = evaluated.replace(regex, (_match: string, multiplier?: string) => {
                 const bonus = actor?.system?.characteristics?.[charName]?.bonus || 0;
-                const mult = multiplier ? parseInt(multiplier) : 1;
+                const mult = multiplier ? parseInt(multiplier, 10) : 1;
                 return (bonus * mult).toString();
             });
         }
@@ -75,7 +95,7 @@ export function evaluateWoundsFormula(formula, actor) {
  * @param {string} formula - The fate formula (e.g., "(1-5|=2),(6-10|=3)")
  * @returns {number} Evaluated fate threshold value
  */
-export function evaluateFateFormula(formula) {
+export function evaluateFateFormula(formula: string): number {
     if (!formula || typeof formula !== 'string') {
         return 0;
     }
@@ -88,15 +108,15 @@ export function evaluateFateFormula(formula) {
         // Parse the conditional format: (range|=value),(range|=value),...
         // Example: "(1-5|=2),(6-10|=3)"
 
-        const conditions = [];
+        const conditions: FateCondition[] = [];
         const conditionRegex = /\((\d+)-(\d+)\|=(\d+)\)/g;
-        let match;
+        let match: RegExpExecArray | null;
 
         while ((match = conditionRegex.exec(trimmedFormula)) !== null) {
             conditions.push({
-                min: parseInt(match[1]),
-                max: parseInt(match[2]),
-                value: parseInt(match[3]),
+                min: parseInt(match[1] ?? '0', 10),
+                max: parseInt(match[2] ?? '0', 10),
+                value: parseInt(match[3] ?? '0', 10),
             });
         }
 
@@ -108,7 +128,7 @@ export function evaluateFateFormula(formula) {
         // Roll 1d10 to determine which condition applies
         const roll = new Roll('1d10');
         void roll.evaluate({ async: false });
-        const result = roll.total;
+        const result = typeof roll.total === 'number' ? roll.total : 0;
 
         // Find matching condition
         for (const condition of conditions) {
@@ -118,7 +138,7 @@ export function evaluateFateFormula(formula) {
         }
 
         // Fallback to first condition value if no match (shouldn't happen)
-        return conditions[0].value;
+        return conditions[0]?.value ?? 0;
     } catch (err) {
         console.error(`Failed to evaluate fate formula "${trimmedFormula}":`, err);
         return 0;
@@ -131,13 +151,13 @@ export function evaluateFateFormula(formula) {
  * @param {string} formula - The wounds formula
  * @returns {number} The multiplier (e.g., "2xTB" returns 2)
  */
-export function parseTBMultiplier(formula) {
+export function parseTBMultiplier(formula: string): number {
     if (!formula || typeof formula !== 'string') {
         return 0;
     }
 
     const match = formula.match(/(\d+)xTB/i);
-    return match ? parseInt(match[1]) : formula.match(/TB/i) ? 1 : 0;
+    return match ? parseInt(match[1] ?? '0', 10) : formula.match(/TB/i) ? 1 : 0;
 }
 
 /**
@@ -146,7 +166,7 @@ export function parseTBMultiplier(formula) {
  * @param {string} formula - The formula containing dice notation
  * @returns {string|null} The dice notation (e.g., "1d5+2") or null
  */
-export function parseDiceRoll(formula) {
+export function parseDiceRoll(formula: string): string | null {
     if (!formula || typeof formula !== 'string') {
         return null;
     }
@@ -161,7 +181,7 @@ export function parseDiceRoll(formula) {
  * @param {string} formula - The wounds formula
  * @returns {string} Description (e.g., "2×TB + 1d5+2")
  */
-export function describeWoundsFormula(formula) {
+export function describeWoundsFormula(formula: string): string {
     if (!formula || typeof formula !== 'string') {
         return 'None';
     }
@@ -176,14 +196,14 @@ export function describeWoundsFormula(formula) {
  * @param {string} formula - The fate formula
  * @returns {string} Description (e.g., "1d10: 1-5=2, 6-10=3")
  */
-export function describeFateFormula(formula) {
+export function describeFateFormula(formula: string): string {
     if (!formula || typeof formula !== 'string') {
         return 'None';
     }
 
-    const conditions = [];
+    const conditions: string[] = [];
     const conditionRegex = /\((\d+)-(\d+)\|=(\d+)\)/g;
-    let match;
+    let match: RegExpExecArray | null;
 
     while ((match = conditionRegex.exec(formula)) !== null) {
         conditions.push(`${match[1]}-${match[2]}=${match[3]}`);
