@@ -5,6 +5,7 @@
  */
 
 import { GrantsProcessor, GRANT_MODE } from './grants-processor.ts';
+import type { WH40KBaseActorDocument, WH40KItemDocument } from '../types/global.d.ts';
 
 export class OriginGrantsProcessor {
     /**
@@ -22,7 +23,7 @@ export class OriginGrantsProcessor {
      *   insanityBonus: number
      * }>}
      */
-    static async processOriginGrants(originItem, actor) {
+    static async processOriginGrants(originItem: WH40KItemDocument, actor: WH40KBaseActorDocument) {
         // Use unified processor in batch mode
         return await GrantsProcessor.processGrants(originItem, actor, {
             mode: GRANT_MODE.BATCH,

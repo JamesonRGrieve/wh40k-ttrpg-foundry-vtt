@@ -1,6 +1,43 @@
 {
-  "completed": [],
-  "failed": [],
+  "completed": [
+    "src/module/data/shared/activation-template.ts",
+    "src/module/data/shared/attack-template.ts",
+    "src/module/data/shared/equippable-template.ts",
+    "src/module/rules/aim.ts",
+    "src/module/rules/damage-type.ts",
+    "src/module/rules/hit-locations.ts",
+    "src/module/data/actor/starship.ts",
+    "src/module/helpers/game-icons.ts",
+    "src/module/utils/stat-block-validator.ts",
+    "src/module/data/item/ship-upgrade.ts",
+    "src/module/data/item/ship-component.ts",
+    "src/module/config/advancements/index.ts",
+    "src/module/data/item/ship-weapon.ts",
+    "src/module/utils/encumbrance-calculator.ts",
+    "src/module/utils/formula-evaluator.ts",
+    "src/module/utils/origin-grants-processor.ts",
+    "src/module/utils/talent-grants.ts",
+    "src/module/utils/xp-transaction.ts",
+    "src/module/utils/prerequisite-validator.ts",
+    "src/module/utils/roll-table-utils.ts",
+    "src/module/rolls/force-field-data.ts",
+    "src/module/rules/combat-actions.ts"
+  ],
+  "failed": [
+    "src/module/rules/attack-specials.ts",
+    "src/module/applications/prompts/righteous-fury-dialog.ts",
+    "src/module/rules/range.ts",
+    "src/module/rules/weapon-training.ts",
+    "src/module/helpers/craftsmanship-helper.ts",
+    "src/module/rolls/roll-helpers.ts",
+    "src/module/rules/ammo.ts",
+    "src/module/rules/attack-options.ts",
+    "src/module/helpers/skill-key-helper.ts",
+    "src/module/documents/token.ts",
+    "src/module/rules/weapon-quality-effects.ts",
+    "src/module/utils/origin-chart-layout.ts",
+    "src/module/rules/active-effects.ts"
+  ],
   "skipped": [],
-  "start_errors": 1548
+  "start_errors": 1446
 }
