@@ -66,7 +66,7 @@ export default class ActorDataModel extends SystemDataModel {
      * @returns {object}
      */
     getRollData({ deterministic = false } = {}): Record<string, unknown> {
-        const data: Record<string, unknown> = { ...this };
+        const data: Record<string, unknown> = { ...(this as unknown as Record<string, unknown>) };
         return data;
     }
 }

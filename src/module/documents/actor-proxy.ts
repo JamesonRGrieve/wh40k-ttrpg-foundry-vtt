@@ -1,10 +1,14 @@
 import { WH40KBaseActor } from './base-actor.ts';
 
+type ActorConfigLike = {
+    documentClasses: Record<string, typeof WH40KBaseActor | undefined>;
+};
+
 const actorHandler: ProxyHandler<typeof WH40KBaseActor> = {
     construct(_: typeof WH40KBaseActor, args: any[]): Actor {
         const type: string | undefined = args[0]?.type;
-        const cls = CONFIG.Actor.documentClasses[type] ?? WH40KBaseActor;
-        return new cls(...args);
+        const cls = type ? (CONFIG.Actor as ActorConfigLike).documentClasses[type] ?? WH40KBaseActor : WH40KBaseActor;
+        return new cls(...args) as unknown as Actor;
     },
 };
 

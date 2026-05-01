@@ -63,7 +63,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
 
         /** @inheritDoc */
         async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
-            await super._onRender(context, options);
+            await super._onRender(context, options as never);
 
             if (this._whatIfActive) {
                 this._renderWhatIfOverlay();

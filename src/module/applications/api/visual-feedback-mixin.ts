@@ -40,7 +40,7 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
 
         /** @override */
         async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
-            await super._onRender(context, options);
+            await super._onRender(context, options as never);
             this._captureCurrentValues();
         }
 

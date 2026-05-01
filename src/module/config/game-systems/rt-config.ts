@@ -66,7 +66,7 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     }
 
     resolveCareerKey(actor: WH40KBaseActor): string | null {
-        const careerName = actor.system?.originPath?.career;
+        const careerName = actor.system?.originPath?.career as string | undefined;
         return careerName ? getCareerKeyFromName(careerName) : null;
     }
 
