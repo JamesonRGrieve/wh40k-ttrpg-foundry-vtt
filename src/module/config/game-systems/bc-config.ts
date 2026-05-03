@@ -163,7 +163,8 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
         const baseCost = super.getTalentAdvanceCost(actor, talent, context);
         if (baseCost == null) return null;
 
-        const advAlignment = (context?.advanceAlignment as ChaosAlignment) ?? talent.system?.chaosAlignment ?? 'unaligned';
+        const talentData = talent as Record<string, unknown>;
+        const advAlignment = (context?.advanceAlignment as ChaosAlignment) ?? (talentData.system as Record<string, unknown>)?.chaosAlignment ?? 'unaligned';
         const charAlignment = this.getCharacterAlignment(actor);
         const modifier = this.getAlignmentCostModifier(charAlignment, advAlignment);
 
