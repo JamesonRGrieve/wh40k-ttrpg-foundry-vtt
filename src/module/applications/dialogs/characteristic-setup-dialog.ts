@@ -1,5 +1,5 @@
 /**
- * @file CharacteristicSetupDialog - Interactive dialog for setting up characteristic rolls
+ * @gulpfile.js CharacteristicSetupDialog - Interactive dialog for setting up characteristic rolls
  * Provides drag-and-drop interface for assigning dice rolls to characteristics during character creation.
  *
  * Usage:
@@ -37,8 +37,8 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /*  Configuration                               */
     /* -------------------------------------------- */
 
-    /** @override */
-    static DEFAULT_OPTIONS = {
+    /** @foundry-v14-overrides.d.ts */
+    static readonly DEFAULT_OPTIONS = {
         id: 'characteristic-setup-{id}',
         classes: ['wh40k-rpg', 'characteristic-setup-dialog'],
         tag: 'div',
@@ -62,7 +62,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS = {
         content: {
             template: 'systems/wh40k-rpg/templates/dialogs/characteristic-setup.hbs',
@@ -87,14 +87,14 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     constructor(actor: WH40KBaseActor, options: ApplicationV2Config.DefaultOptions = {}) {
-        super(options);
+        super(options as Record<string, unknown>);
         this.#actor = actor;
         this.#initializeState();
     }
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get title() {
         return game.i18n.localize('WH40K.CharacteristicSetup.Title');
     }
@@ -123,7 +123,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -193,7 +193,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         super._onRender(context, options);
         this.#activateListeners();
@@ -457,7 +457,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (!this.#applied && this.#resolve) {
             this.#resolve(false);
@@ -475,7 +475,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     }
 
     static async open(actor: WH40KBaseActor): Promise<boolean> {
-        if (!actor || (actor.type !== 'acolyte' && actor.type !== 'character')) {
+        if (!actor || (String(actor.type) !== 'acolyte' && String(actor.type) !== 'character')) {
             ui.notifications.error('Characteristic setup is only available for characters.');
             return false;
         }
