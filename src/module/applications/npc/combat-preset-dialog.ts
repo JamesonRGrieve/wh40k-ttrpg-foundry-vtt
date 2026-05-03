@@ -262,7 +262,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
             'system.tags': preset.tags,
         };
 
-        await npc.update(updates);
+        await npc.update(updates as Record<string, unknown>);
         ui.notifications.info(`Applied preset "${preset.name}" to ${npc.name}`);
     }
 
