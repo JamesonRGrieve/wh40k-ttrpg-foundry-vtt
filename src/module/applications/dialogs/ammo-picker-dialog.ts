@@ -1,5 +1,5 @@
 /**
- * @file AmmoPickerDialog - Allows selecting ammunition type for weapon reload
+ * @gulpfile.js AmmoPickerDialog - Allows selecting ammunition type for weapon reload
  * Follows ConfirmationDialog pattern with ApplicationV2 + HandlebarsApplicationMixin
  *
  * Usage:
@@ -40,8 +40,8 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /*  Configuration                               */
     /* -------------------------------------------- */
 
-    /** @override */
-    static DEFAULT_OPTIONS = {
+    /** @foundry-v14-overrides.d.ts */
+    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         id: 'ammo-picker-{id}',
         classes: ['wh40k-rpg', 'ammo-picker-dialog'],
         tag: 'div',
@@ -60,11 +60,11 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
             selectAmmo: AmmoPickerDialog.#onSelect,
             cancel: AmmoPickerDialog.#onCancel,
         },
-    };
+    } as unknown as ApplicationV2Config.DefaultOptions;
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS = {
         content: {
             template: 'systems/wh40k-rpg/templates/dialogs/ammo-picker.hbs',
@@ -87,7 +87,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
         config: { ammoItems: WH40KItem[]; currentAmmoUuid?: string; weaponName: string; clipMax: number },
         options: ApplicationV2Config.DefaultOptions = {},
     ) {
-        super(options);
+        super(options as Record<string, unknown>);
         this.#config = {
             ammoItems: config.ammoItems || [],
             currentAmmoUuid: config.currentAmmoUuid || '',
@@ -98,7 +98,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get title() {
         return `Load Ammunition — ${this.#config.weaponName}`;
     }
@@ -107,7 +107,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AmmoPickerContext> {
         const context = await super._prepareContext(options);
 
@@ -165,12 +165,12 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /*  Lifecycle                                   */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async close(options?: Record<string, unknown>): Promise<void> {
         if (!this.#resolved && this.#resolve) {
             this.#resolve(null);
         }
-        return super.close(options);
+        return super.close(options) as unknown as Promise<void>;
     }
 
     /* -------------------------------------------- */
