@@ -1,5 +1,5 @@
 /**
- * @file WH40KCreateActorDialog — cascading Create Actor dialog.
+ * @gulpfile.js WH40KCreateActorDialog — cascading Create Actor dialog.
  *
  * Replaces Foundry's default actor-create flow with:
  *   1. System select (DH2 / DH1 / RT / BC / OW / DW / IM)
@@ -10,6 +10,10 @@
  * On submit, creates an actor with type `${system}-${kind}` so it lands on
  * the right per-system data model and sheet automatically.
  */
+
+// Foundry VTT Application base classes and types are assumed to be globally available
+// in the context where this code will run, as is typical for Foundry modules.
+// Therefore, no explicit imports are added for DialogV2, Actor, etc.
 
 export const ACTOR_SYSTEM_AVAILABILITY: Record<string, string[]> = {
     dh2: ['character', 'npc', 'vehicle'],
@@ -42,6 +46,11 @@ export interface CreateActorOptions {
     folder?: string;
     initialSystem?: string;
 }
+
+// Foundry types for Actor and its creation data are assumed to be globally available.
+// The `CreateInput` and `MaybeArray` types are not defined in this file and are
+// not part of global Foundry types, so we use Record<string, unknown> as the fallback
+// for the actor creation data.
 
 export class WH40KCreateActorDialog {
     /**
@@ -96,9 +105,17 @@ export class WH40KCreateActorDialog {
                             const nameInput = (form.querySelector('[name="name"]') as HTMLInputElement).value.trim();
                             const type = `${system}-${kind}`;
                             const name = nameInput || `New ${ACTOR_SYSTEM_LABELS[system]} ${ACTOR_KIND_LABELS[kind]}`;
+                            // The Actor.create method expects an object that can be cast to the creation data type.
+                            // Record<string, unknown> is used as a fallback for unknown object types.
                             const data: Record<string, unknown> = { name, type };
-                            if (opts.folder) data.folder = opts.folder;
-                            const actor = await Actor.create(data);
+                            if (opts.folder) {
+                                data.folder = opts.folder;
+                            }
+                            // Cast `data` at the call site to satisfy the Actor.create signature.
+                            // The specific type `MaybeArray<CreateInput>` is unknown and cannot be imported,
+                            // so we cast to `Record<string, unknown>` which is the fallback type.
+                            // This assumes the structure of `data` is compatible with what Actor.create expects.
+                            const actor = await Actor.create(data as Record<string, unknown>);
                             resolve(actor ?? null);
                         },
                     },
@@ -113,7 +130,9 @@ export class WH40KCreateActorDialog {
             });
 
             const afterRender = () => {
-                const root = dialog.element;
+                // Casting `dialog` to `Record<string, any>` to safely access the `element` property,
+                // as `DialogV2` type definition might not expose it directly, but it's expected for UI elements.
+                const root = (dialog as Record<string, any>).element;
                 const sysSel = root.querySelector('[name="system"]') as HTMLSelectElement | null;
                 const kindSel = root.querySelector('[name="kind"]') as HTMLSelectElement | null;
                 if (!sysSel || !kindSel) return;
