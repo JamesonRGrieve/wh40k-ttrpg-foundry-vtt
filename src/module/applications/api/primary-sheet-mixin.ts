@@ -84,7 +84,10 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
 
         /** @inheritDoc */
         _configureRenderOptions(options: ApplicationV2Config.RenderOptions): void {
-            super._configureRenderOptions(options);
+            const prototype = Object.getPrototypeOf(PrimarySheetWH40K.prototype) as {
+                _configureRenderOptions?: (this: PrimarySheetWH40K, options: ApplicationV2Config.RenderOptions) => void;
+            };
+            prototype._configureRenderOptions?.call(this, options);
 
             const renderContext = (options as any).renderContext;
             let mode = (options as any).mode;
@@ -114,7 +117,10 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
 
         /** @inheritDoc */
         async _renderFrame(options: ApplicationV2Config.RenderOptions): Promise<HTMLElement> {
-            const html = await super._renderFrame(options);
+            const prototype = Object.getPrototypeOf(PrimarySheetWH40K.prototype) as {
+                _renderFrame?: (this: PrimarySheetWH40K, options: ApplicationV2Config.RenderOptions) => Promise<HTMLElement>;
+            };
+            const html = prototype._renderFrame ? await prototype._renderFrame.call(this, options) : this.element;
             if (!game.user.isGM && this.document.limited) html.classList.add('limited');
             return html;
         }
@@ -210,7 +216,10 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
 
         /** @inheritDoc */
         async _onFirstRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
-            await super._onFirstRender(context, options);
+            const prototype = Object.getPrototypeOf(PrimarySheetWH40K.prototype) as {
+                _onFirstRender?: (this: PrimarySheetWH40K, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions) => Promise<void>;
+            };
+            await prototype._onFirstRender?.call(this, context, options);
             if (this.tabGroups.primary) this.element.classList.add(`tab-${this.tabGroups.primary}`);
         }
 
@@ -330,7 +339,10 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
 
         /** @inheritDoc */
         changeTab(tab: string, group: string, options: Record<string, unknown>): void {
-            super.changeTab(tab, group, options);
+            const prototype = Object.getPrototypeOf(PrimarySheetWH40K.prototype) as {
+                changeTab?: (this: PrimarySheetWH40K, tab: string, group: string, options: Record<string, unknown>) => void;
+            };
+            prototype.changeTab?.call(this, tab, group, options);
             if (group !== 'primary') return;
             this.element.className = this.element.className.replace(/tab-\w+/g, '');
             this.element.classList.add(`tab-${tab}`);
@@ -376,7 +388,12 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
 
         _onClickAction(event: Event, target: HTMLElement): void {
             if (target.dataset.action === 'addDocument') this._addDocument(event, target);
-            else super._onClickAction(event as PointerEvent, target as never);
+            else {
+                const prototype = Object.getPrototypeOf(PrimarySheetWH40K.prototype) as {
+                    _onClickAction?: (this: PrimarySheetWH40K, event: PointerEvent, target: HTMLElement) => void;
+                };
+                prototype._onClickAction?.call(this, event as PointerEvent, target);
+            }
         }
 
         /* -------------------------------------------- */

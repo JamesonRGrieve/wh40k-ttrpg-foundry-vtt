@@ -70,7 +70,10 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
 
         /** @inheritDoc */
         _configureRenderOptions(options: ApplicationV2Config.RenderOptions): void {
-            super._configureRenderOptions(options);
+            const prototype = Object.getPrototypeOf(BaseApplicationWH40K.prototype) as {
+                _configureRenderOptions?: (this: BaseApplicationWH40K, options: ApplicationV2Config.RenderOptions) => void;
+            };
+            prototype._configureRenderOptions?.call(this, options);
             if (options.isFirstRender && (this as unknown as { hasFrame: boolean }).hasFrame) {
                 options.window ||= {};
                 options.window.subtitle ||= this.subtitle;
@@ -81,7 +84,10 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
 
         /** @inheritDoc */
         async _onFirstRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
-            await super._onFirstRender(context, options);
+            const prototype = Object.getPrototypeOf(BaseApplicationWH40K.prototype) as {
+                _onFirstRender?: (this: BaseApplicationWH40K, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions) => Promise<void>;
+            };
+            await prototype._onFirstRender?.call(this, context, options);
             this._renderContainers(context, options);
         }
 
@@ -153,14 +159,25 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
                     }
                 }
             }
-            super._replaceHTML(result, content, options);
+            const prototype = Object.getPrototypeOf(BaseApplicationWH40K.prototype) as {
+                _replaceHTML?: (
+                    this: BaseApplicationWH40K,
+                    result: Record<string, HTMLElement>,
+                    content: HTMLElement,
+                    options: ApplicationV2Config.RenderOptions,
+                ) => void;
+            };
+            prototype._replaceHTML?.call(this, result, content, options);
         }
 
         /* -------------------------------------------- */
 
         /** @inheritDoc */
         _updateFrame(options: ApplicationV2Config.RenderOptions): void {
-            super._updateFrame(options);
+            const prototype = Object.getPrototypeOf(BaseApplicationWH40K.prototype) as {
+                _updateFrame?: (this: BaseApplicationWH40K, options: ApplicationV2Config.RenderOptions) => void;
+            };
+            prototype._updateFrame?.call(this, options);
             if (options.window?.subtitle) {
                 const subtitle = (this as unknown as { element: HTMLElement }).element.querySelector('.window-header > .window-subtitle') as HTMLElement | null;
                 if (subtitle) subtitle.innerText = options.window.subtitle;

@@ -64,7 +64,7 @@ export class TargetedActionManager {
         if (source) {
             sourceToken = (source as Token).actor ? (source as Token) : (source as WH40KBaseActor).getActiveTokens()[0];
         } else {
-            const controlled = game.canvas.tokens.controlled;
+            const controlled = game.canvas?.tokens?.controlled;
             if (!controlled || controlled.length === 0) {
                 ui.notifications.warn('You need to control a token!');
                 return undefined;

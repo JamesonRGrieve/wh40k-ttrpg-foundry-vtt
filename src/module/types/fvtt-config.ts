@@ -81,6 +81,31 @@ import type {
 } from '../data/item/_module.ts';
 
 declare module 'fvtt-types/configuration' {
+    interface SystemNameConfig {
+        name: 'wh40k-rpg';
+    }
+
+    interface SettingConfig {
+        [key: `wh40k-rpg.${string}`]: foundry.helpers.ClientSettings.Type;
+    }
+
+    interface FlagConfig {
+        Actor: {
+            'wh40k-rpg': Record<string, unknown>;
+            'rt'?: Record<string, unknown>;
+        };
+        Item: {
+            'wh40k-rpg': Record<string, unknown>;
+            'rt'?: Record<string, unknown>;
+        };
+        ChatMessage: {
+            'wh40k-rpg': Record<string, unknown>;
+        };
+        User: {
+            'wh40k-rpg': Record<string, unknown>;
+        };
+    }
+
     interface DocumentClassConfig {
         // WH40KActorProxy is a Proxy around WH40KBaseActor — its type is typeof WH40KBaseActor
         Actor: typeof WH40KBaseActor;
@@ -88,6 +113,22 @@ declare module 'fvtt-types/configuration' {
         ActiveEffect: typeof WH40KActiveEffect;
         ChatMessage: typeof ChatMessageWH40K;
         TokenDocument: typeof TokenDocumentWH40K;
+    }
+
+    interface ConfiguredActor<SubType extends Actor.SubType> {
+        document: WH40KBaseActor;
+    }
+
+    interface ConfiguredItem<SubType extends Item.SubType> {
+        document: WH40KItem;
+    }
+
+    interface ConfiguredActiveEffect<SubType extends ActiveEffect.SubType> {
+        document: WH40KActiveEffect;
+    }
+
+    interface ConfiguredChatMessage<SubType extends ChatMessage.SubType> {
+        document: ChatMessageWH40K;
     }
 
     interface DataModelConfig {

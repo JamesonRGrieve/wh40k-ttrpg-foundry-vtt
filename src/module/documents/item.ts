@@ -22,6 +22,11 @@ type OriginActorLike = WH40KBaseActor & {
 
 export class WH40KItem extends WH40KItemContainer {
     declare system: WH40KItemSystemData;
+
+    async toChat(): Promise<void> {
+        await this.sendToChat();
+    }
+
     static #pruneUndefined(value: unknown): unknown {
         if (Array.isArray(value)) {
             return value.map((entry) => this.#pruneUndefined(entry));

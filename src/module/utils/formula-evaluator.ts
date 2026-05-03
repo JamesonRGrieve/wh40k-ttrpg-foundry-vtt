@@ -79,10 +79,9 @@ export function evaluateWoundsFormula(formula: string, actor: WH40KBaseActorDocu
         }
 
         // Now evaluate dice notation using Foundry's Roll class
-        const roll = new Roll(evaluated);
-        void roll.evaluate({ async: false });
-
-        return Math.max(0, Math.floor(roll.total));
+        const roll = new Roll(evaluated).evaluateSync();
+        const total = typeof roll.total === 'number' ? roll.total : 0;
+        return Math.max(0, Math.floor(total));
     } catch (err) {
         console.error(`Failed to evaluate wounds formula "${trimmedFormula}":`, err);
         return 0;
@@ -126,8 +125,7 @@ export function evaluateFateFormula(formula: string): number {
         }
 
         // Roll 1d10 to determine which condition applies
-        const roll = new Roll('1d10');
-        void roll.evaluate({ async: false });
+        const roll = new Roll('1d10').evaluateSync();
         const result = typeof roll.total === 'number' ? roll.total : 0;
 
         // Find matching condition

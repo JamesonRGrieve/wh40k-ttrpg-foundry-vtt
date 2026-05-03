@@ -373,7 +373,8 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /** @override */
     get title(): string {
-        const base = `${this.document.type === 'character' ? 'Player Character' : this.document.type}: ${this.document.name}`;
+        const actorType = String(this.document.type);
+        const base = `${actorType.includes('character') ? 'Player Character' : actorType}: ${this.document.name}`;
         return `${base} — Drag and Drop from Compendium to Add`;
     }
 
@@ -686,11 +687,12 @@ export default class CharacterSheet extends BaseActorSheet {
             const prefix = gameSystem === 'dh2e' ? 'dh2' : gameSystem === 'dh1e' ? 'dh1' : gameSystem;
             if (!packName.startsWith(prefix) && !packName.startsWith('homebrew')) continue;
 
-            const index = await pack.getIndex({ fields: ['type', 'system.step'] });
+            const index = (await pack.getIndex({
+                fields: ['type', 'system.step'],
+            })) as unknown as Array<{ _id: string; name: string; type?: string; system?: { step?: string } }>;
             for (const entry of index) {
                 if (entry.type !== 'originPath') continue;
-                const entrySystem = entry.system as { step?: string } | undefined;
-                const step = entrySystem?.step;
+                const step = entry.system?.step;
                 if (!step) continue;
                 if (!stepNames[step]) stepNames[step] = new Set();
                 stepNames[step].add(entry.name);
@@ -1214,7 +1216,7 @@ export default class CharacterSheet extends BaseActorSheet {
         });
 
         // Prepare active effects data
-        sheetContext.effects = this.actor.effects.map((effect: ActiveEffect) => {
+        sheetContext.effects = this.actor.effects.map((effect) => {
             return {
                 id: effect.id,
                 label: effect.name,
@@ -1404,7 +1406,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareOverviewContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
         // Add Active Effects data
-        context.effects = this.actor.effects.map((effect: ActiveEffect) => ({
+        context.effects = this.actor.effects.map((effect) => ({
             id: effect.id,
             name: effect.name,
             icon: effect.icon,
@@ -1432,7 +1434,7 @@ export default class CharacterSheet extends BaseActorSheet {
         await this._prepareTabPartContext('overview', ctx, options);
 
         // Add Active Effects data for dashboard preview
-        const effects = this.actor.effects.map((effect: ActiveEffect) => ({
+        const effects = this.actor.effects.map((effect) => ({
             id: effect.id,
             name: effect.name,
             icon: effect.icon,
@@ -1932,7 +1934,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const currentFavorites = (this.actor.system as Record<string, unknown> & { favoriteCombatActions?: string[] }).favoriteCombatActions || [];
         const newFavorites = currentFavorites.includes(actionKey) ? currentFavorites.filter((k: string) => k !== actionKey) : [...currentFavorites, actionKey];
 
-        await this.actor.update({ 'system.favoriteCombatActions': newFavorites });
+        await this.actor.update({ 'system.favoriteCombatActions': newFavorites } as Record<string, unknown>);
     }
 
     /**
@@ -2068,9 +2070,9 @@ export default class CharacterSheet extends BaseActorSheet {
         }
 
         // Store movement action on token flags
-        await token.update({ 'flags.wh40k-rpg.movementAction': movementType });
+        await token.update({ 'flags.wh40k-rpg.movementAction': movementType } as Record<string, unknown>);
 
-        const config = ((CONFIG as Record<string, unknown>).wh40k as Record<string, unknown> | undefined)?.movementTypes as
+        const config = ((CONFIG as unknown as Record<string, unknown>).wh40k as Record<string, unknown> | undefined)?.movementTypes as
             | Record<string, { label?: string }>
             | undefined;
         const movementConfig = config?.[movementType];
@@ -2311,7 +2313,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         if (!itemsData.length) return;
 
-        await targetActor.createEmbeddedDocuments('Item', itemsData);
+        await targetActor.createEmbeddedDocuments('Item', itemsData as unknown as Parameters<typeof targetActor.createEmbeddedDocuments<'Item'>>[1]);
         await sourceActor.deleteEmbeddedDocuments('Item', itemIds);
         ui.notifications.info(`Gave ${itemsData.length} item(s) to ${targetActor.name}.`);
     }
@@ -2418,7 +2420,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const acquisitionList = Array.isArray(acquisitions) ? acquisitions : [];
         const updatedAcquisitions = structuredClone(acquisitionList);
         updatedAcquisitions.push({ name: '', availability: '', modifier: 0, notes: '', acquired: false });
-        await this.actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions });
+        await this.actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -2435,13 +2437,13 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const acquisitions = this.actor.system?.rogueTrader?.acquisitions;
         if (!Array.isArray(acquisitions)) {
-            await this.actor.update({ 'system.rogueTrader.acquisitions': [] });
+            await this.actor.update({ 'system.rogueTrader.acquisitions': [] } as Record<string, unknown>);
             return;
         }
 
         const updatedAcquisitions = structuredClone(acquisitions);
         updatedAcquisitions.splice(index, 1);
-        await this.actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions });
+        await this.actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -3108,12 +3110,12 @@ export default class CharacterSheet extends BaseActorSheet {
             await this.actor.createEmbeddedDocuments('ActiveEffect', [
                 {
                     name: 'New Effect',
-                    icon: 'icons/svg/aura.svg',
+                    img: 'icons/svg/aura.svg',
                     disabled: false,
                     duration: {},
                     changes: [],
                 },
-            ]);
+            ] as unknown as Parameters<typeof this.actor.createEmbeddedDocuments<'ActiveEffect'>>[1]);
 
             this._notify('info', 'New effect created', {
                 duration: 2000,

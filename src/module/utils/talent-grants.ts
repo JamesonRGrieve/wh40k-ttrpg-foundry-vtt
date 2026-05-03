@@ -5,8 +5,8 @@
  * Now uses the unified GrantsProcessor for all grant operations.
  */
 
-import { GrantsProcessor, GRANT_MODE } from './grants-processor.ts';
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../types/global.d.ts';
+import { GrantsProcessor, GRANT_MODE } from './grants-processor.ts';
 
 /**
  * Process grants from a newly added talent.
@@ -18,7 +18,7 @@ import type { WH40KBaseActorDocument, WH40KItemDocument } from '../types/global.
  * @returns {Promise<void>}
  */
 export async function processTalentGrants(talent: WH40KItemDocument, actor: WH40KBaseActorDocument, depth = 0): Promise<void> {
-    if (!talent || talent.type !== 'talent') return;
+    if (talent?.type !== 'talent') return;
     if (!actor) return;
 
     // Check if this talent grants anything

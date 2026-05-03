@@ -30,6 +30,21 @@ type ItemModifierCarrier = WH40KItem & {
 export class WH40KBaseActor extends Actor {
     declare system: WH40KActorSystemData;
     declare items: foundry.utils.Collection<WH40KItem>;
+
+    async rollCharacteristicCheck(_characteristic: string): Promise<unknown> {
+        return null;
+    }
+
+    async rollWeaponAction(item: WH40KItem): Promise<unknown> {
+        return this.rollItem(item.id ?? '');
+    }
+
+    async rollPsychicPower(item: WH40KItem): Promise<unknown> {
+        return this.rollItem(item.id ?? '');
+    }
+
+    async spendFate(): Promise<void> {}
+
     /* -------------------------------------------- */
     /*  Descendant Document Hooks                   */
     /* -------------------------------------------- */

@@ -28,7 +28,6 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
         classes: ['wh40k-rpg', 'dialog', 'standard-form'],
         window: {
             contentTag: 'form',
-            minimizable: false,
         },
         position: {
             width: 400,
@@ -76,7 +75,7 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
         return new Promise((resolve, reject) => {
             this._resolve = resolve;
             this._reject = reject;
-            this.addEventListener(
+            (this as unknown as EventTarget).addEventListener(
                 'close',
                 () => {
                     if (!this._submitted) resolve(null);

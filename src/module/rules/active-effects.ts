@@ -107,7 +107,11 @@ export async function createEffect(actor: WH40KBaseActorDocument, effectData: Ef
         flags: effectData.flags ?? {},
     };
 
-    return await actor.createEmbeddedDocuments('ActiveEffect', [data], options);
+    return await actor.createEmbeddedDocuments(
+        'ActiveEffect',
+        [data] as unknown as Parameters<typeof actor.createEmbeddedDocuments<'ActiveEffect'>>[1],
+        options,
+    );
 }
 
 /**
@@ -318,8 +322,8 @@ export async function createTemporaryEffect(
  * @returns {Promise<void>}
  */
 export async function removeEffects(actor: WH40KBaseActorDocument, filter: (effect: ActiveEffect) => boolean): Promise<void> {
-    const effects = actor.effects.filter(filter);
-    const ids = effects.map((e: ActiveEffect) => e.id).filter((id): id is string => Boolean(id));
+    const effects = actor.effects.filter((effect) => filter(effect as unknown as ActiveEffect));
+    const ids = effects.map((e) => e.id).filter((id): id is string => Boolean(id));
     if (ids.length) {
         await actor.deleteEmbeddedDocuments('ActiveEffect', ids);
     }

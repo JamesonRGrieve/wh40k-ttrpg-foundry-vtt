@@ -20,7 +20,7 @@ type ActorType = WH40KAcolyte | WH40KNPC | WH40KBaseActor;
  * Uses Foundry V13's native ContextMenu with fixed positioning.
  */
 export class WH40KContextMenu extends applicationUX.ContextMenu {
-    constructor(...args: any[]) {
+    constructor(...args: ConstructorParameters<typeof applicationUX.ContextMenu>) {
         super(...args);
     }
 
@@ -318,7 +318,9 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                 {
                     name: 'Edit Item',
                     icon: '<i class="fas fa-edit"></i>',
-                    callback: () => item.sheet?.render(true),
+                    callback: () => {
+                        item.sheet?.render(true);
+                    },
                 },
                 {
                     name: 'Duplicate',
@@ -468,7 +470,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                 const fate = system.fate as Record<string, unknown> | undefined;
                 const currentTotal = (fate?.total as number) ?? 0;
                 if (currentTotal > 0) {
-                    await this.actor.update({ 'system.fate.total': currentTotal - 1 });
+                    await this.actor.update({ 'system.fate.total': currentTotal - 1 } as Record<string, unknown>);
                     ui.notifications.warn('Fate Point burned! Maximum reduced permanently.');
                 }
             }

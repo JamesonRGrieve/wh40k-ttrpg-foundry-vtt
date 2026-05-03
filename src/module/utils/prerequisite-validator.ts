@@ -150,8 +150,8 @@ function checkCharacteristicPrereq(actor: WH40KBaseActorDocument, prereq: Prereq
         valid: false,
         reason: game.i18n.format('WH40K.Advancement.Prereq.Characteristic', {
             char: charLabel,
-            required: requiredValue,
-            current: currentValue,
+            required: String(requiredValue),
+            current: String(currentValue),
         }),
     };
 }

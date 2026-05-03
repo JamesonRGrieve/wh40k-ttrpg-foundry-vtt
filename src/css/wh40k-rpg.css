@@ -615,30 +615,25 @@ body.theme-dark {
     animation: statIncrease 0.6s ease-out;
 }
 
-
 /* Decrease animation - red flash with shake */
 .wh40k-stat-decrease {
     animation: statDecrease 0.6s ease-out;
 }
-
 
 /* Generic value change animation - gold glow */
 .wh40k-stat-changed {
     animation: statChanged 0.5s ease-out;
 }
 
-
 /* Critical warning pulse */
 .wh40k-stat-critical {
     animation: statCritical 1.5s ease-in-out infinite;
 }
 
-
 /* Success glow */
 .wh40k-stat-success {
     animation: statSuccess 0.8s ease-out;
 }
-
 
 /* ── source: src/css/abstracts/_unified-components.css ── */
 /* ============================================ */
@@ -1368,8 +1363,6 @@ body.theme-dark {
         animation: pulse-critical-intense 1s ease-in-out infinite;
     }
 }
-
-
 
 /* Vital stat header */
 .wh40k-vital-stat-header {
@@ -2230,7 +2223,6 @@ body.theme-dark {
         animation: slideDown 0.2s ease-out;
     }
 }
-
 
 /* ──────────────────────────────────────────── */
 /* Button Component */
@@ -3412,8 +3404,6 @@ body.theme-dark {
 /* ============================================ */
 /* Animations */
 /* ============================================ */
-
-
 
 .wh40k-animate-pulse {
     animation: wh40k-pulse 2s infinite ease-in-out;
@@ -5067,13 +5057,6 @@ body.theme-dark {
     /* ANIMATIONS */
     /* ═══════════════════════════════════════════════════════════════════════ */
 
-    
-    
-    
-    
-    
-    
-    
     /* ═══════════════════════════════════════════════════════════════════════ */
     /* MICRO-INTERACTIONS & POLISH */
     /* ═══════════════════════════════════════════════════════════════════════ */
@@ -15196,7 +15179,6 @@ body.theme-dark {
 /* Animations */
 /* ============================================================================ */
 
-
 /* ── source: src/css/item/_critical-injury.css ── */
 /* Critical Injury Sheet & Chat Card Styles */
 
@@ -15578,7 +15560,6 @@ body.theme-dark {
 /* ============================================================================ */
 /* Animations */
 /* ============================================================================ */
-
 
 /* ── source: src/css/item/_origin-path.css ── */
 /* ============================================ */
@@ -18861,7 +18842,6 @@ body.theme-dark {
     box-shadow: inset 0 -1px 0 var(--wh40k-text-shadow), 0 6px 14px var(--wh40k-shadow-soft);
 }
 
-
 .wh40k-tab.active .wh40k-panel {
     animation: wh40k-panel-in 0.3s ease both;
 }
@@ -19335,18 +19315,15 @@ body.theme-dark {
     animation: btn-press 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-
 /* Button Shake Animation (when hitting limits) */
 .wh40k-btn-shake {
     animation: btn-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
-
 /* Number Roll Animation (smooth number change) */
 .wh40k-number-roll {
     animation: number-roll 0.3s ease-out;
 }
-
 
 /* Ensure progress bars have smooth transitions */
 .wh40k-vital-bar-fill,
@@ -20095,7 +20072,6 @@ body.theme-dark {
         color: rgb(from #c08020 r g b / 0.5);
     }
 }
-
 
 /* Fate Stars Inline */
 .wh40k-fate-stars-inline {
@@ -21511,7 +21487,7 @@ body.theme-dark {
     }
 
     /* Red pulse animation for critical wounds */
-    
+
     /* Panel state modifiers */
     &.wh40k-wounds-critical {
         .wh40k-panel-header {
@@ -21531,7 +21507,6 @@ body.theme-dark {
         }
     }
 
-    
     /* ============================================ */
     /* Critical Damage Pip System */
     /* ============================================ */
@@ -22146,7 +22121,6 @@ body.theme-dark {
         animation: pulse-orange 2s ease-in-out infinite;
     }
 
-    
     /* Panel state modifier for exhausted */
     &.wh40k-exhausted {
         .wh40k-panel-header {
@@ -22160,7 +22134,6 @@ body.theme-dark {
         }
     }
 
-    
     /* ============================================ */
     /* Quick Action Buttons */
     /* ============================================ */
@@ -22411,15 +22384,11 @@ body.theme-dark {
             box-shadow: 0 0 0 3px var(--wh40k-shadow-soft);
         }
 
-        &:hover {
+        &:hover:not([readonly]) {
             border-color: var(--wh40k-border-color);
         }
 
-        &:hover:not(:readonly) {
-            border-color: var(--wh40k-border-color);
-        }
-
-        &:readonly {
+        &[readonly] {
             background: var(--wh40k-panel-bg);
             color: var(--wh40k-text-muted);
             cursor: not-allowed;
@@ -22612,15 +22581,15 @@ body.theme-dark {
     }
 
     /* Gentle glow animation for filled stars */
-    
+
     /* Sparkle effect when gaining fate (triggered via JS) */
-    
+
     .wh40k-fate-pip.wh40k-sparkle {
         animation: sparkle 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
     /* Fade effect when spending fate (triggered via JS) */
-    
+
     .wh40k-fate-pip.wh40k-spending {
         animation: fade-spend 0.5s ease-out forwards;
     }
@@ -22715,7 +22684,6 @@ body.theme-dark {
         animation: dropdown-slide 0.2s ease;
     }
 
-    
     .wh40k-fate-option {
         width: 100%;
         display: flex;
@@ -23252,7 +23220,6 @@ body.theme-dark {
         animation: damned-pulse 2s ease-in-out infinite;
     }
 
-    
     /* ============================================ */
     /* Header Status (Badge with Icon) */
     /* ============================================ */
@@ -23363,8 +23330,6 @@ body.theme-dark {
         }
     }
 
-    
-    
     /* ============================================ */
     /* Main Display Area */
     /* ============================================ */
@@ -23620,8 +23585,6 @@ body.theme-dark {
         animation: damned-alert 1s ease-in-out infinite;
     }
 
-    
-    
     /* ============================================ */
     /* Malignancy Preview */
     /* ============================================ */
@@ -23699,7 +23662,6 @@ body.theme-dark {
         }
     }
 
-    
     /* ============================================ */
     /* Edit Mode Sections */
     /* ============================================ */
@@ -24112,7 +24074,6 @@ body.theme-dark {
         animation: insane-pulse 2s ease-in-out infinite;
     }
 
-    
     /* ============================================ */
     /* Header Status (Badge with Icon) */
     /* ============================================ */
@@ -24223,8 +24184,6 @@ body.theme-dark {
         }
     }
 
-    
-    
     /* ============================================ */
     /* Main Display Area */
     /* ============================================ */
@@ -24473,8 +24432,6 @@ body.theme-dark {
         animation: damned-alert 1s ease-in-out infinite;
     }
 
-    
-    
     /* ============================================ */
     /* Disorder Preview */
     /* ============================================ */
@@ -26628,7 +26585,6 @@ body.theme-dark {
     z-index: 1;
 }
 
-
 .wh40k-pf-gauge-labels {
     display: flex;
     justify-content: space-between;
@@ -28038,7 +27994,6 @@ body.theme-dark {
     border-top: 1px solid var(--wh40k-border-color-light);
     animation: expandDown 0.2s ease;
 }
-
 
 .wh40k-detail-row {
     display: flex;
@@ -29768,7 +29723,6 @@ body.theme-dark {
    Animations
    ======================================== */
 
-
 /* ========================================
    Responsive
    ======================================== */
@@ -30524,7 +30478,6 @@ body.theme-dark {
     }
 }
 
-
 /* ============================================ */
 /* Power Card Actions */
 /* ============================================ */
@@ -30675,7 +30628,6 @@ body.theme-dark {
         display: none;
     }
 }
-
 
 .wh40k-power-detail-section {
     margin-bottom: var(--wh40k-space-md);
@@ -31765,7 +31717,6 @@ body.theme-dark {
     }
 }
 
-
 /* ============================================ */
 /* VITAL STAT CARD - ADDITIONAL STYLES */
 /* ============================================ */
@@ -31897,7 +31848,6 @@ body.theme-dark {
     }
 }
 
-
 .wh40k-wounds-progress {
     background: linear-gradient(
         90deg,
@@ -31944,7 +31894,6 @@ body.theme-dark {
     }
 }
 
-
 .wh40k-alert-fatigue {
     --vital-color-rgb: 192, 128, 32;
     --vital-color: #c08020;
@@ -31979,7 +31928,6 @@ body.theme-dark {
     }
 }
 
-
 /* ============================================ */
 /* FATE STARS DISPLAY */
 /* ============================================ */
@@ -32007,7 +31955,6 @@ body.theme-dark {
         animation: star-glow 2s ease-in-out infinite;
     }
 }
-
 
 /* ============================================ */
 /* MOBILITY SPEEDS (Compact Vitals Version) */
@@ -32831,7 +32778,6 @@ body.theme-dark {
     }
 }
 
-
 /* ── source: src/css/chat/_index.css ── */
 /* ============================================
    Rogue Trader Chat System - Index
@@ -33397,7 +33343,6 @@ body.theme-dark {
     }
 }
 
-
 .wh40k-roll-card__result-label {
     font-family: var(--wh40k-font-display);
     font-size: 0.9rem;
@@ -33650,7 +33595,6 @@ body.theme-dark {
         }
     }
 }
-
 
 /* ============================================ */
 /* Action Controls */
@@ -35394,7 +35338,6 @@ body.theme-dark {
     }
 }
 
-
 /* ============================================ */
 /* Prompt Buttons Container (deprecated - use dialog buttons) */
 /* ============================================ */
@@ -36282,7 +36225,6 @@ body.theme-dark {
     font-variant-numeric: tabular-nums;
 }
 
-
 .wh40k-dialog-buttons {
     display: flex;
     gap: 10px;
@@ -36621,8 +36563,6 @@ body.theme-dark {
     animation: urd-target-pulse-red 0.4s ease;
 }
 
-
-
 /* ============================================ */
 /* Difficulty Picker Dropdown */
 /* ============================================ */
@@ -36736,7 +36676,6 @@ body.theme-dark {
         }
     }
 }
-
 
 /* ============================================ */
 /* Modifiers Section */
@@ -38406,7 +38345,6 @@ body.theme-dark {
     }
 }
 
-
 .csd-char-header {
     display: flex;
     align-items: baseline;
@@ -38537,7 +38475,6 @@ body.theme-dark {
     }
 }
 
-
 .csd-assigned-roll {
     width: 40px;
     height: 36px;
@@ -38586,7 +38523,6 @@ body.theme-dark {
         animation: csd-value-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 }
-
 
 /* ============================================ */
 /* Footer Actions */
@@ -38652,7 +38588,6 @@ body.theme-dark {
         animation: csd-pulse-border 1.5s ease-in-out infinite;
     }
 }
-
 
 /* ============================================ */
 /* Accessibility - Reduced Motion */
@@ -38758,7 +38693,6 @@ body.theme-dark {
         animation: xp-shimmer 2s infinite;
     }
 }
-
 
 .wh40k-adv__xp-info {
     display: flex;
@@ -38914,7 +38848,6 @@ body.theme-dark {
     animation: fadeIn var(--adv-transition-normal);
 }
 
-
 /* ============================================ */
 /* Characteristic Cards Grid */
 /* ============================================ */
@@ -38951,7 +38884,6 @@ body.theme-dark {
         animation: purchasePulse 0.6s ease-out;
     }
 }
-
 
 .wh40k-adv__char-header {
     display: flex;
@@ -39007,7 +38939,6 @@ body.theme-dark {
         animation: currentPulse 1.5s ease-in-out infinite;
     }
 }
-
 
 /* Purchase Button */
 .wh40k-adv__char-btn {
@@ -40184,7 +40115,6 @@ body.theme-dark {
     }
 }
 
-
 /* -------------------------------------------- */
 /*  Main Content Area                           */
 /* -------------------------------------------- */
@@ -40449,7 +40379,6 @@ body.theme-dark {
         height: 24px;
     }
 }
-
 
 /* -------------------------------------------- */
 /*  Selection Detail Panel                      */
@@ -42518,7 +42447,6 @@ body.theme-dark {
     box-shadow: 0 0 20px rgba(201, 162, 39, 0.3);
 }
 
-
 .result-value {
     display: flex;
     flex-direction: column;
@@ -42588,7 +42516,6 @@ body.theme-dark {
         max-width: 300px;
     }
 }
-
 
 /* -------------------------------------------- */
 /*  Roll History                                */
@@ -42721,11 +42648,9 @@ body.theme-dark {
     animation: emphasize 1.5s ease-in-out infinite;
 }
 
-
 .accept-button {
     animation: glow 2s ease-in-out infinite;
 }
-
 
 /* ── source: src/css/_journals.css ── */
 /* ================================== */
@@ -44159,7 +44084,6 @@ body.theme-dark {
 .wh40k-hit-location-highlight {
     animation: hitLocationPulse 0.5s ease-in-out 4;
 }
-
 
 /* ============================================ */
 /* Hit Location Chat Message Styles */
@@ -49615,7 +49539,6 @@ body.theme-dark {
         animation: fadeSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
-    
     .rt {
         &-body {
             grid-column: span 6;
@@ -51472,7 +51395,7 @@ body.theme-dark {
     }
 
     /* Animations */
-    
+
     /* Responsive Design */
     @media (max-width: 500px) {
         .enhanced-skill-roll {
@@ -51505,11 +51428,6 @@ body.theme-dark {
     /*  Animation Keyframes                         */
     /* -------------------------------------------- */
 
-    
-    
-    
-    
-    
     /* -------------------------------------------- */
     /*  Animation Classes                           */
     /* -------------------------------------------- */
@@ -51593,8 +51511,6 @@ body.theme-dark {
         }
     }
 
-    
-    
     /* -------------------------------------------- */
     /*  Special Effects                             */
     /* -------------------------------------------- */
@@ -51604,25 +51520,21 @@ body.theme-dark {
         animation: stat-advance 1s ease-out;
     }
 
-    
     /* Critical threshold warnings (wounds at 0, fatigue maxed) */
     .stat-critical-warning {
         animation: critical-pulse 1.5s infinite;
     }
 
-    
     /* Healing effect (for wounds restored) */
     .stat-heal {
         animation: stat-heal 0.8s ease-out;
     }
 
-    
     /* Damage taken effect */
     .stat-damage {
         animation: stat-damage 0.8s ease-out;
     }
 
-    
     /* -------------------------------------------- */
     /*  Brief Notifications                         */
     /* -------------------------------------------- */
@@ -51738,7 +51650,7 @@ body.theme-dark {
     }
 
     /* Level up burst effect */
-    
+
     .level-up-effect {
         animation: level-up-burst 0.6s ease-out;
     }
@@ -52002,7 +51914,6 @@ body.theme-dark {
         }
     }
 
-    
     /* -------------------------------------------- */
     /*  Panel Variants                              */
     /* -------------------------------------------- */
@@ -52046,7 +51957,6 @@ body.theme-dark {
         }
     }
 
-    
     /* Danger variant */
     .wh40k-collapsible-panel.danger {
         border-color: #dc143c;
@@ -52079,7 +51989,7 @@ body.theme-dark {
     /* -------------------------------------------- */
 
     /* Slide in from top on first render */
-    
+
     .wh40k-collapsible-panel {
         animation: panel-slide-in 0.3s ease-out;
     }
@@ -52774,7 +52684,6 @@ body.theme-dark {
         }
     }
 
-    
     /* -------------------------------------------- */
     /*  Equipment Slots                             */
     /* -------------------------------------------- */
@@ -52836,7 +52745,6 @@ body.theme-dark {
         }
     }
 
-    
     /* -------------------------------------------- */
     /*  Snap-to-Slot Animation                      */
     /* -------------------------------------------- */
@@ -52845,7 +52753,6 @@ body.theme-dark {
         animation: snap-to-slot 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    
     /* -------------------------------------------- */
     /*  Favorites Bar                               */
     /* -------------------------------------------- */
@@ -53478,7 +53385,6 @@ body.theme-dark {
         }
     }
 
-    
     .wh40k-stat-breakdown-header {
         display: flex;
         align-items: center;
@@ -53818,8 +53724,6 @@ body.theme-dark {
         }
     }
 
-    
-    
     /* -------------------------------------------- */
     /*  Preview Changes Display                     */
     /* -------------------------------------------- */
@@ -53839,7 +53743,6 @@ body.theme-dark {
         }
     }
 
-    
     /* -------------------------------------------- */
     /*  Comparison Badges                           */
     /* -------------------------------------------- */
@@ -53881,7 +53784,6 @@ body.theme-dark {
         }
     }
 
-    
     /* -------------------------------------------- */
     /*  Comparison Panel (Optional Side-by-Side)    */
     /* -------------------------------------------- */
@@ -53986,7 +53888,6 @@ body.theme-dark {
         }
     }
 
-    
     /* -------------------------------------------- */
     /*  Impact Summary                              */
     /* -------------------------------------------- */
@@ -54649,9 +54550,6 @@ body.theme-dark {
         }
     }
 
-    
-    
-    
     /* Generic drag-over highlight for any panel drop zone */
     [data-drop-zone].wh40k-drag-over {
         outline: 2px dashed var(--wh40k-gold, var(--wh40k-color-gold));
@@ -54745,7 +54643,7 @@ body.theme-dark {
     }
 
     /* Rolling animation keyframes */
-    
+
     .wh40k-char-hud-circle {
         position: relative;
         width: 48px;
@@ -54775,7 +54673,7 @@ body.theme-dark {
     }
 
     /* Value change flash animation */
-    
+
     .wh40k-char-hud-base {
         @apply tw-text-[0.65em] tw-uppercase tw-tracking-[0.1em] tw-text-center tw-min-w-[50px] tw-h-[22px] tw-flex tw-items-center tw-justify-center tw-transition-colors tw-duration-300;
         color: var(--wh40k-text-muted);
@@ -54786,7 +54684,6 @@ body.theme-dark {
         }
     }
 
-    
     .wh40k-char-hud-toggle {
         width: 18px;
         height: 18px;
@@ -55385,7 +55282,6 @@ body.theme-dark {
         }
     }
 
-    
     /* Header info — layout in Tailwind */
 
     .wh40k-quick-status-gothic {
@@ -57026,7 +56922,6 @@ body.theme-dark {
         }
     }
 
-    
     .wh40k-resource-icon {
         font-size: 1.4em;
         color: #3a7a4a;

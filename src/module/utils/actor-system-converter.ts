@@ -1,5 +1,5 @@
-import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { ACTOR_SYSTEM_LABELS } from '../applications/dialogs/create-actor-dialog.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 
 type ActorDirectoryLike = {
     id: string;
@@ -83,7 +83,7 @@ const ORIGIN_PATH_FIELDS_BY_SYSTEM: Record<ConvertibleCharacterSystem, ReadonlyS
     im: new Set(['homeWorld', 'background', 'role', 'motivation']),
 };
 
-export const CONVERTIBLE_CHARACTER_SYSTEMS = Object.freeze(Object.keys(ACTOR_SYSTEM_LABELS) as ConvertibleCharacterSystem[]);
+export const CONVERTIBLE_CHARACTER_SYSTEMS = Object.freeze(Object.keys(ACTOR_SYSTEM_LABELS));
 export const CONVERTIBLE_ACTOR_KINDS = Object.freeze(['character', 'npc', 'vehicle'] as const);
 
 export function isConvertibleActorKind(kind: string): kind is ConvertibleActorKind {
@@ -102,7 +102,7 @@ export function getActorKind(type: string): ConvertibleActorKind | null {
 
 export function getActorSystemId(type: string): ConvertibleCharacterSystem | null {
     if (!isConvertibleActorType(type)) return null;
-    return type.split('-')[0] as ConvertibleCharacterSystem;
+    return type.split('-')[0];
 }
 
 export function getConvertedActorType(targetSystem: ConvertibleCharacterSystem, kind: ConvertibleActorKind): ConvertibleActorType {
@@ -129,7 +129,7 @@ export function isConvertibleCharacterActorType(type: string): type is `${Conver
 
 export function getCharacterSystemId(type: string): ConvertibleCharacterSystem | null {
     if (!isConvertibleCharacterActorType(type)) return null;
-    return type.slice(0, -'-character'.length) as ConvertibleCharacterSystem;
+    return type.slice(0, -'-character'.length);
 }
 
 export function getConvertedCharacterType(targetSystem: ConvertibleCharacterSystem): `${ConvertibleCharacterSystem}-character` {
@@ -193,6 +193,9 @@ async function repointLinkedSceneTokens(oldActorId: string, newActorId: string):
 }
 
 export async function convertCharacterActorSystem(actor: WH40KBaseActor, targetSystem: ConvertibleCharacterSystem): Promise<WH40KBaseActor> {
+    if (actor.id === null) {
+        throw new Error(`Actor ${actor.name} is missing an id`);
+    }
     const currentSystem = getCharacterSystemId(actor.type);
     if (!currentSystem) {
         throw new Error(`Actor ${actor.id} is not a convertible character actor`);
@@ -201,22 +204,27 @@ export async function convertCharacterActorSystem(actor: WH40KBaseActor, targetS
         return actor;
     }
 
-    const replacementSource = buildConvertedCharacterSource(actor, targetSystem);
-    const created = (await Actor.create(replacementSource, { renderSheet: false })) as unknown as Actor | null;
+    const replacementSource = buildConvertedCharacterSource(actor as WH40KBaseActor & { id: string }, targetSystem);
+    const created = (await Actor.create(replacementSource as unknown as Parameters<typeof Actor.create>[0], {
+        renderSheet: false,
+    })) as unknown as WH40KBaseActor | null;
     if (!created) {
         throw new Error(`Failed to create converted actor for ${actor.name}`);
     }
-    if (created.id === null) {
+    if (actor.id === null || created.id === null) {
         throw new Error(`Converted actor for ${actor.name} is missing an id`);
     }
 
     await repointLinkedSceneTokens(actor.id, created.id);
     await actor.delete();
 
-    return created as unknown as WH40KBaseActor;
+    return created;
 }
 
 export async function convertActorSystem(actor: WH40KBaseActor, targetSystem: ConvertibleCharacterSystem): Promise<WH40KBaseActor> {
+    if (actor.id === null) {
+        throw new Error(`Actor ${actor.name} is missing an id`);
+    }
     const currentSystem = getActorSystemId(actor.type);
     if (!currentSystem) {
         throw new Error(`Actor ${actor.id} is not a convertible actor`);
@@ -225,17 +233,19 @@ export async function convertActorSystem(actor: WH40KBaseActor, targetSystem: Co
         return actor;
     }
 
-    const replacementSource = buildConvertedActorSource(actor, targetSystem);
-    const created = (await Actor.create(replacementSource, { renderSheet: false })) as unknown as Actor | null;
+    const replacementSource = buildConvertedActorSource(actor as WH40KBaseActor & { id: string }, targetSystem);
+    const created = (await Actor.create(replacementSource as unknown as Parameters<typeof Actor.create>[0], {
+        renderSheet: false,
+    })) as unknown as WH40KBaseActor | null;
     if (!created) {
         throw new Error(`Failed to create converted actor for ${actor.name}`);
     }
-    if (created.id === null) {
+    if (actor.id === null || created.id === null) {
         throw new Error(`Converted actor for ${actor.name} is missing an id`);
     }
 
     await repointLinkedSceneTokens(actor.id, created.id);
     await actor.delete();
 
-    return created as unknown as WH40KBaseActor;
+    return created;
 }

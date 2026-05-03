@@ -4,6 +4,11 @@ This codebase is on a **strict-mode TypeScript ratchet**. New code must obey the
 
 ## Compiler configuration
 
+Canonical Foundry type source: `fvtt-types`. The duplicate `@league-of-foundry-developers/foundry-vtt-types`
+package is not used directly in this repo and should not be reintroduced. Base V13 types come from
+`fvtt-types`; local V14 deltas belong in `foundry-v14-overrides.d.ts`; project-specific augmentations belong
+under `src/module/types/`, not in the V14 override file.
+
 `tsconfig.json`:
 
 | Flag                          | Value | Notes                                        |
