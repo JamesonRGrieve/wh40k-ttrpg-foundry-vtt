@@ -377,7 +377,7 @@ export class ReloadActionManager {
             flavor: `${weapon.name} - Reload`,
         };
 
-        return ChatMessage.create(chatData) as Promise<ChatMessage | undefined>;
+        return ChatMessage.create(chatData as unknown as Parameters<typeof ChatMessage.create>[0]) as Promise<ChatMessage | undefined>;
     }
 
     /**

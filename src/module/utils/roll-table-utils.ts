@@ -97,7 +97,7 @@ export class RollTableUtils {
         });
 
         // Check if result triggers Perils of the Warp (typically on 75+)
-        if (roll.total >= 75) {
+        if ((roll.total ?? 0) >= 75) {
             await this.rollPerilsOfTheWarp(actor);
         }
 
@@ -110,7 +110,7 @@ export class RollTableUtils {
      * @returns {Promise<TableResult | null>}
      */
     static async rollPerilsOfTheWarp(actor: WH40KBaseActor) {
-        return await this.rollTable('Perils of the Warp', { displayChat: true });
+        return this.rollTable('Perils of the Warp', { displayChat: true });
     }
 
     /**
@@ -124,7 +124,7 @@ export class RollTableUtils {
         const roll = new Roll(`1d100 + ${modifier}`);
         await roll.evaluate();
 
-        return await this.rollTable('Fear Effects', {
+        return this.rollTable('Fear Effects', {
             displayChat: true,
             roll: roll,
         });
@@ -135,7 +135,7 @@ export class RollTableUtils {
      * @returns {Promise<TableResult>}
      */
     static async rollMutation() {
-        return await this.rollTable('Mutations', { displayChat: true });
+        return this.rollTable('Mutations', { displayChat: true });
     }
 
     /**
@@ -143,7 +143,7 @@ export class RollTableUtils {
      * @returns {Promise<TableResult>}
      */
     static async rollMalignancy() {
-        return await this.rollTable('Malignancies', { displayChat: true });
+        return this.rollTable('Malignancies', { displayChat: true });
     }
 
     /**
@@ -151,7 +151,7 @@ export class RollTableUtils {
      * @returns {Promise<TableResult>}
      */
     static async rollNavigatorMutation() {
-        return await this.rollTable('Navigator Mutations', { displayChat: true });
+        return this.rollTable('Navigator Mutations', { displayChat: true });
     }
 
     /**
@@ -161,7 +161,7 @@ export class RollTableUtils {
      */
     static async rollGiftOfTheGods(godName: string | null = null): Promise<RollTableResult | null> {
         const tableName = godName ? `Gifts of ${godName}` : 'Gifts of the Gods';
-        return await this.rollTable(tableName, { displayChat: true });
+        return this.rollTable(tableName, { displayChat: true });
     }
 
     /**
@@ -176,7 +176,7 @@ export class RollTableUtils {
         const roll = new Roll(`${severity}`);
         await roll.evaluate();
 
-        return await this.rollTable(tableName, {
+        return this.rollTable(tableName, {
             displayChat: true,
             roll: roll,
         });

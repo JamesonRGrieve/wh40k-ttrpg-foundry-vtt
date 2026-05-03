@@ -92,8 +92,8 @@ export async function spendXP(actor: WH40KBaseActorDocument, cost: number, reaso
         return {
             success: false,
             error: game.i18n.format('WH40K.Advancement.Error.InsufficientXP', {
-                cost,
-                available,
+                cost: String(cost),
+                available: String(available),
             }),
         };
     }
@@ -105,9 +105,10 @@ export async function spendXP(actor: WH40KBaseActorDocument, cost: number, reaso
         const newUsed = currentUsed + cost;
 
         // Update the actor
-        await actor.update({
+        const updateData: Record<string, number> = {
             'system.experience.used': newUsed,
-        });
+        };
+        await actor.update(updateData);
 
         // Log the transaction
         if (reason) {
@@ -148,8 +149,8 @@ export async function spendXPBatch(actor: WH40KBaseActorDocument, purchases: XPP
         return {
             success: false,
             error: game.i18n.format('WH40K.Advancement.Error.InsufficientXP', {
-                cost: totalCost,
-                available,
+                cost: String(totalCost),
+                available: String(available),
             }),
         };
     }
@@ -159,9 +160,10 @@ export async function spendXPBatch(actor: WH40KBaseActorDocument, purchases: XPP
         const currentUsed = experience?.used ?? 0;
         const newUsed = currentUsed + totalCost;
 
-        await actor.update({
+        const updateData: Record<string, number> = {
             'system.experience.used': newUsed,
-        });
+        };
+        await actor.update(updateData);
 
         // Log all purchases
         const reasons = purchases

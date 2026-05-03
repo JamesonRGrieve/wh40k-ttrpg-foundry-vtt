@@ -100,6 +100,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
             const chars = system.characteristics as Record<string, { total: number; bonus: number }> | undefined;
             if (chars) {
                 for (const [key, char] of Object.entries(chars)) {
+                    this._previousState.characteristics ??= {};
                     this._previousState.characteristics[key] = {
                         total: char.total,
                         bonus: char.bonus,

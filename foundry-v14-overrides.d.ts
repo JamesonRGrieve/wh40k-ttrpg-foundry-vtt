@@ -1,8 +1,8 @@
 /**
  * Foundry VTT V14 Type Overrides
  *
- * Extends/patches the V13 community types (@league-of-foundry-developers/foundry-vtt-types,
- * fvtt-types) for V14-specific API changes. Remove this file when V14 types are published.
+ * Extends/patches the V13 community types from `fvtt-types` for V14-specific API
+ * changes. Remove this file when upstream V14 types are published.
  *
  * All declarations live in this file. The `fvtt-types` package under `node_modules/` is
  * never modified — v14 shapes are added here as new reference namespaces/classes that
@@ -582,12 +582,28 @@ declare global {
         // call compiles without 'Property api does not exist' errors.
         class ApplicationV2 {
             constructor(options?: Record<string, unknown>);
+            static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions;
+            static RENDER_PRIORITY: number;
+            options: ApplicationV2Config.DefaultOptions;
+            tabGroups: HandlebarsApplicationV14.TabGroupsState;
+            position: { top: number; left: number; width: number; height: number; scale: number; zIndex: number };
+            window: {
+                title: string;
+                subtitle: string;
+                icon: string;
+                controls: unknown[];
+            };
             get element(): HTMLElement;
-            render(options?: boolean | Record<string, unknown>): Promise<unknown>;
+            get isRendered(): boolean;
+            get status(): number;
+            render(options?: boolean | ApplicationV2Config.RenderOptions): Promise<unknown>;
             close(options?: Record<string, unknown>): Promise<unknown>;
             submit(): Promise<void>;
-            _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>>;
-            _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void | Promise<void>;
+            _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>>;
+            _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void | Promise<void>;
+            _onClose(options: Record<string, unknown>): void;
+            _preClose(options: Record<string, unknown>): Promise<void> | void;
+            _canRender(options: ApplicationV2Config.RenderOptions): boolean;
         }
         namespace ApplicationV2 {
             type Any = ApplicationV2;
@@ -601,6 +617,7 @@ declare global {
             close(options?: Record<string, unknown>): Promise<unknown>;
             static confirm(options?: Record<string, unknown>): Promise<boolean>;
             static prompt(options?: Record<string, unknown>): Promise<string | null>;
+            static wait(options?: Record<string, unknown>): Promise<unknown>;
         }
         class FormDataExtended extends FormData {
             constructor(form: HTMLFormElement, options?: Record<string, unknown>);

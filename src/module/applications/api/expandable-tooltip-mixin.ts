@@ -144,7 +144,6 @@ export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base
             for (const element of unenriched) {
                 const content = element.innerHTML;
                 const enriched = await TextEditor.enrichHTML(content, {
-                    async: true,
                     relativeTo: (this as any).document as foundry.abstract.Document.Any,
                 });
                 element.innerHTML = enriched;

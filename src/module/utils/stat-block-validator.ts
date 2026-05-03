@@ -40,7 +40,7 @@ export default class StatBlockValidator {
     /**
      * Characteristic value ranges (min/max)
      */
-    static CHARACTERISTIC_RANGES = {
+    static characteristicRanges = {
         min: 1,
         max: 100,
     };
@@ -48,7 +48,7 @@ export default class StatBlockValidator {
     /**
      * Reasonable value ranges for common stats
      */
-    static STAT_RANGES = {
+    static statRanges = {
         wounds: { min: 1, max: 500 },
         armour: { min: 0, max: 20 },
         movement: { min: 0, max: 50 },
@@ -168,9 +168,9 @@ export default class StatBlockValidator {
                 continue;
             }
 
-            if (base < this.CHARACTERISTIC_RANGES.min || base > this.CHARACTERISTIC_RANGES.max) {
+            if (base < this.characteristicRanges.min || base > this.characteristicRanges.max) {
                 result.warnings.push(
-                    `Characteristic ${key} (${base}) is outside normal range (${this.CHARACTERISTIC_RANGES.min}-${this.CHARACTERISTIC_RANGES.max})`,
+                    `Characteristic ${key} (${base}) is outside normal range (${this.characteristicRanges.min}-${this.characteristicRanges.max})`,
                 );
             }
 
@@ -198,8 +198,8 @@ export default class StatBlockValidator {
             return;
         }
 
-        if (max < this.STAT_RANGES.wounds.min || max > this.STAT_RANGES.wounds.max) {
-            result.warnings.push(`Wounds (${max}) is outside reasonable range (${this.STAT_RANGES.wounds.min}-${this.STAT_RANGES.wounds.max})`);
+        if (max < this.statRanges.wounds.min || max > this.statRanges.wounds.max) {
+            result.warnings.push(`Wounds (${max}) is outside reasonable range (${this.statRanges.wounds.min}-${this.statRanges.wounds.max})`);
         }
     }
 
@@ -215,9 +215,9 @@ export default class StatBlockValidator {
             const value = movement[rate];
             if (value !== undefined && value !== null) {
                 hasAny = true;
-                if (value < this.STAT_RANGES.movement.min || value > this.STAT_RANGES.movement.max) {
+                if (value < this.statRanges.movement.min || value > this.statRanges.movement.max) {
                     result.warnings.push(
-                        `Movement ${rate} (${value}) is outside reasonable range (${this.STAT_RANGES.movement.min}-${this.STAT_RANGES.movement.max})`,
+                        `Movement ${rate} (${value}) is outside reasonable range (${this.statRanges.movement.min}-${this.statRanges.movement.max})`,
                     );
                 }
             }
@@ -248,8 +248,8 @@ export default class StatBlockValidator {
         if (armour.mode === 'simple') {
             const total = armour.total;
             if (total !== undefined && total !== null) {
-                if (total < this.STAT_RANGES.armour.min || total > this.STAT_RANGES.armour.max) {
-                    result.warnings.push(`Armour (${total}) is outside reasonable range (${this.STAT_RANGES.armour.min}-${this.STAT_RANGES.armour.max})`);
+                if (total < this.statRanges.armour.min || total > this.statRanges.armour.max) {
+                    result.warnings.push(`Armour (${total}) is outside reasonable range (${this.statRanges.armour.min}-${this.statRanges.armour.max})`);
                 }
             }
         } else if (armour.mode === 'locations') {
@@ -257,9 +257,9 @@ export default class StatBlockValidator {
             for (const loc of locations) {
                 const value = armour.locations?.[loc];
                 if (value !== undefined && value !== null) {
-                    if (value < this.STAT_RANGES.armour.min || value > this.STAT_RANGES.armour.max) {
+                    if (value < this.statRanges.armour.min || value > this.statRanges.armour.max) {
                         result.warnings.push(
-                            `Armour ${loc} (${value}) is outside reasonable range (${this.STAT_RANGES.armour.min}-${this.STAT_RANGES.armour.max})`,
+                            `Armour ${loc} (${value}) is outside reasonable range (${this.statRanges.armour.min}-${this.statRanges.armour.max})`,
                         );
                     }
                 }
@@ -272,9 +272,9 @@ export default class StatBlockValidator {
      * @private
      */
     static _validateThreatLevel(threatLevel: number, result: ValidationResult): void {
-        if (threatLevel < this.STAT_RANGES.threatLevel.min || threatLevel > this.STAT_RANGES.threatLevel.max) {
+        if (threatLevel < this.statRanges.threatLevel.min || threatLevel > this.statRanges.threatLevel.max) {
             result.warnings.push(
-                `Threat level (${threatLevel}) is outside reasonable range (${this.STAT_RANGES.threatLevel.min}-${this.STAT_RANGES.threatLevel.max})`,
+                `Threat level (${threatLevel}) is outside reasonable range (${this.statRanges.threatLevel.min}-${this.statRanges.threatLevel.max})`,
             );
         }
     }

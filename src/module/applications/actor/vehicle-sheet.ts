@@ -377,7 +377,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const max = this.actor.system.wounds.max;
 
         const newValue = Math.max(0, Math.min(max, current + delta));
-        await this.actor.update({ 'system.wounds.value': newValue });
+        await this.actor.update({ 'system.wounds.value': newValue } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -394,7 +394,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const max = this.actor.system.wounds.max;
 
         const newValue = Math.min(max, current + amount);
-        await this.actor.update({ 'system.wounds.value': newValue });
+        await this.actor.update({ 'system.wounds.value': newValue } as Record<string, unknown>);
 
         ui.notifications.info(`Repaired ${amount} structure points.`);
     }
@@ -412,7 +412,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const current = (this.actor.system.crew as Record<string, number> | undefined)?.rating ?? 30;
 
         const newValue = Math.max(1, Math.min(100, current + delta));
-        await this.actor.update({ 'system.crew.rating': newValue });
+        await this.actor.update({ 'system.crew.rating': newValue } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -428,7 +428,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const current = (this.actor.system.crew as Record<string, number> | undefined)?.morale ?? 50;
 
         const newValue = Math.max(0, Math.min(100, current + delta));
-        await this.actor.update({ 'system.crew.morale': newValue });
+        await this.actor.update({ 'system.crew.morale': newValue } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */

@@ -58,37 +58,36 @@ export type SkillLike = Partial<
 export type CharacteristicLike = WH40KCharacteristic;
 type TalentLike = WH40KItem & {
     system: WH40KItem['system'] & {
-        tier: number | string;
-        tierLabel: string;
-        category: string;
-        categoryLabel: string;
-        fullName: string;
-        aptitudes: string[];
-        prerequisitesLabel: string;
-        hasPrerequisites: boolean;
-        cost: number;
+        tier?: number | string;
+        tierLabel?: string;
+        category?: string;
+        categoryLabel?: string;
+        fullName?: string;
+        aptitudes?: string[];
+        prerequisitesLabel?: string;
+        hasPrerequisites?: boolean;
+        cost?: number;
         benefit: unknown;
         description: unknown;
         [key: string]: unknown;
     };
-    tierLabel: string;
     [key: string]: unknown;
 };
 type TraitLike = WH40KItem & {
     system: WH40KItem['system'] & {
-        fullName: string;
-        category: string;
-        categoryLabel: string;
-        hasLevel: boolean;
-        level: number;
-        isVariable: boolean;
+        fullName?: string;
+        category?: string;
+        categoryLabel?: string;
+        hasLevel?: boolean;
+        level?: number;
+        isVariable?: boolean;
         [key: string]: unknown;
     };
     [key: string]: unknown;
 };
 type TraitGroup = { category: string; categoryLabel: string; traits: Record<string, unknown>[] };
 type TalentDisplay = Record<string, unknown> & {
-    system: { tier?: number };
+    system: { tier?: number | string };
     tierLabel?: string;
 };
 type TraitDisplay = Record<string, unknown> & {
@@ -222,7 +221,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     }
     async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const proto = Object.getPrototypeOf(BaseActorSheet.prototype) as {
-            _preparePartContext?: (this: BaseActorSheet, partId: string, context: Record<string, unknown>, options: Record<string, unknown>) => Promise<Record<string, unknown>>;
+            _preparePartContext?: (
+                this: BaseActorSheet,
+                partId: string,
+                context: Record<string, unknown>,
+                options: Record<string, unknown>,
+            ) => Promise<Record<string, unknown>>;
         };
         return (await proto._preparePartContext?.call(this, partId, context, options)) ?? {};
     }
@@ -918,11 +922,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // all talents, traits, and origin paths for skill grants
         const items = this.actor.items;
         for (const item of items) {
-            if (!(item.system as Record<string, unknown>)?.grants?.skills) continue;
-
-            const skillGrants = ((item.system as Record<string, unknown>).grants as Record<string, unknown>).skills || [];
+            const grants = (item.system as Record<string, unknown>)?.grants as { skills?: Array<{ name?: string } | string> } | undefined;
+            const skillGrants = grants?.skills;
+            if (!skillGrants) continue;
             for (const grant of skillGrants) {
-                const grantName = grant.name || grant;
+                const grantName = typeof grant === 'string' ? grant : grant.name;
+                if (!grantName) continue;
                 if (grantName.toLowerCase() === skillData.label?.toLowerCase()) {
                     return true;
                 }
@@ -946,14 +951,14 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const traits = this.actor.items.filter((i) => (i.type as string) === 'trait');
 
         // Augment with display properties
-        const augmentedTalents = talents.map((t) => this._augmentTalentData(t));
-        const augmentedTraits = traits.map((t) => this._augmentTraitData(t));
+        const augmentedTalents = talents.map((t) => this._augmentTalentData(t as TalentLike));
+        const augmentedTraits = traits.map((t) => this._augmentTraitData(t as TraitLike));
 
         // Group by tier
         const groupedByTier = this._groupTalentsByTier(augmentedTalents);
 
         // Extract unique categories
-        const categories = this._getTalentCategories(talents);
+        const categories = this._getTalentCategories(talents as TalentLike[]);
 
         return {
             talents: augmentedTalents,
@@ -975,7 +980,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     _augmentTalentData(talent: TalentLike): TalentDisplay {
         // Check if this talent is favorited
         const favorites = ((this.actor as WH40KBaseActorDocument).getFlag('wh40k-rpg', 'favoriteTalents') as string[]) || [];
-        const isFavorite = favorites.includes(talent.id);
+        const isFavorite = talent.id ? favorites.includes(talent.id) : false;
 
         // Build tooltip text from description/benefit
         // Handle cases where these might be objects (ProseMirror) or undefined
@@ -1003,13 +1008,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             img: talent.img,
             type: talent.type,
             system: talent.system,
-            tierLabel: talent.system.tierLabel,
-            categoryLabel: talent.system.categoryLabel,
-            fullName: talent.system.fullName,
-            aptitudesLabel: this._formatAptitudes(talent.system.aptitudes),
-            prerequisitesLabel: talent.system.prerequisitesLabel,
-            hasPrerequisites: talent.system.hasPrerequisites,
-            costLabel: talent.system.cost > 0 ? `${talent.system.cost} XP` : '—',
+            tierLabel: talent.system.tierLabel ?? `Tier ${talent.system.tier ?? 0}`,
+            categoryLabel: talent.system.categoryLabel ?? '',
+            fullName: talent.system.fullName ?? talent.name,
+            aptitudesLabel: this._formatAptitudes(talent.system.aptitudes ?? []),
+            prerequisitesLabel: talent.system.prerequisitesLabel ?? '',
+            hasPrerequisites: talent.system.hasPrerequisites ?? false,
+            costLabel: (talent.system.cost ?? 0) > 0 ? `${talent.system.cost} XP` : '—',
             isFavorite: isFavorite,
             flags: talent.flags,
             tooltipText: tooltipText,
@@ -1030,13 +1035,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             img: trait.img,
             type: trait.type,
             system: trait.system,
-            fullName: trait.system.fullName,
-            categoryLabel: trait.system.categoryLabel,
-            hasLevel: trait.system.hasLevel,
-            levelLabel: trait.system.level > 0 ? `(${trait.system.level})` : '',
-            isVariable: trait.system.isVariable,
-            categoryIcon: this._getTraitIcon(trait.system.category),
-            categoryColor: this._getTraitCategoryColor(trait.system.category),
+            fullName: trait.system.fullName ?? trait.name,
+            categoryLabel: trait.system.categoryLabel ?? '',
+            hasLevel: trait.system.hasLevel ?? false,
+            levelLabel: (trait.system.level ?? 0) > 0 ? `(${trait.system.level})` : '',
+            isVariable: trait.system.isVariable ?? false,
+            categoryIcon: this._getTraitIcon(trait.system.category ?? 'general'),
+            categoryColor: this._getTraitCategoryColor(trait.system.category ?? 'general'),
         };
     }
 
@@ -1050,7 +1055,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const groups: Record<number, { tier: number; tierLabel: string; talents: Array<Record<string, unknown>> }> = {};
 
         for (const talent of talents) {
-            const tier = talent.system.tier || 0;
+            const tier = Number(talent.system.tier ?? 0);
             groups[tier] ??= {
                 tier,
                 tierLabel: talent.tierLabel || `Tier ${tier}`,
@@ -1418,7 +1423,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 if (el.closest('[data-disable-drag="true"]') || el.closest('.wh40k-panel-backpack-split')) return;
 
                 el.setAttribute('draggable', 'true');
-                el.addEventListener('dragstart', this._onDragItem.bind(this), false);
+                el.addEventListener('dragstart', (event) => this._onDragItem(event as DragEvent), false);
             }
         });
 
@@ -1532,22 +1537,23 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Check wounds
         if (current.wounds?.value !== previous.wounds) {
-            this.animateWoundsChange?.(previous.wounds, current.wounds.value);
+            this.animateWoundsChange?.(previous.wounds ?? 0, current.wounds.value);
         }
 
         // Check XP
-        if (current.experience?.total !== previous.experience) {
-            this.animateXPGain?.(previous.experience, current.experience.total);
+        const currentExperienceTotal = current.experience?.total;
+        if (currentExperienceTotal !== previous.experience) {
+            this.animateXPGain?.(previous.experience ?? 0, currentExperienceTotal ?? 0);
         }
 
         // Check characteristics
         for (const [key, char] of Object.entries(current.characteristics || {}) as [string, any][]) {
-            const prevChar = previous.characteristics[key];
+            const prevChar = previous.characteristics?.[key];
             if (!prevChar) continue;
 
             // Check total change
             if (char.total !== prevChar.total) {
-                this.animateCharacteristicChange?.(key, prevChar.total, char.total);
+                this.animateCharacteristicChange?.(key, prevChar.total ?? 0, char.total);
             }
         }
     }
@@ -1611,9 +1617,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      */
     _onDragItem(event: DragEvent): void {
         const itemId = (event.currentTarget as HTMLElement).dataset.itemId;
+        if (!itemId) return;
         const item = this.actor.items.get(itemId);
         if (item) {
-            event.dataTransfer.setData('text/plain', JSON.stringify(item.toDragData()));
+            event.dataTransfer?.setData('text/plain', JSON.stringify(item.toDragData()));
         }
     }
 
@@ -1885,7 +1892,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             };
         }
 
-        await this.actor.createEmbeddedDocuments('Item', [data], { renderSheet: true });
+        await this.actor.createEmbeddedDocuments('Item', [data] as unknown as Parameters<typeof this.actor.createEmbeddedDocuments<'Item'>>[1], {
+            renderSheet: true,
+        });
     }
 
     /* -------------------------------------------- */
@@ -2028,7 +2037,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 [`${basePath}.plus20`]: newLevel >= 3,
             };
 
-            await this.actor.update(updateData);
+            await this.actor.update(updateData as Record<string, unknown>);
         }
     }
 
@@ -2089,6 +2098,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             trained: false,
             plus10: false,
             plus20: false,
+            basic: false,
+            advanced: true,
             bonus: 0,
             notes: '',
             cost: 0,
@@ -2097,7 +2108,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         await this.actor.update({
             [`system.skills.${skillKey}.entries`]: entries,
-        });
+        } as Record<string, unknown>);
 
         ui.notifications.info(`Added ${skill.label} (${name}) specialization.`);
     }
@@ -2168,7 +2179,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         }
 
         // Search for the skill by label
-        const searchLabel = skill.label.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const searchLabel = (skill.label ?? skillKey).toLowerCase().replace(/[^a-z0-9]/g, '');
         const index = await pack.getIndex();
         const entry = index.find((i: { name?: string }) => {
             const indexName = (i.name ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -2176,14 +2187,14 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         });
 
         if (!entry) {
-            ui.notifications.info(`No compendium entry found for ${skill.label}.`);
+            ui.notifications.info(`No compendium entry found for ${skill.label ?? skillKey}.`);
             return;
         }
 
         // Load and render the skill item sheet
         const skillItem = await pack.getDocument(entry._id);
-        if (skillItem) {
-            void skillItem.sheet.render(true, { editable: false });
+        if (skillItem?.sheet) {
+            void skillItem.sheet.render(true);
         }
     }
 
@@ -2208,12 +2219,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         }
 
         // Check if item already exists on actor (for move operations)
+        if (!item.id) return false;
         if (this.actor.items.get(item.id)) {
             return this._onSortItem(event, item);
         }
 
         // Create the item
-        return this.actor.createEmbeddedDocuments('Item', [item.toObject()]);
+        return this.actor.createEmbeddedDocuments('Item', [item.toObject()] as unknown as Parameters<typeof this.actor.createEmbeddedDocuments<'Item'>>[1]);
     }
 
     /* -------------------------------------------- */
@@ -2227,20 +2239,24 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      */
     _onSortItem(event: DragEvent, item: WH40KItem): Promise<unknown> | undefined {
         const items = this.actor.items;
+        if (!item.id) return undefined;
         const source = items.get(item.id);
 
         // Confirm the drop target
         const dropTarget = (event.target as HTMLElement).closest('[data-item-id]') as HTMLElement | null;
         if (!dropTarget) return undefined;
-        const target = items.get(dropTarget.dataset.itemId);
-        if (source.id === target.id) return undefined;
+        const targetId = dropTarget.dataset.itemId;
+        if (!source || !targetId) return undefined;
+        const target = items.get(targetId);
+        if (!target || source.id === target.id) return undefined;
 
         // Identify sibling items based on adjacent HTML elements
         const siblings = [];
-        for (const element of dropTarget.parentElement.children) {
+        for (const element of dropTarget.parentElement?.children ?? []) {
             const siblingId = (element as HTMLElement).dataset.itemId;
             if (siblingId && siblingId !== source.id) {
-                siblings.push(items.get((element as HTMLElement).dataset.itemId));
+                const sibling = items.get(siblingId);
+                if (sibling) siblings.push(sibling);
             }
         }
 
@@ -2311,7 +2327,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         await this.actor.update({
             [`system.characteristics.${charKey}.advance`]: newAdvance,
             'system.experience.spent': newSpent,
-        });
+        } as Record<string, unknown>);
 
         // Calculate new values
         const newTotal = char.base + newAdvance * 5 + (char.modifier || 0);
@@ -2347,8 +2363,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Update the border progress indicator
         const charBox = this.element.querySelector(`[data-characteristic="${charKey}"]`) as HTMLElement | null;
         if (charBox) {
-            charBox.style.setProperty('--advance-progress', newAdvance / 5);
-            charBox.dataset.advance = newAdvance;
+            charBox.style.setProperty('--advance-progress', String(newAdvance / 5));
+            charBox.dataset.advance = String(newAdvance);
         }
     }
 
@@ -2433,7 +2449,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 [`system.characteristics.${charKey}.advance`]: parseInt(result.advance) || 0,
                 [`system.characteristics.${charKey}.modifier`]: parseInt(result.modifier) || 0,
                 [`system.characteristics.${charKey}.unnatural`]: parseInt(result.unnatural) || 1,
-            });
+            } as Record<string, unknown>);
 
             ui.notifications.info(`${char.label} updated successfully!`);
         }
