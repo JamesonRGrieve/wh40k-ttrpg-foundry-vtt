@@ -1,5 +1,5 @@
 /**
- * @file ConfirmationDialog - ApplicationV2 replacement for Dialog.confirm()
+ * @gulpfile.js ConfirmationDialog - ApplicationV2 replacement for Dialog.confirm()
  * Provides a modern, consistent confirmation dialog UI
  *
  * Usage:
@@ -32,7 +32,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /*  Configuration                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS = {
         id: 'confirmation-dialog-{id}',
         classes: ['wh40k-rpg', 'confirmation-dialog'],
@@ -43,7 +43,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
             minimizable: false,
             resizable: false,
             contentClasses: ['standard-form', 'tw-p-0', 'tw-bg-gradient-to-b', 'tw-from-[#1a1a24]', 'tw-to-[#0d0d12]'],
-        },
+        } as Record<string, unknown>,
         position: {
             width: 400,
             height: 'auto' as const,
@@ -56,7 +56,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS = {
         content: {
             template: 'systems/wh40k-rpg/templates/dialogs/confirmation.hbs',
@@ -76,7 +76,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     constructor(config: Partial<ConfirmationConfig> = {}, options: ApplicationV2Config.DefaultOptions = {}) {
-        super(options);
+        super(options as Record<string, unknown>);
         this.#config = {
             title: config.title || 'Confirm',
             content: config.content || 'Are you sure?',
@@ -88,7 +88,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get title() {
         return this.#config.title;
     }
@@ -97,7 +97,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<ConfirmationContext> {
         const context = await super._prepareContext(options);
         return {
@@ -128,12 +128,12 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /*  Lifecycle                                   */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async close(options?: Record<string, unknown>): Promise<void> {
         if (!this.#resolved && this.#resolve) {
             this.#resolve(false);
         }
-        return super.close(options);
+        return (await super.close(options)) as void;
     }
 
     /* -------------------------------------------- */
