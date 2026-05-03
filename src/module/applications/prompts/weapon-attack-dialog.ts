@@ -1,5 +1,5 @@
 /**
- * @file WeaponAttackDialog - V2 dialog for weapon attack configuration
+ * @gulpfile.js WeaponAttackDialog - V2 dialog for weapon attack configuration
  */
 
 import BaseRollDialog from './base-roll-dialog.ts';
@@ -8,26 +8,26 @@ import BaseRollDialog from './base-roll-dialog.ts';
  * Dialog for configuring weapon attacks.
  */
 export default class WeaponAttackDialog extends BaseRollDialog {
-    declare weaponAttackData: Record<string, any>;
+    declare weaponAttackData: Record<string, unknown>;
 
     /**
-     * @param {Record<string, any>} weaponActionData  The weapon action data.
+     * @param {Record<string, unknown>} weaponActionData  The weapon action data.
      * @param {ApplicationV2Config.DefaultOptions} [options={}]                Dialog options.
      */
-    constructor(weaponActionData: Record<string, any> = {}, options: ApplicationV2Config.DefaultOptions = {}) {
-        super(weaponActionData.rollData, options);
+    constructor(weaponActionData: Record<string, unknown> = {}, options: ApplicationV2Config.DefaultOptions = {}) {
+        super(weaponActionData.rollData as Record<string, unknown>, options);
         this.weaponAttackData = weaponActionData;
     }
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         ...BaseRollDialog.DEFAULT_OPTIONS,
         classes: ['weapon-attack'],
         actions: {
             ...BaseRollDialog.DEFAULT_OPTIONS.actions,
-            selectWeapon: WeaponAttackDialog.#onSelectWeapon as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            selectWeapon: WeaponAttackDialog.#onSelectWeapon,
         },
         window: {
             title: 'Weapon Attack',
@@ -36,7 +36,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/weapon-roll-prompt.hbs',
@@ -102,8 +102,13 @@ export default class WeaponAttackDialog extends BaseRollDialog {
      * Handle weapon selection via action.
      */
     static async #onSelectWeapon(this: WeaponAttackDialog, event: Event, target: HTMLElement): Promise<void> {
-        await this.weaponAttackData.rollData.selectWeapon?.(target.getAttribute('name') ?? '');
-        await this.weaponAttackData.rollData.update?.();
+        const rollData = this.weaponAttackData.rollData as Record<string, unknown>;
+        if (typeof rollData.selectWeapon === 'function') {
+            await (rollData.selectWeapon as (name: string) => Promise<void>)(target.getAttribute('name') ?? '');
+        }
+        if (typeof rollData.update === 'function') {
+            await (rollData.update as () => Promise<void>)();
+        }
         void this.render();
     }
 
@@ -111,9 +116,10 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /*  Roll Methods                                */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     _validateRoll(): boolean {
-        if ((this.weaponAttackData.rollData.fireRate as number) === 0) {
+        const rollData = this.weaponAttackData.rollData as Record<string, unknown>;
+        if ((rollData.fireRate as number) === 0) {
             ui.notifications.warn('Not enough ammo to perform action. Do you need to reload?');
             return false;
         }
@@ -122,12 +128,17 @@ export default class WeaponAttackDialog extends BaseRollDialog {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async _performRoll(): Promise<void> {
         if (!this._validateRoll()) return;
 
-        await this.weaponAttackData.rollData.finalize?.();
-        await this.weaponAttackData.performActionAndSendToChat?.();
+        const rollData = this.weaponAttackData.rollData as Record<string, unknown>;
+        if (typeof rollData.finalize === 'function') {
+            await (rollData.finalize as () => Promise<void>)();
+        }
+        if (typeof this.weaponAttackData.performActionAndSendToChat === 'function') {
+            await (this.weaponAttackData.performActionAndSendToChat as () => Promise<void>)();
+        }
         await this.close();
     }
 }
@@ -138,9 +149,9 @@ export default class WeaponAttackDialog extends BaseRollDialog {
 
 /**
  * Open a weapon attack dialog.
- * @param {WeaponActionData} weaponAttackData  The weapon action data.
+ * @param {Record<string, unknown>} weaponAttackData  The weapon action data.
  */
-export function prepareWeaponRoll(weaponAttackData) {
-    const prompt = new WeaponAttackDialog(weaponAttackData);
+export function prepareWeaponRoll(weaponAttackData: object) {
+    const prompt = new WeaponAttackDialog(weaponAttackData as Record<string, unknown>);
     prompt.render(true);
 }
