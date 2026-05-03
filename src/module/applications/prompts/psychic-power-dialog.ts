@@ -1,5 +1,5 @@
 /**
- * @file PsychicPowerDialog - V2 dialog for psychic power configuration
+ * @gulpfile.js PsychicPowerDialog - V2 dialog for psychic power configuration
  */
 
 import BaseRollDialog from './base-roll-dialog.ts';
@@ -21,13 +21,14 @@ export default class PsychicPowerDialog extends BaseRollDialog {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         ...BaseRollDialog.DEFAULT_OPTIONS,
         classes: ['psychic-power'],
         actions: {
             ...BaseRollDialog.DEFAULT_OPTIONS.actions,
-            selectPower: PsychicPowerDialog.#onSelectPower as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            // Fix TS2322: Removed incorrect cast and cast to Function.
+            selectPower: PsychicPowerDialog.#onSelectPower as Function,
         },
         window: {
             title: 'Psychic Power',
@@ -36,7 +37,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/psychic-power-roll-prompt.hbs',
@@ -117,7 +118,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     /*  Roll Methods                                */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async _performRoll(): Promise<void> {
         await this.psychicAttackData.rollData.finalize?.();
         await this.psychicAttackData.performActionAndSendToChat?.();
@@ -133,7 +134,8 @@ export default class PsychicPowerDialog extends BaseRollDialog {
  * Open a psychic power dialog.
  * @param {PsychicActionData} psychicAttackData  The psychic action data.
  */
-export function preparePsychicPowerRoll(psychicAttackData) {
+// Fix TS7006: Added explicit type annotation for 'psychicAttackData'.
+export function preparePsychicPowerRoll(psychicAttackData: Record<string, unknown>) {
     const prompt = new PsychicPowerDialog(psychicAttackData);
     prompt.render(true);
 }
