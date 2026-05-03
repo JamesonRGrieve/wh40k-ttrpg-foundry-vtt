@@ -1,5 +1,5 @@
 /**
- * @file ShipUpgradeSheet - ApplicationV2 sheet for ship upgrade items
+ * @gulpfile.js ShipUpgradeSheet - ApplicationV2 sheet for ship upgrade items
  */
 
 import BaseItemSheet from './base-item-sheet.ts';
@@ -10,7 +10,7 @@ import BaseItemSheet from './base-item-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class ShipUpgradeSheet extends BaseItemSheet {
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'ship-upgrade'],
         position: {
@@ -21,7 +21,7 @@ export default class ShipUpgradeSheet extends BaseItemSheet {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/ship-upgrade-sheet.hbs',
@@ -31,7 +31,7 @@ export default class ShipUpgradeSheet extends BaseItemSheet {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static TABS = [
         { tab: 'details', group: 'primary', label: 'WH40K.Item.Tabs.Details' },
         { tab: 'effects', group: 'primary', label: 'WH40K.Item.Tabs.Effects' },
@@ -39,14 +39,14 @@ export default class ShipUpgradeSheet extends BaseItemSheet {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     tabGroups = {
         primary: 'details',
     };
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -54,9 +54,12 @@ export default class ShipUpgradeSheet extends BaseItemSheet {
         context.availabilities = this._getAvailabilityChoices();
 
         // Add display helpers
-        context.hasModifiers = context.system.hasModifiers;
-        context.isPowerConsumer = context.system.power > 0;
-        context.isPowerGenerator = context.system.power < 0;
+        // Cast context.system to Record<string, unknown> to safely access its properties
+        const systemContext = context.system as Record<string, unknown>;
+
+        context.hasModifiers = systemContext.hasModifiers;
+        context.isPowerConsumer = systemContext.power > 0;
+        context.isPowerGenerator = systemContext.power < 0;
 
         return context;
     }
