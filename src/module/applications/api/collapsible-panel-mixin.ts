@@ -189,7 +189,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
                 return `panelStates.${sheet.document.documentName}.${sheet.document.id}`;
             }
             // Otherwise use application ID for global settings
-            return `panelStates.${this.id}`;
+            return `panelStates.${(this as unknown as { id?: string | number }).id ?? 'global'}`;
         }
 
         /* -------------------------------------------- */

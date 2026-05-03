@@ -19,9 +19,9 @@ export class WH40KItemContainer extends Item {
     declare system: ItemDataModel & ContainerSystemData;
     declare items: foundry.utils.Collection<Item>;
 
-    get actor(): ActorBase | null {
+    get actor(): Actor.Implementation | null {
         if (this.parent instanceof Item) return null;
-        return this.parent instanceof Actor ? (this.parent as unknown as ActorBase) : null;
+        return this.parent instanceof Actor ? this.parent : null;
     }
 
     async update(data: Record<string, unknown> = {}, options: Record<string, unknown> = {}): Promise<unknown> {
@@ -67,7 +67,7 @@ export class WH40KItemContainer extends Item {
         // Convert Nested to Items
         game.wh40k.log(`Convert ${this.name as string} Nested`, this.hasNested());
         this.items = new foundry.utils.Collection();
-        const itemClass = (CONFIG.Item as ItemClass).documentClass;
+        const itemClass = CONFIG.Item.documentClass;
         for (const nestedData of this.getNested()) {
             const item = new itemClass(nestedData, { parent: this });
             await this.items.set(nestedData._id, item as unknown as Item);
@@ -139,7 +139,7 @@ export class WH40KItemContainer extends Item {
         const dataArray = Array.isArray(data) ? data : [data];
         game.wh40k.log(`ItemContainer: ${this.name as string} createNestedDocuments`, dataArray);
         const currentItems = this.getNested();
-        const itemClass = (CONFIG.Item as ItemClass).documentClass;
+        const itemClass = CONFIG.Item.documentClass;
 
         if (dataArray.length > 0) {
             for (const itemData of dataArray) {
@@ -191,8 +191,6 @@ export class WH40KItemContainer extends Item {
     }
 
     prepareEmbeddedDocuments(): void {
-        // Access via prototype to avoid ItemBase interface mismatch — prepareEmbeddedDocuments
-        // exists on the Foundry ClientDocument base at runtime but is absent from ItemBase in global.d.ts.
         const superProto = Object.getPrototypeOf(Object.getPrototypeOf(this)) as { prepareEmbeddedDocuments?: () => void };
         superProto.prepareEmbeddedDocuments?.call(this);
         if (!(this instanceof Item && this.system.container)) return;
@@ -200,7 +198,7 @@ export class WH40KItemContainer extends Item {
         const containedItems = this.getNested();
         const oldItems = this.items;
         this.items = new foundry.utils.Collection();
-        const itemClass = (CONFIG.Item as ItemClass).documentClass;
+        const itemClass = CONFIG.Item.documentClass;
         containedItems.forEach((idata) => {
             if (!oldItems?.has(idata._id)) {
                 const theItem = new itemClass(idata as unknown as never, { parent: this });

@@ -31,9 +31,9 @@ interface AdjustmentEntry {
 
 interface TransactionQuote {
     mode: Exclude<TransactionMode, 'none'>;
-    buyer: Actor;
-    source: Actor;
-    item: Item;
+    buyer: Actor.Implementation;
+    source: Actor.Implementation;
+    item: Item.Implementation;
     quantity: number;
     resourceType: ResourceType;
     resourceLabel: string;
@@ -87,7 +87,7 @@ export class TransactionManager {
         });
     }
 
-    static getProfile(actor: Actor | null | undefined): TransactionProfile {
+    static getProfile(actor: Actor.Implementation | null | undefined): TransactionProfile {
         if (!actor) return foundry.utils.deepClone(TransactionManager.DEFAULT_PROFILE);
 
         const stored = (actor.getFlag(SYSTEM_ID, PROFILE_FLAG) as Partial<TransactionProfile> | undefined) ?? {};
@@ -105,18 +105,18 @@ export class TransactionManager {
         };
     }
 
-    static async setMode(actor: Actor, mode: TransactionMode): Promise<void> {
+    static async setMode(actor: Actor.Implementation, mode: TransactionMode): Promise<void> {
         const profile = TransactionManager.getProfile(actor);
         profile.mode = mode;
         await actor.setFlag(SYSTEM_ID, PROFILE_FLAG, profile);
     }
 
-    static isSourceActor(actor: Actor | null | undefined): boolean {
+    static isSourceActor(actor: Actor.Implementation | null | undefined): boolean {
         const profile = TransactionManager.getProfile(actor);
         return profile.mode === 'barter' || profile.mode === 'requisition';
     }
 
-    static getSourceLabel(actor: Actor): string {
+    static getSourceLabel(actor: Actor.Implementation): string {
         const profile = TransactionManager.getProfile(actor);
         switch (profile.mode) {
             case 'barter':
@@ -128,7 +128,7 @@ export class TransactionManager {
         }
     }
 
-    static listSourcesForBuyer(buyer: Actor | import('../documents/base-actor.ts').WH40KBaseActor): Actor[] {
+    static listSourcesForBuyer(buyer: Actor.Implementation): Actor.Implementation[] {
         const requiredPermission = CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER;
 
         return game.actors.contents
@@ -138,7 +138,7 @@ export class TransactionManager {
             .sort((left, right) => left.name.localeCompare(right.name, game.i18n.lang));
     }
 
-    static listItemsForSource(source: Actor | null | undefined): Item[] {
+    static listItemsForSource(source: Actor.Implementation | null | undefined): Item.Implementation[] {
         if (!source) return [];
 
         return source.items.contents
@@ -169,7 +169,14 @@ export class TransactionManager {
         const influenceBurnRequested = Math.max(0, normalizeInt(params.influenceBurn, 0));
         const stockAvailable = profile.inventoryAccess === 'virtual' ? true : TransactionManager.#getAvailableQuantity(item) >= quantity;
 
-        const baseItemCost = normalizeInt(item.system?.cost?.value ?? 0, 0);
+        const itemSystem = item.system as Record<string, unknown> & {
+            cost?: { value?: number | string } | number | string;
+            influence?: number | string;
+        };
+        const baseItemCost = normalizeInt(
+            typeof itemSystem.cost === 'object' && itemSystem.cost !== null ? itemSystem.cost.value ?? 0 : itemSystem.cost ?? 0,
+            0,
+        );
         const baseCost = Math.max(0, baseItemCost * quantity);
         const adjustments: AdjustmentEntry[] = [];
 
@@ -184,7 +191,7 @@ export class TransactionManager {
 
         let influenceBurn = 0;
         if (profile.mode === 'barter' && influenceBurnRequested > 0) {
-            const availableInfluence = normalizeInt(buyer.system?.influence ?? 0, 0);
+            const availableInfluence = normalizeInt((buyer.system as Record<string, unknown> | undefined)?.influence ?? 0, 0);
             influenceBurn = Math.min(influenceBurnRequested, profile.barter.maxInfluenceBurn, availableInfluence);
             if (influenceBurn > 0) {
                 const subtotal = baseCost + adjustments.reduce((sum, adjustment) => sum + adjustment.value, 0);
@@ -208,7 +215,7 @@ export class TransactionManager {
 
         const finalCost = Math.max(0, baseCost + adjustments.reduce((sum, adjustment) => sum + adjustment.value, 0));
         const resourceType: ResourceType = profile.mode === 'barter' ? 'throneGelt' : 'requisition';
-        const availableResource = normalizeInt(buyer.system?.[resourceType] ?? 0, 0);
+        const availableResource = normalizeInt((buyer.system as Record<string, unknown> | undefined)?.[resourceType] ?? 0, 0);
 
         return {
             mode: profile.mode as Exclude<TransactionMode, 'none'>,
@@ -226,7 +233,7 @@ export class TransactionManager {
             stockAvailable,
             influenceBurn,
             remainingResource: Math.max(0, availableResource - finalCost),
-            remainingInfluence: Math.max(0, normalizeInt(buyer.system?.influence ?? 0, 0) - influenceBurn),
+            remainingInfluence: Math.max(0, normalizeInt((buyer.system as Record<string, unknown> | undefined)?.influence ?? 0, 0) - influenceBurn),
         };
     }
 
@@ -250,8 +257,8 @@ export class TransactionManager {
 
         const request: TransactionRequestPayload = {
             requestId: foundry.utils.randomID(),
-            requesterUserId: game.user.id,
-            targetUserId: targetGM.id,
+            requesterUserId: String(game.user.id),
+            targetUserId: String(targetGM.id),
             buyerActorId: params.buyerActorId,
             sourceActorId: params.sourceActorId,
             itemId: params.itemId,
@@ -311,12 +318,12 @@ export class TransactionManager {
         if (!payload || payload.scope !== 'transactions') return;
 
         if (payload.action === REQUEST_APPROVAL && payload.targetUserId === game.user.id && game.user.isGM) {
-            await TransactionManager.#handleApprovalRequest(payload.request);
+            await TransactionManager.#handleApprovalRequest(payload.request as TransactionRequestPayload);
             return;
         }
 
         if (payload.action === REQUEST_RESULT && payload.targetUserId === game.user.id) {
-            await TransactionManager.notifyRequester(payload.message, payload.resultType ?? 'info');
+            await TransactionManager.notifyRequester(String(payload.message), (payload.resultType as 'info' | 'warning' | 'error' | undefined) ?? 'info');
         }
     }
 
@@ -387,46 +394,47 @@ export class TransactionManager {
         `;
     }
 
-    static #getAvailableQuantity(item: Item): number {
-        const quantity = normalizeInt(item.system?.quantity ?? 1, 1);
+    static #getAvailableQuantity(item: Item.Implementation): number {
+        const quantity = normalizeInt((item.system as Record<string, unknown> | undefined)?.quantity ?? 1, 1);
         return quantity > 0 ? quantity : 0;
     }
 
     static async #transferItem(quote: TransactionQuote): Promise<void> {
         const sourceQuantity = TransactionManager.#getAvailableQuantity(quote.item);
-        const hasQuantityField = Number.isFinite(Number(quote.item.system?.quantity ?? 1));
+        const hasQuantityField = Number.isFinite(Number((quote.item.system as Record<string, unknown> | undefined)?.quantity ?? 1));
 
-        const itemData = quote.item.toObject();
-        delete itemData._id;
+        const { _id: _ignoredId, ...itemData } = quote.item.toObject() as Record<string, unknown> & { system?: Record<string, unknown> };
+        const itemSystem = (itemData.system ??= {});
         if (hasQuantityField) {
-            itemData.system.quantity = quote.quantity;
+            itemSystem.quantity = quote.quantity;
         }
 
         const stackTarget = TransactionManager.#findStackTarget(quote.buyer, quote.item);
         if (stackTarget && hasQuantityField) {
             await stackTarget.update({
-                'system.quantity': normalizeInt(stackTarget.system?.quantity ?? 0, 0) + quote.quantity,
-            });
+                'system.quantity': normalizeInt((stackTarget.system as Record<string, unknown> | undefined)?.quantity ?? 0, 0) + quote.quantity,
+            } as Record<string, unknown>);
         } else {
-            await quote.buyer.createEmbeddedDocuments('Item', [itemData]);
+            await quote.buyer.createEmbeddedDocuments('Item', [itemData] as unknown as Parameters<typeof quote.buyer.createEmbeddedDocuments<'Item'>>[1]);
         }
 
         if (TransactionManager.getProfile(quote.source).inventoryAccess === 'virtual') return;
 
         if (!hasQuantityField || sourceQuantity <= quote.quantity) {
+            if (!quote.item.id) return;
             await quote.source.deleteEmbeddedDocuments('Item', [quote.item.id]);
             return;
         }
 
         await quote.item.update({
             'system.quantity': sourceQuantity - quote.quantity,
-        });
+        } as Record<string, unknown>);
     }
 
-    static #findStackTarget(actor: Actor, sourceItem: Item): Item | undefined {
+    static #findStackTarget(actor: Actor.Implementation, sourceItem: Item.Implementation): Item.Implementation | undefined {
         return actor.items.find((candidate) => {
-            const candidateQuantity = candidate.system?.quantity;
-            const sourceQuantity = sourceItem.system?.quantity;
+            const candidateQuantity = (candidate.system as Record<string, unknown> | undefined)?.quantity;
+            const sourceQuantity = (sourceItem.system as Record<string, unknown> | undefined)?.quantity;
             if (typeof candidateQuantity !== 'number' || typeof sourceQuantity !== 'number') return false;
             if (candidate.type !== sourceItem.type) return false;
             if (candidate.name !== sourceItem.name) return false;
@@ -447,7 +455,7 @@ export class TransactionManager {
             influenceBurn: quote.influenceBurn,
         };
 
-        const append = async (actor: Actor) => {
+        const append = async (actor: Actor.Implementation) => {
             const history = ((actor.getFlag(SYSTEM_ID, HISTORY_FLAG) as Record<string, unknown>[]) ?? []).slice(-19);
             history.push(entry);
             await actor.setFlag(SYSTEM_ID, HISTORY_FLAG, history);

@@ -20,7 +20,7 @@ export const DIRECTION = {
     BACKWARD: 'backward',
 };
 
-type Direction = typeof DIRECTION[keyof typeof DIRECTION];
+type Direction = (typeof DIRECTION)[keyof typeof DIRECTION];
 
 type OriginLike = {
     id?: string;

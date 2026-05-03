@@ -11,8 +11,6 @@ import BaseActorSheet from './base-actor-sheet.ts';
  * Uses V2 PARTS system for modular template rendering.
  */
 export default class StarshipSheet extends BaseActorSheet {
-    declare actor: WH40KStarship;
-
     /** @override */
     static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         ...BaseActorSheet.DEFAULT_OPTIONS,
@@ -103,7 +101,8 @@ export default class StarshipSheet extends BaseActorSheet {
      * @protected
      */
     _prepareShipData(context: Record<string, unknown>): void {
-        const items = this.actor.items;
+        const actor = this.actor as unknown as WH40KStarship;
+        const items = actor.items;
 
         // Get ship components grouped by type
         context.shipComponents = items.filter((item: WH40KItem) => item.type === 'shipComponent');
@@ -187,23 +186,24 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #fireShipWeapon(this: StarshipSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+        const actor = this.actor as unknown as WH40KStarship;
         const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
-        const weapon = this.actor.items.get(itemId ?? '');
+        const weapon = actor.items.get(itemId ?? '');
         if (!weapon) return;
 
         const cardData = {
-            actor: this.actor,
+            actor,
             weapon: weapon,
-            crewRating: (this.actor.system as { crew?: { crewRating?: number } }).crew?.crewRating || 30,
+            crewRating: (actor.system as { crew?: { crewRating?: number } }).crew?.crewRating || 30,
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
         ChatMessage.create({
             user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            speaker: ChatMessage.getSpeaker({ actor: actor as unknown as Actor.Implementation }),
             content: html,
-        });
+        } as unknown as Parameters<typeof ChatMessage.create>[0]);
     }
 
     /* -------------------------------------------- */

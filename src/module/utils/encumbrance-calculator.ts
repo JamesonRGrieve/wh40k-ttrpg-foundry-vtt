@@ -92,7 +92,7 @@ export function computeEncumbrance(actor: WH40KBaseActorDocument): {
  */
 export function getCarryCapacity(bonus: number): number {
     const index = Math.max(0, Math.min(bonus, ENCUMBRANCE_TABLE.length - 1));
-    return ENCUMBRANCE_TABLE[index] ?? ENCUMBRANCE_TABLE[ENCUMBRANCE_TABLE.length - 1]!;
+    return ENCUMBRANCE_TABLE[index] ?? ENCUMBRANCE_TABLE[ENCUMBRANCE_TABLE.length - 1];
 }
 
 export { ENCUMBRANCE_TABLE };

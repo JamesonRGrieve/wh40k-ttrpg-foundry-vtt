@@ -304,7 +304,7 @@ export default class NPCSheet extends CharacterSheet {
             heavy: 'Heavy',
             thrown: 'Thrown',
         };
-        context.transactionProfile = TransactionManager.getProfile(this.actor as unknown as Actor);
+        context.transactionProfile = TransactionManager.getProfile(this.actor as unknown as Actor.Implementation);
 
         // NPC-flavoured preparation on top of the PC context.
         this._prepareCharacteristicsContext(context);
@@ -1204,7 +1204,7 @@ export default class NPCSheet extends CharacterSheet {
                 break;
         }
 
-        await this.actor.update({ 'system.trainedSkills': currentSkills });
+        await this.actor.update({ 'system.trainedSkills': currentSkills } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -1260,15 +1260,15 @@ export default class NPCSheet extends CharacterSheet {
                 plus20: false,
                 bonus: 0,
             };
-            await this.actor.update({ 'system.trainedSkills': currentSkills });
+            await this.actor.update({ 'system.trainedSkills': currentSkills } as Record<string, unknown>);
         } else if (current.trained && !current.plus10 && !current.plus20) {
             // Trained → +10
             currentSkills[skillKey] = { ...current, plus10: true, plus20: false };
-            await this.actor.update({ 'system.trainedSkills': currentSkills });
+            await this.actor.update({ 'system.trainedSkills': currentSkills } as Record<string, unknown>);
         } else if (current.plus10 && !current.plus20) {
             // +10 → +20
             currentSkills[skillKey] = { ...current, plus10: true, plus20: true };
-            await this.actor.update({ 'system.trainedSkills': currentSkills });
+            await this.actor.update({ 'system.trainedSkills': currentSkills } as Record<string, unknown>);
         } else {
             // +20 → Untrained (remove)
             await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
@@ -1543,7 +1543,7 @@ export default class NPCSheet extends CharacterSheet {
                         const tag = (form!.querySelector('[name="tag"]') as HTMLInputElement).value.trim();
                         if (tag) {
                             const tags = [...((this.actor.system.tags as string[] | undefined) || []), tag];
-                            await this.actor.update({ 'system.tags': tags });
+                            await this.actor.update({ 'system.tags': tags } as Record<string, unknown>);
                         }
                     },
                 },
@@ -1568,7 +1568,7 @@ export default class NPCSheet extends CharacterSheet {
         const tag = target.dataset.tag;
         if (!tag) return;
         const tags = ((this.actor.system.tags as string[] | undefined) ?? []).filter((t) => t !== tag);
-        await this.actor.update({ 'system.tags': tags });
+        await this.actor.update({ 'system.tags': tags } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -1656,7 +1656,7 @@ export default class NPCSheet extends CharacterSheet {
     static async #setTransactionMode(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const mode = (target.dataset.mode as 'none' | 'barter' | 'requisition' | undefined) ?? 'none';
-        await TransactionManager.setMode(this.npcActor as unknown as Actor, mode);
+        await TransactionManager.setMode(this.npcActor as unknown as Actor.Implementation, mode);
         ui.notifications.info(`${this.npcActor.name} source mode set to ${mode}.`);
         await this.render(false);
     }
@@ -1754,8 +1754,9 @@ export default class NPCSheet extends CharacterSheet {
      */
     static async #rerollInitiative(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
+        if (!this.actor.id) return;
         const combatant = game.combat?.getCombatantByActor(this.actor.id);
-        if (combatant) {
+        if (combatant?.id) {
             await game.combat!.rollInitiative([combatant.id]);
         }
     }
@@ -1774,6 +1775,7 @@ export default class NPCSheet extends CharacterSheet {
             return;
         }
         // Prevent duplicate combatants
+        if (!this.actor.id || !this.npcActor.id) return;
         const existing = game.combat.getCombatantByActor(this.actor.id);
         if (existing) {
             ui.notifications.info(`${this.actor.name} is already in combat.`);
@@ -1796,8 +1798,9 @@ export default class NPCSheet extends CharacterSheet {
      */
     static async #removeFromCombat(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
+        if (!this.actor.id) return;
         const combatant = game.combat?.getCombatantByActor(this.actor.id);
-        if (combatant) {
+        if (combatant?.id) {
             await game.combat!.deleteEmbeddedDocuments('Combatant', [combatant.id]);
         }
     }

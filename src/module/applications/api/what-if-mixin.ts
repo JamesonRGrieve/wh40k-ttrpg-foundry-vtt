@@ -286,7 +286,10 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
             const baseData = this.document.toObject();
             const previewData = foundry.utils.mergeObject(baseData, this._whatIfChanges, { inplace: false });
 
-            this._whatIfPreview = new (CONFIG.Actor as typeof Actor).documentClass(previewData, { parent: null }) as unknown as WH40KBaseActorDocument;
+            this._whatIfPreview = new (CONFIG.Actor as unknown as { documentClass: typeof Actor.implementation }).documentClass(
+                previewData as unknown as ConstructorParameters<typeof Actor.implementation>[0],
+                { parent: null },
+            ) as unknown as WH40KBaseActorDocument;
             if (this._whatIfPreview) this._whatIfPreview.prepareData();
 
             this._calculateImpacts();

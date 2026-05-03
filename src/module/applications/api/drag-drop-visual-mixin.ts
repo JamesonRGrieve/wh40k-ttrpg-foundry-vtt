@@ -78,6 +78,10 @@ function ensureGlobalDragTracking(): void {
  */
 export default function EnhancedDragDropMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
     return class EnhancedDragDropApplication extends Base implements EnhancedDragDropMixinAPI {
+        #actorDocument(): WH40KBaseActorDocument {
+            return this.document as WH40KBaseActorDocument;
+        }
+
         /* -------------------------------------------- */
         /*  Initialization                              */
         /* -------------------------------------------- */
@@ -445,11 +449,13 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                     const itemData = item.toObject();
                     (itemData.system as any).inShipStorage = false;
                     (itemData.system as any).equipped = false;
-                    await this.document.createEmbeddedDocuments('Item', [itemData]);
+                    await this.#actorDocument().createEmbeddedDocuments('Item', [itemData] as unknown as Parameters<
+                        WH40KBaseActorDocument['createEmbeddedDocuments']
+                    >[1]);
                 } else {
                     await item.update({
                         'system.inShipStorage': false,
-                    });
+                    } as Record<string, unknown>);
                 }
             } else if (zoneType === 'ship') {
                 if (item.actor?.id !== this.document.id) {
@@ -457,13 +463,15 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                     (itemData.system as any).inShipStorage = true;
                     (itemData.system as any).equipped = false;
                     (itemData.system as any).inBackpack = false;
-                    await this.document.createEmbeddedDocuments('Item', [itemData]);
+                    await this.#actorDocument().createEmbeddedDocuments('Item', [itemData] as unknown as Parameters<
+                        WH40KBaseActorDocument['createEmbeddedDocuments']
+                    >[1]);
                 } else {
                     await item.update({
                         'system.equipped': false,
                         'system.inBackpack': false,
                         'system.inShipStorage': true,
-                    });
+                    } as Record<string, unknown>);
                 }
             } else if (zoneType === 'equipment') {
                 await this._handleEquipmentDrop(item, slot ?? '');
@@ -539,7 +547,9 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             if (behavior === 'copy') {
                 const itemData = item.toObject();
-                await this.document.createEmbeddedDocuments('Item', [itemData]);
+                await this.#actorDocument().createEmbeddedDocuments('Item', [itemData] as unknown as Parameters<
+                    WH40KBaseActorDocument['createEmbeddedDocuments']
+                >[1]);
                 ui.notifications.info(`Added ${item.name} to inventory`);
             } else if (behavior === 'move') {
                 ui.notifications.info(`Moved ${item.name}`);
@@ -569,8 +579,10 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             newSystem.quantity = quantity;
             newItemData.name = `${item.name} (${quantity})`;
 
-            await this.document.createEmbeddedDocuments('Item', [newItemData]);
-            await item.update({ 'system.quantity': remaining });
+            await this.#actorDocument().createEmbeddedDocuments('Item', [newItemData] as unknown as Parameters<
+                WH40KBaseActorDocument['createEmbeddedDocuments']
+            >[1]);
+            await item.update({ 'system.quantity': remaining } as Record<string, unknown>);
 
             ui.notifications.info(`Split ${item.name}: ${quantity} moved, ${remaining} remaining`);
         }
@@ -612,7 +624,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @private
          */
         async _reorderItems(sourceId: string, targetId: string, clientY: number): Promise<void> {
-            const items = Array.from(this.document.items) as WH40KItem[];
+            const items = Array.from(this.#actorDocument().items) as WH40KItem[];
             const sourceIndex = items.findIndex((i) => i.id === sourceId);
             const targetIndex = items.findIndex((i) => i.id === targetId);
 
@@ -626,7 +638,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                 sort: index * 100,
             }));
 
-            await this.document.updateEmbeddedDocuments('Item', updates);
+            await this.#actorDocument().updateEmbeddedDocuments('Item', updates);
             ui.notifications.info('Items reordered');
         }
 
@@ -662,8 +674,9 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @private
          */
         async _addToFavorites(item: WH40KItem): Promise<void> {
-            const favorites = (this.document.getFlag('wh40k-rpg', 'favorites') as string[]) || [];
+            const favorites = (this.#actorDocument().getFlag('wh40k-rpg', 'favorites') as string[]) || [];
 
+            if (!item.id) return;
             if (favorites.includes(item.id)) {
                 ui.notifications.warn(`${item.name} is already in favorites`);
                 return;
@@ -675,7 +688,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             }
 
             favorites.push(item.id);
-            await this.document.setFlag('wh40k-rpg', 'favorites', favorites);
+            await this.#actorDocument().setFlag('wh40k-rpg', 'favorites', favorites);
             ui.notifications.info(`Added ${item.name} to favorites`);
         }
 
@@ -740,18 +753,18 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
         /* -------------------------------------------- */
 
         async removeFromFavorites(itemId: string): Promise<void> {
-            const favorites = (this.document.getFlag('wh40k-rpg', 'favorites') as string[]) || [];
+            const favorites = (this.#actorDocument().getFlag('wh40k-rpg', 'favorites') as string[]) || [];
             const newFavorites = favorites.filter((id) => id !== itemId);
-            await this.document.setFlag('wh40k-rpg', 'favorites', newFavorites);
+            await this.#actorDocument().setFlag('wh40k-rpg', 'favorites', newFavorites);
         }
 
         async clearFavorites(): Promise<void> {
-            await this.document.setFlag('wh40k-rpg', 'favorites', []);
+            await this.#actorDocument().setFlag('wh40k-rpg', 'favorites', []);
         }
 
         getFavoriteItems(): unknown[] {
-            const favorites = (this.document.getFlag('wh40k-rpg', 'favorites') as string[]) || [];
-            return favorites.map((id) => this.document.items.get(id)).filter((i) => i);
+            const favorites = (this.#actorDocument().getFlag('wh40k-rpg', 'favorites') as string[]) || [];
+            return favorites.map((id) => this.#actorDocument().items.get(id)).filter((i) => i);
         }
     };
 }

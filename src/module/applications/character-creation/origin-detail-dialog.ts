@@ -128,10 +128,19 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         context.hasSource = !!(source.book || source.page);
 
         // Characteristic modifiers
-        context.characteristics = [];
+        const contextData = context as Record<string, unknown> & {
+            characteristics: Array<Record<string, unknown>>;
+            skills: Array<Record<string, unknown>>;
+            talents: unknown[];
+            traits: unknown[];
+            equipment: Array<Record<string, unknown>>;
+            specialAbilities: unknown[];
+            choices: Array<Record<string, unknown>>;
+        };
+        contextData.characteristics = [];
         for (const [key, value] of Object.entries(modifiers as Record<string, number>)) {
             if (value !== 0) {
-                context.characteristics.push({
+                contextData.characteristics.push({
                     key: key,
                     label: getCharacteristicDisplayInfo(key).label,
                     short: getCharacteristicDisplayInfo(key).short,
@@ -140,7 +149,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
                 });
             }
         }
-        context.hasCharacteristics = (context.characteristics as unknown[]).length > 0;
+        context.hasCharacteristics = contextData.characteristics.length > 0;
 
         // Wounds/Fate formulas
         context.woundsFormula = grants.woundsFormula || null;
@@ -148,37 +157,37 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         context.hasFormulas = !!(context.woundsFormula || context.fateFormula);
 
         // Skills
-        context.skills = (grants.skills || []).map((skill: any) => ({
+        contextData.skills = (Array.isArray(grants.skills) ? grants.skills : []).map((skill: any) => ({
             name: skill.name,
             specialization: skill.specialization || null,
             level: skill.level || 'trained',
             levelLabel: getTrainingLabel(skill.level),
             displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
-        context.hasSkills = (context.skills as unknown[]).length > 0;
+        context.hasSkills = contextData.skills.length > 0;
 
         // Talents
-        context.talents = await this._prepareTalents(grants.talents || []);
-        context.hasTalents = (context.talents as unknown[]).length > 0;
+        contextData.talents = await this._prepareTalents(Array.isArray(grants.talents) ? grants.talents : []);
+        context.hasTalents = contextData.talents.length > 0;
 
         // Traits
-        context.traits = await this._prepareTraits(grants.traits || []);
-        context.hasTraits = (context.traits as unknown[]).length > 0;
+        contextData.traits = await this._prepareTraits(Array.isArray(grants.traits) ? grants.traits : []);
+        context.hasTraits = contextData.traits.length > 0;
 
         // Equipment
-        context.equipment = (grants.equipment || []).map((item: any) => ({
+        contextData.equipment = (Array.isArray(grants.equipment) ? grants.equipment : []).map((item: any) => ({
             name: item.name || item,
             quantity: item.quantity || 1,
             uuid: item.uuid || null,
         }));
-        context.hasEquipment = (context.equipment as unknown[]).length > 0;
+        context.hasEquipment = contextData.equipment.length > 0;
 
         // Special Abilities
-        context.specialAbilities = grants.specialAbilities || [];
-        context.hasSpecialAbilities = (context.specialAbilities as unknown[]).length > 0;
+        contextData.specialAbilities = Array.isArray(grants.specialAbilities) ? grants.specialAbilities : [];
+        context.hasSpecialAbilities = contextData.specialAbilities.length > 0;
 
         // Choices
-        context.choices = (grants.choices || []).map((choice: any) => ({
+        contextData.choices = (Array.isArray(grants.choices) ? grants.choices : []).map((choice: any) => ({
             type: choice.type,
             typeLabel: getChoiceTypeLabel(choice.type),
             label: choice.label,
@@ -357,6 +366,6 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             this._resolvePromise({ selected: false, origin: null });
             this._resolvePromise = null;
         }
-        return super.close(options);
+        await super.close(options);
     }
 }
