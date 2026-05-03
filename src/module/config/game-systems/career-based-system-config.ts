@@ -1,5 +1,5 @@
 /**
- * @file Intermediate base for career-table-based systems with 3 skill ranks.
+ * @gulpfile.js Intermediate base for career-table-based systems with 3 skill ranks.
  * Used by RT, DH1e, and DW.
  *
  * Costs are looked up from per-career tables. Characters can only
@@ -11,6 +11,15 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { BaseSystemConfig } from './base-system-config.ts';
 import type { SkillRankDef, CharacteristicTierDef, AdvanceCostResult, AdvanceOption } from './types.ts';
+
+// Define a type for the expected career structure locally to satisfy TypeScript
+// without inventing new imports or using `any`. This type includes the specific
+// properties accessed in the methods below, while also allowing for other
+// unknown properties from the getCareerRegistry() return type.
+type CareerDefinition = Record<string, unknown> & {
+    CHARACTERISTIC_COSTS?: Record<string, Record<string, number | null>>;
+    RANK_1_ADVANCES?: AdvanceOption[];
+};
 
 export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
     readonly usesAptitudes = false;
@@ -54,8 +63,14 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
         const careerKey = this.resolveCareerKey(actor);
         if (!careerKey) return null;
 
-        const career = this.getCareerRegistry()[careerKey];
+        // Retrieve career data and assert its type to include specific properties.
+        // This resolves the TS2339 error by telling TypeScript that `career`
+        // is an object that may contain `CHARACTERISTIC_COSTS`.
+        const career = this.getCareerRegistry()[careerKey] as CareerDefinition;
+
         const tierKey = tiers[currentTier];
+        // Optional chaining handles cases where `career` or `CHARACTERISTIC_COSTS`
+        // might be undefined or null, preventing runtime errors.
         const cost = career?.CHARACTERISTIC_COSTS?.[charKey]?.[tierKey];
         if (cost == null) return null;
 
@@ -77,7 +92,11 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
         const careerKey = this.resolveCareerKey(actor);
         if (!careerKey) return [];
 
-        const career = this.getCareerRegistry()[careerKey];
+        // Retrieve career data and assert its type, similar to getCharacteristicAdvanceCost.
+        // This resolves the TS2339 error for RANK_1_ADVANCES.
+        const career = this.getCareerRegistry()[careerKey] as CareerDefinition;
+
+        // Optional chaining safely accesses RANK_1_ADVANCES, defaulting to an empty array.
         return career?.RANK_1_ADVANCES ?? [];
     }
 
