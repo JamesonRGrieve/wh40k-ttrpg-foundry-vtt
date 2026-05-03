@@ -1,5 +1,5 @@
 /**
- * @file ShipComponentSheet - ApplicationV2 sheet for ship component items
+ * @gulpfile.js ShipComponentSheet - ApplicationV2 sheet for ship component items
  */
 
 import BaseItemSheet from './base-item-sheet.ts';
@@ -10,7 +10,7 @@ import BaseItemSheet from './base-item-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class ShipComponentSheet extends BaseItemSheet {
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'ship-component'],
         position: {
@@ -21,7 +21,7 @@ export default class ShipComponentSheet extends BaseItemSheet {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/ship-component-sheet.hbs',
@@ -31,7 +31,7 @@ export default class ShipComponentSheet extends BaseItemSheet {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static TABS = [
         { tab: 'details', group: 'primary', label: 'WH40K.Item.Tabs.Details' },
         { tab: 'effects', group: 'primary', label: 'WH40K.Item.Tabs.Effects' },
@@ -39,14 +39,14 @@ export default class ShipComponentSheet extends BaseItemSheet {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     tabGroups = {
         primary: 'details',
     };
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -57,9 +57,11 @@ export default class ShipComponentSheet extends BaseItemSheet {
         context.conditions = this._getConditionChoices();
 
         // Add display helpers
-        context.isGenerator = context.system.power?.generated > 0;
-        context.isPowerConsumer = context.system.power?.used > 0;
-        context.hasModifiers = context.system.hasModifiers;
+        const system = context['system'] as Record<string, unknown>;
+        const power = system['power'] as Record<string, number> | undefined;
+        context.isGenerator = (power?.generated ?? 0) > 0;
+        context.isPowerConsumer = (power?.used ?? 0) > 0;
+        context.hasModifiers = system['hasModifiers'];
 
         return context;
     }
