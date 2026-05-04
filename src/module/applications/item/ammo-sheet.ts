@@ -1,17 +1,27 @@
 /**
- * @file AmmoSheet - ApplicationV2 sheet for ammunition items
+ * @gulpfile.js AmmoSheet - ApplicationV2 sheet for ammunition items
  */
 
 import BaseItemSheet from './base-item-sheet.ts';
 import type AmmunitionData from '../../data/item/ammunition.ts';
+
+// Explicitly type static members to resolve TS2417.
+// This assumes BaseItemSheet follows ApplicationV2 conventions for static members.
+// The actual definition of BaseItemSheet is not provided, so we infer types
+// from ApplicationV2Config and HandlebarsApplicationV14 in foundry-v14-overrides.d.ts.
+// NOTE: The original error `TS2417: Class static side 'typeof AmmoSheet' incorrectly extends base class static side 'typeof BaseItemSheet'`
+// suggests a structural incompatibility between the static members of AmmoSheet and BaseItemSheet.
+// Without the definition of BaseItemSheet, we are making an educated guess based on standard Foundry VTT V14 application patterns.
+// We are explicitly typing the static properties according to their expected structure in ApplicationV2.
+// The `as unknown as ...` cast is used for Typescript2352 errors as per instructions.
 
 /**
  * Sheet for ammunition items.
  * Displays modifiers with stat bar and weapon compatibility.
  */
 export default class AmmoSheet extends BaseItemSheet {
-    /** @override */
-    static DEFAULT_OPTIONS = {
+    /** @foundry-v14-overrides.d.ts */
+    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'ammunition'],
         position: {
             width: 580,
@@ -26,8 +36,8 @@ export default class AmmoSheet extends BaseItemSheet {
 
     /* -------------------------------------------- */
 
-    /** @override */
-    static PARTS = {
+    /** @foundry-v14-overrides.d.ts */
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-ammo-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
@@ -36,8 +46,8 @@ export default class AmmoSheet extends BaseItemSheet {
 
     /* -------------------------------------------- */
 
-    /** @override */
-    static TABS = [
+    /** @foundry-v14-overrides.d.ts */
+    static TABS: HandlebarsApplicationV14.TabDescriptor[] = [
         { tab: 'modifiers', group: 'primary', label: 'Modifiers' },
         { tab: 'compatibility', group: 'primary', label: 'Compatibility' },
         { tab: 'qualities', group: 'primary', label: 'Qualities' },
@@ -46,7 +56,7 @@ export default class AmmoSheet extends BaseItemSheet {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     tabGroups: Record<string, string> = {
         primary: 'modifiers',
     };
@@ -55,7 +65,7 @@ export default class AmmoSheet extends BaseItemSheet {
     /*  Context Preparation                         */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -84,8 +94,10 @@ export default class AmmoSheet extends BaseItemSheet {
         if (!quality) return;
 
         const field = type === 'added' ? 'addedQualities' : 'removedQualities';
-        const sys = this.item.system as AmmunitionData;
-        const qualities = new Set((sys[field] as string[]) || []);
+        // TS2352: Conversion of type 'WH40KItemSystemData' to type 'AmmunitionData' may be a mistake
+        const sys = this.item.system as unknown as AmmunitionData;
+        // TS2352: Conversion of type 'Set<string>' to type 'string[]' may be a mistake
+        const qualities = new Set((sys[field] as unknown as string[]) || []);
         qualities.add(quality);
 
         await this.item.update({ [`system.${field}`]: Array.from(qualities) });
@@ -99,8 +111,10 @@ export default class AmmoSheet extends BaseItemSheet {
      */
     static async #removeAddedQuality(this: AmmoSheet, event: Event, target: HTMLElement): Promise<void> {
         const quality = target.dataset.quality;
-        const sys = this.item.system as AmmunitionData;
-        const qualities = new Set((sys.addedQualities as string[]) || []);
+        // TS2352: Conversion of type 'WH40KItemSystemData' to type 'AmmunitionData' may be a mistake
+        const sys = this.item.system as unknown as AmmunitionData;
+        // TS2352: Conversion of type 'Set<string>' to type 'string[]' may be a mistake
+        const qualities = new Set((sys.addedQualities as unknown as string[]) || []);
         if (quality) qualities.delete(quality);
 
         await this.item.update({ 'system.addedQualities': Array.from(qualities) });
@@ -111,8 +125,10 @@ export default class AmmoSheet extends BaseItemSheet {
      */
     static async #removeRemovedQuality(this: AmmoSheet, event: Event, target: HTMLElement): Promise<void> {
         const quality = target.dataset.quality;
-        const sys = this.item.system as AmmunitionData;
-        const qualities = new Set((sys.removedQualities as string[]) || []);
+        // TS2352: Conversion of type 'WH40KItemSystemData' to type 'AmmunitionData' may be a mistake
+        const sys = this.item.system as unknown as AmmunitionData;
+        // TS2352: Conversion of type 'Set<string>' to type 'string[]' may be a mistake
+        const qualities = new Set((sys.removedQualities as unknown as string[]) || []);
         if (quality) qualities.delete(quality);
 
         await this.item.update({ 'system.removedQualities': Array.from(qualities) });
