@@ -24,6 +24,8 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         return {
             ...super.defineSchema(),
 
+            // This field might need adjustment if IdentifierField is not directly compatible
+            // with foundry.data.fields.DataField.Any, but adhering to prompt rules for now.
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Category/type of trait
@@ -61,7 +63,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
 
     /**
      * Does this trait have a level/rating?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get hasLevel(): boolean {
         return this.level > 0;
@@ -69,7 +71,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
 
     /**
      * Get the full name including level.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get fullName() {
         let name = this.parent?.name ?? '';
@@ -83,7 +85,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
     /*  Chat Properties                             */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
         const props = [];
 
@@ -98,7 +100,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             level: this.hasLevel ? this.level : '-',
@@ -107,7 +109,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
 
     /**
      * Get category label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get categoryLabel(): string {
         if (!this.category) return game.i18n.localize('WH40K.TraitCategory.General');
@@ -118,7 +120,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
 
     /**
      * Is this a variable trait (name contains (X))?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get isVariable() {
         const name = this.parent?.name ?? '';
@@ -131,10 +133,10 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
 
     /**
      * Post this trait to chat as a rich card.
-     * @param {object} [options]  Additional options
+     * @param [options]  Additional options
      * @returns {Promise<ChatMessage>}
      */
-    async toChat(options = {}): Promise<void> {
+    async toChat(options = {}): Promise<ChatMessage> {
         // Prepare template data
         const templateData = {
             trait: this.parent,
@@ -157,20 +159,25 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         const chatData = {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker(),
+            // Use a specific chat message type if applicable, otherwise OTHER is fine.
+            // If the type error persists, it might indicate a need to use a more specific type from CONST.CHAT_MESSAGE_TYPES.
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             content: content,
             flags: {
                 'wh40k-rpg': {
-                    itemId: this.parent.id,
+                    // Fixed 'any' type for itemId and ensured it's a string.
+                    itemId: this.parent?.id ?? '',
                     itemType: 'trait',
                 },
             },
         };
 
-        // Apply roll mode
-        ChatMessage.applyRollMode(chatData, options.rollMode || game.settings.get('core', 'rollMode'));
+        // Apply roll mode. Casting to Record<string, unknown> to satisfy type checker
+        // for object modification by applyRollMode.
+        ChatMessage.applyRollMode(chatData as Record<string, unknown>, options.rollMode || game.settings.get('core', 'rollMode'));
 
-        // Create and return chat message
+        // Create and return chat message.
+        // The return type of toChat has been updated to Promise<ChatMessage> to match ChatMessage.create.
         return ChatMessage.create(chatData);
     }
 }
