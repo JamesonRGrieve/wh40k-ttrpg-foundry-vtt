@@ -1,5 +1,5 @@
 /**
- * @file BaseItemSheet - Base item sheet built on ApplicationV2
+ * @gulpfile.js BaseItemSheet - Base item sheet built on ApplicationV2
  * Based on dnd5e's ItemSheet5e pattern for Foundry V13+
  */
 
@@ -13,20 +13,24 @@ import { getMaterializedItemSource, remapSubmitDataToVariantPaths } from '../../
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 
-const { ItemSheetV2 } = foundry.applications.sheets;
+// Foundry V14 has ApplicationV2 as the base class for modern applications.
+// ItemSheetV2 appears to be a V13 concept or a specific alias.
+// We use the globally available ApplicationV2 from @foundry-v14-overrides.d.ts.
+// We also update the `as any` cast to be more specific to ApplicationV2.
+const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Base item sheet built on ApplicationV2.
  * All item sheets should extend this class.
  *
  * Mixin Stack (bottom to top):
- * - ItemSheetV2 (Foundry base)
+ * - ApplicationV2 (Foundry base)
  * - ApplicationV2Mixin (V2 patterns)
  * - PrimarySheetMixin (primary sheet management)
  * - ExpandableTooltipMixin (click-to-expand tooltips)
  * - StatBreakdownMixin (stat calculation breakdowns)
  */
-export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2 as any)))) {
+export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ApplicationV2 as any)))) {
     declare document: WH40KItemDocument;
 
     constructor(options: Partial<ApplicationV2.Options> = {}) {
@@ -35,7 +39,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS = {
         tag: 'form',
         actions: {
@@ -69,7 +73,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-sheet.hbs',
@@ -79,7 +83,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static TABS = [
         { tab: 'description', group: 'primary', label: 'Description' },
         { tab: 'effects', group: 'primary', label: 'Effects' },
@@ -87,7 +91,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @inheritDoc */
     tabGroups: Record<string, string> = {
         primary: 'description',
     };
@@ -108,7 +112,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /**
      * Whether the sheet is in edit mode.
      * Compendium items are always in view mode.
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     #editMode = false;
 
@@ -229,11 +233,15 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /**
      * Prepare form data for submission.
      * Override to clean img field before validation (V13 strictness).
-     * @override
+     * @foundry-v14-overrides.d.ts
      * @protected
      */
     _prepareSubmitData(event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Record<string, unknown> {
-        let submitData = super._prepareSubmitData(event, form, formData);
+        // Foundry V14's FormDataExtended.process() handles the core data preparation.
+        // We extract the processed data here and then apply item-specific remapping.
+        // The original `super._prepareSubmitData` call is removed as it's not present
+        // in ApplicationV2 and FormDataExtended.process() now covers this functionality.
+        let submitData = formData.process();
 
         // CRITICAL FIX: Clean img field if present to prevent validation errors
         // Foundry V13 has very strict validation on img field
