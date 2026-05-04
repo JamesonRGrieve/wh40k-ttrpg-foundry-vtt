@@ -22,6 +22,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     declare overloadDuration: string;
     declare effect: string;
     declare notes: string;
+    declare craftsmanship: string;
 
     /* -------------------------------------------- */
     /*  Data Migration                              */
@@ -47,7 +48,10 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: (new IdentifierField({
+                required: true,
+                blank: true,
+            }) as unknown) as foundry.data.fields.DataField.Any,
 
             // Protection rating (1-100 roll threshold)
             protectionRating: new fields.NumberField({
@@ -98,14 +102,14 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get isRollable(): boolean {
         return true;
     }
 
     /**
      * Get the status label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get statusLabel(): string {
         if (this.overloaded) return game.i18n.localize('WH40K.ForceField.Overloaded');
@@ -115,9 +119,9 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
 
     /**
      * Is the field currently providing protection?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
-    get isProtecting() {
+    get isProtecting(): boolean {
         return this.activated && !this.overloaded;
     }
 
@@ -131,9 +135,9 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * - Good: Overload on 01-05
      * - Best: Overload on 01 only (1% chance)
      *
-     * @type {object}
+     * @scripts/gen-i18n-types.mjs {object}
      */
-    get craftsmanshipModifiers() {
+    get craftsmanshipModifiers(): { overloadMin: number; overloadMax: number } {
         const mods = {
             overloadMin: 1,
             overloadMax: 10,
@@ -159,9 +163,9 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
 
     /**
      * Get effective overload range (including craftsmanship).
-     * @type {object}
+     * @scripts/gen-i18n-types.mjs {object}
      */
-    get effectiveOverloadRange(): Record<string, unknown> {
+    get effectiveOverloadRange(): { min: number; max: number } {
         const craftMods = this.craftsmanshipModifiers;
 
         // If item has explicit overload values, use those
@@ -184,14 +188,14 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {number} roll - The d100 protection roll
      * @returns {boolean}
      */
-    checksOverload(roll): boolean {
+    checksOverload(roll: number): boolean {
         const range = this.effectiveOverloadRange;
         return roll >= range.min && roll <= range.max;
     }
 
     /**
      * Get overload range label for display.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get overloadRangeLabel(): string {
         const range = this.effectiveOverloadRange;
@@ -205,10 +209,10 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     /*  Chat Properties                             */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
         const props = [
-            ...PhysicalItemTemplate.prototype.chatProperties.call(this),
+            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
             `Protection: ${this.protectionRating}%`,
             `Overload: ${this.overloadRangeLabel}`,
             this.statusLabel,
@@ -221,11 +225,11 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             protection: `${this.protectionRating}%`,
-            overload: `${this.overloadThreshold}+`,
+            overload: `${this.overloadMax}+`,
             status: this.statusLabel,
         };
     }
@@ -247,7 +251,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {boolean} overloaded
      * @returns {Promise<Item>}
      */
-    setOverloaded(overloaded): unknown {
+    setOverloaded(overloaded: boolean): unknown {
         return this.parent?.update({ 'system.overloaded': overloaded });
     }
 
@@ -264,7 +268,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} [options] - Roll options
      * @returns {Promise<object>} - Result object with { isProtected: boolean, overloaded: boolean, roll: Roll }
      */
-    async rollProtection(options = {}): Promise<unknown> {
+    async rollProtection(options: { speaker?: Record<string, unknown> } = {}): Promise<unknown> {
         if (!this.isProtecting) {
             return { isProtected: false, overloaded: false, roll: null, inactive: true };
         }
