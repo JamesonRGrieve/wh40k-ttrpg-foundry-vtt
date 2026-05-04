@@ -1,59 +1,48 @@
 {{! Skill Chat Card }}
-<div class="tw-p-2">
-    <header class="tw-flex tw-items-center tw-gap-2">
-        <img class="tw-w-8 tw-h-8 tw-rounded tw-object-cover" src="{{skill.img}}" alt="{{skill.name}}" />
-        <div class="tw-flex-1">
-            <h3 class="tw-m-0 tw-text-base tw-font-bold">{{skill.name}}</h3>
-            <div class="tw-flex tw-flex-wrap tw-gap-1 tw-mt-1">
-                <span class="wh40k-badge">
-                    {{skill.system.skillTypeLabel}}
-                </span>
-                <span class="wh40k-badge">
-                    {{skill.system.characteristicLabel}}
-                    ({{skill.system.characteristicAbbr}})
-                </span>
-                {{#if skill.system.isBasic}}
-                    <span class="wh40k-badge">
-                        <i class="fas fa-check-circle"></i>
-                        Can Use Untrained
-                    </span>
-                {{/if}}
-            </div>
-        </div>
-    </header>
-
+{{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
+    cardClass="wh40k-skill-card"
+    outerExtraClass="tw-overflow-hidden tw-rounded-md"
+    image=skill.img
+    imageAlt=skill.name
+    title=skill.name
+    gameSystem=gameSystem
+    badges=(array
+        (hash label=skill.system.skillTypeLabel)
+        (hash label=(concat skill.system.characteristicLabel ' (' skill.system.characteristicAbbr ')'))
+        (hash icon="fa-check-circle" label=(iff skill.system.isBasic 'Can Use Untrained' '')))
+}}
     {{#if skill.system.descriptor}}
-        <div class="tw-mt-2">
-            <p class="tw-italic tw-text-sm tw-m-0">{{skill.system.descriptor}}</p>
-        </div>
+    <div class="tw-mb-2">
+        <p class="tw-italic tw-text-sm tw-m-0">{{skill.system.descriptor}}</p>
+    </div>
     {{/if}}
 
     {{#if skill.system.uses}}
-        <div class="tw-mt-2">
-            <h4 class="tw-m-0 tw-text-sm tw-font-bold"><i class="fas fa-list-check"></i> Uses</h4>
-            <div class="tw-text-sm">{{{skill.system.uses}}}</div>
-        </div>
+    <div class="tw-mb-2">
+        <h4 class="tw-m-0 tw-mb-1 tw-text-sm tw-font-bold"><i class="fas fa-list-check"></i> Uses</h4>
+        <div class="tw-text-sm">{{{skill.system.uses}}}</div>
+    </div>
     {{/if}}
 
     {{#if skill.system.specialRules}}
-        <div class="tw-mt-2">
-            <h4 class="tw-m-0 tw-text-sm tw-font-bold"><i class="fas fa-book-open"></i> Special Rules</h4>
-            <div class="tw-text-sm">{{{skill.system.specialRules}}}</div>
-        </div>
+    <div class="tw-mb-2">
+        <h4 class="tw-m-0 tw-mb-1 tw-text-sm tw-font-bold"><i class="fas fa-book-open"></i> Special Rules</h4>
+        <div class="tw-text-sm">{{{skill.system.specialRules}}}</div>
+    </div>
     {{/if}}
 
-    <footer class="tw-mt-2 tw-text-xs tw-flex tw-flex-wrap tw-gap-2 tw-opacity-80">
+    <div class="tw-text-xs tw-flex tw-flex-wrap tw-gap-2 tw-opacity-80">
         {{#if skill.system.useTime}}
-            <span><strong>Time:</strong> {{skill.system.useTime}}</span>
+        <span><strong>Time:</strong> {{skill.system.useTime}}</span>
         {{/if}}
         {{#if skill.system.aptitudes.length}}
-            <span><strong>Aptitudes:</strong> {{join skill.system.aptitudes ", "}}</span>
+        <span><strong>Aptitudes:</strong> {{join skill.system.aptitudes ", "}}</span>
         {{/if}}
         {{#if skill.system.hasSpecializations}}
-            <div class="tw-w-full">
-                <strong>Available Specializations:</strong>
-                <span>{{join skill.system.specializations ", "}}</span>
-            </div>
+        <div class="tw-w-full">
+            <strong>Available Specializations:</strong>
+            <span>{{join skill.system.specializations ", "}}</span>
+        </div>
         {{/if}}
-    </footer>
-</div>
+    </div>
+{{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}
