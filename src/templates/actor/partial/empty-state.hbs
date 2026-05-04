@@ -1,0 +1,18 @@
+{{!--
+    Empty-state placeholder — icon + italic message, centered. Used inside list
+    panels (psychic powers, navigator powers, rituals, orders, talents, effects,
+    critical injuries, etc.) when the underlying collection has no entries.
+
+    Hash arguments:
+        icon       — Font Awesome class without "fa-" prefix is fine; full
+                     "fas fa-hat-wizard" also accepted (icon is rendered raw).
+                     Required.
+        text       — plain English fallback message (used when textKey is absent).
+        textKey    — i18n key resolved via {{localize}}. Preferred over `text`.
+        padding    — "sm" (default) | "md". Controls vertical padding.
+        rootClass  — extra utility classes appended to the wrapper.
+--}}
+<div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-[color:var(--wh40k-text-muted)] tw-text-center {{#if (eq padding "md")}}tw-p-6{{else}}tw-p-4{{/if}}{{#if rootClass}} {{rootClass}}{{/if}}">
+    <i class="fas {{icon}} tw-text-2xl tw-mb-2 tw-opacity-60"></i>
+    <p class="tw-italic tw-m-0">{{#if textKey}}{{localize textKey}}{{else}}{{text}}{{/if}}</p>
+</div>

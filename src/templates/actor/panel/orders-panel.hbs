@@ -109,16 +109,10 @@
             </div>
         </div>
         {{else}}
-        <div class="wh40k-empty-state">
-            <i class="fas fa-ship"></i>
-            <p>No ship orders known</p>
-        </div>
+        {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-ship" text="No ship orders known"}}
         {{/each}}
     </div>
 
     {{!-- Add Order Dropzone --}}
-    <div class="wh40k-dropzone {{#if ordersCount}}wh40k-dropzone--compact{{/if}}" data-action="itemCreate" data-type="order">
-        <i class="fas fa-plus wh40k-dropzone-icon"></i>
-        <span class="wh40k-dropzone-text" data-dropzone-text>{{#if ordersCount}}Drop or click to add{{else}}Drop Ship Order or Click to Create{{/if}}</span>
-    </div>
+    {{> systems/wh40k-rpg/templates/actor/partial/dropzone.hbs type="order" hasItems=ordersCount label="Drop Ship Order or Click to Create" compactLabel="Drop or click to add"}}
 {{/systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs}}

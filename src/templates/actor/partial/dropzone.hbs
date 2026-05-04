@@ -1,0 +1,29 @@
+{{!--
+    Dropzone affordance — dashed-border rectangle inviting drop / click to create
+    a new item. Compact variant (used when the host list already has items) is
+    shorter and shows a terser label. Renders the existing wh40k-dropzone class
+    set so the monolith CSS continues to apply until those rules are ported.
+
+    Hash arguments:
+        type            — item type slug; emitted on data-type for itemCreate.
+                          Required.
+        label           — full English label shown when the host list is empty.
+        labelKey        — i18n key resolved via {{localize}} (preferred over `label`).
+        compactLabel    — terser English label shown when the host list has items.
+        compactLabelKey — i18n key for the terse label (preferred).
+        iconClass       — Font Awesome class for the inline icon. Defaults to
+                          "fa-plus".
+        hasItems        — truthy when the host list is non-empty; switches to
+                          the compact layout.
+        rootClass       — extra utility classes appended to the wrapper.
+--}}
+<div class="wh40k-dropzone{{#if hasItems}} wh40k-dropzone--compact{{/if}}{{#if rootClass}} {{rootClass}}{{/if}}" data-action="itemCreate" data-type="{{type}}">
+    <i class="fas {{#if iconClass}}{{iconClass}}{{else}}fa-plus{{/if}} wh40k-dropzone-icon"></i>
+    <span class="wh40k-dropzone-text" data-dropzone-text>
+        {{~#if hasItems~}}
+            {{#if compactLabelKey}}{{localize compactLabelKey}}{{else if compactLabel}}{{compactLabel}}{{else if labelKey}}{{localize labelKey}}{{else}}{{label}}{{/if}}
+        {{~else~}}
+            {{#if labelKey}}{{localize labelKey}}{{else}}{{label}}{{/if}}
+        {{~/if~}}
+    </span>
+</div>
