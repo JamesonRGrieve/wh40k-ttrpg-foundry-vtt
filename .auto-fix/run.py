@@ -38,6 +38,20 @@ os.environ["OPENAI_API_KEY"] = "dummy"
 MODEL_NAME = "openai/cyankiwi/Qwen3-Coder-30B-A3B-Instruct-AWQ-4bit"
 MAX_RETRIES = 2
 
+# ── Fallback ladder (Gemini + Codex via harness ai.py) ──
+HARNESS = "/home/jameson/source/harness/ai.py"
+REAL_HOME = "/home/jameson"  # forced for gemini slot 0 so it doesn't resolve under a redirected session HOME
+GEMINI_SLOTS = [0, 1]
+# 3.1-flash-lite-preview removed: audit showed it produced no-fence prose, lint regressions, and TS2352 casts.
+GEMINI_FLASH_LITE_MODELS = ["gemini-2.5-flash-lite"]
+GEMINI_FLASH_MODELS = ["gemini-3-flash-preview", "gemini-2.5-flash"]
+GEMINI_TIMEOUT = 600
+CODEX_TIMEOUT = 900
+GEMINI_BACKOFF_START = 60
+GEMINI_BACKOFF_MAX = 600  # 10 min cap per cycle
+GEMINI_BACKOFF_CYCLES = 3  # max full slot-0/slot-1 cycles before giving up
+FLASH_FAILURES_BEFORE_CODEX = 2
+
 # ── Error code competency for Qwen3-Coder-30B (32K ctx, 8K out) ──
 
 EASY_CODES = {
@@ -447,7 +461,14 @@ def build_prompt(filepath: str, file_error_lines: list[str]) -> str:
 - Prefer type narrowing (guards, instanceof, typeof) over type assertions (as).
 - Do NOT introduce new ESLint warnings (unused imports, unused variables, etc.).
 - Your output MUST reduce the number of TypeScript errors. Don't trade one
-  error for another — if you can't fix an error cleanly, leave it alone."""
+  error for another — if you can't fix an error cleanly, leave it alone.
+- DO NOT rewrite the file header, license banner, JSDoc blocks, or existing
+  comments. Leave all comments byte-for-byte identical unless the comment is
+  itself the cause of an error.
+- DO NOT add explanatory comments describing what you changed. The diff is the
+  explanation; the file does not need narration.
+- DO NOT emit prose, status updates, "I have updated…" sentences, or any text
+  outside the single ```typescript fence. The output is the file, nothing else."""
 
 
 def git_checkout_file(filepath: str) -> None:
@@ -493,40 +514,156 @@ def save_progress(progress: dict) -> None:
 SYSTEM_PROMPT = """\
 You are a TypeScript expert fixing compiler errors. You will be given a file's full \
 source and a list of TypeScript compiler errors. Output ONLY the complete corrected \
-file, inside a single ```typescript ... ``` fence. No explanation, no other text.\
+file, inside a single ```typescript ... ``` fence. No explanation, no commentary, no \
+status text, no verification summary, no diff — just the file.\
 """
 
-def call_model(filepath: str, file_errors: list[str]) -> str:
-    """Call vLLM directly via OpenAI streaming. Returns the raw model response."""
-    from openai import OpenAI
+def _build_user_msg(filepath: str, file_errors: list[str]) -> str:
     source = (ROOT / filepath).read_text()
-    user_msg = (
+    return (
         build_prompt(filepath, file_errors)
         + f"\n\n## Full file source\n\n```typescript\n{source}\n```"
         + "\n\nOutput the complete corrected file inside a single ```typescript fence."
     )
 
+
+def is_usage_limited(text: str) -> bool:
+    t = text.lower()
+    return (
+        "usage limit" in t
+        or "quota" in t
+        or "rate limit" in t
+        or "rate-limit" in t
+        or "ratelimit" in t
+        or "429" in t
+        or "resource_exhausted" in t
+        or "you've hit your usage" in t
+    )
+
+
+def is_auth_error(text: str) -> bool:
+    t = text.lower()
+    return (
+        ("auth" in t and ("required" in t or "must be configured" in t or "settings.json" in t))
+        or "oauth" in t and "expired" in t
+        or "credentials" in t and "invalid" in t
+        or "opening authentication page" in t
+    )
+
+
+def call_local(filepath: str, file_errors: list[str]) -> tuple[str, str]:
+    """Call vLLM. Returns (output, kind) where kind ∈ {'ok', 'unreachable', 'error'}."""
+    if not check_vllm():
+        return "", "unreachable"
+    from openai import OpenAI
+    user_msg = _build_user_msg(filepath, file_errors)
     client = OpenAI(
         api_key="dummy",
         base_url="http://198.51.100.9/v1",
         timeout=180,
         max_retries=0,  # don't retry — connection errors mean the server OOM'd
     )
-    chunks = []
-    with client.chat.completions.create(
-        model=MODEL_NAME.removeprefix("openai/"),
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_msg},
-        ],
-        max_tokens=8192,
-        temperature=0.1,
-        stream=True,
-    ) as stream:
-        for chunk in stream:
-            delta = chunk.choices[0].delta.content or ""
-            chunks.append(delta)
-    return "".join(chunks)
+    try:
+        chunks = []
+        with client.chat.completions.create(
+            model=MODEL_NAME.removeprefix("openai/"),
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_msg},
+            ],
+            max_tokens=8192,
+            temperature=0.1,
+            stream=True,
+        ) as stream:
+            for chunk in stream:
+                delta = chunk.choices[0].delta.content or ""
+                chunks.append(delta)
+        return "".join(chunks), "ok"
+    except Exception as e:
+        return f"Exception: {e}", "error"
+
+
+def _call_harness(argv: list[str], slot: int, timeout: int) -> tuple[str, str]:
+    """Run a harness ai.py invocation. Slot 0 forces HOME=/home/jameson so it
+    doesn't resolve .gemini/.codex under a redirected session HOME. Returns
+    (combined_output, kind) where kind ∈ {'ok','usage_limit','auth_error','error'}."""
+    env = os.environ.copy()
+    if slot == 0:
+        env["HOME"] = REAL_HOME
+    try:
+        result = subprocess.run(
+            argv,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            env=env,
+            cwd=ROOT,
+        )
+    except subprocess.TimeoutExpired as e:
+        return f"TimeoutExpired after {timeout}s: {e}", "error"
+    out = result.stdout or ""
+    err = result.stderr or ""
+    combined = out + ("\n" + err if err else "")
+    if is_usage_limited(combined):
+        return combined, "usage_limit"
+    if is_auth_error(combined):
+        return combined, "auth_error"
+    if result.returncode != 0 and not out.strip():
+        return combined, "error"
+    return combined, "ok"
+
+
+def call_gemini(slot: int, model: str, filepath: str, file_errors: list[str]) -> tuple[str, str]:
+    """Single Gemini attempt. Returns (output, kind)."""
+    prompt = _build_user_msg(filepath, file_errors)
+    argv = [
+        "python3", HARNESS, "gemini", str(slot),
+        "--model", model,
+        "-p", prompt,
+    ]
+    return _call_harness(argv, slot, GEMINI_TIMEOUT)
+
+
+def call_gemini_with_cycling(
+    model: str,
+    filepath: str,
+    file_errors: list[str],
+    run_state: dict,
+) -> tuple[str, str, int | None]:
+    """Cycle gemini slots on usage_limit with exponential backoff up to GEMINI_BACKOFF_MAX.
+    Returns (output, kind, slot_used). kind 'all_limited' means every slot is exhausted."""
+    backoff = GEMINI_BACKOFF_START
+    start_slot = run_state.get("gemini_slot", 0)
+    for cycle in range(GEMINI_BACKOFF_CYCLES):
+        # Try preferred slot, then the other.
+        order = [start_slot] + [s for s in GEMINI_SLOTS if s != start_slot]
+        any_non_limit = False
+        for slot in order:
+            log(f"      trying gemini {slot} {model}")
+            output, kind = call_gemini(slot, model, filepath, file_errors)
+            run_state["gemini_slot"] = slot
+            if kind != "usage_limit":
+                return output, kind, slot
+            log(f"      gemini {slot} usage limited, switching slot")
+            any_non_limit = True  # noqa: not used to break, kept for clarity
+        # Both slots usage-limited — back off and cycle again.
+        sleep_for = min(backoff, GEMINI_BACKOFF_MAX)
+        log(f"      both gemini slots usage limited, backoff {sleep_for}s (cycle {cycle+1}/{GEMINI_BACKOFF_CYCLES})")
+        time.sleep(sleep_for)
+        backoff = min(backoff * 2, GEMINI_BACKOFF_MAX)
+        # Flip starting slot each cycle so we don't keep hammering the same one first.
+        start_slot = 1 - start_slot
+    return "", "all_limited", None
+
+
+def call_codex(filepath: str, file_errors: list[str]) -> tuple[str, str]:
+    """Last-resort Codex slot 2 attempt. Returns (output, kind)."""
+    prompt = _build_user_msg(filepath, file_errors)
+    argv = [
+        "python3", HARNESS, "codex", "2",
+        "exec", "--json", "--full-auto", prompt,
+    ]
+    return _call_harness(argv, slot=2, timeout=CODEX_TIMEOUT)
 
 
 def apply_model_output(filepath: str, output: str) -> bool:
@@ -545,19 +682,78 @@ def apply_model_output(filepath: str, output: str) -> bool:
     return True
 
 
+def _ratchet_check(
+    filepath: str,
+    file_errors: list[str],
+    current_tsc: int,
+    lint_baseline: int,
+) -> tuple[bool, int, int, str, list[str], set[str]]:
+    """Re-run tsc/lint after an applied edit. Returns
+    (accepted, new_tsc, new_lint, reason_str, new_file_errors, new_codes)."""
+    new_errors = run_tsc()
+    new_tsc = len(new_errors)
+    tsc_delta = new_tsc - current_tsc
+
+    new_lint = get_eslint_warning_count()
+    lint_delta = new_lint - lint_baseline
+
+    new_file_errors = [l for l in new_errors if l.startswith(filepath + "(")]
+    code_re = re.compile(r"error (TS\d+):")
+    before_codes = {code_re.search(l).group(1) for l in file_errors if code_re.search(l)}
+    after_codes = {code_re.search(l).group(1) for l in new_file_errors if code_re.search(l)}
+    new_codes = after_codes - before_codes
+
+    accepted = (tsc_delta < 0) and (lint_delta <= 0) and (not new_codes)
+
+    reasons = []
+    if accepted:
+        reasons.append(f"TSC {current_tsc}→{new_tsc} (fixed {current_tsc - new_tsc})")
+        reasons.append(f"lint {lint_baseline}→{new_lint}")
+    else:
+        if tsc_delta > 0:
+            reasons.append(f"TSC +{tsc_delta}")
+        elif tsc_delta == 0:
+            reasons.append("TSC unchanged (no real progress)")
+        if lint_delta > 0:
+            reasons.append(f"lint +{lint_delta}")
+        if new_codes:
+            reasons.append(f"new codes {sorted(new_codes)}")
+    return accepted, new_tsc, new_lint, ", ".join(reasons), new_file_errors, new_codes
+
+
+def _runner_label(kind: str, model: str | None, slot: int | None) -> str:
+    if kind == "local":
+        return "local vLLM"
+    if kind == "codex":
+        return "codex 2"
+    parts = [kind]
+    if slot is not None:
+        parts.append(f"slot {slot}")
+    if model:
+        parts.append(model)
+    return " ".join(parts)
+
+
 def process_file(
     filepath: str,
-    model: object,
     progress: dict,
     tsc_baseline: int,
     lint_baseline: int,
+    run_state: dict,
 ) -> tuple[int, int]:
-    """Fix one file. Returns (new_tsc_count, new_lint_count)."""
+    """Fix one file via the provider ladder. Returns (new_tsc_count, new_lint_count).
+
+    Per-file ladder:
+      1. local vLLM (skipped if --gemini or local self-disabled earlier this run)
+      2. gemini flash-lite (slot-cycled with backoff)
+      3. gemini flash — locked until a flash-lite attempt produces an
+         applied-but-rejected edit on this file
+      4. codex 2 — only after FLASH_FAILURES_BEFORE_CODEX flash failures
+    """
     if filepath in progress["completed"] or filepath in progress["skipped"]:
         log(f"  SKIP {filepath} (already processed)")
         return tsc_baseline, lint_baseline
 
-    # Fresh TSC parse for this file
     all_errors = run_tsc()
     file_errors = [l for l in all_errors if l.startswith(filepath + "(")]
     current_tsc = len(all_errors)
@@ -570,90 +766,105 @@ def process_file(
 
     log(f"  FIX  {filepath} ({len(file_errors)} errors, {current_tsc} total TSC)")
 
-    for attempt in range(1, MAX_RETRIES + 1):
-        log(f"    attempt {attempt}/{MAX_RETRIES}")
+    # Build the queue. Local first (if enabled), then flash-lite. Flash and
+    # codex are appended dynamically when their gates open.
+    Phase = tuple[str, str | None]  # (kind, model_or_none)
+    queue: list[Phase] = []
+    if run_state["local_enabled"] and not run_state["gemini_only"]:
+        queue.append(("local", None))
+    for m in GEMINI_FLASH_LITE_MODELS:
+        queue.append(("gemini-flash-lite", m))
 
-        # Wait for server to be reachable (up to 10 minutes)
-        for wait_attempt in range(5):
-            if check_vllm():
+    flash_unlocked = False
+    flash_failures = 0
+    codex_queued = False
+    attempt = 0
+
+    while queue:
+        kind, model = queue.pop(0)
+        attempt += 1
+        log(f"    pass {attempt} — {_runner_label(kind, model, None)}")
+
+        slot_used: int | None = None
+        if kind == "local":
+            output, status = call_local(filepath, file_errors)
+            if status == "unreachable":
+                log(f"    local vLLM unreachable — disabling local for the rest of this run")
+                file_log(filepath, attempt, "local-unreachable", "vLLM /v1/models did not respond")
+                run_state["local_enabled"] = False
+                continue
+        elif kind in ("gemini-flash-lite", "gemini-flash"):
+            output, status, slot_used = call_gemini_with_cycling(model, filepath, file_errors, run_state)
+            if status == "all_limited":
+                log(f"    gemini all slots exhausted — aborting file")
+                file_log(filepath, attempt, f"{kind}-all-limited", output)
                 break
-            log(f"    vLLM unreachable, waiting 120s... ({wait_attempt+1}/5)")
-            time.sleep(120)
+            if status == "auth_error":
+                log(f"    gemini auth error — see file log; skipping this runner")
+                file_log(filepath, attempt, f"{kind}-auth-error", output)
+                continue
+        elif kind == "codex":
+            output, status = call_codex(filepath, file_errors)
+            if status == "usage_limit":
+                log(f"    codex usage limit — aborting file")
+                file_log(filepath, attempt, "codex-usage-limit", output)
+                break
         else:
-            log(f"    vLLM unreachable after retries, aborting file")
-            progress["failed"].append(filepath)
-            save_progress(progress)
-            return tsc_baseline, lint_baseline
-
-        model_output = ""
-        try:
-            model_output = call_model(filepath, file_errors)
-        except Exception as e:
-            log(f"    model error: {e}, waiting 120s before next attempt")
-            file_log(filepath, attempt, "error", f"Exception: {e}")
-            time.sleep(120)
+            log(f"    unknown phase kind {kind!r}")
             continue
 
-        file_log(filepath, attempt, "raw-output", model_output)
+        if status == "error":
+            log(f"    {kind} runtime error (see file log)")
+            file_log(filepath, attempt, f"{kind}-error", output)
+            if kind == "gemini-flash":
+                flash_failures += 1
+            continue
 
-        applied = apply_model_output(filepath, model_output)
+        file_log(filepath, attempt, f"{kind}-raw-output", output)
+
+        applied = apply_model_output(filepath, output)
         if not applied:
             log(f"    no valid typescript fence in output")
-            file_log(filepath, attempt, "nochange",
-                     f"PROMPT:\n{build_prompt(filepath, file_errors)}\n\nOUTPUT:\n{model_output}")
+            file_log(
+                filepath, attempt, f"{kind}-nochange",
+                f"PROMPT:\n{build_prompt(filepath, file_errors)}\n\nOUTPUT:\n{output}",
+            )
+            if kind == "gemini-flash":
+                flash_failures += 1
+                if flash_failures >= FLASH_FAILURES_BEFORE_CODEX and not codex_queued:
+                    log(f"    codex unlocked ({flash_failures} flash failures)")
+                    queue.append(("codex", None))
+                    codex_queued = True
             continue
 
-        # Capture the applied diff for logging
+        # An edit was applied — the runner produced a real but possibly insufficient fix.
         diff = git_diff_file(filepath)
+        accepted, new_tsc, new_lint, reason, new_file_errors, new_codes = _ratchet_check(
+            filepath, file_errors, current_tsc, lint_baseline,
+        )
 
-        # Check TSC ratchet
-        new_errors = run_tsc()
-        new_tsc = len(new_errors)
-        tsc_delta = new_tsc - current_tsc
-
-        # Check lint ratchet
-        new_lint = get_eslint_warning_count()
-        lint_delta = new_lint - lint_baseline
-
-        # Per-file error sets (compare error codes before/after)
-        new_file_errors = [l for l in new_errors if l.startswith(filepath + "(")]
-        code_re = re.compile(r"error (TS\d+):")
-        before_codes = {code_re.search(l).group(1) for l in file_errors if code_re.search(l)}
-        after_codes = {code_re.search(l).group(1) for l in new_file_errors if code_re.search(l)}
-        new_codes = after_codes - before_codes  # error codes that DIDN'T exist before
-
-        # Build detailed log
         log_content = (
             f"FILE: {filepath}\n"
             f"ATTEMPT: {attempt}\n"
-            f"TSC: {current_tsc} → {new_tsc} (Δ{tsc_delta:+d})\n"
-            f"  file errors before: {len(file_errors)} {sorted(before_codes)}\n"
-            f"  file errors after:  {len(new_file_errors)} {sorted(after_codes)}\n"
+            f"RUNNER: {_runner_label(kind, model, slot_used)}\n"
+            f"TSC: {current_tsc} → {new_tsc}\n"
+            f"  file errors before: {len(file_errors)}\n"
+            f"  file errors after:  {len(new_file_errors)}\n"
             f"  new error codes:    {sorted(new_codes) if new_codes else '(none)'}\n"
-            f"LINT: {lint_baseline} → {new_lint} (Δ{lint_delta:+d})\n"
-            f"\n{'='*60}\nMODEL OUTPUT:\n{'='*60}\n{model_output}\n"
+            f"LINT: {lint_baseline} → {new_lint}\n"
+            f"\n{'='*60}\nMODEL OUTPUT:\n{'='*60}\n{output}\n"
             f"\n{'='*60}\nAPPLIED DIFF:\n{'='*60}\n{diff}\n"
         )
-
         if new_file_errors:
             log_content += (
                 f"\n{'='*60}\nREMAINING ERRORS IN FILE:\n{'='*60}\n"
                 + "\n".join(new_file_errors) + "\n"
             )
 
-        # Accept ONLY if all of:
-        # - TSC count strictly decreased (no zero-delta "shuffles")
-        # - Lint did not increase
-        # - No new error code appeared (rejects fabricated imports / wrong type names)
-        accepted = (
-            tsc_delta < 0
-            and lint_delta <= 0
-            and not new_codes
-        )
         if accepted:
             fixed_tsc = current_tsc - new_tsc
-            log(f"    OK: TSC {current_tsc}→{new_tsc} (fixed {fixed_tsc}), lint {lint_baseline}→{new_lint}")
-            file_log(filepath, attempt, "success", log_content)
+            log(f"    OK from {_runner_label(kind, model, slot_used)}: {reason}")
+            file_log(filepath, attempt, f"{kind}-success", log_content)
             git_commit_file(
                 filepath,
                 f"fix(types): auto-fix {fixed_tsc} TSC errors in {filepath}",
@@ -661,22 +872,28 @@ def process_file(
             progress["completed"].append(filepath)
             save_progress(progress)
             return new_tsc, new_lint
-        else:
-            reasons = []
-            if tsc_delta > 0:
-                reasons.append(f"TSC +{tsc_delta}")
-            elif tsc_delta == 0:
-                reasons.append("TSC unchanged (no real progress)")
-            if lint_delta > 0:
-                reasons.append(f"lint +{lint_delta}")
-            if new_codes:
-                reasons.append(f"new codes {sorted(new_codes)}")
-            reason_str = ", ".join(reasons)
-            log(f"    REJECT ({reason_str}), rollback")
-            file_log(filepath, attempt, "regress", log_content)
-            git_checkout_file(filepath)
 
-    log(f"    FAILED after {MAX_RETRIES} attempts")
+        # Applied but rejected — roll back, then escalate.
+        log(f"    REJECT from {_runner_label(kind, model, slot_used)} ({reason}), rollback")
+        file_log(filepath, attempt, f"{kind}-regress", log_content)
+        git_checkout_file(filepath)
+
+        if kind == "gemini-flash-lite" and not flash_unlocked:
+            flash_unlocked = True
+            log(f"    flash unlocked (flash-lite produced applied-but-rejected edit)")
+            # Insert flash phases at the front so we try flash on this file before
+            # falling out to the next file.
+            flash_phases: list[Phase] = [("gemini-flash", m) for m in GEMINI_FLASH_MODELS]
+            queue = flash_phases + queue
+
+        if kind == "gemini-flash":
+            flash_failures += 1
+            if flash_failures >= FLASH_FAILURES_BEFORE_CODEX and not codex_queued:
+                log(f"    codex unlocked ({flash_failures} flash failures)")
+                queue.append(("codex", None))
+                codex_queued = True
+
+    log(f"    FAILED on {filepath}")
     progress["failed"].append(filepath)
     save_progress(progress)
     return current_tsc, lint_baseline
@@ -701,6 +918,10 @@ def main() -> None:
         help="Max number of files to attempt (0 = unlimited)",
     )
     parser.add_argument(
+        "--gemini", action="store_true",
+        help="Skip the local model entirely; start the ladder at gemini flash-lite.",
+    )
+    parser.add_argument(
         "tiers", nargs="*", default=["1", "2"],
         help="Which tiers to process (default: 1 2)",
     )
@@ -708,10 +929,15 @@ def main() -> None:
 
     log("=" * 60)
     log(f"TSC auto-fix — tiers {', '.join(args.tiers)}")
+    if args.gemini:
+        log("Mode: --gemini (local skipped, starting at flash-lite)")
     log("=" * 60)
 
     # Print competency table
-    log(f"Model: {MODEL_NAME}")
+    log(f"Local model: {MODEL_NAME}")
+    log(f"Gemini flash-lite ladder: {', '.join(GEMINI_FLASH_LITE_MODELS)}")
+    log(f"Gemini flash ladder (gated by applied-but-rejected flash-lite): {', '.join(GEMINI_FLASH_MODELS)}")
+    log(f"Codex last-resort: ai codex 2 (after {FLASH_FAILURES_BEFORE_CODEX} flash failures)")
     log(f"EASY codes ({len(EASY_CODES)}): {', '.join(sorted(EASY_CODES))}")
     log(f"MEDIUM codes ({len(MEDIUM_CODES)}): {', '.join(sorted(MEDIUM_CODES))}")
     log(f"HARD codes ({len(HARD_CODES)}): {', '.join(sorted(HARD_CODES))}")
@@ -749,6 +975,12 @@ def main() -> None:
     attempted = 0
     limit = args.limit or float("inf")
 
+    run_state: dict = {
+        "local_enabled": not args.gemini,
+        "gemini_only": args.gemini,
+        "gemini_slot": 1 if args.gemini else 0,  # slot 1 is self-contained; safer default in --gemini mode
+    }
+
     for tier in args.tiers:
         entries = manifest["tiers"].get(tier, [])
         log(f"\n── Tier {tier}: {len(entries)} files ──")
@@ -766,7 +998,7 @@ def main() -> None:
                 attempted += 1
 
             current_tsc, current_lint = process_file(
-                filepath, None, progress, current_tsc, current_lint,
+                filepath, progress, current_tsc, current_lint, run_state,
             )
 
         if attempted >= limit:
