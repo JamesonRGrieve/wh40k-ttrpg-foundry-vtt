@@ -19,6 +19,11 @@
                         <div class="tw-grid tw-grid-cols-2 tw-gap-2 tw-items-start">
                         {{!-- Wounds Status --}}
                         <div class="wh40k-vital-stat wh40k-vital-wounds {{#if (eq system.wounds.value 0)}}wh40k-vital-critical{{else if (lt (percent system.wounds.value system.wounds.max) 25)}}wh40k-vital-warning{{/if}}">
+                            {{#if (eq system.wounds.value 0)}}
+                            <span class="tw-pointer-events-none tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-animate-pulse-critical-intense" style="background: var(--vital-color, var(--wh40k-border-medium));"></span>
+                            {{else if (lt (percent system.wounds.value system.wounds.max) 25)}}
+                            <span class="tw-pointer-events-none tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-animate-pulse-warn-intense" style="background: var(--vital-color, var(--wh40k-border-medium));"></span>
+                            {{/if}}
                             <div class="wh40k-vital-stat-header">
                                 <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control"
                                      data-toggle="combat_wounds_details"
@@ -90,6 +95,11 @@
 
                         {{!-- Fatigue --}}
                         <div class="wh40k-vital-stat wh40k-vital-fatigue {{#if (gt system.fatigue.value system.fatigue.max)}}wh40k-vital-critical{{else if (gt system.fatigue.value 0)}}wh40k-vital-warning{{/if}}">
+                            {{#if (gt system.fatigue.value system.fatigue.max)}}
+                            <span class="tw-pointer-events-none tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-animate-pulse-critical-intense" style="background: var(--vital-color, var(--wh40k-border-medium));"></span>
+                            {{else if (gt system.fatigue.value 0)}}
+                            <span class="tw-pointer-events-none tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-animate-pulse-warn-intense" style="background: var(--vital-color, var(--wh40k-border-medium));"></span>
+                            {{/if}}
                             <div class="wh40k-vital-stat-header">
                                 <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control"
                                      data-toggle="combat_fatigue_details"
