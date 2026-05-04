@@ -6,7 +6,11 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * These are special properties that can be attached to weapons/attacks.
  */
 export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTemplate) {
-    /** @override */
+    declare enabled: boolean;
+    declare hasLevel: boolean;
+    declare level: number;
+
+    /** @foundry-v14-overrides.d.ts */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
@@ -17,7 +21,7 @@ export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTe
         };
     }
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
         const props = [];
         if (this.hasLevel && this.level > 0) {
@@ -29,7 +33,7 @@ export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTe
         return props;
     }
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         const labels = [];
         if (this.hasLevel && this.level > 0) {
