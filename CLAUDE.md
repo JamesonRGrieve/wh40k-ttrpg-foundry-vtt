@@ -137,6 +137,44 @@ Tasks that suit cheap-model grinders (each map to a ratchet that gates regressio
 
 Cheap workers can be wrong. The pre-commit ratchets and the typecheck/lint/vitest/storybook gates are what make this safe — a worker that breaks a sheet still has to pass `pnpm check`, and the orchestrator never `--no-verify` past failures.
 
+### `.auto-fix/` — TSC and ESLint grinder
+
+`.auto-fix/run.py` walks per-file TSC error or ESLint warning manifests and feeds each file through a provider ladder (local vLLM Qwen3-Coder → gemini flash-lite → gemini flash → codex 2). Each accepted edit is ratchet-gated and gemini-flash sanity-checked before commit.
+
+```bash
+./.auto-fix/run.py                      # tsc mode, tiers 1+2 from existing manifest
+./.auto-fix/run.py --mode lint --scrape # rescrape eslint warnings, then fix tiers 1+2
+./.auto-fix/run.py --mode lint --scrape --dry  # only rebuild lint manifest
+./.auto-fix/run.py --mode tsc 1         # tsc mode, tier 1 only
+./.auto-fix/run.py --gemini             # skip local vLLM, start ladder at flash-lite
+./.auto-fix/run.py --no-sanity          # skip the gemini-flash YES/NO sanity check
+```
+
+Manifests and progress files are mode-suffixed:
+
+| Mode | Manifest | Progress |
+| --- | --- | --- |
+| tsc  | `.auto-fix/tsc-error-manifest.json` | `.auto-fix/progress.json` |
+| lint | `.auto-fix/eslint-warning-manifest.json` | `.auto-fix/progress-lint.json` |
+
+Each file in a manifest is classified into tier 1/2/3 by the difficulty distribution of its TS codes (`EASY_CODES` / `MEDIUM_CODES` / `HARD_CODES` in `run.py`) or ESLint rules (`EASY_RULES` / `MEDIUM_RULES` / `HARD_RULES`) and the file size cap (`MAX_FILE_LINES = 800`). Tier 1 = ≥80% easy items; tier 2 = ≥60% easy+medium; tier 3 = anything else. Per-code/per-rule prompt guidance lives in `ERROR_GUIDANCE` and `LINT_GUIDANCE` and is included in the prompt only for codes/rules actually present in the file.
+
+**Ratchet semantics per accepted edit:**
+
+- tsc mode: TSC total must DROP, ESLint must NOT RISE, no new TS codes introduced in the file.
+- lint mode: ESLint total must DROP, TSC must NOT RISE, no new ESLint rules introduced in the file.
+
+**Sanity check before commit:** after the ratchet passes, the diff is shown to gemini flash with the prompt *"Does this diff only change typing and/or fix lint warnings and not change functionality or cause errors? Respond YES or NO."* A NO verdict rolls the file back and escalates the ladder (same as a regress). An unparseable verdict logs a `*-sanity-unknown.log` and proceeds. Disable with `--no-sanity` for debugging only.
+
+**Provider ladder gates:**
+
+- Local vLLM is tried first unless `--gemini` is passed or vLLM is unreachable (in which case it is disabled for the rest of the run).
+- Gemini flash-lite is the first cloud step. It cycles slot 0 ↔ slot 1 with exponential backoff on usage limits.
+- Gemini flash unlocks only after a flash-lite attempt produces an *applied-but-rejected* edit on the same file (regression OR sanity NO). This avoids burning flash quota on files where no model can make progress.
+- Codex 2 unlocks after `FLASH_FAILURES_BEFORE_CODEX = 2` flash failures.
+
+Per-file logs land in `.auto-fix/file-logs/<sanitized-path>.attempt<N>.<runner>-<outcome>.log` and contain the prompt, raw output, applied diff, ratchet reason, and sanity verdict.
+
 ### Pre-commit pipeline (in order)
 
 1. `lint-staged` — eslint --fix and prettier on staged files.
