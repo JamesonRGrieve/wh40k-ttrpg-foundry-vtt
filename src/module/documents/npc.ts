@@ -12,7 +12,7 @@ import { WH40KBaseActor } from './base-actor.ts';
  * @extends {WH40KBaseActor}
  */
 export class WH40KNPC extends WH40KBaseActor {
-    declare system: NPCData;
+    declare system: NPCData & WH40KBaseActor['system'];
 
     /* -------------------------------------------- */
     /*  Properties                                  */
@@ -20,7 +20,7 @@ export class WH40KNPC extends WH40KBaseActor {
 
     /**
      * Get the NPC's faction.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get faction(): string {
         return this.system.faction;
@@ -28,7 +28,7 @@ export class WH40KNPC extends WH40KBaseActor {
 
     /**
      * Get the NPC's subfaction.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get subfaction(): string {
         return this.system.subfaction;
@@ -36,7 +36,7 @@ export class WH40KNPC extends WH40KBaseActor {
 
     /**
      * Get the NPC's type (troop, elite, etc.).
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get npcType(): string {
         return this.system.type;
@@ -44,7 +44,7 @@ export class WH40KNPC extends WH40KBaseActor {
 
     /**
      * Get the NPC's role (bruiser, sniper, etc.).
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get role(): string {
         return this.system.role;
@@ -52,7 +52,7 @@ export class WH40KNPC extends WH40KBaseActor {
 
     /**
      * Get the NPC's threat level.
-     * @type {number}
+     * @scripts/gen-i18n-types.mjs {number}
      */
     get threatLevel(): number {
         return this.system.threatLevel;
@@ -60,7 +60,7 @@ export class WH40KNPC extends WH40KBaseActor {
 
     /**
      * Check if this NPC is in horde mode.
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get isHordeMode(): boolean {
         return this.system.horde?.enabled ?? false;
@@ -68,7 +68,7 @@ export class WH40KNPC extends WH40KBaseActor {
 
     /**
      * Check if this NPC type supports horde mode.
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get isHordeType(): boolean {
         return this.system.isHorde;
@@ -189,7 +189,7 @@ export class WH40KNPC extends WH40KBaseActor {
                     const charKey = item.system.isMeleeWeapon ? 'weaponSkill' : 'ballisticSkill';
                     await this.rollCharacteristic(charKey, item.name ?? undefined);
                 } else {
-                    await DHTargetedActionManager.performWeaponAttack(this, null, item);
+                    await DHTargetedActionManager.performWeaponAttack(this as WH40KBaseActor, null, item as never);
                 }
                 return;
             }
@@ -197,7 +197,7 @@ export class WH40KNPC extends WH40KBaseActor {
                 if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
                     await this.rollCharacteristic('willpower', item.name ?? undefined);
                 } else {
-                    await DHTargetedActionManager.performPsychicAttack(this, null, item);
+                    await DHTargetedActionManager.performPsychicAttack(this as WH40KBaseActor, null, item as never);
                 }
                 return;
             }
@@ -207,7 +207,7 @@ export class WH40KNPC extends WH40KBaseActor {
                     actor: this.name ?? '',
                     name: item.name ?? '',
                     type: item.type?.toUpperCase() ?? '',
-                    description: await TextEditor.enrichHTML(item.system.benefit ?? item.system.description ?? '', {
+                    description: await TextEditor.enrichHTML((item.system.benefit ?? item.system.description ?? '') as string, {
                         rollData: { actor: this, item },
                     }),
                 });
@@ -221,7 +221,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {string} [flavor] - Optional flavor text.
      * @returns {Promise<Roll>}
      */
-    async rollSkill(skillName: string, flavor?: string): Promise<unknown> {
+    async rollSkill(skillName: string, flavor?: string): Promise<void> {
         const target = this.system.getSkillTarget(skillName);
         const skill = this.system.trainedSkills[skillName];
         const skillLabel = skill?.name || skillName;
@@ -281,7 +281,7 @@ export class WH40KNPC extends WH40KBaseActor {
         return this.update({
             'system.wounds.value': newWounds,
             'system.wounds.critical': critical,
-        });
+        } as Record<string, unknown>);
     }
 
     /**
@@ -291,7 +291,7 @@ export class WH40KNPC extends WH40KBaseActor {
      */
     healWounds(amount: number): unknown {
         const newWounds = Math.min(this.system.wounds.max, this.system.wounds.value + amount);
-        return this.update({ 'system.wounds.value': newWounds });
+        return this.update({ 'system.wounds.value': newWounds } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -354,7 +354,7 @@ export class WH40KNPC extends WH40KBaseActor {
             updates['system.horde.magnitude.current'] = Math.max(1, newMag);
         }
 
-        return this.update(updates) as unknown as void;
+        return this.update(updates as never) as unknown as void;
     }
 
     /**
@@ -368,7 +368,7 @@ export class WH40KNPC extends WH40KBaseActor {
         return this.update({
             'system.horde.enabled': false,
             'system.type': this.system.type === 'swarm' ? 'creature' : 'elite',
-        });
+        } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -407,7 +407,7 @@ export class WH40KNPC extends WH40KBaseActor {
         // Clear the ID to create a new actor
         delete data['_id'];
 
-        return Actor.create(data);
+        return Actor.create(data as never);
     }
 
     /**
