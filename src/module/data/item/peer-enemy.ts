@@ -6,7 +6,10 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * These represent social connections with organizations/groups.
  */
 export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTemplate) {
-    /** @override */
+    declare group: string;
+    declare modifier: number;
+
+    /** @foundry-v14-overrides.d.ts */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
@@ -16,7 +19,7 @@ export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTempla
         };
     }
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
         const props = [];
         if (this.group) {
@@ -29,7 +32,7 @@ export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTempla
         return props;
     }
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         const labels = [];
         if (this.modifier !== 0) {
