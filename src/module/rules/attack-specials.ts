@@ -63,10 +63,12 @@ export async function updateAttackSpecials(rollData: AttackSpecialSourceRollData
     }
 
     if (actionItem.isRanged) {
-        await calculateAmmoAttackSpecials(rollData);
+        // actionItem.isRanged is true → rollData is WeaponRollData (not PsychicRollData),
+        // narrowed at runtime but invisible to the TS type system; cast accordingly.
+        await calculateAmmoAttackSpecials(mutableRollData as unknown as Parameters<typeof calculateAmmoAttackSpecials>[0]);
     }
 
-    await calculateWeaponModifiersAttackSpecials(rollData);
+    await calculateWeaponModifiersAttackSpecials(mutableRollData as unknown as Parameters<typeof calculateWeaponModifiersAttackSpecials>[0]);
 }
 
 /**
@@ -109,7 +111,7 @@ export function calculateAttackSpecialAttackBonuses(rollData: RollData): void {
     }
 
     // Apply weapon quality effects (Phase 1: Accurate aim bonus)
-    applyQualityModifiersToRollData(rollData);
+    applyQualityModifiersToRollData(rollData as unknown as Parameters<typeof applyQualityModifiersToRollData>[0]);
 }
 
 export function attackSpecials(): Array<{ name: string; hasLevel: boolean }> {
