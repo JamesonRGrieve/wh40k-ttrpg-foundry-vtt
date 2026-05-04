@@ -2,7 +2,7 @@ import SystemDataModel from '../abstract/system-data-model.ts';
 
 /**
  * Template for physical items with weight and availability.
- * @mixin
+ * @src/module/applications/api/primary-sheet-mixin.ts
  */
 export default class PhysicalItemTemplate extends SystemDataModel {
     // Typed property declarations matching defineSchema()
@@ -137,28 +137,31 @@ export default class PhysicalItemTemplate extends SystemDataModel {
             return;
         }
 
+        // Cast source.cost to Record<string, any> to allow property access
+        const sourceCost = source.cost as Record<string, any>;
+
         source.cost = {
             dh1: {
-                throneGelt: normalizeNullableNumber(source.cost.dh1?.throneGelt),
+                throneGelt: normalizeNullableNumber(sourceCost.dh1?.throneGelt),
             },
             dh2: {
-                influence: normalizeNullableNumber(source.cost.dh2?.influence),
+                influence: normalizeNullableNumber(sourceCost.dh2?.influence),
                 homebrew: {
-                    requisition: normalizeNullableNumber(source.cost.dh2?.homebrew?.requisition),
-                    throneGelt: normalizeNullableNumber(source.cost.dh2?.homebrew?.throneGelt),
+                    requisition: normalizeNullableNumber(sourceCost.dh2?.homebrew?.requisition),
+                    throneGelt: normalizeNullableNumber(sourceCost.dh2?.homebrew?.throneGelt),
                 },
             },
             rt: {
-                profitFactor: normalizeNullableNumber(source.cost.rt?.profitFactor),
+                profitFactor: normalizeNullableNumber(sourceCost.rt?.profitFactor),
             },
             dw: {
-                requisition: normalizeNullableNumber(source.cost.dw?.requisition),
+                requisition: normalizeNullableNumber(sourceCost.dw?.requisition),
             },
             bc: {
-                infamy: normalizeNullableNumber(source.cost.bc?.infamy),
+                infamy: normalizeNullableNumber(sourceCost.bc?.infamy),
             },
             ow: {
-                logistics: normalizeNullableNumber(source.cost.ow?.logistics),
+                logistics: normalizeNullableNumber(sourceCost.ow?.logistics),
             },
         };
     }
@@ -200,7 +203,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData?.(source, options);
     }
 
@@ -208,7 +211,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
 
     /**
      * Get the total weight considering quantity.
-     * @type {number}
+     * @scripts/gen-i18n-types.mjs {number}
      */
     get totalWeight() {
         return this.weight * (this.quantity || 1);
@@ -218,7 +221,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
 
     /**
      * Get localized availability label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get availabilityLabel(): string {
         return game.i18n.localize(`WH40K.Availability.${this.availability.capitalize()}`);
@@ -228,7 +231,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
 
     /**
      * Get localized craftsmanship label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get craftsmanshipLabel(): string {
         return game.i18n.localize(`WH40K.Craftsmanship.${this.craftsmanship.capitalize()}`);
@@ -238,7 +241,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
 
     /**
      * Properties for chat display.
-     * @type {string[]}
+     * @scripts/gen-i18n-types.mjs {string[]}
      */
     get chatProperties(): string[] {
         const props = [];
