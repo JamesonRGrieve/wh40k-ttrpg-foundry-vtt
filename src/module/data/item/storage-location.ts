@@ -6,7 +6,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * These represent locations where items can be stored (ship cargo, safe house, etc.).
  */
 export default class StorageLocationData extends ItemDataModel.mixin(DescriptionTemplate) {
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
@@ -16,18 +16,24 @@ export default class StorageLocationData extends ItemDataModel.mixin(Description
         };
     }
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
         const props = [];
-        if (this.location) {
-            props.push(this.location);
+        // Cast 'this' to Record<string, unknown> to access properties not explicitly typed on the instance.
+        // Assert 'location' to string, as defined in defineSchema.
+        const location = (this as Record<string, unknown>).location as string;
+        if (location) {
+            props.push(location);
         }
         return props;
     }
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return [{ label: this.location || 'Storage', icon: 'fa-solid fa-warehouse' }];
+        // Cast 'this' to Record<string, unknown> to access properties not explicitly typed on the instance.
+        // Assert 'location' to string, as defined in defineSchema.
+        const location = (this as Record<string, unknown>).location as string;
+        return [{ label: location || 'Storage', icon: 'fa-solid fa-warehouse' }];
     }
 
     /**
