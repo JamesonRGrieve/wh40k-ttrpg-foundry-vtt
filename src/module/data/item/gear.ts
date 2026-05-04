@@ -22,12 +22,18 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     declare duration: string;
     declare notes: string;
 
+    // Properties inherited from mixins, now explicitly declared for type safety.
+    declare weight: number | null | undefined;
+    declare quantity: number | null | undefined;
+    declare craftsmanship: 'common' | 'poor' | 'good' | 'best';
+
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
+            // Identifier is a custom field type, assumed to be compatible with DataField.Any
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Gear category
@@ -109,15 +115,16 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
         // Ensure uses values are integers
         if (source?.uses) {
-            if (source.uses.value !== undefined) {
-                source.uses.value = parseInt(source.uses.value) || 0;
+            const uses = source.uses as Record<string, unknown>;
+            if (uses.value !== undefined) {
+                uses.value = parseInt(String(uses.value)) || 0;
             }
-            if (source.uses.max !== undefined) {
-                source.uses.max = parseInt(source.uses.max) || 0;
+            if (uses.max !== undefined) {
+                uses.max = parseInt(String(uses.max)) || 0;
             }
         }
     }
@@ -128,7 +135,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /**
      * Get the category label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get categoryLabel(): string {
         const config = CONFIG.WH40K?.gearCategories?.[this.category];
@@ -138,7 +145,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /**
      * Get the category icon.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get categoryIcon() {
         const config = CONFIG.WH40K?.gearCategories?.[this.category];
@@ -147,7 +154,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /**
      * Does this item have limited uses?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get hasLimitedUses() {
         return this.uses.max > 0;
@@ -155,7 +162,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /**
      * Are uses exhausted?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get usesExhausted(): boolean {
         return this.hasLimitedUses && this.uses.value <= 0;
@@ -163,7 +170,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /**
      * Get uses display string (e.g., "5/10")
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get usesDisplay(): string {
         if (!this.hasLimitedUses) return '';
@@ -172,7 +179,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /**
      * Get formatted weight label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get weightLabel(): string {
         return `${this.weight ?? 0} kg`;
@@ -180,7 +187,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /**
      * Get total weight (weight × quantity).
-     * @type {number}
+     * @scripts/gen-i18n-types.mjs {number}
      */
     get totalWeight() {
         return (this.weight ?? 0) * (this.quantity ?? 1);
@@ -193,7 +200,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * - Good: Weight -10%, improved function
      * - Best: Weight -20%, superior performance
      *
-     * @type {object}
+     * @scripts/gen-i18n-types.mjs {object}
      */
     get craftsmanshipModifiers() {
         const mods = {
@@ -217,16 +224,16 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /**
      * Get effective weight including craftsmanship modifier.
-     * @type {number}
+     * @scripts/gen-i18n-types.mjs {number}
      */
     get effectiveWeight(): number {
         const craftMods = this.craftsmanshipModifiers;
-        return Math.round(this.weight * craftMods.weight * 10) / 10; // Round to 1 decimal
+        return Math.round((this.weight ?? 0) * craftMods.weight * 10) / 10; // Round to 1 decimal
     }
 
     /**
      * Get effective total weight (effective weight × quantity).
-     * @type {number}
+     * @scripts/gen-i18n-types.mjs {number}
      */
     get effectiveTotalWeight() {
         return this.effectiveWeight * (this.quantity ?? 1);
@@ -234,7 +241,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /**
      * Check if gear has craftsmanship-derived effects.
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get hasCraftsmanshipEffects() {
         const craft = this.craftsmanship ?? 'common';
@@ -245,9 +252,10 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     /*  Chat Properties                             */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
-        const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.categoryLabel];
+        // Accessing the getter directly from the prototype, as it's a getter, not a method.
+        const props = [...(PhysicalItemTemplate.prototype.chatProperties as unknown as string[] ?? []), this.categoryLabel];
 
         if (this.hasLimitedUses) {
             props.push(game.i18n.format('WH40K.Gear.UsesRemaining', { uses: this.usesDisplay }));
@@ -264,7 +272,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         const labels = [];
 
