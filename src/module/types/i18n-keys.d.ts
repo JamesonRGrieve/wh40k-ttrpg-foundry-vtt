@@ -442,6 +442,7 @@ export type I18nKey =
     | 'WH40K.Dynasty.Name'
     | 'WH40K.Dynasty.Reputation'
     | 'WH40K.Dynasty.ShipName'
+    | 'WH40K.Edit'
     | 'WH40K.Endeavours.AchievementPoints'
     | 'WH40K.Endeavours.AddObjective'
     | 'WH40K.Endeavours.Completed'

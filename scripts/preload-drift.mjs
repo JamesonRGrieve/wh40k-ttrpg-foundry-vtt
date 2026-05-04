@@ -30,7 +30,8 @@ const args = new Set(process.argv.slice(2));
 const jsonMode = args.has('--json');
 
 const PARTIAL_PREFIX = 'systems/wh40k-rpg/templates/';
-const PARTIAL_RE = /\{\{>\s*(systems\/wh40k-rpg\/templates\/[^\s}]+\.hbs)\b/g;
+// Matches both `{{> path}}` (inline partial) and `{{#> path ...}}` (block partial).
+const PARTIAL_RE = /\{\{#?>\s*(systems\/wh40k-rpg\/templates\/[^\s}]+\.hbs)\b/g;
 const PRELOAD_RE = /['"](systems\/wh40k-rpg\/templates\/[^'"]+\.hbs)['"]/g;
 
 function* walkHbs(dir) {
