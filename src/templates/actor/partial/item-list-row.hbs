@@ -1,0 +1,119 @@
+{{!--
+    Item list row — shared card chrome for the four powers-style panels
+    (psychic powers, navigator powers, rituals, orders) and any future list
+    of draggable, expandable items with a name + pills + stats + hover-action
+    toolbar + expandable detail body.
+
+    Block-partial usage:
+        (#>) systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs
+            item=power
+            accentColor="#0891b2"
+            dragType="psychicPower"
+            editAction="itemEdit"
+            editTitleKey="WH40K.Power.EditTitle"
+            extraAttrs='data-discipline="psyker"'
+            pills=(array (hash bgClass="tw-bg-[rgba(8,145,178,0.2)]" textClass="tw-text-[#0891b2]" icon="fa-brain" label="Telekinesis"))
+            stats=(array (hash label="Focus" value="WP +10") (hash label="Action" value="Half"))
+            actions=(array (hash action="rollPower" icon="fa-dice-d20" title="Focus Power" hoverClass="hover:tw-text-[#0891b2]"))
+            ... details body markup ...
+        (/) systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs
+
+    Required hash params:
+        item        — { id, img, name } (required).
+        dragType    — value emitted on data-item-type and consumed by drop-zones.
+        accentColor — CSS color string for the left-border accent and name-hover.
+
+    Optional hash params:
+        editAction      — data-action on the name button (default "itemEdit").
+        editTitle       — title attr on the name button.
+        editTitleKey    — i18n key for the name button title (preferred over editTitle).
+        pills           — array of { bgClass, textClass, icon, label } badges.
+        stats           — array of { label, value } stat columns. Wider columns
+                          can pass widthClass (default "tw-min-w-[80px]").
+        actions         — array of { action, icon, title, titleKey, hoverClass,
+                          itemId? } action-toolbar buttons. itemId defaults to
+                          item.id.
+        extraAttrs      — raw HTML attribute string appended to the card root
+                          (e.g. data-discipline="...").
+        detailsId       — value emitted on data-power-id of the details container
+                          (default item.id). The consuming sheet's
+                          togglePowerDetails action toggles `hidden` here.
+        deleteAction    — data-action on the Delete footer button
+                          (default "itemDelete"). Pass false to suppress the
+                          built-in Edit/Delete footer entirely.
+--}}
+<div class="tw-bg-[var(--wh40k-panel-bg-solid)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-border-l-[3px] tw-rounded-md tw-overflow-hidden tw-transition-all tw-cursor-grab active:tw-cursor-grabbing hover:tw-bg-[var(--wh40k-panel-bg)] hover:tw-border-[var(--wh40k-border-color)] hover:tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)] item-drag"
+     style="border-left-color: {{accentColor}};"
+     data-item-id="{{item.id}}"
+     data-item-type="{{dragType}}"
+     draggable="true"
+     {{{extraAttrs}}}>
+
+    {{!-- Header --}}
+    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-gradient-to-r tw-from-[rgba(0,0,0,0.05)] tw-to-transparent">
+        <img class="tw-w-9 tw-h-9 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-object-cover tw-shrink-0" src="{{item.img}}" alt="{{item.name}}" />
+        <div class="tw-flex-1 tw-min-w-0">
+            <button type="button"
+                    class="tw-block tw-w-full tw-bg-transparent tw-border-none tw-p-0 tw-text-left tw-text-[0.95rem] tw-font-semibold tw-text-[color:var(--wh40k-text-dark)] tw-cursor-pointer tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis"
+                    style="--accent-color: {{accentColor}};"
+                    data-action="{{#if editAction}}{{editAction}}{{else}}itemEdit{{/if}}"
+                    data-item-id="{{item.id}}"
+                    title="{{#if editTitleKey}}{{localize editTitleKey}}{{else}}{{editTitle}}{{/if}}">
+                {{item.name}}
+            </button>
+            {{#if pills.length}}
+            <div class="tw-flex tw-flex-wrap tw-gap-[6px] tw-mt-[2px]">
+                {{#each pills}}
+                <span class="tw-inline-flex tw-items-center tw-gap-[3px] tw-px-[6px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] {{bgClass}} {{textClass}}">
+                    {{#if icon}}<i class="fas {{icon}} tw-text-[0.65rem]"></i>{{/if}}
+                    {{label}}
+                </span>
+                {{/each}}
+            </div>
+            {{/if}}
+        </div>
+        {{#if actions.length}}
+        <div class="tw-flex tw-gap-[2px] tw-shrink-0">
+            {{#each actions}}
+            <button type="button"
+                    class="tw-flex tw-items-center tw-justify-center tw-w-[30px] tw-h-[30px] tw-border tw-border-transparent tw-rounded tw-bg-transparent tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-panel-bg-translucent)] hover:tw-border-[var(--wh40k-border-color-light)] {{hoverClass}}"
+                    data-action="{{action}}"
+                    data-item-id="{{#if itemId}}{{itemId}}{{else}}{{../item.id}}{{/if}}"
+                    title="{{#if titleKey}}{{localize titleKey}}{{else}}{{title}}{{/if}}">
+                <i class="fas {{icon}}"></i>
+            </button>
+            {{/each}}
+        </div>
+        {{/if}}
+    </div>
+
+    {{!-- Stats row --}}
+    {{#if stats.length}}
+    <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-xs)] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color-light)]">
+        {{#each stats}}
+        <div class="tw-flex tw-flex-col tw-gap-[1px] {{#if widthClass}}{{widthClass}}{{else}}tw-min-w-[80px]{{/if}}">
+            <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-muted)]">{{#if labelKey}}{{localize labelKey}}{{else}}{{label}}{{/if}}</span>
+            <span class="tw-text-[0.8rem] tw-font-medium tw-text-[color:var(--wh40k-text-dark)]">{{value}}</span>
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}
+
+    {{!-- Expandable details --}}
+    <div class="tw-p-[var(--wh40k-space-md)] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color-light)]" data-power-id="{{#if detailsId}}{{detailsId}}{{else}}{{item.id}}{{/if}}" hidden>
+        {{> @partial-block}}
+
+        {{#unless (eq deleteAction false)}}
+        <div class="tw-flex tw-gap-[var(--wh40k-space-sm)] tw-mt-[var(--wh40k-space-md)] tw-pt-[var(--wh40k-space-sm)] tw-border-t tw-border-[var(--wh40k-border-color-light)]">
+            <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-3 tw-py-[6px] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-[var(--wh40k-radius-md)] tw-bg-[var(--wh40k-btn-bg)] tw-text-[color:var(--wh40k-text-secondary)] tw-text-[0.75rem] tw-font-semibold tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-border-color-strong)]"
+                    data-action="{{#if editAction}}{{editAction}}{{else}}itemEdit{{/if}}" data-item-id="{{item.id}}">
+                <i class="fas fa-cog"></i> {{localize "WH40K.Edit"}}
+            </button>
+            <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-3 tw-py-[6px] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-[var(--wh40k-radius-md)] tw-bg-[var(--wh40k-btn-bg)] tw-text-[color:var(--wh40k-text-secondary)] tw-text-[0.75rem] tw-font-semibold tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(239,68,68,0.1)] hover:tw-border-[rgba(239,68,68,0.3)] hover:tw-text-[#ef4444]"
+                    data-action="{{#if deleteAction}}{{deleteAction}}{{else}}itemDelete{{/if}}" data-item-id="{{item.id}}">
+                <i class="fas fa-trash"></i> {{localize "WH40K.Delete"}}
+            </button>
+        </div>
+        {{/unless}}
+    </div>
+</div>

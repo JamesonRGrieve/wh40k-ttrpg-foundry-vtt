@@ -15,103 +15,58 @@
     {{/if}}
 
     {{!-- Powers List --}}
-    <div class="wh40k-powers-list" data-drop-zone="powers" data-accepts="psychicPower">
+    <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-min-h-[60px] tw-p-[var(--wh40k-space-md)]" data-drop-zone="powers" data-accepts="psychicPower">
         {{#each psychicPowers as |power|}}
-        <div class="wh40k-power-card item-drag" data-item-id="{{power.id}}" data-discipline="{{power.system.discipline}}" draggable="true">
-            {{!-- Power Header --}}
-            <div class="tw-flex tw-items-center tw-gap-2 tw-p-2">
-                <img class="wh40k-power-icon" src="{{power.img}}" alt="{{power.name}}" />
-                <div class="tw-flex-1 tw-min-w-0">
-                    <button type="button" class="wh40k-power-name" data-action="itemEdit" data-item-id="{{power.id}}" title="Edit Power">
-                        {{power.name}}
-                    </button>
-                    <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-mt-0.5">
-                        <span class="wh40k-power-discipline wh40k-disc-{{power.system.discipline}}">
-                            {{power.system.disciplineLabel}}
-                        </span>
-                        <span class="wh40k-power-pr">
-                            PR {{power.system.prCost}}
-                        </span>
-                        {{#if power.system.sustained}}
-                        <span class="wh40k-power-sustained">
-                            <i class="fas fa-sync-alt"></i> Sustained
-                        </span>
-                        {{/if}}
-                    </div>
-                </div>
-                <div class="tw-flex tw-gap-0.5 tw-shrink-0">
-                    <button type="button" class="wh40k-power-btn wh40k-btn-roll" data-action="rollPower" data-item-id="{{power.id}}" title="Focus Power">
-                        <i class="fas fa-dice-d20"></i>
-                    </button>
-                    {{#if power.system.isAttack}}
-                    <button type="button" class="wh40k-power-btn wh40k-btn-damage" data-action="rollPowerDamage" data-item-id="{{power.id}}" title="Roll Damage">
-                        <i class="fas fa-bolt"></i>
-                    </button>
-                    {{else}}
-                    <button type="button" class="wh40k-power-btn wh40k-btn-chat" data-action="vocalizePower" data-item-id="{{power.id}}" title="Post to Chat">
-                        <i class="fas fa-comment"></i>
-                    </button>
-                    {{/if}}
-                    <button type="button" class="wh40k-power-btn wh40k-btn-expand" data-action="togglePowerDetails" data-item-id="{{power.id}}" title="Toggle Details">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                </div>
+        {{#> systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs
+            item=power
+            accentColor="#0891b2"
+            dragType="psychicPower"
+            extraAttrs=(concat 'data-discipline="' power.system.discipline '"')
+            editTitle="Edit Power"
+            pills=(iff power.system.sustained
+                (array power.system.pill (hash bgClass="tw-bg-[rgba(8,145,178,0.2)]" textClass="tw-text-[#0891b2]" icon="fa-sync-alt" label="Sustained") (hash bgClass="tw-bg-[rgba(0,0,0,0.1)]" textClass="tw-text-[color:var(--wh40k-text-muted)]" label=(concat 'PR ' power.system.prCost)))
+                (array power.system.pill (hash bgClass="tw-bg-[rgba(0,0,0,0.1)]" textClass="tw-text-[color:var(--wh40k-text-muted)]" label=(concat 'PR ' power.system.prCost))))
+            stats=(iff power.system.isAttack
+                (array
+                    (hash label="Focus" value=power.system.focusTestLabel)
+                    (hash label="Action" value=power.system.activationLabel)
+                    (hash label="Damage" value=power.system.damageLabel)
+                    (hash label="Range" value=power.system.targetLabel))
+                (array
+                    (hash label="Focus" value=power.system.focusTestLabel)
+                    (hash label="Action" value=power.system.activationLabel)
+                    (hash label="Range" value=power.system.targetLabel)))
+            actions=(iff power.system.isAttack
+                (array
+                    (hash action="rollPower" icon="fa-dice-d20" title="Focus Power" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
+                    (hash action="rollPowerDamage" icon="fa-bolt" title="Roll Damage" hoverClass="hover:tw-bg-[rgba(239,68,68,0.15)] hover:tw-border-[rgba(239,68,68,0.3)] hover:tw-text-[#ef4444]")
+                    (hash action="togglePowerDetails" icon="fa-chevron-down" title="Toggle Details" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
+                (array
+                    (hash action="rollPower" icon="fa-dice-d20" title="Focus Power" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
+                    (hash action="vocalizePower" icon="fa-comment" title="Post to Chat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
+                    (hash action="togglePowerDetails" icon="fa-chevron-down" title="Toggle Details" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]")))
+        }}
+            {{#if power.system.effect}}
+            <div class="tw-mb-[var(--wh40k-space-md)]">
+                <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-secondary)] tw-mb-1">Effect</span>
+                <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{power.system.effect}}}</div>
             </div>
-
-            {{!-- Power Stats Row --}}
-            <div class="tw-flex tw-flex-wrap tw-gap-2 tw-px-3 tw-py-1">
-                <div class="tw-flex tw-flex-col tw-gap-px tw-min-w-[80px]">
-                    <span class="wh40k-stat-label">Focus</span>
-                    <span class="wh40k-stat-value">{{power.system.focusTestLabel}}</span>
-                </div>
-                <div class="tw-flex tw-flex-col tw-gap-px tw-min-w-[80px]">
-                    <span class="wh40k-stat-label">Action</span>
-                    <span class="wh40k-stat-value">{{power.system.activationLabel}}</span>
-                </div>
-                {{#if power.system.isAttack}}
-                <div class="tw-flex tw-flex-col tw-gap-px tw-min-w-[80px]">
-                    <span class="wh40k-stat-label">Damage</span>
-                    <span class="wh40k-stat-value">{{power.system.damageLabel}}</span>
-                </div>
-                {{/if}}
-                <div class="tw-flex tw-flex-col tw-gap-px tw-min-w-[80px]">
-                    <span class="wh40k-stat-label">Range</span>
-                    <span class="wh40k-stat-value">{{power.system.targetLabel}}</span>
-                </div>
+            {{/if}}
+            {{#if power.system.overbleed}}
+            <div class="tw-mb-[var(--wh40k-space-md)]">
+                <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[#f97316] tw-mb-1"><i class="fas fa-fire tw-text-[0.7rem]"></i> Overbleed</span>
+                <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{power.system.overbleed}}}</div>
             </div>
-
-            {{!-- Expandable Details --}}
-            <div class="wh40k-power-details" data-power-id="{{power.id}}" hidden>
-                {{#if power.system.effect}}
-                <div class="tw-mb-3">
-                    <span class="wh40k-detail-heading">Effect</span>
-                    <div class="wh40k-detail-content">{{{power.system.effect}}}</div>
-                </div>
-                {{/if}}
-                {{#if power.system.overbleed}}
-                <div class="tw-mb-3 wh40k-section-overbleed">
-                    <span class="wh40k-detail-heading"><i class="fas fa-fire"></i> Overbleed</span>
-                    <div class="wh40k-detail-content">{{{power.system.overbleed}}}</div>
-                </div>
-                {{/if}}
-                {{#if power.system.description}}
-                <div class="tw-mb-3">
-                    <span class="wh40k-detail-heading">Description</span>
-                    <div class="wh40k-detail-content">{{{power.system.description}}}</div>
-                </div>
-                {{/if}}
-                <div class="tw-flex tw-gap-2 tw-mt-2">
-                    <button type="button" class="wh40k-detail-btn" data-action="itemEdit" data-item-id="{{power.id}}">
-                        <i class="fas fa-cog"></i> Edit
-                    </button>
-                    <button type="button" class="wh40k-detail-btn wh40k-btn-danger" data-action="itemDelete" data-item-id="{{power.id}}">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                </div>
+            {{/if}}
+            {{#if power.system.description}}
+            <div class="tw-mb-[var(--wh40k-space-md)]">
+                <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-secondary)] tw-mb-1">Description</span>
+                <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{power.system.description}}}</div>
             </div>
-        </div>
+            {{/if}}
+        {{/systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs}}
         {{else}}
-        {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-hat-wizard" text="No psychic powers"}}
+        {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-hat-wizard" text="No psychic powers" padding="md"}}
         {{/each}}
     </div>
 

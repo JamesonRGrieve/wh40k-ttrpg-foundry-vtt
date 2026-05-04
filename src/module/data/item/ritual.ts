@@ -86,6 +86,23 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /**
+     * Pill style descriptor consumed by item-list-row.hbs to render the ritual
+     * type badge. Maps each ritual type to its Tailwind background, text colour,
+     * and FA icon.
+     */
+    get pill(): { bgClass: string; textClass: string; icon: string; label: string } {
+        const map: Record<string, { bgClass: string; textClass: string; icon: string }> = {
+            'prayer': { bgClass: 'tw-bg-[rgba(217,119,6,0.2)]', textClass: 'tw-text-[#d97706]', icon: 'fa-praying-hands' },
+            'rite': { bgClass: 'tw-bg-[rgba(124,58,237,0.2)]', textClass: 'tw-text-[#7c3aed]', icon: 'fa-book-dead' },
+            'invocation': { bgClass: 'tw-bg-[rgba(220,38,38,0.2)]', textClass: 'tw-text-[#dc2626]', icon: 'fa-hand-sparkles' },
+            'ceremony': { bgClass: 'tw-bg-[rgba(2,132,199,0.2)]', textClass: 'tw-text-[#0284c7]', icon: 'fa-church' },
+            'tech-rite': { bgClass: 'tw-bg-[rgba(100,116,139,0.2)]', textClass: 'tw-text-[#64748b]', icon: 'fa-cog' },
+        };
+        const fallback = { bgClass: 'tw-bg-[rgba(0,0,0,0.1)]', textClass: 'tw-text-[color:var(--wh40k-text-muted)]', icon: 'fa-scroll' };
+        return { ...(map[this.type] ?? fallback), label: this.typeLabel };
+    }
+
+    /**
      * Get the test description.
      * @type {string}
      */
