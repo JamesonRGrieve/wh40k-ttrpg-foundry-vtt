@@ -1349,19 +1349,11 @@ body.theme-dark {
 .wh40k-vital-warning {
     background: rgba(255, 165, 0, 0.05);
     box-sizing: border-box;
-
-    &::before {
-        animation: pulse-warn-intense 1.5s ease-in-out infinite;
-    }
 }
 
 .wh40k-vital-critical {
     background: rgb(from var(--wh40k-accent-combat) r g b / 0.08);
     box-sizing: border-box;
-
-    &::before {
-        animation: pulse-critical-intense 1s ease-in-out infinite;
-    }
 }
 
 /* Vital stat header */
