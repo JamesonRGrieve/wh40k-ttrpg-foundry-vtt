@@ -1,138 +1,124 @@
 {{!-- Simplified Experience Panel --}}
-<div class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden tw-mb-3 tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)] tw-relative">
+{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell.hbs key="experience" label="Experience" icon="fa-graduation-cap" actor=actor}}
 
-    {{!-- Panel Header --}}
-    <div class="tw-flex tw-flex-row tw-items-center tw-gap-2 tw-py-2 tw-px-3 tw-bg-gradient-to-b tw-from-[rgba(var(--wh40k-accent-gold),0.15)] tw-to-[rgba(var(--wh40k-accent-gold),0.05)] tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-transition-all tw-duration-200 tw-w-full tw-box-border tw-cursor-pointer tw-select-none sheet-control__hide-control"
-         data-toggle="experience_details"
-         title="Click to {{#if (isExpanded 'experience_details' actor)}}collapse{{else}}expand{{/if}}">
-        <span class="tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[var(--wh40k-text-dark)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">
-            <i class="fas fa-graduation-cap tw-text-[var(--wh40k-accent-gold)] tw-flex-shrink-0"></i> Experience
-        </span>
-        <i class="fas fa-chevron-down tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)] tw-transition-transform tw-duration-200 tw-flex-shrink-0 tw-ml-auto {{#if (isExpanded 'experience_details' actor)}}tw-rotate-180{{/if}}"></i>
-    </div>
-
-    {{!-- Panel Body --}}
-    <div class="tw-p-3 tw-bg-[var(--wh40k-panel-body-bg)]">
-
-        {{!-- Compact XP Display - Single horizontal line --}}
-        <div class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-light)] tw-rounded-[6px] tw-mb-[var(--wh40k-space-md)]">
-            {{!-- Progress Ring --}}
-            <div class="tw-relative tw-w-[50px] tw-h-[50px] tw-shrink-0">
-                <svg viewBox="0 0 100 100" class="tw-w-full tw-h-full">
-                    {{!-- Background circle --}}
-                    <circle cx="50" cy="50" r="45"
-                            fill="none"
-                            stroke="rgba(120, 46, 34, 0.2)"
-                            stroke-width="10"/>
-                    {{!-- Progress circle --}}
-                    <circle cx="50" cy="50" r="45"
-                            fill="none"
-                            stroke="url(#xpGradient)"
-                            stroke-width="10"
-                            stroke-linecap="round"
-                            stroke-dasharray="282.74"
-                            stroke-dashoffset="{{multiply (subtract 1 (divide actor.system.experience.used actor.system.experience.total)) 282.74}}"
-                            style="transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);"
-                            transform="rotate(-90 50 50)"/>
-                    {{!-- Gradient definition --}}
-                    <defs>
-                        <linearGradient id="xpGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#c08020;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#d09838;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-                <div class="tw-absolute tw-top-1/2 tw-left-1/2 tw-translate-x-[-50%] tw-translate-y-[-50%] tw-text-[0.75rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[#c08020]">
-                    {{#if actor.system.experience.total}}{{floor (multiply (divide actor.system.experience.used actor.system.experience.total) 100)}}{{else}}0{{/if}}%
-                </div>
+    {{!-- Compact XP Display - Single horizontal line --}}
+    <div class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-light)] tw-rounded-[6px] tw-mb-[var(--wh40k-space-md)]">
+        {{!-- Progress Ring --}}
+        <div class="tw-relative tw-w-[50px] tw-h-[50px] tw-shrink-0">
+            <svg viewBox="0 0 100 100" class="tw-w-full tw-h-full">
+                {{!-- Background circle --}}
+                <circle cx="50" cy="50" r="45"
+                        fill="none"
+                        stroke="rgba(120, 46, 34, 0.2)"
+                        stroke-width="10"/>
+                {{!-- Progress circle --}}
+                <circle cx="50" cy="50" r="45"
+                        fill="none"
+                        stroke="url(#xpGradient)"
+                        stroke-width="10"
+                        stroke-linecap="round"
+                        stroke-dasharray="282.74"
+                        stroke-dashoffset="{{multiply (subtract 1 (divide actor.system.experience.used actor.system.experience.total)) 282.74}}"
+                        style="transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);"
+                        transform="rotate(-90 50 50)"/>
+                {{!-- Gradient definition --}}
+                <defs>
+                    <linearGradient id="xpGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#c08020;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#d09838;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+            </svg>
+            <div class="tw-absolute tw-top-1/2 tw-left-1/2 tw-translate-x-[-50%] tw-translate-y-[-50%] tw-text-[0.75rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[#c08020]">
+                {{#if actor.system.experience.total}}{{floor (multiply (divide actor.system.experience.used actor.system.experience.total) 100)}}{{else}}0{{/if}}%
             </div>
-
-            {{!-- Available XP Box --}}
-            <div class="tw-flex tw-flex-col tw-items-center tw-gap-[2px] tw-px-3 tw-py-[6px] tw-bg-[rgba(192,128,32,0.1)] tw-border-2 tw-border-[rgba(192,128,32,0.3)] tw-rounded-[6px] tw-shrink-0">
-                <span class="tw-text-[1.4rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[#d09838]">{{system.experience.available}}</span>
-                <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--color-text-dark-secondary)]">Available</span>
-            </div>
-
-            {{!-- Visual Buffer --}}
-            <span class="tw-text-[1.2rem] tw-font-light tw-shrink-0 tw-text-[var(--color-border-primary)]">|</span>
-
-            {{!-- Spent XP --}}
-            <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-shrink-0">
-                <span class="tw-text-[1.1rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[var(--color-text-dark-primary)]">{{system.experience.used}}</span>
-                <span class="tw-text-[0.7rem] tw-font-semibold tw-text-[var(--color-text-dark-secondary)]">Spent</span>
-            </div>
-
-            {{!-- Visual Buffer --}}
-            <span class="tw-text-[1.2rem] tw-font-light tw-shrink-0 tw-text-[var(--color-border-primary)]">|</span>
-
-            {{!-- Total XP --}}
-            <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-shrink-0">
-                <span class="tw-text-[1.1rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[var(--color-text-dark-primary)]">{{system.experience.total}}</span>
-                <span class="tw-text-[0.7rem] tw-font-semibold tw-text-[var(--color-text-dark-secondary)]">Total</span>
-            </div>
-
-            {{!-- Visual Buffer --}}
-            <span class="tw-text-[1.2rem] tw-font-light tw-shrink-0 tw-text-[var(--color-border-primary)]">|</span>
-
-            {{!-- Add XP Button --}}
-            <button type="button"
-                    class="tw-flex tw-items-center tw-justify-center tw-w-[36px] tw-h-[36px] tw-p-0 tw-bg-[rgba(74,143,92,0.1)] tw-border-2 tw-border-[rgba(74,143,92,0.4)] tw-rounded-full tw-text-[#4a8f5c] tw-cursor-pointer tw-transition-all tw-duration-200 tw-shrink-0 tw-ml-auto hover:tw-bg-[rgba(74,143,92,0.2)] hover:tw-border-[#4a8f5c] hover:tw-scale-110 hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.15)] active:tw-scale-95"
-                    data-action="customXP"
-                    title="Add XP">
-                <i class="fas fa-plus tw-text-[1rem]"></i>
-            </button>
-
-            {{!-- Advancement Button --}}
-            <button type="button"
-                    class="tw-flex tw-items-center tw-justify-center tw-w-[36px] tw-h-[36px] tw-p-0 tw-bg-[rgba(201,162,39,0.1)] tw-border-2 tw-border-[rgba(201,162,39,0.4)] tw-rounded-full tw-text-gold tw-cursor-pointer tw-transition-all tw-duration-200 tw-shrink-0 tw-ml-0 hover:tw-bg-[rgba(201,162,39,0.25)] hover:tw-border-gold hover:tw-scale-110 hover:tw-shadow-[0_2px_6px_rgba(201,162,39,0.3)] active:tw-scale-95"
-                    data-action="openAdvancement"
-                    title="{{localize 'WH40K.Advancement.Title'}}">
-                <i class="fa-solid fa-arrow-up-big-small tw-text-[1rem]"></i>
-            </button>
         </div>
 
-        {{!-- Edit Mode (Expandable) --}}
-        <div class="tw-py-2 tw-px-3 tw-bg-black/[0.02] tw-border-t tw-border-[var(--wh40k-border-color-light)] experience_details" {{hideIfNot (isExpanded 'experience_details' actor)}}>
-
-            {{!-- Direct Edit Section --}}
-            <div class="tw-p-3 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-2">
-                <div class="tw-grid tw-grid-cols-2 tw-gap-2">
-                    <label class="tw-flex tw-flex-col tw-gap-1">
-                        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-muted)]">Total XP Earned</span>
-                        <input type="number"
-                               data-dtype="Number"
-                               class="tw-w-full tw-h-[40px] tw-text-center tw-font-alt tw-font-bold tw-text-[1.1rem] tw-rounded-[6px] tw-border-2 tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-input-bg)] tw-text-[var(--wh40k-text-dark)] tw-transition-all tw-duration-150 focus:tw-outline-none focus:tw-border-[var(--wh40k-border-color-strong)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-shadow-[0_0_0_3px_rgba(120,46,34,0.1)]"
-                               name="system.experience.total"
-                               value="{{system.experience.total}}"
-                               min="0"
-                               placeholder="0" />
-                    </label>
-
-                    <label class="tw-flex tw-flex-col tw-gap-1">
-                        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-muted)]">XP Spent</span>
-                        <input type="number"
-                               data-dtype="Number"
-                               class="tw-w-full tw-h-[40px] tw-text-center tw-font-alt tw-font-bold tw-text-[1.1rem] tw-rounded-[6px] tw-border-2 tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-input-bg)] tw-text-[var(--wh40k-text-dark)] tw-transition-all tw-duration-150 focus:tw-outline-none focus:tw-border-[var(--wh40k-border-color-strong)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-shadow-[0_0_0_3px_rgba(120,46,34,0.1)]"
-                               name="system.experience.used"
-                               value="{{system.experience.used}}"
-                               min="0"
-                               max="{{system.experience.total}}"
-                               placeholder="0" />
-                    </label>
-                </div>
-            </div>
-
-            {{!-- Info Section --}}
-            <div class="tw-mt-2">
-                <div class="tw-flex tw-gap-2 tw-p-2 tw-bg-[rgba(192,128,32,0.08)] tw-border-l-[3px] tw-border-l-[rgba(192,128,32,0.4)] tw-rounded-md">
-                    <i class="fas fa-book tw-text-[#c08020] tw-text-[1.2rem] tw-mt-[2px] tw-shrink-0"></i>
-                    <div class="tw-flex tw-flex-col tw-gap-[6px]">
-                        <strong class="tw-text-[0.8rem] tw-font-bold tw-text-[var(--wh40k-text-medium)] tw-uppercase tw-tracking-[0.03em]">About Experience Points</strong>
-                        <p class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)] tw-leading-[1.4] tw-m-0">Spend XP to improve characteristics, acquire skills and talents, or gain psychic powers. Costs vary based on the advancement being purchased.</p>
-                    </div>
-                </div>
-            </div>
-
+        {{!-- Available XP Box --}}
+        <div class="tw-flex tw-flex-col tw-items-center tw-gap-[2px] tw-px-3 tw-py-[6px] tw-bg-[rgba(192,128,32,0.1)] tw-border-2 tw-border-[rgba(192,128,32,0.3)] tw-rounded-[6px] tw-shrink-0">
+            <span class="tw-text-[1.4rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[#d09838]">{{system.experience.available}}</span>
+            <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--color-text-dark-secondary)]">Available</span>
         </div>
+
+        {{!-- Visual Buffer --}}
+        <span class="tw-text-[1.2rem] tw-font-light tw-shrink-0 tw-text-[var(--color-border-primary)]">|</span>
+
+        {{!-- Spent XP --}}
+        <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-shrink-0">
+            <span class="tw-text-[1.1rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[var(--color-text-dark-primary)]">{{system.experience.used}}</span>
+            <span class="tw-text-[0.7rem] tw-font-semibold tw-text-[var(--color-text-dark-secondary)]">Spent</span>
+        </div>
+
+        {{!-- Visual Buffer --}}
+        <span class="tw-text-[1.2rem] tw-font-light tw-shrink-0 tw-text-[var(--color-border-primary)]">|</span>
+
+        {{!-- Total XP --}}
+        <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-shrink-0">
+            <span class="tw-text-[1.1rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[var(--color-text-dark-primary)]">{{system.experience.total}}</span>
+            <span class="tw-text-[0.7rem] tw-font-semibold tw-text-[var(--color-text-dark-secondary)]">Total</span>
+        </div>
+
+        {{!-- Visual Buffer --}}
+        <span class="tw-text-[1.2rem] tw-font-light tw-shrink-0 tw-text-[var(--color-border-primary)]">|</span>
+
+        {{!-- Add XP Button --}}
+        <button type="button"
+                class="tw-flex tw-items-center tw-justify-center tw-w-[36px] tw-h-[36px] tw-p-0 tw-bg-[rgba(74,143,92,0.1)] tw-border-2 tw-border-[rgba(74,143,92,0.4)] tw-rounded-full tw-text-[#4a8f5c] tw-cursor-pointer tw-transition-all tw-duration-200 tw-shrink-0 tw-ml-auto hover:tw-bg-[rgba(74,143,92,0.2)] hover:tw-border-[#4a8f5c] hover:tw-scale-110 hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.15)] active:tw-scale-95"
+                data-action="customXP"
+                title="Add XP">
+            <i class="fas fa-plus tw-text-[1rem]"></i>
+        </button>
+
+        {{!-- Advancement Button --}}
+        <button type="button"
+                class="tw-flex tw-items-center tw-justify-center tw-w-[36px] tw-h-[36px] tw-p-0 tw-bg-[rgba(201,162,39,0.1)] tw-border-2 tw-border-[rgba(201,162,39,0.4)] tw-rounded-full tw-text-gold tw-cursor-pointer tw-transition-all tw-duration-200 tw-shrink-0 tw-ml-0 hover:tw-bg-[rgba(201,162,39,0.25)] hover:tw-border-gold hover:tw-scale-110 hover:tw-shadow-[0_2px_6px_rgba(201,162,39,0.3)] active:tw-scale-95"
+                data-action="openAdvancement"
+                title="{{localize 'WH40K.Advancement.Title'}}">
+            <i class="fa-solid fa-arrow-up-big-small tw-text-[1rem]"></i>
+        </button>
     </div>
-</div>
+
+    {{!-- Edit Mode (Expandable) --}}
+    <div class="tw-py-2 tw-px-3 tw-bg-black/[0.02] tw-border-t tw-border-[var(--wh40k-border-color-light)] experience_details" {{hideIfNot (isExpanded 'experience_details' actor)}}>
+
+        {{!-- Direct Edit Section --}}
+        <div class="tw-p-3 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-2">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-2">
+                <label class="tw-flex tw-flex-col tw-gap-1">
+                    <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-muted)]">Total XP Earned</span>
+                    <input type="number"
+                           data-dtype="Number"
+                           class="tw-w-full tw-h-[40px] tw-text-center tw-font-alt tw-font-bold tw-text-[1.1rem] tw-rounded-[6px] tw-border-2 tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-input-bg)] tw-text-[var(--wh40k-text-dark)] tw-transition-all tw-duration-150 focus:tw-outline-none focus:tw-border-[var(--wh40k-border-color-strong)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-shadow-[0_0_0_3px_rgba(120,46,34,0.1)]"
+                           name="system.experience.total"
+                           value="{{system.experience.total}}"
+                           min="0"
+                           placeholder="0" />
+                </label>
+
+                <label class="tw-flex tw-flex-col tw-gap-1">
+                    <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-muted)]">XP Spent</span>
+                    <input type="number"
+                           data-dtype="Number"
+                           class="tw-w-full tw-h-[40px] tw-text-center tw-font-alt tw-font-bold tw-text-[1.1rem] tw-rounded-[6px] tw-border-2 tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-input-bg)] tw-text-[var(--wh40k-text-dark)] tw-transition-all tw-duration-150 focus:tw-outline-none focus:tw-border-[var(--wh40k-border-color-strong)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-shadow-[0_0_0_3px_rgba(120,46,34,0.1)]"
+                           name="system.experience.used"
+                           value="{{system.experience.used}}"
+                           min="0"
+                           max="{{system.experience.total}}"
+                           placeholder="0" />
+                </label>
+            </div>
+        </div>
+
+        {{!-- Info Section --}}
+        <div class="tw-mt-2">
+            <div class="tw-flex tw-gap-2 tw-p-2 tw-bg-[rgba(192,128,32,0.08)] tw-border-l-[3px] tw-border-l-[rgba(192,128,32,0.4)] tw-rounded-md">
+                <i class="fas fa-book tw-text-[#c08020] tw-text-[1.2rem] tw-mt-[2px] tw-shrink-0"></i>
+                <div class="tw-flex tw-flex-col tw-gap-[6px]">
+                    <strong class="tw-text-[0.8rem] tw-font-bold tw-text-[var(--wh40k-text-medium)] tw-uppercase tw-tracking-[0.03em]">About Experience Points</strong>
+                    <p class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)] tw-leading-[1.4] tw-m-0">Spend XP to improve characteristics, acquire skills and talents, or gain psychic powers. Costs vary based on the advancement being purchased.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{{/systems/wh40k-rpg/templates/actor/partial/vital-panel-shell.hbs}}
