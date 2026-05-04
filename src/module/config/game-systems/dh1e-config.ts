@@ -11,6 +11,11 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dh1e' as const;
     readonly label = 'WH40K.System.DarkHeresy1e';
     readonly cssClass = 'dark-heresy-1e';
+    readonly theme = {
+        primary: 'gold-raw',
+        accent: 'gold-raw-l5',
+        border: 'gold-raw-d15',
+    } as const;
 
     getOriginStepConfig(): OriginStepConfig {
         // DH1e origin path not yet defined — placeholder

@@ -11,6 +11,11 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'dh2e' as const;
     readonly label = 'WH40K.System.DarkHeresy2e';
     readonly cssClass = 'dark-heresy';
+    readonly theme = {
+        primary: 'bronze',
+        accent: 'gold-raw',
+        border: 'gold-raw-d10',
+    } as const;
 
     override get startingXP(): number {
         return 1000;
