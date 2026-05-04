@@ -79,7 +79,8 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     static #migrateArmourTypes(source: Record<string, unknown>): void {
         if (typeof source.armourTypes === 'string') {
             source.restrictions ??= {};
-            source.restrictions.armourTypes = ArmourModificationData.#parseArmourTypes(source.armourTypes);
+            const restrictions = source.restrictions as Record<string, unknown>;
+            restrictions.armourTypes = ArmourModificationData.#parseArmourTypes(source.armourTypes);
             delete source.armourTypes;
         }
     }
@@ -87,17 +88,21 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     static #migrateArmourModifier(source: Record<string, unknown>): void {
         if (typeof source.armourModifier === 'number') {
             source.modifiers ??= {};
-            source.modifiers.armourPoints = source.armourModifier;
+            const modifiers = source.modifiers as Record<string, unknown>;
+            modifiers.armourPoints = source.armourModifier;
             delete source.armourModifier;
         }
     }
 
     static #extractAPFromEffect(source: Record<string, unknown>): void {
-        if ((!source.modifiers?.armourPoints || source.modifiers.armourPoints === 0) && source.effect) {
-            const extracted = ArmourModificationData.#extractAPModifier(source.effect);
+        // Check if source.modifiers exists and is an object before accessing properties.
+        const modifiers = source.modifiers as Record<string, unknown> | undefined;
+        if ((!modifiers || modifiers.armourPoints === 0) && source.effect) {
+            const extracted = ArmourModificationData.#extractAPModifier(source.effect as string | undefined);
             if (extracted > 0) {
-                source.modifiers ??= {};
-                source.modifiers.armourPoints = extracted;
+                source.modifiers = source.modifiers ?? {};
+                const newModifiers = source.modifiers as Record<string, unknown>;
+                newModifiers.armourPoints = extracted;
             }
         }
     }
@@ -105,35 +110,43 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     static #migrateMaxDexBonus(source: Record<string, unknown>): void {
         if (typeof source.maxDexBonus === 'number') {
             source.modifiers ??= {};
-            source.modifiers.maxAgility = source.maxDexBonus;
+            const modifiers = source.modifiers as Record<string, unknown>;
+            modifiers.maxAgility = source.maxDexBonus;
             delete source.maxDexBonus;
         }
     }
 
     static #extractAgilityFromEffect(source: Record<string, unknown>): void {
-        if ((!source.modifiers?.maxAgility || source.modifiers.maxAgility === 0) && source.effect) {
-            const extracted = ArmourModificationData.#extractAgilityModifier(source.effect);
+        // Check if source.modifiers exists and is an object before accessing properties.
+        const modifiers = source.modifiers as Record<string, unknown> | undefined;
+        if ((!modifiers || modifiers.maxAgility === 0) && source.effect) {
+            const extracted = ArmourModificationData.#extractAgilityModifier(source.effect as string | undefined);
             if (extracted !== 0) {
-                source.modifiers ??= {};
-                source.modifiers.maxAgility = extracted;
+                source.modifiers = source.modifiers ?? {};
+                const newModifiers = source.modifiers as Record<string, unknown>;
+                newModifiers.maxAgility = extracted;
             }
         }
     }
 
     static #migrateWeight(source: Record<string, unknown>): void {
-        if (typeof source.weight === 'string') {
+        if (typeof source.weight === 'string' || typeof source.weight === 'number') {
             source.modifiers ??= {};
-            source.modifiers.weight = ArmourModificationData.#parseWeight(source.weight);
+            const modifiers = source.modifiers as Record<string, unknown>;
+            modifiers.weight = ArmourModificationData.#parseWeight(source.weight);
             delete source.weight;
         }
     }
 
     static #cleanupModifiers(source: Record<string, unknown>): void {
-        if (source.modifiers?.characteristics) {
-            delete source.modifiers.characteristics;
-        }
-        if (source.modifiers?.skills) {
-            delete source.modifiers.skills;
+        const modifiers = source.modifiers as Record<string, unknown> | undefined;
+        if (modifiers) {
+            if (modifiers.characteristics) {
+                delete modifiers.characteristics;
+            }
+            if (modifiers.skills) {
+                delete modifiers.skills;
+            }
         }
     }
 
@@ -157,7 +170,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         super._cleanData?.(source, options);
         if (!source) return;
         // Convert SetFields to Arrays for storage
-        if (source.restrictions instanceof Object && (source.restrictions as any).armourTypes instanceof Set) {
+        if (source.restrictions instanceof Object && typeof (source.restrictions as any).armourTypes === 'object' && (source.restrictions as any).armourTypes instanceof Set) {
             (source.restrictions as any).armourTypes = Array.from((source.restrictions as any).armourTypes);
         }
         if (source.addedProperties instanceof Set) {
@@ -174,14 +187,14 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /**
      * Parse armour types string into Set of standardized keys.
-     * @param {string} str - Raw armour types string from pack data
+     * @param {string | undefined} str - Raw armour types string from pack data
      * @returns {string[]} Array of standardized armour type keys
      */
-    static #parseArmourTypes(str) {
+    static #parseArmourTypes(str: string | undefined): string[] {
         if (!str) return ['any'];
 
         const normalized = str.toLowerCase();
-        const types = [];
+        const types: string[] = [];
 
         // Check for "any" patterns
         if (normalized.includes('any armour') && !normalized.includes('except')) {
@@ -189,7 +202,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
 
         // Map common type names to standardized keys
-        const typeMap = {
+        const typeMap: Record<string, string> = {
             'flak': 'flak',
             'mesh': 'mesh',
             'carapace': 'carapace',
@@ -218,23 +231,23 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /**
      * Parse weight string into numeric value.
-     * @param {string|number} str - Weight string
+     * @param {string | number | undefined} str - Weight string
      * @returns {number}
      */
-    static #parseWeight(str) {
+    static #parseWeight(str: string | number | undefined): number {
         if (typeof str === 'number') return str;
         if (!str) return 0;
-        if (str.includes('wep')) return 0;
+        if (str.includes('wep')) return 0; // Assuming 'wep' indicates it's not a weight value
         const match = str.match(/[+-]?\d+\.?\d*/);
         return match ? parseFloat(match[0]) : 0;
     }
 
     /**
      * Extract AP modifier from effect text.
-     * @param {string} effect - Effect description text
+     * @param {string | undefined} effect - Effect description text
      * @returns {number}
      */
-    static #extractAPModifier(effect) {
+    static #extractAPModifier(effect: string | undefined): number {
         if (!effect) return 0;
         const patterns = [/\+(\d+)\s*AP/i, /gain\s*\+(\d+)\s*AP/i, /adds?\s*\+(\d+)\s*AP/i];
         for (const pattern of patterns) {
@@ -246,10 +259,10 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /**
      * Extract Agility modifier from effect text.
-     * @param {string} effect - Effect description text
+     * @param {string | undefined} effect - Effect description text
      * @returns {number}
      */
-    static #extractAgilityModifier(effect) {
+    static #extractAgilityModifier(effect: string | undefined): number {
         if (!effect) return 0;
         const patterns = [/([+-]\d+)\s*max\s*ag/i, /([+-]\d+)\s*max\s*agility/i, /([+-]\d+)\s*to.*agility/i];
         for (const pattern of patterns) {
@@ -265,7 +278,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /**
      * Get restrictions label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get restrictionsLabel(): string {
         if (this.restrictions.armourTypes.size) {
@@ -276,7 +289,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /**
      * Get formatted restrictions label with localized type names.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get restrictionsLabelEnhanced(): string {
         const types = Array.from(this.restrictions.armourTypes as Set<string>);
@@ -293,7 +306,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /**
      * Has any non-zero modifiers?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get hasModifiers() {
         const mods = this.modifiers;
@@ -302,7 +315,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /**
      * Get modifier summary for display.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get modifierSummary() {
         const parts = [];
@@ -323,7 +336,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /**
      * Get properties summary.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get propertiesSummary() {
         const added = Array.from(this.addedProperties);
@@ -342,7 +355,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /**
      * Get icon for modification type based on what it does.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get icon(): string {
         // Determine icon based on what this mod does
@@ -357,9 +370,12 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     /*  Chat Properties                             */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
-        const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this)];
+        // Access the chatProperties getter from the PhysicalItemTemplate prototype,
+        // ensuring correct 'this' context, and spread its results (assumed to be an array).
+        const baseProps = (this as unknown as PhysicalItemTemplate).chatProperties;
+        const props = [...baseProps];
 
         // Restrictions
         props.push(this.restrictionsLabelEnhanced);
@@ -381,7 +397,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             restrictions: this.restrictionsLabelEnhanced,
