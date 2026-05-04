@@ -31,7 +31,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS = {
         id: 'npc-quick-create-{id}',
         classes: ['wh40k-rpg', 'npc-quick-create-dialog'],
@@ -56,16 +56,16 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             cancel: NPCQuickCreateDialog.#onCancel,
             updatePreview: NPCQuickCreateDialog.#onUpdatePreview,
         },
-    };
+    } as unknown as ApplicationV2Config.DefaultOptions;
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS = {
         form: {
             template: 'systems/wh40k-rpg/templates/dialogs/npc-quick-create.hbs',
         },
-    };
+    } as unknown as Record<string, ApplicationV2Config.PartConfiguration>;
 
     /* -------------------------------------------- */
     /*  Properties                                  */
@@ -73,25 +73,25 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
     /**
      * Current form state for preview.
-     * @type {NPCState}
+     * @scripts/gen-i18n-types.mjs {NPCState}
      */
     #state: NPCState;
 
     /**
      * Promise resolver.
-     * @type {((value: WH40KNPC | null) => void) | null}
+     * @scripts/gen-i18n-types.mjs {((value: WH40KNPC | null) => void) | null}
      */
     #resolve: ((value: WH40KNPC | null) => void) | null = null;
 
     /**
      * Whether the dialog was submitted.
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     #submitted = false;
 
     /**
      * Render timeout.
-     * @type {ReturnType<typeof setTimeout> | null}
+     * @scripts/gen-i18n-types.mjs {ReturnType<typeof setTimeout> | null}
      */
     _renderTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -120,7 +120,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -130,20 +130,20 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const types = ThreatCalculator.getTypes();
 
         // Generate preview data
-        const previewData = ThreatCalculator.generateNPCData(this.#state as unknown as Record<string, unknown>);
+        const previewData = ThreatCalculator.generateNPCData(this.#state as unknown as Record<string, unknown>) as Record<string, unknown>;
         const tier = ThreatCalculator.getTier(this.#state.threatLevel);
 
         // Prepare characteristics for display
-        const characteristics = Object.entries(previewData.characteristics as Record<string, any>).map(([key, char]) => ({
+        const characteristics = Object.entries(previewData.characteristics as Record<string, Record<string, unknown>>).map(([key, char]) => ({
             key,
-            label: char.label,
-            short: char.short,
-            value: char.base,
-            bonus: Math.floor(char.base / 10),
+            label: String(char.label),
+            short: String(char.short),
+            value: Number(char.base),
+            bonus: Math.floor(Number(char.base) / 10),
         }));
 
         // Prepare skills for display
-        const skills = Object.entries(previewData.trainedSkills as Record<string, any>).map(([key, skill]) => {
+        const skills = Object.entries(previewData.trainedSkills as Record<string, Record<string, unknown>>).map(([key, skill]) => {
             let level = '';
             if (skill.plus20) level = '+20';
             else if (skill.plus10) level = '+10';
@@ -151,18 +151,18 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
             return {
                 key,
-                name: skill.name || key,
+                name: String(skill.name || key),
                 level,
-                bonus: skill.bonus || 0,
+                bonus: Number(skill.bonus || 0),
             };
         });
 
         // Prepare weapons for display
-        const weapons = (previewData.weapons as any).simple.map((w: any) => ({
-            name: w.name,
-            damage: w.damage,
-            pen: w.pen,
-            range: w.range,
+        const weapons = ((previewData.weapons as Record<string, unknown>).simple as Record<string, unknown>[]).map((w) => ({
+            name: String(w.name),
+            damage: String(w.damage),
+            pen: String(w.pen),
+            range: String(w.range),
         }));
 
         return {
@@ -172,17 +172,17 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             state: this.#state,
 
             // Options
-            roles: roles.map((r: any) => ({
+            roles: roles.map((r: Record<string, unknown>) => ({
                 ...r,
-                selected: r.key === this.#state.role,
+                selected: String(r.key) === this.#state.role,
             })),
-            presets: presets.map((p: any) => ({
+            presets: presets.map((p: Record<string, unknown>) => ({
                 ...p,
-                selected: p.key === this.#state.preset,
+                selected: String(p.key) === this.#state.preset,
             })),
-            types: types.map((t: any) => ({
+            types: types.map((t: Record<string, unknown>) => ({
                 ...t,
-                selected: t.key === this.#state.type,
+                selected: String(t.key) === this.#state.type,
             })),
 
             // Threat tier info
@@ -194,10 +194,10 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
                 characteristics,
                 skills,
                 weapons,
-                wounds: (previewData.wounds as any).max,
-                armour: (previewData.armour as any).total,
-                movement: previewData.movement,
-            } as PreviewState,
+                wounds: Number((previewData.wounds as Record<string, unknown>).max),
+                armour: Number((previewData.armour as Record<string, unknown>).total),
+                movement: previewData.movement as Record<string, number>,
+            } as unknown as PreviewState,
 
             // Buttons
             buttons: [
@@ -211,7 +211,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * Get threat tier description text.
      * @param {number} threatLevel - The threat level.
      * @returns {string} Description text.
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _getTierDescription(threatLevel: number): string {
         if (threatLevel <= 5) return game.i18n.localize('WH40K.NPC.TierMinor');
@@ -223,7 +223,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
@@ -300,7 +300,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
     /**
      * Debounced render for preview updates.
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _debounceRender(): void {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
@@ -317,7 +317,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * Handle form submission.
      * @param {SubmitEvent} event - The submit event.
      * @param {HTMLFormElement} form - The form element.
-     * @param {FormDataExtended} formData - The form data.
+     * @param {foundry.applications.api.FormDataExtended} formData - The form data.
      */
     static async #onSubmit(
         this: NPCQuickCreateDialog,
@@ -328,13 +328,13 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const data = foundry.utils.expandObject(formData.object) as Partial<NPCState>;
 
         // Update state from form
-        this.#state.name = data.name || 'New NPC';
+        this.#state.name = String(data.name || 'New NPC');
         this.#state.threatLevel = parseInt(String(data.threatLevel), 10) || 5;
-        this.#state.role = data.role || 'specialist';
-        this.#state.type = data.type || 'troop';
-        this.#state.preset = data.preset || 'mixed';
-        this.#state.faction = data.faction || '';
-        this.#state.isHorde = data.isHorde === true || data.isHorde === 'true';
+        this.#state.role = String(data.role || 'specialist');
+        this.#state.type = String(data.type || 'troop');
+        this.#state.preset = String(data.preset || 'mixed');
+        this.#state.faction = String(data.faction || '');
+        this.#state.isHorde = data.isHorde === true || String(data.isHorde) === 'true';
 
         // Generate NPC data
         const npcSystemData = ThreatCalculator.generateNPCData(this.#state as unknown as Record<string, unknown>);
@@ -344,11 +344,11 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             name: this.#state.name,
             type: 'npcV2',
             img: 'icons/svg/mystery-man.svg',
-            system: npcSystemData,
+            system: npcSystemData as Record<string, unknown>,
         };
 
         try {
-            const actor = (await Actor.create(actorData)) as WH40KNPC | undefined;
+            const actor = (await Actor.create(actorData as Record<string, unknown>)) as WH40KNPC | undefined;
 
             if (actor) {
                 ui.notifications.info(`Created NPC: ${String(actor.name)}`);
@@ -391,7 +391,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /*  Lifecycle                                   */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async close(options: Record<string, unknown> = {}): Promise<void> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
@@ -401,7 +401,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             this.#resolve(null);
         }
 
-        return super.close(options);
+        return super.close(options) as unknown as Promise<void>;
     }
 
     /* -------------------------------------------- */
@@ -446,21 +446,23 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const { count = 1, namePattern = 'NPC {n}', randomize = false, baseConfig = {} } = config;
 
         const actors: WH40KNPC[] = [];
-        const baseData = ThreatCalculator.generateNPCData(baseConfig);
+        const baseData = ThreatCalculator.generateNPCData(baseConfig) as Record<string, unknown>;
 
         for (let i = 1; i <= count; i++) {
             const name = namePattern.replace('{n}', String(i));
 
             // Clone and optionally randomize
-            const systemData = foundry.utils.deepClone(baseData);
+            const systemData = foundry.utils.deepClone(baseData) as Record<string, unknown>;
 
             if (randomize) {
                 // Randomize characteristics slightly (±5)
-                for (const char of Object.values(systemData.characteristics as Record<string, any>)) {
+                for (const char of Object.values(systemData.characteristics as Record<string, Record<string, unknown>>)) {
                     const variance = Math.floor(Math.random() * 11) - 5;
-                    char.base = Math.max(10, Math.min(99, char.base + variance));
-                    char.total = char.base + char.modifier;
-                    char.bonus = Math.floor(char.total / 10);
+                    const baseValue = Number(char.base);
+                    const modifierValue = Number(char.modifier || 0);
+                    char['base'] = Math.max(10, Math.min(99, baseValue + variance));
+                    char['total'] = Number(char['base']) + modifierValue;
+                    char['bonus'] = Math.floor(Number(char['total']) / 10);
                 }
             }
 
@@ -471,7 +473,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
                 system: systemData,
             };
 
-            const actor = (await Actor.create(actorData)) as WH40KNPC | undefined;
+            const actor = (await Actor.create(actorData as Record<string, unknown>)) as WH40KNPC | undefined;
             if (actor) actors.push(actor);
         }
 
