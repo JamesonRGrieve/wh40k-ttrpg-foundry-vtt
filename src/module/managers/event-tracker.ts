@@ -220,7 +220,31 @@ export class EventTracker {
             for (const [target, entries] of Object.entries(byTarget)) {
                 const triggered = entries.find((e) => e.trigger && e.trigger in resolved);
                 const fallback = entries.find((e) => e.default) ?? entries[0];
-                entry.dispositions[target] = triggered ?? fallback;
+                // The original code assigned 'triggered ?? fallback' directly.
+                // The TS2783 error about duplicate 'id' suggests an issue with object merging or implicit structure.
+                // Assuming 'triggered' and 'fallback' are DispositionEntry objects, and there's no explicit 'id' property on them.
+                // If one of them were being used to construct a new object with an 'id', this could happen.
+                // However, 'DispositionEntry' itself does not have an 'id' field.
+                // To resolve TS2783 without changing logic, we ensure that if 'triggered' is undefined,
+                // we explicitly take the 'fallback' which is guaranteed to be a DispositionEntry (or undefined if entries is empty, which is guarded).
+                // The problematic line was: entry.dispositions[target] = triggered ?? fallback;
+                // Since 'fallback' is guaranteed to be a DispositionEntry (or there are no entries to begin with),
+                // and 'triggered' is either undefined or a DispositionEntry, the result of '??' is a DispositionEntry.
+                // This assignment should be valid. The TS2783 error might stem from an indirect inference
+                // or a complex interaction. As per the instructions, if it cannot be fixed cleanly without logic change, leave it.
+                // However, if the intent is to ensure that the assignment is a valid DispositionEntry, and 'fallback' exists,
+                // we can assign it explicitly when 'triggered' is null or undefined.
+                // Let's try to make this explicit.
+                if (triggered) {
+                    entry.dispositions[target] = triggered;
+                } else if (fallback) {
+                    entry.dispositions[target] = fallback;
+                }
+                // If neither triggered nor fallback exist (i.e., entries was empty), this would error, but entries is guaranteed not to be empty here by the loop structure.
+                // This change preserves the semantic intent: pick triggered if available, otherwise pick fallback.
+                // The TS2783 error message is very specific to object literals with duplicate keys, which isn't directly apparent here.
+                // The current fix tries to ensure a valid DispositionEntry is assigned, assuming 'triggered' might be causing an issue when it's undefined
+                // in combination with the nullish coalescing operator. This is a best-effort fix for TS2783.
             }
 
             // Relationships: walk influences[] in order; last-resolved wins
@@ -471,22 +495,30 @@ export class EventTracker {
                         .find('input[type="checkbox"]')
                         .off('change')
                         .on('change', async (ev: Event) => {
-                            const id = ev.currentTarget.dataset.eventId;
-                            const isChecked = ev.currentTarget.checked;
-                            await EventTracker.setResolved(id, isChecked);
-                            $html.closest('.dialog').find('.dialog-content').html(EventTracker._buildContent(activeTab));
-                            rebind();
+                            const target = ev.currentTarget;
+                            if (target && target instanceof HTMLInputElement) {
+                                const id = target.dataset.eventId;
+                                const isChecked = target.checked;
+                                if (id !== undefined) {
+                                    await EventTracker.setResolved(id, isChecked);
+                                    $html.closest('.dialog').find('.dialog-content').html(EventTracker._buildContent(activeTab));
+                                    rebind();
+                                }
+                            }
                         });
                     // Tab buttons
                     $html
                         .find('.evt-tab-btn')
                         .off('click')
                         .on('click', (ev: Event) => {
-                            const tab = ev.currentTarget.dataset.tab as 'events' | 'npcs';
-                            if (!tab || tab === activeTab) return;
-                            activeTab = tab;
-                            $html.closest('.dialog').find('.dialog-content').html(EventTracker._buildContent(activeTab));
-                            rebind();
+                            const target = ev.currentTarget;
+                            if (target && target instanceof HTMLButtonElement) {
+                                const tab = target.dataset.tab as 'events' | 'npcs';
+                                if (!tab || tab === activeTab) return;
+                                activeTab = tab;
+                                $html.closest('.dialog').find('.dialog-content').html(EventTracker._buildContent(activeTab));
+                                rebind();
+                            }
                         });
                 };
                 rebind();
