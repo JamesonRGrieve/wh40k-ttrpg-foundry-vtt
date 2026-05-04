@@ -19,13 +19,13 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'roll-dialog', 'standard-form'],
         actions: {
-            roll: BaseRollDialog.#onRoll as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            cancel: BaseRollDialog.#onCancel as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            roll: BaseRollDialog.#onRoll,
+            cancel: BaseRollDialog.#onCancel,
         },
         form: {
             handler: BaseRollDialog.#onFormSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
@@ -36,14 +36,13 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
             width: 500,
         },
         window: {
-            minimizable: false,
             resizable: false,
         },
     };
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/base-roll-prompt.hbs',
@@ -58,13 +57,13 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
 
     /**
      * The roll data being configured.
-     * @type {object}
+     * @scripts/gen-i18n-types.mjs {object}
      */
     rollData;
 
     /**
      * Whether the dialog has been initialized.
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     initialized;
 
@@ -114,7 +113,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {FormDataExtended} formData  The form data.
      */
     static async #onFormSubmit(this: BaseRollDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
-        const data = foundry.utils.expandObject(formData.object);
+        const data = foundry.utils.expandObject(formData.object as Record<string, unknown>);
         this._updateRollData(data);
 
         if (typeof this.rollData.update === 'function') {
@@ -139,7 +138,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
 
     /**
      * Handle roll button click.
-     * @this {BaseRollDialog}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {BaseRollDialog}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -151,7 +150,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
 
     /**
      * Handle cancel button click.
-     * @this {BaseRollDialog}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {BaseRollDialog}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
