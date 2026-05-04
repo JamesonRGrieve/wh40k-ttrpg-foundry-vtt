@@ -781,17 +781,55 @@ COMMON_HARD_RULES = """\
   The ONE exception: Foundry's `CONFIG` object is untyped — casting a CONFIG
   access to `Record<string, any>` is acceptable.
 - NEVER add `@ts-ignore`, `@ts-nocheck`, or `// eslint-disable*` comments.
-- NEVER change logic, control flow, or runtime behavior.
+- NEVER change logic, control flow, or runtime behavior. This is the most
+  important rule. Specifically forbidden behavioral changes:
+    * Do NOT add `if (!x) return;` early exits, `instanceof` checks, or any
+      runtime guard that wasn't there.
+    * Do NOT replace `a ?? b` with an `if/else` chain (or vice versa) — they
+      are not always equivalent and the rewrite is never necessary for typing.
+    * Do NOT wrap values with `String(x)`, `Number(x)`, `Boolean(x)` to "fix"
+      a type. If `x` is mistyped, fix the type, don't coerce at runtime.
+    * Do NOT add `else` branches that assign defaults the original code did
+      not assign.
+    * Do NOT remove `super.method()` calls, spread operators, or any line of
+      logic — only the type annotations on those lines may change.
+    * Do NOT change a function's return type from `Promise<void>` to
+      `Promise<SomeValue>` (or vice versa). Do NOT change parameter or return
+      types in ways that affect callers.
+    * Do NOT remove configuration fields (`minimizable`, `contentClasses`,
+      `height`, etc.) from option objects. Casts go ON the object, not by
+      deleting fields.
 - NEVER remove or rename existing code outside the lines that produce errors
   or warnings.
+- **NEVER touch JSDoc tags.** JSDoc tags are `@file`, `@type`, `@override`,
+  `@param`, `@returns`, `@private`, `@protected`, `@this`, `@inheritDoc`,
+  `@deprecated`, `@see`, `@example`, `@throws`, etc. They are a fixed
+  vocabulary. Do NOT replace them with file paths. Do NOT write
+  `@gulpfile.js`, `@foundry-v14-overrides.d.ts`, `@tailwind.config.js`,
+  `@scripts/gen-i18n-types.mjs`, `@src/...`, `@en.json`, or any token
+  containing `/` or a file extension after the `@`. If a JSDoc line is not
+  itself the cause of an error, leave it byte-for-byte identical.
 - **NEVER invent imports. NEVER add new imports.** Use only types that are
   ALREADY imported in the file or are GLOBAL builtins (string, number, boolean,
   Record, Array, Promise, Map, Set, Date, Error, Event, HTMLElement, etc.).
 - **JSDoc type hints are NOT proof a type exists.** If you see `@param x {Foo}`
   in a comment but `Foo` is not in the file's import list, `Foo` does NOT exist
   in scope. Do NOT use `Foo` in your TypeScript annotation.
-- **The CORRECT fallback for unknown object types is `Record<string, unknown>`**.
-  This is always available, requires no imports, and accepts any object.
+- **`Record<string, unknown>` is a last resort, not a default.** Before casting
+  any value to `Record<string, unknown>` (or `Record<string, any>`), check
+  whether the value has:
+    * a declared DataModel schema (`defineSchema()` in a `*Data` class), or
+    * an existing TypeScript interface / type alias for it, or
+    * a `declare property: T;` field in the class.
+  If yes, the fix belongs on that schema/interface/declaration upstream — NOT
+  as a Record cast at the use site. Casting `this.system`, `actor.system`,
+  `item.system`, or any DataModel-backed value to `Record<string, unknown>`
+  is a regression: it throws away the schema's type information.
+  Record casts are only acceptable at true framework boundaries where no
+  schema exists in this repo: `formData.object`, arguments to `*.update(...)`
+  / `*.create(...)`, `CONFIG.<X>` accesses, raw Foundry hook payloads. If
+  you find yourself writing the same Record cast 3+ times in one file,
+  that's a missing interface — stop casting and add the type instead.
 - For primitive params, use the primitive type directly (number, string, boolean).
 - Verify before you write: scan the existing `import` statements at the top
   of the file. Only types appearing there OR global builtins are safe to use.
@@ -800,7 +838,12 @@ COMMON_HARD_RULES = """\
 - DO NOT rewrite the file header, license banner, JSDoc blocks, or existing
   comments. Leave all comments byte-for-byte identical unless the comment is
   itself the cause of the issue.
-- DO NOT add explanatory comments describing what you changed.
+- DO NOT add explanatory comments describing what you changed. Do NOT add
+  comments narrating your reasoning ("Cast to X to satisfy Y", "Fix for TSXXXX:
+  ...", "Removed Z to resolve...", "As per instructions...", "Best-effort fix",
+  "Assuming Foo is globally available", etc.). Such commentary is forbidden in
+  the output. If you would need a comment to explain a change, the change is
+  too invasive — do something simpler instead.
 - DO NOT emit prose, status updates, "I have updated…" sentences, or any text
   outside the single ```typescript fence. The output is the file, nothing else."""
 
@@ -1100,9 +1143,30 @@ def gemini_sanity_check(diff: str, run_state: dict) -> tuple[str, str]:
         return "YES", "(empty diff — trivially safe)"
 
     prompt = (
-        "Does this diff only change typing and/or fix lint warnings and not "
-        "change functionality or cause errors? Respond \"YES\" or \"NO\" "
-        "(uppercase, no other text).\n\n"
+        "You are auditing a diff that is supposed to be TYPING-ONLY. Answer "
+        "\"NO\" if ANY of these are true (uppercase, no other text):\n"
+        "  - Runtime behavior changes: added/removed `if (...)` guards, "
+        "    `instanceof` checks, early `return`s, `String()`/`Number()` "
+        "    coercions, `else` branches with new defaults, or rewrites of "
+        "    `a ?? b` into `if/else`.\n"
+        "  - Removed `super.method()` calls, spread operators "
+        "    (`...super.foo`), or any line of original logic.\n"
+        "  - Changed a function's return type or parameter types in ways that "
+        "    affect callers (e.g. `Promise<void>` → `Promise<X>`).\n"
+        "  - Removed configuration fields from option objects "
+        "    (`minimizable`, `contentClasses`, `height`, etc.).\n"
+        "  - JSDoc tags mangled into file paths: `@file`, `@type`, "
+        "    `@override`, `@param`, `@returns`, `@private`, `@this`, "
+        "    `@inheritDoc` etc. replaced with paths like `@gulpfile.js`, "
+        "    `@foundry-v14-overrides.d.ts`, `@scripts/...`, `@src/...`. ANY "
+        "    `@` token containing `/` or a file extension is forbidden.\n"
+        "  - Added narrative AI-commentary comments explaining the fix "
+        "    (\"Cast to X to satisfy Y\", \"Fix for TSXXXX\", \"As per "
+        "    instructions\", \"Best-effort fix\", \"Assuming X is globally "
+        "    available\", etc.).\n"
+        "  - Added new `any` types (other than `Record<string, any>` for a "
+        "    CONFIG access).\n"
+        "Otherwise answer \"YES\".\n\n"
         "Diff:\n```diff\n" + diff + "\n```"
     )
     start_slot = run_state.get("gemini_slot", 0)

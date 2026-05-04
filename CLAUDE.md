@@ -102,6 +102,29 @@ Each variant maps to `[data-wh40k-system="<id>"] &`. The data attribute lives on
 - The per-rule per-directory baseline catches the case where one directory cleans up while another regresses. The aggregate `tsc --noEmit` ratchet (`.tsc-error-baseline`) is independent and gates total errors.
 - Foundry V14 type overrides live in `foundry-v14-overrides.d.ts` at the repo root. Both V14 gotchas (cleanData `_state` and registerSheet anonymous-class collisions) are encoded as patterns in the codebase — extend those patterns rather than introducing new wrappers.
 
+### Casting policy
+
+`Record<string, unknown>` is strictly weaker than the alternatives but strictly stronger than `any`. Property access stays `unknown` instead of vanishing into `any`, so downstream errors propagate instead of disappearing. Use it as a last resort, not a default.
+
+**Where Record casts are acceptable** — true framework boundaries with no schema in this repo:
+- `formData.object` (FormDataExtended payloads)
+- arguments to `*.update(...)` / `*.create(...)` / `*.updateSource(...)`
+- `CONFIG.<X>` accesses (Foundry's `CONFIG` is untyped; `Record<string, any>` is the documented exception)
+- raw Foundry hook payloads
+- third-party data with no shipped types
+
+**Where Record casts are a regression** — anything DataModel-backed:
+- Casting `this.system`, `actor.system`, `item.system` to `Record<...>` throws away the schema's typing. Fix the DataModel's `defineSchema()` or add `declare` fields on the class instead.
+- Casting `talent`, `weapon`, `armour`, `actor`, `item` parameters whose concrete type the caller knows. Type the parameter properly.
+- Same Record cast appearing 3+ times in one file. That's a missing interface — extract one and use it.
+
+**Enforcement:**
+- `@typescript-eslint/no-explicit-any` (warn) — flags new `any`.
+- `no-restricted-syntax` rules in `.eslintrc.json` flag `as Record<string, unknown>` and `as Record<string, any>` casts as warnings. The `lint:ratchet` baseline ensures the count only goes down. Legitimate boundary casts contribute to the baseline; new internal cop-outs don't fit under it.
+- The `as any` count is tracked per-directory by `ts:coverage` / `ts:ratchet`. `as Record<string, unknown>` rides on the lint baseline rather than `ts:coverage` because it's not strictly an `any`.
+
+The auto-fix tooling (`.auto-fix/run.py`) prompt encodes the same policy — cheap-model grinders are instructed to look for upstream schema/interface fixes before reaching for a Record cast.
+
 ### i18n typing
 
 - `pnpm i18n:gen` — flatten `src/lang/en.json` into a string-literal union at `src/module/types/i18n-keys.d.ts`. The pre-commit hook regenerates automatically.
