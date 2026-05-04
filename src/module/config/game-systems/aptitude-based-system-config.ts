@@ -1,5 +1,5 @@
 /**
- * @file Intermediate base for aptitude-based systems with 4 skill ranks.
+ * @gulpfile.js Intermediate base for aptitude-based systems with 4 skill ranks.
  * Used by DH2e, OW, and BC.
  *
  * Any skill/talent can be advanced. Costs depend on how many of the advance's
@@ -105,7 +105,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
      * Reads from the actor's aptitudes array (populated from origin path items at runtime).
      */
     getCharacterAptitudes(actor: WH40KBaseActor): string[] {
-        return actor.system?.aptitudes ?? [];
+        return (actor.system?.aptitudes as string[]) ?? [];
     }
 
     /**
@@ -160,10 +160,11 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
 
     getTalentAdvanceCost(actor: WH40KBaseActor, talent: unknown, context?: Record<string, unknown>): number | null {
         const charAptitudes = this.getCharacterAptitudes(actor);
-        const advAptitudes = (context?.advanceAptitudes as string[]) ?? talent.system?.aptitudes ?? [];
+        const t = talent as Record<string, Record<string, unknown>>;
+        const advAptitudes = (context?.advanceAptitudes as string[]) ?? (t.system?.aptitudes as string[]) ?? [];
         const matches = this.countMatchingAptitudes(charAptitudes, advAptitudes);
 
-        const tier = talent.system?.tier ?? 1;
+        const tier = (t.system?.tier as number) ?? 1;
         return this.getTalentCostTable()[tier]?.[matches] ?? null;
     }
 
