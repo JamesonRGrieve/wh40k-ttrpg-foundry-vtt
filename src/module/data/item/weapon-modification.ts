@@ -35,7 +35,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Modification category (for visual grouping and icons)
             category: new fields.StringField({
@@ -86,7 +86,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
 
     /**
      * Get restrictions label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get restrictionsLabel() {
         const parts = [];
@@ -101,7 +101,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
 
     /**
      * Get category icon class.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get categoryIcon() {
         const icons = {
@@ -112,12 +112,12 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
             accessory: 'fa-cog',
             other: 'fa-tools',
         };
-        return icons[this.category] || 'fa-cog';
+        return icons[this.category as keyof typeof icons] || 'fa-cog';
     }
 
     /**
      * Get category label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get categoryLabel(): string {
         return game.i18n.localize(`WH40K.Modification.Category.${this.category.capitalize()}`);
@@ -125,7 +125,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
 
     /**
      * Has any non-zero modifiers?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get hasModifiers(): boolean {
         const mods = this.modifiers;
@@ -144,9 +144,9 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
     /*  Chat Properties                             */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
-        const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.restrictionsLabel];
+        const props = [...super.chatProperties, this.restrictionsLabel];
 
         const mods = this.modifiers;
         if (mods.damage !== 0) props.push(`Damage: ${mods.damage >= 0 ? '+' : ''}${mods.damage}`);
@@ -168,7 +168,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             restrictions: this.restrictionsLabel,
