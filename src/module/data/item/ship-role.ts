@@ -9,18 +9,19 @@ import DescriptionTemplate from '../shared/description-template.ts';
  */
 export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplate) {
     // Typed property declarations matching defineSchema()
-    declare identifier: string;
+    // Fix for TS2740: Change 'string' to 'IdentifierField'
+    declare identifier: IdentifierField;
     declare rank: number;
     declare purpose: string;
     declare careerPreferences: string[];
     declare careerNote: string;
     declare subordinates: string[];
-    declare importantSkills: Array<{ name: string; specialization: string }>;
     declare abilities: Array<{ name: string; description: string; bonus: number; action: string; actionType: string; skill: string }>;
     declare effect: string;
     declare shipBonuses: { manoeuvrability: number; detection: number; ballisticSkill: number; crewRating: number };
     declare skillBonuses: Record<string, unknown>;
     declare notes: string;
+    declare importantSkills: Array<{ name: string; specialization: string }>;
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -99,7 +100,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
 
     /**
      * Get formatted career preferences.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get careerPreferencesLabel(): string {
         if (!this.careerPreferences.length) return '-';
@@ -110,7 +111,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
 
     /**
      * Get formatted subordinates.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get subordinatesLabel(): string {
         if (!this.subordinates.length) return '-';
@@ -119,7 +120,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
 
     /**
      * Get formatted important skills.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get importantSkillsLabel(): string {
         if (!this.importantSkills.length) return '-';
@@ -133,7 +134,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
 
     /**
      * Get primary ability description.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get primaryAbility() {
         if (this.abilities && this.abilities.length > 0) {
@@ -145,10 +146,11 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
 
     /**
      * Get all ship bonuses as array for display.
-     * @type {Array<{label: string, value: number, display: string}>}
+     * @scripts/gen-i18n-types.mjs {Array<{label: string, value: number, display: string}>}
      */
     get shipBonusesArray() {
-        const bonuses = [];
+        // Fix for TS7034/TS7005: Add explicit type annotation for bonuses array
+        const bonuses: Array<{ label: string; value: number; display: string }> = [];
         const labels = {
             manoeuvrability: 'Manoeuvrability',
             detection: 'Detection',
@@ -159,7 +161,8 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
         if (!this.shipBonuses) return bonuses;
 
         for (const [key, label] of Object.entries(labels)) {
-            const value = this.shipBonuses[key] || 0;
+            // Fix for TS7053: Cast the key to the correct type for indexing
+            const value = this.shipBonuses[key as keyof typeof this.shipBonuses] || 0;
             if (value !== 0) {
                 bonuses.push({
                     label,
@@ -176,7 +179,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
     /*  Chat Properties                             */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
         const props = [`Rank: ${this.rank}`, `Careers: ${this.careerPreferencesLabel}`, `Skills: ${this.importantSkillsLabel}`];
 
@@ -187,7 +190,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             rank: this.rank,
