@@ -1,5 +1,5 @@
 /**
- * @file ForceFieldDialog - V2 dialog for force field rolls
+ * @gulpfile.js ForceFieldDialog - V2 dialog for force field rolls
  */
 
 import BaseRollDialog from './base-roll-dialog.ts';
@@ -14,13 +14,13 @@ export default class ForceFieldDialog extends BaseRollDialog {
      * @param {object} forceFieldData  The force field data.
      * @param {ForceFieldDialogOptions} [options={}]    Dialog options.
      */
-    constructor(forceFieldData = {}, options: ForceFieldDialogOptions = {}) {
+    constructor(forceFieldData: Record<string, unknown> = {}, options: ForceFieldDialogOptions = {}) {
         super(forceFieldData, options);
     }
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS = {
         classes: ['force-field'],
         window: {
@@ -30,7 +30,7 @@ export default class ForceFieldDialog extends BaseRollDialog {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/force-field-prompt.hbs',
@@ -79,14 +79,14 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /*  Roll Methods                                */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     _validateRoll(): boolean {
-        if (!this.rollData.forceField?.system?.activated) {
+        if (!(this.rollData.forceField as Record<string, unknown>)?.system?.activated) {
             ui.notifications.warn('Force Field not activated!');
             return false;
         }
 
-        if (this.rollData.forceField?.system?.overloaded) {
+        if ((this.rollData.forceField as Record<string, unknown>)?.system?.overloaded) {
             ui.notifications.warn('Force Field currently overloaded!');
             return false;
         }
@@ -96,12 +96,12 @@ export default class ForceFieldDialog extends BaseRollDialog {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async _performRoll(): Promise<void> {
         if (!this._validateRoll()) return;
 
-        await this.rollData.finalize();
-        await this.rollData.performActionAndSendToChat();
+        await (this.rollData as Record<string, unknown>).finalize();
+        await (this.rollData as Record<string, unknown>).performActionAndSendToChat();
         await this.close();
     }
 }
@@ -114,7 +114,7 @@ export default class ForceFieldDialog extends BaseRollDialog {
  * Open a force field dialog.
  * @param {object} forceFieldData  The force field data.
  */
-export function prepareForceFieldRoll(forceFieldData) {
+export function prepareForceFieldRoll(forceFieldData: Record<string, unknown>) {
     const prompt = new ForceFieldDialog(forceFieldData);
     prompt.render(true);
 }
