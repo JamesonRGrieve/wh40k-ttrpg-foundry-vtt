@@ -45,9 +45,6 @@
         </div>
         {{/if}}
 
-        <div class="{{concat 'wh40k-dropzone'}} {{#if talentsCount}}{{concat 'wh40k-dropzone--compact'}}{{/if}}" data-action="itemCreate" data-type="talent">
-            <i class="{{concat 'fas fa-star wh40k-dropzone-icon'}}"></i>
-            <span class="{{concat 'wh40k-dropzone-text'}}" data-dropzone-text>{{#if talentsCount}}Drop to add{{else}}Drop Talent or Click to Create{{/if}}</span>
-        </div>
+        {{> systems/wh40k-rpg/templates/actor/partial/dropzone.hbs type="talent" iconClass="fa-star" hasItems=talentsCount label="Drop Talent or Click to Create" compactLabel="Drop to add"}}
     </div>
 </div>
