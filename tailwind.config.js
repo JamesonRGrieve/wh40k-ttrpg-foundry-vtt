@@ -19,6 +19,18 @@ module.exports = {
     // on its template AND the matching `animation:` rule is removed from the
     // monolith.
     { pattern: /^tw-animate-/ },
+    // Per-system theme tokens emitted by `themeClassFor(systemId, role)` in
+    // `src/module/config/game-systems/index.ts` — the helper produces these
+    // class names dynamically at render time, so Tailwind's static template
+    // scan can't see them. Each entry below matches a `theme.<role>` value
+    // declared in `<id>-config.ts`. Update when a new theme token is added.
+    'tw-bg-bronze', 'tw-text-gold-raw', 'tw-border-gold-raw-d10',
+    'tw-bg-gold-raw', 'tw-text-gold-raw-l5', 'tw-border-gold-raw-d15',
+    'tw-bg-crimson', 'tw-text-crimson-light', 'tw-border-crimson-dark',
+    'tw-text-accent-combat', 'tw-border-accent-combat-d10',
+    'tw-bg-crimson-light', 'tw-text-failure', 'tw-border-failure-l10',
+    'tw-bg-brass', 'tw-text-brass-l20', 'tw-border-brass-d15',
+    'tw-bg-accent-dynasty', 'tw-text-gold', 'tw-border-gold-dark',
   ],
   corePlugins: {
     preflight: false, // Don't reset existing Foundry/system styles
