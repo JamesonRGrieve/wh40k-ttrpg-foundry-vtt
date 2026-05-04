@@ -11,6 +11,11 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dw' as const;
     readonly label = 'WH40K.System.Deathwatch';
     readonly cssClass = 'deathwatch';
+    readonly theme = {
+        primary: 'bronze',
+        accent: 'accent-combat',
+        border: 'accent-combat-d10',
+    } as const;
 
     getOriginStepConfig(): OriginStepConfig {
         return {

@@ -82,6 +82,28 @@ export interface Prerequisite {
 /** Chaos alignment values for Black Crusade */
 export type ChaosAlignment = 'khorne' | 'nurgle' | 'slaanesh' | 'tzeentch' | 'unaligned';
 
+/**
+ * Per-system color tokens. Values are Tailwind palette names (e.g. `'bronze'`,
+ * `'gold-raw'`, `'crimson'`, `'amber-700'`) — NOT raw hex strings — so the
+ * `themeClassFor(role)` helper in `index.ts` can emit `tw-<utility>-<token>`
+ * directly.
+ *
+ * Roles are intentionally semantic so templates ask for `'border'` or
+ * `'accent'` rather than naming a specific color, and palette changes don't
+ * require touching every template.
+ */
+export interface SystemTheme {
+    /** Dominant brand color — header background, primary accents. */
+    primary: string;
+    /** Secondary accent — hover states, active indicators, callouts. */
+    accent: string;
+    /** Border / divider tint for shells, headers, tab strips. */
+    border: string;
+}
+
+/** Roles a template can request from `themeClassFor`. */
+export type SystemThemeRole = keyof SystemTheme;
+
 /** Sidebar header field row used by the player sheet identity panel. */
 export interface SidebarHeaderField {
     label: string;

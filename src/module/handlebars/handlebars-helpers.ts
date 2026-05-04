@@ -1,4 +1,6 @@
 import WH40K from '../config.ts';
+import { SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
+import type { GameSystemId, SystemThemeRole } from '../config/game-systems/index.ts';
 
 export function capitalize(text) {
     if (!text) return '';
@@ -41,6 +43,26 @@ function getArmourAPForLocation(armour, location) {
 }
 
 export function registerHandlebarsHelpers() {
+    /**
+     * Resolve a per-system theme role into a Tailwind utility class.
+     * Reads `_gameSystemId` from the surrounding sheet via Handlebars
+     * `@root._gameSystemId` (set on the sheet root via PrimarySheetMixin).
+     * Falls back to the explicitly passed `systemId` arg, then 'rt'.
+     *
+     * @example  {{themeClassFor 'border'}}            // uses @root system
+     * @example  {{themeClassFor 'accent' 'dh2e'}}     // explicit override
+     */
+    Handlebars.registerHelper('themeClassFor', function (this: unknown, role: SystemThemeRole, ...rest: unknown[]) {
+        // Last arg is Handlebars options object; preceding args are user-supplied.
+        const userArgs = rest.slice(0, -1) as string[];
+        const opts = rest[rest.length - 1] as { data?: { root?: { _gameSystemId?: string; gameSystemId?: string } } };
+        const explicit = userArgs[0];
+        const fromRoot = opts?.data?.root?._gameSystemId ?? opts?.data?.root?.gameSystemId;
+        const candidate = explicit ?? fromRoot ?? 'rt';
+        const systemId: GameSystemId = SystemConfigRegistry.has(candidate) ? (candidate as GameSystemId) : 'rt';
+        return themeClassFor(systemId, role);
+    });
+
     Handlebars.registerHelper('isPsychicAttack', (power) => {
         if (power && power.system.subtype) {
             return power.system.subtype.includes('Attack');
@@ -382,7 +404,7 @@ export function registerHandlebarsHelpers() {
      * that's empty when the condition fails.
      */
     Handlebars.registerHelper('iff', (cond: unknown, ifTrue: unknown, ifFalse: unknown) => {
-        return cond ? ifTrue : (ifFalse ?? '');
+        return cond ? ifTrue : ifFalse ?? '';
     });
 
     /**
