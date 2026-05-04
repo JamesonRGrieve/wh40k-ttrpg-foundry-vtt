@@ -51,6 +51,10 @@ module.exports = {
     'tw-bg-[rgba(124,45,18,0.2)]', 'tw-text-[#7c2d12]',
     'tw-bg-[rgba(234,179,8,0.2)]', 'tw-text-[#eab308]',
     'tw-bg-[rgba(8,145,178,0.2)]', 'tw-text-[#0891b2]',
+    // Order categories (order.ts get pill())
+    'tw-bg-[rgba(59,130,246,0.2)]', 'tw-text-[#3b82f6]',
+    // Navigator levels (navigator-power.ts get pills())
+    'tw-bg-[rgba(34,197,94,0.15)]', 'tw-bg-[rgba(59,130,246,0.15)]', 'tw-bg-[rgba(245,158,11,0.15)]',
   ],
   corePlugins: {
     preflight: false, // Don't reset existing Foundry/system styles

@@ -98,6 +98,25 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
         return label;
     }
 
+    /**
+     * Pill descriptors consumed by item-list-row.hbs. The first entry is the
+     * "Navigator" type badge; subsequent entries describe which power levels
+     * (novice/adept/master) have content.
+     */
+    get pills(): Array<{ bgClass: string; textClass: string; icon: string; label: string }> {
+        const pills = [{ bgClass: 'tw-bg-[rgba(8,145,178,0.2)]', textClass: 'tw-text-[#0891b2]', icon: 'fa-eye', label: 'Navigator' }];
+        if (this.levels.novice.effect) {
+            pills.push({ bgClass: 'tw-bg-[rgba(34,197,94,0.15)]', textClass: 'tw-text-[#22c55e]', icon: 'fa-seedling', label: 'Novice' });
+        }
+        if (this.levels.adept.effect) {
+            pills.push({ bgClass: 'tw-bg-[rgba(59,130,246,0.15)]', textClass: 'tw-text-[#3b82f6]', icon: 'fa-star-half-alt', label: 'Adept' });
+        }
+        if (this.levels.master.effect) {
+            pills.push({ bgClass: 'tw-bg-[rgba(245,158,11,0.15)]', textClass: 'tw-text-[#f59e0b]', icon: 'fa-crown', label: 'Master' });
+        }
+        return pills;
+    }
+
     /* -------------------------------------------- */
     /*  Chat Properties                             */
     /* -------------------------------------------- */

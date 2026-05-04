@@ -15,101 +15,50 @@
     {{/if}}
 
     {{!-- Orders List --}}
-    <div class="wh40k-powers-list" data-drop-zone="powers" data-accepts="order">
+    <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-min-h-[60px] tw-p-[var(--wh40k-space-md)]" data-drop-zone="powers" data-accepts="order">
         {{#each orders as |order|}}
-        <div class="wh40k-power-card wh40k-order-card item-drag" data-item-id="{{order.id}}" data-category="{{order.system.category}}" draggable="true">
-            {{!-- Order Header --}}
-            <div class="tw-flex tw-items-center tw-gap-2 tw-p-2">
-                <img class="wh40k-power-icon" src="{{order.img}}" alt="{{order.name}}" />
-                <div class="tw-flex-1 tw-min-w-0">
-                    <button type="button" class="wh40k-power-name" data-action="itemEdit" data-item-id="{{order.id}}" title="Edit Order">
-                        {{order.name}}
-                    </button>
-                    <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-mt-0.5">
-                        <span class="wh40k-order-category wh40k-cat-{{order.system.category}}">
-                            {{#if (eq order.system.category "combat")}}
-                            <i class="fas fa-crosshairs"></i>
-                            {{else if (eq order.system.category "maneuver")}}
-                            <i class="fas fa-route"></i>
-                            {{else if (eq order.system.category "command")}}
-                            <i class="fas fa-bullhorn"></i>
-                            {{else if (eq order.system.category "support")}}
-                            <i class="fas fa-hands-helping"></i>
-                            {{else if (eq order.system.category "special")}}
-                            <i class="fas fa-star"></i>
-                            {{else}}
-                            <i class="fas fa-ship"></i>
-                            {{/if}}
-                            {{order.system.categoryLabel}}
-                        </span>
-                        <span class="wh40k-order-action">
-                            {{order.system.actionTypeLabel}}
-                        </span>
-                    </div>
-                </div>
-                <div class="tw-flex tw-gap-0.5 tw-shrink-0">
-                    <button type="button" class="wh40k-power-btn wh40k-btn-roll" data-action="rollOrder" data-item-id="{{order.id}}" title="Execute Order">
-                        <i class="fas fa-dice-d20"></i>
-                    </button>
-                    <button type="button" class="wh40k-power-btn wh40k-btn-chat" data-action="vocalizeOrder" data-item-id="{{order.id}}" title="Post to Chat">
-                        <i class="fas fa-comment"></i>
-                    </button>
-                    <button type="button" class="wh40k-power-btn wh40k-btn-expand" data-action="togglePowerDetails" data-item-id="{{order.id}}" title="Toggle Details">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                </div>
+        {{#> systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs
+            item=order
+            accentColor="#0891b2"
+            dragType="order"
+            extraAttrs=(concat 'data-category="' order.system.category '"')
+            editTitle="Edit Order"
+            pills=(array order.system.pill (hash bgClass="tw-bg-[rgba(0,0,0,0.1)]" textClass="tw-text-[color:var(--wh40k-text-muted)]" label=order.system.actionTypeLabel))
+            stats=(array
+                (hash label="Test" value=order.system.testLabel)
+                (hash label="Action" value=order.system.actionTypeLabel))
+            actions=(array
+                (hash action="rollOrder" icon="fa-dice-d20" title="Execute Order" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
+                (hash action="vocalizeOrder" icon="fa-comment" title="Post to Chat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
+                (hash action="togglePowerDetails" icon="fa-chevron-down" title="Toggle Details" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
+        }}
+            {{#if order.system.requirements}}
+            <div class="tw-mb-[var(--wh40k-space-md)]">
+                <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-secondary)] tw-mb-1"><i class="fas fa-list-check tw-text-[0.7rem]"></i> Requirements</span>
+                <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{order.system.requirements}}}</div>
             </div>
-
-            {{!-- Order Stats Row --}}
-            <div class="tw-flex tw-flex-wrap tw-gap-2 tw-px-3 tw-py-1">
-                <div class="tw-flex tw-flex-col tw-gap-px tw-min-w-[80px]">
-                    <span class="wh40k-stat-label">Test</span>
-                    <span class="wh40k-stat-value">{{order.system.testLabel}}</span>
-                </div>
-                <div class="tw-flex tw-flex-col tw-gap-px tw-min-w-[80px]">
-                    <span class="wh40k-stat-label">Action</span>
-                    <span class="wh40k-stat-value">{{order.system.actionTypeLabel}}</span>
-                </div>
+            {{/if}}
+            {{#if order.system.effect}}
+            <div class="tw-mb-[var(--wh40k-space-md)]">
+                <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[#22c55e] tw-mb-1"><i class="fas fa-check-circle tw-text-[0.7rem]"></i> Effect</span>
+                <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{order.system.effect}}}</div>
             </div>
-
-            {{!-- Expandable Details --}}
-            <div class="wh40k-power-details" data-power-id="{{order.id}}" hidden>
-                {{#if order.system.requirements}}
-                <div class="tw-mb-3">
-                    <span class="wh40k-detail-heading"><i class="fas fa-list-check"></i> Requirements</span>
-                    <div class="wh40k-detail-content">{{{order.system.requirements}}}</div>
-                </div>
-                {{/if}}
-                {{#if order.system.effect}}
-                <div class="tw-mb-3 wh40k-section-success">
-                    <span class="wh40k-detail-heading"><i class="fas fa-check-circle"></i> Effect</span>
-                    <div class="wh40k-detail-content">{{{order.system.effect}}}</div>
-                </div>
-                {{/if}}
-                {{#if order.system.failure}}
-                <div class="tw-mb-3 wh40k-section-danger">
-                    <span class="wh40k-detail-heading"><i class="fas fa-exclamation-triangle"></i> Failure</span>
-                    <div class="wh40k-detail-content">{{{order.system.failure}}}</div>
-                </div>
-                {{/if}}
-                {{#if order.system.description}}
-                <div class="tw-mb-3">
-                    <span class="wh40k-detail-heading">Description</span>
-                    <div class="wh40k-detail-content">{{{order.system.description}}}</div>
-                </div>
-                {{/if}}
-                <div class="tw-flex tw-gap-2 tw-mt-2">
-                    <button type="button" class="wh40k-detail-btn" data-action="itemEdit" data-item-id="{{order.id}}">
-                        <i class="fas fa-cog"></i> Edit
-                    </button>
-                    <button type="button" class="wh40k-detail-btn wh40k-btn-danger" data-action="itemDelete" data-item-id="{{order.id}}">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                </div>
+            {{/if}}
+            {{#if order.system.failure}}
+            <div class="tw-mb-[var(--wh40k-space-md)]">
+                <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[#ef4444] tw-mb-1"><i class="fas fa-exclamation-triangle tw-text-[0.7rem]"></i> Failure</span>
+                <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{order.system.failure}}}</div>
             </div>
-        </div>
+            {{/if}}
+            {{#if order.system.description}}
+            <div class="tw-mb-[var(--wh40k-space-md)]">
+                <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-secondary)] tw-mb-1">Description</span>
+                <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{order.system.description}}}</div>
+            </div>
+            {{/if}}
+        {{/systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs}}
         {{else}}
-        {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-ship" text="No ship orders known"}}
+        {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-ship" text="No ship orders known" padding="md"}}
         {{/each}}
     </div>
 
