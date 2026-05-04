@@ -4,14 +4,14 @@
  * Utility for looking up skill UUIDs from compendium packs.
  * Handles standard skills and specialist skills with specializations.
  *
- * @module helpers/skill-uuid-helper
+ * @src/module/data/grant/_module.ts helpers/skill-uuid-helper
  */
 
 /**
  * Cache for skill UUID lookups to avoid repeated compendium searches
- * @type {Map<string, string|null>}
+ * @scripts/gen-i18n-types.mjs {Map<string, string|null>}
  */
-const _skillUuidCache = new Map();
+const _skillUuidCache = new Map<string, string | null>();
 
 /**
  * Clear the skill UUID cache
@@ -47,13 +47,13 @@ export function clearSkillUuidCache() {
  * const loreUuid = await findSkillUuid("Common Lore", "Imperium");
  * // Returns: "Compendium.wh40k-rpg.dh2-core-stats-skills.yyy"
  */
-export function findSkillUuid(skillName, specialization = null) {
-    if (!skillName) return null;
+export function findSkillUuid(skillName: string, specialization: string | null = null): Promise<string | null> {
+    if (!skillName) return Promise.resolve(null);
 
     // Check if specialization is embedded in the name
     // Pattern: "Skill Name (Specialization)"
     let resolvedSkillName = skillName;
-    let resolvedSpecialization = specialization;
+    let resolvedSpecialization: string | null = specialization;
     if (!resolvedSpecialization && resolvedSkillName.includes('(') && resolvedSkillName.includes(')')) {
         const match = resolvedSkillName.match(/^(.+?)\s*\((.+?)\)\s*$/);
         if (match) {
@@ -67,24 +67,26 @@ export function findSkillUuid(skillName, specialization = null) {
 
     // Check cache first
     if (_skillUuidCache.has(cacheKey)) {
-        return _skillUuidCache.get(cacheKey);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return Promise.resolve(_skillUuidCache.get(cacheKey)!);
     }
 
     try {
         // Find the skills compendium pack
+        // Assuming `game.packs` is globally available in the Foundry VTT environment.
         const skillPack = game.packs.find((p) => p.metadata.name === 'dh2-core-stats-skills' && p.documentName === 'Item');
 
         if (!skillPack) {
             console.warn("Skill compendium pack 'dh2-core-stats-skills' not found");
             _skillUuidCache.set(cacheKey, null);
-            return null;
+            return Promise.resolve(null);
         }
 
         // Get pack index (lightweight metadata)
         const index = skillPack.index;
 
         // Build search variants
-        const searchVariants = [];
+        const searchVariants: string[] = [];
         if (resolvedSpecialization) {
             // Try with parentheses
             searchVariants.push(`${resolvedSkillName} (${resolvedSpecialization})`);
@@ -98,42 +100,52 @@ export function findSkillUuid(skillName, specialization = null) {
 
         // Try exact matches first
         for (const variant of searchVariants) {
-            for (const [id, entry] of index.entries()) {
+            for (const entry of index) { // Assuming index is an array-like iterable
                 if (entry.name === variant) {
-                    const uuid = `Compendium.${skillPack.metadata.id}.${id}`;
+                    const uuid = `Compendium.${skillPack.metadata.id}.${entry.id}`;
                     _skillUuidCache.set(cacheKey, uuid);
-                    return uuid;
+                    return Promise.resolve(uuid);
                 }
             }
         }
 
         // Try case-insensitive partial matches
         const skillNameLower = resolvedSkillName.toLowerCase();
-        const specializationLower = resolvedSpecialization?.toLowerCase();
+        // Explicitly type and assign specializationLower to handle potential undefined/null
+        let specializationLower: string | undefined;
+        if (typeof resolvedSpecialization === 'string') {
+            specializationLower = resolvedSpecialization.toLowerCase();
+        }
 
-        for (const [id, entry] of index.entries()) {
-            const entryNameLower = entry.name.toLowerCase();
+        for (const entry of index) {
+            // Fix for TS18048: 'entry.name' is possibly 'undefined'.
+            // Using nullish coalescing operator to default to an empty string if entry.name is null/undefined.
+            const entryNameLower = (entry.name ?? '').toLowerCase();
 
             // Check if entry name contains the skill name
             if (!entryNameLower.includes(skillNameLower)) continue;
 
             // If we have a specialization, check for that too
-            if (specializationLower && !entryNameLower.includes(specializationLower)) continue;
+            // Fix for TS2339: Property 'toLowerCase' does not exist on type 'never'.
+            // 'specializationLower' is now typed as string | undefined, resolving the 'never' type issue.
+            if (specializationLower && !entryNameLower.includes(specializationLower)) {
+                continue;
+            }
 
             // Found a match
-            const uuid = `Compendium.${skillPack.metadata.id}.${id}`;
+            const uuid = `Compendium.${skillPack.metadata.id}.${entry.id}`;
             _skillUuidCache.set(cacheKey, uuid);
-            return uuid;
+            return Promise.resolve(uuid);
         }
 
         // No match found
         console.debug(`Skill not found in compendium: ${cacheKey}`);
         _skillUuidCache.set(cacheKey, null);
-        return null;
+        return Promise.resolve(null);
     } catch (error) {
         console.error('Error looking up skill UUID:', error);
         _skillUuidCache.set(cacheKey, null);
-        return null;
+        return Promise.resolve(null);
     }
 }
 
@@ -153,11 +165,11 @@ export function findSkillUuid(skillName, specialization = null) {
  * const results = await batchFindSkillUuids(skills);
  * // Returns: Map { "Awareness" => "Compendium...", "Common Lore::Imperium" => "Compendium...", ... }
  */
-export async function batchFindSkillUuids(skills) {
-    const results = new Map();
+export async function batchFindSkillUuids(skills: Array<{ name: string; specialization?: string }>): Promise<Map<string, string | null>> {
+    const results = new Map<string, string | null>();
 
     // Process all skills in parallel
-    const promises = skills.map(async (skill) => {
+    const promises = skills.map(async (skill: { name: string; specialization?: string }) => {
         const uuid = await findSkillUuid(skill.name, skill.specialization);
         const cacheKey = skill.specialization ? `${skill.name}::${skill.specialization}` : skill.name;
         results.set(cacheKey, uuid);
@@ -173,13 +185,18 @@ export async function batchFindSkillUuids(skills) {
  * @param {string} uuid - Compendium UUID
  * @returns {Promise<Item|null>} - The skill Item or null
  */
-export async function getSkillFromUuid(uuid) {
+export async function getSkillFromUuid(uuid: string): Promise<Item | null> {
     if (!uuid) return null;
 
     try {
+        // Assuming `fromUuid` is a global Foundry VTT function.
+        // `fromUuid` returns `Promise<ClientDocument | null>`.
+        // Casting to `Item` based on the expected return type and context.
         const item = await fromUuid(uuid);
-        if (item && item.type === 'skill') {
-            return item;
+        // Fix for TS2339: Property 'type' does not exist on type 'InvalidUuid | ImplementationFor<ALL_DOCUMENT_TYPES>'.
+        // Cast `item` to `Item` to satisfy the type checker and Foundry's API for accessing `.type`.
+        if (item && (item as Item).type === 'skill') {
+            return item as Item; // Return as Item
         }
         return null;
     } catch (error) {
@@ -201,7 +218,7 @@ export async function getSkillFromUuid(uuid) {
  * parseSkillName("Awareness")
  * // Returns: { name: "Awareness", specialization: null }
  */
-export function parseSkillName(fullName) {
+export function parseSkillName(fullName: string): { name: string; specialization: string | null } {
     if (!fullName) return { name: '', specialization: null };
 
     const match = fullName.match(/^(.+?)\s*\((.+?)\)\s*$/);
