@@ -19,7 +19,7 @@ export class RollData {
     difficulties: Record<string, string> = rollDifficulties();
     aims: Record<string, string> = aimModifiers();
     locations: Record<string, string> = hitDropdown();
-    lasModes: string[] = WH40K.combat.las_fire_modes as string[];
+    lasModes: string[] = (WH40K as Record<string, any>).combat.las_fire_modes as string[];
 
     // Chat Controls
     ignoreModifiers: boolean = false;
@@ -50,6 +50,8 @@ export class RollData {
     opposedDof: number = 0;
     opposedDos: number = 0;
     opposedRoll: Roll | null = null;
+
+    isThrown: boolean = false;
 
     baseAim: number = 0;
     modifiers: Record<string, number> = {
@@ -172,12 +174,13 @@ export class RollData {
         try {
             const roll = new Roll(rollDetails.formula, rollDetails.params);
             await roll.evaluate();
-            if (roll.total > 60) {
+            const total = roll.total ?? 0;
+            if (total > 60) {
                 this.modifierTotal = 60;
-            } else if (roll.total < -60) {
+            } else if (total < -60) {
                 this.modifierTotal = -60;
             } else {
-                this.modifierTotal = roll.total;
+                this.modifierTotal = total;
             }
         } catch {
             this.modifierTotal = 0;
@@ -270,7 +273,7 @@ export class WeaponRollData extends RollData {
         calculateCombatActionModifier(this);
         if (weaponSystem.usesAmmo) {
             this.usesAmmo = true;
-            calculateAmmoInformation(this);
+            calculateAmmoInformation(this as unknown as Parameters<typeof calculateAmmoInformation>[0]);
         } else {
             this.usesAmmo = false;
         }
@@ -297,7 +300,7 @@ export class WeaponRollData extends RollData {
         }
 
         // Talents
-        const sourceActor = this.sourceActor as WH40KBaseActorDocument | null;
+        const sourceActor = this.sourceActor as unknown as (WH40KBaseActorDocument & { hasTalent: (t: string) => boolean }) | null;
         const sourceActorSystem = sourceActor?.system as { fate?: { value: number } };
         if (sourceActor && sourceActor.hasTalent('Eye of Vengeance') && sourceActorSystem.fate && sourceActorSystem.fate.value > 0) {
             this.hasEyeOfVengeanceAvailable = true;
@@ -338,7 +341,7 @@ export class WeaponRollData extends RollData {
     }
 
     async finalize(): Promise<void> {
-        await calculateAmmoAttackBonuses(this);
+        await calculateAmmoAttackBonuses(this as unknown as Parameters<typeof calculateAmmoAttackBonuses>[0]);
         await calculateAttackSpecialAttackBonuses(this);
         await calculateWeaponModifiersAttackBonuses(this);
         this.modifiers = {
@@ -384,13 +387,14 @@ export class PsychicRollData extends RollData {
 
     initialize(): void {
         if (!this.sourceActor) return;
+        const sourceActor = this.sourceActor as unknown as (WH40KBaseActorDocument & { psy?: { rating?: number; hasFocus?: boolean } });
 
         this.baseTarget = 0;
         this.modifiers['bonus'] = 0;
         this.modifiers['difficulty'] = 0;
         this.modifiers['modifier'] = 0;
-        this.pr = (this.sourceActor as WH40KBaseActorDocument).psy?.rating ?? 0;
-        this.hasFocus = !!(this.sourceActor as WH40KBaseActorDocument).psy?.hasFocus;
+        this.pr = sourceActor.psy?.rating ?? 0;
+        this.hasFocus = !!sourceActor.psy?.hasFocus;
 
         this.powerSelect = this.psychicPowers.length > 1;
         this.power = this.psychicPowers[0];
@@ -409,7 +413,7 @@ export class PsychicRollData extends RollData {
 
     async update(): Promise<void> {
         if (!this.sourceActor) return;
-        const sourceActor = this.sourceActor as WH40KBaseActorDocument;
+        const sourceActor = this.sourceActor as unknown as (WH40KBaseActorDocument & { psy?: { rating?: number } });
 
         this.modifiers['bonus'] = 10 * Math.floor((sourceActor.psy?.rating ?? 0) - this.pr);
         this.modifiers['focus'] = this.hasFocus ? 10 : 0;
@@ -422,19 +426,22 @@ export class PsychicRollData extends RollData {
 
     updateBaseTarget(): void {
         if (!this.sourceActor) return;
-        const sourceActor = this.sourceActor as WH40KBaseActorDocument;
-        const target = (this.power.system as { target?: any })?.target;
+        const sourceActor = this.sourceActor as unknown as (WH40KBaseActorDocument & { 
+            getSkillFuzzy: (s: string) => { current: number; label?: string } | undefined;
+            getCharacteristicFuzzy: (c: string) => { total: number; short: string } | undefined;
+        });
+        const target = (this.power.system as { target?: Record<string, unknown> })?.target;
         if (!target) return;
 
         if (target.useSkill) {
-            const skill = target.skill;
+            const skill = target.skill as string;
             const actorSkill = sourceActor.getSkillFuzzy(skill);
             if (actorSkill) {
                 this.baseTarget = actorSkill.current;
                 this.baseChar = actorSkill.label ?? '';
             }
         } else {
-            const characteristic = target.characteristic;
+            const characteristic = target.characteristic as string;
             const actorCharacteristic = sourceActor.getCharacteristicFuzzy(characteristic);
             if (actorCharacteristic) {
                 this.baseTarget = actorCharacteristic.total;
@@ -444,17 +451,20 @@ export class PsychicRollData extends RollData {
 
         if (target.isOpposed && this.targetActor) {
             this.isOpposed = true;
-            const targetActor = this.targetActor as WH40KBaseActorDocument;
+            const targetActor = this.targetActor as unknown as (WH40KBaseActorDocument & { 
+                getSkillFuzzy: (s: string) => { current: number; label?: string } | undefined;
+                getCharacteristicFuzzy: (c: string) => { total: number; short: string } | undefined;
+            });
 
             if (target.useOpposedSkill) {
-                const skill = target.opposedSkill;
+                const skill = target.opposedSkill as string;
                 const actorSkill = targetActor.getSkillFuzzy(skill);
                 if (actorSkill) {
                     this.opposedTarget = actorSkill.current;
                     this.opposedChar = actorSkill.label ?? '';
                 }
             } else {
-                const characteristic = target.opposed;
+                const characteristic = target.opposed as string;
                 const actorCharacteristic = targetActor.getCharacteristicFuzzy(characteristic);
                 if (actorCharacteristic) {
                     this.opposedTarget = actorCharacteristic.total;
