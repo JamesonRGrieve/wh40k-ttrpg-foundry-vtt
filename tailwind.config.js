@@ -31,6 +31,26 @@ module.exports = {
     'tw-bg-crimson-light', 'tw-text-failure', 'tw-border-failure-l10',
     'tw-bg-brass', 'tw-text-brass-l20', 'tw-border-brass-d15',
     'tw-bg-accent-dynasty', 'tw-text-gold', 'tw-border-gold-dark',
+    // Pill-style classes emitted by `get pill()` getters on item DataModels
+    // (e.g. ritual.ts, navigator-power.ts, order.ts). These strings come from
+    // TS at render time and are not visible to the static template scan.
+    // When a new ritual/order/power type adds a pill, append its class names
+    // here. Each entry is the literal class string emitted by the getter.
+    'tw-bg-[rgba(217,119,6,0.2)]', 'tw-text-[#d97706]',
+    'tw-bg-[rgba(124,58,237,0.2)]', 'tw-text-[#7c3aed]',
+    'tw-bg-[rgba(220,38,38,0.2)]', 'tw-text-[#dc2626]',
+    'tw-bg-[rgba(2,132,199,0.2)]', 'tw-text-[#0284c7]',
+    'tw-bg-[rgba(100,116,139,0.2)]', 'tw-text-[#64748b]',
+    'tw-bg-[rgba(0,0,0,0.1)]', 'tw-text-[color:var(--wh40k-text-muted)]',
+    // Psychic discipline pill colors (psychic-power.ts get pill())
+    'tw-bg-[rgba(139,92,246,0.2)]', 'tw-text-[#8b5cf6]',
+    'tw-bg-[rgba(6,182,212,0.2)]', 'tw-text-[#06b6d4]',
+    'tw-bg-[rgba(245,158,11,0.2)]', 'tw-text-[#f59e0b]',
+    'tw-bg-[rgba(239,68,68,0.2)]', 'tw-text-[#ef4444]',
+    'tw-bg-[rgba(34,197,94,0.2)]', 'tw-text-[#22c55e]',
+    'tw-bg-[rgba(124,45,18,0.2)]', 'tw-text-[#7c2d12]',
+    'tw-bg-[rgba(234,179,8,0.2)]', 'tw-text-[#eab308]',
+    'tw-bg-[rgba(8,145,178,0.2)]', 'tw-text-[#0891b2]',
   ],
   corePlugins: {
     preflight: false, // Don't reset existing Foundry/system styles
