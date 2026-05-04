@@ -22,6 +22,7 @@
         accentBg      — optional CSS gradient/color string for header background.
         accentBorder  — optional CSS color string for header bottom border.
         accentIcon    — optional CSS color string for the header icon color.
+        count         — optional numeric badge rendered after the title (used by list panels).
         rootClass     — extra utility classes appended to the outer panel div.
         bodyClass     — extra utility classes on the body container.
 --}}
@@ -30,6 +31,7 @@
         {{#if accentBg}}style="background: {{accentBg}};{{#if accentBorder}} border-bottom-color: {{accentBorder}};{{/if}}"{{/if}}>
         <span class="tw-flex tw-flex-1 tw-min-w-0 tw-flex-row tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap tw-font-[var(--wh40k-font-display,'Modesto_Condensed',serif)] tw-text-[1.1rem] tw-font-semibold tw-tracking-[0.02em] tw-text-[var(--wh40k-text-dark)] [&>i]:tw-flex-shrink-0 [&>i]:tw-text-[var(--wh40k-accent-gold)]">
             {{#if icon}}<i class="fas {{icon}}"{{#if accentIcon}} style="color: {{accentIcon}};"{{/if}}></i> {{/if}}{{label}}
+            {{#if count}}<span class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-px-[6px] tw-py-[2px] tw-rounded-[10px] tw-text-[0.65rem] tw-font-semibold tw-min-w-[20px] tw-text-center">{{count}}</span>{{/if}}
         </span>
         <i class="fas fa-chevron-down tw-flex-shrink-0 tw-ml-auto tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)] tw-transition-transform tw-duration-200 tw-ease-linear group-[.collapsed]:tw-rotate-[-90deg]"></i>
     </header>

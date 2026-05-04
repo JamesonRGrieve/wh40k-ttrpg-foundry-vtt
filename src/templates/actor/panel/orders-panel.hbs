@@ -1,136 +1,124 @@
-{{!-- Orders Panel V2 - Modern Card-based Design --}}
-<div class="wh40k-panel wh40k-panel-powers wh40k-panel-orders">
-    <header class="wh40k-panel-header" data-action="togglePanel" data-panel-id="orders">
-        <span class="wh40k-panel-title">
-            <i class="fas fa-ship"></i>
-            Ship Orders
-            {{#if ordersCount}}
-            <span class="wh40k-count-badge">{{ordersCount}}</span>
-            {{/if}}
-        </span>
-        <i class="fas fa-chevron-down wh40k-panel-toggle"></i>
-    </header>
-    <div class="wh40k-panel-body">
-        {{!-- Category Filter Tabs --}}
-        {{#if orderCategories.length}}
-        <div class="wh40k-power-filters">
-            <button type="button" class="wh40k-filter-btn {{#unless activeOrderCategory}}active{{/unless}}" data-action="filterOrders" data-category="">
-                All
-            </button>
-            {{#each orderCategories as |cat|}}
-            <button type="button" class="wh40k-filter-btn wh40k-filter-{{cat.id}}" data-action="filterOrders" data-category="{{cat.id}}">
-                {{cat.label}}
-            </button>
-            {{/each}}
-        </div>
-        {{/if}}
-
-        {{!-- Orders List --}}
-        <div class="wh40k-powers-list" data-drop-zone="powers" data-accepts="order">
-            {{#each orders as |order|}}
-            <div class="wh40k-power-card wh40k-order-card item-drag" data-item-id="{{order.id}}" data-category="{{order.system.category}}" draggable="true">
-                {{!-- Order Header --}}
-                <div class="tw-flex tw-items-center tw-gap-2 tw-p-2">
-                    <img class="wh40k-power-icon" src="{{order.img}}" alt="{{order.name}}" />
-                    <div class="tw-flex-1 tw-min-w-0">
-                        <button type="button" class="wh40k-power-name" data-action="itemEdit" data-item-id="{{order.id}}" title="Edit Order">
-                            {{order.name}}
-                        </button>
-                        <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-mt-0.5">
-                            <span class="wh40k-order-category wh40k-cat-{{order.system.category}}">
-                                {{#if (eq order.system.category "combat")}}
-                                <i class="fas fa-crosshairs"></i>
-                                {{else if (eq order.system.category "maneuver")}}
-                                <i class="fas fa-route"></i>
-                                {{else if (eq order.system.category "command")}}
-                                <i class="fas fa-bullhorn"></i>
-                                {{else if (eq order.system.category "support")}}
-                                <i class="fas fa-hands-helping"></i>
-                                {{else if (eq order.system.category "special")}}
-                                <i class="fas fa-star"></i>
-                                {{else}}
-                                <i class="fas fa-ship"></i>
-                                {{/if}}
-                                {{order.system.categoryLabel}}
-                            </span>
-                            <span class="wh40k-order-action">
-                                {{order.system.actionTypeLabel}}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="tw-flex tw-gap-0.5 tw-shrink-0">
-                        <button type="button" class="wh40k-power-btn wh40k-btn-roll" data-action="rollOrder" data-item-id="{{order.id}}" title="Execute Order">
-                            <i class="fas fa-dice-d20"></i>
-                        </button>
-                        <button type="button" class="wh40k-power-btn wh40k-btn-chat" data-action="vocalizeOrder" data-item-id="{{order.id}}" title="Post to Chat">
-                            <i class="fas fa-comment"></i>
-                        </button>
-                        <button type="button" class="wh40k-power-btn wh40k-btn-expand" data-action="togglePowerDetails" data-item-id="{{order.id}}" title="Toggle Details">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                    </div>
-                </div>
-
-                {{!-- Order Stats Row --}}
-                <div class="tw-flex tw-flex-wrap tw-gap-2 tw-px-3 tw-py-1">
-                    <div class="tw-flex tw-flex-col tw-gap-px tw-min-w-[80px]">
-                        <span class="wh40k-stat-label">Test</span>
-                        <span class="wh40k-stat-value">{{order.system.testLabel}}</span>
-                    </div>
-                    <div class="tw-flex tw-flex-col tw-gap-px tw-min-w-[80px]">
-                        <span class="wh40k-stat-label">Action</span>
-                        <span class="wh40k-stat-value">{{order.system.actionTypeLabel}}</span>
-                    </div>
-                </div>
-
-                {{!-- Expandable Details --}}
-                <div class="wh40k-power-details" data-power-id="{{order.id}}" hidden>
-                    {{#if order.system.requirements}}
-                    <div class="tw-mb-3">
-                        <span class="wh40k-detail-heading"><i class="fas fa-list-check"></i> Requirements</span>
-                        <div class="wh40k-detail-content">{{{order.system.requirements}}}</div>
-                    </div>
-                    {{/if}}
-                    {{#if order.system.effect}}
-                    <div class="tw-mb-3 wh40k-section-success">
-                        <span class="wh40k-detail-heading"><i class="fas fa-check-circle"></i> Effect</span>
-                        <div class="wh40k-detail-content">{{{order.system.effect}}}</div>
-                    </div>
-                    {{/if}}
-                    {{#if order.system.failure}}
-                    <div class="tw-mb-3 wh40k-section-danger">
-                        <span class="wh40k-detail-heading"><i class="fas fa-exclamation-triangle"></i> Failure</span>
-                        <div class="wh40k-detail-content">{{{order.system.failure}}}</div>
-                    </div>
-                    {{/if}}
-                    {{#if order.system.description}}
-                    <div class="tw-mb-3">
-                        <span class="wh40k-detail-heading">Description</span>
-                        <div class="wh40k-detail-content">{{{order.system.description}}}</div>
-                    </div>
-                    {{/if}}
-                    <div class="tw-flex tw-gap-2 tw-mt-2">
-                        <button type="button" class="wh40k-detail-btn" data-action="itemEdit" data-item-id="{{order.id}}">
-                            <i class="fas fa-cog"></i> Edit
-                        </button>
-                        <button type="button" class="wh40k-detail-btn wh40k-btn-danger" data-action="itemDelete" data-item-id="{{order.id}}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
-                </div>
-            </div>
-            {{else}}
-            <div class="wh40k-empty-state">
-                <i class="fas fa-ship"></i>
-                <p>No ship orders known</p>
-            </div>
-            {{/each}}
-        </div>
-
-        {{!-- Add Order Dropzone --}}
-        <div class="wh40k-dropzone {{#if ordersCount}}wh40k-dropzone--compact{{/if}}" data-action="itemCreate" data-type="order">
-            <i class="fas fa-plus wh40k-dropzone-icon"></i>
-            <span class="wh40k-dropzone-text" data-dropzone-text>{{#if ordersCount}}Drop or click to add{{else}}Drop Ship Order or Click to Create{{/if}}</span>
-        </div>
+{{!-- Orders Panel --}}
+{{#> systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs panelId="orders" label="Ship Orders" icon="fa-ship" count=ordersCount rootClass="wh40k-panel-powers wh40k-panel-orders" bodyClass="tw-p-0"}}
+    {{!-- Category Filter Tabs --}}
+    {{#if orderCategories.length}}
+    <div class="wh40k-power-filters">
+        <button type="button" class="wh40k-filter-btn {{#unless activeOrderCategory}}active{{/unless}}" data-action="filterOrders" data-category="">
+            All
+        </button>
+        {{#each orderCategories as |cat|}}
+        <button type="button" class="wh40k-filter-btn wh40k-filter-{{cat.id}}" data-action="filterOrders" data-category="{{cat.id}}">
+            {{cat.label}}
+        </button>
+        {{/each}}
     </div>
-</div>
+    {{/if}}
+
+    {{!-- Orders List --}}
+    <div class="wh40k-powers-list" data-drop-zone="powers" data-accepts="order">
+        {{#each orders as |order|}}
+        <div class="wh40k-power-card wh40k-order-card item-drag" data-item-id="{{order.id}}" data-category="{{order.system.category}}" draggable="true">
+            {{!-- Order Header --}}
+            <div class="tw-flex tw-items-center tw-gap-2 tw-p-2">
+                <img class="wh40k-power-icon" src="{{order.img}}" alt="{{order.name}}" />
+                <div class="tw-flex-1 tw-min-w-0">
+                    <button type="button" class="wh40k-power-name" data-action="itemEdit" data-item-id="{{order.id}}" title="Edit Order">
+                        {{order.name}}
+                    </button>
+                    <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-mt-0.5">
+                        <span class="wh40k-order-category wh40k-cat-{{order.system.category}}">
+                            {{#if (eq order.system.category "combat")}}
+                            <i class="fas fa-crosshairs"></i>
+                            {{else if (eq order.system.category "maneuver")}}
+                            <i class="fas fa-route"></i>
+                            {{else if (eq order.system.category "command")}}
+                            <i class="fas fa-bullhorn"></i>
+                            {{else if (eq order.system.category "support")}}
+                            <i class="fas fa-hands-helping"></i>
+                            {{else if (eq order.system.category "special")}}
+                            <i class="fas fa-star"></i>
+                            {{else}}
+                            <i class="fas fa-ship"></i>
+                            {{/if}}
+                            {{order.system.categoryLabel}}
+                        </span>
+                        <span class="wh40k-order-action">
+                            {{order.system.actionTypeLabel}}
+                        </span>
+                    </div>
+                </div>
+                <div class="tw-flex tw-gap-0.5 tw-shrink-0">
+                    <button type="button" class="wh40k-power-btn wh40k-btn-roll" data-action="rollOrder" data-item-id="{{order.id}}" title="Execute Order">
+                        <i class="fas fa-dice-d20"></i>
+                    </button>
+                    <button type="button" class="wh40k-power-btn wh40k-btn-chat" data-action="vocalizeOrder" data-item-id="{{order.id}}" title="Post to Chat">
+                        <i class="fas fa-comment"></i>
+                    </button>
+                    <button type="button" class="wh40k-power-btn wh40k-btn-expand" data-action="togglePowerDetails" data-item-id="{{order.id}}" title="Toggle Details">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            {{!-- Order Stats Row --}}
+            <div class="tw-flex tw-flex-wrap tw-gap-2 tw-px-3 tw-py-1">
+                <div class="tw-flex tw-flex-col tw-gap-px tw-min-w-[80px]">
+                    <span class="wh40k-stat-label">Test</span>
+                    <span class="wh40k-stat-value">{{order.system.testLabel}}</span>
+                </div>
+                <div class="tw-flex tw-flex-col tw-gap-px tw-min-w-[80px]">
+                    <span class="wh40k-stat-label">Action</span>
+                    <span class="wh40k-stat-value">{{order.system.actionTypeLabel}}</span>
+                </div>
+            </div>
+
+            {{!-- Expandable Details --}}
+            <div class="wh40k-power-details" data-power-id="{{order.id}}" hidden>
+                {{#if order.system.requirements}}
+                <div class="tw-mb-3">
+                    <span class="wh40k-detail-heading"><i class="fas fa-list-check"></i> Requirements</span>
+                    <div class="wh40k-detail-content">{{{order.system.requirements}}}</div>
+                </div>
+                {{/if}}
+                {{#if order.system.effect}}
+                <div class="tw-mb-3 wh40k-section-success">
+                    <span class="wh40k-detail-heading"><i class="fas fa-check-circle"></i> Effect</span>
+                    <div class="wh40k-detail-content">{{{order.system.effect}}}</div>
+                </div>
+                {{/if}}
+                {{#if order.system.failure}}
+                <div class="tw-mb-3 wh40k-section-danger">
+                    <span class="wh40k-detail-heading"><i class="fas fa-exclamation-triangle"></i> Failure</span>
+                    <div class="wh40k-detail-content">{{{order.system.failure}}}</div>
+                </div>
+                {{/if}}
+                {{#if order.system.description}}
+                <div class="tw-mb-3">
+                    <span class="wh40k-detail-heading">Description</span>
+                    <div class="wh40k-detail-content">{{{order.system.description}}}</div>
+                </div>
+                {{/if}}
+                <div class="tw-flex tw-gap-2 tw-mt-2">
+                    <button type="button" class="wh40k-detail-btn" data-action="itemEdit" data-item-id="{{order.id}}">
+                        <i class="fas fa-cog"></i> Edit
+                    </button>
+                    <button type="button" class="wh40k-detail-btn wh40k-btn-danger" data-action="itemDelete" data-item-id="{{order.id}}">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="wh40k-empty-state">
+            <i class="fas fa-ship"></i>
+            <p>No ship orders known</p>
+        </div>
+        {{/each}}
+    </div>
+
+    {{!-- Add Order Dropzone --}}
+    <div class="wh40k-dropzone {{#if ordersCount}}wh40k-dropzone--compact{{/if}}" data-action="itemCreate" data-type="order">
+        <i class="fas fa-plus wh40k-dropzone-icon"></i>
+        <span class="wh40k-dropzone-text" data-dropzone-text>{{#if ordersCount}}Drop or click to add{{else}}Drop Ship Order or Click to Create{{/if}}</span>
+    </div>
+{{/systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs}}
