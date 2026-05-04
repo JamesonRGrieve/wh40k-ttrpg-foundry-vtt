@@ -4,7 +4,7 @@ import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-varian
 
 /**
  * Template for items that deal damage.
- * @mixin
+ * @src/module/applications/api/primary-sheet-mixin.ts
  */
 export default class DamageTemplate extends SystemDataModel {
     // Typed property declarations matching defineSchema()
@@ -39,7 +39,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @protected
      */
     static _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        SystemDataModel._migrateData?.();
         DamageTemplate.#migrateSpecial(source);
     }
 
@@ -72,7 +72,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData?.(source, options);
     }
 
@@ -99,7 +99,7 @@ export default class DamageTemplate extends SystemDataModel {
 
     /**
      * Get a formatted damage string.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get damageLabel(): string {
         const dmg = this.damage;
@@ -116,7 +116,7 @@ export default class DamageTemplate extends SystemDataModel {
 
     /**
      * Get the damage type abbreviation.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get damageTypeAbbr() {
         const abbrs = {
@@ -129,14 +129,14 @@ export default class DamageTemplate extends SystemDataModel {
             cold: 'C',
             toxic: 'T',
         };
-        return abbrs[this.damage.type] ?? this.damage.type.charAt(0).toUpperCase();
+        return abbrs[this.damage.type as keyof typeof abbrs] ?? this.damage.type.charAt(0).toUpperCase();
     }
 
     /* -------------------------------------------- */
 
     /**
      * Get localized damage type label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get damageTypeLabel(): string {
         return game.i18n.localize(`WH40K.DamageType.${this.damage.type.capitalize()}`);
@@ -146,7 +146,7 @@ export default class DamageTemplate extends SystemDataModel {
 
     /**
      * Properties for chat display.
-     * @type {string[]}
+     * @scripts/gen-i18n-types.mjs {string[]}
      */
     get chatProperties(): string[] {
         const props = [];
@@ -167,7 +167,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @param {string} quality   The quality to check.
      * @returns {boolean}
      */
-    hasSpecial(quality): boolean {
+    hasSpecial(quality: string): boolean {
         return this.special?.has(quality.toLowerCase()) ?? false;
     }
 }
