@@ -1,7 +1,4 @@
-<div class="wh40k-panel tw-col-span-6 tw-row-span-1">
-    <h1 class="wh40k-panel-header">
-        <span class="wh40k-panel-title">{{localize "WH40K.Starship.Upgrades.Header"}}</span>
-    </h1>
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Starship.Upgrades.Header") rootClass="tw-col-span-6 tw-row-span-1" bodyClass="tw-p-0"}}
     <div class="wh40k-table--border">
         <div class="table-row--head">
             <div class="table-cell--span2">{{localize "WH40K.Starship.Upgrades.Name"}}</div>
@@ -35,4 +32,4 @@
             {{/if}}
         {{/each}}
     </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

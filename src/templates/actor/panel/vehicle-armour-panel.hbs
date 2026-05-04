@@ -1,10 +1,4 @@
-<div class="wh40k-panel tw-col-span-3">
-    <h1 class="wh40k-panel-header">
-        <span class="wh40k-panel-title">
-            <i class="fas fa-shield-alt"></i>
-            {{localize "WH40K.Vehicle.Armour"}}
-        </span>
-    </h1>
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Vehicle.Armour") icon="fa-shield-alt" rootClass="tw-col-span-3" bodyClass="tw-p-0"}}
     <div class="tw-grid tw-grid-cols-3 tw-gap-2 tw-p-2">
         <div class="tw-flex tw-flex-col tw-gap-1">
             <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Armour.Front"}}</span>
@@ -71,4 +65,4 @@
         <strong>Summary:</strong>
         {{system.armourSummary}}
     </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
