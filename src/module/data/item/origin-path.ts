@@ -38,13 +38,14 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     declare effectText: string;
     declare notes: string;
     declare selectedChoices: Record<string, unknown>;
-    declare activeModifiers: Array<{ source: string; type: string; key: string; value: number; itemUuid: string }>;
+    declare activeModifiers: Array<{ source: string; type: string; key: string; value: number | null; itemUuid: string | null }>;
     declare homebrew: { throneGelt: string; thrones: string };
     declare rollResults: {
         wounds: { formula: string; rolled: number; breakdown: string; timestamp: number };
         fate: { formula: string; rolled: number; breakdown: string; timestamp: number };
         thrones: { formula: string; rolled: number; breakdown: string; timestamp: number };
     };
+    declare modifiers: { characteristics: Record<string, number> };
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -52,7 +53,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Origin path step
             step: new fields.StringField({
@@ -268,7 +269,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     /**
      * Get all positions this origin occupies (for multi-parent support).
      * Returns array of positions where this origin appears in the chart.
-     * @type {number[]}
+     * @scripts/gen-i18n-types.mjs {number[]}
      */
     get allPositions() {
         return this.positions && this.positions.length > 0 ? [...this.positions].sort((a, b) => a - b) : [4]; // Default to center position if not set
@@ -277,7 +278,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     /**
      * Get the primary (first) position for this origin.
      * Used for card placement in the chart.
-     * @type {number}
+     * @scripts/gen-i18n-types.mjs {number}
      */
     get primaryPosition() {
         return this.allPositions[0] || 4;
@@ -285,7 +286,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
     /**
      * Get the step label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get stepLabel() {
         const fallbackLabels = {
@@ -306,12 +307,12 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             return game.i18n.localize(localizationKey);
         }
 
-        return fallbackLabels[this.step] || this.step || '';
+        return fallbackLabels[this.step as keyof typeof fallbackLabels] || this.step || '';
     }
 
     /**
      * Is this an advanced origin from Into The Storm?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get isAdvanced(): boolean {
         return this.isAdvancedOrigin || this.xpCost > 0;
@@ -319,7 +320,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
     /**
      * Get display string for XP cost.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get xpCostLabel(): string {
         return this.xpCost > 0 ? `${this.xpCost} XP` : '—';
@@ -327,16 +328,16 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
     /**
      * Does this origin have requirements?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get hasRequirements() {
-        const reqs = this.requirements;
+        const reqs = this.requirements as { text: string; previousSteps: string[]; excludedSteps: string[] };
         return !!(reqs.text || reqs.previousSteps.length || reqs.excludedSteps.length);
     }
 
     /**
      * Does this origin have choices?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get hasChoices() {
         return this.grants.choices.length > 0;
@@ -344,18 +345,18 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
     /**
      * Get choices that still need selection.
-     * @type {object[]}
+     * @scripts/gen-i18n-types.mjs {object[]}
      */
     get pendingChoices() {
         return this.grants.choices.filter((choice) => {
-            const selected = this.selectedChoices[choice.label] || [];
+            const selected = (this.selectedChoices as Record<string, unknown[]>)[choice.label] || [];
             return selected.length < choice.count;
         });
     }
 
     /**
      * Check if all choices have been made.
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get choicesComplete() {
         return this.pendingChoices.length === 0;
@@ -363,7 +364,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
     /**
      * Get the active modifiers derived from selected choices.
-     * @type {object[]}
+     * @scripts/gen-i18n-types.mjs {object[]}
      */
     get derivedModifiers() {
         return this.activeModifiers || [];
@@ -371,7 +372,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
     /**
      * Get a summary of grants.
-     * @type {object}
+     * @scripts/gen-i18n-types.mjs {object}
      */
     get grantsSummary() {
         const grants = this.grants;
@@ -409,7 +410,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     /*  Data Preparation                            */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     prepareDerivedData(): void {
         super.prepareDerivedData?.();
         this._calculateActiveModifiers();
@@ -418,23 +419,25 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     /**
      * Calculate active modifiers from selected choices.
      * This populates the activeModifiers array based on what the player has chosen.
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _calculateActiveModifiers(): void {
-        const activeModifiers = [];
+        const activeModifiers: Array<{ source: string; type: string; key: string; value: number | null; itemUuid: string | null }> = [];
 
         for (const choice of this.grants.choices) {
             // DH2e/BC/OW packs use 'name' while RT uses 'label' — handle both
-            const choiceKey = choice.label || choice.name;
-            const selected = this.selectedChoices[choiceKey] || [];
+            const choiceKey = (choice.label || choice.name) as string;
+            const selected = (this.selectedChoices as Record<string, string[]>)[choiceKey] || [];
 
             for (const selectedValue of selected) {
-                const option = choice.options.find((opt) => (opt.value || opt.name) === selectedValue);
-                if (!option?.grants) continue;
+                const option = choice.options.find((opt: Record<string, unknown>) => (opt['value'] || opt['name']) === selectedValue) as Record<string, unknown>;
+                if (!option?.['grants']) continue;
+
+                const grants = option['grants'] as Record<string, unknown>;
 
                 // Extract characteristic modifiers
-                if (option.grants.characteristics) {
-                    for (const [char, value] of Object.entries(option.grants.characteristics)) {
+                if (grants['characteristics']) {
+                    for (const [char, value] of Object.entries(grants['characteristics'] as Record<string, number>)) {
                         if (value !== 0) {
                             activeModifiers.push({
                                 source: choiceKey,
@@ -448,8 +451,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 }
 
                 // Extract skill grants
-                if (option.grants.skills) {
-                    for (const skill of option.grants.skills) {
+                if (grants['skills']) {
+                    for (const skill of grants['skills'] as Array<{ name: string }>) {
                         activeModifiers.push({
                             source: choiceKey,
                             type: 'skill',
@@ -461,8 +464,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 }
 
                 // Extract talent grants
-                if (option.grants.talents) {
-                    for (const talent of option.grants.talents) {
+                if (grants['talents']) {
+                    for (const talent of grants['talents'] as Array<{ name: string; uuid?: string }>) {
                         activeModifiers.push({
                             source: choiceKey,
                             type: 'talent',
@@ -474,21 +477,21 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 }
 
                 // Extract trait grants
-                if (option.grants.traits) {
-                    for (const trait of option.grants.traits) {
+                if (grants['traits']) {
+                    for (const trait of grants['traits'] as Array<{ name: string; level?: number; uuid?: string }>) {
                         activeModifiers.push({
                             source: choiceKey,
                             type: 'trait',
                             key: trait.name,
-                            value: trait.level,
+                            value: trait.level ?? null,
                             itemUuid: trait.uuid || null,
                         });
                     }
                 }
 
                 // Extract equipment grants
-                if (option.grants.equipment) {
-                    for (const equip of option.grants.equipment) {
+                if (grants['equipment']) {
+                    for (const equip of grants['equipment'] as Array<{ name: string; quantity: number; uuid?: string }>) {
                         activeModifiers.push({
                             source: choiceKey,
                             type: 'equipment',
@@ -532,7 +535,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData?.(source, options);
     }
 
@@ -540,7 +543,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     /*  Chat Properties                             */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
         return [this.stepLabel, ...this.grantsSummary];
     }
@@ -549,7 +552,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             step: this.stepLabel,
