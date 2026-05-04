@@ -422,7 +422,12 @@ export class PsychicRollData extends RollData {
 
     updateBaseTarget(): void {
         if (!this.sourceActor) return;
-        const sourceActor = this.sourceActor as WH40KBaseActorDocument;
+        // getSkillFuzzy lives on WH40KAcolyte at runtime; the wider WH40KBaseActor
+        // type doesn't declare it. Power rolls only target actors that implement it,
+        // so cast through a structural type rather than widening the base class.
+        type FuzzySkill = { current: number; label?: string };
+        type SkillResolver = WH40KBaseActorDocument & { getSkillFuzzy(skill: string): FuzzySkill | undefined };
+        const sourceActor = this.sourceActor as SkillResolver;
         const target = (this.power.system as { target?: any })?.target;
         if (!target) return;
 
@@ -444,7 +449,7 @@ export class PsychicRollData extends RollData {
 
         if (target.isOpposed && this.targetActor) {
             this.isOpposed = true;
-            const targetActor = this.targetActor as WH40KBaseActorDocument;
+            const targetActor = this.targetActor as SkillResolver;
 
             if (target.useOpposedSkill) {
                 const skill = target.opposedSkill;

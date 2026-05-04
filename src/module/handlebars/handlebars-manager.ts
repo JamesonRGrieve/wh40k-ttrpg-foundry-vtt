@@ -198,6 +198,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/components/active-modifiers-panel.hbs',
         ];
 
-        return loadTemplates(templates);
+        return foundry.applications.handlebars.loadTemplates(templates);
     }
 }
