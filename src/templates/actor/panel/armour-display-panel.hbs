@@ -1,9 +1,5 @@
 {{! Armour Display Panel - Character Body Silhouette Layout }}
-<div class="wh40k-panel wh40k-armour-panel">
-    <div class="wh40k-panel-header">
-        <span class="wh40k-panel-title"><i class="fas fa-shield-alt"></i> Armour Points</span>
-    </div>
-    <div class="wh40k-panel-body">
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label="Armour Points" icon="fa-shield-alt" rootClass="wh40k-armour-panel"}}
         <div class="wh40k-armour-silhouette">
             {{! Head (centered at top) }}
             <div class="wh40k-armour-box wh40k-box-head"
@@ -155,5 +151,4 @@
                 <span class="wh40k-box-range">86-00</span>
             </div>
         </div>
-    </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

@@ -1,10 +1,4 @@
-<div class="wh40k-panel tw-col-span-2">
-    <h1 class="wh40k-panel-header">
-        <span class="wh40k-panel-title">
-            <i class="fas fa-heart-broken"></i>
-            {{localize "WH40K.Vehicle.Integrity"}}
-        </span>
-    </h1>
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Vehicle.Integrity") icon="fa-heart-broken" rootClass="tw-col-span-2" bodyClass="tw-p-0"}}
     <div class="tw-flex tw-flex-col tw-gap-2 tw-p-2">
         <div class="wh40k-field__wrapper">
             <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Integrity.Max"}}</span>
@@ -40,4 +34,4 @@
             </div>
         {{/if}}
     </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
