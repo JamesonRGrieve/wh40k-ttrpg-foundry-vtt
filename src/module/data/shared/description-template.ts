@@ -3,7 +3,7 @@ import { resolveLineVariant, inferActiveGameLine, isLineVariantContainer } from 
 
 /**
  * Template for items with descriptions and source references.
- * @mixin
+ * @src/module/applications/api/primary-sheet-mixin.ts
  */
 export default class DescriptionTemplate extends SystemDataModel {
     // Typed property declarations matching defineSchema()
@@ -57,8 +57,8 @@ export default class DescriptionTemplate extends SystemDataModel {
         if (isLineVariantContainer(source.description)) return;
         // Ensure sub-fields are not null (V13 HTMLField strictness)
         if (source.description && typeof source.description === 'object') {
-            source.description.chat ??= '';
-            source.description.summary ??= '';
+            (source.description as Record<string, unknown>).chat ??= '';
+            (source.description as Record<string, unknown>).summary ??= '';
         }
     }
 
@@ -76,9 +76,9 @@ export default class DescriptionTemplate extends SystemDataModel {
         }
         if (isLineVariantContainer(source.source)) return;
         if (source.source && typeof source.source === 'object') {
-            source.source.book ??= '';
-            source.source.page ??= '';
-            source.source.custom ??= '';
+            (source.source as Record<string, unknown>).book ??= '';
+            (source.source as Record<string, unknown>).page ??= '';
+            (source.source as Record<string, unknown>).custom ??= '';
         }
     }
 
@@ -104,11 +104,11 @@ export default class DescriptionTemplate extends SystemDataModel {
 
     /**
      * Clean description template data.
-     * @param {object} source     The source data
+     * @param {object | undefined} source     The source data
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData?.(source, options);
     }
 
@@ -134,7 +134,7 @@ export default class DescriptionTemplate extends SystemDataModel {
 
     /**
      * Get a formatted source reference string.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get sourceReference(): string {
         const { book, page, custom } = this.source;
@@ -150,7 +150,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * Get the enriched description for display.
      * @returns {Promise<string>}
      */
-    async getEnrichedDescription(): Promise<unknown> {
+    async getEnrichedDescription(): Promise<string> {
         return TextEditor.enrichHTML(this.description.value, {
             secrets: this.parent?.isOwner,
             rollData: this.parent?.getRollData() ?? {},
