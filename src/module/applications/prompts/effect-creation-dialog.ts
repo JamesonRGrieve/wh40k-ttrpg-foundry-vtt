@@ -1,5 +1,5 @@
 /**
- * @file Effect Creation Dialog
+ * @gulpfile.js Effect Creation Dialog
  * Streamlined, thematic dialog for creating Active Effects in WH40K RPG
  */
 
@@ -28,26 +28,28 @@ export default class EffectCreationDialog extends DialogV2 {
     declare resolve: (value: ActiveEffect | null) => void;
     declare selectedCategory: string;
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         classes: ['wh40k-rpg', 'wh40k-effect-creation-dialog'],
         window: {
             title: 'WH40K.ActiveEffect.CreateEffect',
             icon: 'fas fa-sparkles',
-            contentClasses: [
-                'tw-bg-gradient-to-br',
-                'tw-from-[#1a1612]',
-                'tw-to-[#2c2417]',
-                'tw-border-2',
-                'tw-border-solid',
-                'tw-border-[var(--wh40k-accent-gold)]',
-                'tw-shadow-[0_8px_32px_rgba(0,0,0,0.5)]',
-                '[&_.dialog-buttons]:tw-hidden',
-            ],
-        },
+            ...({
+                contentClasses: [
+                    'tw-bg-gradient-to-br',
+                    'tw-from-[#1a1612]',
+                    'tw-to-[#2c2417]',
+                    'tw-border-2',
+                    'tw-border-solid',
+                    'tw-border-[var(--wh40k-accent-gold)]',
+                    'tw-shadow-[0_8px_32px_rgba(0,0,0,0.5)]',
+                    '[&_.dialog-buttons]:tw-hidden',
+                ],
+            } as Record<string, unknown>),
+        } as ApplicationV2Config.DefaultOptions['window'],
         position: {
             width: 520,
-            height: 'auto',
+            height: 'auto' as unknown as number,
         },
         form: {
             handler: EffectCreationDialog.formHandler as unknown as ApplicationV2Config.FormConfiguration['handler'],
@@ -58,22 +60,24 @@ export default class EffectCreationDialog extends DialogV2 {
             selectCondition: EffectCreationDialog._onSelectCondition,
             selectCategory: EffectCreationDialog._onSelectCategory,
         },
-        buttons: [
-            {
-                action: 'create',
-                label: 'Create Effect',
-                icon: 'fas fa-check',
-                default: true,
-                type: 'submit',
-            },
-            {
-                action: 'cancel',
-                label: 'Cancel',
-                icon: 'fas fa-times',
-                type: 'button',
-            },
-        ],
-    };
+        ...({
+            buttons: [
+                {
+                    action: 'create',
+                    label: 'Create Effect',
+                    icon: 'fas fa-check',
+                    default: true,
+                    type: 'submit',
+                },
+                {
+                    action: 'cancel',
+                    label: 'Cancel',
+                    icon: 'fas fa-times',
+                    type: 'button',
+                },
+            ],
+        } as Record<string, unknown>),
+    } as ApplicationV2Config.DefaultOptions;
 
     /* -------------------------------------------- */
 
@@ -95,7 +99,7 @@ export default class EffectCreationDialog extends DialogV2 {
     }
 
     constructor(options: EffectCreationDialogOptions) {
-        super(options);
+        super(options as unknown as Record<string, unknown>);
         this.actor = options.actor;
         this.resolve = options.resolve;
         this.selectedCategory = 'custom';
@@ -103,9 +107,9 @@ export default class EffectCreationDialog extends DialogV2 {
 
     /* -------------------------------------------- */
 
-    /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
-        const context = await super._prepareContext(options);
+    /** @foundry-v14-overrides.d.ts */
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        const context = await (DialogV2.prototype as unknown as Record<string, (o: ApplicationV2Config.RenderOptions) => Promise<Record<string, unknown>>>)._prepareContext.call(this, options);
 
         context.actor = this.actor;
         context.selectedCategory = this.selectedCategory;
@@ -177,11 +181,11 @@ export default class EffectCreationDialog extends DialogV2 {
         const conditionId = target.dataset.conditionId;
         if (!conditionId) return;
 
-        const form = this.element.querySelector('form') as HTMLFormElement | null;
+        const form = (this as unknown as Record<string, HTMLElement>).element.querySelector('form') as HTMLFormElement | null;
         if (form) {
             (form.elements.namedItem('effectType') as HTMLInputElement).value = 'condition';
             (form.elements.namedItem('conditionId') as HTMLInputElement).value = conditionId;
-            void this.submit();
+            void (this as unknown as Record<string, () => Promise<void>>).submit();
         }
     }
 
@@ -198,23 +202,23 @@ export default class EffectCreationDialog extends DialogV2 {
         // Handle based on effect type
         switch (data.effectType) {
             case 'condition':
-                effectData = this._createConditionData(data);
+                effectData = EffectCreationDialog._createConditionData(data);
                 break;
 
             case 'characteristic':
-                effectData = this._createCharacteristicData(data);
+                effectData = EffectCreationDialog._createCharacteristicData(data);
                 break;
 
             case 'skill':
-                effectData = this._createSkillData(data);
+                effectData = EffectCreationDialog._createSkillData(data);
                 break;
 
             case 'combat':
-                effectData = this._createCombatData(data);
+                effectData = EffectCreationDialog._createCombatData(data);
                 break;
 
             case 'custom':
-                effectData = this._createCustomData(data);
+                effectData = EffectCreationDialog._createCustomData(data);
                 break;
         }
 
@@ -224,7 +228,7 @@ export default class EffectCreationDialog extends DialogV2 {
         }
 
         // Create the effect
-        const effects = await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
+        const effects = await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData as Record<string, unknown> & { name: string }]);
         return this.resolve(effects[0] as ActiveEffect);
     }
 
@@ -237,7 +241,7 @@ export default class EffectCreationDialog extends DialogV2 {
         const conditionId = data.conditionId;
         if (!conditionId) return null;
 
-        const conditions: Record<string, any> = {
+        const conditions: Record<string, Record<string, unknown>> = {
             stunned: {
                 name: 'Stunned',
                 icon: 'icons/svg/daze.svg',
@@ -309,7 +313,7 @@ export default class EffectCreationDialog extends DialogV2 {
         const conditionData = conditions[conditionId];
         if (!conditionData) return null;
 
-        const effectData = foundry.utils.deepClone(conditionData);
+        const effectData = foundry.utils.deepClone(conditionData) as Record<string, unknown>;
         const rounds = parseInt(data.duration?.rounds ?? '0');
         if (rounds > 0) {
             const combat = game.combat;
@@ -334,9 +338,9 @@ export default class EffectCreationDialog extends DialogV2 {
 
         if (!characteristic || value === 0) return null;
 
-        const charLabel = (CONFIG as any).WH40K?.characteristics?.[characteristic]?.label ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
+        const charLabel = (CONFIG as Record<string, any>).WH40K?.characteristics?.[characteristic]?.label ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
 
-        const effectData: Record<string, any> = {
+        const effectData: Record<string, unknown> = {
             name: `${charLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/upgrade.svg',
             changes: [
@@ -379,7 +383,7 @@ export default class EffectCreationDialog extends DialogV2 {
 
         const skillLabel = skill.charAt(0).toUpperCase() + skill.slice(1);
 
-        const effectData: Record<string, any> = {
+        const effectData: Record<string, unknown> = {
             name: `${skillLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/upgrade.svg',
             changes: [
@@ -422,7 +426,7 @@ export default class EffectCreationDialog extends DialogV2 {
 
         const typeLabel = combatType.charAt(0).toUpperCase() + combatType.slice(1);
 
-        const effectData: Record<string, any> = {
+        const effectData: Record<string, unknown> = {
             name: `${typeLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/combat.svg',
             changes: [
