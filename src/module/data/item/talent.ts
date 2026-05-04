@@ -38,7 +38,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Category/type of talent
             category: new fields.StringField({
@@ -190,7 +190,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      */
     static #migrateSpecialization(source: Record<string, unknown>): void {
-        if (source.hasSpecialization === undefined && source.specialization) {
+        if (source.hasSpecialization === undefined && typeof source.specialization === 'string') {
             source.hasSpecialization = !!source.specialization.trim();
         }
     }
@@ -201,7 +201,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Auto-detect hasSpecialization from talent name containing (X).
-     * @override
+     * @foundry-v14-overrides.d.ts
      */
     prepareDerivedData(): void {
         super.prepareDerivedData?.();
@@ -222,8 +222,8 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Whether this talent can be rolled/activated.
-     * @type {boolean}
-     * @override
+     * @scripts/gen-i18n-types.mjs {boolean}
+     * @foundry-v14-overrides.d.ts
      */
     get isRollable(): boolean {
         return !this.isPassive && (!!this.rollConfig?.characteristic || !!this.rollConfig?.skill);
@@ -231,7 +231,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Get the tier label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get tierLabel(): string {
         return game.i18n.localize(`WH40K.Talent.Tier${this.tier}`);
@@ -239,7 +239,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Get the category label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get categoryLabel(): string {
         if (!this.category) return game.i18n.localize('WH40K.TalentCategory.General');
@@ -250,7 +250,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Get the full name including specialization and rank.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get fullName() {
         let name = this.parent?.name ?? '';
@@ -261,7 +261,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Does this talent have prerequisites?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get hasPrerequisites(): boolean {
         const prereqs = this.prerequisites;
@@ -274,7 +274,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Get a formatted prerequisites string.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get prerequisitesLabel() {
         if (this.prerequisites.text) return this.prerequisites.text;
@@ -301,7 +301,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Does this talent grant anything?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get hasGrants(): boolean {
         const grants = this.grants;
@@ -314,7 +314,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Get a summary of what this talent grants.
-     * @type {string[]}
+     * @scripts/gen-i18n-types.mjs {string[]}
      */
     get grantsSummary() {
         const grants = this.grants;
@@ -343,7 +343,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
     /*  Chat Properties                             */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
         const props = [this.categoryLabel, this.tierLabel];
 
@@ -371,7 +371,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             category: this.categoryLabel,
@@ -415,7 +415,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/talent-card.hbs', templateData);
 
-        return ChatMessage.create({
+        await ChatMessage.create({
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.parent.actor }),
         });
