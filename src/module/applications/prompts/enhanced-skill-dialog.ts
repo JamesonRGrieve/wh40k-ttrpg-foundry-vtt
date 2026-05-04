@@ -1,5 +1,5 @@
 /**
- * @file EnhancedSkillDialog - Enhanced V2 dialog for skill/characteristic rolls
+ * @gulpfile.js EnhancedSkillDialog - Enhanced V2 dialog for skill/characteristic rolls
  * Showcase feature demonstrating ApplicationV2 capabilities with:
  * - Visual difficulty presets with icons
  * - Common modifier checkboxes
@@ -56,17 +56,17 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'enhanced-skill-roll', 'standard-form'],
         actions: {
-            selectDifficulty: EnhancedSkillDialog.#onSelectDifficulty as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            toggleModifier: EnhancedSkillDialog.#onToggleModifier as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            updateCustom: EnhancedSkillDialog.#onUpdateCustom as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            roll: EnhancedSkillDialog.#onRoll as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            rollRepeat: EnhancedSkillDialog.#onRollRepeat as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            cancel: EnhancedSkillDialog.#onCancel as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            selectDifficulty: EnhancedSkillDialog.#onSelectDifficulty,
+            toggleModifier: EnhancedSkillDialog.#onToggleModifier,
+            updateCustom: EnhancedSkillDialog.#onUpdateCustom,
+            roll: EnhancedSkillDialog.#onRoll,
+            rollRepeat: EnhancedSkillDialog.#onRollRepeat,
+            cancel: EnhancedSkillDialog.#onCancel,
         },
         form: {
             submitOnChange: false,
@@ -78,13 +78,12 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         },
         window: {
             title: 'Skill Test',
-            minimizable: false,
         },
     };
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/enhanced-skill-roll.hbs',
@@ -121,28 +120,28 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
     /**
      * The skill data.
-     * @type {object}
+     * @scripts/gen-i18n-types.mjs {object}
      */
     simpleSkillData;
 
     /**
      * Currently selected difficulty modifier.
-     * @type {number}
-     * @private
+     * @scripts/gen-i18n-types.mjs {number}
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _selectedDifficulty = 0;
 
     /**
      * Active common modifiers.
-     * @type {Record<string, boolean>}
-     * @private
+     * @scripts/gen-i18n-types.mjs {Record<string, boolean>}
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
-    _commonModifiers = {};
+    _commonModifiers: Record<string, boolean> = {};
 
     /**
      * Custom modifier value.
-     * @type {number}
-     * @private
+     * @scripts/gen-i18n-types.mjs {number}
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _customModifier = 0;
 
@@ -151,7 +150,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<unknown> {
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = (await super._prepareContext(options)) as Record<string, unknown>;
         const rollData = this.simpleSkillData.rollData;
 
@@ -196,7 +195,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: unknown, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         setupNumberInputAutoSelect(this.element);
@@ -206,7 +205,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         customInput?.addEventListener('input', (e: Event) => {
             const input = e.target as HTMLInputElement;
             this._customModifier = parseInt(input.value, 10) || 0;
-            void this.render(false, { parts: ['form'] });
+            void this.render(undefined, { parts: ['form'] });
         });
 
         // Add keyboard shortcut (Enter to roll)
@@ -226,7 +225,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /**
      * Calculate total from common modifiers.
      * @returns {number}
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _calculateCommonModifiers(): number {
         let total = 0;
@@ -243,7 +242,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /**
      * Get recent rolls from user flags.
      * @returns {Array<{name: string, modifier: number, timestamp: number}>}
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _getRecentRolls(): Array<{ name: string; modifier: number; timestamp: number }> {
         const recent = (game.user as any).getFlag('wh40k-rpg', 'recentRolls') as Array<{ name: string; modifier: number; timestamp: number }> | undefined;
@@ -255,7 +254,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /**
      * Save this roll to recent rolls.
      * @param {number} modifier  Total modifier used.
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     async _saveToRecentRolls(modifier: number): Promise<void> {
         const recent =
@@ -287,7 +286,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
             delete target.dataset.flash;
         }, 300);
 
-        await this.render(false, { parts: ['form'] });
+        await this.render(undefined, { parts: ['form'] });
     }
 
     /* -------------------------------------------- */
@@ -299,7 +298,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         const key = target.dataset.modifierKey;
         if (key) {
             this._commonModifiers[key] = (target as HTMLInputElement).checked;
-            await this.render(false, { parts: ['form'] });
+            await this.render(undefined, { parts: ['form'] });
         }
     }
 
@@ -310,7 +309,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      */
     static async #onUpdateCustom(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
         this._customModifier = parseInt((target as HTMLInputElement).value) || 0;
-        await this.render(false, { parts: ['form'] });
+        await this.render(undefined, { parts: ['form'] });
     }
 
     /* -------------------------------------------- */
@@ -385,7 +384,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
  * Open an enhanced skill roll dialog.
  * @param {object} simpleSkillData  The skill data.
  */
-export function prepareEnhancedSkillRoll(simpleSkillData) {
+export function prepareEnhancedSkillRoll(simpleSkillData: EnhancedSkillDialogData) {
     const prompt = new EnhancedSkillDialog(simpleSkillData);
     prompt.render(true);
 }
