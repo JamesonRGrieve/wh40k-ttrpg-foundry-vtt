@@ -60,13 +60,13 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
      * The roll data being configured.
      * @type {object}
      */
-    rollData;
+    rollData: Record<string, unknown>;
 
     /**
      * Whether the dialog has been initialized.
      * @type {boolean}
      */
-    initialized;
+    initialized: boolean;
 
     /* -------------------------------------------- */
     /*  Rendering                                   */
@@ -75,14 +75,14 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
     /** @inheritDoc */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // Initialize roll data on first render
-        if (!this.initialized && typeof this.rollData.initialize === 'function') {
-            (this.rollData.initialize as () => void)();
+        if (!this.initialized && typeof this.rollData['initialize'] === 'function') {
+            (this.rollData['initialize'] as () => void)();
             this.initialized = true;
         }
 
         // Update roll data if it has an update method
-        if (typeof this.rollData.update === 'function') {
-            await (this.rollData.update as () => Promise<void>)();
+        if (typeof this.rollData['update'] === 'function') {
+            await (this.rollData['update'] as () => Promise<void>)();
         }
 
         const context = (await super._prepareContext(options)) as Record<string, unknown>;
@@ -114,11 +114,11 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {FormDataExtended} formData  The form data.
      */
     static async #onFormSubmit(this: BaseRollDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
-        const data = foundry.utils.expandObject(formData.object);
-        this._updateRollData(data);
+        const data = foundry.utils.expandObject(formData.object as Record<string, unknown>);
+        this._updateRollData(data as Record<string, unknown>);
 
-        if (typeof this.rollData.update === 'function') {
-            await (this.rollData.update as () => Promise<void>)();
+        if (typeof this.rollData['update'] === 'function') {
+            await (this.rollData['update'] as () => Promise<void>)();
         }
     }
 
