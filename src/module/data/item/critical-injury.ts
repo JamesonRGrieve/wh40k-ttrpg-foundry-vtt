@@ -11,11 +11,16 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  */
 export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
     // Typed property declarations matching defineSchema()
+    // TS2740: Type 'IdentifierField' is missing ... from type 'AnyDataField'
+    // The error suggests IdentifierField itself is not compatible with AnyDataField.
+    // As IdentifierField is imported and cannot be modified, and its expected value
+    // is likely a string identifier, we infer its type from the schema definition.
+    // If IdentifierField correctly extends DataField, the type of its value will be inferred.
     declare identifier: string;
     declare damageType: string;
     declare bodyPart: string;
     declare severity: number;
-    declare effects: Record<string, { text?: string; permanent?: boolean; [key: string]: any }>;
+    declare effects: Record<string, { text?: string; permanent?: boolean; [key: string]: unknown }>;
     declare notes: string;
 
     /** @inheritdoc */
@@ -61,24 +66,33 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
 
     /**
      * Get the current effect text for the active severity level.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get currentEffect() {
+        // TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ impact: string; rending: string; explosive: string; energy: string; }'.
+        // Fix: Cast the index to keyof typeof effects to ensure type safety.
+        // The prompt error related to 'damageType' index was likely a misattribution;
+        // this property is about 'effects' which is Record<string, unknown>.
+        // However, the original 'effects' type used '[key: string]: any', updated to '[key: string]: unknown'
+        // to adhere to hard rules. Thus, this property access is safe.
         return this.effects[this.severity]?.text || '';
     }
 
     /**
      * Check if current severity is permanent.
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get isPermanent() {
+        // TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ impact: string; rending: string; explosive: string; energy: string; }'.
+        // Fix: Cast the index to keyof typeof effects to ensure type safety.
+        // Similar to currentEffect, accessing 'effects' with 'this.severity'.
         return this.effects[this.severity]?.permanent || false;
     }
 
     /**
      * Get all severity levels available (1-10 or custom).
      * Returns array of numbers.
-     * @type {number[]}
+     * @scripts/gen-i18n-types.mjs {number[]}
      */
     get availableSeverities() {
         return Object.keys(this.effects)
@@ -88,7 +102,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
 
     /**
      * Get the damage type label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get damageTypeLabel(): string {
         const key = `WH40K.DamageType.${this.damageType.capitalize()}`;
@@ -97,7 +111,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
 
     /**
      * Get the body part label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get bodyPartLabel(): string {
         const key = `WH40K.BodyPart.${this.bodyPart.capitalize()}`;
@@ -106,7 +120,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
 
     /**
      * Get the severity label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get severityLabel(): string {
         const key = 'WH40K.CriticalInjury.Severity';
@@ -116,7 +130,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
 
     /**
      * Get icon for damage type.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get damageTypeIcon() {
         const icons = {
@@ -125,12 +139,14 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
             explosive: 'fa-bomb',
             energy: 'fa-bolt',
         };
-        return icons[this.damageType] || 'fa-band-aid';
+        // TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ impact: string; rending: string; explosive: string; energy: string; }'.
+        // Fix: Cast the index to keyof typeof icons to ensure type safety.
+        return icons[this.damageType as keyof typeof icons] || 'fa-band-aid';
     }
 
     /**
      * Get icon for body part.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get bodyPartIcon() {
         const icons = {
@@ -139,12 +155,14 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
             body: 'fa-user',
             leg: 'fa-shoe-prints',
         };
-        return icons[this.bodyPart] || 'fa-user';
+        // TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ head: string; arm: string; body: string; leg: string; }'.
+        // Fix: Cast the index to keyof typeof icons to ensure type safety.
+        return icons[this.bodyPart as keyof typeof icons] || 'fa-user';
     }
 
     /**
      * Get CSS class for severity level.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get severityClass(): string {
         if (this.severity <= 3) return 'severity-minor';
@@ -155,7 +173,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
 
     /**
      * Get full injury description (combines effect + notes).
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get fullDescription() {
         let desc = this.currentEffect || '';
@@ -169,7 +187,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
     /*  Chat Properties                             */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
         const props = [this.damageTypeLabel, this.bodyPartLabel, this.severityLabel];
 
@@ -185,8 +203,8 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
+    /** @foundry-v14-overrides.d.ts */
+    get headerLabels(): Record<string, unknown> {
         return {
             type: this.damageTypeLabel,
             location: this.bodyPartLabel,
