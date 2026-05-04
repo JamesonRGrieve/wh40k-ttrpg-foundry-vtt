@@ -1,45 +1,27 @@
 {{! Rich chat card for trait vocalization }}
-<div class="wh40k-chat-card wh40k-chat-card--trait {{traitCategoryColor category}} tw-overflow-hidden tw-rounded-md">
-    {{! Header }}
-    <header class="wh40k-card-header wh40k-card-header--trait">
-        <div class="wh40k-card-icon-wrapper">
-            <i class="fas {{traitIcon category}} wh40k-card-icon"></i>
-        </div>
-        <div class="wh40k-card-title-group">
-            <h3 class="wh40k-card-title">{{trait.name}}</h3>
-            <div class="wh40k-card-badges">
-                <span class="wh40k-badge wh40k-badge--category {{traitCategoryColor category}}">
-                    <i class="fas {{traitIcon category}}"></i>
-                    {{categoryLabel}}
-                </span>
-                {{#if hasLevel}}
-                    <span class="wh40k-badge wh40k-badge--level">
-                        Level
-                        {{level}}
-                    </span>
-                {{/if}}
-                {{#if isVariable}}
-                    <span class="wh40k-badge wh40k-badge--variable">
-                        <i class="fas fa-adjust"></i>
-                        Variable
-                    </span>
-                {{/if}}
-            </div>
-        </div>
-    </header>
-
-    {{! Requirements Section }}
+{{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
+    cardClass=(concat 'wh40k-chat-card--trait ' (traitCategoryColor category))
+    outerExtraClass="tw-overflow-hidden tw-rounded-md"
+    title=trait.name
+    iconClass=(traitIcon category)
+    gameSystem=gameSystem
+    badges=(array
+        (hash class=(concat 'wh40k-badge--category ' (traitCategoryColor category)) icon=(traitIcon category) label=categoryLabel)
+        (hash class="wh40k-badge--level" label=(iff hasLevel (concat 'Level ' level) ''))
+        (hash class="wh40k-badge--variable" icon="fa-adjust" label=(iff isVariable 'Variable' '')))
+    footerLabel=timestamp
+    footerIcon="fa-clock"
+}}
     {{#if requirements}}
-        <section class="wh40k-card-section wh40k-card-section--requirements">
-            <h4 class="wh40k-card-section-title">
-                <i class="fas fa-lock"></i>
-                Requirements
-            </h4>
-            <p class="wh40k-card-section-content">{{requirements}}</p>
-        </section>
+    <section class="wh40k-card-section wh40k-card-section--requirements">
+        <h4 class="wh40k-card-section-title">
+            <i class="fas fa-lock"></i>
+            Requirements
+        </h4>
+        <p class="wh40k-card-section-content">{{requirements}}</p>
+    </section>
     {{/if}}
 
-    {{! Benefit/Effect Section }}
     <section class="wh40k-card-section wh40k-card-section--benefit">
         <h4 class="wh40k-card-section-title">
             <i class="fas fa-sparkles"></i>
@@ -50,22 +32,13 @@
         </div>
     </section>
 
-    {{! Notes Section }}
     {{#if notes}}
-        <section class="wh40k-card-section wh40k-card-section--notes">
-            <h4 class="wh40k-card-section-title">
-                <i class="fas fa-sticky-note"></i>
-                Notes
-            </h4>
-            <p class="wh40k-card-section-content">{{notes}}</p>
-        </section>
+    <section class="wh40k-card-section wh40k-card-section--notes">
+        <h4 class="wh40k-card-section-title">
+            <i class="fas fa-sticky-note"></i>
+            Notes
+        </h4>
+        <p class="wh40k-card-section-content">{{notes}}</p>
+    </section>
     {{/if}}
-
-    {{! Footer }}
-    <footer class="wh40k-card-footer">
-        <span class="wh40k-card-timestamp">
-            <i class="fas fa-clock"></i>
-            {{timestamp}}
-        </span>
-    </footer>
-</div>
+{{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}
