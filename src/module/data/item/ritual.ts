@@ -26,7 +26,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Ritual type
             type: new fields.StringField({
@@ -67,14 +67,14 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get isRollable(): boolean {
         return true;
     }
 
     /**
      * Get the ritual type label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get typeLabel(): string {
         return game.i18n.localize(
@@ -87,7 +87,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /**
      * Get the test description.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get testLabel() {
         let label = game.i18n.localize(`WH40K.Characteristic.${this.test.characteristic.capitalize()}`);
@@ -102,9 +102,9 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
     /*  Chat Properties                             */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
-        const props = [this.typeLabel, `Test: ${this.testLabel}`, ...ActivationTemplate.prototype.chatProperties.call(this)];
+        const props = [this.typeLabel, `Test: ${this.testLabel}`, ...ActivationTemplate.prototype.chatProperties];
 
         return props;
     }
@@ -113,12 +113,12 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             type: this.typeLabel,
             test: this.testLabel,
-            action: this.activationLabel,
+            action: ActivationTemplate.prototype.activationLabel,
         };
     }
 }
