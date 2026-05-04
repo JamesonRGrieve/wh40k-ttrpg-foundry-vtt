@@ -1,5 +1,5 @@
 /**
- * @file ItemPreviewCard - Inline expandable preview cards for items on character sheets
+ * @gulpfile.js ItemPreviewCard - Inline expandable preview cards for items on character sheets
  *
  * Shows item details in-place without opening the full item sheet.
  * Integrates with QuickActionsBar for inline actions.
@@ -19,14 +19,24 @@ import QuickActionsBar from './quick-actions-bar.ts';
 /**
  * Mixin that adds item preview card functionality to actor sheets
  */
-export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.ActorSheet>(Base: TBase) {
-    return class extends Base {
-        /** @override */
-        static DEFAULT_OPTIONS = {
+export function ItemPreviewMixin<
+    TBase extends {
+        new (...args: any[]): foundry.appv1.sheets.ActorSheet & { actor: Record<string, unknown>; element: HTMLElement };
+    } & { DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions }
+>(Base: TBase) {
+    return class ItemPreviewCard extends Base {
+        constructor(...args: any[]) {
+            super(...args);
+        }
+
+        /** @foundry-v14-overrides.d.ts */
+        static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
             ...Base.DEFAULT_OPTIONS,
+            // The toggleItemPreview action is resolved by data-action attribute on the HTML element
+            // and does not need to be explicitly declared here as a static property.
+            // If Base.DEFAULT_OPTIONS.actions exists, ensure it's included, but don't add toggleItemPreview here.
             actions: {
-                ...Base.DEFAULT_OPTIONS.actions,
-                toggleItemPreview: ItemPreviewMixin.toggleItemPreview,
+                ...(Base.DEFAULT_OPTIONS.actions || {}),
             },
         };
 
@@ -37,22 +47,27 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
 
         /**
          * Toggle an item preview card
+         * This method is now an instance method to properly access instance properties like #openPreviews, actor, and element.
          */
-        static toggleItemPreview(this: any, event: Event, target: HTMLElement): void {
+        toggleItemPreview(event: Event, target: HTMLElement): void {
             const itemId = target.dataset.itemId;
-            if (!itemId) return;
+            if (!itemId) {
+                return;
+            }
 
-            const item = this.actor.items.get(itemId);
-            if (!item) return;
+            const actor = this.actor as Record<string, any>; // Cast to allow access to items
+            const item = actor.items.get(itemId);
+            if (!item) {
+                return;
+            }
 
             // Find the item row
             const itemRow = this.element.querySelector(`[data-item-id="${itemId}"]`) as HTMLElement | null;
-            if (!itemRow) return;
+            if (!itemRow) {
+                return;
+            }
 
             // Check if preview is already open.
-            // this: any is declared on the function signature (Foundry action handler
-            // pattern); the private fields are in-scope because this static method is
-            // defined inside the mixin's class body.
             const isOpen = this.#openPreviews.has(itemId);
 
             if (isOpen) {
@@ -103,7 +118,9 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          */
         #closePreview(itemId: string): void {
             const preview = this.element.querySelector(`[data-preview-id="${itemId}"]`);
-            if (!preview) return;
+            if (!preview) {
+                return;
+            }
 
             preview.classList.remove('wh40k-item-preview--open');
             setTimeout(() => preview.remove(), 200); // Match CSS transition
@@ -175,8 +192,8 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          * Generate weapon preview
          */
         #generateWeaponPreview(item: WH40KItem): string {
-            const sys = item.system as WeaponDataModel;
-            const sysRec = sys as unknown as Record<string, unknown>;
+            const sys = item.system as unknown as WeaponDataModel;
+            const sysRec = sys as Record<string, unknown>;
             const damage = sysRec.damage as { formula?: string };
             const stats = sysRec.stats as { penetration?: number; range?: string; rof?: string };
 
@@ -219,8 +236,8 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          * Generate armour preview
          */
         #generateArmourPreview(item: WH40KItem): string {
-            const sys = item.system as ArmourDataModel;
-            const sysRec = sys as unknown as Record<string, unknown>;
+            const sys = item.system as unknown as ArmourDataModel;
+            const sysRec = sys as Record<string, unknown>;
             const locations = (sysRec.locations as Record<string, number | undefined>) ?? {};
 
             return `
@@ -429,9 +446,9 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             let qualitiesArray: unknown[] = [];
             if (Array.isArray(qualities)) {
                 qualitiesArray = qualities;
-            } else if (typeof qualities === 'object') {
+            } else if (typeof qualities === 'object' && qualities !== null) {
                 qualitiesArray = Object.entries(qualities as Record<string, unknown>)
-                    .filter(([_, value]) => value)
+                    .filter(([_key, value]) => value)
                     .map(([key]) => key);
             }
 
