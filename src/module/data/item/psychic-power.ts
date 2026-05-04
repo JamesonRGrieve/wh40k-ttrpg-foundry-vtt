@@ -24,6 +24,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     declare sustained: boolean;
     declare rangePerPR: number;
     declare notes: string;
+    declare activationLabel: string;
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -31,7 +32,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Psychic discipline
             discipline: new fields.StringField({
@@ -82,14 +83,14 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get isRollable(): boolean {
         return true;
     }
 
     /**
      * Get the discipline label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get disciplineLabel(): string {
         return game.i18n.localize(`WH40K.PsychicDiscipline.${this.discipline.capitalize()}`);
@@ -97,7 +98,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
 
     /**
      * Get the focus power characteristic label.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get focusCharacteristicLabel(): string {
         return game.i18n.localize(`WH40K.Characteristic.${this.focusPower.characteristic.capitalize()}`);
@@ -105,7 +106,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
 
     /**
      * Get the focus test description.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get focusTestLabel() {
         let label = this.focusCharacteristicLabel;
@@ -121,7 +122,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
 
     /**
      * Is this power dangerous (causes phenomena)?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get causesPhenomena(): boolean {
         return true; // All psychic powers can cause phenomena
@@ -131,17 +132,17 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     /*  Chat Properties                             */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
         const props = [
             this.disciplineLabel,
             `PR Cost: ${this.prCost}`,
             `Focus: ${this.focusTestLabel}`,
-            ...ActivationTemplate.prototype.chatProperties.call(this),
+            ...((ActivationTemplate.prototype.chatProperties as unknown) as (this: unknown) => string[]).call(this),
         ];
 
         if (this.isAttack) {
-            props.push(...DamageTemplate.prototype.chatProperties.call(this));
+            props.push(...((DamageTemplate.prototype.chatProperties as unknown) as (this: unknown) => string[]).call(this));
         }
 
         if (this.sustained) {
@@ -155,7 +156,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             discipline: this.disciplineLabel,
