@@ -161,7 +161,7 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  *   movement: [...]
  * }
  *
- * @mixin
+ * @src/module/applications/api/primary-sheet-mixin.ts
  */
 export default class ModifiersTemplate extends SystemDataModel {
     // Typed property declarations matching defineSchema()
@@ -284,7 +284,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData?.(source, options);
     }
 
@@ -292,18 +292,30 @@ export default class ModifiersTemplate extends SystemDataModel {
 
     /**
      * Check if this item provides any modifiers.
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get hasModifiers(): boolean {
-        const mods = this.modifiers;
-        if (Object.keys(mods.characteristics).length) return true;
-        if (Object.keys(mods.skills).length) return true;
+        // Cast 'this.modifiers' to the declared type for correct property access.
+        const mods = this.modifiers as typeof ModifiersTemplate.prototype.modifiers;
+
+        // Check if characteristics and skills are actual objects before iterating.
+        // The schema defines characteristics and skills as ObjectField, implying Record<string, unknown>.
+        if (Object.keys(mods.characteristics as Record<string, unknown>).length) return true;
+        if (Object.keys(mods.skills as Record<string, unknown>).length) return true;
+
+        // combat and resources are SchemaField. Their properties are specific types.
+        // Use Object.values to check if any value is non-zero.
         if (Object.values(mods.combat).some((v) => v !== 0)) return true;
         if (Object.values(mods.resources).some((v) => v !== 0)) return true;
+
+        // other is ArrayField. Check if the array has any elements.
         if (mods.other?.length) return true;
+
+        // situational is SchemaField, containing ArrayFields. Check if any of the arrays have elements.
         if (mods.situational?.characteristics?.length) return true;
         if (mods.situational?.skills?.length) return true;
         if (mods.situational?.combat?.length) return true;
+
         return false;
     }
 
@@ -314,8 +326,10 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {string} char   The characteristic key.
      * @returns {number}
      */
-    getCharacteristicModifier(char): number {
-        return this.modifiers.characteristics[char] ?? 0;
+    getCharacteristicModifier(char: string): number {
+        // Cast 'characteristics' to Record<string, number | undefined> to safely access property and handle undefined.
+        // The '?? 0' ensures a number is returned.
+        return (this.modifiers.characteristics as Record<string, number | undefined>)[char] ?? 0;
     }
 
     /* -------------------------------------------- */
@@ -325,46 +339,54 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {string} skill   The skill key.
      * @returns {number}
      */
-    getSkillModifier(skill): number {
-        return this.modifiers.skills[skill] ?? 0;
+    getSkillModifier(skill: string): number {
+        // Cast 'skills' to Record<string, number | undefined> to safely access property and handle undefined.
+        // The '?? 0' ensures a number is returned.
+        return (this.modifiers.skills as Record<string, number | undefined>)[skill] ?? 0;
     }
 
     /* -------------------------------------------- */
 
     /**
      * Get all modifiers as a flat array for display.
-     * @type {object[]}
+     * @scripts/gen-i18n-types.mjs {object[]}
      */
     get modifiersList() {
+        // Cast 'this.modifiers' to the declared type for correct property access.
+        const mods = this.modifiers as typeof ModifiersTemplate.prototype.modifiers;
         const list = [];
-        const mods = this.modifiers;
 
         // Characteristics
-        for (const [key, value] of Object.entries(mods.characteristics)) {
+        // Cast characteristics to Record<string, unknown> for Object.entries.
+        // Cast value to number as it's expected to be numeric for comparison and pushing to list.
+        for (const [key, value] of Object.entries(mods.characteristics as Record<string, unknown>)) {
             if (value !== 0) {
                 list.push({
                     key,
                     label: game.i18n.localize(`WH40K.Characteristic.${key.capitalize()}`),
-                    value,
+                    value: value as number,
                     type: 'characteristic',
                 });
             }
         }
 
         // Skills
-        for (const [key, value] of Object.entries(mods.skills)) {
+        // Cast skills to Record<string, unknown> for Object.entries.
+        // Cast value to number as it's expected to be numeric for comparison and pushing to list.
+        for (const [key, value] of Object.entries(mods.skills as Record<string, unknown>)) {
             if (value !== 0) {
                 list.push({
                     key,
                     label: game.i18n.localize(`WH40K.Skill.${key}`),
-                    value,
+                    value: value as number,
                     type: 'skill',
                 });
             }
         }
 
         // Combat
-        for (const [key, value] of Object.entries(mods.combat)) {
+        // Combat properties are defined as numbers in the schema.
+        for (const [key, value] of Object.entries(mods.combat as Record<string, number>)) {
             if (value !== 0) {
                 list.push({
                     key,
@@ -376,7 +398,8 @@ export default class ModifiersTemplate extends SystemDataModel {
         }
 
         // Resources
-        for (const [key, value] of Object.entries(mods.resources)) {
+        // Resources properties are defined as numbers in the schema.
+        for (const [key, value] of Object.entries(mods.resources as Record<string, number>)) {
             if (value !== 0) {
                 list.push({
                     key,
@@ -388,6 +411,7 @@ export default class ModifiersTemplate extends SystemDataModel {
         }
 
         // Other
+        // mods.other is correctly typed as Array<{ key: string; label: string; value: number; mode: string }>
         for (const mod of mods.other) {
             list.push({
                 ...mod,
@@ -402,14 +426,17 @@ export default class ModifiersTemplate extends SystemDataModel {
 
     /**
      * Get situational modifiers as a structured list.
-     * @type {object}
+     * @scripts/gen-i18n-types.mjs {object}
      */
-    get situationalModifiers(): Record<string, unknown> {
-        const situational = (this.modifiers as any).situational || {};
+    get situationalModifiers(): { characteristics: Array<any>; skills: Array<any>; combat: Array<any> } {
+        // Cast 'this.modifiers' to the declared type to access 'situational' properly.
+        const mods = this.modifiers as typeof ModifiersTemplate.prototype.modifiers;
+        // Ensure situational is treated as the expected object, providing defaults if not present.
+        const situational = mods.situational || { characteristics: [], skills: [], combat: [] };
         return {
-            characteristics: situational.characteristics || [],
-            skills: situational.skills || [],
-            combat: situational.combat || [],
+            characteristics: situational.characteristics,
+            skills: situational.skills,
+            combat: situational.combat,
         };
     }
 
@@ -417,10 +444,11 @@ export default class ModifiersTemplate extends SystemDataModel {
 
     /**
      * Check if this item has any situational modifiers.
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get hasSituationalModifiers() {
         const sit = this.situationalModifiers;
+        // The properties are now correctly typed as arrays, so .length is safe.
         return sit.characteristics.length > 0 || sit.skills.length > 0 || sit.combat.length > 0;
     }
 }
