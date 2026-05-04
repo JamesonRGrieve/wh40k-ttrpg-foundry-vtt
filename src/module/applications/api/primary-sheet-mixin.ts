@@ -229,6 +229,20 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
         async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
+            // Surface the active game-system id on the sheet root so per-system
+            // Tailwind variants (`bc:`, `dh1e:`, `dh2e:`, `dw:`, `ow:`, `rt:`,
+            // `im:`) can resolve via `[data-wh40k-system="<id>"] &`.
+            // `_gameSystemId` is set on the prototype by `makeSystemVariant()`
+            // (see actor/game-system-sheets.ts); fall back to the document's
+            // own `system.gameSystem` field for sheets that don't go through
+            // the variant factory.
+            const sheetWithSystem = this as unknown as {
+                _gameSystemId?: string;
+                document?: { system?: { gameSystem?: string } };
+            };
+            const systemId = sheetWithSystem._gameSystemId ?? sheetWithSystem.document?.system?.gameSystem;
+            if (systemId) this.element.dataset.wh40kSystem = systemId;
+
             this._renderModeToggle();
             this.element.classList.toggle('editable', this.isEditable && this._mode === (this.constructor as any).MODES.EDIT);
             this.element.classList.toggle('interactable', this.isEditable && this._mode === (this.constructor as any).MODES.PLAY);
