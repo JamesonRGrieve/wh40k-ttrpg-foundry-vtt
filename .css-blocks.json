@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-05-03T15:46:35.976Z",
+  "generatedAt": "2026-05-04T23:36:21.371Z",
   "summary": {
-    "monolithLines": 58777,
+    "monolithLines": 58668,
     "markers": 145,
     "distinctSources": 127,
-    "coveredLines": 58744,
+    "coveredLines": 58635,
     "uncoveredLines": 33
   },
   "ranges": {
@@ -17,829 +17,829 @@
     "src/css/abstracts/_gothic-theme.css": [
       {
         "start": 39,
-        "end": 642
+        "end": 637
       }
     ],
     "src/css/abstracts/_unified-components.css": [
       {
-        "start": 643,
-        "end": 1774
+        "start": 638,
+        "end": 1759
       }
     ],
     "src/css/wh40k-rpg.css": [
       {
-        "start": 1775,
-        "end": 1779
+        "start": 1760,
+        "end": 1764
       },
       {
-        "start": 1845,
-        "end": 1849
+        "start": 1830,
+        "end": 1834
       },
       {
-        "start": 42947,
-        "end": 42949
+        "start": 42868,
+        "end": 42870
       },
       {
-        "start": 43914,
-        "end": 43916
+        "start": 43835,
+        "end": 43837
       },
       {
-        "start": 44233,
-        "end": 44235
+        "start": 44153,
+        "end": 44155
       },
       {
-        "start": 44742,
-        "end": 44744
+        "start": 44662,
+        "end": 44664
       },
       {
-        "start": 48011,
-        "end": 48013
+        "start": 47931,
+        "end": 47933
       },
       {
-        "start": 48476,
-        "end": 48480
+        "start": 48396,
+        "end": 48400
       },
       {
-        "start": 48622,
-        "end": 48624
+        "start": 48542,
+        "end": 48544
       },
       {
-        "start": 49436,
-        "end": 49438
+        "start": 49356,
+        "end": 49358
       },
       {
-        "start": 50029,
-        "end": 50031
+        "start": 49948,
+        "end": 49950
       },
       {
-        "start": 51490,
-        "end": 51492
+        "start": 51409,
+        "end": 51411
       },
       {
-        "start": 54219,
-        "end": 54221
+        "start": 54116,
+        "end": 54118
       },
       {
-        "start": 57614,
-        "end": 58777
+        "start": 57505,
+        "end": 58668
       }
     ],
     "src/css/layout/_utilities.css": [
       {
-        "start": 1780,
-        "end": 1844
+        "start": 1765,
+        "end": 1829
       }
     ],
     "src/css/item/_index.css": [
       {
-        "start": 1850,
-        "end": 1860
+        "start": 1835,
+        "end": 1845
       },
       {
-        "start": 2476,
-        "end": 2480
+        "start": 2460,
+        "end": 2464
       },
       {
-        "start": 4270,
-        "end": 4272
+        "start": 4252,
+        "end": 4254
       },
       {
-        "start": 17905,
-        "end": 17907
+        "start": 17878,
+        "end": 17880
       }
     ],
     "src/css/item/_item-shared-base.css": [
       {
-        "start": 1861,
-        "end": 2100
+        "start": 1846,
+        "end": 2085
       }
     ],
     "src/css/item/_item-shared-components.css": [
       {
-        "start": 2101,
-        "end": 2475
+        "start": 2086,
+        "end": 2459
       }
     ],
     "src/css/item/_base.css": [
       {
-        "start": 2481,
-        "end": 2546
+        "start": 2465,
+        "end": 2530
       }
     ],
     "src/css/item/_header.css": [
       {
-        "start": 2547,
-        "end": 2701
+        "start": 2531,
+        "end": 2685
       }
     ],
     "src/css/item/_stats.css": [
       {
-        "start": 2702,
-        "end": 2798
+        "start": 2686,
+        "end": 2782
       }
     ],
     "src/css/item/_tabs.css": [
       {
-        "start": 2799,
-        "end": 2906
+        "start": 2783,
+        "end": 2890
       }
     ],
     "src/css/item/_item-tabs.css": [
       {
-        "start": 2907,
-        "end": 3020
+        "start": 2891,
+        "end": 3004
       }
     ],
     "src/css/item/_forms.css": [
       {
-        "start": 3021,
-        "end": 3196
+        "start": 3005,
+        "end": 3180
       }
     ],
     "src/css/item/_content.css": [
       {
-        "start": 3197,
-        "end": 3314
+        "start": 3181,
+        "end": 3298
       }
     ],
     "src/css/item/_buttons.css": [
       {
-        "start": 3315,
-        "end": 3410
+        "start": 3299,
+        "end": 3394
       }
     ],
     "src/css/item/_tables.css": [
       {
-        "start": 3411,
-        "end": 3481
+        "start": 3395,
+        "end": 3463
       }
     ],
     "src/css/item/_tags.css": [
       {
-        "start": 3482,
-        "end": 3607
+        "start": 3464,
+        "end": 3589
       }
     ],
     "src/css/item/_compact.css": [
       {
-        "start": 3608,
-        "end": 3778
+        "start": 3590,
+        "end": 3760
       }
     ],
     "src/css/item/_misc.css": [
       {
-        "start": 3779,
-        "end": 4031
+        "start": 3761,
+        "end": 4013
       }
     ],
     "src/css/item/_sheets.css": [
       {
-        "start": 4032,
-        "end": 4269
+        "start": 4014,
+        "end": 4251
       }
     ],
     "src/css/item/_weapon.css": [
       {
-        "start": 4273,
-        "end": 8332
+        "start": 4255,
+        "end": 8307
       }
     ],
     "src/css/item/_weapon-quality-sheet.css": [
       {
-        "start": 8333,
-        "end": 8776
+        "start": 8308,
+        "end": 8751
       }
     ],
     "src/css/item/_armour.css": [
       {
-        "start": 8777,
-        "end": 9758
+        "start": 8752,
+        "end": 9733
       }
     ],
     "src/css/item/_armour-modification.css": [
       {
-        "start": 9759,
-        "end": 10389
+        "start": 9734,
+        "end": 10364
       }
     ],
     "src/css/item/_gear.css": [
       {
-        "start": 10390,
-        "end": 10970
+        "start": 10365,
+        "end": 10945
       }
     ],
     "src/css/item/_cybernetic.css": [
       {
-        "start": 10971,
-        "end": 11442
+        "start": 10946,
+        "end": 11417
       }
     ],
     "src/css/item/_force-field.css": [
       {
-        "start": 11443,
-        "end": 11858
+        "start": 11418,
+        "end": 11833
       }
     ],
     "src/css/item/_talent-sheet.css": [
       {
-        "start": 11859,
-        "end": 13671
+        "start": 11834,
+        "end": 13646
       }
     ],
     "src/css/item/_trait-sheet.css": [
       {
-        "start": 13672,
-        "end": 14198
+        "start": 13647,
+        "end": 14173
       }
     ],
     "src/css/item/_skill.css": [
       {
-        "start": 14199,
-        "end": 14834
+        "start": 14174,
+        "end": 14809
       }
     ],
     "src/css/item/_condition.css": [
       {
-        "start": 14835,
-        "end": 15199
+        "start": 14810,
+        "end": 15173
       }
     ],
     "src/css/item/_critical-injury.css": [
       {
-        "start": 15200,
-        "end": 15582
+        "start": 15174,
+        "end": 15555
       }
     ],
     "src/css/item/_origin-path.css": [
       {
-        "start": 15583,
-        "end": 16496
+        "start": 15556,
+        "end": 16469
       }
     ],
     "src/css/item/_talents.css": [
       {
-        "start": 16497,
-        "end": 17072
+        "start": 16470,
+        "end": 17045
       }
     ],
     "src/css/item/_talent-trait-modern.css": [
       {
-        "start": 17073,
-        "end": 17673
+        "start": 17046,
+        "end": 17646
       }
     ],
     "src/css/item/_actor-styles.css": [
       {
-        "start": 17674,
-        "end": 17904
+        "start": 17647,
+        "end": 17877
       }
     ],
     "src/css/item/_npc-template-sheet.css": [
       {
-        "start": 17908,
-        "end": 18675
+        "start": 17881,
+        "end": 18648
       }
     ],
     "src/css/panels/_index.css": [
       {
-        "start": 18676,
-        "end": 18681
+        "start": 18649,
+        "end": 18654
       }
     ],
     "src/css/panels/_grid.css": [
       {
-        "start": 18682,
-        "end": 18687
+        "start": 18655,
+        "end": 18660
       }
     ],
     "src/css/panels/_core.css": [
       {
-        "start": 18688,
-        "end": 18883
+        "start": 18661,
+        "end": 18855
       }
     ],
     "src/css/panels/_vitals.css": [
       {
-        "start": 18884,
-        "end": 19359
+        "start": 18856,
+        "end": 19328
       }
     ],
     "src/css/panels/_overview-vitals.css": [
       {
-        "start": 19360,
-        "end": 19778
+        "start": 19329,
+        "end": 19747
       }
     ],
     "src/css/panels/_overview-dashboard.css": [
       {
-        "start": 19779,
-        "end": 21303
+        "start": 19748,
+        "end": 21271
       }
     ],
     "src/css/panels/_wounds.css": [
       {
-        "start": 21304,
-        "end": 21908
+        "start": 21272,
+        "end": 21875
       }
     ],
     "src/css/panels/_fatigue.css": [
       {
-        "start": 21909,
-        "end": 22465
+        "start": 21876,
+        "end": 22430
       }
     ],
     "src/css/panels/_fate.css": [
       {
-        "start": 22466,
-        "end": 23030
+        "start": 22431,
+        "end": 22994
       }
     ],
     "src/css/panels/_corruption.css": [
       {
-        "start": 23031,
-        "end": 23220
+        "start": 22995,
+        "end": 23184
       }
     ],
     "src/css/panels/_corruption-v2.css": [
       {
-        "start": 23221,
-        "end": 24080
+        "start": 23185,
+        "end": 24038
       }
     ],
     "src/css/panels/_insanity.css": [
       {
-        "start": 24081,
-        "end": 24849
+        "start": 24039,
+        "end": 24802
       }
     ],
     "src/css/panels/_experience.css": [
       {
-        "start": 24850,
-        "end": 25141
+        "start": 24803,
+        "end": 25094
       }
     ],
     "src/css/panels/_equipment-cards.css": [
       {
-        "start": 25142,
-        "end": 25784
+        "start": 25095,
+        "end": 25737
       }
     ],
     "src/css/panels/_dynasty-modern.css": [
       {
-        "start": 25785,
-        "end": 26795
+        "start": 25738,
+        "end": 26747
       }
     ],
     "src/css/panels/_movement.css": [
       {
-        "start": 26796,
-        "end": 27444
+        "start": 26748,
+        "end": 27396
       }
     ],
     "src/css/panels/_specialist.css": [
       {
-        "start": 27445,
-        "end": 27700
+        "start": 27397,
+        "end": 27652
       }
     ],
     "src/css/panels/_talents.css": [
       {
-        "start": 27701,
-        "end": 28239
+        "start": 27653,
+        "end": 28190
       }
     ],
     "src/css/panels/_effects.css": [
       {
-        "start": 28240,
-        "end": 28467
+        "start": 28191,
+        "end": 28418
       }
     ],
     "src/css/panels/_skills.css": [
       {
-        "start": 28468,
-        "end": 28879
+        "start": 28419,
+        "end": 28830
       }
     ],
     "src/css/panels/_accents.css": [
       {
-        "start": 28880,
-        "end": 29053
+        "start": 28831,
+        "end": 29004
       }
     ],
     "src/css/panels/_backpack-split-panel.css": [
       {
-        "start": 29054,
-        "end": 29798
+        "start": 29005,
+        "end": 29748
       }
     ],
     "src/css/panels/_powers.css": [
       {
-        "start": 29799,
-        "end": 29928
+        "start": 29749,
+        "end": 29878
       }
     ],
     "src/css/panels/_powers-v2.css": [
       {
-        "start": 29929,
-        "end": 30903
+        "start": 29879,
+        "end": 30851
       }
     ],
     "src/css/panels/_dynasty.css": [
       {
-        "start": 30904,
-        "end": 31039
+        "start": 30852,
+        "end": 30987
       }
     ],
     "src/css/panels/_biography.css": [
       {
-        "start": 31040,
-        "end": 31621
+        "start": 30988,
+        "end": 31569
       }
     ],
     "src/css/panels/_combat-station.css": [
       {
-        "start": 31622,
-        "end": 32830
+        "start": 31570,
+        "end": 32772
       }
     ],
     "src/css/chat/_index.css": [
       {
-        "start": 32831,
-        "end": 32835
+        "start": 32773,
+        "end": 32777
       }
     ],
     "src/css/chat/_foundry-overrides.css": [
       {
-        "start": 32836,
-        "end": 33052
+        "start": 32778,
+        "end": 32994
       }
     ],
     "src/css/chat/_roll-cards.css": [
       {
-        "start": 33053,
-        "end": 34028
+        "start": 32995,
+        "end": 33968
       }
     ],
     "src/css/chat/_item-cards.css": [
       {
-        "start": 34029,
-        "end": 34800
+        "start": 33969,
+        "end": 34740
       }
     ],
     "src/css/prompts/_index.css": [
       {
-        "start": 34801,
-        "end": 34805
+        "start": 34741,
+        "end": 34745
       }
     ],
     "src/css/prompts/_dialogs.css": [
       {
-        "start": 34806,
-        "end": 36438
+        "start": 34746,
+        "end": 36376
       }
     ],
     "src/css/prompts/_unified-roll-dialog.css": [
       {
-        "start": 36439,
-        "end": 37498
+        "start": 36377,
+        "end": 37433
       }
     ],
     "src/css/dialogs/_threat-scaler.css": [
       {
-        "start": 37499,
-        "end": 38048
+        "start": 37434,
+        "end": 37983
       }
     ],
     "src/css/dialogs/_characteristic-setup.css": [
       {
-        "start": 38049,
-        "end": 38686
+        "start": 37984,
+        "end": 38617
       }
     ],
     "src/css/dialogs/_advancement-dialog.css": [
       {
-        "start": 38687,
-        "end": 39447
+        "start": 38618,
+        "end": 39374
       }
     ],
     "src/css/apps/_encounter-builder.css": [
       {
-        "start": 39448,
-        "end": 39871
+        "start": 39375,
+        "end": 39798
       }
     ],
     "src/css/components/_origin-path-builder.css": [
       {
-        "start": 39872,
-        "end": 41244
+        "start": 39799,
+        "end": 41169
       }
     ],
     "src/css/components/_origin-path-choice-dialog.css": [
       {
-        "start": 41245,
-        "end": 41661
+        "start": 41170,
+        "end": 41586
       }
     ],
     "src/css/components/_origin-detail-dialog.css": [
       {
-        "start": 41662,
-        "end": 42338
+        "start": 41587,
+        "end": 42263
       }
     ],
     "src/css/components/_origin-roll-dialog.css": [
       {
-        "start": 42339,
-        "end": 42725
+        "start": 42264,
+        "end": 42646
       }
     ],
     "src/css/_journals.css": [
       {
-        "start": 42726,
-        "end": 42946
+        "start": 42647,
+        "end": 42867
       }
     ],
     "src/css/components/_wh40k-tooltip.css": [
       {
-        "start": 42950,
-        "end": 43390
+        "start": 42871,
+        "end": 43311
       }
     ],
     "src/css/components/_item-preview.css": [
       {
-        "start": 43391,
-        "end": 43656
+        "start": 43312,
+        "end": 43577
       }
     ],
     "src/css/components/_active-modifiers.css": [
       {
-        "start": 43657,
-        "end": 43913
+        "start": 43578,
+        "end": 43834
       }
     ],
     "src/css/components/_armour.css": [
       {
-        "start": 43917,
-        "end": 44232
+        "start": 43838,
+        "end": 44152
       }
     ],
     "src/css/actor/_biography-origin-panel.css": [
       {
-        "start": 44236,
-        "end": 44741
+        "start": 44156,
+        "end": 44661
       }
     ],
     "src/css/actor/_npc-sheet.css": [
       {
-        "start": 44745,
-        "end": 48010
+        "start": 44665,
+        "end": 47930
       }
     ],
     "src/css/actor/_vehicle-sheet.css": [
       {
-        "start": 48014,
-        "end": 48475
+        "start": 47934,
+        "end": 48395
       }
     ],
     "src/css/base/_reset.css": [
       {
-        "start": 48481,
-        "end": 48556
+        "start": 48401,
+        "end": 48476
       }
     ],
     "src/css/_fonts.css": [
       {
-        "start": 48557,
-        "end": 48610
+        "start": 48477,
+        "end": 48530
       }
     ],
     "src/css/components/_chat.css": [
       {
-        "start": 48611,
-        "end": 48621
+        "start": 48531,
+        "end": 48541
       }
     ],
     "src/css/components/_grids_templates.css": [
       {
-        "start": 48625,
-        "end": 48662
+        "start": 48545,
+        "end": 48582
       }
     ],
     "src/css/components/_grids.css": [
       {
-        "start": 48663,
-        "end": 49071
+        "start": 48583,
+        "end": 48991
       }
     ],
     "src/css/components/_panel.css": [
       {
-        "start": 49072,
-        "end": 49151
+        "start": 48992,
+        "end": 49071
       }
     ],
     "src/css/components/_controls.css": [
       {
-        "start": 49152,
-        "end": 49280
+        "start": 49072,
+        "end": 49200
       }
     ],
     "src/css/components/_form_fields.css": [
       {
-        "start": 49281,
-        "end": 49435
+        "start": 49201,
+        "end": 49355
       }
     ],
     "src/css/components/_header.css": [
       {
-        "start": 49439,
-        "end": 49595
+        "start": 49359,
+        "end": 49515
       }
     ],
     "src/css/components/_navigation.css": [
       {
-        "start": 49596,
-        "end": 49665
+        "start": 49516,
+        "end": 49584
       }
     ],
     "src/css/components/_settings.css": [
       {
-        "start": 49666,
-        "end": 50028
+        "start": 49585,
+        "end": 49947
       }
     ],
     "src/css/components/_characteristic_roller.css": [
       {
-        "start": 50032,
-        "end": 50075
+        "start": 49951,
+        "end": 49994
       }
     ],
     "src/css/components/_characteristics.css": [
       {
-        "start": 50076,
-        "end": 50323
+        "start": 49995,
+        "end": 50242
       }
     ],
     "src/css/components/_skills.css": [
       {
-        "start": 50324,
-        "end": 50873
+        "start": 50243,
+        "end": 50792
       }
     ],
     "src/css/components/_compendium.css": [
       {
-        "start": 50874,
-        "end": 51046
+        "start": 50793,
+        "end": 50965
       }
     ],
     "src/css/components/_enhanced-skill-roll.css": [
       {
-        "start": 51047,
-        "end": 51489
+        "start": 50966,
+        "end": 51408
       }
     ],
     "src/css/components/_stat-animations.css": [
       {
-        "start": 51493,
-        "end": 51782
+        "start": 51412,
+        "end": 51690
       }
     ],
     "src/css/components/_collapsible-panels.css": [
       {
-        "start": 51783,
-        "end": 52215
+        "start": 51691,
+        "end": 52121
       }
     ],
     "src/css/components/_context-menu.css": [
       {
-        "start": 52216,
-        "end": 52372
+        "start": 52122,
+        "end": 52278
       }
     ],
     "src/css/components/_enrichers.css": [
       {
-        "start": 52373,
-        "end": 52610
+        "start": 52279,
+        "end": 52516
       }
     ],
     "src/css/components/_enhanced-drag-drop.css": [
       {
-        "start": 52611,
-        "end": 53121
+        "start": 52517,
+        "end": 53024
       }
     ],
     "src/css/components/_combat-quick-panel.css": [
       {
-        "start": 53122,
-        "end": 53290
+        "start": 53025,
+        "end": 53193
       }
     ],
     "src/css/components/_quick-actions.css": [
       {
-        "start": 53291,
-        "end": 53448
+        "start": 53194,
+        "end": 53351
       }
     ],
     "src/css/components/_stat-breakdown.css": [
       {
-        "start": 53449,
-        "end": 53685
+        "start": 53352,
+        "end": 53587
       }
     ],
     "src/css/components/_what-if-mode.css": [
       {
-        "start": 53686,
-        "end": 54111
+        "start": 53588,
+        "end": 54008
       }
     ],
     "src/css/components/_acquisition-dialog.css": [
       {
-        "start": 54112,
-        "end": 54218
+        "start": 54009,
+        "end": 54115
       }
     ],
     "src/css/actor/_index.css": [
       {
-        "start": 54222,
-        "end": 54227
+        "start": 54119,
+        "end": 54124
       },
       {
-        "start": 56232,
-        "end": 56234
+        "start": 56124,
+        "end": 56126
       },
       {
-        "start": 57610,
-        "end": 57613
+        "start": 57501,
+        "end": 57504
       }
     ],
     "src/css/actor/_mixins.css": [
       {
-        "start": 54228,
-        "end": 54238
+        "start": 54125,
+        "end": 54135
       }
     ],
     "src/css/actor/_sheet-base.css": [
       {
-        "start": 54239,
-        "end": 54973
+        "start": 54136,
+        "end": 54866
       }
     ],
     "src/css/actor/_input-override.css": [
       {
-        "start": 54974,
-        "end": 55105
+        "start": 54867,
+        "end": 54998
       }
     ],
     "src/css/actor/_skills.css": [
       {
-        "start": 55106,
-        "end": 55422
+        "start": 54999,
+        "end": 55314
       }
     ],
     "src/css/actor/_status.css": [
       {
-        "start": 55423,
-        "end": 55905
+        "start": 55315,
+        "end": 55797
       }
     ],
     "src/css/actor/_origin-path.css": [
       {
-        "start": 55906,
-        "end": 56231
+        "start": 55798,
+        "end": 56123
       }
     ],
     "src/css/actor/_characteristics.css": [
       {
-        "start": 56235,
-        "end": 56442
+        "start": 56127,
+        "end": 56334
       }
     ],
     "src/css/actor/_ship.css": [
       {
-        "start": 56443,
-        "end": 57103
+        "start": 56335,
+        "end": 56994
       }
     ],
     "src/css/actor/_combat.css": [
       {
-        "start": 57104,
-        "end": 57192
+        "start": 56995,
+        "end": 57083
       }
     ],
     "src/css/actor/_abilities.css": [
       {
-        "start": 57193,
-        "end": 57374
+        "start": 57084,
+        "end": 57265
       }
     ],
     "src/css/actor/_equipment.css": [
       {
-        "start": 57375,
-        "end": 57506
+        "start": 57266,
+        "end": 57397
       }
     ],
     "src/css/actor/_tables.css": [
       {
-        "start": 57507,
-        "end": 57609
+        "start": 57398,
+        "end": 57500
       }
     ]
   }
