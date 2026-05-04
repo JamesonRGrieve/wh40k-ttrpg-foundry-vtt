@@ -58,7 +58,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
             reset: CharacteristicSetupDialog.#onReset,
             toggleAdvanced: CharacteristicSetupDialog.#onToggleAdvanced,
         },
-    };
+    } as unknown as ApplicationV2Config.DefaultOptions;
 
     /* -------------------------------------------- */
 
@@ -102,7 +102,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     #initializeState(): void {
-        const genData = (this.#actor.system as any)?.characterGeneration || {};
+        const genData = (this.#actor.system as Record<string, any>)?.characterGeneration || {};
 
         this.#rolls = Array.isArray(genData.rolls) && genData.rolls.length === 9 ? [...genData.rolls] : Array(9).fill(0);
 
@@ -140,7 +140,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         }));
 
         const characteristics = GENERATION_CHARACTERISTICS.map((key) => {
-            const charData = (this.#actor.system.characteristics as any)?.[key] || {};
+            const charData = (this.#actor.system.characteristics as Record<string, any>)?.[key] || {};
             const assignedIndex = this.#assignments[key] ?? null;
             const rollValue = assignedIndex !== null && this.#rolls[assignedIndex] ? this.#rolls[assignedIndex] : null;
             const base = this.#advancedMode ? this.#customBases[key] ?? DEFAULT_BASE : DEFAULT_BASE;
