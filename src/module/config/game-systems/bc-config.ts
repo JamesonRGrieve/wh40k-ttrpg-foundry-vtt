@@ -23,6 +23,11 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'bc' as const;
     readonly label = 'WH40K.System.BlackCrusade';
     readonly cssClass = 'black-crusade';
+    readonly theme = {
+        primary: 'crimson',
+        accent: 'crimson-light',
+        border: 'crimson-dark',
+    } as const;
 
     getOriginStepConfig(): OriginStepConfig {
         return {

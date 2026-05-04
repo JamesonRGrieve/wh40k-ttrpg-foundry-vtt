@@ -12,6 +12,11 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'ow' as const;
     readonly label = 'WH40K.System.OnlyWar';
     readonly cssClass = 'only-war';
+    readonly theme = {
+        primary: 'brass',
+        accent: 'brass-l20',
+        border: 'brass-d15',
+    } as const;
 
     getOriginStepConfig(): OriginStepConfig {
         return {

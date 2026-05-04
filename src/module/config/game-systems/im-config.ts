@@ -11,6 +11,11 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'im' as const;
     readonly label = 'WH40K.System.ImperiumMaledictum';
     readonly cssClass = 'imperium-maledictum';
+    readonly theme = {
+        primary: 'crimson-light',
+        accent: 'failure',
+        border: 'failure-l10',
+    } as const;
 
     getOriginStepConfig(): OriginStepConfig {
         return {

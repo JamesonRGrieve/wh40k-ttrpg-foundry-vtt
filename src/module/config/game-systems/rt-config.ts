@@ -32,6 +32,11 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'rt' as const;
     readonly label = 'WH40K.System.RogueTrader';
     readonly cssClass = 'rogue-trader';
+    readonly theme = {
+        primary: 'accent-dynasty',
+        accent: 'gold',
+        border: 'gold-dark',
+    } as const;
 
     getOriginStepConfig(): OriginStepConfig {
         return {

@@ -4,7 +4,16 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import type { GameSystemId, SkillRankDef, CharacteristicTierDef, OriginStepConfig, AdvanceCostResult, AdvanceOption, SidebarHeaderField } from './types.ts';
+import type {
+    GameSystemId,
+    SkillRankDef,
+    CharacteristicTierDef,
+    OriginStepConfig,
+    AdvanceCostResult,
+    AdvanceOption,
+    SidebarHeaderField,
+    SystemTheme,
+} from './types.ts';
 
 export abstract class BaseSystemConfig {
     /** Canonical system identifier */
@@ -15,6 +24,13 @@ export abstract class BaseSystemConfig {
 
     /** CSS class applied to system-specific sheets */
     abstract readonly cssClass: string;
+
+    /**
+     * Per-system color tokens (Tailwind palette names). Read by the
+     * `themeClassFor(role)` helper in `./index.ts` to emit per-system
+     * utility classes on shared templates.
+     */
+    abstract readonly theme: SystemTheme;
 
     /** Whether this system uses aptitude-based cost calculations */
     abstract readonly usesAptitudes: boolean;
