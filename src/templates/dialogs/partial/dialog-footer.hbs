@@ -1,0 +1,32 @@
+{{!--
+    Shared dialog footer — Cancel + Confirm button pair, used by every
+    dialog in the dialogs/ folder. The Confirm button uses the gold gradient
+    "primary" treatment; Cancel is the muted secondary.
+
+    Hash arguments:
+        confirmLabel    — text shown on the confirm button (default "Confirm").
+        confirmLabelKey — i18n key resolved via {{localize}} (preferred).
+        cancelLabel     — text shown on the cancel button (default "Cancel").
+        cancelLabelKey  — i18n key (preferred).
+        confirmIcon     — Font Awesome class for confirm button (default "fa-check").
+        cancelIcon      — Font Awesome class for cancel button (default "fa-times").
+        confirmAction   — data-action on confirm button (default "confirm").
+        cancelAction    — data-action on cancel button (default "cancel").
+        confirmDanger   — when truthy, swap the gold gradient for a red one
+                          (used by destructive confirmations).
+        rootClass       — extra utility classes on the <footer>.
+--}}
+<footer class="tw-flex tw-gap-2.5 tw-pt-4 tw-border-t tw-border-solid tw-border-amber-500/20{{#if rootClass}} {{rootClass}}{{/if}}">
+    <button type="button"
+            class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-p-3 tw-rounded-md tw-cursor-pointer tw-border tw-border-solid tw-border-white/15 tw-bg-white/5 tw-text-white/70 tw-font-ui tw-text-base tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-transition-all hover:tw-bg-white/10 hover:tw-text-white/90 hover:tw-border-white/25"
+            data-action="{{#if cancelAction}}{{cancelAction}}{{else}}cancel{{/if}}">
+        <i class="fas {{#if cancelIcon}}{{cancelIcon}}{{else}}fa-times{{/if}} tw-text-sm"></i>
+        {{#if cancelLabelKey}}{{localize cancelLabelKey}}{{else if cancelLabel}}{{cancelLabel}}{{else}}{{localize "WH40K.Cancel"}}{{/if}}
+    </button>
+    <button type="button"
+            class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-p-3 tw-rounded-md tw-cursor-pointer tw-border-0 {{#if confirmDanger}}tw-bg-gradient-to-br tw-from-[var(--wh40k-danger-primary,#a83232)] tw-to-[#5e0e0e] tw-text-white tw-shadow-[0_4px_12px_rgba(168,50,50,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:tw-shadow-[0_6px_20px_rgba(168,50,50,0.4),inset_0_1px_0_rgba(255,255,255,0.25)]{{else}}tw-bg-gradient-to-br tw-from-[var(--wh40k-color-gold)] tw-to-[#8b6914] tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:tw-from-[#d4ad32] hover:tw-to-[#9a7818] hover:tw-shadow-[0_6px_20px_rgba(201,162,39,0.4),inset_0_1px_0_rgba(255,255,255,0.25)]{{/if}} tw-font-ui tw-text-base tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-transition-all hover:tw-translate-y-[-2px] active:tw-translate-y-0"
+            data-action="{{#if confirmAction}}{{confirmAction}}{{else}}confirm{{/if}}" autofocus>
+        <i class="fas {{#if confirmIcon}}{{confirmIcon}}{{else}}fa-check{{/if}} tw-text-sm"></i>
+        {{#if confirmLabelKey}}{{localize confirmLabelKey}}{{else if confirmLabel}}{{confirmLabel}}{{else}}{{localize "WH40K.Confirm"}}{{/if}}
+    </button>
+</footer>
