@@ -6,7 +6,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * These are in-character notes and logs.
  */
 export default class JournalEntryItemData extends ItemDataModel.mixin(DescriptionTemplate) {
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
@@ -16,26 +16,30 @@ export default class JournalEntryItemData extends ItemDataModel.mixin(Descriptio
         };
     }
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
-        const props = [];
-        if (this.time) {
-            props.push(this.time);
+        const props: string[] = [];
+        const data = this as Record<string, unknown>;
+
+        if (data.time) {
+            props.push(data.time as string);
         }
-        if (this.place) {
-            props.push(this.place);
+        if (data.place) {
+            props.push(data.place as string);
         }
         return props;
     }
 
-    /** @override */
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        const labels = [];
-        if (this.time) {
-            labels.push({ label: this.time, icon: 'fa-solid fa-clock' });
+    /** @foundry-v14-overrides.d.ts */
+    get headerLabels(): Array<Record<string, unknown>> {
+        const labels: Array<Record<string, unknown>> = [];
+        const data = this as Record<string, unknown>;
+
+        if (data.time) {
+            labels.push({ label: data.time as string, icon: 'fa-solid fa-clock' });
         }
-        if (this.place) {
-            labels.push({ label: this.place, icon: 'fa-solid fa-location-dot' });
+        if (data.place) {
+            labels.push({ label: data.place as string, icon: 'fa-solid fa-location-dot' });
         }
         return labels;
     }
