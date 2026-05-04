@@ -1,5 +1,5 @@
 /**
- * @file EncounterBuilder - Plan and manage combat encounters
+ * @gulpfile.js EncounterBuilder - Plan and manage combat encounters
  * Phase 6: Advanced GM Tools
  *
  * Provides:
@@ -41,7 +41,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS = {
         id: 'encounter-builder',
         classes: ['wh40k-rpg', 'encounter-builder'],
@@ -71,7 +71,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS = {
         content: {
             template: 'systems/wh40k-rpg/templates/apps/encounter-builder.hbs',
@@ -85,7 +85,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     /**
      * Difficulty ratings based on threat ratio.
      * Ratio = total enemy threat / party threat
-     * @type {Object}
+     * @scripts/gen-i18n-types.mjs {Object}
      */
     static DIFFICULTY_RATINGS = {
         trivial: { maxRatio: 0.5, label: 'WH40K.Threat.Trivial', color: '#4ade80' },
@@ -102,13 +102,13 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
     /**
      * NPCs in the current encounter.
-     * @type {NPC[]}
+     * @scripts/gen-i18n-types.mjs {NPC[]}
      */
     #npcs: NPC[] = [];
 
     /**
      * Party configuration.
-     * @type {PartyConfig}
+     * @scripts/gen-i18n-types.mjs {PartyConfig}
      */
     #party: PartyConfig = {
         count: 4,
@@ -117,7 +117,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
     /**
      * Saved templates.
-     * @type {Template[]}
+     * @scripts/gen-i18n-types.mjs {Template[]}
      */
     #templates: Template[] = [];
 
@@ -127,15 +127,15 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
     /**
      * Singleton instance.
-     * @type {EncounterBuilder|null}
+     * @scripts/gen-i18n-types.mjs {EncounterBuilder|null}
      */
-    static #instance: unknown = null;
+    static #instance: EncounterBuilder | null = null;
 
     /**
      * Get or create the singleton instance.
      * @returns {EncounterBuilder}
      */
-    static get instance() {
+    static get instance(): EncounterBuilder {
         if (!this.#instance) {
             this.#instance = new this();
         }
@@ -146,9 +146,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Show the encounter builder.
      * @returns {EncounterBuilder}
      */
-    static show(): unknown {
+    static show(): EncounterBuilder {
         const instance = this.instance;
-        instance.render(true);
+        void instance.render(true);
         return instance;
     }
 
@@ -156,8 +156,8 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
-    /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    /** @foundry-v14-overrides.d.ts */
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Calculate encounter metrics
@@ -220,25 +220,25 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         };
     }
 
-    /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    /** @foundry-v14-overrides.d.ts */
+    override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
         // Party configuration inputs
-        const partyCount = this.element.querySelector('[name="partyCount"]');
-        const partyLevel = this.element.querySelector('[name="partyLevel"]');
+        const partyCount = this.element.querySelector('[name="partyCount"]') as HTMLInputElement;
+        const partyLevel = this.element.querySelector('[name="partyLevel"]') as HTMLInputElement;
 
         if (partyCount) {
             partyCount.addEventListener('change', (e: Event) => {
                 this.#party.count = parseInt((e.target as HTMLInputElement).value, 10) || 4;
-                void this.render({ parts: ['content'] });
+                void this.render({ parts: ['content'] } as ApplicationV2Config.RenderOptions);
             });
         }
 
         if (partyLevel) {
             partyLevel.addEventListener('change', (e: Event) => {
                 this.#party.averageLevel = parseInt((e.target as HTMLInputElement).value, 10) || 5;
-                void this.render({ parts: ['content'] });
+                void this.render({ parts: ['content'] } as ApplicationV2Config.RenderOptions);
             });
         }
 
@@ -248,7 +248,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
     /**
      * Set up drop zone for dragging NPCs.
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _setupDropZone(): void {
         const dropZone = this.element.querySelector('.encounter-drop-zone');
@@ -267,12 +267,15 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             e.preventDefault();
             dropZone.classList.remove('drag-over');
 
+            if (!e.dataTransfer) return;
+            const dataTransfer = e.dataTransfer;
+
             void (async () => {
                 try {
-                    const data = JSON.parse((e as DragEvent).dataTransfer.getData('text/plain'));
+                    const data = JSON.parse(dataTransfer.getData('text/plain'));
 
                     if (data.type === 'Actor') {
-                        await this._handleActorDrop(data);
+                        await this._handleActorDrop(data as Record<string, unknown>);
                     }
                 } catch (err) {
                     console.error('Failed to handle drop:', err);
@@ -284,15 +287,15 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     /**
      * Handle actor drop.
      * @param {Object} data - Drop data.
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     async _handleActorDrop(data: Record<string, unknown>): Promise<void> {
-        let actor;
+        let actor: Record<string, unknown> | null = null;
 
         if (data.uuid) {
-            actor = await (fromUuid as any)(data.uuid);
+            actor = await (fromUuid as any)(data.uuid as string) as Record<string, unknown> | null;
         } else if (data.id) {
-            actor = game.actors.get(data.id);
+            actor = (game as any).actors.get(data.id as string) as Record<string, unknown> | null;
         }
 
         if (!actor) {
@@ -307,20 +310,20 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         }
 
         // Check if already in list
-        const existing = this.#npcs.find((n) => n.uuid === actor.uuid);
+        const existing = this.#npcs.find((n) => n.uuid === (actor as Record<string, unknown>).uuid as string);
         if (existing) {
             existing.count++;
         } else {
             this.#npcs.push({
-                uuid: actor.uuid,
-                name: actor.name,
-                img: actor.img || 'icons/svg/mystery-man.svg',
-                threat: actor.system.threatLevel || 5,
+                uuid: actor.uuid as string,
+                name: actor.name as string,
+                img: (actor.img as string) || 'icons/svg/mystery-man.svg',
+                threat: (actor.system as Record<string, unknown>)?.threatLevel as number || 5,
                 count: 1,
             });
         }
 
-        void this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] } as ApplicationV2Config.RenderOptions);
     }
 
     /* -------------------------------------------- */
@@ -331,7 +334,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Get difficulty rating for a threat ratio.
      * @param {number} ratio - Threat ratio.
      * @returns {Object} Difficulty rating.
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _getDifficulty(ratio: number): Record<string, unknown> {
         for (const [key, rating] of Object.entries(EncounterBuilder.DIFFICULTY_RATINGS)) {
@@ -347,7 +350,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {number} partyActions - Party action count.
      * @param {number} enemyActions - Enemy action count.
      * @returns {Object} Advantage info.
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _getActionAdvantage(partyActions: number, enemyActions: number): Record<string, unknown> {
         const diff = enemyActions - partyActions;
@@ -367,9 +370,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addNPC(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #addNPC(this: EncounterBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         // Show a simple actor picker
-        const actors = game.actors.filter((a: { type: string }) => a.type === 'npc' || a.type === 'npcV2');
+        const actors = (game as any).actors.filter((a: { type: string }) => a.type === 'npc' || a.type === 'npcV2');
 
         if (actors.length === 0) {
             ui.notifications.warn('No NPC actors found in the world.');
@@ -396,18 +399,19 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             content,
             label: 'Add',
             callback: (html: HTMLElement) => {
-                const form = html[0].querySelector('form');
+                const form = (html as unknown as HTMLElement[])[0].querySelector('form');
+                if (!form) return null;
                 return {
-                    uuid: form.querySelector('[name="uuid"]').value,
-                    count: parseInt(form.querySelector('[name="count"]').value, 10) || 1,
+                    uuid: (form.querySelector('[name="uuid"]') as HTMLSelectElement).value,
+                    count: parseInt((form.querySelector('[name="count"]') as HTMLInputElement).value, 10) || 1,
                 };
             },
             rejectClose: false,
-        });
+        }) as { uuid: string, count: number } | null;
 
         if (!result) return;
 
-        const actor = await (fromUuid as any)(result.uuid);
+        const actor = await (fromUuid as any)(result.uuid) as Record<string, unknown> | null;
         if (!actor) return;
 
         const existing = this.#npcs.find((n: { uuid: string }) => n.uuid === result.uuid);
@@ -416,14 +420,14 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         } else {
             this.#npcs.push({
                 uuid: result.uuid,
-                name: actor.name,
-                img: actor.img || 'icons/svg/mystery-man.svg',
-                threat: actor.system.threatLevel || 5,
+                name: actor.name as string,
+                img: (actor.img as string) || 'icons/svg/mystery-man.svg',
+                threat: (actor.system as Record<string, unknown>)?.threatLevel as number || 5,
                 count: result.count,
             });
         }
 
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] } as ApplicationV2Config.RenderOptions);
     }
 
     /**
@@ -431,12 +435,12 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #removeNPC(this: any, event: Event, target: HTMLElement): void {
-        const index = parseInt(target.dataset.index, 10);
+    static #removeNPC(this: EncounterBuilder, _event: Event, target: HTMLElement): void {
+        const index = parseInt(target.dataset.index as string, 10);
         if (isNaN(index) || index < 0 || index >= this.#npcs.length) return;
 
         this.#npcs.splice(index, 1);
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] } as ApplicationV2Config.RenderOptions);
     }
 
     /**
@@ -444,9 +448,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #adjustCount(this: any, event: Event, target: HTMLElement): void {
-        const index = parseInt(target.dataset.index, 10);
-        const delta = parseInt(target.dataset.delta, 10);
+    static #adjustCount(this: EncounterBuilder, _event: Event, target: HTMLElement): void {
+        const index = parseInt(target.dataset.index as string, 10);
+        const delta = parseInt(target.dataset.delta as string, 10);
 
         if (isNaN(index) || isNaN(delta)) return;
 
@@ -454,7 +458,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         if (!npc) return;
 
         npc.count = Math.max(1, Math.min(20, npc.count + delta));
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] } as ApplicationV2Config.RenderOptions);
     }
 
     /**
@@ -462,9 +466,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #clearAll(this: any, event: Event, target: HTMLElement): void {
+    static #clearAll(this: EncounterBuilder, _event: Event, _target: HTMLElement): void {
         this.#npcs = [];
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] } as ApplicationV2Config.RenderOptions);
     }
 
     /**
@@ -472,7 +476,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #saveTemplate(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #saveTemplate(this: EncounterBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
             ui.notifications.warn('No NPCs to save.');
             return;
@@ -482,9 +486,12 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             title: 'Save Encounter Template',
             content: '<form><div class="form-group"><label>Template Name</label><input type="text" name="name" placeholder="My Encounter"/></div></form>',
             label: 'Save',
-            callback: (html: HTMLElement) => html[0].querySelector('[name="name"]').value,
+            callback: (html: HTMLElement) => {
+                const input = (html as unknown as HTMLElement[])[0].querySelector('[name="name"]') as HTMLInputElement;
+                return input?.value;
+            },
             rejectClose: false,
-        });
+        }) as string | null;
 
         if (!name) return;
 
@@ -496,7 +503,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         });
 
         ui.notifications.info(`Saved encounter template: ${name}`);
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] } as ApplicationV2Config.RenderOptions);
     }
 
     /**
@@ -504,8 +511,8 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #loadTemplate(this: any, event: Event, target: HTMLElement): void {
-        const index = parseInt(target.dataset.index, 10);
+    static #loadTemplate(this: EncounterBuilder, _event: Event, target: HTMLElement): void {
+        const index = parseInt(target.dataset.index as string, 10);
         if (isNaN(index) || index < 0 || index >= this.#templates.length) return;
 
         const template = this.#templates[index];
@@ -515,7 +522,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         }
 
         ui.notifications.info(`Loaded encounter: ${template.name}`);
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] } as ApplicationV2Config.RenderOptions);
     }
 
     /**
@@ -523,7 +530,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #deployToCombat(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #deployToCombat(this: EncounterBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
             ui.notifications.warn('No NPCs to deploy.');
             return;
@@ -532,33 +539,40 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         // Ensure combat exists
         let combat = game.combat;
         if (!combat) {
-            combat = await (Combat as any).create({ scene: game.scenes.active?.id } as Record<string, unknown>);
+            combat = await (Combat as any).create({ scene: (game as any).scenes.active?.id } as Record<string, unknown>);
         }
 
-        const combatants: unknown[] = [];
+        if (!combat) {
+            ui.notifications.error('Could not create or find active combat.');
+            return;
+        }
+
+        const combatants: Record<string, unknown>[] = [];
 
         for (const npcEntry of this.#npcs) {
-            const actor = await (fromUuid as any)(npcEntry.uuid);
+            const actor = await (fromUuid as any)(npcEntry.uuid) as Record<string, unknown> | null;
             if (!actor) continue;
 
             for (let i = 0; i < npcEntry.count; i++) {
                 // Create token data (side-effect: validates token document)
-                await actor.getTokenDocument({
-                    name: npcEntry.count > 1 ? `${actor.name} ${i + 1}` : actor.name,
-                });
+                if (typeof (actor as any).getTokenDocument === 'function') {
+                    await (actor as any).getTokenDocument({
+                        name: npcEntry.count > 1 ? `${actor.name as string} ${i + 1}` : actor.name as string,
+                    });
+                }
 
                 combatants.push({
-                    actorId: actor.id,
+                    actorId: actor.id as string,
                     tokenId: null, // No token placed
-                    name: npcEntry.count > 1 ? `${actor.name} ${i + 1}` : actor.name,
-                    img: actor.img,
+                    name: npcEntry.count > 1 ? `${actor.name as string} ${i + 1}` : actor.name as string,
+                    img: actor.img as string,
                 });
             }
         }
 
-        await combat.createEmbeddedDocuments('Combatant', combatants);
+        await (combat as any).createEmbeddedDocuments('Combatant', combatants);
 
-        ui.notifications.info(game.i18n.format('WH40K.NPC.Encounter.Deployed', { count: combatants.length }));
+        ui.notifications.info(game.i18n.format('WH40K.NPC.Encounter.Deployed', { count: String(combatants.length) }));
     }
 
     /**
@@ -566,13 +580,13 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #openNPC(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #openNPC(this: EncounterBuilder, _event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
         if (!uuid) return;
 
-        const actor = await (fromUuid as any)(uuid);
-        if (actor) {
-            actor.sheet.render(true);
+        const actor = await (fromUuid as any)(uuid) as Record<string, unknown> | null;
+        if (actor && (actor.sheet as Record<string, unknown>)) {
+            (actor.sheet as any).render(true);
         }
     }
 
@@ -586,18 +600,18 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {number} [count=1] - Number to add.
      */
     async addNPC(actorOrUuid: unknown, count: number = 1): Promise<void> {
-        let actor;
-        let uuid;
+        let actor: Record<string, unknown> | null = null;
+        let uuid: string | null = null;
 
         if (typeof actorOrUuid === 'string') {
             uuid = actorOrUuid;
-            actor = await (fromUuid as any)(uuid);
+            actor = await (fromUuid as any)(uuid) as Record<string, unknown> | null;
         } else {
-            actor = actorOrUuid;
-            uuid = actor.uuid;
+            actor = actorOrUuid as Record<string, unknown>;
+            uuid = actor.uuid as string;
         }
 
-        if (!actor) return;
+        if (!actor || !uuid) return;
 
         const existing = this.#npcs.find((n: { uuid: string }) => n.uuid === uuid);
         if (existing) {
@@ -605,15 +619,15 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         } else {
             this.#npcs.push({
                 uuid,
-                name: actor.name,
-                img: actor.img || 'icons/svg/mystery-man.svg',
-                threat: actor.system.threatLevel || 5,
+                name: actor.name as string,
+                img: (actor.img as string) || 'icons/svg/mystery-man.svg',
+                threat: (actor.system as Record<string, unknown>)?.threatLevel as number || 5,
                 count,
             });
         }
 
-        if (this.rendered) {
-            void this.render({ parts: ['content'] });
+        if (this.isRendered) {
+            void this.render({ parts: ['content'] } as ApplicationV2Config.RenderOptions);
         }
     }
 
@@ -626,8 +640,8 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         this.#party.count = count;
         this.#party.averageLevel = averageLevel;
 
-        if (this.rendered) {
-            void this.render({ parts: ['content'] });
+        if (this.isRendered) {
+            void this.render({ parts: ['content'] } as ApplicationV2Config.RenderOptions);
         }
     }
 
@@ -648,8 +662,8 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      */
     clear(): void {
         this.#npcs = [];
-        if (this.rendered) {
-            void this.render({ parts: ['content'] });
+        if (this.isRendered) {
+            void this.render({ parts: ['content'] } as ApplicationV2Config.RenderOptions);
         }
     }
 }
