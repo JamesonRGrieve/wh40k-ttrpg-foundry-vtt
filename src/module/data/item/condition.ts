@@ -11,13 +11,13 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  */
 export default class ConditionData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
     // Typed property declarations matching defineSchema()
-    declare identifier: string;
-    declare nature: string;
+    declare identifier: IdentifierField;
+    declare nature: 'beneficial' | 'harmful' | 'neutral';
     declare effect: string;
     declare removal: string;
     declare stackable: boolean;
     declare stacks: number;
-    declare appliesTo: string;
+    declare appliesTo: 'self' | 'target' | 'both' | 'area';
     declare duration: { value: number; units: string };
     declare notes: string;
 
@@ -74,7 +74,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
 
     /**
      * Get the nature label with safe fallback.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get natureLabel(): string {
         const key = `WH40K.Condition.Nature.${this.nature.capitalize()}`;
@@ -83,7 +83,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
 
     /**
      * Get the nature icon class.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get natureIcon() {
         const icons = {
@@ -91,12 +91,13 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
             harmful: 'fa-exclamation-triangle',
             neutral: 'fa-info-circle',
         };
-        return icons[this.nature] || 'fa-question-circle';
+        // Cast is safe because this.nature is guaranteed to be one of the keys by its type
+        return icons[this.nature as keyof typeof icons] || 'fa-question-circle';
     }
 
     /**
      * Get the nature CSS class.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get natureClass(): string {
         return `nature-${this.nature}`;
@@ -104,7 +105,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
 
     /**
      * Get the appliesTo label with safe fallback.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get appliesToLabel(): string {
         const key = `WH40K.Condition.AppliesTo.${this.appliesTo.capitalize()}`;
@@ -113,7 +114,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
 
     /**
      * Get the appliesTo icon class.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get appliesToIcon() {
         const icons = {
@@ -122,12 +123,13 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
             both: 'fa-users',
             area: 'fa-circle-notch',
         };
-        return icons[this.appliesTo] || 'fa-question';
+        // Cast is safe because this.appliesTo is guaranteed to be one of the keys by its type
+        return icons[this.appliesTo as keyof typeof icons] || 'fa-question';
     }
 
     /**
      * Get the full name with stacks.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get fullName() {
         let name = this.parent?.name ?? '';
@@ -139,7 +141,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
 
     /**
      * Get the duration display string.
-     * @type {string}
+     * @scripts/gen-i18n-types.mjs {string}
      */
     get durationDisplay(): string {
         if (this.duration.units === 'permanent') {
@@ -153,7 +155,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
 
     /**
      * Is this condition temporary?
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     get isTemporary() {
         return this.duration.units !== 'permanent';
@@ -163,7 +165,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
     /*  Chat Properties                             */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
         const props = [this.natureLabel, this.appliesToLabel];
 
@@ -186,7 +188,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             nature: this.natureLabel,
