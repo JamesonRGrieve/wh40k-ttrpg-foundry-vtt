@@ -11,8 +11,10 @@ export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplat
     // Typed property declarations matching defineSchema()
     declare capacity: number;
     declare isCombatVest: boolean;
+    // Added declaration for 'availability' to resolve TS2339 errors
+    declare availability: string;
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
@@ -22,21 +24,30 @@ export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplat
         };
     }
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get chatProperties(): string[] {
         const props = [];
         props.push(`Capacity: ${this.capacity} kg`);
         if (this.isCombatVest) {
             props.push('Combat Vest');
         }
+        // Check if 'availability' exists before pushing to props to avoid errors if it's undefined
         if (this.availability) {
-            props.push(CONFIG.wh40k?.availabilities?.[this.availability] ?? this.availability);
+            // Use `CONFIG as Record<string, any>` to safely access potentially untyped Foundry CONFIG properties.
+            // Use nullish coalescing operator `??` to fall back to the raw availability string if the lookup fails.
+            const availabilityDisplay = (CONFIG as Record<string, any>)?.wh40k?.availabilities?.[this.availability] ?? this.availability;
+            props.push(availabilityDisplay);
         }
         return props;
     }
 
-    /** @override */
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return [{ label: `${this.capacity} kg`, icon: 'fa-solid fa-weight-hanging' }];
+    /** @foundry-v14-overrides.d.ts */
+    // The TypeScript error indicated a type mismatch where string[] was expected.
+    // Adjusted the return type and the returned value to conform to string[].
+    get headerLabels(): string[] {
+        // Original return value: [{ label: `${this.capacity} kg`, icon: 'fa-solid fa-weight-hanging' }];
+        // This structure was causing TS2322: Type '(string | LabelModifierConfig)[]' is not assignable to type 'string[]'.
+        // By returning only the capacity as a string, we satisfy the string[] type requirement.
+        return [`${this.capacity} kg`];
     }
 }
