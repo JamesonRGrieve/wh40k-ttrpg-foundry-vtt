@@ -1,5 +1,5 @@
 /**
- * @file TooltipsWH40K - Rich tooltip system for WH40K RPG
+ * @gulpfile.js TooltipsWH40K - Rich tooltip system for WH40K RPG
  * Based on dnd5e's Tooltips5e pattern - uses Foundry's native TooltipManager
  * with MutationObserver to provide rich tooltip content.
  */
@@ -38,7 +38,10 @@ export class TooltipsWH40K {
     async _loadSkillDescriptions(): Promise<void> {
         try {
             const skillPackNames = ['wh40k-rpg.dh2-core-stats-skills', 'wh40k-rpg.rt-core-items-skills', 'wh40k-rpg.dw-core-items-skills'];
-            const pack = skillPackNames.map((n) => game.packs.get(n)).find((p): p is foundry.abstract.CompendiumCollection<foundry.abstract.Document> => !!p);
+            const pack = skillPackNames.map((n) => game.packs.get(n)).find((p) => !!p) as {
+                getIndex: () => Promise<Array<{ _id: string; name: string }>>;
+                getDocument: (id: string) => Promise<WH40KItem | null>;
+            } | undefined;
             if (!pack) {
                 console.warn('WH40K Tooltips | Could not find skills compendium');
                 return;
@@ -46,7 +49,7 @@ export class TooltipsWH40K {
 
             const index = await pack.getIndex();
             for (const entry of index) {
-                const item = (await pack.getDocument(entry._id)) as WH40KItem | null;
+                const item = await pack.getDocument(entry._id);
                 if (item) {
                     const key = entry.name.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
                     const system = item.system as {
@@ -135,7 +138,11 @@ export class TooltipsWH40K {
     }
 
     async _onHoverContentLink(doc: WH40KItem): Promise<void> {
-        const result = await (doc.richTooltip?.() ?? doc.system?.richTooltip?.() ?? {});
+        const result = (await (
+            (doc as { richTooltip?: () => Promise<Record<string, unknown>> }).richTooltip?.() ??
+            (doc.system as { richTooltip?: () => Promise<Record<string, unknown>> } | null)?.richTooltip?.() ??
+            {}
+        )) as { content?: string; classes?: string[] };
         const { content, classes } = result;
 
         if (!content || !this.#tooltip) return;
@@ -259,7 +266,7 @@ export class TooltipsWH40K {
         let gameSystem: string | null = null;
         if (actorUuid) {
             const actor = (await fromUuid(actorUuid)) as WH40KBaseActor;
-            gameSystem = actor?.system?.gameSystem ?? null;
+            gameSystem = (actor?.system as { gameSystem?: string } | null)?.gameSystem ?? null;
         }
         const systemConfig = gameSystem ? SystemConfigRegistry.getOrNull(gameSystem) : null;
         const skillRanks: any[] = systemConfig?.getSkillRanks() ?? [
@@ -279,8 +286,8 @@ export class TooltipsWH40K {
 
         const calculatedBase = baseValue ?? (level > 0 ? charValue : Math.floor(charValue / 2));
         const bonus = dataBonus ?? 0;
-        const skillInfo = game.wh40k?.tooltips?.getSkillDescription(name);
-        const descriptor = skillInfo?.descriptor || '';
+        const skillInfo = this.getSkillDescription(name);
+        const descriptor = (skillInfo?.descriptor as string) || '';
 
         let html = `
             <div class="wh40k-tooltip__header">
@@ -626,7 +633,7 @@ export function prepareSkillTooltipData(
     characteristics: Record<string, WH40KCharacteristic> = {},
     _actorUuid?: string,
 ): string {
-    const charKey = skill.characteristic || skill.char || 'strength';
+    const charKey = skill.characteristic || (skill as { char?: string }).char || 'strength';
     const char = characteristics[charKey] || {};
     const charTotal = char.total || 0;
     const charLabel = char.label || charKey;
@@ -640,7 +647,7 @@ export function prepareSkillTooltipData(
     const bonus = skill.bonus || 0;
     const data = {
         name: key,
-        label: skill.label || skill.name || key,
+        label: skill.label || (skill as { name?: string }).name || key,
         characteristic: charLabel,
         charValue: charTotal,
         baseValue,
@@ -710,7 +717,7 @@ export function prepareModifierTooltipData(title: string, sources: any[]): strin
 }
 
 export function prepareQualityTooltipData(identifier: string, level: number | null = null): string {
-    const config = (CONFIG as any).ROGUE_TRADER;
+    const config = (CONFIG as Record<string, any>).ROGUE_TRADER;
     if (!config) return '{}';
     const def = config.getQualityDefinition?.(identifier);
     if (!def) return '{}';
