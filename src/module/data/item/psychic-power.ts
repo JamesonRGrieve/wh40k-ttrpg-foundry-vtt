@@ -96,6 +96,25 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     }
 
     /**
+     * Pill style descriptor consumed by item-list-row.hbs to render the
+     * discipline badge.
+     */
+    get pill(): { bgClass: string; textClass: string; icon: string; label: string } {
+        const map: Record<string, { bgClass: string; textClass: string }> = {
+            telepathy: { bgClass: 'tw-bg-[rgba(139,92,246,0.2)]', textClass: 'tw-text-[#8b5cf6]' },
+            telekinesis: { bgClass: 'tw-bg-[rgba(6,182,212,0.2)]', textClass: 'tw-text-[#06b6d4]' },
+            divination: { bgClass: 'tw-bg-[rgba(245,158,11,0.2)]', textClass: 'tw-text-[#f59e0b]' },
+            pyromancy: { bgClass: 'tw-bg-[rgba(239,68,68,0.2)]', textClass: 'tw-text-[#ef4444]' },
+            biomancy: { bgClass: 'tw-bg-[rgba(34,197,94,0.2)]', textClass: 'tw-text-[#22c55e]' },
+            daemonology: { bgClass: 'tw-bg-[rgba(220,38,38,0.2)]', textClass: 'tw-text-[#dc2626]' },
+            malefic: { bgClass: 'tw-bg-[rgba(124,45,18,0.2)]', textClass: 'tw-text-[#7c2d12]' },
+            sanctic: { bgClass: 'tw-bg-[rgba(234,179,8,0.2)]', textClass: 'tw-text-[#eab308]' },
+        };
+        const fallback = { bgClass: 'tw-bg-[rgba(0,0,0,0.1)]', textClass: 'tw-text-[color:var(--wh40k-text-muted)]' };
+        return { ...(map[this.discipline] ?? fallback), icon: 'fa-brain', label: this.disciplineLabel };
+    }
+
+    /**
      * Get the focus power characteristic label.
      * @type {string}
      */

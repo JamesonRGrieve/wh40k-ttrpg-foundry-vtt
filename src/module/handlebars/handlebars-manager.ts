@@ -41,6 +41,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs',
             'systems/wh40k-rpg/templates/actor/partial/empty-state.hbs',
             'systems/wh40k-rpg/templates/actor/partial/dropzone.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs',
             'systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs',
             'systems/wh40k-rpg/templates/shared/field-row.hbs',
 
