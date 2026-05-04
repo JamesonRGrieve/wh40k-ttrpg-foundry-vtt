@@ -1,11 +1,5 @@
 {{! Vehicle Weapons Panel }}
-<div class="wh40k-panel tw-col-span-6">
-    <h1 class="wh40k-panel-header">
-        <span class="wh40k-panel-title">
-            <i class="fas fa-crosshairs"></i>
-            {{localize "WH40K.Vehicle.Weapons"}}
-        </span>
-    </h1>
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Vehicle.Weapons") icon="fa-crosshairs" rootClass="tw-col-span-6" bodyClass="tw-p-0"}}
     <div class="tw-flex tw-flex-col tw-gap-2 tw-p-2">
         {{#if weapons}}
             <div class="wh40k-table--border">
@@ -55,4 +49,4 @@
             </button>
         </div>
     </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

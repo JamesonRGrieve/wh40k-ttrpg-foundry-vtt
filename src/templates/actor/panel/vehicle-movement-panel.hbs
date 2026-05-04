@@ -1,10 +1,4 @@
-<div class="wh40k-panel tw-col-span-3">
-    <h1 class="wh40k-panel-header">
-        <span class="wh40k-panel-title">
-            <i class="fas fa-tachometer-alt"></i>
-            {{localize "WH40K.Vehicle.Movement"}}
-        </span>
-    </h1>
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Vehicle.Movement") icon="fa-tachometer-alt" rootClass="tw-col-span-3" bodyClass="tw-p-0"}}
     <div class="tw-flex tw-flex-col tw-gap-2 tw-p-2">
         <div class="wh40k-field__wrapper">
             <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Size"}}</span>
@@ -44,4 +38,4 @@
             {{system.speedSummary}}
         </div>
     </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
