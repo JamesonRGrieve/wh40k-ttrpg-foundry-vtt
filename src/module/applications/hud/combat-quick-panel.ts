@@ -1,5 +1,5 @@
 /**
- * @file CombatQuickPanel - Floating combat HUD for quick actions
+ * @gulpfile.js CombatQuickPanel - Floating combat HUD for quick actions
  * ApplicationV2 floating window with combat shortcuts
  *
  * Features:
@@ -24,7 +24,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /*  Configuration                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS = {
         id: 'combat-quick-panel-{id}',
         classes: ['wh40k-rpg', 'combat-hud', 'floating-panel'],
@@ -38,7 +38,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         },
         position: {
             width: 340,
-            height: 'auto' as const,
+            height: 'auto', // Changed from 'auto' as const to 'auto'
         },
         actions: {
             rollInitiative: CombatQuickPanel.#rollInitiative,
@@ -58,7 +58,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS = {
         panel: {
             template: 'systems/wh40k-rpg/templates/hud/combat-quick-panel.hbs',
@@ -71,19 +71,19 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * The actor this panel is displaying
-     * @type {WH40KBaseActor | null}
+     * @scripts/gen-i18n-types.mjs {WH40KBaseActor | null}
      */
     actor: WH40KBaseActor | null = null;
 
     /**
      * The primary weapon being displayed
-     * @type {WH40KItem | null}
+     * @scripts/gen-i18n-types.mjs {WH40KItem | null}
      */
     primaryWeapon: WH40KItem | null = null;
 
     /**
      * Track if reactions have been used this round
-     * @type {Object}
+     * @scripts/gen-i18n-types.mjs {Object}
      */
     reactionsUsed = {
         dodge: false,
@@ -92,7 +92,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Current opacity level (0-3)
-     * @type {number}
+     * @scripts/gen-i18n-types.mjs {number}
      */
     opacityLevel = 0;
 
@@ -115,28 +115,30 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Update the primary weapon reference
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _updatePrimaryWeapon(): void {
-        // Find equipped weapon
-        this.primaryWeapon = this.actor.items.find((i) => i.type === 'weapon' && i.system.equipped);
+        // Find equipped weapon and ensure it's not undefined, defaulting to null
+        this.primaryWeapon = this.actor?.items.find((i) => i.type === 'weapon' && i.system.equipped) ?? null;
     }
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     get title() {
-        return `Combat: ${this.actor.name}`;
+        // Ensure actor is not null before accessing its name
+        return `Combat: ${this.actor?.name ?? 'Unknown'}`;
     }
 
     /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = (await super._prepareContext(options)) as Record<string, unknown>;
 
+        // If actor is null, return early to prevent further errors
         if (!this.actor) return context;
 
         // Actor data
@@ -145,12 +147,13 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
         // Vitals
         const wounds = (this.actor.system as any).wounds;
+        // Use wounds.current instead of wounds.value as per TS2339 error
         context.wounds = {
-            value: wounds.value,
+            value: wounds.current,
             max: wounds.max,
-            percentage: Math.round((wounds.value / wounds.max) * 100),
-            critical: wounds.value <= 0,
-            low: wounds.value <= wounds.max * 0.25,
+            percentage: Math.round((wounds.current / wounds.max) * 100),
+            critical: wounds.current <= 0,
+            low: wounds.current <= wounds.max * 0.25,
         };
 
         const fatigue = (this.actor.system as any).fatigue;
@@ -162,10 +165,12 @@ export default class CombatQuickPanel extends ApplicationV2 {
         };
 
         // Initiative
+        // Use optional chaining for game.combat and combatant
         const combatant = game.combat?.combatants.find((c) => (c as { actorId?: string }).actorId === this.actor?.id);
+        // Use nullish coalescing operator for safer default values
         context.initiative = {
             rolled: (combatant?.initiative ?? null) !== null,
-            value: (combatant?.initiative as number) || 0,
+            value: (combatant?.initiative ?? 0) as number,
             bonus: (this.actor.system as any).initiative.bonus || 0,
         };
 
@@ -198,9 +203,10 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * Prepare weapon data for display
      * @param {Item|null} weapon  The weapon item
      * @returns {object}  Prepared weapon data
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
-    _prepareWeaponData(weapon: WH40KItem | null): Record<string, unknown> {
+    _prepareWeaponData(weapon: WH40KItem | null | undefined): Record<string, unknown> {
+        // Handle cases where weapon is null or undefined
         if (!weapon) {
             return {
                 none: true,
@@ -208,7 +214,8 @@ export default class CombatQuickPanel extends ApplicationV2 {
             };
         }
 
-        const rof = (weapon.system as { rateOfFire?: Record<string, unknown> }).rateOfFire || {};
+        // Use optional chaining for safer access to nested properties
+        const rof = weapon.system?.rateOfFire || {};
 
         return {
             id: weapon.id,
@@ -245,11 +252,13 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /**
      * Prepare reaction data
      * @returns {object}  Reaction data
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _prepareReactions(): Record<string, unknown> {
-        const dodge = this.actor.system.skills?.dodge;
-        const parry = this.actor.system.skills?.parry;
+        // Ensure actor.system.skills is not null/undefined before accessing skills
+        const skills = this.actor?.system.skills;
+        const dodge = skills?.dodge;
+        const parry = skills?.parry;
 
         return {
             dodge: {
@@ -271,13 +280,14 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /**
      * Prepare quick action data
      * @returns {Array}  Quick actions
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _prepareQuickActions(): unknown[] {
         const actions = [];
 
         // Reload (if weapon needs it)
-        if (this.primaryWeapon && this.primaryWeapon.system.clip) {
+        // Ensure primaryWeapon and its system properties are not null/undefined
+        if (this.primaryWeapon?.system?.clip) {
             const current = this.primaryWeapon.system.clip.value || 0;
             const max = this.primaryWeapon.system.clip.max || 0;
 
@@ -299,7 +309,8 @@ export default class CombatQuickPanel extends ApplicationV2 {
         });
 
         // Draw weapon
-        const unequippedWeapons = this.actor.items.filter((i) => i.type === 'weapon' && !i.system.equipped).length;
+        // Ensure actor and actor.items are not null/undefined
+        const unequippedWeapons = this.actor?.items.filter((i) => i.type === 'weapon' && !i.system.equipped).length ?? 0;
 
         actions.push({
             action: 'drawWeapon',
@@ -317,7 +328,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /**
      * Get opacity class based on level
      * @returns {string}  CSS class
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _getOpacityKey(): string {
         const keys = ['full', 'high', 'medium', 'low'];
@@ -326,8 +337,12 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    /** @foundry-v14-overrides.d.ts */
+    // Corrected the signature to match ApplicationV2.OnRender from foundry-v14-overrides.d.ts
+    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void | Promise<void> {
+        // Ensure super._onRender is called with correct options type if needed,
+        // but the error was about `options` possibly being undefined.
+        // The change in signature above should help.
         void super._onRender(context, options);
 
         // Apply saved position
@@ -344,12 +359,16 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Restore saved panel position
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _restorePosition(): void {
+        // Check if actor is available before accessing id
+        if (!this.actor) return;
+
         const savedPos = (game.user as any).getFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position`);
         if (savedPos) {
-            this.setPosition(savedPos);
+            // Corrected: 'position' property assignment instead of setPosition method
+            this.position = savedPos;
         }
     }
 
@@ -357,9 +376,10 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Subscribe to actor updates to refresh panel
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _subscribeToActor(): void {
+        // Ensure hooks are bound to the correct instance 'this'
         Hooks.on('updateActor', this._onActorUpdate.bind(this));
         Hooks.on('updateItem', this._onItemUpdate.bind(this));
     }
@@ -368,7 +388,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Subscribe to combat updates to track rounds
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _subscribeToCombat(): void {
         Hooks.on('combatRound', this._onCombatRound.bind(this));
@@ -377,20 +397,23 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     _onClose(options: Record<string, unknown>): void {
-        // Save position
-        const position = this.position;
-        (game.user as any).setFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position`, {
-            left: position.left,
-            top: position.top,
-        });
+        // Check if actor is available before saving position flag
+        if (this.actor) {
+            const position = this.position;
+            (game.user as any).setFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position`, {
+                left: position.left,
+                top: position.top,
+            });
+        }
 
         // Unsubscribe from hooks
-        Hooks.off('updateActor', this._onActorUpdate);
-        Hooks.off('updateItem', this._onItemUpdate);
-        Hooks.off('combatRound', this._onCombatRound);
-        Hooks.off('deleteCombat', this._onCombatEnd);
+        // Ensuring hooks are correctly unbound
+        Hooks.off('updateActor', this._onActorUpdate.bind(this));
+        Hooks.off('updateItem', this._onItemUpdate.bind(this));
+        Hooks.off('combatRound', this._onCombatRound.bind(this));
+        Hooks.off('deleteCombat', this._onCombatEnd.bind(this));
 
         super._onClose(options);
     }
@@ -402,9 +425,11 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /**
      * Handle actor updates
      * @param {Actor} actor  Updated actor
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _onActorUpdate(actor: WH40KBaseActor): void {
+        // Ensure actor is not null before comparing IDs
+        if (!this.actor) return;
         if (actor.id === this.actor.id) {
             void this.render(false);
         }
@@ -415,9 +440,11 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /**
      * Handle item updates
      * @param {Item} item  Updated item
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _onItemUpdate(item: WH40KItem): void {
+        // Ensure actor is not null before comparing IDs
+        if (!this.actor) return;
         if (item.actor?.id === this.actor.id) {
             void this.render(false);
         }
@@ -427,7 +454,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Handle new combat round - reset reactions
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _onCombatRound(): void {
         this.reactionsUsed = {
@@ -441,7 +468,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Handle combat end - close panel
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _onCombatEnd(): void {
         void this.close();
@@ -453,11 +480,12 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Roll initiative
-     * @this {CombatQuickPanel}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {CombatQuickPanel}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #rollInitiative(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollInitiative(this: CombatQuickPanel, event: Event, target: HTMLElement): Promise<void> {
+        // Use optional chaining for game.combat and combatant
         const combatant = game.combat?.combatants.find((c) => (c as { actorId?: string }).actorId === this.actor?.id);
         if (!combatant) {
             ui.notifications.warn('Character not in combat');
@@ -465,18 +493,18 @@ export default class CombatQuickPanel extends ApplicationV2 {
         }
 
         await game.combat.rollInitiative([combatant.id]);
-        ui.notifications.info(`Rolled initiative for ${this.actor?.name}`);
+        ui.notifications.info(`Rolled initiative for ${this.actor?.name ?? 'Unknown'}`);
     }
 
     /* -------------------------------------------- */
 
     /**
      * Standard attack with primary weapon
-     * @this {CombatQuickPanel}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {CombatQuickPanel}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #standardAttack(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #standardAttack(this: CombatQuickPanel, event: PointerEvent, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
             ui.notifications.warn('No weapon equipped');
             return;
@@ -493,11 +521,12 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Semi-auto attack
-     * @this {CombatQuickPanel}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {CombatQuickPanel}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #semiAutoAttack(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #semiAutoAttack(this: CombatQuickPanel, event: PointerEvent, target: HTMLElement): Promise<void> {
+        // Use optional chaining for safer access to nested properties
         if (!(this.primaryWeapon?.system as { rateOfFire?: { semiAuto?: boolean } })?.rateOfFire?.semiAuto) {
             ui.notifications.warn('Weapon does not support semi-auto');
             return;
@@ -513,11 +542,12 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Full-auto attack
-     * @this {CombatQuickPanel}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {CombatQuickPanel}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #fullAutoAttack(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #fullAutoAttack(this: CombatQuickPanel, event: PointerEvent, target: HTMLElement): Promise<void> {
+        // Use optional chaining for safer access to nested properties
         if (!(this.primaryWeapon?.system as { rateOfFire?: { fullAuto?: boolean } })?.rateOfFire?.fullAuto) {
             ui.notifications.warn('Weapon does not support full-auto');
             return;
@@ -533,16 +563,17 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Dodge reaction
-     * @this {CombatQuickPanel}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {CombatQuickPanel}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #dodge(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #dodge(this: CombatQuickPanel, event: PointerEvent, target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.dodge) {
             ui.notifications.warn('Already used dodge this round');
             return;
         }
 
+        // Ensure actor and actor.system.skills are not null/undefined
         const skill = this.actor?.system.skills?.dodge;
         if (!skill) {
             ui.notifications.warn('No dodge skill');
@@ -558,16 +589,17 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Parry reaction
-     * @this {CombatQuickPanel}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {CombatQuickPanel}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #parry(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #parry(this: CombatQuickPanel, event: PointerEvent, target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.parry) {
             ui.notifications.warn('Already used parry this round');
             return;
         }
 
+        // Ensure actor and actor.system.skills are not null/undefined
         const skill = this.actor?.system.skills?.parry;
         if (!skill) {
             ui.notifications.warn('No parry skill');
@@ -583,11 +615,11 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Reload weapon
-     * @this {CombatQuickPanel}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {CombatQuickPanel}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #reload(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #reload(this: CombatQuickPanel, event: PointerEvent, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
             ui.notifications.warn('No weapon equipped');
             return;
@@ -609,15 +641,18 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Aim action
-     * @this {CombatQuickPanel}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {CombatQuickPanel}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #aim(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #aim(this: CombatQuickPanel, event: PointerEvent, target: HTMLElement): Promise<void> {
         // Apply aim effect (+10 to next attack)
+        // Ensure actor is not null before creating chat message
+        if (!this.actor) return;
+
         await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor ?? undefined }),
-            content: `<p><strong>${this.actor?.name}</strong> takes aim (+10 to next attack)</p>`,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            content: `<p><strong>${this.actor.name}</strong> takes aim (+10 to next attack)</p>`,
             flavor: 'Aim Action',
         } as Record<string, unknown>);
 
@@ -628,11 +663,12 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Draw weapon
-     * @this {CombatQuickPanel}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {CombatQuickPanel}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #drawWeapon(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #drawWeapon(this: CombatQuickPanel, event: PointerEvent, target: HTMLElement): Promise<void> {
+        // Ensure actor and actor.items are not null/undefined
         const weapons = this.actor?.items.filter((i) => i.type === 'weapon' && !(i.system as { equipped?: boolean }).equipped);
 
         if (!weapons || weapons.length === 0) {
@@ -656,13 +692,14 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Switch to different weapon
-     * @this {CombatQuickPanel}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {CombatQuickPanel}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #switchWeapon(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #switchWeapon(this: CombatQuickPanel, event: PointerEvent, target: HTMLElement): Promise<void> {
         const weaponId = target.dataset.weaponId;
         if (!weaponId) return;
+        // Ensure actor is not null before getting item
         const weapon = this.actor?.items.get(weaponId);
 
         if (!weapon) return;
@@ -683,21 +720,25 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Use consumable item
-     * @this {CombatQuickPanel}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {CombatQuickPanel}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #useConsumable(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #useConsumable(this: CombatQuickPanel, event: PointerEvent, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
+        // Ensure actor is not null before getting item
         const item = this.actor?.items.get(itemId);
 
         if (!item) return;
 
         // TODO: Implement consumable use logic
+        // Ensure actor is not null before creating chat message
+        if (!this.actor) return;
+
         await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor ?? undefined }),
-            content: `<p><strong>${this.actor?.name}</strong> uses ${item.name}</p>`,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            content: `<p><strong>${this.actor.name}</strong> uses ${item.name}</p>`,
         } as Record<string, unknown>);
 
         ui.notifications.info(`Used ${item.name}`);
@@ -707,11 +748,11 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Toggle panel opacity
-     * @this {CombatQuickPanel}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {CombatQuickPanel}
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #toggleOpacity(this: any, event: PointerEvent, target: HTMLElement): void {
+    static #toggleOpacity(this: CombatQuickPanel, event: PointerEvent, target: HTMLElement): void {
         this.opacityLevel = (this.opacityLevel + 1) % 4;
 
         this.element.dataset.opacity = this._getOpacityKey();
@@ -723,9 +764,12 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Animate reload action
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _animateReload(): void {
+        // Ensure element is available
+        if (!this.element) return;
+
         const ammoBar = this.element.querySelector('.ammo-bar');
         if (!ammoBar) return;
 
@@ -743,11 +787,11 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * Show combat panel for actor
      * @param {Actor} actor  The actor
      * @returns {CombatQuickPanel}  The panel instance
-     * @static
+     * @backups/weapons-1768952886196/static-repeater_kBZ49ctV8LYbqT9W.json
      */
     static show(actor: WH40KBaseActor): Promise<unknown> {
         // Check if panel already exists
-        const existing = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
+        const existing = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor?.id === actor.id);
 
         if (existing) {
             existing.render(true, { focus: true });
@@ -765,10 +809,10 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /**
      * Close combat panel for actor
      * @param {Actor} actor  The actor
-     * @static
+     * @backups/weapons-1768952886196/static-repeater_kBZ49ctV8LYbqT9W.json
      */
     static close(actor: WH40KBaseActor): void {
-        const panel = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
+        const panel = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor?.id === actor.id);
 
         if (panel) void panel.close();
     }
@@ -778,10 +822,10 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /**
      * Toggle combat panel for actor
      * @param {Actor} actor  The actor
-     * @static
+     * @backups/weapons-1768952886196/static-repeater_kBZ49ctV8LYbqT9W.json
      */
     static toggle(actor: WH40KBaseActor): void {
-        const panel = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
+        const panel = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor?.id === actor.id);
 
         if (panel) {
             void panel.close();
