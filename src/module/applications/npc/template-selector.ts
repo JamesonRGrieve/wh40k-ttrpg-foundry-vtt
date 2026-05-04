@@ -45,7 +45,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS = {
         id: 'template-selector-{id}',
         classes: ['wh40k-rpg', 'template-selector'],
@@ -71,7 +71,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS = {
         content: {
             template: 'systems/wh40k-rpg/templates/dialogs/template-selector.hbs',
@@ -84,13 +84,13 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Available templates (cached).
-     * @type {WH40KItem[]}
+     * @scripts/gen-i18n-types.mjs {WH40KItem[]}
      */
     #templates: WH40KItem[] = [];
 
     /**
      * Current filter settings.
-     * @type {FilterState}
+     * @scripts/gen-i18n-types.mjs {FilterState}
      */
     #filters: FilterState = {
         category: '',
@@ -100,37 +100,37 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Selected template UUID.
-     * @type {string|null}
+     * @scripts/gen-i18n-types.mjs {string|null}
      */
     #selectedUuid: string | null = null;
 
     /**
      * Selected threat level.
-     * @type {number}
+     * @scripts/gen-i18n-types.mjs {number}
      */
     #threatLevel: number = 5;
 
     /**
      * Whether to create as horde.
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     #isHorde: boolean = false;
 
     /**
      * Promise resolver.
-     * @type {((value: WH40KNPC | null) => void) | null}
+     * @scripts/gen-i18n-types.mjs {((value: WH40KNPC | null) => void) | null}
      */
     #resolve: ((value: WH40KNPC | null) => void) | null = null;
 
     /**
      * Whether submitted.
-     * @type {boolean}
+     * @scripts/gen-i18n-types.mjs {boolean}
      */
     #submitted: boolean = false;
 
     /**
      * Render timeout handle.
-     * @type {ReturnType<typeof setTimeout> | null}
+     * @scripts/gen-i18n-types.mjs {ReturnType<typeof setTimeout> | null}
      */
     _renderTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -138,7 +138,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -153,6 +153,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         // Get selected template details
         let selectedTemplate: WH40KItem | undefined;
         let preview: Record<string, unknown> | null = null;
+        // Ensure this.#selectedUuid is treated as a string for comparison if not null
         if (this.#selectedUuid) {
             selectedTemplate = this.#templates.find((t) => t.uuid === this.#selectedUuid);
             if (selectedTemplate) {
@@ -211,7 +212,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         };
     }
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
@@ -263,7 +264,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Debounced render.
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _debounceRender(): void {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
@@ -278,7 +279,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Load all NPC templates from compendiums and world.
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     async _loadTemplates(): Promise<void> {
         this.#templates = [];
@@ -309,7 +310,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /**
      * Filter templates based on current filter settings.
      * @returns {WH40KItem[]}
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _filterTemplates(): WH40KItem[] {
         return this.#templates.filter((t) => {
@@ -417,7 +418,8 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                                 name: item.name,
                                 type: item.type,
                                 img: item.img,
-                                system: foundry.utils.deepClone(item.system),
+                                // Cast system to Record<string, unknown> to satisfy CreateData type
+                                system: foundry.utils.deepClone(item.system as Record<string, unknown>),
                             });
                         }
                     }
@@ -431,14 +433,16 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                                 name: item.name,
                                 type: item.type,
                                 img: item.img,
-                                system: foundry.utils.deepClone(item.system),
+                                // Cast system to Record<string, unknown> to satisfy CreateData type
+                                system: foundry.utils.deepClone(item.system as Record<string, unknown>),
                             });
                         }
                     }
                 }
 
                 if (itemsToCreate.length > 0) {
-                    await actor.createEmbeddedDocuments('Item', itemsToCreate);
+                    // Cast itemsToCreate to the expected type for createEmbeddedDocuments
+                    await actor.createEmbeddedDocuments('Item', itemsToCreate as Array<Record<string, unknown>>);
                 }
 
                 ui.notifications.info(`Created NPC: ${actor.name}`);
@@ -470,14 +474,15 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /*  Lifecycle                                   */
     /* -------------------------------------------- */
 
-    /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    /** @foundry-v14-overrides.d.ts */
+    async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
         if (!this.#submitted && this.#resolve) {
             this.#resolve(null);
         }
 
+        // Foundry V14 ApplicationV2.close returns Promise<unknown>
         return super.close(options);
     }
 
