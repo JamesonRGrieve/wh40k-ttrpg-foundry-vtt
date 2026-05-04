@@ -191,8 +191,12 @@ export class WH40KItemContainer extends Item {
     }
 
     prepareEmbeddedDocuments(): void {
-        const superProto = Object.getPrototypeOf(Object.getPrototypeOf(this)) as { prepareEmbeddedDocuments?: () => void };
-        superProto.prepareEmbeddedDocuments?.call(this);
+        // Equivalent to `super.prepareEmbeddedDocuments()`, but routed through Item.prototype
+        // to dodge the ItemBase typing gap (the method exists on ClientDocument at runtime).
+        // Walking via `Object.getPrototypeOf(Object.getPrototypeOf(this))` is unsafe: when a
+        // subclass like WH40KItem extends this class, two prototype hops land back on
+        // WH40KItemContainer.prototype and recurse into this same method → stack overflow.
+        (Item.prototype as { prepareEmbeddedDocuments?: () => void }).prepareEmbeddedDocuments?.call(this);
         if (!(this instanceof Item && this.system.container)) return;
         game.wh40k.log(`ItemContainer: ${this.name as string}`, 'prepareEmbeddedDocuments');
         const containedItems = this.getNested();

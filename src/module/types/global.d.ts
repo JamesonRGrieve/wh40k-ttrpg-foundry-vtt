@@ -263,7 +263,7 @@ export type WH40KItemSystemData = import('../data/abstract/item-data-model.ts').
     penetration?: number;
     range?: number | string;
     rateOfFire?: { single: number; semi: number; full: number } | string;
-    clip?: { current: number; max: number; type?: string };
+    clip?: { value: number; max: number; type?: string };
     container?: string | null;
     attackType?: string;
     detection?: number;
