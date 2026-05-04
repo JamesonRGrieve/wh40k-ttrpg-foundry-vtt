@@ -1,5 +1,5 @@
 /**
- * @file AddXPDialog - V2 dialog for adding/subtracting XP
+ * @gulpfile.js AddXPDialog - V2 dialog for adding/subtracting XP
  */
 
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
@@ -35,13 +35,13 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'add-xp-dialog', 'standard-form'],
         actions: {
-            apply: AddXPDialog.#onApply as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            cancel: AddXPDialog.#onCancel as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            apply: AddXPDialog.#onApply,
+            cancel: AddXPDialog.#onCancel,
         },
         form: {
             handler: AddXPDialog.#onFormChange as unknown as ApplicationV2Config.FormConfiguration['handler'],
@@ -53,14 +53,13 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
         },
         window: {
             title: 'Adjust Total XP',
-            minimizable: false,
             resizable: false,
-        },
+        } as ApplicationV2Config.DefaultOptions['window'],
     };
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/add-xp-prompt.hbs',
@@ -76,7 +75,8 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
     /** @inheritDoc */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AddXPContext> {
         const context = (await super._prepareContext(options)) as AddXPContext;
-        const currentTotal = (this.actor.system as any)?.experience?.total ?? 0;
+        const actorSystem = this.actor.system as { experience?: { total?: number } };
+        const currentTotal = actorSystem.experience?.total ?? 0;
         const newTotal = Math.max(0, currentTotal + this.xpAmount);
 
         return {
@@ -129,10 +129,11 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
             return;
         }
 
-        const currentTotal = (this.actor.system as any)?.experience?.total ?? 0;
+        const actorSystem = this.actor.system as { experience?: { total?: number } };
+        const currentTotal = actorSystem.experience?.total ?? 0;
         const newTotal = Math.max(0, currentTotal + this.xpAmount);
 
-        await this.actor.update({ 'system.experience.total': newTotal });
+        await this.actor.update({ 'system.experience.total': newTotal } as Record<string, unknown>);
 
         const verb = this.xpAmount > 0 ? 'added' : 'removed';
         ui.notifications.info(`${Math.abs(this.xpAmount)} XP ${verb}. Total: ${newTotal}`);
