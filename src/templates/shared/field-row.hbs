@@ -1,7 +1,7 @@
 {{!--
     Shared labelled input row — wh40k-field-row + wh40k-field-label + wh40k-field-input.
     Used on the player Biography Identity panel, and anywhere else a flat
-    "label above input" text/number/select field is needed.
+    "label above input" text/number/select/textarea field is needed.
 
     Required hash params:
         name      — schema path for the form parser ("system.bio.gender")
@@ -9,27 +9,41 @@
         value     — current value to display
 
     Optional hash params:
-        type        — "text" (default), "number", or "select"
+        type        — "text" (default), "number", "select", or "textarea"
         options     — for type="select", an object keyed by value → label
-                      (rendered with {{selectOptions}} fallback uses {{#each}})
         placeholder — input placeholder
+        min         — number min (only meaningful for type="number")
+        max         — number max (only meaningful for type="number")
+        rows        — textarea rows (only meaningful for type="textarea"); default 3
+        dataDtype   — value for data-dtype attribute (e.g. "Number")
+        readonly    — truthy to render the input/select/textarea as readonly
         labelClass  — extra utilities on the label
-        inputClass  — extra utilities on the input/select
+        inputClass  — extra utilities on the input/select/textarea
         rowClass    — extra utilities on the row wrapper
 --}}
 <div class="tw-flex tw-flex-col tw-gap-1 {{rowClass}}">
     <label class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)] {{labelClass}}">{{label}}</label>
     {{#if (eq type "select")}}
-    <select class="tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem] {{inputClass}}" name="{{name}}">
+    <select class="tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem] {{inputClass}}" name="{{name}}"{{#if dataDtype}} data-dtype="{{dataDtype}}"{{/if}}{{#if readonly}} disabled{{/if}}>
         {{#each options}}
         <option value="{{@key}}" {{#if (eq @key ../value)}}selected{{/if}}>{{this}}</option>
         {{/each}}
     </select>
+    {{else if (eq type "textarea")}}
+    <textarea class="tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem] {{inputClass}}"
+              name="{{name}}"
+              rows="{{#if rows}}{{rows}}{{else}}3{{/if}}"
+              {{#if placeholder}}placeholder="{{placeholder}}"{{/if}}
+              {{#if readonly}}readonly{{/if}}>{{value}}</textarea>
     {{else}}
     <input type="{{#if type}}{{type}}{{else}}text{{/if}}"
            class="tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem] {{inputClass}}"
            name="{{name}}"
            value="{{value}}"
-           {{#if placeholder}}placeholder="{{placeholder}}"{{/if}} />
+           {{#if placeholder}}placeholder="{{placeholder}}"{{/if}}
+           {{#if min}}min="{{min}}"{{/if}}
+           {{#if max}}max="{{max}}"{{/if}}
+           {{#if dataDtype}}data-dtype="{{dataDtype}}"{{/if}}
+           {{#if readonly}}readonly{{/if}} />
     {{/if}}
 </div>
