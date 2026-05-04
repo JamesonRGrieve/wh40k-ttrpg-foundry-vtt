@@ -9,9 +9,9 @@ export class WH40KVehicle extends WH40KBaseActor {
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
-            'token.name': data.name,
+            'token.name': data.name as string,
         };
-        this.updateSource(initData);
+        this.updateSource(initData as Record<string, unknown>);
     }
 
     prepareData(): void {
@@ -19,56 +19,58 @@ export class WH40KVehicle extends WH40KBaseActor {
     }
 
     get faction(): string {
-        return this.system.faction;
+        return this.system.faction as string;
     }
     get subfaction(): string {
-        return this.system.subfaction;
+        return this.system.subfaction as string;
     }
     get subtype(): string {
-        return this.system.type;
+        return this.system.type as string;
     }
     get threatLevel(): string {
-        return this.system.threatLevel;
+        return String(this.system.threatLevel);
     }
     get armour(): Record<string, { value: number; total: number }> {
-        return this.system.armour;
+        return this.system.armour as Record<string, { value: number; total: number }>;
     }
     get front(): number {
-        return this.system.armour.front.value;
+        return (this.system.armour as Record<string, { value: number; total: number }>).front.value;
     }
     get side(): number {
-        return this.system.armour.side.value;
+        return (this.system.armour as Record<string, { value: number; total: number }>).side.value;
     }
     get rear(): number {
-        return this.system.armour.rear.value;
+        return (this.system.armour as Record<string, { value: number; total: number }>).rear.value;
     }
     get availability(): string {
-        return this.system.availability;
+        return this.system.availability as string;
     }
     get manoeuverability(): number {
-        return this.system.manoeuverability;
+        return this.system.manoeuverability as number;
     }
     get carryingCapacity(): number {
-        return this.system.carryingCapacity;
+        return this.system.carryingCapacity as number;
     }
     get integrity(): { value: number; max: number } {
-        return this.system.integrity;
+        return this.system.integrity as { value: number; max: number };
     }
     get speed(): number {
-        return this.system.speed;
+        return this.system.speed as number;
     }
     get crew(): Record<string, unknown> {
-        return this.system.crew;
+        return this.system.crew as Record<string, unknown>;
     }
     get vehicleClass(): string {
-        return this.system.vehicleClass;
+        return this.system.vehicleClass as string;
     }
     get size(): number {
-        return this.system.size;
+        return Number(this.system.size);
     }
 
-    async rollItem(itemId): Promise<void> {
+    async rollItem(itemId: string): Promise<void> {
         const item = this.items.get(itemId);
+        if (!item) return;
+
         const character = game.user.character;
         if (!character) {
             ui.notifications.warn("Vehicle items are rolled using the current users' character. However, no character found.");
