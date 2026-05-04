@@ -79,6 +79,21 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
     }
 
     /**
+     * Pill descriptor consumed by item-list-row.hbs for the category badge.
+     */
+    get pill(): { bgClass: string; textClass: string; icon: string; label: string } {
+        const map: Record<string, { bgClass: string; textClass: string; icon: string }> = {
+            combat: { bgClass: 'tw-bg-[rgba(239,68,68,0.2)]', textClass: 'tw-text-[#ef4444]', icon: 'fa-crosshairs' },
+            maneuver: { bgClass: 'tw-bg-[rgba(59,130,246,0.2)]', textClass: 'tw-text-[#3b82f6]', icon: 'fa-route' },
+            command: { bgClass: 'tw-bg-[rgba(245,158,11,0.2)]', textClass: 'tw-text-[#f59e0b]', icon: 'fa-bullhorn' },
+            support: { bgClass: 'tw-bg-[rgba(34,197,94,0.2)]', textClass: 'tw-text-[#22c55e]', icon: 'fa-hands-helping' },
+            special: { bgClass: 'tw-bg-[rgba(139,92,246,0.2)]', textClass: 'tw-text-[#8b5cf6]', icon: 'fa-star' },
+        };
+        const fallback = { bgClass: 'tw-bg-[rgba(0,0,0,0.1)]', textClass: 'tw-text-[color:var(--wh40k-text-muted)]', icon: 'fa-ship' };
+        return { ...(map[this.category] ?? fallback), label: this.categoryLabel };
+    }
+
+    /**
      * Get the action type label.
      * @type {string}
      */
