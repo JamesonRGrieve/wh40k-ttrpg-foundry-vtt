@@ -1,5 +1,5 @@
 /**
- * @file RollConfigurationDialog - General roll configuration dialog
+ * @gulpfile.js RollConfigurationDialog - General roll configuration dialog
  * ApplicationV2 dialog for configuring d100 tests
  *
  * Features:
@@ -36,7 +36,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /*  Configuration                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         id: 'roll-configuration-{id}',
         classes: ['wh40k-rpg', 'roll-configuration-dialog'],
@@ -64,7 +64,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/dialogs/roll-configuration.hbs',
@@ -123,19 +123,19 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
-    /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    /** @foundry-v14-overrides.d.ts */
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context: unknown = await super._prepareContext(options);
 
         // Calculate the difficulty modifier
-        const difficultyPreset = (this.constructor as any).DIFFICULTY_PRESETS.find((p: { key: string }) => p.key === this.selectedDifficulty) || { value: 0 };
+        const difficultyPreset = (this.constructor as any).DIFFICULTY_PRESETS.find((p: DifficultyPreset) => p.key === this.selectedDifficulty) || { value: 0 };
         const difficultyModifier = difficultyPreset.value;
 
         // Calculate situational modifier from active checkboxes
         const situationalModifierTotal = this._calculateSituationalTotal();
 
         // Prepare permanent modifiers (from items, conditions, etc.)
-        const permanentModifiers = (this.config.permanentModifiers || []).map((mod: Record<string, unknown>) => ({
+        const permanentModifiers = (this.config.permanentModifiers || []).map((mod: { uuid?: string; value: number }) => ({
             ...mod,
             valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString(),
             hasSource: !!mod.uuid,
@@ -143,7 +143,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const hasPermanentModifiers = permanentModifiers.length > 0;
 
         // Calculate permanent modifier total
-        const permanentModifierTotal = permanentModifiers.reduce((sum: number, mod: Record<string, unknown>) => sum + ((mod.value as number) || 0), 0);
+        const permanentModifierTotal = permanentModifiers.reduce((sum: number, mod: { uuid?: string; value: number }) => sum + mod.value, 0);
 
         // Calculate total modifier and final target
         const totalModifier = difficultyModifier + this.customModifier + situationalModifierTotal + permanentModifierTotal;
@@ -151,7 +151,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const finalTarget = Math.max(1, Math.min(100, baseTarget + totalModifier));
 
         // Prepare situational modifiers for display
-        const situationalModifiers = (this.config.situationalModifiers || []).map((mod: Record<string, unknown>, index: number) => ({
+        const situationalModifiers = (this.config.situationalModifiers || []).map((mod: { value: number }, index: number) => ({
             ...mod,
             id: `sit-${index}`,
             active: this.activeSituationalModifiers.has(`sit-${index}`),
@@ -187,7 +187,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             hasPermanentModifiers,
 
             // Difficulty presets
-            difficulties: (this.constructor as any).DIFFICULTY_PRESETS.map((d: Record<string, unknown>) => ({
+            difficulties: (this.constructor as any).DIFFICULTY_PRESETS.map((d: DifficultyPreset) => ({
                 ...d,
                 label: game.i18n.localize(d.label),
                 selected: d.key === this.selectedDifficulty,
@@ -213,7 +213,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /**
      * Calculate the total from active situational modifiers.
      * @returns {number}
-     * @private
+     * @src/packs/rogue-trader/rt-core-actors-ships/_source/hazeroth-class-privateer_6WQ9eTU4FFKnKt4N.json
      */
     _calculateSituationalTotal(): number {
         let total = 0;
@@ -226,8 +226,8 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         return total;
     }
 
-    /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    /** @foundry-v14-overrides.d.ts */
+    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
         // Add live update for custom modifier
@@ -252,7 +252,9 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {Event} event
      */
     #onCustomModifierChange(event: Event): void {
-        this.customModifier = parseInt((event.currentTarget as HTMLInputElement).value) || 0;
+        const inputElement = event.currentTarget as HTMLInputElement;
+        const stringValue = inputElement.value ?? "";
+        this.customModifier = Number(stringValue) || 0;
         void this.render({ parts: ['form'] });
     }
 
@@ -298,7 +300,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
     /**
      * Handle situational modifier toggle
-     * @this {RollConfigurationDialog}
+     * @src/packs/rogue-trader/rt-items-navigator-powers/_source/this-test-is-then-modified-by-various-ritual-modifiers-the-r_UxTCVEiD9h8kghWd.json {RollConfigurationDialog}
      * @param {Event} event
      * @param {HTMLElement} target
      */
@@ -323,7 +325,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
         const difficultyPreset = RollConfigurationDialog.DIFFICULTY_PRESETS.find((p) => p.key === data.difficulty) || { value: 0 };
         const situationalTotal = this._calculateSituationalTotal();
-        const customModifier = parseInt(data.customModifier as string) || 0;
+        const customModifier = Number(data.customModifier as string) || 0;
 
         const result: RollConfig = {
             ...this.config,
@@ -362,13 +364,13 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         });
     }
 
-    /** @override */
+    /** @foundry-v14-overrides.d.ts */
     async close(options: Record<string, unknown> = {}): Promise<void> {
         // Ensure we resolve with null if closed without submitting
         if (this.#resolve && !(options as any).submitted) {
             this.#resolve(null);
         }
-        return super.close(options);
+        await super.close(options);
     }
 
     /* -------------------------------------------- */
