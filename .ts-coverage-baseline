@@ -1,7 +1,7 @@
 {
   "totals": {
     "any": 9,
-    "asAny": 177,
+    "asAny": 171,
     "tsExpectError": 9,
     "tsIgnore": 0
   },
@@ -12,9 +12,15 @@
       "tsExpectError": 0,
       "tsIgnore": 0
     },
+    "actor": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
     "applications": {
       "any": 3,
-      "asAny": 127,
+      "asAny": 122,
       "tsExpectError": 9,
       "tsIgnore": 0
     },
@@ -116,7 +122,7 @@
     },
     "utils": {
       "any": 2,
-      "asAny": 4,
+      "asAny": 3,
       "tsExpectError": 0,
       "tsIgnore": 0
     }

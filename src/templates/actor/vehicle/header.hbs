@@ -1,5 +1,10 @@
-{{!-- Vehicle Sheet Header --}}
-<div class="wh40k-header wh40k-panel wh40k-vehicle-header">
+{{!-- Vehicle Sheet Header. Composes the shared `header-base` partial in
+     horizontal variant; the body supplies the vehicle-specific identity,
+     meta row, and quick-stats cluster. --}}
+
+{{#> systems/wh40k-rpg/templates/actor/partial/header-base.hbs
+    variant="horizontal"
+    cardClass="wh40k-vehicle-header"}}
     <div class="wh40k-header__info">
         {{!-- Identity: name input above portrait --}}
         <div class="wh40k-vehicle-identity tw-w-44 tw-shrink-0">
@@ -70,4 +75,4 @@
                 maxAttr="10"}}
         </div>
     </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/header-base.hbs}}

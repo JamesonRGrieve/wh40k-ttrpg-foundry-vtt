@@ -1,0 +1,31 @@
+{{!--
+    Pip-tracker row — flex row of N click-to-toggle pips representing a 1..max
+    discrete tracker (fate stars, fatigue bolts, critical-damage pips, etc.).
+
+    Required hash params:
+        count        — total number of pips to render (e.g. system.fate.max, 10)
+        current      — current filled count; pips with index <= current get the
+                       filled style. Pass 0 to render an empty row.
+        action       — data-action string for the click handler
+                       (e.g. "setFateStar", "setFatigueBolt", "setCriticalPip")
+        dataAttr     — name of the data-* attribute that carries the pip index
+                       (e.g. "fate-index", "fatigue-index", "crit-level")
+        pipClass     — base class for each pip button (e.g. "wh40k-fate-pip")
+
+    Optional hash params:
+        filledClass  — class added when the pip is filled (default: `${pipClass}--filled`)
+        wrapperClass — class on the outer flex container (default sane utility set)
+        iconClass    — Font Awesome class to render inside each pip; if omitted no <i> is rendered
+        titlePrefix  — string prepended to the pip's tooltip (default "Level")
+--}}
+<div class="{{#if wrapperClass}}{{wrapperClass}}{{else}}tw-flex tw-flex-wrap tw-justify-center tw-gap-1{{/if}}">
+    {{#each (range 1 count) as |index|}}
+        <button type="button"
+                class="{{../pipClass}}{{#if (lte index ../current)}} {{#if ../filledClass}}{{../filledClass}}{{else}}{{../pipClass}}--filled{{/if}}{{/if}}"
+                data-action="{{../action}}"
+                data-{{../dataAttr}}="{{index}}"
+                title="{{#if ../titlePrefix}}{{../titlePrefix}}{{else}}Level{{/if}} {{index}}">
+            {{#if ../iconClass}}<i class="fas {{../iconClass}}"></i>{{/if}}
+        </button>
+    {{/each}}
+</div>

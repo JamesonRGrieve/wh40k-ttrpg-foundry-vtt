@@ -1,0 +1,182 @@
+{{!--
+    Degree-meter panel — shared body for the corruption / insanity vital panels
+    (and any future degree-banded 0–100 meter that ships items as side-effects).
+    Wraps vital-panel-shell, renders the value + modifier readout, threshold
+    progress bar, threshold-warning banner, items summary, expandable edit
+    section with item list / dropzone / degree-info readout.
+
+    The caller pre-resolves all degree / modifier strings via the appropriate
+    helpers (corruptionDegree / insanityDegree / etc.) and passes them in via
+    `meta`. This partial does not call those helpers itself.
+
+    Required hash params:
+        key            — short id used for expand/collapse state and badge class
+                         ("corruption" | "insanity" | future).
+        label          — header label (already localized).
+        icon           — Font Awesome class for the panel header.
+        actor          — the actor record (for isExpanded / items).
+        system         — actor.system (for source values via {{source.<...>}}).
+        value          — current value (0–100).
+        meta           — { degreeLabel, degreeClass, modifier, modifierLabel }.
+        thresholds     — array passed to vital-progress-bar.
+        activeWarning  — pre-resolved warning to render, or falsy when none apply.
+                         Shape: { icon, text, bannerClass } where bannerClass is
+                         a Tailwind class string for color/border treatment.
+        itemFlag       — flag-prop name (e.g. "isMalignancy", "isMentalDisorder").
+        itemIcon       — Font Awesome class for item rows.
+        itemPlural     — localized plural label ("Malignancies" / "Mental Disorders").
+        itemSingular   — localized singular label.
+        dropType       — data-type slug for itemCreate.
+        dropLabel      — localized label for empty/full dropzone.
+        dropCompactLabel — localized label when items already exist.
+        degreeInfo     — array of { label, range, modifier, description } rows.
+        degreeInfoTitle — localized title for the info card ("Corruption Degrees").
+        infoIntro      — localized italic intro line.
+        infoIcon       — Font Awesome class for the info banner icon.
+        field          — schema path for inputs ("system.corruption").
+        sourceValue    — raw value from source (for the input value attribute).
+        editLabel      — localized label for the editor ("Corruption Points (0-100)").
+        editTitle      — localized header for the edit card ("Edit Corruption").
+        cssPrefix      — class prefix ("wh40k-corruption" / "wh40k-insanity").
+        decTitle       — localized title for the minus button.
+        incTitle       — localized title for the plus button.
+        modifierWord   — localized "Modifier:" label.
+        gradientClass  — Tailwind gradient classes for the progress bar fill.
+--}}
+{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key=key label=label icon=icon actor=actor
+    rootStateClass=meta.degreeClass
+    badge=(object
+        stateClass=meta.degreeClass
+        icon="fa-certificate"
+        label=meta.degreeLabel
+        tooltip=(concat meta.degreeLabel " - " meta.modifier))}}
+
+    {{!-- Main Display --}}
+    <div class="tw-flex tw-flex-col tw-gap-2">
+
+        {{!-- Current Value & Modifier --}}
+        <div class="tw-flex tw-items-center tw-justify-between tw-mb-2">
+            {{> systems/wh40k-rpg/templates/actor/partial/vital-quick-controls
+                wrapperClass="tw-flex tw-items-center tw-gap-2"
+                cssPrefix=cssPrefix
+                field=field
+                current=value
+                maxLabel="100"
+                decTitle=decTitle
+                incTitle=incTitle
+                maxValue="100"
+                valueWrapperClass="tw-flex tw-items-baseline tw-gap-1"}}
+
+            <div class="tw-flex tw-items-center tw-gap-1 tw-text-sm tw-font-medium">
+                <span class="tw-text-muted">{{modifierWord}}</span>
+                <span class="tw-text-gold">{{meta.modifier}}</span>
+            </div>
+        </div>
+
+        {{!-- Progress Bar with Threshold Markers --}}
+        {{> systems/wh40k-rpg/templates/actor/partial/vital-progress-bar
+            cssPrefix=cssPrefix
+            percent=value
+            containerClass=(concat cssPrefix "-bar-container tw-relative tw-h-4 tw-bg-[rgba(0,0,0,0.3)] tw-rounded-md tw-overflow-hidden tw-mb-2")
+            fillExtraClass=(concat "tw-h-full tw-bg-gradient-to-r " gradientClass)
+            fillStyleWidth=true
+            thresholds=thresholds}}
+
+        {{!-- Warning Banner (caller pre-resolves which one applies) --}}
+        {{#if activeWarning}}
+        <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded {{activeWarning.bannerClass}}">
+            <i class="fas {{activeWarning.icon}}"></i>
+            <span>{{activeWarning.text}}</span>
+        </div>
+        {{/if}}
+
+    </div>
+
+    {{!-- Items Section (always visible if any exist) --}}
+    {{#if (any actor.items itemFlag)}}
+    <div class="tw-mt-2 tw-text-sm tw-text-gray-400 tw-p-1 tw-bg-[rgba(20,112,88,0.08)] tw-border tw-border-[rgba(20,112,88,0.4)] tw-rounded">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-text-[0.8rem] tw-font-bold">
+            <i class="fas {{itemIcon}}"></i>
+            <span>{{countType actor.items itemFlag}} {{itemPlural}}</span>
+        </div>
+    </div>
+    {{/if}}
+
+    {{!-- Edit Mode (Expandable) --}}
+    <div class="{{key}}_details tw-mt-2 tw-p-1 tw-bg-[rgba(0,0,0,0.02)] tw-border-t tw-border-[var(--wh40k-border-color-light)]" {{hideIfNot (isExpanded (concat key '_details') actor)}}>
+
+        {{!-- Direct Edit Section --}}
+        {{#> systems/wh40k-rpg/templates/actor/partial/section-card icon="fa-cog" title=editTitle}}
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-1">
+                {{> systems/wh40k-rpg/templates/actor/partial/vital-edit-input
+                    name=field
+                    label=editLabel
+                    value=sourceValue
+                    labelClass="tw-text-xs tw-text-gray-400"
+                    inputClass="tw-w-full tw-p-1 tw-rounded"
+                    min="0"
+                    max="100"
+                    placeholder="0"}}
+            </div>
+
+            {{> systems/wh40k-rpg/templates/actor/partial/vital-quick-adjust
+                field=field
+                wrapperClass="tw-flex tw-gap-1 tw-mt-2"
+                maxValue="100"}}
+        {{/systems/wh40k-rpg/templates/actor/partial/section-card}}
+
+        {{!-- Items List --}}
+        {{#> systems/wh40k-rpg/templates/actor/partial/section-card icon=itemIcon title=itemPlural cardClass="tw-mt-4"}}
+            {{#if (any actor.items itemFlag)}}
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-1">
+                {{#each actor.items as |item|}}
+                    {{#if (lookup item ../itemFlag)}}
+                    <div class="tw-flex tw-justify-between tw-bg-[rgba(0,0,0,0.2)] tw-p-1 tw-rounded">
+                        <button type="button"
+                                class="item-edit tw-flex tw-flex-1 tw-items-center tw-gap-1 tw-bg-none tw-border-none tw-p-1 tw-text-left tw-text-[0.85rem] tw-font-semibold tw-text-[var(--wh40k-text-medium)] tw-cursor-pointer"
+                                data-item-id="{{item.id}}"
+                                title="{{item.name}}">
+                            <i class="fas {{../itemIcon}}"></i>
+                            {{item.name}}
+                        </button>
+                        <button type="button"
+                                class="item-delete tw-flex tw-w-6 tw-h-6 tw-items-center tw-justify-center tw-p-0 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-cursor-pointer"
+                                data-item-id="{{item.id}}"
+                                title="{{item.name}}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    {{/if}}
+                {{/each}}
+            </div>
+            {{/if}}
+
+            {{!-- Drop Zone (always visible) --}}
+            <div class="wh40k-dropzone {{#unless (any actor.items itemFlag)}}wh40k-dropzone-empty{{/unless}} tw-mt-2 tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-p-2 tw-border tw-border-dashed tw-border-gray-600 tw-rounded tw-cursor-pointer tw-text-center hover:tw-border-gold hover:tw-bg-gold/5"
+                 data-action="itemCreate"
+                 data-type="{{dropType}}">
+                <i class="fas fa-shield-alt tw-text-[2rem] tw-text-muted"></i>
+                <span class="wh40k-dropzone-text tw-text-xs tw-text-muted tw-uppercase tw-tracking-wide tw-text-center" data-dropzone-text>
+                    {{#if (any actor.items itemFlag)}}{{dropCompactLabel}}{{else}}{{dropLabel}}{{/if}}
+                </span>
+            </div>
+        {{/systems/wh40k-rpg/templates/actor/partial/section-card}}
+
+        {{!-- Info Section --}}
+        <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mt-4">
+            <div class="tw-flex tw-gap-2 tw-p-2 tw-bg-[rgba(20,112,88,0.08)] tw-border-l-[3px] tw-border-l-[rgba(20,112,88,0.4)] tw-rounded-md">
+                <i class="fas {{infoIcon}} tw-text-crimson tw-text-[1.3rem] tw-mt-0.5 tw-shrink-0"></i>
+                <div class="tw-flex tw-flex-col tw-gap-1 tw-text-xs">
+                    <strong class="tw-text-[0.8rem] tw-font-bold tw-text-[var(--wh40k-text-medium)] tw-uppercase tw-tracking-wide">{{degreeInfoTitle}}</strong>
+                    <ul class="tw-list-none tw-pl-0 tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)] tw-leading-relaxed tw-m-0">
+                        {{#each degreeInfo as |row|}}
+                        <li><span class="tw-font-bold tw-text-[var(--wh40k-text-medium)] {{row.extraClass}}">{{row.label}} ({{row.range}}):</span> {{{row.description}}}</li>
+                        {{/each}}
+                    </ul>
+                    <p class="tw-text-gray-400 tw-italic tw-mt-1"><i class="fas {{infoIcon}}"></i> {{infoIntro}}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{{/systems/wh40k-rpg/templates/actor/partial/vital-panel-shell}}
