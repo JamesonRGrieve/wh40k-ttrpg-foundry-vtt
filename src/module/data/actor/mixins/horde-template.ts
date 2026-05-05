@@ -27,9 +27,12 @@ export interface HordeData {
 }
 
 /**
- * Constructor type for mixin base classes.
+ * Constructor type for mixin base classes, including expected static methods.
  */
-type Constructor<T = object> = new (...args: any[]) => T;
+type Constructor<T = object> = (new (...args: any[]) => T) & {
+    defineSchema(): Record<string, foundry.data.fields.DataField.Any>;
+    _migrateData?(source: Record<string, unknown>): void;
+};
 
 /**
  * HordeTemplate mixin for actors that can operate in horde mode.
@@ -168,7 +171,7 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
             return (await this.parentActor.update({
                 'system.horde.magnitude.current': newMagnitude,
                 'system.horde.magnitudeLog': [...this.horde.magnitudeLog, logEntry],
-            })) as WH40KBaseActor;
+            } as Record<string, unknown>)) as WH40KBaseActor;
         }
 
         /**
@@ -190,7 +193,7 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
             return (await this.parentActor.update({
                 'system.horde.magnitude.current': newMagnitude,
                 'system.horde.magnitudeLog': [...this.horde.magnitudeLog, logEntry],
-            })) as WH40KBaseActor;
+            } as Record<string, unknown>)) as WH40KBaseActor;
         }
 
         /**
@@ -200,7 +203,7 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
         toggleHordeMode(): Promise<WH40KBaseActor> {
             return this.parentActor.update({
                 'system.horde.enabled': !this.horde.enabled,
-            }) as Promise<WH40KBaseActor>;
+            } as Record<string, unknown>) as Promise<WH40KBaseActor>;
         }
 
         /**
