@@ -148,57 +148,41 @@
         </div>
 
         {{!-- Critical Injuries List --}}
-        {{#if (any actor.items "isCriticalInjury")}}
-        <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-1.5">
-            <div class="tw-flex tw-items-center tw-justify-between tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-medium)] tw-mb-1.5">
-                <i class="{{concat 'fas fa-notes-medical'}}" style="margin-right:4px;font-size:0.9em;"></i> Critical Injuries
-                <button type="button"
-                        class="tw-w-6 tw-h-6 tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-[var(--wh40k-success-bg)] tw-border tw-border-solid tw-border-[rgba(74,143,92,0.4)] tw-rounded-md tw-cursor-pointer" data-action="itemCreate"
-                        data-type="criticalInjury"
-                        title="Add Critical Injury">
-                    <i class="{{concat 'fas fa-plus'}}" style="font-size:0.7rem;color:var(--wh40k-success-secondary);"></i>
-                </button>
-            </div>
-
+        {{#> systems/wh40k-rpg/templates/actor/partial/section-card
+            icon="fa-notes-medical"
+            titleKey="WH40K.Status.Wounds.CriticalInjuries"
+            addAction="itemCreate"
+            addType="criticalInjury"
+            addTitleKey="WH40K.Status.Wounds.AddCriticalInjury"}}
+            {{#if (any actor.items "isCriticalInjury")}}
             <div class="tw-flex tw-flex-col tw-gap-[6px]">
                 {{#each actor.items as |item|}}
                     {{#if item.isCriticalInjury}}
                     <div class="tw-flex tw-items-center tw-justify-between tw-px-1.5 tw-py-0.5 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-[6px]">
                         <button type="button"
-                                class="{{concat 'item-edit'}} tw-flex-1 tw-bg-transparent tw-border-0 tw-p-1 tw-text-left tw-text-[0.85rem] tw-font-semibold tw-text-[var(--wh40k-text-medium)] tw-cursor-pointer tw-flex tw-items-center tw-gap-[6px]"
+                                class="item-edit tw-flex-1 tw-bg-transparent tw-border-0 tw-p-1 tw-text-left tw-text-[0.85rem] tw-font-semibold tw-text-[var(--wh40k-text-medium)] tw-cursor-pointer tw-flex tw-items-center tw-gap-[6px]"
                                 data-item-id="{{item.id}}"
-                                title="Edit {{item.name}}">
-                            <i class="{{concat 'fas fa-band-aid'}}" style="font-size:0.85em;color:var(--wh40k-wounds-secondary);"></i>
+                                title="{{item.name}}">
+                            <i class="fas fa-band-aid" style="font-size:0.85em;color:var(--wh40k-wounds-secondary);"></i>
                             {{item.name}}
                         </button>
                         <button type="button"
-                                class="{{concat 'item-delete'}} tw-w-6 tw-h-6 tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-cursor-pointer"
+                                class="item-delete tw-w-6 tw-h-6 tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-cursor-pointer"
                                 data-item-id="{{item.id}}"
-                                title="Remove {{item.name}}">
-                            <i class="{{concat 'fas fa-times'}}" style="font-size:0.7rem;color:var(--wh40k-wounds-secondary);"></i>
+                                title="{{item.name}}">
+                            <i class="fas fa-times" style="font-size:0.7rem;color:var(--wh40k-wounds-secondary);"></i>
                         </button>
                     </div>
                     {{/if}}
                 {{/each}}
             </div>
-        </div>
-        {{else}}
-        <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-1.5">
-            <div class="tw-flex tw-items-center tw-justify-between tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-medium)] tw-mb-1.5">
-                <i class="{{concat 'fas fa-notes-medical'}}" style="margin-right:4px;font-size:0.9em;"></i> Critical Injuries
-                <button type="button"
-                        class="tw-w-6 tw-h-6 tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-[var(--wh40k-success-bg)] tw-border tw-border-solid tw-border-[rgba(74,143,92,0.4)] tw-rounded-md tw-cursor-pointer" data-action="itemCreate"
-                        data-type="criticalInjury"
-                        title="Add Critical Injury">
-                    <i class="{{concat 'fas fa-plus'}}" style="font-size:0.7rem;color:var(--wh40k-success-secondary);"></i>
-                </button>
-            </div>
+            {{else}}
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-dashed tw-border-[var(--wh40k-border-color-light)] tw-rounded-[6px]">
-                <i class="{{concat 'fas fa-shield-alt'}}" style="font-size:1.8rem;color:var(--wh40k-success-secondary);opacity:0.5;"></i>
-                <span class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)] tw-italic">No critical injuries</span>
+                <i class="fas fa-shield-alt" style="font-size:1.8rem;color:var(--wh40k-success-secondary);opacity:0.5;"></i>
+                <span class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)] tw-italic">{{localize "WH40K.Status.Wounds.NoCriticalInjuries"}}</span>
             </div>
-        </div>
-        {{/if}}
+            {{/if}}
+        {{/systems/wh40k-rpg/templates/actor/partial/section-card}}
 
     </div>
 {{/systems/wh40k-rpg/templates/actor/partial/vital-panel-shell}}

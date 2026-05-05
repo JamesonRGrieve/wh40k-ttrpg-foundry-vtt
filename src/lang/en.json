@@ -1645,6 +1645,7 @@
             "CanMelee": "Can Melee",
             "Equipped": "Equipped",
             "Stowed": "Stowed",
+            "ToggleEquipped": "Toggle Equipped",
             "Jams": "Jams",
             "NeverJams": "Never Jams"
         },
@@ -1849,6 +1850,105 @@
             "StunDesc": "Try to Stun an opponent.",
             "Manoeuvre": "Manoeuvre",
             "ManoeuvreDesc": "Opposed WS Test, if you win, move enemy 1 metre."
+        },
+        "Status": {
+            "Modifier": "Modifier:",
+            "Corruption": {
+                "Label": "Corruption",
+                "Decrease": "Reduce Corruption",
+                "Increase": "Increase Corruption",
+                "EditTitle": "Edit Corruption",
+                "EditLabel": "Corruption Points (0-100)",
+                "Threshold30": "TAINTED → SOILED (30)",
+                "Threshold60": "SOILED → DEBASED (60)",
+                "Threshold90": "DEBASED → PROFANE (90)",
+                "Warn100": "DAMNED - Soul Lost to Chaos!",
+                "Warn90": "PROFANE - On the Edge of Damnation (-30)",
+                "Warn60": "DEBASED - Deeply Corrupted (-20)",
+                "MalignanciesPlural": "Malignancies",
+                "MalignancySingular": "Malignancy",
+                "DropEmpty": "No malignancies (yet)",
+                "DropFull": "Drop Malignancies Here or Click to Create",
+                "InfoIntro": "Malignancies are physical and mental manifestations of Chaos corruption.",
+                "DegreesTitle": "Corruption Degrees",
+                "Degree": {
+                    "Pure": {
+                        "Label": "PURE",
+                        "Description": "Untainted by Chaos - No penalty"
+                    },
+                    "Tainted": {
+                        "Label": "TAINTED",
+                        "Description": "Minor exposure - No penalty"
+                    },
+                    "Soiled": {
+                        "Label": "SOILED",
+                        "Description": "Visibly corrupted - <strong>-10</strong> to checks"
+                    },
+                    "Debased": {
+                        "Label": "DEBASED",
+                        "Description": "Deeply fallen - <strong>-20</strong> to checks"
+                    },
+                    "Profane": {
+                        "Label": "PROFANE",
+                        "Description": "On the edge - <strong>-30</strong> to checks"
+                    },
+                    "Damned": {
+                        "Label": "DAMNED",
+                        "Description": "Soul lost to Chaos - <strong>NPC only</strong>"
+                    }
+                }
+            },
+            "Insanity": {
+                "Label": "Insanity",
+                "Decrease": "Reduce Insanity",
+                "Increase": "Increase Insanity",
+                "EditTitle": "Edit Insanity",
+                "EditLabel": "Insanity Points (0-100)",
+                "Threshold10": "STABLE → UNSETTLED (10)",
+                "Threshold40": "UNSETTLED → DISTURBED (40)",
+                "Threshold60": "DISTURBED → UNHINGED (60)",
+                "Threshold80": "UNHINGED → DERANGED (80)",
+                "Warn100": "TERMINALLY INSANE - Mind Lost to Madness!",
+                "Warn80": "DERANGED - On the Edge of Madness (-20)",
+                "Warn60": "UNHINGED - Severe Mental Instability (-10)",
+                "DisordersPlural": "Mental Disorders",
+                "DisorderSingular": "Mental Disorder",
+                "DropEmpty": "No mental disorders (yet)",
+                "DropFull": "Drop Mental Disorders Here or Click to Create",
+                "InfoIntro": "Mental disorders represent psychological trauma from witnessing horrors beyond mortal comprehension.",
+                "DegreesTitle": "Insanity Degrees",
+                "Degree": {
+                    "Stable": {
+                        "Label": "STABLE",
+                        "Description": "Sound of mind - No penalty"
+                    },
+                    "Unsettled": {
+                        "Label": "UNSETTLED",
+                        "Description": "Minor unease - <strong>+10</strong> to Fear tests"
+                    },
+                    "Disturbed": {
+                        "Label": "DISTURBED",
+                        "Description": "Troubled mind - No modifier"
+                    },
+                    "Unhinged": {
+                        "Label": "UNHINGED",
+                        "Description": "Severe instability - <strong>-10</strong> to checks"
+                    },
+                    "Deranged": {
+                        "Label": "DERANGED",
+                        "Description": "On the brink - <strong>-20</strong> to checks"
+                    },
+                    "Terminal": {
+                        "Label": "TERMINALLY INSANE",
+                        "Description": "Mind lost - <strong>NPC only</strong>"
+                    }
+                }
+            },
+            "Wounds": {
+                "CriticalInjuries": "Critical Injuries",
+                "AddCriticalInjury": "Add Critical Injury",
+                "NoCriticalInjuries": "No critical injuries"
+            }
         }
     }
 }

@@ -1,5 +1,10 @@
-{{!-- NPC Template Sheet Header --}}
-<header class="wh40k-sheet-header npc-template-header tw-flex tw-gap-4 tw-p-3 tw-border-b tw-border-[var(--wh40k-border-color)]" style="background: var(--wh40k-bg-secondary)">
+{{!-- NPC Template Sheet Header. Composes the shared `header-base` partial
+     in horizontal variant; the body supplies the NPC-template-specific
+     portrait, name input, and category/role/threat/faction field rows. --}}
+
+{{#> systems/wh40k-rpg/templates/actor/partial/header-base.hbs
+    variant="horizontal"
+    cardClass="wh40k-sheet-header npc-template-header tw-gap-4 tw-p-3 tw-bg-[var(--wh40k-bg-secondary)] tw-border-[var(--wh40k-border-color)]"}}
     <div class="portrait-section tw-shrink-0">
         <img class="tw-w-20 tw-h-20 tw-object-cover tw-border-2 tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-cursor-pointer tw-transition-[border-color] hover:tw-border-[var(--wh40k-accent-color)]" src="{{item.img}}" alt="{{item.name}}" data-action="editImage" data-tooltip="{{localize 'WH40K.Sheet.ChangeImage'}}">
     </div>
@@ -46,4 +51,4 @@
             </div>
         </div>
     </div>
-</header>
+{{/systems/wh40k-rpg/templates/actor/partial/header-base.hbs}}

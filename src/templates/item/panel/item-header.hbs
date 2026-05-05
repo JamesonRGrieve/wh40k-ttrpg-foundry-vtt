@@ -1,24 +1,37 @@
-{{!-- Item Header - Canonical compact header for non-physical items.
-    Image (with edit overlay) + name input + meta badges.
+{{!-- Canonical Item Header — image (with edit overlay) + name input + meta
+     badges. Replaces the former `item-header-physical.hbs` via the
+     `variant="physical"` opt-in.
 
-    Optional parameters (all backward-compatible -- call with no params to
-    keep the existing talent/trait behavior):
-      - namePlaceholderKey  i18n key for the name input placeholder
-                            (default: WH40K.Item.NamePlaceholder)
-      - namePlaceholder     raw placeholder string; takes precedence over the
-                            i18n key when both are present
-      - typeLabel           explicit type-badge label string (overrides the
-                            default TYPES.Item.<item.type> lookup)
-      - typeLabelKey        i18n key for the type-badge label (alternative to
-                            typeLabel)
-      - typeIcon            FA icon class for the type badge
-                            (default: item.icon)
-      - hideTypeBadge       boolean -- when truthy, suppresses the default
-                            type badge entirely (so a child template that
-                            already renders its own meta block does not get
-                            a duplicate badge from this partial)
+     Optional hash params (all backward-compatible — call with no params
+     to keep the original talent/trait behavior):
+
+       - variant             "compact" (default) | "physical"
+                             "physical" enables the right-hand equipped
+                             toggle column and renders the system.class /
+                             system.type / craftsmanship / twoHanded
+                             auto-badges from the physical-item schema.
+       - namePlaceholderKey  i18n key for the name input placeholder
+                             (default: WH40K.Item.NamePlaceholder)
+       - namePlaceholder     raw placeholder string; takes precedence over
+                             the i18n key when both are present.
+       - typeLabel           explicit type-badge label string (overrides
+                             the default TYPES.Item.<item.type> lookup).
+       - typeLabelKey        i18n key for the type-badge label.
+       - typeIcon            FA icon class for the type badge
+                             (default: item.icon).
+       - hideTypeBadge       boolean — when truthy, suppresses the default
+                             type badge and the auto tier/category badges
+                             (so a child template that already renders its
+                             own meta block does not get a duplicate).
+       - badges              array of extra badge entries appended after
+                             the auto badges. Each entry: { class, icon,
+                             label, title }. Mirrors the chat-card-shell
+                             pattern.
+       - gameSystem          active system id; surfaces `data-wh40k-system`
+                             on the wrapper so per-system variants on
+                             inner elements fire.
 --}}
-<header class="tw-grid tw-grid-cols-[80px_minmax(0,1fr)] tw-gap-4 tw-border-b-2 tw-border-[var(--wh40k-gold-dark)] tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-px-4 tw-py-3 tw-shrink-0">
+<header class="wh40k-item-header tw-grid {{#if (eq variant "physical")}}tw-grid-cols-[80px_minmax(0,1fr)_auto]{{else}}tw-grid-cols-[80px_minmax(0,1fr)]{{/if}} tw-gap-4 tw-border-b-2 tw-border-[var(--wh40k-gold-dark)] tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-px-4 tw-py-3 tw-shrink-0"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
     <div class="wh40k-item-header__image tw-group tw-relative tw-h-20 tw-w-20 tw-cursor-pointer tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105 hover:tw-shadow-[var(--wh40k-shadow-lg),0_0_20px_rgba(212,175,55,0.5)]" data-action="editImage" data-edit="img">
         <img class="tw-h-full tw-w-full tw-object-cover" src="{{item.img}}" alt="{{item.name}}" />
         <div class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/45 tw-text-[var(--wh40k-gold)] tw-opacity-0 tw-transition-opacity group-hover:tw-opacity-100">
@@ -29,33 +42,90 @@
     <div class="tw-flex tw-min-w-0 tw-flex-col tw-justify-center tw-gap-1">
         <input type="text" class="wh40k-item-header__name tw-w-full tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-font-display tw-text-xl tw-text-[var(--wh40k-gold)] tw-shadow-[0_1px_2px_var(--wh40k-text-shadow)] placeholder:tw-text-[var(--wh40k-text-muted)] focus:tw-rounded-sm focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-outline-none" name="name" value="{{item.name}}" placeholder="{{#if namePlaceholder}}{{namePlaceholder}}{{else}}{{localize (or namePlaceholderKey 'WH40K.Item.NamePlaceholder')}}{{/if}}" />
 
-        <div class="tw-mt-1 tw-flex tw-flex-wrap tw-items-center tw-gap-1">
-            {{#unless hideTypeBadge}}
-                {{! Item Type Badge }}
-                <span class="wh40k-badge wh40k-badge--type tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{#if typeLabel}}{{typeLabel}}{{else if typeLabelKey}}{{localize typeLabelKey}}{{else}}{{localize (concat 'TYPES.Item.' item.type)}}{{/if}}">
-                    <i class="fas {{#if typeIcon}}{{typeIcon}}{{else}}{{item.icon}}{{/if}}"></i>
-                    {{#if typeLabel}}{{typeLabel}}{{else if typeLabelKey}}{{localize typeLabelKey}}{{else}}{{localize (concat "TYPES.Item." item.type)}}{{/if}}
+        <div class="wh40k-item-header__meta tw-mt-1 tw-flex tw-flex-wrap tw-items-center tw-gap-1">
+            {{#if (eq variant "physical")}}
+                {{!-- Item Class Badge (for weapons) --}}
+                {{#if system.class}}
+                <span class="wh40k-badge wh40k-badge--class tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{system.classLabel}}">
+                    <i class="fas {{system.classIcon}}"></i>
+                    {{system.classLabel}}
                 </span>
-            {{/unless}}
-
-            {{! Default tier/category badges (rendered when system has those
-                fields). Also suppressed by hideTypeBadge so callers that
-                compose their own meta row do not get duplicate extras. }}
-            {{#unless hideTypeBadge}}
-                {{#if system.tier}}
-                    <span class="wh40k-badge wh40k-badge--tier tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="Tier {{system.tier}}">
-                        <i class="fas fa-layer-group"></i>
-                        T{{system.tier}}
-                    </span>
                 {{/if}}
 
-                {{#if system.category}}
-                    <span class="wh40k-badge wh40k-badge--category tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{system.category}}">
-                        <i class="fas fa-tag"></i>
-                        {{system.category}}
-                    </span>
+                {{!-- Item Type Badge (physical-item flavour: schema-driven) --}}
+                {{#if system.type}}
+                <span class="wh40k-badge wh40k-badge--type tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{system.typeLabel}}">
+                    {{system.typeLabel}}
+                </span>
                 {{/if}}
-            {{/unless}}
+
+                {{!-- Craftsmanship Badge (if not Common) --}}
+                {{#if (and system.craftsmanship (ne system.craftsmanship "common"))}}
+                <span class="wh40k-badge wh40k-badge--craftsmanship tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{system.craftsmanshipLabel}}">
+                    <i class="fas fa-hammer"></i>
+                    {{system.craftsmanshipLabel}}
+                </span>
+                {{/if}}
+
+                {{!-- Two-Handed Indicator (for weapons) --}}
+                {{#if system.twoHanded}}
+                <span class="wh40k-badge wh40k-badge--two-handed tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{localize 'WH40K.Weapon.TwoHanded'}}">
+                    <i class="fas fa-hands"></i>
+                </span>
+                {{/if}}
+            {{else}}
+                {{#unless hideTypeBadge}}
+                    {{! Item Type Badge (compact flavour: TYPES.Item.<type>) }}
+                    <span class="wh40k-badge wh40k-badge--type tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{#if typeLabel}}{{typeLabel}}{{else if typeLabelKey}}{{localize typeLabelKey}}{{else}}{{localize (concat 'TYPES.Item.' item.type)}}{{/if}}">
+                        <i class="fas {{#if typeIcon}}{{typeIcon}}{{else}}{{item.icon}}{{/if}}"></i>
+                        {{#if typeLabel}}{{typeLabel}}{{else if typeLabelKey}}{{localize typeLabelKey}}{{else}}{{localize (concat "TYPES.Item." item.type)}}{{/if}}
+                    </span>
+
+                    {{! Default tier/category badges (rendered when system has those fields). }}
+                    {{#if system.tier}}
+                        <span class="wh40k-badge wh40k-badge--tier tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="Tier {{system.tier}}">
+                            <i class="fas fa-layer-group"></i>
+                            T{{system.tier}}
+                        </span>
+                    {{/if}}
+
+                    {{#if system.category}}
+                        <span class="wh40k-badge wh40k-badge--category tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{system.category}}">
+                            <i class="fas fa-tag"></i>
+                            {{system.category}}
+                        </span>
+                    {{/if}}
+                {{/unless}}
+            {{/if}}
+
+            {{!-- Caller-supplied extra badges (mirrors chat-card-shell). --}}
+            {{#if badges.length}}
+                {{#each badges as |badge|}}
+                    {{#if badge.label}}
+                    <span class="wh40k-badge{{#if badge.class}} {{badge.class}}{{/if}} tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium"{{#if badge.title}} title="{{badge.title}}"{{/if}}>
+                        {{#if badge.icon}}<i class="fas {{badge.icon}}"></i>{{/if}}
+                        {{badge.label}}
+                    </span>
+                    {{/if}}
+                {{/each}}
+            {{/if}}
         </div>
     </div>
+
+    {{#if (eq variant "physical")}}
+        {{!-- Equipped Toggle (for equippable items) --}}
+        {{#if system.equipped}}
+        <div class="wh40k-item-header__equipped tw-flex tw-items-center tw-justify-end">
+            <label class="tw-flex tw-cursor-pointer tw-items-center tw-gap-1.5 tw-rounded-md tw-border tw-border-[rgba(212,175,55,0.25)] tw-bg-[rgba(14,18,26,0.6)] tw-px-3 tw-py-1.5 tw-shadow-[0_10px_20px_rgba(0,0,0,0.3)] tw-transition-all hover:tw-border-[rgba(212,175,55,0.4)] hover:tw-bg-[rgba(20,24,34,0.7)]" title="{{localize 'WH40K.Weapon.ToggleEquipped'}}">
+                <input class="tw-hidden" type="checkbox" name="system.equipped" {{checked system.equipped}} />
+                <span class="tw-text-[1.1rem] tw-text-[rgba(214,221,235,0.7)] tw-transition-colors">
+                    <i class="fas {{#if system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+                </span>
+                <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(214,221,235,0.7)] tw-transition-colors">
+                    {{#if system.equipped}}{{localize "WH40K.Weapon.Equipped"}}{{else}}{{localize "WH40K.Weapon.Stowed"}}{{/if}}
+                </span>
+            </label>
+        </div>
+        {{/if}}
+    {{/if}}
 </header>
