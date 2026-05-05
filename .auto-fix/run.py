@@ -802,13 +802,24 @@ COMMON_HARD_RULES = """\
 - NEVER remove or rename existing code outside the lines that produce errors
   or warnings.
 - **NEVER touch JSDoc tags.** JSDoc tags are `@file`, `@type`, `@override`,
-  `@param`, `@returns`, `@private`, `@protected`, `@this`, `@inheritDoc`,
-  `@deprecated`, `@see`, `@example`, `@throws`, etc. They are a fixed
-  vocabulary. Do NOT replace them with file paths. Do NOT write
-  `@gulpfile.js`, `@foundry-v14-overrides.d.ts`, `@tailwind.config.js`,
-  `@scripts/gen-i18n-types.mjs`, `@src/...`, `@en.json`, or any token
-  containing `/` or a file extension after the `@`. If a JSDoc line is not
-  itself the cause of an error, leave it byte-for-byte identical.
+  `@module`, `@mixin`, `@param`, `@returns`, `@private`, `@protected`,
+  `@this`, `@inheritDoc`, `@inheritdoc`, `@deprecated`, `@see`, `@example`,
+  `@throws`, etc. They are a fixed vocabulary. Do NOT replace them with file
+  paths or any other token. Specifically, the following replacements have
+  been observed and are HARD-FORBIDDEN — every commit containing one of these
+  tokens will be rejected outright:
+    * `@gulpfile.js` (replacement for `@file`) — FORBIDDEN
+    * `@foundry-v14-overrides.d.ts` (replacement for `@override`) — FORBIDDEN
+    * `@src/module/config/game-systems/types.ts` (replacement for `@type`) — FORBIDDEN
+    * `@src/module/data/grant/_module.ts` (replacement for `@module`) — FORBIDDEN
+    * `@src/module/applications/api/primary-sheet-mixin.ts` (replacement for `@mixin`) — FORBIDDEN
+    * `@tailwind.config.js`, `@scripts/...`, `@en.json` — FORBIDDEN
+    * Any token containing `/`, `.ts`, `.js`, `.json`, or `.d.ts` after `@` — FORBIDDEN
+  The text after `@type {…}`, `@param {…}`, `@returns {…}`, `@param x` etc.
+  is documentation, not a TypeScript reference, and is NEVER the cause of a
+  TS error. If a JSDoc line is not itself the cause of an error, leave it
+  byte-for-byte identical. Touching JSDoc to "resolve" a TS error is always
+  the wrong fix.
 - **NEVER invent imports. NEVER add new imports.** Use only types that are
   ALREADY imported in the file or are GLOBAL builtins (string, number, boolean,
   Record, Array, Promise, Map, Set, Date, Error, Event, HTMLElement, etc.).
@@ -830,6 +841,19 @@ COMMON_HARD_RULES = """\
   / `*.create(...)`, `CONFIG.<X>` accesses, raw Foundry hook payloads. If
   you find yourself writing the same Record cast 3+ times in one file,
   that's a missing interface — stop casting and add the type instead.
+- **Specifically forbidden Record-cast smear patterns** (observed in the
+  auto-fix branch and rejected wholesale):
+    * Repeated `(context.system as { foo: T }).foo` casts inside a single
+      `_prepareContext`. The `system` here is a typed DataModel — fix the
+      type or use `declare` fields, do NOT cast inline 3+ times.
+    * Casting `game`, `game.packs`, compendium index entries, or `fromUuid`
+      results to `Record<string, any>` to dodge a property access. These
+      have real Foundry types — use them.
+    * Returning `Promise<Record<string, any> | null>` from a function that
+      logically returns `Item | null`. Match the real return type.
+    * Replacing `as SomeDataModel` with `as unknown as SomeDataModel`
+      across many sites in one file just to silence one site. If one cast
+      needs widening, fix only that one site.
 - For primitive params, use the primitive type directly (number, string, boolean).
 - Verify before you write: scan the existing `import` statements at the top
   of the file. Only types appearing there OR global builtins are safe to use.

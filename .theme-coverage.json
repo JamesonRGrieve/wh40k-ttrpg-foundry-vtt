@@ -1,17 +1,18 @@
 {
-  "generatedAt": "2026-05-04T23:37:31.427Z",
-  "total": 221,
-  "adopted": 4,
+  "generatedAt": "2026-05-05T15:37:31.269Z",
+  "total": 226,
+  "adopted": 5,
   "perSystemHits": {
-    "bc": 5,
-    "dh1e": 5,
-    "dh2e": 5,
-    "dw": 5,
-    "ow": 5,
-    "rt": 5,
-    "im": 5
+    "bc": 7,
+    "dh1e": 7,
+    "dh2e": 7,
+    "dw": 7,
+    "ow": 7,
+    "rt": 7,
+    "im": 7
   },
   "adoptedTemplates": [
+    "src/templates/actor/partial/header-base.hbs",
     "src/templates/actor/partial/tab-strip.hbs",
     "src/templates/actor/player/header-dh.hbs",
     "src/templates/chat/item-card-chat.hbs",
