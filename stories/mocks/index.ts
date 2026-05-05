@@ -231,7 +231,10 @@ export interface MockActiveEffect {
     id: string;
     label: string;
     disabled: boolean;
+    icon?: string;
+    sourceName?: string;
     duration?: { label: string } | null;
+    changes?: Array<{ label: string; value: string }>;
 }
 
 export interface MockWeaponQuality {
@@ -277,7 +280,13 @@ export function mockActiveEffect(overrides?: DeepPartial<MockActiveEffect>): Moc
             id,
             label: 'Blessed Ammunition',
             disabled: false,
+            icon: 'icons/svg/aura.svg',
+            sourceName: 'Litany of Wrath',
             duration: { label: '3 rounds remaining' },
+            changes: [
+                { label: 'Strength', value: '+5' },
+                { label: 'WeaponSkill', value: '+10' },
+            ],
         },
         overrides,
     );

@@ -1,0 +1,33 @@
+{{!--
+    Vital info card — explainer block used inside the expandable details
+    section of vital meter panels (Fatigue, Fate, Experience). Renders an
+    outer translucent panel with an icon + strong title + body slot, with a
+    coloured left-border accent.
+
+    Block-partial usage:
+        {{#> systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs
+              icon="fa-book" title=(localize "WH40K.VitalInfoCard.FatigueRules") accent="warn"}}
+            <p>...body markup...</p>
+        {{/systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs}}
+
+    Required hash params:
+        icon  — FontAwesome icon class ("fa-book", "fa-book-open")
+        title — already-localised strong title text
+
+    Optional hash params:
+        accent       — "warn" (default), "gold", "crimson" — picks the inner
+                       row's left-border + accent-icon colour. Maps to the
+                       existing CSS variables already in use across panels.
+        iconClass    — extra utilities on the leading icon (size override)
+        wrapperClass — extra utilities on the outer card wrapper
+        innerClass   — extra utilities on the inner accent row
+--}}
+<div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg {{wrapperClass}}">
+    <div class="tw-flex tw-gap-2 tw-p-2 tw-rounded-md tw-border-l-[3px] {{#if (eq accent "gold")}}tw-bg-[rgba(0,0,0,0.1)] tw-border-l-[color:var(--wh40k-fate-border)]{{else if (eq accent "crimson")}}tw-bg-[var(--wh40k-wounds-bg)] tw-border-l-[var(--wh40k-wounds-secondary)]{{else}}tw-bg-[rgba(192,128,32,0.08)] tw-border-l-[rgba(192,128,32,0.4)]{{/if}} {{innerClass}}">
+        <i class="fas {{icon}} {{#if (eq accent "crimson")}}tw-text-crimson{{else}}tw-text-gold{{/if}} tw-text-lg tw-mt-0.5 tw-shrink-0 {{iconClass}}"></i>
+        <div class="tw-flex tw-flex-col tw-gap-[6px] tw-text-[var(--wh40k-text-muted)]">
+            <strong class="tw-text-[0.8rem] tw-font-bold tw-text-[var(--wh40k-text-medium)] tw-uppercase tw-tracking-[0.03em]">{{title}}</strong>
+            {{> @partial-block}}
+        </div>
+    </div>
+</div>

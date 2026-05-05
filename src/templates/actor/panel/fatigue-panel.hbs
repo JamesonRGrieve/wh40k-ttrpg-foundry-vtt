@@ -90,17 +90,15 @@
         </div>
 
         {{!-- Info Section --}}
-        <div class="tw-p-2 tw-bg-[rgba(0,0,0,0.1)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-lg tw-mt-4">
-            <div class="tw-flex tw-gap-2 tw-p-2 tw-bg-[rgba(255,165,0,0.05)] tw-border-l-[3px] tw-border-l-warning/40 tw-rounded-md">
-                <i class="{{concat 'fas fa-book'}} tw-text-gold tw-text-lg tw-mt-0.5 tw-shrink-0"></i>
-                <div class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-mt-1">
-                    <strong>Fatigue Rules (Core)</strong>
-                    <p><strong>Any Fatigue:</strong> –10 penalty to all Tests.</p>
-                    <p><strong>Exceeds TB:</strong> Collapse unconscious for (10 – TB) minutes. Upon waking, fatigue resets to TB.</p>
-                    <p><strong>Recovery:</strong> Each hour of rest removes 1 fatigue. Eight consecutive hours removes all fatigue.</p>
-                </div>
-            </div>
-        </div>
+        {{#> systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs
+              icon="fa-book"
+              title=(localize "WH40K.VitalInfoCard.FatigueRulesTitle")
+              accent="warn"
+              wrapperClass="tw-mt-4"}}
+            <p class="tw-text-xs tw-m-0"><strong>{{localize "WH40K.VitalInfoCard.FatigueAnyTitle"}}</strong> {{localize "WH40K.VitalInfoCard.FatigueAnyDesc"}}</p>
+            <p class="tw-text-xs tw-m-0"><strong>{{localize "WH40K.VitalInfoCard.FatigueExceedsTitle"}}</strong> {{localize "WH40K.VitalInfoCard.FatigueExceedsDesc"}}</p>
+            <p class="tw-text-xs tw-m-0"><strong>{{localize "WH40K.VitalInfoCard.FatigueRecoveryTitle"}}</strong> {{localize "WH40K.VitalInfoCard.FatigueRecoveryDesc"}}</p>
+        {{/systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs}}
 
     </div>
 {{/systems/wh40k-rpg/templates/actor/partial/vital-panel-shell}}

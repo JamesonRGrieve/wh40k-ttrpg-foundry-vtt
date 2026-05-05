@@ -2,9 +2,9 @@
 <div class="wh40k-panel wh40k-effects-panel">
     <div class="wh40k-panel-header wh40k-panel-header--clickable sheet-control__hide-control"
          data-toggle="effects_details"
-         title="Click to {{#if (isExpanded 'effects_details' actor)}}collapse{{else}}expand{{/if}}">
+         title="{{#if (isExpanded 'effects_details' actor)}}{{localize 'WH40K.Effects.ClickToCollapse'}}{{else}}{{localize 'WH40K.Effects.ClickToExpand'}}{{/if}}">
         <span class="wh40k-panel-title">
-            <i class="fas fa-sparkles"></i> Active Effects
+            <i class="fas fa-sparkles"></i> {{localize 'WH40K.Effects.ActiveLabel'}}
             {{#if effects.length}}
                 <span class="wh40k-badge">{{effects.length}}</span>
             {{/if}}
@@ -13,74 +13,20 @@
     </div>
 
     <div class="wh40k-panel-body">
-        
         {{#if effects.length}}
             <div class="wh40k-effects-list tw-flex tw-flex-col tw-gap-2 tw-mb-3">
                 {{#each effects as |effect|}}
-                    <div class="wh40k-effect-card tw-p-2 {{#if effect.disabled}}wh40k-effect-disabled{{/if}}" data-effect-id="{{effect.id}}">
-
-                        {{!-- Effect Header --}}
-                        <div class="wh40k-effect-card-header tw-flex tw-items-center tw-gap-2">
-                            <img src="{{effect.icon}}" class="wh40k-effect-icon tw-w-9 tw-h-9 tw-shrink-0" alt="{{effect.label}}" />
-
-                            <div class="wh40k-effect-info tw-flex-1 tw-min-w-0">
-                                <div class="wh40k-effect-name tw-font-semibold tw-truncate tw-mb-0.5">{{effect.label}}</div>
-                                {{#if effect.sourceName}}
-                                    <div class="wh40k-effect-source tw-flex tw-items-center tw-gap-1">
-                                        <i class="fas fa-link"></i> {{effect.sourceName}}
-                                    </div>
-                                {{/if}}
-                            </div>
-
-                            <div class="wh40k-effect-controls tw-flex tw-items-center tw-gap-1 tw-shrink-0">
-                                <button type="button"
-                                        class="wh40k-effect-btn wh40k-effect-toggle tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-cursor-pointer"
-                                        data-action="effectToggle"
-                                        data-effect-id="{{effect.id}}"
-                                        title="{{#if effect.disabled}}Enable{{else}}Disable{{/if}} Effect">
-                                    <i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i>
-                                </button>
-
-                                <button type="button"
-                                        class="wh40k-effect-btn wh40k-effect-edit tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-cursor-pointer"
-                                        data-action="effectEdit"
-                                        data-effect-id="{{effect.id}}"
-                                        title="Edit Effect">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-
-                                <button type="button"
-                                        class="wh40k-effect-btn wh40k-effect-delete tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-cursor-pointer"
-                                        data-action="effectDelete"
-                                        data-effect-id="{{effect.id}}"
-                                        title="Delete Effect">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        {{!-- Effect Changes (if expanded) --}}
-                        {{#if (isExpanded 'effects_details' ../actor)}}
-                            {{#if effect.changes.length}}
-                                <div class="wh40k-effect-changes tw-flex tw-flex-col tw-gap-1 tw-mt-2 tw-pt-2">
-                                    {{#each effect.changes as |change|}}
-                                        <div class="wh40k-effect-change tw-flex tw-items-center tw-gap-1 tw-py-1 tw-px-2">
-                                            <span class="wh40k-change-key">{{change.key}}</span>
-                                            <span class="wh40k-change-mode">{{lookup ../changeModeLookup change.mode}}</span>
-                                            <span class="wh40k-change-value">{{change.value}}</span>
-                                        </div>
-                                    {{/each}}
-                                </div>
-                            {{/if}}
-                        {{/if}}
-                    </div>
+                    {{> systems/wh40k-rpg/templates/actor/partial/effect-row.hbs
+                        effect=effect
+                        expanded=(isExpanded 'effects_details' @root.actor)
+                        editable=true}}
                 {{/each}}
             </div>
         {{/if}}
-        
+
         <div class="wh40k-dropzone effect-create">
             <i class="fas fa-sparkles wh40k-dropzone-icon"></i>
-            <span class="wh40k-dropzone-text" data-dropzone-text>Drop effects here</span>
+            <span class="wh40k-dropzone-text" data-dropzone-text>{{localize 'WH40K.Effects.DropHere'}}</span>
         </div>
     </div>
 </div>

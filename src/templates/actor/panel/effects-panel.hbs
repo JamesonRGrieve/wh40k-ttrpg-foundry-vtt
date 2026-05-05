@@ -3,7 +3,7 @@
 <div class="wh40k-panel wh40k-panel-effects-list {{#if collapsible}}wh40k-collapsible{{/if}}" data-panel-id="effects">
     <div class="wh40k-panel-header" {{#if collapsible}}data-action="togglePanel"{{/if}}>
         <span class="wh40k-panel-title">
-            <i class="fas fa-magic"></i> Active Effects
+            <i class="fas fa-magic"></i> {{localize 'WH40K.Effects.ActiveLabel'}}
         </span>
         {{#if collapsible}}
             <i class="fas fa-chevron-down wh40k-collapse-icon"></i>
@@ -13,61 +13,22 @@
         {{#if effects.length}}
             <div class="wh40k-effects-list tw-flex tw-flex-col tw-gap-2 tw-mb-3">
                 {{#each effects as |effect|}}
-                    <div class="wh40k-effect-card tw-p-2 {{effect.document.natureClass}} {{#if effect.document.disabled}}disabled{{/if}}" data-effect-id="{{effect.id}}">
-                        <div class="wh40k-card-header">
-                            <img src="{{effect.icon}}" alt="{{effect.name}}" class="wh40k-card-icon">
-                            <div class="wh40k-card-info">
-                                <div class="wh40k-card-name">{{effect.name}}</div>
-                                <div class="wh40k-card-meta">{{effect.document.sourceName}}</div>
-                            </div>
-                            <div class="wh40k-effect-controls">
-                                {{#if effect.document.isTemporary}}
-                                    <span class="wh40k-effect-duration {{#if effect.document.isExpiring}}expiring{{/if}}" 
-                                          title="{{effect.document.durationLabel}}">
-                                        <i class="far fa-clock"></i> 
-                                        {{#if effect.document.remainingDuration}}
-                                            {{effect.document.remainingDuration}}
-                                        {{else}}
-                                            ∞
-                                        {{/if}}
-                                    </span>
-                                {{/if}}
-                                <button class="wh40k-card-btn" 
-                                        data-action="toggleEffect" 
-                                        data-effect-id="{{effect.id}}"
-                                        title="{{#if effect.document.disabled}}Enable{{else}}Disable{{/if}} Effect">
-                                    <i class="fas {{#if effect.document.disabled}}fa-eye-slash{{else}}fa-eye{{/if}}"></i>
-                                </button>
-                                {{#if ../editable}}
-                                    <button class="wh40k-card-btn wh40k-btn-danger" 
-                                            data-action="deleteEffect" 
-                                            data-effect-id="{{effect.id}}"
-                                            title="Delete Effect">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                {{/if}}
-                            </div>
-                        </div>
-                        
-                        {{#if effect.document.changesSummary.length}}
-                            <div class="wh40k-effect-changes">
-                                {{#each effect.document.changesSummary as |change|}}
-                                    <div class="wh40k-effect-change">
-                                        <span class="wh40k-change-label">{{change.label}}</span>
-                                        <span class="wh40k-change-value">{{change.value}}</span>
-                                    </div>
-                                {{/each}}
-                            </div>
-                        {{/if}}
-                    </div>
+                    {{> systems/wh40k-rpg/templates/actor/partial/effect-row.hbs
+                        effect=effect
+                        expanded=true
+                        editable=@root.editable
+                        toggleAction="toggleEffect"
+                        editAction=""
+                        deleteAction="deleteEffect"
+                        showDuration=true}}
                 {{/each}}
             </div>
         {{/if}}
-        
+
         {{#if editable}}
             <div class="wh40k-dropzone">
                 <i class="fas fa-magic wh40k-dropzone-icon"></i>
-                <span class="wh40k-dropzone-text" data-dropzone-text>Drop effects here</span>
+                <span class="wh40k-dropzone-text" data-dropzone-text>{{localize 'WH40K.Effects.DropHere'}}</span>
             </div>
         {{/if}}
     </div>

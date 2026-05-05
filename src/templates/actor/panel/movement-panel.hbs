@@ -1,73 +1,91 @@
-<div class="wh40k-panel tw-col-auto">
-    <h1 class="wh40k-panel-header tw-flex tw-items-center tw-gap-[6px]"><i class="fas fa-running"></i> Movement</h1>
-    <div class="tw-flex tw-flex-col tw-gap-3 tw-p-2">
-        {{! Size Selector }}
+{{!-- Compact-but-readable Movement panel — size selector + 3 stat-grid sections (movement / leap+jump / lifting). --}}
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
+    label=(localize "WH40K.MOVEMENT.Label")
+    icon="fa-running"
+    rootClass="tw-col-auto"}}
+    <div class="tw-flex tw-flex-col tw-gap-3">
+        {{!-- Size Selector --}}
         <div class="tw-grid tw-grid-cols-2 tw-mb-2">
-            <span class="tw-shrink-0">Size</span>
+            <span class="tw-shrink-0">{{localize "WH40K.MOVEMENT.Size"}}</span>
             <select class="tw-grow" name="system.size">
-                {{selectOptions dh.sizes selected=source.size}}
+                {{selectOptions dh.sizes selected=source.size labelAttr="label" valueAttr="@key"}}
             </select>
         </div>
 
-        {{! Movement Rates (AB-based) }}
-        <div class="tw-rounded-[6px] tw-border tw-border-solid tw-p-2" style="background:var(--wh40k-bg-paper-light);border-color:var(--wh40k-border-light);">
-            <div class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-mb-1 tw-border-b tw-border-solid tw-pb-1" style="color:var(--wh40k-text-muted);border-color:var(--wh40k-border-light);">Standard Movement</div>
-            <div class="tw-grid tw-gap-1 tw-grid-cols-4">
-                <div class="tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer tw-rounded-md tw-bg-white/50 hover:tw-bg-white/80" data-action="setMovementMode" data-movement-type="half" title="Click to set Half Move as active movement mode">
-                    <span class="tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" style="color:var(--wh40k-text-muted);">Half</span>
-                    <span class="tw-font-alt tw-text-[1.1rem] tw-font-bold" style="color:var(--color-text-primary);">{{actor.movement.half}}m</span>
-                </div>
-                <div class="tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer tw-rounded-md tw-bg-white/50 hover:tw-bg-white/80" data-action="setMovementMode" data-movement-type="full" title="Click to set Full Move as active movement mode">
-                    <span class="tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" style="color:var(--wh40k-text-muted);">Full</span>
-                    <span class="tw-font-alt tw-text-[1.1rem] tw-font-bold" style="color:var(--color-text-primary);">{{actor.movement.full}}m</span>
-                </div>
-                <div class="tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer tw-rounded-md tw-bg-white/50 hover:tw-bg-white/80" data-action="setMovementMode" data-movement-type="charge" title="Click to set Charge as active movement mode">
-                    <span class="tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" style="color:var(--wh40k-text-muted);">Charge</span>
-                    <span class="tw-font-alt tw-text-[1.1rem] tw-font-bold" style="color:var(--color-text-primary);">{{actor.movement.charge}}m</span>
-                </div>
-                <div class="tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer tw-rounded-md tw-bg-white/50 hover:tw-bg-white/80" data-action="setMovementMode" data-movement-type="run" title="Click to set Run as active movement mode">
-                    <span class="tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" style="color:var(--wh40k-text-muted);">Run</span>
-                    <span class="tw-font-alt tw-text-[1.1rem] tw-font-bold" style="color:var(--color-text-primary);">{{actor.movement.run}}m</span>
-                </div>
-            </div>
-        </div>
+        {{!-- Movement Rates (AB-based) --}}
+        {{> systems/wh40k-rpg/templates/actor/partial/stat-grid-section
+            heading=(localize "WH40K.MOVEMENT.Label")
+            columns=4
+            stats=(array
+                (object
+                    label=(localize "WH40K.MOVEMENT.Stat.Half")
+                    value=actor.movement.half
+                    unit="m"
+                    action="setMovementMode"
+                    attrs="data-movement-type=\"half\""
+                    title=(localize "WH40K.MOVEMENT.Tooltip.Half"))
+                (object
+                    label=(localize "WH40K.MOVEMENT.Stat.Full")
+                    value=actor.movement.full
+                    unit="m"
+                    action="setMovementMode"
+                    attrs="data-movement-type=\"full\""
+                    title=(localize "WH40K.MOVEMENT.Tooltip.Full"))
+                (object
+                    label=(localize "WH40K.MOVEMENT.Stat.Charge")
+                    value=actor.movement.charge
+                    unit="m"
+                    action="setMovementMode"
+                    attrs="data-movement-type=\"charge\""
+                    title=(localize "WH40K.MOVEMENT.Tooltip.Charge"))
+                (object
+                    label=(localize "WH40K.MOVEMENT.Stat.Run")
+                    value=actor.movement.run
+                    unit="m"
+                    action="setMovementMode"
+                    attrs="data-movement-type=\"run\""
+                    title=(localize "WH40K.MOVEMENT.Tooltip.Run")))}}
 
-        {{! Leap & Jump (SB-based) }}
-        <div class="tw-rounded-[6px] tw-border tw-border-solid tw-p-2" style="background:var(--wh40k-bg-paper-light);border-color:var(--wh40k-border-light);">
-            <div class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-mb-1 tw-border-b tw-border-solid tw-pb-1" style="color:var(--wh40k-text-muted);border-color:var(--wh40k-border-light);">Leap &amp; Jump (SB)</div>
-            <div class="tw-grid tw-gap-1 tw-grid-cols-4">
-                <div class="tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer tw-rounded-md tw-bg-white/50 hover:tw-bg-white/80" title="Standing vertical leap height">
-                    <span class="tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" style="color:var(--wh40k-text-muted);">Leap (V)</span>
-                    <span class="tw-font-alt tw-text-[1.1rem] tw-font-bold" style="color:var(--color-text-primary);">{{actor.movement.leapVertical}}m</span>
-                </div>
-                <div class="tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer tw-rounded-md tw-bg-white/50 hover:tw-bg-white/80" title="Running horizontal leap distance">
-                    <span class="tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" style="color:var(--wh40k-text-muted);">Leap (H)</span>
-                    <span class="tw-font-alt tw-text-[1.1rem] tw-font-bold" style="color:var(--color-text-primary);">{{actor.movement.leapHorizontal}}m</span>
-                </div>
-                <div class="tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer tw-rounded-md tw-bg-white/50 hover:tw-bg-white/80" title="Vertical jump height in centimeters">
-                    <span class="tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" style="color:var(--wh40k-text-muted);">Jump</span>
-                    <span class="tw-font-alt tw-text-[1.1rem] tw-font-bold" style="color:var(--color-text-primary);">{{actor.movement.jump}}cm</span>
-                </div>
-            </div>
-        </div>
+        {{!-- Leap & Jump (SB-based) --}}
+        {{> systems/wh40k-rpg/templates/actor/partial/stat-grid-section
+            heading=(localize "WH40K.MOVEMENT.Athletics")
+            columns=4
+            stats=(array
+                (object
+                    label=(localize "WH40K.MOVEMENT.Stat.LeapVertical")
+                    value=actor.movement.leapVertical
+                    unit="m"
+                    title=(localize "WH40K.MOVEMENT.Tooltip.LeapVertical"))
+                (object
+                    label=(localize "WH40K.MOVEMENT.Stat.LeapHorizontal")
+                    value=actor.movement.leapHorizontal
+                    unit="m"
+                    title=(localize "WH40K.MOVEMENT.Tooltip.LeapHorizontal"))
+                (object
+                    label=(localize "WH40K.MOVEMENT.Stat.Jump")
+                    value=actor.movement.jump
+                    unit="cm"
+                    title=(localize "WH40K.MOVEMENT.Tooltip.Jump")))}}
 
-        {{! Lifting Capacity (SB-based) }}
-        <div class="tw-rounded-[6px] tw-border tw-border-solid tw-p-2" style="background:var(--wh40k-bg-paper-light);border-color:var(--wh40k-border-light);">
-            <div class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-mb-1 tw-border-b tw-border-solid tw-pb-1" style="color:var(--wh40k-text-muted);border-color:var(--wh40k-border-light);">Lifting Capacity (SB)</div>
-            <div class="tw-grid tw-gap-1 tw-grid-cols-4">
-                <div class="tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer tw-rounded-md tw-bg-white/50 hover:tw-bg-white/80" title="Sustained carrying capacity">
-                    <span class="tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" style="color:var(--wh40k-text-muted);">Carry</span>
-                    <span class="tw-font-alt tw-text-[1.1rem] tw-font-bold" style="color:var(--color-text-primary);">{{actor.lifting.carry}}kg</span>
-                </div>
-                <div class="tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer tw-rounded-md tw-bg-white/50 hover:tw-bg-white/80" title="Brief lifting over head">
-                    <span class="tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" style="color:var(--wh40k-text-muted);">Lift</span>
-                    <span class="tw-font-alt tw-text-[1.1rem] tw-font-bold" style="color:var(--color-text-primary);">{{actor.lifting.lift}}kg</span>
-                </div>
-                <div class="tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer tw-rounded-md tw-bg-white/50 hover:tw-bg-white/80" title="Pushing/dragging capacity">
-                    <span class="tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" style="color:var(--wh40k-text-muted);">Push</span>
-                    <span class="tw-font-alt tw-text-[1.1rem] tw-font-bold" style="color:var(--color-text-primary);">{{actor.lifting.push}}kg</span>
-                </div>
-            </div>
-        </div>
+        {{!-- Lifting Capacity (SB-based) --}}
+        {{> systems/wh40k-rpg/templates/actor/partial/stat-grid-section
+            heading=(localize "WH40K.MOVEMENT.CarryingCapacity")
+            columns=4
+            stats=(array
+                (object
+                    label=(localize "WH40K.MOVEMENT.Stat.Carry")
+                    value=actor.lifting.carry
+                    unit="kg"
+                    title=(localize "WH40K.MOVEMENT.Tooltip.Carry"))
+                (object
+                    label=(localize "WH40K.MOVEMENT.Stat.Lift")
+                    value=actor.lifting.lift
+                    unit="kg"
+                    title=(localize "WH40K.MOVEMENT.Tooltip.Lift"))
+                (object
+                    label=(localize "WH40K.MOVEMENT.Stat.Push")
+                    value=actor.lifting.push
+                    unit="kg"
+                    title=(localize "WH40K.MOVEMENT.Tooltip.Push")))}}
     </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
