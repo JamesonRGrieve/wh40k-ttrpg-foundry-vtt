@@ -226,6 +226,23 @@ async function compilePacks() {
 }
 
 /* ----------------------------------------- */
+/*  Generate icon registry
+/* ----------------------------------------- */
+
+// Build-time codegen for the icon system. Scans templates + TS for
+// `{{icon "family:name"}}` / `icon('family:name')` references and emits
+// `src/module/icons/registry.generated.ts` + `src/module/types/icon-keys.d.ts`.
+// Only icons actually referenced anywhere in the source tree get bundled.
+function generateIcons(done) {
+  exec('node scripts/gen-icons.mjs', (err, stdout, stderr) => {
+    if (stdout) process.stdout.write(stdout);
+    if (stderr) process.stderr.write(stderr);
+    if (err) return done(err);
+    done();
+  });
+}
+
+/* ----------------------------------------- */
 /*  Compile TypeScript
 /* ----------------------------------------- */
 
@@ -342,5 +359,6 @@ exports.clean = gulp.series(cleanBuild);
 exports.css = gulp.series(compileCss);
 exports.packs = gulp.series(compilePacks);
 exports.copy = gulp.series(copyFiles, watchCopy);
-exports.build = gulp.series(cleanBuild, compileCss, compileTypeScript, copyFiles, compilePacks, createArchive);
-exports.default = gulp.series(cleanBuild, compileCss, compileTypeScript, copyFiles, compilePacks, watchUpdates);
+exports.icons = gulp.series(generateIcons);
+exports.build = gulp.series(cleanBuild, generateIcons, compileCss, compileTypeScript, copyFiles, compilePacks, createArchive);
+exports.default = gulp.series(cleanBuild, generateIcons, compileCss, compileTypeScript, copyFiles, compilePacks, watchUpdates);

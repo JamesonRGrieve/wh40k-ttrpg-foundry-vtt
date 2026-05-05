@@ -1,3 +1,4 @@
+import { registerIconHelper } from '../icons/helper.ts';
 import { registerHandlebarsHelpers } from './handlebars-helpers.ts';
 
 /**
@@ -14,6 +15,7 @@ export class HandlebarManager {
 
     static registerHelpers() {
         registerHandlebarsHelpers();
+        registerIconHelper();
     }
 
     /**
@@ -36,6 +38,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/vital-quick-controls.hbs',
             'systems/wh40k-rpg/templates/actor/partial/vital-progress-bar.hbs',
             'systems/wh40k-rpg/templates/actor/partial/vital-edit-input.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs',
             'systems/wh40k-rpg/templates/actor/partial/vital-quick-adjust.hbs',
             'systems/wh40k-rpg/templates/actor/partial/pip-tracker-row.hbs',
             'systems/wh40k-rpg/templates/actor/partial/dashboard-zone.hbs',
@@ -44,7 +47,9 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/section-card.hbs',
             'systems/wh40k-rpg/templates/actor/partial/tab-strip.hbs',
             'systems/wh40k-rpg/templates/actor/partial/stat-box.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/stat-grid-section.hbs',
             'systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/effect-row.hbs',
             'systems/wh40k-rpg/templates/actor/partial/empty-state.hbs',
             'systems/wh40k-rpg/templates/actor/partial/dropzone.hbs',
             'systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs',

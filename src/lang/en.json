@@ -225,6 +225,38 @@
                 "Full": "Full Move",
                 "Charge": "Charge",
                 "Run": "Run"
+            },
+            "Mobility": "Mobility",
+            "Athletics": "Athletics",
+            "CarryingCapacity": "Carrying Capacity",
+            "Size": "Size",
+            "Stat": {
+                "Half": "Half",
+                "Full": "Full",
+                "Charge": "Charge",
+                "Run": "Run",
+                "LeapVertical": "Leap (V)",
+                "LeapHorizontal": "Leap (H)",
+                "LeapVerticalLong": "Leap Vertical",
+                "LeapHorizontalLong": "Leap Horizontal",
+                "Jump": "Jump",
+                "JumpHeight": "Jump Height",
+                "Lift": "Lift",
+                "Carry": "Carry",
+                "Push": "Push",
+                "PushDrag": "Push/Drag"
+            },
+            "Tooltip": {
+                "Half": "Click to set Half Move as active movement mode",
+                "Full": "Click to set Full Move as active movement mode",
+                "Charge": "Click to set Charge as active movement mode",
+                "Run": "Click to set Run as active movement mode",
+                "LeapVertical": "Standing vertical leap height",
+                "LeapHorizontal": "Running horizontal leap distance",
+                "Jump": "Vertical jump height in centimeters",
+                "Lift": "Brief lifting over head",
+                "Carry": "Sustained carrying capacity",
+                "Push": "Pushing/dragging capacity"
             }
         },
         "SETTINGS": {
@@ -270,17 +302,10 @@
             "Influence": "Influence"
         },
         "Advancement": {
-            "Title": "Advancement",
-            "TitleWithCareer": "Advancement — {career}",
+            "Title": "Character Advancement",
+            "TitleWithCareer": "{career} Advancement",
             "XPAvailable": "XP Available",
             "XPUsed": "XP Used",
-            "Maxed": "Maxed",
-            "CannotAfford": "Not enough XP",
-            "ConfirmPurchase": "Spend {cost} XP to advance {name}?",
-            "PurchaseSuccess": "Advanced {name} for {cost} XP",
-            "NoCareerTitle": "No Career Selected",
-            "NoCareerMessage": "Select a career in the Origin Path to unlock advancements.",
-            "NoCareerHint": "Open the Origin Path Builder from the character header.",
             "Tab": {
                 "Characteristics": "Characteristics",
                 "Skills": "Skills",
@@ -292,8 +317,33 @@
                 "Simple": "Simple",
                 "Intermediate": "Intermediate",
                 "Trained": "Trained",
-                "Proficient": "Proficient",
                 "Expert": "Expert"
+            },
+            "Maxed": "Maxed",
+            "Owned": "Owned",
+            "CannotAfford": "Not enough XP",
+            "RequiresPrereq": "Requires prerequisite",
+            "NoSkillsAvailable": "No skills available at this rank",
+            "NoTalentsAvailable": "No talents available at this rank",
+            "NoCareerTitle": "No Career Selected",
+            "NoCareerMessage": "You must complete your Origin Path and select a career before you can purchase advancements.",
+            "NoCareerHint": "Open the Biography tab and use the Origin Path Builder",
+            "ViewInCompendium": "View in Compendium",
+            "ItemNotFound": "Could not find {name} in compendiums",
+            "Purchased": "Purchased {name} for {cost} XP",
+            "PurchasedCharacteristic": "Purchased {char} ({tier}) for {cost} XP",
+            "Prereq": {
+                "Characteristic": "Requires {char} {required}+ (current: {current})",
+                "SkillMissing": "Requires {skill} skill",
+                "SkillLevel": "Requires {skill} at {level}",
+                "TalentMissing": "Requires {talent} talent"
+            },
+            "Error": {
+                "MaxedOut": "This characteristic is already at maximum",
+                "CannotAfford": "Not enough XP to purchase this advancement",
+                "PrerequisitesNotMet": "Prerequisites not met: {reasons}",
+                "InsufficientXP": "Not enough XP (cost: {cost}, available: {available})",
+                "TransactionFailed": "Failed to spend XP"
             }
         },
         "Tabs": {
@@ -702,7 +752,6 @@
             "ChangeSelection": "Change Selection",
             "ChangeSelectionWarning": "Changing this selection will reset the following steps: {steps}. Do you want to continue?",
             "NoPreviewedOrigin": "No origin selected to confirm",
-            "Lineage": "Lineage",
             "LineageDesc": "Noble bloodlines may grant additional abilities and connections. This step is optional.",
             "Skip": "Skip",
             "SkipLineage": "Skip Lineage",
@@ -1728,51 +1777,6 @@
             "Difficulty": "Installation Difficulty",
             "InstallCost": "Installation Cost"
         },
-        "Advancement": {
-            "Title": "Character Advancement",
-            "TitleWithCareer": "{career} Advancement",
-            "XPAvailable": "XP Available",
-            "XPUsed": "XP Used",
-            "Tab": {
-                "Characteristics": "Characteristics",
-                "Skills": "Skills",
-                "Talents": "Talents",
-                "Psychic": "Psychic Powers",
-                "Traits": "Traits"
-            },
-            "Tier": {
-                "Simple": "Simple",
-                "Intermediate": "Intermediate",
-                "Trained": "Trained",
-                "Expert": "Expert"
-            },
-            "Maxed": "Maxed",
-            "Owned": "Owned",
-            "CannotAfford": "Not enough XP",
-            "RequiresPrereq": "Requires prerequisite",
-            "NoSkillsAvailable": "No skills available at this rank",
-            "NoTalentsAvailable": "No talents available at this rank",
-            "NoCareerTitle": "No Career Selected",
-            "NoCareerMessage": "You must complete your Origin Path and select a career before you can purchase advancements.",
-            "NoCareerHint": "Open the Biography tab and use the Origin Path Builder",
-            "ViewInCompendium": "View in Compendium",
-            "ItemNotFound": "Could not find {name} in compendiums",
-            "Purchased": "Purchased {name} for {cost} XP",
-            "PurchasedCharacteristic": "Purchased {char} ({tier}) for {cost} XP",
-            "Prereq": {
-                "Characteristic": "Requires {char} {required}+ (current: {current})",
-                "SkillMissing": "Requires {skill} skill",
-                "SkillLevel": "Requires {skill} at {level}",
-                "TalentMissing": "Requires {talent} talent"
-            },
-            "Error": {
-                "MaxedOut": "This characteristic is already at maximum",
-                "CannotAfford": "Not enough XP to purchase this advancement",
-                "PrerequisitesNotMet": "Prerequisites not met: {reasons}",
-                "InsufficientXP": "Not enough XP (cost: {cost}, available: {available})",
-                "TransactionFailed": "Failed to spend XP"
-            }
-        },
         "Career": {
             "WH40KRPG": "WH40K RPG",
             "RogueTraderDesc": "A scion of a powerful dynasty, holder of a sacred Warrant of Trade.",
@@ -1949,6 +1953,46 @@
                 "AddCriticalInjury": "Add Critical Injury",
                 "NoCriticalInjuries": "No critical injuries"
             }
+        },
+        "VitalInfoCard": {
+            "FatigueRulesTitle": "Fatigue Rules (Core)",
+            "FatigueAnyTitle": "Any Fatigue:",
+            "FatigueAnyDesc": "–10 penalty to all Tests.",
+            "FatigueExceedsTitle": "Exceeds TB:",
+            "FatigueExceedsDesc": "Collapse unconscious for (10 – TB) minutes. Upon waking, fatigue resets to TB.",
+            "FatigueRecoveryTitle": "Recovery:",
+            "FatigueRecoveryDesc": "Each hour of rest removes 1 fatigue. Eight consecutive hours removes all fatigue.",
+            "FateAboutTitle": "About Fate Points",
+            "FateAboutDesc": "Fate Points represent the Emperor's favor and divine protection. They can be spent to alter destiny in critical moments.",
+            "FateUsesTitle": "Uses of Fate:",
+            "FateRerollTitle": "Reroll a Test:",
+            "FateRerollDesc": "Reroll any failed test, keeping the second result",
+            "FateAvoidDeathTitle": "Avoid Death:",
+            "FateAvoidDeathDesc": "When reduced to 0 wounds, spend a Fate Point to survive with 1 wound instead",
+            "FateInterventionTitle": "Divine Intervention:",
+            "FateInterventionDesc": "Call upon the Emperor's grace for a minor miracle at the GM's discretion",
+            "FateRighteousFuryTitle": "Righteous Fury:",
+            "FateRighteousFuryDesc": "Confirm a Righteous Fury result automatically",
+            "FateBurningTitle": "Burning Fate:",
+            "FateBurningDesc": "Permanently spending a Fate Point (reducing your maximum) can achieve truly miraculous results, but this should only be done in the direst circumstances.",
+            "ExperienceAboutTitle": "About Experience Points",
+            "ExperienceAboutDesc": "Spend XP to improve characteristics, acquire skills and talents, or gain psychic powers. Costs vary based on the advancement being purchased."
+        },
+        "Effects": {
+            "Label": "Effect",
+            "ActiveLabel": "Active Effects",
+            "HeaderShort": "EFFECTS",
+            "Create": "Create Effect",
+            "CreateFirst": "Create your first effect",
+            "Edit": "Edit Effect",
+            "Enable": "Enable Effect",
+            "Disable": "Disable Effect",
+            "Delete": "Delete Effect",
+            "None": "No effects",
+            "NoneShort": "No active effects",
+            "DropHere": "Drop effects here",
+            "ClickToExpand": "Click to expand",
+            "ClickToCollapse": "Click to collapse"
         }
     }
 }

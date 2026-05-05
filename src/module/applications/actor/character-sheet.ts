@@ -13,6 +13,7 @@ import type { WH40KItemSystemData } from '../../types/global.d.ts';
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
+import { summarizeChanges, type EffectChangeRaw } from '../../helpers/effects.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import AcquisitionDialog from '../dialogs/acquisition-dialog.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
@@ -1215,7 +1216,8 @@ export default class CharacterSheet extends BaseActorSheet {
             }
         });
 
-        // Prepare active effects data
+        // Prepare active effects data — emit the canonical {label, value}
+        // change shape consumed by `effect-row.hbs`.
         sheetContext.effects = this.actor.effects.map((effect) => {
             return {
                 id: effect.id,
@@ -1223,20 +1225,10 @@ export default class CharacterSheet extends BaseActorSheet {
                 icon: effect.icon,
                 disabled: effect.disabled,
                 sourceName: effect.sourceName,
-                changes: effect.changes || [],
+                changes: summarizeChanges(effect.changes as unknown as EffectChangeRaw[]),
                 document: effect,
             };
         });
-
-        // Change mode lookup for display
-        sheetContext.changeModeLookup = {
-            0: 'Custom',
-            1: 'Multiply',
-            2: 'Add',
-            3: 'Downgrade',
-            4: 'Upgrade',
-            5: 'Override',
-        };
 
         // Extract combat talents for display in combat actions panel
         const talents = this.actor.items.filter((i) => i.type === 'talent') as TalentLike[];

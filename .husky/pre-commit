@@ -1,119 +1,90 @@
-# Pre-commit pipeline. Two phases:
-#   1. Sequential prep: lint-staged formats staged files, then i18n:gen
-#      regenerates the typed-key union (typecheck reads it).
-#   2. Everything else in parallel: 8 ratchets, vitest, storybook playwright,
-#      and (conditionally) the pack-compile gate. They all read the working
-#      tree and emit pass/fail with no inter-dependencies, so total runtime
-#      is bounded by the longest task (usually Storybook Playwright).
-#
-# Update baselines in the same commit as the metric drop:
-#   typecheck:  pnpm typecheck:ratchet:update
-#   eslint:     pnpm lint:ratchet:update
-#   css cov:    pnpm css:ratchet:update
-#   animation:  pnpm animation:ratchet:update
-#   theme:      pnpm theme:ratchet:update
-#   ts cov:     pnpm ts:ratchet:update
-#   symmetry:   pnpm symmetry:ratchet:update
-# preload-drift is a hard gate (no ratchet — real bug class).
-
-# ─── Phase 1: sequential prep ──────────────────────────────────────────────
 pnpm exec lint-staged --hide-unstaged
 
-# i18n:gen must precede typecheck because the typed t() helper imports the
-# generated key union from src/module/types/i18n-keys.d.ts; tsc would fail on
-# a t('WH40K.NewKey') reference if the key hadn't been re-emitted yet.
+# Regenerate i18n key types from src/lang/en.json. The codegen is idempotent;
+# if the langpack didn't change, the file is byte-for-byte identical and git
+# sees no change. New keys flow into src/module/types/i18n-keys.d.ts so the
+# typed t() helper picks them up immediately.
 echo "[pre-commit] regenerating i18n key types…"
 pnpm -s i18n:gen
 
-# ─── Phase 2: parallel ────────────────────────────────────────────────────
-# Helper: launch a task in the background, capture output to a per-slot file,
-# and stash its exit code. await_bg streams output in submission order so the
-# log stays readable even with 10+ tasks racing.
-ratchet_dir=$(mktemp -d -t pre-commit.XXXXXX)
-trap 'rm -rf "$ratchet_dir"' EXIT INT TERM
+# Regenerate the icon registry from `{{icon "..."}}` references in templates
+# and `icon('...')` call sites in TS. Idempotent — if no references changed,
+# the output is byte-for-byte identical. The build-time generator scans
+# src/templates/**/*.hbs and src/module/**/*.ts and emits both
+# src/module/icons/registry.generated.ts (runtime SVG map) and
+# src/module/types/icon-keys.d.ts (typed key union for the icon() helper).
+echo "[pre-commit] regenerating icon registry…"
+pnpm -s icons:gen
 
-run_bg() {
-    slot="$1"; shift
-    ( "$@" >"$ratchet_dir/$slot.log" 2>&1; echo $? >"$ratchet_dir/$slot.exit" ) &
-    echo $! >"$ratchet_dir/$slot.pid"
-}
+# Refresh the CSS block index so .css-blocks.json stays current with the
+# monolith. Cheap (one file scan); avoids the manual `pnpm css:block-index`
+# step after every CSS edit.
+echo "[pre-commit] refreshing CSS block index…"
+pnpm -s css:block-index
 
-await_bg() {
-    slot="$1"; label="$2"
-    pid=$(cat "$ratchet_dir/$slot.pid")
-    wait "$pid" >/dev/null 2>&1 || true
-    code=$(cat "$ratchet_dir/$slot.exit" 2>/dev/null || echo 1)
-    printf '\n===== %s =====\n' "$label"
-    cat "$ratchet_dir/$slot.log"
-    [ "$code" = "0" ]
-}
+# Type-check ratchet: blocks commits that increase tsc --noEmit error count.
+# Update the baseline (.tsc-error-baseline) in the same commit when the
+# count drops, via: pnpm typecheck:ratchet:update
+echo "[pre-commit] running tsc ratchet…"
+pnpm -s typecheck:ratchet
 
-echo "[pre-commit] running checks in parallel…"
+# ESLint warning ratchet: blocks commits that increase the eslint warning
+# count. Update via: pnpm lint:ratchet:update
+echo "[pre-commit] running eslint ratchet…"
+pnpm -s lint:ratchet
 
-# .css-blocks.json refresh — index-only, nothing else reads it during the hook.
-run_bg cssBlockIndex pnpm -s css:block-index
+# CSS-coverage ratchet: blocks commits that increase css-only template count
+# or decrease tailwind-only count. Update via: pnpm css:ratchet:update
+echo "[pre-commit] running css coverage ratchet…"
+pnpm -s css:ratchet
 
-# Type-check ratchet (`tsc --noEmit`) — usually the second-longest task.
-run_bg typecheck pnpm -s typecheck:ratchet
+# Animation ratchet: blocks commits that increase the count of `animation:` /
+# `animation-name:` declarations in src/css/wh40k-rpg.css. Each declaration is
+# a rule that should migrate to `tw-animate-<name>` on the consuming template.
+# Once the count reaches 0, the @keyframes safelist in tailwind.config.js can
+# be dropped. Update via: pnpm animation:ratchet:update
+echo "[pre-commit] running animation ratchet…"
+pnpm -s animation:ratchet
 
-# ESLint warning ratchet — full src/ walk, third-longest task.
-run_bg lint pnpm -s lint:ratchet
+# Theme ratchet: blocks commits that DECREASE the count of templates using
+# per-system `<system>:tw-*` variants (`bc:`, `dh1e:`, `dh2e:`, `dw:`, `ow:`,
+# `rt:`, `im:`). Direction is opposite to other ratchets — adoption climbs
+# over time. Update via: pnpm theme:ratchet:update
+echo "[pre-commit] running theme ratchet…"
+pnpm -s theme:ratchet
 
-# CSS-coverage ratchet (`tailwind-only` ↑ / `css-only` ↓).
-run_bg cssCov pnpm -s css:ratchet
+# Per-rule TS-strictness ratchet: blocks commits that introduce new bare
+# `: any`, ` as any`, or `@ts-expect-error` in any per-directory bucket.
+# Update via: pnpm ts:ratchet:update
+echo "[pre-commit] running ts coverage ratchet…"
+pnpm -s ts:ratchet
 
-# Animation ratchet — count of `animation:` rules in the monolith. Drops as
-# templates port to `tw-animate-<name>`.
-run_bg animation pnpm -s animation:ratchet
+# Symmetry ratchet: blocks commits that increase the count of sheets/dialogs
+# without a sibling .stories.ts, or data/documents files without a sibling
+# .test.ts. Update via: pnpm symmetry:ratchet:update
+echo "[pre-commit] running symmetry ratchet…"
+pnpm -s symmetry:ratchet
 
-# Theme ratchet — count of templates using per-system `<system>:tw-*` variants.
-# Direction is OPPOSITE: count must NOT FALL.
-run_bg theme pnpm -s theme:ratchet
+# Preload-drift gate: blocks commits where Handlebars partials are referenced
+# at runtime ({{> ...}}) but missing from preloadHandlebarsTemplates(), or
+# where preload entries point at non-existent templates. Hard fail (no ratchet —
+# this is a real bug class).
+echo "[pre-commit] running preload-drift gate…"
+pnpm -s preload:drift
 
-# Per-rule per-directory TS-strictness ratchet (`: any`, ` as any`, etc.).
-run_bg tsCov pnpm -s ts:ratchet
-
-# Symmetry ratchet — sheets/dialogs without `.stories.ts`, data/documents
-# without `.test.ts`.
-run_bg symmetry pnpm -s symmetry:ratchet
-
-# Preload-drift hard gate — every {{> ...}} reference must be in
-# preloadHandlebarsTemplates(), and every preload entry must point at a real
-# file. Real bug class, no ratchet.
-run_bg preload pnpm -s preload:drift
-
-# Vitest — full unit-test suite.
-run_bg vitest ./node_modules/.bin/vitest run
-
-# Storybook Playwright integration tests — usually the LONGEST task. Sets the
-# floor for total pre-commit runtime now that everything else runs alongside.
-run_bg storybook sh ./scripts/run-storybook-playwright-tests.sh
-
-# Pack-compile validation — only when gulpfile or pack sources changed. The
-# prior silent-error bug in compilePacks went unnoticed because lint-staged
-# only inspects diffs; running `gulp packs` exercises the full pipeline.
+# Validate pack compilation when the compiler or any pack source changes.
+# The prior silent-error bug in compilePacks went unnoticed because lint-staged
+# only inspects the diff, not the actual Gulp pipeline. `gulp packs` exercises
+# the full pipeline (including the explicit db.open() error surfacing added
+# alongside this hook), so a broken compiler fails here instead of mid-release.
 changed="$(git diff --cached --name-only --diff-filter=ACMR)"
-needs_packs=0
 if printf '%s\n' "$changed" | grep -qE '^(gulpfile\.js|src/packs(/|$))'; then
-    run_bg packs pnpm -s packs
-    needs_packs=1
+    echo "[pre-commit] gulpfile or pack sources changed — validating compilePacks…"
+    pnpm -s packs
 fi
 
-# ─── Await all and report ─────────────────────────────────────────────────
-failed=0
-await_bg cssBlockIndex "css:block-index"  || failed=1
-await_bg typecheck     "typecheck:ratchet" || failed=1
-await_bg lint          "lint:ratchet"     || failed=1
-await_bg cssCov        "css:ratchet"      || failed=1
-await_bg animation     "animation:ratchet" || failed=1
-await_bg theme         "theme:ratchet"    || failed=1
-await_bg tsCov         "ts:ratchet"       || failed=1
-await_bg symmetry      "symmetry:ratchet" || failed=1
-await_bg preload       "preload:drift"    || failed=1
-await_bg vitest        "vitest"           || failed=1
-await_bg storybook     "storybook playwright" || failed=1
-if [ "$needs_packs" = "1" ]; then
-    await_bg packs "packs (compilePacks gate)" || failed=1
-fi
+echo "[pre-commit] running Vitest…"
+./node_modules/.bin/vitest run
 
-[ "$failed" -eq 0 ] || exit 1
+echo "[pre-commit] running Storybook Playwright integration tests…"
+sh ./scripts/run-storybook-playwright-tests.sh
