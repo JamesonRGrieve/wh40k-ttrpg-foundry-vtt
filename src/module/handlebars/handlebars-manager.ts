@@ -213,6 +213,18 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/components/active-modifiers-panel.hbs',
         ];
 
-        return foundry.applications.handlebars.loadTemplates(templates);
+        // Foundry V13's loadTemplates registers partials under the exact key
+        // provided. Some consumers reference partials with the `.hbs` suffix
+        // (e.g. `{{> systems/.../actor-identity.hbs}}`) and others without
+        // (e.g. `{{> systems/.../vital-inline-row}}`). Register every partial
+        // under BOTH keys so either style resolves.
+        const map: Record<string, string> = {};
+        for (const path of templates) {
+            map[path] = path;
+            if (path.endsWith('.hbs')) {
+                map[path.slice(0, -4)] = path;
+            }
+        }
+        return foundry.applications.handlebars.loadTemplates(map);
     }
 }
