@@ -1,0 +1,47 @@
+{{!--
+    Stat-grid section — labelled section header above an N-column grid of
+    label / value cells. Used by movement-panel-full / movement-panel /
+    movement-panel-compact for the mobility / athletics / carrying capacity
+    blocks. Fully data-driven so the same partial serves every game system —
+    the consumer passes the localised heading + an array of cells.
+
+    Hash arguments:
+        heading       — section heading text (already localised by caller).
+        headingIcon   — optional Font Awesome class (e.g. "fa-person-hiking").
+        columns       — grid column count (default 3).
+        stats         — array of { label, value, unit?, icon?, action?, attrs?, title?, cellClass? }
+                        where:
+                            label    — cell label (already localised).
+                            value    — cell value text/number.
+                            unit     — optional trailing unit suffix (e.g. "m", "kg").
+                            icon     — optional FA class for an icon above the label.
+                            action   — optional `data-action` value (makes the cell clickable).
+                            attrs    — optional raw HTML attributes string (e.g.
+                                       `data-movement-type="half"`).
+                            title    — optional title (tooltip) on the cell.
+                            cellClass — extra classes on the cell wrapper.
+        sectionClass  — extra classes on the outer section wrapper.
+        gridClass     — extra classes on the inner grid container.
+--}}
+<div class="wh40k-stat-grid-section tw-mb-3 tw-rounded-md{{#if sectionClass}} {{sectionClass}}{{/if}}">
+    {{#if heading}}
+    <div class="wh40k-stat-grid-header tw-flex tw-items-center tw-gap-2 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-mb-2 tw-pb-1">
+        {{#if headingIcon}}<i class="fas {{headingIcon}} tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-gold)]"></i>{{/if}}
+        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted)]">{{heading}}</span>
+    </div>
+    {{/if}}
+    <div class="wh40k-stat-grid tw-grid tw-gap-2 tw-grid-cols-{{#if columns}}{{columns}}{{else}}3{{/if}}{{#if gridClass}} {{gridClass}}{{/if}}">
+        {{#each stats}}
+        <div class="wh40k-stat-grid-cell tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1 tw-rounded-md tw-bg-white/50{{#if action}} tw-cursor-pointer hover:tw-bg-white/80{{/if}}{{#if cellClass}} {{cellClass}}{{/if}}"
+            {{#if action}}data-action="{{action}}"{{/if}}
+            {{#if attrs}}{{{attrs}}}{{/if}}
+            {{#if title}}title="{{title}}"{{/if}}>
+            {{#if icon}}<i class="fas {{icon}} tw-text-[1.1rem] tw-text-[color:var(--wh40k-accent-gold)]"></i>{{/if}}
+            <span class="wh40k-stat-grid-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-center tw-text-[color:var(--wh40k-text-muted)]">{{label}}</span>
+            <span class="wh40k-stat-grid-value tw-font-alt tw-text-[1.1rem] tw-font-bold tw-leading-none tw-text-[color:var(--color-text-primary)]">
+                {{value}}{{#if unit}}<span class="wh40k-stat-grid-unit tw-text-[0.7rem] tw-font-normal tw-ml-[2px] tw-text-[color:var(--wh40k-text-muted)]">{{unit}}</span>{{/if}}
+            </span>
+        </div>
+        {{/each}}
+    </div>
+</div>

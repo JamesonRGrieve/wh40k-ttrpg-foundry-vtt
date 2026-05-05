@@ -1,5 +1,6 @@
 import Handlebars from 'handlebars';
 import enLang from '../src/lang/en.json';
+import { ICON_REGISTRY } from '../src/module/icons/registry.generated.ts';
 
 const TEMPLATE_PREFIX = 'systems/wh40k-rpg/templates/';
 const SOURCE_ROOT = '../src/templates/';
@@ -189,6 +190,27 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         const relative = path.slice(idx + SOURCE_ROOT.length);
         Handlebars.registerPartial(`${TEMPLATE_PREFIX}${relative}`, source);
     }
+
+    // Register the {{icon}} helper using the same registry the runtime uses.
+    // We don't import src/module/icons/helper.ts directly because it touches
+    // the global Handlebars (Foundry-style) and not the bundled storybook copy.
+    Handlebars.registerHelper('iconSvg', function iconStoryHelper(key: unknown, options: { hash?: Record<string, unknown> }) {
+        if (typeof key !== 'string' || !Object.prototype.hasOwnProperty.call(ICON_REGISTRY, key)) {
+            return new Handlebars.SafeString('');
+        }
+        const hash = options?.hash ?? {};
+        const svg = ICON_REGISTRY[key];
+        const klass = typeof hash.class === 'string' ? hash.class : '';
+        const label = typeof hash.label === 'string' ? hash.label : '';
+        const labelAttrs = label ? `role="img" aria-label="${String(label).replace(/"/g, '&quot;')}"` : `aria-hidden="true" focusable="false"`;
+        const sizeRaw = hash.size;
+        const size = typeof sizeRaw === 'number' ? `${sizeRaw}px` : typeof sizeRaw === 'string' ? sizeRaw : '';
+        const sizeAttr = size ? ` style="width:${size};height:${size};"` : '';
+        const classes = ['wh40k-icon', `wh40k-icon--${key.replace(':', '-')}`];
+        if (klass) classes.push(klass);
+        const out = svg.replace(/^<svg([^>]*)>/, `<svg$1 class="${classes.join(' ')}" ${labelAttrs}${sizeAttr}>`);
+        return new Handlebars.SafeString(out);
+    });
 
     globalState[INIT_KEY] = true;
     return Handlebars;

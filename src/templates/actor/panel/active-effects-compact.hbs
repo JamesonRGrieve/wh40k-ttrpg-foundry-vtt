@@ -4,7 +4,7 @@
     <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-sm)] tw-w-full">
         <div class="tw-flex tw-items-center tw-gap-1">
             <i class="fas fa-sparkles"></i>
-            <span>EFFECTS</span>
+            <span>{{localize 'WH40K.Effects.HeaderShort'}}</span>
             {{#if effects.length}}
                 <span class="tw-ml-1 tw-text-[0.65rem] tw-font-semibold tw-text-[var(--wh40k-accent-gold)]">({{effects.length}})</span>
             {{/if}}
@@ -14,34 +14,15 @@
         {{#if effects.length}}
             <div class="tw-flex tw-flex-col tw-gap-[3px]">
                 {{#each effects as |effect|}}
-                    <div class="tw-flex tw-items-center tw-gap-[6px] tw-px-[6px] tw-py-1 tw-rounded-sm tw-border-l-2 tw-border-l-[var(--wh40k-accent-gold)] tw-transition-all {{#if effect.disabled}}tw-opacity-50 tw-border-l-[var(--wh40k-text-muted)]{{/if}}"
-                         data-effect-id="{{effect.id}}"
-                         title="{{effect.label}}{{#if effect.sourceName}} (from {{effect.sourceName}}){{/if}}">
-                        <img src="{{effect.icon}}" class="tw-w-[18px] tw-h-[18px] tw-rounded-sm tw-object-cover tw-shrink-0 tw-border tw-border-black/10 {{#if effect.disabled}}tw-grayscale{{/if}}" alt="" />
-                        <span class="tw-flex-1 tw-text-[0.75rem] tw-font-medium tw-text-[color:var(--color-text-primary)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis tw-leading-tight {{#if effect.disabled}}tw-line-through tw-text-[color:var(--wh40k-text-muted)]{{/if}}">{{effect.label}}</span>
-                        <div class="tw-flex tw-gap-[2px] tw-ml-auto">
-                            <button type="button"
-                                    class="tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-rounded-sm tw-transition-all hover:tw-bg-white/10 hover:tw-text-[color:var(--wh40k-accent-gold)]"
-                                    data-action="effectToggle"
-                                    data-effect-id="{{effect.id}}"
-                                    title="{{#if effect.disabled}}Enable{{else}}Disable{{/if}}">
-                                <i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}} tw-text-[0.7rem]"></i>
-                            </button>
-                            <button type="button"
-                                    class="tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-rounded-sm tw-transition-all hover:tw-bg-white/10 hover:tw-text-[color:var(--wh40k-accent-combat)]"
-                                    data-action="effectDelete"
-                                    data-effect-id="{{effect.id}}"
-                                    title="Remove">
-                                <i class="fas fa-times tw-text-[0.7rem]"></i>
-                            </button>
-                        </div>
-                    </div>
+                    {{> systems/wh40k-rpg/templates/actor/partial/effect-row.hbs
+                        effect=effect
+                        compact=true}}
                 {{/each}}
             </div>
         {{else}}
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-py-3 tw-text-[color:var(--wh40k-text-muted)]">
                 <i class="fas fa-sparkles tw-text-[1.2rem] tw-opacity-50"></i>
-                <span class="tw-text-[0.75rem] tw-italic">No active effects</span>
+                <span class="tw-text-[0.75rem] tw-italic">{{localize 'WH40K.Effects.NoneShort'}}</span>
             </div>
         {{/if}}
     </div>

@@ -19,6 +19,7 @@ import quickControlsSrc from '../src/templates/actor/partial/vital-quick-control
 import progressBarSrc from '../src/templates/actor/partial/vital-progress-bar.hbs?raw';
 import editInputSrc from '../src/templates/actor/partial/vital-edit-input.hbs?raw';
 import quickAdjustSrc from '../src/templates/actor/partial/vital-quick-adjust.hbs?raw';
+import infoCardSrc from '../src/templates/actor/partial/vital-info-card.hbs?raw';
 
 initializeStoryHandlebars();
 Handlebars.registerHelper('isExpanded', () => false);
@@ -221,5 +222,71 @@ describe('vital-panel-shell partial', () => {
         expect(badge?.getAttribute('title')).toBe('TAINTED - 0 to tests');
         expect(badge?.querySelector('.fa-certificate')).not.toBeNull();
         expect(badge?.querySelector('.wh40k-badge-label')?.textContent?.trim()).toBe('TAINTED');
+    });
+});
+
+describe('vital-info-card partial', () => {
+    it('renders icon, title and a body slot via partial-block (warn accent default)', () => {
+        Handlebars.registerPartial('test-info-card', infoCardSrc);
+        const wrapped = Handlebars.compile(
+            '{{#> test-info-card icon="fa-book" title="Fatigue Rules"}}<p class="rule">Any fatigue: -10 penalty.</p>{{/test-info-card}}',
+        );
+        const html = wrapped({});
+        const root = dom(html);
+        // Icon mounts with the requested FA class, gold tint by default.
+        const icon = root.querySelector('i.fa-book');
+        expect(icon).not.toBeNull();
+        expect(icon?.className).toContain('tw-text-gold');
+        // Title text appears in a strong element.
+        const strong = root.querySelector('strong');
+        expect(strong?.textContent?.trim()).toBe('Fatigue Rules');
+        // Body slot is forwarded into the card.
+        expect(root.querySelector('p.rule')?.textContent).toContain('Any fatigue: -10 penalty.');
+    });
+
+    it('switches accent classes for "gold" variant (fate)', () => {
+        Handlebars.registerPartial('test-info-card-gold', infoCardSrc);
+        const wrapped = Handlebars.compile(
+            '{{#> test-info-card-gold icon="fa-book-open" title="About Fate" accent="gold"}}<p>fate body</p>{{/test-info-card-gold}}',
+        );
+        const root = dom(wrapped({}));
+        const inner = root.querySelector('div.tw-rounded-lg > div');
+        expect(inner?.className).toContain('tw-border-l-[color:var(--wh40k-fate-border)]');
+        expect(inner?.className).toContain('tw-bg-[rgba(0,0,0,0.1)]');
+    });
+
+    it('switches accent classes and icon tint for "crimson" variant', () => {
+        Handlebars.registerPartial('test-info-card-crimson', infoCardSrc);
+        const wrapped = Handlebars.compile(
+            '{{#> test-info-card-crimson icon="fa-skull" title="Critical" accent="crimson"}}<p>danger</p>{{/test-info-card-crimson}}',
+        );
+        const root = dom(wrapped({}));
+        const icon = root.querySelector('i.fa-skull');
+        expect(icon?.className).toContain('tw-text-crimson');
+        const inner = root.querySelector('div.tw-rounded-lg > div');
+        expect(inner?.className).toContain('tw-bg-[var(--wh40k-wounds-bg)]');
+    });
+
+    it('applies optional wrapperClass / iconClass / innerClass extra utilities', () => {
+        Handlebars.registerPartial('test-info-card-extra', infoCardSrc);
+        const wrapped = Handlebars.compile(
+            '{{#> test-info-card-extra icon="fa-book" title="T" wrapperClass="tw-mt-4" iconClass="tw-text-xl" innerClass="my-extra"}}body{{/test-info-card-extra}}',
+        );
+        const root = dom(wrapped({}));
+        const outer = root.querySelector('div.tw-rounded-lg');
+        expect(outer?.className).toContain('tw-mt-4');
+        const inner = root.querySelector('.my-extra');
+        expect(inner).not.toBeNull();
+        const icon = root.querySelector('i.fa-book');
+        expect(icon?.className).toContain('tw-text-xl');
+    });
+
+    it('does not crash when the body slot is omitted', () => {
+        Handlebars.registerPartial('test-info-card-empty', infoCardSrc);
+        const wrapped = Handlebars.compile('{{#> test-info-card-empty icon="fa-book" title="T"}}{{/test-info-card-empty}}');
+        // Should compile and render without throwing.
+        expect(() => wrapped({})).not.toThrow();
+        const root = dom(wrapped({}));
+        expect(root.querySelector('strong')?.textContent?.trim()).toBe('T');
     });
 });

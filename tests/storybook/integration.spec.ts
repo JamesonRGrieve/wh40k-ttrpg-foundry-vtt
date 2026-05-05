@@ -5,7 +5,7 @@ test.describe('Storybook integration', () => {
         await page.goto('/iframe.html?id=shared-components--active-effects-panel');
 
         await expect(page.locator('[data-action="createEffect"]').first()).toBeVisible();
-        await expect(page.locator('[data-action="editEffect"]')).toHaveCount(2);
+        await expect(page.locator('[data-action="effectEdit"]')).toHaveCount(2);
         await expect(page.getByText('Blessed Ammunition')).toBeVisible();
     });
 

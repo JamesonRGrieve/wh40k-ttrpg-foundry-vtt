@@ -1,3 +1,4 @@
+import { formatChangeValue, getChangeLabel } from '../helpers/effects.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 
 /** Shape of an ActiveEffect change entry used throughout this class. */
@@ -216,77 +217,14 @@ export class WH40KActiveEffect extends ActiveEffect {
      */
     get changesSummary(): { key: string; label: string; value: string; mode: string }[] {
         return this.changes.map((change) => {
-            const key = change.key.split('.').pop();
-            const label = this._getChangeLabel(change.key);
-            const value = this._formatChangeValue(change);
-
+            const key = change.key.split('.').pop() ?? '';
             return {
                 key,
-                label,
-                value,
+                label: getChangeLabel(change.key),
+                value: formatChangeValue(change as unknown as { key: string; value: string | number; mode: number }),
                 mode: game.i18n.localize(`WH40K.ActiveEffect.Mode.${change.mode}`),
             };
         });
-    }
-
-    /**
-     * Get a human-readable label for a change key.
-     * @param {string} key    The change key path
-     * @returns {string}      Human-readable label
-     * @private
-     */
-    _getChangeLabel(key: string): string {
-        const parts = key.split('.');
-
-        // Characteristics
-        if (parts[1] === 'characteristics' && parts[2]) {
-            const char = parts[2].capitalize();
-            return game.i18n.localize(`WH40K.Characteristic.${char}`);
-        }
-
-        // Skills
-        if (parts[1] === 'skills' && parts[2]) {
-            return game.i18n.localize(`WH40K.Skill.${parts[2]}`);
-        }
-
-        // Combat
-        if (parts[1] === 'combat' && parts[2]) {
-            return game.i18n.localize(`WH40K.Combat.${parts[2].capitalize()}`);
-        }
-
-        // Movement
-        if (parts[1] === 'movement' && parts[2]) {
-            return game.i18n.localize(`WH40K.Movement.${parts[2].capitalize()}`);
-        }
-
-        // Default: capitalize last part
-        return parts[parts.length - 1].capitalize();
-    }
-
-    /**
-     * Format a change value for display.
-     * @param {object} change   The change data
-     * @returns {string}        Formatted value
-     * @private
-     */
-    _formatChangeValue(change: EffectChange): string {
-        const value = Number(change.value);
-        const modes = CONST.ACTIVE_EFFECT_MODES;
-
-        switch (change.mode) {
-            case modes.ADD:
-                return value > 0 ? `+${value}` : `${value}`;
-            case modes.MULTIPLY:
-                return `×${value}`;
-            case modes.OVERRIDE:
-                return `= ${value}`;
-            case modes.UPGRADE:
-                return `↑${value}`;
-            case modes.DOWNGRADE:
-                return `↓${value}`;
-            default:
-                return `${value}`;
-        }
     }
 
     /* -------------------------------------------- */

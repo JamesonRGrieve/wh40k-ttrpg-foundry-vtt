@@ -35,7 +35,10 @@ describe('storybook shared component templates', () => {
         const element = compileToElement(activeEffectsPanelSrc, mockActiveEffectsContext());
 
         expect(element.querySelector('[data-action="createEffect"]')).not.toBeNull();
-        expect(element.querySelectorAll('[data-action="editEffect"]')).toHaveLength(2);
+        // The canonical effect-row partial uses `effectEdit` (matching the
+        // BaseItemSheet action wiring); the legacy `editEffect` name was
+        // never registered. Two effects → two edit buttons.
+        expect(element.querySelectorAll('[data-action="effectEdit"]')).toHaveLength(2);
         expect(element.textContent).toContain('Blessed Ammunition');
     });
 
@@ -48,7 +51,7 @@ describe('storybook shared component templates', () => {
         );
 
         expect(element.querySelector('[data-action="createEffect"]')).toBeNull();
-        expect(element.querySelector('[data-action="editEffect"]')).toBeNull();
+        expect(element.querySelector('[data-action="effectEdit"]')).toBeNull();
     });
 
     it('renders expanded modifier groups and counts', () => {

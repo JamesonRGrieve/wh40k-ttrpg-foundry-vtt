@@ -1,17 +1,18 @@
 {
-  "generatedAt": "2026-05-05T15:37:31.269Z",
-  "total": 226,
-  "adopted": 5,
+  "generatedAt": "2026-05-05T20:03:25.182Z",
+  "total": 229,
+  "adopted": 6,
   "perSystemHits": {
     "bc": 7,
     "dh1e": 7,
-    "dh2e": 7,
+    "dh2e": 8,
     "dw": 7,
     "ow": 7,
-    "rt": 7,
-    "im": 7
+    "rt": 8,
+    "im": 8
   },
   "adoptedTemplates": [
+    "src/templates/actor/partial/effect-row.hbs",
     "src/templates/actor/partial/header-base.hbs",
     "src/templates/actor/partial/tab-strip.hbs",
     "src/templates/actor/player/header-dh.hbs",
