@@ -1,5 +1,10 @@
-{{! Starship Sheet Header }}
-<div class="wh40k-header wh40k-grid-col-6 wh40k-panel wh40k-ship-header">
+{{! Starship Sheet Header. Composes the shared `header-base` partial in
+    horizontal variant; the body supplies the starship-specific identity,
+    hull text inputs, and quick-stats cluster. }}
+
+{{#> systems/wh40k-rpg/templates/actor/partial/header-base.hbs
+    variant="horizontal"
+    cardClass="wh40k-grid-col-6 wh40k-ship-header"}}
     <div class="wh40k-header__info tw-grid tw-grid-cols-[auto_minmax(0,1fr)_auto] tw-items-start tw-gap-4 tw-px-6 tw-py-2">
         <div class="wh40k-header__identity tw-w-44 tw-shrink-0">
             {{> systems/wh40k-rpg/templates/actor/partial/actor-identity.hbs nameLabelKey="WH40K.Starship.Name" portraitWidthClass="tw-w-44"}}
@@ -43,4 +48,4 @@
                 value=source.crew.crewRating}}
         </div>
     </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/header-base.hbs}}

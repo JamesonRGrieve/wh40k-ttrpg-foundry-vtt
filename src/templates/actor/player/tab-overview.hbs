@@ -14,37 +14,28 @@
                 </div>
                 <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     {{!-- Wounds --}}
-                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5">
-                        <span class="wh40k-vital-icon"><i class="fas fa-heart"></i></span>
-                        <span class="wh40k-vital-label">Wounds</span>
-                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
-                            <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.wounds.value" data-min="0" title="−1">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <span class="wh40k-vital-value {{#if (eq system.wounds.value 0)}}wh40k-critical{{else if (lt (percent system.wounds.value system.wounds.max) 25)}}wh40k-warning{{/if}}">
-                                {{system.wounds.value}}/{{system.wounds.max}}
-                            </span>
-                            <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.wounds.value" data-max="{{system.wounds.max}}" title="+1">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
+                    {{> systems/wh40k-rpg/templates/actor/partial/vital-inline-row
+                        icon="fa-heart"
+                        label="Wounds"
+                        field="system.wounds.value"
+                        current=system.wounds.value
+                        max=system.wounds.max
+                        maxAttr=system.wounds.max
+                        stateClass=(iff (eq system.wounds.value 0) "wh40k-critical" (iff (lt (percent system.wounds.value system.wounds.max) 25) "wh40k-warning" ""))}}
 
                     {{!-- Critical Wounds --}}
                     {{#if (or (gt system.wounds.critical 0) (eq system.wounds.value 0))}}
                     <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5 wh40k-vital-critical-row">
                         <span class="wh40k-vital-icon"><i class="fas fa-skull"></i></span>
                         <span class="wh40k-vital-label">Critical</span>
-                        <div class="wh40k-critical-pips-inline">
-                            {{#times 10}}
-                                <button type="button"
-                                        class="wh40k-crit-pip-mini {{#if (lte this ../system.wounds.critical)}}wh40k-crit-pip-mini--filled{{/if}}"
-                                        data-action="setCriticalPip"
-                                        data-crit-level="{{this}}"
-                                        title="Critical Level {{this}}">
-                                </button>
-                            {{/times}}
-                        </div>
+                        {{> systems/wh40k-rpg/templates/actor/partial/pip-tracker-row
+                            count=10
+                            current=system.wounds.critical
+                            action="setCriticalPip"
+                            dataAttr="crit-level"
+                            pipClass="wh40k-crit-pip-mini"
+                            wrapperClass="wh40k-critical-pips-inline"
+                            titlePrefix="Critical Level"}}
                     </div>
                     {{/if}}
 
@@ -53,17 +44,15 @@
                     <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5">
                         <span class="wh40k-vital-icon"><i class="fas fa-bolt"></i></span>
                         <span class="wh40k-vital-label">Fatigue</span>
-                        <div class="wh40k-fatigue-bolts-inline">
-                            {{#each (range 1 system.fatigue.max) as |index|}}
-                                <button type="button"
-                                        class="wh40k-fatigue-pip {{#if (lte index ../system.fatigue.value)}}wh40k-fatigue-pip--filled{{/if}}"
-                                        data-action="setFatigueBolt"
-                                        data-fatigue-index="{{index}}"
-                                        title="Fatigue Level {{index}}">
-                                    <i class="fas fa-bolt"></i>
-                                </button>
-                            {{/each}}
-                        </div>
+                        {{> systems/wh40k-rpg/templates/actor/partial/pip-tracker-row
+                            count=system.fatigue.max
+                            current=system.fatigue.value
+                            action="setFatigueBolt"
+                            dataAttr="fatigue-index"
+                            pipClass="wh40k-fatigue-pip"
+                            wrapperClass="wh40k-fatigue-bolts-inline"
+                            iconClass="fa-bolt"
+                            titlePrefix="Fatigue Level"}}
                         {{#if (gt system.fatigue.value 0)}}
                         <span class="wh40k-vital-penalty">−10</span>
                         {{/if}}
@@ -87,17 +76,15 @@
                     <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5">
                         <span class="wh40k-vital-icon"><i class="fas fa-star"></i></span>
                         <span class="wh40k-vital-label">Fate</span>
-                        <div class="wh40k-fate-stars-inline">
-                            {{#each (range 1 system.fate.max) as |index|}}
-                                <button type="button"
-                                        class="wh40k-fate-pip {{#if (lte index ../system.fate.value)}}wh40k-fate-pip--filled{{/if}}"
-                                        data-action="setFateStar"
-                                        data-fate-index="{{index}}"
-                                        title="Fate Point {{index}}">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                            {{/each}}
-                        </div>
+                        {{> systems/wh40k-rpg/templates/actor/partial/pip-tracker-row
+                            count=system.fate.max
+                            current=system.fate.value
+                            action="setFateStar"
+                            dataAttr="fate-index"
+                            pipClass="wh40k-fate-pip"
+                            wrapperClass="wh40k-fate-stars-inline"
+                            iconClass="fa-star"
+                            titlePrefix="Fate Point"}}
                         <button type="button" class="wh40k-vital-btn-small" data-action="restoreFate" title="Restore All">
                             <i class="fas fa-redo"></i>
                         </button>
@@ -109,49 +96,38 @@
                 {{#unless isNPC}}
                 {{!-- Mental State (compact) — PC-only (NPC schema has no corruption/insanity) --}}
                 <div class="wh40k-zone-subsection">
-                    <div class="wh40k-mental-row">
-                        <span class="wh40k-mental-label-group">
-                            <span class="wh40k-mental-icon"><i class="fas fa-skull"></i></span>
-                            <span class="wh40k-mental-label">Corruption</span>
-                        </span>
-                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1">
-                            <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.corruption" data-min="0" title="−1">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <span class="wh40k-mental-value">{{system.corruption}}</span>
-                            <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.corruption" data-max="100" title="+1">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                        <span class="wh40k-mental-degree {{corruptionDegreeClass system.corruption}}">{{corruptionDegree system.corruption}}</span>
-                    </div>
-                    <div class="wh40k-mental-row">
-                        <span class="wh40k-mental-label-group">
-                            <span class="wh40k-mental-icon"><i class="fas fa-brain"></i></span>
-                            <span class="wh40k-mental-label">Insanity</span>
-                        </span>
-                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1">
-                            <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.insanity" data-min="0" title="−1">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <span class="wh40k-mental-value">{{system.insanity}}</span>
-                            <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.insanity" data-max="100" title="+1">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                        <span class="wh40k-mental-degree {{insanityDegreeClass system.insanity}}">{{insanityDegree system.insanity}}</span>
-                    </div>
+                    {{> systems/wh40k-rpg/templates/actor/partial/vital-inline-row
+                        icon="fa-skull"
+                        label="Corruption"
+                        field="system.corruption"
+                        current=system.corruption
+                        maxAttr=100
+                        rowClass="wh40k-mental-row"
+                        labelGroupClass="wh40k-mental-label-group"
+                        iconClass="wh40k-mental-icon"
+                        labelClass="wh40k-mental-label"
+                        valueClass="wh40k-mental-value"
+                        stateClass=(corruptionDegreeClass system.corruption)
+                        degreeText=(corruptionDegree system.corruption)}}
+                    {{> systems/wh40k-rpg/templates/actor/partial/vital-inline-row
+                        icon="fa-brain"
+                        label="Insanity"
+                        field="system.insanity"
+                        current=system.insanity
+                        maxAttr=100
+                        rowClass="wh40k-mental-row"
+                        labelGroupClass="wh40k-mental-label-group"
+                        iconClass="wh40k-mental-icon"
+                        labelClass="wh40k-mental-label"
+                        valueClass="wh40k-mental-value"
+                        stateClass=(insanityDegreeClass system.insanity)
+                        degreeText=(insanityDegree system.insanity)}}
                 </div>
                 {{/unless}}
             </div>
 
             {{!-- Active Effects --}}
-            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-effects">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
-                    <i class="fas fa-magic"></i>
-                    <span>Active Effects</span>
-                </div>
-                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Active Effects" icon="fa-magic" zoneClass="wh40k-zone-effects"}}
                     {{#if effects.length}}
                     <div class="wh40k-effects-preview">
                         {{#each effects as |effect|}}
@@ -180,19 +156,13 @@
                         <span>No active effects</span>
                     </div>
                     {{/if}}
-                </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
         </div>
 
         {{!-- COLUMN 2: Favourite Skills → Favourite Talents → Progression --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Favourite Skills --}}
-            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-skills">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
-                    <i class="fas fa-star"></i>
-                    <span>Favourite Skills</span>
-                </div>
-                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Favourite Skills" icon="fa-star" zoneClass="wh40k-zone-skills"}}
                     <div class="wh40k-skill-list-compact">
                         {{#if favoriteSkills}}
                             {{#each favoriteSkills as |skill|}}
@@ -220,16 +190,10 @@
                             </div>
                         {{/if}}
                     </div>
-                </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
 
             {{!-- Favourite Talents --}}
-            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-talents">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
-                    <i class="fas fa-star-half-alt"></i>
-                    <span>Favourite Talents</span>
-                </div>
-                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Favourite Talents" icon="fa-star-half-alt" zoneClass="wh40k-zone-talents"}}
                     <div class="wh40k-talent-list-compact">
                         {{#if favoriteTalents}}
                             {{#each favoriteTalents as |talent|}}
@@ -258,11 +222,10 @@
                             </div>
                         {{/if}}
                     </div>
-                </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
 
             {{#unless isNPC}}
-            {{!-- Progression (XP) — PC-only --}}
+            {{!-- Progression (XP) — PC-only — kept inline due to SVG ring + action-button header --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-progression">
                 <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
                     <div class="wh40k-xp-ring-header" data-tooltip="{{#if system.experience.total}}{{floor (multiply (divide system.experience.used system.experience.total) 100)}}{{else}}0{{/if}}% XP spent ({{system.experience.used}}/{{system.experience.total}})">
@@ -339,12 +302,7 @@
         {{!-- COLUMN 3: Weapons + [Movement | Armour] → Resources --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Equipped Weapons --}}
-            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-weapons">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
-                    <i class="fas fa-crosshairs"></i>
-                    <span>Equipped Weapons</span>
-                </div>
-                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Equipped Weapons" icon="fa-crosshairs" zoneClass="wh40k-zone-weapons"}}
                     {{#if equippedWeapons.length}}
                     <div class="wh40k-ew-list">
                         {{#each equippedWeapons as |weapon|}}
@@ -367,18 +325,12 @@
                         <span>No weapons equipped</span>
                     </div>
                     {{/if}}
-                </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
 
             {{!-- Movement & Armour side by side --}}
             <div class="tw-grid tw-grid-cols-2 tw-gap-2">
                 {{!-- Movement 2x2 --}}
-                <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-movement">
-                    <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
-                        <i class="fas fa-running"></i>
-                        <span>Movement</span>
-                    </div>
-                    <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
+                {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Movement" icon="fa-running" zoneClass="wh40k-zone-movement"}}
                         <div class="tw-grid tw-grid-cols-2 tw-gap-1">
                             <div class="wh40k-speed-item">
                                 <span class="wh40k-speed-value">{{actor.movement.half}}</span>
@@ -407,16 +359,10 @@
                                 <div class="wh40k-enc-fill-compact" style="width: {{encumbrancePercent}}%"></div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
 
                 {{!-- Armour --}}
-                <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-armour">
-                    <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Armour</span>
-                    </div>
-                    <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
+                {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Armour" icon="fa-shield-alt" zoneClass="wh40k-zone-armour"}}
                         <div class="wh40k-ov-armour-silhouette">
                             <div class="wh40k-ov-armour-box wh40k-ov-box-head" title="Head: 01-10">
                                 <span class="wh40k-ov-box-label">Head</span>
@@ -443,18 +389,12 @@
                                 <span class="wh40k-ov-box-ap">{{system.armour.leftLeg.total}}</span>
                             </div>
                         </div>
-                    </div>
-                </div>
+                {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
             </div>
 
             {{#unless isNPC}}
             {{!-- Resources (Influence / Requisition / Gelt) — PC-only --}}
-            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-resources">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
-                    <i class="fas fa-coins"></i>
-                    <span>Resources</span>
-                </div>
-                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-w-full">
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Resources" icon="fa-coins" zoneClass="wh40k-zone-resources" contentClass="wh40k-zone-content tw-p-2 tw-flex-1 tw-w-full"}}
                     <div class="tw-grid {{#if hideThroneGelt}}tw-grid-cols-2{{else}}tw-grid-cols-3{{/if}} tw-gap-2 tw-w-full">
                         <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                             <span class="wh40k-vital-label tw-text-xs" data-tooltip="Social and political pull — calling in favours, securing audiences, persuading officials. Not bought with coin.">Influence</span>
@@ -495,8 +435,7 @@
                         </div>
                         {{/unless}}
                     </div>
-                </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
             {{/unless}}
         </div>
 

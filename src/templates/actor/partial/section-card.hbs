@@ -1,0 +1,40 @@
+{{!--
+    Section card — outer panel chunk used inside vital / status panels for
+    grouped sub-sections (item lists, edit forms, info readouts). Renders the
+    standard padded translucent panel + a heading row with icon, label, and
+    optional add button. Body content provided via {{> @partial-block}}.
+
+    Hash arguments:
+        title       — plain English heading text (used when titleKey is absent).
+        titleKey    — i18n key for heading (preferred over `title`).
+        icon        — Font Awesome class (e.g. "fa-biohazard"). Required.
+        addAction   — data-action string for the trailing button (e.g. "itemCreate").
+                      When omitted, no button renders.
+        addType     — data-type for the add button (e.g. "criticalInjury").
+        addTitle    — plain English tooltip for the add button.
+        addTitleKey — i18n key for the tooltip (preferred).
+        addIcon     — Font Awesome class for the button icon (default "fa-plus").
+        cardClass   — extra utility classes appended to the wrapper.
+        headerClass — extra utility classes appended to the heading row.
+        actionBtnBgClass     — Tailwind bg class override for the add button.
+        actionBtnBorderClass — Tailwind border-color class override for the add button.
+        iconColor            — CSS color override for the add button's icon glyph.
+--}}
+<div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-1.5{{#if cardClass}} {{cardClass}}{{/if}}">
+    <div class="tw-flex tw-items-center tw-justify-between tw-gap-1 tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-medium)] tw-mb-1.5{{#if headerClass}} {{headerClass}}{{/if}}">
+        <span class="tw-flex tw-items-center tw-gap-1.5">
+            <i class="fas {{icon}}"></i>
+            <span>{{#if titleKey}}{{localize titleKey}}{{else}}{{title}}{{/if}}</span>
+        </span>
+        {{#if addAction}}
+        <button type="button"
+                class="tw-w-6 tw-h-6 tw-p-0 tw-flex tw-items-center tw-justify-center tw-border tw-border-solid tw-rounded-md tw-cursor-pointer {{#if actionBtnBgClass}}{{actionBtnBgClass}}{{else}}tw-bg-[var(--wh40k-success-bg)]{{/if}} {{#if actionBtnBorderClass}}{{actionBtnBorderClass}}{{else}}tw-border-[rgba(74,143,92,0.4)]{{/if}}"
+                data-action="{{addAction}}"
+                {{#if addType}}data-type="{{addType}}"{{/if}}
+                title="{{#if addTitleKey}}{{localize addTitleKey}}{{else}}{{addTitle}}{{/if}}">
+            <i class="fas {{#if addIcon}}{{addIcon}}{{else}}fa-plus{{/if}}" style="font-size:0.7rem;color:{{#if iconColor}}{{iconColor}}{{else}}var(--wh40k-success-secondary){{/if}};"></i>
+        </button>
+        {{/if}}
+    </div>
+    {{> @partial-block}}
+</div>

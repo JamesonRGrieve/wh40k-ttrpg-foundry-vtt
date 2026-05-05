@@ -15,6 +15,10 @@ export class BasicActionManager {
         // Add show/hide support for chat messages
         Hooks.on('renderChatMessageHTML', (message: ChatMessage, html: HTMLElement, context: Record<string, unknown>) => {
             game.wh40k.log('renderChatMessageHTML', { message, html, context });
+            // Tailwind's `important: '.wh40k-rpg'` config scopes every tw-* utility
+            // under `.wh40k-rpg`. Chat messages render outside the system's sheet
+            // root, so without this class the chat cards lose all Tailwind styling.
+            html.classList.add('wh40k-rpg');
             html.querySelectorAll('.roll-control__hide-control').forEach((el) =>
                 el.addEventListener('click', async (ev: Event) => await this._toggleExpandChatMessage(ev)),
             );

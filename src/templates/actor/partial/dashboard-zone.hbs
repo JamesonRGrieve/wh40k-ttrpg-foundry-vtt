@@ -1,0 +1,27 @@
+{{!--
+    Dashboard zone — outer column with a header bar (icon + title) and a
+    content panel. Used by the simple zones in `tab-overview.hbs`. Block
+    partial: body content is supplied through the partial-block slot.
+
+    For zones with a non-trivial header (SVG ring, action-button row), build
+    the zone inline rather than forcing this partial to grow new slots.
+
+    Required hash params:
+        title        — header text
+        icon         — Font Awesome class (e.g. "fa-heartbeat"); rendered as
+                       `<i class="fas {{icon}}">`
+
+    Optional hash params:
+        zoneClass    — extra class on the outer zone div (e.g. "wh40k-zone-vitals")
+        contentClass — override the default content-pad utilities. Defaults to
+                       `wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1`
+--}}
+<div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden{{#if zoneClass}} {{zoneClass}}{{/if}}">
+    <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
+        <i class="fas {{icon}}"></i>
+        <span>{{title}}</span>
+    </div>
+    <div class="{{#if contentClass}}{{contentClass}}{{else}}wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1{{/if}}">
+        {{> @partial-block}}
+    </div>
+</div>

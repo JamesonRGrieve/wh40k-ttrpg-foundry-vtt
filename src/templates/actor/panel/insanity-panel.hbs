@@ -1,168 +1,59 @@
-{{!-- Insanity Panel — vital meter with degree badge, threshold warnings, mental-disorder tracking. --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key="insanity" label="Insanity" icon="fa-brain" actor=actor
-    rootStateClass=(insanityDegreeClass system.insanity)
-    badge=(object
-        stateClass=(insanityDegreeClass system.insanity)
-        icon="fa-brain"
-        label=(insanityDegree system.insanity)
-        tooltip=(concat (insanityDegree system.insanity) " - " (insanityModifier system.insanity) " to tests"))}}
-
-    {{!-- Main Display --}}
-    <div class="tw-flex tw-flex-col tw-gap-2">
-
-        {{!-- Current Value & Modifier --}}
-        <div class="tw-flex tw-items-center tw-justify-between tw-mb-2">
-            {{> systems/wh40k-rpg/templates/actor/partial/vital-quick-controls
-                wrapperClass="tw-flex tw-items-center tw-gap-2"
-                cssPrefix="wh40k-insanity"
-                field="system.insanity"
-                current=system.insanity
-                maxLabel="100"
-                decTitle="Reduce Insanity"
-                incTitle="Increase Insanity"
-                maxValue="100"
-                valueWrapperClass="tw-flex tw-items-baseline tw-gap-1"}}
-
-            <div class="tw-flex tw-items-center tw-gap-1 tw-text-sm tw-font-bold">
-                <span>Modifier:</span>
-                <span class="tw-text-gold">{{insanityModifier system.insanity}}</span>
-            </div>
-        </div>
-
-        {{!-- Progress Bar with Threshold Markers --}}
-        {{> systems/wh40k-rpg/templates/actor/partial/vital-progress-bar
-            cssPrefix="wh40k-insanity"
-            percent=system.insanity
-            containerClass="tw-relative tw-h-4 tw-bg-[rgba(0,0,0,0.3)] tw-rounded-md tw-overflow-hidden tw-mb-2"
-            fillExtraClass="tw-h-full tw-bg-gradient-to-r tw-from-purple-700 tw-to-crimson-dark"
-            fillStyleWidth=true
-            thresholds=(array
-                (object at=10 label="10" title="STABLE → UNSETTLED (10)")
-                (object at=40 label="40" title="UNSETTLED → DISTURBED (40)")
-                (object at=60 label="60" title="DISTURBED → UNHINGED (60)")
-                (object at=80 label="80" title="UNHINGED → DERANGED (80)"))}}
-
-        {{!-- Warning Messages at Thresholds --}}
-        {{#if (eq system.insanity 100)}}
-        <div class="tw-text-crimson tw-flex tw-items-center tw-gap-2 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded tw-p-1">
-            <i class="fas fa-dizzy"></i>
-            <span>TERMINALLY INSANE - Mind Lost to Madness!</span>
-        </div>
-        {{else if (gte system.insanity 80)}}
-        <div class="tw-text-crimson-light tw-flex tw-items-center tw-gap-2 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded tw-p-1">
-            <i class="fas fa-exclamation-triangle"></i>
-            <span>DERANGED - On the Edge of Madness (-20)</span>
-        </div>
-        {{else if (gte system.insanity 60)}}
-        <div class="tw-text-warning tw-flex tw-items-center tw-gap-2 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded tw-p-1">
-            <i class="fas fa-user-injured"></i>
-            <span>UNHINGED - Severe Mental Instability (-10)</span>
-        </div>
-        {{/if}}
-
-    </div>
-
-    {{!-- Mental Disorders Section (always visible if any exist) --}}
-    {{#if (any actor.items "isMentalDisorder")}}
-    <div class="tw-mt-2 tw-text-sm tw-text-gray-400">
-        <div class="tw-flex tw-items-center tw-gap-2 tw-text-xs tw-font-bold">
-            <i class="fas fa-head-side-virus"></i>
-            <span>{{countType actor.items "isMentalDisorder"}} Mental Disorders</span>
-        </div>
-    </div>
-    {{/if}}
-
-    {{!-- Edit Mode (Expandable) --}}
-    <div class="tw-mt-2 tw-border-t tw-border-[rgba(255,255,255,0.1)] tw-pt-1" {{hideIfNot (isExpanded 'insanity_details' actor)}}>
-
-        {{!-- Direct Edit Section --}}
-        <div class="tw-p-2 tw-bg-[rgba(0,0,0,0.1)] tw-border tw-border-[rgba(255,255,255,0.07)] tw-rounded-lg tw-mb-1">
-            <div class="tw-flex tw-items-center tw-justify-between tw-gap-1 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wider tw-mb-1">
-                <i class="fas fa-cog"></i> Edit Insanity
-            </div>
-
-            <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-1">
-                {{> systems/wh40k-rpg/templates/actor/partial/vital-edit-input
-                    name="system.insanity"
-                    label="Insanity Points (0-100)"
-                    value=source.insanity
-                    labelClass="tw-text-xs tw-text-gray-400"
-                    inputClass="tw-w-full tw-p-1 tw-rounded"
-                    min="0"
-                    max="100"
-                    placeholder="0"}}
-            </div>
-
-            {{!-- Quick Adjust Buttons --}}
-            {{> systems/wh40k-rpg/templates/actor/partial/vital-quick-adjust
-                field="system.insanity"
-                wrapperClass="tw-flex tw-gap-1 tw-mt-2"
-                maxValue="100"}}
-        </div>
-
-        {{!-- Mental Disorders List --}}
-        <div class="tw-p-2 tw-bg-[rgba(0,0,0,0.1)] tw-border tw-border-[rgba(255,255,255,0.07)] tw-rounded-lg tw-mt-4">
-            <div class="tw-flex tw-items-center tw-justify-between tw-gap-1 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wider tw-mb-1">
-                <i class="fas fa-head-side-virus"></i> Mental Disorders
-            </div>
-
-            {{#if (any actor.items "isMentalDisorder")}}
-            <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-1">
-                {{#each actor.items as |item|}}
-                    {{#if item.isMentalDisorder}}
-                    <div class="tw-flex tw-justify-between tw-bg-[rgba(0,0,0,0.2)] tw-p-1 tw-rounded">
-                        <button type="button"
-                                class="item-edit tw-flex tw-flex-1 tw-items-center tw-gap-1 tw-bg-transparent tw-border-0 tw-p-1 tw-text-left tw-text-sm tw-font-semibold tw-cursor-pointer"
-                                data-item-id="{{item.id}}"
-                                title="Edit {{item.name}}">
-                            <i class="fas fa-brain"></i>
-                            {{item.name}}
-                        </button>
-                        <button type="button"
-                                class="item-delete tw-flex tw-w-6 tw-h-6 tw-items-center tw-justify-center tw-bg-[rgba(0,0,0,0.2)] tw-border tw-border-[rgba(182,58,43,0.3)] tw-rounded-md tw-cursor-pointer"
-                                data-item-id="{{item.id}}"
-                                title="Remove {{item.name}}">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    {{/if}}
-                {{/each}}
-            </div>
-            {{/if}}
-
-            {{!-- Drop Zone (always visible) --}}
-            <div class="wh40k-dropzone {{#unless (any actor.items "isMentalDisorder")}}wh40k-dropzone-empty{{/unless}} tw-mt-2 tw-border tw-border-dashed tw-border-gray-600 tw-p-2 tw-text-center tw-rounded"
-                 data-action="itemCreate"
-                 data-type="mentalDisorder">
-                <i class="fas fa-smile-beam"></i>
-                <span class="wh40k-dropzone-text tw-text-xs" data-dropzone-text>
-                    {{#if (any actor.items "isMentalDisorder")}}
-                        Drop Mental Disorders Here or Click to Create
-                    {{else}}
-                        No mental disorders (yet)
-                    {{/if}}
-                </span>
-            </div>
-        </div>
-
-        {{!-- Info Section --}}
-        <div class="tw-p-2 tw-bg-[rgba(0,0,0,0.1)] tw-border tw-border-[rgba(255,255,255,0.07)] tw-rounded-lg tw-mt-4">
-            <div class="tw-flex tw-gap-2 tw-bg-[rgba(0,0,0,0.2)] tw-p-3 tw-rounded-md">
-                <i class="fas fa-book-medical tw-text-gold tw-text-lg tw-shrink-0 tw-mt-0.5"></i>
-                <div class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-mt-1">
-                    <strong class="tw-text-xs tw-font-bold tw-uppercase tw-tracking-wider">Insanity Degrees</strong>
-                    <ul class="tw-list-none tw-pl-0 tw-leading-relaxed tw-text-gray-400">
-                        <li><span class="tw-font-bold">STABLE (0-9):</span> Sound of mind - No penalty</li>
-                        <li><span class="tw-font-bold">UNSETTLED (10-39):</span> Minor unease - <strong>+10</strong> to Fear tests</li>
-                        <li><span class="tw-font-bold">DISTURBED (40-59):</span> Troubled mind - No modifier</li>
-                        <li><span class="tw-font-bold">UNHINGED (60-79):</span> Severe instability - <strong>-10</strong> to checks</li>
-                        <li><span class="tw-font-bold">DERANGED (80-99):</span> On the brink - <strong>-20</strong> to checks</li>
-                        <li><span class="tw-font-bold tw-text-crimson">TERMINALLY INSANE (100):</span> Mind lost - <strong>NPC only</strong></li>
-                    </ul>
-                    <p class="tw-text-gray-400 tw-italic tw-mt-1"><i class="fas fa-brain"></i> Mental disorders represent psychological trauma from witnessing horrors beyond mortal comprehension.</p>
-                </div>
-            </div>
-        </div>
-
-    </div>
-{{/systems/wh40k-rpg/templates/actor/partial/vital-panel-shell}}
+{{!-- Insanity Panel — thin caller; degree-meter-panel does the heavy lifting. --}}
+{{> systems/wh40k-rpg/templates/actor/partial/degree-meter-panel
+    key="insanity"
+    label=(localize "WH40K.Status.Insanity.Label")
+    icon="fa-brain"
+    actor=actor
+    system=system
+    value=system.insanity
+    sourceValue=source.insanity
+    field="system.insanity"
+    cssPrefix="wh40k-insanity"
+    gradientClass="tw-from-purple-700 tw-to-crimson-dark"
+    decTitle=(localize "WH40K.Status.Insanity.Decrease")
+    incTitle=(localize "WH40K.Status.Insanity.Increase")
+    modifierWord=(localize "WH40K.Status.Modifier")
+    editTitle=(localize "WH40K.Status.Insanity.EditTitle")
+    editLabel=(localize "WH40K.Status.Insanity.EditLabel")
+    meta=(object
+        degreeLabel=(insanityDegree system.insanity)
+        degreeClass=(insanityDegreeClass system.insanity)
+        modifier=(insanityModifier system.insanity))
+    thresholds=(array
+        (object at=10 label="10" title=(localize "WH40K.Status.Insanity.Threshold10"))
+        (object at=40 label="40" title=(localize "WH40K.Status.Insanity.Threshold40"))
+        (object at=60 label="60" title=(localize "WH40K.Status.Insanity.Threshold60"))
+        (object at=80 label="80" title=(localize "WH40K.Status.Insanity.Threshold80")))
+    activeWarning=(iff (eq system.insanity 100)
+        (object
+            icon="fa-dizzy"
+            text=(localize "WH40K.Status.Insanity.Warn100")
+            bannerClass="tw-text-crimson")
+        (iff (gte system.insanity 80)
+            (object
+                icon="fa-exclamation-triangle"
+                text=(localize "WH40K.Status.Insanity.Warn80")
+                bannerClass="tw-text-crimson-light")
+            (iff (gte system.insanity 60)
+                (object
+                    icon="fa-user-injured"
+                    text=(localize "WH40K.Status.Insanity.Warn60")
+                    bannerClass="tw-text-warning")
+                false)))
+    itemFlag="isMentalDisorder"
+    itemIcon="fa-head-side-virus"
+    itemPlural=(localize "WH40K.Status.Insanity.DisordersPlural")
+    itemSingular=(localize "WH40K.Status.Insanity.DisorderSingular")
+    dropType="mentalDisorder"
+    dropLabel=(localize "WH40K.Status.Insanity.DropEmpty")
+    dropCompactLabel=(localize "WH40K.Status.Insanity.DropFull")
+    infoIcon="fa-book-medical"
+    infoIntro=(localize "WH40K.Status.Insanity.InfoIntro")
+    degreeInfoTitle=(localize "WH40K.Status.Insanity.DegreesTitle")
+    degreeInfo=(array
+        (object label=(localize "WH40K.Status.Insanity.Degree.Stable.Label") range="0-9" description=(localize "WH40K.Status.Insanity.Degree.Stable.Description"))
+        (object label=(localize "WH40K.Status.Insanity.Degree.Unsettled.Label") range="10-39" description=(localize "WH40K.Status.Insanity.Degree.Unsettled.Description"))
+        (object label=(localize "WH40K.Status.Insanity.Degree.Disturbed.Label") range="40-59" description=(localize "WH40K.Status.Insanity.Degree.Disturbed.Description"))
+        (object label=(localize "WH40K.Status.Insanity.Degree.Unhinged.Label") range="60-79" description=(localize "WH40K.Status.Insanity.Degree.Unhinged.Description"))
+        (object label=(localize "WH40K.Status.Insanity.Degree.Deranged.Label") range="80-99" description=(localize "WH40K.Status.Insanity.Degree.Deranged.Description"))
+        (object label=(localize "WH40K.Status.Insanity.Degree.Terminal.Label") range="100" description=(localize "WH40K.Status.Insanity.Degree.Terminal.Description") extraClass="tw-text-crimson"))}}
