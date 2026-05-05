@@ -56,7 +56,7 @@
                             </div>
                             {{#if (gt system.wounds.critical 0)}}
                             <div class="wh40k-vital-alert">
-                                <i class="fas fa-skull"></i>
+                                <i class="fas fa-skull tw-animate-alert-pulse"></i>
                                 <span>CRITICAL DAMAGE: {{system.wounds.critical}}</span>
                             </div>
                             {{/if}}
@@ -126,7 +126,7 @@
                             </div>
                             {{#if (gt system.fatigue.value 0)}}
                             <div class="wh40k-vital-alert wh40k-alert-fatigue">
-                                <i class="fas fa-exclamation-triangle"></i>
+                                <i class="fas fa-exclamation-triangle tw-animate-alert-pulse"></i>
                                 <span>{{#if (gt system.fatigue.value system.fatigue.max)}}UNCONSCIOUS{{else}}−10 ALL TESTS{{/if}}</span>
                             </div>
                             {{/if}}
