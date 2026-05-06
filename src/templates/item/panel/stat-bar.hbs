@@ -15,7 +15,7 @@
     - dataset: object of data attributes (optional)
 --}}
 
-<div class="tw-flex tw-flex-wrap tw-gap-2 tw-border-b tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-3 tw-py-2">
+<div class="tw-flex tw-flex-wrap tw-gap-2 tw-border-b tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-bg-[var(--wh40k-item-panel-bg)] tw-px-3 tw-py-2">
   {{#each stats}}
   <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm tw-transition-all {{#if this.rollable}}tw-cursor-pointer hover:tw--translate-y-px hover:tw-border-[rgba(59,130,246,0.4)] hover:tw-bg-[rgba(59,130,246,0.2)] hover:tw-shadow-[var(--wh40k-item-panel-shadow)]{{/if}}"
        {{#if this.action}}data-action="{{this.action}}"{{/if}}

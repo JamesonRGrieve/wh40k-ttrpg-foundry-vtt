@@ -22,7 +22,7 @@
         rowClass    — extra utilities on the row wrapper
 --}}
 <div class="tw-flex tw-flex-col tw-gap-1 {{rowClass}}">
-    <label class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)] {{labelClass}}">{{label}}</label>
+    <label class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure {{labelClass}}">{{label}}</label>
     {{#if (eq type "select")}}
     <select class="tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem] {{inputClass}}" name="{{name}}"{{#if dataDtype}} data-dtype="{{dataDtype}}"{{/if}}{{#if readonly}} disabled{{/if}}>
         {{#each options}}
