@@ -18,34 +18,19 @@
                 (hash action="togglePowerDetails" icon="fa-chevron-down" title="Toggle Details" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
         }}
             {{#if power.system.levels.novice.effect}}
-            <div class="tw-mb-3">
-                <span class="tw-flex tw-items-center tw-gap-1 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[#22c55e] tw-mb-1"><i class="fas fa-seedling tw-text-[0.7rem]"></i> Novice</span>
-                <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{power.system.levels.novice.effect}}}</div>
-            </div>
+                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Novice" icon="fa-seedling" labelClass="tw-text-[#22c55e]" content=power.system.levels.novice.effect}}
             {{/if}}
             {{#if power.system.levels.adept.effect}}
-            <div class="tw-mb-3">
-                <span class="tw-flex tw-items-center tw-gap-1 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[#3b82f6] tw-mb-1"><i class="fas fa-star-half-alt tw-text-[0.7rem]"></i> Adept</span>
-                <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{power.system.levels.adept.effect}}}</div>
-            </div>
+                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Adept" icon="fa-star-half-alt" labelClass="tw-text-[#3b82f6]" content=power.system.levels.adept.effect}}
             {{/if}}
             {{#if power.system.levels.master.effect}}
-            <div class="tw-mb-3">
-                <span class="tw-flex tw-items-center tw-gap-1 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[#f59e0b] tw-mb-1"><i class="fas fa-crown tw-text-[0.7rem]"></i> Master</span>
-                <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{power.system.levels.master.effect}}}</div>
-            </div>
+                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Master" icon="fa-crown" labelClass="tw-text-[#f59e0b]" content=power.system.levels.master.effect}}
             {{/if}}
             {{#if power.system.sideEffects}}
-            <div class="tw-mb-3">
-                <span class="tw-flex tw-items-center tw-gap-1 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[#ef4444] tw-mb-1"><i class="fas fa-exclamation-triangle tw-text-[0.7rem]"></i> Side Effects</span>
-                <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{power.system.sideEffects}}}</div>
-            </div>
+                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Side Effects" icon="fa-exclamation-triangle" labelClass="tw-text-[#ef4444]" content=power.system.sideEffects}}
             {{/if}}
             {{#if power.system.description}}
-            <div class="tw-mb-3">
-                <span class="tw-flex tw-items-center tw-gap-1 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-secondary)] tw-mb-1">Description</span>
-                <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{power.system.description}}}</div>
-            </div>
+                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Description" content=power.system.description}}
             {{/if}}
         {{/systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs}}
         {{else}}

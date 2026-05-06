@@ -47,22 +47,13 @@
                     (hash action="togglePowerDetails" icon="fa-chevron-down" title="Toggle Details" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]")))
         }}
             {{#if power.system.effect}}
-            <div class="tw-mb-[var(--wh40k-space-md)]">
-                <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-secondary)] tw-mb-1">Effect</span>
-                <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{power.system.effect}}}</div>
-            </div>
+                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Effect" content=power.system.effect}}
             {{/if}}
             {{#if power.system.overbleed}}
-            <div class="tw-mb-[var(--wh40k-space-md)]">
-                <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[#f97316] tw-mb-1"><i class="fas fa-fire tw-text-[0.7rem]"></i> Overbleed</span>
-                <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{power.system.overbleed}}}</div>
-            </div>
+                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Overbleed" icon="fa-fire" labelClass="tw-text-[#f97316]" content=power.system.overbleed}}
             {{/if}}
             {{#if power.system.description}}
-            <div class="tw-mb-[var(--wh40k-space-md)]">
-                <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-[color:var(--wh40k-text-secondary)] tw-mb-1">Description</span>
-                <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{power.system.description}}}</div>
-            </div>
+                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Description" content=power.system.description}}
             {{/if}}
         {{/systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs}}
         {{else}}
