@@ -219,7 +219,7 @@
       
       {{!-- LOADED AMMO BANNER (if loaded) --}}
       {{#if (and system.usesAmmo hasLoadedAmmo)}}
-      <div class="wh40k-loaded-ammo-card">
+      <div class="wh40k-loaded-ammo-card tw-animate-[slide-in-up_0.4s_ease-out]">
         <div class="wh40k-loaded-ammo-card__header">
           <i class="fa-solid fa-circle-dot"></i>
           <span class="wh40k-loaded-ammo-card__name">{{loadedAmmoLabel}}</span>
@@ -253,7 +253,7 @@
       {{#if modificationsData.length}}
       <div class="wh40k-mods-inline">
         {{#each modificationsData as |mod|}}
-        <div class="wh40k-mod-chip {{#unless mod.active}}wh40k-mod-chip--inactive{{/unless}}">
+        <div class="wh40k-mod-chip tw-animate-slide-in-up {{#unless mod.active}}wh40k-mod-chip--inactive{{/unless}}">
           <i class="fa-solid {{mod.categoryIcon}}"></i>
           <span>{{mod.name}}</span>
           <button type="button" class="wh40k-mod-chip__toggle" 
@@ -278,7 +278,7 @@
           <span>Combat Statistics</span>
           <i class="fa-solid fa-chevron-down wh40k-section__toggle"></i>
         </header>
-        <div class="wh40k-section__body" data-section-content="combat">
+        <div class="wh40k-section__body tw-animate-slide-in-up" data-section-content="combat">
           <div class="wh40k-form-grid wh40k-form-grid--2col">
             {{!-- Damage Formula --}}
             <div class="wh40k-float-field">
@@ -370,7 +370,7 @@
           <span>Ranged Attack</span>
           <i class="fa-solid fa-chevron-down wh40k-section__toggle"></i>
         </header>
-        <div class="wh40k-section__body" data-section-content="ranged">
+        <div class="wh40k-section__body tw-animate-slide-in-up" data-section-content="ranged">
           <div class="wh40k-form-grid wh40k-form-grid--2col">
             {{!-- Range --}}
             <div class="wh40k-float-field">
@@ -429,7 +429,7 @@
           <span>Ammunition</span>
           <i class="fa-solid fa-chevron-down wh40k-section__toggle"></i>
         </header>
-        <div class="wh40k-section__body" data-section-content="ammunition">
+        <div class="wh40k-section__body tw-animate-slide-in-up" data-section-content="ammunition">
           <div class="wh40k-form-grid wh40k-form-grid--3col">
             {{!-- Current --}}
             <div class="wh40k-float-field wh40k-float-field--narrow">
@@ -482,7 +482,7 @@
           <span>Acquisition</span>
           <i class="fa-solid fa-chevron-down wh40k-section__toggle"></i>
         </header>
-        <div class="wh40k-section__body" data-section-content="acquisition">
+        <div class="wh40k-section__body tw-animate-slide-in-up" data-section-content="acquisition">
           <div class="wh40k-form-grid wh40k-form-grid--2col">
             {{!-- Availability --}}
             <div class="wh40k-float-field wh40k-float-field--select">
@@ -536,7 +536,7 @@
           <span>Description</span>
           <i class="fa-solid fa-chevron-down wh40k-section__toggle"></i>
         </header>
-        <div class="wh40k-section__body wh40k-section__body--prose" data-section-content="description">
+        <div class="wh40k-section__body wh40k-section__body--prose tw-animate-slide-in-up" data-section-content="description">
           {{#if inEditMode}}
           <div class="wh40k-description-editor">
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
@@ -573,7 +573,7 @@
           {{/if}}
           <i class="fa-solid fa-chevron-down wh40k-section__toggle"></i>
         </header>
-        <div class="wh40k-section__body" data-section-content="modifications">
+        <div class="wh40k-section__body tw-animate-slide-in-up" data-section-content="modifications">
           {{#if modificationsData.length}}
           <div class="wh40k-mods-list" data-drop-zone="modifications">
             {{#each modificationsData as |mod|}}
@@ -622,7 +622,7 @@
           <span class="tw-inline-flex tw-items-center tw-justify-center tw-min-w-[22px] tw-h-[22px] tw-px-1.5 tw-ml-1.5 tw-bg-gold bc:tw-bg-crimson-light dh1e:tw-bg-gold-raw-l5 dh2e:tw-bg-gold-raw dw:tw-bg-accent-combat ow:tw-bg-brass-l20 rt:tw-bg-gold im:tw-bg-failure tw-rounded-full tw-font-ui tw-text-xs tw-font-bold tw-text-[#1a1a1a]">{{effects.length}}</span>
           <i class="fa-solid fa-chevron-down wh40k-section__toggle"></i>
         </header>
-        <div class="wh40k-section__body" data-section-content="effects">
+        <div class="wh40k-section__body tw-animate-slide-in-up" data-section-content="effects">
           {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
         </div>
       </section>
