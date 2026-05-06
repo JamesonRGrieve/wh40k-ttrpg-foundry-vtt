@@ -1,0 +1,18 @@
+{{!--
+    Labeled stat chip — small horizontal pill with an uppercase label and a
+    bold numeric value, set against a translucent white card. Used by
+    encumbrance and similar inventory readouts where multiple discrete
+    "label : value" pairs sit side-by-side in a single panel body.
+
+    Required hash params:
+        label       — label text (already localized by caller).
+        value       — value to display (already resolved by caller).
+
+    Optional hash params:
+        rootClass   — additional utility classes appended to the outer chip
+                      (for layout positioning or override styling).
+--}}
+<div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-m-0.5 tw-bg-white/50 tw-rounded-md tw-border tw-border-black/10{{#if rootClass}} {{rootClass}}{{/if}}">
+    <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">{{label}}</span>
+    <span class="tw-font-bold">{{value}}</span>
+</div>
