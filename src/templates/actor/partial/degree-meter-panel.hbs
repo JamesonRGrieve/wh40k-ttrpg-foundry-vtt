@@ -69,7 +69,7 @@
 
             <div class="tw-flex tw-items-center tw-gap-1 tw-text-sm tw-font-medium">
                 <span class="tw-text-muted">{{modifierWord}}</span>
-                <span class="tw-text-gold">{{meta.modifier}}</span>
+                <span class="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{meta.modifier}}</span>
             </div>
         </div>
 
@@ -152,7 +152,7 @@
             {{/if}}
 
             {{!-- Drop Zone (always visible) --}}
-            <div class="wh40k-dropzone {{#unless (any actor.items itemFlag)}}wh40k-dropzone-empty{{/unless}} tw-mt-2 tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-p-2 tw-border tw-border-dashed tw-border-gray-600 tw-rounded tw-cursor-pointer tw-text-center hover:tw-border-gold hover:tw-bg-gold/5"
+            <div class="wh40k-dropzone {{#unless (any actor.items itemFlag)}}wh40k-dropzone-empty{{/unless}} tw-mt-2 tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-p-2 tw-border tw-border-dashed tw-border-gray-600 tw-rounded tw-cursor-pointer tw-text-center hover:tw-border-gold bc:hover:tw-border-crimson-light dh1e:hover:tw-border-gold-raw-l5 dh2e:hover:tw-border-gold-raw dw:hover:tw-border-accent-combat ow:hover:tw-border-brass-l20 rt:hover:tw-border-gold im:hover:tw-border-failure hover:tw-bg-gold/5 bc:hover:tw-bg-crimson-light/5 dh1e:hover:tw-bg-gold-raw-l5/5 dh2e:hover:tw-bg-gold-raw/5 dw:hover:tw-bg-accent-combat/5 ow:hover:tw-bg-brass-l20/5 rt:hover:tw-bg-gold/5 im:hover:tw-bg-failure/5"
                  data-action="itemCreate"
                  data-type="{{dropType}}">
                 <i class="fas fa-shield-alt tw-text-[2rem] tw-text-muted"></i>
