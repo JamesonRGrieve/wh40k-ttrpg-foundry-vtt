@@ -38,7 +38,7 @@
     {{!-- Roll Result --}}
     {{#if hasRolled}}
         <div class="roll-result-container tw-flex tw-flex-col tw-gap-4">
-            <div class="roll-result {{rollType}} tw-p-7 tw-bg-[linear-gradient(135deg,var(--wh40k-panel-bg-solid)_0%,var(--wh40k-input-bg)_100%)] tw-border-[3px] tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-text-center tw-shadow-[0_0_20px_rgba(201,162,39,0.3)]">
+            <div class="roll-result {{rollType}} tw-p-7 tw-bg-[linear-gradient(135deg,var(--wh40k-panel-bg-solid)_0%,var(--wh40k-input-bg)_100%)] tw-border-[3px] tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-text-center tw-shadow-[0_0_20px_rgba(201,162,39,0.3)] tw-animate-[slideDown_0.4s_ease-out]">
                 <div class="result-value tw-flex tw-flex-col tw-items-center tw-gap-3">
                     <span class="result-number tw-text-[4rem] tw-font-black tw-font-[var(--wh40k-font-display)] tw-text-[color:var(--wh40k-gold)] tw-[text-shadow:0_0_15px_rgba(201,162,39,0.5),0_2px_4px_rgba(0,0,0,0.5)] tw-leading-none">{{rollResult.total}}</span>
                     <span class="result-label tw-text-[1.2rem] tw-font-semibold tw-text-[color:var(--wh40k-text-light)] tw-uppercase tw-tracking-[2px]">{{rollTypeLabel}}</span>
@@ -75,7 +75,7 @@
     <div class="dialog-actions tw-flex tw-justify-between tw-items-center tw-pt-4 tw-mt-2 tw-border-t-2 tw-border-[var(--wh40k-bronze)]">
         <div class="left-actions tw-flex tw-gap-3">
             {{#unless hasRolled}}
-                <button type="button" class="primary-button roll-button tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-bg-dark)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-gold-hover)] hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_12px_rgba(201,162,39,0.4)]" data-action="roll">
+                <button type="button" class="primary-button roll-button tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-bg-dark)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-gold-hover)] hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_12px_rgba(201,162,39,0.4)] tw-animate-emphasize" data-action="roll">
                     <i class="fa-solid fa-dice tw-text-[1.1rem]"></i>
                     <span>Roll For Me</span>
                 </button>
@@ -98,7 +98,7 @@
             </button>
 
             {{#if hasRolled}}
-                <button type="submit" class="primary-button accept-button tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-bg-dark)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-gold-hover)] hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_12px_rgba(201,162,39,0.4)]" data-action="accept">
+                <button type="submit" class="primary-button accept-button tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-bg-dark)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-gold-hover)] hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_12px_rgba(201,162,39,0.4)] tw-animate-glow" data-action="accept">
                     <i class="fa-solid fa-check tw-text-[1.1rem]"></i>
                     <span>Accept</span>
                 </button>

@@ -28,7 +28,7 @@
     <span class="tw-flex-1">{{title}}</span>
   </div>
 
-  <div class="wh40k-expansion-panel {{#if expanded}}wh40k-expansion-panel--open{{/if}} tw-p-2 tw-mt-1 tw-bg-[rgba(20,20,30,0.85)] tw-rounded-md tw-border-l-[3px] tw-border-solid tw-border-[var(--wh40k-accent,#3b82f6)] tw-shadow-inset"
+  <div class="wh40k-expansion-panel {{#if expanded}}wh40k-expansion-panel--open tw-animate-slideDown{{/if}} tw-p-2 tw-mt-1 tw-bg-[rgba(20,20,30,0.85)] tw-rounded-md tw-border-l-[3px] tw-border-solid tw-border-[var(--wh40k-accent,#3b82f6)] tw-shadow-inset"
        data-panel-id="{{id}}"
        {{#if accentColor}}style="--wh40k-accent: {{accentColor}}"{{/if}}>
     {{{content}}}

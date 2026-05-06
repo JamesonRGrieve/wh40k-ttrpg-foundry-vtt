@@ -2187,7 +2187,6 @@ body.theme-dark {
 
     &--open {
         display: block;
-        animation: slideDown 0.2s ease-out;
     }
 }
 
@@ -15244,7 +15243,6 @@ body.theme-dark {
             background: rgb(from #c0392b r g b / 0.3);
             color: #c0392b;
             border: 1px solid rgb(from #c0392b r g b / 0.4);
-            animation: pulse-danger 2s ease-in-out infinite;
         }
 
         &--permanent {
@@ -21426,7 +21424,6 @@ body.theme-dark {
 
         .wh40k-wounds-current {
             color: var(--wh40k-wounds-secondary);
-            animation: pulse-scale 1.5s ease-in-out infinite;
         }
     }
 
@@ -22058,7 +22055,6 @@ body.theme-dark {
 
         .wh40k-fatigue-current {
             color: var(--wh40k-fatigue-secondary);
-            animation: pulse-scale 1.5s ease-in-out infinite;
         }
     }
 
@@ -30382,11 +30378,6 @@ body.theme-dark {
     gap: 2px;
     font-size: 0.7rem;
     color: #f59e0b;
-
-    i {
-        font-size: 0.6rem;
-        animation: spin 2s linear infinite;
-    }
 }
 
 /* ============================================ */
@@ -30533,7 +30524,6 @@ body.theme-dark {
     padding: var(--wh40k-space-md);
     background: var(--wh40k-panel-bg-translucent);
     border-top: 1px solid var(--wh40k-border-color-light);
-    animation: expandDown 0.2s ease;
 
     &[hidden] {
         display: none;
@@ -41597,7 +41587,6 @@ body.theme-dark {
     border: 3px solid var(--wh40k-gold);
     border-radius: var(--wh40k-radius-md);
     text-align: center;
-    animation: slideDown 0.4s ease-out;
     box-shadow: 0 0 20px rgba(201, 162, 39, 0.3);
 }
 
@@ -41656,12 +41645,6 @@ body.theme-dark {
     border: 2px dashed var(--wh40k-bronze);
     border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-text-muted);
-
-    i {
-        color: var(--wh40k-bronze);
-        margin-bottom: 1.25rem;
-        animation: pulse 2.5s ease-in-out infinite;
-    }
 
     p {
         margin: 0;
@@ -41796,14 +41779,6 @@ body.theme-dark {
         border-color: var(--wh40k-gold);
         color: var(--wh40k-gold);
     }
-}
-
-.roll-button {
-    animation: emphasize 1.5s ease-in-out infinite;
-}
-
-.accept-button {
-    animation: glow 2s ease-in-out infinite;
 }
 
 /* ── source: src/css/_journals.css ── */
@@ -48683,7 +48658,6 @@ body.theme-dark {
         grid-gap: 0;
         opacity: 1;
         transform: translateY(0);
-        animation: fadeSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
     .rt {
