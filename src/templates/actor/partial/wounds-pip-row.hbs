@@ -1,0 +1,30 @@
+{{!--
+    Critical-damage pip row for the wounds panel (10 pips).
+
+    Hash params:
+        critical — required, current critical damage value
+        mode     — "display" (radial-glow filled glyph) or "edit" (numbered glyph)
+--}}
+<div class="tw-flex tw-flex-wrap tw-gap-[6px] tw-justify-center">
+    {{#each (array 1 2 3 4 5 6 7 8 9 10) as |level|}}
+        <button type="button"
+                class="tw-w-7 tw-h-7 tw-p-0 tw-border-2 tw-border-solid tw-rounded-full tw-cursor-pointer tw-flex tw-items-center tw-justify-center tw-relative {{#if (lte level ../critical)}}tw-border-crimson tw-bg-[var(--wh40k-wounds-bg)]{{else}}tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-btn-bg)]{{/if}}"
+                data-action="setCriticalPip"
+                data-crit-level="{{level}}"
+                title="{{#if (eq ../mode 'edit')}}Set Critical to {{level}}{{else}}Critical Level {{level}} - Click to toggle{{/if}}">
+            {{#if (lte level ../critical)}}
+                {{#if (eq ../mode 'edit')}}
+                    <span class="tw-text-[0.65rem] tw-font-bold tw-text-white" style="background: radial-gradient(circle, #d85545, var(--wh40k-wounds-secondary)); width: auto; height: auto;">{{level}}</span>
+                {{else}}
+                    <span class="tw-w-4 tw-h-4 tw-rounded-full" style="background: radial-gradient(circle, #d85545, var(--wh40k-wounds-secondary)); box-shadow: 0 0 8px rgba(182,58,43,0.6), inset 0 1px 2px rgba(0,0,0,0.3);"></span>
+                {{/if}}
+            {{else}}
+                {{#if (eq ../mode 'edit')}}
+                    <span class="tw-text-[0.65rem] tw-font-bold tw-text-[var(--wh40k-text-muted)]">{{level}}</span>
+                {{else}}
+                    <span class="tw-w-4 tw-h-4 tw-rounded-full tw-bg-[var(--wh40k-border-accent)]"></span>
+                {{/if}}
+            {{/if}}
+        </button>
+    {{/each}}
+</div>
