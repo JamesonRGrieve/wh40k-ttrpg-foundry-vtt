@@ -1,10 +1,10 @@
 {{! Rogue Trader Assign Damage Card - Modern Design }}
 <div class="tw-font-ui">
-    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-card-border)] tw-bg-[var(--wh40k-card-bg)] tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]">
+    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-card-border)] tw-bg-[var(--wh40k-card-bg)] tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
         {{! Header }}
         <div class="tw-relative tw-px-4 tw-py-3 tw-bg-gradient-to-r tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color)]">
             <div class="tw-text-xs tw-text-[var(--wh40k-card-muted)] tw-uppercase tw-tracking-widest tw-mb-1">{{this.actor.name}}</div>
-            {{#if hasDamage}}<h2 class="tw-font-display tw-text-lg tw-font-semibold tw-text-[var(--wh40k-card-gold)] tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{this.hit.location}} Hit</h2>{{else}}<h2 class="tw-font-display tw-text-lg tw-font-semibold tw-text-[var(--wh40k-card-gold)] tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">Damage Applied</h2>{{/if}}
+            {{#if hasDamage}}<h2 class="tw-font-display tw-text-lg tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{this.hit.location}} Hit</h2>{{else}}<h2 class="tw-font-display tw-text-lg tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">Damage Applied</h2>{{/if}}
         </div>
 
         {{! Body }}
