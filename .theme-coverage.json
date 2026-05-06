@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-06T17:23:50.252Z",
+  "generatedAt": "2026-05-06T18:26:34.658Z",
   "total": 244,
-  "adopted": 35,
+  "adopted": 48,
   "perSystemHits": {
-    "bc": 80,
-    "dh1e": 80,
-    "dh2e": 84,
-    "dw": 80,
-    "ow": 80,
-    "rt": 84,
-    "im": 84
+    "bc": 140,
+    "dh1e": 140,
+    "dh2e": 144,
+    "dw": 140,
+    "ow": 140,
+    "rt": 144,
+    "im": 144
   },
   "adoptedTemplates": [
     "src/templates/actor/panel/active-effects-compact.hbs",
@@ -41,11 +41,24 @@
     "src/templates/chat/item-card-chat.hbs",
     "src/templates/chat/partial/chat-card-shell.hbs",
     "src/templates/dialogs/advancement-dialog.hbs",
+    "src/templates/item/armour-mod-modifiers.hbs",
+    "src/templates/item/armour-mod-restrictions.hbs",
     "src/templates/item/item-armour-sheet.hbs",
     "src/templates/item/item-condition-sheet.hbs",
+    "src/templates/item/item-critical-injury-sheet.hbs",
+    "src/templates/item/item-force-field-sheet.hbs",
+    "src/templates/item/item-journal-entry-sheet.hbs",
+    "src/templates/item/item-origin-path-sheet.hbs",
     "src/templates/item/item-psychic-power-sheet.hbs",
     "src/templates/item/item-sheet.hbs",
     "src/templates/item/item-skill-sheet.hbs",
-    "src/templates/item/item-weapon-mod-sheet.hbs"
+    "src/templates/item/item-storage-location-sheet.hbs",
+    "src/templates/item/item-weapon-mod-sheet.hbs",
+    "src/templates/item/npc-template/tabs.hbs",
+    "src/templates/item/panel/acquisition-panel.hbs",
+    "src/templates/item/panel/active-effects-panel.hbs",
+    "src/templates/item/panel/modifiers-editor-panel.hbs",
+    "src/templates/item/panel/modifiers-panel.hbs",
+    "src/templates/item/panel/source-panel.hbs"
   ]
 }
