@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-06T16:56:22.186Z",
+  "generatedAt": "2026-05-06T16:59:09.642Z",
   "total": 244,
-  "adopted": 12,
+  "adopted": 13,
   "perSystemHits": {
-    "bc": 11,
-    "dh1e": 11,
-    "dh2e": 15,
-    "dw": 11,
-    "ow": 11,
-    "rt": 15,
-    "im": 15
+    "bc": 12,
+    "dh1e": 12,
+    "dh2e": 16,
+    "dw": 12,
+    "ow": 12,
+    "rt": 16,
+    "im": 16
   },
   "adoptedTemplates": [
     "src/templates/actor/panel/fate-panel.hbs",
@@ -19,6 +19,7 @@
     "src/templates/actor/partial/header-base.hbs",
     "src/templates/actor/partial/item-table-row.hbs",
     "src/templates/actor/partial/item-table.hbs",
+    "src/templates/actor/partial/panel.hbs",
     "src/templates/actor/partial/tab-strip.hbs",
     "src/templates/actor/player/header-dh.hbs",
     "src/templates/chat/item-card-chat.hbs",
