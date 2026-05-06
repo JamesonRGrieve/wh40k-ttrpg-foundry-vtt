@@ -1,104 +1,77 @@
 {{! Rogue Trader Talent Chat Card }}
-<div class="tw-font-ui">
-    <div class="tw-relative tw-overflow-hidden tw-rounded-md">
-        {{! Header }}
-        <div class="tw-flex tw-items-start tw-gap-3 tw-p-3 tw-flex-shrink-0 tw-border-b-2 tw-border-accent-talents/30 tw-bg-[linear-gradient(180deg,rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.15)_0%,transparent_100%)]">
-            <img class="tw-w-12 tw-h-12 tw-rounded-full tw-border-2 tw-border-white/80 tw-shadow tw-object-cover tw-flex-shrink-0" src="{{talent.img}}" alt="{{talent.name}}" />
-            <div class="tw-flex-1">
-                <h3 class="tw-m-0 tw-mb-1 tw-text-lg tw-font-bold">{{talent.name}}</h3>
-                <div class="tw-flex tw-gap-1 tw-mt-1 tw-flex-wrap">
-                    <span class="wh40k-badge tw-bg-accent-talents/10 tw-border-accent-talents/30 tw-text-accent-talents {{tierColor talent.tier}}">
-                        <i class="fas fa-layer-group"></i>
-                        {{talent.tierLabel}}
-                    </span>
-                    <span class="wh40k-badge tw-bg-gold/10 tw-border-gold/30 tw-text-gold">
-                        <i class="fas {{talentIcon talent.category}}"></i>
-                        {{talent.category}}
-                    </span>
-                    {{#if talent.isPassive}}
-                        <span class="wh40k-badge tw-bg-[var(--color-bg-option)] tw-border-[var(--color-border-secondary)] tw-text-[var(--color-text-secondary)]">
-                            <i class="fas fa-circle"></i>
-                            Passive
-                        </span>
-                    {{else}}
-                        <span class="wh40k-badge tw-bg-[var(--color-bg-option)] tw-border-[var(--color-border-secondary)] tw-text-[var(--color-text-secondary)]">
-                            <i class="fas fa-bolt"></i>
-                            Active
-                        </span>
-                    {{/if}}
-                </div>
+{{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
+    cardClass="wh40k-talent-card"
+    outerExtraClass="tw-overflow-hidden tw-rounded-md tw-font-ui"
+    image=talent.img
+    imageAlt=talent.name
+    title=talent.name
+    gameSystem=gameSystem
+    badges=(array
+        (hash icon="fa-layer-group" label=talent.tierLabel)
+        (hash icon=(talentIcon talent.category) label=talent.category)
+        (hash icon=(iff talent.isPassive "fa-circle" "fa-bolt") label=(iff talent.isPassive "Passive" "Active"))
+    )
+    footerLabel=timestamp
+    footerIcon="fa-clock"
+}}
+    {{! Prerequisites Section }}
+    {{#if talent.hasPrerequisites}}
+        <div class="tw-mb-3">
+            <h4 class="tw-flex tw-items-center tw-gap-1.5 tw-mb-3 tw-py-2 tw-px-3 tw-m-0 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.1)_0%,transparent_100%)] tw-border-l-[3px] tw-border-accent-talents tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-text-dark)]">
+                <i class="fas fa-tasks tw-text-accent-talents tw-text-[0.9rem]"></i>
+                Prerequisites
+            </h4>
+            <div class="tw-text-sm tw-leading-relaxed tw-text-[var(--color-text-primary)]">
+                {{talent.prerequisitesLabel}}
             </div>
         </div>
+    {{/if}}
 
-        {{! Body }}
-        <div class="tw-p-3">
-            {{! Prerequisites Section }}
-            {{#if talent.hasPrerequisites}}
-                <div class="tw-mb-3">
-                    <h4 class="tw-flex tw-items-center tw-gap-1.5 tw-mb-3 tw-py-2 tw-px-3 tw-m-0 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.1)_0%,transparent_100%)] tw-border-l-[3px] tw-border-accent-talents tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-text-dark)]">
-                        <i class="fas fa-tasks tw-text-accent-talents tw-text-[0.9rem]"></i>
-                        Prerequisites
-                    </h4>
-                    <div class="tw-text-sm tw-leading-relaxed tw-text-[var(--color-text-primary)]">
-                        {{talent.prerequisitesLabel}}
-                    </div>
-                </div>
-            {{/if}}
-
-            {{! Benefit Section }}
-            <div class="tw-mb-3">
-                <h4 class="tw-flex tw-items-center tw-gap-1.5 tw-mb-3 tw-py-2 tw-px-3 tw-m-0 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.1)_0%,transparent_100%)] tw-border-l-[3px] tw-border-accent-talents tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-text-dark)]">
-                    <i class="fas fa-star tw-text-accent-talents tw-text-[0.9rem]"></i>
-                    Benefit
-                </h4>
-                <div class="tw-text-[0.9rem] tw-leading-[1.65] tw-text-[var(--color-text-primary)]">
-                    {{{talent.benefit}}}
-                </div>
-            </div>
-
-            {{! Specialization (if present) }}
-            {{#if talent.specialization}}
-                <div class="tw-mb-3">
-                    <h4 class="tw-flex tw-items-center tw-gap-1.5 tw-mb-3 tw-py-2 tw-px-3 tw-m-0 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.1)_0%,transparent_100%)] tw-border-l-[3px] tw-border-accent-talents tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-text-dark)]">
-                        <i class="fas fa-tag tw-text-accent-talents tw-text-[0.9rem]"></i>
-                        Specialization
-                    </h4>
-                    <div class="tw-text-sm tw-leading-relaxed tw-text-[var(--color-text-primary)]">
-                        {{talent.specialization}}
-                        {{#if talent.stackable}}
-                            {{#if talent.rank}}
-                                <span class="tw-text-[var(--color-text-secondary)] tw-italic">(Rank {{talent.rank}})</span>
-                            {{/if}}
-                        {{/if}}
-                    </div>
-                </div>
-            {{/if}}
-        </div>
-
-        {{! Footer }}
-        <div class="tw-flex-shrink-0 tw-px-3 tw-py-2 tw-border-t tw-border-[var(--color-border-light)] tw-bg-[linear-gradient(180deg,rgba(0,0,0,0.1),rgba(0,0,0,0.2))]">
-            <div class="tw-flex tw-flex-wrap tw-gap-3">
-                {{#if talent.aptitudes.length}}
-                    <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-sm">
-                        <strong>Aptitudes:</strong>
-                        <div class="tw-flex tw-flex-wrap tw-gap-1.5">
-                            {{#each talent.aptitudes as |apt|}}
-                                <span class="tw-inline-block tw-px-1.5 tw-py-0.5 tw-bg-gradient-to-br tw-from-accent-talents/15 tw-to-accent-talents/10 tw-border tw-border-accent-talents/30 tw-rounded tw-text-[0.7rem] tw-font-semibold tw-text-[var(--wh40k-text-dark)] tw-uppercase tw-tracking-wide">{{apt}}</span>
-                            {{/each}}
-                        </div>
-                    </div>
-                {{/if}}
-
-                <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-sm">
-                    <strong>Cost:</strong>
-                    {{talent.costLabel}}
-                </div>
-            </div>
-
-            <div class="tw-mt-1 tw-flex tw-items-center tw-gap-1.5 tw-text-xs tw-text-[var(--wh40k-text-muted)]">
-                <i class="far fa-clock"></i>
-                {{timestamp}}
-            </div>
+    {{! Benefit Section }}
+    <div class="tw-mb-3">
+        <h4 class="tw-flex tw-items-center tw-gap-1.5 tw-mb-3 tw-py-2 tw-px-3 tw-m-0 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.1)_0%,transparent_100%)] tw-border-l-[3px] tw-border-accent-talents tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-text-dark)]">
+            <i class="fas fa-star tw-text-accent-talents tw-text-[0.9rem]"></i>
+            Benefit
+        </h4>
+        <div class="tw-text-[0.9rem] tw-leading-[1.65] tw-text-[var(--color-text-primary)]">
+            {{{talent.benefit}}}
         </div>
     </div>
-</div>
+
+    {{! Specialization (if present) }}
+    {{#if talent.specialization}}
+        <div class="tw-mb-3">
+            <h4 class="tw-flex tw-items-center tw-gap-1.5 tw-mb-3 tw-py-2 tw-px-3 tw-m-0 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.1)_0%,transparent_100%)] tw-border-l-[3px] tw-border-accent-talents tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-text-dark)]">
+                <i class="fas fa-tag tw-text-accent-talents tw-text-[0.9rem]"></i>
+                Specialization
+            </h4>
+            <div class="tw-text-sm tw-leading-relaxed tw-text-[var(--color-text-primary)]">
+                {{talent.specialization}}
+                {{#if talent.stackable}}
+                    {{#if talent.rank}}
+                        <span class="tw-text-[var(--color-text-secondary)] tw-italic">(Rank {{talent.rank}})</span>
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+    {{/if}}
+
+    {{! Aptitudes + Cost (formerly footer rows) }}
+    <div class="tw-flex tw-flex-wrap tw-gap-3 tw-pt-2 tw-border-t tw-border-[var(--color-border-light)]">
+        {{#if talent.aptitudes.length}}
+            <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-sm">
+                <strong>Aptitudes:</strong>
+                <div class="tw-flex tw-flex-wrap tw-gap-1.5">
+                    {{#each talent.aptitudes as |apt|}}
+                        <span class="tw-inline-block tw-px-1.5 tw-py-0.5 tw-bg-gradient-to-br tw-from-accent-talents/15 tw-to-accent-talents/10 tw-border tw-border-accent-talents/30 tw-rounded tw-text-[0.7rem] tw-font-semibold tw-text-[var(--wh40k-text-dark)] tw-uppercase tw-tracking-wide">{{apt}}</span>
+                    {{/each}}
+                </div>
+            </div>
+        {{/if}}
+
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-sm">
+            <strong>Cost:</strong>
+            {{talent.costLabel}}
+        </div>
+    </div>
+{{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}
