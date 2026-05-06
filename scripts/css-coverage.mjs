@@ -158,6 +158,12 @@ const JS_HOOKS = new Set([
     'urd-power-name',
     // Dead structural classes — no CSS rules, no JS queries; kept only as DOM identifiers.
     'wh40k-item-tab',
+    // Dead nav container class on npc-template/tabs.hbs — no CSS rules, no JS queries.
+    'wh40k-tabs-nav',
+    // Tailwind arbitrary-selector targets: ancestors use `[&_.positive]:tw-*` / `[&_.negative]:tw-*`
+    // to conditionally color child spans. Not CSS classes in the project stylesheet.
+    'positive',
+    'negative',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a

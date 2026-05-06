@@ -1,19 +1,19 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Vehicle.Armour") icon="fa-shield-alt" rootClass="tw-col-span-3" bodyClass="tw-p-0" titleClass="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"}}
     <div class="tw-grid tw-grid-cols-3 tw-gap-2 tw-p-2">
         <div class="tw-flex tw-flex-col tw-gap-1">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Armour.Front"}}</span>
-            <div class="wh40k-field__wrapper">
+            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Armour.Front"}}</span>
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-py-1.5 tw-px-2 tw-bg-white/50 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
                 <input
                     type="number"
                     data-dtype="Number"
-                    class="wh40k-field__input"
+                    class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]"
                     name="system.armour.front.value"
                     value="{{source.armour.front.value}}"
                     placeholder="0"
                 />
                 <input
                     type="text"
-                    class="wh40k-field__input tw-italic tw-opacity-70"
+                    class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)] tw-italic tw-opacity-70"
                     name="system.armour.front.descriptor"
                     value="{{source.armour.front.descriptor}}"
                     placeholder="Descriptor"
@@ -21,19 +21,19 @@
             </div>
         </div>
         <div class="tw-flex tw-flex-col tw-gap-1">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Armour.Side"}}</span>
-            <div class="wh40k-field__wrapper">
+            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Armour.Side"}}</span>
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-py-1.5 tw-px-2 tw-bg-white/50 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
                 <input
                     type="number"
                     data-dtype="Number"
-                    class="wh40k-field__input"
+                    class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]"
                     name="system.armour.side.value"
                     value="{{source.armour.side.value}}"
                     placeholder="0"
                 />
                 <input
                     type="text"
-                    class="wh40k-field__input tw-italic tw-opacity-70"
+                    class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)] tw-italic tw-opacity-70"
                     name="system.armour.side.descriptor"
                     value="{{source.armour.side.descriptor}}"
                     placeholder="Descriptor"
@@ -41,19 +41,19 @@
             </div>
         </div>
         <div class="tw-flex tw-flex-col tw-gap-1">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Armour.Rear"}}</span>
-            <div class="wh40k-field__wrapper">
+            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Armour.Rear"}}</span>
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-py-1.5 tw-px-2 tw-bg-white/50 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
                 <input
                     type="number"
                     data-dtype="Number"
-                    class="wh40k-field__input"
+                    class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]"
                     name="system.armour.rear.value"
                     value="{{source.armour.rear.value}}"
                     placeholder="0"
                 />
                 <input
                     type="text"
-                    class="wh40k-field__input tw-italic tw-opacity-70"
+                    class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)] tw-italic tw-opacity-70"
                     name="system.armour.rear.descriptor"
                     value="{{source.armour.rear.descriptor}}"
                     placeholder="Descriptor"
