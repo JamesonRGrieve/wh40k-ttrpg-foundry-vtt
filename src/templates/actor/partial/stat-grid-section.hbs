@@ -23,23 +23,23 @@
         sectionClass  — extra classes on the outer section wrapper.
         gridClass     — extra classes on the inner grid container.
 --}}
-<div class="wh40k-stat-grid-section tw-mb-3 tw-rounded-md{{#if sectionClass}} {{sectionClass}}{{/if}}">
+<div class="tw-mb-3 tw-rounded-md{{#if sectionClass}} {{sectionClass}}{{/if}}">
     {{#if heading}}
-    <div class="wh40k-stat-grid-header tw-flex tw-items-center tw-gap-2 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-mb-2 tw-pb-1">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-mb-2 tw-pb-1">
         {{#if headingIcon}}<i class="fas {{headingIcon}} tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-gold)] bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>{{/if}}
         <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted)]">{{heading}}</span>
     </div>
     {{/if}}
-    <div class="wh40k-stat-grid tw-grid tw-gap-2 tw-grid-cols-{{#if columns}}{{columns}}{{else}}3{{/if}}{{#if gridClass}} {{gridClass}}{{/if}}">
+    <div class="tw-grid tw-gap-2 tw-grid-cols-{{#if columns}}{{columns}}{{else}}3{{/if}}{{#if gridClass}} {{gridClass}}{{/if}}">
         {{#each stats}}
-        <div class="wh40k-stat-grid-cell tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1 tw-rounded-md tw-bg-white/50{{#if action}} tw-cursor-pointer hover:tw-bg-white/80{{/if}}{{#if cellClass}} {{cellClass}}{{/if}}"
+        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1 tw-rounded-md tw-bg-white/50{{#if action}} tw-cursor-pointer hover:tw-bg-white/80{{/if}}{{#if cellClass}} {{cellClass}}{{/if}}"
             {{#if action}}data-action="{{action}}"{{/if}}
             {{#if attrs}}{{{attrs}}}{{/if}}
             {{#if title}}title="{{title}}"{{/if}}>
             {{#if icon}}<i class="fas {{icon}} tw-text-[1.1rem] tw-text-[color:var(--wh40k-accent-gold)] bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>{{/if}}
-            <span class="wh40k-stat-grid-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-center tw-text-[color:var(--wh40k-text-muted)]">{{label}}</span>
-            <span class="wh40k-stat-grid-value tw-font-alt tw-text-[1.1rem] tw-font-bold tw-leading-none tw-text-[color:var(--color-text-primary)]">
-                {{value}}{{#if unit}}<span class="wh40k-stat-grid-unit tw-text-[0.7rem] tw-font-normal tw-ml-[2px] tw-text-[color:var(--wh40k-text-muted)]">{{unit}}</span>{{/if}}
+            <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-center tw-text-[color:var(--wh40k-text-muted)]">{{label}}</span>
+            <span class="tw-font-alt tw-text-[1.1rem] tw-font-bold tw-leading-none tw-text-[color:var(--color-text-primary)]">
+                {{value}}{{#if unit}}<span class="tw-text-[0.7rem] tw-font-normal tw-ml-[2px] tw-text-[color:var(--wh40k-text-muted)]">{{unit}}</span>{{/if}}
             </span>
         </div>
         {{/each}}
