@@ -1,19 +1,21 @@
 {
-  "generatedAt": "2026-05-06T17:03:31.102Z",
+  "generatedAt": "2026-05-06T17:05:51.645Z",
   "total": 244,
-  "adopted": 16,
+  "adopted": 18,
   "perSystemHits": {
-    "bc": 16,
-    "dh1e": 16,
-    "dh2e": 20,
-    "dw": 16,
-    "ow": 16,
-    "rt": 20,
-    "im": 20
+    "bc": 18,
+    "dh1e": 18,
+    "dh2e": 22,
+    "dw": 18,
+    "ow": 18,
+    "rt": 22,
+    "im": 22
   },
   "adoptedTemplates": [
     "src/templates/actor/panel/fate-panel.hbs",
     "src/templates/actor/panel/fatigue-panel.hbs",
+    "src/templates/actor/panel/wounds-panel.hbs",
+    "src/templates/actor/partial/actor-identity.hbs",
     "src/templates/actor/partial/collapsible-panel.hbs",
     "src/templates/actor/partial/degree-meter-panel.hbs",
     "src/templates/actor/partial/effect-row.hbs",

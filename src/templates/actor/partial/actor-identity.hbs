@@ -29,7 +29,7 @@
 
     <div class="tw-relative tw-aspect-[11/15] {{#if portraitWidthClass}}{{portraitWidthClass}}{{else}}tw-w-full tw-max-w-[160px]{{/if}} tw-self-center tw-cursor-pointer tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium,rgba(0,0,0,0.2))] tw-transition-all hover:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)]">
         {{#if withOriginBuilder}}
-        <i class="fa-solid fa-dice-d20 tw-absolute tw-text-2xl tw-top-2 tw-left-2 tw-z-10 tw-cursor-pointer tw-text-gold tw-opacity-60 tw-transition-all hover:tw-opacity-100 hover:tw-text-[#f0d060] hover:tw-drop-shadow-[0_0_8px_rgba(212,175,55,0.9)] {{#unless originPathComplete}}tw-animate-origin-pulse{{/unless}}"
+        <i class="fa-solid fa-dice-d20 tw-absolute tw-text-2xl tw-top-2 tw-left-2 tw-z-10 tw-cursor-pointer tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-opacity-60 tw-transition-all hover:tw-opacity-100 hover:tw-text-[#f0d060] hover:tw-drop-shadow-[0_0_8px_rgba(212,175,55,0.9)] {{#unless originPathComplete}}tw-animate-origin-pulse{{/unless}}"
            data-action="openOriginPathBuilder"
            data-tooltip="{{localize 'WH40K.Utility.SetupOriginPath'}}"></i>
         {{/if}}
