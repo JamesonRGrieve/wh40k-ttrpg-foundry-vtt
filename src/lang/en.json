@@ -2036,7 +2036,8 @@
             "AddVehicleWeapon": "Add Weapon",
             "AddVehicleUpgrade": "Add Upgrade",
             "FireWeapon": "Fire Weapon",
-            "Settings": "Settings"
+            "Settings": "Settings",
+            "ShowStatBreakdown": "Show stat breakdown"
         }
     }
 }
