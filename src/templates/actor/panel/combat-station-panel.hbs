@@ -198,7 +198,7 @@
                             <div class="wh40k-vital-stat-body">
                                 <div class="wh40k-fate-stars tw-flex tw-items-center tw-justify-center tw-gap-2.5 tw-py-1.5">
                                     {{#each (range 1 system.fate.max) as |index|}}
-                                        <button type="button" class="wh40k-fate-pip {{#if (lte index ../system.fate.value)}}wh40k-fate-pip--active{{/if}}" data-action="setFateStar" data-fate-index="{{index}}" title="Fate Point {{index}}">
+                                        <button type="button" class="wh40k-fate-pip {{#if (lte index ../system.fate.value)}}wh40k-fate-pip--active tw-animate-star-glow{{/if}}" data-action="setFateStar" data-fate-index="{{index}}" title="Fate Point {{index}}">
                                             <i class="fas fa-star"></i>
                                         </button>
                                     {{/each}}
