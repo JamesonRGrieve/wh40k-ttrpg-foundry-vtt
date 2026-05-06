@@ -1,20 +1,23 @@
 {
-  "generatedAt": "2026-05-06T17:09:50.817Z",
+  "generatedAt": "2026-05-06T17:14:34.032Z",
   "total": 244,
-  "adopted": 21,
+  "adopted": 25,
   "perSystemHits": {
-    "bc": 29,
-    "dh1e": 29,
-    "dh2e": 33,
-    "dw": 29,
-    "ow": 29,
-    "rt": 33,
-    "im": 33
+    "bc": 36,
+    "dh1e": 36,
+    "dh2e": 40,
+    "dw": 36,
+    "ow": 36,
+    "rt": 40,
+    "im": 40
   },
   "adoptedTemplates": [
     "src/templates/actor/panel/active-effects-compact.hbs",
+    "src/templates/actor/panel/characteristic-panel.hbs",
     "src/templates/actor/panel/fate-panel.hbs",
     "src/templates/actor/panel/fatigue-panel.hbs",
+    "src/templates/actor/panel/movement-panel-full.hbs",
+    "src/templates/actor/panel/talent-panel.hbs",
     "src/templates/actor/panel/wounds-panel.hbs",
     "src/templates/actor/partial/actor-identity.hbs",
     "src/templates/actor/partial/collapsible-panel.hbs",
@@ -30,6 +33,7 @@
     "src/templates/actor/player/header-dh.hbs",
     "src/templates/actor/starship/tab-history.hbs",
     "src/templates/actor/vehicle/tab-notes.hbs",
+    "src/templates/actor/vehicle/tab-overview.hbs",
     "src/templates/chat/item-card-chat.hbs",
     "src/templates/chat/partial/chat-card-shell.hbs",
     "src/templates/dialogs/advancement-dialog.hbs"
