@@ -9,6 +9,6 @@
         colSpan2 — optional bool; adds tw-col-span-2 (only meaningful inside a 2-col grid)
 --}}
 <div class="tw-flex tw-items-baseline tw-gap-1.5 {{#if compact}}tw-text-sm{{else}}tw-py-1 tw-text-base{{/if}}{{#if colSpan2}} tw-col-span-2{{/if}}">
-    <span class="tw-font-semibold {{#unless compact}}tw-flex-shrink-0 {{/unless}}tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">{{label}}</span>
+    <span class="tw-font-semibold {{#unless compact}}tw-flex-shrink-0 {{/unless}}tw-text-[var(--wh40k-bronze)] bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure after:tw-content-[':']">{{label}}</span>
     <span class="tw-text-[var(--wh40k-text-dark)]">{{#if valueHtml}}{{{value}}}{{else}}{{value}}{{/if}}</span>
 </div>

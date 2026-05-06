@@ -15,7 +15,7 @@
     footerLabel=item.system.source
 }}
     {{!-- Coverage Visual --}}
-    <div class="tw-flex tw-flex-wrap tw-gap-1 tw-pb-2 tw-mb-2 tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+    <div class="tw-flex tw-flex-wrap tw-gap-1 tw-pb-2 tw-mb-2 tw-border-b tw-border-[var(--wh40k-border-color-light)] bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure">
       {{#each item.system.locationArray as |loc|}}
       <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-text-xs {{#if loc.covered}}tw-bg-[var(--wh40k-accent-overlay)] tw-border-[var(--wh40k-bronze)] tw-text-[var(--wh40k-text-dark)]{{else}}tw-bg-transparent tw-border-[var(--wh40k-border-color-light)] tw-text-[var(--wh40k-text-muted)] tw-opacity-50{{/if}}">
         <span class="tw-font-semibold tw-uppercase tw-tracking-wide">{{loc.abbr}}</span>

@@ -1,6 +1,7 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
     label=(iff actor.encumbrance.encumbered (localize "WH40K.Encumbrance.TitleOverweight") (localize "WH40K.Encumbrance.Title"))
-    rootClass=(concat "tw-col-auto " (isError actor.encumbrance.encumbered))}}
+    rootClass=(concat "tw-col-auto " (isError actor.encumbrance.encumbered))
+    headerClass="tw-border-b-gold bc:tw-border-b-crimson-light dh1e:tw-border-b-gold-raw-l5 dh2e:tw-border-b-gold-raw dw:tw-border-b-accent-combat ow:tw-border-b-brass-l20 rt:tw-border-b-gold im:tw-border-b-failure"}}
     {{> systems/wh40k-rpg/templates/actor/partial/labeled-stat-chip.hbs
         label=(localize "WH40K.Encumbrance.Current") value=actor.encumbrance.value}}
     {{> systems/wh40k-rpg/templates/actor/partial/labeled-stat-chip.hbs
