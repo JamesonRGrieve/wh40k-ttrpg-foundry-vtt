@@ -17,7 +17,7 @@
       </div>
 
       <div class="wh40k-injury-header__info tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
-        <input type="text" class="wh40k-injury-header__name tw-font-display tw-text-xl tw-text-gold tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" value="{{item.name}}" placeholder="Critical Injury Name" />
+        <input type="text" class="wh40k-injury-header__name tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" value="{{item.name}}" placeholder="Critical Injury Name" />
 
         <div class="wh40k-injury-header__meta tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
           <span class="wh40k-injury-badge wh40k-injury-badge--damage wh40k-injury-badge--{{item.system.damageType}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Damage Type">
@@ -48,7 +48,7 @@
     ═══════════════════════════════════════════════════════════════════ --}}
     <div class="wh40k-injury-severity tw-p-3 tw-shrink-0">
       <div class="wh40k-injury-severity__header tw-flex tw-items-center tw-gap-2 tw-mb-2 tw-text-sm">
-        <i class="fas fa-chart-line tw-text-gold"></i>
+        <i class="fas fa-chart-line tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
         <span>Severity Level</span>
       </div>
       <div class="wh40k-injury-severity__slider tw-flex tw-flex-col tw-gap-1">
@@ -62,7 +62,7 @@
                class="wh40k-injury-severity__input tw-w-full" />
         <div class="wh40k-injury-severity__labels tw-flex tw-justify-between tw-text-xs">
           <span class="wh40k-injury-severity__label wh40k-injury-severity__label--min tw-opacity-70">Minor (1)</span>
-          <span class="wh40k-injury-severity__label wh40k-injury-severity__label--current tw-font-semibold tw-text-gold">
+          <span class="wh40k-injury-severity__label wh40k-injury-severity__label--current tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
             <strong>{{item.system.severity}}</strong>
           </span>
           <span class="wh40k-injury-severity__label wh40k-injury-severity__label--max tw-opacity-70">Fatal (10)</span>
