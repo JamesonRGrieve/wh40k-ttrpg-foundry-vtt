@@ -144,6 +144,12 @@ const JS_HOOKS = new Set([
     // Foundry VTT framework classes used by the tab system (TabsV2) at runtime.
     'tab',
     'tabs',
+    // base-item-sheet.ts wires Foundry's TabsV2 with navSelector:'.wh40k-tabs' and
+    // contentSelector:'.wh40k-tab-content'; primary-sheet-mixin.ts queries
+    // '.wh40k-tab.active[data-tab=...]' — permanent JS selectors, cannot be removed.
+    'wh40k-tabs',
+    'wh40k-tab',
+    'wh40k-tab-content',
     // Foundry VTT ProseMirror rich-text editor container class.
     'editor-content',
     // Foundry VTT sidebar tab link class (a.item) used by the TabsV2 nav system.
@@ -168,6 +174,18 @@ const JS_HOOKS = new Set([
     'wh40k-badge--stacks',
     'wh40k-badge--level',
     'wh40k-badge--variable',
+    // Foundry VTT dialog framework classes — rendered by Foundry's Dialog application
+    // infrastructure; the dialog host element carries these and styles them. They are
+    // not project CSS and cannot be migrated to Tailwind utilities.
+    'dialog-content',
+    'dialog-buttons',
+    'dialog-button',
+    'roll',
+    'default',
+    'cancel',
+    // weapon-attack-dialog.ts queries '.weapon-select' by class name to collect checked
+    // weapon ids — permanent JS selector, not a styling class.
+    'weapon-select',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
