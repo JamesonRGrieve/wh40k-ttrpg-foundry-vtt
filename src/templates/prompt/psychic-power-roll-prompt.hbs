@@ -4,7 +4,7 @@
         {{!-- Power Select or Info --}}
         {{#if powerSelect}}
             <div class="wh40k-prompt__panel tw-relative tw-mb-4">
-                <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Select Power</h3>
+                <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Select Power</h3>
                 <div class="wh40k-prompt__weapon-list tw-flex tw-flex-col tw-gap-2">
                     {{#each psychicPowers as |power|}}
                         <label class="wh40k-prompt__weapon-item tw-flex tw-items-center tw-gap-3 tw-cursor-pointer tw-rounded tw-p-3 {{#if power.isSelected}}wh40k-prompt__weapon-item--selected{{/if}}">
@@ -32,7 +32,7 @@
                 <div class="wh40k-prompt__header tw-flex tw-items-center tw-gap-[14px] tw-mb-4 tw-pb-[14px]">
                     <img class="wh40k-prompt__icon tw-w-12 tw-h-12 tw-flex-shrink-0 tw-rounded tw-object-cover" alt="{{power.name}}" src="{{power.img}}" />
                     <div class="wh40k-prompt__title-group tw-flex-1 tw-min-w-0">
-                        <h2 class="wh40k-prompt__title tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-wider tw-m-0 tw-truncate">{{power.name}}</h2>
+                        <h2 class="wh40k-prompt__title tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-wider tw-m-0 tw-truncate">{{power.name}}</h2>
                         <div class="wh40k-prompt__subtitle tw-text-[0.9rem] tw-text-[color:var(--wh40k-text-secondary)] tw-mt-1 tw-truncate">{{this.sourceActor.name}}</div>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                 {{!-- Target Display --}}
                 <div class="wh40k-prompt__target tw-flex tw-items-center tw-justify-between tw-py-2">
                     <span class="wh40k-prompt__target-label tw-text-[0.85rem]">Target ({{baseChar}})</span>
-                    <span class="wh40k-prompt__target-value tw-font-bold tw-text-[1.5rem] tw-text-gold">{{baseTarget}}</span>
+                    <span class="wh40k-prompt__target-value tw-font-bold tw-text-[1.5rem] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{baseTarget}}</span>
                     <span class="wh40k-prompt__target-percent tw-text-[0.85rem]">%</span>
                 </div>
 
@@ -56,7 +56,7 @@
 
             {{!-- Focus Power Section --}}
             <div class="wh40k-prompt__panel tw-relative tw-mb-4">
-                <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Focus Power</h3>
+                <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Focus Power</h3>
                 <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
                     <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Psychic Rating</span>
                     <input class="wh40k-prompt__input tw-text-right" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
@@ -75,7 +75,7 @@
 
             {{!-- Modifiers Section --}}
             <div class="wh40k-prompt__panel tw-relative tw-mb-0">
-                <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Modifiers</h3>
+                <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Modifiers</h3>
                 {{#with this.modifiers}}
                     <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
                         <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Difficulty</span>
