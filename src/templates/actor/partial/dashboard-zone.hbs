@@ -14,14 +14,14 @@
     Optional hash params:
         zoneClass    — extra class on the outer zone div (e.g. "wh40k-zone-vitals")
         contentClass — override the default content-pad utilities. Defaults to
-                       `wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1`
+                       `tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1`
 --}}
-<div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden{{#if zoneClass}} {{zoneClass}}{{/if}}">
-    <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+<div class="tw-flex tw-flex-col tw-overflow-hidden tw-bg-[var(--color-bg-secondary)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px]{{#if zoneClass}} {{zoneClass}}{{/if}}">
+    <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5 tw-bg-[var(--color-bg-tertiary)] tw-border-b tw-border-solid tw-border-[var(--color-border-secondary)] tw-text-xs tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
         <i class="fas {{icon}}"></i>
         <span>{{title}}</span>
     </div>
-    <div class="{{#if contentClass}}{{contentClass}}{{else}}wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1{{/if}}">
+    <div class="{{#if contentClass}}{{contentClass}}{{else}}tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1{{/if}}">
         {{> @partial-block}}
     </div>
 </div>

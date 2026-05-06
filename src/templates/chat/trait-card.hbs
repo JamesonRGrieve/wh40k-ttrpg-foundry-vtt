@@ -13,32 +13,32 @@
     footerIcon="fa-clock"
 }}
     {{#if requirements}}
-    <section class="wh40k-card-section wh40k-card-section--requirements">
-        <h4 class="wh40k-card-section-title">
+    <section class="tw-mb-2 tw-pb-2 tw-border-b tw-border-solid tw-border-[rgba(0,0,0,0.1)]">
+        <h4 class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-mb-1 tw-flex tw-items-center tw-gap-1">
             <i class="fas fa-lock"></i>
             Requirements
         </h4>
-        <p class="wh40k-card-section-content">{{requirements}}</p>
+        <p class="tw-text-sm">{{requirements}}</p>
     </section>
     {{/if}}
 
-    <section class="wh40k-card-section wh40k-card-section--benefit bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure">
-        <h4 class="wh40k-card-section-title">
+    <section class="tw-mb-2 bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure">
+        <h4 class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-mb-1 tw-flex tw-items-center tw-gap-1">
             <i class="fas fa-sparkles"></i>
             Effect
         </h4>
-        <div class="wh40k-card-section-content wh40k-prose">
+        <div class="tw-bg-[var(--wh40k-panel-body-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-text-dark)] tw-text-[length:var(--wh40k-font-size-sm)] tw-p-[var(--wh40k-space-sm)] tw-min-h-[40px] tw-max-h-[120px] tw-overflow-y-auto tw-leading-[1.4] hover:tw-border-[var(--wh40k-gold)] hover:tw-bg-[var(--wh40k-input-bg-focus)]">
             {{{benefit}}}
         </div>
     </section>
 
     {{#if notes}}
-    <section class="wh40k-card-section wh40k-card-section--notes">
-        <h4 class="wh40k-card-section-title">
+    <section class="tw-mt-2 tw-pt-2 tw-border-t tw-border-solid tw-border-[rgba(0,0,0,0.1)]">
+        <h4 class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-mb-1 tw-flex tw-items-center tw-gap-1">
             <i class="fas fa-sticky-note"></i>
             Notes
         </h4>
-        <p class="wh40k-card-section-content">{{notes}}</p>
+        <p class="tw-text-sm">{{notes}}</p>
     </section>
     {{/if}}
 {{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}
