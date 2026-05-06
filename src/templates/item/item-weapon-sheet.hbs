@@ -81,8 +81,9 @@
             <span class="wh40k-iconic-stat__label">Damage</span>
           </div>
           <div class="wh40k-iconic-stat__glow"></div>
+          {{#if hasModificationEffects}}<span class="wh40k-iconic-stat__mod-star tw-animate-star-twinkle tw-absolute tw-top-1 tw-right-1.5 tw-text-[0.6rem] tw-text-[var(--wh40k-gold)] tw-z-[3] tw-pointer-events-none" aria-hidden="true">★</span>{{/if}}
         </div>
-        
+
         {{!-- Penetration - Arrow (Medium) --}}
         <div class="wh40k-iconic-stat wh40k-iconic-stat--pen wh40k-iconic-stat--medium {{#if hasModificationEffects}}wh40k-iconic-stat--modified{{/if}}"
              data-tooltip="Penetration">
@@ -94,8 +95,9 @@
             <span class="wh40k-iconic-stat__label">Penetration</span>
           </div>
           <div class="wh40k-iconic-stat__glow"></div>
+          {{#if hasModificationEffects}}<span class="wh40k-iconic-stat__mod-star tw-animate-star-twinkle tw-absolute tw-top-1 tw-right-1.5 tw-text-[0.6rem] tw-text-[var(--wh40k-gold)] tw-z-[3] tw-pointer-events-none" aria-hidden="true">★</span>{{/if}}
         </div>
-        
+
         {{!-- To Hit - Crosshairs (Medium, conditional) --}}
         {{#if (ne effectiveToHit 0)}}
         <div class="wh40k-iconic-stat wh40k-iconic-stat--tohit wh40k-iconic-stat--medium"

@@ -320,6 +320,12 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
                 if (accepts.length === 0 || accepts.includes(item.type)) {
                     zoneEl.classList.add('drop-valid');
+                    if (!zoneEl.querySelector('.wh40k-drop-zone__pulse-bg')) {
+                        const pulseBg = document.createElement('span');
+                        pulseBg.className = 'wh40k-drop-zone__pulse-bg tw-animate-drop-zone-pulse tw-absolute tw-inset-0 tw-pointer-events-none';
+                        pulseBg.style.background = 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(212, 175, 55, 0.05) 10px, rgba(212, 175, 55, 0.05) 20px)';
+                        zoneEl.appendChild(pulseBg);
+                    }
                 } else {
                     zoneEl.classList.add('drop-invalid');
                 }
@@ -720,6 +726,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             this.element.querySelectorAll('[data-drop-zone]').forEach((zone) => {
                 zone.classList.remove('drop-valid', 'drop-invalid', 'drop-hover');
+                zone.querySelectorAll('.wh40k-drop-zone__pulse-bg').forEach((el) => el.remove());
             });
 
             this.element.querySelectorAll('.drop-indicator').forEach((el) => el.remove());

@@ -280,6 +280,19 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
                 (event.target as HTMLInputElement).select();
             });
         });
+
+        // Equipped toggle: burst-pulse animation on check
+        this.element.querySelectorAll<HTMLInputElement>('.wh40k-toggle-equipped input[type="checkbox"]').forEach((cb) => {
+            cb.addEventListener('change', () => {
+                if (!cb.checked) return;
+                const icon = cb.closest<HTMLElement>('.wh40k-toggle-equipped')?.querySelector<HTMLElement>('.wh40k-toggle-equipped__indicator i');
+                if (!icon) return;
+                icon.classList.remove('tw-animate-[burst-pulse_0.4s_ease]');
+                void icon.offsetWidth;
+                icon.classList.add('tw-animate-[burst-pulse_0.4s_ease]');
+                icon.addEventListener('animationend', () => icon.classList.remove('tw-animate-[burst-pulse_0.4s_ease]'), { once: true });
+            });
+        });
     }
 
     /* -------------------------------------------- */
