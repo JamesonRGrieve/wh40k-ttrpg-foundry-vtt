@@ -1,17 +1,18 @@
 {
-  "generatedAt": "2026-05-06T12:21:05.066Z",
-  "total": 240,
-  "adopted": 8,
+  "generatedAt": "2026-05-06T16:51:42.241Z",
+  "total": 244,
+  "adopted": 10,
   "perSystemHits": {
-    "bc": 7,
-    "dh1e": 7,
-    "dh2e": 11,
-    "dw": 7,
-    "ow": 7,
-    "rt": 11,
-    "im": 11
+    "bc": 9,
+    "dh1e": 9,
+    "dh2e": 13,
+    "dw": 9,
+    "ow": 9,
+    "rt": 13,
+    "im": 13
   },
   "adoptedTemplates": [
+    "src/templates/actor/partial/collapsible-panel.hbs",
     "src/templates/actor/partial/effect-row.hbs",
     "src/templates/actor/partial/header-base.hbs",
     "src/templates/actor/partial/item-table-row.hbs",
@@ -19,6 +20,7 @@
     "src/templates/actor/partial/tab-strip.hbs",
     "src/templates/actor/player/header-dh.hbs",
     "src/templates/chat/item-card-chat.hbs",
-    "src/templates/chat/partial/chat-card-shell.hbs"
+    "src/templates/chat/partial/chat-card-shell.hbs",
+    "src/templates/dialogs/advancement-dialog.hbs"
   ]
 }
