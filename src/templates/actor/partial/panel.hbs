@@ -9,21 +9,34 @@
         (/) systems/wh40k-rpg/templates/actor/partial/panel.hbs
 
     Hash arguments:
-        label         — header title text (required).
-        icon          — Font Awesome class (e.g. "fa-shield-alt"). Optional; omitted icons
-                        leave the title text flush.
-        count         — optional numeric/badge slot rendered in the header
-                        (used by panels that show a list size).
-        rootClass     — extra utility classes appended to the outer `wh40k-panel`
-                        (e.g. `tw-col-auto`, `wh40k-effects-panel`).
-        rootAttrs     — raw HTML attributes string appended to the outer element
-                        (e.g. `data-drop-zone="general" data-accepts="trait"`).
-        headerClass   — extra utility classes on the header (e.g. modifier flags).
-        bodyClass     — extra utility classes on the body container.
+        label              — header title text (required).
+        icon               — Font Awesome class (e.g. "fa-shield-alt"). Optional;
+                             omitted icons leave the title text flush.
+        count              — optional numeric/badge slot rendered in the header
+                             (used by panels that show a list size).
+        rootClass          — extra utility classes appended to the outer `wh40k-panel`
+                             (e.g. `tw-col-auto`, `wh40k-effects-panel`).
+        rootAttrs          — raw HTML attributes string appended to the outer element
+                             (e.g. `data-drop-zone="general" data-accepts="trait"`).
+        headerClass        — extra utility classes on the header (e.g. modifier flags).
+        bodyClass          — extra utility classes on the body container.
+
+        headerActionIcon   — optional Font Awesome class for a small trailing
+                             header button (e.g. `fa-sliders`). When provided,
+                             a 24×24 ghost button is rendered after the title /
+                             count slot.
+        headerAction       — required when `headerActionIcon` is set; the
+                             `data-action` value for the header button.
+        headerActionTitle  — required when `headerActionIcon` is set; the
+                             tooltip / aria-label string (already localized by
+                             the caller).
+        headerActionTone   — optional; "info" (default) | "gold". Picks the
+                             button's color tokens.
 
     Note: panels with custom header behaviour (clickable headers / chevron toggles
-    / inline buttons / bespoke status badges) should keep using `vital-panel-shell.hbs`
-    or stay inline — this scaffold deliberately covers only the static header case.
+    / multiple inline buttons / bespoke status badges) should keep using
+    `vital-panel-shell.hbs` or stay inline — this scaffold covers only the static
+    header case plus a single optional trailing action button.
 --}}
 <div class="wh40k-panel tw-rounded-lg tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-overflow-hidden tw-relative tw-mb-4 tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)]{{#if rootClass}} {{rootClass}}{{/if}}"{{#if rootAttrs}} {{{rootAttrs}}}{{/if}}>
     <div class="wh40k-panel-header tw-flex tw-flex-row tw-items-center tw-gap-2 tw-p-2 tw-bg-gradient-to-b tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.15)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.05)] tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-w-full tw-box-border{{#if headerClass}} {{headerClass}}{{/if}}">
@@ -31,6 +44,14 @@
             {{#if icon}}<i class="fas {{icon}} tw-text-[color:var(--panel-accent,var(--wh40k-accent-gold))] tw-flex-shrink-0"></i> {{/if}}{{label}}
         </span>
         {{#if count}}<span class="wh40k-panel-count tw-ml-auto tw-px-2 tw-py-0.5 tw-rounded-full tw-bg-[rgba(0,0,0,0.1)] tw-text-[0.85em] tw-font-semibold">{{count}}</span>{{/if}}
+        {{#if headerActionIcon}}
+        <button type="button"
+                class="tw-inline-flex tw-items-center tw-justify-center tw-w-6 tw-h-6 tw-ml-auto tw-p-0 tw-border tw-rounded tw-cursor-pointer tw-transition-all hover:tw-scale-110{{#if (eq headerActionTone "gold")}} tw-bg-[rgba(201,162,39,0.15)] tw-border-[rgba(201,162,39,0.4)] tw-text-gold hover:tw-bg-[rgba(201,162,39,0.3)] hover:tw-border-gold{{else}} tw-bg-[rgba(36,107,131,0.2)] tw-border-[rgba(36,107,131,0.4)] tw-text-[rgba(36,107,131,0.8)] hover:tw-bg-[rgba(36,107,131,0.4)] hover:tw-border-[rgba(36,107,131,0.6)] hover:tw-text-[#1a4f61]{{/if}}"
+                data-action="{{headerAction}}"
+                title="{{headerActionTitle}}">
+            <i class="fa-solid {{headerActionIcon}} tw-text-[0.8rem]"></i>
+        </button>
+        {{/if}}
     </div>
     <div class="wh40k-panel-body tw-p-3 tw-bg-[var(--wh40k-panel-body-bg)]{{#if bodyClass}} {{bodyClass}}{{/if}}">
         {{> @partial-block}}
