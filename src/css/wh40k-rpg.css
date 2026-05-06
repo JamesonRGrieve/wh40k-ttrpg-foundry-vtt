@@ -4880,7 +4880,6 @@ body.theme-dark {
             &--ammo-empty {
                 border-color: rgba(182, 62, 46, 0.5);
                 background: linear-gradient(145deg, rgba(182, 62, 46, 0.12), rgba(12, 16, 24, 0.7));
-                animation: clip-pulse 2s ease-in-out infinite;
 
                 .wh40k-iconic-stat__shape {
                     color: var(--wh40k-red-bright);
@@ -5078,17 +5077,7 @@ body.theme-dark {
 
             .wh40k-fab-actions {
                 .wh40k-fab {
-                    animation: slide-in-up 0.3s ease-out backwards;
-
-                    &:nth-child(1) {
-                        animation-delay: 0.05s;
-                    }
-                    &:nth-child(2) {
-                        animation-delay: 0.1s;
-                    }
-                    &:nth-child(3) {
-                        animation-delay: 0.15s;
-                    }
+                    /* animation now applied via tw-animate-[slide-in-up_0.3s_ease-out_backwards] in JS */
                 }
             }
         }
@@ -5254,44 +5243,6 @@ body.theme-dark {
 
     /* Loaded ammo card entrance — animation ported to tw-animate-[slide-in-up_0.4s_ease-out] on template */
     /* Modification chip enter animation — animation ported to tw-animate-slide-in-up on template */
-
-    /* Quality chip stagger animation (use nth-child for stagger effect) */
-    .wh40k-iconic-stat__qualities {
-        .wh40k-quality-chip {
-            animation: slide-in-up 0.3s ease-out backwards;
-
-            &:nth-child(1) {
-                animation-delay: 0.05s;
-            }
-            &:nth-child(2) {
-                animation-delay: 0.1s;
-            }
-            &:nth-child(3) {
-                animation-delay: 0.15s;
-            }
-            &:nth-child(4) {
-                animation-delay: 0.2s;
-            }
-            &:nth-child(5) {
-                animation-delay: 0.25s;
-            }
-            &:nth-child(6) {
-                animation-delay: 0.3s;
-            }
-            &:nth-child(7) {
-                animation-delay: 0.35s;
-            }
-            &:nth-child(8) {
-                animation-delay: 0.4s;
-            }
-            &:nth-child(9) {
-                animation-delay: 0.45s;
-            }
-            &:nth-child(10) {
-                animation-delay: 0.5s;
-            }
-        }
-    }
 
     .wh40k-stat-card {
         display: flex;
@@ -18784,23 +18735,6 @@ body.theme-dark {
 
 .wh40k-panel:hover .wh40k-panel-header {
     box-shadow: inset 0 -1px 0 var(--wh40k-text-shadow), 0 6px 14px var(--wh40k-shadow-soft);
-}
-
-.wh40k-tab.active .wh40k-panel {
-    animation: wh40k-panel-in 0.3s ease both;
-}
-
-.wh40k-tab.active .wh40k-panel:nth-of-type(2) {
-    animation-delay: 0.03s;
-}
-.wh40k-tab.active .wh40k-panel:nth-of-type(3) {
-    animation-delay: 0.06s;
-}
-.wh40k-tab.active .wh40k-panel:nth-of-type(4) {
-    animation-delay: 0.09s;
-}
-.wh40k-tab.active .wh40k-panel:nth-of-type(5) {
-    animation-delay: 0.12s;
 }
 
 /* ============================================ */
@@ -38427,11 +38361,6 @@ body.theme-dark {
 /* ============================================ */
 /* Drag Active State (whole dialog) */
 /* ============================================ */
-.characteristic-setup-dialog.drag-active {
-    .csd-char-slot:not(.has-roll) {
-        animation: csd-pulse-border 1.5s ease-in-out infinite;
-    }
-}
 
 /* ============================================ */
 /* Accessibility - Reduced Motion */
@@ -39178,28 +39107,6 @@ body.theme-dark {
     background: rgba(46, 204, 113, 0.85);
     border-color: rgba(46, 204, 113, 1);
     box-shadow: 0 0 3px rgba(46, 204, 113, 0.6);
-}
-
-/* ============================================ */
-/* Reduced Motion */
-/* ============================================ */
-@media (prefers-reduced-motion: reduce) {
-    .wh40k-adv__xp-fill::after {
-        animation: none;
-    }
-
-    .wh40k-adv__tier-dot--current {
-        animation: none;
-    }
-
-    .wh40k-adv__char-card--purchased,
-    .wh40k-adv__advance-card--purchased {
-        animation: none;
-    }
-
-    .wh40k-adv__panel {
-        animation: none;
-    }
 }
 
 /* ── source: src/css/apps/_encounter-builder.css ── */

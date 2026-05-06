@@ -827,6 +827,17 @@ export default class WeaponSheet extends ContainerItemSheet {
         const fab = this.element.querySelector('.wh40k-fab-container');
         if (fab) {
             fab.classList.toggle('expanded', this.#fabExpanded);
+            const fabItems = fab.querySelectorAll<HTMLElement>('.wh40k-fab-actions .wh40k-fab');
+            const delays = [0.05, 0.1, 0.15];
+            fabItems.forEach((item, i) => {
+                if (this.#fabExpanded) {
+                    item.classList.add('tw-animate-[slide-in-up_0.3s_ease-out_backwards]');
+                    item.style.animationDelay = `${delays[i] ?? (i + 1) * 0.05}s`;
+                } else {
+                    item.classList.remove('tw-animate-[slide-in-up_0.3s_ease-out_backwards]');
+                    item.style.animationDelay = '';
+                }
+            });
         }
     }
 

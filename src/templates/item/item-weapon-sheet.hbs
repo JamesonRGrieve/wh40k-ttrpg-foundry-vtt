@@ -143,7 +143,7 @@
         
         {{!-- Clip - Magazine (clickable to decrement if owned) --}}
         {{#if system.usesAmmo}}
-        <div class="wh40k-iconic-stat wh40k-iconic-stat--clip wh40k-iconic-stat--small wh40k-iconic-stat--ammo-{{system.ammoStatus}} {{#if isOwnedByActor}}wh40k-iconic-stat--clickable{{/if}}"
+        <div class="wh40k-iconic-stat wh40k-iconic-stat--clip wh40k-iconic-stat--small wh40k-iconic-stat--ammo-{{system.ammoStatus}} {{#if (or (eq system.ammoStatus "critical") (eq system.ammoStatus "empty"))}}tw-animate-clip-pulse{{/if}} {{#if isOwnedByActor}}wh40k-iconic-stat--clickable{{/if}}"
              {{#if isOwnedByActor}}data-action="expendAmmo"{{/if}}
              data-tooltip="{{#if isOwnedByActor}}Click to Spend Ammo{{else}}Ammunition{{/if}}">
           <div class="wh40k-iconic-stat__shape">
