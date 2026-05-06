@@ -3,7 +3,7 @@
 {{#> systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs
     overline=sheetName
     title=name
-    subtitle=(iff type (concat type " • " (lookup ../difficulties difficulty)) "")
+    subtitle=(iff type (concat type " • " (lookup difficulties difficulty)) "")
     playerRolledBadge=isManualRoll
     bgClass="tw-bg-[var(--wh40k-panel-bg-solid)]"
     gameSystem=../gameSystem}}
