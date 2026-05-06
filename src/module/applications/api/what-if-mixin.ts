@@ -88,14 +88,14 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
 
         _createWhatIfToolbar(): HTMLElement {
             const toolbar = document.createElement('div');
-            toolbar.className = 'what-if-toolbar';
+            toolbar.className = 'what-if-toolbar tw-animate-toolbar-slide-in';
 
             const changeCount = Object.keys(this._whatIfChanges).length;
 
             toolbar.innerHTML = `
                 <div class="what-if-toolbar-content">
                     <div class="what-if-status">
-                        <i class="fas fa-flask"></i>
+                        <i class="fas fa-flask tw-animate-flask-bubble"></i>
                         <span class="what-if-label">Preview Mode</span>
                         <span class="what-if-count">${changeCount} change${changeCount !== 1 ? 's' : ''}</span>
                     </div>
@@ -235,7 +235,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
                     element.appendChild(badge);
                 }
 
-                badge.className = `what-if-badge ${difference > 0 ? 'positive' : 'negative'}`;
+                badge.className = `what-if-badge tw-animate-badge-appear ${difference > 0 ? 'positive' : 'negative'}`;
                 badge.textContent = `${data.current} → ${data.preview} (${sign}${difference})`;
                 badge.dataset.current = data.current.toString();
                 badge.dataset.preview = data.preview.toString();

@@ -395,7 +395,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             this.element.querySelectorAll('.drop-indicator').forEach((el) => el.remove());
 
             const indicator = document.createElement('div');
-            indicator.className = 'drop-indicator';
+            indicator.className = 'drop-indicator tw-animate-indicator-glow';
             if (insertBefore) {
                 targetRow.parentNode?.insertBefore(indicator, targetRow);
             } else {
