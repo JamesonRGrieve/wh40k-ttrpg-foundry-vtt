@@ -4,12 +4,12 @@
     <div class="wh40k-panel">
         <header class="wh40k-panel-header">
             <h3 class="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-dice-d20"></i> {{localize "WH40K.NPC.Template.BaseCharacteristics"}}</h3>
-            <span class="panel-note">{{localize "WH40K.NPC.Template.CharacteristicsNote"}}</span>
+            <span class="tw-text-sm tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Template.CharacteristicsNote"}}</span>
         </header>
         <div class="wh40k-panel-content">
-            <div class="characteristics-grid tw-grid tw-grid-cols-5 tw-gap-3">
+            <div class="tw-grid tw-grid-cols-5 tw-gap-3">
                 {{#each characteristics as |char key|}}
-                <div class="characteristic-field tw-flex tw-flex-col tw-items-center tw-gap-1">
+                <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                     <label class="tw-text-xs tw-font-semibold tw-uppercase">{{char.label}}</label>
                     <input class="tw-w-[50px] tw-text-center tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm" type="number" name="system.baseCharacteristics.{{key}}"
                            value="{{char.value}}" min="0" max="100" />
@@ -25,9 +25,9 @@
             <h3><i class="fas fa-bolt"></i> {{localize "WH40K.NPC.Template.UnnaturalCharacteristics"}}</h3>
         </header>
         <div class="wh40k-panel-content">
-            <div class="characteristics-grid tw-grid tw-grid-cols-[repeat(10,1fr)] tw-gap-3">
+            <div class="tw-grid tw-grid-cols-[repeat(10,1fr)] tw-gap-3">
                 {{#each characteristics as |char key|}}
-                <div class="characteristic-field tw-flex tw-flex-col tw-items-center tw-gap-1">
+                <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                     <label class="tw-text-[0.625rem] tw-font-semibold tw-uppercase">{{char.short}}</label>
                     <input class="tw-w-[35px] tw-text-center tw-p-1 tw-text-sm tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm" type="number" name="system.unnaturalCharacteristics.{{key}}"
                            value="{{lookup ../system.unnaturalCharacteristics key}}" min="0" max="10" />
@@ -43,18 +43,18 @@
             <h3><i class="fas fa-heart"></i> {{localize "WH40K.NPC.Template.VitalStats"}}</h3>
         </header>
         <div class="wh40k-panel-content">
-            <div class="vital-stats-grid tw-flex tw-gap-8 tw-justify-center">
-                <div class="vital-field tw-flex tw-flex-col tw-items-center tw-gap-1">
+            <div class="tw-flex tw-gap-8 tw-justify-center">
+                <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                     <label class="tw-font-semibold">{{localize "WH40K.Wounds"}}</label>
                     <input class="tw-w-[60px] tw-text-center tw-p-2 tw-text-xl tw-border-2 tw-border-[var(--wh40k-border-color)] tw-rounded-md" type="number" name="system.baseWounds" value="{{source.baseWounds}}" min="1" />
                 </div>
 
-                <div class="vital-field tw-flex tw-flex-col tw-items-center tw-gap-1">
+                <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                     <label class="tw-font-semibold">{{localize "WH40K.Movement"}}</label>
                     <input class="tw-w-[60px] tw-text-center tw-p-2 tw-text-xl tw-border-2 tw-border-[var(--wh40k-border-color)] tw-rounded-md" type="number" name="system.baseMovement" value="{{source.baseMovement}}" min="0" />
                 </div>
 
-                <div class="vital-field tw-flex tw-flex-col tw-items-center tw-gap-1">
+                <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                     <label class="tw-font-semibold">{{localize "WH40K.NPC.Armour"}}</label>
                     <input class="tw-w-[60px] tw-text-center tw-p-2 tw-text-xl tw-border-2 tw-border-[var(--wh40k-border-color)] tw-rounded-md" type="number" name="system.baseArmour" value="{{source.baseArmour}}" min="0" />
                 </div>
@@ -72,19 +72,19 @@
         </header>
         <div class="wh40k-panel-content">
             {{#if (gt system.trainedSkills.length 0)}}
-            <div class="skills-list tw-flex tw-flex-col tw-gap-2">
+            <div class="tw-flex tw-flex-col tw-gap-2">
                 {{#each system.trainedSkills as |skill idx|}}
-                <div class="skill-row tw-flex tw-items-center tw-gap-2 tw-p-2 tw-rounded-md" style="background: var(--wh40k-bg-secondary)" data-index="{{idx}}">
-                    <span class="skill-name tw-flex-[2] tw-font-medium">{{skill.name}}</span>
-                    <span class="skill-char tw-w-10 tw-text-center tw-text-xs tw-text-[var(--wh40k-text-muted)]">{{skill.characteristic}}</span>
-                    <div class="skill-level">
+                <div class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-rounded-md" style="background: var(--wh40k-bg-secondary)" data-index="{{idx}}">
+                    <span class="tw-flex-[2] tw-font-medium">{{skill.name}}</span>
+                    <span class="tw-w-10 tw-text-center tw-text-xs tw-text-[var(--wh40k-text-muted)]">{{skill.characteristic}}</span>
+                    <div>
                         <select class="tw-p-1" name="system.trainedSkills.{{idx}}.level">
                             <option value="trained" {{#eq skill.level "trained"}}selected{{/eq}}>{{localize "WH40K.Skills.Trained"}}</option>
                             <option value="plus10" {{#eq skill.level "plus10"}}selected{{/eq}}>+10</option>
                             <option value="plus20" {{#eq skill.level "plus20"}}selected{{/eq}}>+20</option>
                         </select>
                     </div>
-                    <input class="skill-bonus tw-w-[50px] tw-text-center" type="number" name="system.trainedSkills.{{idx}}.bonus"
+                    <input class="tw-w-[50px] tw-text-center" type="number" name="system.trainedSkills.{{idx}}.bonus"
                            value="{{skill.bonus}}" placeholder="+0" />
                     <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger"
                             data-action="removeSkill" data-index="{{idx}}">
@@ -94,7 +94,7 @@
                 {{/each}}
             </div>
             {{else}}
-            <p class="empty-message tw-text-center tw-italic tw-p-4 tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Template.NoSkills"}}</p>
+            <p class="tw-text-center tw-italic tw-p-4 tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Template.NoSkills"}}</p>
             {{/if}}
         </div>
     </div>
