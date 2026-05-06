@@ -1,12 +1,12 @@
 {{!-- Active Effects Panel --}}
 {{!-- Displays all active effects on the actor --}}
-<div class="wh40k-panel wh40k-panel-effects-list {{#if collapsible}}wh40k-collapsible{{/if}}" data-panel-id="effects">
+<div class="wh40k-panel" data-panel-id="effects">
     <div class="wh40k-panel-header" {{#if collapsible}}data-action="togglePanel"{{/if}}>
         <span class="wh40k-panel-title tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
             <i class="fas fa-magic"></i> {{localize 'WH40K.Effects.ActiveLabel'}}
         </span>
         {{#if collapsible}}
-            <i class="fas fa-chevron-down wh40k-collapse-icon"></i>
+            <i class="fas fa-chevron-down"></i>
         {{/if}}
     </div>
     <div class="wh40k-panel-body">
