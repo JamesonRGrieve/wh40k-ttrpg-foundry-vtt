@@ -79,6 +79,19 @@ const CLASS_ATTR_RE = /class(?:Name)?\s*=\s*"([^"]*)"|class(?:Name)?\s*=\s*'([^'
 const FA_RE = /^fa[rsbldt]$|^fa-(solid|regular|brands|light|thin|duotone)$|^fa-/;
 // basic-action-manager.ts queries all roll-control__* selectors by class name
 const ROLL_CONTROL_RE = /^roll-control__/;
+// Talent-sheet component hierarchy (talent-sheet.hbs) — all styling lives in the CSS
+// monolith under .wh40k-talent-sheet-v2 and related selectors. Retained as semantic
+// design-system classes during the Tailwind migration.
+const TALENT_SHEET_RE = /^wh40k-talent-/;
+// Section component classes shared by talent-sheet, condition-sheet, and others.
+const SECTION_CLASS_RE = /^wh40k-section/;
+// Condition-sheet component hierarchy (item-condition-sheet.hbs) — styling lives in
+// the CSS monolith under .wh40k-condition-sheet and related selectors.
+const CONDITION_SHEET_RE = /^wh40k-condition/;
+// wh40k-item-sheet BEM sub-elements and modifiers (wh40k-item-sheet__* / wh40k-item-sheet--*).
+// Used by journal-entry-sheet, peer-enemy-sheet, critical-injury-sheet, and others that do
+// not inherit wh40k-item-sheet via ApplicationV2's classes array.
+const ITEM_SHEET_BEM_RE = /^wh40k-item-sheet[_-]/;
 const JS_HOOKS = new Set([
     'sheet-control__hide-control',
     // expandable-tooltip-mixin.ts queries and toggles these classes by name
@@ -324,6 +337,142 @@ const JS_HOOKS = new Set([
     'wh40k-consumable-actions',
     'wh40k-checkbox',
     'wh40k-checkbox-group',
+    // wh40k-item-sheet root class on journal-entry-sheet and peer-enemy-sheet — these sheets do
+    // not declare wh40k-item-sheet in their ApplicationV2 classes array, so the template places
+    // it on the outer element to scope the wh40k-item-sheet__* CSS rules.
+    'wh40k-item-sheet',
+    // Shared content-display class used across many item sheets; has complex child-selector CSS
+    // rules (p, strong, em, ul, ol) that cannot be inlined on the element itself.
+    'wh40k-description-content',
+    // wh40k-panel BEM sub-elements used by ship-weapon-sheet. The parent rules are at
+    // .wh40k-item-sheet .wh40k-panel__header / .wh40k-panel__content in the monolith.
+    'wh40k-panel__header',
+    'wh40k-panel__content',
+    // ApplicationV2 root modifier classes applied via the classes array — redundant in template
+    // bodies but harmless; treated as dead tokens during migration.
+    'ship-component',
+    'ship-upgrade',
+    'ship-weapon',
+    // Dead layout class — no CSS rules, no JS queries.
+    'form-row',
+    // Talent-sheet semantic design-system classes not matched by the TALENT_SHEET_RE prefix.
+    // These are used in the talent sheet but have a generic wh40k- prefix.
+    'wh40k-action-btn',
+    'wh40k-action-btn--edit',
+    'wh40k-action-btn--roll',
+    'wh40k-action-btn--chat',
+    'wh40k-header-btn',
+    'wh40k-header-btn--hover',
+    'wh40k-header-btn--done',
+    'wh40k-badge--cost',
+    'wh40k-badge--stackable',
+    'wh40k-badge--rollable',
+    'wh40k-benefit-text',
+    'wh40k-notes-content',
+    'wh40k-hint-text',
+    'wh40k-hint',
+    'wh40k-empty-state',
+    'wh40k-empty-state--compact',
+    'wh40k-empty-state--clickable',
+    'wh40k-editor-container',
+    'wh40k-btn-add-data',
+    'wh40k-aptitude-tag',
+    'wh40k-effects-banner',
+    'wh40k-effects-banner__header',
+    'wh40k-effects-banner__pills',
+    'wh40k-effects-banner__link',
+    'wh40k-effect-pill',
+    'wh40k-effect-pill--modifiers',
+    'wh40k-effect-pill--situational',
+    'wh40k-effect-pill--grants',
+    'wh40k-effect-pill__label',
+    'wh40k-effect-pill__count',
+    'wh40k-properties-grid',
+    'wh40k-property',
+    'wh40k-property--radio',
+    'wh40k-property--checkbox',
+    'wh40k-property-label',
+    'wh40k-property-value',
+    'wh40k-property-select',
+    'wh40k-property-input',
+    'wh40k-property-input--rank',
+    'wh40k-property-input--inline',
+    'wh40k-property-input--mono',
+    'wh40k-property-display',
+    'wh40k-property-textarea',
+    'wh40k-radio-group',
+    'wh40k-radio-label',
+    'wh40k-radio-indicator',
+    'wh40k-checkbox-label',
+    'wh40k-checkbox-inline',
+    'wh40k-specialization-edit',
+    'wh40k-specialization-field',
+    'wh40k-specialization-badge',
+    'wh40k-rank-controls',
+    'wh40k-rank-btn',
+    'wh40k-modifiers-grid',
+    'wh40k-modifier-group',
+    'wh40k-modifier-group-header',
+    'wh40k-modifier-list',
+    'wh40k-modifier-item',
+    'wh40k-modifier-name',
+    'wh40k-modifier-value',
+    'wh40k-situational-list',
+    'wh40k-situational-item',
+    'wh40k-situational-header',
+    'wh40k-situational-stat',
+    'wh40k-situational-value',
+    'wh40k-situational-condition',
+    'wh40k-grants-grid',
+    'wh40k-grants-category',
+    'wh40k-grants-category-header',
+    'wh40k-grants-items',
+    'wh40k-grant-tag',
+    'wh40k-grant-tag--skill',
+    'wh40k-grant-tag--talent',
+    'wh40k-grant-tag--trait',
+    'wh40k-grant-tag--clickable',
+    'wh40k-grant-name',
+    'wh40k-grant-spec',
+    'wh40k-grant-link',
+    'wh40k-grant-level',
+    'wh40k-prerequisites-display',
+    'wh40k-prereq-text',
+    'wh40k-prereq-group',
+    'wh40k-prereq-group-label',
+    'wh40k-prereq-tag',
+    'wh40k-roll-config-display',
+    'wh40k-config-item',
+    'wh40k-config-desc',
+    'wh40k-config-mod',
+    'wh40k-abilities-list',
+    'wh40k-ability-card',
+    'wh40k-ability-name',
+    'wh40k-ability-description',
+    // Talent-sheet footer classes (source reference panel).
+    'wh40k-footer-edit',
+    'wh40k-footer-display',
+    'wh40k-footer-field',
+    'wh40k-footer-field--page',
+    'wh40k-footer-label',
+    'wh40k-footer-input',
+    'wh40k-footer-source',
+    'wh40k-footer-source--empty',
+    // Talent-sheet quickstats bar (prerequisite and aptitude summary chips).
+    'wh40k-quickstat',
+    'wh40k-quickstat--prereqs',
+    'wh40k-quickstat--aptitudes',
+    'wh40k-quickstat--spec',
+    'wh40k-quickstat-label',
+    'wh40k-quickstat-value',
+    'wh40k-quickstat-tags',
+    // Condition-sheet tab modifier classes not matched by the CONDITION_SHEET_RE prefix.
+    'wh40k-tab-content--condition',
+    'wh40k-tabs--condition',
+    // Tailwind addComponents-generated classes (defined via addComponents() in tailwind.config.js,
+    // not prefixed with tw-). The label/input/select/hint layout is handled entirely by Tailwind.
+    'form-group',
+    'hint',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
@@ -380,6 +529,10 @@ function isTwOrExempt(token) {
     if (FA_RE.test(token)) return true;
     if (JS_HOOKS.has(token)) return true;
     if (ROLL_CONTROL_RE.test(token)) return true;
+    if (TALENT_SHEET_RE.test(token)) return true;
+    if (SECTION_CLASS_RE.test(token)) return true;
+    if (CONDITION_SHEET_RE.test(token)) return true;
+    if (ITEM_SHEET_BEM_RE.test(token)) return true;
     if (SECTION_ID_RE.test(token)) return true;
     if (HBS_FRAGMENT_RE.test(token)) return true;
     if (HBS_EXPR_RE.test(token)) return true;
