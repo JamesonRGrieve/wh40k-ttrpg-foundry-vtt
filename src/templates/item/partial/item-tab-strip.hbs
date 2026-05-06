@@ -4,7 +4,7 @@
     Hash params:
         tabs    — array of { tab, label, icon (FA class), active? }
 --}}
-<nav class="tw-flex tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-flex-shrink-0" data-group="primary">
+<nav class="tw-flex tw-border-b-2 tw-border-gold/30 bc:tw-border-crimson/30 dh1e:tw-border-gold-raw/30 dh2e:tw-border-gold/30 dw:tw-border-accent-combat/30 ow:tw-border-brass-l20/30 rt:tw-border-amber-700/30 im:tw-border-failure/30 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-flex-shrink-0" data-group="primary">
     {{#each tabs}}
     <button type="button" class="wh40k-item-tab {{#if active}}active {{/if}}tw-px-[var(--wh40k-space-lg)] tw-py-[var(--wh40k-space-sm)] tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-sm)] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-transparent tw-mb-[-2px] tw-cursor-pointer tw-no-underline hover:tw-text-gold bc:hover:tw-text-crimson-light dh1e:hover:tw-text-gold-raw-l5 dh2e:hover:tw-text-gold-raw dw:hover:tw-text-accent-combat ow:hover:tw-text-brass-l20 rt:hover:tw-text-gold im:hover:tw-text-failure hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="{{tab}}" data-group="primary">
         <i class="fas {{icon}} tw-mr-[var(--wh40k-space-xs)]"></i>
