@@ -1,0 +1,59 @@
+{{!--
+    item-table.hbs — shared table chrome for the inventory / equipment / ship /
+    vehicle "list of items with a per-row toolbar" pattern. Pairs with
+    `item-table-row.hbs` for the row body.
+
+    Block-partial usage:
+        (#>) systems/wh40k-rpg/templates/actor/partial/item-table.hbs
+            rootClass="wh40k-weapontable--border"
+            addAction="itemCreate"
+            addType="weapon"
+            addTitleKey="WH40K.Common.Add"
+            headers=(array
+                (object cellClass="table-cell--span2" labelKey="WH40K.Weapon.Name")
+                (object labelKey="WH40K.Weapon.Class")
+                (object labelKey="WH40K.Weapon.Type")
+                (object labelKey="WH40K.Weapon.Equipped"))
+            ... rows (each invoking item-table-row) ...
+        (/) systems/wh40k-rpg/templates/actor/partial/item-table.hbs
+
+    Hash arguments:
+        rootClass     — extra classes appended to `wh40k-table--border`
+                        (e.g. `wh40k-weapontable--border`).
+        headers       — array of column-header descriptors. Each entry is a
+                        plain object with:
+                          labelKey  — i18n key (preferred)
+                          label     — literal string fallback
+                          cellClass — class on the header cell
+                                      (default `table-cell`).
+                        The trailing add-action cell is rendered automatically
+                        when `addAction` is set; do NOT include it in `headers`.
+        addAction     — data-action name for the create button (e.g.
+                        "itemCreate"). Omit to suppress the trailing cell.
+        addType       — data-type value passed alongside addAction
+                        (e.g. "weapon").
+        addTitleKey   — i18n key for the add button's title attr / aria-label.
+        addIconKey    — icon registry key for the create button
+                        (default 'fa:plus-circle'). Use `iconSvg` syntax,
+                        e.g. 'fa:plus'.
+
+    Per-system theming: the table border + header background lift via inline
+    `<system>:tw-*` variants so each game system gets a distinct visual tone.
+--}}
+<div class="wh40k-table--border tw-rounded-md tw-overflow-hidden dh2e:tw-border-bronze rt:tw-border-amber-700 im:tw-border-crimson{{#if rootClass}} {{rootClass}}{{/if}}">
+    <div class="table-row--head dh2e:tw-bg-bronze/10 rt:tw-bg-amber-700/10 im:tw-bg-crimson/10">
+        {{#each headers as |header|}}
+            <div class="{{#if header.cellClass}}{{header.cellClass}}{{else}}table-cell{{/if}}">
+                {{#if header.labelKey}}{{localize header.labelKey}}{{else}}{{header.label}}{{/if}}
+            </div>
+        {{/each}}
+        {{#if addAction}}
+            <div class="table-cell--last">
+                <label class="wh40k-control-button" data-action="{{addAction}}"{{#if addType}} data-type="{{addType}}"{{/if}}{{#if addTitleKey}} title="{{localize addTitleKey}}" aria-label="{{localize addTitleKey}}"{{/if}}>
+                    <span class="wh40k-control-button__span">{{iconSvg (defaultVal addIconKey 'fa:plus-circle') class="tw-w-3.5 tw-h-3.5"}}</span>
+                </label>
+            </div>
+        {{/if}}
+    </div>
+    {{> @partial-block}}
+</div>

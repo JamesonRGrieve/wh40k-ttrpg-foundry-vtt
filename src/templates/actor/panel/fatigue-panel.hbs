@@ -61,34 +61,12 @@
     </div>
 
     {{!-- Edit Mode (Expandable) --}}
-    <div class="tw-mt-2 tw-pt-2 tw-border-t tw-border-t-white/10" {{hideIfNot (isExpanded 'fatigue_details' actor)}}>
-
-        {{!-- Current Fatigue Editor --}}
-        <div class="tw-p-2 tw-bg-[rgba(0,0,0,0.1)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-lg tw-mb-1">
-            <div class="tw-text-xs tw-font-bold tw-uppercase tw-tracking-widest tw-text-gray-400 tw-mb-1 tw-flex tw-items-center tw-gap-1">
-                <i class="{{concat 'fas fa-cog'}}"></i> Edit Values
-            </div>
-
-            <div class="tw-grid tw-grid-cols-2 tw-gap-2 tw-mt-1">
-                {{> systems/wh40k-rpg/templates/actor/partial/vital-edit-input
-                    name="system.fatigue.max"
-                    label="Threshold"
-                    value=system.fatigue.max
-                    labelClass="tw-text-xs tw-text-gray-400"
-                    inputClass="tw-w-full tw-p-1 tw-rounded"
-                    readonly=true
-                    placeholder="Threshold"}}
-
-                {{> systems/wh40k-rpg/templates/actor/partial/vital-edit-input
-                    name="system.fatigue.value"
-                    label="Current Fatigue"
-                    value=system.fatigue.value
-                    labelClass="tw-text-xs tw-text-gray-400"
-                    inputClass="tw-w-full tw-p-1 tw-rounded"
-                    placeholder="Current"}}
-            </div>
-        </div>
-
+    {{#> systems/wh40k-rpg/templates/actor/partial/vital-edit-body.hbs
+          key="fatigue" actor=actor
+          editIcon="fa-cog" editTitle=(localize "WH40K.VitalEditBody.EditValuesTitle")
+          fields=(array
+              (object name="system.fatigue.max"   label=(localize "WH40K.VitalEditBody.FatigueThresholdLabel") value=system.fatigue.max   labelClass="tw-text-xs tw-text-gray-400" inputClass="tw-w-full tw-p-1 tw-rounded" readonly=true placeholder=(localize "WH40K.VitalEditBody.FatigueThresholdLabel"))
+              (object name="system.fatigue.value" label=(localize "WH40K.VitalEditBody.FatigueCurrentLabel")   value=system.fatigue.value labelClass="tw-text-xs tw-text-gray-400" inputClass="tw-w-full tw-p-1 tw-rounded" placeholder=(localize "WH40K.VitalEditBody.CurrentPlaceholder")))}}
         {{!-- Info Section --}}
         {{#> systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs
               icon="fa-book"
@@ -99,6 +77,5 @@
             <p class="tw-text-xs tw-m-0"><strong>{{localize "WH40K.VitalInfoCard.FatigueExceedsTitle"}}</strong> {{localize "WH40K.VitalInfoCard.FatigueExceedsDesc"}}</p>
             <p class="tw-text-xs tw-m-0"><strong>{{localize "WH40K.VitalInfoCard.FatigueRecoveryTitle"}}</strong> {{localize "WH40K.VitalInfoCard.FatigueRecoveryDesc"}}</p>
         {{/systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs}}
-
-    </div>
+    {{/systems/wh40k-rpg/templates/actor/partial/vital-edit-body.hbs}}
 {{/systems/wh40k-rpg/templates/actor/partial/vital-panel-shell}}

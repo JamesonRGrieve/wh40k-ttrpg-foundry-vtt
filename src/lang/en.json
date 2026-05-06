@@ -215,7 +215,8 @@
                 "Medium": "Medium Protection",
                 "Heavy": "Heavy Protection",
                 "Power": "Power Protection"
-            }
+            },
+            "AP": "AP"
         },
         "Movement": "Movement",
         "MOVEMENT": {
@@ -1696,7 +1697,18 @@
             "Stowed": "Stowed",
             "ToggleEquipped": "Toggle Equipped",
             "Jams": "Jams",
-            "NeverJams": "Never Jams"
+            "NeverJams": "Never Jams",
+            "Name": "Name",
+            "Class": "Class",
+            "Type": "Type",
+            "Damage": "Damage",
+            "Pen": "Pen",
+            "Range": "Range",
+            "RoF": "RoF (S/B/F)",
+            "Clip": "Clip",
+            "Reload": "Reload",
+            "Special": "Special",
+            "RollDamage": "Roll Damage"
         },
         "Reload": {
             "Free": "Free Action",
@@ -1993,6 +2005,31 @@
             "DropHere": "Drop effects here",
             "ClickToExpand": "Click to expand",
             "ClickToCollapse": "Click to collapse"
+        },
+        "VitalEditBody": {
+            "EditValuesTitle": "Edit Values",
+            "EditFateTitle": "Edit Fate Points",
+            "EditWoundsTitle": "Edit Wounds",
+            "MaxPlaceholder": "Max",
+            "CurrentPlaceholder": "Current",
+            "FatigueThresholdLabel": "Threshold",
+            "FatigueCurrentLabel": "Current Fatigue",
+            "FateMaxLabel": "Max Fate Points",
+            "FateCurrentLabel": "Current Fate",
+            "WoundsMaxLabel": "Max Wounds",
+            "WoundsCurrentLabel": "Current Wounds",
+            "ExperienceTotalLabel": "Total XP Earned",
+            "ExperienceSpentLabel": "XP Spent"
+        },
+        "Common": {
+            "Name": "Name",
+            "Type": "Type",
+            "Edit": "Edit",
+            "Delete": "Delete",
+            "Roll": "Roll",
+            "Add": "Add",
+            "AddArmour": "Add Armour",
+            "Settings": "Settings"
         }
     }
 }
