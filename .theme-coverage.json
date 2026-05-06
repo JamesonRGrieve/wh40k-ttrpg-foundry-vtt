@@ -1,18 +1,19 @@
 {
-  "generatedAt": "2026-05-06T17:01:05.390Z",
+  "generatedAt": "2026-05-06T17:03:31.102Z",
   "total": 244,
-  "adopted": 14,
+  "adopted": 16,
   "perSystemHits": {
-    "bc": 13,
-    "dh1e": 13,
-    "dh2e": 17,
-    "dw": 13,
-    "ow": 13,
-    "rt": 17,
-    "im": 17
+    "bc": 16,
+    "dh1e": 16,
+    "dh2e": 20,
+    "dw": 16,
+    "ow": 16,
+    "rt": 20,
+    "im": 20
   },
   "adoptedTemplates": [
     "src/templates/actor/panel/fate-panel.hbs",
+    "src/templates/actor/panel/fatigue-panel.hbs",
     "src/templates/actor/partial/collapsible-panel.hbs",
     "src/templates/actor/partial/degree-meter-panel.hbs",
     "src/templates/actor/partial/effect-row.hbs",
@@ -20,6 +21,7 @@
     "src/templates/actor/partial/item-table-row.hbs",
     "src/templates/actor/partial/item-table.hbs",
     "src/templates/actor/partial/panel.hbs",
+    "src/templates/actor/partial/stat-grid-section.hbs",
     "src/templates/actor/partial/tab-strip.hbs",
     "src/templates/actor/partial/vital-panel-shell.hbs",
     "src/templates/actor/player/header-dh.hbs",
