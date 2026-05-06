@@ -36451,15 +36451,6 @@ body.theme-dark {
     }
 }
 
-/* Target pulse animation */
-.urd-target__number.urd-target-increase {
-    animation: urd-target-pulse-green 0.4s ease;
-}
-
-.urd-target__number.urd-target-decrease {
-    animation: urd-target-pulse-red 0.4s ease;
-}
-
 /* ============================================ */
 /* Difficulty Picker Dropdown */
 /* ============================================ */
@@ -38226,10 +38217,6 @@ body.theme-dark {
         border-style: solid;
     }
 
-    /* Snap animation */
-    &.snap-to-slot {
-        animation: csd-snap 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
 }
 
 .csd-char-header {
@@ -50610,18 +50597,6 @@ body.theme-dark {
     /*  Animation Classes                           */
     /* -------------------------------------------- */
 
-    .stat-increase {
-        animation: stat-increase 0.6s ease-out;
-    }
-
-    .stat-decrease {
-        animation: stat-decrease 0.6s ease-out;
-    }
-
-    .flash-update {
-        animation: flash-update 0.5s ease-out;
-    }
-
     .pulse-gold {
         animation: pulse-gold 0.8s ease-out;
     }
@@ -50679,34 +50654,11 @@ body.theme-dark {
     .value-counter {
         display: inline-block;
         transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-
-        &.counting-up {
-            animation: count-up 0.5s ease-out;
-        }
-
-        &.counting-down {
-            animation: count-down 0.5s ease-out;
-        }
     }
 
     /* -------------------------------------------- */
     /*  Special Effects                             */
     /* -------------------------------------------- */
-
-    /* Level up / advancement effect */
-    .stat-advancement {
-        animation: stat-advance 1s ease-out;
-    }
-
-    /* Healing effect (for wounds restored) */
-    .stat-heal {
-        animation: stat-heal 0.8s ease-out;
-    }
-
-    /* Damage taken effect */
-    .stat-damage {
-        animation: stat-damage 0.8s ease-out;
-    }
 
     /* -------------------------------------------- */
     /*  Brief Notifications                         */
@@ -50774,14 +50726,6 @@ body.theme-dark {
         display: inline-block;
         transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         font-variant-numeric: tabular-nums; /* Monospaced numbers for smooth counting */
-
-        &.counting-up {
-            animation: count-up 0.5s ease-out;
-        }
-
-        &.counting-down {
-            animation: count-down 0.5s ease-out;
-        }
     }
 
     /* -------------------------------------------- */
@@ -50816,10 +50760,6 @@ body.theme-dark {
     .xp-display,
     .experience-tracker {
         transition: all var(--wh40k-transition-medium);
-
-        &.stat-advancement {
-            animation: stat-advance 1s ease-out;
-        }
     }
 
     /* -------------------------------------------- */
@@ -50828,18 +50768,18 @@ body.theme-dark {
 
     /* Respect user's motion preferences */
     @media (prefers-reduced-motion: reduce) {
-        .stat-increase,
-        .stat-decrease,
-        .flash-update,
+        .tw-animate-stat-increase,
+        .tw-animate-stat-decrease,
+        .tw-animate-flash-update,
         .pulse-gold,
         .pulse-glow,
-        .stat-advancement,
+        .tw-animate-stat-advance,
         .stat-critical-warning,
-        .stat-heal,
-        .stat-damage,
+        .tw-animate-stat-heal,
+        .tw-animate-stat-damage,
         .value-counter,
-        .counting-up,
-        .counting-down,
+        .tw-animate-count-up,
+        .tw-animate-count-down,
         .characteristic-bonus,
         .char-bonus,
         .derived-value,
@@ -51912,14 +51852,6 @@ body.theme-dark {
     }
 
     /* -------------------------------------------- */
-    /*  Snap-to-Slot Animation                      */
-    /* -------------------------------------------- */
-
-    .snap-to-slot {
-        animation: snap-to-slot 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    /* -------------------------------------------- */
     /*  Favorites Bar                               */
     /* -------------------------------------------- */
 
@@ -52141,7 +52073,6 @@ body.theme-dark {
         [data-item-id].dragging,
         [data-drop-zone],
         .drop-indicator,
-        .snap-to-slot,
         .favorite-item {
             animation: none !important;
             transition: none !important;
@@ -53798,10 +53729,6 @@ body.theme-dark {
             transform: scale(0.95);
         }
 
-        /* Rolling animation class - added via JS on click */
-        &.rolling {
-            animation: wh40k-char-roll 0.4s ease-out;
-        }
     }
 
     /* Rolling animation keyframes */
@@ -53828,10 +53755,6 @@ body.theme-dark {
         text-shadow: 0 1px 0 var(--wh40k-text-shadow);
         transition: color 0.3s ease, text-shadow 0.3s ease;
 
-        /* Value change animation class - added via JS on update */
-        &.value-changed {
-            animation: wh40k-value-flash 0.5s ease-out;
-        }
     }
 
     /* Value change flash animation */
@@ -53839,11 +53762,6 @@ body.theme-dark {
     .wh40k-char-hud-base {
         @apply tw-text-[0.65em] tw-uppercase tw-tracking-[0.1em] tw-text-center tw-min-w-[50px] tw-h-[22px] tw-flex tw-items-center tw-justify-center tw-transition-colors tw-duration-300;
         color: var(--wh40k-text-muted);
-
-        /* Value change animation for total */
-        &.value-changed {
-            animation: wh40k-total-flash 0.5s ease-out;
-        }
     }
 
     .wh40k-char-hud-toggle {
