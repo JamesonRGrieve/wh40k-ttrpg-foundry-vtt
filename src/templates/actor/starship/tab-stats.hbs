@@ -1,7 +1,7 @@
 {{!-- Starship Stats Tab --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     <div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-1">
-        <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Combat.Header"}}</h1>
+        <h1 class="wh40k-panel-header tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{localize "WH40K.Starship.Combat.Header"}}</h1>
         {{!-- Initiative box --}}
         <div class="tw-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-2 tw-mb-2.5 tw-rounded-md tw-border tw-border-[rgba(30,60,90,0.3)] tw-bg-[linear-gradient(135deg,rgba(30,60,90,0.15)_0%,rgba(40,80,120,0.2)_100%)]">
             <button type="button" class="wh40k-initiative-btn tw-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1.5 tw-rounded-md tw-border tw-border-[#2a4a6a] tw-bg-[linear-gradient(180deg,#4a6b8a_0%,#3a5a7a_100%)] tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer" data-action="rollInitiative" title="{{localize 'WH40K.Starship.Combat.RollInitiative'}}">
