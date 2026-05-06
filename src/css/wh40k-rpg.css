@@ -22563,7 +22563,6 @@ body.theme-dark {
         i {
             color: var(--wh40k-fate-secondary);
             filter: drop-shadow(0 3px 8px var(--wh40k-fate-border));
-            animation: gentle-glow 3s ease-in-out infinite;
         }
 
         &:hover i {
@@ -22673,7 +22672,6 @@ body.theme-dark {
         box-shadow: 0 4px 16px var(--wh40k-shadow-medium);
         z-index: 100;
         overflow: hidden;
-        animation: dropdown-slide 0.2s ease;
     }
 
     .wh40k-fate-option {
