@@ -24,7 +24,7 @@
 --}}
 <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg {{wrapperClass}}">
     <div class="tw-flex tw-gap-2 tw-p-2 tw-rounded-md tw-border-l-[3px] {{#if (eq accent "gold")}}tw-bg-[rgba(0,0,0,0.1)] tw-border-l-[color:var(--wh40k-fate-border)]{{else if (eq accent "crimson")}}tw-bg-[var(--wh40k-wounds-bg)] tw-border-l-[var(--wh40k-wounds-secondary)]{{else}}tw-bg-[rgba(192,128,32,0.08)] tw-border-l-[rgba(192,128,32,0.4)]{{/if}} {{innerClass}}">
-        <i class="fas {{icon}} {{#if (eq accent "crimson")}}tw-text-crimson{{else}}tw-text-gold{{/if}} tw-text-lg tw-mt-0.5 tw-shrink-0 {{iconClass}}"></i>
+        <i class="fas {{icon}} {{#if (eq accent "crimson")}}tw-text-crimson bc:tw-text-crimson-light dh1e:tw-text-gold-raw dh2e:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure{{else}}tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure{{/if}} tw-text-lg tw-mt-0.5 tw-shrink-0 {{iconClass}}"></i>
         <div class="tw-flex tw-flex-col tw-gap-[6px] tw-text-[var(--wh40k-text-muted)]">
             <strong class="tw-text-[0.8rem] tw-font-bold tw-text-[var(--wh40k-text-medium)] tw-uppercase tw-tracking-[0.03em]">{{title}}</strong>
             {{> @partial-block}}
