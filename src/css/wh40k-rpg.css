@@ -31682,7 +31682,6 @@ body.theme-dark {
 
     i {
         font-size: 0.85rem;
-        animation: pulse-glow 2s ease-in-out infinite;
     }
 }
 
@@ -31804,17 +31803,6 @@ body.theme-dark {
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-
-    &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
-        animation: shimmer 2s linear infinite;
-    }
 }
 
 .wh40k-wounds-progress {
@@ -31892,7 +31880,6 @@ body.theme-dark {
     &.wh40k-fatigue-pip--filled {
         color: #c08020; /* Filled: solid amber */
         text-shadow: 0 0 6px rgb(from #c08020 r g b / 0.5);
-        animation: bolt-glow-combat 2s ease-in-out infinite;
     }
 }
 
@@ -32738,10 +32725,6 @@ body.theme-dark {
         background: rgb(from var(--wh40k-accent-gold) r g b / 0.15);
         border-color: var(--wh40k-accent-gold);
         color: var(--wh40k-accent-gold);
-
-        i {
-            animation: star-pulse 1.5s ease-in-out infinite;
-        }
     }
 }
 

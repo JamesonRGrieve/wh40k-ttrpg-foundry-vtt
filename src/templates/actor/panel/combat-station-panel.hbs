@@ -50,7 +50,9 @@
                                 </div>
                                 <div class="wh40k-vital-bar-wrapper">
                                     <div class="wh40k-vital-bar-track">
-                                        <div class="wh40k-vital-bar-progress wh40k-wounds-progress" style="--progress: {{percent system.wounds.value system.wounds.max}}%"></div>
+                                        <div class="wh40k-vital-bar-progress wh40k-wounds-progress" style="--progress: {{percent system.wounds.value system.wounds.max}}%">
+                                        <span class="wh40k-wounds-progress__shimmer tw-pointer-events-none tw-absolute tw-inset-0 tw-animate-shimmer tw-bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.2)_50%,transparent_100%)]"></span>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +121,7 @@
                                 <div class="wh40k-fatigue-bolts-combat tw-flex tw-items-center tw-justify-center tw-gap-2.5 tw-py-1.5 tw-flex-wrap">
                                     {{#each (range 1 system.fatigue.max) as |index|}}
                                         <button type="button" class="wh40k-fatigue-pip {{#if (lte index ../system.fatigue.value)}}wh40k-fatigue-pip--filled{{/if}}" data-action="setFatigueBolt" data-fatigue-index="{{index}}" title="Fatigue Level {{index}}">
-                                            <i class="fas fa-bolt"></i>
+                                            <i class="fas fa-bolt {{#if (lte index ../system.fatigue.value)}}tw-animate-bolt-glow-combat{{/if}}"></i>
                                         </button>
                                     {{/each}}
                                 </div>
