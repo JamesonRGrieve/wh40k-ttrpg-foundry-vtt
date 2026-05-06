@@ -360,6 +360,15 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
             if (group !== 'primary') return;
             this.element.className = this.element.className.replace(/tab-\w+/g, '');
             this.element.classList.add(`tab-${tab}`);
+            const activeTab = this.element.querySelector<HTMLElement>(`.wh40k-tab.active[data-tab="${tab}"]`);
+            if (activeTab) {
+                activeTab.querySelectorAll<HTMLElement>('.wh40k-panel').forEach((panel, i) => {
+                    panel.classList.remove('tw-animate-wh40k-panel-in');
+                    void panel.offsetWidth;
+                    panel.classList.add('tw-animate-wh40k-panel-in');
+                    panel.style.animationDelay = `${i * 0.03}s`;
+                });
+            }
         }
 
         /* -------------------------------------------- */
