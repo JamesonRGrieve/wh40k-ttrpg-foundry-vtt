@@ -1,0 +1,29 @@
+{{!--
+    Circular icon-action button — 36×36 round button with 2px border and a
+    hover scale/shadow flourish. Used by panel headers and stat strips for
+    discrete actions that should read as a single tappable affordance.
+
+    Required hash params:
+        action      — data-action value (e.g. "customXP", "openAdvancement")
+        icon        — Font Awesome class (e.g. "fa-plus", "fa-arrow-up-big-small")
+        title       — tooltip / aria-label text (already localized by caller)
+
+    Optional hash params:
+        tone        — color theme; one of "success" | "gold" | "info" | "danger" | "neutral".
+                      Defaults to "neutral".
+        extraClass  — additional utility classes appended to the button element
+                      (e.g. "tw-ml-auto" or "tw-ml-0" for layout positioning).
+        iconPrefix  — Font Awesome family prefix; defaults to "fas". Pass
+                      "fa-solid", "far", etc. when an icon needs a different
+                      family.
+        iconClass   — extra utility classes on the <i> element (e.g. sizing).
+                      Defaults to "tw-text-[1rem]".
+        dataAttrs   — raw attribute string appended to the button (e.g.
+                      `data-stat-key="willpower"`).
+--}}
+<button type="button"
+        class="tw-flex tw-items-center tw-justify-center tw-w-[36px] tw-h-[36px] tw-p-0 tw-rounded-full tw-cursor-pointer tw-transition-all tw-duration-200 tw-shrink-0 tw-border-2 active:tw-scale-95 hover:tw-scale-110{{#if (eq tone "success")}} tw-bg-[rgba(74,143,92,0.1)] tw-border-[rgba(74,143,92,0.4)] tw-text-[#4a8f5c] hover:tw-bg-[rgba(74,143,92,0.2)] hover:tw-border-[#4a8f5c] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.15)]{{else if (eq tone "gold")}} tw-bg-[rgba(201,162,39,0.1)] tw-border-[rgba(201,162,39,0.4)] tw-text-gold hover:tw-bg-[rgba(201,162,39,0.25)] hover:tw-border-gold hover:tw-shadow-[0_2px_6px_rgba(201,162,39,0.3)]{{else if (eq tone "info")}} tw-bg-[rgba(36,107,131,0.1)] tw-border-[rgba(36,107,131,0.4)] tw-text-[#246b83] hover:tw-bg-[rgba(36,107,131,0.25)] hover:tw-border-[#246b83] hover:tw-shadow-[0_2px_6px_rgba(36,107,131,0.3)]{{else if (eq tone "danger")}} tw-bg-[rgba(182,58,43,0.1)] tw-border-[rgba(182,58,43,0.4)] tw-text-crimson hover:tw-bg-[rgba(182,58,43,0.25)] hover:tw-border-crimson hover:tw-shadow-[0_2px_6px_rgba(182,58,43,0.3)]{{else}} tw-bg-[var(--wh40k-btn-bg)] tw-border-[var(--wh40k-border-color-light)] tw-text-[var(--wh40k-text-secondary)] hover:tw-bg-[rgba(0,0,0,0.05)] hover:tw-border-[var(--wh40k-border-color)] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.1)]{{/if}}{{#if extraClass}} {{extraClass}}{{/if}}"
+        data-action="{{action}}"{{#if dataAttrs}} {{{dataAttrs}}}{{/if}}
+        title="{{title}}">
+    <i class="{{#if iconPrefix}}{{iconPrefix}}{{else}}fas{{/if}} {{icon}} {{#if iconClass}}{{iconClass}}{{else}}tw-text-[1rem]{{/if}}"></i>
+</button>
