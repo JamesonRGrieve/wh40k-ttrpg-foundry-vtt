@@ -34,7 +34,8 @@ describe('stat-grid-section partial', () => {
                 stats: [{ label: 'Leap', value: 2, unit: 'm' }],
             }),
         );
-        const header = root.querySelector('.wh40k-stat-grid-header');
+        // Heading is the first child div containing a span with the heading text
+        const header = root.querySelector('div > div:first-child');
         expect(header).not.toBeNull();
         expect(header?.textContent).toContain('Athletics');
         expect(root.querySelector('.fa-person-hiking')).not.toBeNull();
@@ -46,7 +47,9 @@ describe('stat-grid-section partial', () => {
                 stats: [{ label: 'X', value: 1 }],
             }),
         );
-        expect(root.querySelector('.wh40k-stat-grid-header')).toBeNull();
+        // Without a heading, the outer div should contain only the grid div (no header sibling)
+        const children = Array.from(root.querySelector('div')?.children ?? []);
+        expect(children.length).toBe(1);
     });
 
     it('renders one cell per stat with label / value / unit', () => {
@@ -62,12 +65,18 @@ describe('stat-grid-section partial', () => {
                 ],
             }),
         );
-        const cells = root.querySelectorAll('.wh40k-stat-grid-cell');
+        // Each stat renders as a tw-flex div inside the grid
+        const grid = root.querySelector('.tw-grid');
+        const cells = grid?.querySelectorAll(':scope > div') ?? [];
         expect(cells.length).toBe(4);
-        expect(cells[0].querySelector('.wh40k-stat-grid-label')?.textContent?.trim()).toBe('Half');
-        expect(cells[0].querySelector('.wh40k-stat-grid-value')?.textContent).toContain('3');
-        expect(cells[0].querySelector('.wh40k-stat-grid-unit')?.textContent).toBe('m');
-        expect(cells[3].querySelector('.wh40k-stat-grid-value')?.textContent).toContain('18');
+        // First span in cell is the label, second is the value
+        const labelSpans = cells[0].querySelectorAll('span');
+        expect(labelSpans[0]?.textContent?.trim()).toBe('Half');
+        expect(labelSpans[1]?.textContent).toContain('3');
+        // Unit is a nested span inside the value span
+        expect(labelSpans[1]?.querySelector('span')?.textContent).toBe('m');
+        const lastCellSpans = cells[3].querySelectorAll('span');
+        expect(lastCellSpans[1]?.textContent).toContain('18');
     });
 
     it('reflects the column count in the grid class', () => {
@@ -77,7 +86,7 @@ describe('stat-grid-section partial', () => {
                 stats: [{ label: 'A', value: 1 }],
             }),
         );
-        const grid = root.querySelector('.wh40k-stat-grid');
+        const grid = root.querySelector('.tw-grid');
         expect(grid?.className).toContain('tw-grid-cols-4');
     });
 
@@ -87,7 +96,7 @@ describe('stat-grid-section partial', () => {
                 stats: [{ label: 'A', value: 1 }],
             }),
         );
-        expect(root.querySelector('.wh40k-stat-grid')?.className).toContain('tw-grid-cols-3');
+        expect(root.querySelector('.tw-grid')?.className).toContain('tw-grid-cols-3');
     });
 
     it('marks cells with action as clickable and passes through attrs', () => {
@@ -105,7 +114,7 @@ describe('stat-grid-section partial', () => {
                 ],
             }),
         );
-        const cell = root.querySelector('.wh40k-stat-grid-cell');
+        const cell = root.querySelector('.tw-grid > div');
         expect(cell?.getAttribute('data-action')).toBe('setMovementMode');
         expect(cell?.getAttribute('data-movement-type')).toBe('half');
         expect(cell?.getAttribute('title')).toBe('Set Half Move');
@@ -118,7 +127,7 @@ describe('stat-grid-section partial', () => {
                 stats: [{ label: 'Jump', value: 50, unit: 'cm' }],
             }),
         );
-        const cell = root.querySelector('.wh40k-stat-grid-cell');
+        const cell = root.querySelector('.tw-grid > div');
         expect(cell?.hasAttribute('data-action')).toBe(false);
         expect(cell?.className).not.toContain('tw-cursor-pointer');
     });
