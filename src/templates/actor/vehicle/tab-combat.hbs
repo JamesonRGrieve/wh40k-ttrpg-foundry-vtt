@@ -4,8 +4,8 @@
 
         {{!-- Weapons List --}}
         <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
-            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold tw-mb-2 tw-flex tw-items-center tw-gap-2">
-                <i class="fas fa-crosshairs tw-text-gold"></i>
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-crosshairs tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
                 Weapons
             </h3>
             <div class="tw-flex tw-flex-col tw-gap-2">
@@ -27,14 +27,14 @@
 
         {{!-- Traits --}}
         <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
-            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold tw-mb-2 tw-flex tw-items-center tw-gap-2">
-                <i class="fas fa-shield-alt tw-text-gold"></i>
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-shield-alt tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
                 Vehicle Traits
             </h3>
             <div class="tw-flex tw-flex-col tw-gap-3">
                 {{#each vehicleTraits}}
                 <div class="tw-px-3 tw-py-3 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px]">
-                    <strong class="tw-text-gold">{{this.name}}</strong>
+                    <strong class="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{this.name}}</strong>
                     {{#if this.system.description}}
                     <p class="tw-mt-2 tw-text-[0.85rem] tw-text-[#888]">{{{this.system.description}}}</p>
                     {{/if}}
