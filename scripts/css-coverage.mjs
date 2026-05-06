@@ -164,6 +164,10 @@ const JS_HOOKS = new Set([
     // to conditionally color child spans. Not CSS classes in the project stylesheet.
     'positive',
     'negative',
+    // Dead badge variant modifiers — no CSS rules, no JS queries.
+    'wh40k-badge--stacks',
+    'wh40k-badge--level',
+    'wh40k-badge--variable',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
