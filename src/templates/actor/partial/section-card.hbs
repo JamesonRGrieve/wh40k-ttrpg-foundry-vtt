@@ -21,7 +21,7 @@
         iconColor            — CSS color override for the add button's icon glyph.
 --}}
 <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-1.5{{#if cardClass}} {{cardClass}}{{/if}}">
-    <div class="tw-flex tw-items-center tw-justify-between tw-gap-1 tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-medium)] tw-mb-1.5{{#if headerClass}} {{headerClass}}{{/if}}">
+    <div class="tw-flex tw-items-center tw-justify-between tw-gap-1 tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-medium)] tw-mb-1.5 tw-border-b tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-pb-1{{#if headerClass}} {{headerClass}}{{/if}}">
         <span class="tw-flex tw-items-center tw-gap-1.5">
             <i class="fas {{icon}}"></i>
             <span>{{#if titleKey}}{{localize titleKey}}{{else}}{{title}}{{/if}}</span>

@@ -20,7 +20,7 @@
         rowClass    — extra utility classes appended to the row container
                       (e.g. "wh40k-vital-critical-row").
 --}}
-<div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5{{#if rowClass}} {{rowClass}}{{/if}}">
+<div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5 tw-border-l-2 tw-border-l-gold bc:tw-border-l-crimson-light dh1e:tw-border-l-gold-raw-l5 dh2e:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure tw-pl-1{{#if rowClass}} {{rowClass}}{{/if}}">
     <span class="wh40k-vital-icon"><i class="fas {{icon}}"></i></span>
     <span class="wh40k-vital-label">{{label}}</span>
     {{> @partial-block}}
