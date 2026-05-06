@@ -1,26 +1,26 @@
 {{! Rogue Trader Simple Roll Prompt - Modern Design }}
 {{#with rollData}}
-    <form class="wh40k-prompt tw-relative tw-font-ui tw-text-[#e8e4d9] tw-p-5" autocomplete="off">
-        <div class="wh40k-prompt__panel tw-relative tw-p-4 tw-mb-4 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[#14141c] tw-to-[#0d0d12] tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
-            <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-[#d4af37] tw-uppercase tw-tracking-[0.12em] tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(255,255,255,0.08)]">{{name}}</h3>
+    <form class="tw-relative tw-font-ui tw-text-[#e8e4d9] tw-p-5" autocomplete="off">
+        <div class="tw-relative tw-p-4 tw-mb-4 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[#14141c] tw-to-[#0d0d12] tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
+            <h3 class="tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-[#d4af37] tw-uppercase tw-tracking-[0.12em] tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(255,255,255,0.08)]">{{name}}</h3>
 
-            <div class="wh40k-prompt__target tw-flex tw-items-center tw-justify-center tw-gap-3 tw-p-4 tw-bg-gradient-to-br tw-from-[rgba(201,162,39,0.1)] tw-to-[rgba(0,0,0,0.2)] tw-border tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-rounded-lg tw-my-3">
-                <span class="wh40k-prompt__target-label tw-text-[0.9rem] tw-font-semibold tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.1em]">Target</span>
-                <span class="wh40k-prompt__target-value tw-text-[2rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-shadow-[0_0_20px_rgba(201,162,39,0.2)] tw-tabular-nums">{{baseTarget}}</span>
-                <span class="wh40k-prompt__target-percent tw-text-[1rem] tw-text-[#6a6a6a]">%</span>
+            <div class="tw-flex tw-items-center tw-justify-center tw-gap-3 tw-p-4 tw-bg-gradient-to-br tw-from-[rgba(201,162,39,0.1)] tw-to-[rgba(0,0,0,0.2)] tw-border tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-rounded-lg tw-my-3">
+                <span class="tw-text-[0.9rem] tw-font-semibold tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.1em]">Target</span>
+                <span class="tw-text-[2rem] tw-font-bold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-shadow-[0_0_20px_rgba(201,162,39,0.2)] tw-tabular-nums">{{baseTarget}}</span>
+                <span class="tw-text-[1rem] tw-text-[#6a6a6a]">%</span>
             </div>
 
-            <div class="wh40k-prompt__divider tw-h-px tw-bg-gradient-to-r tw-from-transparent tw-via-[rgba(201,162,39,0.3)] tw-to-transparent tw-my-4"></div>
+            <div class="tw-h-px tw-bg-gradient-to-r tw-from-transparent tw-via-[rgba(201,162,39,0.3)] tw-to-transparent tw-my-4"></div>
 
-            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-3 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Difficulty</span>
-                <select class="wh40k-prompt__select tw-w-full tw-min-h-[40px] tw-px-3 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px]" data-dtype="Number" name="modifiers.difficulty" id="difficulty">
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-3 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
+                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Difficulty</span>
+                <select class="tw-w-full tw-min-h-[40px] tw-px-3 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px]" data-dtype="Number" name="modifiers.difficulty" id="difficulty">
                     {{selectOptions difficulties selected=modifiers.difficulty}}
                 </select>
             </div>
-            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-3 tw-items-center tw-py-2 tw-min-h-[40px]">
-                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Modifier</span>
-                <input class="wh40k-prompt__input tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[80px] tw-text-center tw-w-20" type="number" data-dtype="Number" name="modifiers.modifier" id="modifier" value="0" />
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-3 tw-items-center tw-py-2 tw-min-h-[40px]">
+                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Modifier</span>
+                <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[80px] tw-text-center tw-w-20" type="number" data-dtype="Number" name="modifiers.modifier" id="modifier" value="0" />
             </div>
         </div>
     </form>

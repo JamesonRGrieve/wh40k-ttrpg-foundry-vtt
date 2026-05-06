@@ -1,44 +1,44 @@
 {{! Rogue Trader Force Field Prompt - Modern Design }}
 <div class="dialog-content">
-    <form class="wh40k-prompt tw-relative tw-font-ui tw-text-[color:var(--wh40k-text-primary)]" autocomplete="off">
+    <form class="tw-relative tw-font-ui tw-text-[#e8e4d9] tw-p-5" autocomplete="off">
         {{! Character & Field Info }}
-        <div class="wh40k-prompt__panel tw-relative tw-mb-4">
-            <div class="wh40k-prompt__header tw-flex tw-items-center tw-gap-[14px] tw-mb-4 tw-pb-[14px]">
-                <img class="wh40k-prompt__icon tw-w-12 tw-h-12 tw-flex-shrink-0 tw-rounded tw-object-cover" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
-                <div class="wh40k-prompt__title-group tw-flex-1 tw-min-w-0">
-                    <h2 class="wh40k-prompt__title tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-wider tw-m-0 tw-truncate">Force Field</h2>
-                    <div class="wh40k-prompt__subtitle tw-text-[0.9rem] tw-text-[color:var(--wh40k-text-secondary)] tw-mt-1 tw-truncate">{{this.forceField.name}}</div>
+        <div class="tw-relative tw-p-4 tw-mb-4 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[#14141c] tw-to-[#0d0d12] tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
+            <div class="tw-flex tw-items-center tw-gap-[14px] tw-mb-4 tw-pb-[14px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
+                <img class="tw-w-12 tw-h-12 tw-flex-shrink-0 tw-rounded tw-object-cover tw-border tw-border-[rgba(201,162,39,0.3)]" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
+                <div class="tw-flex-1 tw-min-w-0">
+                    <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-wider tw-m-0 tw-truncate">Force Field</h2>
+                    <div class="tw-text-[0.9rem] tw-text-[color:var(--wh40k-text-secondary)] tw-mt-1 tw-truncate">{{this.forceField.name}}</div>
                 </div>
             </div>
 
-            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
-                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Character</span>
-                <span class="wh40k-prompt__value">{{this.actor.name}}</span>
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
+                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Character</span>
+                <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-tabular-nums">{{this.actor.name}}</span>
             </div>
-            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
-                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Quality</span>
-                <span class="wh40k-prompt__value">{{this.forceField.system.protectionRating}}</span>
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
+                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Quality</span>
+                <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-tabular-nums">{{this.forceField.system.protectionRating}}</span>
             </div>
-            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
-                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Activated</span>
-                <span class="wh40k-prompt__value">{{this.forceField.system.activated}}</span>
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
+                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Activated</span>
+                <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-tabular-nums">{{this.forceField.system.activated}}</span>
             </div>
-            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
-                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Overloaded</span>
-                <span class="wh40k-prompt__value">{{this.forceField.system.overloaded}}</span>
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Overloaded</span>
+                <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-tabular-nums">{{this.forceField.system.overloaded}}</span>
             </div>
         </div>
 
         {{! Protection Settings }}
-        <div class="wh40k-prompt__panel tw-relative tw-mb-0">
-            <h3 class="wh40k-prompt__section-title tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2">Protection</h3>
-            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
-                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Rating</span>
-                <input class="wh40k-prompt__input tw-text-right" type="number" data-dtype="Number" name="protectionRating" value="{{this.protectionRating}}" />
+        <div class="tw-relative tw-p-4 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[#14141c] tw-to-[#0d0d12] tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
+            <h3 class="tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(255,255,255,0.08)]">Protection</h3>
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
+                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Rating</span>
+                <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[80px] tw-text-right tw-w-20" type="number" data-dtype="Number" name="protectionRating" value="{{this.protectionRating}}" />
             </div>
-            <div class="wh40k-prompt__field tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
-                <span class="wh40k-prompt__label tw-text-[0.85rem] tw-font-medium">Overload</span>
-                <input class="wh40k-prompt__input tw-text-right" type="number" data-dtype="Number" name="overloadRating" value="{{this.overloadRating}}" />
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Overload</span>
+                <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[80px] tw-text-right tw-w-20" type="number" data-dtype="Number" name="overloadRating" value="{{this.overloadRating}}" />
             </div>
         </div>
     </form>
