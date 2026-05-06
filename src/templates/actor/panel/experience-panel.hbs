@@ -1,18 +1,5 @@
 {{!-- Simplified Experience Panel --}}
-<div class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden tw-mb-3 tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)] tw-relative">
-
-    {{!-- Panel Header --}}
-    <div class="tw-flex tw-flex-row tw-items-center tw-gap-2 tw-py-2 tw-px-3 tw-bg-gradient-to-b tw-from-[rgba(var(--wh40k-accent-gold),0.15)] tw-to-[rgba(var(--wh40k-accent-gold),0.05)] tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-transition-all tw-duration-200 tw-w-full tw-box-border tw-cursor-pointer tw-select-none sheet-control__hide-control"
-         data-toggle="experience_details"
-         title="Click to {{#if (isExpanded 'experience_details' actor)}}collapse{{else}}expand{{/if}}">
-        <span class="tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[var(--wh40k-text-dark)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">
-            <i class="fas fa-graduation-cap tw-text-[var(--wh40k-accent-gold)] tw-flex-shrink-0"></i> Experience
-        </span>
-        <i class="fas fa-chevron-down tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)] tw-transition-transform tw-duration-200 tw-flex-shrink-0 tw-ml-auto {{#if (isExpanded 'experience_details' actor)}}tw-rotate-180{{/if}}"></i>
-    </div>
-
-    {{!-- Panel Body --}}
-    <div class="tw-p-3 tw-bg-[var(--wh40k-panel-body-bg)]">
+{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key="experience" label="Experience" icon="fa-graduation-cap" actor=actor}}
 
         {{!-- Compact XP Display - Single horizontal line --}}
         <div class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-light)] tw-rounded-[6px] tw-mb-[var(--wh40k-space-md)]">
@@ -107,5 +94,4 @@
                 <p class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)] tw-leading-[1.4] tw-m-0">{{localize "WH40K.VitalInfoCard.ExperienceAboutDesc"}}</p>
             {{/systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs}}
         {{/systems/wh40k-rpg/templates/actor/partial/vital-edit-body.hbs}}
-    </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/vital-panel-shell}}
