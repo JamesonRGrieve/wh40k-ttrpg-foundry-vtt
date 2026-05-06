@@ -23207,7 +23207,6 @@ body.theme-dark {
     }
     &.degree-damned {
         border-left: 4px solid var(--wh40k-degree-damned);
-        animation: damned-pulse 2s ease-in-out infinite;
     }
 
     /* ============================================ */
@@ -23299,7 +23298,6 @@ body.theme-dark {
             background: rgba(220, 38, 38, 0.2);
             border-color: #b91c1c;
             color: #991b1b;
-            animation: badge-pulse 2s ease-in-out infinite;
 
             .wh40k-badge-label {
                 text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
@@ -23311,7 +23309,6 @@ body.theme-dark {
             background: rgba(127, 29, 29, 0.25);
             border-color: #7f1d1d;
             color: #7f1d1d;
-            animation: badge-pulse 1s ease-in-out infinite;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 8px rgba(127, 29, 29, 0.4);
 
             .wh40k-badge-label {
@@ -23565,14 +23562,12 @@ body.theme-dark {
         background: rgba(139, 0, 0, 0.2);
         color: #8b0000;
         border: 2px solid rgba(139, 0, 0, 0.6);
-        animation: alert-pulse 2s ease-in-out infinite;
     }
 
     .wh40k-alert-damned {
         background: rgba(0, 0, 0, 0.3);
         color: #ff0000;
         border: 2px solid #8b0000;
-        animation: damned-alert 1s ease-in-out infinite;
     }
 
     /* ============================================ */
@@ -23648,7 +23643,6 @@ body.theme-dark {
             background: rgb(from var(--wh40k-degree-damned) r g b / 0.3);
             border: 2px solid var(--wh40k-degree-damned);
             color: var(--wh40k-degree-damned);
-            animation: badge-pulse 2s ease-in-out infinite;
         }
     }
 
@@ -24061,7 +24055,6 @@ body.theme-dark {
     }
     &.degree-terminally {
         border-left: 4px solid var(--wh40k-degree-terminally);
-        animation: insane-pulse 2s ease-in-out infinite;
     }
 
     /* ============================================ */
@@ -24153,7 +24146,6 @@ body.theme-dark {
             background: rgba(220, 38, 38, 0.2);
             border-color: #b91c1c;
             color: #991b1b;
-            animation: badge-pulse 2s ease-in-out infinite;
 
             .wh40k-badge-label {
                 text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
@@ -24165,7 +24157,6 @@ body.theme-dark {
             background: rgba(127, 29, 29, 0.25);
             border-color: #7f1d1d;
             color: #7f1d1d;
-            animation: badge-pulse 1s ease-in-out infinite;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 8px rgba(127, 29, 29, 0.4);
 
             .wh40k-badge-label {
@@ -24412,14 +24403,12 @@ body.theme-dark {
         background: rgba(139, 0, 0, 0.2);
         color: #8b0000;
         border: 2px solid rgba(139, 0, 0, 0.6);
-        animation: alert-pulse 2s ease-in-out infinite;
     }
 
     .wh40k-alert-damned {
         background: rgba(0, 0, 0, 0.3);
         color: #ff0000;
         border: 2px solid #8b0000;
-        animation: damned-alert 1s ease-in-out infinite;
     }
 
     /* ============================================ */
