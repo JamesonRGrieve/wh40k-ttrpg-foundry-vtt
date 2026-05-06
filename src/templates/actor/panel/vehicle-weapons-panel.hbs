@@ -27,7 +27,7 @@
         {{/if}}
 
         <div class="tw-flex tw-flex-col tw-gap-1">
-            <label class="wh40k-field__header">{{localize "WH40K.Vehicle.Weapons.Description"}}</label>
+            <label class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Weapons.Description"}}</label>
             <div class="tw-rounded-md tw-overflow-hidden">
                 {{editor system.weapons target="system.weapons" button=true editable=editable}}
             </div>
@@ -35,7 +35,7 @@
         </div>
 
         <div class="tw-flex tw-justify-end">
-            <button class="wh40k-control-button" data-action="itemCreate" data-type="weapon">
+            <button class="tw-cursor-pointer tw-opacity-70 hover:tw-opacity-100 tw-transition-opacity" data-action="itemCreate" data-type="weapon">
                 {{iconSvg "fa:plus-circle" class="tw-w-3.5 tw-h-3.5"}}
                 {{localize "WH40K.Vehicle.Weapons.Add"}}
             </button>
