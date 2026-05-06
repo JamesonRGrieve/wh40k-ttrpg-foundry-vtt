@@ -5047,7 +5047,7 @@ body.theme-dark {
 
     /* Section expand/collapse animation */
     .wh40k-section__body {
-        animation: slide-in-up 0.3s ease-out;
+        /* animation ported to tw-animate-slide-in-up on template elements */
 
         &.collapsed {
             display: none;
@@ -5284,15 +5284,8 @@ body.theme-dark {
         }
     }
 
-    /* Loaded ammo card entrance */
-    .wh40k-loaded-ammo-card {
-        animation: slide-in-up 0.4s ease-out;
-    }
-
-    /* Modification chip enter animation */
-    .wh40k-mod-chip {
-        animation: slide-in-up 0.3s ease-out;
-    }
+    /* Loaded ammo card entrance — animation ported to tw-animate-[slide-in-up_0.4s_ease-out] on template */
+    /* Modification chip enter animation — animation ported to tw-animate-slide-in-up on template */
 
     /* Quality chip stagger animation (use nth-child for stagger effect) */
     .wh40k-iconic-stat__qualities {
@@ -26550,7 +26543,7 @@ body.theme-dark {
     color: #fff;
     font-size: 1.2rem;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    animation: pf-marker-pulse 2s ease-in-out infinite;
+    /* animation ported to tw-animate-pf-marker-pulse on template element */
     z-index: 1;
 }
 
