@@ -5,7 +5,7 @@
             {{localize "WH40K.ShipRole.Header"}}
         </span>
         <span class="tw-ml-auto tw-px-2 tw-py-0.5 tw-bg-[rgba(74,55,40,0.1)] tw-rounded-full tw-text-[0.85em] tw-font-semibold">{{shipRoles.length}}</span>
-        <button type="button" class="tw-p-1 tw-bg-transparent tw-border-none tw-cursor-pointer tw-transition-all hover:tw-text-gold hover:tw-scale-110" data-action="itemCreate" data-item-type="shipRole" data-tooltip="Add Ship Role">
+        <button type="button" class="tw-p-1 tw-bg-transparent tw-border-none tw-cursor-pointer tw-transition-all hover:tw-text-gold bc:hover:tw-text-crimson-light dh1e:hover:tw-text-gold-raw-l5 dh2e:hover:tw-text-gold-raw dw:hover:tw-text-accent-combat ow:hover:tw-text-brass-l20 rt:hover:tw-text-gold im:hover:tw-text-failure hover:tw-scale-110" data-action="itemCreate" data-item-type="shipRole" data-tooltip="Add Ship Role">
             <i class="fas fa-plus"></i>
         </button>
         <i class="fas fa-chevron-down collapse-icon"></i>
@@ -64,7 +64,7 @@
                                 <strong class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#6a5348]">{{localize "WH40K.ShipRole.Abilities"}}:</strong>
                                 <div class="tw-flex tw-flex-col tw-gap-1.5">
                                     {{#each role.system.abilities as |ability|}}
-                                    <div class="tw-flex tw-items-start tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[rgba(74,55,40,0.05)] tw-rounded-md tw-border-l-[3px] tw-border-l-solid tw-border-l-gold bc:tw-border-l-crimson-light dh1e:tw-border-l-gold-raw-l5 dh2e:tw-border-l-gold dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure">
+                                    <div class="tw-flex tw-items-start tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[rgba(74,55,40,0.05)] tw-rounded-md tw-border-l-[3px] tw-border-l-solid tw-border-l-gold bc:tw-border-l-crimson-light dh1e:tw-border-l-gold-raw-l5 dh2e:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure">
                                         <span class="tw-font-semibold tw-text-[#4a3728] tw-flex-1">{{ability.name}}</span>
                                         {{#if ability.bonus}}
                                         <span class="tw-inline-flex tw-items-center tw-justify-center tw-min-w-[2.5rem] tw-h-6 tw-px-2 tw-rounded-full tw-text-[0.85em] tw-font-bold {{#if (gt ability.bonus 0)}}tw-bg-[rgba(40,180,80,0.2)] tw-border tw-border-solid tw-border-[rgba(40,180,80,0.3)] tw-text-[#1a6a2a]{{else}}tw-bg-[rgba(200,60,60,0.2)] tw-border tw-border-solid tw-border-[rgba(200,60,60,0.3)] tw-text-[#8a2020]{{/if}}">
