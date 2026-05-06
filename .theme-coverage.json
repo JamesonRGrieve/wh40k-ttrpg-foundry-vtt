@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-06T18:59:17.881Z",
+  "generatedAt": "2026-05-06T19:02:56.086Z",
   "total": 244,
-  "adopted": 54,
+  "adopted": 55,
   "perSystemHits": {
-    "bc": 169,
-    "dh1e": 169,
-    "dh2e": 173,
-    "dw": 169,
-    "ow": 169,
-    "rt": 173,
-    "im": 173
+    "bc": 173,
+    "dh1e": 173,
+    "dh2e": 177,
+    "dw": 173,
+    "ow": 173,
+    "rt": 177,
+    "im": 177
   },
   "adoptedTemplates": [
     "src/templates/actor/panel/active-effects-compact.hbs",
@@ -17,6 +17,7 @@
     "src/templates/actor/panel/fate-panel.hbs",
     "src/templates/actor/panel/fatigue-panel.hbs",
     "src/templates/actor/panel/movement-panel-full.hbs",
+    "src/templates/actor/panel/ship-role-panel.hbs",
     "src/templates/actor/panel/talent-panel.hbs",
     "src/templates/actor/panel/vehicle-integrity-panel.hbs",
     "src/templates/actor/panel/wounds-panel.hbs",
