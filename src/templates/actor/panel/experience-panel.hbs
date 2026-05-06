@@ -62,20 +62,21 @@
             <span class="tw-text-[1.2rem] tw-font-light tw-shrink-0 tw-text-[var(--color-border-primary)]">|</span>
 
             {{!-- Add XP Button --}}
-            <button type="button"
-                    class="tw-flex tw-items-center tw-justify-center tw-w-[36px] tw-h-[36px] tw-p-0 tw-bg-[rgba(74,143,92,0.1)] tw-border-2 tw-border-[rgba(74,143,92,0.4)] tw-rounded-full tw-text-[#4a8f5c] tw-cursor-pointer tw-transition-all tw-duration-200 tw-shrink-0 tw-ml-auto hover:tw-bg-[rgba(74,143,92,0.2)] hover:tw-border-[#4a8f5c] hover:tw-scale-110 hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.15)] active:tw-scale-95"
-                    data-action="customXP"
-                    title="Add XP">
-                <i class="fas fa-plus tw-text-[1rem]"></i>
-            </button>
+            {{> systems/wh40k-rpg/templates/actor/partial/circular-icon-button.hbs
+                action="customXP"
+                tone="success"
+                icon="fa-plus"
+                title=(localize "WH40K.VitalEditBody.AddXP")
+                extraClass="tw-ml-auto"}}
 
             {{!-- Advancement Button --}}
-            <button type="button"
-                    class="tw-flex tw-items-center tw-justify-center tw-w-[36px] tw-h-[36px] tw-p-0 tw-bg-[rgba(201,162,39,0.1)] tw-border-2 tw-border-[rgba(201,162,39,0.4)] tw-rounded-full tw-text-gold tw-cursor-pointer tw-transition-all tw-duration-200 tw-shrink-0 tw-ml-0 hover:tw-bg-[rgba(201,162,39,0.25)] hover:tw-border-gold hover:tw-scale-110 hover:tw-shadow-[0_2px_6px_rgba(201,162,39,0.3)] active:tw-scale-95"
-                    data-action="openAdvancement"
-                    title="{{localize 'WH40K.Advancement.Title'}}">
-                <i class="fa-solid fa-arrow-up-big-small tw-text-[1rem]"></i>
-            </button>
+            {{> systems/wh40k-rpg/templates/actor/partial/circular-icon-button.hbs
+                action="openAdvancement"
+                tone="gold"
+                iconPrefix="fa-solid"
+                icon="fa-arrow-up-big-small"
+                title=(localize "WH40K.Advancement.Title")
+                extraClass="tw-ml-0"}}
         </div>
 
         {{!-- Edit Mode (Expandable) --}}
