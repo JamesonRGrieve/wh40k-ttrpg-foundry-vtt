@@ -140,7 +140,7 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
          */
         #createPopover(anchor: HTMLElement, breakdown: BreakdownData): void {
             const popover = document.createElement('div');
-            popover.className = 'wh40k-stat-breakdown-popover';
+            popover.className = 'wh40k-stat-breakdown-popover tw-animate-popoverFadeIn';
 
             const html = this.#buildPopoverHTML(breakdown);
             popover.innerHTML = html;

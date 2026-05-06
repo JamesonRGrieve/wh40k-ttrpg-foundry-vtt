@@ -5093,7 +5093,6 @@ body.theme-dark {
 
     /* Edit toggle button glow when active */
     .wh40k-edit-toggle.active {
-        animation: glow-pulse 2s ease-in-out infinite;
     }
 
     /* FAB expand animation */
@@ -20041,7 +20040,6 @@ body.theme-dark {
     &.wh40k-fatigue-pip--filled {
         color: #c08020;
         text-shadow: 0 0 6px rgb(from #c08020 r g b / 0.5);
-        animation: bolt-glow 2s ease-in-out infinite;
     }
 
     &:hover {
@@ -51946,7 +51944,6 @@ body.theme-dark {
         background: linear-gradient(90deg, transparent, var(--wh40k-gold), transparent);
         margin: 2px 0;
         position: relative;
-        animation: indicator-glow 1s ease-in-out infinite;
 
         &::before,
         &::after {
@@ -52597,7 +52594,6 @@ body.theme-dark {
         border-radius: var(--wh40k-radius-lg);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         overflow: hidden;
-        animation: popoverFadeIn 0.15s ease-out;
 
         &::before {
             content: '';
@@ -52856,7 +52852,6 @@ body.theme-dark {
         border-bottom: 3px solid var(--wh40k-gold);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
         padding: 0.75rem 1rem;
-        animation: toolbar-slide-in 0.4s ease-out;
 
         .what-if-toolbar-content {
             display: flex;
@@ -52874,7 +52869,6 @@ body.theme-dark {
 
             i {
                 font-size: 1.2rem;
-                animation: flask-bubble 2s ease-in-out infinite;
             }
 
             .what-if-label {
@@ -52981,7 +52975,6 @@ body.theme-dark {
         font-weight: bold;
         white-space: nowrap;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-        animation: badge-appear 0.3s ease-out;
         pointer-events: none;
 
         /* Positive change (increase) */
