@@ -18,7 +18,7 @@
 
 <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1">
   {{#each qualities}}
-  <div class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-border tw-border-[rgba(100,100,120,0.4)] tw-bg-[rgba(100,100,120,0.25)] tw-px-2.5 tw-py-1 tw-text-sm tw-text-[var(--color-text-secondary)] tw-transition-all {{#if ../expandable}}tw-cursor-pointer hover:tw--translate-y-px hover:tw-border-[rgba(100,100,120,0.6)] hover:tw-bg-[rgba(100,100,120,0.35)]{{/if}}"
+  <div class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-border tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-bg-[rgba(100,100,120,0.25)] tw-px-2.5 tw-py-1 tw-text-sm tw-text-[var(--color-text-secondary)] tw-transition-all {{#if ../expandable}}tw-cursor-pointer hover:tw--translate-y-px hover:tw-border-[rgba(100,100,120,0.6)] hover:tw-bg-[rgba(100,100,120,0.35)]{{/if}}"
        {{#if ../expandable}}data-action="expandQuality" data-quality-name="{{this.name}}"{{/if}}>
     <span class="tw-font-medium">
       {{this.name}}{{#if this.rating}} ({{this.rating}}){{/if}}
