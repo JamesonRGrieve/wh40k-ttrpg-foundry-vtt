@@ -15,17 +15,11 @@
             <div class="tw-h-px tw-my-2.5 tw-bg-[linear-gradient(90deg,transparent_0%,var(--wh40k-border-color)_20%,var(--wh40k-border-color)_80%,transparent_100%)]"></div>
 
             {{#if item.system.category}}
-                <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-py-1 tw-text-base">
-                    <span class="tw-font-semibold tw-flex-shrink-0 tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Category</span>
-                    <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.category}}</span>
-                </div>
+                {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Category" value=item.system.category}}
             {{/if}}
 
             {{#if item.system.requirements}}
-                <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-py-1 tw-text-base">
-                    <span class="tw-font-semibold tw-flex-shrink-0 tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Requirements</span>
-                    <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.requirements}}</span>
-                </div>
+                {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Requirements" value=item.system.requirements}}
             {{/if}}
 
             {{#if item.system.effect}}
@@ -45,14 +39,8 @@
             {{!-- Weapon Stats --}}
             {{#if isWeapon}}
                 <div class="tw-grid tw-grid-cols-2 tw-gap-1.5 tw-p-2.5 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Class</span>
-                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.class}}</span>
-                    </div>
-                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Type</span>
-                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.type}}</span>
-                    </div>
+                    {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Class" value=item.system.class compact=true}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Type" value=item.system.type compact=true}}
                     <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
                         <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Damage</span>
                         <span class="tw-text-[var(--wh40k-text-dark)]">{{#if item.system.damageLabel}}{{item.system.damageLabel}}{{else}}{{item.system.damage.formula}}{{#if item.system.damage.bonus}}+{{item.system.damage.bonus}}{{/if}} {{item.system.damage.type}}{{/if}}</span>
@@ -62,22 +50,13 @@
                         <span class="tw-text-[var(--wh40k-text-dark)]">{{#if item.system.damage.penetration}}{{item.system.damage.penetration}}{{else}}{{item.system.penetration}}{{/if}}</span>
                     </div>
                     {{#if item.system.range}}
-                        <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                            <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Range</span>
-                            <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.range}}</span>
-                        </div>
+                        {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Range" value=item.system.range compact=true}}
                     {{/if}}
                     {{#if item.system.rof}}
-                        <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                            <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">RoF</span>
-                            <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.rof}}</span>
-                        </div>
+                        {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="RoF" value=item.system.rof compact=true}}
                     {{/if}}
                     {{#if item.system.special}}
-                        <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm tw-col-span-2">
-                            <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Special</span>
-                            <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.special}}</span>
-                        </div>
+                        {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Special" value=item.system.special compact=true colSpan2=true}}
                     {{/if}}
                 </div>
             {{/if}}
@@ -85,22 +64,10 @@
             {{!-- Navigator Power Stats --}}
             {{#if isNavigatorPower}}
                 <div class="tw-grid tw-grid-cols-2 tw-gap-1.5 tw-p-2.5 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Use Time</span>
-                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.useTime}}</span>
-                    </div>
-                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Range</span>
-                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.range}}</span>
-                    </div>
-                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Test</span>
-                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.test}}</span>
-                    </div>
-                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Sustain</span>
-                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.sustain}}</span>
-                    </div>
+                    {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Use Time" value=item.system.useTime compact=true}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Range" value=item.system.range compact=true}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Test" value=item.system.test compact=true}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Sustain" value=item.system.sustain compact=true}}
                 </div>
                 {{#if item.system.novice}}
                     <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
@@ -125,26 +92,11 @@
             {{!-- Ship Component Stats --}}
             {{#if isShipComponent}}
                 <div class="tw-grid tw-grid-cols-2 tw-gap-1.5 tw-p-2.5 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Type</span>
-                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.componentType}}</span>
-                    </div>
-                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Hull</span>
-                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.hullType}}</span>
-                    </div>
-                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Power</span>
-                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.powerUsage}}</span>
-                    </div>
-                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">Space</span>
-                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.spaceUsage}}</span>
-                    </div>
-                    <div class="tw-flex tw-items-baseline tw-gap-1.5 tw-text-sm">
-                        <span class="tw-font-semibold tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">SP Cost</span>
-                        <span class="tw-text-[var(--wh40k-text-dark)]">{{item.system.spCost}}</span>
-                    </div>
+                    {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Type" value=item.system.componentType compact=true}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Hull" value=item.system.hullType compact=true}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Power" value=item.system.powerUsage compact=true}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="Space" value=item.system.spaceUsage compact=true}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs label="SP Cost" value=item.system.spCost compact=true}}
                 </div>
             {{/if}}
 
