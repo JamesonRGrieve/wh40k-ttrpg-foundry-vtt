@@ -2,7 +2,8 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
     label=(localize "WH40K.Vehicle.SpecialRules")
     icon="fa-scroll"
-    rootClass="tw-col-auto"}}
+    rootClass="tw-col-auto"
+    titleClass="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"}}
     <div class="tw-flex tw-flex-col tw-gap-1.5">
         {{editor system.specialRules target="system.specialRules" button=true editable=editable}}
         <small class="tw-text-sm tw-opacity-60 tw-italic">{{localize "WH40K.Vehicle.SpecialRules.Hint"}}</small>

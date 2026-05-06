@@ -18,7 +18,7 @@
     {{!-- Untrained Advanced Skills (4 columns, compact) --}}
     {{#if skillLists.advancedUntrained.length}}
     <div class="wh40k-advanced-untrained-section">
-        <h4 class="wh40k-section-divider">Advanced Skills (Untrained)</h4>
+        <h4 class="wh40k-section-divider tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">Advanced Skills (Untrained)</h4>
         <div class="tw-grid tw-grid-cols-4 tw-gap-0.5">
             {{#each skillLists.advancedUntrained as |entry|}}
             <div class="wh40k-skill-row wh40k-skill-row--advanced wh40k-skill-row--compact tw-grid tw-grid-cols-skill-row-compact tw-gap-1 tw-items-center tw-py-0.5 tw-px-1.5" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="0">
