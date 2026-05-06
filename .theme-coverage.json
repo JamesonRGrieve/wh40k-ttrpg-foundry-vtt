@@ -1,17 +1,18 @@
 {
-  "generatedAt": "2026-05-06T16:51:42.241Z",
+  "generatedAt": "2026-05-06T16:54:00.314Z",
   "total": 244,
-  "adopted": 10,
+  "adopted": 11,
   "perSystemHits": {
-    "bc": 9,
-    "dh1e": 9,
-    "dh2e": 13,
-    "dw": 9,
-    "ow": 9,
-    "rt": 13,
-    "im": 13
+    "bc": 10,
+    "dh1e": 10,
+    "dh2e": 14,
+    "dw": 10,
+    "ow": 10,
+    "rt": 14,
+    "im": 14
   },
   "adoptedTemplates": [
+    "src/templates/actor/panel/fate-panel.hbs",
     "src/templates/actor/partial/collapsible-panel.hbs",
     "src/templates/actor/partial/effect-row.hbs",
     "src/templates/actor/partial/header-base.hbs",
