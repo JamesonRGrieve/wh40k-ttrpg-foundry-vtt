@@ -1,31 +1,31 @@
-{{!-- 
+{{!--
   Rogue Trader Combat Action Item Sheet
   Sheet for combat action configuration
 --}}
-<div class="wh40k-combat-action-sheet">
+<div class="tw-flex tw-flex-col tw-h-full">
   <form autocomplete="off">
-    
+
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Combat action identity
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="wh40k-item-header tw-grid tw-grid-cols-[80px_minmax(0,1fr)] tw-gap-4 tw-border-b-2 tw-border-[var(--wh40k-gold-dark)] tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-px-4 tw-py-3 tw-shrink-0">
+    <header class="tw-grid tw-grid-cols-[80px_minmax(0,1fr)] tw-gap-4 tw-border-b-2 tw-border-[var(--wh40k-gold-dark)] tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-px-4 tw-py-3 tw-shrink-0">
       <div class="wh40k-item-header__image tw-group tw-relative tw-h-20 tw-w-20 tw-cursor-pointer tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105 hover:tw-shadow-[var(--wh40k-shadow-lg),0_0_20px_rgba(212,175,55,0.5)]" data-action="editImage" data-edit="img">
         <img class="tw-h-full tw-w-full tw-object-cover" src="{{item.img}}" alt="{{item.name}}" />
-        <div class="wh40k-item-header__overlay tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/45 tw-text-[var(--wh40k-gold)] tw-opacity-0 tw-transition-opacity group-hover:tw-opacity-100">
+        <div class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/45 tw-text-[var(--wh40k-gold)] tw-opacity-0 tw-transition-opacity group-hover:tw-opacity-100">
           <i class="fas fa-edit tw-text-lg"></i>
         </div>
       </div>
-      
-      <div class="wh40k-item-header__info tw-flex tw-min-w-0 tw-flex-col tw-justify-center tw-gap-1">
+
+      <div class="tw-flex tw-min-w-0 tw-flex-col tw-justify-center tw-gap-1">
         <input type="text" class="wh40k-item-header__name tw-w-full tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-shadow-[0_1px_2px_var(--wh40k-text-shadow)] placeholder:tw-text-[var(--wh40k-text-muted)] focus:tw-rounded-sm focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-outline-none" name="name" value="{{item.name}}" placeholder="Action Name" />
-        
-        <div class="wh40k-item-header__meta tw-mt-1 tw-flex tw-flex-wrap tw-items-center tw-gap-1">
+
+        <div class="tw-mt-1 tw-flex tw-flex-wrap tw-items-center tw-gap-1">
           {{!-- Action Type Badge --}}
           <span class="wh40k-badge wh40k-badge--action-type tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium">
             <i class="fas fa-clock"></i>
             {{item.system.actionTypeLabel}}
           </span>
-          
+
           {{!-- Attack Modifier Badge --}}
           {{#if (ne item.system.attackModifier 0)}}
           <span class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium {{#if (gt item.system.attackModifier 0)}}wh40k-badge--positive tw-bg-[rgba(34,197,94,0.15)] tw-text-[#86efac]{{else}}wh40k-badge--negative tw-bg-[rgba(248,113,113,0.15)] tw-text-[#fca5a5]{{/if}}">
@@ -40,17 +40,17 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          PROPERTIES PANEL
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-item-body">
+    <div class="wh40k-item-body tw-overflow-y-auto">
       <div class="wh40k-panel">
         <div class="wh40k-panel-header">
           <span class="wh40k-panel-title"><i class="fas fa-cog"></i> Properties</span>
         </div>
         <div class="wh40k-panel-body">
-          <div class="wh40k-form-grid">
+          <div class="tw-grid tw-gap-2">
             {{!-- Action Type --}}
-            <div class="wh40k-form-field">
-              <label class="wh40k-label">Action Type</label>
-              <select name="system.actionType" class="wh40k-select">
+            <div class="tw-flex tw-flex-col tw-gap-0.5">
+              <label class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-text-[rgba(202,210,222,0.7)]">Action Type</label>
+              <select name="system.actionType" class="tw-px-[10px] tw-py-[6px] tw-bg-[rgba(0,0,0,0.25)] tw-border tw-border-[rgba(255,255,255,0.1)] tw-rounded-md tw-text-[0.85rem] tw-cursor-pointer focus:tw-outline-none focus:tw-border-[rgba(212,175,55,0.5)]">
                 {{#select item.system.actionType}}
                 <option value="Half">Half Action</option>
                 <option value="Full">Full Action</option>
@@ -60,46 +60,46 @@
                 {{/select}}
               </select>
             </div>
-            
+
             {{!-- Attack Modifier --}}
-            <div class="wh40k-form-field">
-              <label class="wh40k-label">Attack Modifier</label>
-              <input type="number" name="system.attackModifier" value="{{item.system.attackModifier}}" 
-                     class="wh40k-input" placeholder="0" step="5" />
+            <div class="tw-flex tw-flex-col tw-gap-0.5">
+              <label class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-text-[rgba(202,210,222,0.7)]">Attack Modifier</label>
+              <input type="number" name="system.attackModifier" value="{{item.system.attackModifier}}"
+                     class="tw-px-[10px] tw-py-[6px] tw-bg-[rgba(0,0,0,0.25)] tw-border tw-border-[rgba(255,255,255,0.1)] tw-rounded-md tw-text-[0.85rem] tw-text-center focus:tw-outline-none focus:tw-border-[rgba(212,175,55,0.5)]" placeholder="0" step="5" />
             </div>
           </div>
-          
+
           {{!-- Subtypes --}}
-          <div class="wh40k-form-field wh40k-form-field--full">
-            <label class="wh40k-label">Action Subtypes</label>
-            <div class="wh40k-checkbox-group">
-              <label class="wh40k-checkbox-label">
-                <input type="checkbox" name="system.subtypes" value="Attack" 
+          <div class="tw-col-span-full tw-flex tw-flex-col tw-gap-0.5 tw-mt-3">
+            <label class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-text-[rgba(202,210,222,0.7)]">Action Subtypes</label>
+            <div class="tw-flex tw-flex-col tw-gap-2">
+              <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-[0.88rem]">
+                <input type="checkbox" name="system.subtypes" value="Attack"
                        {{#if (includes item.system.subtypesList "Attack")}}checked{{/if}} />
                 Attack
               </label>
-              <label class="wh40k-checkbox-label">
-                <input type="checkbox" name="system.subtypes" value="Movement" 
+              <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-[0.88rem]">
+                <input type="checkbox" name="system.subtypes" value="Movement"
                        {{#if (includes item.system.subtypesList "Movement")}}checked{{/if}} />
                 Movement
               </label>
-              <label class="wh40k-checkbox-label">
-                <input type="checkbox" name="system.subtypes" value="Concentration" 
+              <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-[0.88rem]">
+                <input type="checkbox" name="system.subtypes" value="Concentration"
                        {{#if (includes item.system.subtypesList "Concentration")}}checked{{/if}} />
                 Concentration
               </label>
-              <label class="wh40k-checkbox-label">
-                <input type="checkbox" name="system.subtypes" value="Miscellaneous" 
+              <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-[0.88rem]">
+                <input type="checkbox" name="system.subtypes" value="Miscellaneous"
                        {{#if (includes item.system.subtypesList "Miscellaneous")}}checked{{/if}} />
                 Miscellaneous
               </label>
-              <label class="wh40k-checkbox-label">
-                <input type="checkbox" name="system.subtypes" value="Melee" 
+              <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-[0.88rem]">
+                <input type="checkbox" name="system.subtypes" value="Melee"
                        {{#if (includes item.system.subtypesList "Melee")}}checked{{/if}} />
                 Melee
               </label>
-              <label class="wh40k-checkbox-label">
-                <input type="checkbox" name="system.subtypes" value="Ranged" 
+              <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-[0.88rem]">
+                <input type="checkbox" name="system.subtypes" value="Ranged"
                        {{#if (includes item.system.subtypesList "Ranged")}}checked{{/if}} />
                 Ranged
               </label>
@@ -107,7 +107,7 @@
           </div>
         </div>
       </div>
-      
+
       {{!-- ═══════════════════════════════════════════════════════════════════
            DESCRIPTION PANEL
       ═══════════════════════════════════════════════════════════════════ --}}
@@ -116,23 +116,23 @@
           <span class="wh40k-panel-title"><i class="fas fa-book"></i> Description</span>
         </div>
         <div class="wh40k-panel-body">
-          <div class="wh40k-form-field wh40k-form-field--full">
-            <label class="wh40k-label">Full Description</label>
+          <div class="tw-col-span-full tw-flex tw-flex-col tw-gap-0.5">
+            <label class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-text-[rgba(202,210,222,0.7)]">Full Description</label>
             {{#if inEditMode}}
               {{editor system.description.value target="system.description.value" button=true editable=editable}}
             {{else}}
-              <div class="wh40k-description-content">{{{system.description.value}}}</div>
+              <div class="tw-leading-relaxed tw-text-sm">{{{system.description.value}}}</div>
             {{/if}}
           </div>
-          
-          <div class="wh40k-form-field wh40k-form-field--full">
-            <label class="wh40k-label">Summary (for cards/tooltips)</label>
-            <input type="text" name="system.description.summary" value="{{item.system.description.summary}}" 
-                   class="wh40k-input" placeholder="Brief action summary" />
+
+          <div class="tw-col-span-full tw-flex tw-flex-col tw-gap-0.5 tw-mt-3">
+            <label class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-text-[rgba(202,210,222,0.7)]">Summary (for cards/tooltips)</label>
+            <input type="text" name="system.description.summary" value="{{item.system.description.summary}}"
+                   class="tw-px-[10px] tw-py-[6px] tw-bg-[rgba(0,0,0,0.25)] tw-border tw-border-[rgba(255,255,255,0.1)] tw-rounded-md tw-text-[0.85rem] focus:tw-outline-none focus:tw-border-[rgba(212,175,55,0.5)]" placeholder="Brief action summary" />
           </div>
         </div>
       </div>
-      
+
       {{!-- ═══════════════════════════════════════════════════════════════════
            SOURCE REFERENCE
       ═══════════════════════════════════════════════════════════════════ --}}
@@ -141,16 +141,16 @@
           <span class="wh40k-panel-title"><i class="fas fa-bookmark"></i> Source</span>
         </div>
         <div class="wh40k-panel-body">
-          <div class="wh40k-form-grid">
-            <div class="wh40k-form-field">
-              <label class="wh40k-label">Book</label>
-              <input type="text" name="system.source.book" value="{{source.source.book}}" 
-                     class="wh40k-input" placeholder="e.g. Core Rulebook" />
+          <div class="tw-grid tw-gap-2">
+            <div class="tw-flex tw-flex-col tw-gap-0.5">
+              <label class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-text-[rgba(202,210,222,0.7)]">Book</label>
+              <input type="text" name="system.source.book" value="{{source.source.book}}"
+                     class="tw-px-[10px] tw-py-[6px] tw-bg-[rgba(0,0,0,0.25)] tw-border tw-border-[rgba(255,255,255,0.1)] tw-rounded-md tw-text-[0.85rem] focus:tw-outline-none focus:tw-border-[rgba(212,175,55,0.5)]" placeholder="e.g. Core Rulebook" />
             </div>
-            <div class="wh40k-form-field">
-              <label class="wh40k-label">Page</label>
-              <input type="text" name="system.source.page" value="{{source.source.page}}" 
-                     class="wh40k-input" placeholder="e.g. 232" />
+            <div class="tw-flex tw-flex-col tw-gap-0.5">
+              <label class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-text-[rgba(202,210,222,0.7)]">Page</label>
+              <input type="text" name="system.source.page" value="{{source.source.page}}"
+                     class="tw-px-[10px] tw-py-[6px] tw-bg-[rgba(0,0,0,0.25)] tw-border tw-border-[rgba(255,255,255,0.1)] tw-rounded-md tw-text-[0.85rem] focus:tw-outline-none focus:tw-border-[rgba(212,175,55,0.5)]" placeholder="e.g. 232" />
             </div>
           </div>
         </div>

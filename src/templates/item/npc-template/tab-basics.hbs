@@ -6,7 +6,7 @@
             <h3><i class="fas fa-scroll"></i> {{localize "WH40K.NPC.Template.Description"}}</h3>
         </header>
         <div class="wh40k-panel-content">
-            <div class="prosemirror-editor">
+            <div>
                 {{formInput fields.description value=system.description enriched=enrichedDescription}}
             </div>
         </div>
@@ -18,17 +18,17 @@
             <h3><i class="fas fa-tags"></i> {{localize "WH40K.NPC.Tags"}}</h3>
         </header>
         <div class="wh40k-panel-content">
-            <div class="tags-container tw-flex tw-flex-wrap tw-gap-2">
+            <div class="tw-flex tw-flex-wrap tw-gap-2">
                 {{#each system.tags as |tag idx|}}
-                    <span class="wh40k-tag tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-full tw-text-sm" style="background: var(--wh40k-accent-color-light)" data-index="{{idx}}">
+                    <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-full tw-text-sm" style="background: var(--wh40k-accent-color-light)" data-index="{{idx}}">
                         {{tag}}
-                        <button type="button" class="tag-remove tw-border-0 tw-bg-transparent tw-cursor-pointer tw-p-0 tw-text-[var(--wh40k-text-muted)] hover:tw-text-[var(--wh40k-danger)]" data-action="removeTag" data-index="{{idx}}">
+                        <button type="button" class="tw-border-0 tw-bg-transparent tw-cursor-pointer tw-p-0 tw-text-[var(--wh40k-text-muted)] hover:tw-text-[var(--wh40k-danger)]" data-action="removeTag" data-index="{{idx}}">
                             <i class="fas fa-times"></i>
                         </button>
                     </span>
                 {{/each}}
-                <div class="add-tag tw-flex tw-gap-1">
-                    <input class="tag-input tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-rounded-sm tw-w-[120px]" type="text" placeholder="{{localize 'WH40K.NPC.AddTag'}}" data-action="addTagOnEnter" />
+                <div class="tw-flex tw-gap-1">
+                    <input class="tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-rounded-sm tw-w-[120px]" type="text" placeholder="{{localize 'WH40K.NPC.AddTag'}}" data-action="addTagOnEnter" />
                     <button type="button" class="tw-px-2 tw-py-1" data-action="addTag">
                         <i class="fas fa-plus"></i>
                     </button>
@@ -43,10 +43,10 @@
             <h3><i class="fas fa-chart-line"></i> {{localize "WH40K.NPC.Template.ScalingRules"}}</h3>
         </header>
         <div class="wh40k-panel-content">
-            <div class="scaling-grid tw-grid tw-grid-cols-2 tw-gap-4">
-                <div class="scaling-field tw-flex tw-flex-col tw-gap-1">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-4">
+                <div class="tw-flex tw-flex-col tw-gap-1">
                     <label class="tw-text-sm tw-font-medium">{{localize "WH40K.NPC.Template.CharacteristicScale"}}</label>
-                    <div class="input-with-suffix tw-flex tw-items-center tw-gap-1">
+                    <div class="tw-flex tw-items-center tw-gap-1">
                         <input
                             class="tw-w-[60px]"
                             type="number"
@@ -60,36 +60,36 @@
                     </div>
                 </div>
 
-                <div class="scaling-field tw-flex tw-flex-col tw-gap-1">
+                <div class="tw-flex tw-flex-col tw-gap-1">
                     <label class="tw-text-sm tw-font-medium">{{localize "WH40K.NPC.Template.WoundsScale"}}</label>
-                    <div class="input-with-suffix tw-flex tw-items-center tw-gap-1">
+                    <div class="tw-flex tw-items-center tw-gap-1">
                         <input class="tw-w-[60px]" type="number" name="system.scalingRules.woundsScale" value="{{source.scalingRules.woundsScale}}" min="0" max="50" step="1" />
                         <span class="tw-text-[var(--wh40k-text-muted)]">%</span>
                     </div>
                 </div>
 
-                <div class="scaling-field tw-flex tw-flex-col tw-gap-1">
+                <div class="tw-flex tw-flex-col tw-gap-1">
                     <label class="tw-text-sm tw-font-medium">{{localize "WH40K.NPC.Template.ArmourScale"}}</label>
-                    <div class="input-with-suffix tw-flex tw-items-center tw-gap-1">
+                    <div class="tw-flex tw-items-center tw-gap-1">
                         <input class="tw-w-[60px]" type="number" name="system.scalingRules.armourScale" value="{{source.scalingRules.armourScale}}" min="0" max="30" step="1" />
                         <span class="tw-text-[var(--wh40k-text-muted)]">%</span>
                     </div>
                 </div>
 
-                <div class="scaling-field tw-flex tw-flex-col tw-gap-1">
+                <div class="tw-flex tw-flex-col tw-gap-1">
                     <label class="tw-text-sm tw-font-medium">{{localize "WH40K.NPC.Template.WeaponScale"}}</label>
-                    <div class="input-with-suffix tw-flex tw-items-center tw-gap-1">
+                    <div class="tw-flex tw-items-center tw-gap-1">
                         <input class="tw-w-[60px]" type="number" name="system.scalingRules.weaponScale" value="{{source.scalingRules.weaponScale}}" min="0" max="30" step="1" />
                         <span class="tw-text-[var(--wh40k-text-muted)]">%</span>
                     </div>
                 </div>
 
-                <div class="scaling-field tw-flex tw-flex-col tw-gap-1 tw-col-span-full">
+                <div class="tw-flex tw-flex-col tw-gap-1 tw-col-span-full">
                     <label class="tw-text-sm tw-font-medium">{{localize "WH40K.NPC.Template.MinMultiplier"}}</label>
                     <input type="number" name="system.scalingRules.minMultiplier" value="{{source.scalingRules.minMultiplier}}" min="0.1" max="1" step="0.1" />
                 </div>
 
-                <div class="scaling-field tw-flex tw-flex-col tw-gap-1 tw-col-span-full">
+                <div class="tw-flex tw-flex-col tw-gap-1 tw-col-span-full">
                     <label class="tw-text-sm tw-font-medium">{{localize "WH40K.NPC.Template.MaxMultiplier"}}</label>
                     <input type="number" name="system.scalingRules.maxMultiplier" value="{{source.scalingRules.maxMultiplier}}" min="1" max="5" step="0.1" />
                 </div>
@@ -103,7 +103,7 @@
             <h3><i class="fas fa-book"></i> {{localize "WH40K.NPC.Source"}}</h3>
         </header>
         <div class="wh40k-panel-content">
-            <div class="source-fields tw-flex tw-items-center tw-gap-4">
+            <div class="tw-flex tw-items-center tw-gap-4">
                 <label class="tw-font-medium tw-min-w-[120px]">{{localize "WH40K.NPC.SourceBook"}}</label>
                 <input class="tw-flex-1 tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm" type="text" name="system.source" value="{{source.source}}" placeholder="{{localize 'WH40K.NPC.SourcePlaceholder'}}" />
             </div>
