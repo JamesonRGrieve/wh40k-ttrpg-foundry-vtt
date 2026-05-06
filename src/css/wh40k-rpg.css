@@ -38216,7 +38216,6 @@ body.theme-dark {
         box-shadow: 0 0 20px rgb(from var(--csd-gold) r g b / 0.4);
         border-style: solid;
     }
-
 }
 
 .csd-char-header {
@@ -50256,10 +50255,6 @@ body.theme-dark {
                     text-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
                 }
             }
-
-            &.flash-select {
-                animation: flash-gold 0.3s ease-out;
-            }
         }
 
         /* Common Modifiers */
@@ -50593,25 +50588,6 @@ body.theme-dark {
     /*  Animation Keyframes                         */
     /* -------------------------------------------- */
 
-    /* -------------------------------------------- */
-    /*  Animation Classes                           */
-    /* -------------------------------------------- */
-
-    .pulse-gold {
-        animation: pulse-gold 0.8s ease-out;
-    }
-
-    .pulse-glow {
-        animation: pulse-glow 0.8s ease-out;
-    }
-
-    /* Characteristic bonus pulse */
-    .characteristic-bonus.changed {
-        animation: pulse-gold 0.8s ease-out;
-        transition: transform 0.3s ease-out;
-        transform: scale(1.1);
-    }
-
     /* Derived stat pulse */
     .derived-stat-changed {
         animation: pulse-glow 0.8s ease-out;
@@ -50735,12 +50711,6 @@ body.theme-dark {
     .characteristic-bonus,
     .char-bonus {
         transition: all var(--wh40k-transition-medium);
-
-        &.changed {
-            animation: pulse-gold 0.8s ease-out;
-            transform: scale(1.15);
-            font-weight: 700;
-        }
     }
 
     /* Derived stats (calculated values) */
@@ -50771,10 +50741,7 @@ body.theme-dark {
         .tw-animate-stat-increase,
         .tw-animate-stat-decrease,
         .tw-animate-flash-update,
-        .pulse-gold,
-        .pulse-glow,
         .tw-animate-stat-advance,
-        .stat-critical-warning,
         .tw-animate-stat-heal,
         .tw-animate-stat-damage,
         .value-counter,
@@ -50782,10 +50749,10 @@ body.theme-dark {
         .tw-animate-count-down,
         .characteristic-bonus,
         .char-bonus,
+        .derived-stat-changed,
         .derived-value,
         .xp-display,
         .experience-tracker,
-        .level-up-effect,
         input[type='number'],
         input[type='text'].stat-value,
         .stat-display,
@@ -53615,7 +53582,6 @@ body.theme-dark {
         i {
             color: var(--wh40k-fatigue-primary, #ff8c00);
             filter: drop-shadow(0 2px 6px rgba(255, 140, 0, 0.4)) grayscale(0.2);
-            animation: seal-shake-pip 3s ease-in-out infinite;
         }
 
         .wh40k-seal-pip-value {
@@ -53633,13 +53599,11 @@ body.theme-dark {
         i {
             color: var(--wh40k-corruption-primary, #8b0000);
             filter: drop-shadow(0 2px 10px rgba(139, 0, 0, 0.8)) grayscale(0.3);
-            animation: seal-burn-pip 1.5s ease-in-out infinite;
         }
 
         .wh40k-seal-pip-value {
             color: var(--wh40k-corruption-primary, #8b0000);
             text-shadow: 0 0 4px rgba(255, 0, 0, 0.8);
-            animation: text-flicker 0.5s ease-in-out infinite;
         }
     }
 
@@ -53728,7 +53692,6 @@ body.theme-dark {
         &:active {
             transform: scale(0.95);
         }
-
     }
 
     /* Rolling animation keyframes */
@@ -53754,7 +53717,6 @@ body.theme-dark {
         color: var(--wh40k-text-dark);
         text-shadow: 0 1px 0 var(--wh40k-text-shadow);
         transition: color 0.3s ease, text-shadow 0.3s ease;
-
     }
 
     /* Value change flash animation */
