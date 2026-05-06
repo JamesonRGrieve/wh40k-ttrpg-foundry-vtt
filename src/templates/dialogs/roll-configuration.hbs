@@ -3,15 +3,15 @@
     {{!-- Header with actor info --}}
     {{#if actor}}
     <header class="tw-flex tw-items-center tw-gap-3 tw-pb-3 tw-mb-4 tw-border-b tw-border-solid tw-border-[rgba(201,162,39,0.3)]">
-        <img class="tw-w-12 tw-h-12 tw-rounded-full tw-border-2 tw-border-solid tw-border-gold tw-object-cover tw-shadow-md" src="{{actorImg}}" alt="{{actorName}}" />
+        <img class="tw-w-12 tw-h-12 tw-rounded-full tw-border-2 tw-border-solid tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-object-cover tw-shadow-md" src="{{actorImg}}" alt="{{actorName}}" />
         <div class="tw-flex-1">
-            <h3 class="tw-font-display tw-text-lg tw-font-semibold tw-text-gold tw-m-0 tw-uppercase tw-tracking-[0.05em]">{{rollName}}</h3>
+            <h3 class="tw-font-display tw-text-lg tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-m-0 tw-uppercase tw-tracking-[0.05em]">{{rollName}}</h3>
             <span class="tw-text-[0.85rem] tw-text-[#9a9a8a]">{{actorName}}</span>
         </div>
     </header>
     {{else}}
     <header class="tw-flex tw-items-center tw-justify-center tw-gap-3 tw-pb-3 tw-mb-4 tw-border-b tw-border-solid tw-border-[rgba(201,162,39,0.3)]">
-        <h3 class="tw-font-display tw-text-lg tw-font-semibold tw-text-gold tw-m-0 tw-uppercase tw-tracking-[0.05em]">{{rollName}}</h3>
+        <h3 class="tw-font-display tw-text-lg tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-m-0 tw-uppercase tw-tracking-[0.05em]">{{rollName}}</h3>
     </header>
     {{/if}}
 
@@ -29,13 +29,13 @@
         {{/if}}
         <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-mt-2 tw-pt-2 tw-border-t tw-border-solid tw-border-[rgba(201,162,39,0.2)]">
             <span class="tw-text-[#9a9a8a] tw-font-medium">{{localize "WH40K.Roll.FinalTarget"}}</span>
-            <span class="tw-text-xl tw-font-semibold tw-text-gold tw-[text-shadow:0_0_10px_rgba(201,162,39,0.3)]">{{finalTarget}}</span>
+            <span class="tw-text-xl tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-[text-shadow:0_0_10px_rgba(201,162,39,0.3)]">{{finalTarget}}</span>
         </div>
     </div>
 
     {{!-- Difficulty Selection --}}
     <div class="tw-mb-3">
-        <label class="tw-block tw-text-xs tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em] tw-mb-1">{{localize "WH40K.Roll.Difficulty"}}</label>
+        <label class="tw-block tw-text-xs tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-[0.05em] tw-mb-1">{{localize "WH40K.Roll.Difficulty"}}</label>
         <select name="difficulty" class="tw-w-full tw-px-3 tw-py-2 tw-bg-black/40 tw-border tw-border-solid tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] focus:tw-outline-none focus:tw-border-gold focus:tw-shadow-[0_0_8px_rgba(201,162,39,0.3)]">
             {{#each difficulties}}
             <option value="{{this.key}}" {{#if this.selected}}selected{{/if}} class="tw-bg-[#1a1a24] tw-text-[#e8e4d9]">
@@ -48,15 +48,15 @@
     {{!-- Situational Modifiers --}}
     {{#if hasSituationalModifiers}}
     <div class="tw-mb-3">
-        <label class="tw-block tw-text-xs tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em] tw-mb-2">{{localize "WH40K.Roll.SituationalModifiers"}}</label>
+        <label class="tw-block tw-text-xs tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-[0.05em] tw-mb-2">{{localize "WH40K.Roll.SituationalModifiers"}}</label>
         <div class="tw-flex tw-flex-col tw-gap-1.5">
             {{#each situationalModifiers}}
             <button type="button"
-                    class="tw-flex tw-items-center tw-gap-2.5 tw-p-2.5 tw-border tw-border-solid tw-rounded-md tw-text-[#9a9a8a] tw-cursor-pointer tw-transition-all tw-text-left tw-text-[0.85rem] {{#if this.active}}tw-bg-gradient-to-br tw-from-[rgba(201,162,39,0.25)] tw-to-[rgba(201,162,39,0.15)] tw-border-gold tw-shadow-[0_0_8px_rgba(201,162,39,0.2)]{{else}}tw-bg-black/30 tw-border-[rgba(201,162,39,0.2)] hover:tw-bg-[rgba(201,162,39,0.1)] hover:tw-border-[rgba(201,162,39,0.4)]{{/if}}"
+                    class="tw-flex tw-items-center tw-gap-2.5 tw-p-2.5 tw-border tw-border-solid tw-rounded-md tw-text-[#9a9a8a] tw-cursor-pointer tw-transition-all tw-text-left tw-text-[0.85rem] {{#if this.active}}tw-bg-gradient-to-br tw-from-[rgba(201,162,39,0.25)] tw-to-[rgba(201,162,39,0.15)] tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-shadow-[0_0_8px_rgba(201,162,39,0.2)]{{else}}tw-bg-black/30 tw-border-[rgba(201,162,39,0.2)] hover:tw-bg-[rgba(201,162,39,0.1)] hover:tw-border-[rgba(201,162,39,0.4)]{{/if}}"
                     data-action="toggleSituational"
                     data-modifier-id="{{this.id}}"
                     title="{{this.condition}}">
-                <i class="{{this.icon}} tw-text-[14px] tw-w-[18px] tw-text-center tw-shrink-0 tw-transition-colors {{#if this.active}}tw-text-gold{{else}}tw-text-[#6a6a5a]{{/if}}"></i>
+                <i class="{{this.icon}} tw-text-[14px] tw-w-[18px] tw-text-center tw-shrink-0 tw-transition-colors {{#if this.active}}tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure{{else}}tw-text-[#6a6a5a]{{/if}}"></i>
                 <span class="tw-flex-1 tw-font-medium tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap {{#if this.active}}tw-text-[#e8e4d9]{{else}}tw-text-[#b8b8a8]{{/if}}">{{this.source}}</span>
                 <span class="tw-font-bold tw-text-[0.9rem] tw-px-2 tw-py-0.5 tw-rounded-sm tw-bg-black/20 tw-shrink-0 {{#if (gt this.value 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
                     {{this.valueDisplay}}
@@ -79,7 +79,7 @@
     {{!-- Permanent Modifiers (from items, conditions, talents, traits) --}}
     {{#if hasPermanentModifiers}}
     <div class="tw-mt-4 tw-mb-3">
-        <label class="tw-block tw-text-xs tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em] tw-mb-1">{{localize "WH40K.Roll.PermanentModifiers"}}</label>
+        <label class="tw-block tw-text-xs tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-[0.05em] tw-mb-1">{{localize "WH40K.Roll.PermanentModifiers"}}</label>
         <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mt-2">
             {{#each permanentModifiers}}
             <div class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-px-3 tw-py-2 tw-bg-black/20 tw-border-l-[3px] tw-border-l-solid tw-border-l-[rgba(168,85,247,0.5)] tw-rounded-md tw-transition-all hover:tw-bg-black/30 hover:tw-border-l-[rgba(168,85,247,0.8)]">
@@ -122,7 +122,7 @@
 
     {{!-- Custom Modifier --}}
     <div class="tw-mb-3">
-        <label class="tw-block tw-text-xs tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em] tw-mb-1">{{localize "WH40K.Roll.CustomModifier"}}</label>
+        <label class="tw-block tw-text-xs tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-[0.05em] tw-mb-1">{{localize "WH40K.Roll.CustomModifier"}}</label>
         <div class="tw-flex tw-flex-col tw-gap-1">
             <input type="number" name="customModifier" value="{{customModifier}}" placeholder="±0"
                    class="tw-w-full tw-px-3 tw-py-2 tw-bg-black/40 tw-border tw-border-solid tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] focus:tw-outline-none focus:tw-border-gold focus:tw-shadow-[0_0_8px_rgba(201,162,39,0.3)]" />
@@ -132,7 +132,7 @@
 
     {{!-- Roll Mode --}}
     <div class="tw-mb-3">
-        <label class="tw-block tw-text-xs tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em] tw-mb-1">{{localize "WH40K.Roll.RollMode"}}</label>
+        <label class="tw-block tw-text-xs tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-[0.05em] tw-mb-1">{{localize "WH40K.Roll.RollMode"}}</label>
         <select name="rollMode" class="tw-w-full tw-px-3 tw-py-2 tw-bg-black/40 tw-border tw-border-solid tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] focus:tw-outline-none focus:tw-border-gold focus:tw-shadow-[0_0_8px_rgba(201,162,39,0.3)]">
             {{#each rollModes}}
             <option value="{{this.key}}" {{#if this.selected}}selected{{/if}} class="tw-bg-[#1a1a24] tw-text-[#e8e4d9]">
@@ -146,7 +146,7 @@
     <footer class="tw-flex tw-gap-2 tw-mt-4 tw-pt-4 tw-border-t tw-border-solid tw-border-[rgba(201,162,39,0.2)]">
         {{#each buttons}}
         <button type="{{this.type}}"
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-2.5 tw-border tw-border-solid tw-rounded-md tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all {{#if (eq this.cssClass 'primary')}}tw-bg-gradient-to-br tw-from-gold tw-to-[#8b7015] tw-border-gold tw-text-[#0d0d12] hover:tw-from-[#ddb832] hover:tw-to-[#a08020] hover:tw-shadow-[0_0_16px_rgba(201,162,39,0.5)]{{else}}tw-bg-gradient-to-br tw-from-[rgba(201,162,39,0.2)] tw-to-[rgba(201,162,39,0.1)] tw-border-[rgba(201,162,39,0.4)] tw-text-gold hover:tw-from-[rgba(201,162,39,0.4)] hover:tw-to-[rgba(201,162,39,0.2)] hover:tw-border-gold hover:tw-shadow-[0_0_12px_rgba(201,162,39,0.3)]{{/if}}"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-2.5 tw-border tw-border-solid tw-rounded-md tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all {{#if (eq this.cssClass 'primary')}}tw-bg-gradient-to-br tw-from-gold tw-to-[#8b7015] tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-text-[#0d0d12] hover:tw-from-[#ddb832] hover:tw-to-[#a08020] hover:tw-shadow-[0_0_16px_rgba(201,162,39,0.5)]{{else}}tw-bg-gradient-to-br tw-from-[rgba(201,162,39,0.2)] tw-to-[rgba(201,162,39,0.1)] tw-border-[rgba(201,162,39,0.4)] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure hover:tw-from-[rgba(201,162,39,0.4)] hover:tw-to-[rgba(201,162,39,0.2)] hover:tw-border-gold hover:tw-shadow-[0_0_12px_rgba(201,162,39,0.3)]{{/if}}"
                 {{#if this.action}}data-action="{{this.action}}"{{/if}}>
             <i class="{{this.icon}} tw-text-[14px]"></i>
             {{localize this.label}}
