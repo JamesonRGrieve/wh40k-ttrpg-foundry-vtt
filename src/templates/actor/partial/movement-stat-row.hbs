@@ -1,0 +1,22 @@
+{{!--
+    Movement stat row — single Half/Full/Charge/Run row for compact movement panels.
+
+    Hash params:
+        label        — required (e.g. "Half")
+        value        — required (numeric)
+        icon         — FA class (e.g. "fa-walking")
+        iconBgGrad   — required CSS gradient string for icon circle background
+        iconColor    — required CSS color string for icon glyph
+        fillPercent  — number 0..100 for the gold progress bar
+        unit         — optional, default "m"
+--}}
+<div class="tw-relative tw-flex tw-items-center tw-gap-[12px] tw-px-3 tw-py-[10px] tw-rounded-[6px] tw-overflow-hidden tw-transition-all tw-border tw-border-solid hover:tw-translate-x-[2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)]" style="background:var(--color-bg-option);border-color:var(--color-border-light);">
+    <div class="tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2] tw-text-[0.9rem]" style="background:{{iconBgGrad}};color:{{iconColor}};">
+        <i class="fas {{icon}}"></i>
+    </div>
+    <div class="tw-flex tw-items-baseline tw-flex-1 tw-z-[2] tw-gap-[8px]">
+        <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px]" style="color:var(--wh40k-text-muted);">{{label}}</span>
+        <span class="tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none" style="color:var(--color-text-primary);">{{value}}<span class="tw-text-[0.8rem] tw-font-normal tw-ml-[2px]" style="color:var(--wh40k-text-muted);">{{#if unit}}{{unit}}{{else}}m{{/if}}</span></span>
+    </div>
+    <div class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1] tw-transition-[width]" style="width:{{fillPercent}}%;background:linear-gradient(90deg,rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.08) 0%,rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.02) 100%);border-right:2px solid rgba(from var(--wh40k-accent-gold,#d4a520) r g b/0.2);"></div>
+</div>
