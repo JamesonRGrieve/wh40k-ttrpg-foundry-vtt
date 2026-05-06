@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-05-06T12:20:05.408Z",
+  "generatedAt": "2026-05-06T15:44:53.511Z",
   "summary": {
-    "monolithLines": 58667,
+    "monolithLines": 57995,
     "markers": 145,
     "distinctSources": 127,
-    "coveredLines": 58634,
+    "coveredLines": 57962,
     "uncoveredLines": 33
   },
   "ranges": {
@@ -36,52 +36,52 @@
         "end": 1834
       },
       {
-        "start": 42867,
-        "end": 42869
+        "start": 42170,
+        "end": 42172
       },
       {
-        "start": 43834,
-        "end": 43836
+        "start": 43137,
+        "end": 43139
       },
       {
-        "start": 44152,
-        "end": 44154
+        "start": 43455,
+        "end": 43457
       },
       {
-        "start": 44661,
-        "end": 44663
+        "start": 43964,
+        "end": 43966
       },
       {
-        "start": 47930,
-        "end": 47932
+        "start": 47233,
+        "end": 47235
       },
       {
-        "start": 48395,
-        "end": 48399
+        "start": 47698,
+        "end": 47702
       },
       {
-        "start": 48541,
-        "end": 48543
+        "start": 47844,
+        "end": 47846
       },
       {
-        "start": 49355,
-        "end": 49357
+        "start": 48658,
+        "end": 48660
       },
       {
-        "start": 49947,
-        "end": 49949
+        "start": 49250,
+        "end": 49252
       },
       {
-        "start": 51408,
-        "end": 51410
+        "start": 50711,
+        "end": 50713
       },
       {
-        "start": 54115,
-        "end": 54117
+        "start": 53418,
+        "end": 53420
       },
       {
-        "start": 57504,
-        "end": 58667
+        "start": 56807,
+        "end": 57966
       }
     ],
     "src/css/layout/_utilities.css": [
@@ -519,327 +519,327 @@
     "src/css/dialogs/_advancement-dialog.css": [
       {
         "start": 38617,
-        "end": 39373
+        "end": 39353
       }
     ],
     "src/css/apps/_encounter-builder.css": [
       {
-        "start": 39374,
-        "end": 39797
+        "start": 39354,
+        "end": 39777
       }
     ],
     "src/css/components/_origin-path-builder.css": [
       {
-        "start": 39798,
-        "end": 41168
+        "start": 39778,
+        "end": 41148
       }
     ],
     "src/css/components/_origin-path-choice-dialog.css": [
       {
-        "start": 41169,
-        "end": 41585
-      }
-    ],
-    "src/css/components/_origin-detail-dialog.css": [
-      {
-        "start": 41586,
-        "end": 42262
+        "start": 41149,
+        "end": 41565
       }
     ],
     "src/css/components/_origin-roll-dialog.css": [
       {
-        "start": 42263,
-        "end": 42645
+        "start": 41566,
+        "end": 41948
       }
     ],
     "src/css/_journals.css": [
       {
-        "start": 42646,
-        "end": 42866
+        "start": 41949,
+        "end": 42169
       }
     ],
     "src/css/components/_wh40k-tooltip.css": [
       {
-        "start": 42870,
-        "end": 43310
+        "start": 42173,
+        "end": 42613
       }
     ],
     "src/css/components/_item-preview.css": [
       {
-        "start": 43311,
-        "end": 43576
+        "start": 42614,
+        "end": 42879
       }
     ],
     "src/css/components/_active-modifiers.css": [
       {
-        "start": 43577,
-        "end": 43833
+        "start": 42880,
+        "end": 43136
       }
     ],
     "src/css/components/_armour.css": [
       {
-        "start": 43837,
-        "end": 44151
+        "start": 43140,
+        "end": 43454
       }
     ],
     "src/css/actor/_biography-origin-panel.css": [
       {
-        "start": 44155,
-        "end": 44660
+        "start": 43458,
+        "end": 43963
       }
     ],
     "src/css/actor/_npc-sheet.css": [
       {
-        "start": 44664,
-        "end": 47929
+        "start": 43967,
+        "end": 47232
       }
     ],
     "src/css/actor/_vehicle-sheet.css": [
       {
-        "start": 47933,
-        "end": 48394
+        "start": 47236,
+        "end": 47697
       }
     ],
     "src/css/base/_reset.css": [
       {
-        "start": 48400,
-        "end": 48475
+        "start": 47703,
+        "end": 47778
       }
     ],
     "src/css/_fonts.css": [
       {
-        "start": 48476,
-        "end": 48529
+        "start": 47779,
+        "end": 47832
       }
     ],
     "src/css/components/_chat.css": [
       {
-        "start": 48530,
-        "end": 48540
+        "start": 47833,
+        "end": 47843
       }
     ],
     "src/css/components/_grids_templates.css": [
       {
-        "start": 48544,
-        "end": 48581
+        "start": 47847,
+        "end": 47884
       }
     ],
     "src/css/components/_grids.css": [
       {
-        "start": 48582,
-        "end": 48990
+        "start": 47885,
+        "end": 48293
       }
     ],
     "src/css/components/_panel.css": [
       {
-        "start": 48991,
-        "end": 49070
+        "start": 48294,
+        "end": 48373
       }
     ],
     "src/css/components/_controls.css": [
       {
-        "start": 49071,
-        "end": 49199
+        "start": 48374,
+        "end": 48502
       }
     ],
     "src/css/components/_form_fields.css": [
       {
-        "start": 49200,
-        "end": 49354
+        "start": 48503,
+        "end": 48657
       }
     ],
     "src/css/components/_header.css": [
       {
-        "start": 49358,
-        "end": 49514
+        "start": 48661,
+        "end": 48817
       }
     ],
     "src/css/components/_navigation.css": [
       {
-        "start": 49515,
-        "end": 49583
+        "start": 48818,
+        "end": 48886
       }
     ],
     "src/css/components/_settings.css": [
       {
-        "start": 49584,
-        "end": 49946
+        "start": 48887,
+        "end": 49249
       }
     ],
     "src/css/components/_characteristic_roller.css": [
       {
-        "start": 49950,
-        "end": 49993
+        "start": 49253,
+        "end": 49296
       }
     ],
     "src/css/components/_characteristics.css": [
       {
-        "start": 49994,
-        "end": 50241
+        "start": 49297,
+        "end": 49544
       }
     ],
     "src/css/components/_skills.css": [
       {
-        "start": 50242,
-        "end": 50791
+        "start": 49545,
+        "end": 50094
       }
     ],
     "src/css/components/_compendium.css": [
       {
-        "start": 50792,
-        "end": 50964
+        "start": 50095,
+        "end": 50267
       }
     ],
     "src/css/components/_enhanced-skill-roll.css": [
       {
-        "start": 50965,
-        "end": 51407
+        "start": 50268,
+        "end": 50710
       }
     ],
     "src/css/components/_stat-animations.css": [
       {
-        "start": 51411,
-        "end": 51689
+        "start": 50714,
+        "end": 50992
       }
     ],
     "src/css/components/_collapsible-panels.css": [
       {
-        "start": 51690,
-        "end": 52120
+        "start": 50993,
+        "end": 51423
       }
     ],
     "src/css/components/_context-menu.css": [
       {
-        "start": 52121,
-        "end": 52277
+        "start": 51424,
+        "end": 51580
       }
     ],
     "src/css/components/_enrichers.css": [
       {
-        "start": 52278,
-        "end": 52515
+        "start": 51581,
+        "end": 51818
       }
     ],
     "src/css/components/_enhanced-drag-drop.css": [
       {
-        "start": 52516,
-        "end": 53023
+        "start": 51819,
+        "end": 52326
       }
     ],
     "src/css/components/_combat-quick-panel.css": [
       {
-        "start": 53024,
-        "end": 53192
+        "start": 52327,
+        "end": 52495
       }
     ],
     "src/css/components/_quick-actions.css": [
       {
-        "start": 53193,
-        "end": 53350
+        "start": 52496,
+        "end": 52653
       }
     ],
     "src/css/components/_stat-breakdown.css": [
       {
-        "start": 53351,
-        "end": 53586
+        "start": 52654,
+        "end": 52889
       }
     ],
     "src/css/components/_what-if-mode.css": [
       {
-        "start": 53587,
-        "end": 54007
+        "start": 52890,
+        "end": 53310
       }
     ],
     "src/css/components/_acquisition-dialog.css": [
       {
-        "start": 54008,
-        "end": 54114
+        "start": 53311,
+        "end": 53417
       }
     ],
     "src/css/actor/_index.css": [
       {
-        "start": 54118,
-        "end": 54123
+        "start": 53421,
+        "end": 53426
       },
       {
-        "start": 56123,
-        "end": 56125
+        "start": 55426,
+        "end": 55428
       },
       {
-        "start": 57500,
-        "end": 57503
+        "start": 56803,
+        "end": 56806
       }
     ],
     "src/css/actor/_mixins.css": [
       {
-        "start": 54124,
-        "end": 54134
+        "start": 53427,
+        "end": 53437
       }
     ],
     "src/css/actor/_sheet-base.css": [
       {
-        "start": 54135,
-        "end": 54865
+        "start": 53438,
+        "end": 54168
       }
     ],
     "src/css/actor/_input-override.css": [
       {
-        "start": 54866,
-        "end": 54997
+        "start": 54169,
+        "end": 54300
       }
     ],
     "src/css/actor/_skills.css": [
       {
-        "start": 54998,
-        "end": 55313
+        "start": 54301,
+        "end": 54616
       }
     ],
     "src/css/actor/_status.css": [
       {
-        "start": 55314,
-        "end": 55796
+        "start": 54617,
+        "end": 55099
       }
     ],
     "src/css/actor/_origin-path.css": [
       {
-        "start": 55797,
-        "end": 56122
+        "start": 55100,
+        "end": 55425
       }
     ],
     "src/css/actor/_characteristics.css": [
       {
-        "start": 56126,
-        "end": 56333
+        "start": 55429,
+        "end": 55636
       }
     ],
     "src/css/actor/_ship.css": [
       {
-        "start": 56334,
-        "end": 56993
+        "start": 55637,
+        "end": 56296
       }
     ],
     "src/css/actor/_combat.css": [
       {
-        "start": 56994,
-        "end": 57082
+        "start": 56297,
+        "end": 56385
       }
     ],
     "src/css/actor/_abilities.css": [
       {
-        "start": 57083,
-        "end": 57264
+        "start": 56386,
+        "end": 56567
       }
     ],
     "src/css/actor/_equipment.css": [
       {
-        "start": 57265,
-        "end": 57396
+        "start": 56568,
+        "end": 56699
       }
     ],
     "src/css/actor/_tables.css": [
       {
-        "start": 57397,
-        "end": 57499
+        "start": 56700,
+        "end": 56802
+      }
+    ],
+    "src/css/foundry-chrome.css": [
+      {
+        "start": 57967,
+        "end": 57995
       }
     ]
   }
