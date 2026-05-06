@@ -1,18 +1,11 @@
 {{! Rogue Trader Force Field Roll Card - Modern Design }}
-<div class="tw-font-ui tw-text-[color:var(--wh40k-text-dark)] [&_*]:tw-box-border">
-    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-2 tw-border-[color:var(--wh40k-gold)] tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]">
-        {{! Header }}
-        <div class="tw-relative tw-px-4 tw-py-3 tw-bg-[linear-gradient(90deg,var(--wh40k-accent-overlay)_0%,transparent_100%)] tw-border-b tw-border-[color:var(--wh40k-border-color)]">
-            <div class="tw-text-xs tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.1em] tw-mb-1">{{actor.name}}</div>
-            <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[0.05em] tw-m-0 tw-[text-shadow:0_2px_4px_var(--wh40k-shadow-medium)]">{{forceField.name}}</h2>
-            <div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)] tw-mt-0.5 tw-opacity-90">Force Field Activation</div>
-            {{#if isManualRoll}}
-                <div class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-2.5 tw-py-[3px] tw-mt-1.5 tw-bg-[rgba(168,85,247,0.15)] tw-border tw-border-[rgba(168,85,247,0.4)] tw-rounded-sm tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#c084fc]"><i class="fas fa-hand-paper tw-text-[0.65rem]"></i> Player Rolled</div>
-            {{/if}}
-        </div>
-
-        {{! Body }}
-        <div class="tw-px-4 tw-py-3">
+{{#> systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs
+    overline=actor.name
+    title=forceField.name
+    subtitle="Force Field Activation"
+    playerRolledBadge=isManualRoll
+    bgClass="tw-bg-[var(--wh40k-panel-bg-solid)]"
+    gameSystem=gameSystem}}
             {{#if isTargetOnly}}
                 <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
                     <span class="tw-text-[color:var(--wh40k-text-muted)] tw-font-medium">Protection Rating</span>
@@ -52,6 +45,4 @@
                     <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-l-[color:var(--wh40k-gold)] tw-rounded-r tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto [&_p]:tw-m-0 [&_p]:tw-mb-2 [&_p:last-child]:tw-mb-0">{{forceField.system.description}}</div>
                 {{/if}}
             {{/if}}{{! end isTargetOnly else }}
-        </div>
-    </div>
-</div>
+{{/systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs}}
