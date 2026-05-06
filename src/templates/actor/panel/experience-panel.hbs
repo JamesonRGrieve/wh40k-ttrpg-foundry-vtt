@@ -29,14 +29,14 @@
                         </linearGradient>
                     </defs>
                 </svg>
-                <div class="tw-absolute tw-top-1/2 tw-left-1/2 tw-translate-x-[-50%] tw-translate-y-[-50%] tw-text-[0.75rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[#c08020]">
+                <div class="tw-absolute tw-top-1/2 tw-left-1/2 tw-translate-x-[-50%] tw-translate-y-[-50%] tw-text-[0.75rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[#c08020] bc:tw-text-crimson-dark dh1e:tw-text-gold-dark dh2e:tw-text-gold-dark dw:tw-text-accent-combat-d10 ow:tw-text-brass-d15 rt:tw-text-gold-dark im:tw-text-failure">
                     {{#if actor.system.experience.total}}{{floor (multiply (divide actor.system.experience.used actor.system.experience.total) 100)}}{{else}}0{{/if}}%
                 </div>
             </div>
 
             {{!-- Available XP Box --}}
-            <div class="tw-flex tw-flex-col tw-items-center tw-gap-[2px] tw-px-3 tw-py-[6px] tw-bg-[rgba(192,128,32,0.1)] tw-border-2 tw-border-[rgba(192,128,32,0.3)] tw-rounded-[6px] tw-shrink-0">
-                <span class="tw-text-[1.4rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[#d09838]">{{system.experience.available}}</span>
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-[2px] tw-px-3 tw-py-[6px] tw-bg-[rgba(192,128,32,0.1)] bc:tw-bg-crimson/10 dh1e:tw-bg-gold-raw/10 dh2e:tw-bg-gold-raw/10 dw:tw-bg-accent-combat/10 ow:tw-bg-brass-l20/10 rt:tw-bg-gold/10 im:tw-bg-failure/10 tw-border-2 tw-border-[rgba(192,128,32,0.3)] bc:tw-border-crimson/30 dh1e:tw-border-gold-raw/30 dh2e:tw-border-gold-raw/30 dw:tw-border-accent-combat/30 ow:tw-border-brass-l20/30 rt:tw-border-gold/30 im:tw-border-failure/30 tw-rounded-[6px] tw-shrink-0">
+                <span class="tw-text-[1.4rem] tw-font-bold tw-font-alt tw-leading-none tw-text-[#d09838] bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{system.experience.available}}</span>
                 <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--color-text-dark-secondary)]">Available</span>
             </div>
 
