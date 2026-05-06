@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-06T21:25:17.809Z",
+  "generatedAt": "2026-05-06T21:31:12.916Z",
   "total": 244,
-  "adopted": 242,
+  "adopted": 244,
   "perSystemHits": {
-    "bc": 427,
-    "dh1e": 427,
-    "dh2e": 431,
-    "dw": 427,
-    "ow": 427,
-    "rt": 431,
-    "im": 431
+    "bc": 429,
+    "dh1e": 429,
+    "dh2e": 433,
+    "dw": 429,
+    "ow": 429,
+    "rt": 433,
+    "im": 433
   },
   "adoptedTemplates": [
     "src/templates/applications/compendium-browser.hbs",
@@ -201,6 +201,7 @@
     "src/templates/item/panel/modifiers-summary.hbs",
     "src/templates/item/panel/modifiers-editor-panel.hbs",
     "src/templates/item/panel/source-panel.hbs",
+    "src/templates/item/panel/item-header.hbs",
     "src/templates/item/panel/stat-bar.hbs",
     "src/templates/item/panel/acquisition-panel.hbs",
     "src/templates/item/panel/active-effects-panel.hbs",
@@ -219,6 +220,7 @@
     "src/templates/item/armour-mod-header.hbs",
     "src/templates/item/ship-upgrade-sheet.hbs",
     "src/templates/item/armour-mod-properties.hbs",
+    "src/templates/item/partial/item-tab-strip.hbs",
     "src/templates/item/ship-component-sheet.hbs",
     "src/templates/item/item-storage-location-sheet.hbs",
     "src/templates/item/npc-template/tab-preview.hbs",
