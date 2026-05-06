@@ -23,7 +23,7 @@
 
         {{#each thresholds}}
         <div class="wh40k-threshold-marker tw-absolute tw-top-[-2px] tw-h-4 tw-flex tw-flex-col tw-items-center tw-pointer-events-none tw-z-[2]" style="left: {{this.at}}%;" title="{{this.title}}">
-            <span class="tw-w-0.5 tw-h-full tw-bg-[var(--wh40k-border-accent)] tw-rounded-[1px]"></span>
+            <span class="tw-w-0.5 tw-h-full tw-bg-[var(--wh40k-border-accent)] tw-rounded-[1px] tw-bg-gold bc:tw-bg-crimson-light dh1e:tw-bg-gold-raw-l5 dh2e:tw-bg-gold-raw dw:tw-bg-accent-combat ow:tw-bg-brass-l20 rt:tw-bg-gold im:tw-bg-failure"></span>
             <span class="tw-absolute tw-top-[-18px] tw-text-[9px] tw-font-semibold tw-text-[var(--wh40k-text-muted)] tw-bg-[var(--wh40k-panel-bg-solid)] tw-px-[3px] tw-py-px tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color-light)]">{{this.label}}</span>
         </div>
         {{/each}}

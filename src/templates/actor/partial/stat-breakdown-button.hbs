@@ -21,7 +21,7 @@
                       (e.g. `tw-ml-1` to space from a value display).
 --}}
 <button type="button"
-        class="tw-inline-flex tw-items-center tw-justify-center tw-w-5 tw-h-5 tw-p-0 tw-bg-transparent tw-border-none tw-rounded tw-text-[color:var(--color-text-secondary,#94a3b8)] tw-cursor-pointer tw-transition-all tw-opacity-60 hover:tw-bg-[rgba(59,130,246,0.2)] hover:tw-text-[#93c5fd] hover:tw-opacity-100 hover:tw-scale-110{{#if (eq position "absolute")}} tw-absolute tw-top-2 tw-right-2 tw-z-10{{/if}}{{#if extraClass}} {{extraClass}}{{/if}}"
+        class="tw-inline-flex tw-items-center tw-justify-center tw-w-5 tw-h-5 tw-p-0 tw-bg-transparent tw-border-none tw-rounded tw-text-[color:var(--color-text-secondary,#94a3b8)] tw-cursor-pointer tw-transition-all tw-opacity-60 tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure hover:tw-bg-[rgba(59,130,246,0.2)] hover:tw-text-[#93c5fd] hover:tw-opacity-100 hover:tw-scale-110{{#if (eq position "absolute")}} tw-absolute tw-top-2 tw-right-2 tw-z-10{{/if}}{{#if extraClass}} {{extraClass}}{{/if}}"
         data-action="showStatBreakdown"
         data-stat-key="{{statKey}}"
         title="{{#if title}}{{title}}{{else}}{{localize "WH40K.Common.ShowStatBreakdown"}}{{/if}}">
