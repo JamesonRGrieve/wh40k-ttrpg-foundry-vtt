@@ -10,37 +10,37 @@
         </header>
         <div class="wh40k-panel-content">
             {{#if (gt system.weapons.length 0)}}
-                <div class="weapons-list">
-                    <div class="weapon-header tw-grid tw-grid-cols-[2fr_1fr_0.5fr_1fr_1fr_1.5fr_0.5fr] tw-gap-2 tw-items-center tw-p-2 tw-font-semibold tw-text-xs tw-uppercase" style="background: var(--wh40k-bg-tertiary)">
-                        <span class="col-name">{{localize "WH40K.Name"}}</span>
-                        <span class="col-damage">{{localize "WH40K.Weapon.Damage"}}</span>
-                        <span class="col-pen">{{localize "WH40K.Weapon.Pen"}}</span>
-                        <span class="col-range">{{localize "WH40K.Weapon.Range"}}</span>
-                        <span class="col-rof">{{localize "WH40K.Weapon.RoF"}}</span>
-                        <span class="col-special">{{localize "WH40K.Weapon.Special"}}</span>
-                        <span class="col-actions"></span>
+                <div>
+                    <div class="tw-grid tw-grid-cols-[2fr_1fr_0.5fr_1fr_1fr_1.5fr_0.5fr] tw-gap-2 tw-items-center tw-p-2 tw-font-semibold tw-text-xs tw-uppercase" style="background: var(--wh40k-bg-tertiary)">
+                        <span>{{localize "WH40K.Name"}}</span>
+                        <span>{{localize "WH40K.Weapon.Damage"}}</span>
+                        <span>{{localize "WH40K.Weapon.Pen"}}</span>
+                        <span>{{localize "WH40K.Weapon.Range"}}</span>
+                        <span>{{localize "WH40K.Weapon.RoF"}}</span>
+                        <span>{{localize "WH40K.Weapon.Special"}}</span>
+                        <span></span>
                     </div>
                     {{#each system.weapons as |weapon idx|}}
-                        <div class="weapon-row tw-grid tw-grid-cols-[2fr_1fr_0.5fr_1fr_1fr_1.5fr_0.5fr] tw-gap-2 tw-items-center tw-p-2 tw-border-b tw-border-[var(--wh40k-border-color)]" data-index="{{idx}}">
+                        <div class="tw-grid tw-grid-cols-[2fr_1fr_0.5fr_1fr_1fr_1.5fr_0.5fr] tw-gap-2 tw-items-center tw-p-2 tw-border-b tw-border-[var(--wh40k-border-color)]" data-index="{{idx}}">
                             <input
-                                class="col-name tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full"
+                                class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full"
                                 type="text"
                                 name="system.weapons.{{idx}}.name"
                                 value="{{weapon.name}}"
                                 placeholder="{{localize 'WH40K.Weapon.Name'}}"
                             />
-                            <input class="col-damage tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="text" name="system.weapons.{{idx}}.damage" value="{{weapon.damage}}" placeholder="1d10+3" />
-                            <input class="col-pen tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="number" name="system.weapons.{{idx}}.pen" value="{{weapon.pen}}" min="0" />
-                            <input class="col-range tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="text" name="system.weapons.{{idx}}.range" value="{{weapon.range}}" placeholder="30m" />
-                            <input class="col-rof tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="text" name="system.weapons.{{idx}}.rof" value="{{weapon.rof}}" placeholder="S/-/-" />
+                            <input class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="text" name="system.weapons.{{idx}}.damage" value="{{weapon.damage}}" placeholder="1d10+3" />
+                            <input class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="number" name="system.weapons.{{idx}}.pen" value="{{weapon.pen}}" min="0" />
+                            <input class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="text" name="system.weapons.{{idx}}.range" value="{{weapon.range}}" placeholder="30m" />
+                            <input class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="text" name="system.weapons.{{idx}}.rof" value="{{weapon.rof}}" placeholder="S/-/-" />
                             <input
-                                class="col-special tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full"
+                                class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full"
                                 type="text"
                                 name="system.weapons.{{idx}}.special"
                                 value="{{weapon.special}}"
                                 placeholder="{{localize 'WH40K.Weapon.SpecialPlaceholder'}}"
                             />
-                            <div class="col-actions">
+                            <div>
                                 <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger" data-action="removeWeapon" data-index="{{idx}}">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -49,7 +49,7 @@
                     {{/each}}
                 </div>
             {{else}}
-                <p class="empty-message tw-text-center tw-italic tw-p-4 tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Template.NoWeapons"}}</p>
+                <p class="tw-text-center tw-italic tw-p-4 tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Template.NoWeapons"}}</p>
             {{/if}}
         </div>
     </div>
@@ -60,12 +60,12 @@
             <h3><i class="fas fa-shield-alt"></i> {{localize "WH40K.NPC.Template.Armour"}}</h3>
         </header>
         <div class="wh40k-panel-content">
-            <div class="armour-simple tw-flex tw-items-center tw-gap-4 tw-mb-4">
+            <div class="tw-flex tw-items-center tw-gap-4 tw-mb-4">
                 <label class="tw-font-medium tw-min-w-[120px]">{{localize "WH40K.NPC.Template.BaseArmour"}}</label>
                 <input class="tw-w-[60px] tw-p-2 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm" type="number" name="system.baseArmour" value="{{source.baseArmour}}" min="0" />
             </div>
 
-            <div class="armour-notes tw-flex tw-items-center tw-gap-4 tw-mb-4">
+            <div class="tw-flex tw-items-center tw-gap-4 tw-mb-4">
                 <label class="tw-font-medium tw-min-w-[120px]">{{localize "WH40K.NPC.Template.ArmourNotes"}}</label>
                 <input
                     class="tw-flex-1 tw-p-2 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm"
@@ -88,11 +88,11 @@
         </header>
         <div class="wh40k-panel-content">
             {{#if (gt system.equipment.length 0)}}
-                <div class="equipment-list tw-flex tw-flex-col tw-gap-2">
+                <div class="tw-flex tw-flex-col tw-gap-2">
                     {{#each system.equipment as |item idx|}}
-                        <div class="equipment-row tw-flex tw-gap-2 tw-items-center" data-index="{{idx}}">
+                        <div class="tw-flex tw-gap-2 tw-items-center" data-index="{{idx}}">
                             <input class="tw-flex-1 tw-px-2 tw-py-1" type="text" name="system.equipment.{{idx}}.name" value="{{item.name}}" placeholder="{{localize 'WH40K.Item.Name'}}" />
-                            <input class="quantity tw-w-[50px] tw-text-center" type="number" name="system.equipment.{{idx}}.quantity" value="{{item.quantity}}" min="1" />
+                            <input class="tw-w-[50px] tw-text-center" type="number" name="system.equipment.{{idx}}.quantity" value="{{item.quantity}}" min="1" />
                             <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger" data-action="removeEquipment" data-index="{{idx}}">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -100,7 +100,7 @@
                     {{/each}}
                 </div>
             {{else}}
-                <p class="empty-message tw-text-center tw-italic tw-p-4 tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Template.NoEquipment"}}</p>
+                <p class="tw-text-center tw-italic tw-p-4 tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Template.NoEquipment"}}</p>
             {{/if}}
         </div>
     </div>

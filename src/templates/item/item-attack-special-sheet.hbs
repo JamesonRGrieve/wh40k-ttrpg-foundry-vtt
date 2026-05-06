@@ -1,52 +1,52 @@
 {{! Rogue Trader Attack Special Sheet - Modern Design }}
-<form class="wh40k-item-sheet" autocomplete="off">
+<form class="tw-flex tw-flex-col tw-h-full tw-overflow-hidden" autocomplete="off">
     {{! Header }}
-    <div class="wh40k-item-sheet__header">
-        <div class="wh40k-item-sheet__image-wrapper">
-            <img class="wh40k-item-sheet__image" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
+    <div class="tw-flex tw-items-center tw-gap-4 tw-p-4 tw-border-b-2 tw-border-[rgba(212,175,55,0.3)] tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.15)_0%,rgba(44,36,23,0.95)_100%)]">
+        <div class="tw-relative tw-shrink-0">
+            <img class="tw-h-16 tw-w-16 tw-rounded-lg tw-border-2 tw-border-[rgba(212,175,55,0.3)] tw-object-cover tw-cursor-pointer tw-transition-transform hover:tw-scale-105" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
         </div>
-        <div class="wh40k-item-sheet__title-area">
-            <div class="wh40k-item-sheet__name-field">
-                <label class="wh40k-item-sheet__name-label">Name</label>
-                <input class="wh40k-item-sheet__name-input" name="name" type="text" value="{{item.name}}" />
+        <div class="tw-flex-1 tw-min-w-0">
+            <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[rgba(202,210,222,0.7)]">Name</label>
+                <input class="tw-w-full tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-text-base tw-font-semibold" name="name" type="text" value="{{item.name}}" />
             </div>
         </div>
     </div>
 
     {{! Main Fields }}
-    <div class="wh40k-item-sheet__panel">
-        <div class="wh40k-item-sheet__field-row tw-flex tw-gap-4 tw-mb-3">
-            <div class="wh40k-item-sheet__checkbox-field tw-flex tw-items-center tw-gap-2">
-                <input class="wh40k-item-sheet__input" name="system.hasLevel" type="checkbox" data-dtype="Boolean" {{checked item.system.hasLevel}} />
-                <label class="wh40k-item-sheet__label">Has Level</label>
+    <div class="tw-p-4 tw-border-b tw-border-[rgba(0,0,0,0.1)]">
+        <div class="tw-flex tw-gap-4 tw-mb-3">
+            <div class="tw-flex tw-items-center tw-gap-2">
+                <input name="system.hasLevel" type="checkbox" data-dtype="Boolean" {{checked item.system.hasLevel}} />
+                <label>Has Level</label>
             </div>
-            <div class="wh40k-item-sheet__checkbox-field tw-flex tw-items-center tw-gap-2">
-                <input class="wh40k-item-sheet__input" name="system.enabled" type="checkbox" data-dtype="Boolean" {{checked item.system.enabled}} />
-                <label class="wh40k-item-sheet__label">Enabled</label>
+            <div class="tw-flex tw-items-center tw-gap-2">
+                <input name="system.enabled" type="checkbox" data-dtype="Boolean" {{checked item.system.enabled}} />
+                <label>Enabled</label>
             </div>
         </div>
 
-        <div class="wh40k-item-sheet__field-row tw-flex tw-gap-4">
-            <div class="wh40k-item-sheet__field tw-flex tw-flex-col tw-gap-1">
-                <label class="wh40k-item-sheet__label">Level</label>
+        <div class="tw-flex tw-gap-4">
+            <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[rgba(202,210,222,0.7)]">Level</label>
                 {{#if item.system.hasLevel}}
-                    <input class="wh40k-item-sheet__input" name="system.level" type="number" data-dtype="Number" value="{{item.system.level}}" />
+                    <input name="system.level" type="number" data-dtype="Number" value="{{item.system.level}}" />
                 {{else}}
-                    <input class="wh40k-item-sheet__input" type="text" value="N/A" disabled />
+                    <input type="text" value="N/A" disabled />
                 {{/if}}
             </div>
-            <div class="wh40k-item-sheet__field tw-flex tw-flex-col tw-gap-1 tw-flex-1">
-                <label class="wh40k-item-sheet__label">Source</label>
-                <input class="wh40k-item-sheet__input" name="system.source" type="text" value="{{item.system.source}}" />
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[rgba(202,210,222,0.7)]">Source</label>
+                <input name="system.source" type="text" value="{{item.system.source}}" />
             </div>
         </div>
     </div>
 
     {{! Description }}
-    <div class="wh40k-item-sheet__description tw-p-4 tw-border-t tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure">
-        <div class="wh40k-item-sheet__field tw-flex tw-flex-col tw-gap-1">
-            <label class="wh40k-item-sheet__label">Description</label>
-            <textarea class="wh40k-item-sheet__textarea tw-w-full tw-p-2 tw-rounded tw-border tw-border-[rgba(255,255,255,0.1)] tw-bg-[rgba(0,0,0,0.2)] tw-text-[var(--color-text-primary)]" name="system.description.value">{{item.system.description.value}}</textarea>
+    <div class="tw-p-4 tw-border-t tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure">
+        <div class="tw-flex tw-flex-col tw-gap-1">
+            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[rgba(202,210,222,0.7)]">Description</label>
+            <textarea class="tw-w-full tw-p-2 tw-rounded tw-border tw-border-[rgba(255,255,255,0.1)] tw-bg-[rgba(0,0,0,0.2)] tw-text-[var(--color-text-primary)]" name="system.description.value">{{item.system.description.value}}</textarea>
         </div>
     </div>
 </form>

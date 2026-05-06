@@ -174,6 +174,31 @@ const JS_HOOKS = new Set([
     'wh40k-badge--stacks',
     'wh40k-badge--level',
     'wh40k-badge--variable',
+    'wh40k-badge--action-type',
+    'wh40k-badge--positive',
+    'wh40k-badge--negative',
+    // Shared design-system field / grid classes used across 30+ templates. CSS rules provide
+    // label sizing, input theming, and grid layout. Preserved as semantic selectors during the
+    // Tailwind migration rather than inlined on every usage site.
+    'wh40k-field',
+    'wh40k-field-grid',
+    'wh40k-field-grid--2col',
+    'wh40k-field-grid--3col',
+    'wh40k-field-row',
+    // Shared description/empty/help text classes used across multiple templates.
+    'wh40k-description-content',
+    'wh40k-empty-text',
+    'wh40k-help-text',
+    // Shared quality-tag component classes used on ammo and weapon sheets.
+    'wh40k-quality-tag',
+    'wh40k-quality-tag--added',
+    'wh40k-quality-tag--removed',
+    'wh40k-quality-tag__label',
+    'wh40k-quality-tag__remove',
+    'wh40k-quality-tags',
+    // Shared btn variant — no standalone CSS rules; modifier applied via the wh40k-btn base.
+    'wh40k-btn--primary',
+    'wh40k-btn--secondary',
     // Foundry VTT dialog framework classes — rendered by Foundry's Dialog application
     // infrastructure; the dialog host element carries these and styles them. They are
     // not project CSS and cannot be migrated to Tailwind utilities.
@@ -186,6 +211,119 @@ const JS_HOOKS = new Set([
     // weapon-attack-dialog.ts queries '.weapon-select' by class name to collect checked
     // weapon ids — permanent JS selector, not a styling class.
     'weapon-select',
+    // Shared design-system button classes used across 18+ templates. Complex hover/active/variant
+    // rules live in the CSS monolith; these are intentionally preserved as semantic selectors
+    // during the Tailwind migration rather than inlined individually on every button.
+    'wh40k-btn',
+    'wh40k-btn-icon',
+    'wh40k-btn-danger',
+    'wh40k-btn-primary',
+    // npc-template panel content wrapper — structural class paired with wh40k-panel/wh40k-panel-header.
+    // Retained as a semantic wrapper during the Tailwind migration.
+    'wh40k-panel-content',
+    // npc-template tab section classes — pair with Foundry TabsV2's `active` toggle
+    // (which is already in JS_HOOKS). The CSS rules `display:none / .active { display:block }`
+    // depend on these class names being present on the section elements.
+    'tab-content',
+    'tab-basics',
+    'tab-characteristics',
+    'tab-equipment',
+    'tab-abilities',
+    'tab-preview',
+    // base-item-sheet.ts uses navSelector:'.wh40k-tabs', contentSelector:'.wh40k-tab-content';
+    // primary-sheet-mixin.ts queries `.wh40k-tab.active[data-tab="..."]` — permanent JS selectors.
+    // ammo-sheet.ts / gear-sheet.ts / armour-sheet.ts etc. use scrollable:['.wh40k-tab-content'].
+    'wh40k-tabs',
+    'wh40k-tab',
+    'wh40k-tab-content',
+    // Foundry ApplicationV2 scrollable region — base-actor-sheet.ts queries '.scrollable' by name.
+    'scrollable',
+    // skill-sheet.ts uses scrollable:['.wh40k-item-body'] — permanent JS selector.
+    'wh40k-item-body',
+    // Tailwind arbitrary-selector target: ancestors use `[&_.neutral]:tw-*` to color child spans.
+    // Not a CSS class in the project stylesheet.
+    'neutral',
+    // Dead structural classes on item-ammo-sheet.hbs — no CSS rules, no JS queries.
+    'wh40k-ammo-sheet',
+    'wh40k-ammo-header',
+    'wh40k-ammo-header__image',
+    'wh40k-ammo-header__image-overlay',
+    'wh40k-ammo-header__info',
+    'wh40k-ammo-header__meta',
+    'wh40k-ammo-header__name',
+    'wh40k-ammo-badge',
+    'wh40k-ammo-badge--type',
+    'wh40k-ammo-badge--modifiers',
+    'wh40k-ammo-badge--compatibility',
+    'wh40k-ammo-stats',
+    'wh40k-ammo-stat',
+    'wh40k-ammo-stat--neutral',
+    'wh40k-ammo-stat__icon',
+    'wh40k-ammo-stat__content',
+    'wh40k-ammo-stat__label',
+    'wh40k-ammo-stat__value',
+    'wh40k-ammo-tabs',
+    'wh40k-ammo-tab',
+    'wh40k-ammo-content',
+    'wh40k-tab-content--ammo',
+    'wh40k-tabs--ammo',
+    'wh40k-ammo-panel',
+    'wh40k-ammo-section',
+    'wh40k-ammo-section__header',
+    'wh40k-ammo-section__body',
+    'wh40k-ammo-section__body--editor',
+    'wh40k-ammo-section__count',
+    'wh40k-quality-add',
+    'wh40k-quality-add__input',
+    'wh40k-weapon-type-chips',
+    'wh40k-weapon-type-chip',
+    'wh40k-weapon-type-chip__label',
+    // Dead structural classes on item-gear-sheet.hbs — no CSS rules, no JS queries.
+    'wh40k-gear-sheet',
+    'wh40k-gear-header',
+    'wh40k-gear-header__image',
+    'wh40k-gear-header__image-overlay',
+    'wh40k-gear-header__info',
+    'wh40k-gear-header__meta',
+    'wh40k-gear-header__name',
+    'wh40k-gear-badge',
+    'wh40k-gear-badge--category',
+    'wh40k-gear-badge--craft',
+    'wh40k-gear-badge--quantity',
+    'wh40k-gear-stats',
+    'wh40k-gear-stat',
+    'wh40k-gear-stat--category',
+    'wh40k-gear-stat--quantity',
+    'wh40k-gear-stat--weight',
+    'wh40k-gear-stat--availability',
+    'wh40k-gear-stat--cost',
+    'wh40k-gear-stat__icon',
+    'wh40k-gear-stat__content',
+    'wh40k-gear-stat__label',
+    'wh40k-gear-stat__value',
+    'wh40k-gear-tabs',
+    'wh40k-gear-tab',
+    'wh40k-tab-content--gear',
+    'wh40k-tabs--gear',
+    'wh40k-gear-content',
+    'wh40k-gear-panel',
+    'wh40k-gear-section',
+    'wh40k-gear-section--consumable',
+    'wh40k-gear-section__header',
+    'wh40k-gear-section__body',
+    'wh40k-gear-section__body--editor',
+    'wh40k-gear-section__badge',
+    'wh40k-gear-section__badge--danger',
+    'wh40k-gear-grid',
+    'wh40k-gear-column',
+    'wh40k-uses-bar',
+    'wh40k-uses-bar__track',
+    'wh40k-uses-bar__fill',
+    'wh40k-uses-bar__fill--empty',
+    'wh40k-uses-bar__label',
+    'wh40k-consumable-actions',
+    'wh40k-checkbox',
+    'wh40k-checkbox-group',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
