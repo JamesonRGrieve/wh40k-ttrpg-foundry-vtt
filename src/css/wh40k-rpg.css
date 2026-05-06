@@ -38431,7 +38431,6 @@ body.theme-dark {
     i {
         color: rgb(from var(--csd-bone) r g b / 0.3);
         font-size: 1rem;
-        animation: csd-bounce 2s ease-in-out infinite;
     }
 }
 
@@ -38480,7 +38479,6 @@ body.theme-dark {
         background: rgb(from var(--csd-gold) r g b / 0.15);
         border-color: rgb(from var(--csd-gold) r g b / 0.5);
         color: var(--csd-gold);
-        animation: csd-value-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 }
 
