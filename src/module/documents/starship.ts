@@ -151,6 +151,7 @@ export class WH40KStarship extends WH40KBaseActor {
             weapon: weapon,
             crewRating: this.system.crew?.crewRating || 30,
             detectionBonus: this.detectionBonus,
+            gameSystem: (this.system as { gameSystem?: string }).gameSystem,
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);

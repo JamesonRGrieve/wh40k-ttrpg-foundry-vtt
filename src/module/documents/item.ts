@@ -495,6 +495,7 @@ export class WH40KItem extends WH40KItemContainer {
             isRollable: this.isRollable,
             isUsable: this.isConsumable || this.isDrug || this.isTool,
             actor: this.actor,
+            gameSystem: (this.actor?.system as { gameSystem?: string } | undefined)?.gameSystem,
             ...options,
         };
 

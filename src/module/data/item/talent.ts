@@ -389,6 +389,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * @returns {Promise<ChatMessage>}
      */
     async toChat(): Promise<void> {
+        const parentItem = this.parent as { actor?: { system?: { gameSystem?: string } } | null };
         const templateData = {
             talent: {
                 id: this.parent.id,
@@ -411,6 +412,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
                 stackable: this.stackable,
             },
             timestamp: new Date().toLocaleString(),
+            gameSystem: parentItem.actor?.system?.gameSystem,
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/talent-card.hbs', templateData);
