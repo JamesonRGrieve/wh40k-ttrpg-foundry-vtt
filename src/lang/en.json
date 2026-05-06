@@ -2038,6 +2038,14 @@
             "FireWeapon": "Fire Weapon",
             "Settings": "Settings",
             "ShowStatBreakdown": "Show stat breakdown"
+        },
+        "Encumbrance": {
+            "Title": "Encumbrance",
+            "TitleOverweight": "Encumbrance (overweight)",
+            "Current": "Current Enc.",
+            "Max": "Max Enc.",
+            "BackpackCurrent": "Backpack Current Enc.",
+            "BackpackMax": "Backpack Max Enc."
         }
     }
 }

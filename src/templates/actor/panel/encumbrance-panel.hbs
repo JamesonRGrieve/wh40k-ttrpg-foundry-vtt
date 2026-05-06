@@ -1,24 +1,16 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
-    label=(iff actor.encumbrance.encumbered "Encumbrance (overweight)" "Encumbrance")
+    label=(iff actor.encumbrance.encumbered (localize "WH40K.Encumbrance.TitleOverweight") (localize "WH40K.Encumbrance.Title"))
     rootClass=(concat "tw-col-auto " (isError actor.encumbrance.encumbered))}}
-    <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-m-0.5 tw-bg-white/50 tw-rounded-md tw-border tw-border-black/10">
-        <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Current Enc.</span>
-        <span class="tw-font-bold">{{actor.encumbrance.value}}</span>
-    </div>
-    <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-m-0.5 tw-bg-white/50 tw-rounded-md tw-border tw-border-black/10">
-        <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Max Enc.</span>
-        <span class="tw-font-bold">{{actor.encumbrance.max}}</span>
-    </div>
+    {{> systems/wh40k-rpg/templates/actor/partial/labeled-stat-chip.hbs
+        label=(localize "WH40K.Encumbrance.Current") value=actor.encumbrance.value}}
+    {{> systems/wh40k-rpg/templates/actor/partial/labeled-stat-chip.hbs
+        label=(localize "WH40K.Encumbrance.Max") value=actor.encumbrance.max}}
     {{#if actor.backpack.hasBackpack}}
         {{#unless actor.backpack.isCombatVest}}
-            <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-m-0.5 tw-bg-white/50 tw-rounded-md tw-border tw-border-black/10">
-                <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Backpack Current Enc.</span>
-                <span class="tw-font-bold">{{actor.encumbrance.backpack_value}}</span>
-            </div>
-            <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-m-0.5 tw-bg-white/50 tw-rounded-md tw-border tw-border-black/10">
-                <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Backpack Max Enc.</span>
-                <span class="tw-font-bold">{{actor.encumbrance.backpack_max}}</span>
-            </div>
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-stat-chip.hbs
+                label=(localize "WH40K.Encumbrance.BackpackCurrent") value=actor.encumbrance.backpack_value}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-stat-chip.hbs
+                label=(localize "WH40K.Encumbrance.BackpackMax") value=actor.encumbrance.backpack_max}}
         {{/unless}}
     {{/if}}
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
