@@ -1,14 +1,9 @@
 {{! Rogue Trader Damage Roll Card - Rich Hit-by-Hit Display }}
-<div class="tw-font-ui">
-    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-card-border)] tw-bg-[var(--wh40k-card-bg)] tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]">
-        {{! Header }}
-        <div class="tw-relative tw-px-4 tw-py-3 tw-bg-[linear-gradient(90deg,var(--wh40k-accent-overlay)_0%,transparent_100%)] tw-border-b tw-border-[var(--wh40k-border-color)]">
-            <div class="tw-text-xs tw-text-[var(--wh40k-card-muted)] tw-uppercase tw-tracking-[0.1em] tw-mb-1">Damage Roll</div>
-            <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[var(--wh40k-card-gold)] tw-uppercase tw-tracking-[0.05em] tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{weaponName}}</h2>
-        </div>
-
-        {{! Body }}
-        <div class="tw-px-4 tw-py-3">
+{{#> systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs
+    overline="Damage Roll"
+    title=weaponName
+    borderClass="tw-border-[var(--wh40k-card-border)]"
+    gameSystem=gameSystem}}
             {{#if psychicEffect}}
                 <div class="tw-relative tw-h-3 tw-my-2.5 tw-opacity-50 tw-bg-transparent before:tw-content-['⬥'] before:tw-absolute before:tw-left-1/2 before:tw-top-1/2 before:tw-translate-x-[-50%] before:tw-translate-y-[-50%] before:tw-text-[var(--wh40k-card-gold)] before:tw-text-[10px] after:tw-content-[''] after:tw-absolute after:tw-top-1/2 after:tw-left-[10%] after:tw-right-[10%] after:tw-h-px after:tw-bg-[linear-gradient(90deg,transparent_0%,var(--wh40k-card-gold)_30%,transparent_48%,transparent_52%,var(--wh40k-card-gold)_70%,transparent_100%)]"></div>
                 <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-[var(--wh40k-card-gold)] tw-rounded-[0_4px_4px_0] tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto">{{{psychicEffect}}}</div>
@@ -103,6 +98,4 @@
                     {{/if}}
                 </div>
             {{/each}}
-        </div>
-    </div>
-</div>
+{{/systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs}}
