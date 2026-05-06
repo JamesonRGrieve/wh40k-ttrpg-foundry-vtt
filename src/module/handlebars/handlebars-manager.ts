@@ -63,6 +63,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/circular-icon-button.hbs',
             'systems/wh40k-rpg/templates/actor/partial/stat-breakdown-button.hbs',
             'systems/wh40k-rpg/templates/actor/partial/labeled-stat-chip.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs',
             'systems/wh40k-rpg/templates/dialogs/partial/dialog-footer.hbs',
             'systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs',
             'systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs',
