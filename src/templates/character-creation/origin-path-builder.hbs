@@ -69,7 +69,7 @@
                  data-step-index="{{step.index}}"
                  data-step-key="{{step.key}}"
                  data-tooltip="{{step.label}}{{#if step.selection}}: {{step.selection.name}}{{/if}}">
-                <div class="step-number">
+                <div class="step-number {{#if step.isActive}}tw-animate-pulse-glow{{/if}}">
                     {{#if step.selection}}
                         <img src="{{step.selection.img}}" alt="{{step.selection.name}}" class="step-icon-img" />
                     {{else if (eq step.key "characteristics")}}

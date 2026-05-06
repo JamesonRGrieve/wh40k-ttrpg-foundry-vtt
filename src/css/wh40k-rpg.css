@@ -29068,7 +29068,6 @@ body.theme-dark {
 .wh40k-enc-alert {
     color: var(--wh40k-color-failure);
     font-size: 1rem;
-    animation: pulse-glow 2s infinite;
 }
 
 /* ========================================
@@ -39936,7 +39935,6 @@ body.theme-dark {
             background: linear-gradient(135deg, var(--wh40k-gold), rgb(184, 147, 35));
             border-color: var(--wh40k-gold);
             box-shadow: 0 0 12px rgba(201, 162, 39, 0.6);
-            animation: pulse-glow 2s ease-in-out infinite;
         }
         .step-label {
             color: var(--wh40k-gold);

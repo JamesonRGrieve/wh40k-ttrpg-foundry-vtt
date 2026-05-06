@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-06T20:22:45.839Z",
+  "generatedAt": "2026-05-06T20:32:52.473Z",
   "total": 244,
-  "adopted": 105,
+  "adopted": 106,
   "perSystemHits": {
-    "bc": 276,
-    "dh1e": 276,
-    "dh2e": 280,
-    "dw": 276,
-    "ow": 276,
-    "rt": 280,
-    "im": 280
+    "bc": 277,
+    "dh1e": 277,
+    "dh2e": 281,
+    "dw": 277,
+    "ow": 277,
+    "rt": 281,
+    "im": 281
   },
   "adoptedTemplates": [
     "src/templates/actor/npc/tab-npc.hbs",
@@ -103,6 +103,7 @@
     "src/templates/prompt/add-speciality-prompt.hbs",
     "src/templates/prompt/add-xp-prompt.hbs",
     "src/templates/prompt/assign-damage-prompt.hbs",
+    "src/templates/prompt/damage-roll-prompt.hbs",
     "src/templates/prompt/enhanced-skill-roll.hbs",
     "src/templates/prompt/force-field-prompt.hbs",
     "src/templates/prompt/psychic-power-roll-prompt.hbs",
