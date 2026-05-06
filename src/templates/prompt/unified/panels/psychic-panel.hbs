@@ -3,7 +3,7 @@
 {{!-- Power Selection (if multiple) --}}
 {{#if powerSelect}}
     <div class="tw-mb-3">
-        <h4 class="tw-font-display tw-text-xs tw-font-semibold tw-text-gold-raw tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">Select Power</h4>
+        <h4 class="tw-font-display tw-text-xs tw-font-semibold tw-text-gold-raw bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">Select Power</h4>
         <div class="tw-flex tw-flex-col tw-gap-2 tw-my-2">
             {{#each psychicPowers as |power|}}
                 <label class="tw-flex tw-items-center tw-gap-[14px] tw-py-3 tw-px-[14px] tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(0,0,0,0.35)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-translate-x-1 {{#if power.isSelected}}tw-bg-[rgba(201,162,39,0.08)] tw-border-gold-raw tw-shadow-[0_0_20px_rgba(201,162,39,0.2),inset_0_0_20px_rgba(201,162,39,0.05)] [&_.urd-power-name]:tw-text-gold-raw{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}}"
@@ -28,7 +28,7 @@
     {{#if rollData.modifiers.bonus}}
         <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-min-h-9 tw-border-b tw-border-[rgba(255,255,255,0.05)]">
             <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">Rating Bonus</span>
-            <span class="tw-text-base tw-font-semibold tw-text-gold-raw">+{{rollData.modifiers.bonus}}</span>
+            <span class="tw-text-base tw-font-semibold tw-text-gold-raw bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">+{{rollData.modifiers.bonus}}</span>
         </div>
     {{/if}}
     <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5">
@@ -41,7 +41,7 @@
         <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">Distance (m)</span>
         <input class="tw-py-2.5 tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-text-[#e8e4d9] tw-text-base tw-font-medium tw-min-w-20 tw-w-20 tw-text-center tw-[appearance:textfield] [&::-webkit-outer-spin-button]:tw-[appearance:none] [&::-webkit-inner-spin-button]:tw-[appearance:none] tw-transition-all hover:tw-border-[rgba(255,255,255,0.15)] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[rgba(0,0,0,0.4)]" type="number" data-dtype="Number" name="distance" value="{{distance}}" />
     </div>
-    <div class="tw-flex tw-items-center tw-justify-between tw-py-2.5 tw-px-[14px] tw-my-2 tw-bg-[linear-gradient(90deg,rgba(0,0,0,0.3)_0%,rgba(0,0,0,0.15)_100%)] tw-rounded-md tw-border-l-[3px] tw-border-l-gold-raw">
+    <div class="tw-flex tw-items-center tw-justify-between tw-py-2.5 tw-px-[14px] tw-my-2 tw-bg-[linear-gradient(90deg,rgba(0,0,0,0.3)_0%,rgba(0,0,0,0.15)_100%)] tw-rounded-md tw-border-l-[3px] tw-border-l-gold-raw bc:tw-border-l-crimson-light dh1e:tw-border-l-gold-raw-l5 dh2e:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure">
         <span class="tw-font-semibold tw-text-base tw-text-[#e8e4d9]">{{rangeName}}</span>
         <span class="tw-font-bold tw-text-[0.95rem] tw-[font-variant-numeric:tabular-nums] tw-text-[#b8b8a8]">Max: {{maxRange}}m</span>
     </div>
