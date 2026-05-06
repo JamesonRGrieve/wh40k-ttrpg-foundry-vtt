@@ -146,15 +146,28 @@ const JS_HOOKS = new Set([
     'tabs',
     // Foundry VTT ProseMirror rich-text editor container class.
     'editor-content',
+    // Foundry VTT sidebar tab link class (a.item) used by the TabsV2 nav system.
+    'item',
+    // Drag-and-drop target markers — no CSS rules, no JS querySelector, structural hooks only.
+    'item-drag',
+    'actor-drag',
+    // Roll-trigger action marker on characteristic rows — no CSS rules, functional hook.
+    'roll-characteristic',
+    // Tailwind arbitrary-selector target: parent uses `[&_.urd-power-name]:tw-*` to style children.
+    // Not a CSS class; the class only exists so the Tailwind selector can match it.
+    'urd-power-name',
+    // Dead structural classes — no CSS rules, no JS queries; kept only as DOM identifiers.
+    'wh40k-item-tab',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
-// class attr. Two forms:
-//   Leading-strip:  `{{cssPrefix}}-bar-container` → `-bar-container`  (starts with hyphen)
-//   Trailing-strip: `wh40k-{{key}}-badge`         → `wh40k-`          (ends with hyphen)
-// Neither form is a valid CSS class name (CSS identifiers cannot start or end with a
+// class attr. Three forms:
+//   Leading-strip (single):  `{{cssPrefix}}-bar-container` → `-bar-container`  (starts with `-[a-z]`)
+//   Leading-strip (double):  `{{pipClass}}--filled`        → `--filled`        (starts with `--[a-z]`)
+//   Trailing-strip:          `wh40k-{{key}}-badge`         → `wh40k-`          (ends with hyphen)
+// None of these forms are valid CSS class names (CSS identifiers cannot start or end with a
 // bare hyphen in this way), so they are safely exempt from the non-tw check.
-const HBS_FRAGMENT_RE = /^-[a-z][a-z0-9-]*$|^[a-z][a-z0-9-]+-$/;
+const HBS_FRAGMENT_RE = /^-{1,2}[a-z][a-z0-9-]*$|^[a-z][a-z0-9-]+-$/;
 // Tokens that contain characters that are invalid in a CSS class name are always
 // HBS expression fragments — e.g. `(eq`, `tab.active}}active{{/if}}`.
 // Valid CSS identifiers only contain [a-zA-Z0-9_-] and cannot start with a digit.
@@ -218,7 +231,13 @@ function classifyFile(file) {
         const value = m[1] ?? m[2] ?? '';
         // Strip Handlebars expressions inside class attribute; they are dynamic
         // and we do not classify them.
-        const cleaned = value.replace(/\{\{[^}]*\}\}/g, ' ');
+        // Two-pass cleanup:
+        //   1. Remove complete {{...}} expressions.
+        //   2. Remove any remaining {{... fragments — these are HBS blocks whose closing }}
+        //      fell after the quote that ended the class attribute capture (e.g.
+        //      `class="tw-foo {{#if (eq tone "gold")}}` gets captured as
+        //      `tw-foo {{#if (eq tone ` — the `{{` is never closed in the captured value).
+        const cleaned = value.replace(/\{\{[^}]*\}\}/g, ' ').replace(/\{\{.*/g, ' ');
         const tokens = cleaned.split(/\s+/).filter(Boolean);
         if (tokens.length === 0) continue;
         hasAnyClass = true;
