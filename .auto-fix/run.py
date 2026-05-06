@@ -1,26 +1,39 @@
 #!/home/jameson/.local/share/uv/tools/aider-chat/bin/python
 """
-Auto-fix TSC errors or ESLint warnings using aider + local Qwen3-Coder via vLLM,
-with a Gemini/Codex fallback ladder.
+Auto-fix TSC errors, ESLint warnings, or CSS-to-Tailwind ports using aider +
+local Qwen3-Coder via vLLM, with a Gemini/Codex fallback ladder.
 
 Usage:
     ./run.py                          # tsc mode, tiers 1+2 from existing manifest
     ./run.py --mode lint              # lint mode (eslint warnings)
-    ./run.py --scrape                 # Re-scrape errors/warnings into manifest, then run
+    ./run.py --mode css               # css mode (port .hbs templates to Tailwind)
+    ./run.py --scrape                 # Re-scrape signals into manifest, then run
     ./run.py --scrape --dry           # Re-scrape only, don't fix anything
     ./run.py --reset                  # Clear progress and start fresh (current mode only)
     ./run.py 1                        # Run tier 1 only
-    ./run.py --mode lint --scrape 1   # Re-scrape lint, then run tier 1
+    ./run.py --mode css --scrape 1    # Re-scrape css targets, then port tier 1
 
 Each file fix is ratchet-gated:
   - tsc mode:  TSC must DROP, lint must NOT RISE, no new TS codes introduced.
   - lint mode: Lint must DROP, TSC must NOT RISE, no new lint rules introduced.
+  - css mode:  tw-only must RISE by ≥1 for the touched template, mixed/css-only
+               must NOT RISE, TSC and lint must NOT RISE, no new keyframes /
+               theming variants introduced. See `.auto-fix/css-port.md` for
+               the full recipe and the Tier 1 / 2 / 3 classification rules.
 
 After ratchet passes, a Gemini-flash sanity check asks:
-  "Does this diff only change typing and/or fix lint warnings and not change
-   functionality or cause errors? YES/NO."
+  - tsc/lint: "Does this diff only change typing and/or fix lint warnings?"
+  - css:      "Does this diff only port class= attrs to Tailwind utilities,
+               leaving DOM, Handlebars logic, attributes, and JS hooks intact?"
 A NO response rolls back the file and escalates the ladder. Failures roll back
 the file and log the full exchange for prompt tuning.
+
+CSS-mode side-effects (after a successful port):
+  - When the template is the SOLE consumer of its primary source-block, the
+    block is deleted from `src/css/wh40k-rpg.css` via `pnpm css:block delete`.
+  - `.css-coverage-baseline` is lowered via `pnpm css:ratchet:update`.
+  - The commit bundles the template change, the monolith deletion, and the
+    baseline update into one revision per template.
 """
 
 import argparse
@@ -43,10 +56,12 @@ FILE_LOGS = AUTOFIX / "file-logs"
 MANIFEST_FILES = {
     "tsc": AUTOFIX / "tsc-error-manifest.json",
     "lint": AUTOFIX / "eslint-warning-manifest.json",
+    "css": AUTOFIX / "css-port-manifest.json",
 }
 PROGRESS_FILES = {
     "tsc": AUTOFIX / "progress.json",
     "lint": AUTOFIX / "progress-lint.json",
+    "css": AUTOFIX / "progress-css.json",
 }
 
 os.environ["OPENAI_API_BASE"] = "http://198.51.100.9/v1"
@@ -665,6 +680,923 @@ def lint_warning_lines_for_file(results: list[dict], filepath: str) -> list[str]
 
 
 # ────────────────────────────────────────────────────────────────────────
+# Source signal extraction (CSS-to-Tailwind porting)
+# ────────────────────────────────────────────────────────────────────────
+#
+# CSS mode does not extract "errors" or "warnings" per file — it walks the
+# `pnpm css:coverage` JSON report (`.css-coverage.json`) plus the source-block
+# index (`.css-blocks.json`) and produces a per-template porting brief: which
+# legacy classes the template uses, which monolith block(s) own the rules for
+# those classes, and how much animation / theming / Foundry-chrome residue
+# the block carries.
+#
+# The grinder is scoped to VISUAL-STYLING ports. Tier 3 deferral is encoded in
+# the scraper (any block with `@keyframes`, `animation:`, `animation-name:`,
+# or `[data-wh40k-system="..."]` is sent to Tier 3). The animation and theming
+# ratchets own those workstreams; the CSS-mode worker physically cannot pick
+# them up even if its prompt context were corrupted.
+
+# Class tokens that count as Tailwind utilities or are JS-hook / icon-library
+# infrastructure (no styling concern). Mirrors scripts/css-coverage.mjs.
+CSS_TW_PREFIXES = ("tw-", "-tw-", "!tw-")
+CSS_FA_RE = re.compile(r"^fa[rsbldt]$|^fa-(solid|regular|brands|light|thin|duotone)$|^fa-")
+CSS_MATERIAL_ICONS = {
+    "material-icons", "material-icons-outlined", "material-icons-round",
+    "material-icons-sharp", "material-icons-two-tone",
+}
+# Permanent JS-selector classes. Keep this list in lockstep with the JS_HOOKS
+# Set in scripts/css-coverage.mjs — when a hook is added there, mirror it here.
+CSS_JS_HOOKS = {
+    "sheet-control__hide-control",
+    "wh40k-expandable", "wh40k-expandable--expanded",
+    "wh40k-expansion-panel", "wh40k-expansion-panel--open",
+    "wh40k-stat-pill", "wh40k-stat-pill__icon",
+    "wh40k-stat-pill__value", "wh40k-stat-pill__label",
+    "wh40k-badge",
+    "active",
+    "wh40k-item-header__image", "wh40k-item-header__name",
+    "wh40k-badge--type", "wh40k-badge--tier", "wh40k-badge--category",
+    "wh40k-roll-card__value--negative",
+    "wh40k-modifier-count",
+    "wh40k-panel", "wh40k-panel-header", "wh40k-panel-title",
+    "wh40k-panel-body", "wh40k-panel-count",
+    "wh40k-threshold-marker", "wh40k-panel-chevron", "wh40k-badge-label",
+    "wh40k-navigation", "wh40k-navigation__item", "wh40k-nav-item",
+    "origin-detail-tabs", "origin-detail-tab-content",
+}
+CSS_ROLL_CONTROL_RE = re.compile(r"^roll-control__")
+CSS_HBS_FRAGMENT_RE = re.compile(r"^-[a-z][a-z0-9-]*$|^[a-z][a-z0-9-]+-$")
+
+CSS_MONOLITH = ROOT / "src/css/wh40k-rpg.css"
+CSS_BLOCK_INDEX = ROOT / ".css-blocks.json"
+CSS_COVERAGE_JSON = ROOT / ".css-coverage.json"
+
+CLASS_ATTR_RE = re.compile(
+    r"""class(?:Name)?\s*=\s*"([^"]*)"|class(?:Name)?\s*=\s*'([^']*)'""",
+    re.IGNORECASE,
+)
+
+
+def _css_token_is_styling(token: str) -> bool:
+    """True when `token` is a project styling class (counts against tw-only).
+
+    Excludes `tw-*` utilities (with or without a variant prefix), Font Awesome
+    glyphs, Google Material Icons, JS-hook classes, roll-control hooks, and
+    {{handlebars}}-fragment artefacts.
+    """
+    if not token or not token.strip():
+        return False
+    t = token.strip()
+    # Strip Tailwind variant prefix (last colon at bracket-depth 0).
+    depth = 0
+    last_colon = -1
+    for i, ch in enumerate(t):
+        if ch == "[":
+            depth += 1
+        elif ch == "]":
+            depth -= 1
+        elif ch == ":" and depth == 0:
+            last_colon = i
+    bare = t[last_colon + 1:] if last_colon >= 0 else t
+    if bare.startswith(CSS_TW_PREFIXES):
+        return False
+    if CSS_FA_RE.match(t):
+        return False
+    if t in CSS_MATERIAL_ICONS:
+        return False
+    if t in CSS_JS_HOOKS:
+        return False
+    if CSS_ROLL_CONTROL_RE.match(t):
+        return False
+    if CSS_HBS_FRAGMENT_RE.match(t):
+        return False
+    return True
+
+
+def extract_template_styling_classes(filepath: str) -> set[str]:
+    """Return the set of legacy styling classes used in a template's class
+    attributes. Excludes tw-* / FA / JS hooks / hbs fragments."""
+    try:
+        text = (ROOT / filepath).read_text()
+    except OSError:
+        return set()
+    classes: set[str] = set()
+    for m in CLASS_ATTR_RE.finditer(text):
+        attr = m.group(1) or m.group(2) or ""
+        # Skip handlebars expressions {{...}} — they expand at render time.
+        cleaned = re.sub(r"\{\{[^}]*\}\}", " ", attr)
+        for tok in cleaned.split():
+            if _css_token_is_styling(tok):
+                classes.add(tok)
+    return classes
+
+
+def find_blocks_for_classes(
+    monolith_lines: list[str],
+    block_ranges: dict[str, list[dict]],
+    classes: set[str],
+) -> dict[str, dict[str, int]]:
+    """For each source-block, count how many of `classes` are referenced
+    inside it. Returns {source_path: {"hits": int, "lines": int}} sorted by
+    hits desc. Used to identify which monolith blocks to show the model."""
+    if not classes:
+        return {}
+    # Compile a pattern that matches `.classname` on word boundary.
+    escaped = [re.escape(c) for c in classes]
+    cls_re = re.compile(r"\.(" + "|".join(escaped) + r")\b")
+    block_hits: dict[str, dict[str, int]] = {}
+    for source, ranges in block_ranges.items():
+        for r in ranges:
+            start, end = r["start"], r["end"]
+            block_text = "\n".join(monolith_lines[start - 1:end])
+            hits = len(set(cls_re.findall(block_text)))
+            if hits:
+                cur = block_hits.setdefault(source, {"hits": 0, "lines": 0})
+                cur["hits"] += hits
+                cur["lines"] += end - start + 1
+    return dict(sorted(block_hits.items(), key=lambda kv: -kv[1]["hits"]))
+
+
+def block_text_for_source(
+    monolith_lines: list[str],
+    block_ranges: dict[str, list[dict]],
+    source: str,
+) -> str:
+    """Return the concatenated text of every range for a given source path."""
+    parts: list[str] = []
+    for r in block_ranges.get(source, []):
+        start, end = r["start"], r["end"]
+        parts.append("\n".join(monolith_lines[start - 1:end]))
+    return "\n\n".join(parts)
+
+
+def block_entanglement(
+    monolith_lines: list[str],
+    block_ranges: dict[str, list[dict]],
+    source: str,
+) -> dict[str, int]:
+    """Count animation / theming / Foundry-chrome rules in a block."""
+    text = block_text_for_source(monolith_lines, block_ranges, source)
+    return {
+        "animation_count": len(re.findall(r"@keyframes\b|animation\s*:|animation-name\s*:", text)),
+        "theming_count": len(re.findall(r"\[data-wh40k-system=", text)),
+        "foundry_chrome_count": (
+            len(re.findall(r"\.window-content\b", text))
+            + len(re.findall(r"\.ProseMirror\b", text))
+            + len(re.findall(r"\.editor-content\b", text))
+            + len(re.findall(r"\.form-fields\b", text))
+        ),
+    }
+
+
+def consumers_for_block(
+    block_classes: set[str],
+    all_template_classes: dict[str, set[str]],
+) -> list[str]:
+    """Return the list of templates that reference any class from a block."""
+    consumers: list[str] = []
+    for tpl, cls in all_template_classes.items():
+        if cls & block_classes:
+            consumers.append(tpl)
+    return sorted(consumers)
+
+
+def block_classes_set(
+    monolith_lines: list[str],
+    block_ranges: dict[str, list[dict]],
+    source: str,
+) -> set[str]:
+    """Return the set of CSS class names defined as selectors inside a block."""
+    text = block_text_for_source(monolith_lines, block_ranges, source)
+    return set(re.findall(r"\.([a-zA-Z_][a-zA-Z0-9_-]*)\b", text))
+
+
+def run_css_coverage_refresh() -> dict:
+    """Run `pnpm css:coverage --quiet` to refresh `.css-coverage.json`."""
+    subprocess.run(
+        ["pnpm", "css:coverage", "--quiet"],
+        capture_output=True,
+        text=True,
+        cwd=ROOT,
+        timeout=60,
+    )
+    if not CSS_COVERAGE_JSON.exists():
+        return {"summary": {}, "byTemplate": {}}
+    return json.loads(CSS_COVERAGE_JSON.read_text())
+
+
+def run_css_block_index_refresh() -> dict:
+    """Run `pnpm css:block-index` to refresh `.css-blocks.json`."""
+    subprocess.run(
+        ["pnpm", "css:block-index"],
+        capture_output=True,
+        text=True,
+        cwd=ROOT,
+        timeout=60,
+    )
+    if not CSS_BLOCK_INDEX.exists():
+        return {"ranges": {}}
+    return json.loads(CSS_BLOCK_INDEX.read_text())
+
+
+def gather_css_targets() -> list[dict]:
+    """Walk every `mixed` template, collect its porting brief.
+
+    Returns a list of dicts: {file, lines, class_count, classes,
+    source_blocks: [{source, hits, block_lines, animation, theming, chrome}],
+    consumer_count, animation_count, theming_count, foundry_chrome_count,
+    primary_block_lines, primary_block_source}.
+    """
+    coverage = run_css_coverage_refresh()
+    block_index = run_css_block_index_refresh()
+    block_ranges = block_index.get("ranges", {})
+
+    if not CSS_MONOLITH.exists():
+        return []
+    monolith_lines = CSS_MONOLITH.read_text().split("\n")
+
+    # Walk every .hbs template; collect class sets so we can compute
+    # cross-template consumer counts per block.
+    all_template_classes: dict[str, set[str]] = {}
+    templates_root = ROOT / "src/templates"
+    for path in templates_root.rglob("*.hbs"):
+        rel = str(path.relative_to(ROOT))
+        all_template_classes[rel] = extract_template_styling_classes(rel)
+
+    # Coverage report's per-template classification lives in a `templates` map.
+    by_template = (coverage.get("byTemplate") or {})
+    if not by_template and "templates" in coverage:
+        by_template = coverage["templates"]
+
+    targets: list[dict] = []
+    for rel, classes in all_template_classes.items():
+        if not classes:
+            continue  # already tw-only
+        # Skip if coverage report says tailwind-only or css-only — only port
+        # mixed templates. (When the per-template map isn't available, fall
+        # back to "non-empty styling classes" as a mixed proxy.)
+        info = by_template.get(rel)
+        if isinstance(info, dict) and info.get("classification") == "tailwind-only":
+            continue
+        # Identify owning source-blocks.
+        block_hits = find_blocks_for_classes(monolith_lines, block_ranges, classes)
+        block_briefs: list[dict] = []
+        animation_total = theming_total = chrome_total = 0
+        primary_lines = 0
+        primary_source: str | None = None
+        for source, info_hits in list(block_hits.items())[:5]:
+            ent = block_entanglement(monolith_lines, block_ranges, source)
+            block_briefs.append({
+                "source": source,
+                "hits": info_hits["hits"],
+                "block_lines": info_hits["lines"],
+                **ent,
+            })
+            animation_total += ent["animation_count"]
+            theming_total += ent["theming_count"]
+            chrome_total += ent["foundry_chrome_count"]
+            if info_hits["lines"] > primary_lines:
+                primary_lines = info_hits["lines"]
+                primary_source = source
+
+        # Consumer count for the primary block.
+        if primary_source:
+            block_cls = block_classes_set(monolith_lines, block_ranges, primary_source)
+            consumers = consumers_for_block(block_cls, all_template_classes)
+        else:
+            consumers = [rel]
+
+        try:
+            line_count = (ROOT / rel).read_text().count("\n")
+        except OSError:
+            line_count = 0
+
+        targets.append({
+            "file": rel,
+            "lines": line_count,
+            "class_count": len(classes),
+            "classes": sorted(classes),
+            "source_blocks": block_briefs,
+            "primary_block_source": primary_source,
+            "primary_block_lines": primary_lines,
+            "consumer_count": len(consumers),
+            "consumers": consumers,
+            "animation_count": animation_total,
+            "theming_count": theming_total,
+            "foundry_chrome_count": chrome_total,
+        })
+
+    return targets
+
+
+def classify_css_target(target: dict) -> str:
+    """Tier 3 (deferred): any animation or theming entanglement.
+    Tier 2 (review): >1 consumer OR >1 chrome rule OR primary block >800 lines
+                     OR template has no identified primary block.
+    Tier 1 (grindable): single consumer, ≤1 chrome rule, no entanglement,
+                        primary block ≤800 lines.
+    """
+    if target["animation_count"] > 0 or target["theming_count"] > 0:
+        return "3"
+    if target["consumer_count"] > 1:
+        return "2"
+    if target["foundry_chrome_count"] > 1:
+        return "2"
+    if target["primary_block_lines"] > 800:
+        return "2"
+    if target["primary_block_source"] is None:
+        return "2"
+    return "1"
+
+
+def build_css_manifest(targets: list[dict]) -> dict:
+    """Build the CSS-mode manifest from gather_css_targets() output."""
+    tiers: dict[str, list[dict]] = {"1": [], "2": [], "3": []}
+    for t in sorted(targets, key=lambda x: (x["primary_block_lines"], x["file"])):
+        tier = classify_css_target(t)
+        # Preserve a short strategy hint for human review.
+        if tier == "3":
+            reason = "DEFERRED (animation/theming entanglement)"
+        elif tier == "2":
+            bits = []
+            if t["consumer_count"] > 1:
+                bits.append(f"{t['consumer_count']} consumers")
+            if t["foundry_chrome_count"] > 1:
+                bits.append(f"{t['foundry_chrome_count']} chrome rules")
+            if t["primary_block_lines"] > 800:
+                bits.append(f"{t['primary_block_lines']}-line primary block")
+            if not t["primary_block_source"]:
+                bits.append("no identified primary block")
+            reason = "REVIEW (" + ", ".join(bits) + ")"
+        else:
+            reason = "GRINDABLE (single consumer, clean leaf)"
+        tiers[tier].append({**t, "tier_reason": reason})
+
+    summary = {}
+    for tier_id in ["1", "2", "3"]:
+        entries = tiers[tier_id]
+        summary[f"tier{tier_id}_files"] = len(entries)
+        summary[f"tier{tier_id}_classes"] = sum(e["class_count"] for e in entries)
+        summary[f"tier{tier_id}_block_lines"] = sum(e["primary_block_lines"] for e in entries)
+
+    return {"mode": "css", "tiers": tiers, "summary": summary}
+
+
+def scrape_and_save_css() -> dict:
+    """Build and persist the CSS porting manifest."""
+    log("Scanning templates and css-blocks for CSS porting candidates...")
+    targets = gather_css_targets()
+    log(f"  {len(targets)} mixed templates with non-tw classes")
+    manifest = build_css_manifest(targets)
+    out_path = MANIFEST_FILES["css"]
+    with open(out_path, "w") as f:
+        json.dump(manifest, f, indent=2)
+    for tier_id in ["1", "2", "3"]:
+        n = manifest["summary"][f"tier{tier_id}_files"]
+        c = manifest["summary"][f"tier{tier_id}_classes"]
+        log(f"  Tier {tier_id}: {n} templates, {c} legacy classes")
+    log(f"Manifest written to {out_path}")
+    return manifest
+
+
+# ────────────────────────────────────────────────────────────────────────
+# CSS-mode prompt construction
+# ────────────────────────────────────────────────────────────────────────
+
+CSS_TOKEN_MAP_PATH = ROOT / "scripts/css-token-map.json"
+CSS_RECIPE_PATH = ROOT / "docs/tailwind-migration.md"
+
+
+def _load_css_token_map() -> str:
+    if not CSS_TOKEN_MAP_PATH.exists():
+        return "{}"
+    return CSS_TOKEN_MAP_PATH.read_text()
+
+
+def _load_css_recipe_summary() -> str:
+    """Inline the top of `docs/tailwind-migration.md` (invariants + cheat
+    sheet) so the model has the rules without us paraphrasing."""
+    if not CSS_RECIPE_PATH.exists():
+        return "(tailwind-migration.md not found)"
+    text = CSS_RECIPE_PATH.read_text()
+    # Cap to avoid blowing the prompt budget.
+    return text[:6000]
+
+
+CSS_HARD_RULES = """\
+- Output ONLY the corrected `.hbs` file inside a single ```handlebars fence.
+  No explanation, no commentary, no prose, no diff — just the file.
+- ONLY modify `class="…"` and `class={{...}}` attributes. Do NOT change DOM
+  structure, element types, attribute names, `data-*` attributes, `data-action`
+  hooks, `data-tab` / `data-group`, i18n keys, `{{localize ...}}` calls, or
+  any Handlebars logic (`{{#if}}`, `{{#each}}`, `{{> partial}}`).
+- Replace each legacy `wh40k-*` / project class with inline `tw-*` Tailwind
+  utilities that reproduce the same visual styling. Use `tw-` prefix on every
+  utility (`tw-flex`, `tw-bg-gold`, `hover:tw-text-gold`).
+- Use the token map (below) to translate `var(--wh40k-*)` references.
+- Hard-coded colors (`rgba(...)`, `#xxxxxx`) become arbitrary inline values:
+  `tw-bg-[rgba(0,0,0,0.3)]`, `tw-text-[#ce93d8]`. Do NOT extend
+  `tailwind.config.js` for one-off literals.
+- Preserve any class that is queried by JS (Foundry navSelector / contentSelector
+  values, querySelector targets in the matching `*.ts` application). When in
+  doubt about whether a class is a JS hook, KEEP IT alongside the new utilities.
+- The `active` class is a state class toggled by Foundry — keep it; pair it
+  with the arbitrary variant pattern `[&.active]:tw-block` (or similar) for
+  state-dependent styling.
+- If you encounter an `animation:` rule, an `@keyframes` definition, or a
+  `[data-wh40k-system="..."]` selector inside the source-block, ABORT and
+  emit only the literal token `TIER3_ENTANGLED` inside the fence. Do NOT
+  attempt the port. Animation and theming migrations are owned by separate
+  workstreams.
+- Do NOT remove `tab` or other Foundry-driven state classes that appear on
+  elements with a `data-tab` or `data-group` attribute.
+- Do NOT introduce new Handlebars helpers, partials, or block expressions.
+- Do NOT add narrative comments explaining the port. The output is the file."""
+
+
+SYSTEM_PROMPT_CSS = """\
+You are a Tailwind CSS expert porting a Handlebars template's legacy CSS \
+classes to inline `tw-*` utilities. You will be given the template's full \
+source, the CSS source-block(s) that style it, the project's token map, and \
+the migration recipe. Output ONLY the complete corrected `.hbs` file inside \
+a single ```handlebars fence. No explanation, no commentary, no diff — just \
+the file.\
+"""
+
+
+def build_css_prompt(filepath: str, target: dict) -> str:
+    """Per-template CSS port prompt."""
+    # Pull in source-block text for the primary block (and up to one secondary
+    # block if it has notable hits).
+    monolith_lines = CSS_MONOLITH.read_text().split("\n")
+    block_index = json.loads(CSS_BLOCK_INDEX.read_text())
+    block_ranges = block_index.get("ranges", {})
+    block_sections: list[str] = []
+    for brief in target["source_blocks"][:2]:
+        text = block_text_for_source(monolith_lines, block_ranges, brief["source"])
+        block_sections.append(
+            f"### Source-block `{brief['source']}` ({brief['block_lines']} lines, "
+            f"{brief['hits']} class hits)\n\n```css\n{text}\n```"
+        )
+    blocks_md = "\n\n".join(block_sections) if block_sections else "(no matching source-blocks found)"
+
+    classes_md = ", ".join(f"`{c}`" for c in target["classes"][:80])
+    if len(target["classes"]) > 80:
+        classes_md += f", … (+{len(target['classes']) - 80} more)"
+
+    token_map = _load_css_token_map()
+    recipe = _load_css_recipe_summary()
+
+    return f"""Port `{filepath}` from custom CSS classes to inline Tailwind utilities.
+
+## Template legacy classes ({target['class_count']} total)
+
+{classes_md}
+
+## Owning CSS source-blocks (from src/css/wh40k-rpg.css)
+
+{blocks_md}
+
+## Tailwind token translation map (scripts/css-token-map.json)
+
+```json
+{token_map}
+```
+
+## Migration recipe (docs/tailwind-migration.md, abridged)
+
+{recipe}
+
+## Hard rules
+
+{CSS_HARD_RULES}
+"""
+
+
+def apply_hbs_output(filepath: str, output: str) -> tuple[bool, bool]:
+    """Extract the handlebars/hbs/html fence from model output and write the
+    file. Returns (applied, deferred) where deferred=True means the model
+    emitted TIER3_ENTANGLED and we should record the file as skipped."""
+    # First, look for the deferral sentinel.
+    fence = re.search(r"```(?:handlebars|hbs|html)?\n(.*?)```", output, re.DOTALL)
+    if not fence:
+        return False, False
+    new_content = fence.group(1)
+    if not new_content.strip():
+        return False, False
+    if "TIER3_ENTANGLED" in new_content and len(new_content.strip().splitlines()) <= 3:
+        return False, True
+    (ROOT / filepath).write_text(new_content)
+    return True, False
+
+
+def get_css_coverage_summary() -> dict:
+    """Read .css-coverage.json summary {tailwind-only, mixed, css-only, total}."""
+    if not CSS_COVERAGE_JSON.exists():
+        return {"tailwind-only": 0, "mixed": 0, "css-only": 0, "total": 0}
+    return json.loads(CSS_COVERAGE_JSON.read_text()).get("summary", {})
+
+
+def _ratchet_check_css(
+    filepath: str,
+    pre_summary: dict,
+    pre_tsc: int,
+    pre_lint: int,
+) -> tuple[bool, dict, int, int, str]:
+    """Re-run css:coverage + tsc + lint after an applied edit. Acceptance:
+    - tailwind-only must RISE by ≥1 (relative to pre)
+    - mixed must NOT RISE
+    - css-only must NOT RISE
+    - tsc must NOT RISE
+    - lint must NOT RISE
+    Returns (accepted, post_summary, post_tsc, post_lint, reason)."""
+    run_css_coverage_refresh()
+    post_summary = get_css_coverage_summary()
+    post_tsc = len(run_tsc())
+    post_lint_results = run_eslint_json()
+    post_lint = sum(r.get("warningCount", 0) for r in post_lint_results) if post_lint_results else 999999
+
+    tw_delta = post_summary.get("tailwind-only", 0) - pre_summary.get("tailwind-only", 0)
+    mixed_delta = post_summary.get("mixed", 0) - pre_summary.get("mixed", 0)
+    css_only_delta = post_summary.get("css-only", 0) - pre_summary.get("css-only", 0)
+    tsc_delta = post_tsc - pre_tsc
+    lint_delta = post_lint - pre_lint
+
+    reasons: list[str] = []
+    accepted = (
+        tw_delta >= 1
+        and mixed_delta <= 0
+        and css_only_delta <= 0
+        and tsc_delta <= 0
+        and lint_delta <= 0
+    )
+    if accepted:
+        reasons.append(f"tw-only +{tw_delta}")
+        reasons.append(f"mixed {mixed_delta:+d}")
+        reasons.append(f"TSC {pre_tsc}→{post_tsc}")
+        reasons.append(f"lint {pre_lint}→{post_lint}")
+    else:
+        if tw_delta < 1:
+            reasons.append(f"tw-only delta {tw_delta} (need +1)")
+        if mixed_delta > 0:
+            reasons.append(f"mixed +{mixed_delta}")
+        if css_only_delta > 0:
+            reasons.append(f"css-only +{css_only_delta}")
+        if tsc_delta > 0:
+            reasons.append(f"TSC +{tsc_delta}")
+        if lint_delta > 0:
+            reasons.append(f"lint +{lint_delta}")
+    return accepted, post_summary, post_tsc, post_lint, ", ".join(reasons)
+
+
+CSS_SANITY_PROMPT_HEADER = """\
+You are auditing a diff that is supposed to port a Handlebars template's CSS \
+classes to inline Tailwind utilities, with NO behavioral changes. Answer \
+"NO" if ANY of these are true (uppercase, no other text):
+  - DOM structure changed: elements added/removed, element types changed
+    (`<div>` → `<span>`), nesting altered, partials inserted/removed,
+    `{{> partial}}` references added or deleted.
+  - Handlebars logic changed: `{{#if}}` / `{{#each}}` / `{{else}}` blocks
+    added, removed, or rewritten; condition expressions altered;
+    `{{localize ...}}` keys changed.
+  - Attribute names or values changed beyond `class`: `data-action`,
+    `data-tab`, `data-group`, `data-uuid`, `data-tooltip`, `name=`, `value=`,
+    `disabled`, `type=`, `for=`, `id=`, `src=`, `alt=`, etc.
+  - Required JS-hook classes were stripped without a Tailwind replacement
+    that preserves the JS-queried selector — e.g. removing `origin-detail-tabs`,
+    `origin-detail-tab-content`, a `wh40k-navigation*` class, or a
+    `roll-control__*` class.
+  - The `active` state class was removed from any element that previously had
+    it (Foundry toggles this class — removal breaks tab visibility / nav
+    state).
+  - Animation / keyframes handling: `tw-animate-*` classes were added, or
+    `@keyframes` rules were emitted, or `animation:` rules were touched.
+    Animation porting is OUT OF SCOPE for this workstream.
+  - Per-system theme variants were added (`bc:tw-*`, `dh1e:tw-*`, `dh2e:tw-*`,
+    `dw:tw-*`, `ow:tw-*`, `rt:tw-*`, `im:tw-*`). Theming is OUT OF SCOPE.
+  - Narrative comments were added explaining the port (e.g. "Ported X to Y",
+    "Replaced .foo with tw-bar", "Migrated to Tailwind").
+Otherwise answer "YES".
+"""
+
+
+def gemini_sanity_check_css(diff: str, run_state: dict) -> tuple[str, str]:
+    """Ask gemini flash-lite to certify the diff is class-only and behavior-
+    preserving. Returns (verdict, raw_output)."""
+    if not diff.strip():
+        return "YES", "(empty diff — trivially safe)"
+    prompt = CSS_SANITY_PROMPT_HEADER + "\nDiff:\n```diff\n" + diff + "\n```"
+    start_slot = run_state.get("gemini_slot", 0)
+    order = [start_slot] + [s for s in GEMINI_SLOTS if s != start_slot]
+    last_output = ""
+    for slot in order:
+        argv = [
+            "python3", HARNESS, "gemini", str(slot),
+            "--model", SANITY_MODEL,
+            "-p", prompt,
+        ]
+        output, kind = _call_harness(argv, slot, SANITY_TIMEOUT)
+        last_output = output
+        if kind == "usage_limit":
+            log(f"      sanity(css): gemini {slot} usage limited, trying next slot")
+            continue
+        if kind in ("auth_error", "error"):
+            log(f"      sanity(css): gemini {slot} {kind}, trying next slot")
+            continue
+        text_upper = output.strip().upper()
+        for candidate in reversed([l.strip() for l in text_upper.splitlines() if l.strip()]):
+            stripped = candidate.strip("`*_-. ")
+            if stripped == "YES" or stripped.startswith("YES"):
+                return "YES", output
+            if stripped == "NO" or stripped.startswith("NO"):
+                return "NO", output
+        if re.search(r"\bYES\b", text_upper):
+            return "YES", output
+        if re.search(r"\bNO\b", text_upper):
+            return "NO", output
+        return "unknown", output
+    return "unknown", last_output
+
+
+def process_css_file(
+    target: dict,
+    progress: dict,
+    pre_summary: dict,
+    pre_tsc: int,
+    pre_lint: int,
+    run_state: dict,
+    sanity_enabled: bool,
+) -> tuple[dict, int, int]:
+    """Port one template via the provider ladder. Returns
+    (post_summary, post_tsc, post_lint)."""
+    filepath = target["file"]
+    if filepath in progress["completed"] or filepath in progress["skipped"]:
+        log(f"  SKIP {filepath} (already processed)")
+        return pre_summary, pre_tsc, pre_lint
+
+    log(
+        f"  PORT {filepath} ({target['class_count']} legacy classes, "
+        f"primary block {target['primary_block_lines']}L "
+        f"{target['primary_block_source'] or 'unknown'})"
+    )
+
+    Phase = tuple[str, str | None]
+    queue: list[Phase] = []
+    if run_state["local_enabled"] and not run_state["gemini_only"]:
+        queue.append(("local", None))
+    for m in GEMINI_FLASH_LITE_MODELS:
+        queue.append(("gemini-flash-lite", m))
+
+    flash_unlocked = False
+    flash_failures = 0
+    codex_queued = False
+    attempt = 0
+
+    while queue:
+        kind, model = queue.pop(0)
+        attempt += 1
+        log(f"    pass {attempt} — {_runner_label(kind, model, None)}")
+
+        # Build the prompt fresh each attempt (in case file content changed).
+        prompt = build_css_prompt(filepath, target)
+        source = (ROOT / filepath).read_text()
+        user_msg = (
+            prompt
+            + f"\n\n## Full template source (`{filepath}`)\n\n```handlebars\n{source}\n```"
+            + "\n\nOutput the complete corrected file inside a single ```handlebars fence."
+        )
+
+        slot_used: int | None = None
+        if kind == "local":
+            if not check_vllm():
+                log(f"    local vLLM unreachable — disabling local for the rest of this run")
+                file_log(filepath, attempt, "local-unreachable", "vLLM /v1/models did not respond")
+                run_state["local_enabled"] = False
+                continue
+            from openai import OpenAI
+            client = OpenAI(
+                api_key="dummy",
+                base_url="http://198.51.100.9/v1",
+                timeout=180,
+                max_retries=0,
+            )
+            try:
+                chunks = []
+                with client.chat.completions.create(
+                    model=MODEL_NAME.removeprefix("openai/"),
+                    messages=[
+                        {"role": "system", "content": SYSTEM_PROMPT_CSS},
+                        {"role": "user", "content": user_msg},
+                    ],
+                    max_tokens=8192,
+                    temperature=0.1,
+                    stream=True,
+                ) as stream:
+                    for chunk in stream:
+                        delta = chunk.choices[0].delta.content or ""
+                        chunks.append(delta)
+                output, status = "".join(chunks), "ok"
+            except Exception as e:
+                output, status = f"Exception: {e}", "error"
+        elif kind in ("gemini-flash-lite", "gemini-flash"):
+            argv_base = [
+                "python3", HARNESS, "gemini",
+                "--model", model,
+                "-p", user_msg,
+            ]
+            # Inline cycling — same shape as call_gemini_with_cycling but with
+            # the css system prompt embedded in user_msg.
+            backoff = GEMINI_BACKOFF_START
+            start_slot = run_state.get("gemini_slot", 0)
+            output, status, slot_used = "", "all_limited", None
+            for cycle in range(GEMINI_BACKOFF_CYCLES):
+                order = [start_slot] + [s for s in GEMINI_SLOTS if s != start_slot]
+                cycle_done = False
+                for slot in order:
+                    log(f"      trying gemini {slot} {model}")
+                    argv = [
+                        "python3", HARNESS, "gemini", str(slot),
+                        "--model", model,
+                        "-p", f"{SYSTEM_PROMPT_CSS}\n\n{user_msg}",
+                    ]
+                    output, kind_status = _call_harness(argv, slot, GEMINI_TIMEOUT)
+                    run_state["gemini_slot"] = slot
+                    if kind_status != "usage_limit":
+                        status = kind_status
+                        slot_used = slot
+                        cycle_done = True
+                        break
+                    log(f"      gemini {slot} usage limited, switching slot")
+                if cycle_done:
+                    break
+                sleep_for = min(backoff, GEMINI_BACKOFF_MAX)
+                log(f"      both gemini slots usage limited, backoff {sleep_for}s (cycle {cycle+1}/{GEMINI_BACKOFF_CYCLES})")
+                time.sleep(sleep_for)
+                backoff = min(backoff * 2, GEMINI_BACKOFF_MAX)
+                start_slot = 1 - start_slot
+            if status == "all_limited":
+                log(f"    gemini all slots exhausted — aborting file")
+                file_log(filepath, attempt, f"{kind}-all-limited", output)
+                break
+            if status == "auth_error":
+                log(f"    gemini auth error — see file log; skipping this runner")
+                file_log(filepath, attempt, f"{kind}-auth-error", output)
+                continue
+        elif kind == "codex":
+            argv = [
+                "python3", HARNESS, "codex", "2",
+                "exec", "--json", "--full-auto",
+                f"{SYSTEM_PROMPT_CSS}\n\n{user_msg}",
+            ]
+            output, status = _call_harness(argv, slot=2, timeout=CODEX_TIMEOUT)
+            if status == "usage_limit":
+                log(f"    codex usage limit — aborting file")
+                file_log(filepath, attempt, "codex-usage-limit", output)
+                break
+        else:
+            log(f"    unknown phase kind {kind!r}")
+            continue
+
+        if status == "error":
+            log(f"    {kind} runtime error (see file log)")
+            file_log(filepath, attempt, f"{kind}-error", output)
+            if kind == "gemini-flash":
+                flash_failures += 1
+            continue
+
+        file_log(filepath, attempt, f"{kind}-raw-output", output)
+
+        applied, deferred = apply_hbs_output(filepath, output)
+        if deferred:
+            log(f"    DEFERRED by model (TIER3_ENTANGLED) — recording skip")
+            file_log(filepath, attempt, f"{kind}-tier3-deferred", output)
+            progress["skipped"].append(filepath)
+            save_progress(progress, "css")
+            return pre_summary, pre_tsc, pre_lint
+        if not applied:
+            log(f"    no valid handlebars fence in output")
+            file_log(filepath, attempt, f"{kind}-nochange",
+                     f"PROMPT:\n{prompt}\n\nOUTPUT:\n{output}")
+            if kind == "gemini-flash":
+                flash_failures += 1
+                if flash_failures >= FLASH_FAILURES_BEFORE_CODEX and not codex_queued:
+                    log(f"    codex unlocked ({flash_failures} flash failures)")
+                    queue.append(("codex", None))
+                    codex_queued = True
+            continue
+
+        diff = git_diff_file(filepath)
+        accepted, post_summary, post_tsc, post_lint, reason = _ratchet_check_css(
+            filepath, pre_summary, pre_tsc, pre_lint,
+        )
+
+        log_content = (
+            f"FILE: {filepath}\n"
+            f"MODE: css\n"
+            f"ATTEMPT: {attempt}\n"
+            f"RUNNER: {_runner_label(kind, model, slot_used)}\n"
+            f"PRE  : tw-only={pre_summary.get('tailwind-only')} mixed={pre_summary.get('mixed')} css-only={pre_summary.get('css-only')} TSC={pre_tsc} lint={pre_lint}\n"
+            f"POST : tw-only={post_summary.get('tailwind-only')} mixed={post_summary.get('mixed')} css-only={post_summary.get('css-only')} TSC={post_tsc} lint={post_lint}\n"
+            f"REASON: {reason}\n"
+            f"\n{'='*60}\nMODEL OUTPUT:\n{'='*60}\n{output}\n"
+            f"\n{'='*60}\nAPPLIED DIFF:\n{'='*60}\n{diff}\n"
+        )
+
+        if not accepted:
+            log(f"    REJECT from {_runner_label(kind, model, slot_used)} ({reason}), rollback")
+            file_log(filepath, attempt, f"{kind}-regress", log_content)
+            git_checkout_file(filepath)
+            if kind == "gemini-flash-lite" and not flash_unlocked:
+                flash_unlocked = True
+                log(f"    flash unlocked (flash-lite produced applied-but-rejected edit)")
+                flash_phases: list[Phase] = [("gemini-flash", m) for m in GEMINI_FLASH_MODELS]
+                queue = flash_phases + queue
+            if kind == "gemini-flash":
+                flash_failures += 1
+                if flash_failures >= FLASH_FAILURES_BEFORE_CODEX and not codex_queued:
+                    log(f"    codex unlocked ({flash_failures} flash failures)")
+                    queue.append(("codex", None))
+                    codex_queued = True
+            continue
+
+        # Ratchet passed. Run the gemini-flash sanity check before committing.
+        if sanity_enabled:
+            log(f"    sanity check ({SANITY_MODEL})…")
+            verdict, sanity_raw = gemini_sanity_check_css(diff, run_state)
+            log_content += (
+                f"\n{'='*60}\nSANITY VERDICT: {verdict}\n{'='*60}\n{sanity_raw}\n"
+            )
+            if verdict == "NO":
+                log(f"    sanity: NO — rolling back and escalating")
+                file_log(filepath, attempt, f"{kind}-sanity-no", log_content)
+                git_checkout_file(filepath)
+                if kind == "gemini-flash-lite" and not flash_unlocked:
+                    flash_unlocked = True
+                    flash_phases = [("gemini-flash", m) for m in GEMINI_FLASH_MODELS]
+                    queue = flash_phases + queue
+                if kind == "gemini-flash":
+                    flash_failures += 1
+                    if flash_failures >= FLASH_FAILURES_BEFORE_CODEX and not codex_queued:
+                        log(f"    codex unlocked ({flash_failures} flash failures)")
+                        queue.append(("codex", None))
+                        codex_queued = True
+                continue
+            if verdict == "unknown":
+                log(f"    sanity: unknown response — treating as YES (logged for review)")
+                file_log(filepath, attempt, f"{kind}-sanity-unknown", log_content)
+
+        # Sanity OK (or disabled): also update the css-coverage baseline and
+        # delete the source-block when the template was the sole consumer.
+        if target.get("primary_block_source") and target.get("consumer_count", 99) == 1:
+            try:
+                subprocess.run(
+                    ["pnpm", "css:block", "delete", target["primary_block_source"]],
+                    capture_output=True,
+                    text=True,
+                    cwd=ROOT,
+                    timeout=60,
+                )
+            except Exception as e:
+                log(f"    css:block delete warning: {e}")
+        try:
+            subprocess.run(
+                ["pnpm", "css:ratchet:update"],
+                capture_output=True,
+                text=True,
+                cwd=ROOT,
+                timeout=60,
+            )
+        except Exception as e:
+            log(f"    css:ratchet:update warning: {e}")
+
+        commit_msg = f"refactor(css): port {filepath} to inline Tailwind"
+        log(f"    OK from {_runner_label(kind, model, slot_used)}: {reason}")
+        file_log(filepath, attempt, f"{kind}-success", log_content)
+        # Stage CSS-side artefacts (monolith deletion, baseline) along with
+        # the template change before committing.
+        subprocess.run(
+            ["git", "add",
+             filepath,
+             "src/css/wh40k-rpg.css",
+             ".css-coverage-baseline",
+             ".css-blocks.json"],
+            cwd=ROOT, capture_output=True,
+        )
+        subprocess.run(
+            ["git", "commit", "-m", commit_msg, "--no-verify"],
+            cwd=ROOT, capture_output=True,
+        )
+        progress["completed"].append(filepath)
+        save_progress(progress, "css")
+        return post_summary, post_tsc, post_lint
+
+    log(f"    FAILED on {filepath}")
+    progress["failed"].append(filepath)
+    save_progress(progress, "css")
+    return pre_summary, pre_tsc, pre_lint
+
+
+# ────────────────────────────────────────────────────────────────────────
 # Mode-aware classification and manifest building
 # ────────────────────────────────────────────────────────────────────────
 
@@ -744,6 +1676,8 @@ def build_manifest(by_file: dict[str, dict[str, int]], mode: str) -> dict:
 
 def scrape_and_save(mode: str) -> dict:
     """Run the relevant tool, build a manifest, save to disk."""
+    if mode == "css":
+        return scrape_and_save_css()
     if mode == "tsc":
         log("Scraping TSC errors...")
         error_lines = run_tsc()
@@ -1519,8 +2453,8 @@ def process_file(
 def main() -> None:
     parser = argparse.ArgumentParser(description="Auto-fix TSC errors or ESLint warnings")
     parser.add_argument(
-        "--mode", choices=["tsc", "lint"], default="tsc",
-        help="What to fix: tsc errors or eslint warnings (default: tsc)",
+        "--mode", choices=["tsc", "lint", "css"], default="tsc",
+        help="What to fix: tsc errors, eslint warnings, or css→Tailwind ports (default: tsc)",
     )
     parser.add_argument(
         "--scrape", action="store_true",
@@ -1573,10 +2507,14 @@ def main() -> None:
         log(f"EASY codes ({len(EASY_CODES)}): {', '.join(sorted(EASY_CODES))}")
         log(f"MEDIUM codes ({len(MEDIUM_CODES)}): {', '.join(sorted(MEDIUM_CODES))}")
         log(f"HARD codes ({len(HARD_CODES)}): {', '.join(sorted(HARD_CODES))}")
-    else:
+    elif mode == "lint":
         log(f"EASY rules ({len(EASY_RULES)}): {', '.join(sorted(EASY_RULES))}")
         log(f"MEDIUM rules ({len(MEDIUM_RULES)}): {', '.join(sorted(MEDIUM_RULES))}")
         log(f"HARD rules ({len(HARD_RULES)}): {', '.join(sorted(HARD_RULES))}")
+    else:  # css
+        log("Tier 1 (grindable): single consumer, ≤1 Foundry-chrome rule, no animations/theming, primary block ≤800 lines")
+        log("Tier 2 (review):    multi-consumer OR >1 chrome rule OR >800-line primary block")
+        log("Tier 3 (deferred):  any @keyframes / animation: / theming selector — owned by separate workstreams")
 
     manifest_path = MANIFEST_FILES[mode]
     progress_path = PROGRESS_FILES[mode]
@@ -1601,26 +2539,73 @@ def main() -> None:
 
     log("Measuring baselines...")
     starting_tsc = len(run_tsc())
+    current_tsc = starting_tsc
     if mode == "tsc":
         current_lint = read_eslint_baseline()
     else:
         current_lint = get_eslint_warning_count()
-    current_tsc = starting_tsc
-
-    if progress["start_items"] is None:
-        progress["start_items"] = current_tsc if mode == "tsc" else current_lint
     log(f"TSC errors: {current_tsc}")
     log(f"ESLint warnings: {current_lint}")
-    save_progress(progress, mode)
-
-    attempted = 0
-    limit = args.limit or float("inf")
 
     run_state: dict = {
         "local_enabled": not args.gemini,
         "gemini_only": args.gemini,
         "gemini_slot": 1 if args.gemini else 0,
     }
+
+    attempted = 0
+    limit = args.limit or float("inf")
+
+    if mode == "css":
+        # CSS mode tracks tw-only / mixed / css-only counts instead of
+        # error / warning totals. Re-use the progress structure but populate
+        # `start_items` with the starting tailwind-only count.
+        pre_summary = get_css_coverage_summary()
+        if not pre_summary or "tailwind-only" not in pre_summary:
+            run_css_coverage_refresh()
+            pre_summary = get_css_coverage_summary()
+        if progress["start_items"] is None:
+            progress["start_items"] = pre_summary.get("tailwind-only", 0)
+        log(f"CSS tailwind-only: {pre_summary.get('tailwind-only')}")
+        log(f"CSS mixed:         {pre_summary.get('mixed')}")
+        log(f"CSS css-only:      {pre_summary.get('css-only')}")
+        save_progress(progress, mode)
+
+        for tier in args.tiers:
+            entries = manifest["tiers"].get(tier, [])
+            log(f"\n── Tier {tier}: {len(entries)} templates ──")
+            # Smallest first — quickest cycles, fastest signal for the operator.
+            entries.sort(key=lambda e: e.get("primary_block_lines", 0))
+
+            for entry in entries:
+                if attempted >= limit:
+                    log(f"  Limit reached ({args.limit}), stopping")
+                    break
+                already = entry["file"] in progress["completed"] or entry["file"] in progress["skipped"]
+                if not already:
+                    attempted += 1
+                pre_summary, current_tsc, current_lint = process_css_file(
+                    entry, progress, pre_summary, current_tsc, current_lint,
+                    run_state, sanity_enabled,
+                )
+            if attempted >= limit:
+                break
+
+        log("\n" + "=" * 60)
+        log("DONE")
+        log(f"  Mode:               css")
+        log(f"  Start tw-only:      {progress['start_items']}")
+        log(f"  End   tw-only:      {pre_summary.get('tailwind-only')}")
+        log(f"  End   mixed:        {pre_summary.get('mixed')}")
+        log(f"  Templates ported:   {len(progress['completed'])}")
+        log(f"  Templates failed:   {len(progress['failed'])}")
+        log(f"  Templates deferred: {len(progress['skipped'])}")
+        log("=" * 60)
+        return
+
+    if progress["start_items"] is None:
+        progress["start_items"] = current_tsc if mode == "tsc" else current_lint
+    save_progress(progress, mode)
 
     for tier in args.tiers:
         entries = manifest["tiers"].get(tier, [])
