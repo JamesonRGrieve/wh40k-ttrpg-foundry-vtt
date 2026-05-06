@@ -3397,14 +3397,6 @@ body.theme-dark {
 /* Animations */
 /* ============================================ */
 
-.wh40k-animate-pulse {
-    animation: wh40k-pulse 2s infinite ease-in-out;
-}
-
-.wh40k-animate-glow {
-    animation: wh40k-glow 2s infinite ease-in-out;
-}
-
 /* ============================================ */
 /* Tier Badge (for Talents) */
 /* ============================================ */
@@ -43347,13 +43339,6 @@ body.theme-dark {
 }
 
 /* ============================================ */
-/* Hit Location Highlight Animation */
-/* ============================================ */
-
-.wh40k-hit-location-highlight {
-    animation: hitLocationPulse 0.5s ease-in-out 4;
-}
-
 /* ============================================ */
 /* Hit Location Chat Message Styles */
 /* ============================================ */
