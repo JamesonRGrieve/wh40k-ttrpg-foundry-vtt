@@ -14,7 +14,7 @@
 --}}
 
 {{#if item}}
-<div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-item-spacing-xs)] tw-p-[var(--wh40k-item-spacing-sm)] tw-bg-[var(--wh40k-item-panel-bg)] tw-border-t tw-border-[var(--wh40k-item-panel-border)] {{#if compact}}tw-gap-[var(--wh40k-item-spacing-xs)] tw-p-[var(--wh40k-item-spacing-xs)]{{/if}}">
+<div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-item-spacing-xs)] tw-p-[var(--wh40k-item-spacing-sm)] tw-bg-[var(--wh40k-item-panel-bg)] tw-border-t tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure {{#if compact}}tw-gap-[var(--wh40k-item-spacing-xs)] tw-p-[var(--wh40k-item-spacing-xs)]{{/if}}">
   {{!-- Weapon Actions --}}
   {{#if (eq item.type "weapon")}}
     <button type="button"

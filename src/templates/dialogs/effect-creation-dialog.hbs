@@ -2,7 +2,7 @@
 <form class="tw-flex tw-flex-col tw-gap-4 tw-p-3">
 
     {{!-- Category Selection Tabs --}}
-    <div class="tw-grid tw-grid-cols-5 tw-gap-1 tw-p-2 tw-bg-black/30 tw-rounded-lg tw-border tw-border-solid tw-border-[var(--wh40k-accent-gold)]/20">
+    <div class="tw-grid tw-grid-cols-5 tw-gap-1 tw-p-2 tw-bg-black/30 tw-rounded-lg tw-border tw-border-solid tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure">
         <button type="button"
                 class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-p-2 tw-bg-white/5 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:tw-bg-white/10 hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-none"
                 data-active="{{#if (eq selectedCategory 'condition')}}true{{else}}false{{/if}}"
