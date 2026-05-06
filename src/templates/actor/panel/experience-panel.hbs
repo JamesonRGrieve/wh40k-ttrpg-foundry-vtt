@@ -92,36 +92,12 @@
         </div>
 
         {{!-- Edit Mode (Expandable) --}}
-        <div class="tw-py-2 tw-px-3 tw-bg-black/[0.02] tw-border-t tw-border-[var(--wh40k-border-color-light)] experience_details" {{hideIfNot (isExpanded 'experience_details' actor)}}>
-
-            {{!-- Direct Edit Section --}}
-            <div class="tw-p-3 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-2">
-                <div class="tw-grid tw-grid-cols-2 tw-gap-2">
-                    <label class="tw-flex tw-flex-col tw-gap-1">
-                        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-muted)]">Total XP Earned</span>
-                        <input type="number"
-                               data-dtype="Number"
-                               class="tw-w-full tw-h-[40px] tw-text-center tw-font-alt tw-font-bold tw-text-[1.1rem] tw-rounded-[6px] tw-border-2 tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-input-bg)] tw-text-[var(--wh40k-text-dark)] tw-transition-all tw-duration-150 focus:tw-outline-none focus:tw-border-[var(--wh40k-border-color-strong)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-shadow-[0_0_0_3px_rgba(120,46,34,0.1)]"
-                               name="system.experience.total"
-                               value="{{system.experience.total}}"
-                               min="0"
-                               placeholder="0" />
-                    </label>
-
-                    <label class="tw-flex tw-flex-col tw-gap-1">
-                        <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-muted)]">XP Spent</span>
-                        <input type="number"
-                               data-dtype="Number"
-                               class="tw-w-full tw-h-[40px] tw-text-center tw-font-alt tw-font-bold tw-text-[1.1rem] tw-rounded-[6px] tw-border-2 tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-input-bg)] tw-text-[var(--wh40k-text-dark)] tw-transition-all tw-duration-150 focus:tw-outline-none focus:tw-border-[var(--wh40k-border-color-strong)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-shadow-[0_0_0_3px_rgba(120,46,34,0.1)]"
-                               name="system.experience.used"
-                               value="{{system.experience.used}}"
-                               min="0"
-                               max="{{system.experience.total}}"
-                               placeholder="0" />
-                    </label>
-                </div>
-            </div>
-
+        {{#> systems/wh40k-rpg/templates/actor/partial/vital-edit-body.hbs
+              key="experience" actor=actor
+              wrapperClass="experience_details"
+              fields=(array
+                  (object name="system.experience.total" label=(localize "WH40K.VitalEditBody.ExperienceTotalLabel") value=system.experience.total min="0" placeholder="0")
+                  (object name="system.experience.used"  label=(localize "WH40K.VitalEditBody.ExperienceSpentLabel") value=system.experience.used  min="0" max=system.experience.total placeholder="0"))}}
             {{!-- Info Section --}}
             {{#> systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs
                   icon="fa-book"
@@ -130,7 +106,6 @@
                   wrapperClass="tw-mt-2"}}
                 <p class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)] tw-leading-[1.4] tw-m-0">{{localize "WH40K.VitalInfoCard.ExperienceAboutDesc"}}</p>
             {{/systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs}}
-
-        </div>
+        {{/systems/wh40k-rpg/templates/actor/partial/vital-edit-body.hbs}}
     </div>
 </div>

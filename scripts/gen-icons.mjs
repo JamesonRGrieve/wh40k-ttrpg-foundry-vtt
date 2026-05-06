@@ -137,6 +137,11 @@ function scanReferences() {
     const out = new Set();
     // {{iconSvg "family:name" ...}} or {{iconSvg 'family:name' ...}}
     const helperRe = /\{\{\s*iconSvg\s+(['"])([a-z]+):([a-z0-9-]+)\1/g;
+    // Hash-arg passthrough: when a partial accepts an icon-key hash param and
+    // forwards it to {{iconSvg ...}} via a variable, the helperRe above misses
+    // the literal at the call site. Match common partial-hash-arg names that
+    // hold icon keys: iconKey="…", addIconKey="…", editIconKey="…", etc.
+    const hashArgRe = /\b\w*[Ii]conKey\s*=\s*(['"])([a-z]+):([a-z0-9-]+)\1/g;
     // icon('family:name')  or  icon("family:name")  in TS
     const tsRe = /\bicon\(\s*(['"])([a-z]+):([a-z0-9-]+)\1/g;
 
@@ -145,6 +150,8 @@ function scanReferences() {
         let m;
         while ((m = helperRe.exec(src)) !== null) out.add(`${m[2]}:${m[3]}`);
         helperRe.lastIndex = 0;
+        while ((m = hashArgRe.exec(src)) !== null) out.add(`${m[2]}:${m[3]}`);
+        hashArgRe.lastIndex = 0;
     }
 
     for (const f of walk(MODULE_ROOT, ['.ts'])) {
@@ -168,6 +175,11 @@ function scanReferences() {
     out.add('fa:cog');
     out.add('lucide:dice-5');
     out.add('lucide:settings');
+    // Partial-default fallbacks. `item-table.hbs` and `item-table-row.hbs`
+    // accept an `addIconKey` / `editIconKey` hash arg with these defaults; if
+    // no caller sets the arg, the literal is hidden inside `defaultVal` and
+    // misses the scanner.
+    out.add('fa:plus-circle');
     return out;
 }
 

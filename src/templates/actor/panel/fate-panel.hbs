@@ -46,33 +46,12 @@
     </div>
 
     {{!-- Edit Mode (Expandable) --}}
-    <div class="tw-mt-2 tw-px-2 tw-py-1.5 tw-bg-black/[.02] tw-border-t tw-border-[color:var(--wh40k-border-color-light)]" {{hideIfNot (isExpanded 'fate_details' actor)}}>
-
-        {{!-- Quick Edit Section --}}
-        <div class="tw-p-2 tw-bg-[color:var(--wh40k-panel-bg-translucent)] tw-border tw-border-[color:var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-1">
-            <div class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-medium)] tw-mb-1 tw-flex tw-items-center tw-gap-[6px]">
-                <i class="{{concat 'fas' ' fa-cog'}}"></i> Edit Fate Points
-            </div>
-
-            <div class="tw-grid tw-grid-cols-2 tw-gap-2">
-                {{> systems/wh40k-rpg/templates/actor/partial/vital-edit-input
-                    name="system.fate.max"
-                    label="Max Fate Points"
-                    value=system.fate.max
-                    min="0"
-                    max="10"
-                    placeholder="Max"}}
-
-                {{> systems/wh40k-rpg/templates/actor/partial/vital-edit-input
-                    name="system.fate.value"
-                    label="Current Fate"
-                    value=system.fate.value
-                    min="0"
-                    max=system.fate.max
-                    placeholder="Current"}}
-            </div>
-        </div>
-
+    {{#> systems/wh40k-rpg/templates/actor/partial/vital-edit-body.hbs
+          key="fate" actor=actor
+          editIcon="fa-cog" editTitle=(localize "WH40K.VitalEditBody.EditFateTitle")
+          fields=(array
+              (object name="system.fate.max"   label=(localize "WH40K.VitalEditBody.FateMaxLabel")     value=system.fate.max   min="0" max="10" placeholder=(localize "WH40K.VitalEditBody.MaxPlaceholder"))
+              (object name="system.fate.value" label=(localize "WH40K.VitalEditBody.FateCurrentLabel") value=system.fate.value min="0" max=system.fate.max placeholder=(localize "WH40K.VitalEditBody.CurrentPlaceholder")))}}
         {{!-- About Fate Info Section --}}
         {{#> systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs
               icon="fa-book-open"
@@ -91,6 +70,5 @@
 
             <p class="tw-text-crimson tw-mt-[6px] tw-px-1 tw-py-0.5 tw-bg-[color:var(--wh40k-wounds-bg)] tw-border-l-2 tw-border-l-[color:var(--wh40k-wounds-secondary)] tw-rounded-[3px] tw-text-[0.75rem]"><i class="fas fa-fire"></i> <strong class="tw-text-[color:var(--wh40k-wounds-secondary)]">{{localize "WH40K.VitalInfoCard.FateBurningTitle"}}</strong> {{localize "WH40K.VitalInfoCard.FateBurningDesc"}}</p>
         {{/systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs}}
-
-    </div>
+    {{/systems/wh40k-rpg/templates/actor/partial/vital-edit-body.hbs}}
 {{/systems/wh40k-rpg/templates/actor/partial/vital-panel-shell}}

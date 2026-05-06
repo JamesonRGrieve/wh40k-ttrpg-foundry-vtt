@@ -1,74 +1,57 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
-    label="Armour"
+    label=(localize "WH40K.Equipment.Armour")
+    icon="fa-shield-alt"
     rootClass="tw-col-auto"}}
-    <div class="wh40k-table--border wh40k-armourtable--border">
-    <div class="table-row--head">
-        <div class="table-cell--span2">Name</div>
-        <div class="table-cell">Type</div>
-        <div class="table-cell">AP</div>
-        <div class="table-cell">Equipped</div>
-        <div class="table-cell--last">
-            <label class="wh40k-control-button" data-action="itemCreate" data-type="armour">
-                <span class="wh40k-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
-            </label>
-        </div>
-    </div>
-    {{#each actor.items as | item |}}
-        {{#if item.isArmour}}
-            <div class="table-row item-drag" data-item-id="{{item.id}}" data-item-type="armour">
-                <div class="table-cell--settingstoggle">
-                    <label class="wh40k-control-button item-edit" data-item-id="{{item.id}}">
-                        <span class="wh40k-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
-                    </label>
-                </div>
-                <div class="table-cell--left">
-                    {{> systems/wh40k-rpg/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
-                </div>
-                <div class="table-cell">
-                    <span class="display">{{item.system.type}}</span>
-                </div>
-                <div class="table-cell">
-                    <span class="display">{{armourDisplay item.system}}</span>
-                </div>
-                <div class="table-cell">
-                    <span class="display">{{item.system.equipped}}</span>
-                </div>
-                <div class="table-cell--last">
-                    <label class="wh40k-control-button item-delete" data-item-id="{{item.id}}">
-                        <span class="wh40k-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
-                    </label>
-                </div>
-            <div class="table-cell--description description_{{item.id}}" {{hideIfNot
-                (isExpanded (concat 'description_' item.id ))}}>
-                <div class="tw-grid tw-grid-cols-2 tw-gap-[3px]">
+    {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
+        rootClass="wh40k-armourtable--border"
+        addAction="itemCreate"
+        addType="armour"
+        addTitleKey="WH40K.Common.AddArmour"
+        headers=(array
+            (object cellClass="table-cell--span2" labelKey="WH40K.Weapon.Name")
+            (object labelKey="WH40K.Common.Type")
+            (object labelKey="WH40K.Armour.AP")
+            (object labelKey="WH40K.Weapon.Equipped"))}}
+        {{#each actor.items as | item |}}
+            {{#if item.isArmour}}
+                {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs
+                    item=item
+                    dragType="armour"
+                    nameToggleId=(concat 'description_' item.id)
+                    cells=(array
+                        (object value=item.system.type)
+                        (object value=(armourDisplay item.system))
+                        (object value=item.system.equipped))
+                    actions=(array
+                        (object action="itemDelete" iconKey="fa:trash" titleKey="WH40K.Common.Delete"))}}
+                    <div class="tw-grid tw-grid-cols-2 tw-gap-[3px]">
                         <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-bg-white/50 tw-rounded-md">
-                            <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Head</span>
+                            <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.BodyLocation.Head"}}</span>
                             <span class="tw-font-bold">{{armourLocation item.system "head"}}</span>
                         </div>
                         <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-bg-white/50 tw-rounded-md">
-                            <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Left Arm</span>
+                            <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.BodyLocation.LeftArm"}}</span>
                             <span class="tw-font-bold">{{armourLocation item.system "leftArm"}}</span>
                         </div>
                         <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-bg-white/50 tw-rounded-md">
-                            <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Right Arm</span>
+                            <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.BodyLocation.RightArm"}}</span>
                             <span class="tw-font-bold">{{armourLocation item.system "rightArm"}}</span>
                         </div>
                         <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-bg-white/50 tw-rounded-md">
-                            <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Body</span>
+                            <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.BodyLocation.Body"}}</span>
                             <span class="tw-font-bold">{{armourLocation item.system "body"}}</span>
                         </div>
                         <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-bg-white/50 tw-rounded-md">
-                            <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Left Leg</span>
+                            <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.BodyLocation.LeftLeg"}}</span>
                             <span class="tw-font-bold">{{armourLocation item.system "leftLeg"}}</span>
                         </div>
                         <div class="tw-flex tw-items-baseline tw-gap-2 tw-px-2 tw-py-1.5 tw-bg-white/50 tw-rounded-md">
-                            <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">Right Leg</span>
+                            <span class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.BodyLocation.RightLeg"}}</span>
                             <span class="tw-font-bold">{{armourLocation item.system "rightLeg"}}</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    {{/if}}
-    {{/each}}
-    </div>
+                {{/systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs}}
+            {{/if}}
+        {{/each}}
+    {{/systems/wh40k-rpg/templates/actor/partial/item-table.hbs}}
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

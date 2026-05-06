@@ -1,87 +1,64 @@
-<div class="wh40k-panel tw-col-auto" data-drop-zone="general" data-accepts="weapon">
-    <div class="wh40k-panel-header">
-        <span class="wh40k-panel-title"><i class="fas fa-sword"></i> Weapons</span>
-    </div>
-    <div class="wh40k-panel-body">
-        <div class="wh40k-table--border wh40k-weapontable--border">
-        <div class="table-row--head">
-            <div class="table-cell--span2">Name</div>
-            <div class="table-cell">Class</div>
-            <div class="table-cell">Type</div>
-            <div class="table-cell">Equipped</div>
-            <div class="table-cell--last">
-                <label class="wh40k-control-button" data-action="itemCreate" data-type="weapon">
-                    <span class="wh40k-control-button__span material-icons">{{defaultVal icon 'add_circle'}}</span>
-                </label>
-            </div>
-        </div>
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
+    label=(localize "WH40K.Weapons")
+    icon="fa-sword"
+    rootClass="tw-col-auto"
+    rootAttrs='data-drop-zone="general" data-accepts="weapon"'}}
+    {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
+        rootClass="wh40k-weapontable--border"
+        addAction="itemCreate"
+        addType="weapon"
+        addTitleKey="WH40K.Combat.AddWeapon"
+        headers=(array
+            (object cellClass="table-cell--span2" labelKey="WH40K.Weapon.Name")
+            (object labelKey="WH40K.Weapon.Class")
+            (object labelKey="WH40K.Weapon.Type")
+            (object labelKey="WH40K.Weapon.Equipped"))}}
         {{#each actor.items as | item |}}
             {{#if item.isWeapon}}
-                <div class="table-row item-drag" data-item-id="{{item.id}}" data-item-type="weapon">
-                    <div class="table-cell--settingstoggle">
-                        <label class="wh40k-control-button item-edit" data-item-id="{{item.id}}">
-                            <span class="wh40k-control-button__span material-icons">{{defaultVal icon 'settings'}}</span>
-                        </label>
-                    </div>
-                    <div class="table-cell--left">
-                        {{> systems/wh40k-rpg/templates/actor/partial/trait-toggle.hbs toggle=(concat 'description_' item.id) text=item.name}}
-                    </div>
-                    <div class="table-cell">
-                        <span class="display">{{item.system.class}}</span>
-                    </div>
-                    <div class="table-cell">
-                        <span class="display">{{item.system.type}}</span>
-                    </div>
-                    <div class="table-cell">
-                        <span class="display">{{item.system.equipped}}</span>
-                    </div>
-                    <div class="table-cell--last">
-                        <label class="wh40k-control-button item-roll" data-item-id="{{item.id}}">
-                            <span class="wh40k-control-button__span material-icons">{{defaultVal icon 'casino'}}</span>
-                        </label>
-                        <label class="wh40k-control-button item-damage" data-item-id="{{item.id}}">
-                            <span class="wh40k-control-button__span material-icons">{{defaultVal icon 'bolt'}}</span>
-                        </label>
-                        <label class="wh40k-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="wh40k-control-button__span material-icons">{{defaultVal icon 'delete'}}</span>
-                        </label>
-                    </div>
-                    <div class="table-cell--description description_{{item.id}}" {{hideIfNot
-                        (isExpanded (concat 'description_' item.id ))}}>
-                        <div class="wh40k-settings">
-                            <div class="wh40k-field__wrapper">
-                                <span class="wh40k-field__header">Damage</span>
-                                <span class="wh40k-field__span">{{item.system.damageLabel}}</span>
-                            </div>
-                            <div class="wh40k-field__wrapper">
-                                <span class="wh40k-field__header">Pen</span>
-                                <span class="wh40k-field__span">{{item.system.damage.penetration}}</span>
-                            </div>
-                            <div class="wh40k-field__wrapper">
-                                <span class="wh40k-field__header">Range</span>
-                                <span class="wh40k-field__span">{{item.system.rangeLabel}}</span>
-                            </div>
-                            <div class="wh40k-field__wrapper">
-                                <span class="wh40k-field__header">ROF (S/B/F)</span>
-                                <span class="wh40k-field__span">{{item.system.rateOfFireLabel}}</span>
-                            </div>
-                            <div class="wh40k-field__wrapper">
-                                <span class="wh40k-field__header">Clip</span>
-                                <span class="wh40k-field__span">{{item.system.clip.value}} / {{item.system.effectiveClipMax}}</span>
-                            </div>
-                            <div class="wh40k-field__wrapper">
-                                <span class="wh40k-field__header">Reload</span>
-                                <span class="wh40k-field__span">{{item.system.reload}}</span>
-                            </div>
-                            <div class="wh40k-field__wrapper">
-                                <span class="wh40k-field__header">Special</span>
-                                <span class="wh40k-field__span">{{specialDisplay item.system.special}}</span>
-                            </div>
+                {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs
+                    item=item
+                    dragType="weapon"
+                    nameToggleId=(concat 'description_' item.id)
+                    cells=(array
+                        (object value=item.system.class)
+                        (object value=item.system.type)
+                        (object value=item.system.equipped))
+                    actions=(array
+                        (object action="itemRoll" iconKey="fa:dice-d20" titleKey="WH40K.Common.Roll")
+                        (object action="itemDamage" iconKey="fa:bolt" titleKey="WH40K.Weapon.RollDamage")
+                        (object action="itemDelete" iconKey="fa:trash" titleKey="WH40K.Common.Delete"))}}
+                    <div class="wh40k-settings tw-grid tw-grid-cols-2 tw-gap-2">
+                        <div class="wh40k-field__wrapper">
+                            <span class="wh40k-field__header">{{localize "WH40K.Weapon.Damage"}}</span>
+                            <span class="wh40k-field__span">{{item.system.damageLabel}}</span>
+                        </div>
+                        <div class="wh40k-field__wrapper">
+                            <span class="wh40k-field__header">{{localize "WH40K.Weapon.Pen"}}</span>
+                            <span class="wh40k-field__span">{{item.system.damage.penetration}}</span>
+                        </div>
+                        <div class="wh40k-field__wrapper">
+                            <span class="wh40k-field__header">{{localize "WH40K.Weapon.Range"}}</span>
+                            <span class="wh40k-field__span">{{item.system.rangeLabel}}</span>
+                        </div>
+                        <div class="wh40k-field__wrapper">
+                            <span class="wh40k-field__header">{{localize "WH40K.Weapon.RoF"}}</span>
+                            <span class="wh40k-field__span">{{item.system.rateOfFireLabel}}</span>
+                        </div>
+                        <div class="wh40k-field__wrapper">
+                            <span class="wh40k-field__header">{{localize "WH40K.Weapon.Clip"}}</span>
+                            <span class="wh40k-field__span">{{item.system.clip.value}} / {{item.system.effectiveClipMax}}</span>
+                        </div>
+                        <div class="wh40k-field__wrapper">
+                            <span class="wh40k-field__header">{{localize "WH40K.Weapon.Reload"}}</span>
+                            <span class="wh40k-field__span">{{item.system.reload}}</span>
+                        </div>
+                        <div class="wh40k-field__wrapper">
+                            <span class="wh40k-field__header">{{localize "WH40K.Weapon.Special"}}</span>
+                            <span class="wh40k-field__span">{{specialDisplay item.system.special}}</span>
                         </div>
                     </div>
-                </div>
+                {{/systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs}}
             {{/if}}
         {{/each}}
-        </div>
-    </div>
-</div>
+    {{/systems/wh40k-rpg/templates/actor/partial/item-table.hbs}}
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
