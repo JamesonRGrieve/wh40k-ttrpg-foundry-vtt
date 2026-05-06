@@ -129,6 +129,13 @@ const JS_HOOKS = new Set([
     'wh40k-navigation',
     'wh40k-navigation__item',
     'wh40k-nav-item',
+    // origin-detail-dialog.ts configures Foundry tabs with
+    //   navSelector: '.origin-detail-tabs',
+    //   contentSelector: '.origin-detail-tab-content'
+    // Foundry queries these selectors at runtime to wire up tab switching, so
+    // they are JS hooks, not styling classes.
+    'origin-detail-tabs',
+    'origin-detail-tab-content',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
