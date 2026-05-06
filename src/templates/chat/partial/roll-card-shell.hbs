@@ -1,0 +1,33 @@
+{{!--
+    Roll-card shell — outer frame + gradient header + body for the
+    `wh40k-roll-card` family (action / damage / simple / psychic / force-field /
+    assign-damage). Used as a block partial; body content is delivered through
+    the partial-block slot.
+
+    Hash params:
+        title              — required big-title text (rendered as <h2>)
+        overline           — optional small uppercase label above title
+        subtitle           — optional secondary line under the title
+        playerRolledBadge  — optional bool; renders the "Player Rolled" pill
+        gameSystem         — optional; emits data-wh40k-system on the card
+        borderClass        — optional outer-border class (default tw-border-gold)
+        bgClass            — optional outer bg class (default tw-bg-[var(--wh40k-card-bg)])
+--}}
+<div class="tw-font-ui">
+    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 {{#if borderClass}}{{borderClass}}{{else}}tw-border-gold{{/if}} {{#if bgClass}}{{bgClass}}{{else}}tw-bg-[var(--wh40k-card-bg)]{{/if}} tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
+        {{!-- Header --}}
+        <div class="tw-relative tw-px-4 tw-py-3 tw-bg-[linear-gradient(90deg,var(--wh40k-accent-overlay)_0%,transparent_100%)] tw-border-b tw-border-[var(--wh40k-border-color)]">
+            {{#if overline}}<div class="tw-text-[0.75rem] tw-text-[var(--wh40k-card-muted)] tw-uppercase tw-tracking-[0.1em] tw-mb-1">{{overline}}</div>{{/if}}
+            <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em] tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{title}}</h2>
+            {{#if subtitle}}<div class="tw-text-[0.85rem] tw-text-[var(--wh40k-card-text)] tw-mt-0.5 tw-opacity-90">{{subtitle}}</div>{{/if}}
+            {{#if playerRolledBadge}}
+                <div class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-2.5 tw-py-[3px] tw-mt-1.5 tw-bg-[rgba(168,85,247,0.15)] tw-border tw-border-[rgba(168,85,247,0.4)] tw-rounded-[3px] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#c084fc]"><i class="fas fa-hand-paper tw-text-[0.65rem]"></i> Player Rolled</div>
+            {{/if}}
+        </div>
+
+        {{!-- Body --}}
+        <div class="tw-px-4 tw-py-3">
+            {{> @partial-block}}
+        </div>
+    </div>
+</div>

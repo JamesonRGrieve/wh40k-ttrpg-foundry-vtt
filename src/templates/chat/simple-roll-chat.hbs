@@ -1,19 +1,12 @@
 {{!-- Rogue Trader Roll Card - Modern Design --}}
 {{#with rollData}}
-<div class="tw-font-ui">
-    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-gold tw-bg-[var(--wh40k-panel-bg-solid)] tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]">
-        {{!-- Header --}}
-        <div class="tw-relative tw-p-[12px_16px] tw-bg-[linear-gradient(90deg,var(--wh40k-accent-overlay)_0%,transparent_100%)] tw-border-b tw-border-[var(--wh40k-border-color)]">
-            <div class="tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.1em] tw-mb-1">{{sheetName}}</div>
-            <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold tw-uppercase tw-tracking-[0.05em] tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{name}}</h2>
-            {{#if type}}<div class="tw-text-[0.85rem] tw-mt-0.5 tw-opacity-90">{{type}} • {{lookup difficulties difficulty}}</div>{{/if}}
-            {{#if isManualRoll}}
-                <div class="tw-inline-flex tw-items-center tw-gap-1 tw-px-[10px] tw-py-[3px] tw-mt-[6px] tw-bg-[rgba(168,85,247,0.15)] tw-border tw-border-[rgba(168,85,247,0.4)] tw-rounded-[3px] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#c084fc]"><i class="fas fa-hand-paper tw-text-[0.65rem]"></i> Player Rolled</div>
-            {{/if}}
-        </div>
-
-        {{!-- Body --}}
-        <div class="tw-p-[12px_16px]">
+{{#> systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs
+    overline=sheetName
+    title=name
+    subtitle=(iff type (concat type " • " (lookup ../difficulties difficulty)) "")
+    playerRolledBadge=isManualRoll
+    bgClass="tw-bg-[var(--wh40k-panel-bg-solid)]"
+    gameSystem=../gameSystem}}
             {{!-- Modifiers Breakdown --}}
             <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
                 <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">Base</span>
@@ -61,7 +54,6 @@
                     <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">Degrees of Failure</span>
                 </div>
             {{/if}}
-        </div>
 
             {{/if}}{{!-- end isTargetOnly else --}}
 
@@ -71,6 +63,5 @@
             <div class="tw-hidden">{{{render}}}</div>
         </div>
         {{/unless}}
-    </div>
-</div>
+{{/systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs}}
 {{/with}}
