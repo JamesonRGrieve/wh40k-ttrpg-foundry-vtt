@@ -177,12 +177,12 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
             const element = this.element.querySelector(selector) as HTMLElement | null;
             if (!element) return;
 
-            element.classList.remove('derived-stat-changed');
+            element.classList.remove('tw-animate-pulse-glow');
             void element.offsetWidth;
-            element.classList.add('derived-stat-changed');
+            element.classList.add('tw-animate-pulse-glow');
 
             setTimeout(() => {
-                element.classList.remove('derived-stat-changed');
+                element.classList.remove('tw-animate-pulse-glow');
             }, 1000);
         }
 
