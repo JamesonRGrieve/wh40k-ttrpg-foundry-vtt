@@ -4849,7 +4849,6 @@ body.theme-dark {
                 .wh40k-iconic-stat__shape {
                     transform: scale(1.15);
                     filter: drop-shadow(0 0 8px rgba(212, 140, 80, 0.6));
-                    animation: burst-pulse 0.6s ease;
                 }
             }
         }
@@ -4970,18 +4969,6 @@ body.theme-dark {
         }
 
         /* Modified indicator */
-        &--modified {
-            &::before {
-                content: '★';
-                position: absolute;
-                top: 4px;
-                right: 6px;
-                font-size: 0.6rem;
-                color: var(--wh40k-gold);
-                z-index: 3;
-                animation: star-twinkle 2s ease-in-out infinite;
-            }
-        }
     }
 
     /* Quality chip (inside mosaic) */
@@ -5222,10 +5209,6 @@ body.theme-dark {
     /* Equipped toggle animation */
     .wh40k-toggle-equipped {
         transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-
-        input:checked ~ .wh40k-toggle-equipped__indicator i {
-            animation: burst-pulse 0.4s ease;
-        }
     }
 
     /* Image hover zoom */
@@ -37212,18 +37195,6 @@ body.theme-dark {
 /* Accessibility: Reduced Motion */
 /* ============================================ */
 
-@media (prefers-reduced-motion: reduce) {
-    .urd-target__number,
-    .urd-dice__die-input,
-    .urd-dice__result,
-    .urd-step-pulse,
-    .urd-difficulty-picker__list,
-    .urd-difficulty-picker__caret {
-        animation: none !important;
-        transition: none !important;
-    }
-}
-
 /* ── source: src/css/dialogs/_threat-scaler.css ── */
 /**
  * Enhanced NPC Threat Scaler Dialog Styles
@@ -39989,16 +39960,6 @@ body.theme-dark {
 
     &.valid-next {
         border-color: #4caf50;
-
-        &::after {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border: 2px dashed #4caf50;
-            border-radius: var(--wh40k-radius-lg);
-            pointer-events: none;
-            animation: pulse-border 1.5s ease-in-out infinite;
-        }
     }
 
     .card-img {
@@ -50956,23 +50917,6 @@ body.theme-dark {
     /*  Accessibility & Reduced Motion              */
     /* -------------------------------------------- */
 
-    @media (prefers-reduced-motion: reduce) {
-        .wh40k-collapsible-panel,
-        .wh40k-panel-content,
-        .wh40k-panel-toggle-icon,
-        .wh40k-panel-header-collapsible,
-        .wh40k-preset-btn {
-            animation: none !important;
-            transition: none !important;
-        }
-
-        .wh40k-panel-toggle-icon {
-            .collapsed & {
-                transform: none;
-            }
-        }
-    }
-
     /* High contrast mode */
     @media (prefers-contrast: high) {
         .wh40k-collapsible-panel {
@@ -51516,15 +51460,6 @@ body.theme-dark {
             border: 2px dashed var(--wh40k-gold);
             background: rgba(212, 175, 55, 0.1);
 
-            &::before {
-                content: '';
-                position: absolute;
-                inset: 0;
-                background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(212, 175, 55, 0.05) 10px, rgba(212, 175, 55, 0.05) 20px);
-                pointer-events: none;
-                animation: drop-zone-pulse 2s ease-in-out infinite;
-            }
-
             &::after {
                 content: '⬇ Drop Here';
                 position: absolute;
@@ -51849,24 +51784,6 @@ body.theme-dark {
     }
 
     /* -------------------------------------------- */
-    /*  Accessibility - Reduced Motion              */
-    /* -------------------------------------------- */
-
-    @media (prefers-reduced-motion: reduce) {
-        .wh40k-drag-ghost,
-        [data-item-id].dragging,
-        [data-drop-zone],
-        .drop-indicator,
-        .favorite-item {
-            animation: none !important;
-            transition: none !important;
-        }
-
-        [data-drop-zone]::before {
-            animation: none !important;
-        }
-    }
-
     /* -------------------------------------------- */
     /*  Touch Device Support                        */
     /* -------------------------------------------- */
@@ -52608,17 +52525,6 @@ body.theme-dark {
 
     .what-if-preview {
         position: relative;
-
-        /* Highlight changed element */
-        &::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border: 2px solid var(--wh40k-gold);
-            border-radius: var(--wh40k-radius-md);
-            pointer-events: none;
-            animation: preview-pulse 2s ease-in-out infinite;
-        }
     }
 
     /* -------------------------------------------- */
@@ -52861,20 +52767,6 @@ body.theme-dark {
     /* -------------------------------------------- */
     /*  Accessibility - Reduced Motion              */
     /* -------------------------------------------- */
-
-    @media (prefers-reduced-motion: reduce) {
-        .what-if-mode::before,
-        .what-if-toolbar,
-        .what-if-badge,
-        .what-if-preview::after,
-        .what-if-comparison-panel {
-            animation: none !important;
-        }
-
-        .what-if-preview::after {
-            opacity: 1;
-        }
-    }
 
     /* -------------------------------------------- */
     /*  Print Styles                                */
@@ -53712,22 +53604,6 @@ body.theme-dark {
         }
     }
 
-    /* Accessibility - reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-        .wh40k-char-hud-item,
-        .wh40k-char-hud-name,
-        .wh40k-char-hud-mod,
-        .wh40k-char-hud-base,
-        .wh40k-char-hud-toggle-icon {
-            animation: none !important;
-            transition: none !important;
-        }
-
-        .wh40k-char-hud-name:hover,
-        .wh40k-char-hud-item:hover {
-            transform: none !important;
-        }
-    }
 }
 
 /* ── source: src/css/actor/_input-override.css ── */

@@ -224,6 +224,18 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Set up drag-and-drop visual feedback
         this._setupDragDropFeedback();
+
+        // Iconic stat hover: burst-pulse on __shape
+        this.element.querySelectorAll<HTMLElement>('.wh40k-iconic-stat').forEach((stat) => {
+            stat.addEventListener('mouseenter', () => {
+                const shape = stat.querySelector<HTMLElement>('.wh40k-iconic-stat__shape');
+                if (!shape) return;
+                shape.classList.remove('tw-animate-burst-pulse');
+                void shape.offsetWidth;
+                shape.classList.add('tw-animate-burst-pulse');
+                shape.addEventListener('animationend', () => shape.classList.remove('tw-animate-burst-pulse'), { once: true });
+            });
+        });
     }
 
     /* -------------------------------------------- */

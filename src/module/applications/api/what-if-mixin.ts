@@ -224,6 +224,11 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
 
             elements.forEach((element) => {
                 element.classList.add('what-if-preview');
+                if (!element.querySelector('.wh40k-what-if__pulse-border')) {
+                    const pulseBorder = document.createElement('span');
+                    pulseBorder.className = 'wh40k-what-if__pulse-border tw-animate-preview-pulse tw-absolute tw-inset-[-2px] tw-border-2 tw-border-solid tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-pointer-events-none';
+                    element.appendChild(pulseBorder);
+                }
 
                 const difference = data.preview - data.current;
                 const sign = difference > 0 ? '+' : '';
@@ -377,6 +382,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
             this.element.querySelectorAll('.what-if-badge').forEach((badge) => badge.remove());
             this.element.querySelectorAll('.what-if-preview').forEach((el) => {
                 el.classList.remove('what-if-preview');
+                el.querySelectorAll('.wh40k-what-if__pulse-border').forEach((s) => s.remove());
             });
 
             await this.render(false);

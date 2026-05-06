@@ -346,6 +346,9 @@
                          data-origin-id="{{origin.id}}"
                          data-origin-uuid="{{origin.uuid}}"
                          data-tooltip="{{origin.shortDescription}}">
+                        {{#if origin.isValidNext}}
+                            <span class="wh40k-origin-card__valid-border tw-animate-pulse-border tw-absolute tw-inset-[-4px] tw-border-2 tw-border-dashed tw-border-[#4caf50] tw-rounded-[var(--wh40k-radius-lg)] tw-pointer-events-none" aria-hidden="true"></span>
+                        {{/if}}
                         {{#if origin.isSelected}}
                             <div class="selection-indicator">
                                 <i class="fa-solid fa-check-circle"></i>
