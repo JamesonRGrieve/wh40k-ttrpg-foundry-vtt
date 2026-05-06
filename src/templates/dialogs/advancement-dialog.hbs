@@ -1,14 +1,16 @@
 {{!-- Advancement Dialog Template --}}
-<div class="wh40k-adv">
+<div class="wh40k-adv" data-wh40k-system="{{_gameSystemId}}">
   
   {{!-- Header with XP Display --}}
   <header class="wh40k-adv__header">
     <div class="wh40k-adv__xp-display">
       <div class="wh40k-adv__xp-bar">
-        <div class="wh40k-adv__xp-fill" style="width: {{xp.usedPercent}}%"></div>
+        <div class="wh40k-adv__xp-fill" style="width: {{xp.usedPercent}}%">
+          <span class="wh40k-adv__xp-fill-shimmer tw-pointer-events-none tw-absolute tw-inset-0 tw-animate-xp-shimmer tw-bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)]"></span>
+        </div>
       </div>
       <div class="wh40k-adv__xp-info">
-        <span class="wh40k-adv__xp-available">
+        <span class="wh40k-adv__xp-available bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat im:tw-text-failure ow:tw-text-brass-l20 rt:tw-text-gold">
           <i class="fas fa-bolt"></i>
           <strong>{{xp.available}}</strong> {{localize "WH40K.Advancement.XPAvailable"}}
         </span>
@@ -21,7 +23,7 @@
 
   {{!-- No Career Selected - Blocked State --}}
   {{#unless hasCareer}}
-  <div class="wh40k-adv__blocked-state">
+  <div class="wh40k-adv__blocked-state tw-animate-[fadeIn_250ms_ease]">
     <div class="wh40k-adv__blocked-icon">
       <i class="fas fa-route"></i>
     </div>
@@ -54,10 +56,10 @@
 
     {{!-- Characteristics Tab --}}
     {{#if (eq activeTab "characteristics")}}
-    <div class="wh40k-adv__panel wh40k-adv__panel--characteristics">
+    <div class="wh40k-adv__panel tw-animate-[fadeIn_250ms_ease] wh40k-adv__panel--characteristics">
       <div class="wh40k-adv__char-grid">
         {{#each characteristics}}
-        <div class="wh40k-adv__char-card {{#if this.recentlyPurchased}}wh40k-adv__char-card--purchased{{/if}} {{#if this.isMaxed}}wh40k-adv__char-card--maxed{{/if}}">
+        <div class="wh40k-adv__char-card {{#if this.recentlyPurchased}}wh40k-adv__char-card--purchased tw-animate-purchasePulse{{/if}} {{#if this.isMaxed}}wh40k-adv__char-card--maxed{{/if}}">
           
           <div class="wh40k-adv__char-header">
             <span class="wh40k-adv__char-abbr">{{this.abbreviation}}</span>
@@ -77,7 +79,7 @@
           <div class="wh40k-adv__char-tiers">
             {{#each this.tiers}}
             <div 
-              class="wh40k-adv__tier-dot {{#if this.purchased}}wh40k-adv__tier-dot--purchased{{/if}} {{#if this.current}}wh40k-adv__tier-dot--current{{/if}}"
+              class="wh40k-adv__tier-dot {{#if this.purchased}}wh40k-adv__tier-dot--purchased{{/if}} {{#if this.current}}wh40k-adv__tier-dot--current tw-animate-currentPulse{{/if}}"
               title="{{this.label}}"
             ></div>
             {{/each}}
@@ -114,7 +116,7 @@
 
     {{!-- Skills Tab --}}
     {{#if (eq activeTab "skills")}}
-    <div class="wh40k-adv__panel wh40k-adv__panel--skills">
+    <div class="wh40k-adv__panel tw-animate-[fadeIn_250ms_ease] wh40k-adv__panel--skills">
       {{#if skills.length}}
       <div class="wh40k-adv__advance-list">
         {{#each skills}}
@@ -122,7 +124,7 @@
           {{#if this.owned}}wh40k-adv__advance-card--owned{{/if}}
           {{#if this.blocked}}wh40k-adv__advance-card--blocked{{/if}}
           {{#if this.cantAfford}}wh40k-adv__advance-card--cant-afford{{/if}}
-          {{#if this.recentlyPurchased}}wh40k-adv__advance-card--purchased{{/if}}"
+          {{#if this.recentlyPurchased}}wh40k-adv__advance-card--purchased tw-animate-purchasePulse{{/if}}"
         >
           <div class="wh40k-adv__advance-info">
             <span class="wh40k-adv__advance-name">{{this.displayName}}</span>
@@ -185,7 +187,7 @@
 
     {{!-- Talents Tab --}}
     {{#if (eq activeTab "talents")}}
-    <div class="wh40k-adv__panel wh40k-adv__panel--talents">
+    <div class="wh40k-adv__panel tw-animate-[fadeIn_250ms_ease] wh40k-adv__panel--talents">
       {{#if talents.length}}
       <div class="wh40k-adv__advance-list">
         {{#each talents}}
@@ -193,7 +195,7 @@
           {{#if this.owned}}wh40k-adv__advance-card--owned{{/if}}
           {{#if this.blocked}}wh40k-adv__advance-card--blocked{{/if}}
           {{#if this.cantAfford}}wh40k-adv__advance-card--cant-afford{{/if}}
-          {{#if this.recentlyPurchased}}wh40k-adv__advance-card--purchased{{/if}}"
+          {{#if this.recentlyPurchased}}wh40k-adv__advance-card--purchased tw-animate-purchasePulse{{/if}}"
         >
           <div class="wh40k-adv__advance-info">
             <span class="wh40k-adv__advance-tier-badge" title="Tier {{this.tier}}">T{{this.tier}}</span>
@@ -263,7 +265,7 @@
 
     {{!-- Psychic Powers Tab (psykers only) --}}
     {{#if (eq activeTab "psychic")}}
-    <div class="wh40k-adv__panel wh40k-adv__panel--psychic">
+    <div class="wh40k-adv__panel tw-animate-[fadeIn_250ms_ease] wh40k-adv__panel--psychic">
       {{#if psychic}}
       <div class="wh40k-adv__psy-rating-card">
         <div class="wh40k-adv__psy-rating-info">
@@ -386,7 +388,7 @@
 
     {{!-- Traits Tab --}}
     {{#if (eq activeTab "traits")}}
-    <div class="wh40k-adv__panel wh40k-adv__panel--traits">
+    <div class="wh40k-adv__panel tw-animate-[fadeIn_250ms_ease] wh40k-adv__panel--traits">
       {{#if traits.owned.length}}
       <h4 class="wh40k-adv__psy-disc-header">Current Traits</h4>
       <div class="wh40k-adv__advance-list">
