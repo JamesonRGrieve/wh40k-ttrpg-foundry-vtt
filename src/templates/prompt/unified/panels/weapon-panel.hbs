@@ -3,7 +3,7 @@
 {{!-- Weapon Selection (if multiple) --}}
 {{#if weaponSelect}}
     <div class="tw-mb-3">
-        <h4 class="tw-font-display tw-text-xs tw-font-semibold tw-text-gold-raw tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">Select Weapon</h4>
+        <h4 class="tw-font-display tw-text-xs tw-font-semibold tw-text-gold-raw bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">Select Weapon</h4>
         <div class="tw-flex tw-flex-col tw-gap-2 tw-my-2">
             {{#each weapons as |weapon|}}
                 <label class="tw-flex tw-items-center tw-gap-[14px] tw-py-3 tw-px-[14px] tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(0,0,0,0.35)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-translate-x-1 {{#if weapon.isSelected}}tw-bg-[rgba(201,162,39,0.08)] tw-border-gold-raw tw-shadow-[0_0_20px_rgba(201,162,39,0.2),inset_0_0_20px_rgba(201,162,39,0.05)] [&_.urd-weapon-name]:tw-text-gold-raw{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}}"
@@ -29,7 +29,7 @@
     {{#if usesAmmo}}
         <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-min-h-9 tw-border-b tw-border-[rgba(255,255,255,0.05)]">
             <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">Ammunition</span>
-            <span class="tw-text-base tw-font-semibold tw-text-gold-raw">{{ammoText}}</span>
+            <span class="tw-text-base tw-font-semibold tw-text-gold-raw bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{ammoText}}</span>
         </div>
     {{/if}}
 
