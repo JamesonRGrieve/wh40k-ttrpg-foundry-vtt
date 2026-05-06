@@ -6,7 +6,7 @@
       imageAlt=name
       title=name
       badges=(array
-          (object class=(concat "wh40k-badge--" severityClass) icon="fa-chart-line" label=severityLabel)
+          (object class=(concat "wh40k-badge--" severityClass (iff (eq severityClass "severity-fatal") " tw-animate-pulse-danger" "")) icon="fa-chart-line" label=severityLabel)
           (iff permanent (object class="tw-bg-[rgb(from_var(--wh40k-accent-psychic)_r_g_b_/_0.2)] tw-text-[#713b87] tw-border tw-border-[rgb(from_var(--wh40k-accent-psychic)_r_g_b_/_0.3)]" icon="fa-infinity" label="Permanent"))
       )
       footerLabel=sourceReference

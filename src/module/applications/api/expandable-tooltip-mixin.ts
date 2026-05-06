@@ -94,7 +94,7 @@ export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base
 
             if (trigger && panel) {
                 trigger.classList.add('wh40k-expandable--expanded');
-                panel.classList.add('wh40k-expansion-panel--open');
+                panel.classList.add('wh40k-expansion-panel--open', 'tw-animate-slideDown');
                 this.#openPanels.add(panelId);
 
                 // Enrich content if needed
@@ -116,7 +116,7 @@ export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base
 
             if (trigger && panel) {
                 trigger.classList.remove('wh40k-expandable--expanded');
-                panel.classList.remove('wh40k-expansion-panel--open');
+                panel.classList.remove('wh40k-expansion-panel--open', 'tw-animate-slideDown');
                 this.#openPanels.delete(panelId);
             }
         }

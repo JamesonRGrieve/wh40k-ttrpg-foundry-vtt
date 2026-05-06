@@ -18,6 +18,7 @@
         showCalculator — boolean; when true, render the showStatBreakdown button next to value
         statKey     — passed to showStatBreakdown action (when showCalculator is true)
         valueWrapperClass — additional classes on the value display (text-xl, etc.)
+        currentAnimateClass — animation utility to add to the current-value span (e.g. "tw-animate-pulse-scale")
 --}}
 <div class="{{wrapperClass}}">
     <button type="button"
@@ -30,7 +31,7 @@
     </button>
 
     <div class="{{cssPrefix}}-value tw-flex tw-items-center tw-gap-1 tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure {{valueWrapperClass}}">
-        <span class="{{cssPrefix}}-current">{{current}}</span>
+        <span class="{{cssPrefix}}-current {{currentAnimateClass}}">{{current}}</span>
         {{#if maxLabel}}
         <span class="{{cssPrefix}}-sep">/</span>
         <span class="{{cssPrefix}}-max">{{maxLabel}}</span>
