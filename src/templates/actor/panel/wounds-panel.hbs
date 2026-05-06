@@ -47,7 +47,7 @@
             <span class="tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-text-[0.8rem] tw-uppercase tw-tracking-[0.05em] tw-text-crimson bc:tw-text-crimson-light dh1e:tw-text-gold-raw dh2e:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
                 <i class="{{concat 'fas fa-skull'}}"></i> Critical Damage
             </span>
-            <span class="tw-text-[0.8rem] tw-font-bold tw-text-crimson tw-font-alt">{{system.wounds.critical}} / 10</span>
+            <span class="tw-text-[0.8rem] tw-font-bold tw-text-crimson bc:tw-text-crimson-light dh1e:tw-text-gold-raw dh2e:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-font-alt">{{system.wounds.critical}} / 10</span>
         </div>
         {{> systems/wh40k-rpg/templates/actor/partial/wounds-pip-row.hbs critical=system.wounds.critical mode="display"}}
     </div>
@@ -79,7 +79,7 @@
 
                 <input type="number"
                        data-dtype="Number"
-                       class="tw-w-[70px] tw-h-9 tw-px-1.5 tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-[6px] tw-bg-[var(--wh40k-input-bg)] tw-text-[1.2rem] tw-font-bold tw-text-crimson tw-text-center tw-font-alt"
+                       class="tw-w-[70px] tw-h-9 tw-px-1.5 tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-[6px] tw-bg-[var(--wh40k-input-bg)] tw-text-[1.2rem] tw-font-bold tw-text-crimson bc:tw-text-crimson-light dh1e:tw-text-gold-raw dh2e:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-text-center tw-font-alt"
                        name="system.wounds.critical"
                        value="{{source.wounds.critical}}"
                        min="0"
