@@ -177,6 +177,7 @@ interface PreparedTraitPanel {
 
 interface AdvancementContext extends Record<string, unknown> {
     systemConfig: BaseSystemConfig | null;
+    _gameSystemId: string;
     usesAptitudes: boolean;
     usesCareerTables: boolean;
     hasCareer: boolean;
@@ -297,6 +298,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const systemConfig = this.#getSystemConfig();
         context.systemConfig = systemConfig;
+        context._gameSystemId = this.#getActorSystem().gameSystem ?? 'rt';
         context.usesAptitudes = systemConfig?.usesAptitudes ?? false;
         context.usesCareerTables = systemConfig?.usesCareerTables ?? true;
 
