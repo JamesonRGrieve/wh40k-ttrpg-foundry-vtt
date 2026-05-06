@@ -154,6 +154,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/apps/encounter-builder.hbs',
 
             // NPC Template sheet templates
+            'systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs',
             'systems/wh40k-rpg/templates/item/npc-template/header.hbs',
             'systems/wh40k-rpg/templates/item/npc-template/tabs.hbs',
             'systems/wh40k-rpg/templates/item/npc-template/tab-basics.hbs',
