@@ -1,37 +1,37 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Vehicle.Movement") icon="fa-tachometer-alt" rootClass="tw-col-span-3" bodyClass="tw-p-0" titleClass="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"}}
     <div class="tw-flex tw-flex-col tw-gap-2 tw-p-2">
-        <div class="wh40k-field__wrapper">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Size"}}</span>
-            <select class="wh40k-field__input" name="system.size">
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-py-1.5 tw-px-2 tw-bg-white/50 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
+            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Size"}}</span>
+            <select class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.size">
                 {{selectOptions dh.vehicleSizes selected=source.size labelAttr="label" valueAttr="@key"}}
             </select>
             <small class="tw-text-xs tw-opacity-60 tw-italic">{{system.sizeLabel}} ({{system.sizeDescriptor}})</small>
         </div>
-        <div class="wh40k-field__wrapper">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.SizeDescriptor"}}</span>
-            <input type="text" class="wh40k-field__input" name="system.sizeDescriptor" value="{{source.sizeDescriptor}}" placeholder="e.g., 20m" />
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-py-1.5 tw-px-2 tw-bg-white/50 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
+            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.SizeDescriptor"}}</span>
+            <input type="text" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.sizeDescriptor" value="{{source.sizeDescriptor}}" placeholder="e.g., 20m" />
         </div>
-        <div class="wh40k-field__wrapper">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Speed.Cruising"}}</span>
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-py-1.5 tw-px-2 tw-bg-white/50 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
+            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Speed.Cruising"}}</span>
             <div class="tw-flex tw-items-center tw-gap-1">
-                <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.speed.cruising" value="{{source.speed.cruising}}" />
+                <input type="number" data-dtype="Number" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.speed.cruising" value="{{source.speed.cruising}}" />
                 <span class="tw-text-xs tw-opacity-70 tw-shrink-0">kph</span>
             </div>
         </div>
-        <div class="wh40k-field__wrapper">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Speed.Tactical"}}</span>
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-py-1.5 tw-px-2 tw-bg-white/50 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
+            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Speed.Tactical"}}</span>
             <div class="tw-flex tw-items-center tw-gap-1">
-                <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.speed.tactical" value="{{source.speed.tactical}}" />
+                <input type="number" data-dtype="Number" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.speed.tactical" value="{{source.speed.tactical}}" />
                 <span class="tw-text-xs tw-opacity-70 tw-shrink-0">m</span>
             </div>
         </div>
-        <div class="wh40k-field__wrapper">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Manoeuverability"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.manoeuverability" value="{{source.manoeuverability}}" />
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-py-1.5 tw-px-2 tw-bg-white/50 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
+            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Manoeuverability"}}</span>
+            <input type="number" data-dtype="Number" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.manoeuverability" value="{{source.manoeuverability}}" />
         </div>
-        <div class="wh40k-field__wrapper tw-col-span-full">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Speed.Notes"}}</span>
-            <input type="text" class="wh40k-field__input" name="system.speed.notes" value="{{source.speed.notes}}" placeholder="Speed modifiers, special rules..." />
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-py-1.5 tw-px-2 tw-bg-white/50 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.1)] tw-col-span-full">
+            <span class="tw-text-[0.85em] tw-font-semibold tw-text-[#8b6914] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.Vehicle.Speed.Notes"}}</span>
+            <input type="text" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.speed.notes" value="{{source.speed.notes}}" placeholder="Speed modifiers, special rules..." />
         </div>
         <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-xs tw-flex-wrap">
             <strong>{{localize "WH40K.Vehicle.Speed.Summary"}}:</strong>
