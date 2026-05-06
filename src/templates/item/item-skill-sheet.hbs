@@ -7,7 +7,7 @@
                 <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
             </div>
             <div class="wh40k-item-title tw-flex tw-flex-col tw-justify-center tw-gap-1 tw-min-w-0">
-                <input type="text" class="wh40k-item-title__name tw-font-display tw-text-xl tw-text-gold tw-bg-transparent tw-border-none tw-w-full tw-px-1 tw-py-0.5" name="name" value="{{item.name}}" placeholder="Skill Name" />
+                <input type="text" class="wh40k-item-title__name tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-px-1 tw-py-0.5" name="name" value="{{item.name}}" placeholder="Skill Name" />
                 <div class="wh40k-item-meta tw-flex tw-flex-wrap tw-gap-1 tw-mt-1 tw-items-center">
                     <span class="wh40k-meta-badge wh40k-meta-badge--skill tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
                         <i class="fas fa-graduation-cap"></i> Skill
@@ -68,7 +68,7 @@
             {{!-- Properties Panel --}}
             <section class="wh40k-skill-properties tw-mb-3">
                 <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-                    <i class="fas fa-info-circle tw-text-gold"></i> Properties
+                    <i class="fas fa-info-circle tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Properties
                 </h3>
 
                 <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
@@ -121,7 +121,7 @@
             {{#if item.system.descriptor}}
             <section class="wh40k-skill-descriptor tw-mb-3">
                 <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-                    <i class="fas fa-align-left tw-text-gold"></i> Description
+                    <i class="fas fa-align-left tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Description
                 </h3>
                 <div class="wh40k-descriptor-text tw-text-sm tw-p-2 tw-rounded-sm">
                     {{item.system.descriptor}}
@@ -133,7 +133,7 @@
             {{#if (eq item.system.skillType "specialist")}}
             <section class="wh40k-skill-specializations tw-mb-3">
                 <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-                    <i class="fas fa-list-ul tw-text-gold"></i> Specializations
+                    <i class="fas fa-list-ul tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Specializations
                 </h3>
 
                 {{#if item.system.specializations.length}}
@@ -157,7 +157,7 @@
             {{!-- Uses & Rules Panel --}}
             <section class="wh40k-skill-uses tw-mb-3">
                 <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-                    <i class="fas fa-book-open tw-text-gold"></i> Uses &amp; Rules
+                    <i class="fas fa-book-open tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Uses &amp; Rules
                 </h3>
                 <div class="wh40k-uses-content editor tw-text-sm" data-edit="system.uses">
                     {{{item.system.uses}}}
@@ -167,7 +167,7 @@
             {{!-- Difficulty Examples Table --}}
             <section class="wh40k-skill-difficulties tw-mb-3">
                 <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-                    <i class="fas fa-chart-line tw-text-gold"></i> Example Difficulties
+                    <i class="fas fa-chart-line tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Example Difficulties
                 </h3>
 
                 {{#if item.system.exampleDifficulties.length}}
@@ -202,7 +202,7 @@
             {{#if item.system.specialRules}}
             <section class="wh40k-skill-special-rules tw-mb-3">
                 <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-                    <i class="fas fa-exclamation-triangle tw-text-gold"></i> Special Rules
+                    <i class="fas fa-exclamation-triangle tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Special Rules
                 </h3>
                 <div class="wh40k-special-rules-content editor tw-text-sm" data-edit="system.specialRules">
                     {{{item.system.specialRules}}}
@@ -213,7 +213,7 @@
             {{!-- Roll Config (advanced settings) --}}
             <section class="wh40k-skill-roll-config tw-mb-3">
                 <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-                    <i class="fas fa-cog tw-text-gold"></i> Roll Configuration
+                    <i class="fas fa-cog tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Roll Configuration
                 </h3>
 
                 <div class="wh40k-config-grid tw-grid tw-grid-cols-3 tw-gap-3">

@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-06T17:21:26.848Z",
+  "generatedAt": "2026-05-06T17:23:50.252Z",
   "total": 244,
-  "adopted": 31,
+  "adopted": 35,
   "perSystemHits": {
-    "bc": 52,
-    "dh1e": 52,
-    "dh2e": 56,
-    "dw": 52,
-    "ow": 52,
-    "rt": 56,
-    "im": 56
+    "bc": 80,
+    "dh1e": 80,
+    "dh2e": 84,
+    "dw": 80,
+    "ow": 80,
+    "rt": 84,
+    "im": 84
   },
   "adoptedTemplates": [
     "src/templates/actor/panel/active-effects-compact.hbs",
@@ -41,7 +41,11 @@
     "src/templates/chat/item-card-chat.hbs",
     "src/templates/chat/partial/chat-card-shell.hbs",
     "src/templates/dialogs/advancement-dialog.hbs",
+    "src/templates/item/item-armour-sheet.hbs",
+    "src/templates/item/item-condition-sheet.hbs",
+    "src/templates/item/item-psychic-power-sheet.hbs",
     "src/templates/item/item-sheet.hbs",
+    "src/templates/item/item-skill-sheet.hbs",
     "src/templates/item/item-weapon-mod-sheet.hbs"
   ]
 }
