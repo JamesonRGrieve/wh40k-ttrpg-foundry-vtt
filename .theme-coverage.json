@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-06T19:02:56.086Z",
+  "generatedAt": "2026-05-06T19:09:54.942Z",
   "total": 244,
-  "adopted": 55,
+  "adopted": 72,
   "perSystemHits": {
-    "bc": 173,
-    "dh1e": 173,
-    "dh2e": 177,
-    "dw": 173,
-    "ow": 173,
-    "rt": 177,
-    "im": 177
+    "bc": 233,
+    "dh1e": 233,
+    "dh2e": 237,
+    "dw": 233,
+    "ow": 233,
+    "rt": 237,
+    "im": 237
   },
   "adoptedTemplates": [
     "src/templates/actor/panel/active-effects-compact.hbs",
@@ -66,6 +66,23 @@
     "src/templates/item/panel/active-effects-panel.hbs",
     "src/templates/item/panel/modifiers-editor-panel.hbs",
     "src/templates/item/panel/modifiers-panel.hbs",
-    "src/templates/item/panel/source-panel.hbs"
+    "src/templates/item/panel/source-panel.hbs",
+    "src/templates/prompt/add-speciality-prompt.hbs",
+    "src/templates/prompt/add-xp-prompt.hbs",
+    "src/templates/prompt/assign-damage-prompt.hbs",
+    "src/templates/prompt/enhanced-skill-roll.hbs",
+    "src/templates/prompt/force-field-prompt.hbs",
+    "src/templates/prompt/psychic-power-roll-prompt.hbs",
+    "src/templates/prompt/simple-roll-prompt.hbs",
+    "src/templates/prompt/unified/context-panel.hbs",
+    "src/templates/prompt/unified/dice-input.hbs",
+    "src/templates/prompt/unified/footer.hbs",
+    "src/templates/prompt/unified/header.hbs",
+    "src/templates/prompt/unified/modifiers.hbs",
+    "src/templates/prompt/unified/panels/force-field-panel.hbs",
+    "src/templates/prompt/unified/panels/psychic-panel.hbs",
+    "src/templates/prompt/unified/panels/weapon-panel.hbs",
+    "src/templates/prompt/unified/target-display.hbs",
+    "src/templates/prompt/weapon-roll-prompt.hbs"
   ]
 }
