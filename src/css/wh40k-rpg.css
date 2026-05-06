@@ -22568,13 +22568,11 @@ body.theme-dark {
     /* Sparkle effect when gaining fate (triggered via JS) */
 
     .wh40k-fate-pip.wh40k-sparkle {
-        animation: sparkle 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
     /* Fade effect when spending fate (triggered via JS) */
 
     .wh40k-fate-pip.wh40k-spending {
-        animation: fade-spend 0.5s ease-out forwards;
     }
 
     /* Empty state */
@@ -31922,7 +31920,6 @@ body.theme-dark {
     &.wh40k-fate-pip--active {
         color: var(--wh40k-accent-info); /* Filled: solid blue */
         text-shadow: 0 0 8px rgb(from var(--wh40k-accent-info) r g b / 0.5), 0 0 4px rgb(from var(--wh40k-accent-info) r g b / 0.3);
-        animation: star-glow 2s ease-in-out infinite;
     }
 }
 
