@@ -17,7 +17,7 @@
                           the compact layout.
         rootClass       — extra utility classes appended to the wrapper.
 --}}
-<div class="wh40k-dropzone{{#if hasItems}} wh40k-dropzone--compact{{/if}}{{#if rootClass}} {{rootClass}}{{/if}}" data-action="itemCreate" data-type="{{type}}">
+<div class="wh40k-dropzone{{#if hasItems}} wh40k-dropzone--compact{{/if}}{{#if rootClass}} {{rootClass}}{{/if}} tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure" data-action="itemCreate" data-type="{{type}}">
     <i class="fas {{#if iconClass}}{{iconClass}}{{else}}fa-plus{{/if}} wh40k-dropzone-icon"></i>
     <span class="wh40k-dropzone-text" data-dropzone-text>
         {{~#if hasItems~}}

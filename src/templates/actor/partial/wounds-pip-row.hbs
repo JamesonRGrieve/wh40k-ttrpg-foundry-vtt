@@ -8,7 +8,7 @@
 <div class="tw-flex tw-flex-wrap tw-gap-[6px] tw-justify-center">
     {{#each (array 1 2 3 4 5 6 7 8 9 10) as |level|}}
         <button type="button"
-                class="tw-w-7 tw-h-7 tw-p-0 tw-border-2 tw-border-solid tw-rounded-full tw-cursor-pointer tw-flex tw-items-center tw-justify-center tw-relative {{#if (lte level ../critical)}}tw-border-crimson tw-bg-[var(--wh40k-wounds-bg)]{{else}}tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-btn-bg)]{{/if}}"
+                class="tw-w-7 tw-h-7 tw-p-0 tw-border-2 tw-border-solid tw-rounded-full tw-cursor-pointer tw-flex tw-items-center tw-justify-center tw-relative tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure {{#if (lte level ../critical)}}tw-border-crimson tw-bg-[var(--wh40k-wounds-bg)]{{else}}tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-btn-bg)]{{/if}}"
                 data-action="setCriticalPip"
                 data-crit-level="{{level}}"
                 title="{{#if (eq ../mode 'edit')}}Set Critical to {{level}}{{else}}Critical Level {{level}} - Click to toggle{{/if}}">

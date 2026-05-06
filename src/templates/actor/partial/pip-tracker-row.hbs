@@ -21,7 +21,7 @@
 <div class="{{#if wrapperClass}}{{wrapperClass}}{{else}}tw-flex tw-flex-wrap tw-justify-center tw-gap-1{{/if}}">
     {{#each (range 1 count) as |index|}}
         <button type="button"
-                class="{{../pipClass}}{{#if (lte index ../current)}} {{#if ../filledClass}}{{../filledClass}}{{else}}{{../pipClass}}--filled{{/if}}{{/if}}"
+                class="{{../pipClass}}{{#if (lte index ../current)}} {{#if ../filledClass}}{{../filledClass}}{{else}}{{../pipClass}}--filled{{/if}}{{/if}} tw-border tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure"
                 data-action="{{../action}}"
                 data-{{../dataAttr}}="{{index}}"
                 title="{{#if ../titlePrefix}}{{../titlePrefix}}{{else}}Level{{/if}} {{index}}">

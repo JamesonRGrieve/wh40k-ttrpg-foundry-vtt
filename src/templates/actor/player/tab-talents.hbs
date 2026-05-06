@@ -3,7 +3,7 @@
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} bc:tw-bg-crimson/[2%] dh1e:tw-bg-gold-dark/[2%] dh2e:tw-bg-gold-dark/[2%] dw:tw-bg-accent-combat/[2%] ow:tw-bg-brass/[2%] rt:tw-bg-gold/[2%] im:tw-bg-failure/[2%]" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
     {{!-- Two Column Layout: Specialist Skills (left) / Talents + Traits (right) --}}
-    <div class="tw-grid tw-grid-cols-[60%_40%] tw-gap-3 tw-w-full">
+    <div class="tw-grid tw-grid-cols-[60%_40%] tw-gap-3 tw-w-full tw-border-t-2 tw-border-t-gold bc:tw-border-t-crimson-light dh1e:tw-border-t-gold-raw-l5 dh2e:tw-border-t-gold-raw dw:tw-border-t-accent-combat ow:tw-border-t-brass-l20 rt:tw-border-t-gold im:tw-border-t-failure tw-pt-2">
         {{!-- Left Column - Specialist Skills --}}
         <div class="wh40k-talents-col wh40k-talents-col-left tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{> systems/wh40k-rpg/templates/actor/panel/skills-specialist-panel.hbs}}

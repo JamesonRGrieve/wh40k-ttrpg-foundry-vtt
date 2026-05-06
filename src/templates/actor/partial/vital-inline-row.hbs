@@ -43,7 +43,7 @@
     NOTE: This is a regular (non-block) partial. Rows that need extra content after the controls
     (e.g. the Fate row's restoreFate button) should remain inline rather than use this partial.
 --}}
-<div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5{{#if rowClass}} {{rowClass}}{{/if}}"{{#if tooltip}} data-tooltip="{{tooltip}}"{{/if}}>
+<div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5 tw-border-l-2 tw-border-l-gold bc:tw-border-l-crimson-light dh1e:tw-border-l-gold-raw-l5 dh2e:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure tw-pl-1{{#if rowClass}} {{rowClass}}{{/if}}"{{#if tooltip}} data-tooltip="{{tooltip}}"{{/if}}>
     {{#if labelGroupClass}}
     <span class="{{labelGroupClass}}">
         <span class="{{#if iconClass}}{{iconClass}}{{else}}wh40k-vital-icon{{/if}}"><i class="fas {{icon}}"></i></span>
