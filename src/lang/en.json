@@ -2029,6 +2029,12 @@
             "Roll": "Roll",
             "Add": "Add",
             "AddArmour": "Add Armour",
+            "AddShipWeapon": "Add Ship Weapon",
+            "AddShipComponent": "Add Component",
+            "AddShipUpgrade": "Add Upgrade",
+            "AddVehicleWeapon": "Add Weapon",
+            "AddVehicleUpgrade": "Add Upgrade",
+            "FireWeapon": "Fire Weapon",
             "Settings": "Settings"
         }
     }
