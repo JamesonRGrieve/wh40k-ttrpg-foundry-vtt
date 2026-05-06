@@ -381,6 +381,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             success: data.success,
             dos: data.dos,
             modifiers: data.modifiers,
+            gameSystem: (this.actor.system as { gameSystem?: string } | undefined)?.gameSystem,
         });
 
         return ChatMessage.create({

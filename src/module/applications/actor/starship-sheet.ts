@@ -195,6 +195,7 @@ export default class StarshipSheet extends BaseActorSheet {
             actor,
             weapon: weapon,
             crewRating: (actor.system as { crew?: { crewRating?: number } }).crew?.crewRating || 30,
+            gameSystem: (actor.system as { gameSystem?: string }).gameSystem,
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
