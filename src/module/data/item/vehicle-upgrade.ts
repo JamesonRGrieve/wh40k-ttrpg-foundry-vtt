@@ -120,6 +120,28 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
     }
 
     /**
+     * Render modifiers as inline HTML for table-cell display. Negative values
+     * surface in crimson, positive in success-green; when no modifiers are
+     * present, an italic localized "no modifiers" placeholder is emitted. Lives
+     * here (rather than in a template `{{#each}}`) so the row partial can
+     * accept a single value cell.
+     * @type {string}
+     */
+    get modifiersHtml(): string {
+        const list = this.modifiersList;
+        if (!list.length) {
+            const label = game.i18n.localize('WH40K.Modification.NoModifiers');
+            return `<em class="tw-opacity-50 tw-text-xs">${label}</em>`;
+        }
+        return list
+            .map((mod) => {
+                const tone = mod.value < 0 ? 'tw-text-crimson' : 'tw-text-success';
+                return `<span class="${tone} tw-text-xs">${mod.label}: ${mod.formatted}</span>`;
+            })
+            .join('');
+    }
+
+    /**
      * Get upgrade type label from config.
      * @type {string}
      */

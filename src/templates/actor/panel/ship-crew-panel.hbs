@@ -24,23 +24,20 @@
         <span class="wh40k-panel-title">{{localize "WH40K.Starship.Crew.Officers"}}</span>
     </h1>
     <p class="tw-text-sm tw-italic tw-opacity-70 tw-px-2 tw-pt-2">{{localize "WH40K.Starship.Crew.OfficersDesc"}}</p>
-    <div class="wh40k-table--border">
-        <div class="table-row--head">
-            <div class="table-cell--span2">{{localize "WH40K.Starship.Crew.Role"}}</div>
-            <div class="table-cell--span2">{{localize "WH40K.Starship.Crew.Officer"}}</div>
-            <div class="table-cell--span2">{{localize "WH40K.Starship.Crew.Bonus"}}</div>
-        </div>
+    {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
+        headers=(array
+            (object cellClass="table-cell--span2" labelKey="WH40K.Starship.Crew.Role")
+            (object cellClass="table-cell--span2" labelKey="WH40K.Starship.Crew.Officer")
+            (object cellClass="table-cell--span2" labelKey="WH40K.Starship.Crew.Bonus"))}}
         {{#each shipRoles as |role|}}
-            <div class="table-row">
-                <div class="table-cell--span2">
-                    <button class="item-name wh40k-item-button" data-item-id="{{role.id}}" type="button">
-                        <img class="wh40k-item-img" src="{{role.img}}" alt="{{role.name}}" />
-                        {{role.name}}
-                    </button>
-                </div>
-                <div class="table-cell--span2">{{role.system.officer}}</div>
-                <div class="table-cell--span2">{{role.system.effect}}</div>
-            </div>
+            {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs
+                item=role
+                showImg=true
+                editAction=false
+                cells=(array
+                    (object value=role.system.officer cellClass="table-cell--span2")
+                    (object value=role.system.effect cellClass="table-cell--span2"))}}
+            {{/systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs}}
         {{/each}}
-    </div>
+    {{/systems/wh40k-rpg/templates/actor/partial/item-table.hbs}}
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

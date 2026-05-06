@@ -1,44 +1,30 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Starship.Components.Header") rootClass="tw-col-span-6 tw-row-span-2" bodyClass="tw-p-0"}}
-    <div class="wh40k-table--border">
-        <div class="table-row--head">
-            <div class="table-cell--span2">{{localize "WH40K.Starship.Components.Name"}}</div>
-            <div class="table-cell">{{localize "WH40K.Starship.Components.Type"}}</div>
-            <div class="table-cell">{{localize "WH40K.Starship.Components.Power"}}</div>
-            <div class="table-cell">{{localize "WH40K.Starship.Components.Space"}}</div>
-            <div class="table-cell">{{localize "WH40K.Starship.Components.SP"}}</div>
-            <div class="table-cell--last">
-                <label class="wh40k-control-button" data-action="itemCreate" data-type="shipComponent">
-                    <span class="wh40k-control-button__span material-icons">add_circle</span>
-                </label>
-            </div>
-        </div>
+    {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
+        addAction="itemCreate"
+        addType="shipComponent"
+        addTitleKey="WH40K.Common.AddShipComponent"
+        headers=(array
+            (object cellClass="table-cell--span2" labelKey="WH40K.Starship.Components.Name")
+            (object labelKey="WH40K.Starship.Components.Type")
+            (object labelKey="WH40K.Starship.Components.Power")
+            (object labelKey="WH40K.Starship.Components.Space")
+            (object labelKey="WH40K.Starship.Components.SP"))}}
         {{#each actor.items as |item|}}
             {{#if item.isShipComponent}}
-                <div class="table-row">
-                    <div class="table-cell--span2">
-                        <button class="item-name wh40k-item-button" data-item-id="{{item.id}}" type="button">
-                            <img class="wh40k-item-img" src="{{item.img}}" alt="{{item.name}}" />
-                            {{item.name}}
-                        </button>
-                    </div>
-                    <div class="table-cell" title="{{item.system.componentTypeLabel}}">
-                        {{item.system.componentTypeLabel}}
-                    </div>
-                    <div class="table-cell {{#if (gt item.system.power.generated 0)}}tw-text-success tw-font-semibold{{else if (gt item.system.power.used 0)}}tw-text-crimson{{/if}}">
-                        {{item.system.powerDisplay}}
-                    </div>
-                    <div class="table-cell">{{item.system.space}}</div>
-                    <div class="table-cell">{{item.system.shipPoints}}</div>
-                    <div class="table-cell--last">
-                        <label class="wh40k-control-button item-edit" data-item-id="{{item.id}}">
-                            <span class="wh40k-control-button__span material-icons">settings</span>
-                        </label>
-                        <label class="wh40k-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="wh40k-control-button__span material-icons">delete</span>
-                        </label>
-                    </div>
-                </div>
+                {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs
+                    item=item
+                    showImg=true
+                    editAction=false
+                    cells=(array
+                        (object value=item.system.componentTypeLabel cellClass="table-cell" title=item.system.componentTypeLabel)
+                        (object value=item.system.powerDisplay cellClass=(concat "table-cell " (iff (gt item.system.power.generated 0) "tw-text-success tw-font-semibold" (iff (gt item.system.power.used 0) "tw-text-crimson" ""))))
+                        (object value=item.system.space)
+                        (object value=item.system.shipPoints))
+                    actions=(array
+                        (object action="itemEdit" iconKey="fa:cog" titleKey="WH40K.Common.Settings")
+                        (object action="itemDelete" iconKey="fa:trash" titleKey="WH40K.Common.Delete"))}}
+                {{/systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs}}
             {{/if}}
         {{/each}}
-    </div>
+    {{/systems/wh40k-rpg/templates/actor/partial/item-table.hbs}}
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
