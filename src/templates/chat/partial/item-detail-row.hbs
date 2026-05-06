@@ -1,0 +1,14 @@
+{{!--
+    Labeled detail row for item-card chat templates.
+
+    Hash params:
+        label    — required (e.g. "Damage")
+        value    — required (string or HTML)
+        valueHtml — optional bool; when true, renders {{{value}}} (triple-stash)
+        compact  — optional bool; when true uses tw-text-sm (grid cells), default tw-text-base + tw-py-1
+        colSpan2 — optional bool; adds tw-col-span-2 (only meaningful inside a 2-col grid)
+--}}
+<div class="tw-flex tw-items-baseline tw-gap-1.5 {{#if compact}}tw-text-sm{{else}}tw-py-1 tw-text-base{{/if}}{{#if colSpan2}} tw-col-span-2{{/if}}">
+    <span class="tw-font-semibold {{#unless compact}}tw-flex-shrink-0 {{/unless}}tw-text-[var(--wh40k-bronze)] after:tw-content-[':']">{{label}}</span>
+    <span class="tw-text-[var(--wh40k-text-dark)]">{{#if valueHtml}}{{{value}}}{{else}}{{value}}{{/if}}</span>
+</div>

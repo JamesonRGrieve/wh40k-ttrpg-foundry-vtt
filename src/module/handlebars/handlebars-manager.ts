@@ -61,6 +61,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/movement-stat-row.hbs',
             'systems/wh40k-rpg/templates/dialogs/partial/dialog-footer.hbs',
             'systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs',
+            'systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs',
             'systems/wh40k-rpg/templates/shared/field-row.hbs',
 
             // Acolyte sheet templates
