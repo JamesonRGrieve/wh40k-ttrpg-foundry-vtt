@@ -2,7 +2,7 @@
 <nav class="wh40k-tabs-nav tw-flex tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-shrink-0" style="background: var(--wh40k-panel-bg-translucent)" data-group="primary">
     {{#each tabs as |tab|}}
     <button type="button"
-            class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-sm tw-uppercase tw-tracking-[0.1em] tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer tw-transition-all tw-no-underline hover:tw-text-gold hover:tw-bg-[rgba(212,175,55,0.08)] {{#if tab.active}}active tw-text-gold tw-border-b-gold tw-bg-[rgba(212,175,55,0.12)]{{/if}}"
+            class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-sm tw-uppercase tw-tracking-[0.1em] tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-0 tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer tw-transition-all tw-no-underline hover:tw-text-gold hover:tw-bg-[rgba(212,175,55,0.08)] {{#if tab.active}}active tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-border-b-gold tw-bg-[rgba(212,175,55,0.12)]{{/if}}"
             data-tab="{{tab.tab}}"
             data-group="primary"
             data-action="changeTab">
