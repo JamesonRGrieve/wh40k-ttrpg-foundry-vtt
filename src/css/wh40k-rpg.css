@@ -610,31 +610,6 @@ body.theme-dark {
    STAT CHANGE ANIMATIONS
    ======================================== */
 
-/* Increase animation - green flash with scale */
-.wh40k-stat-increase {
-    animation: statIncrease 0.6s ease-out;
-}
-
-/* Decrease animation - red flash with shake */
-.wh40k-stat-decrease {
-    animation: statDecrease 0.6s ease-out;
-}
-
-/* Generic value change animation - gold glow */
-.wh40k-stat-changed {
-    animation: statChanged 0.5s ease-out;
-}
-
-/* Critical warning pulse */
-.wh40k-stat-critical {
-    animation: statCritical 1.5s ease-in-out infinite;
-}
-
-/* Success glow */
-.wh40k-stat-success {
-    animation: statSuccess 0.8s ease-out;
-}
-
 /* ── source: src/css/abstracts/_unified-components.css ── */
 /* ============================================ */
 /* UNIFIED COMPONENT LIBRARY */
@@ -19286,21 +19261,6 @@ body.theme-dark {
 /* ============================================ */
 /* Satisfying interactions for +/- buttons */
 
-/* Button Press Animation (scale down and bounce back) */
-.wh40k-btn-pressed {
-    animation: btn-press 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Button Shake Animation (when hitting limits) */
-.wh40k-btn-shake {
-    animation: btn-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-}
-
-/* Number Roll Animation (smooth number change) */
-.wh40k-number-roll {
-    animation: number-roll 0.3s ease-out;
-}
-
 /* Ensure progress bars have smooth transitions */
 .wh40k-vital-bar-fill,
 .wh40k-wounds-bar-fill,
@@ -21452,7 +21412,6 @@ body.theme-dark {
         background: var(--wh40k-wounds-bg);
         color: var(--wh40k-wounds-primary);
         border: 2px solid var(--wh40k-wounds-border);
-        animation: pulse-red 2s ease-in-out infinite;
     }
 
     .wh40k-alert-warning {
@@ -22093,7 +22052,6 @@ body.theme-dark {
         background: var(--wh40k-fatigue-bg);
         color: var(--wh40k-fatigue-primary);
         border: 2px solid var(--wh40k-fatigue-border);
-        animation: pulse-orange 2s ease-in-out infinite;
     }
 
     /* Panel state modifier for exhausted */
@@ -35273,7 +35231,6 @@ body.theme-dark {
 
         i {
             color: rgba(251, 146, 60, 0.9);
-            animation: melta-pulse 2s ease-in-out infinite;
         }
     }
 }
@@ -50741,11 +50698,6 @@ body.theme-dark {
         animation: stat-advance 1s ease-out;
     }
 
-    /* Critical threshold warnings (wounds at 0, fatigue maxed) */
-    .stat-critical-warning {
-        animation: critical-pulse 1.5s infinite;
-    }
-
     /* Healing effect (for wounds restored) */
     .stat-heal {
         animation: stat-heal 0.8s ease-out;
@@ -50868,12 +50820,6 @@ body.theme-dark {
         &.stat-advancement {
             animation: stat-advance 1s ease-out;
         }
-    }
-
-    /* Level up burst effect */
-
-    .level-up-effect {
-        animation: level-up-burst 0.6s ease-out;
     }
 
     /* -------------------------------------------- */
