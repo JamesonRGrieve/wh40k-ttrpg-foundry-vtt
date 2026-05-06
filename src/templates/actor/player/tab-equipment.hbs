@@ -1,5 +1,5 @@
 {{!-- Acolyte Sheet Equipment Tab --}}
 {{!-- This part renders the Equipment tab content --}}
-<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} tw-hidden tw-flex-col tw-gap-3 tw-p-3 {{#if tab.active}}tw-flex{{/if}}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} tw-hidden tw-flex-col tw-gap-3 tw-p-3 {{#if tab.active}}tw-flex{{/if}} bc:tw-bg-crimson/[2%] dh1e:tw-bg-gold-dark/[2%] dh2e:tw-bg-gold-dark/[2%] dw:tw-bg-accent-combat/[2%] ow:tw-bg-brass/[2%] rt:tw-bg-gold/[2%] im:tw-bg-failure/[2%]" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     {{> systems/wh40k-rpg/templates/actor/panel/loadout-equipment-panel.hbs}}
 </section>
