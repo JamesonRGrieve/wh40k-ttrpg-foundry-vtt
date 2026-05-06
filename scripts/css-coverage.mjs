@@ -136,6 +136,16 @@ const JS_HOOKS = new Set([
     // they are JS hooks, not styling classes.
     'origin-detail-tabs',
     'origin-detail-tab-content',
+    // base-actor-sheet.ts uses querySelectorAll('.item-edit'), '.item-delete', '.item-vocalize'
+    // to wire up item action handlers — permanent JS selectors, not project CSS classes.
+    'item-edit',
+    'item-delete',
+    'item-vocalize',
+    // Foundry VTT framework classes used by the tab system (TabsV2) at runtime.
+    'tab',
+    'tabs',
+    // Foundry VTT ProseMirror rich-text editor container class.
+    'editor-content',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
@@ -145,6 +155,10 @@ const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Neither form is a valid CSS class name (CSS identifiers cannot start or end with a
 // bare hyphen in this way), so they are safely exempt from the non-tw check.
 const HBS_FRAGMENT_RE = /^-[a-z][a-z0-9-]*$|^[a-z][a-z0-9-]+-$/;
+// Tokens that contain characters that are invalid in a CSS class name are always
+// HBS expression fragments — e.g. `(eq`, `tab.active}}active{{/if}}`.
+// Valid CSS identifiers only contain [a-zA-Z0-9_-] and cannot start with a digit.
+const HBS_EXPR_RE = /[^a-zA-Z0-9_-]|^\d/;
 
 /** Return true when a bare utility string is a Tailwind utility (any polarity). */
 function isTwBare(s) {
@@ -189,6 +203,7 @@ function isTwOrExempt(token) {
     if (ROLL_CONTROL_RE.test(token)) return true;
     if (SECTION_ID_RE.test(token)) return true;
     if (HBS_FRAGMENT_RE.test(token)) return true;
+    if (HBS_EXPR_RE.test(token)) return true;
     return false;
 }
 
