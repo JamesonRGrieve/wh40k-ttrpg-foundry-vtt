@@ -27,7 +27,7 @@
 
     {{!-- Warning Messages --}}
     {{#if (gt system.fatigue.value system.fatigue.max)}}
-    <div class="tw-text-crimson tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded tw-mt-1">
+    <div class="tw-text-crimson bc:tw-text-crimson-light dh1e:tw-text-gold-raw dh2e:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded tw-mt-1">
         <i class="{{concat 'fas fa-dizzy'}}"></i>
         <span>UNCONSCIOUS - Collapsed for {{sub 10 characteristics.toughness.bonus}} minutes!</span>
     </div>
