@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-06T17:14:34.032Z",
+  "generatedAt": "2026-05-06T17:18:00.710Z",
   "total": 244,
-  "adopted": 25,
+  "adopted": 28,
   "perSystemHits": {
-    "bc": 36,
-    "dh1e": 36,
-    "dh2e": 40,
-    "dw": 36,
-    "ow": 36,
-    "rt": 40,
-    "im": 40
+    "bc": 45,
+    "dh1e": 45,
+    "dh2e": 49,
+    "dw": 45,
+    "ow": 45,
+    "rt": 49,
+    "im": 49
   },
   "adoptedTemplates": [
     "src/templates/actor/panel/active-effects-compact.hbs",
@@ -32,6 +32,9 @@
     "src/templates/actor/partial/vital-panel-shell.hbs",
     "src/templates/actor/player/header-dh.hbs",
     "src/templates/actor/starship/tab-history.hbs",
+    "src/templates/actor/vehicle/tab-combat.hbs",
+    "src/templates/actor/vehicle/tab-components.hbs",
+    "src/templates/actor/vehicle/tab-crew.hbs",
     "src/templates/actor/vehicle/tab-notes.hbs",
     "src/templates/actor/vehicle/tab-overview.hbs",
     "src/templates/chat/item-card-chat.hbs",
