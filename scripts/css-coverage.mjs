@@ -855,6 +855,144 @@ const JS_HOOKS = new Set([
     'wh40k-empty-state',
     'wh40k-empty-icon',
     'wh40k-empty-hint',
+    // enhanced-skill-roll.hbs — all component classes have CSS rules in the monolith under
+    // .enhanced-skill-roll. Inline tw-* utilities on the same elements supersede the CSS rules;
+    // retained as DOM identifiers during the Tailwind migration.
+    'enhanced-skill-roll',
+    'roll-header',
+    'skill-name',
+    'base-target',
+    'difficulty-section',
+    'section-title',
+    'difficulty-grid',
+    'difficulty-btn',
+    'diff-label',
+    'diff-mod',
+    'modifiers-section',
+    'common-modifiers',
+    'modifier-checkbox',
+    'modifier-label',
+    'modifier-value',
+    'modifier-description',
+    'custom-section',
+    'custom-modifier',
+    'custom-hint',
+    'calculation-section',
+    'calculation-breakdown',
+    'calc-line',
+    'calc-label',
+    'calc-value',
+    'final-target',
+    'final-label',
+    'final-value',
+    // State modifier on .final-value — CSS rules add text-shadow; tw-* provides color.
+    'increased',
+    'decreased',
+    'recent-section',
+    'recent-rolls',
+    'recent-btn',
+    'recent-name',
+    'recent-mod',
+    'roll-footer',
+    'roll-btn',
+    'cancel-btn',
+    'keyboard-hint',
+    // Generic semantic child classes inside enhanced-skill-roll's .base-target and
+    // .action-comparison/.party-actions/.enemy-actions — CSS rules are nested under those
+    // parents, tw-* utilities on the same elements provide equivalent styling.
+    'label',
+    'value',
+    // State class on .calc-line — CSS rule is `.calc-line.modifier { color: … }`.
+    'modifier',
+    // psychic-power-roll-prompt.hbs — wh40k-prompt* BEM component classes have CSS rules in
+    // the monolith. .wh40k-prompt is also referenced by an :has() selector that sizes the
+    // dialog window. Retained as semantic design-system classes during the Tailwind migration.
+    'wh40k-prompt',
+    'wh40k-prompt--psychic',
+    'wh40k-prompt__panel',
+    'wh40k-prompt__header',
+    'wh40k-prompt__icon',
+    'wh40k-prompt__title-group',
+    'wh40k-prompt__title',
+    'wh40k-prompt__subtitle',
+    'wh40k-prompt__target',
+    'wh40k-prompt__target-label',
+    'wh40k-prompt__target-value',
+    'wh40k-prompt__target-percent',
+    'wh40k-prompt__section-title',
+    'wh40k-prompt__field',
+    'wh40k-prompt__label',
+    'wh40k-prompt__value',
+    'wh40k-prompt__input',
+    'wh40k-prompt__select',
+    'wh40k-prompt__checkbox-field',
+    'wh40k-prompt__divider',
+    'wh40k-prompt__range-info',
+    'wh40k-prompt__range-label',
+    'wh40k-prompt__range-value',
+    'wh40k-prompt__weapon-list',
+    'wh40k-prompt__weapon-item',
+    'wh40k-prompt__weapon-item--selected',
+    'wh40k-prompt__weapon-check',
+    'wh40k-prompt__weapon-img',
+    'wh40k-prompt__weapon-info',
+    'wh40k-prompt__weapon-name',
+    'wh40k-prompt__weapon-details',
+    // weapon-panel.hbs — Tailwind arbitrary-selector targets: ancestors use
+    // `[&_.urd-card__icon]:tw-text-gold-raw` / `[&_.urd-weapon-name]:tw-text-gold-raw`
+    // to style child elements. These class names exist only so those selectors can match;
+    // there are no CSS rules or JS queries for them.
+    'urd-card__icon',
+    'urd-weapon-name',
+    // target-display.hbs — urd-difficulty-picker and urd-target__number are queried by
+    // unified-roll-dialog.ts via querySelector. urd-difficulty-picker__item-label is an
+    // arbitrary-selector target (`[&_.urd-difficulty-picker__item-label]:tw-text-gold-raw`).
+    'urd-difficulty-picker',
+    'urd-difficulty-picker__item-label',
+    'urd-target__number',
+    // encounter-builder.hbs — all component classes have CSS rules in the monolith under
+    // .encounter-builder-content. encounter-drop-zone is also queried by encounter-builder.ts
+    // via querySelector for drag-over state toggling. Inline tw-* utilities supersede the CSS;
+    // retained as DOM identifiers during the Tailwind migration.
+    'encounter-builder-content',
+    'encounter-header',
+    'party-config',
+    'party-fields',
+    'encounter-main',
+    'npc-list-section',
+    'section-header',
+    'encounter-drop-zone',
+    'npc-table',
+    'encounter-metrics',
+    'metric-card',
+    'difficulty',
+    'difficulty-badge',
+    'ratio',
+    'threat-summary',
+    'action-economy',
+    'action-comparison',
+    'party-actions',
+    'enemy-actions',
+    'vs',
+    'advantage',
+    'templates',
+    'template-list',
+    'empty-message',
+    'encounter-footer',
+    // icon-button — CSS rules provide compact button padding; modifier 'danger' on same element.
+    'icon-button',
+    'danger',
+    // 'primary' on encounter-footer deploy button — CSS rule `.encounter-footer .primary` provides
+    // accent background; tw-* utilities on the same element supersede with inline styling.
+    'primary',
+    // Table column semantic class names (img, name, threat, count, total, actions) — used as
+    // both `<th>` column headers and `<td>` cell class names for CSS column-width rules.
+    'img',
+    'name',
+    'threat',
+    'count',
+    'total',
+    'actions',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
