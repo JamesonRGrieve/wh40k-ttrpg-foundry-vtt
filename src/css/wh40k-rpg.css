@@ -5029,11 +5029,6 @@ body.theme-dark {
         }
     }
 
-    /* Value change highlight (add .wh40k-value-changed class via JS when value updates) */
-    .wh40k-value-changed {
-        animation: value-change-highlight 0.6s ease-out;
-    }
-
     /* Interactive elements hover lift */
     .wh40k-quality-chip,
     .wh40k-mod-chip,
@@ -27910,7 +27905,6 @@ body.theme-dark {
     padding-top: 0;
     background: var(--wh40k-panel-bg-translucent);
     border-top: 1px solid var(--wh40k-border-color-light);
-    animation: expandDown 0.2s ease;
 }
 
 .wh40k-detail-row {
@@ -33235,10 +33229,6 @@ body.theme-dark {
             color: var(--wh40k-danger-secondary);
         }
     }
-
-    &--critical {
-        animation: critical-pulse 1s ease-in-out infinite alternate;
-    }
 }
 
 .wh40k-roll-card__result-label {
@@ -33474,12 +33464,6 @@ body.theme-dark {
         color: var(--wh40k-text-muted);
         margin-top: 6px;
         font-style: italic;
-    }
-
-    /* Confirmed RF - dramatic glow animation */
-    &--confirmed {
-        animation: fury-glow 1.5s ease-in-out infinite alternate;
-        border-color: var(--wh40k-gold-bright);
     }
 
     /* Not confirmed - subdued appearance */
@@ -36064,7 +36048,6 @@ body.theme-dark {
     padding: 16px;
     border-radius: 6px;
     border: 1px solid;
-    animation: wh40k-xp-preview-fadein 0.3s ease;
 
     &.wh40k-xp-preview--positive {
         background: linear-gradient(135deg, rgba(42, 139, 74, 0.15) 0%, rgba(42, 139, 74, 0.05) 100%);
@@ -50588,11 +50571,6 @@ body.theme-dark {
     /*  Animation Keyframes                         */
     /* -------------------------------------------- */
 
-    /* Derived stat pulse */
-    .derived-stat-changed {
-        animation: pulse-glow 0.8s ease-out;
-    }
-
     /* -------------------------------------------- */
     /*  Smooth Transitions                          */
     /* -------------------------------------------- */
@@ -50716,11 +50694,6 @@ body.theme-dark {
     /* Derived stats (calculated values) */
     .derived-value {
         transition: color 0.3s ease, transform 0.2s ease;
-
-        &.derived-stat-changed {
-            animation: pulse-glow 0.8s ease-out;
-            color: var(--wh40k-gold, var(--wh40k-color-gold));
-        }
     }
 
     /* -------------------------------------------- */
@@ -50749,7 +50722,7 @@ body.theme-dark {
         .tw-animate-count-down,
         .characteristic-bonus,
         .char-bonus,
-        .derived-stat-changed,
+        .tw-animate-pulse-glow,
         .derived-value,
         .xp-display,
         .experience-tracker,
@@ -50984,7 +50957,6 @@ body.theme-dark {
             border: 2px solid var(--wh40k-gold, var(--wh40k-color-gold));
             border-top-color: transparent;
             border-radius: 50%;
-            animation: panel-spin 0.8s linear infinite;
         }
     }
 
@@ -51027,7 +50999,6 @@ body.theme-dark {
 
         .wh40k-panel-title i {
             color: #ff9800;
-            animation: pulse-warning 2s infinite;
         }
     }
 
@@ -51061,41 +51032,6 @@ body.theme-dark {
     /* -------------------------------------------- */
     /*  Panel Animations                            */
     /* -------------------------------------------- */
-
-    /* Slide in from top on first render */
-
-    .wh40k-collapsible-panel {
-        animation: panel-slide-in 0.3s ease-out;
-    }
-
-    /* Stagger animation for multiple panels */
-    .wh40k-collapsible-panel:nth-child(1) {
-        animation-delay: 0.05s;
-    }
-    .wh40k-collapsible-panel:nth-child(2) {
-        animation-delay: 0.1s;
-    }
-    .wh40k-collapsible-panel:nth-child(3) {
-        animation-delay: 0.15s;
-    }
-    .wh40k-collapsible-panel:nth-child(4) {
-        animation-delay: 0.2s;
-    }
-    .wh40k-collapsible-panel:nth-child(5) {
-        animation-delay: 0.25s;
-    }
-    .wh40k-collapsible-panel:nth-child(6) {
-        animation-delay: 0.3s;
-    }
-    .wh40k-collapsible-panel:nth-child(7) {
-        animation-delay: 0.35s;
-    }
-    .wh40k-collapsible-panel:nth-child(8) {
-        animation-delay: 0.4s;
-    }
-    .wh40k-collapsible-panel:nth-child(9) {
-        animation-delay: 0.45s;
-    }
 
     /* -------------------------------------------- */
     /*  Gothic 40K Theme Enhancements               */
@@ -52861,7 +52797,6 @@ body.theme-dark {
         border-radius: 6px;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
         z-index: 99;
-        animation: panel-slide-in 0.4s ease-out;
 
         .comparison-header {
             background: var(--wh40k-gold);
@@ -54317,10 +54252,6 @@ body.theme-dark {
         &:hover {
             color: #f0d060;
             text-shadow: 0 0 18px rgba(212, 175, 55, 0.9);
-        }
-
-        &.pulse {
-            animation: origin-pulse 2s ease-in-out infinite;
         }
     }
 
@@ -55960,7 +55891,6 @@ body.theme-dark {
         &.wh40k-shortage {
             background: linear-gradient(135deg, rgba(180, 40, 40, 0.15) 0%, rgba(200, 60, 60, 0.2) 100%);
             border-color: rgba(180, 40, 40, 0.35);
-            animation: pulse-warning 2s infinite;
         }
     }
 
