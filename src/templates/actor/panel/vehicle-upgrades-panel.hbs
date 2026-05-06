@@ -1,42 +1,25 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Vehicle.Upgrades.Header") icon="fa-cogs" rootClass="tw-col-span-6 tw-row-span-1" bodyClass="tw-p-0"}}
-    <div class="wh40k-table--border">
-        <div class="table-row--head">
-            <div class="table-cell--span2">{{localize "WH40K.Vehicle.Upgrades.Name"}}</div>
-            <div class="table-cell">{{localize "WH40K.VehicleUpgrade.Type"}}</div>
-            <div class="table-cell">{{localize "WH40K.VehicleUpgrade.Difficulty"}}</div>
-            <div class="table-cell--span2">{{localize "WH40K.Vehicle.Upgrades.Modifiers"}}</div>
-            <div class="table-cell--last">
-                <button class="wh40k-control-button" data-action="itemCreate" data-type="vehicleUpgrade">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
-        </div>
+    {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
+        addAction="itemCreate"
+        addType="vehicleUpgrade"
+        addTitleKey="WH40K.Common.AddVehicleUpgrade"
+        headers=(array
+            (object cellClass="table-cell--span2" labelKey="WH40K.Vehicle.Upgrades.Name")
+            (object labelKey="WH40K.VehicleUpgrade.Type")
+            (object labelKey="WH40K.VehicleUpgrade.Difficulty")
+            (object cellClass="table-cell--span2" labelKey="WH40K.Vehicle.Upgrades.Modifiers"))}}
         {{#each upgrades as |item|}}
-        <div class="table-row">
-            <div class="table-cell--span2">
-                <button class="item-name wh40k-item-button" data-item-id="{{item.id}}" type="button">
-                    <img class="wh40k-item-img" src="{{item.img}}" alt="{{item.name}}" />
-                    {{item.name}}
-                </button>
-            </div>
-            <div class="table-cell">{{item.system.upgradeTypeLabel}}</div>
-            <div class="table-cell">{{item.system.difficultyFormatted}}</div>
-            <div class="table-cell--span2 tw-flex tw-flex-col tw-gap-0.5">
-                {{#each item.system.modifiersList as |mod|}}
-                <span class="{{#if (lt mod.value 0)}}tw-text-crimson{{else}}tw-text-success{{/if}} tw-text-xs">
-                    {{mod.label}}: {{mod.formatted}}
-                </span>
-                {{/each}}
-                {{#unless item.system.hasModifiers}}
-                <em class="tw-opacity-50 tw-text-xs">No stat modifiers</em>
-                {{/unless}}
-            </div>
-            <div class="table-cell--last">
-                <button class="wh40k-control-button item-delete" data-item-id="{{item.id}}">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        </div>
+            {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs
+                item=item
+                showImg=true
+                editAction=false
+                cells=(array
+                    (object value=item.system.upgradeTypeLabel)
+                    (object value=item.system.difficultyFormatted)
+                    (object cellClass="table-cell--span2 tw-flex tw-flex-col tw-gap-0.5" isHtml=true value=item.system.modifiersHtml))
+                actions=(array
+                    (object action="itemDelete" iconKey="fa:trash" titleKey="WH40K.Common.Delete"))}}
+            {{/systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs}}
         {{/each}}
-    </div>
+    {{/systems/wh40k-rpg/templates/actor/partial/item-table.hbs}}
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

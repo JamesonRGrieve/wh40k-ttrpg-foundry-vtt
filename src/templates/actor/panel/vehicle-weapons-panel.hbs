@@ -2,36 +2,28 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Vehicle.Weapons") icon="fa-crosshairs" rootClass="tw-col-span-6" bodyClass="tw-p-0"}}
     <div class="tw-flex tw-flex-col tw-gap-2 tw-p-2">
         {{#if weapons}}
-            <div class="wh40k-table--border">
-                <div class="table-row--head">
-                    <div class="table-cell--span2">{{localize "WH40K.Weapon.Name"}}</div>
-                    <div class="table-cell">{{localize "WH40K.Weapon.Class"}}</div>
-                    <div class="table-cell">{{localize "WH40K.Weapon.Range"}}</div>
-                    <div class="table-cell">{{localize "WH40K.Weapon.Damage"}}</div>
-                    <div class="table-cell--last">{{localize "WH40K.Actions"}}</div>
-                </div>
+            {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
+                headers=(array
+                    (object cellClass="table-cell--span2" labelKey="WH40K.Weapon.Name")
+                    (object labelKey="WH40K.Weapon.Class")
+                    (object labelKey="WH40K.Weapon.Range")
+                    (object labelKey="WH40K.Weapon.Damage")
+                    (object cellClass="table-cell--last" labelKey="WH40K.Actions"))}}
                 {{#each weapons as |weapon|}}
-                    <div class="table-row">
-                        <div class="table-cell--span2">
-                            <button class="item-name wh40k-item-button" data-item-id="{{weapon.id}}" type="button">
-                                <img class="wh40k-item-img" src="{{weapon.img}}" alt="{{weapon.name}}" />
-                                {{weapon.name}}
-                            </button>
-                        </div>
-                        <div class="table-cell">{{weapon.system.class}}</div>
-                        <div class="table-cell">{{weapon.system.range}}</div>
-                        <div class="table-cell">{{#if weapon.system.damageLabel}}{{weapon.system.damageLabel}}{{else}}{{weapon.system.damage.formula}}{{#if weapon.system.damage.bonus}}+{{weapon.system.damage.bonus}}{{/if}}{{/if}}</div>
-                        <div class="table-cell--last">
-                            <button class="wh40k-control-button" data-action="rollWeapon" data-item-id="{{weapon.id}}" title="Roll Attack">
-                                <i class="fas fa-dice-d20"></i>
-                            </button>
-                            <button class="wh40k-control-button item-delete" data-item-id="{{weapon.id}}" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
+                    {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs
+                        item=weapon
+                        showImg=true
+                        editAction=false
+                        cells=(array
+                            (object value=weapon.system.class)
+                            (object value=weapon.system.range)
+                            (object value=(iff weapon.system.damageLabel weapon.system.damageLabel (concat weapon.system.damage.formula (iff weapon.system.damage.bonus (concat "+" weapon.system.damage.bonus) "")))))
+                        actions=(array
+                            (object action="rollWeapon" iconKey="fa:dice-d20" titleKey="WH40K.Common.Roll")
+                            (object action="itemDelete" iconKey="fa:trash" titleKey="WH40K.Common.Delete"))}}
+                    {{/systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs}}
                 {{/each}}
-            </div>
+            {{/systems/wh40k-rpg/templates/actor/partial/item-table.hbs}}
         {{/if}}
 
         <div class="tw-flex tw-flex-col tw-gap-1">
@@ -44,7 +36,7 @@
 
         <div class="tw-flex tw-justify-end">
             <button class="wh40k-control-button" data-action="itemCreate" data-type="weapon">
-                <i class="fas fa-plus"></i>
+                {{iconSvg "fa:plus-circle" class="tw-w-3.5 tw-h-3.5"}}
                 {{localize "WH40K.Vehicle.Weapons.Add"}}
             </button>
         </div>
