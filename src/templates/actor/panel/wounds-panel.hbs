@@ -31,12 +31,12 @@
     {{!-- Warning Messages --}}
     {{#if (eq system.wounds.value 0)}}
     <div class="tw-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-mt-1 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-rounded-[6px] tw-border-2 tw-border-solid tw-border-crimson bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-bg-[var(--wh40k-wounds-bg)] tw-text-crimson bc:tw-text-crimson-light dh1e:tw-text-gold-raw dh2e:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-animate-pulse-red">
-        <i class="{{concat 'fas fa-skull-crossbones'}}"></i>
+        <i class="fas fa-skull-crossbones"></i>
         <span>CRITICALLY WOUNDED - At 0 wounds!</span>
     </div>
     {{else if (lt (percent system.wounds.value system.wounds.max) 25)}}
     <div class="tw-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-mt-1 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-rounded-[6px] tw-border-2 tw-border-solid tw-border-[rgba(196,135,29,0.5)] tw-bg-[var(--wh40k-warning-bg)] tw-text-warning">
-        <i class="{{concat 'fas fa-exclamation-triangle'}}"></i>
+        <i class="fas fa-exclamation-triangle"></i>
         <span>Severely Injured - Below 25%</span>
     </div>
     {{/if}}
@@ -46,7 +46,7 @@
     <div class="tw-mt-2 tw-p-1.5 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-wounds-border)] tw-rounded-lg">
         <div class="tw-flex tw-items-center tw-justify-between tw-mb-1.5">
             <span class="tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-text-[0.8rem] tw-uppercase tw-tracking-[0.05em] tw-text-crimson bc:tw-text-crimson-light dh1e:tw-text-gold-raw dh2e:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
-                <i class="{{concat 'fas fa-skull'}}"></i> Critical Damage
+                <i class="fas fa-skull"></i> Critical Damage
             </span>
             <span class="tw-text-[0.8rem] tw-font-bold tw-text-crimson bc:tw-text-crimson-light dh1e:tw-text-gold-raw dh2e:tw-text-crimson dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-font-alt">{{system.wounds.critical}} / 10</span>
         </div>
@@ -65,7 +65,7 @@
         {{!-- Critical Damage Editor --}}
         <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-1.5">
             <div class="tw-flex tw-items-center tw-justify-between tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-medium)] tw-mb-1.5">
-                <i class="{{concat 'fas fa-skull'}}" style="margin-right:4px;font-size:0.9em;"></i> Critical Damage
+                <i class="fas fa-skull" style="margin-right:4px;font-size:0.9em;"></i> Critical Damage
             </div>
 
             <div class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-mb-2">
@@ -75,7 +75,7 @@
                         data-field="system.wounds.critical"
                         data-min="0"
                         title="Reduce Critical">
-                    <i class="{{concat 'fas fa-minus'}}" style="font-size:0.75rem;"></i>
+                    <i class="fas fa-minus" style="font-size:0.75rem;"></i>
                 </button>
 
                 <input type="number"
@@ -93,7 +93,7 @@
                         data-field="system.wounds.critical"
                         data-max="10"
                         title="Increase Critical">
-                    <i class="{{concat 'fas fa-plus'}}" style="font-size:0.75rem;"></i>
+                    <i class="fas fa-plus" style="font-size:0.75rem;"></i>
                 </button>
             </div>
 
