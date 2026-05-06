@@ -1725,11 +1725,11 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Add rolling animation for characteristic rolls
         if (rollType === 'characteristic') {
-            target.classList.add('rolling');
+            target.classList.add('tw-animate-wh40k-char-roll');
             target.addEventListener(
                 'animationend',
                 () => {
-                    target.classList.remove('rolling');
+                    target.classList.remove('tw-animate-wh40k-char-roll');
                 },
                 { once: true },
             );
@@ -2356,8 +2356,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Add value-changed animation to mod display for V1 HUD
         const modElement = this.element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-mod`) as HTMLElement | null;
         if (modElement) {
-            modElement.classList.add('value-changed');
-            setTimeout(() => modElement.classList.remove('value-changed'), 500);
+            modElement.classList.add('tw-animate-wh40k-value-flash');
+            setTimeout(() => modElement.classList.remove('tw-animate-wh40k-value-flash'), 500);
         }
 
         // Update the border progress indicator

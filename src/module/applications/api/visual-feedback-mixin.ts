@@ -121,19 +121,19 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
          */
         _getAnimationClass(fieldName: string, oldValue: number | string, newValue: number | string): string {
             if (fieldName.includes('wounds') && fieldName.includes('value')) {
-                return Number(newValue) > Number(oldValue) ? 'stat-heal' : 'stat-damage';
+                return Number(newValue) > Number(oldValue) ? 'tw-animate-stat-heal' : 'tw-animate-stat-damage';
             }
 
             if (fieldName.includes('experience.total') || fieldName.includes('advance')) {
-                return 'stat-advancement';
+                return 'tw-animate-stat-advance';
             }
 
             if (typeof oldValue === 'number' && typeof newValue === 'number') {
-                if (newValue > oldValue) return 'stat-increase';
-                if (newValue < oldValue) return 'stat-decrease';
+                if (newValue > oldValue) return 'tw-animate-stat-increase';
+                if (newValue < oldValue) return 'tw-animate-stat-decrease';
             }
 
-            return 'flash-update';
+            return 'tw-animate-flash-update';
         }
 
         /* -------------------------------------------- */
@@ -146,12 +146,12 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
          */
         _applyAnimation(element: HTMLElement, animationClass: string): void {
             const animationClasses = [
-                'stat-increase',
-                'stat-decrease',
-                'flash-update',
-                'stat-heal',
-                'stat-damage',
-                'stat-advancement',
+                'tw-animate-stat-increase',
+                'tw-animate-stat-decrease',
+                'tw-animate-flash-update',
+                'tw-animate-stat-heal',
+                'tw-animate-stat-damage',
+                'tw-animate-stat-advance',
                 'pulse-gold',
                 'pulse-glow',
             ];
@@ -276,14 +276,14 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
 
             const animationClass =
                 animationType === 'increase'
-                    ? 'stat-increase'
+                    ? 'tw-animate-stat-increase'
                     : animationType === 'decrease'
-                    ? 'stat-decrease'
+                    ? 'tw-animate-stat-decrease'
                     : animationType === 'heal'
-                    ? 'stat-heal'
+                    ? 'tw-animate-stat-heal'
                     : animationType === 'damage'
-                    ? 'stat-damage'
-                    : 'flash-update';
+                    ? 'tw-animate-stat-damage'
+                    : 'tw-animate-flash-update';
 
             this._applyAnimation(element, animationClass);
         }
