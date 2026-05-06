@@ -13,7 +13,8 @@
             decTitle="Reduce Wounds"
             incTitle="Increase Wounds"
             showCalculator=true
-            statKey="wounds"}}
+            statKey="wounds"
+            currentAnimateClass=(iff (eq system.wounds.value 0) "tw-animate-pulse-scale" "")}}
 
         {{> systems/wh40k-rpg/templates/actor/partial/vital-progress-bar
             cssPrefix="wh40k-wounds"
