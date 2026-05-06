@@ -35,14 +35,9 @@
         </div>
 
         {{!-- Stat Breakdown Button --}}
-        <button
-            type="button"
-            class="tw-inline-flex tw-items-center tw-justify-center tw-size-5 tw-p-0 tw-bg-transparent tw-border-none tw-rounded-[3px] tw-text-[color:var(--color-text-secondary,#94a3b8)] tw-cursor-pointer tw-opacity-60 tw-absolute tw-top-2 tw-right-2 tw-z-10"
-            data-action="showStatBreakdown"
-            data-stat-key="fate"
-            title="Show fate calculation">
-            <i class="{{concat 'fa-solid' ' fa-calculator'}} tw-text-xs"></i>
-        </button>
+        {{> systems/wh40k-rpg/templates/actor/partial/stat-breakdown-button.hbs
+            statKey="fate"
+            position="absolute"}}
     </div>
 
     {{!-- Edit Mode (Expandable) --}}

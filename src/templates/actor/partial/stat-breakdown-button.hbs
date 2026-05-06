@@ -1,0 +1,29 @@
+{{!--
+    Stat-breakdown calculator button — small (20×20) ghost button that
+    triggers the `showStatBreakdown` action with a `data-stat-key`. The
+    visual treatment is identical across panels; differences between
+    consumers boil down to layout positioning (inline vs absolute) and
+    optional adjacent-element spacing.
+
+    Required hash params:
+        statKey     — string passed as `data-stat-key` (e.g. "willpower",
+                      "fate", "wounds").
+
+    Optional hash params:
+        title       — tooltip text. Defaults to the localized "Show stat
+                      breakdown" string; callers wanting a per-statKey
+                      tooltip should pass `title` explicitly.
+        position    — "inline" (default) | "absolute". When "absolute" the
+                      button anchors to the panel's top-right corner with
+                      `tw-top-2 tw-right-2`; the consumer must provide
+                      `tw-relative` on the surrounding container.
+        extraClass  — additional utility classes appended to the button
+                      (e.g. `tw-ml-1` to space from a value display).
+--}}
+<button type="button"
+        class="tw-inline-flex tw-items-center tw-justify-center tw-w-5 tw-h-5 tw-p-0 tw-bg-transparent tw-border-none tw-rounded tw-text-[color:var(--color-text-secondary,#94a3b8)] tw-cursor-pointer tw-transition-all tw-opacity-60 hover:tw-bg-[rgba(59,130,246,0.2)] hover:tw-text-[#93c5fd] hover:tw-opacity-100 hover:tw-scale-110{{#if (eq position "absolute")}} tw-absolute tw-top-2 tw-right-2 tw-z-10{{/if}}{{#if extraClass}} {{extraClass}}{{/if}}"
+        data-action="showStatBreakdown"
+        data-stat-key="{{statKey}}"
+        title="{{#if title}}{{title}}{{else}}{{localize "WH40K.Common.ShowStatBreakdown"}}{{/if}}">
+    <i class="fa-solid fa-calculator tw-text-[0.75rem]"></i>
+</button>

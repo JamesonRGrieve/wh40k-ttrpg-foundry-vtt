@@ -25,14 +25,8 @@
                         data-wh40k-tooltip="characteristic"
                         data-wh40k-tooltip-data="{{this.tooltipData}}"
                     >{{this.short}}</span>
-                    <button
-                        type="button"
-                        class="tw-inline-flex tw-items-center tw-justify-center tw-w-5 tw-h-5 tw-p-0 tw-bg-transparent tw-border-none tw-rounded tw-text-[color:var(--color-text-secondary,#94a3b8)] tw-cursor-pointer tw-transition-all tw-opacity-60 hover:tw-bg-[rgba(59,130,246,0.2)] hover:tw-text-[#93c5fd] hover:tw-opacity-100 hover:tw-scale-110"
-                        data-action="showStatBreakdown"
-                        data-stat-key="{{name}}"
-                        title="Show stat breakdown">
-                        <i class="fa-solid fa-calculator tw-text-[0.75rem]"></i>
-                    </button>
+                    {{> systems/wh40k-rpg/templates/actor/partial/stat-breakdown-button.hbs
+                        statKey=name}}
                     <span class="tw-text-[0.95em] tw-text-[#2a1a0a] tw-font-bold" title="Current total">{{this.total}}</span>
                 </summary>
                 <div class="tw-grid tw-grid-cols-1 tw-gap-[6px] tw-px-2 tw-pt-[6px] tw-pb-2 tw-border-t tw-border-[rgba(74,55,40,0.1)] tw-bg-white/90">
