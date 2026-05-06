@@ -22,7 +22,7 @@ const GENERATION_CHARACTERISTICS = [
     'fellowship',
 ] as const;
 
-type CharacteristicKey = typeof GENERATION_CHARACTERISTICS[number];
+type CharacteristicKey = (typeof GENERATION_CHARACTERISTICS)[number];
 
 const DEFAULT_BASE = 25;
 
@@ -316,6 +316,9 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         event.dataTransfer!.setData('text/plain', JSON.stringify(this.#dragData));
 
         this.element.classList.add('drag-active');
+        this.element.querySelectorAll<HTMLElement>('.csd-char-slot:not(.has-roll)').forEach((slot) => {
+            slot.classList.add('tw-animate-csd-pulse-border');
+        });
     }
 
     /* -------------------------------------------- */
@@ -323,6 +326,9 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     #onDragEnd(event: DragEvent): void {
         (event.currentTarget as HTMLElement).classList.remove('dragging');
         this.element.classList.remove('drag-active');
+        this.element.querySelectorAll('.csd-char-slot').forEach((slot) => {
+            slot.classList.remove('tw-animate-csd-pulse-border');
+        });
         this.element.querySelectorAll('.drop-valid, .drop-hover').forEach((el) => {
             el.classList.remove('drop-valid', 'drop-hover');
         });
