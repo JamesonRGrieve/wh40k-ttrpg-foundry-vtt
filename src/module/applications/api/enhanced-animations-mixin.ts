@@ -161,11 +161,11 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
             // Add counter class for styling
             element.classList.add('value-counter');
             if (toValue > fromValue) {
-                element.classList.add('counting-up');
-                element.classList.remove('counting-down');
+                element.classList.add('tw-animate-count-up');
+                element.classList.remove('tw-animate-count-down');
             } else {
-                element.classList.add('counting-down');
-                element.classList.remove('counting-up');
+                element.classList.add('tw-animate-count-down');
+                element.classList.remove('tw-animate-count-up');
             }
 
             const startTime = Date.now();
@@ -187,7 +187,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
                 } else {
                     element.textContent = formatFn(toValue);
                     this._runningAnimations.delete(animationKey);
-                    element.classList.remove('counting-up', 'counting-down');
+                    element.classList.remove('tw-animate-count-up', 'tw-animate-count-down');
                 }
             };
 
@@ -226,7 +226,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
             // Add visual feedback class
             const woundsValue = this.element.querySelector<HTMLElement>('.wh40k-wounds-value');
             if (woundsValue) {
-                const animClass = newValue > oldValue ? 'stat-heal' : 'stat-damage';
+                const animClass = newValue > oldValue ? 'tw-animate-stat-heal' : 'tw-animate-stat-damage';
                 this._flashElement(woundsValue, animClass, 800);
             }
         }
@@ -355,7 +355,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
             this.animateCounter(xpElement, oldXP, newXP);
 
             // Add golden radiance effect
-            this._flashElement((xpElement.closest('.xp-display') as HTMLElement) || xpElement, 'stat-advancement', 1000);
+            this._flashElement((xpElement.closest('.xp-display') as HTMLElement) || xpElement, 'tw-animate-stat-advance', 1000);
         }
 
         /* -------------------------------------------- */
