@@ -20,9 +20,18 @@ import progressBarSrc from '../src/templates/actor/partial/vital-progress-bar.hb
 import editInputSrc from '../src/templates/actor/partial/vital-edit-input.hbs?raw';
 import quickAdjustSrc from '../src/templates/actor/partial/vital-quick-adjust.hbs?raw';
 import infoCardSrc from '../src/templates/actor/partial/vital-info-card.hbs?raw';
+import editBodySrc from '../src/templates/actor/partial/vital-edit-body.hbs?raw';
 
 initializeStoryHandlebars();
-Handlebars.registerHelper('isExpanded', () => false);
+let isExpandedReturn = false;
+Handlebars.registerHelper('isExpanded', () => isExpandedReturn);
+// `hideIfNot` is provided by initializeStoryHandlebars() in production; for
+// testing we mirror Foundry's behaviour: returns 'style="display:none"' when
+// the value is falsy, else an empty string. Some setups already register it;
+// guard against double-registration.
+if (!Handlebars.helpers.hideIfNot) {
+    Handlebars.registerHelper('hideIfNot', (cond: unknown) => (cond ? '' : new Handlebars.SafeString('style="display:none;"')));
+}
 
 const shellTemplate = Handlebars.compile(shellSrc);
 const quickControlsTemplate = Handlebars.compile(quickControlsSrc);
@@ -288,5 +297,124 @@ describe('vital-info-card partial', () => {
         expect(() => wrapped({})).not.toThrow();
         const root = dom(wrapped({}));
         expect(root.querySelector('strong')?.textContent?.trim()).toBe('T');
+    });
+});
+
+describe('vital-edit-body partial', () => {
+    // The body partial nests vital-edit-input, so we register both under their
+    // canonical full paths so the {{> systems/.../vital-edit-input}} reference
+    // resolves at compile time.
+    Handlebars.registerPartial('systems/wh40k-rpg/templates/actor/partial/vital-edit-input', editInputSrc);
+    Handlebars.registerPartial('test-edit-body', editBodySrc);
+
+    function renderEditBody(ctx: Record<string, unknown>, body = '<p class="extras">extras</p>'): HTMLElement {
+        const wrapped = Handlebars.compile(
+            `{{#> test-edit-body key=key actor=actor fields=fields editIcon=editIcon editTitle=editTitle wrapperClass=wrapperClass}}${body}{{/test-edit-body}}`,
+        );
+        return dom(wrapped(ctx));
+    }
+
+    it('renders the wrapper gated by isExpanded(<key>_details)', () => {
+        isExpandedReturn = false;
+        const collapsed = renderEditBody({
+            key: 'wounds',
+            actor: { id: 'a1', flags: {} },
+            fields: [{ name: 'system.wounds.max', label: 'Max Wounds', value: 12 }],
+        });
+        // hideIfNot returns the style attr when collapsed.
+        const wrapper = collapsed.firstElementChild as HTMLElement;
+        expect(wrapper.getAttribute('style')).toContain('display:none');
+
+        isExpandedReturn = true;
+        const expanded = renderEditBody({
+            key: 'wounds',
+            actor: { id: 'a1', flags: {} },
+            fields: [{ name: 'system.wounds.max', label: 'Max Wounds', value: 12 }],
+        });
+        expect((expanded.firstElementChild as HTMLElement).getAttribute('style') ?? '').not.toContain('display:none');
+    });
+
+    it('emits one vital-edit-input per `fields` entry with the schema name path verbatim', () => {
+        isExpandedReturn = true;
+        const root = renderEditBody({
+            key: 'fate',
+            actor: { id: 'a1', flags: {} },
+            editTitle: 'Edit Fate Points',
+            fields: [
+                { name: 'system.fate.max', label: 'Max Fate Points', value: 3, min: '0', max: '10', placeholder: 'Max' },
+                { name: 'system.fate.value', label: 'Current Fate', value: 1, min: '0', max: 3, placeholder: 'Current' },
+            ],
+        });
+        const inputs = root.querySelectorAll('input[type="number"]');
+        expect(inputs.length).toBe(2);
+        expect(inputs[0].getAttribute('name')).toBe('system.fate.max');
+        expect(inputs[0].getAttribute('value')).toBe('3');
+        expect(inputs[1].getAttribute('name')).toBe('system.fate.value');
+        expect(inputs[1].getAttribute('max')).toBe('3');
+    });
+
+    it('renders the optional editIcon + editTitle heading when editTitle is set', () => {
+        isExpandedReturn = true;
+        const root = renderEditBody({
+            key: 'fatigue',
+            actor: { id: 'a1', flags: {} },
+            editIcon: 'fa-cog',
+            editTitle: 'Edit Values',
+            fields: [{ name: 'system.fatigue.value', label: 'Current Fatigue', value: 0 }],
+        });
+        const heading = root.querySelector('div.tw-rounded-lg > div.tw-flex');
+        expect(heading?.textContent).toContain('Edit Values');
+        expect(heading?.querySelector('i.fa-cog')).not.toBeNull();
+    });
+
+    it('omits the heading row when editTitle is not set (experience panel)', () => {
+        isExpandedReturn = true;
+        const root = renderEditBody({
+            key: 'experience',
+            actor: { id: 'a1', flags: {} },
+            fields: [{ name: 'system.experience.total', label: 'Total XP Earned', value: 100 }],
+        });
+        // No heading => first child of the edit card is the grid wrapper.
+        const card = root.querySelector('div.tw-rounded-lg');
+        const firstInner = card?.firstElementChild as HTMLElement | null;
+        // Either there's no fa-cog icon at all, or the first child is the grid (no heading row).
+        expect(card?.querySelector('i.fa-cog')).toBeNull();
+        expect(firstInner?.className ?? '').toContain('tw-grid');
+    });
+
+    it('renders the partial-block body slot AFTER the edit card (used by wounds extras)', () => {
+        isExpandedReturn = true;
+        const root = renderEditBody(
+            {
+                key: 'wounds',
+                actor: { id: 'a1', flags: {} },
+                editTitle: 'Edit Wounds',
+                fields: [{ name: 'system.wounds.max', label: 'Max Wounds', value: 12 }],
+            },
+            '<div class="critical-extra">CRIT</div><div class="injuries-extra">INJ</div>',
+        );
+        const wrapper = root.firstElementChild as HTMLElement;
+        const children = Array.from(wrapper.children);
+        // First child = edit card; subsequent children = partial-block payload.
+        expect(children[0].className).toContain('tw-rounded-lg');
+        expect(wrapper.querySelector('.critical-extra')).not.toBeNull();
+        expect(wrapper.querySelector('.injuries-extra')).not.toBeNull();
+        // Body slot renders below the edit card in DOM order.
+        const editIdx = children.findIndex((c) => c.className.includes('tw-rounded-lg'));
+        const critIdx = children.findIndex((c) => c.classList.contains('critical-extra'));
+        expect(critIdx).toBeGreaterThan(editIdx);
+    });
+
+    it('appends optional wrapperClass utilities to the outer wrapper', () => {
+        isExpandedReturn = true;
+        const root = renderEditBody({
+            key: 'experience',
+            actor: { id: 'a1', flags: {} },
+            wrapperClass: 'experience_details tw-extra',
+            fields: [{ name: 'system.experience.total', label: 'Total XP', value: 100 }],
+        });
+        const wrapper = root.firstElementChild as HTMLElement;
+        expect(wrapper.className).toContain('experience_details');
+        expect(wrapper.className).toContain('tw-extra');
     });
 });

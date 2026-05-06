@@ -1,0 +1,69 @@
+{{!--
+    Vital edit-body — the expandable details container shared by every vital
+    meter panel (Wounds, Fatigue, Fate, Experience). Renders:
+
+      1. The toggle-gated outer wrapper (`hideIfNot (isExpanded …)`).
+      2. An "edit card" — translucent panel with an optional cog/heading row and
+         a 2-column grid of {{> vital-edit-input }} fields (one entry per
+         `fields` array element).
+      3. A `{{> @partial-block }}` body slot, rendered AFTER the edit card.
+         Panels use this slot for any extras the canonical shape can't
+         capture — e.g. the wounds Critical-Damage editor + Critical-Injuries
+         list, or the per-panel `vital-info-card` explainer.
+
+    Required hash params:
+        key    — toggle key prefix; the wrapper is gated by `<key>_details`
+                 (e.g. "wounds" → `wounds_details`).
+        actor  — the actor context (forwarded to `isExpanded`).
+        fields — array of edit-input descriptors. Each entry's hash is forwarded
+                 verbatim to vital-edit-input: { name, label, value, min?, max?,
+                 readonly?, placeholder?, labelClass?, inputClass? }.
+
+    Optional hash params:
+        editIcon          — FA icon class for the edit-card heading
+                            (default "fa-cog"). Only rendered when editTitle is set.
+        editTitle         — Already-localised heading text. When omitted the
+                            heading row is skipped entirely (used by the
+                            experience panel which currently has no header).
+        wrapperClass      — Extra utilities on the outer wrapper.
+        editCardClass     — Extra utilities on the edit-card box.
+        gridClass         — Override the default 2-col grid utility chain.
+
+    Block-partial usage (typical):
+        {{#> systems/wh40k-rpg/templates/actor/partial/vital-edit-body.hbs
+              key="fate" actor=actor editIcon="fa-cog" editTitle="Edit Fate Points"
+              fields=(array
+                  (object name="system.fate.max"   label="Max Fate Points" value=system.fate.max   min="0" max="10" placeholder="Max")
+                  (object name="system.fate.value" label="Current Fate"    value=system.fate.value min="0" max=system.fate.max placeholder="Current"))}}
+            {{#> systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs icon="fa-book-open" title=(localize "...") accent="gold"}}
+                ...info body...
+            {{/systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs}}
+        {{/systems/wh40k-rpg/templates/actor/partial/vital-edit-body.hbs}}
+--}}
+<div class="tw-py-2 tw-px-3 tw-bg-[rgba(0,0,0,0.02)] tw-border-t tw-border-solid tw-border-[var(--wh40k-border-color-light)] {{wrapperClass}}" {{hideIfNot (isExpanded (concat key '_details') actor)}}>
+
+    <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-1.5 {{editCardClass}}">
+        {{#if editTitle}}
+        <div class="tw-flex tw-items-center tw-gap-1 tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-medium)] tw-mb-1.5">
+            <i class="fas {{#if editIcon}}{{editIcon}}{{else}}fa-cog{{/if}}"></i> {{editTitle}}
+        </div>
+        {{/if}}
+
+        <div class="{{#if gridClass}}{{gridClass}}{{else}}tw-grid tw-grid-cols-2 tw-gap-2{{/if}}">
+            {{#each fields}}
+                {{> systems/wh40k-rpg/templates/actor/partial/vital-edit-input
+                    name=this.name
+                    label=this.label
+                    value=this.value
+                    min=this.min
+                    max=this.max
+                    readonly=this.readonly
+                    placeholder=this.placeholder
+                    labelClass=this.labelClass
+                    inputClass=this.inputClass}}
+            {{/each}}
+        </div>
+    </div>
+
+    {{> @partial-block}}
+</div>

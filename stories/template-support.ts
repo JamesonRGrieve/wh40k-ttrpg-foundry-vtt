@@ -96,6 +96,8 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         return args.join('');
     });
     Handlebars.registerHelper('isExpanded', () => false);
+    Handlebars.registerHelper('hideIfNot', (check) => (check ? '' : new Handlebars.SafeString('style="display:none;"')));
+    Handlebars.registerHelper('defaultVal', (value, fallback) => value || fallback);
     Handlebars.registerHelper('and', (...args: unknown[]) => {
         args.pop();
         return args.every(Boolean);
