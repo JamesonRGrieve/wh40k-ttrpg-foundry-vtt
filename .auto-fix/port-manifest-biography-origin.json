@@ -1,0 +1,63 @@
+{
+  "session": "biography-origin",
+  "blocks_deleted": [
+    {
+      "source": "src/css/actor/_biography-origin-panel.css",
+      "lines_removed": 506,
+      "classes_ported": [],
+      "classes_dead": [
+        "wh40k-origin-panel-modern",
+        "wh40k-panel-header (nested inside .wh40k-origin-panel-modern)",
+        "wh40k-origin-header-left",
+        "wh40k-panel-title (nested inside .wh40k-origin-panel-modern)",
+        "wh40k-origin-progress-badge",
+        "wh40k-complete (nested inside .wh40k-origin-progress-badge)",
+        "wh40k-progress-text",
+        "wh40k-origin-steps-visual",
+        "wh40k-origin-step-node",
+        "wh40k-filled (modifier on .wh40k-origin-step-node)",
+        "wh40k-empty (modifier on .wh40k-origin-step-node)",
+        "wh40k-step-circle",
+        "wh40k-step-img",
+        "wh40k-step-label",
+        "wh40k-step-connector",
+        "wh40k-active (modifier on .wh40k-step-connector)",
+        "wh40k-origin-builder-cta",
+        "wh40k-btn-origin-builder",
+        "wh40k-btn-text",
+        "wh40k-builder-badge",
+        "wh40k-complete (modifier on .wh40k-builder-badge)",
+        "wh40k-incomplete (modifier on .wh40k-builder-badge)",
+        "wh40k-origin-empty-state",
+        "wh40k-empty-text (nested inside .wh40k-origin-empty-state)",
+        "wh40k-origin-bonuses-modern",
+        "collapsed (modifier on .wh40k-origin-bonuses-modern)",
+        "wh40k-bonuses-toggle",
+        "wh40k-toggle-icon",
+        "wh40k-bonuses-content",
+        "wh40k-bonus-group",
+        "wh40k-bonus-category-label",
+        "wh40k-bonus-chips",
+        "wh40k-char-chip",
+        "wh40k-positive (modifier on .wh40k-char-chip)",
+        "wh40k-negative (modifier on .wh40k-char-chip)",
+        "wh40k-chip-stat",
+        "wh40k-chip-value",
+        "wh40k-bonus-tags",
+        "wh40k-bonus-tag",
+        "wh40k-tag-skill (modifier on .wh40k-bonus-tag)",
+        "wh40k-tag-talent (modifier on .wh40k-bonus-tag)",
+        "wh40k-tag-trait (modifier on .wh40k-bonus-tag)"
+      ]
+    }
+  ],
+  "notes": [
+    "Every class in this CSS block is dead code — no usage found in any .hbs template or .ts file.",
+    "The tab-biography.hbs template uses wh40k-panel-header and wh40k-panel-title, but those are styled by a different CSS source (the shared panel block), not this block. The nested rules inside .wh40k-origin-panel-modern do not affect those shared usages.",
+    "The origin-path-builder.hbs uses bare 'step-label' and 'step-connector' (no wh40k- prefix) — unrelated to the prefixed classes here.",
+    "The biography tab (tab-biography.hbs) is already fully Tailwind-only; it contains no classes from this block.",
+    "506 lines removed from the monolith with no template changes required.",
+    "css:ratchet passes: tw-only=129, mixed=115, css-only=0 (unchanged — the biography tab was already classified tailwind-only).",
+    "animation:ratchet passes: no animation rules were in this block."
+  ]
+}

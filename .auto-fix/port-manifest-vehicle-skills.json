@@ -1,0 +1,44 @@
+{
+  "session": "vehicle-skills",
+  "blocks_deleted": [
+    {
+      "source": "src/css/actor/_vehicle-sheet.css",
+      "lines_deleted": 462,
+      "templates_modified": [
+        "src/templates/actor/vehicle/header.hbs",
+        "src/templates/actor/vehicle/tabs.hbs"
+      ],
+      "notes": [
+        "wh40k-vehicle-header cardClass replaced with tw-grid tw-grid-cols-[auto_1fr_auto] tw-gap-4 tw-p-4",
+        "wh40k-vehicle-identity/meta/meta-row/field/field--wide classes replaced with inline Tailwind on their elements",
+        "wh40k-vehicle-stat-box/label/input/values/separator baseClass params in 3 stat-box calls replaced with inline Tailwind dark-variant strings",
+        "wh40k-vehicle-quick-stats layout and border-l replaced with tw-flex tw-flex-col tw-gap-2 tw-border-l etc.",
+        "wh40k-vehicle-tabs removed from navClass; wh40k-tab-btn in itemClass replaced with full Tailwind utility chain including [&.active]: states",
+        "Framework layout rules (.window-content, form) scoped to .wh40k-rpg.sheet.actor.vehicle salvaged to foundry-chrome.css section in monolith (Foundry-internal DOM, not patchable via templates)",
+        "All tab content templates (tab-combat, tab-components, tab-crew, tab-notes, tab-overview) were already pure Tailwind - no changes needed",
+        "Dead classes (wh40k-portrait-container, wh40k-portrait, wh40k-vehicle-panel, wh40k-vehicle-panel-title, wh40k-vehicle-weapons-list, wh40k-vehicle-weapon-item, wh40k-vehicle-crew-*, wh40k-vehicle-items-list, wh40k-vehicle-component-*, wh40k-vehicle-traits-list, wh40k-vehicle-trait-item, wh40k-vehicle-empty, wh40k-vehicle-stats-grid, wh40k-vehicle-stat-item, wh40k-vehicle-stat-value, editor-content, .tab show/hide) had zero template usages - deleted with block"
+      ]
+    },
+    {
+      "source": "src/css/actor/_skills.css",
+      "lines_deleted": 312,
+      "templates_modified": [],
+      "notes": [
+        "ENTIRE block was nested inside .wh40k-wrapper {} — all rules are dead code (no .wh40k-wrapper ancestor exists in the DOM for any of these templates)",
+        "Classes that appear in templates/TS (wh40k-skills-panel, wh40k-skills-columns, wh40k-skills-column, wh40k-rank-input) already had inline Tailwind on their elements OR had no relevant CSS effect because the .wh40k-wrapper scoping prevented the rules from firing",
+        "wh40k-rank-input: used in base-system-config.ts as inputClass override but its CSS (font-size:1em, max-width:240px) was scoped inside .wh40k-wrapper and never applied; preserved as hook class in TS but no CSS needed",
+        "wh40k-tooltip class used in wh40k-tooltip.ts creates dynamic tooltip popups (separate system) - not the CSS tooltip ::before/::after from this block",
+        "Dead: wh40k-skills-split, wh40k-skilltable--border, wh40k-skills-header, wh40k-skill-training, wh40k-skill-char-tag, wh40k-skill-name (CSS-only variant inside wrapper), wh40k-divination, csd-resource-*, csd-divination-*, wh40k-origin-builder-btn, wh40k-header-value, wh40k-header-single-column, wh40k-player-input, wh40k-rank-input (CSS), wh40k-header-hud"
+      ]
+    }
+  ],
+  "ratchet_results": {
+    "css_ratchet": "PASS — tw-only=129 mixed=115 css-only=0 (unchanged from baseline)",
+    "animation_ratchet": "PASS"
+  },
+  "notes": [
+    "Total lines removed from monolith: 774 (462 + 312)",
+    "No new CSS rules added to templates — only inline Tailwind utilities",
+    "foundry-chrome.css section in monolith received salvaged .window-content/form layout rules for vehicle sheet"
+  ]
+}
