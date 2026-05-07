@@ -4,6 +4,7 @@
 
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import type { ApplicationV2Ctor } from '../api/application-types.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -19,7 +20,7 @@ interface AddXPContext extends Record<string, unknown> {
 /**
  * Dialog for adding or subtracting experience points.
  */
-export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
+export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     declare actor: WH40KAcolyte;
     declare xpAmount: number;
 
@@ -40,8 +41,8 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'add-xp-dialog', 'standard-form'],
         actions: {
-            apply: AddXPDialog.#onApply as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            cancel: AddXPDialog.#onCancel as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            apply: AddXPDialog.#onApply as Function,
+            cancel: AddXPDialog.#onCancel as Function,
         },
         form: {
             handler: AddXPDialog.#onFormChange as unknown as ApplicationV2Config.FormConfiguration['handler'],
@@ -53,7 +54,6 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
         },
         window: {
             title: 'Adjust Total XP',
-            minimizable: false,
             resizable: false,
         },
     };
@@ -132,7 +132,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
         const currentTotal = (this.actor.system as any)?.experience?.total ?? 0;
         const newTotal = Math.max(0, currentTotal + this.xpAmount);
 
-        await this.actor.update({ 'system.experience.total': newTotal });
+        await this.actor.update({ 'system.experience.total': newTotal } as Record<string, unknown>);
 
         const verb = this.xpAmount > 0 ? 'added' : 'removed';
         ui.notifications.info(`${Math.abs(this.xpAmount)} XP ${verb}. Total: ${newTotal}`);

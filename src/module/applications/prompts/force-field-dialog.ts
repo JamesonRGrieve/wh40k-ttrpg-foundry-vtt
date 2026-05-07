@@ -81,12 +81,13 @@ export default class ForceFieldDialog extends BaseRollDialog {
 
     /** @override */
     _validateRoll(): boolean {
-        if (!this.rollData.forceField?.system?.activated) {
+        const ff = this.rollData['forceField'] as { system?: { activated?: boolean; overloaded?: boolean } } | null | undefined;
+        if (!ff?.system?.activated) {
             ui.notifications.warn('Force Field not activated!');
             return false;
         }
 
-        if (this.rollData.forceField?.system?.overloaded) {
+        if (ff?.system?.overloaded) {
             ui.notifications.warn('Force Field currently overloaded!');
             return false;
         }
@@ -100,8 +101,8 @@ export default class ForceFieldDialog extends BaseRollDialog {
     async _performRoll(): Promise<void> {
         if (!this._validateRoll()) return;
 
-        await this.rollData.finalize();
-        await this.rollData.performActionAndSendToChat();
+        await (this.rollData['finalize'] as () => Promise<void>)();
+        await (this.rollData['performActionAndSendToChat'] as () => Promise<void>)();
         await this.close();
     }
 }
@@ -114,7 +115,7 @@ export default class ForceFieldDialog extends BaseRollDialog {
  * Open a force field dialog.
  * @param {object} forceFieldData  The force field data.
  */
-export function prepareForceFieldRoll(forceFieldData) {
+export function prepareForceFieldRoll(forceFieldData: Record<string, unknown>) {
     const prompt = new ForceFieldDialog(forceFieldData);
     prompt.render(true);
 }

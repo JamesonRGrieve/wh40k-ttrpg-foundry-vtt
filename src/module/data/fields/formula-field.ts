@@ -16,7 +16,7 @@ export default class FormulaField extends foundry.data.fields.StringField {
      * Is this formula field deterministic (no dice, just math)?
      * @type {boolean}
      */
-    deterministic: boolean;
+    deterministic!: boolean;
 
     /* -------------------------------------------- */
 

@@ -20,13 +20,16 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
     declare costs: string;
     declare notes: string;
 
+    // Getters from ActivationTemplate
+    declare activationLabel: string;
+
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Ritual type
             type: new fields.StringField({
@@ -121,7 +124,11 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [this.typeLabel, `Test: ${this.testLabel}`, ...ActivationTemplate.prototype.chatProperties.call(this)];
+        const props = [
+            this.typeLabel,
+            `Test: ${this.testLabel}`,
+            ...((Object.getOwnPropertyDescriptor(ActivationTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
+        ];
 
         return props;
     }

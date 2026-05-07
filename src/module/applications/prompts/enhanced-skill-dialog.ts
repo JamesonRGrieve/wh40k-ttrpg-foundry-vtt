@@ -10,6 +10,7 @@
 
 import { sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
+import type { ApplicationV2Ctor } from '../api/application-types.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -41,7 +42,7 @@ interface EnhancedSkillDialogData {
 /**
  * Enhanced dialog for configuring skill or characteristic rolls.
  */
-export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV2) {
+export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     /**
      * @param {EnhancedSkillDialogData} simpleSkillData  The skill data.
      * @param {ApplicationV2Config.DefaultOptions} [options={}]     Dialog options.
@@ -61,12 +62,12 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'enhanced-skill-roll', 'standard-form'],
         actions: {
-            selectDifficulty: EnhancedSkillDialog.#onSelectDifficulty as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            toggleModifier: EnhancedSkillDialog.#onToggleModifier as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            updateCustom: EnhancedSkillDialog.#onUpdateCustom as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            roll: EnhancedSkillDialog.#onRoll as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            rollRepeat: EnhancedSkillDialog.#onRollRepeat as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            cancel: EnhancedSkillDialog.#onCancel as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            selectDifficulty: EnhancedSkillDialog.#onSelectDifficulty as Function,
+            toggleModifier: EnhancedSkillDialog.#onToggleModifier as Function,
+            updateCustom: EnhancedSkillDialog.#onUpdateCustom as Function,
+            roll: EnhancedSkillDialog.#onRoll as Function,
+            rollRepeat: EnhancedSkillDialog.#onRollRepeat as Function,
+            cancel: EnhancedSkillDialog.#onCancel as Function,
         },
         form: {
             submitOnChange: false,
@@ -74,11 +75,10 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         },
         position: {
             width: 450,
-            height: 'auto',
+            height: 'auto' as unknown as number,
         },
         window: {
             title: 'Skill Test',
-            minimizable: false,
         },
     };
 
@@ -137,7 +137,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @type {Record<string, boolean>}
      * @private
      */
-    _commonModifiers = {};
+    _commonModifiers: Record<string, boolean> = {};
 
     /**
      * Custom modifier value.
@@ -151,8 +151,8 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<unknown> {
-        const context = (await super._prepareContext(options)) as Record<string, unknown>;
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        const context = await super._prepareContext(options);
         const rollData = this.simpleSkillData.rollData;
 
         // Calculate total modifier
@@ -196,7 +196,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: unknown, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         setupNumberInputAutoSelect(this.element);
@@ -385,7 +385,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
  * Open an enhanced skill roll dialog.
  * @param {object} simpleSkillData  The skill data.
  */
-export function prepareEnhancedSkillRoll(simpleSkillData) {
+export function prepareEnhancedSkillRoll(simpleSkillData: EnhancedSkillDialogData) {
     const prompt = new EnhancedSkillDialog(simpleSkillData);
     prompt.render(true);
 }

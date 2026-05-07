@@ -24,11 +24,12 @@ export class WH40KItemContainer extends Item {
         return this.parent instanceof Actor ? this.parent : null;
     }
 
-    async update(data: Record<string, unknown> = {}, options: Record<string, unknown> = {}): Promise<unknown> {
-        data._id = this.id;
+    override async update(data: Item.UpdateInput = {} as Item.UpdateInput, options?: Parameters<Item['update']>[1]): Promise<this | undefined> {
+        const dataRecord = data as Record<string, unknown>;
+        dataRecord['_id'] = this.id;
         if (this.isNestedItem()) {
-            const parentItem = this.parent as WH40KItemContainer;
-            await parentItem.updateNestedDocuments(data);
+            const parentItem = this.parent as unknown as WH40KItemContainer;
+            await parentItem.updateNestedDocuments(dataRecord);
             return undefined;
         } else {
             return super.update(data, options);
@@ -69,7 +70,7 @@ export class WH40KItemContainer extends Item {
         this.items = new foundry.utils.Collection();
         const itemClass = CONFIG.Item.documentClass;
         for (const nestedData of this.getNested()) {
-            const item = new itemClass(nestedData, { parent: this });
+            const item = new itemClass(nestedData as unknown as never, { parent: this as unknown as never });
             await this.items.set(nestedData._id, item as unknown as Item);
         }
         game.wh40k.log(`Item ${this.name as string} items:`, this.items);
@@ -145,7 +146,7 @@ export class WH40KItemContainer extends Item {
             for (const itemData of dataArray) {
                 let clone = JSON.parse(JSON.stringify(itemData)) as NestedItemData;
                 clone._id = foundry.utils.randomID();
-                clone = new itemClass(clone as unknown as never, { parent: this }).toJSON() as NestedItemData;
+                clone = new itemClass(clone as unknown as never, { parent: this as unknown as never }).toJSON() as NestedItemData;
                 currentItems.push(clone);
             }
 
@@ -205,7 +206,7 @@ export class WH40KItemContainer extends Item {
         const itemClass = CONFIG.Item.documentClass;
         containedItems.forEach((idata) => {
             if (!oldItems?.has(idata._id)) {
-                const theItem = new itemClass(idata as unknown as never, { parent: this });
+                const theItem = new itemClass(idata as unknown as never, { parent: this as unknown as never });
                 this.items.set(idata._id, theItem as unknown as Item);
             } else {
                 // Reuse existing item instance and update its data

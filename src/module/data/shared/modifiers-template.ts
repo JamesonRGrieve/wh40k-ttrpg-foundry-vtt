@@ -266,12 +266,13 @@ export default class ModifiersTemplate extends SystemDataModel {
     static #normalizeModifiers(source: Record<string, unknown>): void {
         if (!source.modifiers) return;
 
-        source.modifiers.characteristics ??= {};
-        source.modifiers.skills ??= {};
-        source.modifiers.combat ??= {};
-        source.modifiers.resources ??= {};
-        source.modifiers.other ??= [];
-        source.modifiers.situational ??= { characteristics: [], skills: [], combat: [] };
+        const mods = source.modifiers as Record<string, unknown>;
+        mods.characteristics ??= {};
+        mods.skills ??= {};
+        mods.combat ??= {};
+        mods.resources ??= {};
+        mods.other ??= [];
+        mods.situational ??= { characteristics: [], skills: [], combat: [] };
     }
 
     /* -------------------------------------------- */
@@ -284,7 +285,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options?: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
     }
 
@@ -314,8 +315,8 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {string} char   The characteristic key.
      * @returns {number}
      */
-    getCharacteristicModifier(char): number {
-        return this.modifiers.characteristics[char] ?? 0;
+    getCharacteristicModifier(char: string): number {
+        return (this.modifiers.characteristics[char] as number) ?? 0;
     }
 
     /* -------------------------------------------- */
@@ -325,8 +326,8 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {string} skill   The skill key.
      * @returns {number}
      */
-    getSkillModifier(skill): number {
-        return this.modifiers.skills[skill] ?? 0;
+    getSkillModifier(skill: string): number {
+        return (this.modifiers.skills[skill] as number) ?? 0;
     }
 
     /* -------------------------------------------- */
@@ -404,12 +405,12 @@ export default class ModifiersTemplate extends SystemDataModel {
      * Get situational modifiers as a structured list.
      * @type {object}
      */
-    get situationalModifiers(): Record<string, unknown> {
+    get situationalModifiers(): { characteristics: unknown[]; skills: unknown[]; combat: unknown[] } {
         const situational = (this.modifiers as any).situational || {};
         return {
-            characteristics: situational.characteristics || [],
-            skills: situational.skills || [],
-            combat: situational.combat || [],
+            characteristics: (situational.characteristics as unknown[]) || [],
+            skills: (situational.skills as unknown[]) || [],
+            combat: (situational.combat as unknown[]) || [],
         };
     }
 

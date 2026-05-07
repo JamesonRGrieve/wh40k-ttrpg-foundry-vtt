@@ -3,6 +3,13 @@ import ThreatCalculator from './threat-calculator.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+interface ScalingPreview {
+    characteristics: Record<string, unknown>;
+    wounds: { current: number; new: number };
+    armour: { current: number | string; new: number | string };
+    [key: string]: unknown;
+}
+
 interface ScalerState {
     newThreatLevel: number;
     scaleCharacteristics: boolean;
@@ -151,7 +158,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
             scaleSkills: this.#state.scaleSkills,
             scaleWeapons: this.#state.scaleWeapons,
             scaleArmour: this.#state.scaleArmour,
-        });
+        }) as unknown as ScalingPreview;
 
         // Prepare characteristics for display
         const characteristicChanges = Object.entries(preview.characteristics as Record<string, any>).map(([key, char]) => {
@@ -241,7 +248,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
             const checkbox = form.querySelector(`[name="${name}"]`) as HTMLInputElement | null;
             if (checkbox) {
                 checkbox.addEventListener('change', () => {
-                    this.#state[name] = checkbox.checked;
+                    (this.#state as unknown as Record<string, unknown>)[name] = checkbox.checked;
                     this._debounceRender();
                 });
             }
@@ -346,23 +353,18 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {HTMLFormElement} form
      * @param {foundry.applications.api.FormDataExtended} formData
      */
-    static async #onSubmit(
-        this: NPCThreatScalerDialog,
-        event: SubmitEvent,
-        form: HTMLFormElement,
-        formData: foundry.applications.api.FormDataExtended,
-    ): Promise<void> {
+    static async #onSubmit(this: NPCThreatScalerDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         if (!this.#actor) return;
 
         const data = foundry.utils.expandObject(formData.object) as Partial<ScalerState>;
 
         // Update state from form
         this.#state.newThreatLevel = parseInt(String(data.newThreatLevel), 10);
-        this.#state.scaleCharacteristics = data.scaleCharacteristics === true || data.scaleCharacteristics === 'true';
-        this.#state.scaleWounds = data.scaleWounds === true || data.scaleWounds === 'true';
-        this.#state.scaleSkills = data.scaleSkills === true || data.scaleSkills === 'true';
-        this.#state.scaleWeapons = data.scaleWeapons === true || data.scaleWeapons === 'true';
-        this.#state.scaleArmour = data.scaleArmour === true || data.scaleArmour === 'true';
+        this.#state.scaleCharacteristics = data.scaleCharacteristics === true || String(data.scaleCharacteristics) === 'true';
+        this.#state.scaleWounds = data.scaleWounds === true || String(data.scaleWounds) === 'true';
+        this.#state.scaleSkills = data.scaleSkills === true || String(data.scaleSkills) === 'true';
+        this.#state.scaleWeapons = data.scaleWeapons === true || String(data.scaleWeapons) === 'true';
+        this.#state.scaleArmour = data.scaleArmour === true || String(data.scaleArmour) === 'true';
 
         const currentThreat = (this.#actor.system as any).threatLevel;
         const newThreat = this.#state.newThreatLevel;
@@ -395,9 +397,9 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
 
             ui.notifications.info(
                 game.i18n.format('WH40K.NPC.ScaledThreat', {
-                    name: this.#actor.name,
-                    from: currentThreat,
-                    to: newThreat,
+                    name: String(this.#actor.name),
+                    from: String(currentThreat),
+                    to: String(newThreat),
                 }),
             );
 
@@ -436,7 +438,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
             this.#resolve(false);
         }
 
-        return super.close(options);
+        await super.close(options);
     }
 
     /* -------------------------------------------- */
@@ -464,7 +466,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @returns {Promise<boolean>} True if scaling was applied, false otherwise.
      */
     static async scale(actor: WH40KBaseActor): Promise<boolean> {
-        if (!actor || actor.type !== 'npcV2') {
+        if (!actor || (actor.type as string) !== 'npcV2') {
             ui.notifications.warn('Can only scale npcV2 type actors');
             return false;
         }

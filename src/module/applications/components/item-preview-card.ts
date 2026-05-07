@@ -16,17 +16,20 @@ import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KItemModifiers } from '../../types/global.d.ts';
 import QuickActionsBar from './quick-actions-bar.ts';
 
+type ActorSheetCtor = new (...args: any[]) => foundry.appv1.sheets.ActorSheet;
+
 /**
  * Mixin that adds item preview card functionality to actor sheets
  */
-export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.ActorSheet>(Base: TBase) {
-    return class extends Base {
+export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase) {
+    const baseOptions = (Base as unknown as { DEFAULT_OPTIONS?: { actions?: Record<string, unknown> } }).DEFAULT_OPTIONS;
+    return class ItemPreviewMixinClass extends Base {
         /** @override */
         static DEFAULT_OPTIONS = {
-            ...Base.DEFAULT_OPTIONS,
+            ...baseOptions,
             actions: {
-                ...Base.DEFAULT_OPTIONS.actions,
-                toggleItemPreview: ItemPreviewMixin.toggleItemPreview,
+                ...(baseOptions?.actions ?? {}),
+                toggleItemPreview: ItemPreviewMixinClass.toggleItemPreview,
             },
         };
 
@@ -46,7 +49,7 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             if (!item) return;
 
             // Find the item row
-            const itemRow = this.element.querySelector(`[data-item-id="${itemId}"]`) as HTMLElement | null;
+            const itemRow = this.element[0].querySelector(`[data-item-id="${itemId}"]`) as HTMLElement | null;
             if (!itemRow) return;
 
             // Check if preview is already open.
@@ -69,7 +72,7 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          */
         #openPreview(item: WH40KItem, itemRow: HTMLElement): void {
             // Close any existing preview for this item
-            this.#closePreview(item.id);
+            this.#closePreview(item.id!);
 
             // Generate preview content
             const previewHTML = this.#generatePreviewHTML(item);
@@ -93,19 +96,19 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
                 'tw-rounded-[var(--wh40k-radius-md)]',
                 'tw-shadow-[inset_0_1px_3px_rgba(0,0,0,0.2)]',
             );
-            preview.dataset.previewId = item.id;
+            preview.dataset.previewId = item.id ?? undefined;
             preview.innerHTML = previewHTML;
 
             // Insert after item row
             itemRow.insertAdjacentElement('afterend', preview);
 
             // Track as open
-            this.#openPreviews.add(item.id);
+            this.#openPreviews.add(item.id!);
 
             // Add close button handler
             const closeBtn = preview.querySelector('[data-action="closeItemPreview"]');
             if (closeBtn) {
-                closeBtn.addEventListener('click', () => this.#closePreview(item.id));
+                closeBtn.addEventListener('click', () => this.#closePreview(item.id!));
             }
 
             // Animate in
@@ -120,7 +123,7 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          * Close an item preview card
          */
         #closePreview(itemId: string): void {
-            const preview = this.element.querySelector(`[data-preview-id="${itemId}"]`);
+            const preview = this.element[0].querySelector(`[data-preview-id="${itemId}"]`);
             if (!preview) return;
 
             preview.classList.remove('wh40k-item-preview--open');
@@ -195,7 +198,7 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          * Generate weapon preview
          */
         #generateWeaponPreview(item: WH40KItem): string {
-            const sys = item.system as WeaponDataModel;
+            const sys = item.system as unknown as WeaponDataModel;
             const sysRec = sys as unknown as Record<string, unknown>;
             const damage = sysRec.damage as { formula?: string };
             const stats = sysRec.stats as { penetration?: number; range?: string; rof?: string };
@@ -245,7 +248,7 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          * Generate armour preview
          */
         #generateArmourPreview(item: WH40KItem): string {
-            const sys = item.system as ArmourDataModel;
+            const sys = item.system as unknown as ArmourDataModel;
             const sysRec = sys as unknown as Record<string, unknown>;
             const locations = (sysRec.locations as Record<string, number | undefined>) ?? {};
 

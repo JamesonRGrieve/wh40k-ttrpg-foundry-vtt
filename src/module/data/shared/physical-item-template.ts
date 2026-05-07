@@ -137,28 +137,38 @@ export default class PhysicalItemTemplate extends SystemDataModel {
             return;
         }
 
+        interface CostShape {
+            dh1?: { throneGelt?: unknown };
+            dh2?: { influence?: unknown; homebrew?: { requisition?: unknown; throneGelt?: unknown } };
+            rt?: { profitFactor?: unknown };
+            dw?: { requisition?: unknown };
+            bc?: { infamy?: unknown };
+            ow?: { logistics?: unknown };
+        }
+        const cost = source.cost as CostShape;
+
         source.cost = {
             dh1: {
-                throneGelt: normalizeNullableNumber(source.cost.dh1?.throneGelt),
+                throneGelt: normalizeNullableNumber(cost.dh1?.throneGelt),
             },
             dh2: {
-                influence: normalizeNullableNumber(source.cost.dh2?.influence),
+                influence: normalizeNullableNumber(cost.dh2?.influence),
                 homebrew: {
-                    requisition: normalizeNullableNumber(source.cost.dh2?.homebrew?.requisition),
-                    throneGelt: normalizeNullableNumber(source.cost.dh2?.homebrew?.throneGelt),
+                    requisition: normalizeNullableNumber(cost.dh2?.homebrew?.requisition),
+                    throneGelt: normalizeNullableNumber(cost.dh2?.homebrew?.throneGelt),
                 },
             },
             rt: {
-                profitFactor: normalizeNullableNumber(source.cost.rt?.profitFactor),
+                profitFactor: normalizeNullableNumber(cost.rt?.profitFactor),
             },
             dw: {
-                requisition: normalizeNullableNumber(source.cost.dw?.requisition),
+                requisition: normalizeNullableNumber(cost.dw?.requisition),
             },
             bc: {
-                infamy: normalizeNullableNumber(source.cost.bc?.infamy),
+                infamy: normalizeNullableNumber(cost.bc?.infamy),
             },
             ow: {
-                logistics: normalizeNullableNumber(source.cost.ow?.logistics),
+                logistics: normalizeNullableNumber(cost.ow?.logistics),
             },
         };
     }
@@ -200,7 +210,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options?: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
     }
 

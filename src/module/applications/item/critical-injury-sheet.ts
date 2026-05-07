@@ -14,7 +14,7 @@ async function changeSeverity(this: BaseItemSheet, _event: Event, target: HTMLEl
     const newSeverity = parseInt((target as HTMLInputElement).value, 10);
     const sys = item.system as { severity?: number };
     if (newSeverity !== sys.severity) {
-        await item.update({ 'system.severity': newSeverity });
+        await item.update({ 'system.severity': newSeverity } as Record<string, unknown>);
     }
 }
 

@@ -6,6 +6,10 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * These represent social connections with organizations/groups.
  */
 export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTemplate) {
+    // Typed property declarations matching defineSchema()
+    declare group: string;
+    declare modifier: number;
+
     /** @override */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;

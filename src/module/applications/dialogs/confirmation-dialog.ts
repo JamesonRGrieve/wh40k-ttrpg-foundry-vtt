@@ -46,7 +46,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
         },
         position: {
             width: 400,
-            height: 'auto' as const,
+            height: 'auto' as unknown as number,
         },
         actions: {
             confirm: ConfirmationDialog.#onConfirm,
@@ -76,7 +76,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     constructor(config: Partial<ConfirmationConfig> = {}, options: ApplicationV2Config.DefaultOptions = {}) {
-        super(options);
+        super(options as Record<string, unknown>);
         this.#config = {
             title: config.title || 'Confirm',
             content: config.content || 'Are you sure?',
@@ -129,7 +129,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options?: Record<string, unknown>): Promise<void> {
+    async close(options?: Record<string, unknown>): Promise<unknown> {
         if (!this.#resolved && this.#resolve) {
             this.#resolve(false);
         }

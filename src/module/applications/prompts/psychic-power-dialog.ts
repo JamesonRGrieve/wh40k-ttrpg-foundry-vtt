@@ -27,7 +27,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
         classes: ['psychic-power'],
         actions: {
             ...BaseRollDialog.DEFAULT_OPTIONS.actions,
-            selectPower: PsychicPowerDialog.#onSelectPower as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            selectPower: PsychicPowerDialog.#onSelectPower as Function,
         },
         window: {
             title: 'Psychic Power',
@@ -133,7 +133,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
  * Open a psychic power dialog.
  * @param {PsychicActionData} psychicAttackData  The psychic action data.
  */
-export function preparePsychicPowerRoll(psychicAttackData) {
+export function preparePsychicPowerRoll(psychicAttackData: Record<string, unknown>) {
     const prompt = new PsychicPowerDialog(psychicAttackData);
     prompt.render(true);
 }

@@ -6,6 +6,10 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * These are in-character notes and logs.
  */
 export default class JournalEntryItemData extends ItemDataModel.mixin(DescriptionTemplate) {
+    // Typed property declarations matching defineSchema()
+    declare time: string;
+    declare place: string;
+
     /** @override */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;

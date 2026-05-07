@@ -1,5 +1,12 @@
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 
+// Allow custom hook names beyond fvtt-types' strict HookConfig keyof constraint.
+type HooksCompat = typeof Hooks & {
+    call(hook: string, ...args: unknown[]): boolean;
+    callAll(hook: string, ...args: unknown[]): boolean;
+};
+const HooksExt = Hooks as HooksCompat;
+
 /**
  * BasicRollWH40K - Extended Roll class for WH40K RPG VTT
  * Implements three-stage roll workflow: Configure → Evaluate → Post
@@ -68,7 +75,7 @@ export default class BasicRollWH40K extends Roll {
      */
     static async buildConfigure(config: Record<string, unknown>) {
         // Fire pre-roll hook - allows modules to modify or cancel the roll
-        const hookResult = Hooks.call('wh40k-rpg.preRoll', this, config);
+        const hookResult = HooksExt.call('wh40k-rpg.preRoll', this, config);
         if (hookResult === false) return null;
 
         // Show configuration dialog if needed
@@ -79,7 +86,7 @@ export default class BasicRollWH40K extends Roll {
         }
 
         // Fire post-configuration hook
-        Hooks.callAll('wh40k-rpg.postRollConfiguration', this, config);
+        HooksExt.callAll('wh40k-rpg.postRollConfiguration', this, config);
 
         return config;
     }
@@ -109,7 +116,7 @@ export default class BasicRollWH40K extends Roll {
             flavor: config.flavor,
             ...(config.rollOptions as Record<string, unknown>),
         };
-        const roll = new this(formula, (config.data as Record<string, unknown>) || {}, rollOptions);
+        const roll = new this(formula, ((config.data as Record<string, unknown>) || {}) as Record<string, never>, rollOptions as Roll.Options);
 
         // Store configuration for later reference (separate from Roll options)
         roll.configuration = foundry.utils.deepClone(config);
@@ -118,7 +125,7 @@ export default class BasicRollWH40K extends Roll {
         await roll.evaluate();
 
         // Fire post-evaluation hook
-        Hooks.callAll('wh40k-rpg.postRollEvaluate', roll, config);
+        HooksExt.callAll('wh40k-rpg.postRollEvaluate', roll, config);
 
         return roll;
     }
@@ -135,14 +142,14 @@ export default class BasicRollWH40K extends Roll {
         const chatData = await this._prepareChatData(roll, config);
 
         // Apply roll mode visibility
-        const rollMode = (config.rollMode as string) || (game.settings.get('core', 'rollMode') as string);
+        const rollMode = ((config.rollMode as string) || (game.settings.get('core', 'rollMode') as string)) as ChatMessage.PassableRollMode;
         ChatMessage.applyRollMode(chatData, rollMode);
 
         // Create the chat message
         const message = await ChatMessage.create(chatData);
 
         // Fire post-message hook
-        Hooks.callAll('wh40k-rpg.postRollPost', message, roll, config);
+        HooksExt.callAll('wh40k-rpg.postRollPost', message, roll, config);
 
         return message;
     }
@@ -156,7 +163,7 @@ export default class BasicRollWH40K extends Roll {
      */
     static async _prepareChatData(roll: BasicRollWH40K, config: Record<string, unknown>) {
         // Get speaker data
-        const speaker = config.speaker || ChatMessage.getSpeaker({ actor: config.actor as Actor });
+        const speaker = config.speaker || ChatMessage.getSpeaker({ actor: config.actor as WH40KBaseActor });
 
         // Render the chat template - V13: use namespaced renderTemplate
         const templateData = await this._prepareTemplateData(roll, config);
@@ -185,7 +192,7 @@ export default class BasicRollWH40K extends Roll {
      * @returns {Promise<Record<string, unknown>>} Template data
      * @protected
      */
-    static async _prepareTemplateData(roll: BasicRollWH40K, config: Record<string, unknown>) {
+    static async _prepareTemplateData(roll: BasicRollWH40K, config: Record<string, unknown>): Promise<Record<string, unknown>> {
         return {
             roll: roll,
             rollData: {
@@ -251,33 +258,34 @@ export default class BasicRollWH40K extends Roll {
      * @returns {Record<string, unknown>}
      * @override
      */
-    toJSON() {
-        const json = super.toJSON();
+    toJSON(): ReturnType<Roll['toJSON']> & { configuration?: Record<string, unknown> } {
+        const json: ReturnType<Roll['toJSON']> & { configuration?: Record<string, unknown> } = super.toJSON();
         json.configuration = this.configuration;
         return json;
     }
 
     /**
      * Recreate a roll from serialized data
-     * @param {Record<string, unknown>} data - Serialized roll data
+     * @param {Roll.Data} data - Serialized roll data
      * @returns {BasicRollWH40K}
      * @override
      */
-    static fromData(data: Record<string, unknown>) {
+    static fromData<T extends Roll.Internal.AnyConstructor>(this: T, data: Roll.Data): ReturnType<typeof Roll.fromData<T>> {
+        const dataWithConfig = data as Roll.Data & { configuration?: Record<string, unknown> };
         try {
             // Let parent class handle core roll reconstruction
             const roll = super.fromData(data);
 
             // Restore our custom configuration
-            if (data.configuration) {
-                (roll as BasicRollWH40K).configuration = data.configuration as Record<string, unknown>;
+            if (dataWithConfig.configuration) {
+                (roll as BasicRollWH40K).configuration = dataWithConfig.configuration;
             }
 
-            return roll;
+            return roll as ReturnType<typeof Roll.fromData<T>>;
         } catch (error) {
-            console.warn(`Failed to recreate ${this.name} from data:`, error);
+            console.warn(`Failed to recreate roll from data:`, error);
             // Return a basic roll as fallback
-            return super.fromData(data);
+            return super.fromData(data) as ReturnType<typeof Roll.fromData<T>>;
         }
     }
 }

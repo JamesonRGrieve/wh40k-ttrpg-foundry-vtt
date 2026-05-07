@@ -14,6 +14,7 @@ import BaseItemSheet from './base-item-sheet.ts';
 export default class ContainerItemSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
+        ...BaseItemSheet.DEFAULT_OPTIONS,
         actions: {
             ...BaseItemSheet.DEFAULT_OPTIONS?.actions,
             nestedItemCreate: ContainerItemSheet.#nestedItemCreate,
@@ -66,13 +67,13 @@ export default class ContainerItemSheet extends BaseItemSheet {
         const form = this.element.querySelector('form') ?? this.element;
 
         form.addEventListener('dragover', this._onDragOver.bind(this));
-        form.addEventListener('drop', this._onDrop.bind(this) as EventListener);
+        form.addEventListener('drop', this._onDrop.bind(this) as unknown as EventListener);
         form.addEventListener('dragend', this._onDragEnd.bind(this));
 
         // Set up draggable nested items
         this.element.querySelectorAll('[data-nested-item-id]').forEach((el) => {
             el.setAttribute('draggable', 'true');
-            el.addEventListener('dragstart', this._onNestedItemDragStart.bind(this) as EventListener);
+            el.addEventListener('dragstart', this._onNestedItemDragStart.bind(this) as unknown as EventListener);
         });
     }
 
@@ -109,7 +110,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
         event.stopPropagation();
 
         let data;
-        let droppedItem: WH40KItem | null;
+        let droppedItem: WH40KItem | null = null;
         let sourceActor: Actor | null = null;
 
         try {
@@ -121,13 +122,15 @@ export default class ContainerItemSheet extends BaseItemSheet {
             droppedItem = (await fromUuid(data.uuid)) as WH40KItem | null;
             if (!droppedItem) return false;
 
+            const resolvedItem = droppedItem;
+
             // Get source actor if applicable
             if (data.uuid?.startsWith('Actor.')) {
                 sourceActor = (await fromUuid(data.uuid.split('.Item.')[0])) as Actor | null;
             }
 
             // Check if item already exists
-            if (this.item.items?.find((i) => i._id === droppedItem._id)) {
+            if (this.item.items?.find((i) => i._id === resolvedItem._id)) {
                 return false;
             }
         } catch (err) {
@@ -146,11 +149,12 @@ export default class ContainerItemSheet extends BaseItemSheet {
         }
 
         // Add the item to the container
-        await this.item.createNestedDocuments([droppedItem]);
+        await this.item.createNestedDocuments([droppedItem as unknown as Record<string, unknown>]);
 
         // Remove from source actor if applicable
         if (sourceActor && ['acolyte', 'character'].includes(sourceActor.type)) {
-            await sourceActor.deleteEmbeddedDocuments('Item', [droppedItem._id]);
+            const itemId = droppedItem._id;
+            if (itemId) await sourceActor.deleteEmbeddedDocuments('Item', [itemId]);
         }
 
         return false;
@@ -164,13 +168,13 @@ export default class ContainerItemSheet extends BaseItemSheet {
      */
     _validateDropTarget(droppedItem: WH40KItem): boolean {
         let canAdd = this.item.id !== droppedItem._id;
-        let parent = this.item.parent;
+        let parent: { id: string | null; parent?: unknown } | null = this.item.parent as { id: string | null; parent?: unknown } | null;
         let count = 0;
 
         while (parent && count < 10) {
             count++;
             canAdd = canAdd && parent.id !== droppedItem._id;
-            parent = parent.parent;
+            parent = (parent.parent as typeof parent) ?? null;
         }
 
         return canAdd;
@@ -183,7 +187,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @protected
      */
     _canAddItem(item: WH40KItem): boolean {
-        const sys = this.item.system as { container?: boolean };
+        const sys = this.item.system as { container?: boolean; containerTypes?: string[] };
         if (!sys.containerTypes) return false;
         return sys.containerTypes.includes(item.type);
     }
@@ -238,7 +242,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
     static #nestedItemEdit(this: ContainerItemSheet, event: Event, target: HTMLElement): void {
         const itemId = (target.closest('[data-nested-item-id]') as HTMLElement | null)?.dataset.nestedItemId;
         const nestedItem = this.item.items?.get(itemId!);
-        nestedItem?.sheet.render(true);
+        nestedItem?.sheet?.render(true);
     }
 
     /* -------------------------------------------- */

@@ -1,7 +1,7 @@
 import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
-import { Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
+import { AttackDataLike, Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
 import { getDegree, getOpposedDegrees, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
@@ -33,12 +33,17 @@ export class ActionData {
     checkForPerils(): void {
         if (this.rollData.power) {
             const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument | null;
-            if (sourceActor && (sourceActor.system as { psy?: { rating: number } })?.psy?.rating < (this.rollData as PsychicRollData).pr) {
-                if (this.rollData.roll && !/^(.)\1+$/.test(this.rollData.roll.total.toString())) {
+            const psyRating = (sourceActor?.system as { psy?: { rating: number } })?.psy?.rating ?? 0;
+            if (sourceActor && psyRating < (this.rollData as PsychicRollData).pr) {
+                const rollTotal = this.rollData.roll?.total;
+                if (rollTotal !== undefined && !/^(.)\1+$/.test(rollTotal.toString())) {
                     this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
                 }
-            } else if (this.rollData.roll && /^(.)\1+$/.test(this.rollData.roll.total.toString())) {
-                this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
+            } else {
+                const rollTotal = this.rollData.roll?.total;
+                if (rollTotal !== undefined && /^(.)\1+$/.test(rollTotal.toString())) {
+                    this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
+                }
             }
         }
     }
@@ -132,26 +137,25 @@ export class ActionData {
                 const stunRoll = new Roll(`1d10+${bonus}`, {});
                 await stunRoll.evaluate();
                 this.rollData.roll = stunRoll;
+                const stunTotal = stunRoll.total ?? 0;
 
                 if (this.rollData.targetActor) {
                     const defense = (this.rollData.targetActor.system as { armour?: { head?: { total: number } } })?.armour?.head?.total ?? 0;
-                    if (stunRoll.total >= defense) {
+                    if (stunTotal >= defense) {
                         this.rollData.success = true;
                         this.addEffect(
                             'Stun Attack',
-                            `Stun roll of ${stunRoll.total} vs ${defense}. Target is stunned for ${
-                                stunRoll.total - defense
-                            } rounds and gains 1 level of fatigue.`,
+                            `Stun roll of ${stunTotal} vs ${defense}. Target is stunned for ${stunTotal - defense} rounds and gains 1 level of fatigue.`,
                         );
                     } else {
                         this.rollData.success = false;
-                        this.addEffect('Stun Attack', `Stun roll of ${stunRoll.total} vs ${defense}. The attack fails to stun the target!`);
+                        this.addEffect('Stun Attack', `Stun roll of ${stunTotal} vs ${defense}. The attack fails to stun the target!`);
                     }
                 } else {
                     this.rollData.success = true;
                     this.addEffect(
                         'Stun Attack',
-                        `Stun roll of ${stunRoll.total}. Compare to the target’s total of his Toughness bonus +1 per Armour point protecting his head. If the attacker’s roll is equal to or higher than this value, the target is Stunned for a number of rounds equal to the difference between the two values and gains one level of Fatigue.`,
+                        `Stun roll of ${stunTotal}. Compare to the target's total of his Toughness bonus +1 per Armour point protecting his head. If the attacker's roll is equal to or higher than this value, the target is Stunned for a number of rounds equal to the difference between the two values and gains one level of Fatigue.`,
                     );
                 }
                 return;
@@ -174,7 +178,8 @@ export class ActionData {
             };
             if (itemSystem.isMelee) {
                 if (!this.rollData.success) {
-                    const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument | null;
+                    type ActorWithHasTalent = WH40KBaseActorDocument & { hasTalent(name: string): boolean };
+                    const sourceActor = this.rollData.sourceActor as ActorWithHasTalent | null;
                     if (sourceActor?.hasTalent('Blademaster')) {
                         this.effects.push('blademaster');
                         if (this.rollData.roll) this.rollData.previousRolls.push(this.rollData.roll);
@@ -287,11 +292,12 @@ export class ActionData {
     async calculateHits(): Promise<void> {
         const weaponRollData = this.rollData as WeaponRollData;
         if ((this.rollData.success || weaponRollData.isThrown) && this.damageData) {
-            let hit = await Hit.createHit(this, 0);
+            const attackData = this as unknown as AttackDataLike;
+            let hit = await Hit.createHit(attackData, 0);
             this.damageData.hits.push(hit);
 
             for (let i = 0; i < this.damageData.additionalHits; i++) {
-                hit = await Hit.createHit(this, i + 1);
+                hit = await Hit.createHit(attackData, i + 1);
                 this.damageData.hits.push(hit);
             }
         }
@@ -324,7 +330,7 @@ export class ActionData {
     }
 
     async useResources(): Promise<void> {
-        await useAmmo(this);
+        await useAmmo(this as unknown as Parameters<typeof useAmmo>[0]);
 
         if (this.rollData.eyeOfVengeance) {
             const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument | null;
@@ -333,12 +339,14 @@ export class ActionData {
     }
 
     async refundResources(): Promise<void> {
-        await refundAmmo(this);
+        await refundAmmo(this as unknown as Parameters<typeof refundAmmo>[0]);
 
         if (this.rollData.eyeOfVengeance) {
             const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument;
-            await sourceActor.update({
-                'system.fate.value': (sourceActor.system as any).fate.value + 1,
+            const fateSystem = sourceActor.system as { fate?: { value: number } };
+            const currentFate = fateSystem.fate?.value ?? 0;
+            await (sourceActor.update as (data: Record<string, unknown>) => Promise<unknown>)({
+                'system.fate.value': currentFate + 1,
             });
         }
     }
@@ -368,7 +376,9 @@ export class ActionData {
         }
 
         this.rollData.render = (await this.rollData.roll?.render()) ?? null;
-        this.template = this.rollData.template;
+        if (this.rollData.template !== undefined) {
+            this.template = this.rollData.template;
+        }
 
         await sendActionDataToChat(this);
     }
@@ -411,7 +421,7 @@ export class PsychicActionData extends ActionData {
     async descriptionText(): Promise<void> {
         if (this.rollData.power) {
             this.psychicEffect = await TextEditor.enrichHTML((this.rollData.power.system as { description?: string })?.description ?? '', {
-                rollData: this.rollData,
+                rollData: this.rollData as unknown as Record<string, unknown>,
             });
         }
     }

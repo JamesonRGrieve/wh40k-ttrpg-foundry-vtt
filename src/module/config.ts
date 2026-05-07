@@ -776,7 +776,9 @@ WH40K.calculateDegrees = (roll, target) => {
         roll,
         target,
         degrees: success ? degrees : -degrees,
-        label: success ? game.i18n.format('WH40K.Degrees.Success', { degrees }) : game.i18n.format('WH40K.Degrees.Failure', { degrees }),
+        label: success
+            ? game.i18n.format('WH40K.Degrees.Success', { degrees: String(degrees) })
+            : game.i18n.format('WH40K.Degrees.Failure', { degrees: String(degrees) }),
     };
 };
 
@@ -814,7 +816,7 @@ WH40K.defaultIcons = {
     starship: 'modules/game-icons-net-font/svg/spaceship.svg',
 };
 
-const gameIconPath = (name) => `modules/game-icons-net-font/svg/${name}.svg`;
+const gameIconPath = (name: string) => `modules/game-icons-net-font/svg/${name}.svg`;
 
 WH40K.skillIcons = {
     acrobatics: gameIconPath('jump-across'),
@@ -1372,11 +1374,12 @@ WH40K.getQualityDescription = function (identifier) {
  * @returns {number|null}    Jam threshold (90-100) or null if cannot jam
  */
 WH40K.getJamThreshold = function (weapon) {
-    const craftsmanship = weapon.system?.craftsmanship;
-    const qualities = weapon.system?.effectiveSpecial || weapon.system?.special;
+    const w = weapon as { system?: { craftsmanship?: string; effectiveSpecial?: Set<string>; special?: Set<string> } };
+    const craftsmanship = w.system?.craftsmanship;
+    const qualities = w.system?.effectiveSpecial || w.system?.special;
 
     // Best/Master-crafted never jam
-    if (['best', 'master-crafted'].includes(craftsmanship)) {
+    if (craftsmanship && ['best', 'master-crafted'].includes(craftsmanship)) {
         return null;
     }
 

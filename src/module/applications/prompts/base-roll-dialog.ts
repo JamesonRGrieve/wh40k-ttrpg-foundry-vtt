@@ -1,4 +1,5 @@
 import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
+import type { ApplicationV2Ctor } from '../api/application-types.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -6,7 +7,7 @@ const { ApplicationV2 } = foundry.applications.api;
  * Base dialog class for roll prompts.
  * Provides common functionality for weapon, psychic, force field, and other roll dialogs.
  */
-export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
+export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     /**
      * @param {Record<string, unknown>} rollData     The roll data to configure.
      * @param {ApplicationV2Config.DefaultOptions} [options={}] Dialog options.
@@ -24,8 +25,8 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'roll-dialog', 'standard-form'],
         actions: {
-            roll: BaseRollDialog.#onRoll as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            cancel: BaseRollDialog.#onCancel as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            roll: BaseRollDialog.#onRoll as Function,
+            cancel: BaseRollDialog.#onCancel as Function,
         },
         form: {
             handler: BaseRollDialog.#onFormSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
@@ -36,7 +37,6 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
             width: 500,
         },
         window: {
-            minimizable: false,
             resizable: false,
         },
     };

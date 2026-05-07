@@ -12,8 +12,10 @@ import type { WH40KItem } from '../../documents/item.ts';
 export default class ArmourModSheet extends ContainerItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
+        ...ContainerItemSheet.DEFAULT_OPTIONS,
         classes: ['wh40k-rpg', 'sheet', 'item', 'armour-modification'],
         actions: {
+            ...ContainerItemSheet.DEFAULT_OPTIONS?.actions,
             toggleArmourType: ArmourModSheet.#onToggleArmourType,
             adjustModifier: ArmourModSheet.#onAdjustModifier,
             addProperty: ArmourModSheet.#onAddProperty,
@@ -28,7 +30,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         header: {
             template: 'systems/wh40k-rpg/templates/item/armour-mod-header.hbs',
         },
@@ -77,7 +79,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
     /** @inheritDoc */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const system = this.item.system as {
+        const system = this.item.system as unknown as {
             restrictions: { armourTypes: Set<string> };
             addedProperties: Set<string>;
             removedProperties: Set<string>;
@@ -143,7 +145,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
         // Get shared context from _prepareContext
         const sharedContext = await this._prepareContext(options);
         const partContext = { ...sharedContext, ...context };
-        const system = this.item.system as {
+        const system = this.item.system as unknown as {
             restrictions: { armourTypes: Set<string> };
             addedProperties: Set<string>;
             removedProperties: Set<string>;
@@ -196,7 +198,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
     static async #onToggleArmourType(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const type = target.dataset.type;
         if (!type) return;
-        const current = new Set((this.item.system as { restrictions: { armourTypes: string[] } }).restrictions.armourTypes);
+        const current = new Set((this.item.system as unknown as { restrictions: { armourTypes: string[] } }).restrictions.armourTypes);
 
         if (current.has(type)) {
             current.delete(type);
@@ -211,7 +213,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
         await this.item.update({
             'system.restrictions.armourTypes': Array.from(current),
-        });
+        } as Record<string, unknown>);
     }
 
     /**

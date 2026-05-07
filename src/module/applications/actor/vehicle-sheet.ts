@@ -117,7 +117,7 @@ export default class VehicleSheet extends BaseActorSheet {
         await this._prepareItems(context);
 
         // Prepare tabs
-        context.tabs = this._prepareTabs();
+        context.tabs = this._prepareVehicleTabs();
 
         return context;
     }
@@ -266,7 +266,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @returns {Array} Tabs configuration array.
      * @protected
      */
-    _prepareTabs(): Record<string, unknown>[] {
+    _prepareVehicleTabs(): Record<string, unknown>[] {
         return (this.constructor as unknown as { TABS: HandlebarsApplicationV14.TabDescriptor[] }).TABS.map((tab: HandlebarsApplicationV14.TabDescriptor) => ({
             id: tab.tab,
             tab: tab.tab,
@@ -446,7 +446,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const item = this.actor.items.get(itemId);
         if (!item) return;
 
-        await item.update({ 'system.active': !(item.system as Record<string, unknown>).active });
+        await item.update({ 'system.active': !(item.system as Record<string, unknown>).active } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -466,7 +466,7 @@ export default class VehicleSheet extends BaseActorSheet {
 
         // Toggle damaged state or apply specific damage
         const damaged = (item.system as Record<string, unknown>).damaged || false;
-        await item.update({ 'system.damaged': !damaged });
+        await item.update({ 'system.damaged': !damaged } as Record<string, unknown>);
 
         ui.notifications.info(`${item.name} ${damaged ? 'repaired' : 'damaged'}.`);
     }

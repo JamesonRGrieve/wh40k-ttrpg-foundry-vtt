@@ -5,13 +5,14 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
+import type { ApplicationV2Ctor } from '../api/application-types.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Dialog for adding specialist skill specializations.
  */
-export default class SpecialistSkillDialog extends ApplicationV2Mixin(ApplicationV2) {
+export default class SpecialistSkillDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     declare actorDoc: WH40KBaseActor;
     declare preSelectedSkillKey: string;
     declare _specializationMap: Map<string, string[]>;
@@ -36,15 +37,14 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'specialist-skill', 'standard-form'],
         actions: {
-            add: SpecialistSkillDialog.#onAdd as unknown as ApplicationV2Config.DefaultOptions['actions'],
-            cancel: SpecialistSkillDialog.#onCancel as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            add: SpecialistSkillDialog.#onAdd as Function,
+            cancel: SpecialistSkillDialog.#onCancel as Function,
         },
         position: {
             width: 420,
         },
         window: {
             title: 'Add Specialist Skill',
-            minimizable: false,
         },
     };
 
@@ -70,7 +70,12 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     async _loadAllSpecializations(): Promise<void> {
         this._compendiumLoaded = true;
 
-        for (const pack of game.packs as foundry.utils.Collection<CompendiumCollection>) {
+        type AnyPack = {
+            metadata: { type: string; name: string };
+            getIndex(): Promise<foundry.utils.Collection<{ _id: string; name: string }>>;
+            getDocument(id: string): Promise<unknown>;
+        };
+        for (const pack of game.packs as unknown as AnyPack[]) {
             if (pack.metadata.type !== 'Item') continue;
             if (!pack.metadata.name.includes('skill')) continue;
 

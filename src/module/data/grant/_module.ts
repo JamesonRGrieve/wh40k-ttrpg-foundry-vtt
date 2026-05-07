@@ -31,22 +31,22 @@ export const GRANT_TYPES = {
  * @param {object} config - Grant configuration with type field
  * @returns {BaseGrantData|null}
  */
-export function createGrant(config) {
-    if (!config?.type) {
+export function createGrant(config: Record<string, unknown>) {
+    if (!config?.['type']) {
         console.warn('createGrant: Missing type in config', config);
         return null;
     }
 
-    const GrantClass = GRANT_TYPES[config.type];
+    const GrantClass = GRANT_TYPES[config['type'] as keyof typeof GRANT_TYPES];
     if (!GrantClass) {
-        console.warn(`createGrant: Unknown grant type "${config.type}"`);
+        console.warn(`createGrant: Unknown grant type "${config['type']}"`);
         return null;
     }
 
     try {
         return new GrantClass(config);
     } catch (error) {
-        console.warn(`createGrant: Failed to create ${config.type} grant:`, error.message, config);
+        console.warn(`createGrant: Failed to create ${config['type']} grant:`, (error as Error).message, config);
         return null;
     }
 }
@@ -56,7 +56,7 @@ export function createGrant(config) {
  * @param {object} config - Grant configuration
  * @returns {string[]} Array of validation errors
  */
-export function validateGrantConfig(config) {
+export function validateGrantConfig(config: Record<string, unknown>) {
     const grant = createGrant(config);
     if (!grant) return [`Invalid grant type: ${config?.type}`];
     return grant.validateGrant();

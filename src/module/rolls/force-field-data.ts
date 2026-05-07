@@ -58,7 +58,7 @@ export class ForceFieldData {
         if (this.overload) {
             this.forceField = (await this.forceField.update({
                 'system.overloaded': true,
-            })) as ForceFieldItem;
+            } as Record<string, unknown>)) as ForceFieldItem;
         }
 
         const html = await foundry.applications.handlebars.renderTemplate(

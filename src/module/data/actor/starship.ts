@@ -31,14 +31,14 @@ export default class StarshipData extends ActorDataModel {
         total: number;
         used: number;
         /** Computed in _prepareResources / prepareEmbeddedData */
-        available?: number;
+        available: number;
         consumed?: number;
     };
     declare power: {
         total: number;
         used: number;
         /** Computed in _prepareResources / prepareEmbeddedData */
-        available?: number;
+        available: number;
         generated?: number;
         consumed?: number;
     };

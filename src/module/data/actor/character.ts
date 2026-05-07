@@ -136,7 +136,7 @@ export default class CharacterData extends CreatureTemplate {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static override defineSchema(): Record<string, foundry.data.fields.DataField> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),

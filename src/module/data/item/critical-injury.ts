@@ -24,7 +24,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Damage type that caused this
             damageType: new fields.StringField({
@@ -119,7 +119,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * @type {string}
      */
     get damageTypeIcon() {
-        const icons = {
+        const icons: Record<string, string> = {
             impact: 'fa-hammer',
             rending: 'fa-cut',
             explosive: 'fa-bomb',
@@ -133,7 +133,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * @type {string}
      */
     get bodyPartIcon() {
-        const icons = {
+        const icons: Record<string, string> = {
             head: 'fa-head-side-brain',
             arm: 'fa-hand-paper',
             body: 'fa-user',

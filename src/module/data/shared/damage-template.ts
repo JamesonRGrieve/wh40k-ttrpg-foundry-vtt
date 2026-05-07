@@ -16,7 +16,7 @@ export default class DamageTemplate extends SystemDataModel {
         const fields = foundry.data.fields;
         return {
             damage: new fields.SchemaField({
-                formula: new FormulaField({ required: true, blank: true, initial: '' }),
+                formula: new FormulaField({ required: true, blank: true, initial: '' } as unknown as ConstructorParameters<typeof FormulaField>[0]),
                 type: new fields.StringField({
                     required: true,
                     initial: 'impact',
@@ -72,7 +72,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
     }
 
@@ -119,7 +119,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @type {string}
      */
     get damageTypeAbbr() {
-        const abbrs = {
+        const abbrs: Record<string, string> = {
             impact: 'I',
             rending: 'R',
             explosive: 'X',
@@ -167,7 +167,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @param {string} quality   The quality to check.
      * @returns {boolean}
      */
-    hasSpecial(quality): boolean {
+    hasSpecial(quality: string): boolean {
         return this.special?.has(quality.toLowerCase()) ?? false;
     }
 }

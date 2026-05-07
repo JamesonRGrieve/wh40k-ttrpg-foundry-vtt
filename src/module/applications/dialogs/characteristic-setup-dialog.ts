@@ -87,7 +87,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     constructor(actor: WH40KBaseActor, options: ApplicationV2Config.DefaultOptions = {}) {
-        super(options);
+        super(options as Record<string, unknown>);
         this.#actor = actor;
         this.#initializeState();
     }
@@ -481,7 +481,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     }
 
     static async open(actor: WH40KBaseActor): Promise<boolean> {
-        if (!actor || (actor.type !== 'acolyte' && actor.type !== 'character')) {
+        if (!actor || ((actor.type as string) !== 'acolyte' && (actor.type as string) !== 'character')) {
             ui.notifications.error('Characteristic setup is only available for characters.');
             return false;
         }
