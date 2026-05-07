@@ -54,7 +54,52 @@
     "no-constant-binary-expression": "warn",
     "no-loss-of-precision": "warn",
     "no-new-native-nonconstructor": "warn",
-    "prefer-rest-params": "warn"
+    "prefer-rest-params": "warn",
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-debugger": "warn",
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "LogicalExpression[operator='??'][left.type='MemberExpression'][left.object.type='ThisExpression']",
+        "message": "Don't use `??` on `this.*` — initialize the field in the DataModel schema (defineSchema/migrateData) so the value is always defined. If this is truly external data, parse via Zod and propagate the inferred type."
+      },
+      {
+        "selector": "LogicalExpression[operator='??'] > MemberExpression.left:has(MemberExpression[property.name='system'])",
+        "message": "Don't use `??` on a `.system.*` access — tighten the DataModel so the property is typed as defined. If the value really can be missing, fix the schema's default; don't paper over it at the call site."
+      },
+      {
+        "selector": "AssignmentExpression[operator='??=']",
+        "message": "`??=` hides default-initialization bugs. Set the default in the schema (defineSchema/migrateData) or at construction, not at the call site."
+      },
+      {
+        "selector": "TSUnknownKeyword:not(CatchClause TSUnknownKeyword)",
+        "message": "`unknown` should not persist past a boundary. External input → validate via Zod immediately and use the inferred type downstream. Internal data → define an interface. The only acceptable `unknown` is a parameter directly fed into a Zod parse / type guard on the next line; disable inline with `// eslint-disable-next-line no-restricted-syntax -- boundary: <reason>`."
+      },
+      {
+        "selector": "TSAsExpression > TSUnknownKeyword",
+        "message": "`as unknown` is a step toward `as SomethingElse`. Write a Zod schema or type guard instead."
+      },
+      {
+        "selector": "TSAsExpression > TSTypeReference[typeName.name='Record']",
+        "message": "`as Record<...>` casts throw away schema typing. If this is a true framework boundary (formData.object, hook payload, third-party data), parse via Zod and propagate the inferred type. If it's DataModel-backed, fix `defineSchema()` or add `declare` fields. If the same Record cast appears 3+ times in one file, extract an interface."
+      },
+      {
+        "selector": "CallExpression[callee.object.object.name='ui'][callee.object.property.name='notifications'][arguments.0.type='Literal']",
+        "message": "Hardcoded string in `ui.notifications.*`. All player-facing strings must live in `src/lang/en.json` under `WH40K.*` and be resolved via `t(...)` or `game.i18n.localize(...)`."
+      },
+      {
+        "selector": "CallExpression[callee.object.object.name='ui'][callee.object.property.name='notifications'] > TemplateLiteral.arguments[expressions.length=0]",
+        "message": "Hardcoded template-literal in `ui.notifications.*`. All player-facing strings must live in `src/lang/en.json` under `WH40K.*` and be resolved via `t(...)` or `game.i18n.format(...)`."
+      },
+      {
+        "selector": "PropertyDefinition[key.name='DEFAULT_OPTIONS'] Property[key.name='title'][value.type='Literal']",
+        "message": "Hardcoded `window.title` in `DEFAULT_OPTIONS`. Use a `WH40K.*` localization key — the sheet title is player-facing."
+      },
+      {
+        "selector": "PropertyDefinition[key.name='TABS'] Property[key.name='label'][value.type='Literal']",
+        "message": "Hardcoded `label` in `TABS`. Use a `WH40K.*` localization key — tab labels are player-facing."
+      }
+    ]
   },
   "ignorePatterns": [
     "dist/",
@@ -119,6 +164,14 @@
         "@typescript-eslint/no-unsafe-enum-comparison": "warn",
         "@typescript-eslint/prefer-nullish-coalescing": ["warn", { "ignorePrimitives": { "string": true } }],
         "@typescript-eslint/prefer-optional-chain": "warn",
+        "@typescript-eslint/no-deprecated": "warn",
+        "@typescript-eslint/no-unnecessary-boolean-literal-compare": "warn",
+        "@typescript-eslint/no-meaningless-void-operator": "warn",
+        "@typescript-eslint/prefer-includes": "warn",
+        "@typescript-eslint/prefer-string-starts-ends-with": "warn",
+        "@typescript-eslint/prefer-find": "warn",
+        "@typescript-eslint/require-array-sort-compare": ["warn", { "ignoreStringArrays": true }],
+        "@typescript-eslint/prefer-readonly": "warn",
         "@typescript-eslint/promise-function-async": "warn",
         "@typescript-eslint/return-await": ["warn", "in-try-catch"],
         "@typescript-eslint/ban-ts-comment": ["warn", { "ts-expect-error": "allow-with-description", "ts-ignore": true, "ts-nocheck": true, "ts-check": false, "minimumDescriptionLength": 5 }],
