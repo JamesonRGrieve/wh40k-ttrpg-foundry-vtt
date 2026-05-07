@@ -1,11 +1,11 @@
 {{! NPC Template - Basics Tab }}
-<section class="tab-content tab-basics" data-tab="basics" data-group="primary">
+<section data-tab="basics" data-group="primary">
     {{! Description Section }}
     <div class="wh40k-panel">
         <header class="wh40k-panel-header">
             <h3><i class="fas fa-scroll"></i> {{localize "WH40K.NPC.Template.Description"}}</h3>
         </header>
-        <div class="wh40k-panel-content">
+        <div class="tw-p-2">
             <div>
                 {{formInput fields.description value=system.description enriched=enrichedDescription}}
             </div>
@@ -17,7 +17,7 @@
         <header class="wh40k-panel-header">
             <h3><i class="fas fa-tags"></i> {{localize "WH40K.NPC.Tags"}}</h3>
         </header>
-        <div class="wh40k-panel-content">
+        <div class="tw-p-2">
             <div class="tw-flex tw-flex-wrap tw-gap-2">
                 {{#each system.tags as |tag idx|}}
                     <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-full tw-text-sm" style="background: var(--wh40k-accent-color-light)" data-index="{{idx}}">
@@ -42,7 +42,7 @@
         <header class="wh40k-panel-header">
             <h3><i class="fas fa-chart-line"></i> {{localize "WH40K.NPC.Template.ScalingRules"}}</h3>
         </header>
-        <div class="wh40k-panel-content">
+        <div class="tw-p-2">
             <div class="tw-grid tw-grid-cols-2 tw-gap-4">
                 <div class="tw-flex tw-flex-col tw-gap-1">
                     <label class="tw-text-sm tw-font-medium">{{localize "WH40K.NPC.Template.CharacteristicScale"}}</label>
@@ -102,7 +102,7 @@
         <header class="wh40k-panel-header">
             <h3><i class="fas fa-book"></i> {{localize "WH40K.NPC.Source"}}</h3>
         </header>
-        <div class="wh40k-panel-content">
+        <div class="tw-p-2">
             <div class="tw-flex tw-items-center tw-gap-4">
                 <label class="tw-font-medium tw-min-w-[120px]">{{localize "WH40K.NPC.SourceBook"}}</label>
                 <input class="tw-flex-1 tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm" type="text" name="system.source" value="{{source.source}}" placeholder="{{localize 'WH40K.NPC.SourcePlaceholder'}}" />
