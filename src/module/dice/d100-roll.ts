@@ -274,7 +274,9 @@ export default class D100Roll extends BasicRollWH40K {
 
             // Result info
             const resultDiv = document.createElement('div');
-            resultDiv.className = this.isSuccess ? 'wh40k-dice-success' : 'wh40k-dice-failure';
+            resultDiv.className = this.isSuccess
+                ? 'wh40k-dice-success tw-text-[var(--wh40k-success-secondary)] tw-font-semibold'
+                : 'wh40k-dice-failure tw-text-[var(--wh40k-danger-secondary)] tw-font-semibold';
             const degrees = this.isSuccess ? this.degreesOfSuccess : this.degreesOfFailure;
             const degreeLabel = this.isSuccess ? 'DoS' : 'DoF';
             resultDiv.textContent = `${this.isSuccess ? 'Success' : 'Failure'}: ${degrees} ${degreeLabel}`;
@@ -283,7 +285,7 @@ export default class D100Roll extends BasicRollWH40K {
             // Critical indicator
             if (this.isCriticalSuccess) {
                 const critDiv = document.createElement('div');
-                critDiv.className = 'wh40k-dice-critical';
+                critDiv.className = 'wh40k-dice-critical tw-text-[var(--wh40k-gold-bright)] tw-font-bold tw-[text-shadow:0_0_6px_rgba(255,215,0,0.5)]';
                 critDiv.textContent = '⚡ Critical Success!';
                 summary.appendChild(critDiv);
             } else if (this.isCriticalFailure) {
@@ -296,7 +298,7 @@ export default class D100Roll extends BasicRollWH40K {
             // Doubles indicator (for Righteous Fury)
             if (this.isDoubles && this.isSuccess) {
                 const doublesDiv = document.createElement('div');
-                doublesDiv.className = 'wh40k-dice-doubles';
+                doublesDiv.className = 'wh40k-dice-doubles tw-text-[var(--wh40k-warning-primary)] tw-font-semibold tw-italic';
                 doublesDiv.textContent = '🔥 Doubles! (Righteous Fury?)';
                 summary.appendChild(doublesDiv);
             }

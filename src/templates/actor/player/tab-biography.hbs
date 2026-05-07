@@ -27,34 +27,34 @@
                     <span class="wh40k-panel-title"><i class="fas fa-users"></i> Connections</span>
                 </div>
                 <div class="wh40k-panel-body">
-                    <div class="wh40k-connections-section">
+                    <div class="wh40k-connections-section tw-mb-2 last:tw-mb-0">
                         <div class="wh40k-affliction-header">
                             <span>Peers</span>
-                            <button type="button" class="wh40k-add-btn" data-action="itemCreate" data-type="peer"><i class="fas fa-plus"></i></button>
+                            <button type="button" class="wh40k-add-btn tw-bg-transparent tw-border tw-border-[var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-py-1 tw-px-2 tw-rounded-md tw-transition-all tw-text-xs hover:tw-bg-[var(--wh40k-panel-bg-translucent)] hover:tw-border-accent-bio hover:tw-text-accent-bio" data-action="itemCreate" data-type="peer"><i class="fas fa-plus"></i></button>
                         </div>
                         <div class="wh40k-affliction-list">
                             {{#each actor.items as |item|}}
                                 {{#if item.isPeer}}
                                 <div class="wh40k-affliction-row" data-item-id="{{item.id}}">
                                     <span class="wh40k-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
-                                    <span class="wh40k-connection-bonus">+{{item.system.modifier}}</span>
+                                    <span class="wh40k-connection-bonus tw-text-xs tw-font-semibold tw-text-success tw-py-0.5 tw-px-1.5 tw-bg-success/15 tw-rounded">+{{item.system.modifier}}</span>
                                     <button type="button" class="wh40k-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
                                 </div>
                                 {{/if}}
                             {{/each}}
                         </div>
                     </div>
-                    <div class="wh40k-connections-section">
+                    <div class="wh40k-connections-section tw-mb-2 last:tw-mb-0">
                         <div class="wh40k-affliction-header">
                             <span>Enemies</span>
-                            <button type="button" class="wh40k-add-btn" data-action="itemCreate" data-type="enemy"><i class="fas fa-plus"></i></button>
+                            <button type="button" class="wh40k-add-btn tw-bg-transparent tw-border tw-border-[var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-py-1 tw-px-2 tw-rounded-md tw-transition-all tw-text-xs hover:tw-bg-[var(--wh40k-panel-bg-translucent)] hover:tw-border-accent-bio hover:tw-text-accent-bio" data-action="itemCreate" data-type="enemy"><i class="fas fa-plus"></i></button>
                         </div>
                         <div class="wh40k-affliction-list">
                             {{#each actor.items as |item|}}
                                 {{#if item.isEnemy}}
                                 <div class="wh40k-affliction-row" data-item-id="{{item.id}}">
                                     <span class="wh40k-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
-                                    <span class="wh40k-connection-penalty">{{item.system.modifier}}</span>
+                                    <span class="wh40k-connection-penalty tw-text-xs tw-font-semibold tw-text-accent-combat tw-py-0.5 tw-px-1.5 tw-bg-accent-combat/15 tw-rounded">{{item.system.modifier}}</span>
                                     <button type="button" class="wh40k-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
                                 </div>
                                 {{/if}}
@@ -71,35 +71,35 @@
         {{!-- Right Column: Journal/Notes --}}
         <div class="wh40k-bio-col tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{!-- Character Notes / Journal --}}
-            <div class="wh40k-panel wh40k-panel-journal">
+            <div class="wh40k-panel wh40k-panel-journal tw-flex-1 tw-flex tw-flex-col">
                 <div class="wh40k-panel-header">
                     <span class="wh40k-panel-title"><i class="fas fa-book-open"></i> Character Journal</span>
                 </div>
-                <div class="wh40k-panel-body wh40k-journal-body">
-                    <div class="wh40k-journal-section">
-                        <label class="wh40k-field-label tw-text-[#4a3728] bc:tw-text-crimson-dark dh1e:tw-text-gold-dark dh2e:tw-text-gold-dark dw:tw-text-accent-combat-d10 ow:tw-text-brass-d15 rt:tw-text-gold-dark im:tw-text-failure">Personality & Quirks</label>
-                        <textarea class="wh40k-textarea" name="system.bio.quirks" rows="2" placeholder="Distinctive habits, mannerisms, beliefs...">{{system.bio.quirks}}</textarea>
+                <div class="wh40k-panel-body wh40k-journal-body tw-flex-1 tw-flex tw-flex-col tw-gap-2">
+                    <div class="wh40k-journal-section tw-flex tw-flex-col tw-gap-1 tw-mt-2">
+                        <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[#4a3728] bc:tw-text-crimson-dark dh1e:tw-text-gold-dark dh2e:tw-text-gold-dark dw:tw-text-accent-combat-d10 ow:tw-text-brass-d15 rt:tw-text-gold-dark im:tw-text-failure">Personality & Quirks</label>
+                        <textarea class="wh40k-textarea tw-w-full tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-sm tw-leading-[1.5] tw-resize-y tw-font-[inherit] focus:tw-outline-none focus:tw-border-gold placeholder:tw-text-[color:var(--wh40k-text-muted)] placeholder:tw-italic" name="system.bio.quirks" rows="2" placeholder="Distinctive habits, mannerisms, beliefs...">{{system.bio.quirks}}</textarea>
                     </div>
-                    <div class="wh40k-journal-section">
-                        <label class="wh40k-field-label">Superstitions & Rituals</label>
-                        <textarea class="wh40k-textarea" name="system.bio.superstition" rows="2" placeholder="Personal beliefs and observances...">{{system.bio.superstition}}</textarea>
+                    <div class="wh40k-journal-section tw-flex tw-flex-col tw-gap-1 tw-mt-2">
+                        <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">Superstitions & Rituals</label>
+                        <textarea class="wh40k-textarea tw-w-full tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-sm tw-leading-[1.5] tw-resize-y tw-font-[inherit] focus:tw-outline-none focus:tw-border-gold placeholder:tw-text-[color:var(--wh40k-text-muted)] placeholder:tw-italic" name="system.bio.superstition" rows="2" placeholder="Personal beliefs and observances...">{{system.bio.superstition}}</textarea>
                     </div>
-                    <div class="wh40k-journal-section">
-                        <label class="wh40k-field-label">Treasured Mementos</label>
-                        <textarea class="wh40k-textarea" name="system.bio.mementos" rows="2" placeholder="Important possessions and keepsakes...">{{system.bio.mementos}}</textarea>
+                    <div class="wh40k-journal-section tw-flex tw-flex-col tw-gap-1 tw-mt-2">
+                        <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">Treasured Mementos</label>
+                        <textarea class="wh40k-textarea tw-w-full tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-sm tw-leading-[1.5] tw-resize-y tw-font-[inherit] focus:tw-outline-none focus:tw-border-gold placeholder:tw-text-[color:var(--wh40k-text-muted)] placeholder:tw-italic" name="system.bio.mementos" rows="2" placeholder="Important possessions and keepsakes...">{{system.bio.mementos}}</textarea>
                     </div>
-                    <div class="wh40k-journal-section wh40k-journal-notes">
-                        <label class="wh40k-field-label">Background & Notes</label>
+                    <div class="wh40k-journal-section wh40k-journal-notes tw-flex tw-flex-col tw-gap-1 tw-mt-2 tw-flex-1 tw-min-h-[150px]">
+                        <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">Background & Notes</label>
                         {{#if editable}}
-                        <prose-mirror name="system.bio.notes" 
-                                      value="{{biography.source.notes}}" 
+                        <prose-mirror name="system.bio.notes"
+                                      value="{{biography.source.notes}}"
                                       document-uuid="{{actor.uuid}}"
-                                      class="wh40k-prose-editor"
+                                      class="wh40k-prose-editor tw-flex-1 tw-min-h-[250px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-overflow-y-auto tw-text-[0.9rem] tw-leading-[1.6] focus:tw-outline-none focus-within:tw-border-accent-bio"
                                       compact>
                             {{{biography.enriched.notes}}}
                         </prose-mirror>
                         {{else}}
-                        <div class="wh40k-prose-content editor-content">
+                        <div class="wh40k-prose-content editor-content tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[0.9rem] tw-leading-[1.6] tw-min-h-[100px]">
                             {{{biography.enriched.notes}}}
                         </div>
                         {{/if}}

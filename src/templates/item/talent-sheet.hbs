@@ -219,7 +219,7 @@
 
         {{!-- Benefit Section (Editable with hover button) --}}
         <div class="wh40k-section wh40k-section--editable {{#if inEditMode}}wh40k-section--editing{{/if}}">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
             <i class="fa-solid fa-star"></i>
             Benefit
             {{#if canEdit}}
@@ -256,7 +256,7 @@
 
         {{!-- Special Abilities Section --}}
         <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1">
+          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-bolt-lightning"></i>
             Special Abilities
             {{#if inEditMode}}
@@ -303,7 +303,7 @@
 
         {{!-- Basic Properties --}}
         <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1">
+          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-cog"></i>
             Basic Properties
           </h3>
@@ -429,7 +429,7 @@
 
         {{!-- Specialization (with Has Specialization checkbox) --}}
         <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1">
+          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-bullseye"></i>
             Specialization (X)
           </h3>
@@ -465,7 +465,7 @@
 
         {{!-- Prerequisites --}}
         <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1">
+          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-lock"></i>
             Prerequisites
             {{#if inEditMode}}
@@ -525,7 +525,7 @@
         {{!-- Roll Configuration (if active talent) --}}
         {{#unless talentData.isPassive}}
         <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1">
+          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-dice-d20"></i>
             Roll Configuration
           </h3>
@@ -604,7 +604,7 @@
 
         {{!-- Permanent Modifiers --}}
         <div class="wh40k-section wh40k-section--effects" data-section-id="modifiers" data-has-data="{{modifiersData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "modifiers")}}{{@index}}{{/if}}{{/each}}">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1">
+          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-chart-line"></i>
             Permanent Modifiers
             {{#if inEditMode}}
@@ -738,7 +738,7 @@
 
         {{!-- Situational Modifiers --}}
         <div class="wh40k-section wh40k-section--effects" data-section-id="situational" data-has-data="{{situationalData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "situational")}}{{@index}}{{/if}}{{/each}}">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1">
+          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-clock-rotate-left"></i>
             Situational Modifiers
             {{#if inEditMode}}
@@ -809,7 +809,7 @@
 
         {{!-- Grants Section --}}
         <div class="wh40k-section wh40k-section--effects" data-section-id="grants" data-has-data="{{grantsData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "grants")}}{{@index}}{{/if}}{{/each}}">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1">
+          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-gift"></i>
             Grants
             {{#if inEditMode}}
@@ -916,7 +916,7 @@
 
         {{!-- Benefit (Editable with hover button) --}}
         <div class="wh40k-section wh40k-section--editable {{#if inEditMode}}wh40k-section--editing{{/if}}">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1">
+          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-star"></i>
             Benefit
             {{#if canEdit}}
@@ -953,7 +953,7 @@
 
         {{!-- Notes --}}
         <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1">
+          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-sticky-note"></i>
             Notes
           </h3>
@@ -977,7 +977,7 @@
         {{!-- Identifier (for developers) --}}
         {{#if inEditMode}}
         <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1">
+          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-code"></i>
             Technical
           </h3>

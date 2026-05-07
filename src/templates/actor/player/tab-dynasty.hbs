@@ -58,8 +58,8 @@
 
                     {{!-- Misfortunes Section --}}
                     <div class="wh40k-pf-misfortunes">
-                        <label class="wh40k-field-label"><i class="fas fa-exclamation-triangle"></i> Misfortunes & Notes</label>
-                        <textarea class="wh40k-textarea" name="system.rogueTrader.profitFactor.misfortunes" rows="2" placeholder="Track PF losses, temporary modifiers...">{{system.rogueTrader.profitFactor.misfortunes}}</textarea>
+                        <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]"><i class="fas fa-exclamation-triangle"></i> Misfortunes & Notes</label>
+                        <textarea class="wh40k-textarea tw-w-full tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-sm tw-leading-[1.5] tw-resize-y tw-font-[inherit] focus:tw-outline-none focus:tw-border-gold placeholder:tw-text-[color:var(--wh40k-text-muted)] placeholder:tw-italic" name="system.rogueTrader.profitFactor.misfortunes" rows="2" placeholder="Track PF losses, temporary modifiers...">{{system.rogueTrader.profitFactor.misfortunes}}</textarea>
                     </div>
 
                     {{!-- Quick Acquisition Reference --}}
@@ -122,27 +122,27 @@
                 </div>
                 <div class="wh40k-panel-body">
                     <div class="wh40k-endeavour-fields">
-                        <div class="wh40k-field-row">
-                            <label class="wh40k-field-label">Endeavour Name</label>
-                            <input type="text" class="wh40k-field-input" name="system.rogueTrader.endeavour.name" value="{{system.rogueTrader.endeavour.name}}" placeholder="Name of current endeavour..." />
+                        <div class="wh40k-field-row tw-flex tw-flex-col tw-gap-1">
+                            <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">Endeavour Name</label>
+                            <input type="text" class="wh40k-field-input tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem] focus:tw-outline-none focus:tw-border-gold" name="system.rogueTrader.endeavour.name" value="{{system.rogueTrader.endeavour.name}}" placeholder="Name of current endeavour..." />
                         </div>
-                        <div class="wh40k-field-row wh40k-field-row-split">
-                            <div class="wh40k-field-half">
-                                <label class="wh40k-field-label">Achievement Points</label>
+                        <div class="wh40k-field-row wh40k-field-row-split tw-grid tw-grid-cols-2 tw-gap-3">
+                            <div class="wh40k-field-half tw-flex tw-flex-col tw-gap-1">
+                                <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">Achievement Points</label>
                                 <div class="wh40k-ap-tracker">
                                     <input type="number" class="wh40k-vital-input" name="system.rogueTrader.endeavour.achievementCurrent" value="{{system.rogueTrader.endeavour.achievementCurrent}}" data-dtype="Number" />
                                     <span>/</span>
                                     <input type="number" class="wh40k-vital-input" name="system.rogueTrader.endeavour.achievementRequired" value="{{system.rogueTrader.endeavour.achievementRequired}}" data-dtype="Number" />
                                 </div>
                             </div>
-                            <div class="wh40k-field-half">
-                                <label class="wh40k-field-label">PF Reward</label>
+                            <div class="wh40k-field-half tw-flex tw-flex-col tw-gap-1">
+                                <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">PF Reward</label>
                                 <input type="number" class="wh40k-vital-input" name="system.rogueTrader.endeavour.reward" value="{{system.rogueTrader.endeavour.reward}}" data-dtype="Number" />
                             </div>
                         </div>
-                        <div class="wh40k-field-row">
-                            <label class="wh40k-field-label">Objectives & Notes</label>
-                            <textarea class="wh40k-textarea" name="system.rogueTrader.endeavour.notes" rows="3" placeholder="Track objectives and progress...">{{system.rogueTrader.endeavour.notes}}</textarea>
+                        <div class="wh40k-field-row tw-flex tw-flex-col tw-gap-1">
+                            <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">Objectives & Notes</label>
+                            <textarea class="wh40k-textarea tw-w-full tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-sm tw-leading-[1.5] tw-resize-y tw-font-[inherit] focus:tw-outline-none focus:tw-border-gold placeholder:tw-text-[color:var(--wh40k-text-muted)] placeholder:tw-italic" name="system.rogueTrader.endeavour.notes" rows="3" placeholder="Track objectives and progress...">{{system.rogueTrader.endeavour.notes}}</textarea>
                         </div>
                     </div>
                 </div>
