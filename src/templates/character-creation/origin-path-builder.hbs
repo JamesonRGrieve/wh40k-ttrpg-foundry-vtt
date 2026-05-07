@@ -233,21 +233,22 @@
                                 <i class="fa-solid fa-dice-d20"></i>
                                 {{localize "WH40K.CharacteristicSetup.RollsBank"}}
                             </h3>
-                            <button type="button" class="csd-icon-btn csd-bank-roll-btn" data-action="rollCharacteristicsBank" data-tooltip="{{localize 'WH40K.CharacteristicSetup.RollBank'}}">
+                            <button type="button" class="csd-icon-btn tw-max-w-full tw-whitespace-nowrap" data-action="rollCharacteristicsBank" data-tooltip="{{localize 'WH40K.CharacteristicSetup.RollBank'}}">
                                 <i class="fa-solid fa-dice"></i>
                             </button>
                         </div>
                         <div class="csd-rolls-container csd-rolls-container--bank">
                             {{#each charGen.rollsBank}}
-                            <div class="csd-roll-chip {{#if isEmpty}}empty{{/if}} {{#if isAssigned}}assigned{{/if}}"
+                            <div class="csd-roll-chip {{#if isEmpty}}empty{{/if}} {{#if isAssigned}}tw-opacity-30 tw-cursor-not-allowed tw-relative{{/if}}"
                                  data-roll-index="{{index}}"
                                  {{#unless isEmpty}}{{#unless isAssigned}}draggable="true"{{/unless}}{{/unless}}>
                                 <span class="csd-roll-value">{{#if isEmpty}}—{{else}}{{value}}{{/if}}</span>
                                 <span class="csd-roll-label">{{displayIndex}}</span>
+                                {{#if isAssigned}}<span class="tw-pointer-events-none tw-absolute tw-top-0.5 tw-right-1 tw-text-[0.7rem] tw-text-[#4caf50]">✓</span>{{/if}}
                             </div>
                             {{/each}}
                         </div>
-                        <p class="csd-bank-hint">{{localize "WH40K.CharacteristicSetup.ClickToEdit"}}</p>
+                        <p class="tw-text-center tw-text-xs tw-text-[rgba(232,220,196,0.5)] tw-mt-2 tw-m-0 tw-italic">{{localize "WH40K.CharacteristicSetup.ClickToEdit"}}</p>
                     </section>
 
                     <div class="csd-main-column">
@@ -291,7 +292,7 @@
                                             <span class="csd-char-plus">+</span>
                                             <div class="csd-char-roll-slot">
                                                 {{#if hasRoll}}
-                                                <div class="csd-assigned-roll"
+                                                <div class="csd-assigned-roll tw-w-[40px] tw-h-[36px] tw-flex tw-items-center tw-justify-center tw-bg-gradient-to-br tw-from-[rgba(76,175,80,0.3)] tw-to-[rgba(76,175,80,0.15)] tw-border-2 tw-border-[rgba(76,175,80,0.6)] tw-rounded-[6px] tw-text-[1.2rem] tw-font-bold tw-text-[color:var(--csd-bone,#e8dcc4)] tw-cursor-grab hover:tw-scale-110 hover:tw-border-[var(--csd-gold,#b08d57)]"
                                                      draggable="true"
                                                      data-roll-index="{{assignedIndex}}"
                                                      data-characteristic="{{key}}">

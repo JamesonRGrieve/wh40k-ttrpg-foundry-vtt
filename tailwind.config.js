@@ -55,6 +55,23 @@ module.exports = {
     'tw-bg-[rgba(59,130,246,0.2)]', 'tw-text-[#3b82f6]',
     // Navigator levels (navigator-power.ts get pills())
     'tw-bg-[rgba(34,197,94,0.15)]', 'tw-bg-[rgba(59,130,246,0.15)]', 'tw-bg-[rgba(245,158,11,0.15)]',
+    // d100-roll.ts dice summary classes (wh40k-dice-success, wh40k-dice-failure, wh40k-dice-critical,
+    // wh40k-dice-doubles) injected via JS into dice tooltip summaries — not in any template file.
+    'tw-text-[var(--wh40k-danger-secondary)]',
+    'tw-text-[var(--wh40k-success-secondary)]',
+    'tw-text-[var(--wh40k-gold-bright)]',
+    'tw-text-[var(--wh40k-warning-primary)]',
+    'tw-[text-shadow:0_0_6px_rgba(255,215,0,0.5)]',
+    // chat-message.ts degree badge (wh40k-degree-badge) — injected via JS into dice totals.
+    'tw-ml-2',
+    'tw-py-0.5',
+    'tw-tracking-[0.05em]',
+    'tw-rounded-[3px]',
+    'tw-align-middle',
+    'tw-bg-[var(--wh40k-success-bg)]',
+    'tw-bg-[var(--wh40k-danger-bg)]',
+    'tw-border-[var(--wh40k-success-primary)]',
+    'tw-border-[var(--wh40k-danger-primary)]',
   ],
   corePlugins: {
     preflight: false, // Don't reset existing Foundry/system styles

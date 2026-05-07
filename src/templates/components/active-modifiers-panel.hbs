@@ -9,7 +9,7 @@
             <i class="fa-solid fa-wand-magic-sparkles"></i>
             Active Modifiers
         </span>
-        <span class="wh40k-modifier-count tw-inline-flex tw-items-center tw-justify-center tw-min-w-[24px] tw-h-6 tw-px-2 tw-bg-[rgba(168,85,247,0.2)] tw-rounded-full tw-text-[0.85em] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+        <span class="tw-inline-flex tw-items-center tw-justify-center tw-min-w-[24px] tw-h-6 tw-px-2 tw-bg-[rgba(168,85,247,0.2)] tw-rounded-full tw-text-[0.85em] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
             {{add (add (add (add modifiers.conditions.length modifiers.talents.length) modifiers.traits.length) modifiers.equipment.length) modifiers.effects.length}}
         </span>
     </div>
@@ -26,7 +26,7 @@
                         Conditions
                     </div>
                     {{#each modifiers.conditions as |mod|}}
-                    <div class="wh40k-modifier-item wh40k-modifier-item--condition wh40k-modifier-item--{{mod.nature}} tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-[rgba(245,158,11,0.6)] tw-rounded-[var(--wh40k-radius-md)]">
+                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] hover:tw-bg-[rgba(0,0,0,0.3)] tw-border-l-[3px] tw-border-l-[rgba(245,158,11,0.6)] tw-rounded-[var(--wh40k-radius-md)] tw-transition-all hover:tw-translate-x-0.5">
                         <div class="tw-shrink-0 tw-w-10 tw-h-10 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-overflow-hidden">
                             <img src="{{mod.img}}" alt="{{mod.name}}" class="tw-w-full tw-h-full tw-object-cover" />
                         </div>
@@ -53,7 +53,7 @@
                         Talents
                     </div>
                     {{#each modifiers.talents as |mod|}}
-                    <div class="wh40k-modifier-item wh40k-modifier-item--talent {{#unless mod.active}}wh40k-modifier-item--inactive{{/unless}} tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-[rgba(168,85,247,0.6)] tw-rounded-[var(--wh40k-radius-md)] {{#unless mod.active}}tw-opacity-50{{/unless}}">
+                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] hover:tw-bg-[rgba(0,0,0,0.3)] tw-border-l-[3px] tw-border-l-[rgba(168,85,247,0.6)] tw-rounded-[var(--wh40k-radius-md)] tw-transition-all hover:tw-translate-x-0.5 {{#unless mod.active}}tw-opacity-50{{/unless}}">
                         <div class="tw-shrink-0 tw-w-10 tw-h-10 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-overflow-hidden">
                             <img src="{{mod.img}}" alt="{{mod.name}}" class="tw-w-full tw-h-full tw-object-cover" />
                         </div>
@@ -82,7 +82,7 @@
                         Traits
                     </div>
                     {{#each modifiers.traits as |mod|}}
-                    <div class="wh40k-modifier-item wh40k-modifier-item--trait tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-[rgba(59,130,246,0.6)] tw-rounded-[var(--wh40k-radius-md)]">
+                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] hover:tw-bg-[rgba(0,0,0,0.3)] tw-border-l-[3px] tw-border-l-[rgba(59,130,246,0.6)] tw-rounded-[var(--wh40k-radius-md)] tw-transition-all hover:tw-translate-x-0.5">
                         <div class="tw-shrink-0 tw-w-10 tw-h-10 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-overflow-hidden">
                             <img src="{{mod.img}}" alt="{{mod.name}}" class="tw-w-full tw-h-full tw-object-cover" />
                         </div>
@@ -106,7 +106,7 @@
                         Equipment
                     </div>
                     {{#each modifiers.equipment as |mod|}}
-                    <div class="wh40k-modifier-item wh40k-modifier-item--equipment tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-[rgba(100,116,139,0.6)] tw-rounded-[var(--wh40k-radius-md)]">
+                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] hover:tw-bg-[rgba(0,0,0,0.3)] tw-border-l-[3px] tw-border-l-[rgba(100,116,139,0.6)] tw-rounded-[var(--wh40k-radius-md)] tw-transition-all hover:tw-translate-x-0.5">
                         <div class="tw-shrink-0 tw-w-10 tw-h-10 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-overflow-hidden">
                             <img src="{{mod.img}}" alt="{{mod.name}}" class="tw-w-full tw-h-full tw-object-cover" />
                         </div>
@@ -130,7 +130,7 @@
                         Effects
                     </div>
                     {{#each modifiers.effects as |mod|}}
-                    <div class="wh40k-modifier-item wh40k-modifier-item--effect {{#unless mod.active}}wh40k-modifier-item--inactive{{/unless}} tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-[rgba(236,72,153,0.6)] tw-rounded-[var(--wh40k-radius-md)] {{#unless mod.active}}tw-opacity-50{{/unless}}">
+                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] hover:tw-bg-[rgba(0,0,0,0.3)] tw-border-l-[3px] tw-border-l-[rgba(236,72,153,0.6)] tw-rounded-[var(--wh40k-radius-md)] tw-transition-all hover:tw-translate-x-0.5 {{#unless mod.active}}tw-opacity-50{{/unless}}">
                         <div class="tw-shrink-0 tw-w-10 tw-h-10 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))] tw-overflow-hidden">
                             <img src="{{mod.img}}" alt="{{mod.name}}" class="tw-w-full tw-h-full tw-object-cover" />
                         </div>

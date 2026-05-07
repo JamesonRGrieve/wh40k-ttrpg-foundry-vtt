@@ -253,7 +253,12 @@ export class ChatMessageWH40K extends ChatMessage {
 
         // Create degree badge
         const badge = document.createElement('span');
-        badge.className = `wh40k-degree-badge ${success ? 'wh40k-degree-badge--success' : 'wh40k-degree-badge--failure'}`;
+        const badgeBase =
+            'wh40k-degree-badge tw-inline-flex tw-items-center tw-justify-center tw-ml-2 tw-px-2 tw-py-0.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-rounded-[3px] tw-align-middle';
+        const badgeVariant = success
+            ? 'wh40k-degree-badge--success tw-bg-[var(--wh40k-success-bg)] tw-border tw-border-[var(--wh40k-success-primary)] tw-text-[var(--wh40k-success-secondary)]'
+            : 'wh40k-degree-badge--failure tw-bg-[var(--wh40k-danger-bg)] tw-border tw-border-[var(--wh40k-danger-primary)] tw-text-[var(--wh40k-danger-secondary)]';
+        badge.className = `${badgeBase} ${badgeVariant}`;
         badge.textContent = `${degrees} ${success ? 'DoS' : 'DoF'}`;
 
         diceTotal.appendChild(badge);

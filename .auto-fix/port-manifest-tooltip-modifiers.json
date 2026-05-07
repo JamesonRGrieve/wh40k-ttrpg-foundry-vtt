@@ -1,0 +1,54 @@
+{
+  "generated": "2026-05-06",
+  "task": "Port _wh40k-tooltip.css and _active-modifiers.css active classes to inline Tailwind",
+
+  "tooltip_component": {
+    "status": "SKIPPED — JS-generated DOM only",
+    "reason": "All wh40k-tooltip classes (wh40k-tooltip, wh40k-tooltip__action, wh40k-tooltip__badge, wh40k-tooltip__bonus, wh40k-tooltip__bonus-calc) are applied exclusively via TypeScript in src/module/applications/components/wh40k-tooltip.ts via classList.add() and template literal HTML strings. Zero occurrences found in any .hbs template. The tooltip is rendered onto Foundry's #tooltip element (appended to document.body), outside any sheet root — it has no .wh40k-rpg ancestor at runtime. Porting requires modifying the TS file and adding .wh40k-rpg to the tooltip root; that is out of scope for this template-only task.",
+    "affected_ts_file": "src/module/applications/components/wh40k-tooltip.ts",
+    "classes_not_ported": [
+      "wh40k-tooltip",
+      "wh40k-tooltip__action",
+      "wh40k-tooltip__badge",
+      "wh40k-tooltip__bonus",
+      "wh40k-tooltip__bonus-calc"
+    ],
+    "safe_to_delete_css_block": false
+  },
+
+  "active_modifiers_component": {
+    "status": "COMPLETE",
+    "template": "src/templates/components/active-modifiers-panel.hbs",
+    "classes_ported": [
+      {
+        "class": "wh40k-modifier-count",
+        "tailwind": "tw-inline-flex tw-items-center tw-justify-center tw-min-w-[24px] tw-h-6 tw-px-2 tw-bg-[rgba(168,85,247,0.2)] tw-rounded-full tw-text-[0.85em] tw-font-semibold",
+        "note": "Legacy class was already flanked by full Tailwind equivalents; removed legacy class."
+      },
+      {
+        "class": "wh40k-modifier-item (+ --condition, --talent, --trait, --equipment, --effect, --inactive variants)",
+        "tailwind": "tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] hover:tw-bg-[rgba(0,0,0,0.3)] tw-border-l-[3px] tw-border-l-[<type-color>] tw-rounded-[var(--wh40k-radius-md)] tw-transition-all hover:tw-translate-x-0.5 (+ tw-opacity-50 for --inactive)",
+        "note": "Added missing hover states (background darken + translateX) that were previously only in CSS. Removed all wh40k-modifier-item* legacy classes."
+      }
+    ],
+    "note_on_modifier_group": "wh40k-modifier-group and wh40k-modifier-group-header do NOT appear in active-modifiers-panel.hbs. They appear only in talent-sheet.hbs, item-trait-sheet.hbs, and item-cybernetic-sheet.hbs (talent-sheet CSS context, not active-modifiers context). Per task instructions: do NOT touch talent-sheet templates.",
+    "safe_to_delete_css_block": false,
+    "reason_not_deletable": "wh40k-modifier-group and wh40k-modifier-group-header are still used in talent-sheet.hbs, item-trait-sheet.hbs, and item-cybernetic-sheet.hbs with styling from the _talent-sheet.css block (not _active-modifiers.css). The _active-modifiers.css block also defines these classes, so deleting it would break those templates' inherited styles."
+  },
+
+  "remaining_legacy_classes_in_non_active_modifiers_context": {
+    "wh40k-modifier-group": [
+      "src/templates/item/talent-sheet.hbs",
+      "src/templates/item/item-trait-sheet.hbs",
+      "src/templates/item/item-cybernetic-sheet.hbs"
+    ],
+    "wh40k-modifier-group-header": [
+      "src/templates/item/talent-sheet.hbs"
+    ],
+    "wh40k-modifier-item": [
+      "src/templates/item/talent-sheet.hbs",
+      "src/templates/item/item-trait-sheet.hbs",
+      "src/templates/item/item-cybernetic-sheet.hbs"
+    ]
+  }
+}
