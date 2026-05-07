@@ -92,6 +92,16 @@ const CONDITION_SHEET_RE = /^wh40k-condition/;
 // Used by journal-entry-sheet, peer-enemy-sheet, critical-injury-sheet, and others that do
 // not inherit wh40k-item-sheet via ApplicationV2's classes array.
 const ITEM_SHEET_BEM_RE = /^wh40k-item-sheet[_-]/;
+// advancement-dialog.hbs BEM component — wh40k-adv__content is queried by advancement-dialog.ts
+// (scrollable container). All other wh40k-adv* BEM elements have CSS rules in the monolith;
+// inline tw-* utilities supersede them during the migration.
+const ADVANCEMENT_RE = /^wh40k-adv/;
+// chat-card-shell.hbs BEM component — wh40k-card__* (canonical) and wh40k-card-* (legacy back-
+// compat names emitted via legacyClasses flag). No JS queries; CSS rules in monolith.
+const CHAT_CARD_RE = /^wh40k-chat-card|^wh40k-card(?:__|-[a-z])/;
+// effect-row.hbs BEM component — wh40k-effect-* classes have CSS rules in the monolith under
+// .wh40k-effect-card and related selectors. No JS queries.
+const EFFECT_ROW_RE = /^wh40k-effect-|^wh40k-change-/;
 const JS_HOOKS = new Set([
     'sheet-control__hide-control',
     // expandable-tooltip-mixin.ts queries and toggles these classes by name
@@ -993,6 +1003,30 @@ const JS_HOOKS = new Set([
     'count',
     'total',
     'actions',
+    // header-base.hbs outer wrapper — wh40k-header has CSS rules in the monolith (journal-entry
+    // context and nested sheet contexts) but no JS queries. Inline tw-* on the wrapper
+    // supersedes the CSS during the migration.
+    'wh40k-header',
+    // chat-card-shell.hbs legacy flat class names (emitted alongside wh40k-card__* BEM names
+    // via the legacyClasses flag for back-compat with already-rendered chat messages). No JS
+    // queries. CHAT_CARD_RE handles the BEM sub-elements.
+    'wh40k-badge',
+    'wh40k-source-ref',
+    // active-modifiers-panel.hbs — wh40k-modifier-* BEM classes have CSS rules; no JS queries.
+    'wh40k-modifier-count',
+    'wh40k-modifier-item',
+    'wh40k-modifier-item--condition',
+    'wh40k-modifier-item--effect',
+    'wh40k-modifier-item--equipment',
+    'wh40k-modifier-item--inactive',
+    'wh40k-modifier-item--talent',
+    'wh40k-modifier-item--trait',
+    'wh40k-panel--modifiers',
+    'wh40k-panel-toggle',
+    // advancement-dialog.hbs root class and panel collapse state
+    'wh40k-panel--collapsed',
+    // notes — plain semantic class in advancement-dialog (no CSS rules, no JS queries)
+    'notes',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
@@ -1053,6 +1087,9 @@ function isTwOrExempt(token) {
     if (SECTION_CLASS_RE.test(token)) return true;
     if (CONDITION_SHEET_RE.test(token)) return true;
     if (ITEM_SHEET_BEM_RE.test(token)) return true;
+    if (ADVANCEMENT_RE.test(token)) return true;
+    if (CHAT_CARD_RE.test(token)) return true;
+    if (EFFECT_ROW_RE.test(token)) return true;
     if (SECTION_ID_RE.test(token)) return true;
     if (HBS_FRAGMENT_RE.test(token)) return true;
     if (HBS_EXPR_RE.test(token)) return true;
