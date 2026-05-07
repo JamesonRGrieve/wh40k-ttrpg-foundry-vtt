@@ -622,14 +622,14 @@
             <div class="wh40k-modifiers-grid tw-grid">
               {{!-- Characteristic Modifiers --}}
               {{#if modifiersData.hasCharacteristics}}
-              <div class="wh40k-modifier-group">
-                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-1">
+              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                   <i class="fa-solid fa-dumbbell"></i>
                   Characteristics
                 </h4>
                 <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.characteristics}}
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between">
+                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
                     <span class="wh40k-modifier-name">{{this.label}}</span>
                     <span class="wh40k-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
@@ -642,14 +642,14 @@
 
               {{!-- Skill Modifiers --}}
               {{#if modifiersData.hasSkills}}
-              <div class="wh40k-modifier-group">
-                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-1">
+              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                   <i class="fa-solid fa-graduation-cap"></i>
                   Skills
                 </h4>
                 <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.skills}}
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between">
+                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
                     <span class="wh40k-modifier-name">{{this.label}}</span>
                     <span class="wh40k-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
@@ -662,14 +662,14 @@
 
               {{!-- Combat Modifiers --}}
               {{#if modifiersData.hasCombat}}
-              <div class="wh40k-modifier-group">
-                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-1">
+              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                   <i class="fa-solid fa-swords"></i>
                   Combat
                 </h4>
                 <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.combat}}
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between">
+                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
                     <span class="wh40k-modifier-name">{{this.label}}</span>
                     <span class="wh40k-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
@@ -682,14 +682,14 @@
 
               {{!-- Resource Modifiers --}}
               {{#if modifiersData.hasResources}}
-              <div class="wh40k-modifier-group">
-                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-1">
+              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                   <i class="fa-solid fa-heart"></i>
                   Resources
                 </h4>
                 <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.resources}}
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between">
+                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
                     <span class="wh40k-modifier-name">{{this.label}}</span>
                     <span class="wh40k-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
@@ -702,14 +702,14 @@
 
               {{!-- Other Modifiers --}}
               {{#if modifiersData.hasOther}}
-              <div class="wh40k-modifier-group">
-                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-1">
+              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                   <i class="fa-solid fa-ellipsis"></i>
                   Other
                 </h4>
                 <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.other}}
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between">
+                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
                     <span class="wh40k-modifier-name">{{this.label}}</span>
                     <span class="wh40k-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}

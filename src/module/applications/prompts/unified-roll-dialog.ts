@@ -361,14 +361,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         tooltipParts.push(`= ${finalTarget}`);
         const targetBreakdownTooltip = tooltipParts.join('\n');
 
-        // Dynamic color class based on success chance
+        // Dynamic color class based on success chance (tw-* arbitrary values for color + text-shadow)
         let targetColorClass;
-        if (finalTarget <= 15) targetColorClass = 'urd-target__number--dire';
-        else if (finalTarget <= 30) targetColorClass = 'urd-target__number--poor';
-        else if (finalTarget <= 45) targetColorClass = 'urd-target__number--fair';
-        else if (finalTarget <= 60) targetColorClass = 'urd-target__number--good';
-        else if (finalTarget <= 80) targetColorClass = 'urd-target__number--great';
-        else targetColorClass = 'urd-target__number--legendary';
+        if (finalTarget <= 15) targetColorClass = 'tw-text-[#dc2626] tw-[text-shadow:0_0_20px_rgba(220,38,38,0.5),0_2px_8px_rgba(0,0,0,0.6)]';
+        else if (finalTarget <= 30) targetColorClass = 'tw-text-[#f87171] tw-[text-shadow:0_0_20px_rgba(248,113,113,0.4),0_2px_8px_rgba(0,0,0,0.6)]';
+        else if (finalTarget <= 45) targetColorClass = 'tw-text-[#fbbf24] tw-[text-shadow:0_0_25px_rgba(251,191,36,0.4),0_2px_8px_rgba(0,0,0,0.6)]';
+        else if (finalTarget <= 60) targetColorClass = 'tw-text-gold tw-[text-shadow:0_0_30px_rgba(201,162,39,0.4),0_2px_8px_rgba(0,0,0,0.6)]';
+        else if (finalTarget <= 80) targetColorClass = 'tw-text-[#4ade80] tw-[text-shadow:0_0_30px_rgba(74,222,128,0.5),0_2px_8px_rgba(0,0,0,0.6)]';
+        else targetColorClass = 'tw-text-[#22d3ee] tw-[text-shadow:0_0_35px_rgba(34,211,238,0.5),0_0_60px_rgba(34,211,238,0.2),0_2px_8px_rgba(0,0,0,0.6)]';
 
         // Track previous target for animation
         this._previousTarget = this._previousTarget ?? finalTarget;
