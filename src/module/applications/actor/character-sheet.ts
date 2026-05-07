@@ -2760,7 +2760,23 @@ export default class CharacterSheet extends BaseActorSheet {
         if (visibleCount === 0 && itemCards.length > 0) {
             const noResults = document.createElement('div');
             noResults.className = 'wh40k-no-results';
-            noResults.innerHTML = '<i class="fas fa-search"></i><span>No items match your filters</span>';
+            Object.assign(noResults.style, {
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 'var(--wh40k-space-sm, 0.5rem)',
+                padding: 'var(--wh40k-space-lg, 1rem)',
+                color: 'var(--color-text-tertiary)',
+                fontStyle: 'italic',
+                textAlign: 'center',
+                pointerEvents: 'none',
+            });
+            noResults.innerHTML =
+                '<i class="fas fa-search" style="font-size:2rem;opacity:0.5"></i><span style="font-size:var(--wh40k-font-size-base,0.9rem)">No items match your filters</span>';
             equipmentPanel.appendChild(noResults);
         }
     }

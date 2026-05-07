@@ -1,0 +1,93 @@
+{
+  "task": "port-manifest-vital-panels-1",
+  "generatedAt": "2026-05-07T03:22:00.000Z",
+  "strategy": "delete-dead-code",
+  "description": "Deleted three vital-panel CSS blocks that were entirely dead code. All classes were scoped inside unused root classes (.wh40k-wounds-panel-v2, .wh40k-fatigue-panel-v2, .wh40k-fate-panel-v2). The consuming templates (wounds-panel.hbs, fatigue-panel.hbs, fate-panel.hbs, corruption-panel.hbs, insanity-panel.hbs, degree-meter-panel.hbs) were already fully ported to tw-* utilities using vital-panel-shell, vital-quick-controls, vital-progress-bar, and degree-meter-panel partials.",
+  "blocks": [
+    {
+      "source": "src/css/panels/_wounds.css",
+      "linesDeleted": 602,
+      "rootClass": ".wh40k-wounds-panel-v2",
+      "status": "deleted",
+      "liveClassesRetained": [
+        ".wh40k-wounds-bar — hook class for enhanced-animations-mixin.ts; emitted by vital-progress-bar partial via cssPrefix; no CSS rules needed (tw-* handles styling)",
+        ".wh40k-wounds-bar-fill — hook class for enhanced-animations-mixin.ts; emitted by vital-progress-bar partial; fill styling is fillExtraClass tw-*",
+        ".wh40k-wounds-current — hook class for enhanced-animations-mixin.ts; emitted by vital-quick-controls partial via cssPrefix; tw-* provides text styling",
+        ".wh40k-wounds-value — hook class for enhanced-animations-mixin.ts; emitted by vital-quick-controls partial via cssPrefix",
+        ".wh40k-wounds-critical — rootStateClass on vital-panel-shell outer div; no CSS rules needed (tw-* handles conditional alert styling in template)",
+        ".wh40k-wounds-warning — rootStateClass on vital-panel-shell outer div; no CSS rules needed",
+        ".wh40k-injury-card — used in critical-injury-card.hbs; CSS rules live in _critical-injury.css block (line 12878), NOT in this deleted block",
+        ".wh40k-threshold-marker — used in vital-progress-bar.hbs already decorated with tw-absolute tw-top-[-2px] etc.; CSS block rules were dead (scoped inside .wh40k-wounds-panel-v2)"
+      ],
+      "deadClassesDeleted": [
+        "wh40k-wounds-panel-v2 (root, unused)", "wh40k-wounds-display", "wh40k-wounds-tracker",
+        "wh40k-wounds-btn", "wh40k-wounds-minus", "wh40k-wounds-plus", "wh40k-wounds-sep",
+        "wh40k-wounds-bar-container", "wh40k-wounds-percent", "wh40k-wounds-alert",
+        "wh40k-alert-critical", "wh40k-alert-warning", "wh40k-wounds-critical-section",
+        "wh40k-critical-pips", "wh40k-critical-header", "wh40k-critical-title",
+        "wh40k-critical-value", "wh40k-crit-pip", "wh40k-pip-inner", "wh40k-crit-pip--filled",
+        "wh40k-critical-controls", "wh40k-critical-btn", "wh40k-critical-input",
+        "wh40k-critical-pips-edit", "wh40k-wounds-edit-section", "wh40k-wounds-edit-header",
+        "wh40k-wounds-edit-grid", "wh40k-edit-field", "wh40k-edit-label", "wh40k-edit-input",
+        "wh40k-add-btn-small", "wh40k-injury-list", "wh40k-injury-name", "wh40k-injury-delete",
+        "wh40k-wounds-empty", "wh40k-threshold-line", "wh40k-threshold-label"
+      ]
+    },
+    {
+      "source": "src/css/panels/_fatigue.css",
+      "linesDeleted": 553,
+      "rootClass": ".wh40k-fatigue-panel-v2",
+      "status": "deleted",
+      "liveClassesRetained": [
+        ".wh40k-fatigue-bar — emitted by vital-progress-bar via cssPrefix; no CSS rules needed (all tw-*)",
+        ".wh40k-fatigue-bar-fill — emitted by vital-progress-bar; fill is fillExtraClass tw-*",
+        ".wh40k-fatigue-current / .wh40k-fatigue-value — emitted by vital-quick-controls; no CSS rules needed"
+      ],
+      "deadClassesDeleted": [
+        "wh40k-fatigue-panel-v2 (root, unused)", "wh40k-fatigue-display", "wh40k-fatigue-tracker",
+        "wh40k-fatigue-btn", "wh40k-fatigue-minus", "wh40k-fatigue-plus", "wh40k-fatigue-sep",
+        "wh40k-fatigue-bar-container", "wh40k-fatigue-percent", "wh40k-fatigue-alert",
+        "wh40k-alert-exhausted", "wh40k-fatigue-info-box", "wh40k-info-content",
+        "wh40k-fatigue-formula", "wh40k-fatigue-actions", "wh40k-fatigue-action-btn",
+        "wh40k-rest-btn", "wh40k-clear-btn", "wh40k-mode-toggle", "wh40k-mode-option",
+        "wh40k-mode-radio", "wh40k-mode-label", "wh40k-mode-active", "wh40k-fatigue-auto-badge",
+        "wh40k-auto-tag", "wh40k-exhausted", "wh40k-fatigue-edit-section",
+        "wh40k-fatigue-edit-header", "wh40k-fatigue-edit-grid", "wh40k-threshold-marker (fatigue scope)"
+      ]
+    },
+    {
+      "source": "src/css/panels/_fate.css",
+      "linesDeleted": 560,
+      "rootClass": ".wh40k-fate-panel-v2",
+      "status": "deleted",
+      "liveClassesRetained": [
+        ".wh40k-fate-pip — CSS rules exist at line 16218 (_overview-dashboard scope) and line 26041 (_combat-station scope); NOT dependent on deleted block",
+        ".wh40k-fate-tracker — used as wrapperClass prefix in fate-panel.hbs alongside tw-flex tw-items-center tw-justify-between tw-mb-2; scoped CSS inside .wh40k-fate-panel-v2 was dead"
+      ],
+      "deadClassesDeleted": [
+        "wh40k-fate-panel-v2 (root, unused)", "wh40k-fate-display", "wh40k-fate-value",
+        "wh40k-fate-sep", "wh40k-fate-current", "wh40k-fate-max", "wh40k-fate-btn",
+        "wh40k-fate-pips", "wh40k-fate-pip--filled", "wh40k-fate-pips-edit",
+        "wh40k-fate-none", "wh40k-fate-actions", "wh40k-fate-quick-actions",
+        "wh40k-fate-quick-btn", "wh40k-fate-spend-btn", "wh40k-fate-spend-menu",
+        "wh40k-fate-option", "wh40k-fate-option--burn", "wh40k-fate-dropdown",
+        "wh40k-fate-warning", "wh40k-fate-edit-section", "wh40k-fate-edit-header",
+        "wh40k-fate-edit-grid", "wh40k-fate-info-box", "wh40k-restore-btn",
+        "wh40k-sparkle", "wh40k-spending", "wh40k-star-number", "wh40k-menu-open",
+        "wh40k-spend-one-btn"
+      ]
+    }
+  ],
+  "ratchetResults": {
+    "css:ratchet": "OK: tw-only=129 mixed=115 css-only=0 (unchanged)",
+    "animation:ratchet": "OK: 1 (unchanged from baseline of 1)",
+    "totalLinesDeleted": 1715
+  },
+  "notes": [
+    "All three panel CSS blocks were entirely scoped inside unused root classes. The templates had already been ported to use vital-panel-shell + tw-* partial infrastructure.",
+    "wh40k-injury-card CSS rules live in _critical-injury.css (line 12878), not in the deleted blocks — chat template is unaffected.",
+    "wh40k-fate-pip CSS rules live in _overview-dashboard.css (16218) and _combat-station.css (26041) — pip display is unaffected.",
+    "Hook classes used by enhanced-animations-mixin.ts (.wh40k-wounds-bar, .wh40k-wounds-bar-fill, .wh40k-wounds-current, .wh40k-wounds-value) are still emitted by vital-quick-controls and vital-progress-bar partials via cssPrefix template expansion; they require no CSS rules because styling is handled by inline tw-* on those same elements.",
+    "The wounds bar animation in enhanced-animations-mixin uses setProperty('--wounds-percent') on .wh40k-wounds-bar. The vital-progress-bar sets this via inline style; the CSS var was only consumed by rules inside the now-deleted .wh40k-wounds-panel-v2 scope. The new template uses fillExtraClass gradient for static display; JS animation will find the element but the CSS var won't affect rendering (acceptable — animation was already non-functional with the new template structure)."
+  ]
+}

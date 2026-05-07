@@ -141,6 +141,17 @@ export class TokenDocumentWH40K extends TokenDocument {
         // Build movement buttons container
         const container = document.createElement('div');
         container.classList.add('wh40k-token-movement');
+        Object.assign(container.style, {
+            display: 'flex',
+            gap: '4px',
+            justifyContent: 'center',
+            padding: '4px',
+            position: 'absolute',
+            bottom: '-40px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            whiteSpace: 'nowrap',
+        });
 
         for (const [type, config] of Object.entries(movementTypes)) {
             const speed = movement[type];
@@ -151,14 +162,54 @@ export class TokenDocumentWH40K extends TokenDocument {
             if (type === activeType) btn.classList.add('active');
             btn.dataset.movementType = type;
             btn.title = `${game.i18n.localize(config.label)}: ${speed}m`;
-            btn.innerHTML = `<i class="${config.icon}"></i><span class="wh40k-token-movement__value">${speed}m</span>`;
+            btn.innerHTML = `<i class="${config.icon}"></i><span class="wh40k-token-movement__value" style="font-weight:700;font-family:var(--wh40k-font-alt,serif)">${speed}m</span>`;
+            Object.assign(btn.style, {
+                display: 'flex',
+                alignItems: 'center',
+                gap: '3px',
+                padding: '4px 8px',
+                background: 'rgba(0,0,0,0.7)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: '4px',
+                color: '#ddd',
+                fontSize: '0.7rem',
+                cursor: 'pointer',
+            });
+
+            btn.addEventListener('mouseenter', () => {
+                btn.style.background = 'rgba(0,0,0,0.85)';
+                btn.style.borderColor = 'rgba(255,255,255,0.4)';
+                btn.style.color = '#fff';
+            });
+            btn.addEventListener('mouseleave', () => {
+                if (!btn.classList.contains('active')) {
+                    btn.style.background = 'rgba(0,0,0,0.7)';
+                    btn.style.borderColor = 'rgba(255,255,255,0.2)';
+                    btn.style.color = '#ddd';
+                }
+            });
 
             btn.addEventListener('click', (event) => {
                 event.preventDefault();
                 this.#setMovementAction(token, type);
-                container.querySelectorAll('.wh40k-token-movement__btn').forEach((b: Element) => b.classList.remove('active'));
+                container.querySelectorAll('.wh40k-token-movement__btn').forEach((b: Element) => {
+                    (b as HTMLElement).style.background = 'rgba(0,0,0,0.7)';
+                    (b as HTMLElement).style.borderColor = 'rgba(255,255,255,0.2)';
+                    (b as HTMLElement).style.color = '#ddd';
+                    b.classList.remove('active');
+                });
                 btn.classList.add('active');
+                btn.style.background = 'rgba(52,152,219,0.6)';
+                btn.style.borderColor = 'rgba(52,152,219,0.8)';
+                btn.style.color = '#fff';
             });
+
+            // Apply active state styles
+            if (type === activeType) {
+                btn.style.background = 'rgba(52,152,219,0.6)';
+                btn.style.borderColor = 'rgba(52,152,219,0.8)';
+                btn.style.color = '#fff';
+            }
 
             container.appendChild(btn);
         }

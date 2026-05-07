@@ -1,0 +1,79 @@
+{
+  "task": "port-manifest-vital-panels-2",
+  "description": "Delete dead CSS blocks for insanity, corruption-v2, and equipment-cards panels",
+  "status": "complete",
+  "blocks_deleted": [
+    {
+      "source": "src/css/panels/_insanity.css",
+      "lines_deleted": 759,
+      "reason": "Entire block nested inside .wh40k-insanity-panel-v2 — class never used in any template. The insanity UI has been fully replaced by degree-meter-panel.hbs + vital-panel-shell.hbs using Tailwind utilities.",
+      "classes_affected": [
+        ".wh40k-insanity-panel-v2",
+        ".wh40k-insanity-badge",
+        ".wh40k-insanity-display",
+        ".wh40k-insanity-header",
+        ".wh40k-insanity-bar-container",
+        ".wh40k-insanity-bar",
+        ".wh40k-insanity-bar-fill",
+        ".wh40k-insanity-btn",
+        ".wh40k-insanity-current",
+        ".wh40k-insanity-max",
+        ".wh40k-disorder-card",
+        ".wh40k-disorder-list",
+        ".wh40k-insanity-edit-section",
+        "...and all other nested classes"
+      ],
+      "template_work_required": false,
+      "notes": "insanity-panel.hbs is a thin caller to degree-meter-panel.hbs which uses Tailwind. No template changes needed."
+    },
+    {
+      "source": "src/css/panels/_corruption-v2.css",
+      "lines_deleted": 848,
+      "reason": "Entire block nested inside .wh40k-corruption-panel-v2 — class never used in any template. The corruption UI has been fully replaced by degree-meter-panel.hbs + vital-panel-shell.hbs using Tailwind utilities.",
+      "classes_affected": [
+        ".wh40k-corruption-panel-v2",
+        ".wh40k-corruption-badge",
+        ".wh40k-corruption-bar-container",
+        ".wh40k-corruption-bar",
+        ".wh40k-corruption-bar-fill",
+        ".wh40k-corruption-btn",
+        ".wh40k-malignancy-card",
+        ".wh40k-malignancy-list",
+        ".wh40k-corruption-edit-section",
+        "...and all other nested classes"
+      ],
+      "template_work_required": false,
+      "notes": "corruption-panel.hbs is a thin caller to degree-meter-panel.hbs which uses Tailwind. Note: wh40k-degree-* styling is preserved in the _overview-dashboard.css block (wh40k-mental-degree), which is separate and NOT deleted. The degree class names emitted by corruptionDegreeClass/insanityDegreeClass helpers continue to work for the vital-panel-shell rootStateClass but have no CSS rules applied from the deleted block (the v2 panel was the consumer; the new shell uses Tailwind directly)."
+    },
+    {
+      "source": "src/css/panels/_equipment-cards.css",
+      "lines_deleted": 643,
+      "reason": "All equipment-card/equip-row/card-* classes in this block are unused — no template references found for wh40k-equipment-table, wh40k-equip-row, wh40k-equipment-card, wh40k-card-header, wh40k-stat-badge, etc.",
+      "classes_affected": [
+        ".wh40k-equipment-table",
+        ".wh40k-equip-row",
+        ".wh40k-equip-icon",
+        ".wh40k-equip-name",
+        ".wh40k-equipment-card",
+        ".wh40k-card-header",
+        ".wh40k-card-stats",
+        ".wh40k-stat-badge",
+        ".wh40k-card-actions",
+        ".wh40k-card-btn",
+        ".wh40k-badge-ap",
+        ".wh40k-badge-rating",
+        ".wh40k-status-badge",
+        "...and all other block-level classes"
+      ],
+      "template_work_required": false,
+      "notes": "wh40k-action-btn IS used in talent-sheet.hbs and item-armour-sheet.hbs, but its CSS rules come from _talent-sheet.css (line 9464) and _armour.css (line 6367) — NOT from this deleted block. The deletion does not affect those usages. wh40k-dropzone/wh40k-modifier-value classes are also used but their CSS rules come from _unified-components.css and _talent-sheet.css blocks respectively — also not affected."
+    }
+  ],
+  "ratchet_results": {
+    "css:ratchet": "PASS — tw-only=129 mixed=115 css-only=0 (unchanged; deleted blocks were dead CSS not consumed by templates)",
+    "animation:ratchet": "PASS — no animation rules were in the deleted blocks"
+  },
+  "total_lines_deleted": 2250,
+  "classes_skipped": [],
+  "classes_requiring_coordinated_port": []
+}

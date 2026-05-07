@@ -1,5 +1,5 @@
 {{!-- Navigator Powers Panel --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs panelId="navigator-powers" label="Navigator Powers" icon="fa-eye" count=navigatorPowersCount rootClass="wh40k-panel-powers wh40k-panel-navigator-powers" bodyClass="tw-p-0" titleClass="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"}}
+{{#> systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs panelId="navigator-powers" label="Navigator Powers" icon="fa-eye" count=navigatorPowersCount rootClass="wh40k-panel-powers wh40k-panel-navigator-powers" bodyClass="tw-p-0" titleClass="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure" accentBg="linear-gradient(135deg,rgb(from #0891b2 r g b / 0.15) 0%,rgb(from #0891b2 r g b / 0.05) 100%)" accentBorder="rgb(from #0891b2 r g b / 0.3)" accentIcon="#0891b2"}}
     {{!-- Powers List --}}
     <div class="tw-flex tw-flex-col tw-gap-2 tw-min-h-[60px] tw-p-[var(--wh40k-space-md)]" data-drop-zone="powers" data-accepts="navigatorPower">
         {{#each navigatorPowers as |power|}}
