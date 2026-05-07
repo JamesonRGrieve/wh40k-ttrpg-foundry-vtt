@@ -29,7 +29,7 @@ const { ItemSheetV2 } = foundry.applications.sheets;
 export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2 as any)))) {
     declare document: WH40KItemDocument;
 
-    constructor(options: Partial<ApplicationV2.Options> = {}) {
+    constructor(options: Partial<ApplicationV2Config.DefaultOptions> = {}) {
         super(options);
     }
 
@@ -70,7 +70,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
@@ -233,7 +233,9 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @protected
      */
     _prepareSubmitData(event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Record<string, unknown> {
-        let submitData = super._prepareSubmitData(event, form, formData);
+        type SuperWithPrepare = { _prepareSubmitData?: (e: SubmitEvent, f: HTMLFormElement, fd: FormDataExtended) => Record<string, unknown> };
+        const proto = Object.getPrototypeOf(BaseItemSheet.prototype) as SuperWithPrepare;
+        let submitData = proto._prepareSubmitData?.call(this, event, form, formData) ?? {};
 
         // CRITICAL FIX: Clean img field if present to prevent validation errors
         // Foundry V13 has very strict validation on img field
@@ -329,7 +331,8 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     static async #onEditImage(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
         const attr = target.dataset.edit ?? 'img';
         const current = foundry.utils.getProperty(this.document._source, attr);
-        const fp = new CONFIG.ux.FilePicker({
+        const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse(): Promise<void> };
+        const fp = new FilePickerCtor({
             current,
             type: 'image',
             callback: (path: string) => this.document.update({ [attr]: path }),
@@ -358,12 +361,12 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Handle creating an effect.
      */
     static async #effectCreate(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
-        await this.item.createEmbeddedDocuments(
+        await (this.item.createEmbeddedDocuments as (type: string, data: Record<string, unknown>[], options?: Record<string, unknown>) => Promise<unknown>)(
             'ActiveEffect',
             [
                 {
                     name: 'New Effect',
-                    icon: 'icons/svg/aura.svg',
+                    img: 'icons/svg/aura.svg',
                     origin: this.item.uuid,
                     disabled: true,
                 },
@@ -380,7 +383,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     static #effectEdit(this: BaseItemSheet, event: Event, target: HTMLElement): void {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
         const effect = this.item.effects.get(effectId!);
-        effect?.sheet.render(true);
+        effect?.sheet?.render(true);
     }
 
     /* -------------------------------------------- */

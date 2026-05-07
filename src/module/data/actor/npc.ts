@@ -105,6 +105,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             rightArm: number;
             leftLeg: number;
             rightLeg: number;
+            [key: string]: number;
         };
     };
     declare specialAbilities: string;
@@ -148,7 +149,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {SchemaField}
      * @private
      */
-    static _CharacteristicField(label: string, short: string): unknown {
+    static _CharacteristicField(label: string, short: string): foundry.data.fields.DataField.Any {
         return new SchemaField({
             label: new StringField({ required: true, initial: label }),
             short: new StringField({ required: true, initial: short }),
@@ -506,7 +507,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * Map characteristic short names to full keys.
      * @type {Object<string, string>}
      */
-    static CHARACTERISTIC_MAP = {
+    static CHARACTERISTIC_MAP: Record<string, string> = {
         WS: 'weaponSkill',
         BS: 'ballisticSkill',
         S: 'strength',
@@ -543,7 +544,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * Default skill-to-characteristic mapping.
      * @type {Object<string, string>}
      */
-    static SKILL_CHARACTERISTIC_MAP = {
+    static SKILL_CHARACTERISTIC_MAP: Record<string, string> = {
         acrobatics: 'agility',
         athletics: 'strength',
         awareness: 'perception',
@@ -682,16 +683,17 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     addSimpleWeapon(data: Record<string, unknown> = {}): unknown {
         const weapons = foundry.utils.deepClone(this.weapons.simple || []);
+        const weaponClass = (data.class as NPCV2SimpleWeapon['class']) || 'melee';
         weapons.push({
-            name: data.name || 'New Weapon',
-            damage: data.damage || '1d10',
-            pen: data.pen || 0,
-            range: data.range || 'Melee',
-            rof: data.rof || 'S/-/-',
-            clip: data.clip || 0,
-            reload: data.reload || '-',
-            special: data.special || '',
-            class: data.class || 'melee',
+            name: (data.name as string) || 'New Weapon',
+            damage: (data.damage as string) || '1d10',
+            pen: (data.pen as number) || 0,
+            range: (data.range as string) || 'Melee',
+            rof: (data.rof as string) || 'S/-/-',
+            clip: (data.clip as number) || 0,
+            reload: (data.reload as string) || '-',
+            special: (data.special as string) || '',
+            class: weaponClass,
         });
         return this.parent.update({ 'system.weapons.simple': weapons });
     }
@@ -936,7 +938,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
 
     /** @override */
     getRollData(): Record<string, unknown> {
-        const data = super.getRollData ? super.getRollData() : {};
+        const data = super.getRollData();
 
         // Add characteristic values and bonuses for formulas
         for (const [key, char] of Object.entries(this.characteristics)) {
@@ -992,9 +994,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     static #migrateSize(source: Record<string, unknown>): void {
         if (source.size !== undefined) {
-            source.size = this._toInt(source.size, 4);
-            if (source.size < 1) source.size = 1;
-            if (source.size > 10) source.size = 10;
+            const sizeInt = this._toInt(source.size, 4);
+            source.size = sizeInt < 1 ? 1 : sizeInt > 10 ? 10 : sizeInt;
         }
     }
 
@@ -1003,15 +1004,16 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {object} source - The source data
      */
     static #migrateWounds(source: Record<string, unknown>): void {
-        if (source.wounds) {
-            if (source.wounds.max !== undefined) {
-                source.wounds.max = this._toInt(source.wounds.max, 10);
+        if (source.wounds && typeof source.wounds === 'object') {
+            const wounds = source.wounds as Record<string, unknown>;
+            if (wounds.max !== undefined) {
+                wounds.max = this._toInt(wounds.max, 10);
             }
-            if (source.wounds.value !== undefined) {
-                source.wounds.value = this._toInt(source.wounds.value, 10);
+            if (wounds.value !== undefined) {
+                wounds.value = this._toInt(wounds.value, 10);
             }
-            if (source.wounds.critical !== undefined) {
-                source.wounds.critical = this._toInt(source.wounds.critical, 0);
+            if (wounds.critical !== undefined) {
+                wounds.critical = this._toInt(wounds.critical, 0);
             }
         }
     }

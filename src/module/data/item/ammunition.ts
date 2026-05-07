@@ -30,7 +30,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // What weapon types can use this ammo
             weaponTypes: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: [] }),
@@ -148,7 +148,10 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), `For: ${this.weaponTypesLabel}`];
+        const props = [
+            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
+            `For: ${this.weaponTypesLabel}`,
+        ];
 
         const mods = this.modifiers;
         if (mods.damage !== 0) {

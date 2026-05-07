@@ -98,8 +98,8 @@ export class WH40KCreateActorDialog {
                             const name = nameInput || `New ${ACTOR_SYSTEM_LABELS[system]} ${ACTOR_KIND_LABELS[kind]}`;
                             const data: Record<string, unknown> = { name, type };
                             if (opts.folder) data.folder = opts.folder;
-                            const actor = await Actor.create(data);
-                            resolve(actor ?? null);
+                            const actor = await Actor.create(data as unknown as Parameters<typeof Actor.create>[0]);
+                            resolve((actor as unknown as Actor | null) ?? null);
                         },
                     },
                     {
@@ -113,7 +113,7 @@ export class WH40KCreateActorDialog {
             });
 
             const afterRender = () => {
-                const root = dialog.element;
+                const root = (dialog as unknown as { element: HTMLElement }).element;
                 const sysSel = root.querySelector('[name="system"]') as HTMLSelectElement | null;
                 const kindSel = root.querySelector('[name="kind"]') as HTMLSelectElement | null;
                 if (!sysSel || !kindSel) return;

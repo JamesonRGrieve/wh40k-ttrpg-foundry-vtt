@@ -176,7 +176,7 @@ export class ReloadActionManager {
                         actor.items.find((i: WH40KItem) => i.type === 'ammunition' && i.name === system.loadedAmmo.name);
                     if (prevAmmoItem) {
                         const ammoSystem = this.getAmmoSystem(prevAmmoItem);
-                        await prevAmmoItem.update({ 'system.quantity': (ammoSystem.quantity || 0) - previousValue });
+                        await prevAmmoItem.update({ 'system.quantity': (ammoSystem.quantity || 0) - previousValue } as Record<string, unknown>);
                     }
                 }
                 return {
@@ -193,7 +193,7 @@ export class ReloadActionManager {
             const roundsToLoad = Math.min(newEffectiveMax, ammoSystem.quantity || 0);
 
             // Deduct rounds from inventory
-            await selectedAmmo.update({ 'system.quantity': (ammoSystem.quantity || 0) - roundsToLoad });
+            await selectedAmmo.update({ 'system.quantity': (ammoSystem.quantity || 0) - roundsToLoad } as Record<string, unknown>);
 
             // Update weapon — set loadedAmmo reference if different type
             const isSameAmmo = selectedAmmo.uuid === system.loadedAmmo?.uuid;
@@ -235,7 +235,7 @@ export class ReloadActionManager {
         }
 
         // Fallback for unowned weapons (no actor) — simple reload without inventory
-        await weapon.update({ 'system.clip.value': effectiveMax });
+        await weapon.update({ 'system.clip.value': effectiveMax } as Record<string, unknown>);
 
         return {
             success: true,

@@ -107,21 +107,25 @@ export class HooksManager {
     static registerHooks(): void {
         Hooks.once('init', () => HooksManager.init());
         Hooks.on('ready', () => HooksManager.ready());
-        Hooks.on('hotbarDrop', (bar: Hotbar, data: Record<string, unknown>, slot: number) => HooksManager.hotbarDrop(bar, data, slot));
-        Hooks.on('renderCompendiumDirectory', (app: CompendiumDirectory, html: JQuery, data: Record<string, unknown>) =>
-            HooksManager.renderCompendiumDirectory(app, html, data),
+        (Hooks.on as (hook: string, fn: Function) => number)('hotbarDrop', (bar: unknown, data: Record<string, unknown>, slot: number) =>
+            HooksManager.hotbarDrop(bar, data, slot),
         );
-        Hooks.on('renderActorDirectory', (app: ActorDirectory, html: JQuery, data: Record<string, unknown>) =>
+        (Hooks.on as (hook: string, fn: Function) => number)(
+            'renderCompendiumDirectory',
+            (app: CompendiumDirectory, html: JQuery, data: Record<string, unknown>) => HooksManager.renderCompendiumDirectory(app, html, data),
+        );
+        (Hooks.on as (hook: string, fn: Function) => number)('renderActorDirectory', (app: ActorDirectory, html: JQuery, data: Record<string, unknown>) =>
             HooksManager.renderActorDirectory(app, html, data),
         );
-        Hooks.on('renderDocumentSheetConfig', (app: Application, html: JQuery, data: Record<string, unknown>) =>
+        (Hooks.on as (hook: string, fn: Function) => number)('renderDocumentSheetConfig', (app: Application, html: JQuery, data: Record<string, unknown>) =>
             HooksManager.renderDocumentSheetConfig(app, html, data),
         );
-        Hooks.on('getActorDirectoryEntryContext', (_html: JQuery, options: DirectoryContextOption[]) =>
+        (Hooks.on as (hook: string, fn: Function) => number)('getActorDirectoryEntryContext', (_html: JQuery, options: DirectoryContextOption[]) =>
             HooksManager.getActorDirectoryEntryContext(options),
         );
-        Hooks.on('getActorSheetClass', (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) =>
-            HooksManager.getActorSheetClass(actor, sheetData),
+        (Hooks.on as (hook: string, fn: Function) => number)(
+            'getActorSheetClass',
+            (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) => HooksManager.getActorSheetClass(actor, sheetData),
         );
 
         DHTargetedActionManager.initializeHooks();
@@ -199,7 +203,11 @@ export class HooksManager {
     }
 
     static getActorFromDirectoryEntry(element: HTMLElement): WH40KBaseActor | null {
-        const actorId = element.dataset.documentId ?? element.dataset.entryId ?? element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-document-id') ?? element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-entry-id');
+        const actorId =
+            element.dataset.documentId ??
+            element.dataset.entryId ??
+            element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-document-id') ??
+            element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-entry-id');
         if (!actorId) return null;
         return (game.actors?.get(actorId) as WH40KBaseActor | undefined) ?? null;
     }
@@ -213,50 +221,70 @@ export class HooksManager {
             log: (s: string, o?: unknown) => (game.wh40k.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
             warn: (s: string, o?: unknown) => console.warn(`${consolePrefix}${s}`, o),
             error: (s: string, o?: unknown) => console.error(`${consolePrefix}${s}`, o),
-            rollItemMacro,
-            rollSkillMacro,
-            rollCharacteristicMacro,
+            rollItemMacro: rollItemMacro as unknown as (data: Record<string, unknown>, slot: number) => Promise<unknown>,
+            rollSkillMacro: rollSkillMacro as unknown as (data: Record<string, unknown>, slot: number) => Promise<unknown>,
+            rollCharacteristicMacro: rollCharacteristicMacro as unknown as (data: Record<string, unknown>, slot: number) => Promise<unknown>,
             // Roll table utilities
             rollTable: RollTableUtils,
             // Convenience methods for common roll tables
-            rollPsychicPhenomena: (actor: WH40KBaseActor, mod: unknown) => RollTableUtils.rollPsychicPhenomena(actor, mod),
+            rollPsychicPhenomena: (actor: WH40KBaseActor, mod: unknown) => RollTableUtils.rollPsychicPhenomena(actor, mod as number | undefined),
             rollPerilsOfTheWarp: (actor: WH40KBaseActor) => RollTableUtils.rollPerilsOfTheWarp(actor),
-            rollFearEffects: (fear: unknown, dof: unknown) => RollTableUtils.rollFearEffects(fear, dof),
+            rollFearEffects: (fear: unknown, dof: unknown) => RollTableUtils.rollFearEffects(fear as number | undefined, dof as number | undefined),
             rollMutation: () => RollTableUtils.rollMutation(),
             rollMalignancy: () => RollTableUtils.rollMalignancy(),
-            showRollTableDialog: () => RollTableUtils.showRollTableDialog(),
+            showRollTableDialog: async () => {
+                RollTableUtils.showRollTableDialog();
+            },
             // Compendium browser
-            openCompendiumBrowser: (options: Record<string, unknown> = {}) => RTCompendiumBrowser.open(options),
+            openCompendiumBrowser: async (options: Record<string, unknown> = {}) => RTCompendiumBrowser.open(options),
             // Character creation
             OriginPathBuilder: characterCreation.OriginPathBuilder,
-            openOriginPathBuilder: (actor: WH40KBaseActor, options: Record<string, unknown> = {}) => characterCreation.OriginPathBuilder.show(actor, options),
+            openOriginPathBuilder: async (actor: WH40KBaseActor, options: Record<string, unknown> = {}) =>
+                characterCreation.OriginPathBuilder.show(actor, options),
             // NPC utilities
             npc: npcApplications,
+            applications: npcApplications,
             ThreatCalculator: npcApplications.ThreatCalculator,
-            quickCreateNPC: (config: unknown) => npcApplications.NPCQuickCreateDialog.create(config),
-            batchCreateNPCs: (config: unknown) => npcApplications.BatchCreateDialog.open(config),
-            openEncounterBuilder: () => npcApplications.EncounterBuilder.show(),
-            exportStatBlock: (actor: WH40KBaseActor, format: unknown) => npcApplications.StatBlockExporter.quickExport(actor, format),
+            quickCreateNPC: (config: unknown) =>
+                npcApplications.NPCQuickCreateDialog.create(config as Parameters<typeof npcApplications.NPCQuickCreateDialog.create>[0]),
+            batchCreateNPCs: (config: unknown) =>
+                npcApplications.BatchCreateDialog.open(config as Parameters<typeof npcApplications.BatchCreateDialog.open>[0]),
+            openEncounterBuilder: async () => {
+                npcApplications.EncounterBuilder.show();
+            },
+            exportStatBlock: (actor: WH40KBaseActor, format: unknown) =>
+                npcApplications.StatBlockExporter.quickExport(actor, format as 'text' | 'json' | undefined),
             importStatBlock: (input: unknown) => npcApplications.StatBlockParser.open(input),
-            openTemplateSelector: (options: Record<string, unknown> = {}) => npcApplications.TemplateSelector.open(options),
+            openTemplateSelector: (options: Record<string, unknown> = {}) =>
+                npcApplications.TemplateSelector.open(options as Parameters<typeof npcApplications.TemplateSelector.open>[0]),
             // Phase 7: QoL Features
             DifficultyCalculatorDialog: npcApplications.DifficultyCalculatorDialog,
-            calculateDifficulty: (actor: WH40KBaseActor) => npcApplications.DifficultyCalculatorDialog.show(actor),
+            calculateDifficulty: async (actor: WH40KBaseActor) => {
+                npcApplications.DifficultyCalculatorDialog.show(actor as never);
+            },
             CombatPresetDialog: npcApplications.CombatPresetDialog,
-            savePreset: (actor: WH40KBaseActor) => npcApplications.CombatPresetDialog.savePreset(actor),
-            loadPreset: (actor: WH40KBaseActor) => npcApplications.CombatPresetDialog.loadPreset(actor),
-            openPresetLibrary: () => npcApplications.CombatPresetDialog.showLibrary(),
+            savePreset: async (actor: WH40KBaseActor) => {
+                npcApplications.CombatPresetDialog.savePreset(actor as never);
+            },
+            loadPreset: async (actor: WH40KBaseActor) => {
+                npcApplications.CombatPresetDialog.loadPreset(actor as never);
+            },
+            openPresetLibrary: async () => {
+                npcApplications.CombatPresetDialog.showLibrary();
+            },
             transaction: TransactionManager,
             // Dice/Roll classes
             dice: dice,
             BasicRollWH40K: dice.BasicRollWH40K,
             D100Roll: dice.D100Roll,
+            // tooltips is initialized in ready()
+            tooltips: null as unknown as import('./types/global.d.ts').WH40KGameSystem['tooltips'],
         };
 
         //CONFIG.debug.hooks = true;
 
         // Add custom constants for configuration.
-        CONFIG.wh40k = WH40K;
+        CONFIG.wh40k = WH40K as unknown as import('./config.ts').WH40KSystemConfig;
         CONFIG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
         CONFIG.MeasuredTemplate.defaults.angle = 30.0;
 
@@ -264,7 +292,7 @@ export class HooksManager {
         CONFIG.Actor.documentClass = WH40KActorProxy as unknown as typeof WH40KActorProxy;
         // Per (system, kind) document class registrations. The generic proxy
         // dispatches to the right concrete class based on the actor's `type`.
-        CONFIG.Actor.documentClasses = {
+        (CONFIG.Actor as Record<string, unknown>).documentClasses = {
             'dh2-character': documents.WH40KDH2Character,
             'dh2-npc': documents.WH40KDH2NPC,
             'dh2-vehicle': documents.WH40KDH2Vehicle,
@@ -304,7 +332,7 @@ export class HooksManager {
         CONFIG.Token.rulerClass = TokenRulerWH40K;
 
         // Register custom Roll classes for serialization/deserialization
-        CONFIG.Dice.rolls.push(dice.BasicRollWH40K, dice.D100Roll);
+        CONFIG.Dice.rolls.push(dice.BasicRollWH40K as never, dice.D100Roll as never);
 
         // Register data models for actors — one per (system, kind) type.
         // DataModels handle schema validation and data preparation.
@@ -705,7 +733,7 @@ export class HooksManager {
         documents.TokenDocumentWH40K.registerMovementActions();
         documents.TokenDocumentWH40K.registerHUDListeners();
         CONFIG.Token.movement.costAggregator = (results: unknown[], _distance: unknown, _segment: unknown) => {
-            return Math.max(...results.map((i: { cost: number }) => i.cost));
+            return Math.max(...results.map((i) => (i as { cost: number }).cost));
         };
     }
 
@@ -728,14 +756,14 @@ export class HooksManager {
         game.wh40k.log('Hotbar Drop:', data);
         switch (data.type) {
             case 'characteristic':
-                void rollCharacteristicMacro(data, slot);
+                void createCharacteristicMacro(data, slot);
                 return false;
             case 'item':
             case 'Item':
-                void rollItemMacro(data, slot);
+                void createItemMacro(data, slot);
                 return false;
             case 'skill':
-                void rollSkillMacro(data, slot);
+                void createSkillMacro(data, slot);
                 return false;
             default:
                 return true;
@@ -772,7 +800,7 @@ export class HooksManager {
      */
     static getActorSheetClass(actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>): string | null {
         // Only handle npcV2 actors
-        if (actor.type !== 'npcV2') return null;
+        if ((actor.type as string) !== 'npcV2') return null;
 
         // Check primaryUse field
         const primaryUse = actor.system?.primaryUse;

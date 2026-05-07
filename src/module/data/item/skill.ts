@@ -31,7 +31,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Linked characteristic
             characteristic: new fields.StringField({
@@ -107,7 +107,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      * @type {string}
      */
     get characteristicAbbr() {
-        const abbrs = {
+        const abbrs: Record<string, string> = {
             weaponSkill: 'WS',
             ballisticSkill: 'BS',
             strength: 'S',
@@ -194,6 +194,6 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
             },
         };
 
-        return ChatMessage.create(messageData);
+        return ChatMessage.create(messageData as unknown as Parameters<typeof ChatMessage.create>[0]);
     }
 }

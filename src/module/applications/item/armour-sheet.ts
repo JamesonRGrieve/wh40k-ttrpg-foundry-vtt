@@ -12,6 +12,7 @@ import type { default as ArmourDataModel } from '../../data/item/armour.ts';
 export default class ArmourSheet extends ContainerItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
+        ...ContainerItemSheet.DEFAULT_OPTIONS,
         classes: ['wh40k-rpg', 'sheet', 'item', 'armour'],
         position: {
             width: 560,
@@ -26,7 +27,7 @@ export default class ArmourSheet extends ContainerItemSheet {
             editMod: ArmourSheet.#editMod,
             removeMod: ArmourSheet.#removeMod,
         },
-    };
+    } satisfies typeof ContainerItemSheet.DEFAULT_OPTIONS & Partial<ApplicationV2Config.DefaultOptions>;
 
     /* -------------------------------------------- */
 
@@ -62,7 +63,7 @@ export default class ArmourSheet extends ContainerItemSheet {
     /** @override */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const sys = this.item.system as ArmourDataModel;
+        const sys = this.item.system as unknown as ArmourDataModel;
 
         // Add armour-specific context
         context.armourTypes = CONFIG.WH40K?.armourTypes || {};
@@ -91,7 +92,7 @@ export default class ArmourSheet extends ContainerItemSheet {
     _getAvailableProperties(): Record<string, { label: string }> {
         const props: Record<string, { label: string }> = {};
         const available = ['sealed', 'auto-stabilized', 'hexagrammic', 'blessed', 'camouflage', 'lightweight', 'reinforced', 'agility-bonus', 'strength-bonus'];
-        const sys = this.item.system as ArmourDataModel;
+        const sys = this.item.system as unknown as ArmourDataModel;
 
         for (const id of available) {
             // Skip already-added properties
@@ -121,7 +122,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      */
     static async #toggleCoverage(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const location = target.dataset.location;
-        const sys = this.item.system as ArmourDataModel;
+        const sys = this.item.system as unknown as ArmourDataModel;
         const coverage = new Set(sys.coverage || []);
 
         // Handle "all" special case
@@ -158,7 +159,7 @@ export default class ArmourSheet extends ContainerItemSheet {
             coverage.add('body');
         }
 
-        await this.item.update({ 'system.coverage': Array.from(coverage) });
+        await this.item.update({ 'system.coverage': Array.from(coverage) } as Record<string, unknown>);
     }
 
     /**
@@ -172,11 +173,11 @@ export default class ArmourSheet extends ContainerItemSheet {
         const property = select?.value;
         if (!property) return;
 
-        const sys = this.item.system as ArmourDataModel;
+        const sys = this.item.system as unknown as ArmourDataModel;
         const properties = new Set(sys.properties || []);
         properties.add(property);
 
-        await this.item.update({ 'system.properties': Array.from(properties) });
+        await this.item.update({ 'system.properties': Array.from(properties) } as Record<string, unknown>);
 
         // Reset select
         if (select) select.value = '';
@@ -190,11 +191,11 @@ export default class ArmourSheet extends ContainerItemSheet {
      */
     static async #removeProperty(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const property = target.dataset.property;
-        const sys = this.item.system as ArmourDataModel;
+        const sys = this.item.system as unknown as ArmourDataModel;
         const properties = new Set(sys.properties || []);
         if (property) properties.delete(property);
 
-        await this.item.update({ 'system.properties': Array.from(properties) });
+        await this.item.update({ 'system.properties': Array.from(properties) } as Record<string, unknown>);
     }
 
     /**
@@ -204,7 +205,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {HTMLElement} target
      */
     static #addModification(this: ArmourSheet, event: Event, target: HTMLElement): void {
-        const sys = this.item.system as ArmourDataModel;
+        const sys = this.item.system as unknown as ArmourDataModel;
         // Check if slots available
         if (sys.availableModSlots <= 0) {
             ui.notifications.warn(game.i18n.localize('WH40K.Armour.NoSlotsAvailable'));
@@ -223,7 +224,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      */
     static async #editMod(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.modIndex ?? '', 10);
-        const sys = this.item.system as ArmourDataModel;
+        const sys = this.item.system as unknown as ArmourDataModel;
         const mod = sys.modifications[index];
         if (!mod?.uuid) return;
 
@@ -243,10 +244,10 @@ export default class ArmourSheet extends ContainerItemSheet {
      */
     static async #removeMod(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.modIndex ?? '', 10);
-        const sys = this.item.system as ArmourDataModel;
+        const sys = this.item.system as unknown as ArmourDataModel;
         const modifications = [...sys.modifications];
         modifications.splice(index, 1);
 
-        await this.item.update({ 'system.modifications': modifications });
+        await this.item.update({ 'system.modifications': modifications } as Record<string, unknown>);
     }
 }

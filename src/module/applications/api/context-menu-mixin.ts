@@ -74,8 +74,8 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
         /* -------------------------------------------- */
 
         /** @override */
-        _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> | void {
-            super._onRender(context, options);
+        async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+            await super._onRender(context, options);
 
             // Setup context menus on first render
             if (options.isFirstRender) {
@@ -447,12 +447,12 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
 
         async _toggleEquipped(item: WH40KItem): Promise<void> {
             const system = item.system as Record<string, unknown>;
-            await item.update({ 'system.equipped': !(system.equipped as boolean) });
+            await item.update({ 'system.equipped': !(system.equipped as boolean) } as Record<string, unknown>);
         }
 
         async _toggleActivated(item: WH40KItem): Promise<void> {
             const system = item.system as Record<string, unknown>;
-            await item.update({ 'system.activated': !(system.activated as boolean) });
+            await item.update({ 'system.activated': !(system.activated as boolean) } as Record<string, unknown>);
         }
 
         async _spendFate(purpose: string): Promise<void> {}

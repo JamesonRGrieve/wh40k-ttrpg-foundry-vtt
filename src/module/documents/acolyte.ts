@@ -85,7 +85,7 @@ const SKILL_ALIASES: Record<string, string> = {
  * @extends {WH40KBaseActor}
  */
 export class WH40KAcolyte extends WH40KBaseActor {
-    declare system: WH40KCharacterSystemData;
+    declare system: WH40KBaseActor['system'] & WH40KCharacterSystemData;
 
     /* -------------------------------------------- */
     /*  Getters                                     */
@@ -671,7 +671,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
 
     async spendFate(): Promise<void> {
         await this.update({
-            'system.fate.value': this.system.fate.value - 1,
-        });
+            system: { fate: { value: this.system.fate.value - 1 } },
+        } as Actor.UpdateInput);
     }
 }

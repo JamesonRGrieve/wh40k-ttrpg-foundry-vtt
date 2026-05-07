@@ -17,7 +17,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare type: string;
-    declare armourPoints: { head: number; leftArm: number; rightArm: number; body: number; leftLeg: number; rightLeg: number };
+    declare armourPoints: { head: number; leftArm: number; rightArm: number; body: number; leftLeg: number; rightLeg: number; [key: string]: number };
     declare coverage: Set<string>;
     declare maxAgility: number | null;
     declare properties: Set<string>;
@@ -30,6 +30,13 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         cachedModifiers: { armourPoints: number; maxAgility: number };
     }>;
     declare modificationSlots: number;
+
+    // Properties from PhysicalItemTemplate
+    declare craftsmanship: string;
+    declare weight: number;
+
+    // Properties from EquippableTemplate
+    declare equipped: boolean;
 
     /* -------------------------------------------- */
     /*  Data Migration                              */
@@ -73,7 +80,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
         // Note: Set to Array conversion is handled by Foundry's SetField
     }
@@ -93,7 +100,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         const lineKey = inferActiveGameLine(data);
         const armourPoints = resolveLineVariant(data.armourPoints as Record<string, unknown>, lineKey) as Record<string, number> | undefined;
         const coverageValue = resolveLineVariant(data.coverage as Record<string, unknown>, lineKey);
-        const maxAgility = resolveLineVariant(data.maxAgility as Record<string, unknown>, lineKey) as number | null | undefined;
+        const maxAgility = resolveLineVariant(data.maxAgility as unknown, lineKey) as number | null | undefined;
 
         // Validate AP values (0-20 reasonable range)
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
@@ -141,7 +148,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as any)({ required: true, blank: true }) as foundry.data.fields.StringField,
 
             // Armour classification
             type: new fields.StringField({
@@ -360,7 +367,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {string} location   The body location.
      * @returns {number}
      */
-    getAPForLocation(location): number {
+    getAPForLocation(location: string): number {
         const coverage = this._getEffectiveCoverage();
         if (coverage.has('all')) return this.armourPoints[location] ?? 0;
         if (coverage.size && !coverage.has(location)) return 0;
@@ -373,7 +380,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get apSummary(): string {
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
-        const abbrs = { head: 'H', body: 'B', leftArm: 'LA', rightArm: 'RA', leftLeg: 'LL', rightLeg: 'RL' };
+        const abbrs: Record<string, string> = { head: 'H', body: 'B', leftArm: 'LA', rightArm: 'RA', leftLeg: 'LL', rightLeg: 'RL' };
         const coverage = this._getEffectiveCoverage();
         const coveredLocations = coverage.has('all') || !coverage.size ? locations : locations.filter((loc) => coverage.has(loc));
 
@@ -403,7 +410,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get typeIcon() {
-        const icons = {
+        const icons: Record<string, string> = {
             'flak': 'fa-shield',
             'mesh': 'fa-vest',
             'carapace': 'fa-shield-halved',
@@ -603,7 +610,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {string} location - The body location
      * @returns {number} - Effective AP value
      */
-    getEffectiveAPForLocation(location): number {
+    getEffectiveAPForLocation(location: string): number {
         const baseAP = this.getAPForLocation(location);
         const craftMods = this.craftsmanshipModifiers;
 
@@ -618,7 +625,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} [weapon] - Optional weapon data model
      * @returns {number} - Effective AP value
      */
-    getEffectiveAPAgainstWeapon(location, weapon = null): number {
+    getEffectiveAPAgainstWeapon(location: string, weapon: { primitive?: boolean } | null = null): number {
         let ap = this.getEffectiveAPForLocation(location);
 
         // Primitive armour vs non-primitive weapon: halve AP (round up)
@@ -695,7 +702,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this)];
+        const props = [...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? [])];
 
         props.unshift(this.typeLabel);
         props.push(`AP: ${this.apSummary}`);

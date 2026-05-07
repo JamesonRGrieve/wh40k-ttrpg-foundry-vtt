@@ -127,7 +127,7 @@ export async function useAmmo(actionData: AmmoActionData): Promise<void> {
 
         await actionItem.update({
             'system.clip.value': newValue,
-        });
+        } as Record<string, unknown>);
 
         if (actionItem.system.clip.value === 0) {
             ui.notifications.warn(`Clip is now empty. Ammo should be removed or reloaded.`);
@@ -140,7 +140,7 @@ export async function refundAmmo(actionData: AmmoActionData): Promise<void> {
     if (actionItem.usesAmmo) {
         await actionItem.update({
             'system.clip.value': actionItem.system.clip.value + actionData.rollData.ammoUsed,
-        });
+        } as Record<string, unknown>);
     }
 }
 

@@ -54,9 +54,9 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
         const careerKey = this.resolveCareerKey(actor);
         if (!careerKey) return null;
 
-        const career = this.getCareerRegistry()[careerKey];
-        const tierKey = tiers[currentTier];
-        const cost = career?.CHARACTERISTIC_COSTS?.[charKey]?.[tierKey];
+        const career = this.getCareerRegistry()[careerKey] as Record<string, Record<string, Record<string, number>>> | undefined;
+        const tierKey = tiers[currentTier]!;
+        const cost = career?.['CHARACTERISTIC_COSTS']?.[charKey]?.[tierKey];
         if (cost == null) return null;
 
         return { cost, tier: tierKey };
@@ -77,8 +77,8 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
         const careerKey = this.resolveCareerKey(actor);
         if (!careerKey) return [];
 
-        const career = this.getCareerRegistry()[careerKey];
-        return career?.RANK_1_ADVANCES ?? [];
+        const career = this.getCareerRegistry()[careerKey] as Record<string, AdvanceOption[]> | undefined;
+        return career?.['RANK_1_ADVANCES'] ?? [];
     }
 
     // ── RT/DH1e/DW Skill Visibility ─────────────────────────────

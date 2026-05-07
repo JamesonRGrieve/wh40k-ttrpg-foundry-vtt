@@ -57,8 +57,9 @@ export default class DescriptionTemplate extends SystemDataModel {
         if (isLineVariantContainer(source.description)) return;
         // Ensure sub-fields are not null (V13 HTMLField strictness)
         if (source.description && typeof source.description === 'object') {
-            source.description.chat ??= '';
-            source.description.summary ??= '';
+            const desc = source.description as Record<string, unknown>;
+            desc.chat ??= '';
+            desc.summary ??= '';
         }
     }
 
@@ -76,9 +77,10 @@ export default class DescriptionTemplate extends SystemDataModel {
         }
         if (isLineVariantContainer(source.source)) return;
         if (source.source && typeof source.source === 'object') {
-            source.source.book ??= '';
-            source.source.page ??= '';
-            source.source.custom ??= '';
+            const src = source.source as Record<string, unknown>;
+            src.book ??= '';
+            src.page ??= '';
+            src.custom ??= '';
         }
     }
 
@@ -108,7 +110,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options?: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
     }
 
@@ -123,11 +125,11 @@ export default class DescriptionTemplate extends SystemDataModel {
         this.description = {
             ...DescriptionTemplate.#emptyDescription(),
             ...(resolvedDescription ?? {}),
-        };
+        } as { value: string; chat: string; summary: string };
         this.source = {
             ...DescriptionTemplate.#emptySource(),
             ...(resolvedSource ?? {}),
-        };
+        } as { book: string; page: string; custom: string };
     }
 
     /* -------------------------------------------- */

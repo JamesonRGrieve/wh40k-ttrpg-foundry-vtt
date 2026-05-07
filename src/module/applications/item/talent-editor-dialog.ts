@@ -9,6 +9,7 @@
  */
 
 import type TalentData from '../../data/item/talent.ts';
+import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const { ApplicationV2, HandlebarsApplicationMixin } = (foundry.applications as any).api;
@@ -173,7 +174,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _prepareModifiersEditData(system: TalentData): Record<string, unknown> {
-        const mods = system.modifiers || ({} as TalentData['modifiers']);
+        const mods = (system as TalentData & Pick<ModifiersTemplate, 'modifiers'>).modifiers || ({} as ModifiersTemplate['modifiers']);
 
         // Convert characteristics object to array
         const characteristics = Object.entries(mods.characteristics || {})
@@ -238,7 +239,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _prepareSituationalEditData(system: TalentData): Record<string, unknown> {
-        const situational = system.modifiers?.situational || ({ characteristics: [], skills: [], combat: [] } as TalentData['modifiers']['situational']);
+        const situational =
+            (system as TalentData & Pick<ModifiersTemplate, 'modifiers'>).modifiers?.situational ||
+            ({ characteristics: [], skills: [], combat: [] } as ModifiersTemplate['modifiers']['situational']);
 
         return {
             characteristics: (situational.characteristics || []).map((mod: { key: string; value: number; condition: string }, index: number) => ({
@@ -562,7 +565,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {FormDataExtended} formData - The form data
      */
     static async #formHandler(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
-        const data = foundry.utils.expandObject(formData.object) as Record<string, Record<string, unknown>>;
+        const data = foundry.utils.expandObject(formData.object as Record<string, unknown>) as Record<string, Record<string, unknown>>;
 
         // Process the form data into the proper structure
         const updateData: Record<string, unknown> = {};

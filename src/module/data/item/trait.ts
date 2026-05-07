@@ -24,7 +24,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: false, blank: true }),
 
             // Category/type of trait
             category: new fields.StringField({
@@ -134,7 +134,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      * @param {object} [options]  Additional options
      * @returns {Promise<ChatMessage>}
      */
-    async toChat(options = {}): Promise<void> {
+    async toChat(options: { rollMode?: string } = {}): Promise<void> {
         // Prepare template data
         const templateData = {
             trait: this.parent,
@@ -168,9 +168,12 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         };
 
         // Apply roll mode
-        ChatMessage.applyRollMode(chatData, options.rollMode || game.settings.get('core', 'rollMode'));
+        ChatMessage.applyRollMode(
+            chatData as unknown as Parameters<typeof ChatMessage.applyRollMode>[0],
+            (options.rollMode || game.settings.get('core', 'rollMode')) as Parameters<typeof ChatMessage.applyRollMode>[1],
+        );
 
         // Create and return chat message
-        return ChatMessage.create(chatData);
+        await ChatMessage.create(chatData as unknown as Parameters<typeof ChatMessage.create>[0]);
     }
 }

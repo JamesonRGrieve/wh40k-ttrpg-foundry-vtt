@@ -2,41 +2,44 @@ import WH40K from '../config.ts';
 import { SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
 import type { GameSystemId, SystemThemeRole } from '../config/game-systems/index.ts';
 
-export function capitalize(text) {
+export function capitalize(text: string): string {
     if (!text) return '';
     return text[0].toUpperCase() + text.substring(1);
 }
 
-export function toCamelCase(str) {
+export function toCamelCase(str: string): string {
     return str
-        .replace(/\s(.)/g, ($1) => {
+        .replace(/\s(.)/g, ($1: string) => {
             return $1.toUpperCase();
         })
         .replace(/\s/g, '')
-        .replace(/^(.)/, ($1) => {
+        .replace(/^(.)/, ($1: string) => {
             return $1.toLowerCase();
         });
 }
 
 const ARMOUR_LOCATIONS = ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg'];
 
-function getArmourPointsObject(armour) {
-    const raw = armour?.armourPoints;
+function getArmourPointsObject(armour: unknown) {
+    if (!armour || typeof armour !== 'object') return null;
+    const raw = (armour as Record<string, unknown>).armourPoints;
     if (!raw || typeof raw !== 'object') return null;
-    if (raw.armourPoints && typeof raw.armourPoints === 'object') {
-        return raw.armourPoints;
+    const nested = (raw as Record<string, unknown>).armourPoints;
+    if (nested && typeof nested === 'object') {
+        return nested;
     }
     return raw;
 }
 
-function getArmourAPForLocation(armour, location) {
-    if (!armour) return 0;
-    if (typeof armour.getAPForLocation === 'function') {
-        return armour.getAPForLocation(location);
+function getArmourAPForLocation(armour: unknown, location: string) {
+    if (!armour || typeof armour !== 'object') return 0;
+    const armourObj = armour as Record<string, unknown>;
+    if (typeof armourObj.getAPForLocation === 'function') {
+        return (armourObj.getAPForLocation as (loc: string) => number)(location);
     }
     const armourPoints = getArmourPointsObject(armour);
     if (armourPoints) {
-        const value = Number(armourPoints?.[location] ?? 0);
+        const value = Number((armourPoints as Record<string, unknown>)[location] ?? 0);
         return Number.isFinite(value) ? value : 0;
     }
     return 0;
@@ -112,7 +115,8 @@ export function registerHandlebarsHelpers() {
             return actor.flags['wh40k-rpg'].ui.expanded.includes(field);
         }
         // Fallback to global CONFIG for compatibility (old system)
-        return CONFIG.wh40k.ui.expanded ? CONFIG.wh40k.ui.expanded.includes(field) : false;
+        const wh40kConfig = CONFIG.wh40k as unknown as { ui?: { expanded?: string[] } };
+        return wh40kConfig.ui?.expanded ? wh40kConfig.ui.expanded.includes(field) : false;
     });
 
     Handlebars.registerHelper('toLowerCase', (str) => {
@@ -135,7 +139,8 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('getBioOptions', (field) => {
-        return CONFIG.wh40k.bio[field];
+        const bioConfig = CONFIG.wh40k as unknown as { bio?: Record<string, unknown> };
+        return bioConfig.bio?.[field];
     });
 
     Handlebars.registerHelper('and', (obj1, obj2) => {
@@ -196,7 +201,7 @@ export function registerHandlebarsHelpers() {
      * Handles both arrays ["value1", "value2"] and CONFIG objects {key: {label: "..."}}
      */
     Handlebars.registerHelper('arrayToObject', (array) => {
-        const obj = {};
+        const obj: Record<string, unknown> = {};
         if (array == null) return obj;
 
         // Handle CONFIG-style objects (already objects with label/data properties)
@@ -275,7 +280,7 @@ export function registerHandlebarsHelpers() {
      * Usage: {{#each (range 1 5)}}
      */
     Handlebars.registerHelper('range', (start, end) => {
-        const out = [];
+        const out: number[] = [];
         const s = Number(start) || 0;
         const e = Number(end) || 0;
         if (e < s) return out;
@@ -445,14 +450,14 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('armourDisplay', (armour) => {
-        const getValue = (location) => getArmourAPForLocation(armour, location);
+        const getValue = (location: string) => getArmourAPForLocation(armour, location);
         const first = getValue('body');
         const same = ARMOUR_LOCATIONS.every((location) => getValue(location) === first);
         if (same) {
             return `${first} ALL`;
         }
 
-        const locations_array = [];
+        const locations_array: string[] = [];
         ARMOUR_LOCATIONS.forEach((part) => {
             if (getValue(part) > 0) {
                 locations_array.push(part);
@@ -486,7 +491,8 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('skillIcon', (skillKey) => {
-        const config = CONFIG?.rt?.getSkillIcon ? CONFIG.wh40k : WH40K;
+        const configAny = CONFIG as unknown as Record<string, unknown>;
+        const config = (configAny?.rt as { getSkillIcon?: (k: string) => string } | undefined)?.getSkillIcon ? CONFIG.wh40k : WH40K;
         const icon = config?.getSkillIcon?.(skillKey) || 'modules/game-icons-net-font/svg/skills.svg';
         if (foundry?.utils?.getRoute) return foundry.utils.getRoute(icon);
         return icon;
@@ -622,7 +628,7 @@ export function registerHandlebarsHelpers() {
      * @returns {string} Font Awesome icon class
      */
     Handlebars.registerHelper('talentIcon', (category) => {
-        const icons = {
+        const icons: Record<string, string> = {
             combat: 'fa-sword',
             social: 'fa-users',
             knowledge: 'fa-book',
@@ -635,7 +641,7 @@ export function registerHandlebarsHelpers() {
             unique: 'fa-star',
             general: 'fa-circle',
         };
-        return icons[category] || icons.general;
+        return icons[category] || icons['general'];
     });
 
     /**
@@ -645,13 +651,13 @@ export function registerHandlebarsHelpers() {
      * @returns {string} CSS class name
      */
     Handlebars.registerHelper('tierColor', (tier) => {
-        const colors = {
+        const colors: Record<number, string> = {
             1: 'tier-bronze',
             2: 'tier-silver',
             3: 'tier-gold',
             0: 'tier-none',
         };
-        return colors[tier] || colors[0];
+        return colors[Number(tier)] || colors[0];
     });
 
     /**
@@ -690,7 +696,7 @@ export function registerHandlebarsHelpers() {
      * @returns {string} Font Awesome icon class
      */
     Handlebars.registerHelper('traitIcon', (category) => {
-        const icons = {
+        const icons: Record<string, string> = {
             creature: 'fa-paw',
             character: 'fa-user-shield',
             elite: 'fa-star',
@@ -707,7 +713,7 @@ export function registerHandlebarsHelpers() {
      * @returns {string} CSS class
      */
     Handlebars.registerHelper('traitCategoryColor', (category) => {
-        const colors = {
+        const colors: Record<string, string> = {
             creature: 'trait-creature',
             character: 'trait-character',
             elite: 'trait-elite',
@@ -743,7 +749,9 @@ export function registerHandlebarsHelpers() {
         const qualityIds = Array.isArray(specialSet) ? specialSet : Array.from(specialSet);
         if (!qualityIds.length) return [];
 
-        const rtConfig = CONFIG?.rt;
+        const rtConfig = (CONFIG as unknown as Record<string, unknown>)?.rt as
+            | { weaponQualities?: Record<string, { label: string; description: string; hasLevel?: boolean }> }
+            | undefined;
         if (!rtConfig?.weaponQualities) {
             console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return [];
@@ -799,7 +807,9 @@ export function registerHandlebarsHelpers() {
      * @returns {object[]}             Array of quality objects
      */
     Handlebars.registerHelper('craftsmanshipQualities', (weaponSystem) => {
-        const rtConfig = CONFIG?.rt;
+        const rtConfig = (CONFIG as unknown as Record<string, unknown>)?.rt as
+            | { weaponQualities?: Record<string, { label: string; description: string; hasLevel?: boolean }> }
+            | undefined;
         if (!rtConfig?.weaponQualities) {
             console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return [];
@@ -883,7 +893,7 @@ export function registerHandlebarsHelpers() {
      * @param {object[]} items    Array of embedded items
      * @returns {boolean}
      */
-    Handlebars.registerHelper('hasEmbeddedQualities', (items) => {
+    Handlebars.registerHelper('hasEmbeddedQualities', (items: Array<{ type?: string }>) => {
         if (!items || !items.length) return false;
         return items.some((item) => item.type === 'attackSpecial');
     });
@@ -910,7 +920,9 @@ export function registerHandlebarsHelpers() {
      * @returns {object}
      */
     Handlebars.registerHelper('qualityLookup', (identifier) => {
-        const rtConfig = CONFIG?.rt;
+        const rtConfig = (CONFIG as unknown as Record<string, unknown>)?.rt as
+            | { weaponQualities?: Record<string, { label: string; description: string; hasLevel?: boolean }> }
+            | undefined;
         if (!rtConfig?.weaponQualities) {
             console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return {
@@ -956,7 +968,7 @@ export function registerHandlebarsHelpers() {
  * @param {number} strength - Weapon strength value
  * @returns {string} Display string
  */
-export function displayStrength(strength) {
+export function displayStrength(strength: number): string | number {
     return strength && strength > 0 ? strength : '-';
 }
 
@@ -965,7 +977,7 @@ export function displayStrength(strength) {
  * @param {number} crit - Crit rating value
  * @returns {string} Display string
  */
-export function displayCrit(crit) {
+export function displayCrit(crit: number): string {
     return crit && crit > 0 ? `${crit}+` : '-';
 }
 
@@ -975,7 +987,7 @@ export function displayCrit(crit) {
  * @param {number} maxLength - Maximum length before truncation
  * @returns {string} Truncated string
  */
-export function truncate(str, maxLength = 100) {
+export function truncate(str: string, maxLength = 100): string {
     if (!str || typeof str !== 'string') return '';
     // Strip HTML tags for text length calculation
     const plainText = str.replace(/<[^>]*>/g, '');
@@ -988,10 +1000,10 @@ export function truncate(str, maxLength = 100) {
  * Usage: {{#select currentValue}}...options...{{/select}}
  * Marks the matching option as selected
  */
-export function select(selected, options) {
+export function select(selected: unknown, options: { fn: (ctx: unknown) => string }): string {
     const escapedValue = String(selected).replace(/['"]/g, '\\$&');
 
     // Replace selected attribute in options
-    const html = options.fn(this);
+    const html = options.fn(undefined);
     return html.replace(new RegExp(` value="${escapedValue}"`), ` value="${escapedValue}" selected="selected"`);
 }

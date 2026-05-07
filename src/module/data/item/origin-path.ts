@@ -37,13 +37,27 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     };
     declare effectText: string;
     declare notes: string;
-    declare selectedChoices: Record<string, unknown>;
-    declare activeModifiers: Array<{ source: string; type: string; key: string; value: number; itemUuid: string }>;
+    declare selectedChoices: Record<string, unknown[]>;
+    declare activeModifiers: Array<{ source: string; type: string; key: string; value: number | null; itemUuid: string | null }>;
     declare homebrew: { throneGelt: string; thrones: string };
     declare rollResults: {
         wounds: { formula: string; rolled: number; breakdown: string; timestamp: number };
         fate: { formula: string; rolled: number; breakdown: string; timestamp: number };
         thrones: { formula: string; rolled: number; breakdown: string; timestamp: number };
+    };
+
+    // Properties from ModifiersTemplate
+    declare modifiers: {
+        characteristics: Record<string, unknown>;
+        skills: Record<string, unknown>;
+        combat: { attack: number; damage: number; penetration: number; defense: number; initiative: number; speed: number };
+        resources: { wounds: number; fate: number; insanity: number; corruption: number };
+        other: Array<{ key: string; label: string; value: number; mode: string }>;
+        situational: {
+            characteristics: Array<{ key: string; value: number; condition: string; icon: string }>;
+            skills: Array<{ key: string; value: number; condition: string; icon: string }>;
+            combat: Array<{ key: string; value: number; condition: string; icon: string }>;
+        };
     };
 
     /** @inheritdoc */
@@ -52,7 +66,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as any)({ required: true, blank: true }) as foundry.data.fields.StringField,
 
             // Origin path step
             step: new fields.StringField({
@@ -288,7 +302,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @type {string}
      */
     get stepLabel() {
-        const fallbackLabels = {
+        const fallbackLabels: Record<string, string> = {
             homeWorld: 'Home World',
             birthright: 'Birthright',
             lureOfTheVoid: 'Lure of the Void',
@@ -421,15 +435,26 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @private
      */
     _calculateActiveModifiers(): void {
-        const activeModifiers = [];
+        interface OptionGrants {
+            characteristics?: Record<string, unknown>;
+            skills?: Array<{ name: string }>;
+            talents?: Array<{ name: string; uuid?: string }>;
+            traits?: Array<{ name: string; level?: number; uuid?: string }>;
+            equipment?: Array<{ name: string; quantity?: number; uuid?: string }>;
+        }
+        interface ChoiceOption extends Record<string, unknown> {
+            grants?: OptionGrants;
+        }
+
+        const activeModifiers: Array<{ source: string; type: string; key: string; value: number | null; itemUuid: string | null }> = [];
 
         for (const choice of this.grants.choices) {
             // DH2e/BC/OW packs use 'name' while RT uses 'label' — handle both
-            const choiceKey = choice.label || choice.name;
+            const choiceKey: string = choice.label || choice.name || '';
             const selected = this.selectedChoices[choiceKey] || [];
 
             for (const selectedValue of selected) {
-                const option = choice.options.find((opt) => (opt.value || opt.name) === selectedValue);
+                const option = (choice.options as ChoiceOption[]).find((opt) => (opt.value || opt.name) === selectedValue);
                 if (!option?.grants) continue;
 
                 // Extract characteristic modifiers
@@ -440,7 +465,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                                 source: choiceKey,
                                 type: 'characteristic',
                                 key: char,
-                                value: value,
+                                value: value as number,
                                 itemUuid: null,
                             });
                         }
@@ -480,7 +505,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                             source: choiceKey,
                             type: 'trait',
                             key: trait.name,
-                            value: trait.level,
+                            value: trait.level ?? null,
                             itemUuid: trait.uuid || null,
                         });
                     }
@@ -493,7 +518,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                             source: choiceKey,
                             type: 'equipment',
                             key: equip.name,
-                            value: equip.quantity,
+                            value: equip.quantity ?? null,
                             itemUuid: equip.uuid || null,
                         });
                     }
@@ -532,7 +557,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
     }
 

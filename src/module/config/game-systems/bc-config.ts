@@ -121,7 +121,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * Get the character's current Chaos alignment.
      */
     getCharacterAlignment(actor: WH40KBaseActor): ChaosAlignment {
-        return actor.system?.chaosAlignment ?? 'unaligned';
+        return ((actor.system as Record<string, unknown>)?.['chaosAlignment'] as ChaosAlignment | undefined) ?? 'unaligned';
     }
 
     /**

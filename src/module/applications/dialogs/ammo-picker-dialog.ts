@@ -54,7 +54,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
         },
         position: {
             width: 420,
-            height: 'auto' as const,
+            height: 'auto' as unknown as number,
         },
         actions: {
             selectAmmo: AmmoPickerDialog.#onSelect,
@@ -87,7 +87,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
         config: { ammoItems: WH40KItem[]; currentAmmoUuid?: string; weaponName: string; clipMax: number },
         options: ApplicationV2Config.DefaultOptions = {},
     ) {
-        super(options);
+        super(options as Record<string, unknown>);
         this.#config = {
             ammoItems: config.ammoItems || [],
             currentAmmoUuid: config.currentAmmoUuid || '',
@@ -166,7 +166,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options?: Record<string, unknown>): Promise<void> {
+    async close(options?: Record<string, unknown>): Promise<unknown> {
         if (!this.#resolved && this.#resolve) {
             this.#resolve(null);
         }

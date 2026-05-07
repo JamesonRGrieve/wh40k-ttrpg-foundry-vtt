@@ -97,13 +97,13 @@ export function getRankAdvancements(careerKey: string, rank = 1) {
  * @returns {{cost: number, tier: string}|null} Cost and tier name, or null if maxed
  */
 export function getNextCharacteristicCost(careerKey: string, characteristicKey: string, currentAdvances: number) {
-    const costs = getCharacteristicCosts(careerKey);
+    const costs = getCharacteristicCosts(careerKey) as Record<string, Record<string, number>> | null;
     if (!costs || !costs[characteristicKey]) return null;
 
     if (currentAdvances >= TIER_ORDER.length) return null; // Already maxed
 
-    const tier = TIER_ORDER[currentAdvances];
-    const cost = costs[characteristicKey][tier];
+    const tier = TIER_ORDER[currentAdvances]!;
+    const cost = costs[characteristicKey]![tier];
 
     return { cost, tier };
 }
@@ -147,8 +147,8 @@ export function getCareerKeyFromName(careerName: string) {
         'void master': 'voidMaster',
     };
 
-    if (nameToKey[normalized]) {
-        return nameToKey[normalized];
+    if (nameToKey[normalized as keyof typeof nameToKey]) {
+        return nameToKey[normalized as keyof typeof nameToKey];
     }
 
     // Fallback: check if it matches a key directly

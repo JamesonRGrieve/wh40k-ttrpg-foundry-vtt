@@ -1860,7 +1860,7 @@ export default class CharacterSheet extends BaseActorSheet {
         try {
             const hitData = new Hit();
             const assignData = new AssignDamageData(this.actor as unknown as ActorLike, hitData);
-            await prepareAssignDamageRoll(assignData);
+            await prepareAssignDamageRoll(assignData as unknown as Record<string, unknown>);
         } catch (error: any) {
             this._notify('error', `Assign damage failed: ${error.message}`, {
                 duration: 5000,
@@ -2092,7 +2092,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
-        await item.update({ 'system.equipped': !(item.system as Record<string, unknown>).equipped });
+        await item.update({ 'system.equipped': !(item.system as Record<string, unknown>).equipped } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -2111,7 +2111,7 @@ export default class CharacterSheet extends BaseActorSheet {
             'system.equipped': false,
             'system.inBackpack': true,
             'system.inShipStorage': false,
-        });
+        } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -2126,7 +2126,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
-        await item.update({ 'system.inBackpack': false });
+        await item.update({ 'system.inBackpack': false } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -2145,7 +2145,7 @@ export default class CharacterSheet extends BaseActorSheet {
             'system.equipped': false,
             'system.inBackpack': false,
             'system.inShipStorage': true,
-        });
+        } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -2160,7 +2160,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
-        await item.update({ 'system.inShipStorage': false });
+        await item.update({ 'system.inShipStorage': false } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -2208,7 +2208,7 @@ export default class CharacterSheet extends BaseActorSheet {
                     'system.equipped': false,
                     'system.inBackpack': false,
                     'system.inShipStorage': true,
-                }),
+                } as Record<string, unknown>),
             );
         });
 
@@ -2229,7 +2229,7 @@ export default class CharacterSheet extends BaseActorSheet {
             transferOperations.push(
                 item.update({
                     'system.inShipStorage': false,
-                }),
+                } as Record<string, unknown>),
             );
         });
 
@@ -2322,7 +2322,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
-        await item.update({ 'system.activated': !(item.system as Record<string, unknown>).activated });
+        await item.update({ 'system.activated': !(item.system as Record<string, unknown>).activated } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -2344,7 +2344,7 @@ export default class CharacterSheet extends BaseActorSheet {
                     const armourItems = items.filter((i: WH40KItem & { isArmour?: boolean }) => i.type === 'armour' || i.isArmour);
                     for (const item of armourItems) {
                         if (!item.system.equipped) {
-                            await item.update({ 'system.equipped': true });
+                            await item.update({ 'system.equipped': true } as Record<string, unknown>);
                             count++;
                         }
                     }
@@ -2357,7 +2357,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 case 'unequip-all': {
                     const equippedItems = items.filter((i: WH40KItem) => (i.system as { equipped?: boolean })?.equipped === true);
                     for (const item of equippedItems) {
-                        await item.update({ 'system.equipped': false });
+                        await item.update({ 'system.equipped': false } as Record<string, unknown>);
                         count++;
                     }
                     this._notify('info', `Unequipped ${count} item${count !== 1 ? 's' : ''}`, {
@@ -2375,7 +2375,7 @@ export default class CharacterSheet extends BaseActorSheet {
                         await item.update({
                             'system.inBackpack': true,
                             'system.equipped': false,
-                        });
+                        } as Record<string, unknown>);
                         count++;
                     }
                     this._notify('info', `Stowed ${count} gear item${count !== 1 ? 's' : ''} in backpack`, {
@@ -3097,7 +3097,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (!item) return;
 
         const newLevel = Math.max(0, (Number(item.system.level) || 0) + delta);
-        await item.update({ 'system.level': newLevel });
+        await item.update({ 'system.level': newLevel } as Record<string, unknown>);
 
         // Provide visual feedback
         ui.notifications.info(`${item.name} level ${delta > 0 ? 'increased' : 'decreased'} to ${newLevel}`);

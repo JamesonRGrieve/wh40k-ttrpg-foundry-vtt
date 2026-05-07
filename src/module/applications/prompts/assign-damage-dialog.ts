@@ -81,8 +81,8 @@ export default class AssignDamageDialog extends BaseRollDialog {
 
     /** @override */
     async _performRoll(): Promise<void> {
-        await this.rollData.finalize();
-        await this.rollData.performActionAndSendToChat();
+        await (this.rollData['finalize'] as () => Promise<void>)();
+        await (this.rollData['performActionAndSendToChat'] as () => Promise<void>)();
         await this.close();
     }
 }
@@ -95,7 +95,7 @@ export default class AssignDamageDialog extends BaseRollDialog {
  * Open an assign damage dialog.
  * @param {object} assignDamageData  The damage assignment data.
  */
-export function prepareAssignDamageRoll(assignDamageData) {
+export function prepareAssignDamageRoll(assignDamageData: Record<string, unknown>) {
     const prompt = new AssignDamageDialog(assignDamageData);
     prompt.render(true);
 }

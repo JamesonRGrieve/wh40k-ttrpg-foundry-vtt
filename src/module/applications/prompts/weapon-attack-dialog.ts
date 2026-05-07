@@ -27,7 +27,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
         classes: ['weapon-attack'],
         actions: {
             ...BaseRollDialog.DEFAULT_OPTIONS.actions,
-            selectWeapon: WeaponAttackDialog.#onSelectWeapon as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            selectWeapon: WeaponAttackDialog.#onSelectWeapon as Function,
         },
         window: {
             title: 'Weapon Attack',
@@ -140,7 +140,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
  * Open a weapon attack dialog.
  * @param {WeaponActionData} weaponAttackData  The weapon action data.
  */
-export function prepareWeaponRoll(weaponAttackData) {
+export function prepareWeaponRoll(weaponAttackData: Record<string, unknown>) {
     const prompt = new WeaponAttackDialog(weaponAttackData);
     prompt.render(true);
 }

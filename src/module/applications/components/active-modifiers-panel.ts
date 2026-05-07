@@ -17,6 +17,7 @@
 
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KBaseActorDocument, WH40KItemModifiers } from '../../types/global.d.ts';
+import type { WH40KActiveEffect } from '../../documents/active-effect.ts';
 
 interface ModifierEntry {
     id: string;
@@ -31,19 +32,30 @@ interface ModifierEntry {
     isEffect?: boolean;
 }
 
+type BaseWithOptions = {
+    DEFAULT_OPTIONS?: { actions?: Record<string, unknown> };
+};
+
+type ActorSheetCtor = new (...args: any[]) => foundry.appv1.sheets.ActorSheet;
+
 /**
  * Mixin that adds active modifiers panel to actor sheets
  */
-export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.ActorSheet>(Base: TBase) {
-    return class extends Base {
+export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase) {
+    const baseWithOptions = Base as unknown as BaseWithOptions;
+    return class ActiveModifiersApplication extends Base {
+        constructor(...args: any[]) {
+            super(...args);
+        }
+
         /** @override */
         static DEFAULT_OPTIONS = {
-            ...Base.DEFAULT_OPTIONS,
+            ...(baseWithOptions.DEFAULT_OPTIONS ?? {}),
             actions: {
-                ...Base.DEFAULT_OPTIONS.actions,
-                toggleModifier: ActiveModifiersMixin.toggleModifier,
-                viewModifierSource: ActiveModifiersMixin.viewModifierSource,
-                toggleModifiersPanel: ActiveModifiersMixin.toggleModifiersPanel,
+                ...(baseWithOptions.DEFAULT_OPTIONS?.actions ?? {}),
+                toggleModifier: ActiveModifiersApplication.toggleModifier,
+                viewModifierSource: ActiveModifiersApplication.viewModifierSource,
+                toggleModifiersPanel: ActiveModifiersApplication.toggleModifiersPanel,
             },
         };
 
@@ -66,7 +78,7 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
             // Toggle the item's active state
             const system = item.system as { active?: boolean };
             const isActive = system.active ?? true;
-            await item.update({ 'system.active': !isActive });
+            await item.update({ 'system.active': !isActive } as Record<string, unknown>);
         }
 
         /**
@@ -96,7 +108,7 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
          * Prepare active modifiers data for rendering
          */
         prepareActiveModifiers(): Record<string, unknown> {
-            const actor = this.actor as WH40KBaseActorDocument;
+            const actor = (this as unknown as { actor: WH40KBaseActorDocument }).actor;
             const modifiers: Record<string, unknown> = {
                 conditions: [] as ModifierEntry[],
                 talents: [] as ModifierEntry[],
@@ -111,8 +123,8 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
             for (const condition of conditions) {
                 const system = condition.system as Record<string, unknown>;
                 (modifiers.conditions as ModifierEntry[]).push({
-                    id: condition.id,
-                    name: condition.name,
+                    id: condition.id ?? '',
+                    name: condition.name ?? '',
                     img: condition.img ?? undefined,
                     description: (system.description as string) || '',
                     duration: (system.duration as string) || 'Permanent',
@@ -130,8 +142,8 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
                 const mods = system.modifiers as WH40KItemModifiers;
                 if (mods && this.#hasActiveModifiers(mods)) {
                     (modifiers.talents as ModifierEntry[]).push({
-                        id: talent.id,
-                        name: (talent.system as any).fullName || talent.name,
+                        id: talent.id ?? '',
+                        name: (talent.system as any).fullName || (talent.name ?? ''),
                         img: talent.img ?? undefined,
                         description: this.#formatModifierDescription(mods),
                         duration: (system.isPassive as boolean) ? 'Passive' : 'Active',
@@ -148,8 +160,8 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
                 const mods = system.modifiers as WH40KItemModifiers;
                 if (mods && this.#hasActiveModifiers(mods)) {
                     (modifiers.traits as ModifierEntry[]).push({
-                        id: trait.id,
-                        name: trait.name,
+                        id: trait.id ?? '',
+                        name: trait.name ?? '',
                         img: trait.img ?? undefined,
                         description: this.#formatModifierDescription(mods),
                         duration: 'Permanent',
@@ -166,8 +178,8 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
                 const mods = system.modifiers as WH40KItemModifiers;
                 if (mods && this.#hasActiveModifiers(mods)) {
                     (modifiers.equipment as ModifierEntry[]).push({
-                        id: item.id,
-                        name: item.name,
+                        id: item.id ?? '',
+                        name: item.name ?? '',
                         img: item.img ?? undefined,
                         description: this.#formatModifierDescription(mods),
                         duration: 'While Equipped',
@@ -180,13 +192,14 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
             // Collect active effects
             for (const effect of actor.effects) {
                 if (!effect.disabled) {
+                    const e = effect as unknown as WH40KActiveEffect;
                     (modifiers.effects as ModifierEntry[]).push({
-                        id: effect.id,
-                        name: effect.name || effect.label,
-                        img: effect.img || effect.icon || undefined,
-                        description: this.#formatEffectDescription(effect),
-                        duration: this.#formatEffectDuration(effect),
-                        active: !effect.disabled,
+                        id: e.id ?? '',
+                        name: e.name ?? (e as unknown as { label?: string }).label ?? '',
+                        img: e.img ?? (e as unknown as { icon?: string }).icon ?? undefined,
+                        description: this.#formatEffectDescription(e),
+                        duration: this.#formatEffectDuration(e),
+                        active: !e.disabled,
                         canToggle: true,
                         isEffect: true,
                     });
@@ -248,7 +261,7 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
             return parts.join(', ') || 'Various modifiers';
         }
 
-        #formatEffectDescription(effect: ActiveEffect): string {
+        #formatEffectDescription(effect: WH40KActiveEffect): string {
             const changes = effect.changes || [];
             if (changes.length === 0) return 'No changes';
 
@@ -260,7 +273,7 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
             return parts.join(', ');
         }
 
-        #formatEffectDuration(effect: ActiveEffect): string {
+        #formatEffectDuration(effect: WH40KActiveEffect): string {
             if (!effect.duration?.rounds && !effect.duration?.seconds) {
                 return 'Permanent';
             }

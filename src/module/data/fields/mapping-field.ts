@@ -14,7 +14,7 @@ export default class MappingField extends foundry.data.fields.ObjectField {
      * @param {boolean} [options.initialKeysOnly]   Only allow initial keys.
      */
     constructor(model: foundry.data.fields.DataField.Any, options: Record<string, unknown> = {}) {
-        super(options);
+        super(options as foundry.data.fields.ObjectField.DefaultOptions);
         this.model = model;
         this.initialKeys = (options.initialKeys as string[]) ?? null;
         this.initialKeysOnly = (options.initialKeysOnly as boolean) ?? false;

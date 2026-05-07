@@ -1,17 +1,37 @@
 import { WH40KBaseActor } from './base-actor.ts';
 
+type StarshipSystemData = WH40KBaseActor['system'] & {
+    hullType: string;
+    hullClass: string;
+    hullIntegrity: { value: number; max: number };
+    speed: number;
+    manoeuvrability: number;
+    detection: number;
+    detectionBonus: number;
+    armour: number;
+    voidShields: number;
+    turretRating: number;
+    crew: Record<string, unknown>;
+    power: { used: number; total: number };
+    space: { used: number; total: number };
+    weaponCapacity: Record<string, unknown>;
+};
+
 export class WH40KStarship extends WH40KBaseActor {
-    async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: unknown): Promise<void> {
+    declare system: StarshipSystemData;
+
+    protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | void> {
         await super._preCreate(data, options, user);
-        const initData = {
+        const dataAsRecord = data as unknown as Record<string, unknown>;
+        const initData: Record<string, unknown> = {
             'token.bar1': { attribute: 'hullIntegrity' },
             'token.bar2': { attribute: 'crew.morale' },
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
-            'token.name': data.name,
+            'token.name': dataAsRecord.name,
         };
-        this.updateSource(initData);
+        this.updateSource(initData as never);
     }
 
     /** @override */
@@ -119,8 +139,8 @@ export class WH40KStarship extends WH40KBaseActor {
     /**
      * Get ship weapons grouped by location
      */
-    get weaponsByLocation() {
-        const grouped = {
+    get weaponsByLocation(): Record<string, unknown[]> {
+        const grouped: Record<string, unknown[]> = {
             prow: [],
             dorsal: [],
             port: [],
@@ -128,7 +148,8 @@ export class WH40KStarship extends WH40KBaseActor {
             keel: [],
         };
         for (const weapon of this.shipWeapons) {
-            const loc = weapon.system.location || 'dorsal';
+            const weaponItem = weapon as { system: Record<string, unknown> };
+            const loc = (weaponItem.system.location as string | undefined) || 'dorsal';
             if (grouped[loc]) grouped[loc].push(weapon);
         }
         return grouped;
@@ -138,7 +159,7 @@ export class WH40KStarship extends WH40KBaseActor {
      * Fire a ship weapon
      * @param {string} weaponId - The ID of the weapon to fire
      */
-    async fireWeapon(weaponId): Promise<void> {
+    async fireWeapon(weaponId: string): Promise<void> {
         const weapon = this.items.get(weaponId);
         if (!weapon || (weapon.type as string) !== 'shipWeapon') {
             ui.notifications.warn('Invalid ship weapon');
@@ -149,7 +170,7 @@ export class WH40KStarship extends WH40KBaseActor {
         const cardData = {
             actor: this,
             weapon: weapon,
-            crewRating: this.system.crew?.crewRating || 30,
+            crewRating: (this.system.crew as Record<string, unknown> | undefined)?.['crewRating'] || 30,
             detectionBonus: this.detectionBonus,
             gameSystem: (this.system as { gameSystem?: string }).gameSystem,
         };
@@ -158,7 +179,7 @@ export class WH40KStarship extends WH40KBaseActor {
 
         await ChatMessage.create({
             user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor: this }),
+            speaker: ChatMessage.getSpeaker({ actor: this as unknown as Actor.Implementation }),
             content: html,
         });
     }
@@ -166,7 +187,7 @@ export class WH40KStarship extends WH40KBaseActor {
     /**
      * Roll ship initiative (1d10 + Detection Bonus)
      */
-    async rollInitiative(): Promise<unknown> {
+    override async rollInitiative(_options?: Actor.RollInitiativeOptions): Promise<Combat.Implementation | null> {
         const roll = await new Roll(`1d10 + ${this.detectionBonus}`).evaluate();
 
         const content = `
@@ -182,11 +203,11 @@ export class WH40KStarship extends WH40KBaseActor {
         `;
 
         await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this }),
+            speaker: ChatMessage.getSpeaker({ actor: this as unknown as Actor.Implementation }),
             content: content,
             rolls: [roll],
         });
 
-        return roll;
+        return null;
     }
 }

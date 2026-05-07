@@ -26,7 +26,7 @@ interface ActionItemLike {
     isRanged: boolean;
 }
 
-interface AttackDataLike {
+export interface AttackDataLike {
     rollData: {
         weapon?: ActionItemLike;
         power?: ActionItemLike;
@@ -112,7 +112,8 @@ export class Hit {
 
         // Determine Righteous Fury Effects
         for (const righteousFury of hit.righteousFury) {
-            righteousFury.effect = (await getCriticalDamage(hit.damageType, hit.location, righteousFury.roll.total)) ?? '';
+            const rfTotal = righteousFury.roll.total ?? 0;
+            righteousFury.effect = (await getCriticalDamage(hit.damageType, hit.location, rfTotal)) ?? '';
         }
 
         return hit;
@@ -136,7 +137,7 @@ export class Hit {
         const sourceActor = attackData.rollData.sourceActor;
 
         // Get RF threshold from weapon qualities (Gauss=9, Vengeful=8, standard=10)
-        let righteousFuryThreshold = getRighteousFuryThreshold(actionItem);
+        let righteousFuryThreshold = getRighteousFuryThreshold(actionItem as unknown as Parameters<typeof getRighteousFuryThreshold>[0]);
 
         // Legacy support: check for Vengeful in attackSpecials (attack-specials.mjs)
         if (attackData.rollData.hasAttackSpecial('Vengeful')) {
@@ -151,11 +152,12 @@ export class Hit {
         if (!rollFormula || typeof rollFormula !== 'string' || rollFormula === '') {
             rollFormula = '0';
         }
-        this.damageRoll = new Roll(rollFormula, attackData.rollData);
+        const damageRoll = new Roll(rollFormula, attackData.rollData) as unknown as Roll;
+        this.damageRoll = damageRoll;
 
         if (attackData.rollData.hasAttackSpecial('Tearing')) {
             game.wh40k.log('Modifying dice due to tearing');
-            (this.damageRoll.terms as unknown[])
+            (damageRoll.terms as unknown[])
                 .filter((term): term is foundry.dice.terms.Die => term instanceof foundry.dice.terms.Die)
                 .forEach((die) => {
                     if (die.modifiers.includes('kh')) return;
@@ -164,12 +166,12 @@ export class Hit {
                 });
         }
 
-        await this.damageRoll.evaluate();
-        game.wh40k.log('Damage Roll', this.damageRoll);
+        await damageRoll.evaluate();
+        game.wh40k.log('Damage Roll', damageRoll);
 
-        this.damage = this.damageRoll.total;
+        this.damage = damageRoll.total ?? 0;
 
-        for (const term of this.damageRoll.terms as unknown[]) {
+        for (const term of damageRoll.terms as unknown[]) {
             const termAny = term as { results?: { discarded?: boolean; active?: boolean; result?: number }[] };
             if (!termAny.results) continue;
             for (const result of termAny.results) {
@@ -241,12 +243,12 @@ export class Hit {
                     if (attackData.rollData.dos >= 3) {
                         const accurateRoll = new Roll('1d10', {});
                         await accurateRoll.evaluate();
-                        this.modifiers['accurate'] = accurateRoll.total;
+                        this.modifiers['accurate'] = accurateRoll.total ?? 0;
                     }
                     if (attackData.rollData.dos >= 5) {
                         const accurateRoll = new Roll('1d10', {});
                         await accurateRoll.evaluate();
-                        this.modifiers['accurate x 2'] = accurateRoll.total;
+                        this.modifiers['accurate x 2'] = accurateRoll.total ?? 0;
                     }
                 }
             }
@@ -267,7 +269,7 @@ export class Hit {
             if (attackData.rollData.hasAttackSpecial('Maximal')) {
                 const maximalRoll = new Roll('1d10', {});
                 await maximalRoll.evaluate();
-                this.modifiers['maximal'] = maximalRoll.total;
+                this.modifiers['maximal'] = maximalRoll.total ?? 0;
             }
 
             // Mighty Shot
@@ -283,17 +285,16 @@ export class Hit {
             }
 
             // Ammo
-            await calculateAmmoDamageBonuses(attackData, this);
+            await calculateAmmoDamageBonuses(attackData as unknown as Parameters<typeof calculateAmmoDamageBonuses>[0], this);
         }
 
-        await calculateWeaponModifiersDamageBonuses(attackData, this);
+        await calculateWeaponModifiersDamageBonuses(attackData as unknown as Parameters<typeof calculateWeaponModifiersDamageBonuses>[0], this);
 
         // Exotic quality damage bonuses (Force, Witch-Edge, Daemonbane)
         const exoticModifiers = calculateExoticQualityDamageModifiers({
-            weapon: actionItem,
-            actor: sourceActor,
-            target: attackData.damageData?.targetActor,
-            baseDamage: this.damage,
+            weapon: actionItem as unknown as Parameters<typeof calculateExoticQualityDamageModifiers>[0]['weapon'],
+            actor: sourceActor as unknown as Parameters<typeof calculateExoticQualityDamageModifiers>[0]['actor'],
+            target: attackData.damageData?.targetActor as unknown as Parameters<typeof calculateExoticQualityDamageModifiers>[0]['target'],
         });
 
         // Handle exotic modifiers - most are numeric, but Daemonbane is a dice formula
@@ -302,7 +303,7 @@ export class Hit {
                 // Daemonbane: "2d10" - roll additional dice
                 const exoticRoll = new Roll(value, {});
                 await exoticRoll.evaluate();
-                this.modifiers[key] = exoticRoll.total;
+                this.modifiers[key] = exoticRoll.total ?? 0;
             } else if (typeof value === 'number') {
                 // Force, Witch-Edge: numeric bonuses
                 this.modifiers[key] = value;
@@ -323,9 +324,10 @@ export class Hit {
         } else {
             this.hasPenetrationRoll = true;
             try {
-                this.penetrationRoll = new Roll(String(rollFormula), attackData.rollData);
-                await this.penetrationRoll.evaluate();
-                this.penetration = this.penetrationRoll.total;
+                const penRoll = new Roll(String(rollFormula), attackData.rollData) as unknown as Roll;
+                this.penetrationRoll = penRoll;
+                await penRoll.evaluate();
+                this.penetration = penRoll.total ?? 0;
             } catch {
                 ui.notifications.warn('Penetration formula failed - setting to 0');
                 this.penetration = 0;
@@ -356,7 +358,7 @@ export class Hit {
             }
 
             // Ammo
-            await calculateAmmoPenetrationBonuses(attackData, this);
+            await calculateAmmoPenetrationBonuses(attackData as unknown as Parameters<typeof calculateAmmoPenetrationBonuses>[0], this);
         }
 
         if (attackData.rollData.eyeOfVengeance) {
@@ -371,7 +373,7 @@ export class Hit {
 
         // Quality-based penetration modifiers (Melta via weapon qualities)
         const qualityPenModifiers = calculateQualityPenetrationModifiers({
-            weapon: actionItem,
+            weapon: actionItem as unknown as Parameters<typeof calculateQualityPenetrationModifiers>[0]['weapon'],
             rangeName: attackData.rollData.rangeName,
             basePenetration: this.penetration,
         });
@@ -385,7 +387,7 @@ export class Hit {
             }
         }
 
-        await calculateWeaponModifiersPenetrationBonuses(attackData, this);
+        await calculateWeaponModifiersPenetrationBonuses(attackData as unknown as Parameters<typeof calculateWeaponModifiersPenetrationBonuses>[0], this);
     }
 
     async _calculateSpecials(attackData: AttackDataLike) {
@@ -405,7 +407,7 @@ export class Hit {
         }
 
         if (actionItem.isRanged) {
-            await calculateAmmoSpecials(attackData, this);
+            await calculateAmmoSpecials(attackData as unknown as Parameters<typeof calculateAmmoSpecials>[0], this);
         }
 
         for (const special of attackData.rollData.attackSpecials) {

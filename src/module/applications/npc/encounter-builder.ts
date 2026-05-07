@@ -100,6 +100,8 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     /*  Properties                                  */
     /* -------------------------------------------- */
 
+    declare rendered: boolean;
+
     /**
      * NPCs in the current encounter.
      * @type {NPC[]}
@@ -129,13 +131,13 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Singleton instance.
      * @type {EncounterBuilder|null}
      */
-    static #instance: unknown = null;
+    static #instance: EncounterBuilder | null = null;
 
     /**
      * Get or create the singleton instance.
      * @returns {EncounterBuilder}
      */
-    static get instance() {
+    static get instance(): EncounterBuilder {
         if (!this.#instance) {
             this.#instance = new this();
         }
@@ -146,9 +148,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Show the encounter builder.
      * @returns {EncounterBuilder}
      */
-    static show(): unknown {
+    static show(): EncounterBuilder {
         const instance = this.instance;
-        instance.render(true);
+        void instance.render(true);
         return instance;
     }
 
@@ -254,22 +256,22 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         const dropZone = this.element.querySelector('.encounter-drop-zone');
         if (!dropZone) return;
 
-        dropZone.addEventListener('dragover', (e: DragEvent) => {
+        dropZone.addEventListener('dragover', (e: Event) => {
             e.preventDefault();
             dropZone.classList.add('drag-over');
         });
 
-        dropZone.addEventListener('dragleave', (_e: DragEvent) => {
+        dropZone.addEventListener('dragleave', (_e: Event) => {
             dropZone.classList.remove('drag-over');
         });
 
-        dropZone.addEventListener('drop', (e: DragEvent) => {
+        dropZone.addEventListener('drop', (e: Event) => {
             e.preventDefault();
             dropZone.classList.remove('drag-over');
 
             void (async () => {
                 try {
-                    const data = JSON.parse((e as DragEvent).dataTransfer.getData('text/plain'));
+                    const data = JSON.parse((e as DragEvent).dataTransfer?.getData('text/plain') ?? '{}');
 
                     if (data.type === 'Actor') {
                         await this._handleActorDrop(data);
@@ -292,7 +294,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         if (data.uuid) {
             actor = await (fromUuid as any)(data.uuid);
         } else if (data.id) {
-            actor = game.actors.get(data.id);
+            actor = game.actors.get(data.id as string);
         }
 
         if (!actor) {
@@ -395,11 +397,11 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             title: 'Add NPC',
             content,
             label: 'Add',
-            callback: (html: HTMLElement) => {
-                const form = html[0].querySelector('form');
+            callback: (html: HTMLElement[]) => {
+                const form = html[0].querySelector('form') as HTMLFormElement;
                 return {
-                    uuid: form.querySelector('[name="uuid"]').value,
-                    count: parseInt(form.querySelector('[name="count"]').value, 10) || 1,
+                    uuid: (form.querySelector('[name="uuid"]') as HTMLSelectElement).value,
+                    count: parseInt((form.querySelector('[name="count"]') as HTMLInputElement).value, 10) || 1,
                 };
             },
             rejectClose: false,
@@ -432,7 +434,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target
      */
     static #removeNPC(this: any, event: Event, target: HTMLElement): void {
-        const index = parseInt(target.dataset.index, 10);
+        const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index) || index < 0 || index >= this.#npcs.length) return;
 
         this.#npcs.splice(index, 1);
@@ -445,8 +447,8 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target
      */
     static #adjustCount(this: any, event: Event, target: HTMLElement): void {
-        const index = parseInt(target.dataset.index, 10);
-        const delta = parseInt(target.dataset.delta, 10);
+        const index = parseInt(target.dataset.index ?? '', 10);
+        const delta = parseInt(target.dataset.delta ?? '', 10);
 
         if (isNaN(index) || isNaN(delta)) return;
 
@@ -482,7 +484,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             title: 'Save Encounter Template',
             content: '<form><div class="form-group"><label>Template Name</label><input type="text" name="name" placeholder="My Encounter"/></div></form>',
             label: 'Save',
-            callback: (html: HTMLElement) => html[0].querySelector('[name="name"]').value,
+            callback: (html: HTMLElement[]) => (html[0].querySelector('[name="name"]') as HTMLInputElement).value,
             rejectClose: false,
         });
 
@@ -505,7 +507,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target
      */
     static #loadTemplate(this: any, event: Event, target: HTMLElement): void {
-        const index = parseInt(target.dataset.index, 10);
+        const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index) || index < 0 || index >= this.#templates.length) return;
 
         const template = this.#templates[index];
@@ -534,8 +536,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         if (!combat) {
             combat = await (Combat as any).create({ scene: game.scenes.active?.id } as Record<string, unknown>);
         }
+        if (!combat) return;
 
-        const combatants: unknown[] = [];
+        const combatants: Record<string, unknown>[] = [];
 
         for (const npcEntry of this.#npcs) {
             const actor = await (fromUuid as any)(npcEntry.uuid);
@@ -556,9 +559,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             }
         }
 
-        await combat.createEmbeddedDocuments('Combatant', combatants);
+        await (combat as any).createEmbeddedDocuments('Combatant', combatants);
 
-        ui.notifications.info(game.i18n.format('WH40K.NPC.Encounter.Deployed', { count: combatants.length }));
+        ui.notifications.info(game.i18n.format('WH40K.NPC.Encounter.Deployed', { count: String(combatants.length) }));
     }
 
     /**
@@ -586,14 +589,20 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {number} [count=1] - Number to add.
      */
     async addNPC(actorOrUuid: unknown, count: number = 1): Promise<void> {
-        let actor;
-        let uuid;
+        interface ActorLike {
+            uuid: string;
+            name: string;
+            img: string;
+            system: { threatLevel?: number };
+        }
+        let actor: ActorLike | null = null;
+        let uuid: string;
 
         if (typeof actorOrUuid === 'string') {
             uuid = actorOrUuid;
-            actor = await (fromUuid as any)(uuid);
+            actor = (await (fromUuid as any)(uuid)) as ActorLike | null;
         } else {
-            actor = actorOrUuid;
+            actor = actorOrUuid as ActorLike;
             uuid = actor.uuid;
         }
 

@@ -23,6 +23,9 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     declare effect: string;
     declare notes: string;
 
+    // Properties from PhysicalItemTemplate
+    declare craftsmanship: string;
+
     /* -------------------------------------------- */
     /*  Data Migration                              */
     /* -------------------------------------------- */
@@ -47,7 +50,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as any)({ required: true, blank: true }) as foundry.data.fields.StringField,
 
             // Protection rating (1-100 roll threshold)
             protectionRating: new fields.NumberField({
@@ -184,8 +187,8 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {number} roll - The d100 protection roll
      * @returns {boolean}
      */
-    checksOverload(roll): boolean {
-        const range = this.effectiveOverloadRange;
+    checksOverload(roll: number): boolean {
+        const range = this.effectiveOverloadRange as { min: number; max: number };
         return roll >= range.min && roll <= range.max;
     }
 
@@ -194,7 +197,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @type {string}
      */
     get overloadRangeLabel(): string {
-        const range = this.effectiveOverloadRange;
+        const range = this.effectiveOverloadRange as { min: number; max: number };
         if (range.min === range.max) {
             return `${String(range.min).padStart(2, '0')}`;
         }
@@ -208,7 +211,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     /** @override */
     get chatProperties(): string[] {
         const props = [
-            ...PhysicalItemTemplate.prototype.chatProperties.call(this),
+            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
             `Protection: ${this.protectionRating}%`,
             `Overload: ${this.overloadRangeLabel}`,
             this.statusLabel,
@@ -225,7 +228,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             protection: `${this.protectionRating}%`,
-            overload: `${this.overloadThreshold}+`,
+            overload: this.overloadRangeLabel,
             status: this.statusLabel,
         };
     }
@@ -247,7 +250,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {boolean} overloaded
      * @returns {Promise<Item>}
      */
-    setOverloaded(overloaded): unknown {
+    setOverloaded(overloaded: boolean): unknown {
         return this.parent?.update({ 'system.overloaded': overloaded });
     }
 
@@ -264,7 +267,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} [options] - Roll options
      * @returns {Promise<object>} - Result object with { isProtected: boolean, overloaded: boolean, roll: Roll }
      */
-    async rollProtection(options = {}): Promise<unknown> {
+    async rollProtection(options: { speaker?: ReturnType<(typeof ChatMessage)['getSpeaker']> } = {}): Promise<unknown> {
         if (!this.isProtecting) {
             return { isProtected: false, overloaded: false, roll: null, inactive: true };
         }

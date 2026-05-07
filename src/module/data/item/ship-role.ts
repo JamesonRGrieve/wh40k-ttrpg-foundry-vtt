@@ -28,7 +28,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Role rank/priority
             rank: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
@@ -148,8 +148,8 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * @type {Array<{label: string, value: number, display: string}>}
      */
     get shipBonusesArray() {
-        const bonuses = [];
-        const labels = {
+        const bonuses: Array<{ label: string; value: number; display: string }> = [];
+        const labels: Record<string, string> = {
             manoeuvrability: 'Manoeuvrability',
             detection: 'Detection',
             ballisticSkill: 'Ballistic Skill',
@@ -159,7 +159,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
         if (!this.shipBonuses) return bonuses;
 
         for (const [key, label] of Object.entries(labels)) {
-            const value = this.shipBonuses[key] || 0;
+            const value = (this.shipBonuses as Record<string, number>)[key] || 0;
             if (value !== 0) {
                 bonuses.push({
                     label,

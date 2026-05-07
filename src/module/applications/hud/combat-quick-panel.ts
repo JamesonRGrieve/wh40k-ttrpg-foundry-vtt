@@ -38,7 +38,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         },
         position: {
             width: 340,
-            height: 'auto' as const,
+            height: 'auto' as unknown as number,
         },
         actions: {
             rollInitiative: CombatQuickPanel.#rollInitiative,
@@ -81,6 +81,8 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     primaryWeapon: WH40KItem | null = null;
 
+    declare setPosition: (pos: Partial<{ top: number; left: number; width: number; height: number | 'auto' }>) => void;
+
     /**
      * Track if reactions have been used this round
      * @type {Object}
@@ -119,14 +121,15 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     _updatePrimaryWeapon(): void {
         // Find equipped weapon
-        this.primaryWeapon = this.actor.items.find((i) => i.type === 'weapon' && i.system.equipped);
+        if (!this.actor) return;
+        this.primaryWeapon = this.actor.items.find((i) => i.type === 'weapon' && (i.system as { equipped?: boolean }).equipped === true) ?? null;
     }
 
     /* -------------------------------------------- */
 
     /** @override */
     get title() {
-        return `Combat: ${this.actor.name}`;
+        return `Combat: ${this.actor?.name ?? 'Unknown'}`;
     }
 
     /* -------------------------------------------- */
@@ -226,7 +229,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
                     0,
                 percentage: (weapon.system as { ammoPercentage?: number }).ammoPercentage ?? 100,
                 low:
-                    (weapon.system as { clip?: { value: number } }).clip?.value <=
+                    ((weapon.system as { clip?: { value: number } }).clip?.value ?? 0) <=
                     ((weapon.system as { effectiveClipMax?: number; clip?: { max: number } }).effectiveClipMax ||
                         (weapon.system as { clip?: { max: number } }).clip?.max ||
                         0) *
@@ -248,8 +251,8 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @private
      */
     _prepareReactions(): Record<string, unknown> {
-        const dodge = this.actor.system.skills?.dodge;
-        const parry = this.actor.system.skills?.parry;
+        const dodge = this.actor?.system.skills?.dodge;
+        const parry = this.actor?.system.skills?.parry;
 
         return {
             dodge: {
@@ -299,7 +302,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         });
 
         // Draw weapon
-        const unequippedWeapons = this.actor.items.filter((i) => i.type === 'weapon' && !i.system.equipped).length;
+        const unequippedWeapons = (this.actor?.items.filter((i) => i.type === 'weapon' && !i.system.equipped) ?? []).length;
 
         actions.push({
             action: 'drawWeapon',
@@ -347,7 +350,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @private
      */
     _restorePosition(): void {
-        const savedPos = (game.user as any).getFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position`);
+        const savedPos = (game.user as any).getFlag('wh40k-rpg', `combatPanel.${this.actor?.id}.position`);
         if (savedPos) {
             this.setPosition(savedPos);
         }
@@ -381,7 +384,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     _onClose(options: Record<string, unknown>): void {
         // Save position
         const position = this.position;
-        (game.user as any).setFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position`, {
+        (game.user as any).setFlag('wh40k-rpg', `combatPanel.${this.actor?.id}.position`, {
             left: position.left,
             top: position.top,
         });
@@ -405,7 +408,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @private
      */
     _onActorUpdate(actor: WH40KBaseActor): void {
-        if (actor.id === this.actor.id) {
+        if (actor.id === this.actor?.id) {
             void this.render(false);
         }
     }
@@ -418,7 +421,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @private
      */
     _onItemUpdate(item: WH40KItem): void {
-        if (item.actor?.id === this.actor.id) {
+        if (item.actor?.id === this.actor?.id) {
             void this.render(false);
         }
     }
@@ -464,6 +467,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
             return;
         }
 
+        if (!game.combat) return;
         await game.combat.rollInitiative([combatant.id]);
         ui.notifications.info(`Rolled initiative for ${this.actor?.name}`);
     }
@@ -633,7 +637,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {HTMLElement} target
      */
     static async #drawWeapon(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const weapons = this.actor?.items.filter((i) => i.type === 'weapon' && !(i.system as { equipped?: boolean }).equipped);
+        const weapons = this.actor?.items.filter((i: WH40KItem) => i.type === 'weapon' && !(i.system as { equipped?: boolean }).equipped);
 
         if (!weapons || weapons.length === 0) {
             ui.notifications.warn('No weapons to draw');
@@ -747,17 +751,19 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static show(actor: WH40KBaseActor): Promise<unknown> {
         // Check if panel already exists
-        const existing = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
+        const existing = (Object.values(ui.windows) as unknown[]).find(
+            (app): app is CombatQuickPanel => app instanceof CombatQuickPanel && app.actor?.id === actor.id,
+        );
 
         if (existing) {
-            existing.render(true, { focus: true });
-            return existing as any;
+            void existing.render(true);
+            return Promise.resolve(existing);
         }
 
         // Create new panel
         const panel = new CombatQuickPanel(actor);
         void panel.render(true);
-        return panel as any;
+        return Promise.resolve(panel);
     }
 
     /* -------------------------------------------- */
@@ -768,7 +774,9 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @static
      */
     static close(actor: WH40KBaseActor): void {
-        const panel = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
+        const panel = (Object.values(ui.windows) as unknown[]).find(
+            (app): app is CombatQuickPanel => app instanceof CombatQuickPanel && app.actor?.id === actor.id,
+        );
 
         if (panel) void panel.close();
     }
@@ -781,7 +789,9 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @static
      */
     static toggle(actor: WH40KBaseActor): void {
-        const panel = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
+        const panel = (Object.values(ui.windows) as unknown[]).find(
+            (app): app is CombatQuickPanel => app instanceof CombatQuickPanel && app.actor?.id === actor.id,
+        );
 
         if (panel) {
             void panel.close();

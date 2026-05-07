@@ -6,6 +6,11 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * These are special properties that can be attached to weapons/attacks.
  */
 export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTemplate) {
+    // Typed property declarations matching defineSchema()
+    declare enabled: boolean;
+    declare hasLevel: boolean;
+    declare level: number;
+
     /** @override */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;

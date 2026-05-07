@@ -22,7 +22,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
      * @type {typeof SystemDataModel[]}
      * @private
      */
-    static _schemaTemplates: typeof SystemDataModel[] = [];
+    static _schemaTemplates: (typeof SystemDataModel)[] = [];
 
     /* -------------------------------------------- */
 
@@ -130,7 +130,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /** @inheritDoc */
     static cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions, _state?: DataModelV14.UpdateState): Record<string, unknown> {
         this._cleanData(source, options);
-        return super.cleanData(source, options, _state);
+        return (super.cleanData as DataModelV14.CleanDataSignature)(source, options, _state);
     }
 
     /* -------------------------------------------- */
@@ -175,7 +175,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /** @inheritDoc */
     static validateJoint(data: Record<string, unknown>): void {
         this._validateJoint(data);
-        return super.validateJoint(data);
+        return super.validateJoint(data as never);
     }
 
     /* -------------------------------------------- */
@@ -246,7 +246,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
      * @param {...*} templates            Template classes to mix.
      * @returns {typeof SystemDataModel}  Final prepared type.
      */
-    static mixin(...templates: typeof SystemDataModel[]): typeof SystemDataModel {
+    static mixin(...templates: (typeof SystemDataModel)[]): typeof SystemDataModel {
         for (const template of templates) {
             if (!(template.prototype instanceof SystemDataModel)) {
                 throw new Error(`${template.name} is not a subclass of SystemDataModel`);

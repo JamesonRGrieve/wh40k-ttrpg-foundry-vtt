@@ -48,7 +48,7 @@ export default class ItemGrantData extends BaseGrantData {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static override defineSchema(): Record<string, foundry.data.fields.DataField> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -142,10 +142,12 @@ export default class ItemGrantData extends BaseGrantData {
 
         // Apply if not dry run
         if (!options.dryRun && itemsToCreate.length > 0) {
-            const created = (await actor.createEmbeddedDocuments(
+            const created = await (
+                actor as unknown as { createEmbeddedDocuments: (name: string, data: Record<string, unknown>[]) => Promise<WH40KItem[]> }
+            ).createEmbeddedDocuments(
                 'Item',
                 itemsToCreate.map((i) => i.data),
-            )) as WH40KItem[];
+            );
 
             // Track what was applied
             created.forEach((item, index) => {
@@ -198,10 +200,12 @@ export default class ItemGrantData extends BaseGrantData {
         const items = restoreData?.items ?? [];
         if (items.length === 0) return result;
 
-        const created = (await actor.createEmbeddedDocuments(
+        const created = await (
+            actor as unknown as { createEmbeddedDocuments: (name: string, data: Record<string, unknown>[]) => Promise<WH40KItem[]> }
+        ).createEmbeddedDocuments(
             'Item',
             items.map((i) => i.data),
-        )) as WH40KItem[];
+        );
 
         created.forEach((item, index) => {
             result.applied[items[index].uuid] = item.id!;

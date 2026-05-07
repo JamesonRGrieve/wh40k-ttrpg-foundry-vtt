@@ -1,5 +1,6 @@
 import RollConfigurationDialog from '../applications/dialogs/roll-configuration-dialog.ts';
 import BasicRollWH40K from './basic-roll.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 
 /**
  * D100Roll - Specialized roll class for d100 skill/characteristic tests
@@ -34,11 +35,19 @@ export default class D100Roll extends BasicRollWH40K {
     /* -------------------------------------------- */
 
     /**
+     * Get the evaluated total. Rolls are always evaluated before these getters are called.
+     * @type {number}
+     */
+    get evaluatedTotal(): number {
+        return this.total as unknown as number;
+    }
+
+    /**
      * Get the target number for this roll
      * @type {number}
      */
-    get target() {
-        return this.configuration.target ?? 0;
+    get target(): number {
+        return (this.configuration.target as number) ?? 0;
     }
 
     /**
@@ -46,7 +55,7 @@ export default class D100Roll extends BasicRollWH40K {
      * @type {boolean}
      */
     get isSuccess() {
-        return this.total <= this.target;
+        return this.evaluatedTotal <= this.target;
     }
 
     /**
@@ -64,7 +73,7 @@ export default class D100Roll extends BasicRollWH40K {
      */
     get degreesOfSuccess() {
         if (!this.isSuccess) return 0;
-        return Math.floor((this.target - this.total) / 10) + 1;
+        return Math.floor((this.target - this.evaluatedTotal) / 10) + 1;
     }
 
     /**
@@ -74,7 +83,7 @@ export default class D100Roll extends BasicRollWH40K {
      */
     get degreesOfFailure() {
         if (this.isSuccess) return 0;
-        return Math.floor((this.total - this.target) / 10) + 1;
+        return Math.floor((this.evaluatedTotal - this.target) / 10) + 1;
     }
 
     /**
@@ -101,7 +110,7 @@ export default class D100Roll extends BasicRollWH40K {
      */
     get isCriticalSuccess() {
         if (!this.isSuccess) return false;
-        if (this.total <= 5) return true; // Natural crit (01-05)
+        if (this.evaluatedTotal <= 5) return true; // Natural crit (01-05)
         return this.degreesOfSuccess >= 3; // 3+ DoS
     }
 
@@ -112,7 +121,7 @@ export default class D100Roll extends BasicRollWH40K {
      */
     get isCriticalFailure() {
         if (this.isSuccess) return false;
-        if (this.total >= 96) return true; // Natural fumble (96-00)
+        if (this.evaluatedTotal >= 96) return true; // Natural fumble (96-00)
         return this.degreesOfFailure >= 3; // 3+ DoF
     }
 
@@ -122,7 +131,7 @@ export default class D100Roll extends BasicRollWH40K {
      * @type {boolean}
      */
     get isDoubles() {
-        const total = this.total;
+        const total = this.evaluatedTotal;
         const tens = Math.floor(total / 10);
         const ones = total % 10;
         return tens === ones;
@@ -146,12 +155,12 @@ export default class D100Roll extends BasicRollWH40K {
      * @returns {Promise<Object|null>} Dialog result, or null if cancelled
      * @override
      */
-    static async _showConfigurationDialog(config) {
+    static override async _showConfigurationDialog(config: Record<string, unknown>): Promise<Record<string, unknown>> {
         // Use the configured dialog class
         const DialogClass = this.configurationDialog;
         if (!DialogClass) return config;
 
-        return DialogClass.configure(config);
+        return (await DialogClass.configure(config)) as Record<string, unknown>;
     }
 
     /* -------------------------------------------- */
@@ -164,7 +173,7 @@ export default class D100Roll extends BasicRollWH40K {
      * @returns {string} The roll formula (always "1d100")
      * @override
      */
-    static constructFormula(config) {
+    static constructFormula(_config: Record<string, unknown>) {
         // d100 rolls don't add modifiers to the roll itself
         // Modifiers affect the target number instead
         return '1d100';
@@ -181,35 +190,36 @@ export default class D100Roll extends BasicRollWH40K {
      * @returns {Promise<Object>} Template data
      * @override
      */
-    static async _prepareTemplateData(roll, config) {
+    static override async _prepareTemplateData(roll: BasicRollWH40K, config: Record<string, unknown>): Promise<Record<string, unknown>> {
         const baseData = await super._prepareTemplateData(roll, config);
 
         // Calculate modifiers for display
-        const activeModifiers = {};
+        const activeModifiers: Record<string, unknown> = {};
         if (config.modifiers) {
-            for (const [key, value] of Object.entries(config.modifiers)) {
+            for (const [key, value] of Object.entries(config.modifiers as Record<string, unknown>)) {
                 if (value !== 0) {
                     activeModifiers[key.toUpperCase()] = value;
                 }
             }
         }
 
+        const d100Roll = roll as D100Roll;
         return {
             ...baseData,
             rollData: {
-                ...baseData.rollData,
+                ...(baseData.rollData as Record<string, unknown>),
                 name: config.name || config.flavor || this.defaultFlavor,
                 baseTarget: config.baseTarget ?? config.target,
                 modifiedTarget: config.target,
                 activeModifiers: activeModifiers,
-                success: roll.isSuccess,
-                dos: roll.degreesOfSuccess,
-                dof: roll.degreesOfFailure,
-                isCriticalSuccess: roll.isCriticalSuccess,
-                isCriticalFailure: roll.isCriticalFailure,
-                isDoubles: roll.isDoubles,
-                triggersRighteousFury: roll.triggersRighteousFury,
-                sheetName: config.actor?.name || config.speaker?.alias || '',
+                success: d100Roll.isSuccess,
+                dos: d100Roll.degreesOfSuccess,
+                dof: d100Roll.degreesOfFailure,
+                isCriticalSuccess: d100Roll.isCriticalSuccess,
+                isCriticalFailure: d100Roll.isCriticalFailure,
+                isDoubles: d100Roll.isDoubles,
+                triggersRighteousFury: d100Roll.triggersRighteousFury,
+                sheetName: (config.actor as { name?: string })?.name || (config.speaker as { alias?: string })?.alias || '',
             },
         };
     }
@@ -221,21 +231,24 @@ export default class D100Roll extends BasicRollWH40K {
      * @returns {Promise<Object>} Chat message data
      * @override
      */
-    static async _prepareChatData(roll, config) {
+    static async _prepareChatData(roll: BasicRollWH40K, config: Record<string, unknown>) {
         const chatData = await super._prepareChatData(roll, config);
+        const d100Roll = roll as D100Roll;
 
         // Add d100-specific flags
-        chatData.flags['wh40k-rpg'] = {
-            ...chatData.flags['wh40k-rpg'],
+        const flags = chatData.flags as Record<string, unknown>;
+        const existingFlags = (flags['wh40k-rpg'] as Record<string, unknown>) ?? {};
+        flags['wh40k-rpg'] = {
+            ...existingFlags,
             target: config.target,
             baseTarget: config.baseTarget ?? config.target,
-            success: roll.isSuccess,
-            degrees: roll.degrees,
-            degreesOfSuccess: roll.degreesOfSuccess,
-            degreesOfFailure: roll.degreesOfFailure,
-            isCriticalSuccess: roll.isCriticalSuccess,
-            isCriticalFailure: roll.isCriticalFailure,
-            isDoubles: roll.isDoubles,
+            success: d100Roll.isSuccess,
+            degrees: d100Roll.degrees,
+            degreesOfSuccess: d100Roll.degreesOfSuccess,
+            degreesOfFailure: d100Roll.degreesOfFailure,
+            isCriticalSuccess: d100Roll.isCriticalSuccess,
+            isCriticalFailure: d100Roll.isCriticalFailure,
+            isDoubles: d100Roll.isDoubles,
         };
 
         return chatData;
@@ -291,8 +304,7 @@ export default class D100Roll extends BasicRollWH40K {
                 summary.appendChild(critDiv);
             } else if (this.isCriticalFailure) {
                 const critDiv = document.createElement('div');
-                critDiv.className =
-                    'wh40k-dice-fumble tw-text-[var(--wh40k-red-bright)] tw-font-bold tw-[text-shadow:0_0_6px_rgba(255,68,68,0.5)]';
+                critDiv.className = 'wh40k-dice-fumble tw-text-[var(--wh40k-red-bright)] tw-font-bold tw-[text-shadow:0_0_6px_rgba(255,68,68,0.5)]';
                 critDiv.textContent = '💀 Critical Failure!';
                 summary.appendChild(critDiv);
             }
@@ -325,10 +337,10 @@ export default class D100Roll extends BasicRollWH40K {
      * @param {boolean} [options.configure=true] - Whether to show configuration
      * @returns {Promise<ChatMessage|null>}
      */
-    static async test(options = {}) {
+    static async test(options: Record<string, unknown> = {}) {
         return this.build({
             ...options,
-            baseTarget: options.baseTarget ?? options.target,
+            baseTarget: options['baseTarget'] ?? options['target'],
         });
     }
 
@@ -339,8 +351,9 @@ export default class D100Roll extends BasicRollWH40K {
      * @param {Object} [options] - Additional options
      * @returns {Promise<ChatMessage|null>}
      */
-    static async characteristicTest(actor, characteristic, options = {}) {
-        const charData = actor.system.characteristics?.[characteristic];
+    static async characteristicTest(actor: WH40KBaseActor, characteristic: string, options: Record<string, unknown> = {}) {
+        const system = actor.system as { characteristics?: Record<string, { total: number; label?: string }> };
+        const charData = system.characteristics?.[characteristic];
         if (!charData) {
             ui.notifications.warn(`Characteristic "${characteristic}" not found`);
             return null;
@@ -363,8 +376,9 @@ export default class D100Roll extends BasicRollWH40K {
      * @param {Object} [options] - Additional options
      * @returns {Promise<ChatMessage|null>}
      */
-    static async skillTest(actor, skill, options = {}) {
-        const skillData = actor.system.skills?.[skill];
+    static async skillTest(actor: WH40KBaseActor, skill: string, options: Record<string, unknown> = {}) {
+        const system = actor.system as { skills?: Record<string, { current: number; label?: string }> };
+        const skillData = system.skills?.[skill];
         if (!skillData) {
             ui.notifications.warn(`Skill "${skill}" not found`);
             return null;

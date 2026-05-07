@@ -79,7 +79,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static override defineSchema(): Record<string, foundry.data.fields.DataField> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             // Unique identifier for this grant within its parent

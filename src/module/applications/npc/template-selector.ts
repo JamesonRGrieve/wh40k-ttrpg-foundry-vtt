@@ -24,8 +24,8 @@ interface NpcTemplateSys {
 }
 
 interface TemplateRow {
-    uuid: string;
-    name: string;
+    uuid: string | null;
+    name: string | null;
     img: string;
     category: string;
     faction: string;
@@ -395,7 +395,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                 system: systemData,
             };
 
-            const actor = (await Actor.create(actorData)) as WH40KNPC | undefined;
+            const actor = (await Actor.create(actorData as unknown as Parameters<typeof Actor.create>[0])) as WH40KNPC | undefined;
 
             if (actor) {
                 // Create embedded traits and talents
@@ -438,7 +438,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                 }
 
                 if (itemsToCreate.length > 0) {
-                    await actor.createEmbeddedDocuments('Item', itemsToCreate);
+                    await actor.createEmbeddedDocuments('Item', itemsToCreate as unknown as Parameters<typeof actor.createEmbeddedDocuments<'Item'>>[1]);
                 }
 
                 ui.notifications.info(`Created NPC: ${actor.name}`);
@@ -471,7 +471,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
         if (!this.#submitted && this.#resolve) {

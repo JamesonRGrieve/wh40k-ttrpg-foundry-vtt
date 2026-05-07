@@ -1113,7 +1113,10 @@ export default class NPCSheet extends CharacterSheet {
         const level = target.dataset.level;
         if (!skillKey || !level) return;
 
-        const currentSkills = foundry.utils.deepClone(this.npcActor.system.trainedSkills) || {};
+        const currentSkills: Record<string, Record<string, unknown>> = (foundry.utils.deepClone(this.npcActor.system.trainedSkills) as unknown as Record<
+            string,
+            Record<string, unknown>
+        >) || {};
         const currentState = currentSkills[skillKey];
 
         // Skill characteristic mapping
@@ -1220,7 +1223,10 @@ export default class NPCSheet extends CharacterSheet {
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
 
-        const currentSkills = foundry.utils.deepClone(this.npcActor.system.trainedSkills) || {};
+        const currentSkills: Record<string, Record<string, unknown>> = (foundry.utils.deepClone(this.npcActor.system.trainedSkills) as unknown as Record<
+            string,
+            Record<string, unknown>
+        >) || {};
         const current = currentSkills[skillKey];
 
         // Skill characteristic mapping
@@ -1314,7 +1320,7 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const fp = new FilePicker({
             type: 'image',
-            current: this.actor.img,
+            current: this.actor.img as string | undefined,
             callback: (path: string) => {
                 this.actor.update({ img: path });
             },

@@ -234,7 +234,7 @@ export class TokenDocumentWH40K extends TokenDocument {
         const config = movementTypes[type];
         const label = config ? game.i18n.localize(config.label) : type;
         const speed = (token.actor?.system?.movement as Record<string, number> | undefined)?.[type];
-        void token.update({ 'flags.wh40k-rpg.movementAction': type });
+        void token.update({ flags: { 'wh40k-rpg': { movementAction: type } } } as TokenDocument.UpdateInput);
         ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);
     }
 }
