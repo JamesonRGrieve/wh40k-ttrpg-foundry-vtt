@@ -188,6 +188,15 @@ const JS_HOOKS = new Set([
     'collapsible-body',
     'collapsible-header',
     'collapse-icon',
+    // Foundry ApplicationV2 tab nav root selector — navSelector: '.tabs' wires Foundry's
+    // tab engine to the nav element; the class carries no project CSS rules.
+    'tabs',
+    // Foundry item-list structural identifier — used by Foundry's drag/sort infrastructure
+    // on list item rows; no project CSS rule targets bare `.item`.
+    'item',
+    // Foundry dialog button role classes not already listed.
+    'default',
+    'secondary',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
@@ -250,12 +259,20 @@ function isTwOrExempt(token) {
 
 function classifyFile(file) {
     const src = readFileSync(file, 'utf8');
+    // Pre-sanitize: replace " inside HBS expressions with a visually-distinct
+    // non-ASCII character so CLASS_ATTR_RE (which uses [^"] as its class-value
+    // stopper) does not terminate early when a class attr contains a HBS helper
+    // with a string argument, e.g. {{#if (eq tone "success")}}.  Without this,
+    // the regex captures only up to the inner quote, leaving HBS parameter tokens
+    // like `tone` or `padding` as dangling class-name candidates.
+    // The replacement character (‹ U+2039) cannot appear in a real CSS class name.
+    const sanitized = src.replace(/\{\{[^}]+"[^}]*\}\}/g, (m) => m.replace(/"/g, '‹'));
     let hasTw = false;
     let hasNonTw = false;
     let hasAnyClass = false;
 
     let m;
-    while ((m = CLASS_ATTR_RE.exec(src)) !== null) {
+    while ((m = CLASS_ATTR_RE.exec(sanitized)) !== null) {
         const value = m[1] ?? m[2] ?? '';
         // Strip Handlebars expressions inside class attribute; they are dynamic
         // and we do not classify them.
