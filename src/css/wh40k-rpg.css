@@ -44068,68 +44068,6 @@ body.theme-dark {
 }
 
 /* ── source: src/css/wh40k-rpg.css ── */
-/* Vehicle Sheet V2 - ApplicationV2 sheet (outside wh40k-wrapper) */
-
-/* ── source: src/css/actor/_vehicle-sheet.css ── */
-/* ============================================ */
-/* Vehicle Sheet V2 Styles */
-/* ============================================ */
-/* Phase 6: Dedicated sheet for vehicle/ship NPCs */
-/* Based on NPC V2 pattern but optimized for vehicles */
-
-    * {
-        font-family: 'IM Fell DW Pica', serif;
-        font-size: 10pt;
-
-        .fas {
-            font-family: 'Font Awesome 6 Pro' !important;
-            --font-family-classic: 'Font Awesome 6 Pro' !important;
-        }
-    }
-
-    button,
-    button[type='roll'],
-    input[type='text'],
-    input[type='number'],
-    select,
-    option,
-    textarea,
-    label,
-    span.display {
-        font-family: var(--wh40k-font-body);
-        font-size: 10pt;
-    }
-
-    h1,
-    h2,
-    h3 {
-        margin: 0;
-        padding: 0;
-        font-family: 'IM Fell DW Pica', serif;
-    }
-
-    h1 {
-        font-size: 12pt;
-    }
-
-    h2 {
-        font-size: 11pt;
-    }
-
-    h3 {
-        font-size: 10pt;
-    }
-
-    .mt-5 {
-        margin-top: 5px;
-    }
-
-    .mt-10 {
-        margin-top: 10px;
-    }
-}
-
-/* ── source: src/css/wh40k-rpg.css ── */
 /* Generic Settings */
 
 /* ── source: src/css/components/_grids_templates.css ── */
