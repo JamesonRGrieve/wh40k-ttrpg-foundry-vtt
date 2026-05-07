@@ -1,0 +1,85 @@
+{
+  "task": "Port item CSS source blocks to Tailwind",
+  "date": "2026-05-06",
+  "blocks_deleted": [
+    "src/css/item/_base.css",
+    "src/css/item/_header.css",
+    "src/css/item/_tabs.css",
+    "src/css/item/_item-tabs.css",
+    "src/css/item/_forms.css",
+    "src/css/item/_buttons.css"
+  ],
+  "lines_removed": 715,
+  "templates_modified": [
+    "src/templates/item/item-ammo-sheet.hbs",
+    "src/templates/item/item-cybernetic-sheet.hbs",
+    "src/templates/item/item-gear-sheet.hbs",
+    "src/templates/item/item-journal-entry-sheet.hbs",
+    "src/templates/item/item-psychic-power-sheet.hbs",
+    "src/templates/item/item-sheet.hbs",
+    "src/templates/item/item-skill-sheet.hbs",
+    "src/templates/item/item-storage-location-sheet.hbs",
+    "src/templates/item/item-weapon-mod-sheet.hbs",
+    "src/templates/item/item-weapon-sheet.hbs",
+    "src/templates/item/ship-component-sheet.hbs",
+    "src/templates/item/ship-upgrade-sheet.hbs",
+    "src/templates/item/ship-weapon-sheet.hbs",
+    "src/templates/item/item-trait-sheet.hbs",
+    "src/templates/item/talent-sheet.hbs",
+    "src/templates/item/item-origin-path-sheet.hbs",
+    "src/templates/item/npc-template/tab-abilities.hbs",
+    "src/templates/item/npc-template/tab-characteristics.hbs",
+    "src/templates/item/npc-template/tab-equipment.hbs",
+    "src/templates/item/npc-template/tab-preview.hbs"
+  ],
+  "porting_notes": {
+    "_base.css": [
+      "wh40k-item-sheet container: tw-flex tw-flex-col tw-h-full tw-overflow-hidden tw-bg-[var(--wh40k-sheet-bg)] tw-text-[var(--wh40k-text-dark)] on root div",
+      "form inside: tw-flex tw-flex-col tw-flex-1 tw-min-h-0 tw-overflow-hidden",
+      "Salvaged .wh40k-rpg.sheet.item .window-content rule as free-standing block before marker deletion",
+      "Scrollbar pseudo-element styles (::-webkit-scrollbar) left as cascade fallback — not portrable to Tailwind"
+    ],
+    "_header.css": [
+      "wh40k-item-header: tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-border-b-2 tw-border-gold-dark on header",
+      "wh40k-item-image: tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[...] tw-transition-all hover:tw-scale-105",
+      "wh40k-item-image--sm: tw-w-[50px] tw-h-[50px] variant",
+      "wh40k-item-title: tw-flex tw-flex-col tw-justify-center tw-gap-1 tw-min-w-0",
+      "wh40k-item-meta: tw-flex tw-flex-wrap tw-gap-1 tw-mt-1 tw-items-center",
+      "wh40k-meta-badge: tw-inline-flex tw-items-center tw-gap-[3px] tw-px-2 tw-py-[2px] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border... tw-text-xs"
+    ],
+    "_tabs.css": [
+      "wh40k-tabs nav: tw-flex tw-flex-shrink-0 tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]",
+      "wh40k-tab button active: tw-text-[var(--wh40k-gold)] tw-border-b-[var(--wh40k-gold)]",
+      "wh40k-tab button inactive: tw-text-[var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]",
+      "wh40k-tab-content: tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3",
+      "wh40k-panel inside item sheet: tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden",
+      "wh40k-panel__header: tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b",
+      "wh40k-panel__content: tw-p-3",
+      "wh40k-panel__actions: already had tw-flex in templates"
+    ],
+    "_item-tabs.css": [
+      "wh40k-talent-tabs / wh40k-trait-tabs / wh40k-origin-tabs nav: ported in prior session",
+      "wh40k-talent-tab / wh40k-trait-tab / wh40k-origin-tab active/inactive states: ported in prior session with system color vars",
+      "wh40k-talent-content / wh40k-trait-content / wh40k-origin-content: tw-flex-1 tw-overflow-y-auto tw-min-h-0 tw-p-3",
+      "wh40k-talent-panel / wh40k-trait-panel / wh40k-origin-panel visibility: {{#if (eq activeTab)}}tw-block{{else}}tw-hidden{{/if}}"
+    ],
+    "_forms.css": [
+      "wh40k-field: tw-flex tw-flex-col tw-gap-1 on each field div",
+      "wh40k-field-grid / wh40k-field-grid--2col / wh40k-field-grid--3col: tw-grid tw-grid-cols-N tw-gap-3",
+      "wh40k-description: class was dead code (no exact match in templates; wh40k-description-editor is different)",
+      "wh40k-empty-state: tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-4 tw-text-center tw-italic"
+    ],
+    "_buttons.css": [
+      "wh40k-btn base: tw-inline-flex tw-items-center tw-justify-center on all wh40k-btn elements",
+      "wh40k-btn--primary: tw-bg-gradient-to-br tw-from-[var(--wh40k-gold-dark)] tw-to-[var(--wh40k-gold)] tw-text-[#1a1a1a]",
+      "wh40k-btn--secondary: tw-border-[var(--wh40k-border-color)] hover:tw-border-gold",
+      "wh40k-btn--ghost: tw-border-transparent hover:tw-bg-[rgba(212,175,55,0.08)]",
+      "wh40k-btn--icon: tw-inline-flex tw-items-center tw-justify-center",
+      "wh40k-table: dead code (no template usage)"
+    ]
+  },
+  "metrics_after": {
+    "css_ratchet": "OK: tw-only=129 mixed=115 css-only=0 (unchanged)",
+    "animation_ratchet": "OK (no change)"
+  }
+}
