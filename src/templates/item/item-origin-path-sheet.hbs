@@ -256,7 +256,7 @@
           {{#if item.system.grants.aptitudes.length}}
           <div class="wh40k-aptitudes-display tw-flex tw-flex-wrap tw-gap-1">
             {{#each item.system.grants.aptitudes as |apt|}}
-            <span class="wh40k-aptitude-tag tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs">{{apt}}</span>
+            <span class="wh40k-aptitude-tag tw-inline-flex tw-items-center tw-px-2.5 tw-py-1 tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.15),rgba(212,175,55,0.05))] tw-border tw-border-[rgba(212,175,55,0.3)] tw-rounded-sm tw-text-xs tw-font-semibold tw-text-gold">{{apt}}</span>
             {{/each}}
           </div>
           {{else}}
@@ -424,7 +424,7 @@
             <i class="fas fa-info-circle"></i> Brief mechanical summary or flavor text
           </p>
 
-          <div class="wh40k-editor-container">
+          <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
             {{#if inEditMode}}
             {{editor system.effectText target="system.effectText" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -443,7 +443,7 @@
             <i class="fas fa-info-circle"></i> Full lore and background information
           </p>
 
-          <div class="wh40k-editor-container">
+          <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -458,7 +458,7 @@
             <i class="fas fa-sticky-note tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Notes
           </h3>
 
-          <div class="wh40k-property">
+          <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
             <textarea name="system.notes" rows="4" class="wh40k-property-textarea tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y" placeholder="GM notes, balance considerations, etc.">{{item.system.notes}}</textarea>
           </div>
         </div>
@@ -469,7 +469,7 @@
             <i class="fas fa-book-bookmark tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Source
           </h3>
 
-          <div class="wh40k-property">
+          <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
             <input type="text" name="system.source" value="{{item.system.source}}" class="wh40k-property-input tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" placeholder="Core Rulebook, pg. XX" />
           </div>
         </div>

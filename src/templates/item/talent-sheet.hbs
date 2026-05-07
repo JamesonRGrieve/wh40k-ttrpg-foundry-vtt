@@ -8,7 +8,7 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Portrait, name, key badges, and quick actions
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="wh40k-talent-header tw-flex tw-items-start tw-flex-shrink-0">
+    <header class="wh40k-talent-header tw-flex tw-items-start tw-flex-shrink-0 tw-gap-3 tw-p-3 tw-bg-gradient-to-b tw-from-[var(--color-bg-secondary)] tw-to-[var(--color-bg-primary)] tw-border-b-2 tw-border-b-[var(--color-border-secondary)]">
       {{!-- Portrait --}}
       <div class="wh40k-talent-portrait tw-relative tw-flex-shrink-0 tw-cursor-pointer tw-overflow-hidden" data-action="editImage">
         <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
@@ -121,7 +121,7 @@
         <span class="wh40k-quickstat-label">Aptitudes</span>
         <div class="wh40k-quickstat-tags tw-flex tw-flex-wrap tw-gap-1">
           {{#each talentData.aptitudes}}
-          <span class="wh40k-aptitude-tag">{{this}}</span>
+          <span class="wh40k-aptitude-tag tw-inline-flex tw-items-center tw-px-2.5 tw-py-1 tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.15),rgba(212,175,55,0.05))] tw-border tw-border-[rgba(212,175,55,0.3)] tw-rounded-sm tw-text-xs tw-font-semibold tw-text-gold">{{this}}</span>
           {{/each}}
         </div>
       </div>
@@ -236,7 +236,7 @@
           </h3>
           <div class="wh40k-section-body">
             {{#if inEditMode}}
-            <div class="wh40k-editor-container">
+            <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{editor system.benefit target="system.benefit" button=true editable=canEdit engine="prosemirror"}}
             </div>
             {{else}}
@@ -308,10 +308,10 @@
             Basic Properties
           </h3>
           <div class="wh40k-section-body">
-            <div class="wh40k-properties-grid tw-grid">
+            <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
               {{!-- Category --}}
-              <div class="wh40k-property">
-                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1">
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fa-solid fa-tag"></i>
                   Category
                 </label>
@@ -327,8 +327,8 @@
               </div>
 
               {{!-- Tier --}}
-              <div class="wh40k-property">
-                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1">
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fa-solid fa-layer-group"></i>
                   Tier
                 </label>
@@ -344,21 +344,21 @@
               </div>
 
               {{!-- XP Cost --}}
-              <div class="wh40k-property">
-                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1">
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fa-solid fa-coins"></i>
                   XP Cost
                 </label>
                 {{#if inEditMode}}
-                <input type="number" name="system.cost" value="{{talentData.cost}}" min="0" class="wh40k-property-input" />
+                <input type="number" name="system.cost" value="{{talentData.cost}}" min="0" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" />
                 {{else}}
                 <div class="wh40k-property-value">{{talentData.cost}}</div>
                 {{/if}}
               </div>
 
               {{!-- Type (Passive/Active) - Radio Buttons --}}
-              <div class="wh40k-property wh40k-property--radio">
-                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1">
+              <div class="wh40k-property wh40k-property--radio tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fa-solid fa-circle-check"></i>
                   Type
                 </label>
@@ -386,8 +386,8 @@
               </div>
 
               {{!-- Stackable --}}
-              <div class="wh40k-property wh40k-property--checkbox">
-                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1">
+              <div class="wh40k-property wh40k-property--checkbox tw-flex tw-flex-col tw-gap-1.5 tw-justify-center">
+                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fa-solid fa-layer-group"></i>
                   Stackable
                 </label>
@@ -403,8 +403,8 @@
 
               {{!-- Rank (if stackable) --}}
               {{#if talentData.stackable}}
-              <div class="wh40k-property">
-                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1">
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fa-solid fa-hashtag"></i>
                   Current Rank
                 </label>
@@ -413,7 +413,7 @@
                   <button type="button" class="wh40k-rank-btn tw-cursor-pointer" data-action="adjustRank" data-delta="-1">
                     <i class="fa-solid fa-minus"></i>
                   </button>
-                  <input type="number" name="system.rank" value="{{talentData.rank}}" min="1" class="wh40k-property-input wh40k-property-input--rank" />
+                  <input type="number" name="system.rank" value="{{talentData.rank}}" min="1" class="wh40k-property-input wh40k-property-input--rank tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" />
                   <button type="button" class="wh40k-rank-btn tw-cursor-pointer" data-action="adjustRank" data-delta="1">
                     <i class="fa-solid fa-plus"></i>
                   </button>
@@ -443,7 +443,7 @@
               {{#if talentData.hasSpecialization}}
               <div class="wh40k-specialization-field">
                 <input type="text" name="system.specialization" value="{{talentData.specialization}}"
-                       class="wh40k-property-input wh40k-property-input--inline" placeholder="e.g., Las, Mechanicum, Nobility" />
+                       class="wh40k-property-input wh40k-property-input--inline tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., Las, Mechanicum, Nobility" />
               </div>
               {{/if}}
             </div>
@@ -476,7 +476,7 @@
           </h3>
           <div class="wh40k-section-body">
             {{#if prerequisitesData.hasAny}}
-            <div class="wh40k-prerequisites-display tw-flex tw-flex-col tw-gap-2">
+            <div class="wh40k-prerequisites-display tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md">
               {{#if prerequisitesData.hasText}}
               <div class="wh40k-prereq-text">{{prerequisitesData.text}}</div>
               {{/if}}
@@ -531,31 +531,31 @@
           </h3>
           <div class="wh40k-section-body">
             {{#if inEditMode}}
-            <div class="wh40k-properties-grid tw-grid">
-              <div class="wh40k-property">
-                <label class="wh40k-property-label">Characteristic</label>
+            <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Characteristic</label>
                 <input type="text" name="system.rollConfig.characteristic"
                        value="{{rollConfigData.characteristic}}"
-                       class="wh40k-property-input" placeholder="e.g., willpower" />
+                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., willpower" />
               </div>
-              <div class="wh40k-property">
-                <label class="wh40k-property-label">Skill</label>
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Skill</label>
                 <input type="text" name="system.rollConfig.skill"
                        value="{{rollConfigData.skill}}"
-                       class="wh40k-property-input" placeholder="e.g., psyniscience" />
+                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., psyniscience" />
               </div>
-              <div class="wh40k-property">
-                <label class="wh40k-property-label">Modifier</label>
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Modifier</label>
                 <input type="number" name="system.rollConfig.modifier"
                        value="{{rollConfigData.modifier}}"
-                       class="wh40k-property-input" />
+                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" />
               </div>
             </div>
-            <div class="wh40k-property" style="margin-top: 12px;">
-              <label class="wh40k-property-label">Roll Description</label>
+            <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5 tw-mt-3">
+              <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Roll Description</label>
               <input type="text" name="system.rollConfig.description"
                      value="{{rollConfigData.description}}"
-                     class="wh40k-property-input" placeholder="Description for roll dialog" />
+                     class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="Description for roll dialog" />
             </div>
             {{else if rollConfigData.isConfigured}}
             <div class="wh40k-roll-config-display tw-flex tw-flex-col tw-gap-1">
@@ -630,8 +630,8 @@
                 <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.characteristics}}
                   <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
-                    <span class="wh40k-modifier-name">{{this.label}}</span>
-                    <span class="wh40k-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
+                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
                     </span>
                   </div>
@@ -650,8 +650,8 @@
                 <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.skills}}
                   <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
-                    <span class="wh40k-modifier-name">{{this.label}}</span>
-                    <span class="wh40k-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
+                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
                     </span>
                   </div>
@@ -670,8 +670,8 @@
                 <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.combat}}
                   <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
-                    <span class="wh40k-modifier-name">{{this.label}}</span>
-                    <span class="wh40k-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
+                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
                     </span>
                   </div>
@@ -690,8 +690,8 @@
                 <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.resources}}
                   <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
-                    <span class="wh40k-modifier-name">{{this.label}}</span>
-                    <span class="wh40k-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
+                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
                     </span>
                   </div>
@@ -710,8 +710,8 @@
                 <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.other}}
                   <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
-                    <span class="wh40k-modifier-name">{{this.label}}</span>
-                    <span class="wh40k-modifier-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
+                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
                     </span>
                   </div>
@@ -933,7 +933,7 @@
           </h3>
           <div class="wh40k-section-body">
             {{#if inEditMode}}
-            <div class="wh40k-editor-container">
+            <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{editor system.benefit target="system.benefit" button=true editable=canEdit engine="prosemirror"}}
             </div>
             {{else}}
@@ -959,7 +959,7 @@
           </h3>
           <div class="wh40k-section-body">
             {{#if inEditMode}}
-            <textarea name="system.notes" rows="4" class="wh40k-property-textarea tw-w-full"
+            <textarea name="system.notes" rows="4" class="wh40k-property-textarea tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm tw-min-h-[80px] tw-resize-y focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]"
                       placeholder="GM notes, house rules, clarifications...">{{talentData.notes}}</textarea>
             {{else if talentData.notes}}
             <div class="wh40k-notes-content">
@@ -982,10 +982,10 @@
             Technical
           </h3>
           <div class="wh40k-section-body">
-            <div class="wh40k-property">
-              <label class="wh40k-property-label">Identifier <span class="wh40k-hint">(for macros/scripts)</span></label>
+            <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+              <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Identifier <span class="wh40k-hint">(for macros/scripts)</span></label>
               <input type="text" name="system.identifier" value="{{talentData.identifier}}"
-                     class="wh40k-property-input wh40k-property-input--mono" placeholder="camelCaseIdentifier" />
+                     class="wh40k-property-input wh40k-property-input--mono tw-w-full tw-px-3 tw-py-2 tw-font-mono tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="camelCaseIdentifier" />
             </div>
           </div>
         </div>
