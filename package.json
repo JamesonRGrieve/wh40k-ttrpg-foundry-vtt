@@ -40,8 +40,6 @@
     "format": "prettier --check 'src/**/*.{ts,json,css,hbs}'",
     "format:fix": "prettier --write 'src/**/*.{ts,json,css,hbs}'",
     "typecheck": "tsc --noEmit",
-    "typecheck:ratchet": "node scripts/typecheck-ratchet.mjs",
-    "typecheck:ratchet:update": "node scripts/typecheck-ratchet.mjs --update",
     "validate:json": "node -e \"const fs=require('fs'); const f='src/lang/en.json'; JSON.parse(fs.readFileSync(f,'utf8')); console.log(f+' OK')\"",
     "stylelint": "stylelint 'src/css/**/*.css'",
     "stylelint:fix": "stylelint 'src/css/**/*.css' --fix",
@@ -149,5 +147,8 @@
   "bugs": {
     "url": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/issues"
   },
-  "homepage": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt#readme"
+  "homepage": "https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt#readme",
+  "dependencies": {
+    "zod": "^4.4.3"
+  }
 }

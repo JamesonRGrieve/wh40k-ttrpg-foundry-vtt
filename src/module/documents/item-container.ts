@@ -16,6 +16,9 @@ interface ContainerSystemData extends Record<string, unknown> {
 }
 
 export class WH40KItemContainer extends Item {
+    // @ts-expect-error -- V14 types `Item.system` as a discriminated union over registered subTypes;
+    // the abstract `ItemDataModel & ContainerSystemData` shape this base class needs is structurally
+    // sound but not a member of that union. Subclasses (`WH40KItem`) refine to the concrete type.
     declare system: ItemDataModel & ContainerSystemData;
     declare items: foundry.utils.Collection<Item>;
 

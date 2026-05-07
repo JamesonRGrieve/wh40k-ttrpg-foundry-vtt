@@ -1,8 +1,8 @@
 {
   "totals": {
     "any": 9,
-    "asAny": 171,
-    "tsExpectError": 9,
+    "asAny": 137,
+    "tsExpectError": 10,
     "tsIgnore": 0
   },
   "byDir": {
@@ -20,7 +20,7 @@
     },
     "applications": {
       "any": 3,
-      "asAny": 122,
+      "asAny": 100,
       "tsExpectError": 9,
       "tsIgnore": 0
     },
@@ -44,7 +44,7 @@
     },
     "data": {
       "any": 3,
-      "asAny": 31,
+      "asAny": 20,
       "tsExpectError": 0,
       "tsIgnore": 0
     },
@@ -57,7 +57,7 @@
     "documents": {
       "any": 0,
       "asAny": 0,
-      "tsExpectError": 0,
+      "tsExpectError": 1,
       "tsIgnore": 0
     },
     "handlebars": {
@@ -98,7 +98,7 @@
     },
     "rolls": {
       "any": 1,
-      "asAny": 1,
+      "asAny": 0,
       "tsExpectError": 0,
       "tsIgnore": 0
     },
