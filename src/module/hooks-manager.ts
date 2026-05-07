@@ -752,9 +752,10 @@ export class HooksManager {
 
         const browserBtn = document.createElement('button');
         browserBtn.type = 'button';
-        browserBtn.className = 'wh40k-compendium-browser-btn';
+        browserBtn.className =
+            'wh40k-compendium-browser-btn tw-bg-gradient-to-br tw-from-[var(--wh40k-gold-dark)] tw-to-[var(--wh40k-gold)] tw-border tw-border-solid tw-border-[var(--wh40k-gold)] tw-rounded tw-text-[var(--wh40k-sheet-bg)] tw-text-xs tw-font-semibold tw-px-2 tw-py-1 tw-cursor-pointer tw-mr-1';
         browserBtn.title = 'Open Compendium Browser';
-        browserBtn.innerHTML = '<i class="fas fa-search"></i> Compendium Browser';
+        browserBtn.innerHTML = '<i class="fas fa-search tw-mr-1"></i> Compendium Browser';
 
         browserBtn.addEventListener('click', (event) => {
             event.preventDefault();

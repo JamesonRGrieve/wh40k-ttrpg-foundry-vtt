@@ -55,13 +55,24 @@ module.exports = {
     'tw-bg-[rgba(59,130,246,0.2)]', 'tw-text-[#3b82f6]',
     // Navigator levels (navigator-power.ts get pills())
     'tw-bg-[rgba(34,197,94,0.15)]', 'tw-bg-[rgba(59,130,246,0.15)]', 'tw-bg-[rgba(245,158,11,0.15)]',
-    // d100-roll.ts dice summary classes (wh40k-dice-success, wh40k-dice-failure, wh40k-dice-critical,
-    // wh40k-dice-doubles) injected via JS into dice tooltip summaries — not in any template file.
+    // d100-roll.ts dice summary (wh40k-dice-summary, wh40k-dice-target, wh40k-dice-success,
+    // wh40k-dice-failure, wh40k-dice-critical, wh40k-dice-fumble, wh40k-dice-doubles)
+    // injected via JS into dice tooltip summaries — not in any template file.
+    'tw-mt-2', 'tw-p-2',
+    'tw-bg-[var(--wh40k-panel-bg-translucent)]', 'tw-rounded-md',
+    'tw-text-[0.85rem]', 'tw-leading-relaxed',
+    'tw-text-[var(--wh40k-text-muted)]', 'tw-font-medium',
     'tw-text-[var(--wh40k-danger-secondary)]',
     'tw-text-[var(--wh40k-success-secondary)]',
     'tw-text-[var(--wh40k-gold-bright)]',
     'tw-text-[var(--wh40k-warning-primary)]',
+    'tw-font-bold',
     'tw-[text-shadow:0_0_6px_rgba(255,215,0,0.5)]',
+    'tw-text-[var(--wh40k-red-bright)]',
+    'tw-[text-shadow:0_0_6px_rgba(255,68,68,0.5)]',
+    // chat-message.ts portrait (wh40k-message-portrait) — injected via JS into message-sender.
+    'tw-w-7', 'tw-h-7', 'tw-object-cover', 'tw-rounded-full', 'tw-border-2', 'tw-border-gold',
+    'tw-mr-2', 'tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]',
     // chat-message.ts degree badge (wh40k-degree-badge) — injected via JS into dice totals.
     'tw-ml-2',
     'tw-py-0.5',

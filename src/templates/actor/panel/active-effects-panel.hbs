@@ -1,15 +1,15 @@
 {{!-- Active Effects Panel - Card/Row Structure --}}
 <div class="wh40k-panel wh40k-effects-panel">
-    <div class="wh40k-panel-header wh40k-panel-header--clickable sheet-control__hide-control"
+    <div class="wh40k-panel-header wh40k-panel-header--clickable sheet-control__hide-control tw-cursor-pointer tw-select-none"
          data-toggle="effects_details"
          title="{{#if (isExpanded 'effects_details' actor)}}{{localize 'WH40K.Effects.ClickToCollapse'}}{{else}}{{localize 'WH40K.Effects.ClickToExpand'}}{{/if}}">
         <span class="wh40k-panel-title tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
             <i class="fas fa-sparkles"></i> {{localize 'WH40K.Effects.ActiveLabel'}}
             {{#if effects.length}}
-                <span class="wh40k-badge">{{effects.length}}</span>
+                <span class="wh40k-badge tw-inline-flex tw-items-center tw-justify-center tw-min-w-[20px] tw-h-5 tw-px-1.5 tw-ml-2 tw-bg-gradient-to-br tw-from-[var(--wh40k-accent-gold)] tw-to-[color-mix(in_srgb,var(--wh40k-accent-gold),black_10%)] tw-text-[#0a0a0f] tw-rounded-[10px] tw-text-[0.7rem] tw-font-bold tw-shadow-sm">{{effects.length}}</span>
             {{/if}}
         </span>
-        <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'effects_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
+        <i class="fas fa-chevron-down wh40k-panel-chevron tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-transition-[transform,color] tw-duration-200 tw-ml-auto tw-flex-shrink-0 {{#if (isExpanded 'effects_details' actor)}}wh40k-panel-chevron--open tw-rotate-180{{/if}}"></i>
     </div>
 
     <div class="wh40k-panel-body">

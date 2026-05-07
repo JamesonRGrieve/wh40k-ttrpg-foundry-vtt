@@ -1,5 +1,5 @@
 {{! Rogue Trader Peer/Enemy Sheet - Modern Design }}
-<form class="wh40k-item-sheet" autocomplete="off">
+<form class="wh40k-item-sheet tw-flex tw-flex-col tw-h-full" autocomplete="off">
     {{! Header }}
     <div class="wh40k-item-sheet__header">
         <div class="wh40k-item-sheet__title-area tw-pl-4">
@@ -11,7 +11,7 @@
     </div>
 
     {{! Main Fields }}
-    <div class="wh40k-item-sheet__panel">
+    <div class="wh40k-item-sheet__panel tw-p-3">
         <div class="wh40k-item-sheet__field tw-flex tw-flex-col tw-gap-1">
             <label class="wh40k-item-sheet__label">Modifier</label>
             <input class="wh40k-item-sheet__input tw-w-24" name="system.modifier" type="number" data-dtype="Number" value="{{item.system.modifier}}" />

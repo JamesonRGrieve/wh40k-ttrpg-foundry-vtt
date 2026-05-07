@@ -90,17 +90,17 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs wh40k-tabs--trait wh40k-trait-tabs" data-group="primary">
-      <button type="button" class="wh40k-tab wh40k-trait-tab active" data-tab="properties" data-group="primary">
-        <i class="fas fa-cog"></i>
+    <nav class="wh40k-tabs wh40k-tabs--trait wh40k-trait-tabs tw-flex tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)] tw-shrink-0" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-trait-tab active tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-[var(--wh40k-traits-bg)] tw-border-0 tw-border-b-[3px] tw-border-b-[color:var(--wh40k-traits-primary)] tw-text-sm tw-font-medium tw-text-[color:var(--wh40k-traits-primary)] tw-cursor-pointer" data-tab="properties" data-group="primary">
+        <i class="fas fa-cog tw-text-[0.9rem]"></i>
         <span>Properties</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-trait-tab" data-tab="effects" data-group="primary">
-        <i class="fas fa-magic"></i>
+      <button type="button" class="wh40k-tab wh40k-trait-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-sm tw-font-medium tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="effects" data-group="primary">
+        <i class="fas fa-magic tw-text-[0.9rem]"></i>
         <span>Effects</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-trait-tab" data-tab="description" data-group="primary">
-        <i class="fas fa-book"></i>
+      <button type="button" class="wh40k-tab wh40k-trait-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-sm tw-font-medium tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="description" data-group="primary">
+        <i class="fas fa-book tw-text-[0.9rem]"></i>
         <span>Description</span>
       </button>
     </nav>
@@ -108,7 +108,7 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="wh40k-trait-content wh40k-tab-content wh40k-tab-content--trait">
+    <section class="wh40k-trait-content wh40k-tab-content wh40k-tab-content--trait tw-flex-1 tw-overflow-y-auto tw-min-h-0 tw-p-3">
       
       {{!-- PROPERTIES TAB --}}
       <div class="wh40k-trait-panel tab active" data-tab="properties" data-group="primary">
@@ -278,7 +278,7 @@
         </div>
         {{else}}
         <div class="wh40k-trait-section">
-          <div class="wh40k-empty-state">
+          <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-4 tw-text-center tw-text-[color:var(--wh40k-text-subtle)] tw-italic">
             <i class="fas fa-chart-line"></i>
             <p>No modifiers defined</p>
             <p class="wh40k-field-hint">Use Active Effects tab to add stat bonuses</p>

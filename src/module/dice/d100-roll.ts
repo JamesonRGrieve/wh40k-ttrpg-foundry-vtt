@@ -264,11 +264,12 @@ export default class D100Roll extends BasicRollWH40K {
 
         if (diceTotal) {
             const summary = document.createElement('div');
-            summary.className = 'wh40k-dice-summary';
+            summary.className =
+                'wh40k-dice-summary tw-mt-2 tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-text-[0.85rem] tw-leading-relaxed';
 
             // Target info
             const targetDiv = document.createElement('div');
-            targetDiv.className = 'wh40k-dice-target';
+            targetDiv.className = 'wh40k-dice-target tw-text-[var(--wh40k-text-muted)] tw-font-medium';
             targetDiv.textContent = `Target: ${target}`;
             summary.appendChild(targetDiv);
 
@@ -290,7 +291,8 @@ export default class D100Roll extends BasicRollWH40K {
                 summary.appendChild(critDiv);
             } else if (this.isCriticalFailure) {
                 const critDiv = document.createElement('div');
-                critDiv.className = 'wh40k-dice-fumble';
+                critDiv.className =
+                    'wh40k-dice-fumble tw-text-[var(--wh40k-red-bright)] tw-font-bold tw-[text-shadow:0_0_6px_rgba(255,68,68,0.5)]';
                 critDiv.textContent = '💀 Critical Failure!';
                 summary.appendChild(critDiv);
             }

@@ -54,13 +54,13 @@
     <span class="{{#if labelClass}}{{labelClass}}{{else}}wh40k-vital-label{{/if}}">{{label}}</span>
     {{/if}}
     <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1{{#unless degreeText}} tw-ml-auto{{/unless}}{{#if controlsExtraClass}} {{controlsExtraClass}}{{/if}}">
-        <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="{{field}}" data-min="{{#if min}}{{min}}{{else}}0{{/if}}" title="{{#if decTitle}}{{decTitle}}{{else}}−1{{/if}}">
+        <button type="button" class="wh40k-vital-btn tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="{{field}}" data-min="{{#if min}}{{min}}{{else}}0{{/if}}" title="{{#if decTitle}}{{decTitle}}{{else}}−1{{/if}}">
             <i class="fas fa-minus"></i>
         </button>
         <span class="{{#if valueClass}}{{valueClass}}{{else}}wh40k-vital-value{{/if}}{{#unless degreeText}}{{#if stateClass}} {{stateClass}}{{/if}}{{/unless}}">
             {{current}}{{#if max}}/{{max}}{{/if}}
         </span>
-        <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="{{field}}"{{#if maxAttr}} data-max="{{maxAttr}}"{{/if}} title="{{#if incTitle}}{{incTitle}}{{else}}+1{{/if}}">
+        <button type="button" class="wh40k-vital-btn tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="{{field}}"{{#if maxAttr}} data-max="{{maxAttr}}"{{/if}} title="{{#if incTitle}}{{incTitle}}{{else}}+1{{/if}}">
             <i class="fas fa-plus"></i>
         </button>
     </div>

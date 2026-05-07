@@ -11,26 +11,26 @@
       
       {{!-- HEADER WITH EDIT TOGGLE --}}
       <header class="wh40k-weapon-header">
-        <div class="wh40k-item-image wh40k-item-image--sm" data-action="editImage">
+        <div class="wh40k-item-image wh40k-item-image--sm tw-w-[50px] tw-h-[50px] tw-rounded-md tw-overflow-hidden tw-cursor-pointer tw-shrink-0 tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105" data-action="editImage">
           <img src="{{item.img}}" alt="{{item.name}}" />
         </div>
 
-        <div class="wh40k-item-title">
+        <div class="wh40k-item-title tw-flex tw-flex-col tw-justify-center tw-gap-1 tw-min-w-0">
           <input type="text" class="wh40k-item-title__name {{#unless inEditMode}}wh40k-input--readonly{{/unless}}" 
                  name="name" value="{{item.name}}" placeholder="Weapon Name" 
                  {{#unless inEditMode}}readonly{{/unless}} />
           
-          <div class="wh40k-item-meta wh40k-weapon-meta">
-            <span class="wh40k-meta-badge wh40k-meta-badge--weapon-class" title="Weapon Class: {{system.classLabel}}">
-              <i class="fa-solid fa-{{#if system.isMeleeWeapon}}sword{{else}}gun{{/if}}"></i>
+          <div class="wh40k-item-meta wh40k-weapon-meta tw-flex tw-flex-wrap tw-gap-1 tw-mt-1 tw-items-center">
+            <span class="wh40k-meta-badge wh40k-meta-badge--weapon-class tw-inline-flex tw-items-center tw-gap-[3px] tw-px-2 tw-py-[2px] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-text-xs tw-text-[var(--wh40k-text-muted)]" title="Weapon Class: {{system.classLabel}}">
+              <i class="fa-solid fa-{{#if system.isMeleeWeapon}}sword{{else}}gun{{/if}} tw-text-[10px] tw-opacity-70"></i>
               {{system.classLabel}}
             </span>
-            <span class="wh40k-meta-badge wh40k-meta-badge--weapon-type" title="Weapon Type: {{system.typeLabel}}">
-              <i class="fa-solid {{system.typeIcon}}"></i>
+            <span class="wh40k-meta-badge wh40k-meta-badge--weapon-type tw-inline-flex tw-items-center tw-gap-[3px] tw-px-2 tw-py-[2px] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-text-xs tw-text-[var(--wh40k-text-muted)]" title="Weapon Type: {{system.typeLabel}}">
+              <i class="fa-solid {{system.typeIcon}} tw-text-[10px] tw-opacity-70"></i>
               {{system.typeLabel}}
             </span>
             {{#if (ne system.craftsmanship "common")}}
-            <span class="wh40k-meta-badge wh40k-meta-badge--craft wh40k-meta-badge--{{system.craftsmanship}}" title="Craftsmanship">
+            <span class="wh40k-meta-badge wh40k-meta-badge--craft wh40k-meta-badge--{{system.craftsmanship}} tw-inline-flex tw-items-center tw-gap-[3px] tw-px-2 tw-py-[2px] tw-bg-[rgba(181,166,66,0.15)] tw-border tw-border-[rgba(181,166,66,0.4)] tw-rounded-sm tw-text-xs tw-text-[var(--wh40k-color-brass)]" title="Craftsmanship">
               {{system.craftsmanshipLabel}}
             </span>
             {{/if}}
@@ -226,7 +226,7 @@
           <i class="fa-solid fa-circle-dot"></i>
           <span class="wh40k-loaded-ammo-card__name">{{loadedAmmoLabel}}</span>
           {{#if isOwnedByActor}}
-          <button type="button" class="wh40k-btn wh40k-btn--icon wh40k-btn--ghost" data-action="ejectAmmo" title="Eject">
+          <button type="button" class="wh40k-btn wh40k-btn--icon wh40k-btn--ghost tw-inline-flex tw-items-center tw-justify-center tw-px-1 tw-py-1 tw-bg-transparent tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-sm tw-cursor-pointer hover:tw-border-[var(--wh40k-gold)] hover:tw-text-gold" data-action="ejectAmmo" title="Eject">
             <i class="fa-solid fa-eject"></i>
           </button>
           {{/if}}
@@ -592,11 +592,11 @@
               </div>
               {{/if}}
               <div class="wh40k-mod-card__actions">
-                <button type="button" class="wh40k-btn wh40k-btn--icon wh40k-btn--ghost" 
+                <button type="button" class="wh40k-btn wh40k-btn--icon wh40k-btn--ghost tw-inline-flex tw-items-center tw-justify-center tw-px-1 tw-py-1 tw-bg-transparent tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-sm tw-cursor-pointer hover:tw-border-[var(--wh40k-gold)] hover:tw-text-gold"
                         data-action="viewModification" data-mod-index="{{mod.index}}" title="View">
                   <i class="fa-solid fa-eye"></i>
                 </button>
-                <button type="button" class="wh40k-btn wh40k-btn--icon wh40k-btn--ghost wh40k-btn--danger" 
+                <button type="button" class="wh40k-btn wh40k-btn--icon wh40k-btn--ghost wh40k-btn--danger tw-inline-flex tw-items-center tw-justify-center tw-px-1 tw-py-1 tw-bg-transparent tw-border tw-border-[var(--wh40k-red-dark)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-sm tw-cursor-pointer hover:tw-bg-[var(--wh40k-red-dark)] hover:tw-border-[var(--wh40k-red)] hover:tw-text-white"
                         data-action="removeModification" data-mod-index="{{mod.index}}" title="Remove">
                   <i class="fa-solid fa-trash"></i>
                 </button>
@@ -605,7 +605,7 @@
             {{/each}}
           </div>
           {{else}}
-          <div class="wh40k-empty-state wh40k-mod-dropzone" data-drop-zone="modifications">
+          <div class="wh40k-empty-state wh40k-mod-dropzone tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70" data-drop-zone="modifications">
             <i class="fa-solid fa-wrench"></i>
             <p>No modifications</p>
             <p class="wh40k-hint">Drag modifications from compendium</p>

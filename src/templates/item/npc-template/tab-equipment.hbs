@@ -4,7 +4,7 @@
     <div class="wh40k-panel">
         <header class="wh40k-panel-header">
             <h3 class="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-sword"></i> {{localize "WH40K.NPC.Template.Weapons"}}</h3>
-            <button type="button" class="wh40k-btn wh40k-btn-icon" data-action="addWeapon">
+            <button type="button" class="wh40k-btn wh40k-btn-icon tw-inline-flex tw-items-center tw-justify-center" data-action="addWeapon">
                 <i class="fas fa-plus"></i>
             </button>
         </header>
@@ -41,7 +41,7 @@
                                 placeholder="{{localize 'WH40K.Weapon.SpecialPlaceholder'}}"
                             />
                             <div>
-                                <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger" data-action="removeWeapon" data-index="{{idx}}">
+                                <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger tw-inline-flex tw-items-center tw-justify-center" data-action="removeWeapon" data-index="{{idx}}">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -82,7 +82,7 @@
     <div class="wh40k-panel">
         <header class="wh40k-panel-header">
             <h3><i class="fas fa-backpack"></i> {{localize "WH40K.NPC.Template.Equipment"}}</h3>
-            <button type="button" class="wh40k-btn wh40k-btn-icon" data-action="addEquipment">
+            <button type="button" class="wh40k-btn wh40k-btn-icon tw-inline-flex tw-items-center tw-justify-center" data-action="addEquipment">
                 <i class="fas fa-plus"></i>
             </button>
         </header>
@@ -93,7 +93,7 @@
                         <div class="tw-flex tw-gap-2 tw-items-center" data-index="{{idx}}">
                             <input class="tw-flex-1 tw-px-2 tw-py-1" type="text" name="system.equipment.{{idx}}.name" value="{{item.name}}" placeholder="{{localize 'WH40K.Item.Name'}}" />
                             <input class="tw-w-[50px] tw-text-center" type="number" name="system.equipment.{{idx}}.quantity" value="{{item.quantity}}" min="1" />
-                            <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger" data-action="removeEquipment" data-index="{{idx}}">
+                            <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger tw-inline-flex tw-items-center tw-justify-center" data-action="removeEquipment" data-index="{{idx}}">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>

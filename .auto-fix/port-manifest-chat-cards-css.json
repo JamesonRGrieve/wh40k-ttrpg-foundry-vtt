@@ -1,0 +1,67 @@
+{
+  "task": "port-chat-cards-css",
+  "blocks_deleted": [
+    {
+      "source": "src/css/chat/_roll-cards.css",
+      "lines_deleted": 964,
+      "status": "deleted"
+    },
+    {
+      "source": "src/css/chat/_item-cards.css",
+      "lines_deleted": 772,
+      "status": "deleted"
+    }
+  ],
+  "files_modified": [
+    {
+      "path": "src/module/dice/d100-roll.ts",
+      "changes": [
+        "Added tw- utilities to wh40k-dice-summary className (tw-mt-2 tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-text-[0.85rem] tw-leading-relaxed)",
+        "Added tw- utilities to wh40k-dice-target className (tw-text-[var(--wh40k-text-muted)] tw-font-medium)",
+        "Added tw- utilities to wh40k-dice-fumble className (tw-text-[var(--wh40k-red-bright)] tw-font-bold tw-[text-shadow:0_0_6px_rgba(255,68,68,0.5)])"
+      ]
+    },
+    {
+      "path": "src/module/documents/chat-message.ts",
+      "changes": [
+        "Added tw- utilities to wh40k-message-portrait className (tw-w-7 tw-h-7 tw-object-cover tw-rounded-full tw-border-2 tw-border-gold tw-mr-2 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)])"
+      ]
+    },
+    {
+      "path": "src/templates/chat/simple-roll-chat.hbs",
+      "changes": [
+        "Removed legacy wh40k-roll-card__value--negative class (already covered by tw-text-failure)"
+      ]
+    },
+    {
+      "path": "src/templates/chat/partial/modifier-breakdown.hbs",
+      "changes": [
+        "Removed legacy wh40k-roll-card__value--negative class (already covered by tw-text-[var(--wh40k-danger-secondary)])"
+      ]
+    },
+    {
+      "path": "tailwind.config.js",
+      "changes": [
+        "Added safelist entries for all JS-injected tw- utilities: dice summary, dice target, dice fumble, message portrait"
+      ]
+    }
+  ],
+  "dead_code": {
+    "wh40k-item-card__*": "All wh40k-item-card__ classes were dead code — item-card-chat.hbs is fully ported to tw- utilities already. No template referenced any wh40k-item-card__ BEM class.",
+    "wh40k-roll-card__*": "All wh40k-roll-card__ classes (except value--negative) were dead code — roll-card-shell.hbs, action-roll-chat.hbs, damage-roll-chat.hbs and all other chat templates are fully ported to tw- utilities.",
+    "#chat-log .message.flexcol dark-mode-overrides": "Dark mode overrides using nested :is() selectors were dead code — chat messages get the wh40k-rpg class via renderChatMessageHTML hook and the theme variables handle dark mode via CSS custom properties.",
+    "wh40k-chat": "Not used in any template — dead code.",
+    "wh40k-roll-card__qualities/wh40k-quality-tag in chat": "wh40k-quality-tag is used only in item-ammo-sheet.hbs (non-chat), with tw- utilities alongside it."
+  },
+  "ratchet_results": {
+    "css:ratchet": "PASS — tw-only=129 mixed=115 css-only=0 (unchanged, chat templates were already classified tailwind-only or not classified)",
+    "animation:ratchet": "PASS — no animation rules in deleted blocks"
+  },
+  "notes": [
+    "roll-card-shell.hbs was already fully ported to tw- utilities before this task.",
+    "item-card-chat.hbs was already fully ported to tw- utilities before this task.",
+    "action-roll-chat.hbs, damage-roll-chat.hbs and all other chat roll templates were already fully ported.",
+    "The wh40k-dice-* and wh40k-degree-badge classes are JS hook classes kept for querySelector targeting; tw- utilities now cover their visual styles.",
+    "wh40k-message-portrait is a JS hook class kept for duplicate-prevention check; tw- utilities now cover its visual styles."
+  ]
+}

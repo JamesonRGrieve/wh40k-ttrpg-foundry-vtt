@@ -25,14 +25,14 @@
                             <span class="tw-pointer-events-none tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-animate-pulse-warn-intense" style="background: var(--vital-color, var(--wh40k-border-medium));"></span>
                             {{/if}}
                             <div class="wh40k-vital-stat-header">
-                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control"
+                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control tw-cursor-pointer tw-select-none"
                                      data-toggle="combat_wounds_details"
                                      title="Click to {{#if (isExpanded 'combat_wounds_details' actor)}}collapse{{else}}expand{{/if}}">
                                     <div class="wh40k-vital-label">
                                         <i class="fas fa-heart"></i>
                                         <span>WOUNDS</span>
                                     </div>
-                                    <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'combat_wounds_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
+                                    <i class="fas fa-chevron-down wh40k-panel-chevron tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-transition-[transform,color] tw-duration-200 tw-ml-auto tw-flex-shrink-0 {{#if (isExpanded 'combat_wounds_details' actor)}}wh40k-panel-chevron--open tw-rotate-180{{/if}}"></i>
                                 </div>
                                 <div class="wh40k-vital-controls">
                                     <button type="button" class="wh40k-vital-ctrl-btn" data-action="decrement" data-field="system.wounds.value" data-min="0" title="Decrease">
@@ -79,15 +79,15 @@
                             {{/if}}
                             <div class="wh40k-panel-details combat_wounds_details {{#unless (isExpanded 'combat_wounds_details' actor)}}wh40k-panel-details--collapsed{{/unless}}">
                                 <div class="wh40k-vital-edit-section">
-                                    <label class="wh40k-vital-edit-field">
+                                    <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
                                         <span class="wh40k-vital-edit-label">Max Wounds</span>
                                         <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.wounds.max" value="{{source.wounds.max}}" min="1" placeholder="Max" />
                                     </label>
-                                    <label class="wh40k-vital-edit-field">
+                                    <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
                                         <span class="wh40k-vital-edit-label">Current Wounds</span>
                                         <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.wounds.value" value="{{source.wounds.value}}" min="0" max="{{system.wounds.max}}" placeholder="Current" />
                                     </label>
-                                    <label class="wh40k-vital-edit-field">
+                                    <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
                                         <span class="wh40k-vital-edit-label">Critical Damage</span>
                                         <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.wounds.critical" value="{{source.wounds.critical}}" min="0" max="10" placeholder="Critical" />
                                     </label>
@@ -103,14 +103,14 @@
                             <span class="tw-pointer-events-none tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-animate-pulse-warn-intense" style="background: var(--vital-color, var(--wh40k-border-medium));"></span>
                             {{/if}}
                             <div class="wh40k-vital-stat-header">
-                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control"
+                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control tw-cursor-pointer tw-select-none"
                                      data-toggle="combat_fatigue_details"
                                      title="Click to {{#if (isExpanded 'combat_fatigue_details' actor)}}collapse{{else}}expand{{/if}}">
                                     <div class="wh40k-vital-label">
                                         <i class="fas fa-bolt"></i>
                                         <span>FATIGUE</span>
                                     </div>
-                                    <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'combat_fatigue_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
+                                    <i class="fas fa-chevron-down wh40k-panel-chevron tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-transition-[transform,color] tw-duration-200 tw-ml-auto tw-flex-shrink-0 {{#if (isExpanded 'combat_fatigue_details' actor)}}wh40k-panel-chevron--open tw-rotate-180{{/if}}"></i>
                                 </div>
                                 <div class="wh40k-vital-controls">
                                     <button type="button" class="wh40k-vital-ctrl-btn" data-action="decrement" data-field="system.fatigue.value" data-min="0" title="Decrease"><i class="fas fa-minus"></i></button>
@@ -134,11 +134,11 @@
                             {{/if}}
                             <div class="wh40k-panel-details combat_fatigue_details {{#unless (isExpanded 'combat_fatigue_details' actor)}}wh40k-panel-details--collapsed{{/unless}}">
                                 <div class="wh40k-vital-edit-section">
-                                    <label class="wh40k-vital-edit-field">
+                                    <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
                                         <span class="wh40k-vital-edit-label">Threshold (TB)</span>
                                         <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fatigue.max" value="{{system.fatigue.max}}" min="0" readonly placeholder="Threshold" />
                                     </label>
-                                    <label class="wh40k-vital-edit-field">
+                                    <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
                                         <span class="wh40k-vital-edit-label">Current Fatigue</span>
                                         <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fatigue.value" value="{{system.fatigue.value}}" min="0" placeholder="Current" />
                                     </label>
@@ -183,14 +183,14 @@
                         {{!-- Fate --}}
                         <div class="wh40k-vital-stat wh40k-vital-fate">
                             <div class="wh40k-vital-stat-header">
-                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control"
+                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control tw-cursor-pointer tw-select-none"
                                      data-toggle="combat_fate_details"
                                      title="Click to {{#if (isExpanded 'combat_fate_details' actor)}}collapse{{else}}expand{{/if}}">
                                     <div class="wh40k-vital-label">
                                         <i class="fas fa-star"></i>
                                         <span>FATE</span>
                                     </div>
-                                    <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'combat_fate_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
+                                    <i class="fas fa-chevron-down wh40k-panel-chevron tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-transition-[transform,color] tw-duration-200 tw-ml-auto tw-flex-shrink-0 {{#if (isExpanded 'combat_fate_details' actor)}}wh40k-panel-chevron--open tw-rotate-180{{/if}}"></i>
                                 </div>
                                 <div class="wh40k-vital-controls">
                                     <button type="button" class="wh40k-vital-ctrl-btn" data-action="decrement" data-field="system.fate.value" data-min="0" title="Spend"><i class="fas fa-minus"></i></button>
@@ -208,11 +208,11 @@
                             </div>
                             <div class="wh40k-panel-details combat_fate_details {{#unless (isExpanded 'combat_fate_details' actor)}}wh40k-panel-details--collapsed{{/unless}}">
                                 <div class="wh40k-vital-edit-section">
-                                    <label class="wh40k-vital-edit-field">
+                                    <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
                                         <span class="wh40k-vital-edit-label">Max Fate</span>
                                         <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fate.max" value="{{system.fate.max}}" min="0" placeholder="Max" />
                                     </label>
-                                    <label class="wh40k-vital-edit-field">
+                                    <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
                                         <span class="wh40k-vital-edit-label">Current Fate</span>
                                         <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fate.value" value="{{system.fate.value}}" min="0" max="{{system.fate.max}}" placeholder="Current" />
                                     </label>

@@ -280,7 +280,8 @@ export class ChatMessageWH40K extends ChatMessage {
         if (sender.querySelector('.wh40k-message-portrait')) return;
 
         const portrait = document.createElement('img');
-        portrait.className = 'wh40k-message-portrait';
+        portrait.className =
+            'wh40k-message-portrait tw-w-7 tw-h-7 tw-object-cover tw-rounded-full tw-border-2 tw-border-gold tw-mr-2 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]';
         portrait.src = actor.img;
         portrait.alt = actor.name;
 
