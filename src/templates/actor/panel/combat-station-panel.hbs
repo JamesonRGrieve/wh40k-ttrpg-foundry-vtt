@@ -1,7 +1,7 @@
 {{!-- Combat Tab Panel --}}
 {{!-- Streamlined combat interface --}}
 
-<div class="wh40k-combat-tab tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-flex-1 tw-min-h-0">
+<div class="wh40k-combat-tab tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-flex-1 tw-min-h-0" style="container-type: inline-size;">
     {{!-- Main Combat Layout: Left (vitals + armour + weapons) | Right (actions) --}}
     <div class="wh40k-combat-layout tw-grid tw-grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] tw-gap-3 tw-w-full tw-items-stretch tw-flex-1 tw-min-h-0">
         <div class="tw-flex tw-flex-col tw-gap-3 tw-min-h-0">
@@ -13,7 +13,7 @@
                         <div class="wh40k-panel-header">
                             <span class="wh40k-panel-title tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-heartbeat"></i> Vitals</span>
                         </div>
-                        <div class="wh40k-panel-body wh40k-vitals-hud tw-flex tw-flex-col tw-gap-2 tw-bg-gradient-to-br tw-from-black/[0.02] tw-to-black/[0.05] tw-border tw-border-solid tw-border-black/10 tw-rounded-[var(--wh40k-radius-lg)] tw-shadow-[inset_0_1px_3px_rgba(0,0,0,0.05)]">
+                        <div class="wh40k-panel-body wh40k-vitals-hud tw-flex tw-flex-col tw-gap-2 tw-bg-gradient-to-br tw-from-black/[0.02] tw-to-black/[0.05] tw-border tw-border-solid tw-border-black/10 tw-rounded-[var(--wh40k-radius-lg)] tw-shadow-[inset_0_1px_3px_rgba(0,0,0,0.05)] tw-p-2">
 
                         {{!-- Row: Wounds | Fatigue --}}
                         <div class="tw-grid tw-grid-cols-2 tw-gap-2 tw-items-start">
@@ -25,7 +25,7 @@
                             <span class="tw-pointer-events-none tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-animate-pulse-warn-intense" style="background: var(--vital-color, var(--wh40k-border-medium));"></span>
                             {{/if}}
                             <div class="wh40k-vital-stat-header">
-                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control tw-cursor-pointer tw-select-none"
+                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control tw-cursor-pointer tw-select-none tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-flex-1 tw-transition-colors tw-duration-200 tw-p-[var(--wh40k-space-xs)] tw-mx-[calc(-1*var(--wh40k-space-xs))] tw-mr-0 tw-rounded-[var(--wh40k-radius-md)]"
                                      data-toggle="combat_wounds_details"
                                      title="Click to {{#if (isExpanded 'combat_wounds_details' actor)}}collapse{{else}}expand{{/if}}">
                                     <div class="wh40k-vital-label">
@@ -34,41 +34,41 @@
                                     </div>
                                     <i class="fas fa-chevron-down wh40k-panel-chevron tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-transition-[transform,color] tw-duration-200 tw-ml-auto tw-flex-shrink-0 {{#if (isExpanded 'combat_wounds_details' actor)}}wh40k-panel-chevron--open tw-rotate-180{{/if}}"></i>
                                 </div>
-                                <div class="wh40k-vital-controls">
-                                    <button type="button" class="wh40k-vital-ctrl-btn" data-action="decrement" data-field="system.wounds.value" data-min="0" title="Decrease">
-                                        <i class="fas fa-minus"></i>
+                                <div class="wh40k-vital-controls tw-flex tw-gap-[var(--wh40k-space-xs)] tw-shrink-0">
+                                    <button type="button" class="wh40k-vital-ctrl-btn tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-0 tw-m-0 tw-cursor-pointer tw-transition-all tw-font-bold tw-rounded-[6px] tw-w-[22px] tw-h-[22px] tw-text-[0.7rem] tw-bg-[rgba(var(--vital-color-rgb,0,0,0),0.08)] tw-border tw-border-solid tw-border-[rgba(var(--vital-color-rgb,0,0,0),0.2)] tw-text-[color:var(--vital-color,var(--wh40k-text-primary))]" data-action="decrement" data-field="system.wounds.value" data-min="0" title="Decrease">
+                                        <i class="fas fa-minus tw-text-[0.65rem] tw-leading-none"></i>
                                     </button>
-                                    <button type="button" class="wh40k-vital-ctrl-btn" data-action="increment" data-field="system.wounds.value" title="Increase">
-                                        <i class="fas fa-plus"></i>
+                                    <button type="button" class="wh40k-vital-ctrl-btn tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-0 tw-m-0 tw-cursor-pointer tw-transition-all tw-font-bold tw-rounded-[6px] tw-w-[22px] tw-h-[22px] tw-text-[0.7rem] tw-bg-[rgba(var(--vital-color-rgb,0,0,0),0.08)] tw-border tw-border-solid tw-border-[rgba(var(--vital-color-rgb,0,0,0),0.2)] tw-text-[color:var(--vital-color,var(--wh40k-text-primary))]" data-action="increment" data-field="system.wounds.value" title="Increase">
+                                        <i class="fas fa-plus tw-text-[0.65rem] tw-leading-none"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="wh40k-vital-stat-body">
-                                <div class="wh40k-vital-readout">
-                                    <span class="wh40k-combat-vital-value">{{system.wounds.value}}</span>
-                                    <span class="wh40k-combat-vital-max-label">/ {{system.wounds.max}}</span>
+                            <div class="wh40k-vital-stat-body tw-p-[var(--wh40k-space-xs)] tw-flex tw-flex-col tw-gap-1">
+                                <div class="wh40k-vital-readout tw-flex tw-items-baseline tw-gap-1">
+                                    <span class="wh40k-combat-vital-value tw-font-alt tw-text-[1.8rem] tw-font-bold tw-text-[color:var(--vital-color,var(--wh40k-text-primary))] tw-leading-none tw-[text-shadow:0_1px_2px_rgba(0,0,0,0.1)]">{{system.wounds.value}}</span>
+                                    <span class="wh40k-combat-vital-max-label tw-text-[0.9rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-leading-none">/ {{system.wounds.max}}</span>
                                 </div>
-                                <div class="wh40k-vital-bar-wrapper">
-                                    <div class="wh40k-vital-bar-track">
-                                        <div class="wh40k-vital-bar-progress wh40k-wounds-progress" style="--progress: {{percent system.wounds.value system.wounds.max}}%">
+                                <div class="wh40k-vital-bar-wrapper tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-w-full">
+                                    <div class="wh40k-vital-bar-track tw-flex-1 tw-h-[8px] tw-bg-[rgba(0,0,0,0.08)] tw-rounded-[var(--wh40k-radius-md)] tw-overflow-hidden tw-relative tw-shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]">
+                                        <div class="wh40k-vital-bar-progress wh40k-wounds-progress tw-h-full tw-rounded-[var(--wh40k-radius-md)] tw-transition-[width_0.4s_cubic-bezier(0.4,0,0.2,1)] tw-relative tw-overflow-hidden tw-bg-[linear-gradient(90deg,color-mix(in_srgb,var(--wh40k-accent-combat),black_10%)_0%,var(--wh40k-accent-combat)_50%,color-mix(in_srgb,var(--wh40k-accent-combat),white_10%)_100%)]" style="--progress: {{percent system.wounds.value system.wounds.max}}%; width: var(--progress);">
                                         <span class="wh40k-wounds-progress__shimmer tw-pointer-events-none tw-absolute tw-inset-0 tw-animate-shimmer tw-bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.2)_50%,transparent_100%)]"></span>
                                     </div>
                                     </div>
                                 </div>
                             </div>
                             {{#if (gt system.wounds.critical 0)}}
-                            <div class="wh40k-vital-alert">
-                                <i class="fas fa-skull tw-animate-alert-pulse"></i>
+                            <div class="wh40k-vital-alert tw-flex tw-items-center tw-gap-[6px] tw-px-2 tw-py-1 tw-bg-[rgba(var(--vital-color-rgb,0,0,0),0.12)] tw-border tw-border-solid tw-border-[rgba(var(--vital-color-rgb,0,0,0),0.25)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--vital-color,var(--wh40k-text-primary))]">
+                                <i class="fas fa-skull tw-animate-alert-pulse tw-text-[0.75rem]"></i>
                                 <span>CRITICAL DAMAGE: {{system.wounds.critical}}</span>
                             </div>
                             {{/if}}
                             {{#if (or (gt system.wounds.critical 0) (eq system.wounds.value 0))}}
-                            <div class="wh40k-vital-critical-inline">
-                                <span class="wh40k-crit-label"><i class="fas fa-skull"></i> CRIT</span>
-                                <div class="wh40k-critical-pips-compact">
+                            <div class="wh40k-vital-critical-inline tw-flex tw-items-center tw-gap-[6px] tw-px-2 tw-py-1.5 tw-mt-1 tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.08)] tw-border-l-2 tw-border-l-[color:var(--wh40k-accent-combat)] tw-rounded-r">
+                                <span class="wh40k-crit-label tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-accent-combat)] tw-whitespace-nowrap"><i class="fas fa-skull tw-text-[0.7rem]"></i> CRIT</span>
+                                <div class="wh40k-critical-pips-compact tw-flex tw-gap-[2px] tw-flex-1">
                                     {{#each (array 1 2 3 4 5 6 7 8 9 10) as |level|}}
                                         <button type="button"
-                                                class="wh40k-crit-pip-mini {{#if (lte level ../system.wounds.critical)}}wh40k-crit-pip-mini--filled{{/if}}"
+                                                class="wh40k-crit-pip-mini {{#if (lte level ../system.wounds.critical)}}wh40k-crit-pip-mini--filled tw-bg-[linear-gradient(135deg,var(--wh40k-accent-combat)_0%,color-mix(in_srgb,var(--wh40k-accent-combat),black_10%)_100%)] tw-border-[color:color-mix(in_srgb,var(--wh40k-accent-combat),black_5%)] tw-shadow-[0_0_4px_rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.4),inset_0_1px_0_rgba(255,255,255,0.2)]{{else}}tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.15)] tw-border-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.3)]{{/if}} tw-w-[10px] tw-h-[10px] tw-p-0 tw-border tw-border-solid tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-transition-all tw-shrink-0"
                                                 data-action="setCriticalPip"
                                                 data-crit-level="{{level}}"
                                                 title="Critical Level {{level}} - Click to toggle">
@@ -317,7 +317,7 @@
         </div>
 
         {{!-- RIGHT COLUMN: Combat Actions --}}
-        <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2 wh40k-combat-actions">
+        <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2 wh40k-combat-actions tw-min-w-0 tw-min-h-full">
             {{> systems/wh40k-rpg/templates/actor/panel/combat-actions-panel.hbs}}
         </div>
     </div>

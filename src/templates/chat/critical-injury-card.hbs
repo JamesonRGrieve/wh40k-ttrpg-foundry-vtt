@@ -2,6 +2,7 @@
 {{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
       cardClass=(concat "wh40k-injury-card wh40k-injury-card--" damageType)
       outerExtraClass="tw-overflow-hidden tw-rounded-md"
+      headerStyle=(iff (eq damageType "impact") "background: linear-gradient(135deg, rgba(121,85,72,0.2) 0%, rgba(121,85,72,0.1) 100%); border-bottom-color: rgba(121,85,72,0.3);" (iff (eq damageType "explosive") "background: linear-gradient(135deg, rgba(243,156,18,0.2) 0%, rgba(243,156,18,0.1) 100%); border-bottom-color: rgba(243,156,18,0.3);" (iff (eq damageType "energy") "background: linear-gradient(135deg, rgba(52,152,219,0.2) 0%, rgba(52,152,219,0.1) 100%); border-bottom-color: rgba(52,152,219,0.3);" "background: linear-gradient(135deg, rgba(192,57,43,0.2) 0%, rgba(192,57,43,0.1) 100%); border-bottom-color: rgba(192,57,43,0.3);")))
       image=img
       imageAlt=name
       title=name

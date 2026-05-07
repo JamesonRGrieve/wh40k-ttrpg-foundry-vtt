@@ -76,7 +76,23 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
 
             // Create preview element
             const preview = document.createElement('div');
-            preview.classList.add('wh40k-item-preview', `wh40k-item-preview--${item.type}`);
+            preview.classList.add(
+                'wh40k-item-preview',
+                `wh40k-item-preview--${item.type}`,
+                'tw-hidden',
+                'tw-opacity-0',
+                'tw-max-h-0',
+                'tw-overflow-hidden',
+                'tw-m-0',
+                'tw-p-0',
+                'tw-transition-all',
+                'tw-duration-300',
+                'tw-bg-[var(--wh40k-panel-bg,rgba(0,0,0,0.3))]',
+                'tw-border',
+                'tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))]',
+                'tw-rounded-[var(--wh40k-radius-md)]',
+                'tw-shadow-[inset_0_1px_3px_rgba(0,0,0,0.2)]',
+            );
             preview.dataset.previewId = item.id;
             preview.innerHTML = previewHTML;
 
@@ -95,6 +111,8 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             // Animate in
             requestAnimationFrame(() => {
                 preview.classList.add('wh40k-item-preview--open');
+                preview.classList.remove('tw-hidden', 'tw-opacity-0', 'tw-max-h-0', 'tw-m-0', 'tw-p-0');
+                preview.classList.add('tw-block', 'tw-opacity-100', 'tw-max-h-[1000px]', 'tw-my-2', 'tw-p-3');
             });
         }
 
@@ -106,6 +124,8 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             if (!preview) return;
 
             preview.classList.remove('wh40k-item-preview--open');
+            preview.classList.remove('tw-block', 'tw-opacity-100', 'tw-max-h-[1000px]', 'tw-my-2', 'tw-p-3');
+            preview.classList.add('tw-opacity-0', 'tw-max-h-0');
             setTimeout(() => preview.remove(), 200); // Match CSS transition
 
             this.#openPreviews.delete(itemId);
@@ -153,19 +173,19 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             const actionsHTML = QuickActionsBar.renderActions(actions, false);
 
             return `
-                <div class="wh40k-item-preview-header">
-                    <div class="wh40k-item-preview-title">
-                        <img src="${item.img}" alt="${item.name}" class="wh40k-item-preview-icon" />
+                <div class="wh40k-item-preview-header tw-flex tw-justify-between tw-items-center tw-gap-[var(--wh40k-space-md)] tw-mb-3 tw-pb-2 tw-border-b tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))]">
+                    <div class="wh40k-item-preview-title tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-flex-1 tw-text-[1.1em] tw-font-semibold tw-text-[color:var(--wh40k-text-primary,#fff)]">
+                        <img src="${item.img}" alt="${item.name}" class="wh40k-item-preview-icon tw-w-8 tw-h-8 tw-rounded-[var(--wh40k-radius-md)] tw-border tw-border-[var(--wh40k-panel-border,rgba(255,255,255,0.1))]" />
                         <span>${item.name}</span>
                     </div>
-                    <div class="wh40k-item-preview-actions">
+                    <div class="wh40k-item-preview-actions tw-flex tw-gap-[var(--wh40k-space-xs)] tw-flex-wrap tw-justify-end">
                         ${actionsHTML}
                         <button type="button" class="wh40k-quick-action wh40k-quick-action--secondary" data-action="closeItemPreview" title="Collapse">
                             <i class="fa-solid fa-chevron-up"></i>
                         </button>
                     </div>
                 </div>
-                <div class="wh40k-item-preview-body">
+                <div class="wh40k-item-preview-body tw-text-[0.95em]">
                     ${content}
                 </div>
             `;
@@ -181,7 +201,7 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             const stats = sysRec.stats as { penetration?: number; range?: string; rof?: string };
 
             return `
-                <div class="wh40k-weapon-preview-stats">
+                <div class="wh40k-weapon-preview-stats tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-sm)] tw-mb-2">
                     <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
                         <i class="fa-solid fa-burst tw-text-[var(--wh40k-stat-neutral)]"></i>
                         <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">Damage</span>
@@ -211,7 +231,13 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
                     </div>
                 </div>
                 ${this.#generateQualitiesHTML(sysRec.qualities)}
-                ${sysRec.description ? `<div class="wh40k-item-preview-description">${String(sysRec.description)}</div>` : ''}
+                ${
+                    sysRec.description
+                        ? `<div class="wh40k-item-preview-description tw-mt-2 tw-p-2 tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-leading-[1.5] [&_p:first-child]:tw-mt-0 [&_p:last-child]:tw-mb-0">${String(
+                              sysRec.description,
+                          )}</div>`
+                        : ''
+                }
             `;
         }
 
@@ -224,40 +250,46 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             const locations = (sysRec.locations as Record<string, number | undefined>) ?? {};
 
             return `
-                <div class="wh40k-armour-preview-locations">
+                <div class="wh40k-armour-preview-locations tw-grid tw-grid-cols-[repeat(auto-fit,minmax(120px,1fr))] tw-gap-[6px] tw-mb-2">
                     ${
                         locations.head
-                            ? `<div class="wh40k-armour-location"><span class="wh40k-location-label">Head:</span> <strong>${locations.head}</strong></div>`
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">Head:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations.head}</strong></div>`
                             : ''
                     }
                     ${
                         locations.leftArm
-                            ? `<div class="wh40k-armour-location"><span class="wh40k-location-label">L Arm:</span> <strong>${locations.leftArm}</strong></div>`
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">L Arm:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations.leftArm}</strong></div>`
                             : ''
                     }
                     ${
                         locations.rightArm
-                            ? `<div class="wh40k-armour-location"><span class="wh40k-location-label">R Arm:</span> <strong>${locations.rightArm}</strong></div>`
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">R Arm:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations.rightArm}</strong></div>`
                             : ''
                     }
                     ${
                         locations.body
-                            ? `<div class="wh40k-armour-location"><span class="wh40k-location-label">Body:</span> <strong>${locations.body}</strong></div>`
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">Body:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations.body}</strong></div>`
                             : ''
                     }
                     ${
                         locations.leftLeg
-                            ? `<div class="wh40k-armour-location"><span class="wh40k-location-label">L Leg:</span> <strong>${locations.leftLeg}</strong></div>`
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">L Leg:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations.leftLeg}</strong></div>`
                             : ''
                     }
                     ${
                         locations.rightLeg
-                            ? `<div class="wh40k-armour-location"><span class="wh40k-location-label">R Leg:</span> <strong>${locations.rightLeg}</strong></div>`
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">R Leg:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations.rightLeg}</strong></div>`
                             : ''
                     }
                 </div>
                 ${this.#generateQualitiesHTML(Array.from((sysRec.properties as Iterable<unknown>) ?? []))}
-                ${sysRec.description ? `<div class="wh40k-item-preview-description">${String(sysRec.description)}</div>` : ''}
+                ${
+                    sysRec.description
+                        ? `<div class="wh40k-item-preview-description tw-mt-2 tw-p-2 tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-leading-[1.5] [&_p:first-child]:tw-mt-0 [&_p:last-child]:tw-mb-0">${String(
+                              sysRec.description,
+                          )}</div>`
+                        : ''
+                }
             `;
         }
 
@@ -277,7 +309,7 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             // Prerequisites
             if (sys.prerequisites?.text) {
                 content += `
-                    <div class="wh40k-item-preview-prereqs">
+                    <div class="wh40k-item-preview-prereqs tw-mb-2 tw-p-[6px_8px] tw-bg-[rgba(168,85,247,0.1)] tw-border-l-[3px] tw-border-l-[rgba(168,85,247,0.5)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]">
                         <strong>Prerequisites:</strong> ${sys.prerequisites.text}
                     </div>
                 `;
@@ -285,7 +317,7 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
 
             // Benefit
             if (sys.benefit) {
-                content += `<div class="wh40k-item-preview-benefit">${sys.benefit}</div>`;
+                content += `<div class="wh40k-item-preview-benefit tw-mb-2 tw-leading-[1.5] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))]">${sys.benefit}</div>`;
             }
 
             // Modifiers
@@ -309,11 +341,11 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             let content = '';
 
             if (sys.level) {
-                content += `<div class="wh40k-trait-level"><strong>Level:</strong> ${sys.level}</div>`;
+                content += `<div class="wh40k-trait-level tw-mb-2 tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.95em]"><strong class="tw-text-[color:var(--wh40k-text-primary,#fff)] tw-mr-1">Level:</strong> ${sys.level}</div>`;
             }
 
             if (sys.description) {
-                content += `<div class="wh40k-item-preview-description">${sys.description}</div>`;
+                content += `<div class="wh40k-item-preview-description tw-mt-2 tw-p-2 tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-leading-[1.5] [&_p:first-child]:tw-mt-0 [&_p:last-child]:tw-mb-0">${sys.description}</div>`;
             }
 
             return content;
@@ -332,7 +364,7 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             const sys = item.system as unknown as ConditionSys;
 
             let content = `
-                <div class="wh40k-condition-preview-meta">
+                <div class="wh40k-condition-preview-meta tw-flex tw-flex-wrap tw-gap-[6px] tw-mb-2">
                     ${sys.nature ? `<span class="wh40k-badge wh40k-badge--${sys.nature}">${sys.nature}</span>` : ''}
                     ${sys.duration ? `<span class="wh40k-badge">Duration: ${sys.duration}</span>` : ''}
                     ${(sys.stacks ?? 0) > 1 ? `<span class="wh40k-badge">×${sys.stacks}</span>` : ''}
@@ -340,7 +372,7 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             `;
 
             if (sys.description) {
-                content += `<div class="wh40k-item-preview-description">${sys.description}</div>`;
+                content += `<div class="wh40k-item-preview-description tw-mt-2 tw-p-2 tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-leading-[1.5] [&_p:first-child]:tw-mt-0 [&_p:last-child]:tw-mb-0">${sys.description}</div>`;
             }
 
             return content;

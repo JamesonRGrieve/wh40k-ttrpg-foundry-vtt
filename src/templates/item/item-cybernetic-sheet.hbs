@@ -371,11 +371,11 @@
             <div class="wh40k-modifiers-display">
               
               {{#if system.modifiers.characteristics}}
-              <div class="wh40k-modifier-group">
+              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
                 <h4 class="wh40k-modifier-group-title">Characteristics</h4>
                 <div class="wh40k-modifier-list">
                   {{#each system.modifiers.characteristics}}
-                  <div class="wh40k-modifier-item">
+                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
                     <span class="wh40k-modifier-name">{{capitalize @key}}</span>
                     <span class="wh40k-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
                       {{signedNumber this}}
@@ -385,13 +385,13 @@
                 </div>
               </div>
               {{/if}}
-              
+
               {{#if system.modifiers.skills}}
-              <div class="wh40k-modifier-group">
+              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
                 <h4 class="wh40k-modifier-group-title">Skills</h4>
                 <div class="wh40k-modifier-list">
                   {{#each system.modifiers.skills}}
-                  <div class="wh40k-modifier-item">
+                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
                     <span class="wh40k-modifier-name">{{capitalize @key}}</span>
                     <span class="wh40k-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
                       {{signedNumber this}}
@@ -401,13 +401,13 @@
                 </div>
               </div>
               {{/if}}
-              
+
               {{#if system.modifiers.combat}}
-              <div class="wh40k-modifier-group">
+              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
                 <h4 class="wh40k-modifier-group-title">Combat</h4>
                 <div class="wh40k-modifier-list">
                   {{#each system.modifiers.combat}}
-                  <div class="wh40k-modifier-item">
+                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
                     <span class="wh40k-modifier-name">{{capitalize @key}}</span>
                     <span class="wh40k-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
                       {{signedNumber this}}
@@ -417,12 +417,12 @@
                 </div>
               </div>
               {{/if}}
-              
+
               {{#if system.modifiers.wounds}}
-              <div class="wh40k-modifier-group">
+              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
                 <h4 class="wh40k-modifier-group-title">Other</h4>
                 <div class="wh40k-modifier-list">
-                  <div class="wh40k-modifier-item">
+                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
                     <span class="wh40k-modifier-name">Wounds</span>
                     <span class="wh40k-modifier-value {{#if (gt system.modifiers.wounds 0)}}positive{{else}}negative{{/if}}">
                       {{signedNumber system.modifiers.wounds}}
@@ -431,12 +431,12 @@
                 </div>
               </div>
               {{/if}}
-              
+
               {{#if system.modifiers.movement}}
-              <div class="wh40k-modifier-group">
+              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
                 <h4 class="wh40k-modifier-group-title">Movement</h4>
                 <div class="wh40k-modifier-list">
-                  <div class="wh40k-modifier-item">
+                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
                     <span class="wh40k-modifier-name">Movement Bonus</span>
                     <span class="wh40k-modifier-value {{#if (gt system.modifiers.movement 0)}}positive{{else}}negative{{/if}}">
                       {{signedNumber system.modifiers.movement}}
