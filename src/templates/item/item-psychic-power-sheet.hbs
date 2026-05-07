@@ -28,44 +28,44 @@
         </header>
 
         <!-- Quick Stats Bar -->
-        <div class="wh40k-quick-stats tw-flex tw-flex-wrap tw-gap-2 tw-px-3 tw-py-2 tw-shrink-0">
+        <div class="tw-flex tw-flex-wrap tw-gap-2 tw-px-3 tw-py-2 tw-shrink-0 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-b tw-border-[var(--wh40k-border-color-light)]">
             {{#if item.system.action}}
-            <div class="wh40k-stat-badge wh40k-stat-badge--psychic tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
-                <span class="wh40k-stat-badge__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-bolt"></i></span>
-                <span class="wh40k-stat-badge__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">ACTION</span>
-                <span class="wh40k-stat-badge__value tw-font-semibold">{{item.system.action}}</span>
+            <div class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm tw-border tw-border-[#8b00ff] tw-bg-[linear-gradient(135deg,rgba(106,13,173,0.4)_0%,rgba(139,0,255,0.2)_100%)]">
+                <span class="tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-bolt"></i></span>
+                <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">ACTION</span>
+                <span class="tw-font-semibold">{{item.system.action}}</span>
             </div>
             {{/if}}
 
             {{#if item.system.range}}
-            <div class="wh40k-stat-badge tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
-                <span class="wh40k-stat-badge__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-arrows-left-right"></i></span>
-                <span class="wh40k-stat-badge__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">RANGE</span>
-                <span class="wh40k-stat-badge__value tw-font-semibold">{{item.system.range}}</span>
+            <div class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm tw-border tw-border-[color:var(--wh40k-border-color-light)] tw-bg-[color:var(--wh40k-panel-bg)]">
+                <span class="tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-arrows-left-right"></i></span>
+                <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">RANGE</span>
+                <span class="tw-font-semibold">{{item.system.range}}</span>
             </div>
             {{/if}}
 
             {{#if item.system.sustained}}
-            <div class="wh40k-stat-badge tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
-                <span class="wh40k-stat-badge__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-clock"></i></span>
-                <span class="wh40k-stat-badge__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">SUSTAINED</span>
-                <span class="wh40k-stat-badge__value tw-font-semibold">{{item.system.sustained}}</span>
+            <div class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm tw-border tw-border-[color:var(--wh40k-border-color-light)] tw-bg-[color:var(--wh40k-panel-bg)]">
+                <span class="tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-clock"></i></span>
+                <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">SUSTAINED</span>
+                <span class="tw-font-semibold">{{item.system.sustained}}</span>
             </div>
             {{/if}}
 
             {{#if item.system.subtype}}
-            <div class="wh40k-stat-badge tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
-                <span class="wh40k-stat-badge__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-tags"></i></span>
-                <span class="wh40k-stat-badge__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">TYPE</span>
-                <span class="wh40k-stat-badge__value tw-font-semibold">{{item.system.subtype}}</span>
+            <div class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm tw-border tw-border-[color:var(--wh40k-border-color-light)] tw-bg-[color:var(--wh40k-panel-bg)]">
+                <span class="tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-tags"></i></span>
+                <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">TYPE</span>
+                <span class="tw-font-semibold">{{item.system.subtype}}</span>
             </div>
             {{/if}}
 
             {{#if item.system.cost}}
-            <div class="wh40k-stat-badge tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
-                <span class="wh40k-stat-badge__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-gem"></i></span>
-                <span class="wh40k-stat-badge__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">XP</span>
-                <span class="wh40k-stat-badge__value tw-font-semibold">{{item.system.cost}}</span>
+            <div class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm tw-border tw-border-[color:var(--wh40k-border-color-light)] tw-bg-[color:var(--wh40k-panel-bg)]">
+                <span class="tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-gem"></i></span>
+                <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">XP</span>
+                <span class="tw-font-semibold">{{item.system.cost}}</span>
             </div>
             {{/if}}
         </div>
@@ -248,10 +248,10 @@
                         </div>
                     </div>
                     <div class="wh40k-panel__content tw-p-3">
-                        <div class="wh40k-tags tw-flex tw-flex-wrap tw-gap-1">
+                        <div class="tw-flex tw-flex-wrap tw-gap-1">
                             {{#each item.items as |embedded|}}
                             {{#if embedded.isAttackSpecial}}
-                            <span class="wh40k-tag wh40k-tag--psychic tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs" data-item-id="{{embedded.id}}">
+                            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-border tw-border-[#8b00ff] tw-bg-[rgba(106,13,173,0.2)] tw-text-[#6a0dad] dark:tw-bg-[rgba(106,13,173,0.3)] dark:tw-text-[#d8a8ff]" data-item-id="{{embedded.id}}">
                                 {{embedded.name}}
                                 {{#if embedded.system.level}}({{embedded.system.level}}){{/if}}
                                 <i class="fas fa-times item-delete tw-cursor-pointer tw-ml-1" data-item-id="{{embedded.id}}"></i>
@@ -278,7 +278,7 @@
                             {{#if inEditMode}}
                               {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
                             {{else}}
-                              <div class="wh40k-description-content">{{{system.description.value}}}</div>
+                              <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.description.value}}}</div>
                             {{/if}}
                         </div>
                     </div>

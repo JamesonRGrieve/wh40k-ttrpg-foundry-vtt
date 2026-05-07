@@ -1,0 +1,562 @@
+[
+  {
+    "source": "src/css/abstracts/_index.css",
+    "classification": "EMPTY",
+    "line_count": 5,
+    "active_classes": [],
+    "chrome_selectors": [],
+    "notes": "Contains only a comment block (Abstracts Index header). No rules, no selectors."
+  },
+  {
+    "source": "src/css/abstracts/_gothic-theme.css",
+    "classification": "CHROME",
+    "line_count": 574,
+    "active_classes": [],
+    "chrome_selectors": [":root {", "body.theme-light {", "body.theme-dark {", ":root,", "body.theme-light,"],
+    "notes": "Defines 201 CSS custom properties (--wh40k-*) under :root and body.theme-light/dark. 62 of those variables are referenced via var(--wh40k-*) in templates/TS files (e.g. --wh40k-gold, --wh40k-panel-bg, --wh40k-space-md, --wh40k-border-color, --wh40k-input-bg, --wh40k-radius-sm, --wh40k-transition-base, etc.) and in combat-quick-panel.hbs. Removing this block would silently degrade all var() fallbacks throughout the UI. Also defines utility classes: theme-dark, theme-light, wh40k-panel, wh40k-panel-header, wh40k-input, wh40k-text-primary, wh40k-text-secondary, wh40k-text-muted, wh40k-divider, wh40k-bg-primary, wh40k-bg-secondary, wh40k-bg-tertiary — several of which are still used in templates (wh40k-panel-header 65 hits, wh40k-text-muted 161 hits, wh40k-bg-primary 12 hits, wh40k-bg-secondary 11 hits, wh40k-bg-tertiary 2 hits, wh40k-text-primary 13 hits, wh40k-text-secondary 30 hits, wh40k-divider 4 hits, wh40k-input 63 hits). NOT SAFE to delete.",
+    "active_examples": [
+      "src/templates/actor/panel/combat-actions-panel.hbs (wh40k-panel)",
+      "src/templates/actor/panel/combat-actions-panel.hbs (wh40k-panel-header)",
+      "src/templates/applications/compendium-browser.hbs (wh40k-text-muted)",
+      "src/templates/hud/combat-quick-panel.hbs (var(--wh40k-bronze))",
+      "src/templates/prompt/release-notes-prompt.hbs (wh40k-bg-primary, wh40k-bg-secondary)"
+    ]
+  },
+  {
+    "source": "src/css/abstracts/_unified-components.css",
+    "classification": "CHROME",
+    "line_count": 1122,
+    "active_classes": [
+      "collapsed", "wh40k-btn-icon", "wh40k-btn-primary", "wh40k-control-button",
+      "wh40k-dropzone", "wh40k-dropzone-icon", "wh40k-dropzone-text",
+      "wh40k-field-input", "wh40k-group-icon", "wh40k-header-btn",
+      "wh40k-input", "wh40k-panel", "wh40k-panel-body", "wh40k-panel-chevron",
+      "wh40k-panel-details", "wh40k-panel-header", "wh40k-panel-header--clickable",
+      "wh40k-panel-title", "wh40k-textarea",
+      "wh40k-vital-btn", "wh40k-vital-critical", "wh40k-vital-ctrl-btn",
+      "wh40k-vital-fate", "wh40k-vital-fatigue", "wh40k-vital-input", "wh40k-vital-label",
+      "wh40k-vital-readout", "wh40k-vital-stat", "wh40k-vital-stat-body",
+      "wh40k-vital-stat-header", "wh40k-vital-warning", "wh40k-vital-wounds"
+    ],
+    "chrome_selectors": [":root {"],
+    "active_examples": [
+      "src/templates/actor/panel/combat-actions-panel.hbs (wh40k-panel: 388 hits)",
+      "src/templates/actor/panel/combat-actions-panel.hbs (wh40k-panel-header: 65 hits)",
+      "src/templates/actor/panel/ship-crew-panel.hbs (wh40k-input: 63 hits)",
+      "src/templates/actor/panel/vehicle-integrity-panel.hbs (wh40k-control-button: 5 hits)",
+      "src/templates/item/npc-template/tab-characteristics.hbs (wh40k-btn-icon: 12 hits)"
+    ],
+    "notes": "32 of 57 classes actively used. Also defines :root vars (--wh40k-text-h1 through --wh40k-text-micro, --wh40k-font-numeric, --wh40k-font-body-alt) referenced in panels/_core.css, panels/_vitals.css, actor/_biography-origin-panel.css within the monolith. NOT SAFE to delete."
+  },
+  {
+    "source": "src/css/layout/_utilities.css",
+    "classification": "ACTIVE",
+    "line_count": 65,
+    "active_classes": ["wh40k-panel", "wh40k-text-muted"],
+    "active_examples": [
+      "src/templates/actor/panel/combat-actions-panel.hbs (wh40k-panel: 388 hits)",
+      "src/templates/applications/compendium-browser.hbs (wh40k-text-muted: 161 hits)"
+    ],
+    "chrome_selectors": [],
+    "notes": "Defines wh40k-panel (also defined in unified-components) and wh40k-text-muted (also in gothic-theme). Classes wh40k-full-width, wh40k-tab-col, wh40k-tab-grid have no active references but the block shares classes with other blocks still in use."
+  },
+  {
+    "source": "src/css/item/_index.css",
+    "classification": "EMPTY",
+    "line_count": 22,
+    "active_classes": [],
+    "chrome_selectors": [],
+    "notes": "Four separate marker blocks (lines 1810-1820, 2434-2438, 4218-4220, 17764-17766) containing only comments and whitespace. No CSS rules."
+  },
+  {
+    "source": "src/css/item/_item-shared-base.css",
+    "classification": "ACTIVE",
+    "line_count": 240,
+    "active_classes": ["wh40k-item-sheet", "wh40k-field", "wh40k-field-grid", "wh40k-armour-section", "wh40k-empty-text"],
+    "active_examples": [
+      "src/templates/item/item-sheet.hbs:1 (wh40k-item-sheet: 13 hits)",
+      "src/templates/actor/player/tab-biography.hbs (wh40k-field: 59 hits)",
+      "src/templates/item/item-ammo-sheet.hbs (wh40k-field-grid: 3 hits)",
+      "src/templates/item/item-armour-sheet.hbs:171 (wh40k-armour-section: 8 hits)",
+      "src/templates/actor/panel/backpack-split-panel.hbs:99 (wh40k-empty-text: 5 hits)"
+    ],
+    "chrome_selectors": ["textarea {", "input[type='number'],", ":root {", "input[type='text'],", "h3 {"],
+    "notes": "Also contains :root and bare HTML element selectors for input/textarea/h3 styling."
+  },
+  {
+    "source": "src/css/item/_item-shared-components.css",
+    "classification": "ACTIVE",
+    "line_count": 373,
+    "active_classes": [
+      "wh40k-badge", "wh40k-btn", "wh40k-empty-state", "wh40k-expandable",
+      "wh40k-expansion-panel", "wh40k-property-detail", "wh40k-property-tag",
+      "wh40k-property-tags", "wh40k-tag", "wh40k-tag-list"
+    ],
+    "active_examples": [
+      "src/templates/actor/panel/active-effects-panel.hbs (wh40k-badge: 40 hits)",
+      "src/templates/item/item-ammo-sheet.hbs:258 (wh40k-btn: 25 exact hits)",
+      "src/templates/actor/panel/backpack-split-panel.hbs (wh40k-empty-state: 26 hits)",
+      "src/templates/item/panel/expandable-section.hbs:22 (wh40k-expandable: 6 hits)",
+      "src/templates/item/panel/quality-tags.hbs:55 (wh40k-expansion-panel: 7 hits)"
+    ],
+    "chrome_selectors": ["p {"],
+    "notes": "wh40k-badge-row has no active references. wh40k-tag is used (4 hits). wh40k-tags (separate class) also active. p { bare selector present."
+  },
+  {
+    "source": "src/css/item/_base.css",
+    "classification": "ACTIVE",
+    "line_count": 66,
+    "active_classes": ["wh40k-item-sheet", "wh40k-tab-content"],
+    "active_examples": [
+      "src/templates/item/item-sheet.hbs:1 (wh40k-item-sheet: 13 hits)",
+      "src/templates/item/item-weapon-quality-sheet.hbs:98 (wh40k-tab-content: 22 hits)"
+    ],
+    "chrome_selectors": [],
+    "notes": "Also references Foundry's .window-content and .sheet classes as ancestor selectors. Classes 'item', 'scss', 'sheet', 'wh40k-rpg' are framework/structural classes not unique to this block."
+  },
+  {
+    "source": "src/css/item/_header.css",
+    "classification": "ACTIVE",
+    "line_count": 155,
+    "active_classes": ["wh40k-item-header", "wh40k-item-image", "wh40k-item-meta", "wh40k-item-title", "wh40k-meta-badge"],
+    "active_examples": [
+      "src/templates/item/item-sheet.hbs:4 (wh40k-item-header: 4 hits)",
+      "src/templates/item/item-sheet.hbs:5 (wh40k-item-image: 4 hits)",
+      "src/templates/item/item-weapon-sheet.hbs:23 (wh40k-item-meta: 3 hits)",
+      "src/templates/item/item-sheet.hbs:9 (wh40k-item-title: 4 hits)",
+      "src/templates/item/item-weapon-sheet.hbs:24 (wh40k-meta-badge: 6 hits)"
+    ],
+    "chrome_selectors": [],
+    "notes": "wh40k-item-title__name (4 hits), wh40k-item-title__type (2 hits) also active. All header classes still referenced."
+  },
+  {
+    "source": "src/css/item/_stats.css",
+    "classification": "ACTIVE",
+    "line_count": 97,
+    "active_classes": ["material-icons", "wh40k-quick-stats", "wh40k-stat-badge", "wh40k-stat-badge__icon"],
+    "active_examples": [
+      "src/templates/actor/panel/acquisitions-panel.hbs:14 (material-icons: 47 hits)",
+      "src/templates/item/item-psychic-power-sheet.hbs:31 (wh40k-quick-stats: 1 hit)",
+      "src/templates/item/item-psychic-power-sheet.hbs:33 (wh40k-stat-badge: 20 hits)",
+      "src/templates/item/item-psychic-power-sheet.hbs:34 (wh40k-stat-badge__icon: 5 hits)"
+    ],
+    "chrome_selectors": [],
+    "notes": "material-icons is a Google Material Icons font class used 47 times. wh40k-stat-badge__value (5 hits) also active."
+  },
+  {
+    "source": "src/css/item/_tabs.css",
+    "classification": "ACTIVE",
+    "line_count": 108,
+    "active_classes": ["wh40k-panel", "wh40k-panel__actions", "wh40k-panel__content", "wh40k-panel__header", "wh40k-tab", "wh40k-tab-content", "wh40k-tabs"],
+    "active_examples": [
+      "src/templates/actor/panel/combat-actions-panel.hbs (wh40k-panel: 388 hits)",
+      "src/templates/item/item-sheet.hbs:36 (wh40k-panel__content: 12 hits)",
+      "src/templates/item/item-sheet.hbs:33 (wh40k-panel__header: 12 hits)",
+      "src/templates/actor/vehicle/tabs.hbs:5 (wh40k-tab: 69 hits)",
+      "src/templates/item/item-weapon-quality-sheet.hbs:98 (wh40k-tab-content: 22 hits)"
+    ],
+    "chrome_selectors": ["h3 {"],
+    "notes": "wh40k-panel__actions has 1 hit. All major tab/panel classes actively referenced."
+  },
+  {
+    "source": "src/css/item/_item-tabs.css",
+    "classification": "ACTIVE",
+    "line_count": 114,
+    "active_classes": [
+      "wh40k-origin-content", "wh40k-origin-panel", "wh40k-origin-tab", "wh40k-origin-tabs",
+      "wh40k-talent-content", "wh40k-talent-panel", "wh40k-talent-tab", "wh40k-talent-tabs",
+      "wh40k-trait-content", "wh40k-trait-panel", "wh40k-trait-tab", "wh40k-trait-tabs"
+    ],
+    "active_examples": [
+      "src/templates/item/item-origin-path-sheet.hbs:85 (wh40k-origin-content: 2 hits)",
+      "src/templates/item/item-origin-path-sheet.hbs:88 (wh40k-origin-panel: 4 hits)",
+      "src/templates/item/item-origin-path-sheet.hbs:64 (wh40k-origin-tab: 4 hits)",
+      "src/templates/item/talent-sheet.hbs:213 (wh40k-talent-content: 3 hits)",
+      "src/templates/item/item-trait-sheet.hbs:111 (wh40k-trait-content: 2 hits)"
+    ],
+    "chrome_selectors": [],
+    "notes": "All 12 item-tab-specific classes are actively referenced."
+  },
+  {
+    "source": "src/css/item/_forms.css",
+    "classification": "ACTIVE",
+    "line_count": 176,
+    "active_classes": ["wh40k-description", "wh40k-empty-state", "wh40k-field", "wh40k-field-grid"],
+    "active_examples": [
+      "src/templates/item/item-ammo-sheet.hbs:354 (wh40k-description: 29 hits)",
+      "src/templates/actor/panel/backpack-split-panel.hbs (wh40k-empty-state: 26 hits)",
+      "src/templates/actor/player/tab-biography.hbs (wh40k-field: 59 hits)",
+      "src/templates/item/item-ammo-sheet.hbs:139 (wh40k-field-grid: 3 hits)"
+    ],
+    "chrome_selectors": ["p {", "ol {", ".editor {", "h1,", "h4 {"],
+    "notes": "Also contains Foundry .editor class selector. Bare element selectors (p, ol, h1, h4) present."
+  },
+  {
+    "source": "src/css/item/_content.css",
+    "classification": "ACTIVE",
+    "line_count": 118,
+    "active_classes": ["wh40k-tag", "wh40k-tags"],
+    "active_examples": [
+      "src/templates/actor/npc/tab-npc.hbs:106 (wh40k-tag: 4 hits)",
+      "src/templates/item/item-psychic-power-sheet.hbs:251 (wh40k-tags: 1 hit)"
+    ],
+    "chrome_selectors": [],
+    "notes": "wh40k-damage-display has no active references but wh40k-tag and wh40k-tags are still used."
+  },
+  {
+    "source": "src/css/item/_buttons.css",
+    "classification": "ACTIVE",
+    "line_count": 96,
+    "active_classes": ["wh40k-btn", "wh40k-table"],
+    "active_examples": [
+      "src/templates/item/item-ammo-sheet.hbs:258 (wh40k-btn: 25 exact hits)",
+      "src/templates/actor/partial/item-table.hbs:21 (wh40k-table: 2 hits)"
+    ],
+    "chrome_selectors": ["td {", "th {", "th,"],
+    "notes": "Contains bare td/th selectors scoped under wh40k-table."
+  },
+  {
+    "source": "src/css/item/_tables.css",
+    "classification": "SAFE",
+    "line_count": 61,
+    "active_classes": [],
+    "active_examples": [],
+    "chrome_selectors": [],
+    "notes": "Defines wh40k-mod-row and wh40k-tier-badge. Neither class found in any template or TS file."
+  },
+  {
+    "source": "src/css/item/_tags.css",
+    "classification": "ACTIVE",
+    "line_count": 126,
+    "active_classes": ["wh40k-stat-badge", "wh40k-stat-badge__value", "wh40k-tag"],
+    "active_examples": [
+      "src/templates/item/item-psychic-power-sheet.hbs:33 (wh40k-stat-badge: 20 hits)",
+      "src/templates/item/item-psychic-power-sheet.hbs:36 (wh40k-stat-badge__value: 5 hits)",
+      "src/templates/actor/npc/tab-npc.hbs:106 (wh40k-tag: 4 hits)"
+    ],
+    "chrome_selectors": [],
+    "notes": "wh40k-field__textarea has 1 active hit (vehicle-crew-panel.hbs). theme-dark is a Foundry body class, not a product class."
+  },
+  {
+    "source": "src/css/item/_compact.css",
+    "classification": "ACTIVE",
+    "line_count": 171,
+    "active_classes": ["wh40k-description-content", "wh40k-item-title__name", "wh40k-item-title__type", "wh40k-requirements"],
+    "active_examples": [
+      "src/templates/item/item-ammo-sheet.hbs:354 (wh40k-description-content: 26 hits)",
+      "src/templates/item/item-sheet.hbs:10 (wh40k-item-title__name: 4 hits)",
+      "src/templates/item/item-sheet.hbs:11 (wh40k-item-title__type: 2 hits)",
+      "src/templates/item/item-trait-sheet.hbs:159 (wh40k-requirements used as prefix in wh40k-requirements-display)"
+    ],
+    "chrome_selectors": ["p {"],
+    "notes": "Classes wh40k-benefit-group, wh40k-benefit-label, wh40k-benefit-tag, wh40k-benefit-tags, wh40k-compact-content, wh40k-compact-description, wh40k-item-header--compact, wh40k-item-image--small, wh40k-item-sheet--compact, wh40k-origin-benefits, wh40k-origin-step have no active references. But wh40k-description-content (26 hits), wh40k-item-title__name (4 hits) are active. wh40k-requirements matches as a prefix of wh40k-requirements-display — exact match not confirmed."
+  },
+  {
+    "source": "src/css/item/_misc.css",
+    "classification": "ACTIVE",
+    "line_count": 253,
+    "active_classes": [
+      "browser-body", "browser-header", "browser-results", "browser-sidebar",
+      "clear-filters", "compendium-item", "filter-group", "item-details",
+      "item-image", "item-meta", "item-name", "item-type", "no-results",
+      "results-group", "results-group-count", "results-group-header",
+      "results-group-title", "results-header", "results-list", "wh40k-compendium-browser"
+    ],
+    "active_examples": [
+      "src/templates/applications/compendium-browser.hbs:1 (wh40k-compendium-browser: 5 hits)",
+      "src/templates/applications/compendium-browser.hbs:7 (browser-body: 1 hit)",
+      "src/templates/applications/compendium-browser.hbs:2 (browser-header: 1 hit)",
+      "src/templates/applications/compendium-browser.hbs:12 (filter-group: 13 hits)",
+      "src/templates/applications/compendium-browser.hbs:128 (compendium-item: 2 hits)"
+    ],
+    "chrome_selectors": ["p {", "input,", "select {", "h1 {", "h3 {"],
+    "notes": "All 20 classes are actively used in compendium-browser.hbs."
+  },
+  {
+    "source": "src/css/item/_sheets.css",
+    "classification": "ACTIVE",
+    "line_count": 238,
+    "active_classes": [
+      "wh40k-item-sheet__effect", "wh40k-item-sheet__effects-list",
+      "wh40k-item-sheet__empty", "wh40k-item-sheet__panel",
+      "wh40k-item-sheet__panel-count", "wh40k-item-sheet__panel-title"
+    ],
+    "active_examples": [
+      "src/templates/item/item-journal-entry-sheet.hbs:17 (wh40k-item-sheet__panel: 10 hits)",
+      "src/templates/item/item-journal-entry-sheet.hbs:18 (wh40k-item-sheet__panel-title: 4 hits)",
+      "src/templates/item/item-storage-location-sheet.hbs:55 (wh40k-item-sheet__empty: 1 hit)",
+      "src/templates/item/item-storage-location-sheet.hbs:34 (wh40k-item-sheet__panel-count: 1 hit)"
+    ],
+    "chrome_selectors": ["p {", "h2.wh40k-item-sheet__panel-title {"],
+    "notes": "wh40k-item-sheet__effect-btn, wh40k-item-sheet__effect-controls, wh40k-item-sheet__effect-name have no active references. wh40k-armour-diagram and wh40k-mod-row have no active references. wh40k-item-sheet__panel-action has no active references."
+  },
+  {
+    "source": "src/css/item/_weapon.css",
+    "classification": "ACTIVE",
+    "line_count": 3974,
+    "active_classes": [
+      "wh40k-ammo-dropzone", "wh40k-ammo-mod", "wh40k-body-toggle", "wh40k-description-editor",
+      "wh40k-edit-toggle", "wh40k-empty-hint", "wh40k-empty-state--mods",
+      "wh40k-fab", "wh40k-fab-actions", "wh40k-fab-container",
+      "wh40k-float-field", "wh40k-float-field__arrow", "wh40k-float-field__bar",
+      "wh40k-form-grid", "wh40k-hint",
+      "wh40k-iconic-stat", "wh40k-iconic-stat--action", "wh40k-iconic-stat--attack",
+      "wh40k-iconic-stat--clickable", "wh40k-iconic-stat--disabled", "wh40k-iconic-stat--reload",
+      "wh40k-iconic-stat__glow", "wh40k-iconic-stat__label", "wh40k-iconic-stat__progress",
+      "wh40k-iconic-stat__shape", "wh40k-iconic-stat__value",
+      "wh40k-input--readonly", "wh40k-loaded-ammo-card",
+      "wh40k-meta-badge--weapon", "wh40k-meta-badge--weapon-class", "wh40k-meta-badge--weapon-type",
+      "wh40k-mod-card", "wh40k-mod-card__name", "wh40k-mod-chip",
+      "wh40k-mod-dropzone", "wh40k-mod-effect", "wh40k-mod-item", "wh40k-mods-inline", "wh40k-mods-list",
+      "wh40k-prose", "wh40k-prose-editor",
+      "wh40k-quality-tag", "wh40k-quality-tags", "wh40k-rof-grid",
+      "wh40k-section", "wh40k-section__body", "wh40k-section__header", "wh40k-section__toggle",
+      "wh40k-toggle-equipped", "wh40k-toggle-equipped__indicator", "wh40k-toggle-equipped__label",
+      "wh40k-toggle-row", "wh40k-toggle-switch", "wh40k-toggle-switch--readonly",
+      "wh40k-toggle-switch__slider", "wh40k-weapon-body", "wh40k-weapon-card",
+      "wh40k-weapon-header-actions", "wh40k-weapon-meta", "wh40k-weapon-mosaic",
+      "wh40k-weapon-sheet-v3", "wh40k-weapon-sticky-header"
+    ],
+    "active_examples": [
+      "src/templates/item/item-weapon-sheet.hbs:5 (wh40k-weapon-sheet-v3)",
+      "src/templates/item/item-weapon-sheet.hbs:58 (wh40k-iconic-stat: multiple)",
+      "src/templates/item/item-weapon-sheet.hbs:224 (wh40k-loaded-ammo-card)",
+      "src/templates/chat/weapon-card-chat.hbs:6 (wh40k-weapon-card)",
+      "src/module/applications/item/weapon-sheet.ts:839 (wh40k-fab querySelector)"
+    ],
+    "chrome_selectors": ["input {", ".editor-menu {", "select:not(:focus) ~ label {", "button {", "select:focus ~ label,"],
+    "notes": "62 of 135 classes still actively referenced. NOT SAFE to delete."
+  },
+  {
+    "source": "src/css/item/_weapon-quality-sheet.css",
+    "classification": "ACTIVE",
+    "line_count": 444,
+    "active_classes": [
+      "wh40k-field-row", "wh40k-hint-text", "wh40k-quality-badge",
+      "wh40k-quality-content", "wh40k-quality-header", "wh40k-quality-header__image-overlay",
+      "wh40k-quality-panel", "wh40k-quality-section", "wh40k-quality-section__header",
+      "wh40k-quality-stat", "wh40k-quality-stats", "wh40k-quality-tab",
+      "wh40k-quality-tabs", "wh40k-weapon-quality-sheet"
+    ],
+    "active_examples": [
+      "src/templates/item/item-weapon-quality-sheet.hbs (multiple class hits)",
+      "src/templates/item/talent-sheet.hbs:618 (wh40k-hint-text: 3 hits)",
+      "src/templates/actor/player/tab-dynasty.hbs:125 (wh40k-field-row: 5 hits)"
+    ],
+    "chrome_selectors": ["textarea {", "input,", ".editor {", "input[type='checkbox'] {", "h3 {"],
+    "notes": "All quality-sheet-specific classes are still referenced in the weapon quality sheet template."
+  },
+  {
+    "source": "src/css/item/_armour.css",
+    "classification": "ACTIVE",
+    "line_count": 982,
+    "active_classes": [
+      "wh40k-armour-ap-field", "wh40k-armour-ap-grid", "wh40k-armour-badge",
+      "wh40k-armour-content", "wh40k-armour-header", "wh40k-armour-header__image-overlay",
+      "wh40k-armour-section", "wh40k-armour-sheet", "wh40k-armour-stat",
+      "wh40k-armour-stat__icon", "wh40k-armour-stat__value", "wh40k-armour-stats",
+      "wh40k-armour-tab", "wh40k-armour-tabs", "wh40k-empty-state",
+      "wh40k-mod-item", "wh40k-toggle-equipped", "wh40k-toggle-equipped__indicator",
+      "wh40k-toggle-equipped__label"
+    ],
+    "active_examples": [
+      "src/templates/item/item-armour-sheet.hbs:5 (wh40k-armour-sheet)",
+      "src/templates/item/item-armour-sheet.hbs:22 (wh40k-armour-badge: 4 hits)",
+      "src/templates/item/item-armour-sheet.hbs:177 (wh40k-armour-ap-grid: 2 hits)",
+      "src/templates/item/item-armour-sheet.hbs:178 (wh40k-armour-ap-field: 12 hits)",
+      "src/templates/item/item-armour-sheet.hbs:56 (wh40k-toggle-equipped)"
+    ],
+    "chrome_selectors": ["textarea {", "input {", "p {", "input,", ".editor {"],
+    "notes": "wh40k-action-btn (4 hits), wh40k-modification-list, wh40k-modification-row have no active references. Core armour classes all active."
+  },
+  {
+    "source": "src/css/item/_armour-modification.css",
+    "classification": "ACTIVE",
+    "line_count": 631,
+    "active_classes": [
+      "armour-modification", "wh40k-field", "wh40k-field-input",
+      "wh40k-field-label", "wh40k-field-row"
+    ],
+    "active_examples": [
+      "src/module/applications/item/armour-mod-sheet.ts:15 (armour-modification class)",
+      "src/templates/actor/player/tab-biography.hbs (wh40k-field: 59 hits)",
+      "src/templates/actor/player/tab-dynasty.hbs:127 (wh40k-field-input: 2 hits)",
+      "src/templates/actor/player/tab-biography.hbs:80 (wh40k-field-label: 10 hits)",
+      "src/templates/actor/player/tab-dynasty.hbs:125 (wh40k-field-row: 5 hits)"
+    ],
+    "chrome_selectors": ["input[type='checkbox'] {", ".editor {", "h3 {"],
+    "notes": "Classes wh40k-armour-mod-effect, wh40k-armour-mod-header, wh40k-armour-mod-modifiers, wh40k-armour-mod-properties, wh40k-armour-mod-restrictions, wh40k-armour-mod-summary, wh40k-field--editor, wh40k-field-select, wh40k-field-textarea have no active references. But armour-modification (sheet class), wh40k-field, wh40k-field-input, wh40k-field-label, wh40k-field-row are used."
+  },
+  {
+    "source": "src/css/item/_gear.css",
+    "classification": "ACTIVE",
+    "line_count": 581,
+    "active_classes": [
+      "wh40k-checkbox", "wh40k-consumable-actions", "wh40k-field",
+      "wh40k-field-row", "wh40k-gear-badge", "wh40k-gear-column",
+      "wh40k-gear-content", "wh40k-gear-grid", "wh40k-gear-header",
+      "wh40k-gear-header__image-overlay", "wh40k-gear-panel", "wh40k-gear-section",
+      "wh40k-gear-section__body", "wh40k-gear-sheet", "wh40k-gear-tab", "wh40k-gear-tabs"
+    ],
+    "active_examples": [
+      "src/templates/item/item-gear-sheet.hbs:5 (wh40k-gear-sheet: 1 hit)",
+      "src/templates/item/item-gear-sheet.hbs:11 (wh40k-gear-header: 1 hit)",
+      "src/templates/item/item-gear-sheet.hbs:127 (wh40k-gear-content: 1 hit)",
+      "src/templates/actor/panel/psy-panel.hbs:23 (wh40k-checkbox: 10 hits)",
+      "src/templates/item/item-gear-sheet.hbs:337 (wh40k-consumable-actions: 1 hit)"
+    ],
+    "chrome_selectors": ["textarea {", "input,", ".editor {", "input[type='checkbox']:checked + i {", "input[type='checkbox'] {"],
+    "notes": "wh40k-gear-badge--best/common/good/poor (craftsmanship variants) have no active references. Core gear layout classes all active."
+  },
+  {
+    "source": "src/css/item/_cybernetic.css",
+    "classification": "ACTIVE",
+    "line_count": 472,
+    "active_classes": [
+      "wh40k-cybernetic-badge", "wh40k-cybernetic-content",
+      "wh40k-cybernetic-header", "wh40k-cybernetic-header__image-overlay",
+      "wh40k-cybernetic-panel", "wh40k-cybernetic-section",
+      "wh40k-cybernetic-section__body", "wh40k-cybernetic-sheet",
+      "wh40k-cybernetic-stat", "wh40k-cybernetic-stat__icon", "wh40k-cybernetic-stat__value",
+      "wh40k-cybernetic-stats", "wh40k-cybernetic-tab", "wh40k-cybernetic-tabs"
+    ],
+    "active_examples": [
+      "src/templates/item/item-cybernetic-sheet.hbs:5 (wh40k-cybernetic-sheet: 2 hits)",
+      "src/templates/item/item-cybernetic-sheet.hbs:11 (wh40k-cybernetic-header: 1 hit)",
+      "src/templates/item/item-cybernetic-sheet.hbs:23 (wh40k-cybernetic-badge: 4 hits)",
+      "src/templates/item/item-cybernetic-sheet.hbs:62 (wh40k-cybernetic-stats: 1 hit)",
+      "src/templates/item/item-cybernetic-sheet.hbs:126 (wh40k-cybernetic-content: 2 hits)"
+    ],
+    "chrome_selectors": ["input {", "input:checked ~ & {", ".editor {", "h3 {"],
+    "notes": "wh40k-cybernetic-badge--best/common/good/poor have no active references. All other cybernetic layout classes active."
+  },
+  {
+    "source": "src/css/item/_force-field.css",
+    "classification": "ACTIVE",
+    "line_count": 416,
+    "active_classes": [
+      "wh40k-forcefield-badge", "wh40k-forcefield-content",
+      "wh40k-forcefield-header", "wh40k-forcefield-header__image-overlay",
+      "wh40k-forcefield-panel", "wh40k-forcefield-section",
+      "wh40k-forcefield-section__body", "wh40k-forcefield-sheet",
+      "wh40k-forcefield-stat", "wh40k-forcefield-stat__icon", "wh40k-forcefield-stat__value",
+      "wh40k-forcefield-stats", "wh40k-forcefield-tab", "wh40k-forcefield-tabs"
+    ],
+    "active_examples": [
+      "src/templates/item/item-force-field-sheet.hbs:5 (wh40k-forcefield-sheet: 1 hit)",
+      "src/templates/item/item-force-field-sheet.hbs:11 (wh40k-forcefield-header: 1 hit)",
+      "src/templates/item/item-force-field-sheet.hbs:23 (wh40k-forcefield-badge: 3 hits)",
+      "src/templates/item/item-force-field-sheet.hbs:55 (wh40k-forcefield-stats: 1 hit)",
+      "src/templates/item/item-force-field-sheet.hbs:108 (wh40k-forcefield-content: 1 hit)"
+    ],
+    "chrome_selectors": [".editor {", "h3 {"],
+    "notes": "wh40k-forcefield-badge--best/common/good/poor have no active references. All layout/structure classes active."
+  },
+  {
+    "source": "src/css/item/_talent-sheet.css",
+    "classification": "ACTIVE",
+    "line_count": 1813,
+    "active_classes": [
+      "wh40k-abilities-list", "wh40k-ability-card", "wh40k-ability-description",
+      "wh40k-ability-name", "wh40k-action-btn", "wh40k-add-effect-btn",
+      "wh40k-aptitude-tag", "wh40k-aptitudes-display", "wh40k-badge",
+      "wh40k-benefit-text", "wh40k-btn-add-data", "wh40k-hint-text",
+      "wh40k-modifier-group", "wh40k-modifier-group-title", "wh40k-modifier-item",
+      "wh40k-modifier-list", "wh40k-modifier-name", "wh40k-modifier-value",
+      "wh40k-properties-grid", "wh40k-property", "wh40k-property-input",
+      "wh40k-property-label", "wh40k-talent-content", "wh40k-talent-panel",
+      "wh40k-talent-tab", "wh40k-talent-tabs"
+    ],
+    "active_examples": [
+      "src/templates/item/talent-sheet.hbs:270 (wh40k-abilities-list: 1 hit)",
+      "src/templates/item/talent-sheet.hbs:83 (wh40k-action-btn: 4 hits)",
+      "src/templates/item/talent-sheet.hbs:618 (wh40k-hint-text: 3 hits)",
+      "src/templates/item/talent-sheet.hbs:625 (wh40k-modifier-group: 30 hits)",
+      "src/templates/item/talent-sheet.hbs:187 (wh40k-talent-tabs)"
+    ],
+    "chrome_selectors": ["input[type='radio'] {", "p {", "ol {", ".editor {", "input[type='checkbox'] {"],
+    "notes": "wh40k-tier-badge, wh40k-tier-desc, wh40k-tier-header, wh40k-tier-list, wh40k-tier-progression, wh40k-tier-row have no active references. Core talent and modifier classes are heavily used."
+  },
+  {
+    "source": "src/css/item/_trait-sheet.css",
+    "classification": "ACTIVE",
+    "line_count": 527,
+    "active_classes": [
+      "wh40k-editor-container", "wh40k-empty-state", "wh40k-field-hint",
+      "wh40k-modifier-group", "wh40k-modifier-group-title", "wh40k-modifier-item",
+      "wh40k-modifier-list", "wh40k-modifier-name", "wh40k-modifier-value",
+      "wh40k-modifiers-display", "wh40k-properties-grid", "wh40k-property",
+      "wh40k-property-input", "wh40k-property-label", "wh40k-property-textarea",
+      "wh40k-requirement-tag", "wh40k-trait-sheet"
+    ],
+    "active_examples": [
+      "src/templates/item/item-trait-sheet.hbs:5 (wh40k-trait-sheet: 2 hits)",
+      "src/templates/item/item-origin-path-sheet.hbs:427 (wh40k-editor-container: 9 hits)",
+      "src/templates/item/item-origin-path-sheet.hbs:374 (wh40k-field-hint: 18 hits)",
+      "src/templates/item/item-trait-sheet.hbs:200 (wh40k-modifier-group-title: 10 hits)",
+      "src/templates/item/item-origin-path-sheet.hbs:343 (wh40k-requirement-tag: 3 hits)"
+    ],
+    "chrome_selectors": ["p {", ".editor {", "h3 {"],
+    "notes": "wh40k-field-hint (18 hits) is very heavily used. All major trait-sheet classes active."
+  },
+  {
+    "source": "src/css/item/_skill.css",
+    "classification": "ACTIVE",
+    "line_count": 636,
+    "active_classes": [
+      "wh40k-aptitude-tag", "wh40k-aptitudes-list", "wh40k-char-badge",
+      "wh40k-config-field", "wh40k-config-grid", "wh40k-descriptor-badge",
+      "wh40k-descriptor-text", "wh40k-difficulties-empty", "wh40k-difficulties-table",
+      "wh40k-difficulty-modifier", "wh40k-difficulty-name", "wh40k-item-body",
+      "wh40k-meta-badge--skill", "wh40k-properties-grid", "wh40k-property",
+      "wh40k-skill-sheet"
+    ],
+    "active_examples": [
+      "src/templates/item/item-skill-sheet.hbs:2 (wh40k-skill-sheet: 1 hit)",
+      "src/templates/item/item-skill-sheet.hbs:51 (wh40k-char-badge: 1 hit)",
+      "src/templates/item/item-skill-sheet.hbs:106 (wh40k-aptitudes-list: 1 hit)",
+      "src/templates/item/item-skill-sheet.hbs:174 (wh40k-difficulties-table: 1 hit)",
+      "src/templates/item/item-skill-sheet.hbs:219 (wh40k-config-grid: 1 hit)"
+    ],
+    "chrome_selectors": ["td {", "p {", "ol {", "input,", "th {"],
+    "notes": "wh40k-spec-input and wh40k-spec-row have no active references. wh40k-item-body used in combat-action-sheet.hbs, skill-sheet.hbs, and referenced in skill-sheet.ts scrollable selector."
+  },
+  {
+    "source": "src/css/item/_condition.css",
+    "classification": "ACTIVE",
+    "line_count": 364,
+    "active_classes": [
+      "wh40k-badge", "wh40k-card-body", "wh40k-card-footer", "wh40k-card-header",
+      "wh40k-card-icon", "wh40k-card-subtitle", "wh40k-card-title", "wh40k-card-title-area",
+      "wh40k-condition-card", "wh40k-condition-sheet", "wh40k-field",
+      "wh40k-item-sheet__header", "wh40k-item-sheet__panel"
+    ],
+    "active_examples": [
+      "src/templates/chat/condition-card.hbs:3 (wh40k-condition-card via concat helper)",
+      "src/templates/item/item-condition-sheet.hbs:5 (wh40k-condition-sheet: 1 hit)",
+      "src/templates/chat/partial/chat-card-shell.hbs:34 (wh40k-card-header: 1 hit)",
+      "src/templates/chat/partial/chat-card-shell.hbs:63 (wh40k-card-body: 1 hit)",
+      "src/templates/item/item-journal-entry-sheet.hbs:3 (wh40k-item-sheet__header: 5 hits)"
+    ],
+    "chrome_selectors": ["h4 {", "p {"],
+    "notes": "wh40k-card-badges, wh40k-condition-badges, wh40k-condition-effect, wh40k-condition-grid, wh40k-condition-meta, wh40k-condition-notes, wh40k-condition-removal, wh40k-field--checkbox have no active references. But chat-card-shell classes (wh40k-card-*) and condition-sheet classes are active."
+  },
+  {
+    "source": "src/css/item/_critical-injury.css",
+    "classification": "ACTIVE",
+    "line_count": 381,
+    "active_classes": [
+      "wh40k-badge", "wh40k-card-body", "wh40k-card-footer", "wh40k-card-header",
+      "wh40k-card-icon", "wh40k-card-title", "wh40k-card-title-area",
+      "wh40k-field", "wh40k-injury-card", "wh40k-injury-sheet"
+    ],
+    "active_examples": [
+      "src/templates/chat/critical-injury-card.hbs:3 (wh40k-injury-card via concat helper)",
+      "src/templates/chat/partial/chat-card-shell.hbs:34 (wh40k-card-header: 1 hit)",
+      "src/templates/chat/partial/chat-card-shell.hbs:63 (wh40k-card-body: 1 hit)",
+      "src/templates/chat/partial/chat-card-shell.hbs:68 (wh40k-card-footer: 1 hit)"
+    ],
+    "chrome_selectors": ["p {", "input[type='checkbox'] {"],
+    "notes": "wh40k-card-badges, wh40k-damage-icon, wh40k-field--checkbox, wh40k-field__input--short, wh40k-injury-badges, wh40k-injury-description, wh40k-injury-effect, wh40k-injury-grid, wh40k-injury-meta, wh40k-injury-notes have no active template references. But wh40k-card-* classes are shared with chat-card-shell and wh40k-injury-card is used."
+  }
+]

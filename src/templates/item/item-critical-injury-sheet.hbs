@@ -160,7 +160,7 @@
                 {{/with}}
               {{/each}}
             {{else}}
-              <div class="wh40k-description-content">{{{item.system.currentEffect}}}</div>
+              <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{item.system.currentEffect}}}</div>
               <div class="wh40k-injury-severity-preview tw-mt-2">
                 <p class="tw-text-xs tw-italic tw-opacity-70"><em>This injury has effects for all severity levels 1-10. Change the severity slider to preview different effects.</em></p>
               </div>
@@ -194,7 +194,7 @@
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             {{else}}
-            <div class="wh40k-description-content">{{{system.description.value}}}</div>
+            <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.description.value}}}</div>
             {{/if}}
           </div>
         </div>

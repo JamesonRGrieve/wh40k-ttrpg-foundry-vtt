@@ -1,0 +1,12 @@
+{
+  "ported_blocks": [
+    "src/css/item/_content.css",
+    "src/css/item/_tags.css"
+  ],
+  "modified_templates": [
+    "src/templates/item/item-psychic-power-sheet.hbs",
+    "src/templates/actor/npc/tab-npc.hbs"
+  ],
+  "remaining_active_classes": [],
+  "notes": "Cleared all active references to wh40k-tag, wh40k-tags, wh40k-stat-badge, and wh40k-stat-badge__value. The base wh40k-stat-badge layout utilities were already inline on item-psychic-power-sheet.hbs; added tw-border and tw-bg-* to complete the port. The --psychic variants on stat-badge and tag were inlined as arbitrary-value Tailwind utilities (border/background matching the monolith source values). The wh40k-tag in tab-npc.hbs received a full tw-* translation of the base tag styles. Remaining classes in tab-npc.hbs (wh40k-tags-row, wh40k-tag-remove, wh40k-tags-empty, wh40k-tag-add) are scoped to src/css/item/_npc-template-sheet.css (line ~44734), not the target blocks, and were intentionally left untouched."
+}

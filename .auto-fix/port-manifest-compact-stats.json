@@ -1,0 +1,24 @@
+{
+  "ported_blocks": [
+    "src/css/item/_compact.css",
+    "src/css/item/_stats.css"
+  ],
+  "modified_templates": [
+    "src/templates/item/item-psychic-power-sheet.hbs",
+    "src/templates/item/item-critical-injury-sheet.hbs",
+    "src/templates/item/item-condition-sheet.hbs",
+    "src/templates/item/item-trait-sheet.hbs",
+    "src/templates/item/item-cybernetic-sheet.hbs",
+    "src/templates/item/item-origin-path-sheet.hbs",
+    "src/templates/item/item-sheet.hbs",
+    "src/templates/item/ship-upgrade-sheet.hbs",
+    "src/templates/item/item-armour-sheet.hbs",
+    "src/templates/item/item-ammo-sheet.hbs",
+    "src/templates/item/ship-weapon-sheet.hbs",
+    "src/templates/item/talent-sheet.hbs",
+    "src/templates/item/ship-component-sheet.hbs",
+    "src/templates/item/item-force-field-sheet.hbs"
+  ],
+  "remaining_active_classes": [],
+  "notes": "All _stats.css active classes (wh40k-quick-stats, wh40k-stat-badge and BEM children) have been ported. The wh40k-stat-badge BEM classes had already been stripped by a prior linter pass; only wh40k-quick-stats remained and was given its missing bg/border-b/border utilities before removal. All _compact.css active class references (wh40k-description-content, 26 occurrences across 14 templates) were ported with tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)] and the legacy class removed. Other _compact.css classes (wh40k-compact-content, wh40k-origin-benefits, wh40k-origin-step, wh40k-benefit-group, wh40k-benefit-tags, wh40k-benefit-tag, wh40k-compact-description, wh40k-requirements, wh40k-item-sheet--compact) had zero template references and required no template changes."
+}
