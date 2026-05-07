@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-05-07T13:12:28.772Z",
+  "generatedAt": "2026-05-07T13:49:18.254Z",
   "summary": {
-    "monolithLines": 14321,
-    "markers": 23,
-    "distinctSources": 12,
-    "coveredLines": 14288,
+    "monolithLines": 11686,
+    "markers": 20,
+    "distinctSources": 9,
+    "coveredLines": 11653,
     "uncoveredLines": 33
   },
   "ranges": {
@@ -30,44 +30,44 @@
         "end": 1746
       },
       {
-        "start": 8645,
-        "end": 8647
+        "start": 5721,
+        "end": 5723
       },
       {
-        "start": 9355,
-        "end": 9357
+        "start": 6431,
+        "end": 6433
       },
       {
-        "start": 9666,
-        "end": 9668
+        "start": 6742,
+        "end": 6744
       },
       {
-        "start": 9669,
-        "end": 9671
+        "start": 6745,
+        "end": 6747
       },
       {
-        "start": 12938,
-        "end": 12940
+        "start": 10014,
+        "end": 10016
       },
       {
-        "start": 12941,
-        "end": 12943
+        "start": 10017,
+        "end": 10019
       },
       {
-        "start": 12944,
-        "end": 12946
+        "start": 10020,
+        "end": 10022
       },
       {
-        "start": 12947,
-        "end": 12949
+        "start": 10023,
+        "end": 10025
       },
       {
-        "start": 12950,
-        "end": 12952
+        "start": 10026,
+        "end": 10028
       },
       {
-        "start": 12953,
-        "end": 14112
+        "start": 10029,
+        "end": 11188
       }
     ],
     "src/css/item/_weapon.css": [
@@ -76,52 +76,34 @@
         "end": 5720
       }
     ],
-    "src/css/panels/_overview-dashboard.css": [
-      {
-        "start": 5721,
-        "end": 7243
-      }
-    ],
-    "src/css/panels/_combat-station.css": [
-      {
-        "start": 7244,
-        "end": 8427
-      }
-    ],
-    "src/css/chat/_foundry-overrides.css": [
-      {
-        "start": 8428,
-        "end": 8644
-      }
-    ],
     "src/css/components/_wh40k-tooltip.css": [
       {
-        "start": 8648,
-        "end": 9088
+        "start": 5724,
+        "end": 6164
       }
     ],
     "src/css/components/_item-preview.css": [
       {
-        "start": 9089,
-        "end": 9354
+        "start": 6165,
+        "end": 6430
       }
     ],
     "src/css/components/_armour.css": [
       {
-        "start": 9358,
-        "end": 9665
+        "start": 6434,
+        "end": 6741
       }
     ],
     "src/css/actor/_npc-sheet.css": [
       {
-        "start": 9672,
-        "end": 12937
+        "start": 6748,
+        "end": 10013
       }
     ],
     "src/css/foundry-chrome.css": [
       {
-        "start": 14113,
-        "end": 14321
+        "start": 11189,
+        "end": 11686
       }
     ]
   }
