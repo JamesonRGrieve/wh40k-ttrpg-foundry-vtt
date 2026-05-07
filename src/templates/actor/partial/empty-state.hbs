@@ -12,7 +12,7 @@
         padding    — "sm" (default) | "md". Controls vertical padding.
         rootClass  — extra utility classes appended to the wrapper.
 --}}
-<div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-[color:var(--wh40k-text-muted)] tw-text-center {{#if (eq padding "md")}}tw-p-6{{else}}tw-p-4{{/if}}{{#if rootClass}} {{rootClass}}{{/if}}">
+<div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-[color:var(--wh40k-text-muted)] tw-text-center {{#if (eq padding "md")}}tw-p-6{{else}}tw-p-4{{/if}}{{#if rootClass}} {{rootClass}}{{/if}}">
     <i class="fas {{icon}} tw-text-2xl tw-mb-2 tw-opacity-60 tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
     <p class="tw-italic tw-m-0">{{#if textKey}}{{localize textKey}}{{else}}{{text}}{{/if}}</p>
 </div>

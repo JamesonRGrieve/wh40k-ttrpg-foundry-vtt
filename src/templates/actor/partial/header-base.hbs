@@ -31,11 +31,11 @@
                         "header" for semantic markup).
 --}}
 {{#if (eq variant "horizontal")}}
-<div class="wh40k-header wh40k-panel{{#if cardClass}} {{cardClass}}{{/if}} tw-flex tw-flex-none tw-shrink-0 tw-border-b tw-border-solid tw-border-[var(--color-border-secondary,#444)] dh2e:tw-border-bronze rt:tw-border-accent-dynasty bc:tw-border-crimson dw:tw-border-bronze ow:tw-border-brass im:tw-border-crimson-light dh1e:tw-border-gold-raw"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
+<div class="wh40k-panel{{#if cardClass}} {{cardClass}}{{/if}} tw-flex tw-flex-none tw-shrink-0 tw-overflow-visible tw-z-10 tw-border-b tw-border-solid tw-border-[var(--color-border-secondary,#444)] dh2e:tw-border-bronze rt:tw-border-accent-dynasty bc:tw-border-crimson dw:tw-border-bronze ow:tw-border-brass im:tw-border-crimson-light dh1e:tw-border-gold-raw"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
     {{> @partial-block}}
 </div>
 {{else}}
-<div class="wh40k-header wh40k-panel{{#if cardClass}} {{cardClass}}{{/if}} tw-flex tw-flex-none tw-flex-col tw-gap-3 tw-px-3 tw-py-3 tw-min-w-0 tw-m-0 tw-border-r-0 tw-border-b tw-border-solid tw-border-[var(--color-border-secondary,#444)] dh2e:tw-border-bronze rt:tw-border-accent-dynasty bc:tw-border-crimson dw:tw-border-bronze ow:tw-border-brass im:tw-border-crimson-light dh1e:tw-border-gold-raw tw-rounded-none"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
+<div class="wh40k-panel{{#if cardClass}} {{cardClass}}{{/if}} tw-flex tw-flex-none tw-flex-col tw-gap-3 tw-px-3 tw-py-3 tw-min-w-0 tw-m-0 tw-overflow-visible tw-z-10 tw-border-r-0 tw-border-b tw-border-solid tw-border-[var(--color-border-secondary,#444)] dh2e:tw-border-bronze rt:tw-border-accent-dynasty bc:tw-border-crimson dw:tw-border-bronze ow:tw-border-brass im:tw-border-crimson-light dh1e:tw-border-gold-raw tw-rounded-none"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
     <div class="{{#if innerClass}}{{innerClass}}{{else}}tw-flex tw-flex-col tw-items-center tw-gap-3{{/if}}">
         {{> @partial-block}}
     </div>

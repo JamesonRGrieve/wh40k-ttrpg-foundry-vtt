@@ -197,6 +197,51 @@ const JS_HOOKS = new Set([
     // Foundry dialog button role classes not already listed.
     'default',
     'secondary',
+    // character-sheet.ts queries `.wh40k-panel-psychic-powers .wh40k-filter-btn` and
+    // `.wh40k-panel-orders .wh40k-filter-btn` to toggle active state on filter buttons.
+    // The class is a permanent JS selector; active-state styling is handled by tw- classes
+    // conditionally rendered by HBS ({{#unless activeOrderCategory}}tw-bg-accent-powers…{{/unless}}).
+    'wh40k-filter-btn',
+    // character-sheet.ts / vehicle-sheet.ts / starship-sheet.ts configure Foundry tabs with
+    //   container: { classes: ['wh40k-body'], id: 'tab-body' }
+    // Foundry's tab engine reads this class to find the scrollable tab content container and
+    // wires show/hide of .tab panels. Permanent Foundry JS hook; no CSS to migrate.
+    'wh40k-body',
+    // primary-sheet-mixin.ts queries `.wh40k-tab.active[data-tab="${tab}"]` on scroll-anchor logic.
+    // base-item-sheet.ts declares navSelector: '.wh40k-tabs', contentSelector: '.wh40k-tab-content'
+    // and scrollable: ['.wh40k-tab-content'] — all three are live DOM selectors, not project CSS.
+    'wh40k-tab',
+    'wh40k-tabs',
+    'wh40k-tab-content',
+    // base-item-sheet.ts DEFAULT_OPTIONS.classes includes 'wh40k-item-sheet' — added programmatically
+    // by Foundry's sheet infrastructure, not a CSS class to migrate.
+    'wh40k-item-sheet',
+    // enrichers.ts and roll-configuration-dialog.ts set className with 'positive' or 'negative'
+    // as a JS-controlled modifier-sign flag; the CSS is scoped to those dynamic elements.
+    'positive',
+    'negative',
+    // threat-scaler-dialog.ts querySelectorAll('.wh40k-preview-tab') and
+    // querySelectorAll('.wh40k-preview-section') to drive tab switching in the preview panel.
+    'wh40k-preview-tab',
+    'wh40k-preview-section',
+    // Foundry standard form-group hint class — used by Foundry's settings UI and emitted by
+    // origin-roll-dialog.ts / drag-drop-visual-mixin.ts as `<p class="hint">`. No project CSS rule.
+    'hint',
+    // ship-component-sheet.ts / ship-upgrade-sheet.ts declare these in DEFAULT_OPTIONS.classes;
+    // Foundry adds them programmatically. No project CSS rules to migrate.
+    'ship-component',
+    'ship-upgrade',
+    // unified-roll-dialog.ts queries '.urd-difficulty-picker' and '.urd-target__number' by
+    // class name to read/update the difficulty selection and target number at runtime.
+    'urd-difficulty-picker',
+    'urd-target__number',
+    // urd-* are Tailwind arbitrary-variant targeting classes used in patterns like
+    //   [&_.urd-weapon-name]:tw-text-gold-raw
+    // inside the PARENT element's class attr. The child element must carry the bare class
+    // name so the :has/descendant selector fires. No project CSS rule; not a migration target.
+    'urd-weapon-name',
+    'urd-card__icon',
+    'urd-difficulty-picker__item-label',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
@@ -239,6 +284,11 @@ function isTwOrExempt(token) {
     // Fast path: raw token is already a Tailwind utility (also handles
     // `tw-text-[color:var(--foo)]` where the colon is inside brackets).
     if (isTwBare(token)) return true;
+
+    // Tailwind arbitrary CSS custom-property tokens: `[--foo:bar]` or `[--foo:var(--bar)]`.
+    // These are Tailwind's way of setting CSS custom properties inline; they have no `tw-`
+    // prefix but are unambiguously Tailwind constructs, not project CSS class names.
+    if (/^\[--[a-zA-Z]/.test(token)) return true;
 
     // Strip one Tailwind variant prefix by finding the last colon at bracket-depth 0.
     // This handles all variant forms: `hover:`, `[&>label]:`, `data-[active=true]:`, etc.
