@@ -1,0 +1,190 @@
+{
+  "session": "panels-a",
+  "date": "2026-05-06",
+  "summary": "Ported CSS classes from three _biography/powers/accents panel blocks to inline Tailwind utilities and deleted the source blocks from the monolith.",
+  "blocks_deleted": [
+    {
+      "source": "src/css/panels/_powers.css",
+      "lines_removed": 130,
+      "classes_ported": [
+        {
+          "class": "wh40k-tab-powers",
+          "templates": ["src/templates/actor/player/tab-powers.hbs"],
+          "utilities_added": "tw-p-3 [&.active]:!tw-block",
+          "notes": "JS hook retained (wh40k-tab class kept for primary-sheet-mixin querySelector); active display override needed because base stylesheet sets display:flex!important"
+        }
+      ],
+      "classes_dead": [
+        "wh40k-powers-equipment-panel",
+        "wh40k-powers-layout",
+        "wh40k-powers-grid"
+      ]
+    },
+    {
+      "source": "src/css/panels/_accents.css",
+      "lines_removed": 174,
+      "classes_ported": [],
+      "classes_dead": [
+        "all rules in block — targeted .wh40k-tab[data-tab='overview'], .wh40k-tab-overview, etc.",
+        "actor tabs use wh40k-nav-item class not wh40k-tab, making all rules dead code"
+      ]
+    },
+    {
+      "source": "src/css/panels/_biography.css",
+      "lines_removed": 582,
+      "classes_ported": [
+        {
+          "class": "wh40k-section-header",
+          "templates": ["src/templates/item/talent-sheet.hbs"],
+          "utilities_added": "tw-flex tw-items-center tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]",
+          "notes": "SECTION_CLASS_RE in css-coverage.mjs excludes this class from tailwind-only check; 12 instances updated"
+        },
+        {
+          "class": "wh40k-section-title",
+          "templates": [
+            "src/templates/item/item-trait-sheet.hbs",
+            "src/templates/item/item-origin-path-sheet.hbs"
+          ],
+          "utilities_added": "tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)]",
+          "notes": "SECTION_CLASS_RE excludes this class from tailwind-only check"
+        },
+        {
+          "class": "wh40k-add-btn",
+          "templates": ["src/templates/actor/player/tab-biography.hbs"],
+          "utilities_added": "tw-bg-transparent tw-border tw-border-[var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-py-1 tw-px-2 tw-rounded-md tw-transition-all tw-text-xs hover:tw-bg-[var(--wh40k-panel-bg-translucent)] hover:tw-border-accent-bio hover:tw-text-accent-bio",
+          "notes": "JS hook in JS_HOOKS set in css-coverage.mjs; 2 instances"
+        },
+        {
+          "class": "wh40k-connections-section",
+          "templates": ["src/templates/actor/player/tab-biography.hbs"],
+          "utilities_added": "tw-mb-2 last:tw-mb-0",
+          "notes": "JS hook in JS_HOOKS"
+        },
+        {
+          "class": "wh40k-connection-bonus",
+          "templates": ["src/templates/actor/player/tab-biography.hbs"],
+          "utilities_added": "tw-text-xs tw-font-semibold tw-text-success tw-py-0.5 tw-px-1.5 tw-bg-success/15 tw-rounded"
+        },
+        {
+          "class": "wh40k-connection-penalty",
+          "templates": ["src/templates/actor/player/tab-biography.hbs"],
+          "utilities_added": "tw-text-xs tw-font-semibold tw-text-accent-combat tw-py-0.5 tw-px-1.5 tw-bg-accent-combat/15 tw-rounded"
+        },
+        {
+          "class": "wh40k-panel-journal",
+          "templates": ["src/templates/actor/player/tab-biography.hbs"],
+          "utilities_added": "tw-flex-1 tw-flex tw-flex-col",
+          "notes": "JS hook in JS_HOOKS"
+        },
+        {
+          "class": "wh40k-journal-body",
+          "templates": ["src/templates/actor/player/tab-biography.hbs"],
+          "utilities_added": "tw-flex-1 tw-flex tw-flex-col tw-gap-2",
+          "notes": "JS hook in JS_HOOKS"
+        },
+        {
+          "class": "wh40k-journal-section",
+          "templates": ["src/templates/actor/player/tab-biography.hbs"],
+          "utilities_added": "tw-flex tw-flex-col tw-gap-1 tw-mt-2",
+          "notes": "JS hook in JS_HOOKS; wh40k-journal-notes modifier also got tw-flex-1 tw-min-h-[150px]"
+        },
+        {
+          "class": "wh40k-field-label",
+          "templates": [
+            "src/templates/actor/player/tab-biography.hbs",
+            "src/templates/actor/player/tab-dynasty.hbs"
+          ],
+          "utilities_added": "tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]",
+          "notes": "JS hook in JS_HOOKS; some instances get per-system color variant chain"
+        },
+        {
+          "class": "wh40k-textarea",
+          "templates": [
+            "src/templates/actor/player/tab-biography.hbs",
+            "src/templates/actor/player/tab-dynasty.hbs"
+          ],
+          "utilities_added": "tw-w-full tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-sm tw-leading-[1.5] tw-resize-y tw-font-[inherit] focus:tw-outline-none focus:tw-border-gold placeholder:tw-text-[color:var(--wh40k-text-muted)] placeholder:tw-italic"
+        },
+        {
+          "class": "wh40k-prose-editor",
+          "templates": ["src/templates/actor/player/tab-biography.hbs"],
+          "utilities_added": "tw-flex-1 tw-min-h-[250px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-overflow-y-auto tw-text-[0.9rem] tw-leading-[1.6] focus:tw-outline-none focus-within:tw-border-accent-bio",
+          "notes": "JS hook in JS_HOOKS; .ProseMirror child rules salvaged to foundry-chrome.css block in monolith"
+        },
+        {
+          "class": "wh40k-prose-content",
+          "templates": ["src/templates/actor/player/tab-biography.hbs"],
+          "utilities_added": "tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[0.9rem] tw-leading-[1.6] tw-min-h-[100px]",
+          "notes": "Child-type rules (p, ul, ol, h1-h3, :empty::before) salvaged to foundry-chrome.css block in monolith"
+        },
+        {
+          "class": "wh40k-field-row",
+          "templates": [
+            "src/templates/actor/player/tab-dynasty.hbs",
+            "src/templates/item/item-gear-sheet.hbs"
+          ],
+          "utilities_added": "tw-flex tw-flex-col tw-gap-1"
+        },
+        {
+          "class": "wh40k-field-row-split",
+          "templates": ["src/templates/actor/player/tab-dynasty.hbs"],
+          "utilities_added": "tw-grid tw-grid-cols-2 tw-gap-3"
+        },
+        {
+          "class": "wh40k-field-half",
+          "templates": ["src/templates/actor/player/tab-dynasty.hbs"],
+          "utilities_added": "tw-flex tw-flex-col tw-gap-1"
+        },
+        {
+          "class": "wh40k-field-input",
+          "templates": ["src/templates/actor/player/tab-dynasty.hbs"],
+          "utilities_added": "tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem] focus:tw-outline-none focus:tw-border-gold"
+        }
+      ],
+      "classes_dead": [
+        "wh40k-origin-path",
+        "wh40k-origin-step",
+        "wh40k-origin-label",
+        "wh40k-origin-choice",
+        "wh40k-origin-img",
+        "wh40k-origin-name",
+        "wh40k-origin-info",
+        "wh40k-origin-summary",
+        "wh40k-origin-remove",
+        "wh40k-origin-empty",
+        "wh40k-origin-empty-title",
+        "wh40k-origin-empty-sub",
+        "wh40k-journal-entries",
+        "wh40k-journal-entries-title",
+        "wh40k-journal-entries-section",
+        "wh40k-panel-action-btn",
+        "wh40k-journal-list",
+        "wh40k-journal-entry",
+        "wh40k-entry-header",
+        "wh40k-entry-name",
+        "wh40k-entry-meta",
+        "wh40k-entry-delete",
+        "wh40k-entry-preview",
+        "wh40k-journal-editor"
+      ],
+      "chrome_salvaged": {
+        "destination": "src/css/foundry-chrome.css block in monolith",
+        "rules": [
+          ".wh40k-prose-editor .ProseMirror { ... } (full content typography rules)",
+          ".wh40k-prose-content child-type selectors (p, ul, ol, h1-h3, :empty::before)"
+        ]
+      }
+    }
+  ],
+  "ratchets_updated": [
+    "css:ratchet:update — tw-only=129 mixed=115 css-only=0",
+    "animation:ratchet:update — baseline=1"
+  ],
+  "notes": [
+    "field-row.hbs partial was already fully ported to pure TW utilities before this session — no wh40k-field-* classes present",
+    "journal-panel.hbs partial was already fully ported to TW utilities",
+    "wh40k-origin-* classes in item-origin-path-sheet.hbs are a different component (wh40k-origin-sheet, wh40k-origin-header, wh40k-origin-tabs, etc.) — not the same as the wh40k-origin-{path,step,...} classes that were dead code in _biography.css",
+    "css-coverage.mjs JS_HOOKS and SECTION_CLASS_RE patterns exempt many biography block classes from the tailwind-only classification check — templates were already classified tailwind-only before explicit TW utilities were added",
+    "wh40k-tab-powers: wh40k-tab is a JS hook queried in primary-sheet-mixin.ts querySelector('.wh40k-tab.active[data-tab=\"...\"]') — must not be removed from HTML"
+  ]
+}
