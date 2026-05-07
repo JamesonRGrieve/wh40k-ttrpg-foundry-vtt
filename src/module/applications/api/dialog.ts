@@ -17,7 +17,7 @@ interface DialogButton {
 /**
  * Base dialog class for creating WH40K dialogs.
  */
-export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
+export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2 as unknown as import('./application-types.ts').ApplicationV2Ctor) {
     _resolve?: (value: unknown) => void;
     _reject?: (reason?: unknown) => void;
     _submitted?: boolean;

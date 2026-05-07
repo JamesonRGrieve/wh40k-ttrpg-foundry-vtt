@@ -54,9 +54,10 @@ export default class ShipUpgradeSheet extends BaseItemSheet {
         context.availabilities = this._getAvailabilityChoices();
 
         // Add display helpers
-        context.hasModifiers = context.system.hasModifiers;
-        context.isPowerConsumer = context.system.power > 0;
-        context.isPowerGenerator = context.system.power < 0;
+        const sys = context.system as { hasModifiers?: boolean; power?: number };
+        context.hasModifiers = sys.hasModifiers;
+        context.isPowerConsumer = (sys.power ?? 0) > 0;
+        context.isPowerGenerator = (sys.power ?? 0) < 0;
 
         return context;
     }

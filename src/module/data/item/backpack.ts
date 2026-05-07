@@ -12,6 +12,9 @@ export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplat
     declare capacity: number;
     declare isCombatVest: boolean;
 
+    // Properties from PhysicalItemTemplate
+    declare availability: string;
+
     /** @override */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
@@ -30,7 +33,7 @@ export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplat
             props.push('Combat Vest');
         }
         if (this.availability) {
-            props.push(CONFIG.wh40k?.availabilities?.[this.availability] ?? this.availability);
+            props.push(String(CONFIG.wh40k?.availabilities?.[this.availability] ?? this.availability));
         }
         return props;
     }

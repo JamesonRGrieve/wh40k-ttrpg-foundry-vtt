@@ -416,7 +416,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             return;
         }
 
-        await (actor as unknown as WH40KBaseActor).rollItem(this.item.id);
+        await (actor as unknown as WH40KBaseActor).rollItem(this.item.id!);
     }
 
     /* -------------------------------------------- */
@@ -654,7 +654,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         mods[index].active = !mods[index].active;
 
-        await this.item.update({ 'system.modifications': mods });
+        await this.item.update({ 'system.modifications': mods } as Record<string, unknown>);
 
         const mod = mods[index];
         ui.notifications.info(`${mod.name} ${mod.active ? 'activated' : 'deactivated'}.`);
@@ -748,7 +748,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         // Add to array
         const weaponSystemDrop = this.item.system as unknown as WeaponData;
         const mods = [...weaponSystemDrop.modifications, modEntry];
-        await this.item.update({ 'system.modifications': mods });
+        await this.item.update({ 'system.modifications': mods } as Record<string, unknown>);
 
         ui.notifications.info(`${modItem.name} installed.`);
         return true;
@@ -839,9 +839,9 @@ export default class WeaponSheet extends ContainerItemSheet {
         const fab = this.element.querySelector('.wh40k-fab-container');
         if (fab) {
             fab.classList.toggle('expanded', this.#fabExpanded);
-            const fabItems = fab.querySelectorAll<HTMLElement>('.wh40k-fab-actions .wh40k-fab');
+            const fabItems = (fab as HTMLElement).querySelectorAll<HTMLElement>('.wh40k-fab-actions .wh40k-fab');
             const delays = [0.05, 0.1, 0.15];
-            fabItems.forEach((item, i) => {
+            fabItems.forEach((item: HTMLElement, i: number) => {
                 if (this.#fabExpanded) {
                     item.classList.add('tw-animate-[slide-in-up_0.3s_ease-out_backwards]');
                     item.style.animationDelay = `${delays[i] ?? (i + 1) * 0.05}s`;

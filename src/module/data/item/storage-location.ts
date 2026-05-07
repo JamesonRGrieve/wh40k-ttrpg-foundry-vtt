@@ -6,6 +6,10 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * These represent locations where items can be stored (ship cargo, safe house, etc.).
  */
 export default class StorageLocationData extends ItemDataModel.mixin(DescriptionTemplate) {
+    // Typed property declarations matching defineSchema()
+    declare location: string;
+    declare isContainer: boolean;
+
     /** @override */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;

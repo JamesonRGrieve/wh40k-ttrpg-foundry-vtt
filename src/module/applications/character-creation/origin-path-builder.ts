@@ -157,6 +157,13 @@ interface EquipmentItemEntry extends Record<string, unknown> {
 }
 
 /**
+ * Local alias for the internal OriginLike type accepted by OriginChartLayout.
+ * NormalizedOrigin is structurally compatible; this alias lets us cast without
+ * `as any` at each call site.
+ */
+type OriginLikeParam = Parameters<typeof OriginChartLayout.computeFullChart>[0][number];
+
+/**
  * Minimal shape of a document resolved via fromUuid().
  * Only the fields actually accessed in this file are declared.
  */
@@ -178,8 +185,6 @@ const DIRECTION = {
 };
 
 export default class OriginPathBuilder extends HandlebarsApplicationMixin(ApplicationV2) {
-    declare render: (options?: boolean | Record<string, unknown>) => Promise<unknown>;
-    declare close: () => Promise<void>;
     declare actor: WH40KBaseActor;
     declare gameSystem: string;
     declare registryConfig: BaseSystemConfig;
@@ -454,8 +459,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Flag scope + key for serialized builder state (equipment picks, char gen inputs).
      */
-    static FLAG_SCOPE = 'wh40k-rpg';
-    static BUILDER_STATE_FLAG = 'originPathBuilderState';
+    static FLAG_SCOPE = 'wh40k-rpg' as const;
+    static BUILDER_STATE_FLAG = 'originPathBuilderState' as const;
 
     /**
      * Restore in-memory builder state from actor flags so equipment picks and
@@ -535,7 +540,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const selection = this.selections.get(step.step);
             if (!selection) continue;
 
-            selection.system.pathPositions = OriginChartLayout.resolvePathPositions(selection, lastSelection);
+            selection.system.pathPositions = OriginChartLayout.resolvePathPositions(
+                selection as unknown as OriginLikeParam,
+                lastSelection as unknown as OriginLikeParam | null,
+            );
             lastSelection = selection;
         }
     }
@@ -622,7 +630,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
             const documents = await pack.getDocuments();
             // Filter and normalize
-            allOriginPaths.push(...documents.filter((d) => d.type === 'originPath').map((d) => normalizeOrigin(d as unknown as Record<string, unknown>)));
+            allOriginPaths.push(
+                ...documents
+                    .filter((d) => (d as unknown as { type?: string }).type === 'originPath')
+                    .map((d) => normalizeOrigin(d as unknown as Record<string, unknown>)),
+            );
         }
 
         if (allOriginPaths.length === 0) {
@@ -663,11 +675,17 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         } else {
             // Use chart layout for core steps - pass direction and step keys for system support
             const stepKeys = this.systemConfig.coreSteps.map((s) => s.key || s.step);
-            const chartLayout = OriginChartLayout.computeFullChart(this.allOrigins, this.selections, this.guidedMode, this.direction, stepKeys);
+            const chartLayout = OriginChartLayout.computeFullChart(
+                this.allOrigins as unknown as OriginLikeParam[],
+                this.selections as unknown as Map<string, OriginLikeParam>,
+                this.guidedMode,
+                this.direction,
+                stepKeys,
+            );
 
             // Find the step layout matching current step
             const stepIndex = this.systemConfig.coreSteps.findIndex((s) => s.key === currentStep.key);
-            const stepLayout = (chartLayout as { steps: StepLayout[] }).steps[stepIndex];
+            const stepLayout = (chartLayout as unknown as { steps: StepLayout[] }).steps[stepIndex];
             currentOrigins = this._prepareOriginsForStep(stepLayout);
             // Use previewed origin if available, otherwise use confirmed selection
             selectedItem = (this.previewedOrigin || (this.selections.get(currentStep.step) as NormalizedOriginWithMeta | undefined)) ?? null;
@@ -1488,7 +1506,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         const availabilityConfig =
-            ((CONFIG as Record<string, unknown>)?.wh40k as { availabilities?: Record<string, { label: string; modifier: number }> } | undefined)
+            ((CONFIG as unknown as Record<string, unknown>)?.wh40k as { availabilities?: Record<string, { label: string; modifier: number }> } | undefined)
                 ?.availabilities ||
             WH40K.availabilities ||
             {};
@@ -1511,10 +1529,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     'type',
                 ],
             });
-            for (const entry of index) {
+            for (const rawEntry of index) {
+                const entry = rawEntry as unknown as { _id: string; name?: string; uuid?: string; img?: string; type?: string; system?: OriginPathSystemData };
                 // Cybernetics enter play via grants, not equipment selection.
                 if (entry.type === 'cybernetic') continue;
-                const entrySys = entry.system as OriginPathSystemData | undefined;
+                const entrySys = entry.system;
                 const availability = entrySys?.availability;
                 if (!availability) continue;
                 const modifier = availabilityConfig[availability]?.modifier ?? null;
@@ -2423,7 +2442,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this.selections.clear();
 
         const coreStepKeys = this.systemConfig.coreSteps.map((s) => s.key || s.step);
-        const chartLayout = OriginChartLayout.computeFullChart(this.allOrigins, this.selections, false, 'forward', coreStepKeys) as { steps: StepLayout[] };
+        const chartLayout = OriginChartLayout.computeFullChart(
+            this.allOrigins as unknown as OriginLikeParam[],
+            this.selections as unknown as Map<string, OriginLikeParam>,
+            false,
+            'forward',
+            coreStepKeys,
+        ) as unknown as { steps: StepLayout[] };
 
         const coreSteps = this.systemConfig.coreSteps;
         for (let i = 0; i < coreSteps.length; i++) {
@@ -2466,7 +2491,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Delete origin path items from actor
         const originPathItems = this.actor.items.filter((i) => i.type === 'originPath');
         if (originPathItems.length > 0) {
-            const ids = originPathItems.map((i) => i.id);
+            const ids = originPathItems.map((i) => i.id).filter((id): id is string => id !== null);
             await this.actor.deleteEmbeddedDocuments('Item', ids);
         }
 
@@ -2851,7 +2876,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
 
             const lastSelection = this._getLastConfirmedSelection(currentIndex);
-            originData.system.pathPositions = OriginChartLayout.resolvePathPositions(originData, lastSelection);
+            originData.system.pathPositions = OriginChartLayout.resolvePathPositions(
+                originData as unknown as OriginLikeParam,
+                lastSelection as unknown as OriginLikeParam | null,
+            );
 
             // Store selection as plain data object
             this.selections.set(currentStep.step, originData);
@@ -3171,7 +3199,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return;
         }
         if (this.equipmentSelections.size >= max) {
-            ui.notifications.warn(game.i18n.format('WH40K.OriginPath.EquipmentLimitReached', { max }));
+            ui.notifications.warn(game.i18n.format('WH40K.OriginPath.EquipmentLimitReached', { max: String(max) }));
             return;
         }
 
@@ -3209,7 +3237,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         for (let i = 0; i < OriginPathBuilder.GENERATION_CHARACTERISTICS.length; i++) {
             const roll = new Roll('2d10');
             await roll.evaluate();
-            rolls.push(roll.total);
+            rolls.push(roll.total ?? 0);
         }
 
         this._charRolls = rolls;
@@ -3316,7 +3344,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
         const roll = new Roll(formula);
         await roll.evaluate();
-        this._thronesRolled = roll.total;
+        this._thronesRolled = roll.total ?? 0;
         this._saveScrollPosition?.();
         this.render();
     }
@@ -3332,7 +3360,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             },
             rejectClose: false,
         });
-        if (val != null && !isNaN(val)) {
+        if (typeof val === 'number' && !isNaN(val)) {
             this._thronesRolled = val;
             this._saveScrollPosition?.();
             this.render();
@@ -3354,7 +3382,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const mod = this._getContextualInfluenceMod();
         const roll = new Roll('1d5');
         await roll.evaluate();
-        this._influenceRolled = Math.max(0, roll.total + felBonus + mod);
+        this._influenceRolled = Math.max(0, (roll.total ?? 0) + felBonus + mod);
         this._saveScrollPosition?.();
         this.render();
     }
@@ -3370,7 +3398,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             },
             rejectClose: false,
         });
-        if (val != null && !isNaN(val)) {
+        if (typeof val === 'number' && !isNaN(val)) {
             this._influenceRolled = val;
             this._saveScrollPosition?.();
             this.render();
@@ -3469,7 +3497,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // and _getOriginPathCharacteristicModifier() would double-count modifiers.
             const existingOriginItems = this.actor.items.filter((i) => i.type === 'originPath');
             if (existingOriginItems.length > 0) {
-                const idsToDelete = existingOriginItems.map((i) => i.id);
+                const idsToDelete = existingOriginItems.map((i) => i.id).filter((id): id is string => id !== null);
                 await this.actor.deleteEmbeddedDocuments('Item', idsToDelete);
             }
 
@@ -3530,7 +3558,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 }
                 cleanOriginItems.push(itemData);
             }
-            await this.actor.createEmbeddedDocuments('Item', cleanOriginItems);
+            await this.actor.createEmbeddedDocuments('Item', cleanOriginItems as unknown as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
 
             // Apply characteristic rolls if any are assigned
             const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
@@ -3771,11 +3799,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _resetCurrencyResources(): Promise<void> {
-        await this.actor.update({
+        const currencyUpdate: Record<string, unknown> = {
             'system.influence': 0,
             'system.requisition': 0,
             'system.throneGelt': 0,
-        });
+        };
+        await this.actor.update(currencyUpdate);
     }
 
     /**
@@ -3790,8 +3819,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const uuid = entry.uuid as string;
             const source = await fromUuid(uuid);
             if (!source) continue;
-            const sourceDoc = source as { toObject?: () => Record<string, unknown> };
-            const itemData = sourceDoc.toObject ? sourceDoc.toObject() : (foundry.utils.deepClone(source) as Record<string, unknown>);
+            const sourceDoc = source as unknown as { toObject?: () => Record<string, unknown> };
+            const itemData = sourceDoc.toObject ? sourceDoc.toObject() : (foundry.utils.deepClone(source) as unknown as Record<string, unknown>);
             delete itemData._id;
             (itemData.flags as Record<string, unknown>) ??= {};
             (itemData.flags as Record<string, Record<string, unknown>>).core ??= {};
@@ -3825,7 +3854,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         if (creations.length > 0) {
-            await this.actor.createEmbeddedDocuments('Item', creations);
+            await this.actor.createEmbeddedDocuments('Item', creations as unknown as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
         }
     }
 
@@ -3845,9 +3874,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (!pack) continue;
 
             const index = await pack.getIndex({ fields: ['system.weaponTypes', 'system.identifier', 'name', 'type'] });
-            const match = index.find((entry) => {
+            const match = index.find((rawEntry) => {
+                const entry = rawEntry as unknown as { type?: string; system?: OriginPathSystemData };
                 if (entry.type !== 'ammunition') return false;
-                const types = (entry.system as OriginPathSystemData)?.weaponTypes || [];
+                const types = entry.system?.weaponTypes || [];
                 return Array.isArray(types) && types.includes(weaponIdentifier as string);
             });
             if (!match) continue;

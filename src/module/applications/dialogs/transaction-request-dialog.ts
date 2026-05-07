@@ -7,9 +7,9 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 interface TransactionRequestContext extends Record<string, unknown> {
     buyer: WH40KBaseActor;
     hasSources: boolean;
-    sources: Array<{ id: string; name: string; modeLabel: string; selected: boolean }>;
-    selectedSource: Actor | null;
-    items: Array<{ id: string; name: string; img: string | null; type: string; quantity: number; cost: number; selected: boolean }>;
+    sources: Array<{ id: string | null; name: string; modeLabel: string; selected: boolean }>;
+    selectedSource: Actor.Implementation | null;
+    items: Array<{ id: string | null; name: string; img: string | null; type: string; quantity: number; cost: number; selected: boolean }>;
     selectedItem: WH40KItem | null;
     quantity: number;
     influenceBurn: number;
@@ -27,11 +27,10 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
             title: 'Barter',
             icon: 'fa-solid fa-handshake',
             resizable: true,
-            contentClasses: ['standard-form'],
         },
         position: {
             width: 720,
-            height: 'auto',
+            height: 'auto' as unknown as number,
         },
         form: {
             handler: TransactionRequestDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
@@ -51,14 +50,14 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
     };
 
     declare actor: WH40KBaseActor;
-    declare sourceId: string;
-    declare itemId: string;
+    declare sourceId: string | null;
+    declare itemId: string | null;
     declare quantity: number;
     declare influenceBurn: number;
     #resolve: ((value: boolean | null) => void) | null = null;
 
     constructor(actor: WH40KBaseActor, options: ApplicationV2Config.DefaultOptions = {}) {
-        super(options);
+        super(options as unknown as Record<string, unknown>);
         this.actor = actor;
 
         const sources = TransactionManager.listSourcesForBuyer(actor);
@@ -90,7 +89,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         }
 
         let quote: unknown = null;
-        if (selectedSource && selectedItem) {
+        if (selectedSource && selectedItem && this.actor.id && selectedSource.id && selectedItem.id) {
             try {
                 quote = TransactionManager.prepareQuote({
                     buyerActorId: this.actor.id,
@@ -180,7 +179,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         event.preventDefault();
 
         try {
-            if (!this.sourceId || !this.itemId) {
+            if (!this.sourceId || !this.itemId || !this.actor.id) {
                 throw new Error('Choose a source and an item first.');
             }
 

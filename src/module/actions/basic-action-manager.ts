@@ -13,7 +13,7 @@ export class BasicActionManager {
 
     initializeHooks(): void {
         // Add show/hide support for chat messages
-        Hooks.on('renderChatMessageHTML', (message: ChatMessage, html: HTMLElement, context: Record<string, unknown>) => {
+        Hooks.on('renderChatMessageHTML', (message: ChatMessage, html: HTMLElement, context: ChatMessage.MessageData) => {
             game.wh40k.log('renderChatMessageHTML', { message, html, context });
             // Tailwind's `important: '.wh40k-rpg'` config scopes every tw-* utility
             // under `.wh40k-rpg`. Chat messages render outside the system's sheet
@@ -35,16 +35,16 @@ export class BasicActionManager {
 
         // Initialize Scene Control Buttons
         // V14: controls is Record<string, SceneControl> keyed by control name, not an array
-        Hooks.on('getSceneControlButtons', (controls: Record<string, SceneControl>) => {
+        Hooks.on('getSceneControlButtons', (controls: Record<string, foundry.applications.ui.SceneControls.Control>) => {
             const bar = controls.tokens;
             if (!bar) return;
             const toolOrder = Object.keys(bar.tools).length;
-            bar.tools.assignDamage = {
+            bar.tools['assignDamage'] = {
                 name: 'Assign Damage',
                 title: 'Assign Damage',
                 icon: 'fas fa-shield',
                 visible: true,
-                onClick: async () => await this.assignDamageTool(),
+                onChange: async () => await this.assignDamageTool(),
                 button: true,
                 order: toolOrder,
             };
@@ -204,7 +204,7 @@ export class BasicActionManager {
         }
 
         const assignData = new AssignDamageData(targetActor as unknown as ActorLike, hitData);
-        await prepareAssignDamageRoll(assignData);
+        await prepareAssignDamageRoll(assignData as unknown as Record<string, unknown>);
     }
 
     async _applyDamage(event: Event): Promise<void> {
@@ -262,7 +262,7 @@ export class BasicActionManager {
 
         const hitData = new Hit();
         const assignData = new AssignDamageData(sourceActor as unknown as ActorLike, hitData);
-        await prepareAssignDamageRoll(assignData);
+        await prepareAssignDamageRoll(assignData as unknown as Record<string, unknown>);
     }
 
     getActionData(id: string | undefined): ActionData | null {

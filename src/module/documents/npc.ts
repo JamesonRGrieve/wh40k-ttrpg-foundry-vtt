@@ -12,7 +12,7 @@ import { WH40KBaseActor } from './base-actor.ts';
  * @extends {WH40KBaseActor}
  */
 export class WH40KNPC extends WH40KBaseActor {
-    declare system: NPCData;
+    declare system: WH40KBaseActor['system'] & NPCData;
 
     /* -------------------------------------------- */
     /*  Properties                                  */
@@ -79,21 +79,22 @@ export class WH40KNPC extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: Record<string, unknown>): Promise<void> {
-        await super._preCreate(data as never, options as never, user as never);
+    protected override async _preCreate(data: never, options: never, user: User.Internal.Implementation): Promise<boolean | void> {
+        await super._preCreate(data, options, user as never);
+        const createData = data as Record<string, unknown>;
 
         // Configure token defaults for NPC V2
-        const initData = {
+        const initData: Record<string, unknown> = {
             'token.bar1': { attribute: 'wounds' },
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.disposition': CONST.TOKEN_DISPOSITIONS.HOSTILE,
-            'token.name': data.name,
+            'token.name': createData.name,
         };
 
         // If horde type, show magnitude instead of wounds
-        const systemData = data.system as Record<string, unknown> | undefined;
-        if (systemData?.type === 'horde' || systemData?.type === 'swarm') {
+        const systemData = createData.system as Record<string, unknown> | undefined;
+        if (systemData !== undefined && (systemData['type'] === 'horde' || systemData['type'] === 'swarm')) {
             initData['token.bar1'] = { attribute: 'horde.magnitude' };
         }
 
@@ -187,27 +188,30 @@ export class WH40KNPC extends WH40KBaseActor {
             case 'weapon': {
                 if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
                     const charKey = item.system.isMeleeWeapon ? 'weaponSkill' : 'ballisticSkill';
-                    await this.rollCharacteristic(charKey, item.name ?? undefined);
+                    await this.rollCharacteristic(charKey, item.name !== null ? item.name : undefined);
                 } else {
-                    await DHTargetedActionManager.performWeaponAttack(this, null, item);
+                    await DHTargetedActionManager.performWeaponAttack(this as unknown as WH40KBaseActor, null, item);
                 }
                 return;
             }
             case 'psychicPower': {
                 if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
-                    await this.rollCharacteristic('willpower', item.name ?? undefined);
+                    await this.rollCharacteristic('willpower', item.name !== null ? item.name : undefined);
                 } else {
-                    await DHTargetedActionManager.performPsychicAttack(this, null, item);
+                    await DHTargetedActionManager.performPsychicAttack(this as unknown as WH40KBaseActor, null, item);
                 }
                 return;
             }
             default: {
                 const { DHBasicActionManager } = await import('../actions/basic-action-manager.ts');
+                const rawBenefit = item.system.benefit;
+                const rawDescription = item.system.description;
+                const htmlContent = typeof rawBenefit === 'string' ? rawBenefit : typeof rawDescription === 'string' ? rawDescription : '';
                 await DHBasicActionManager.sendItemVocalizeChat({
-                    actor: this.name ?? '',
-                    name: item.name ?? '',
-                    type: item.type?.toUpperCase() ?? '',
-                    description: await TextEditor.enrichHTML(item.system.benefit ?? item.system.description ?? '', {
+                    actor: this.name !== null ? this.name : '',
+                    name: item.name !== null ? item.name : '',
+                    type: item.type !== null ? item.type.toUpperCase() : '',
+                    description: await TextEditor.enrichHTML(htmlContent, {
                         rollData: { actor: this, item },
                     }),
                 });
@@ -221,7 +225,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {string} [flavor] - Optional flavor text.
      * @returns {Promise<Roll>}
      */
-    async rollSkill(skillName: string, flavor?: string): Promise<unknown> {
+    async rollSkill(skillName: string, flavor?: string): Promise<void> {
         const target = this.system.getSkillTarget(skillName);
         const skill = this.system.trainedSkills[skillName];
         const skillLabel = skill?.name || skillName;
@@ -281,7 +285,7 @@ export class WH40KNPC extends WH40KBaseActor {
         return this.update({
             'system.wounds.value': newWounds,
             'system.wounds.critical': critical,
-        });
+        } as Record<string, unknown>);
     }
 
     /**
@@ -291,7 +295,7 @@ export class WH40KNPC extends WH40KBaseActor {
      */
     healWounds(amount: number): unknown {
         const newWounds = Math.min(this.system.wounds.max, this.system.wounds.value + amount);
-        return this.update({ 'system.wounds.value': newWounds });
+        return this.update({ 'system.wounds.value': newWounds } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -368,7 +372,7 @@ export class WH40KNPC extends WH40KBaseActor {
         return this.update({
             'system.horde.enabled': false,
             'system.type': this.system.type === 'swarm' ? 'creature' : 'elite',
-        });
+        } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -407,7 +411,7 @@ export class WH40KNPC extends WH40KBaseActor {
         // Clear the ID to create a new actor
         delete data['_id'];
 
-        return Actor.create(data);
+        return Actor.create(data as unknown as Actor.CreateData);
     }
 
     /**

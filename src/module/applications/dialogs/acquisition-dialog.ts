@@ -65,7 +65,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         },
         position: {
             width: 480,
-            height: 'auto',
+            height: 'auto' as unknown as number,
         },
         form: {
             handler: AcquisitionDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
@@ -106,7 +106,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @param {WH40KBaseActor} actor  The actor
      * @param {object} options  Additional options
      */
-    constructor(actor: WH40KBaseActor, options: { item?: WH40KItem } & Record<string, unknown> = {}) {
+    constructor(actor: WH40KBaseActor, options: { item?: WH40KItem | null } & Record<string, unknown> = {}) {
         super(options);
         this.actor = actor;
         this.item = options.item || null;
@@ -322,7 +322,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         if (dos <= -3) {
             const rogueTrader = (this.actor.system as any).rogueTrader;
             const newPF = Math.max(0, rogueTrader.profitFactor.current - 1);
-            await this.actor.update({ 'system.rogueTrader.profitFactor.current': newPF });
+            await this.actor.update({ 'system.rogueTrader.profitFactor.current': newPF } as Record<string, unknown>);
             ui.notifications.warn(`Critical failure! Profit Factor reduced to ${newPF}`);
         }
 
@@ -427,7 +427,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<object|null>}  Result or null
      * @static
      */
-    static async show(actor: WH40KBaseActor, item: WH40KItem = null): Promise<unknown> {
+    static async show(actor: WH40KBaseActor, item: WH40KItem | null = null): Promise<unknown> {
         const dialog = new AcquisitionDialog(actor, { item });
         void dialog.render(true);
         return dialog.wait();

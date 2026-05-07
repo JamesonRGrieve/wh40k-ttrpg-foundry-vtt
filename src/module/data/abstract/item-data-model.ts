@@ -273,7 +273,8 @@ export default class ItemDataModel extends SystemDataModel {
      */
     getRollData({ deterministic = false } = {}): Record<string, unknown> {
         const actor = (this.parent as WH40KItem).actor;
-        const actorRollData = actor?.getRollData({ deterministic }) ?? {};
+        const actorRollData =
+            (actor as unknown as { getRollData?: (opts: { deterministic: boolean }) => Record<string, unknown> })?.getRollData?.({ deterministic }) ?? {};
         return { ...actorRollData, item: this.toObject() };
     }
 

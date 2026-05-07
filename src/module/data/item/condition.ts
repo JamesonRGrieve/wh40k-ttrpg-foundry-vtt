@@ -27,7 +27,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Is this a beneficial or harmful condition?
             nature: new fields.StringField({
@@ -86,7 +86,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * @type {string}
      */
     get natureIcon() {
-        const icons = {
+        const icons: Record<string, string> = {
             beneficial: 'fa-plus-circle',
             harmful: 'fa-exclamation-triangle',
             neutral: 'fa-info-circle',
@@ -116,7 +116,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * @type {string}
      */
     get appliesToIcon() {
-        const icons = {
+        const icons: Record<string, string> = {
             self: 'fa-user',
             target: 'fa-crosshairs',
             both: 'fa-users',

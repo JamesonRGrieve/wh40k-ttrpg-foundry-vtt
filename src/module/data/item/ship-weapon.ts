@@ -30,7 +30,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Weapon type
             weaponType: new fields.StringField({
@@ -126,7 +126,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
     static #migrateType(source: Record<string, unknown>): void {
         if ('type' in source) {
             if (!source.weaponType) {
-                const typeMap = {
+                const typeMap: Record<string, string> = {
                     'macrocannon': 'macrobattery',
                     'macrobattery': 'macrobattery',
                     'lance': 'lance',

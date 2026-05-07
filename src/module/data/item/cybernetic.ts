@@ -33,7 +33,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Cybernetic type
             type: new fields.StringField({
@@ -141,7 +141,11 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.typeLabel, `Location: ${this.locationsLabel}`];
+        const props = [
+            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
+            this.typeLabel,
+            `Location: ${this.locationsLabel}`,
+        ];
 
         if (this.hasArmourPoints) {
             const apValues = Object.entries(this.armourPoints)

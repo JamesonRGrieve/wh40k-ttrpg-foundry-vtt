@@ -27,6 +27,8 @@ export default class EffectCreationDialog extends DialogV2 {
     declare actor: WH40KBaseActor;
     declare resolve: (value: ActiveEffect | null) => void;
     declare selectedCategory: string;
+    declare element: HTMLElement;
+    declare submit: () => Promise<void>;
 
     /** @override */
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
@@ -34,20 +36,10 @@ export default class EffectCreationDialog extends DialogV2 {
         window: {
             title: 'WH40K.ActiveEffect.CreateEffect',
             icon: 'fas fa-sparkles',
-            contentClasses: [
-                'tw-bg-gradient-to-br',
-                'tw-from-[#1a1612]',
-                'tw-to-[#2c2417]',
-                'tw-border-2',
-                'tw-border-solid',
-                'tw-border-[var(--wh40k-accent-gold)]',
-                'tw-shadow-[0_8px_32px_rgba(0,0,0,0.5)]',
-                '[&_.dialog-buttons]:tw-hidden',
-            ],
         },
         position: {
             width: 520,
-            height: 'auto',
+            height: 'auto' as unknown as number,
         },
         form: {
             handler: EffectCreationDialog.formHandler as unknown as ApplicationV2Config.FormConfiguration['handler'],
@@ -58,21 +50,24 @@ export default class EffectCreationDialog extends DialogV2 {
             selectCondition: EffectCreationDialog._onSelectCondition,
             selectCategory: EffectCreationDialog._onSelectCategory,
         },
-        buttons: [
-            {
-                action: 'create',
-                label: 'Create Effect',
-                icon: 'fas fa-check',
-                default: true,
-                type: 'submit',
-            },
-            {
-                action: 'cancel',
-                label: 'Cancel',
-                icon: 'fas fa-times',
-                type: 'button',
-            },
-        ],
+        // DialogV2-specific buttons config (not in the shared DefaultOptions type)
+        ...({
+            buttons: [
+                {
+                    action: 'create',
+                    label: 'Create Effect',
+                    icon: 'fas fa-check',
+                    default: true,
+                    type: 'submit',
+                },
+                {
+                    action: 'cancel',
+                    label: 'Cancel',
+                    icon: 'fas fa-times',
+                    type: 'button',
+                },
+            ],
+        } as Partial<ApplicationV2Config.DefaultOptions>),
     };
 
     /* -------------------------------------------- */
@@ -95,7 +90,7 @@ export default class EffectCreationDialog extends DialogV2 {
     }
 
     constructor(options: EffectCreationDialogOptions) {
-        super(options);
+        super(options as unknown as Record<string, unknown>);
         this.actor = options.actor;
         this.resolve = options.resolve;
         this.selectedCategory = 'custom';
@@ -104,8 +99,8 @@ export default class EffectCreationDialog extends DialogV2 {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
-        const context = await super._prepareContext(options);
+    async _prepareContext(_options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        const context: Record<string, unknown> = {};
 
         context.actor = this.actor;
         context.selectedCategory = this.selectedCategory;
@@ -195,26 +190,27 @@ export default class EffectCreationDialog extends DialogV2 {
 
         let effectData: Record<string, unknown> | null = null;
 
+        const Ctor = this.constructor as typeof EffectCreationDialog;
         // Handle based on effect type
         switch (data.effectType) {
             case 'condition':
-                effectData = this._createConditionData(data);
+                effectData = Ctor._createConditionData(data);
                 break;
 
             case 'characteristic':
-                effectData = this._createCharacteristicData(data);
+                effectData = Ctor._createCharacteristicData(data);
                 break;
 
             case 'skill':
-                effectData = this._createSkillData(data);
+                effectData = Ctor._createSkillData(data);
                 break;
 
             case 'combat':
-                effectData = this._createCombatData(data);
+                effectData = Ctor._createCombatData(data);
                 break;
 
             case 'custom':
-                effectData = this._createCustomData(data);
+                effectData = Ctor._createCustomData(data);
                 break;
         }
 
@@ -224,7 +220,7 @@ export default class EffectCreationDialog extends DialogV2 {
         }
 
         // Create the effect
-        const effects = await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
+        const effects = await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData as Record<string, unknown> & { name: string }]);
         return this.resolve(effects[0] as ActiveEffect);
     }
 

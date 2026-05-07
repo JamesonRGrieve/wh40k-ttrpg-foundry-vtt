@@ -49,107 +49,126 @@ export default class OriginPathSheet extends BaseItemSheet {
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
-        const system = this.document.system;
-        const grants = system?.grants || {};
-        const modifiers = system?.modifiers?.characteristics || {};
+        const system = this.document.system as Record<string, unknown>;
+        interface OriginGrants {
+            woundsFormula?: string;
+            fateFormula?: string;
+            skills?: Array<{ name: string; specialization?: string; level?: string }>;
+            talents?: Array<{ name: string; specialization?: string; uuid?: string }>;
+            traits?: Array<{ name: string; level?: string; uuid?: string }>;
+            equipment?: Array<{ name?: string; quantity?: number; uuid?: string } | string>;
+            specialAbilities?: unknown[];
+            choices?: Array<{ type: string; label: string; count?: number; options: Array<{ label: string; value: string; description?: string }> }>;
+        }
+        const grants = (system?.grants ?? {}) as OriginGrants;
+        const charModifiers = system?.modifiers as Record<string, unknown> | undefined;
+        const modifiers = (charModifiers?.characteristics ?? {}) as Record<string, number>;
 
-        context.origin = this.document;
-        context.allowSelection = false;
-        context.isSelected = false;
-
-        // Basic info
-        context.name = this.document.name;
-        context.img = this.document.img;
-        context.step = system?.step;
-        context.stepLabel = this._getStepLabel(system?.step);
-        context.xpCost = system?.xpCost || 0;
-        context.isAdvanced = system?.isAdvancedOrigin || false;
-
-        // Description
-        context.description = system?.description?.value || '';
-        context.hasDescription = !!context.description;
-
-        // Source info
-        context.source = system?.source || {};
-        context.hasSource = !!(context.source.book || context.source.page);
+        const step = system?.step as string | undefined;
+        const descriptionObj = system?.description as Record<string, unknown> | undefined;
+        const sourceObj = (system?.source as Record<string, unknown> | undefined) ?? {};
+        const requirementsObj = (system?.requirements as Record<string, unknown> | undefined) ?? {};
 
         // Characteristic modifiers
-        context.characteristics = [];
+        const characteristics: Array<{ key: string; label: string; short: string; value: number; positive: boolean }> = [];
         for (const [key, value] of Object.entries(modifiers)) {
             if (value !== 0) {
-                context.characteristics.push({
-                    key: key,
+                characteristics.push({
+                    key,
                     label: getCharacteristicDisplayInfo(key).label,
                     short: getCharacteristicDisplayInfo(key).short,
-                    value: value,
+                    value,
                     positive: value > 0,
                 });
             }
         }
-        context.hasCharacteristics = context.characteristics.length > 0;
-
-        // Wounds/Fate formulas
-        context.woundsFormula = grants.woundsFormula || null;
-        context.fateFormula = grants.fateFormula || null;
-        context.hasFormulas = !!(context.woundsFormula || context.fateFormula);
 
         // Skills
-        context.skills = (grants.skills || []).map((skill) => ({
+        const skills = (grants.skills ?? []).map((skill) => ({
             name: skill.name,
-            specialization: skill.specialization || null,
-            level: skill.level || 'trained',
-            levelLabel: getTrainingLabel(skill.level),
+            specialization: skill.specialization ?? null,
+            level: skill.level ?? 'trained',
+            levelLabel: getTrainingLabel(skill.level ?? 'trained'),
             displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
-        context.hasSkills = context.skills.length > 0;
 
         // Talents
-        context.talents = (grants.talents || []).map((talent) => ({
+        const talents = (grants.talents ?? []).map((talent) => ({
             name: talent.name,
-            specialization: talent.specialization || null,
-            uuid: talent.uuid || null,
+            specialization: talent.specialization ?? null,
+            uuid: talent.uuid ?? null,
             hasItem: !!talent.uuid,
         }));
-        context.hasTalents = context.talents.length > 0;
 
         // Traits
-        context.traits = (grants.traits || []).map((trait) => ({
+        const traits = (grants.traits ?? []).map((trait) => ({
             name: trait.name,
-            level: trait.level || null,
-            uuid: trait.uuid || null,
+            level: trait.level ?? null,
+            uuid: trait.uuid ?? null,
             hasItem: !!trait.uuid,
         }));
-        context.hasTraits = context.traits.length > 0;
 
         // Equipment
-        context.equipment = (grants.equipment || []).map((item) => ({
-            name: item.name || item,
-            quantity: item.quantity || 1,
-            uuid: item.uuid || null,
-        }));
-        context.hasEquipment = context.equipment.length > 0;
-
-        // Special Abilities
-        context.specialAbilities = grants.specialAbilities || [];
-        context.hasSpecialAbilities = context.specialAbilities.length > 0;
+        const equipment = (grants.equipment ?? []).map((item) => {
+            if (typeof item === 'string') return { name: item, quantity: 1, uuid: null };
+            return { name: item.name ?? '', quantity: item.quantity ?? 1, uuid: item.uuid ?? null };
+        });
 
         // Choices
-        context.choices = (grants.choices || []).map((choice) => ({
+        const choices = (grants.choices ?? []).map((choice) => ({
             type: choice.type,
             typeLabel: getChoiceTypeLabel(choice.type),
             label: choice.label,
-            count: choice.count || 1,
+            count: choice.count ?? 1,
             options: choice.options.map((opt) => ({
                 label: opt.label,
                 value: opt.value,
-                description: opt.description || '',
+                description: opt.description ?? '',
             })),
         }));
-        context.hasChoices = context.choices.length > 0;
 
-        // Requirements
-        context.requirements = system?.requirements || {};
-        context.hasRequirements = !!(context.requirements.text || context.requirements.previousSteps?.length || context.requirements.excludedSteps?.length);
+        const specialAbilities = grants.specialAbilities ?? [];
+        const woundsFormula = grants.woundsFormula ?? null;
+        const fateFormula = grants.fateFormula ?? null;
+
+        Object.assign(context, {
+            origin: this.document,
+            allowSelection: false,
+            isSelected: false,
+            name: this.document.name,
+            img: this.document.img,
+            step,
+            stepLabel: this._getStepLabel(step),
+            xpCost: (system?.xpCost as number) || 0,
+            isAdvanced: (system?.isAdvancedOrigin as boolean) || false,
+            description: (descriptionObj?.value as string) || '',
+            hasDescription: !!descriptionObj?.value,
+            source: sourceObj,
+            hasSource: !!(sourceObj.book || sourceObj.page),
+            characteristics,
+            hasCharacteristics: characteristics.length > 0,
+            woundsFormula,
+            fateFormula,
+            hasFormulas: !!(woundsFormula || fateFormula),
+            skills,
+            hasSkills: skills.length > 0,
+            talents,
+            hasTalents: talents.length > 0,
+            traits,
+            hasTraits: traits.length > 0,
+            equipment,
+            hasEquipment: equipment.length > 0,
+            specialAbilities,
+            hasSpecialAbilities: specialAbilities.length > 0,
+            choices,
+            hasChoices: choices.length > 0,
+            requirements: requirementsObj,
+            hasRequirements: !!(
+                requirementsObj.text ||
+                (requirementsObj.previousSteps as unknown[] | undefined)?.length ||
+                (requirementsObj.excludedSteps as unknown[] | undefined)?.length
+            ),
+        });
 
         return context;
     }
@@ -158,9 +177,9 @@ export default class OriginPathSheet extends BaseItemSheet {
     /*  Helper Methods                              */
     /* -------------------------------------------- */
 
-    _getStepLabel(step: any): string {
+    _getStepLabel(step: string | undefined): string {
         if (!step) return '';
-        const labels = {
+        const labels: Record<string, string> = {
             homeWorld: 'Home World',
             birthright: 'Birthright',
             lureOfTheVoid: 'Lure of the Void',
@@ -172,6 +191,6 @@ export default class OriginPathSheet extends BaseItemSheet {
         };
         const key = step.charAt(0).toUpperCase() + step.slice(1);
         const localizationKey = `WH40K.OriginPath.${key}`;
-        return game.i18n.has?.(localizationKey) ? game.i18n.localize(localizationKey) : labels[step] || step;
+        return game.i18n.has?.(localizationKey) ? game.i18n.localize(localizationKey) : labels[step] ?? step;
     }
 }

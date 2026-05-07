@@ -176,7 +176,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
         async _onEnhancedDragStart(event: DragEvent): Promise<void> {
             const element = event.currentTarget as HTMLElement;
             const itemId = element.dataset.itemId;
-            const item = this.document.items.get(itemId ?? '') as WH40KItem | undefined;
+            const item = this.#actorDocument().items.get(itemId ?? '') as WH40KItem | undefined;
 
             if (!item) return;
 
@@ -323,7 +323,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                     if (!zoneEl.querySelector('.wh40k-drop-zone__pulse-bg')) {
                         const pulseBg = document.createElement('span');
                         pulseBg.className = 'wh40k-drop-zone__pulse-bg tw-animate-drop-zone-pulse tw-absolute tw-inset-0 tw-pointer-events-none';
-                        pulseBg.style.background = 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(212, 175, 55, 0.05) 10px, rgba(212, 175, 55, 0.05) 20px)';
+                        pulseBg.style.background =
+                            'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(212, 175, 55, 0.05) 10px, rgba(212, 175, 55, 0.05) 20px)';
                         zoneEl.appendChild(pulseBg);
                     }
                 } else {
@@ -508,7 +509,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                 return;
             }
 
-            await item.update({ 'system.equipped': true });
+            await item.update({ 'system.equipped': true } as Record<string, unknown>);
             ui.notifications.info(`Equipped ${item.name}`);
             this._animateSnapToSlot(item);
         }

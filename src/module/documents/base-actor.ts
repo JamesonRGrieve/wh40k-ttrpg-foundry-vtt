@@ -28,8 +28,8 @@ type ItemModifierCarrier = WH40KItem & {
 };
 
 export class WH40KBaseActor extends Actor {
-    declare system: WH40KActorSystemData;
-    declare items: foundry.utils.Collection<WH40KItem>;
+    declare system: Actor['system'] & WH40KActorSystemData;
+    declare items: Actor['items'] & foundry.utils.Collection<WH40KItem>;
 
     async rollCharacteristicCheck(_characteristic: string): Promise<unknown> {
         return null;
@@ -53,21 +53,16 @@ export class WH40KBaseActor extends Actor {
      * Handle the creation of descendant documents (items).
      * @override
      */
-    _onCreateDescendantDocuments(
-        parent: foundry.abstract.Document.Any | null,
-        collection: string,
-        documents: WH40KItem[],
-        data: Array<Record<string, unknown>>,
-        options: Record<string, unknown>,
-        userId: string,
-    ): void {
-        super._onCreateDescendantDocuments(parent, collection, documents, data, options, userId);
+    protected override _onCreateDescendantDocuments(...args: Actor.OnCreateDescendantDocumentsArgs): void {
+        super._onCreateDescendantDocuments(...args);
+        const [, collection, documents, , , userId] = args;
+        const items = documents as unknown as WH40KItem[];
         if (collection === 'items') {
             this._onItemsChanged();
 
             // Process talent grants for newly added talents
             if (game.user.id === userId) {
-                for (const item of documents) {
+                for (const item of items) {
                     if (item.type === 'talent' && item.system?.hasGrants) {
                         setTimeout(() => void processTalentGrants(item, this), 100);
                     }
@@ -80,15 +75,9 @@ export class WH40KBaseActor extends Actor {
      * Handle the update of descendant documents (items).
      * @override
      */
-    _onUpdateDescendantDocuments(
-        parent: foundry.abstract.Document.Any | null,
-        collection: string,
-        documents: WH40KItem[],
-        changes: Array<Record<string, unknown>>,
-        options: Record<string, unknown>,
-        userId: string,
-    ): void {
-        super._onUpdateDescendantDocuments(parent, collection, documents, changes, options, userId);
+    protected override _onUpdateDescendantDocuments(...args: Actor.OnUpdateDescendantDocumentsArgs): void {
+        super._onUpdateDescendantDocuments(...args);
+        const [, collection] = args;
         if (collection === 'items') {
             this._onItemsChanged();
         }
@@ -98,23 +87,18 @@ export class WH40KBaseActor extends Actor {
      * Handle the deletion of descendant documents (items).
      * @override
      */
-    _onDeleteDescendantDocuments(
-        parent: foundry.abstract.Document.Any | null,
-        collection: string,
-        documents: WH40KItem[],
-        ids: string[],
-        options: Record<string, unknown>,
-        userId: string,
-    ): void {
+    protected override _onDeleteDescendantDocuments(...args: Actor.OnDeleteDescendantDocumentsArgs): void {
+        const [, collection, documents, , , userId] = args;
+        const items = documents as unknown as WH40KItem[];
         if (collection === 'items' && game.user.id === userId) {
-            for (const item of documents) {
+            for (const item of items) {
                 if (item.type === 'talent' && item.system?.hasGrants) {
                     setTimeout(() => void handleTalentRemoval(item, this), 100);
                 }
             }
         }
 
-        super._onDeleteDescendantDocuments(parent, collection, documents, ids, options, userId);
+        super._onDeleteDescendantDocuments(...args);
         if (collection === 'items') {
             this._onItemsChanged();
         }
@@ -137,21 +121,24 @@ export class WH40KBaseActor extends Actor {
         }
     }
 
-    async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: unknown): Promise<void> {
-        await super._preCreate(data as never, options, user);
+    protected override async _preCreate(data: never, options: never, user: User.Internal.Implementation): Promise<boolean | void> {
+        await super._preCreate(data, options, user as never);
+        const createData = data as Record<string, unknown>;
+        const preCreateOptions = options as Record<string, unknown>;
+        void preCreateOptions;
         const initData: Record<string, unknown> = {
             'token.bar1': { attribute: 'wounds' },
             'token.bar2': { attribute: 'fate' },
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
-            'token.name': data.name,
+            'token.name': createData.name,
         };
-        if (data.type === 'vehicle') {
+        if (createData.type === 'vehicle') {
             initData['token.bar1'] = { attribute: 'integrity' };
             initData['token.bar2'] = undefined;
         }
-        if (data.type === 'acolyte' || data.type === 'character') {
+        if (createData.type === 'acolyte' || createData.type === 'character') {
             initData['token.vision'] = true;
             initData['token.actorLink'] = true;
 
@@ -176,7 +163,7 @@ export class WH40KBaseActor extends Actor {
     }
 
     get size(): number {
-        return Number.parseInt(this.system.size);
+        return Number.parseInt(String(this.system.size));
     }
 
     get movement(): { half: number; full: number; charge: number; run: number } {
@@ -599,6 +586,10 @@ export class WH40KBaseActor extends Actor {
     #getFateBreakdown(): WH40KStatBreakdown {
         const fate = this.system.fate;
 
+        if (!fate) {
+            return { label: 'Fate Points', base: 0, modifiers: [], total: 0 };
+        }
+
         const breakdown: WH40KStatBreakdown = {
             label: 'Fate Points',
             base: fate.rolled ? fate.max - (this.system.totalFateModifier || 0) : 0,
@@ -678,9 +669,9 @@ export class WH40KBaseActor extends Actor {
             const value = modifiers.characteristics[charKey];
             if (value && value !== 0) {
                 modifiersArray.push({
-                    source: item.name,
+                    source: item.name !== null ? item.name : '',
                     value: value,
-                    uuid: item.uuid,
+                    uuid: item.uuid !== null ? item.uuid : undefined,
                     icon: this.#getItemIcon(item),
                 });
             }
@@ -701,9 +692,9 @@ export class WH40KBaseActor extends Actor {
             const value = modifiers.skills[skillKey];
             if (value && value !== 0) {
                 modifiersArray.push({
-                    source: item.name,
+                    source: item.name !== null ? item.name : '',
                     value: value,
-                    uuid: item.uuid,
+                    uuid: item.uuid !== null ? item.uuid : undefined,
                     icon: this.#getItemIcon(item),
                 });
             }
@@ -723,9 +714,9 @@ export class WH40KBaseActor extends Actor {
             const woundsMod = modifiers.other.find((m: { key: string; value: number }) => m.key === 'wounds' || m.key === 'wounds.max');
             if (woundsMod && woundsMod.value !== 0) {
                 modifiersArray.push({
-                    source: item.name,
+                    source: item.name !== null ? item.name : '',
                     value: woundsMod.value,
-                    uuid: item.uuid,
+                    uuid: item.uuid !== null ? item.uuid : undefined,
                     icon: this.#getItemIcon(item),
                 });
             }
@@ -745,9 +736,9 @@ export class WH40KBaseActor extends Actor {
             const initiativeMod = modifiers.other.find((m: { key: string; value: number }) => m.key === 'initiative');
             if (initiativeMod && initiativeMod.value !== 0) {
                 modifiersArray.push({
-                    source: item.name,
+                    source: item.name !== null ? item.name : '',
                     value: initiativeMod.value,
-                    uuid: item.uuid,
+                    uuid: item.uuid !== null ? item.uuid : undefined,
                     icon: this.#getItemIcon(item),
                 });
             }

@@ -80,7 +80,7 @@ interface SkillData {
 interface ModifierSource {
     name: string;
     type: string;
-    id: string;
+    id: string | null;
     value: number;
     label?: string;
     specialization?: string;
@@ -252,8 +252,8 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {boolean} hasEntries - Whether skill has specialist entries (skill group)
      * @returns {SchemaField}
      */
-    static SkillField(label: string, charShort: string, advanced = false, hasEntries = false): unknown {
-        const schema: Record<string, unknown> = {
+    static SkillField(label: string, charShort: string, advanced = false, hasEntries = false): foundry.data.fields.DataField.Any {
+        const schema: Record<string, foundry.data.fields.DataField.Any> = {
             label: new StringField({ required: true, initial: label }),
             characteristic: new StringField({ required: true, initial: charShort }),
             advanced: new BooleanField({ required: true, initial: advanced }),

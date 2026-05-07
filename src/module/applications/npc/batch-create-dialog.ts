@@ -242,12 +242,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {HTMLFormElement} form
      * @param {foundry.applications.api.FormDataExtended} formData
      */
-    static async #onSubmit(
-        this: BatchCreateDialog,
-        event: SubmitEvent,
-        form: HTMLFormElement,
-        formData: foundry.applications.api.FormDataExtended,
-    ): Promise<void> {
+    static async #onSubmit(this: BatchCreateDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         const data = foundry.utils.expandObject(formData.object) as Partial<BatchState>;
 
         // Update state from form

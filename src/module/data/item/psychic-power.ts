@@ -25,13 +25,16 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     declare rangePerPR: number;
     declare notes: string;
 
+    // Getters from ActivationTemplate
+    declare activationLabel: string;
+
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Psychic discipline
             discipline: new fields.StringField({
@@ -156,11 +159,11 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             this.disciplineLabel,
             `PR Cost: ${this.prCost}`,
             `Focus: ${this.focusTestLabel}`,
-            ...ActivationTemplate.prototype.chatProperties.call(this),
+            ...((Object.getOwnPropertyDescriptor(ActivationTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
         ];
 
         if (this.isAttack) {
-            props.push(...DamageTemplate.prototype.chatProperties.call(this));
+            props.push(...((Object.getOwnPropertyDescriptor(DamageTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []));
         }
 
         if (this.sustained) {

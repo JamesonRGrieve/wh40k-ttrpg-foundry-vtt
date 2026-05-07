@@ -57,9 +57,10 @@ export default class ShipComponentSheet extends BaseItemSheet {
         context.conditions = this._getConditionChoices();
 
         // Add display helpers
-        context.isGenerator = context.system.power?.generated > 0;
-        context.isPowerConsumer = context.system.power?.used > 0;
-        context.hasModifiers = context.system.hasModifiers;
+        const sys = context.system as { hasModifiers?: boolean; power?: { generated?: number; used?: number } };
+        context.isGenerator = (sys.power?.generated ?? 0) > 0;
+        context.isPowerConsumer = (sys.power?.used ?? 0) > 0;
+        context.hasModifiers = sys.hasModifiers;
 
         return context;
     }

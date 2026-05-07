@@ -82,11 +82,6 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     /** Saved scroll position before re-render, restored in _onRender. */
     _savedScrollTop: number = 0;
 
-    /** Inherited from ApplicationV2 — re-declared so the mixin return type exposes it. */
-    declare render: (options?: boolean | Record<string, unknown>) => Promise<unknown>;
-
-    /** Inherited from ApplicationV2 — re-declared so the mixin return type exposes it. */
-    declare close: (options?: Record<string, unknown>) => Promise<void>;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'origin-choice-dialog'],
@@ -231,8 +226,8 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        const context = (await super._prepareContext(options as unknown as never)) as Record<string, unknown>;
 
         context.item = this.item;
         context.itemName = this.item.name;
@@ -272,17 +267,18 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                                 } else if ((grants.skills?.length ?? 0) > 0) {
                                     const skillData = (grants.skills ?? [])[0];
                                     if (typeof skillData === 'string') {
-                                        optUuid = await findSkillUuid(skillData, null);
+                                        optUuid = (await findSkillUuid(skillData, null)) ?? null;
                                     } else if (skillData) {
                                         if (skillData.uuid) {
                                             optUuid = skillData.uuid;
                                         } else {
                                             const skillName = skillData.name ?? '';
                                             const specialization = skillData.specialization ?? null;
-                                            optUuid = await (findSkillUuid as (name: string, spec: string | null) => Promise<string | null>)(
-                                                skillName,
-                                                specialization,
-                                            );
+                                            optUuid =
+                                                (await (findSkillUuid as unknown as (name: string, spec: string | null) => Promise<string | null>)(
+                                                    skillName,
+                                                    specialization,
+                                                )) ?? null;
                                         }
                                     }
                                 } else if ((grants.traits?.length ?? 0) > 0 && firstTrait?.uuid) {
@@ -443,8 +439,8 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
-        super._onRender(context, options);
+    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        await super._onRender(context, options);
 
         // Restore scroll position after re-render
         if (this._savedScrollTop) {

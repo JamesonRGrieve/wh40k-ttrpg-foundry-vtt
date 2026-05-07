@@ -1,3 +1,4 @@
+import type { AnyMutableObject } from 'fvtt-types/utils';
 import { formatChangeValue, getChangeLabel } from '../helpers/effects.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 
@@ -52,9 +53,9 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @type {string}
      */
     get nature(): string {
-        // Check explicit flag
-        const flagNature = this.getFlag('wh40k-rpg', 'nature');
-        if (flagNature) return flagNature;
+        // Check explicit flag — getFlag returns unknown, narrow to string
+        const flagNature = (this as unknown as { getFlag(scope: string, key: string): unknown }).getFlag('wh40k-rpg', 'nature');
+        if (typeof flagNature === 'string' && flagNature) return flagNature;
 
         // Analyze changes to determine nature
         let positiveCount = 0;
@@ -62,8 +63,9 @@ export class WH40KActiveEffect extends ActiveEffect {
 
         for (const change of this.changes) {
             if (change.mode === CONST.ACTIVE_EFFECT_MODES.ADD) {
-                if (change.value > 0) positiveCount++;
-                else if (change.value < 0) negativeCount++;
+                const numericValue = Number(change.value);
+                if (numericValue > 0) positiveCount++;
+                else if (numericValue < 0) negativeCount++;
             }
         }
 
@@ -92,28 +94,36 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @returns {*}                     The resulting applied value
      * @override
      */
-    apply(target: unknown, change: EffectChange): unknown {
+    override apply(target: Actor.Implementation, change: ActiveEffect.ChangeData): AnyMutableObject {
+        // Narrow the target to our system type for internal helpers
+        const actor = target as unknown as WH40KBaseActor;
         // Handle WH40K RPG-specific change keys
         const key = change.key;
+        const internalChange: EffectChange = {
+            key: change.key,
+            value: change.value,
+            mode: change.mode,
+            priority: (change as unknown as { priority?: number }).priority,
+        };
 
         // Handle characteristic modifications (e.g., "characteristics.strength")
         if (key.startsWith('system.characteristics.')) {
-            return this._applyCharacteristicChange(target, change);
+            return { value: this._applyCharacteristicChange(actor, internalChange) };
         }
 
         // Handle skill modifications (e.g., "skills.acrobatics.bonus")
         if (key.startsWith('system.skills.')) {
-            return this._applySkillChange(target, change);
+            return { value: this._applySkillChange(actor, internalChange) };
         }
 
         // Handle combat stat modifications
         if (key.startsWith('system.combat.')) {
-            return this._applyCombatChange(target, change);
+            return { value: this._applyCombatChange(actor, internalChange) };
         }
 
         // Handle movement modifications
         if (key.startsWith('system.movement.')) {
-            return this._applyMovementChange(target, change);
+            return { value: this._applyMovementChange(actor, internalChange) };
         }
 
         // Default to parent implementation
@@ -133,7 +143,7 @@ export class WH40KActiveEffect extends ActiveEffect {
 
         if (!actor.system.characteristics?.[charKey]) return null;
 
-        const current = foundry.utils.getProperty(actor, path) ?? 0;
+        const current = Number(foundry.utils.getProperty(actor, path) ?? 0);
         return this._applyChangeValue(current, change);
     }
 
@@ -150,7 +160,7 @@ export class WH40KActiveEffect extends ActiveEffect {
 
         if (!actor.system.skills?.[skillKey]) return null;
 
-        const current = foundry.utils.getProperty(actor, path) ?? 0;
+        const current = Number(foundry.utils.getProperty(actor, path) ?? 0);
         return this._applyChangeValue(current, change);
     }
 
@@ -163,7 +173,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      */
     _applyCombatChange(actor: WH40KBaseActor, change: EffectChange): number {
         const path = change.key;
-        const current = foundry.utils.getProperty(actor, path) ?? 0;
+        const current = Number(foundry.utils.getProperty(actor, path) ?? 0);
         return this._applyChangeValue(current, change);
     }
 
@@ -176,7 +186,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      */
     _applyMovementChange(actor: WH40KBaseActor, change: EffectChange): number {
         const path = change.key;
-        const current = foundry.utils.getProperty(actor, path) ?? 0;
+        const current = Number(foundry.utils.getProperty(actor, path) ?? 0);
         return this._applyChangeValue(current, change);
     }
 
@@ -243,15 +253,15 @@ export class WH40KActiveEffect extends ActiveEffect {
         }
 
         if (d.rounds) {
-            return game.i18n.format('WH40K.ActiveEffect.DurationRounds', { rounds: d.rounds });
+            return game.i18n.format('WH40K.ActiveEffect.DurationRounds', { rounds: String(d.rounds) });
         }
 
         if (d.turns) {
-            return game.i18n.format('WH40K.ActiveEffect.DurationTurns', { turns: d.turns });
+            return game.i18n.format('WH40K.ActiveEffect.DurationTurns', { turns: String(d.turns) });
         }
 
         if (d.seconds) {
-            return game.i18n.format('WH40K.ActiveEffect.DurationSeconds', { seconds: d.seconds });
+            return game.i18n.format('WH40K.ActiveEffect.DurationSeconds', { seconds: String(d.seconds) });
         }
 
         return game.i18n.localize('WH40K.ActiveEffect.Unknown');

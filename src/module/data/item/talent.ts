@@ -38,7 +38,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Category/type of talent
             category: new fields.StringField({
@@ -191,7 +191,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     static #migrateSpecialization(source: Record<string, unknown>): void {
         if (source.hasSpecialization === undefined && source.specialization) {
-            source.hasSpecialization = !!source.specialization.trim();
+            source.hasSpecialization = !!(source.specialization as string).trim();
         }
     }
 
@@ -417,9 +417,9 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/talent-card.hbs', templateData);
 
-        return ChatMessage.create({
+        await ChatMessage.create({
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.parent.actor }),
-        });
+        } as unknown as Parameters<typeof ChatMessage.create>[0]);
     }
 }

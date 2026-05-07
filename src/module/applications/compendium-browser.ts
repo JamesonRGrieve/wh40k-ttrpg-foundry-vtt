@@ -4,6 +4,7 @@
  */
 
 import ApplicationV2Mixin from './api/application-v2-mixin.ts';
+import type { ApplicationV2Ctor } from './api/application-types.ts';
 
 /** A single result entry in the compendium browser list. */
 interface BrowserResult extends CompendiumIndexEntry {
@@ -29,7 +30,7 @@ const { ApplicationV2 } = foundry.applications.api;
 /**
  * Compendium browser for browsing and filtering WH40K system compendiums.
  */
-export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
+export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     declare _filters: {
         type: string;
         search: string;
@@ -196,7 +197,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         for (const pack of packs) {
             const index = await pack.getIndex({ fields: ['system.source'] });
             for (const entry of index) {
-                const source = this._getEntrySource(entry);
+                const source = this._getEntrySource(entry as unknown as CompendiumIndexEntry & { system?: Record<string, unknown> });
                 if (source) sources.add(source);
             }
         }
@@ -211,7 +212,9 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         for (const pack of packs) {
             const index = await pack.getIndex({ fields: ['system.category', 'flags'] });
             for (const entry of index) {
-                const category = this._getEntryCategory(entry);
+                const category = this._getEntryCategory(
+                    entry as unknown as CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> },
+                );
                 if (category) categories.add(category);
             }
         }
@@ -250,7 +253,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
 
             for (const entry of index) {
                 const e = entry as CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> };
-                if (!this._passesFilters(e, pack)) continue;
+                if (!this._passesFilters(e, pack as unknown as CompendiumPack)) continue;
 
                 const sourceLabel = this._getEntrySource(e);
                 const categoryLabel = this._getEntryCategory(e);
@@ -682,7 +685,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         const uuid = (event.currentTarget as HTMLElement).dataset.uuid;
         if (!uuid) return;
         const doc = await fromUuid(uuid);
-        if (doc) (doc as FoundryDocWithSheet).sheet.render(true);
+        if (doc) (doc as unknown as FoundryDocWithSheet).sheet.render(true);
     }
 
     _onDragStart(event: DragEvent): void {
@@ -722,7 +725,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         const uuid = target.dataset.uuid;
         if (!uuid) return;
         const doc = await fromUuid(uuid);
-        if (doc) (doc as FoundryDocWithSheet).sheet.render(true);
+        if (doc) (doc as unknown as FoundryDocWithSheet).sheet.render(true);
     }
 
     /* -------------------------------------------- */

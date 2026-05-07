@@ -1233,8 +1233,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (manualTotal !== null) {
             // Manual roll - compute results without finalize() (which calls roll1d100)
             // rd.roll is already set by _submitToChat() as a fake Roll object
-            rd.success = (rd.roll as Roll).total <= (rd['protectionRating'] as number);
-            rd['overload'] = (rd.roll as Roll).total <= (rd['overloadRating'] as number);
+            rd.success = (rd.roll as Roll).total! <= (rd['protectionRating'] as number);
+            rd['overload'] = (rd.roll as Roll).total! <= (rd['overloadRating'] as number);
             rd.isManualRoll = true;
         } else {
             // Target-only - no roll, no finalize

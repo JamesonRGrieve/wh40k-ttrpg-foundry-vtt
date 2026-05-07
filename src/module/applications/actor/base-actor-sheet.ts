@@ -114,8 +114,12 @@ const ContextMenuBase = ContextMenuMixin(CollapsibleBase) as unknown as AnyAppli
 const DragDropBase = EnhancedDragDropMixin(ContextMenuBase) as unknown as AnyApplicationV2Ctor;
 const WhatIfBase = WhatIfMixin(DragDropBase) as unknown as AnyApplicationV2Ctor;
 const StatBreakdownBase = StatBreakdownMixin(WhatIfBase) as unknown as AnyApplicationV2Ctor;
-const ItemPreviewBase = ItemPreviewMixin(StatBreakdownBase) as unknown as AnyApplicationV2Ctor;
-const BaseActorSheetBase = ActiveModifiersMixin(ItemPreviewBase) as unknown as AnyApplicationV2Ctor;
+const ItemPreviewBase = ItemPreviewMixin(
+    StatBreakdownBase as unknown as new (...args: any[]) => foundry.appv1.sheets.ActorSheet,
+) as unknown as AnyApplicationV2Ctor;
+const BaseActorSheetBase = ActiveModifiersMixin(
+    ItemPreviewBase as unknown as new (...args: any[]) => foundry.appv1.sheets.ActorSheet,
+) as unknown as AnyApplicationV2Ctor;
 
 /**
  * Base actor sheet built on ApplicationV2.
@@ -207,9 +211,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     // and call super. The actual implementation lives in Foundry's ApplicationV2 base,
     // which is erased by the mixin chain cast. These stubs restore type visibility by
     // delegating through the erased prototype chain via the AnyApplicationV2Ctor base.
-    _getHeaderControls(): { icon: string; label: string; action?: string; visible?: boolean }[] {
+    _getHeaderControls(): foundry.applications.api.ApplicationV2.HeaderControlsEntry[] {
         const proto = Object.getPrototypeOf(BaseActorSheet.prototype) as {
-            _getHeaderControls?: (this: BaseActorSheet) => { icon: string; label: string; action?: string; visible?: boolean }[];
+            _getHeaderControls?: (this: BaseActorSheet) => foundry.applications.api.ApplicationV2.HeaderControlsEntry[];
         };
         return proto._getHeaderControls?.call(this) ?? [];
     }
@@ -1636,7 +1640,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const attr = target.dataset.edit ?? 'img';
         const docSource = this.document.toObject(true);
         const current = foundry.utils.getProperty(docSource, attr);
-        const fp = new CONFIG.ux.FilePicker({
+        const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse(): Promise<void> };
+        const fp = new FilePickerCtor({
             current,
             type: 'image',
             callback: (path: string) => this.document.update({ [attr]: path }),

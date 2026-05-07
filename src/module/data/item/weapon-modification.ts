@@ -35,7 +35,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Modification category (for visual grouping and icons)
             category: new fields.StringField({
@@ -104,7 +104,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
      * @type {string}
      */
     get categoryIcon() {
-        const icons = {
+        const icons: Record<string, string> = {
             sight: 'fa-crosshairs',
             barrel: 'fa-gun',
             stock: 'fa-wrench',
@@ -146,7 +146,10 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.restrictionsLabel];
+        const props = [
+            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
+            this.restrictionsLabel,
+        ];
 
         const mods = this.modifiers;
         if (mods.damage !== 0) props.push(`Damage: ${mods.damage >= 0 ? '+' : ''}${mods.damage}`);

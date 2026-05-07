@@ -11,7 +11,7 @@
  */
 
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
-import StatBlockValidator from '../../utils/stat-block-validator.ts';
+import StatBlockValidator, { type StatBlockData } from '../../utils/stat-block-validator.ts';
 import TextPatternExtractor from '../../utils/text-pattern-extractor.ts';
 import ThreatCalculator, {
     type NPCArmourData,
@@ -22,6 +22,25 @@ import ThreatCalculator, {
     type NPCSystemData,
     type NPCWeapon,
 } from './threat-calculator.ts';
+
+/** Shape of a characteristic entry inside NPCSystemData.characteristics. */
+interface NPCCharacteristicEntry {
+    base: number;
+    total: number;
+    bonus: number;
+    unnatural?: number;
+}
+
+/** Typed view of the NPCSystemData characteristics map for safe property access. */
+type NPCCharacteristicsMap = Record<string, NPCCharacteristicEntry>;
+
+/** Minimal interface for the target actor that can be updated by the import dialog. */
+interface ImportTargetActor {
+    update: (data: Record<string, unknown>) => Promise<unknown>;
+    createEmbeddedDocuments: (type: string, data: unknown[]) => Promise<unknown>;
+    name: string;
+    sheet: { render: (force: boolean) => void };
+}
 
 /** Shape of a parsed actor data object ready for Actor.create(). */
 interface ParsedActorData {
@@ -111,7 +130,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             height: 700,
         },
         form: {
-            handler: StatBlockParser._onSubmit,
+            handler: StatBlockParser._onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: true,
         },
@@ -236,7 +255,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * Target actor to update instead of creating new.
      * @type {Actor|null}
      */
-    #targetActor = null;
+    #targetActor: ImportTargetActor | null = null;
 
     /**
      * Parsed data preview.
@@ -374,7 +393,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         // Run validation on parsed data if we have any
         if (parseResult.data) {
-            const validation = StatBlockValidator.validate(parseResult.data);
+            const validation = StatBlockValidator.validate(parseResult.data as unknown as StatBlockData);
 
             // Merge validation results with parse results
             parseResult.errors = [...parseResult.errors, ...validation.errors];
@@ -632,19 +651,20 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return result;
     }
 
-    static _applyCharacteristics(systemData: Record<string, unknown>, characteristicResult: Record<string, unknown>): void {
-        for (const [key, value] of Object.entries(characteristicResult.values) as [string, number][]) {
-            if (!systemData.characteristics[key]) continue;
-            systemData.characteristics[key].base = value;
-            systemData.characteristics[key].total = value;
-            systemData.characteristics[key].bonus = Math.floor(value / 10);
+    static _applyCharacteristics(systemData: NPCSystemData, characteristicResult: CharacteristicParseResult): void {
+        const chars = systemData.characteristics as unknown as NPCCharacteristicsMap;
+        for (const [key, value] of Object.entries(characteristicResult.values)) {
+            if (!chars[key]) continue;
+            chars[key].base = value;
+            chars[key].total = value;
+            chars[key].bonus = Math.floor(value / 10);
         }
 
-        for (const [key, bonusValue] of Object.entries(characteristicResult.unnaturalValues) as [string, number][]) {
-            const base = systemData.characteristics[key]?.base ?? 0;
+        for (const [key, bonusValue] of Object.entries(characteristicResult.unnaturalValues)) {
+            const base = chars[key]?.base ?? 0;
             const baseBonus = Math.floor(base / 10) || 1;
             const multiplier = Math.max(2, Math.round(bonusValue / baseBonus));
-            systemData.characteristics[key].unnatural = multiplier;
+            chars[key].unnatural = multiplier;
         }
     }
 
@@ -693,21 +713,22 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     static _parseArmour(text: string): NPCArmourData | null {
         if (!text) return null;
         const normalized = text.replace(/\./g, ' ');
+        const emptyLocations: NPCArmourLocations = { head: 0, body: 0, leftArm: 0, rightArm: 0, leftLeg: 0, rightLeg: 0 };
         const locations = this._parseArmourLocations(normalized);
         if (locations) {
-            return { mode: 'locations', locations };
+            return { mode: 'locations', total: 0, locations };
         }
 
         const allMatch = normalized.match(/\bAll\s*(\d+)/i) || normalized.match(/\b(\d+)\s*All\b/i);
         if (allMatch) {
             const total = parseInt(allMatch[1], 10);
-            return Number.isNaN(total) ? null : { mode: 'simple', total };
+            return Number.isNaN(total) ? null : { mode: 'simple', total, locations: emptyLocations };
         }
 
         const armourMatch = normalized.match(this.PATTERNS.armour);
         if (armourMatch) {
             const total = parseInt(armourMatch[1], 10);
-            return Number.isNaN(total) ? null : { mode: 'simple', total };
+            return Number.isNaN(total) ? null : { mode: 'simple', total, locations: emptyLocations };
         }
 
         return null;
@@ -780,7 +801,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             const key = specialization ? `${baseKey}${this._toSkillKey(specialization, true)}` : baseKey;
             trainedSkills[key] = {
                 name: specialization ? `${name} (${specialization})` : name,
-                characteristic: characteristic || this._characteristicKeyFromShort(SkillKeyHelper.getCharacteristic(baseKey)) || 'perception',
+                characteristic: characteristic || this._characteristicKeyFromShort(SkillKeyHelper.getCharacteristic(baseKey) ?? '') || 'perception',
                 trained: true,
                 plus10: level === 'plus10' || level === 'plus20',
                 plus20: level === 'plus20',
@@ -841,9 +862,9 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return result;
     }
 
-    static _applyTraitAdjustments(systemData: Record<string, unknown>, traits: unknown[]): void {
+    static _applyTraitAdjustments(systemData: NPCSystemData, traits: TraitEntry[]): void {
         if (!traits || traits.length === 0) return;
-        const sizeMap = {
+        const sizeMap: Record<string, number> = {
             tiny: 1,
             puny: 2,
             scrawny: 3,
@@ -855,19 +876,21 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             colossal: 9,
             gargantuan: 10,
         };
+        const chars = systemData.characteristics as unknown as NPCCharacteristicsMap;
 
         for (const trait of traits) {
             if (trait.name.toLowerCase() === 'size' && trait.value) {
                 const sizeKey = trait.value.toLowerCase();
-                if (sizeMap[sizeKey]) {
-                    systemData.size = sizeMap[sizeKey];
+                const sizeVal = sizeMap[sizeKey];
+                if (sizeVal !== undefined) {
+                    systemData.size = sizeVal;
                 }
             }
 
             if (trait.name.toLowerCase().startsWith('unnatural')) {
                 const key = this._unnaturalCharacteristicKey(trait.name);
-                if (key && trait.numericValue) {
-                    systemData.characteristics[key].unnatural = trait.numericValue;
+                if (key && trait.numericValue && chars[key]) {
+                    chars[key].unnatural = trait.numericValue;
                 }
             }
         }
@@ -888,18 +911,18 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return weapons;
     }
 
-    static _parseWeaponEntry(entry: unknown): unknown {
+    static _parseWeaponEntry(entry: string): NPCWeapon | null {
         const match = entry.match(/^([^()]+)\s*(?:\((.+)\))?$/);
         if (!match) return null;
         const name = match[1].trim();
         const details = (match[2] || '').trim();
         if (!name) return null;
 
-        const segments = details
+        const segments: string[] = details
             ? details
                   .split(';')
-                  .map((segment) => segment.trim())
-                  .filter(Boolean)
+                  .map((s: string) => s.trim())
+                  .filter((s): s is string => s.length > 0)
             : [];
         let range = 'Melee';
         let rof = 'S/-/-';
@@ -968,7 +991,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         };
     }
 
-    static _inferWeaponClass(name: string, range: string): unknown {
+    static _inferWeaponClass(name: string, range: string): string {
         const lower = name.toLowerCase();
         if (range.toLowerCase() === 'melee') return 'melee';
         if (lower.includes('pistol')) return 'pistol';
@@ -1079,7 +1102,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     static _cleanEntry(entry: unknown): string {
-        return TextPatternExtractor.cleanEntry(entry);
+        return TextPatternExtractor.cleanEntry(String(entry ?? ''));
     }
 
     static _extractValueTokens(line: string): string[] {
@@ -1159,7 +1182,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static async _onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
+    static async _onSubmit(this: StatBlockParser, event: Event | SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         if (!this.#parsedData) {
             ui.notifications.error('No valid data to import. Parse input first.');
             return;
@@ -1167,7 +1190,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         try {
             if (this.#targetActor) {
-                const updateData: unknown = {
+                const updateData: Record<string, unknown> = {
                     system: this.#parsedData.system,
                 };
                 if (this.#parsedData.name && this.#parsedData.name !== 'Imported NPC') {
@@ -1195,18 +1218,23 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                 system: this.#parsedData.system,
             };
 
-            const actor = await Actor.create(actorData as any);
+            const actorResult = await Actor.create(actorData as any);
+            const actor = Array.isArray(actorResult) ? actorResult[0] : actorResult;
+            if (!actor) throw new Error('Actor.create() returned nothing');
 
             // Create embedded items if any
             if (this.#parsedData.items?.length > 0) {
-                await actor.createEmbeddedDocuments('Item', this.#parsedData.items);
+                await (actor as unknown as { createEmbeddedDocuments: (type: string, data: unknown[]) => Promise<unknown> }).createEmbeddedDocuments(
+                    'Item',
+                    this.#parsedData.items,
+                );
             }
 
-            ui.notifications.info(game.i18n.format('WH40K.NPC.Import.Success', { name: actor.name }));
-            void actor.sheet.render(true);
+            ui.notifications.info(game.i18n.format('WH40K.NPC.Import.Success', { name: (actor as unknown as { name?: string }).name ?? '' }));
+            void (actor as unknown as { sheet?: { render: (force: boolean) => void } }).sheet?.render(true);
 
             this.#submitted = true;
-            if (this.#resolve) this.#resolve(actor);
+            if (this.#resolve) this.#resolve(actor as unknown);
         } catch (err) {
             console.error('Failed to import NPC:', err);
             ui.notifications.error(game.i18n.localize('WH40K.NPC.Import.Failed'));
@@ -1272,17 +1300,20 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @returns {Promise<Actor|null>} Created actor or null.
      */
     static async open(initialInput: unknown = ''): Promise<unknown> {
-        let input = initialInput;
-        let options = {};
+        let input: string;
+        let options: Record<string, unknown> = {};
         if (typeof initialInput === 'object' && initialInput !== null) {
-            options = initialInput;
-            input = initialInput.initialInput ?? '';
+            options = initialInput as Record<string, unknown>;
+            const raw = (initialInput as Record<string, unknown>).initialInput;
+            input = typeof raw === 'string' ? raw : '';
+        } else {
+            input = typeof initialInput === 'string' ? initialInput : '';
         }
 
-        const { actor, initialInput: _ignored, ...appOptions } = options as any;
+        const { actor, initialInput: _ignored, ...appOptions } = options;
         const parser = new this(appOptions);
         parser.#rawInput = input;
-        parser.#targetActor = actor ?? null;
+        parser.#targetActor = actor !== undefined ? (actor as unknown as ImportTargetActor) : null;
         return parser.wait();
     }
 
@@ -1291,7 +1322,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} input - Input to parse.
      * @returns {Object} Parse result with data, errors, warnings.
      */
-    static quickParse(input: string): Record<string, unknown> {
+    static quickParse(input: string): ParseResult {
         return this.parse(input);
     }
 }

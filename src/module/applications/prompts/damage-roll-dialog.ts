@@ -3,6 +3,7 @@
  */
 
 import { ActionData } from '../../rolls/action-data.ts';
+import type { RollData } from '../../rolls/roll-data.ts';
 import { sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import BaseRollDialog from './base-roll-dialog.ts';
 
@@ -50,16 +51,18 @@ export default class DamageRollDialog extends BaseRollDialog {
         const actionData = new ActionData();
         actionData.template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
 
-        this.rollData.damage = form.querySelector('#damage')?.value ?? this.rollData.damage;
-        this.rollData.penetration = form.querySelector('#penetration')?.value ?? this.rollData.penetration;
-        this.rollData.damageType = form.querySelector('[name=damageType]')?.value ?? this.rollData.damageType;
-        this.rollData.pr = form.querySelector('#pr')?.value;
+        this.rollData.damage = (form.querySelector('#damage') as HTMLInputElement | null)?.value ?? this.rollData.damage;
+        this.rollData.penetration = (form.querySelector('#penetration') as HTMLInputElement | null)?.value ?? this.rollData.penetration;
+        this.rollData.damageType = (form.querySelector('[name=damageType]') as HTMLInputElement | null)?.value ?? this.rollData.damageType;
+        this.rollData.pr = (form.querySelector('#pr') as HTMLInputElement | null)?.value;
         this.rollData.template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
 
-        this.rollData.roll = new Roll(this.rollData.damage, this.rollData);
-        await this.rollData.roll.evaluate();
+        const typedRollData = this.rollData as unknown as RollData;
+        const theRoll = new Roll(this.rollData.damage as string, this.rollData as unknown as Record<string, never>);
+        typedRollData.roll = theRoll;
+        await theRoll.evaluate();
 
-        actionData.rollData = this.rollData;
+        actionData.rollData = typedRollData;
         await sendActionDataToChat(actionData);
 
         await this.close();
@@ -74,7 +77,7 @@ export default class DamageRollDialog extends BaseRollDialog {
  * Open a damage roll dialog.
  * @param {object} rollData  The roll data.
  */
-export function prepareDamageRoll(rollData) {
+export function prepareDamageRoll(rollData: Record<string, unknown>) {
     rollData.dh = CONFIG.wh40k;
     const prompt = new DamageRollDialog(rollData);
     prompt.render(true);

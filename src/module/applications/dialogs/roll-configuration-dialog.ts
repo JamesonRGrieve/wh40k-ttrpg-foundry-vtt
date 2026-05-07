@@ -48,7 +48,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         },
         position: {
             width: 400,
-            height: 'auto',
+            height: 'auto' as unknown as number,
         },
         form: {
             handler: RollConfigurationDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
@@ -111,7 +111,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {Object} [options] - Application options
      */
     constructor(config: RollConfig = {}, options: ApplicationV2Config.DefaultOptions = {}) {
-        super(options);
+        super(options as unknown as Record<string, unknown>);
         this.config = foundry.utils.deepClone(config);
         this.actor = config.actor || null;
         this.selectedDifficulty = config.difficulty || 'difficult';
@@ -125,17 +125,17 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context: unknown = await super._prepareContext(options);
+        const context = (await super._prepareContext(options)) as Record<string, unknown>;
 
         // Calculate the difficulty modifier
-        const difficultyPreset = (this.constructor as any).DIFFICULTY_PRESETS.find((p: { key: string }) => p.key === this.selectedDifficulty) || { value: 0 };
+        const difficultyPreset = RollConfigurationDialog.DIFFICULTY_PRESETS.find((p) => p.key === this.selectedDifficulty) ?? { value: 0 };
         const difficultyModifier = difficultyPreset.value;
 
         // Calculate situational modifier from active checkboxes
         const situationalModifierTotal = this._calculateSituationalTotal();
 
         // Prepare permanent modifiers (from items, conditions, etc.)
-        const permanentModifiers = (this.config.permanentModifiers || []).map((mod: Record<string, unknown>) => ({
+        const permanentModifiers = (this.config.permanentModifiers || []).map((mod) => ({
             ...mod,
             valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString(),
             hasSource: !!mod.uuid,
@@ -143,7 +143,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const hasPermanentModifiers = permanentModifiers.length > 0;
 
         // Calculate permanent modifier total
-        const permanentModifierTotal = permanentModifiers.reduce((sum: number, mod: Record<string, unknown>) => sum + ((mod.value as number) || 0), 0);
+        const permanentModifierTotal = permanentModifiers.reduce((sum: number, mod) => sum + (mod.value || 0), 0);
 
         // Calculate total modifier and final target
         const totalModifier = difficultyModifier + this.customModifier + situationalModifierTotal + permanentModifierTotal;
@@ -151,7 +151,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const finalTarget = Math.max(1, Math.min(100, baseTarget + totalModifier));
 
         // Prepare situational modifiers for display
-        const situationalModifiers = (this.config.situationalModifiers || []).map((mod: Record<string, unknown>, index: number) => ({
+        const situationalModifiers = (this.config.situationalModifiers || []).map((mod, index: number) => ({
             ...mod,
             id: `sit-${index}`,
             active: this.activeSituationalModifiers.has(`sit-${index}`),
@@ -187,7 +187,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             hasPermanentModifiers,
 
             // Difficulty presets
-            difficulties: (this.constructor as any).DIFFICULTY_PRESETS.map((d: Record<string, unknown>) => ({
+            difficulties: RollConfigurationDialog.DIFFICULTY_PRESETS.map((d: DifficultyPreset) => ({
                 ...d,
                 label: game.i18n.localize(d.label),
                 selected: d.key === this.selectedDifficulty,
@@ -368,7 +368,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         if (this.#resolve && !(options as any).submitted) {
             this.#resolve(null);
         }
-        return super.close(options);
+        await super.close(options);
     }
 
     /* -------------------------------------------- */

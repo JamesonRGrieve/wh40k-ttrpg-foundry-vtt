@@ -22,13 +22,19 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     declare duration: string;
     declare notes: string;
 
+    // Properties from PhysicalItemTemplate
+    declare weight: number;
+    declare quantity: number;
+    declare craftsmanship: string;
+
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
-            identifier: new IdentifierField({ required: true, blank: true }),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            identifier: new (IdentifierField as any)({ required: true, blank: true }) as foundry.data.fields.StringField,
 
             // Gear category
             category: new fields.StringField({
@@ -109,15 +115,16 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
         // Ensure uses values are integers
-        if (source?.uses) {
-            if (source.uses.value !== undefined) {
-                source.uses.value = parseInt(source.uses.value) || 0;
+        if (source?.uses && typeof source.uses === 'object' && source.uses !== null) {
+            const uses = source.uses as Record<string, unknown>;
+            if (uses.value !== undefined) {
+                uses.value = parseInt(String(uses.value)) || 0;
             }
-            if (source.uses.max !== undefined) {
-                source.uses.max = parseInt(source.uses.max) || 0;
+            if (uses.max !== undefined) {
+                uses.max = parseInt(String(uses.max)) || 0;
             }
         }
     }
@@ -247,7 +254,10 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.categoryLabel];
+        const props = [
+            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
+            this.categoryLabel,
+        ];
 
         if (this.hasLimitedUses) {
             props.push(game.i18n.format('WH40K.Gear.UsesRemaining', { uses: this.usesDisplay }));

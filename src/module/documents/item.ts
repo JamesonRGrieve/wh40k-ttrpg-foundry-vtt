@@ -21,10 +21,10 @@ type OriginActorLike = WH40KBaseActor & {
 };
 
 export class WH40KItem extends WH40KItemContainer {
-    declare system: WH40KItemSystemData;
+    declare system: WH40KItemSystemData & { container: unknown };
 
-    async toChat(): Promise<void> {
-        await this.sendToChat();
+    async toChat(): Promise<unknown> {
+        return this.sendToChat();
     }
 
     static #pruneUndefined(value: unknown): unknown {
@@ -104,7 +104,7 @@ export class WH40KItem extends WH40KItemContainer {
         // Note: If img is not in source, that's fine - it just won't be updated
         // No need to add a default since the existing document img will remain
 
-        return super.cleanData(source, options, _state);
+        return (super.cleanData as DataModelV14.CleanDataSignature)(source, options, _state);
     }
 
     /**
@@ -258,9 +258,9 @@ export class WH40KItem extends WH40KItemContainer {
         return this._type === 'trait' && rtFlags?.['kind'] === 'condition';
     }
 
-    get originPathStep(): boolean {
+    get originPathStep(): string {
         const rtFlags = this.flags['rt'] as Record<string, unknown> | undefined;
-        return rtFlags?.['step'] || this.system?.step || '';
+        return (rtFlags?.['step'] as string | undefined) || (this.system?.step as string | undefined) || '';
     }
 
     get isWeapon(): boolean {
@@ -268,19 +268,19 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isRanged(): boolean {
-        return this._type === 'weapon' && this.system.class.toLowerCase() !== 'melee';
+        return this._type === 'weapon' && (this.system.class ?? '').toLowerCase() !== 'melee';
     }
 
     get isThrown(): boolean {
-        return this._type === 'weapon' && this.system.class.toLowerCase() === 'thrown';
+        return this._type === 'weapon' && (this.system.class ?? '').toLowerCase() === 'thrown';
     }
 
     get usesAmmo(): boolean {
-        return this.isRanged && this.system.reload && this.system.reload !== 'N/A';
+        return this.isRanged && !!this.system.reload && this.system.reload !== 'N/A';
     }
 
     get isMelee(): boolean {
-        return this._type === 'weapon' && this.system.class.toLowerCase() === 'melee';
+        return this._type === 'weapon' && (this.system.class ?? '').toLowerCase() === 'melee';
     }
 
     get isArmour(): boolean {
@@ -351,10 +351,10 @@ export class WH40KItem extends WH40KItemContainer {
         return this._type === 'peer';
     }
 
-    _onCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: unknown): unknown {
+    protected override _onCreate(data: never, options: never, userId: string): void {
         game.wh40k.log('Determining nested items for', this);
         void this._determineNestedItems();
-        return super._onCreate(data, options, user);
+        super._onCreate(data, options, userId);
     }
 
     prepareData(): void {
@@ -365,9 +365,9 @@ export class WH40KItem extends WH40KItemContainer {
 
         if (this.isPsychicPower) {
             if (!this.system.damage || this.system.damage === '') {
-                this.system.damage = 0;
+                this.system.damage = '0';
             }
-            if (!this.system.penetration || this.system.penetration === '') {
+            if (!this.system.penetration || (this.system.penetration as unknown) === '') {
                 this.system.penetration = 0;
             }
         }
@@ -481,7 +481,7 @@ export class WH40KItem extends WH40KItemContainer {
      * Send this item's details to chat as a card
      * @param {Object} options - Options for the chat card
      */
-    async sendToChat(options: Record<string, unknown> = {}): Promise<void> {
+    async sendToChat(options: Record<string, unknown> = {}): Promise<unknown> {
         const cardData = {
             item: this,
             itemTypeLabel: this.itemTypeLabel,
@@ -512,7 +512,7 @@ export class WH40KItem extends WH40KItemContainer {
         const chatData: Record<string, unknown> = {
             user: game.user.id,
             content: html,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor as Actor }),
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             // Set flags for ChatMessageWH40K enrichment
             flags: {
                 'wh40k-rpg': {
@@ -602,9 +602,11 @@ export class WH40KItem extends WH40KItemContainer {
         // Create the roll
         const roll = new Roll('1d100');
         await roll.evaluate();
+        if (roll.total === undefined) return this.sendToChat();
+        const rollTotal: number = roll.total;
 
-        const success = roll.total <= targetValue;
-        const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
+        const success = rollTotal <= targetValue;
+        const degrees = Math.floor(Math.abs(targetValue - rollTotal) / 10);
 
         const cardData = {
             item: this,
@@ -644,14 +646,18 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Use the higher of the two as base, modified by Navigator Rank
         const navigatorRank = (navActor?.system?.['navigatorRank'] as number | undefined) || 0;
-        const baseChar = perception?.total > willpower?.total ? perception : willpower;
+        const perceptionTotal: number = perception ? perception.total : 0;
+        const willpowerTotal: number = willpower ? willpower.total : 0;
+        const baseChar = perceptionTotal > willpowerTotal ? perception : willpower;
         const targetValue = (baseChar?.total || 30) + navigatorRank * 5;
 
         const roll = new Roll('1d100');
         await roll.evaluate();
+        if (roll.total === undefined) return this.sendToChat();
+        const rollTotal: number = roll.total;
 
-        const success = roll.total <= targetValue;
-        const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
+        const success = rollTotal <= targetValue;
+        const degrees = Math.floor(Math.abs(targetValue - rollTotal) / 10);
 
         const cardData = {
             item: this,
@@ -688,9 +694,11 @@ export class WH40KItem extends WH40KItemContainer {
 
         const roll = new Roll('1d100');
         await roll.evaluate();
+        if (roll.total === undefined) return this.sendToChat();
+        const rollTotal: number = roll.total;
 
-        const success = roll.total <= targetValue;
-        const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
+        const success = rollTotal <= targetValue;
+        const degrees = Math.floor(Math.abs(targetValue - rollTotal) / 10);
 
         const cardData = {
             item: this,
@@ -727,9 +735,11 @@ export class WH40KItem extends WH40KItemContainer {
 
         const roll = new Roll('1d100');
         await roll.evaluate();
+        if (roll.total === undefined) return this.sendToChat();
+        const rollTotal: number = roll.total;
 
-        const success = roll.total <= targetValue;
-        const degrees = Math.floor(Math.abs(targetValue - roll.total) / 10);
+        const success = rollTotal <= targetValue;
+        const degrees = Math.floor(Math.abs(targetValue - rollTotal) / 10);
 
         const cardData = {
             item: this,
@@ -802,7 +812,7 @@ export class WH40KItem extends WH40KItemContainer {
                 const skillPack = game.packs.get('wh40k-rpg.dh2-core-stats-skills');
                 if (skillPack) {
                     const index = await skillPack.getIndex({ fields: ['name'] });
-                    const skillEntry = index.find((s: { name: string }) => s.name.toLowerCase() === skillName.toLowerCase());
+                    const skillEntry = index.find((s) => typeof s.name === 'string' && s.name.toLowerCase() === skillName.toLowerCase());
                     if (skillEntry) {
                         const skill = await skillPack.getDocument(skillEntry._id);
                         if (skill) itemsToAdd.push(skill.toObject());
@@ -817,7 +827,7 @@ export class WH40KItem extends WH40KItemContainer {
                 const talentPack = game.packs.get('wh40k-rpg.dh2-core-stats-talents');
                 if (talentPack) {
                     const index = await talentPack.getIndex({ fields: ['name'] });
-                    const talentEntry = index.find((t: { name: string }) => t.name.toLowerCase() === (talentName as string).toLowerCase());
+                    const talentEntry = index.find((t) => typeof t.name === 'string' && t.name.toLowerCase() === talentName.toLowerCase());
                     if (talentEntry) {
                         const talent = await talentPack.getDocument(talentEntry._id);
                         if (talent) itemsToAdd.push(talent.toObject());
@@ -833,11 +843,11 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Add items
         if (itemsToAdd.length > 0) {
-            await actor.createEmbeddedDocuments('Item', itemsToAdd);
+            await actor.createEmbeddedDocuments('Item', itemsToAdd as never[]);
         }
 
         // Add the origin path itself
-        await actor.createEmbeddedDocuments('Item', [this.toObject()]);
+        await actor.createEmbeddedDocuments('Item', [this.toObject() as never]);
 
         ui.notifications.info(`Applied ${this.name as string} to ${actor.name}`);
     }

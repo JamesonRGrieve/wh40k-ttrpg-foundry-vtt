@@ -653,7 +653,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         // Roll 1d10
         const roll = new Roll('1d10');
         await roll.evaluate();
-        const rolledValue = roll.total;
+        const rolledValue = roll.total ?? 0;
 
         // Parse conditions
         const conditionRegex = /\((\d+)-(\d+)\|=(\d+)\)/g;

@@ -11,6 +11,10 @@
 
 import BaseItemSheet from './base-item-sheet.ts';
 import type TalentData from '../../data/item/talent.ts';
+import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
+
+/** TalentData with mixin-inherited fields visible to the type system. */
+type TalentSystem = TalentData & Pick<ModifiersTemplate, 'modifiers'> & { source: { book?: string; page?: string } | string | undefined };
 
 /**
  * Redesigned sheet for talent items with modern ApplicationV2 patterns.
@@ -77,7 +81,7 @@ export default class TalentSheet extends BaseItemSheet {
     /** @inheritDoc */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const system = this.item.system as unknown as TalentData;
+        const system = this.item.system as unknown as TalentSystem;
 
         // Tab state
         context.tabs = this._getTabs();
@@ -113,10 +117,12 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared talent data
      * @protected
      */
-    _prepareTalentData(system: TalentData): Record<string, unknown> {
+    _prepareTalentData(system: TalentSystem): Record<string, unknown> {
         // Get source reference properly (not the object)
-        const sourceBook = system.source?.book || '';
-        const sourcePage = system.source?.page || '';
+        const rawSource = system.source;
+        const sourceObj = typeof rawSource === 'object' && rawSource !== null ? rawSource : {};
+        const sourceBook = sourceObj.book || '';
+        const sourcePage = sourceObj.page || '';
 
         return {
             identifier: system.identifier || '',
@@ -153,7 +159,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared prerequisites data
      * @protected
      */
-    _preparePrerequisitesData(system: TalentData): Record<string, unknown> {
+    _preparePrerequisitesData(system: TalentSystem): Record<string, unknown> {
         const prereqs = system.prerequisites || { text: '', characteristics: {}, skills: [], talents: [] };
         const chars = prereqs.characteristics || {};
         const skills = prereqs.skills || [];
@@ -191,8 +197,8 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared modifiers data
      * @protected
      */
-    _prepareModifiersData(system: TalentData): Record<string, unknown> {
-        const mods = system.modifiers || ({} as TalentData['modifiers']);
+    _prepareModifiersData(system: TalentSystem): Record<string, unknown> {
+        const mods = system.modifiers || ({} as TalentSystem['modifiers']);
 
         // Characteristic modifiers
         const charMods = Object.entries(mods.characteristics || {})
@@ -216,7 +222,7 @@ export default class TalentSheet extends BaseItemSheet {
             }));
 
         // Combat modifiers
-        const combat = mods.combat || ({} as TalentData['modifiers']['combat']);
+        const combat = mods.combat || ({} as TalentSystem['modifiers']['combat']);
         const combatMods = Object.entries(combat)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
@@ -227,7 +233,7 @@ export default class TalentSheet extends BaseItemSheet {
             }));
 
         // Resource modifiers
-        const resources = mods.resources || ({} as TalentData['modifiers']['resources']);
+        const resources = mods.resources || ({} as TalentSystem['modifiers']['resources']);
         const resourceMods = Object.entries(resources)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
@@ -268,7 +274,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared grants data
      * @protected
      */
-    _prepareGrantsData(system: TalentData): Record<string, unknown> {
+    _prepareGrantsData(system: TalentSystem): Record<string, unknown> {
         const grants = system.grants || ({ skills: [], talents: [], traits: [], specialAbilities: [] } as TalentData['grants']);
 
         const skills = (grants.skills || []).map((skill: { name: string; specialization: string; level: string }) => ({
@@ -321,8 +327,8 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared situational data
      * @protected
      */
-    _prepareSituationalData(system: TalentData): Record<string, unknown> {
-        const situational = system.modifiers?.situational || ({ characteristics: [], skills: [], combat: [] } as TalentData['modifiers']['situational']);
+    _prepareSituationalData(system: TalentSystem): Record<string, unknown> {
+        const situational = system.modifiers?.situational || ({ characteristics: [], skills: [], combat: [] } as TalentSystem['modifiers']['situational']);
 
         const characteristics = (situational.characteristics || []).map((mod: { key: string; value: number; condition: string }) => ({
             key: mod.key,
@@ -372,7 +378,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared roll config data
      * @protected
      */
-    _prepareRollConfigData(system: TalentData): Record<string, unknown> {
+    _prepareRollConfigData(system: TalentSystem): Record<string, unknown> {
         const config = system.rollConfig || ({ characteristic: '', skill: '', modifier: 0, description: '' } as TalentData['rollConfig']);
         return {
             characteristic: config.characteristic || '',
@@ -393,7 +399,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object[]} Category options for select
      * @protected
      */
-    _getCategoryOptions(currentCategory: string): Record<string, unknown>[] {
+    _getCategoryOptions(currentCategory: string | undefined): Record<string, unknown>[] {
         const categories = [
             { value: '', label: 'General' },
             { value: 'general', label: 'General' },
@@ -422,7 +428,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object[]} Tier options for select
      * @protected
      */
-    _getTierOptions(currentTier: number): Record<string, unknown>[] {
+    _getTierOptions(currentTier: number | undefined): Record<string, unknown>[] {
         return [
             { value: 0, label: '—', selected: currentTier === 0 },
             { value: 1, label: 'Tier 1', selected: currentTier === 1 },

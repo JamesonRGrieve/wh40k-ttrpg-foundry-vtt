@@ -1,5 +1,5 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
-import ThreatCalculator from './threat-calculator.ts';
+import ThreatCalculator, { type NPCMovement } from './threat-calculator.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -19,7 +19,7 @@ interface PreviewState {
     weapons: Array<{ name: string; damage: string; pen: string; range: string }>;
     wounds: number;
     armour: number;
-    movement: Record<string, number>;
+    movement: NPCMovement;
 }
 
 /**
@@ -319,12 +319,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {HTMLFormElement} form - The form element.
      * @param {FormDataExtended} formData - The form data.
      */
-    static async #onSubmit(
-        this: NPCQuickCreateDialog,
-        event: SubmitEvent,
-        form: HTMLFormElement,
-        formData: foundry.applications.api.FormDataExtended,
-    ): Promise<void> {
+    static async #onSubmit(this: NPCQuickCreateDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         const data = foundry.utils.expandObject(formData.object) as Partial<NPCState>;
 
         // Update state from form
@@ -334,7 +329,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         this.#state.type = data.type || 'troop';
         this.#state.preset = data.preset || 'mixed';
         this.#state.faction = data.faction || '';
-        this.#state.isHorde = data.isHorde === true || data.isHorde === 'true';
+        this.#state.isHorde = data.isHorde === true || String(data.isHorde) === 'true';
 
         // Generate NPC data
         const npcSystemData = ThreatCalculator.generateNPCData(this.#state as unknown as Record<string, unknown>);
@@ -348,7 +343,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         };
 
         try {
-            const actor = (await Actor.create(actorData)) as WH40KNPC | undefined;
+            const actor = (await Actor.create(actorData as unknown as Parameters<typeof Actor.create>[0])) as WH40KNPC | undefined;
 
             if (actor) {
                 ui.notifications.info(`Created NPC: ${String(actor.name)}`);
@@ -401,7 +396,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             this.#resolve(null);
         }
 
-        return super.close(options);
+        await super.close(options);
     }
 
     /* -------------------------------------------- */
@@ -471,7 +466,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
                 system: systemData,
             };
 
-            const actor = (await Actor.create(actorData)) as WH40KNPC | undefined;
+            const actor = (await Actor.create(actorData as unknown as Parameters<typeof Actor.create>[0])) as WH40KNPC | undefined;
             if (actor) actors.push(actor);
         }
 

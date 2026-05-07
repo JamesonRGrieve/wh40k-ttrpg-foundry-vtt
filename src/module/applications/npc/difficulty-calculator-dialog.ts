@@ -45,7 +45,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         },
         position: {
             width: 600,
-            height: 'auto' as const,
+            height: 'auto' as unknown as number,
         },
         actions: {
             updateQuantity: DifficultyCalculatorDialog.#updateQuantity,
@@ -97,7 +97,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         const context = await super._prepareContext(options);
 
         // Get party info
-        const party = game.users.filter((u) => u.active && u.character) as any[];
+        const party = game.users.filter((u) => u.active && !!u.character) as any[];
         const partySize = party.length;
 
         // Calculate average party rank
@@ -232,7 +232,10 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
 
     /** @override */
     _attachPartListeners(partId: string, htmlElement: HTMLElement, options: ApplicationV2Config.RenderOptions): void {
-        super._attachPartListeners(partId, htmlElement, options);
+        const proto = Object.getPrototypeOf(Object.getPrototypeOf(this)) as {
+            _attachPartListeners?: (p: string, h: HTMLElement, o: ApplicationV2Config.RenderOptions) => void;
+        };
+        proto._attachPartListeners?.call(this, partId, htmlElement, options);
 
         // Listen for quantity input changes
         const quantityInput = htmlElement.querySelector('[name="quantity"]') as HTMLInputElement | null;

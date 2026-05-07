@@ -19,7 +19,7 @@ export class RollData {
     difficulties: Record<string, string> = rollDifficulties();
     aims: Record<string, string> = aimModifiers();
     locations: Record<string, string> = hitDropdown();
-    lasModes: string[] = WH40K.combat.las_fire_modes as string[];
+    lasModes: string[] = (WH40K.combat as { las_fire_modes?: string[] })?.las_fire_modes ?? [];
 
     // Chat Controls
     ignoreModifiers: boolean = false;
@@ -75,8 +75,13 @@ export class RollData {
     weapon?: WH40KItem;
     power?: WH40KItem;
 
+    isThrown?: boolean;
+
+    // Set by WeaponRollData / PsychicRollData; read by ActionData.performActionAndSendToChat
+    template?: string;
+
     get showDamage(): boolean {
-        return this.success || this.isThrown;
+        return this.success || (this.isThrown ?? false);
     }
 
     reset(): void {
@@ -172,12 +177,15 @@ export class RollData {
         try {
             const roll = new Roll(rollDetails.formula, rollDetails.params);
             await roll.evaluate();
-            if (roll.total > 60) {
+            const rollTotal = roll.total;
+            if (rollTotal === undefined) {
+                this.modifierTotal = 0;
+            } else if (rollTotal > 60) {
                 this.modifierTotal = 60;
-            } else if (roll.total < -60) {
+            } else if (rollTotal < -60) {
                 this.modifierTotal = -60;
             } else {
-                this.modifierTotal = roll.total;
+                this.modifierTotal = rollTotal;
             }
         } catch {
             this.modifierTotal = 0;
@@ -270,7 +278,7 @@ export class WeaponRollData extends RollData {
         calculateCombatActionModifier(this);
         if (weaponSystem.usesAmmo) {
             this.usesAmmo = true;
-            calculateAmmoInformation(this);
+            calculateAmmoInformation(this as Parameters<typeof calculateAmmoInformation>[0]);
         } else {
             this.usesAmmo = false;
         }
@@ -297,7 +305,8 @@ export class WeaponRollData extends RollData {
         }
 
         // Talents
-        const sourceActor = this.sourceActor as WH40KBaseActorDocument | null;
+        type ActorWithTalents = WH40KBaseActorDocument & { hasTalent(name: string): boolean };
+        const sourceActor = this.sourceActor as ActorWithTalents | null;
         const sourceActorSystem = sourceActor?.system as { fate?: { value: number } };
         if (sourceActor && sourceActor.hasTalent('Eye of Vengeance') && sourceActorSystem.fate && sourceActorSystem.fate.value > 0) {
             this.hasEyeOfVengeanceAvailable = true;
@@ -338,7 +347,7 @@ export class WeaponRollData extends RollData {
     }
 
     async finalize(): Promise<void> {
-        await calculateAmmoAttackBonuses(this);
+        await calculateAmmoAttackBonuses(this as Parameters<typeof calculateAmmoAttackBonuses>[0]);
         await calculateAttackSpecialAttackBonuses(this);
         await calculateWeaponModifiersAttackBonuses(this);
         this.modifiers = {
@@ -389,8 +398,9 @@ export class PsychicRollData extends RollData {
         this.modifiers['bonus'] = 0;
         this.modifiers['difficulty'] = 0;
         this.modifiers['modifier'] = 0;
-        this.pr = (this.sourceActor as WH40KBaseActorDocument).psy?.rating ?? 0;
-        this.hasFocus = !!(this.sourceActor as WH40KBaseActorDocument).psy?.hasFocus;
+        type ActorWithPsy = WH40KBaseActorDocument & { psy?: import('../types/global.d.ts').WH40KPsy };
+        this.pr = (this.sourceActor as ActorWithPsy).psy?.rating ?? 0;
+        this.hasFocus = !!(this.sourceActor as ActorWithPsy).psy?.hasFocus;
 
         this.powerSelect = this.psychicPowers.length > 1;
         this.power = this.psychicPowers[0];
@@ -409,7 +419,8 @@ export class PsychicRollData extends RollData {
 
     async update(): Promise<void> {
         if (!this.sourceActor) return;
-        const sourceActor = this.sourceActor as WH40KBaseActorDocument;
+        type ActorWithPsy = WH40KBaseActorDocument & { psy?: import('../types/global.d.ts').WH40KPsy };
+        const sourceActor = this.sourceActor as ActorWithPsy;
 
         this.modifiers['bonus'] = 10 * Math.floor((sourceActor.psy?.rating ?? 0) - this.pr);
         this.modifiers['focus'] = this.hasFocus ? 10 : 0;

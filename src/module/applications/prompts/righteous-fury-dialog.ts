@@ -3,6 +3,7 @@
  */
 
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import type { ApplicationV2Ctor } from '../api/application-types.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -20,7 +21,7 @@ interface RighteousFuryDialogOptions {
  * Dialog for confirming Righteous Fury triggers.
  * Shows the confirmation roll (d100 vs BS/WS) and handles the result.
  */
-export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV2) {
+export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     /**
      * @param {RighteousFuryDialogOptions} options - Dialog options
      */

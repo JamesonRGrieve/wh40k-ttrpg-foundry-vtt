@@ -279,7 +279,8 @@ export class EventTracker {
         for (const [id, event] of Object.entries(graph)) {
             const src = event.source_name || event.source_file || 'Unknown';
             if (!groups[src]) groups[src] = [];
-            groups[src].push({ id, ...event });
+            const { id: _id, ...rest } = event;
+            groups[src].push({ id, ...rest });
         }
 
         // Count stats
@@ -463,16 +464,18 @@ export class EventTracker {
             buttons: {
                 close: { label: 'Close' },
             },
-            render: (html: HTMLElement) => {
+            render: (html: JQuery<HTMLElement>) => {
                 const $html = html instanceof HTMLElement ? $(html) : html;
                 const rebind = () => {
                     // Event checkboxes
                     $html
                         .find('input[type="checkbox"]')
                         .off('change')
-                        .on('change', async (ev: Event) => {
-                            const id = ev.currentTarget.dataset.eventId;
-                            const isChecked = ev.currentTarget.checked;
+                        .on('change', async (ev: JQuery.ChangeEvent) => {
+                            const target = ev.currentTarget as HTMLInputElement;
+                            const id = target.dataset.eventId;
+                            if (!id) return;
+                            const isChecked = target.checked;
                             await EventTracker.setResolved(id, isChecked);
                             $html.closest('.dialog').find('.dialog-content').html(EventTracker._buildContent(activeTab));
                             rebind();
@@ -481,8 +484,9 @@ export class EventTracker {
                     $html
                         .find('.evt-tab-btn')
                         .off('click')
-                        .on('click', (ev: Event) => {
-                            const tab = ev.currentTarget.dataset.tab as 'events' | 'npcs';
+                        .on('click', (ev: JQuery.ClickEvent) => {
+                            const target = ev.currentTarget as HTMLElement;
+                            const tab = target.dataset.tab as 'events' | 'npcs';
                             if (!tab || tab === activeTab) return;
                             activeTab = tab;
                             $html.closest('.dialog').find('.dialog-content').html(EventTracker._buildContent(activeTab));

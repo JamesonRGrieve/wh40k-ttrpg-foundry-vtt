@@ -12,17 +12,19 @@ import type AmmunitionData from '../../data/item/ammunition.ts';
 export default class AmmoSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
+        ...BaseItemSheet.DEFAULT_OPTIONS,
         classes: ['wh40k-rpg', 'sheet', 'item', 'ammunition'],
         position: {
             width: 580,
             height: 660,
         },
         actions: {
+            ...BaseItemSheet.DEFAULT_OPTIONS?.actions,
             addQuality: AmmoSheet.#addQuality,
             removeAddedQuality: AmmoSheet.#removeAddedQuality,
             removeRemovedQuality: AmmoSheet.#removeRemovedQuality,
         },
-    };
+    } satisfies typeof BaseItemSheet.DEFAULT_OPTIONS & Partial<ApplicationV2Config.DefaultOptions>;
 
     /* -------------------------------------------- */
 
@@ -84,8 +86,8 @@ export default class AmmoSheet extends BaseItemSheet {
         if (!quality) return;
 
         const field = type === 'added' ? 'addedQualities' : 'removedQualities';
-        const sys = this.item.system as AmmunitionData;
-        const qualities = new Set((sys[field] as string[]) || []);
+        const sys = this.item.system as unknown as AmmunitionData;
+        const qualities = new Set((sys[field] as unknown as string[]) || []);
         qualities.add(quality);
 
         await this.item.update({ [`system.${field}`]: Array.from(qualities) });
@@ -99,11 +101,11 @@ export default class AmmoSheet extends BaseItemSheet {
      */
     static async #removeAddedQuality(this: AmmoSheet, event: Event, target: HTMLElement): Promise<void> {
         const quality = target.dataset.quality;
-        const sys = this.item.system as AmmunitionData;
-        const qualities = new Set((sys.addedQualities as string[]) || []);
+        const sys = this.item.system as unknown as AmmunitionData;
+        const qualities = new Set((sys.addedQualities as unknown as string[]) || []);
         if (quality) qualities.delete(quality);
 
-        await this.item.update({ 'system.addedQualities': Array.from(qualities) });
+        await this.item.update({ 'system.addedQualities': Array.from(qualities) } as Record<string, unknown>);
     }
 
     /**
@@ -111,10 +113,10 @@ export default class AmmoSheet extends BaseItemSheet {
      */
     static async #removeRemovedQuality(this: AmmoSheet, event: Event, target: HTMLElement): Promise<void> {
         const quality = target.dataset.quality;
-        const sys = this.item.system as AmmunitionData;
-        const qualities = new Set((sys.removedQualities as string[]) || []);
+        const sys = this.item.system as unknown as AmmunitionData;
+        const qualities = new Set((sys.removedQualities as unknown as string[]) || []);
         if (quality) qualities.delete(quality);
 
-        await this.item.update({ 'system.removedQualities': Array.from(qualities) });
+        await this.item.update({ 'system.removedQualities': Array.from(qualities) } as Record<string, unknown>);
     }
 }
