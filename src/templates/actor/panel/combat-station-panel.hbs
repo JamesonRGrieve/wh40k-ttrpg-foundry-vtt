@@ -13,7 +13,7 @@
                         <div class="wh40k-panel-header">
                             <span class="wh40k-panel-title tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-heartbeat"></i> Vitals</span>
                         </div>
-                        <div class="wh40k-panel-body wh40k-vitals-hud tw-flex tw-flex-col tw-gap-2">
+                        <div class="wh40k-panel-body wh40k-vitals-hud tw-flex tw-flex-col tw-gap-2 tw-bg-gradient-to-br tw-from-black/[0.02] tw-to-black/[0.05] tw-border tw-border-solid tw-border-black/10 tw-rounded-[var(--wh40k-radius-lg)] tw-shadow-[inset_0_1px_3px_rgba(0,0,0,0.05)]">
 
                         {{!-- Row: Wounds | Fatigue --}}
                         <div class="tw-grid tw-grid-cols-2 tw-gap-2 tw-items-start">
@@ -232,23 +232,23 @@
                                 <div class="wh40k-mobility-speeds-inline">
                                     <button type="button" class="wh40k-speed-inline wh40k-speed-half" data-action="vocalizeMovement" data-movement-type="half" title="Click to announce movement">
                                         <i class="fas fa-walking"></i>
-                                        <span class="wh40k-speed-value">{{system.movement.half}}m</span>
-                                        <span class="wh40k-speed-label">Half</span>
+                                        <span class="wh40k-speed-value tw-font-alt tw-text-[1.5rem] tw-font-bold tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.movement.half}}m</span>
+                                        <span class="wh40k-speed-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">Half</span>
                                     </button>
                                     <button type="button" class="wh40k-speed-inline wh40k-speed-full" data-action="vocalizeMovement" data-movement-type="full" title="Click to announce movement">
                                         <i class="fas fa-shoe-prints"></i>
-                                        <span class="wh40k-speed-value">{{system.movement.full}}m</span>
-                                        <span class="wh40k-speed-label">Full</span>
+                                        <span class="wh40k-speed-value tw-font-alt tw-text-[1.5rem] tw-font-bold tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.movement.full}}m</span>
+                                        <span class="wh40k-speed-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">Full</span>
                                     </button>
                                     <button type="button" class="wh40k-speed-inline wh40k-speed-charge" data-action="vocalizeMovement" data-movement-type="charge" title="Click to announce movement">
                                         <i class="fas fa-running"></i>
-                                        <span class="wh40k-speed-value">{{system.movement.charge}}m</span>
-                                        <span class="wh40k-speed-label">Charge</span>
+                                        <span class="wh40k-speed-value tw-font-alt tw-text-[1.5rem] tw-font-bold tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.movement.charge}}m</span>
+                                        <span class="wh40k-speed-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">Charge</span>
                                     </button>
                                     <button type="button" class="wh40k-speed-inline wh40k-speed-run" data-action="vocalizeMovement" data-movement-type="run" title="Click to announce movement">
                                         <i class="fas fa-wind"></i>
-                                        <span class="wh40k-speed-value">{{system.movement.run}}m</span>
-                                        <span class="wh40k-speed-label">Run</span>
+                                        <span class="wh40k-speed-value tw-font-alt tw-text-[1.5rem] tw-font-bold tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.movement.run}}m</span>
+                                        <span class="wh40k-speed-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">Run</span>
                                     </button>
                                 </div>
                             </div>

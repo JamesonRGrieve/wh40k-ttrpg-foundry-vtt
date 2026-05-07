@@ -1,0 +1,87 @@
+{
+  "task": "port-panels-medium",
+  "date": "2026-05-06",
+  "description": "Port 4 CSS panel blocks to inline Tailwind: _skills.css, _talents.css, _powers-v2.css, _movement.css",
+  "cssBlocksDeleted": [
+    {
+      "source": "src/css/panels/_skills.css",
+      "linesDeleted": 412,
+      "status": "deleted"
+    },
+    {
+      "source": "src/css/panels/_talents.css",
+      "linesDeleted": 537,
+      "status": "deleted"
+    },
+    {
+      "source": "src/css/panels/_powers-v2.css",
+      "linesDeleted": 967,
+      "status": "deleted"
+    },
+    {
+      "source": "src/css/panels/_movement.css",
+      "linesDeleted": 649,
+      "status": "deleted"
+    }
+  ],
+  "totalLinesRemoved": 2565,
+  "templatesModified": [
+    "src/templates/actor/partial/skill-row.hbs",
+    "src/templates/actor/panel/skills-panel.hbs",
+    "src/templates/actor/panel/psychic-powers-panel.hbs",
+    "src/templates/actor/panel/navigator-powers-panel.hbs",
+    "src/templates/actor/panel/rituals-panel.hbs",
+    "src/templates/actor/panel/orders-panel.hbs",
+    "src/templates/actor/panel/combat-station-panel.hbs",
+    "src/templates/actor/panel/movement-panel-full.hbs",
+    "src/templates/actor/player/tab-biography.hbs",
+    "src/templates/actor/player/tab-overview.hbs",
+    "src/templates/actor/npc/tab-npc.hbs",
+    "src/templates/item/talent-sheet.hbs"
+  ],
+  "moduleFilesModified": [
+    "src/module/documents/token.ts",
+    "src/module/applications/actor/character-sheet.ts"
+  ],
+  "ratchetChanges": {
+    "css:ratchet": { "tailwindOnly": "120→129", "mixed": "124→115", "cssOnly": "0→0" },
+    "animation:ratchet": { "count": "1→1" }
+  },
+  "portingNotes": [
+    "wh40k-skills-panel: added tw-font-alt (font-family from CSS)",
+    "wh40k-skill-row: ported bg/border/hover styles inline; kept class as JS hook in base-actor-sheet.ts",
+    "wh40k-skill-icon: ported block/size/background-image styles inline",
+    "wh40k-skill-name: ported button resets + hover color inline",
+    "wh40k-skill-roll: ported button resets + hover inline",
+    "wh40k-skill-favorite: ported inline",
+    "wh40k-train-indicator: ported active/inactive states inline in skill-row.hbs",
+    "wh40k-training-display: added bg/border inline",
+    "wh40k-skill-total: added bg/shadow inline",
+    "wh40k-advanced-untrained-section: ported border-top, mt, pt inline",
+    "wh40k-section-divider: ported font/spacing/alignment inline",
+    "wh40k-skill-row--compact: ported opacity/italic/firebrick color inline",
+    "wh40k-skill-row--locked: ported opacity inline; pseudo ::after lock icon dropped (non-essential cosmetic)",
+    "wh40k-train-btn: dead code (no template usage) - deleted with CSS block",
+    "wh40k-weapons-fullwidth: dead code - deleted with CSS block",
+    "wh40k-combat-vitals-grid: dead code - deleted with CSS block",
+    "wh40k-header-btn: ported 22x22px gold button styles to all 10 usages in talent-sheet.hbs and tab-npc.hbs",
+    "wh40k-vitals-hud: ported bg-gradient/border/shadow inline in combat-station-panel.hbs",
+    "wh40k-combat-actions: JS hook class, min-width handled by grid parent - no CSS porting needed",
+    "wh40k-power-filters: ported flex/wrap/gap/bg inline in psychic-powers-panel.hbs and orders-panel.hbs",
+    "wh40k-filter-btn: ported border/rounded/hover states inline",
+    "wh40k-tab-powers: already fully inlined with [&.active]:!tw-block and tw-p-3",
+    "wh40k-panel-powers/psychic-powers/navigator-powers/rituals/orders: passed accentBg/accentBorder/accentIcon to collapsible-panel partial instead of CSS descendant selectors",
+    "wh40k-affliction-header: ported @apply tw-flex tw-items-center tw-justify-between tw-mb-1 inline",
+    "wh40k-affliction-list: ported flex+gap+min-height inline",
+    "wh40k-affliction-row: ported bg/border/hover inline",
+    "wh40k-affliction-name: ported flex-1/cursor/text styles inline",
+    "wh40k-affliction-del: ported button styles inline",
+    "wh40k-mobility-section/wh40k-size-section: ported bg/border/rounded inline in movement-panel-full.hbs",
+    "wh40k-size-select: ported full select styling inline",
+    "wh40k-speed-value: ported font-alt/size/weight/color inline in combat-station-panel.hbs and tab-overview.hbs",
+    "wh40k-speed-label: ported size/weight/uppercase/tracking inline",
+    "wh40k-speed-box/wh40k-speed-data: dead code (templates use wh40k-speed-inline instead) - deleted",
+    "wh40k-token-movement/__btn/__value: JS-generated, outside .wh40k-rpg scope; ported to inline DOM styles in token.ts",
+    "wh40k-no-results: JS-generated in character-sheet.ts; ported to inline DOM styles"
+  ]
+}

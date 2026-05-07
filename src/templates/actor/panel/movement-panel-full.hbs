@@ -87,12 +87,12 @@
                     title=(localize "WH40K.MOVEMENT.Tooltip.Push")))}}
 
         {{!-- Size --}}
-        <div class="wh40k-mobility-section wh40k-size-section tw-rounded-md tw-p-2">
+        <div class="wh40k-mobility-section wh40k-size-section tw-rounded-md tw-p-2 tw-mb-[var(--wh40k-space-md)] tw-bg-[var(--wh40k-bg-paper-light)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)]">
             <div class="wh40k-stat-grid-header tw-flex tw-items-center tw-gap-2 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-mb-2 tw-pb-1">
                 <i class="fas fa-arrows-alt tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-gold)] bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
                 <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.MOVEMENT.Size"}}</span>
             </div>
-            <select name="system.size" data-dtype="Number" class="wh40k-size-select tw-w-full tw-text-[0.85rem] tw-font-semibold tw-text-center tw-rounded-md tw-cursor-pointer">
+            <select name="system.size" data-dtype="Number" class="wh40k-size-select tw-w-full tw-text-[0.85rem] tw-font-semibold tw-text-center tw-rounded-md tw-cursor-pointer tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-border tw-border-solid tw-border-[var(--wh40k-border-medium)] tw-bg-[rgba(255,255,255,0.8)] tw-text-[color:var(--color-text-primary)] tw-transition-all hover:tw-border-[color:var(--wh40k-accent-gold)] focus:tw-outline-none focus:tw-border-[color:var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_0_3px_rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.15)]">
                 {{selectOptions dh.sizes selected=system.size labelAttr="label" valueAttr="@key"}}
             </select>
         </div>
