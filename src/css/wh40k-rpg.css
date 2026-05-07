@@ -29474,588 +29474,6 @@ body.theme-dark {
 
 /* ============================================ */
 
-/* ── source: src/css/panels/_biography.css ── */
-/* Origin Path */
-.wh40k-origin-path {
-    @apply tw-flex tw-flex-col tw-gap-1;
-}
-
-.wh40k-origin-step {
-    @apply tw-flex tw-items-center tw-gap-2 tw-py-1 tw-px-2 tw-min-h-9 tw-relative tw-overflow-hidden;
-    background: var(--wh40k-bg-paper-light);
-    border: 1px solid var(--wh40k-border-light);
-    border-radius: var(--wh40k-radius-md);
-
-    &.wh40k-filled {
-        background: var(--wh40k-bg-input);
-        border-color: rgb(from var(--wh40k-accent-bio) r g b / 0.3);
-    }
-
-    &:hover {
-        background: var(--wh40k-bg-paper);
-        border-color: var(--wh40k-border-medium);
-    }
-}
-
-.wh40k-origin-label {
-    @apply tw-shrink-0 tw-font-semibold;
-    width: 100px;
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-}
-
-.wh40k-origin-choice {
-    @apply tw-flex-1 tw-flex tw-items-center tw-gap-1 tw-min-w-0;
-}
-
-.wh40k-origin-img {
-    @apply tw-w-6 tw-h-6 tw-shrink-0;
-    border: 1px solid var(--wh40k-border-light);
-    border-radius: 3px;
-    object-fit: cover;
-}
-
-.wh40k-origin-name {
-    @apply tw-flex-1 tw-cursor-pointer tw-truncate;
-    font-size: 0.85rem;
-    color: var(--color-text-primary);
-
-    &:hover {
-        color: var(--wh40k-accent-bio);
-    }
-}
-
-.wh40k-origin-info {
-    @apply tw-flex tw-flex-col tw-gap-0.5 tw-min-w-0;
-}
-
-.wh40k-origin-summary {
-    @apply tw-truncate;
-    font-size: 0.72rem;
-    color: var(--wh40k-text-muted);
-    line-height: 1.2;
-    max-width: 360px;
-}
-
-.wh40k-origin-remove {
-    background: transparent;
-    border: none;
-    color: var(--wh40k-text-muted);
-    cursor: pointer;
-    padding: 4px;
-
-    &:hover {
-        color: var(--wh40k-accent-combat);
-    }
-}
-
-.wh40k-origin-empty {
-    flex: 1;
-    padding: 4px 8px;
-    border: 1px dashed var(--wh40k-border-medium);
-    border-radius: var(--wh40k-radius-md);
-    font-size: 0.75rem;
-    color: var(--wh40k-text-muted);
-    text-align: center;
-    font-style: italic;
-    display: grid;
-    gap: 2px;
-}
-
-.wh40k-origin-empty-title {
-    font-weight: 600;
-    color: var(--color-text-secondary);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    font-size: 0.7rem;
-}
-
-.wh40k-origin-empty-sub {
-    font-size: 0.7rem;
-}
-
-.wh40k-journal-entries {
-    @apply tw-grid tw-gap-2;
-}
-
-.wh40k-journal-entries-title {
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-text-secondary);
-    padding: 2px 0;
-}
-
-/* Journal Entries Section - Modern Design */
-.wh40k-journal-entries-section {
-    margin-top: var(--wh40k-space-md); /* Consistent spacing */
-}
-
-.wh40k-section-header {
-    @apply tw-flex tw-items-center tw-justify-between tw-mb-2 tw-pb-1;
-    border-bottom: 1px solid var(--wh40k-border-color-light);
-}
-
-.wh40k-section-title {
-    @apply tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide;
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-
-    i {
-        color: var(--wh40k-accent-bio);
-    }
-}
-
-.wh40k-add-btn {
-    background: transparent;
-    border: 1px solid var(--wh40k-border-color-light);
-    color: var(--wh40k-text-muted);
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: var(--wh40k-radius-md);
-    transition: all var(--wh40k-transition-fast);
-    font-size: 0.75rem;
-
-    &:hover {
-        background: var(--wh40k-panel-bg-translucent);
-        border-color: var(--wh40k-accent-bio);
-        color: var(--wh40k-accent-bio);
-    }
-}
-
-.wh40k-panel-action-btn {
-    background: transparent;
-    border: 1px solid var(--wh40k-border-color-light);
-    color: var(--wh40k-text-muted);
-    cursor: pointer;
-    padding: 4px 10px;
-    border-radius: var(--wh40k-radius-md);
-    transition: all var(--wh40k-transition-fast);
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    white-space: nowrap;
-
-    i {
-        font-size: 0.85rem;
-    }
-
-    &:hover {
-        background: rgb(from var(--wh40k-accent-bio) r g b / 0.1);
-        border-color: var(--wh40k-accent-bio);
-        color: var(--wh40k-accent-bio);
-
-        i {
-            color: var(--wh40k-accent-bio);
-        }
-    }
-
-    &:active {
-        transform: scale(0.97);
-    }
-}
-
-.wh40k-journal-list {
-    @apply tw-flex tw-flex-col tw-gap-1;
-}
-
-.wh40k-journal-entry {
-    padding: var(--wh40k-space-sm);
-    background: var(--wh40k-panel-bg-solid);
-    border: 1px solid var(--wh40k-border-color-light);
-    border-left: 3px solid var(--wh40k-accent-bio);
-    border-radius: var(--wh40k-radius-md);
-    transition: all var(--wh40k-transition-base);
-
-    &:hover {
-        background: var(--wh40k-panel-bg);
-        border-color: var(--wh40k-border-color);
-        box-shadow: 0 1px 3px var(--wh40k-shadow-soft);
-    }
-}
-
-.wh40k-entry-header {
-    @apply tw-flex tw-items-center tw-gap-2;
-}
-
-.wh40k-entry-name {
-    @apply tw-flex-1 tw-cursor-pointer tw-text-left tw-font-semibold;
-    font-size: 0.875rem;
-    color: var(--wh40k-text-dark);
-    background: transparent;
-    border: none;
-    padding: 0;
-
-    &:hover {
-        color: var(--wh40k-accent-bio);
-        text-decoration: underline;
-    }
-}
-
-.wh40k-entry-meta {
-    font-size: 0.7rem;
-    color: var(--wh40k-text-muted);
-    white-space: nowrap;
-}
-
-.wh40k-entry-delete {
-    background: transparent;
-    border: 1px solid transparent;
-    color: var(--wh40k-text-muted);
-    cursor: pointer;
-    padding: 2px 6px;
-    border-radius: 3px;
-    transition: all var(--wh40k-transition-fast);
-    font-size: 0.75rem;
-
-    &:hover {
-        color: var(--wh40k-wounds-secondary);
-        background: var(--wh40k-wounds-bg);
-        border-color: var(--wh40k-wounds-border);
-    }
-}
-
-.wh40k-entry-preview {
-    margin-top: var(--wh40k-space-xs);
-    padding-top: var(--wh40k-space-xs);
-    border-top: 1px solid var(--wh40k-border-color-light);
-    font-size: 0.8rem;
-    color: var(--wh40k-text-secondary);
-    font-style: italic;
-    line-height: 1.4;
-}
-
-/* Connections */
-.wh40k-connections-section {
-    margin-bottom: var(--wh40k-space-sm);
-
-    &:last-child {
-        margin-bottom: 0;
-    }
-}
-
-.wh40k-connection-bonus {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--wh40k-color-success);
-    padding: 2px 6px;
-    background: rgb(from var(--wh40k-color-success) r g b / 0.15);
-    border-radius: 3px;
-}
-
-.wh40k-connection-penalty {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--wh40k-accent-combat);
-    padding: 2px 6px;
-    background: rgb(from var(--wh40k-accent-combat) r g b / 0.15);
-    border-radius: 3px;
-}
-
-/* Journal Panel */
-.wh40k-panel-journal {
-    @apply tw-flex-1 tw-flex tw-flex-col;
-
-    .wh40k-panel-body {
-        @apply tw-flex-1 tw-flex tw-flex-col;
-    }
-}
-
-.wh40k-journal-body {
-    @apply tw-flex tw-flex-col tw-gap-2;
-}
-
-.wh40k-journal-section {
-    @apply tw-flex tw-flex-col tw-gap-1 tw-mt-2;
-
-    &.wh40k-journal-main {
-        flex: 1;
-        min-height: 200px;
-    }
-
-    &.wh40k-journal-notes {
-        flex: 1;
-        min-height: 150px;
-    }
-}
-
-/* ProseMirror Editor Integration */
-.wh40k-prose-editor {
-    flex: 1;
-    min-height: 250px;
-    background: var(--wh40k-bg-input);
-    border: 1px solid var(--wh40k-border-light);
-    border-radius: var(--wh40k-radius-md);
-    overflow-y: auto;
-    font-size: 0.9rem;
-    line-height: 1.6;
-
-    &:focus,
-    &:focus-within {
-        outline: none;
-        border-color: var(--wh40k-accent-bio);
-        box-shadow: 0 0 0 2px rgb(from var(--wh40k-accent-bio) r g b / 0.1);
-    }
-
-    /* ProseMirror content styling */
-    .ProseMirror {
-        padding: var(--wh40k-space-sm);
-        min-height: 100%;
-        outline: none;
-
-        p {
-            margin: 0 0 var(--wh40k-space-sm) 0;
-            &:last-child {
-                margin-bottom: 0;
-            }
-        }
-
-        ul,
-        ol {
-            margin: 0 0 var(--wh40k-space-sm) var(--wh40k-space-lg);
-            padding-left: var(--wh40k-space-md);
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-family: var(--wh40k-font-alt);
-            margin: var(--wh40k-space-md) 0 var(--wh40k-space-sm) 0;
-            color: var(--color-text-primary);
-            font-weight: 700;
-
-            &:first-child {
-                margin-top: 0;
-            }
-        }
-
-        h1 {
-            font-size: 1.8rem;
-        }
-        h2 {
-            font-size: 1.5rem;
-        }
-        h3 {
-            font-size: 1.2rem;
-        }
-        h4 {
-            font-size: 1.1rem;
-        }
-
-        blockquote {
-            margin: var(--wh40k-space-sm) 0;
-            padding: var(--wh40k-space-sm) var(--wh40k-space-md);
-            border-left: 3px solid var(--wh40k-accent-bio);
-            background: rgb(from var(--wh40k-accent-bio) r g b / 0.05);
-            font-style: italic;
-        }
-
-        code {
-            background: rgba(0, 0, 0, 0.1);
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85em;
-        }
-
-        pre {
-            background: rgba(0, 0, 0, 0.1);
-            padding: var(--wh40k-space-sm);
-            border-radius: var(--wh40k-radius-md);
-            overflow-x: auto;
-
-            code {
-                background: none;
-                padding: 0;
-            }
-        }
-
-        /* Tables */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: var(--wh40k-space-sm) 0;
-
-            th,
-            td {
-                border: 1px solid var(--wh40k-border-light);
-                padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
-                text-align: left;
-            }
-
-            th {
-                background: rgb(from var(--wh40k-accent-bio) r g b / 0.1);
-                font-weight: 600;
-            }
-        }
-
-        /* Links */
-        a {
-            color: var(--wh40k-accent-bio);
-            text-decoration: underline;
-
-            &:hover {
-                color: color-mix(in srgb, var(--wh40k-accent-bio), white 10%);
-            }
-        }
-
-        /* Images */
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: var(--wh40k-radius-md);
-            margin: var(--wh40k-space-sm) 0;
-        }
-
-        /* Horizontal rule */
-        hr {
-            margin: var(--wh40k-space-md) 0;
-            border: none;
-            border-top: 2px solid var(--wh40k-border-light);
-        }
-    }
-}
-
-/* Read-only prose content (for non-editable view) */
-.wh40k-prose-content {
-    padding: var(--wh40k-space-sm);
-    background: var(--wh40k-bg-input);
-    border: 1px solid var(--wh40k-border-light);
-    border-radius: var(--wh40k-radius-md);
-    font-size: 0.9rem;
-    line-height: 1.6;
-    min-height: 100px;
-
-    p {
-        margin: 0 0 var(--wh40k-space-sm) 0;
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-
-    ul,
-    ol {
-        margin: 0 0 var(--wh40k-space-sm) var(--wh40k-space-lg);
-    }
-
-    h1,
-    h2,
-    h3 {
-        font-family: var(--wh40k-font-alt);
-        margin: var(--wh40k-space-sm) 0;
-    }
-
-    &:empty::before {
-        content: 'No notes recorded...';
-        color: var(--wh40k-text-muted);
-        font-style: italic;
-    }
-}
-
-.wh40k-journal-editor {
-    flex: 1;
-    min-height: 150px;
-    padding: var(--wh40k-space-sm);
-    background: var(--wh40k-bg-input);
-    border: 1px solid var(--wh40k-border-light);
-    border-radius: var(--wh40k-radius-md);
-    overflow-y: auto;
-    font-size: 0.9rem;
-    line-height: 1.5;
-
-    &:focus,
-    &:focus-within {
-        outline: none;
-        border-color: var(--wh40k-accent-bio);
-    }
-
-    /* Rich text styling */
-    p {
-        margin: 0 0 var(--wh40k-space-sm) 0;
-    }
-    ul,
-    ol {
-        margin: 0 0 var(--wh40k-space-sm) var(--wh40k-space-lg);
-    }
-    h1,
-    h2,
-    h3 {
-        font-family: var(--wh40k-font-alt);
-        margin: var(--wh40k-space-sm) 0;
-    }
-}
-
-/* ============================================ */
-/* Form Field Components */
-/* ============================================ */
-
-.wh40k-field-row {
-    @apply tw-flex tw-flex-col tw-gap-1;
-}
-
-.wh40k-field-row-split {
-    @apply tw-grid tw-grid-cols-2 tw-gap-3;
-}
-
-.wh40k-field-half {
-    @apply tw-flex tw-flex-col tw-gap-1;
-}
-
-.wh40k-field-label {
-    @apply tw-font-semibold tw-uppercase;
-    font-size: 0.7rem;
-    letter-spacing: 0.03em;
-    color: var(--color-text-secondary);
-}
-
-.wh40k-field-input {
-    width: 100%;
-    padding: 6px 8px;
-    background: var(--wh40k-bg-input);
-    border: 1px solid var(--wh40k-border-light);
-    border-radius: var(--wh40k-radius-md);
-    color: var(--color-text-primary);
-    font-size: 0.9rem;
-
-    &:focus {
-        outline: none;
-        border-color: var(--wh40k-accent-gold);
-    }
-
-    &::placeholder {
-        color: var(--wh40k-text-muted);
-        font-style: italic;
-    }
-}
-
-.wh40k-textarea {
-    width: 100%;
-    padding: var(--wh40k-space-sm);
-    background: var(--wh40k-bg-input);
-    border: 1px solid var(--wh40k-border-light);
-    border-radius: var(--wh40k-radius-md);
-    color: var(--color-text-primary);
-    font-size: 0.85rem;
-    line-height: 1.5;
-    resize: vertical;
-    font-family: inherit;
-
-    &:focus {
-        outline: none;
-        border-color: var(--wh40k-accent-gold);
-    }
-
-    &::placeholder {
-        color: var(--wh40k-text-muted);
-        font-style: italic;
-    }
-}
-
 /* ── source: src/css/panels/_combat-station.css ── */
 /* ============================================ */
 /* COMBAT TAB - Clean Combat Interface */
@@ -48346,6 +47764,153 @@ body.theme-dark {
         flex-direction: column;
         height: 100%;
         overflow: hidden;
+    }
+}
+
+/* salvaged from src/css/panels/_biography.css — ProseMirror content styling */
+.wh40k-prose-editor {
+    .ProseMirror {
+        padding: var(--wh40k-space-sm);
+        min-height: 100%;
+        outline: none;
+
+        p {
+            margin: 0 0 var(--wh40k-space-sm) 0;
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        ul,
+        ol {
+            margin: 0 0 var(--wh40k-space-sm) var(--wh40k-space-lg);
+            padding-left: var(--wh40k-space-md);
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--wh40k-font-alt);
+            margin: var(--wh40k-space-md) 0 var(--wh40k-space-sm) 0;
+            color: var(--color-text-primary);
+            font-weight: 700;
+
+            &:first-child {
+                margin-top: 0;
+            }
+        }
+
+        h1 {
+            font-size: 1.8rem;
+        }
+        h2 {
+            font-size: 1.5rem;
+        }
+        h3 {
+            font-size: 1.2rem;
+        }
+        h4 {
+            font-size: 1.1rem;
+        }
+
+        blockquote {
+            margin: var(--wh40k-space-sm) 0;
+            padding: var(--wh40k-space-sm) var(--wh40k-space-md);
+            border-left: 3px solid var(--wh40k-accent-bio);
+            background: rgb(from var(--wh40k-accent-bio) r g b / 0.05);
+            font-style: italic;
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.1);
+            padding: var(--wh40k-space-sm);
+            border-radius: var(--wh40k-radius-md);
+            overflow-x: auto;
+
+            code {
+                background: none;
+                padding: 0;
+            }
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: var(--wh40k-space-sm) 0;
+
+            th,
+            td {
+                border: 1px solid var(--wh40k-border-light);
+                padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
+                text-align: left;
+            }
+
+            th {
+                background: rgb(from var(--wh40k-accent-bio) r g b / 0.1);
+                font-weight: 600;
+            }
+        }
+
+        a {
+            color: var(--wh40k-accent-bio);
+            text-decoration: underline;
+
+            &:hover {
+                color: color-mix(in srgb, var(--wh40k-accent-bio), white 10%);
+            }
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--wh40k-radius-md);
+            margin: var(--wh40k-space-sm) 0;
+        }
+
+        hr {
+            margin: var(--wh40k-space-md) 0;
+            border: none;
+            border-top: 2px solid var(--wh40k-border-light);
+        }
+    }
+}
+
+/* salvaged from src/css/panels/_biography.css — read-only prose content typography */
+.wh40k-prose-content {
+    p {
+        margin: 0 0 var(--wh40k-space-sm) 0;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    ul,
+    ol {
+        margin: 0 0 var(--wh40k-space-sm) var(--wh40k-space-lg);
+    }
+
+    h1,
+    h2,
+    h3 {
+        font-family: var(--wh40k-font-alt);
+        margin: var(--wh40k-space-sm) 0;
+    }
+
+    &:empty::before {
+        content: 'No notes recorded...';
+        color: var(--wh40k-text-muted);
+        font-style: italic;
     }
 }
 
