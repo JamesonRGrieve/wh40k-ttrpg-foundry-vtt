@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-05-06",
+  "worker": "claude-sonnet-4-6",
+  "blocks": [
+    {
+      "cssSource": "src/css/panels/_wounds.css",
+      "monolithLines": { "start": 21272, "end": 21875 },
+      "targetClasses": [
+        "wh40k-crit-pip",
+        "wh40k-critical-pips",
+        "wh40k-injury-card",
+        "wh40k-injury-delete",
+        "wh40k-injury-name"
+      ],
+      "classes": {
+        "wh40k-critical-pips": {
+          "status": "ported — no remaining template consumers",
+          "note": "wounds-panel.hbs and wounds-pip-row.hbs were already fully Tailwind before this task. CSS rules at lines 21535 and 21727 (wounds block) are orphaned."
+        },
+        "wh40k-crit-pip": {
+          "status": "ported — no remaining template consumers",
+          "note": "wounds-pip-row.hbs uses tw-* inline. Only remaining reference is pip-tracker-row.stories.ts:75 which passes 'wh40k-crit-pip' as a mock pipClass arg to the story — this is a story input, not an actual template class applied to DOM. The story exercises the partial that renders tw-* classes, not wh40k-crit-pip. CSS rules at line 21542 are orphaned."
+        },
+        "wh40k-injury-card": {
+          "status": "shared — defer",
+          "note": "Used in src/templates/chat/critical-injury-card.hbs:3 as a dynamic concat: (concat \"wh40k-injury-card wh40k-injury-card--\" damageType). This is a programmatic class and the rule at line 15393 (in _critical-injury.css block) provides complex BEM theming per damage type. Cannot be safely ported without reworking the chat card template's damage-type theming system. Belongs to _critical-injury.css, not _wounds.css."
+        },
+        "wh40k-injury-name": {
+          "status": "ported",
+          "note": "Was used in combat-station-panel.hbs:161. Ported to tw-flex-1 tw-text-[var(--wh40k-font-size-sm)] tw-cursor-pointer hover:tw-underline. JS hook class item-edit retained. CSS rules at lines 21794 (wounds block) and 32532 (combat-station block) are now orphaned.",
+          "templates": ["src/templates/actor/panel/combat-station-panel.hbs"]
+        },
+        "wh40k-injury-delete": {
+          "status": "ported",
+          "note": "Was used in combat-station-panel.hbs:162. Ported to tw-flex tw-items-center tw-justify-center tw-w-[18px] tw-h-[18px] tw-p-0 tw-bg-transparent tw-border-0 tw-text-[var(--wh40k-text-muted)] tw-cursor-pointer tw-shrink-0 hover:tw-text-[var(--wh40k-accent-combat)]. JS hook class item-delete retained. CSS rules at lines 21819 (wounds block) and 32542 (combat-station block) are now orphaned.",
+          "templates": ["src/templates/actor/panel/combat-station-panel.hbs"]
+        }
+      },
+      "safeToDeleteFromMonolith": false,
+      "reason": "wh40k-injury-card is still a template consumer (dynamic concat in critical-injury-card.hbs). Additionally pip-tracker-row.stories.ts passes 'wh40k-crit-pip' as a string arg; while the DOM element does not use the class, removing the CSS rule before auditing stories is premature."
+    },
+    {
+      "cssSource": "src/css/item/_armour-modification.css",
+      "monolithLines": { "start": 9734, "end": 10364 },
+      "targetClasses": [
+        "armour-modification",
+        "wh40k-field",
+        "wh40k-field-input",
+        "wh40k-field-label",
+        "wh40k-field-row"
+      ],
+      "classes": {
+        "armour-modification": {
+          "status": "JS hook — no action needed",
+          "note": "Used in src/module/applications/item/armour-mod-sheet.ts:15 as a DEFAULT_OPTIONS.classes entry. This is the sheet's CSS selector hook, not a styled class from the template. Must be retained. All armour-mod-*.hbs templates are already fully Tailwind."
+        },
+        "wh40k-field": {
+          "status": "shared — defer",
+          "note": "Used across 15+ templates: item-ammo-sheet.hbs, item-gear-sheet.hbs, and others. The _armour-modification.css block uses it nested inside .wh40k-panel--source but none of the armour-mod templates actually use this class. The armour-mod templates are already fully Tailwind. Deferring shared class port to a dedicated task."
+        },
+        "wh40k-field-input": {
+          "status": "shared — defer",
+          "note": "Used in src/templates/shared/field-row.hbs comment only (the actual template uses tw-*). But also in many other templates. Not present in any armour-mod template. The _armour-modification.css block defines it nested inside .wh40k-panel--source. Deferring."
+        },
+        "wh40k-field-label": {
+          "status": "shared — defer",
+          "note": "Used in tab-dynasty.hbs, tab-biography.hbs, item-trait-sheet.hbs, item-origin-path-sheet.hbs, item-cybernetic-sheet.hbs and others. The shared/field-row.hbs partial does NOT use this class (it's already Tailwind). The _armour-modification.css block defines it nested inside .wh40k-panel--source and .wh40k-property-add. Deferring."
+        },
+        "wh40k-field-row": {
+          "status": "shared — defer",
+          "note": "Used in tab-dynasty.hbs, item-gear-sheet.hbs, and shared/field-row.hbs comment header. The actual shared/field-row.hbs partial uses tw-*. The _armour-modification.css block defines a grid layout for .wh40k-field-row nested inside .wh40k-panel--source. Deferring."
+        }
+      },
+      "safeToDeleteFromMonolith": false,
+      "reason": "armour-modification JS hook class must remain in TS. wh40k-field* classes are shared across many templates outside of armour-modification context — they cannot be deleted from the monolith until all consumers are ported."
+    }
+  ],
+  "sideEffects": [
+    {
+      "template": "src/templates/actor/panel/combat-station-panel.hbs",
+      "change": "Replaced wh40k-injury-row, wh40k-injury-name, wh40k-injury-delete with tw-* inline utilities. JS hook classes item-edit and item-delete retained.",
+      "cssSource": "src/css/panels/_combat-station.css (lines 32522-32562)",
+      "note": "These classes also had duplicate rules in _wounds.css (21778-21843). Both sets are now orphaned."
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {{!-- Advancement Dialog Template --}}
-<div class="wh40k-adv" data-wh40k-system="{{_gameSystemId}}">
+<div class="tw-flex tw-flex-col tw-h-full tw-gap-0 tw-font-[var(--wh40k-font-ui)]" data-wh40k-system="{{_gameSystemId}}">
   
   {{!-- Header with XP Display --}}
   <header class="wh40k-adv__header">
@@ -142,14 +142,14 @@
             </span>
             {{/if}}
             {{#if this.owned}}
-            <span class="wh40k-adv__advance-badge wh40k-adv__advance-badge--owned">
+            <span class="tw-text-[0.7rem] tw-py-[0.15rem] tw-px-[0.4rem] tw-rounded-[3px] tw-inline-flex tw-items-center tw-gap-1 tw-w-fit tw-bg-[rgba(45,80,22,0.3)] tw-text-[#7cb342]">
               <i class="fas fa-check"></i> {{localize "WH40K.Advancement.Owned"}}
             </span>
             {{/if}}
           </div>
 
           {{#if this.blocked}}
-          <div class="wh40k-adv__advance-blocked" title="{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-[color:var(--color-text-secondary)] tw-cursor-help [&_i]:tw-text-[color:var(--wh40k-color-warning)]" title="{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
             <i class="fas fa-lock"></i>
             <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
           </div>
@@ -159,7 +159,7 @@
           </div>
           {{else if this.canPurchase}}
           <button
-            class="wh40k-adv__advance-btn"
+            class="tw-py-[0.4rem] tw-px-[0.8rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]"
             data-action="purchaseAdvance"
             data-index="{{this.index}}"
             data-type="skill"
@@ -214,7 +214,7 @@
             </span>
             {{/if}}
             {{#if this.owned}}
-            <span class="wh40k-adv__advance-badge wh40k-adv__advance-badge--owned">
+            <span class="tw-text-[0.7rem] tw-py-[0.15rem] tw-px-[0.4rem] tw-rounded-[3px] tw-inline-flex tw-items-center tw-gap-1 tw-w-fit tw-bg-[rgba(45,80,22,0.3)] tw-text-[#7cb342]">
               <i class="fas fa-check"></i> {{localize "WH40K.Advancement.Owned"}}
             </span>
             {{/if}}
@@ -227,7 +227,7 @@
           </div>
           
           {{#if this.blocked}}
-          <div class="wh40k-adv__advance-blocked" title="{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-[color:var(--color-text-secondary)] tw-cursor-help [&_i]:tw-text-[color:var(--wh40k-color-warning)]" title="{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
             <i class="fas fa-lock"></i>
             <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
           </div>
@@ -237,7 +237,7 @@
           </div>
           {{else if this.canPurchase}}
           <button 
-            class="wh40k-adv__advance-btn"
+            class="tw-py-[0.4rem] tw-px-[0.8rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]"
             data-action="purchaseAdvance"
             data-index="{{this.index}}"
             data-type="talent"
@@ -276,7 +276,7 @@
         {{#if psychic.psyAdvance.maxed}}
         <span class="wh40k-adv__psy-rating-maxed"><i class="fas fa-crown"></i> Maximum</span>
         {{else if psychic.psyAdvance.canPurchase}}
-        <button class="wh40k-adv__advance-btn" data-action="purchasePsyRating" type="button">
+        <button class="tw-py-[0.4rem] tw-px-[0.8rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]" data-action="purchasePsyRating" type="button">
           <span>Advance to {{psychic.psyAdvance.nextRating}}</span>
           <span class="wh40k-adv__advance-cost">{{psychic.psyAdvance.cost}} XP</span>
         </button>
@@ -334,7 +334,7 @@
               <i class="fas fa-external-link-alt"></i>
             </a>
             {{#if this.owned}}
-            <span class="wh40k-adv__advance-badge wh40k-adv__advance-badge--owned">
+            <span class="tw-text-[0.7rem] tw-py-[0.15rem] tw-px-[0.4rem] tw-rounded-[3px] tw-inline-flex tw-items-center tw-gap-1 tw-w-fit tw-bg-[rgba(45,80,22,0.3)] tw-text-[#7cb342]">
               <i class="fas fa-check"></i> Owned
             </span>
             {{/if}}
@@ -346,14 +346,14 @@
             {{/if}}
           </div>
           {{#if this.blocked}}
-          <div class="wh40k-adv__advance-blocked">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-[color:var(--color-text-secondary)] tw-cursor-help [&_i]:tw-text-[color:var(--wh40k-color-warning)]">
             <i class="fas fa-lock"></i>
             <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
           </div>
           {{else if this.owned}}
           <div class="wh40k-adv__advance-status"><i class="fas fa-check-circle"></i></div>
           {{else if this.canPurchase}}
-          <button class="wh40k-adv__advance-btn"
+          <button class="tw-py-[0.4rem] tw-px-[0.8rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]"
             data-action="purchaseAdvance"
             data-index="{{this.index}}"
             data-type="psychic-power"
@@ -396,7 +396,7 @@
         <div class="wh40k-adv__advance-card wh40k-adv__advance-card--owned">
           <div class="wh40k-adv__advance-info">
             <span class="wh40k-adv__advance-name">{{this.name}}</span>
-            <span class="wh40k-adv__advance-badge">
+            <span class="tw-text-[0.7rem] tw-py-[0.15rem] tw-px-[0.4rem] tw-rounded-[3px] tw-inline-flex tw-items-center tw-gap-1 tw-w-fit">
               <i class="fas fa-seedling"></i> {{this.source}}
             </span>
           </div>
@@ -426,7 +426,7 @@
               <i class="fas fa-external-link-alt"></i>
             </a>
             {{#if this.owned}}
-            <span class="wh40k-adv__advance-badge wh40k-adv__advance-badge--owned">
+            <span class="tw-text-[0.7rem] tw-py-[0.15rem] tw-px-[0.4rem] tw-rounded-[3px] tw-inline-flex tw-items-center tw-gap-1 tw-w-fit tw-bg-[rgba(45,80,22,0.3)] tw-text-[#7cb342]">
               <i class="fas fa-check"></i> Taken
             </span>
             {{/if}}
@@ -434,7 +434,7 @@
           {{#if this.owned}}
           <div class="wh40k-adv__advance-status"><i class="fas fa-check-circle"></i></div>
           {{else if this.canPurchase}}
-          <button class="wh40k-adv__advance-btn"
+          <button class="tw-py-[0.4rem] tw-px-[0.8rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]"
             data-action="purchaseAdvance"
             data-index="{{this.index}}"
             data-type="elite"

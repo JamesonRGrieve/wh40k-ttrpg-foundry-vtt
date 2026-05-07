@@ -1,0 +1,89 @@
+{
+  "generatedAt": "2026-05-06",
+  "blocks": [
+    {
+      "cssSource": "src/css/dialogs/_threat-scaler.css",
+      "lineRange": [36155, 36704],
+      "activeClasses": ["decreased", "increased", "negative", "neutral", "npc-threat-scaler-dialog"],
+      "status": "no-template-changes-needed",
+      "notes": "Template src/templates/dialogs/threat-scaler.hbs was already fully Tailwind. The classes 'decreased', 'increased', 'negative', 'neutral' were legacy modifiers on .wh40k-stat-new / .wh40k-stat-change — the template already uses conditional inline tw-text-[#4caf50] / tw-text-[#f44336] instead. 'npc-threat-scaler-dialog' is a Foundry DEFAULT_OPTIONS.classes JS hook — must stay. Safe to delete CSS block once orchestrator confirms no other consumers."
+    },
+    {
+      "cssSource": "src/css/dialogs/_characteristic-setup.css",
+      "lineRange": [36705, 37326],
+      "activeClasses": ["assigned", "characteristic-setup-dialog", "csd-assigned-roll", "csd-bank-hint", "csd-bank-roll-btn"],
+      "templateChanges": [
+        {
+          "file": "src/templates/character-creation/origin-path-builder.hbs",
+          "class": "assigned",
+          "action": "removed",
+          "replacement": "tw-opacity-30 tw-cursor-not-allowed tw-relative (on .csd-roll-chip); added conditional <span> for ::after checkmark content"
+        },
+        {
+          "file": "src/templates/character-creation/origin-path-builder.hbs",
+          "class": "csd-bank-hint",
+          "action": "removed",
+          "replacement": "tw-text-center tw-text-xs tw-text-[rgba(232,220,196,0.5)] tw-mt-2 tw-m-0 tw-italic"
+        },
+        {
+          "file": "src/templates/character-creation/origin-path-builder.hbs",
+          "class": "csd-bank-roll-btn",
+          "action": "removed",
+          "replacement": "tw-max-w-full tw-whitespace-nowrap (added to csd-icon-btn element)"
+        },
+        {
+          "file": "src/templates/character-creation/origin-path-builder.hbs",
+          "class": "csd-assigned-roll",
+          "action": "kept (JS hook)",
+          "replacement": "Added Tailwind equivalents alongside: tw-w-[40px] tw-h-[36px] tw-flex tw-items-center tw-justify-center tw-bg-gradient-to-br tw-from-[rgba(76,175,80,0.3)] tw-to-[rgba(76,175,80,0.15)] tw-border-2 tw-border-[rgba(76,175,80,0.6)] tw-rounded-[6px] tw-text-[1.2rem] tw-font-bold tw-text-[color:var(--csd-bone,#e8dcc4)] tw-cursor-grab hover:tw-scale-110 hover:tw-border-[var(--csd-gold,#b08d57)]"
+        }
+      ],
+      "jsHooks": [
+        "csd-assigned-roll — querySelector('.csd-assigned-roll') in characteristic-setup-dialog.ts:217 and origin-path-builder.ts:1257",
+        "characteristic-setup-dialog — DEFAULT_OPTIONS.classes in characteristic-setup-dialog.ts:43"
+      ],
+      "notes": "characteristic-setup.hbs was already fully Tailwind (no legacy classes). origin-path-builder.hbs contained csd-bank-hint, csd-bank-roll-btn, assigned, csd-assigned-roll. CSS block not safe to delete until remaining csd-* classes in origin-path-builder.hbs are also ported."
+    },
+    {
+      "cssSource": "src/css/dialogs/_advancement-dialog.css",
+      "lineRange": [37327, 38039],
+      "activeClasses": ["advancement-dialog", "wh40k-adv", "wh40k-adv__advance-badge", "wh40k-adv__advance-blocked", "wh40k-adv__advance-btn"],
+      "templateChanges": [
+        {
+          "file": "src/templates/dialogs/advancement-dialog.hbs",
+          "class": "wh40k-adv",
+          "action": "removed",
+          "replacement": "tw-flex tw-flex-col tw-h-full tw-gap-0 tw-font-[var(--wh40k-font-ui)]"
+        },
+        {
+          "file": "src/templates/dialogs/advancement-dialog.hbs",
+          "class": "wh40k-adv__advance-badge",
+          "action": "removed (all 4 instances)",
+          "replacement": "tw-text-[0.7rem] tw-py-[0.15rem] tw-px-[0.4rem] tw-rounded-[3px] tw-inline-flex tw-items-center tw-gap-1 tw-w-fit"
+        },
+        {
+          "file": "src/templates/dialogs/advancement-dialog.hbs",
+          "class": "wh40k-adv__advance-badge--owned",
+          "action": "removed (merged into base class replacement)",
+          "replacement": "tw-bg-[rgba(45,80,22,0.3)] tw-text-[#7cb342] added for owned variant"
+        },
+        {
+          "file": "src/templates/dialogs/advancement-dialog.hbs",
+          "class": "wh40k-adv__advance-blocked",
+          "action": "removed (all 3 instances)",
+          "replacement": "tw-flex tw-items-center tw-gap-2 tw-text-[color:var(--color-text-secondary)] tw-cursor-help [&_i]:tw-text-[color:var(--wh40k-color-warning)]"
+        },
+        {
+          "file": "src/templates/dialogs/advancement-dialog.hbs",
+          "class": "wh40k-adv__advance-btn",
+          "action": "removed (all 5 instances)",
+          "replacement": "tw-py-[0.4rem] tw-px-[0.8rem] tw-bg-[linear-gradient(135deg,...)] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover/active scale variants"
+        }
+      ],
+      "jsHooks": [
+        "advancement-dialog — DEFAULT_OPTIONS.classes in advancement-dialog.ts:202"
+      ],
+      "notes": "advancement-dialog CSS block still has many other wh40k-adv__* classes not in scope for this task. CSS block not safe to delete until all remaining wh40k-adv__* classes are ported."
+    }
+  ]
+}

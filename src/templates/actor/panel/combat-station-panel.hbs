@@ -11,7 +11,7 @@
                 <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2">
                     <div class="wh40k-panel wh40k-panel-vitals">
                         <div class="wh40k-panel-header">
-                            <span class="wh40k-panel-title tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-heartbeat"></i> Vitals</span>
+                            <span class="wh40k-panel-title"><i class="fas fa-heartbeat"></i> Vitals</span>
                         </div>
                         <div class="wh40k-panel-body wh40k-vitals-hud tw-flex tw-flex-col tw-gap-2">
 
@@ -50,9 +50,7 @@
                                 </div>
                                 <div class="wh40k-vital-bar-wrapper">
                                     <div class="wh40k-vital-bar-track">
-                                        <div class="wh40k-vital-bar-progress wh40k-wounds-progress" style="--progress: {{percent system.wounds.value system.wounds.max}}%">
-                                        <span class="wh40k-wounds-progress__shimmer tw-pointer-events-none tw-absolute tw-inset-0 tw-animate-shimmer tw-bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.2)_50%,transparent_100%)]"></span>
-                                    </div>
+                                        <div class="wh40k-vital-bar-progress wh40k-wounds-progress" style="--progress: {{percent system.wounds.value system.wounds.max}}%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -121,7 +119,7 @@
                                 <div class="wh40k-fatigue-bolts-combat tw-flex tw-items-center tw-justify-center tw-gap-2.5 tw-py-1.5 tw-flex-wrap">
                                     {{#each (range 1 system.fatigue.max) as |index|}}
                                         <button type="button" class="wh40k-fatigue-pip {{#if (lte index ../system.fatigue.value)}}wh40k-fatigue-pip--filled{{/if}}" data-action="setFatigueBolt" data-fatigue-index="{{index}}" title="Fatigue Level {{index}}">
-                                            <i class="fas fa-bolt {{#if (lte index ../system.fatigue.value)}}tw-animate-bolt-glow-combat{{/if}}"></i>
+                                            <i class="fas fa-bolt"></i>
                                         </button>
                                     {{/each}}
                                 </div>
@@ -159,10 +157,10 @@
                                 {{#if criticalInjuries.length}}
                                 <div class="wh40k-injuries-list tw-flex tw-flex-col tw-gap-1">
                                     {{#each criticalInjuries as |injury|}}
-                                    <div class="wh40k-injury-row" data-item-id="{{injury.id}}">
-                                        <span class="wh40k-injury-name item-edit" data-item-id="{{injury.id}}">{{injury.name}}</span>
-                                        <button type="button" class="wh40k-injury-delete item-delete" data-item-id="{{injury.id}}" title="Remove">
-                                            <i class="fas fa-times"></i>
+                                    <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-1 tw-px-[var(--wh40k-space-sm)] tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.08)] tw-border-l-2 tw-border-[var(--wh40k-accent-combat)] tw-rounded-[0_var(--wh40k-radius-sm)_var(--wh40k-radius-sm)_0]" data-item-id="{{injury.id}}">
+                                        <span class="item-edit tw-flex-1 tw-text-[var(--wh40k-font-size-sm)] tw-cursor-pointer hover:tw-underline" data-item-id="{{injury.id}}">{{injury.name}}</span>
+                                        <button type="button" class="item-delete tw-flex tw-items-center tw-justify-center tw-w-[18px] tw-h-[18px] tw-p-0 tw-bg-transparent tw-border-0 tw-text-[var(--wh40k-text-muted)] tw-cursor-pointer tw-shrink-0 hover:tw-text-[var(--wh40k-accent-combat)]" data-item-id="{{injury.id}}" title="Remove">
+                                            <i class="fas fa-times" style="font-size:0.7rem;"></i>
                                         </button>
                                     </div>
                                     {{/each}}
@@ -200,7 +198,7 @@
                             <div class="wh40k-vital-stat-body">
                                 <div class="wh40k-fate-stars tw-flex tw-items-center tw-justify-center tw-gap-2.5 tw-py-1.5">
                                     {{#each (range 1 system.fate.max) as |index|}}
-                                        <button type="button" class="wh40k-fate-pip {{#if (lte index ../system.fate.value)}}wh40k-fate-pip--active tw-animate-star-glow{{/if}}" data-action="setFateStar" data-fate-index="{{index}}" title="Fate Point {{index}}">
+                                        <button type="button" class="wh40k-fate-pip {{#if (lte index ../system.fate.value)}}wh40k-fate-pip--active{{/if}}" data-action="setFateStar" data-fate-index="{{index}}" title="Fate Point {{index}}">
                                             <i class="fas fa-star"></i>
                                         </button>
                                     {{/each}}
