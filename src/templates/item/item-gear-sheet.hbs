@@ -100,23 +100,23 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs wh40k-tabs--gear wh40k-gear-tabs" data-group="primary">
-      <button type="button" class="wh40k-tab wh40k-gear-tab active" data-tab="overview" data-group="primary">
-        <i class="fas fa-info-circle"></i>
+    <nav class="wh40k-tabs wh40k-tabs--gear wh40k-gear-tabs tw-flex tw-flex-shrink-0 tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-gear-tab active tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-gold)] tw-bg-transparent tw-border-b-2 tw-border-b-[var(--wh40k-gold)] tw--mb-0.5 tw-cursor-pointer" data-tab="overview" data-group="primary">
+        <i class="fas fa-info-circle tw-mr-1"></i>
         <span>Overview</span>
       </button>
       {{#if hasLimitedUses}}
-      <button type="button" class="wh40k-tab wh40k-gear-tab" data-tab="usage" data-group="primary">
-        <i class="fas fa-hourglass-half"></i>
+      <button type="button" class="wh40k-tab wh40k-gear-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="usage" data-group="primary">
+        <i class="fas fa-hourglass-half tw-mr-1"></i>
         <span>Usage</span>
       </button>
       {{/if}}
-      <button type="button" class="wh40k-tab wh40k-gear-tab" data-tab="description" data-group="primary">
-        <i class="fas fa-book"></i>
+      <button type="button" class="wh40k-tab wh40k-gear-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="description" data-group="primary">
+        <i class="fas fa-book tw-mr-1"></i>
         <span>Description</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-gear-tab" data-tab="effects" data-group="primary">
-        <i class="fas fa-sparkles"></i>
+      <button type="button" class="wh40k-tab wh40k-gear-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="effects" data-group="primary">
+        <i class="fas fa-sparkles tw-mr-1"></i>
         <span>Effects</span>
       </button>
     </nav>
@@ -124,7 +124,7 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="wh40k-gear-content wh40k-tab-content wh40k-tab-content--gear">
+    <section class="wh40k-gear-content wh40k-tab-content wh40k-tab-content--gear tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3">
       
       {{!-- OVERVIEW TAB --}}
       <div class="wh40k-gear-panel tab active" data-tab="overview" data-group="primary">
@@ -141,10 +141,10 @@
                 <i class="fas fa-tags"></i>
                 <h3 class="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">Classification</h3>
               </div>
-              <div class="wh40k-gear-section__body">
-                <div class="wh40k-field">
-                  <label>Category</label>
-                  <select name="system.category">
+              <div class="wh40k-gear-section__body tw-flex tw-flex-col tw-gap-2">
+                <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
+                  <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Category</label>
+                  <select name="system.category" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]">
                     <option value="general" {{#if (eq system.category "general")}}selected{{/if}}>General Equipment</option>
                     <option value="tools" {{#if (eq system.category "tools")}}selected{{/if}}>Tools</option>
                     <option value="drugs" {{#if (eq system.category "drugs")}}selected{{/if}}>Drugs</option>
@@ -160,20 +160,20 @@
                     <option value="contraband" {{#if (eq system.category "contraband")}}selected{{/if}}>Contraband</option>
                   </select>
                 </div>
-                
-                <div class="wh40k-field">
-                  <label>Craftsmanship</label>
-                  <select name="system.craftsmanship">
+
+                <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
+                  <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Craftsmanship</label>
+                  <select name="system.craftsmanship" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]">
                     <option value="poor" {{#if (eq system.craftsmanship "poor")}}selected{{/if}}>Poor</option>
                     <option value="common" {{#if (eq system.craftsmanship "common")}}selected{{/if}}>Common</option>
                     <option value="good" {{#if (eq system.craftsmanship "good")}}selected{{/if}}>Good</option>
                     <option value="best" {{#if (eq system.craftsmanship "best")}}selected{{/if}}>Best</option>
                   </select>
                 </div>
-                
-                <div class="wh40k-field">
-                  <label>Availability</label>
-                  <select name="system.availability">
+
+                <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
+                  <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Availability</label>
+                  <select name="system.availability" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]">
                     <option value="ubiquitous" {{#if (eq system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
                     <option value="abundant" {{#if (eq system.availability "abundant")}}selected{{/if}}>Abundant</option>
                     <option value="plentiful" {{#if (eq system.availability "plentiful")}}selected{{/if}}>Plentiful</option>
@@ -223,22 +223,22 @@
                 <i class="fas fa-cubes"></i>
                 <h3>Physical Properties</h3>
               </div>
-              <div class="wh40k-gear-section__body">
-                <div class="wh40k-field">
-                  <label>Quantity</label>
-                  <input type="number" name="system.quantity" value="{{source.quantity}}" 
-                         data-dtype="Number" min="1" />
+              <div class="wh40k-gear-section__body tw-flex tw-flex-col tw-gap-2">
+                <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
+                  <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Quantity</label>
+                  <input type="number" name="system.quantity" value="{{source.quantity}}"
+                         data-dtype="Number" min="1" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]" />
                 </div>
-                
-                <div class="wh40k-field">
-                  <label>Weight per Unit (kg)</label>
-                  <input type="number" name="system.weight" value="{{source.weight}}" 
-                         data-dtype="Number" min="0" step="0.1" />
+
+                <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
+                  <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Weight per Unit (kg)</label>
+                  <input type="number" name="system.weight" value="{{source.weight}}"
+                         data-dtype="Number" min="0" step="0.1" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]" />
                 </div>
-                
-                <div class="wh40k-field">
-                  <label>Total Weight</label>
-                  <input type="text" value="{{source.effectiveTotalWeight}} kg" disabled />
+
+                <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
+                  <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Total Weight</label>
+                  <input type="text" value="{{source.effectiveTotalWeight}} kg" disabled class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-muted)] tw-opacity-60" />
                 </div>
               </div>
             </div>
@@ -251,10 +251,10 @@
                 <h3>Economic</h3>
               </div>
               <div class="wh40k-gear-section__body">
-                <div class="wh40k-field">
-                  <label>Cost (Thrones)</label>
+                <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
+                  <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Cost (Thrones)</label>
                   <input type="number" name="system.cost.dh2.homebrew.throneGelt" value="{{source.cost.dh2.homebrew.throneGelt}}"
-                         data-dtype="Number" min="0" />
+                         data-dtype="Number" min="0" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]" />
                 </div>
               </div>
             </div>
@@ -274,10 +274,10 @@
                 </label>
                 
                 {{#if system.consumable}}
-                <div class="wh40k-field tw-mt-2">
-                  <label>Maximum Uses</label>
-                  <input type="number" name="system.uses.max" value="{{source.uses.max}}" 
-                         data-dtype="Number" min="0" />
+                <div class="wh40k-field tw-flex tw-flex-col tw-gap-1 tw-mt-2">
+                  <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Maximum Uses</label>
+                  <input type="number" name="system.uses.max" value="{{source.uses.max}}"
+                         data-dtype="Number" min="0" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]" />
                 </div>
                 {{/if}}
               </div>
@@ -315,31 +315,31 @@
             </div>
             
             <div class="wh40k-field-row tw-flex tw-flex-col tw-gap-1">
-              <div class="wh40k-field">
-                <label>Current Uses</label>
-                <input type="number" name="system.uses.value" value="{{source.uses.value}}" 
-                       data-dtype="Number" min="0" max="{{system.uses.max}}" />
+              <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Current Uses</label>
+                <input type="number" name="system.uses.value" value="{{source.uses.value}}"
+                       data-dtype="Number" min="0" max="{{system.uses.max}}" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]" />
               </div>
-              <div class="wh40k-field">
-                <label>Maximum Uses</label>
-                <input type="number" name="system.uses.max" value="{{source.uses.max}}" 
-                       data-dtype="Number" min="0" />
+              <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Maximum Uses</label>
+                <input type="number" name="system.uses.max" value="{{source.uses.max}}"
+                       data-dtype="Number" min="0" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]" />
               </div>
             </div>
-            
-            <div class="wh40k-field">
-              <label>Duration / Recovery</label>
-              <input type="text" name="system.duration" value="{{source.duration}}" 
-                     placeholder="e.g., 1 hour, 1d6 rounds, permanent" />
+
+            <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
+              <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Duration / Recovery</label>
+              <input type="text" name="system.duration" value="{{source.duration}}"
+                     placeholder="e.g., 1 hour, 1d6 rounds, permanent" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]" />
             </div>
-            
+
             {{!-- Quick Actions --}}
             <div class="wh40k-consumable-actions">
-              <button type="button" class="wh40k-btn wh40k-btn--secondary" data-action="consumeUse" {{#if usesExhausted}}disabled{{/if}}>
+              <button type="button" class="wh40k-btn wh40k-btn--secondary tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-sm tw-cursor-pointer hover:tw-border-[var(--wh40k-gold)] hover:tw-text-gold" data-action="consumeUse" {{#if usesExhausted}}disabled{{/if}}>
                 <i class="fas fa-minus"></i>
                 Use One
               </button>
-              <button type="button" class="wh40k-btn wh40k-btn--primary" data-action="resetUses">
+              <button type="button" class="wh40k-btn wh40k-btn--primary tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-2 tw-bg-gradient-to-br tw-from-[var(--wh40k-gold-dark)] tw-to-[var(--wh40k-gold)] tw-border tw-border-[var(--wh40k-gold)] tw-rounded-md tw-text-[#1a1a1a] tw-text-sm tw-cursor-pointer" data-action="resetUses">
                 <i class="fas fa-redo"></i>
                 Reset to Max
               </button>

@@ -1,0 +1,46 @@
+{
+  "task": "port-item-shared-css",
+  "completed": true,
+  "blocks_deleted": [
+    "src/css/item/_misc.css",
+    "src/css/item/_sheets.css",
+    "src/css/item/_item-shared-base.css",
+    "src/css/item/_item-shared-components.css"
+  ],
+  "lines_removed": 1104,
+  "templates_modified": [
+    "src/templates/applications/compendium-browser.hbs",
+    "src/templates/item/item-peer-enemy-sheet.hbs",
+    "src/templates/item/item-ammo-sheet.hbs",
+    "src/templates/item/item-gear-sheet.hbs",
+    "src/templates/item/item-weapon-sheet.hbs",
+    "src/templates/item/item-cybernetic-sheet.hbs",
+    "src/templates/item/item-trait-sheet.hbs",
+    "src/templates/item/base/item-base.hbs",
+    "src/templates/item/base/talent-base.hbs",
+    "src/templates/item/item-weapon-mod-sheet.hbs",
+    "src/templates/item/ship-component-sheet.hbs",
+    "src/templates/item/talent-sheet.hbs",
+    "src/templates/item/panel/quality-tags.hbs",
+    "src/templates/item/panel/expandable-section.hbs",
+    "src/templates/actor/panel/backpack-split-panel.hbs",
+    "src/templates/dialogs/combat-preset.hbs",
+    "src/templates/chat/partial/chat-card-shell.hbs"
+  ],
+  "ts_modified": [
+    "src/module/hooks-manager.ts"
+  ],
+  "notes": {
+    "dead_code": [
+      "wh40k-item-section / wh40k-weapon-section / wh40k-talent-section (no template usages)",
+      "wh40k-badge--weapon/armour/gear/talent/trait/beneficial/harmful/neutral (no template usages)",
+      "wh40k-tag / wh40k-tag-list (no template usages - wh40k-tag-remove/add are different classes)",
+      "wh40k-badge-row (no template usages)",
+      "wh40k-mod-row / wh40k-armour-diagram (no template usages)",
+      "wh40k-item-sheet__effects-list / __effect / __effect-btn / __effect-name / __effect-controls / __panel-action (no template usages)",
+      "_item-shared-base.css :root CSS variable definitions (not template-facing)"
+    ],
+    "css_ratchet": "tw-only=129 mixed=115 css-only=0 (unchanged from before - no tw-only regressions)",
+    "animation_ratchet": "passed"
+  }
+}

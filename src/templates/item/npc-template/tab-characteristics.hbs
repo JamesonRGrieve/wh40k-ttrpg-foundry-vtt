@@ -66,7 +66,7 @@
     <div class="wh40k-panel">
         <header class="wh40k-panel-header">
             <h3><i class="fas fa-graduation-cap"></i> {{localize "WH40K.NPC.Template.TrainedSkills"}}</h3>
-            <button type="button" class="wh40k-btn wh40k-btn-icon" data-action="addSkill">
+            <button type="button" class="wh40k-btn wh40k-btn-icon tw-inline-flex tw-items-center tw-justify-center" data-action="addSkill">
                 <i class="fas fa-plus"></i>
             </button>
         </header>
@@ -86,7 +86,7 @@
                     </div>
                     <input class="tw-w-[50px] tw-text-center" type="number" name="system.trainedSkills.{{idx}}.bonus"
                            value="{{skill.bonus}}" placeholder="+0" />
-                    <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger"
+                    <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger tw-inline-flex tw-items-center tw-justify-center"
                             data-action="removeSkill" data-index="{{idx}}">
                         <i class="fas fa-trash"></i>
                     </button>

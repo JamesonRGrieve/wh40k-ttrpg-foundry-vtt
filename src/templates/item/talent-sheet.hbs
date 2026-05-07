@@ -30,28 +30,28 @@
         {{!-- Quick Badges --}}
         <div class="wh40k-talent-badges tw-flex tw-flex-wrap tw-gap-1">
           {{!-- Type Badge --}}
-          <span class="wh40k-badge wh40k-badge--type tw-flex tw-items-center tw-gap-1">
+          <span class="wh40k-badge wh40k-badge--type tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
             <i class="fa-solid {{#if talentData.isPassive}}fa-circle-check{{else}}fa-bolt{{/if}}"></i>
             {{#if talentData.isPassive}}Passive{{else}}Active{{/if}}
           </span>
 
           {{!-- Tier Badge --}}
           {{#if (gt talentData.tier 0)}}
-          <span class="wh40k-badge wh40k-badge--tier wh40k-badge--tier-{{talentData.tier}} tw-flex tw-items-center tw-gap-1">
+          <span class="wh40k-badge wh40k-badge--tier wh40k-badge--tier-{{talentData.tier}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
             <i class="fa-solid fa-layer-group"></i>
             Tier {{talentData.tier}}
           </span>
           {{/if}}
 
           {{!-- Category Badge --}}
-          <span class="wh40k-badge wh40k-badge--category tw-flex tw-items-center tw-gap-1">
+          <span class="wh40k-badge wh40k-badge--category tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
             <i class="fa-solid fa-tag"></i>
             {{talentData.categoryLabel}}
           </span>
 
           {{!-- XP Cost Badge --}}
           {{#if (gt talentData.cost 0)}}
-          <span class="wh40k-badge wh40k-badge--cost tw-flex tw-items-center tw-gap-1">
+          <span class="wh40k-badge wh40k-badge--cost tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
             <i class="fa-solid fa-coins"></i>
             {{talentData.cost}} XP
           </span>
@@ -59,7 +59,7 @@
 
           {{!-- Stackable Badge --}}
           {{#if talentData.stackable}}
-          <span class="wh40k-badge wh40k-badge--stackable tw-flex tw-items-center tw-gap-1">
+          <span class="wh40k-badge wh40k-badge--stackable tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
             <i class="fa-solid fa-layer-group"></i>
             Rank {{talentData.rank}}
           </span>
@@ -67,7 +67,7 @@
 
           {{!-- Rollable Badge --}}
           {{#if talentData.isRollable}}
-          <span class="wh40k-badge wh40k-badge--rollable tw-flex tw-items-center tw-gap-1">
+          <span class="wh40k-badge wh40k-badge--rollable tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
             <i class="fa-solid fa-dice-d20"></i>
             Rollable
           </span>
@@ -184,25 +184,25 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-talent-tabs tw-flex tw-flex-shrink-0" data-group="primary">
-      <button type="button" class="wh40k-talent-tab tw-flex tw-items-center tw-gap-1 tw-cursor-pointer {{#if (eq activeTab "overview")}}active{{/if}}"
+    <nav class="wh40k-talent-tabs tw-flex tw-flex-shrink-0 tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)]" data-group="primary">
+      <button type="button" class="wh40k-talent-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab "overview")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
               data-tab="overview" data-group="primary">
-        <i class="fa-solid fa-eye"></i>
+        <i class="fa-solid fa-eye tw-text-[0.9rem]"></i>
         <span>Overview</span>
       </button>
-      <button type="button" class="wh40k-talent-tab tw-flex tw-items-center tw-gap-1 tw-cursor-pointer {{#if (eq activeTab "effects")}}active{{/if}}"
+      <button type="button" class="wh40k-talent-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab "effects")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
               data-tab="effects" data-group="primary">
-        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <i class="fa-solid fa-wand-magic-sparkles tw-text-[0.9rem]"></i>
         <span>Effects</span>
       </button>
-      <button type="button" class="wh40k-talent-tab tw-flex tw-items-center tw-gap-1 tw-cursor-pointer {{#if (eq activeTab "properties")}}active{{/if}}"
+      <button type="button" class="wh40k-talent-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab "properties")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
               data-tab="properties" data-group="primary">
-        <i class="fa-solid fa-sliders"></i>
+        <i class="fa-solid fa-sliders tw-text-[0.9rem]"></i>
         <span>Properties</span>
       </button>
-      <button type="button" class="wh40k-talent-tab tw-flex tw-items-center tw-gap-1 tw-cursor-pointer {{#if (eq activeTab "description")}}active{{/if}}"
+      <button type="button" class="wh40k-talent-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab "description")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
               data-tab="description" data-group="primary">
-        <i class="fa-solid fa-book"></i>
+        <i class="fa-solid fa-book tw-text-[0.9rem]"></i>
         <span>Description</span>
       </button>
     </nav>
@@ -210,12 +210,12 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="wh40k-talent-content tw-flex-1 tw-overflow-y-auto tw-min-h-0">
+    <section class="wh40k-talent-content tw-flex-1 tw-overflow-y-auto tw-min-h-0 tw-p-3 [&::-webkit-scrollbar]:tw-w-2 [&::-webkit-scrollbar-track]:tw-bg-[var(--wh40k-panel-bg)] [&::-webkit-scrollbar-thumb]:tw-bg-[var(--wh40k-border-color)] [&::-webkit-scrollbar-thumb]:tw-rounded-md">
 
       {{!-- ─────────────────────────────────────────────────────────────────
            OVERVIEW TAB: Benefit and effects summary
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="wh40k-talent-panel {{#if (eq activeTab "overview")}}active{{/if}}" data-tab="overview" data-group="primary">
+      <div class="wh40k-talent-panel {{#if (eq activeTab "overview")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="overview" data-group="primary">
 
         {{!-- Benefit Section (Editable with hover button) --}}
         <div class="wh40k-section wh40k-section--editable {{#if inEditMode}}wh40k-section--editing{{/if}}">
@@ -299,7 +299,7 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            PROPERTIES TAB: Configuration and details
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="wh40k-talent-panel {{#if (eq activeTab "properties")}}active{{/if}}" data-tab="properties" data-group="primary">
+      <div class="wh40k-talent-panel {{#if (eq activeTab "properties")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="properties" data-group="primary">
 
         {{!-- Basic Properties --}}
         <div class="wh40k-section">
@@ -392,7 +392,7 @@
                   Stackable
                 </label>
                 {{#if inEditMode}}
-                <label class="wh40k-checkbox-label tw-flex tw-items-center tw-gap-1 tw-cursor-pointer">
+                <label class="wh40k-checkbox-label tw-flex tw-items-center tw-gap-1 tw-cursor-pointer tw-text-[0.85rem] tw-font-semibold tw-text-[var(--color-text-primary)] tw-select-none">
                   <input type="checkbox" name="system.stackable" {{checked talentData.stackable}} />
                   <span>Can Take Multiple Times</span>
                 </label>
@@ -600,7 +600,7 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            EFFECTS TAB: Modifiers and mechanical effects
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="wh40k-talent-panel wh40k-talent-panel--effects {{#if (eq activeTab "effects")}}active{{/if}}" data-tab="effects" data-group="primary">
+      <div class="wh40k-talent-panel wh40k-talent-panel--effects {{#if (eq activeTab "effects")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="effects" data-group="primary">
 
         {{!-- Permanent Modifiers --}}
         <div class="wh40k-section wh40k-section--effects" data-section-id="modifiers" data-has-data="{{modifiersData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "modifiers")}}{{@index}}{{/if}}{{/each}}">
@@ -912,7 +912,7 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            DESCRIPTION TAB: Benefit, notes, technical
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="wh40k-talent-panel {{#if (eq activeTab "description")}}active{{/if}}" data-tab="description" data-group="primary">
+      <div class="wh40k-talent-panel {{#if (eq activeTab "description")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="description" data-group="primary">
 
         {{!-- Benefit (Editable with hover button) --}}
         <div class="wh40k-section wh40k-section--editable {{#if inEditMode}}wh40k-section--editing{{/if}}">

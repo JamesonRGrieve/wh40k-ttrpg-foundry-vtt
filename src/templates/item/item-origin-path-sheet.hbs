@@ -60,21 +60,21 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-origin-tabs tw-flex tw-shrink-0" data-group="primary">
-      <button type="button" class="wh40k-origin-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="grants" data-group="primary">
-        <i class="fas fa-gift"></i>
+    <nav class="wh40k-origin-tabs tw-flex tw-shrink-0 tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)]" data-group="primary">
+      <button type="button" class="wh40k-origin-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-text-[color:var(--wh40k-dynasty-primary)] tw-bg-[var(--wh40k-dynasty-bg)] tw-border-b-[color:var(--wh40k-dynasty-primary)]" data-tab="grants" data-group="primary">
+        <i class="fas fa-gift tw-text-[0.9rem]"></i>
         <span>Grants</span>
       </button>
-      <button type="button" class="wh40k-origin-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="requirements" data-group="primary">
-        <i class="fas fa-lock"></i>
+      <button type="button" class="wh40k-origin-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="requirements" data-group="primary">
+        <i class="fas fa-lock tw-text-[0.9rem]"></i>
         <span>Requirements</span>
       </button>
-      <button type="button" class="wh40k-origin-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="choices" data-group="primary">
-        <i class="fas fa-question-circle"></i>
+      <button type="button" class="wh40k-origin-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="choices" data-group="primary">
+        <i class="fas fa-question-circle tw-text-[0.9rem]"></i>
         <span>Choices</span>
       </button>
-      <button type="button" class="wh40k-origin-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="description" data-group="primary">
-        <i class="fas fa-book"></i>
+      <button type="button" class="wh40k-origin-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="description" data-group="primary">
+        <i class="fas fa-book tw-text-[0.9rem]"></i>
         <span>Description</span>
       </button>
     </nav>
@@ -85,7 +85,7 @@
     <section class="wh40k-origin-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-2">
 
       {{!-- GRANTS TAB --}}
-      <div class="wh40k-origin-panel active" data-tab="grants" data-group="primary">
+      <div class="wh40k-origin-panel active tw-block" data-tab="grants" data-group="primary">
 
         {{!-- Characteristic Modifiers --}}
         <div class="wh40k-origin-section tw-mb-3">
@@ -310,7 +310,7 @@
       </div>
 
       {{!-- REQUIREMENTS TAB --}}
-      <div class="wh40k-origin-panel" data-tab="requirements" data-group="primary">
+      <div class="wh40k-origin-panel tw-hidden" data-tab="requirements" data-group="primary">
         {{#if item.system.hasRequirements}}
           {{!-- Text Requirements --}}
           {{#if item.system.requirements.text}}
@@ -377,7 +377,7 @@
       </div>
 
       {{!-- CHOICES TAB --}}
-      <div class="wh40k-origin-panel" data-tab="choices" data-group="primary">
+      <div class="wh40k-origin-panel tw-hidden" data-tab="choices" data-group="primary">
         {{#if item.system.grants.choices.length}}
           {{#each item.system.grants.choices as |choice index|}}
           <div class="wh40k-origin-section tw-mb-3">
@@ -413,7 +413,7 @@
       </div>
 
       {{!-- DESCRIPTION TAB --}}
-      <div class="wh40k-origin-panel" data-tab="description" data-group="primary">
+      <div class="wh40k-origin-panel tw-hidden" data-tab="description" data-group="primary">
         {{!-- Effect Text --}}
         <div class="wh40k-origin-section tw-mb-3">
           <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
