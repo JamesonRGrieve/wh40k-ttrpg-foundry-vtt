@@ -2,6 +2,7 @@
 {{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
       cardClass=(concat "wh40k-condition-card wh40k-condition-card--" nature)
       outerExtraClass="tw-overflow-hidden tw-rounded-md"
+      headerStyle=(iff (eq nature "beneficial") "background: linear-gradient(135deg, rgba(39,174,96,0.9) 0%, rgba(39,174,96,0.95) 100%); color: white;" (iff (eq nature "harmful") "background: linear-gradient(135deg, rgba(192,57,43,0.9) 0%, rgba(192,57,43,0.95) 100%); color: white;" "background: linear-gradient(135deg, rgba(149,165,166,0.9) 0%, rgba(127,140,141,0.95) 100%); color: white;"))
       image=img
       imageAlt=name
       title=name

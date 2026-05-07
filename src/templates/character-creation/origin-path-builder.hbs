@@ -1,32 +1,32 @@
 {{!-- Origin Path Builder Template - Refactored Design --}}
-<div class="origin-builder">
+<div class="origin-builder tw-grid tw-grid-rows-[auto_auto_1fr_auto_auto] tw-h-full tw-gap-0">
 
     {{!-- Unified Header: Toolbar + Mode + Direction --}}
-    <header class="builder-toolbar">
-        <div class="toolbar-group">
-            <button type="button" class="toolbar-btn" data-action="randomize" data-tooltip="{{localize 'WH40K.OriginPath.RandomizeHint'}}">
+    <header class="builder-toolbar tw-flex tw-justify-between tw-items-stretch tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-bg-[linear-gradient(180deg,var(--wh40k-bronze-dark),rgba(0,0,0,0.8))] tw-border-b-2 tw-border-b-[var(--wh40k-gold)]">
+        <div class="toolbar-group tw-flex tw-gap-[var(--wh40k-space-sm)] tw-items-center">
+            <button type="button" class="toolbar-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-text-light)] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="randomize" data-tooltip="{{localize 'WH40K.OriginPath.RandomizeHint'}}">
                 <i class="fa-solid fa-dice"></i>
                 <span>{{localize "WH40K.OriginPath.Randomize"}}</span>
             </button>
-            <button type="button" class="toolbar-btn" data-action="reset" data-tooltip="{{localize 'WH40K.OriginPath.ResetHint'}}">
+            <button type="button" class="toolbar-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-text-light)] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="reset" data-tooltip="{{localize 'WH40K.OriginPath.ResetHint'}}">
                 <i class="fa-solid fa-rotate-left"></i>
                 <span>{{localize "WH40K.OriginPath.Reset"}}</span>
             </button>
         </div>
 
-        <div class="toolbar-center">
-            <h1 class="toolbar-title">{{journeyTitle}}</h1>
-            
+        <div class="toolbar-center tw-flex-1 tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)]">
+            <h1 class="toolbar-title tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.1rem] tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[2px]">{{journeyTitle}}</h1>
+
             {{!-- Mode and Direction Controls (inline with title) --}}
-            <div class="toolbar-controls">
+            <div class="toolbar-controls tw-flex tw-gap-[var(--wh40k-space-md)] tw-items-center">
                 {{!-- Guided/Free Mode Toggle --}}
-                <div class="mode-toggle">
-                    <label class="mode-option {{#if guidedMode}}active{{/if}}" data-tooltip="{{localize 'WH40K.OriginPath.GuidedHint'}}">
+                <div class="mode-toggle tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-xs)] tw-bg-[rgba(0,0,0,0.3)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[var(--wh40k-bronze)]">
+                    <label class="mode-option tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-[color:var(--wh40k-text-light)] {{#if guidedMode}}tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] tw-text-[color:var(--wh40k-gold)]{{/if}}" data-tooltip="{{localize 'WH40K.OriginPath.GuidedHint'}}">
                         <input type="radio" name="mode" value="guided" {{#if guidedMode}}checked{{/if}} data-action="setMode">
                         <i class="fa-solid fa-route"></i>
                         <span>{{localize "WH40K.OriginPath.Guided"}}</span>
                     </label>
-                    <label class="mode-option {{#unless guidedMode}}active{{/unless}}" data-tooltip="{{localize 'WH40K.OriginPath.FreeHint'}}">
+                    <label class="mode-option tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-[color:var(--wh40k-text-light)] {{#unless guidedMode}}tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] tw-text-[color:var(--wh40k-gold)]{{/unless}}" data-tooltip="{{localize 'WH40K.OriginPath.FreeHint'}}">
                         <input type="radio" name="mode" value="free" {{#unless guidedMode}}checked{{/unless}} data-action="setMode">
                         <i class="fa-solid fa-unlock"></i>
                         <span>{{localize "WH40K.OriginPath.Free"}}</span>
@@ -35,13 +35,13 @@
 
                 {{!-- Direction Toggle (RT only — DH2e steps are independent) --}}
                 {{#if hasDirectionToggle}}
-                <div class="direction-toggle">
-                    <label class="direction-option {{#if isBackward}}active{{/if}}" data-tooltip="{{localize 'WH40K.OriginPath.DirectionBackwardHint'}}">
+                <div class="direction-toggle tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-xs)] tw-bg-[rgba(0,0,0,0.3)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[var(--wh40k-bronze)]">
+                    <label class="direction-option tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-[color:var(--wh40k-text-light)] {{#if isBackward}}tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] tw-text-[color:var(--wh40k-gold)]{{/if}}" data-tooltip="{{localize 'WH40K.OriginPath.DirectionBackwardHint'}}">
                         <input type="radio" name="direction" value="backward" {{#if isBackward}}checked{{/if}} data-action="setDirection">
                         <i class="fa-solid fa-arrow-left"></i>
                         <span>{{localize "WH40K.OriginPath.DirectionBackward"}}</span>
                     </label>
-                    <label class="direction-option {{#if isForward}}active{{/if}}" data-tooltip="{{localize 'WH40K.OriginPath.DirectionForwardHint'}}">
+                    <label class="direction-option tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-[color:var(--wh40k-text-light)] {{#if isForward}}tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] tw-text-[color:var(--wh40k-gold)]{{/if}}" data-tooltip="{{localize 'WH40K.OriginPath.DirectionForwardHint'}}">
                         <input type="radio" name="direction" value="forward" {{#if isForward}}checked{{/if}} data-action="setDirection">
                         <i class="fa-solid fa-arrow-right"></i>
                         <span>{{localize "WH40K.OriginPath.DirectionForward"}}</span>
@@ -51,62 +51,73 @@
             </div>
         </div>
 
-        <div class="toolbar-group">
-            <button type="button" class="toolbar-btn" data-action="export" data-tooltip="{{localize 'WH40K.OriginPath.ExportHint'}}">
+        <div class="toolbar-group tw-flex tw-gap-[var(--wh40k-space-sm)] tw-items-center">
+            <button type="button" class="toolbar-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-text-light)] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="export" data-tooltip="{{localize 'WH40K.OriginPath.ExportHint'}}">
                 <i class="fa-solid fa-download"></i>
             </button>
-            <button type="button" class="toolbar-btn" data-action="import" data-tooltip="{{localize 'WH40K.OriginPath.ImportHint'}}">
+            <button type="button" class="toolbar-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-text-light)] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="import" data-tooltip="{{localize 'WH40K.OriginPath.ImportHint'}}">
                 <i class="fa-solid fa-upload"></i>
             </button>
         </div>
     </header>
 
     {{!-- Step Navigation with Visual Progress --}}
-    <nav class="step-navigation">
+    <nav class="step-navigation tw-flex tw-justify-center tw-items-center tw-gap-0 tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)] tw-bg-[rgba(0,0,0,0.4)] tw-border-b tw-border-b-[var(--wh40k-bronze)] tw-overflow-x-auto">
         {{#each steps as |step|}}
-            <div class="step-nav-item {{#if step.isActive}}active{{/if}} {{#if step.isComplete}}complete{{/if}} {{#if step.isDisabled}}disabled{{/if}}" 
-                 data-action="goToStep" 
+            <div class="step-nav-item tw-group tw-flex tw-flex-col tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-min-w-[80px] tw-cursor-pointer tw-relative {{#if step.isActive}}tw-scale-105{{/if}} {{#if step.isDisabled}}tw-opacity-40 tw-cursor-not-allowed{{/if}} {{#if step.isLineage}}lineage-step{{/if}}"
+                 data-action="goToStep"
                  data-step-index="{{step.index}}"
                  data-step-key="{{step.key}}"
                  data-tooltip="{{step.label}}{{#if step.selection}}: {{step.selection.name}}{{/if}}">
-                <div class="step-number {{#if step.isActive}}tw-animate-pulse-glow{{/if}}">
-                    {{#if step.selection}}
-                        <img src="{{step.selection.img}}" alt="{{step.selection.name}}" class="step-icon-img" />
+                <div class="step-number tw-w-10 tw-h-10 tw-flex tw-items-center tw-justify-center tw-rounded-full tw-border-2 tw-relative tw-overflow-hidden tw-text-[0.85rem] tw-font-semibold tw-transition-all
+                    {{#if step.isActive}}tw-bg-[linear-gradient(135deg,var(--wh40k-gold),rgb(184,147,35))] tw-border-[var(--wh40k-gold)] tw-shadow-[0_0_12px_rgba(201,162,39,0.6)] tw-animate-pulse-glow{{else if step.isComplete}}tw-border-[rgb(166,132,32)] tw-shadow-[0_2px_8px_rgba(201,162,39,0.3)] tw-text-[var(--wh40k-panel-bg-solid)]{{else if step.isLineage}}tw-bg-[linear-gradient(135deg,#9b4dca,#6b2d9b)] tw-border-[#ce93d8]{{else}}tw-border-[var(--wh40k-bronze)] tw-bg-[rgba(0,0,0,0.5)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}
+                    group-hover:tw-border-[var(--wh40k-gold)] group-hover:tw-scale-105">
+                    {{#if step.isComplete}}
+                        {{!-- Complete state: show image if available, else checkmark icon --}}
+                        {{#if step.selection}}
+                            <img src="{{step.selection.img}}" alt="{{step.selection.name}}" class="step-icon-img tw-w-full tw-h-full tw-object-cover tw-rounded-full" />
+                        {{else}}
+                            <i class="fa-solid fa-check tw-text-[0.9rem] tw-text-[color:var(--wh40k-bg-dark)] tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-[linear-gradient(135deg,var(--wh40k-gold),rgb(184,147,35))] tw-rounded-full"></i>
+                        {{/if}}
+                    {{else if step.selection}}
+                        <img src="{{step.selection.img}}" alt="{{step.selection.name}}" class="step-icon-img tw-w-full tw-h-full tw-object-cover tw-rounded-full" />
                     {{else if (eq step.key "characteristics")}}
                         <i class="fa-solid {{step.icon}}"></i>
                     {{else}}
                         {{add step.index 1}}
                     {{/if}}
                 </div>
-                <span class="step-label">{{step.shortLabel}}</span>
+                <span class="step-label tw-text-[0.65rem] tw-uppercase tw-tracking-[0.5px] tw-text-center tw-transition-all
+                    {{#if step.isActive}}tw-text-[color:var(--wh40k-gold)] tw-font-semibold{{else if step.isComplete}}tw-text-[color:var(--wh40k-gold)]{{else if step.isLineage}}tw-text-[#ce93d8]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}
+                    group-hover:tw-text-[color:var(--wh40k-text-light)]">{{step.shortLabel}}</span>
             </div>
             {{#unless @last}}
-                <div class="step-connector {{#if step.isComplete}}active{{/if}}"></div>
+                <div class="step-connector tw-flex-[0_0_24px] tw-h-[3px] tw-rounded-[var(--wh40k-radius-sm)] tw-transition-all {{#if step.isComplete}}tw-bg-[linear-gradient(90deg,rgba(201,162,39,0.6),rgba(201,162,39,0.3))]{{else}}tw-bg-[linear-gradient(90deg,rgba(255,255,255,0.1),rgba(255,255,255,0.05))]{{/if}}"></div>
             {{/unless}}
         {{/each}}
     </nav>
 
     {{!-- Main Content --}}
-    <main class="builder-main {{#unless showSelectionPanel}}builder-main--full{{/unless}}">
+    <main class="builder-main tw-grid tw-gap-[var(--wh40k-space-md)] tw-p-[var(--wh40k-space-md)] tw-overflow-hidden tw-min-h-0 {{#if showSelectionPanel}}tw-grid-cols-[1fr_350px]{{else}}tw-grid-cols-[1fr]{{/if}}">
         {{!-- Step Content (Left) --}}
-        <section class="step-content">
-            <div class="step-header">
-                <div class="step-icon">
-                    <i class="fa-solid {{currentStep.icon}}"></i>
+        <section class="step-content tw-flex tw-flex-col tw-gap-[var(--wh40k-space-md)] tw-overflow-y-auto tw-pr-[var(--wh40k-space-sm)]">
+            <div class="step-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
+                <div class="step-icon tw-w-12 tw-h-12 tw-flex tw-items-center tw-justify-center tw-bg-[linear-gradient(135deg,var(--wh40k-bronze-dark),var(--wh40k-bronze))] tw-border-2 tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)]">
+                    <i class="fa-solid {{currentStep.icon}} tw-text-[1.5rem] tw-text-[color:var(--wh40k-gold)]"></i>
                 </div>
-                <div class="step-info">
+                <div class="step-info tw-flex-1">
                     {{#if showEquipment}}
-                        <h2><i class="fa-solid fa-box"></i> {{localize "WH40K.OriginPath.EquipmentTitle"}}</h2>
-                        <p>{{localize "WH40K.OriginPath.EquipmentDesc"}}</p>
+                        <h2 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.3rem] tw-text-[color:var(--wh40k-gold)]"><i class="fa-solid fa-box"></i> {{localize "WH40K.OriginPath.EquipmentTitle"}}</h2>
+                        <p class="tw-mt-[var(--wh40k-space-xs)] tw-mb-0 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OriginPath.EquipmentDesc"}}</p>
                     {{else if currentStep.isCharacteristics}}
-                        <h2><i class="fa-solid fa-dice-d20"></i> {{localize "WH40K.CharacteristicSetup.Title"}}</h2>
-                        <p>{{localize "WH40K.CharacteristicSetup.Instructions"}}</p>
+                        <h2 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.3rem] tw-text-[color:var(--wh40k-gold)]"><i class="fa-solid fa-dice-d20"></i> {{localize "WH40K.CharacteristicSetup.Title"}}</h2>
+                        <p class="tw-mt-[var(--wh40k-space-xs)] tw-mb-0 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.CharacteristicSetup.Instructions"}}</p>
                     {{else if currentStep.isLineage}}
-                        <h2>{{optionalStepLabel}} <span class="optional-badge">{{localize "WH40K.OriginPath.Optional"}}</span></h2>
-                        <p>{{optionalStepDesc}}</p>
+                        <h2 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.3rem] tw-text-[color:var(--wh40k-gold)]">{{optionalStepLabel}} <span class="optional-badge tw-text-[0.65rem] tw-font-normal tw-py-[2px] tw-px-[6px] tw-bg-[rgba(156,39,176,0.2)] tw-border tw-border-[rgba(156,39,176,0.4)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[#ce93d8] tw-uppercase tw-tracking-[0.5px] tw-align-middle tw-ml-[var(--wh40k-space-sm)]">{{localize "WH40K.OriginPath.Optional"}}</span></h2>
+                        <p class="tw-mt-[var(--wh40k-space-xs)] tw-mb-0 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)]">{{optionalStepDesc}}</p>
                     {{else}}
-                        <h2>{{localize "WH40K.OriginPath.Step"}} {{add currentStep.index 1}}: {{currentStep.label}}</h2>
-                        <p>{{currentStep.description}}</p>
+                        <h2 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.3rem] tw-text-[color:var(--wh40k-gold)]">{{localize "WH40K.OriginPath.Step"}} {{add currentStep.index 1}}: {{currentStep.label}}</h2>
+                        <p class="tw-mt-[var(--wh40k-space-xs)] tw-mb-0 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)]">{{currentStep.description}}</p>
                     {{/if}}
                 </div>
             </div>
@@ -144,7 +155,7 @@
                             <option value="{{option.value}}" {{#if (eq option.value ../equipment.typeFilter)}}selected{{/if}}>{{option.label}}</option>
                         {{/each}}
                     </select>
-                    <button type="button" class="toolbar-btn" data-action="clearEquipment" data-tooltip="{{localize 'WH40K.OriginPath.EquipmentClearAll'}}">
+                    <button type="button" class="toolbar-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-text-light)] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="clearEquipment" data-tooltip="{{localize 'WH40K.OriginPath.EquipmentClearAll'}}">
                         <i class="fa-solid fa-rotate-left"></i>
                         <span>{{localize "WH40K.OriginPath.EquipmentClearAll"}}</span>
                     </button>
@@ -340,9 +351,10 @@
             </div>
             {{else}}
             {{!-- Origin Cards --}}
-            <div class="origin-cards-grid">
+            <div class="origin-cards-grid tw-grid tw-grid-cols-[repeat(auto-fill,minmax(112px,1fr))] tw-gap-[var(--wh40k-space-sm)]">
                 {{#each currentStep.origins as |origin|}}
-                    <div class="origin-card {{#if origin.isSelected}}selected{{/if}} {{#if origin.isDisabled}}disabled{{/if}} {{#if origin.isValidNext}}valid-next{{/if}}"
+                    <div class="origin-card tw-group tw-flex tw-flex-col tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-2 tw-rounded-[var(--wh40k-radius-md)] tw-p-[var(--wh40k-space-xs)] tw-cursor-pointer tw-relative tw-transition-all
+                        {{#if origin.isSelected}}selected tw-border-[var(--wh40k-gold)] tw-bg-[linear-gradient(135deg,rgba(var(--wh40k-gold-rgb),0.1),rgba(var(--wh40k-gold-rgb),0.05))] tw-shadow-[0_0_15px_rgba(var(--wh40k-gold-rgb),0.3)]{{else if origin.isDisabled}}disabled tw-border-[var(--wh40k-bronze)] tw-opacity-40 tw-cursor-not-allowed tw-grayscale-[0.5]{{else if origin.isValidNext}}valid-next tw-border-[#4caf50]{{else}}tw-border-[var(--wh40k-bronze)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_12px_rgba(0,0,0,0.4)]{{/if}}"
                          data-action="selectOriginCard"
                          data-origin-id="{{origin.id}}"
                          data-origin-uuid="{{origin.uuid}}"
@@ -351,32 +363,32 @@
                             <span class="wh40k-origin-card__valid-border tw-animate-pulse-border tw-absolute tw-inset-[-4px] tw-border-2 tw-border-dashed tw-border-[#4caf50] tw-rounded-[var(--wh40k-radius-lg)] tw-pointer-events-none" aria-hidden="true"></span>
                         {{/if}}
                         {{#if origin.isSelected}}
-                            <div class="selection-indicator">
-                                <i class="fa-solid fa-check-circle"></i>
+                            <div class="selection-indicator tw-absolute tw-top-2 tw-right-2 tw-w-8 tw-h-8 tw-flex tw-items-center tw-justify-center tw-bg-[var(--wh40k-gold)] tw-rounded-full tw-shadow-[0_2px_8px_rgba(201,162,39,0.5)] tw-z-[4]">
+                                <i class="fa-solid fa-check-circle tw-text-[1.2rem] tw-text-[color:var(--wh40k-bg-dark)]"></i>
                             </div>
                         {{/if}}
-                        <img src="{{origin.img}}" alt="{{origin.name}}" class="card-img" />
-                        <h4 class="card-name">{{origin.name}}</h4>
+                        <img src="{{origin.img}}" alt="{{origin.name}}" class="card-img tw-w-full tw-aspect-[4/3] tw-object-cover tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[var(--wh40k-bronze)] tw-mb-[var(--wh40k-space-xs)]" />
+                        <h4 class="card-name tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-light)] tw-text-center tw-leading-[1.2]">{{origin.name}}</h4>
                         {{#if origin.badges}}
-                            <div class="card-badges">
+                            <div class="card-badges tw-flex tw-gap-[var(--wh40k-space-xs)] tw-justify-center tw-mt-[var(--wh40k-space-xs)] tw-flex-wrap">
                                 {{#if origin.hasChoices}}
-                                    <span class="card-badge choices">{{localize "WH40K.OriginPath.HasChoices"}}</span>
+                                    <span class="card-badge tw-py-[2px] tw-px-[5px] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-bg-[rgba(255,170,0,0.2)] tw-text-[#ffaa00] tw-border tw-border-[rgba(255,170,0,0.4)]">{{localize "WH40K.OriginPath.HasChoices"}}</span>
                                 {{/if}}
                                 {{#if origin.isAdvanced}}
-                                    <span class="card-badge advanced">{{localize "WH40K.OriginPath.Advanced"}}</span>
+                                    <span class="card-badge tw-py-[2px] tw-px-[5px] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-bg-[rgba(156,39,176,0.2)] tw-text-[#ce93d8] tw-border tw-border-[rgba(156,39,176,0.4)]">{{localize "WH40K.OriginPath.Advanced"}}</span>
                                 {{/if}}
                                 {{#if origin.xpCost}}
-                                    <span class="card-badge xp">{{origin.xpCost}} XP</span>
+                                    <span class="card-badge tw-py-[2px] tw-px-[5px] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-bg-[rgba(33,150,243,0.2)] tw-text-[#64b5f6] tw-border tw-border-[rgba(33,150,243,0.4)]">{{origin.xpCost}} XP</span>
                                 {{/if}}
                             </div>
                         {{/if}}
                         {{!-- Preview button for detailed view --}}
-                        <button type="button" class="card-preview-btn" data-action="viewOriginCard" data-origin-id="{{origin.id}}" data-origin-uuid="{{origin.uuid}}" data-tooltip="{{localize 'WH40K.OriginPath.ViewDetails'}}">
-                            <i class="fa-solid fa-eye"></i>
+                        <button type="button" class="card-preview-btn tw-absolute tw-top-1 tw-left-1 tw-w-7 tw-h-7 tw-flex tw-items-center tw-justify-center tw-bg-[rgba(0,0,0,0.8)] tw-border tw-border-[var(--wh40k-gold)] tw-rounded-full tw-text-[color:var(--wh40k-gold)] tw-cursor-pointer tw-opacity-0 group-hover:tw-opacity-100 tw-transition-all tw-z-[3] hover:tw-bg-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-panel-bg-solid)] hover:tw-scale-110" data-action="viewOriginCard" data-origin-id="{{origin.id}}" data-origin-uuid="{{origin.uuid}}" data-tooltip="{{localize 'WH40K.OriginPath.ViewDetails'}}">
+                            <i class="fa-solid fa-eye tw-text-[0.75rem]"></i>
                         </button>
                     </div>
                 {{else}}
-                    <p class="no-origins">{{localize "WH40K.OriginPath.NoOriginsAvailable"}}</p>
+                    <p class="no-origins tw-col-span-full tw-text-center tw-text-[color:var(--wh40k-text-muted)] tw-py-8">{{localize "WH40K.OriginPath.NoOriginsAvailable"}}</p>
                 {{/each}}
             </div>
             {{/if}}
@@ -384,29 +396,29 @@
 
         {{!-- Selection Detail Panel (Right) --}}
         {{#if showSelectionPanel}}
-        <aside class="selection-panel">
+        <aside class="selection-panel tw-flex tw-flex-col tw-gap-[var(--wh40k-space-md)] tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-p-[var(--wh40k-space-md)] tw-overflow-y-auto">
             {{#if selectedOrigin}}
                 {{!-- Header --}}
-                    <div class="selection-header">
-                        <img src="{{selectedOrigin.img}}" alt="{{selectedOrigin.name}}" class="selection-img" />
-                        <div class="selection-info">
-                            <h3>{{selectedOrigin.name}}</h3>
+                    <div class="selection-header tw-flex tw-items-start tw-gap-[var(--wh40k-space-md)]">
+                        <img src="{{selectedOrigin.img}}" alt="{{selectedOrigin.name}}" class="selection-img tw-w-16 tw-h-16 tw-object-cover tw-border-2 tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)]" />
+                        <div class="selection-info tw-flex-1">
+                            <h3 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.1rem] tw-text-[color:var(--wh40k-gold)]">{{selectedOrigin.name}}</h3>
                             {{#if selectedOrigin.description}}
-                                <div class="selection-description">{{{selectedOrigin.description}}}</div>
+                                <div class="selection-description tw-mt-[var(--wh40k-space-xs)] tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-muted)] tw-leading-[1.4]">{{{selectedOrigin.description}}}</div>
                             {{/if}}
                             {{#if selectedOrigin.requirementsText}}
-                                <div class="selection-requirements">
+                                <div class="selection-requirements tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-text-[0.8rem] tw-text-[color:var(--wh40k-crimson)]">
                                     <i class="fas fa-exclamation-triangle"></i>
                                     <span>{{selectedOrigin.requirementsText}}</span>
                                 </div>
                             {{/if}}
                         </div>
-                        <div class="selection-actions">
-                        <button type="button" class="toolbar-btn" data-action="viewOrigin" data-tooltip="{{localize 'WH40K.OriginPath.ViewDetails'}}">
+                        <div class="selection-actions tw-flex tw-gap-[var(--wh40k-space-xs)]">
+                        <button type="button" class="toolbar-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-text-light)] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="viewOrigin" data-tooltip="{{localize 'WH40K.OriginPath.ViewDetails'}}">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                         {{#unless selectedOrigin.isConfirmed}}
-                            <button type="button" class="toolbar-btn toolbar-btn--confirm" data-action="confirmSelection" data-tooltip="{{localize 'WH40K.OriginPath.ConfirmSelection'}}">
+                            <button type="button" class="toolbar-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(76,175,80,0.2)] tw-border tw-border-[#4caf50] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[#4caf50] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[#4caf50] hover:tw-border-[#4caf50] hover:tw-text-white" data-action="confirmSelection" data-tooltip="{{localize 'WH40K.OriginPath.ConfirmSelection'}}">
                                 <i class="fa-solid fa-check"></i>
                             </button>
                         {{/unless}}
@@ -415,94 +427,95 @@
 
                 {{!-- Grants Section --}}
                 {{#if selectedOrigin.grants}}
-                    <div class="selection-section">
-                        <h4 class="section-title">
-                            <i class="fa-solid fa-gift"></i>
+                    <div class="selection-section tw-border-t tw-border-t-[var(--wh40k-bronze)] tw-pt-[var(--wh40k-space-md)]">
+                        <h4 class="section-title tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[0.5px]">
+                            <i class="fa-solid fa-gift tw-text-[0.9rem]"></i>
                             {{localize "WH40K.OriginPath.Grants"}}
                         </h4>
-                        <div class="grants-list">
+                        <div class="grants-list tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
                             {{!-- Characteristics --}}
                             {{#if selectedOrigin.grants.hasCharacteristics}}
                                 <div class="grants-category">
-                                    <span class="category-label">{{localize "WH40K.Characteristics"}}</span>
-                                    <div class="category-items">
+                                    <span class="category-label tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize "WH40K.Characteristics"}}</span>
+                                    <div class="category-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[150px] tw-overflow-y-auto tw-overflow-x-hidden">
                                         {{#each selectedOrigin.grants.characteristics as |char|}}
-                                            <span class="grant-item characteristic {{#if char.positive}}positive{{else}}negative{{/if}}">
+                                            <span class="grant-item characteristic tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[2px] tw-px-[8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-leading-[1.3]
+                                                {{#if char.positive}}tw-border tw-border-[rgba(76,175,80,0.3)] tw-text-[#4caf50]{{else}}negative tw-border tw-border-[rgba(231,76,60,0.3)] tw-text-[color:var(--wh40k-accent-red)]{{/if}}">
                                                 {{char.short}}: {{#if char.positive}}+{{/if}}{{char.value}}
                                             </span>
                                         {{/each}}
                                     </div>
                                 </div>
                             {{/if}}
-                            
+
                             {{!-- Skills (clickable) --}}
                             {{#if selectedOrigin.grants.hasSkills}}
                                 <div class="grants-category">
-                                    <span class="category-label">{{localize "WH40K.Skills.Header"}}</span>
-                                    <div class="category-items">
+                                    <span class="category-label tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize "WH40K.Skills.Header"}}</span>
+                                    <div class="category-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[150px] tw-overflow-y-auto tw-overflow-x-hidden">
                                         {{#each selectedOrigin.grants.skills as |skill|}}
-                                            <div class="grant-tag skill-tag clickable" 
+                                            <div class="grant-tag skill-tag tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3] tw-max-w-full tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap {{#if skill.uuid}}clickable tw-cursor-pointer hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-[1px]{{/if}}"
                                                   {{#if skill.uuid}}data-action="openItem" data-uuid="{{skill.uuid}}"{{/if}}
                                                   data-wh40k-tooltip="generic"
                                                   data-wh40k-tooltip-data="{{skill.tooltipData}}"
                                                   data-tooltip="{{skill.displayName}} ({{skill.levelLabel}})">
-                                                <i class="fa-solid fa-book-open"></i>
-                                                <span class="tag-label">{{skill.displayName}}</span>
-                                                <span class="tag-level">{{skill.levelLabel}}</span>
-                                                {{#if skill.uuid}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
+                                                <i class="fa-solid fa-book-open tw-text-[0.7rem] tw-flex-shrink-0 tw-text-[color:var(--wh40k-accent-info)]"></i>
+                                                <span class="tag-label tw-flex-1 tw-min-w-0 tw-overflow-hidden tw-text-ellipsis">{{skill.displayName}}</span>
+                                                <span class="tag-level tw-text-[0.65rem] tw-opacity-80 tw-flex-shrink-0">{{skill.levelLabel}}</span>
+                                                {{#if skill.uuid}}<i class="fa-solid fa-external-link tag-link tw-text-[0.65rem] tw-opacity-60 tw-text-[color:var(--wh40k-gold)]"></i>{{/if}}
                                             </div>
                                         {{/each}}
                                     </div>
                                 </div>
                             {{/if}}
-                            
+
                             {{!-- Talents (clickable if they have uuid) --}}
                             {{#if selectedOrigin.grants.hasTalents}}
                                 <div class="grants-category">
-                                    <span class="category-label">{{localize "WH40K.Talents"}}</span>
-                                    <div class="category-items">
+                                    <span class="category-label tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize "WH40K.Talents"}}</span>
+                                    <div class="category-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[150px] tw-overflow-y-auto tw-overflow-x-hidden">
                                         {{#each selectedOrigin.grants.talents as |talent|}}
-                                            <div class="grant-tag talent-tag {{#if talent.hasItem}}clickable{{/if}}" 
+                                            <div class="grant-tag talent-tag tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3] tw-max-w-full tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap {{#if talent.hasItem}}clickable tw-cursor-pointer hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-[1px]{{/if}}"
                                                   {{#if talent.uuid}}data-action="openItem" data-uuid="{{talent.uuid}}"{{/if}}
                                                   data-wh40k-tooltip="generic"
                                                   data-wh40k-tooltip-data="{{talent.tooltipData}}"
                                                   data-tooltip="{{talent.tooltip}}">
-                                                <i class="fa-solid fa-star"></i>
-                                                <span class="tag-label">{{talent.name}}</span>
-                                                {{#if talent.hasItem}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
+                                                <i class="fa-solid fa-star tw-text-[0.7rem] tw-flex-shrink-0 tw-text-[#f39c12]"></i>
+                                                <span class="tag-label tw-flex-1 tw-min-w-0 tw-overflow-hidden tw-text-ellipsis">{{talent.name}}</span>
+                                                {{#if talent.hasItem}}<i class="fa-solid fa-external-link tag-link tw-text-[0.65rem] tw-opacity-60 tw-text-[color:var(--wh40k-gold)]"></i>{{/if}}
                                             </div>
                                         {{/each}}
                                     </div>
                                 </div>
                             {{/if}}
-                            
+
                             {{!-- Traits (clickable if they have uuid) --}}
                             {{#if selectedOrigin.grants.hasTraits}}
                                 <div class="grants-category">
-                                    <span class="category-label">{{localize "WH40K.Traits"}}</span>
-                                    <div class="category-items">
+                                    <span class="category-label tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize "WH40K.Traits"}}</span>
+                                    <div class="category-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[150px] tw-overflow-y-auto tw-overflow-x-hidden">
                                         {{#each selectedOrigin.grants.traits as |trait|}}
-                                            <div class="grant-tag trait-tag {{#if trait.hasItem}}clickable{{/if}}"
+                                            <div class="grant-tag trait-tag tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3] tw-max-w-full tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap {{#if trait.hasItem}}clickable tw-cursor-pointer hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-[1px]{{/if}}"
                                                   {{#if trait.uuid}}data-action="openItem" data-uuid="{{trait.uuid}}"{{/if}}
                                                   data-tooltip="{{trait.tooltip}}">
-                                                <i class="fa-solid fa-dna"></i>
-                                                <span class="tag-label">{{trait.name}}{{#if trait.level}} ({{trait.level}}){{/if}}</span>
-                                                {{#if trait.hasItem}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
+                                                <i class="fa-solid fa-dna tw-text-[0.7rem] tw-flex-shrink-0 tw-text-[color:var(--wh40k-accent-psychic)]"></i>
+                                                <span class="tag-label tw-flex-1 tw-min-w-0 tw-overflow-hidden tw-text-ellipsis">{{trait.name}}{{#if trait.level}} ({{trait.level}}){{/if}}</span>
+                                                {{#if trait.hasItem}}<i class="fa-solid fa-external-link tag-link tw-text-[0.65rem] tw-opacity-60 tw-text-[color:var(--wh40k-gold)]"></i>{{/if}}
                                             </div>
                                         {{/each}}
                                     </div>
                                 </div>
                             {{/if}}
-                            
+
                             {{!-- Equipment --}}
                             {{#if selectedOrigin.grants.hasEquipment}}
                                 <div class="grants-category">
-                                    <span class="category-label">{{localize "WH40K.EquipmentGranted"}}</span>
-                                    <div class="category-items">
+                                    <span class="category-label tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize "WH40K.EquipmentGranted"}}</span>
+                                    <div class="category-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[150px] tw-overflow-y-auto tw-overflow-x-hidden">
                                         {{#each selectedOrigin.grants.equipment as |item|}}
-                                            <div class="grant-tag equipment-tag">
-                                                <i class="fa-solid fa-box"></i>
-                                                <span class="tag-label">{{item.name}}</span>
+                                            <div class="grant-tag equipment-tag tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3] tw-max-w-full tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">
+                                                <i class="fa-solid fa-box tw-text-[0.7rem] tw-flex-shrink-0 tw-text-[color:var(--wh40k-accent-green)]"></i>
+                                                <span class="tag-label tw-flex-1 tw-min-w-0 tw-overflow-hidden tw-text-ellipsis">{{item.name}}</span>
                                             </div>
                                         {{/each}}
                                     </div>
@@ -514,29 +527,30 @@
 
                 {{!-- Choices Section --}}
                 {{#if selectedOrigin.hasChoices}}
-                    <div class="selection-section choices-section">
-                        <h4 class="section-title">
-                            <i class="fa-solid fa-list-check"></i>
+                    <div class="selection-section choices-section tw-border-t tw-border-t-[var(--wh40k-bronze)] tw-pt-[var(--wh40k-space-md)]">
+                        <h4 class="section-title tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[0.5px]">
+                            <i class="fa-solid fa-list-check tw-text-[0.9rem]"></i>
                             {{localize "WH40K.OriginPath.ChoicesRequired"}}
                         </h4>
                         {{#each selectedOrigin.choices as |choice|}}
-                            <div class="choice-item {{#if choice.isComplete}}complete{{/if}}">
-                                <div class="choice-header">
+                            <div class="choice-item tw-rounded-[var(--wh40k-radius-sm)] tw-p-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-sm)]
+                                {{#if choice.isComplete}}tw-border tw-border-[rgba(76,175,80,0.4)] tw-bg-[rgba(76,175,80,0.1)]{{else}}tw-border tw-border-[rgba(255,170,0,0.3)] tw-bg-[rgba(255,170,0,0.1)]{{/if}}">
+                                <div class="choice-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-xs)]">
                                     {{#if choice.isComplete}}
-                                        <i class="fa-solid fa-check-circle choice-complete-icon"></i>
+                                        <i class="fa-solid fa-check-circle choice-complete-icon tw-text-[#4caf50]"></i>
                                     {{else}}
-                                        <i class="fa-regular fa-circle choice-incomplete-icon"></i>
+                                        <i class="fa-regular fa-circle choice-incomplete-icon tw-text-[color:var(--wh40k-text-muted)]"></i>
                                     {{/if}}
-                                    <span class="choice-type-badge">{{choice.typeLabel}}</span>
-                                    <span class="choice-label">{{choice.label}}</span>
-                                    <span class="choice-count">{{choice.count}}x</span>
+                                    <span class="choice-type-badge tw-text-[0.65rem] tw-py-[2px] tw-px-[6px] tw-bg-[rgba(255,170,0,0.2)] tw-border tw-border-[rgba(255,170,0,0.4)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[#ffaa00] tw-uppercase">{{choice.typeLabel}}</span>
+                                    <span class="choice-label tw-flex-1 tw-font-semibold tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-light)]">{{choice.label}}</span>
+                                    <span class="choice-count tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)]">{{choice.count}}x</span>
                                 </div>
                                 {{#if choice.selection}}
-                                    <div class="choice-selection">
-                                        <i class="fa-solid fa-check"></i> {{choice.selection}}
+                                    <div class="choice-selection tw-text-[0.8rem] tw-text-[#4caf50] tw-mb-[var(--wh40k-space-xs)]">
+                                        <i class="fa-solid fa-check tw-mr-[var(--wh40k-space-xs)]"></i> {{choice.selection}}
                                     </div>
                                 {{/if}}
-                                <button type="button" class="choice-btn" data-action="editChoice" data-choice-label="{{choice.label}}">
+                                <button type="button" class="choice-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(255,170,0,0.15)] tw-border tw-border-[rgba(255,170,0,0.4)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[#ffaa00] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[rgba(255,170,0,0.25)] hover:tw-border-[#ffaa00]" data-action="editChoice" data-choice-label="{{choice.label}}">
                                     <i class="fa-solid fa-pen"></i>
                                     {{#if choice.isComplete}}{{localize "WH40K.OriginPath.ChangeChoice"}}{{else}}{{localize "WH40K.OriginPath.MakeChoice"}}{{/if}}
                                 </button>
@@ -547,75 +561,75 @@
 
                 {{!-- Roll Section --}}
                 {{#if selectedOrigin.hasRolls}}
-                    <div class="selection-section rolls-section">
-                        <h4 class="section-title">
-                            <i class="fa-solid fa-dice"></i>
+                    <div class="selection-section rolls-section tw-border-t tw-border-t-[var(--wh40k-bronze)] tw-pt-[var(--wh40k-space-md)]">
+                        <h4 class="section-title tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[0.5px]">
+                            <i class="fa-solid fa-dice tw-text-[0.9rem]"></i>
                             {{localize "WH40K.OriginPath.StartingStats"}}
                         </h4>
                         {{#if selectedOrigin.rolls.wounds}}
-                            <div class="roll-item {{#if selectedOrigin.rolls.wounds.hasValue}}has-value{{/if}}">
-                                <div class="roll-info">
-                                    <div class="roll-label">
-                                        <i class="fa-solid fa-heart"></i> {{localize "WH40K.Wounds"}}
+                            <div class="roll-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-mb-[var(--wh40k-space-xs)] {{#if selectedOrigin.rolls.wounds.hasValue}}tw-border tw-border-[rgba(76,175,80,0.3)] tw-bg-[rgba(76,175,80,0.05)]{{else}}tw-border tw-border-transparent{{/if}}">
+                                <div class="roll-info tw-flex-1">
+                                    <div class="roll-label tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-light)]">
+                                        <i class="fa-solid fa-heart tw-mr-[var(--wh40k-space-xs)]"></i> {{localize "WH40K.Wounds"}}
                                     </div>
                                     {{#if selectedOrigin.rolls.wounds.hasValue}}
-                                        <div class="roll-result">{{selectedOrigin.rolls.wounds.value}} <span class="roll-breakdown">({{selectedOrigin.rolls.wounds.breakdown}})</span></div>
+                                        <div class="roll-result tw-text-[0.9rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)]">{{selectedOrigin.rolls.wounds.value}} <span class="roll-breakdown tw-text-[0.75rem] tw-font-normal tw-text-[color:var(--wh40k-text-muted)]">({{selectedOrigin.rolls.wounds.breakdown}})</span></div>
                                     {{else}}
-                                        <div class="roll-formula">{{selectedOrigin.rolls.wounds.formula}}</div>
+                                        <div class="roll-formula tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-mono">{{selectedOrigin.rolls.wounds.formula}}</div>
                                     {{/if}}
                                 </div>
-                                <div class="roll-actions">
-                                    <button type="button" class="roll-btn" data-action="rollStat" data-stat-type="wounds" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
+                                <div class="roll-actions tw-flex tw-gap-[var(--wh40k-space-xs)]">
+                                    <button type="button" class="roll-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105 hover:tw-shadow-[0_2px_8px_rgba(var(--wh40k-gold-rgb),0.4)]" data-action="rollStat" data-stat-type="wounds" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
                                         <i class="fa-solid fa-dice"></i>
                                         {{#if selectedOrigin.rolls.wounds.hasValue}}{{localize "WH40K.OriginPath.Reroll"}}{{else}}{{localize "WH40K.Roll.Roll"}}{{/if}}
                                     </button>
-                                    <button type="button" class="manual-btn" data-action="manualStat" data-stat-type="wounds" data-tooltip="{{localize 'WH40K.OriginPath.ManualTooltip'}}">
+                                    <button type="button" class="manual-btn tw-flex tw-items-center tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105" data-action="manualStat" data-stat-type="wounds" data-tooltip="{{localize 'WH40K.OriginPath.ManualTooltip'}}">
                                         <i class="fa-solid fa-keyboard"></i>
                                     </button>
                                 </div>
                             </div>
                         {{/if}}
                         {{#if selectedOrigin.rolls.fate}}
-                            <div class="roll-item {{#if selectedOrigin.rolls.fate.hasValue}}has-value{{/if}}">
-                                <div class="roll-info">
-                                    <div class="roll-label">
-                                        <i class="fa-solid fa-star"></i> {{localize "WH40K.Fate"}}
+                            <div class="roll-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-mb-[var(--wh40k-space-xs)] {{#if selectedOrigin.rolls.fate.hasValue}}tw-border tw-border-[rgba(76,175,80,0.3)] tw-bg-[rgba(76,175,80,0.05)]{{else}}tw-border tw-border-transparent{{/if}}">
+                                <div class="roll-info tw-flex-1">
+                                    <div class="roll-label tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-light)]">
+                                        <i class="fa-solid fa-star tw-mr-[var(--wh40k-space-xs)]"></i> {{localize "WH40K.Fate"}}
                                     </div>
                                     {{#if selectedOrigin.rolls.fate.hasValue}}
-                                        <div class="roll-result">{{selectedOrigin.rolls.fate.value}} <span class="roll-breakdown">({{selectedOrigin.rolls.fate.breakdown}})</span></div>
+                                        <div class="roll-result tw-text-[0.9rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)]">{{selectedOrigin.rolls.fate.value}} <span class="roll-breakdown tw-text-[0.75rem] tw-font-normal tw-text-[color:var(--wh40k-text-muted)]">({{selectedOrigin.rolls.fate.breakdown}})</span></div>
                                     {{else}}
-                                        <div class="roll-formula">{{selectedOrigin.rolls.fate.formula}}</div>
+                                        <div class="roll-formula tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-mono">{{selectedOrigin.rolls.fate.formula}}</div>
                                     {{/if}}
                                 </div>
-                                <div class="roll-actions">
-                                    <button type="button" class="roll-btn" data-action="rollStat" data-stat-type="fate" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
+                                <div class="roll-actions tw-flex tw-gap-[var(--wh40k-space-xs)]">
+                                    <button type="button" class="roll-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105 hover:tw-shadow-[0_2px_8px_rgba(var(--wh40k-gold-rgb),0.4)]" data-action="rollStat" data-stat-type="fate" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
                                         <i class="fa-solid fa-dice"></i>
                                         {{#if selectedOrigin.rolls.fate.hasValue}}{{localize "WH40K.OriginPath.Reroll"}}{{else}}{{localize "WH40K.Roll.Roll"}}{{/if}}
                                     </button>
-                                    <button type="button" class="manual-btn" data-action="manualStat" data-stat-type="fate" data-tooltip="{{localize 'WH40K.OriginPath.ManualTooltip'}}">
+                                    <button type="button" class="manual-btn tw-flex tw-items-center tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105" data-action="manualStat" data-stat-type="fate" data-tooltip="{{localize 'WH40K.OriginPath.ManualTooltip'}}">
                                         <i class="fa-solid fa-keyboard"></i>
                                     </button>
                                 </div>
                             </div>
                         {{/if}}
                         {{#if selectedOrigin.rolls.thrones}}
-                            <div class="roll-item {{#if selectedOrigin.rolls.thrones.hasValue}}has-value{{/if}}">
-                                <div class="roll-info">
-                                    <div class="roll-label">
-                                        <i class="fa-solid fa-coins"></i> Throne Gelt
+                            <div class="roll-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-mb-[var(--wh40k-space-xs)] {{#if selectedOrigin.rolls.thrones.hasValue}}tw-border tw-border-[rgba(76,175,80,0.3)] tw-bg-[rgba(76,175,80,0.05)]{{else}}tw-border tw-border-transparent{{/if}}">
+                                <div class="roll-info tw-flex-1">
+                                    <div class="roll-label tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-light)]">
+                                        <i class="fa-solid fa-coins tw-mr-[var(--wh40k-space-xs)]"></i> Throne Gelt
                                     </div>
                                     {{#if selectedOrigin.rolls.thrones.hasValue}}
-                                        <div class="roll-result">{{selectedOrigin.rolls.thrones.value}} <span class="roll-breakdown">({{selectedOrigin.rolls.thrones.breakdown}})</span></div>
+                                        <div class="roll-result tw-text-[0.9rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)]">{{selectedOrigin.rolls.thrones.value}} <span class="roll-breakdown tw-text-[0.75rem] tw-font-normal tw-text-[color:var(--wh40k-text-muted)]">({{selectedOrigin.rolls.thrones.breakdown}})</span></div>
                                     {{else}}
-                                        <div class="roll-formula">{{selectedOrigin.rolls.thrones.formula}}</div>
+                                        <div class="roll-formula tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-mono">{{selectedOrigin.rolls.thrones.formula}}</div>
                                     {{/if}}
                                 </div>
-                                <div class="roll-actions">
-                                    <button type="button" class="roll-btn" data-action="rollStat" data-stat-type="thrones" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
+                                <div class="roll-actions tw-flex tw-gap-[var(--wh40k-space-xs)]">
+                                    <button type="button" class="roll-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105 hover:tw-shadow-[0_2px_8px_rgba(var(--wh40k-gold-rgb),0.4)]" data-action="rollStat" data-stat-type="thrones" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
                                         <i class="fa-solid fa-dice"></i>
                                         {{#if selectedOrigin.rolls.thrones.hasValue}}{{localize "WH40K.OriginPath.Reroll"}}{{else}}{{localize "WH40K.Roll.Roll"}}{{/if}}
                                     </button>
-                                    <button type="button" class="manual-btn" data-action="manualStat" data-stat-type="thrones" data-tooltip="{{localize 'WH40K.OriginPath.ManualTooltip'}}">
+                                    <button type="button" class="manual-btn tw-flex tw-items-center tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105" data-action="manualStat" data-stat-type="thrones" data-tooltip="{{localize 'WH40K.OriginPath.ManualTooltip'}}">
                                         <i class="fa-solid fa-keyboard"></i>
                                     </button>
                                 </div>
@@ -625,28 +639,28 @@
                 {{/if}}
 
                 {{#if selectedOrigin.resources.showInfluence}}
-                    <div class="selection-section rolls-section">
-                        <h4 class="section-title">
-                            <i class="fa-solid fa-user-tie"></i>
+                    <div class="selection-section rolls-section tw-border-t tw-border-t-[var(--wh40k-bronze)] tw-pt-[var(--wh40k-space-md)]">
+                        <h4 class="section-title tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[0.5px]">
+                            <i class="fa-solid fa-user-tie tw-text-[0.9rem]"></i>
                             Starting Resources
                         </h4>
-                        <div class="roll-item {{#if selectedOrigin.resources.influenceRolled}}has-value{{/if}}">
-                            <div class="roll-info">
-                                <div class="roll-label">
-                                    <i class="fa-solid fa-user-tie"></i> Influence
+                        <div class="roll-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-mb-[var(--wh40k-space-xs)] {{#if selectedOrigin.resources.influenceRolled}}tw-border tw-border-[rgba(76,175,80,0.3)] tw-bg-[rgba(76,175,80,0.05)]{{else}}tw-border tw-border-transparent{{/if}}">
+                            <div class="roll-info tw-flex-1">
+                                <div class="roll-label tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-light)]">
+                                    <i class="fa-solid fa-user-tie tw-mr-[var(--wh40k-space-xs)]"></i> Influence
                                 </div>
                                 {{#if selectedOrigin.resources.influenceRolled}}
-                                    <div class="roll-result">{{selectedOrigin.resources.influenceRolled}}</div>
+                                    <div class="roll-result tw-text-[0.9rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)]">{{selectedOrigin.resources.influenceRolled}}</div>
                                 {{else}}
-                                    <div class="roll-formula">1d5 + Fel Bonus + {{selectedOrigin.resources.influenceMod}}</div>
+                                    <div class="roll-formula tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-mono">1d5 + Fel Bonus + {{selectedOrigin.resources.influenceMod}}</div>
                                 {{/if}}
                             </div>
-                            <div class="roll-actions">
-                                <button type="button" class="roll-btn" data-action="rollInfluence">
+                            <div class="roll-actions tw-flex tw-gap-[var(--wh40k-space-xs)]">
+                                <button type="button" class="roll-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105" data-action="rollInfluence">
                                     <i class="fa-solid fa-dice"></i>
                                     {{#if selectedOrigin.resources.influenceRolled}}Reroll{{else}}Roll{{/if}}
                                 </button>
-                                <button type="button" class="manual-btn" data-action="manualInfluence">
+                                <button type="button" class="manual-btn tw-flex tw-items-center tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105" data-action="manualInfluence">
                                     <i class="fa-solid fa-keyboard"></i>
                                 </button>
                             </div>
@@ -656,18 +670,18 @@
 
                 {{!-- Confirm Selection Button --}}
                 {{#unless selectedOrigin.isConfirmed}}
-                    <div class="selection-confirm">
-                        <button type="button" class="confirm-selection-btn" data-action="confirmSelection" data-tooltip="{{localize 'WH40K.OriginPath.ConfirmSelectionHint'}}">
-                            <i class="fa-solid fa-check"></i>
+                    <div class="selection-confirm tw-mt-auto tw-pt-[var(--wh40k-space-md)] tw-border-t-2 tw-border-t-[var(--wh40k-bronze)]">
+                        <button type="button" class="confirm-selection-btn tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-md)] tw-bg-[linear-gradient(135deg,var(--wh40k-gold),var(--wh40k-gold-dark))] tw-border-2 tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[rgba(0,0,0,0.9)] tw-font-[var(--wh40k-font-header)] tw-text-[1rem] tw-font-bold tw-uppercase tw-tracking-[1px] tw-cursor-pointer tw-shadow-[0_4px_12px_rgba(var(--wh40k-gold-rgb),0.3)] hover:tw-bg-[linear-gradient(135deg,var(--wh40k-gold-light),var(--wh40k-gold))] hover:tw--translate-y-[2px] hover:tw-shadow-[0_6px_20px_rgba(var(--wh40k-gold-rgb),0.5)]" data-action="confirmSelection" data-tooltip="{{localize 'WH40K.OriginPath.ConfirmSelectionHint'}}">
+                            <i class="fa-solid fa-check tw-text-[1.1rem]"></i>
                             <span>{{localize "WH40K.OriginPath.ConfirmSelection"}}</span>
                         </button>
                     </div>
                 {{/unless}}
             {{else}}
                 {{!-- Empty State --}}
-                <div class="selection-empty">
-                    <i class="fa-solid fa-hand-pointer"></i>
-                    <p>{{localize "WH40K.OriginPath.SelectOriginPrompt"}}</p>
+                <div class="selection-empty tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full tw-text-[color:var(--wh40k-text-muted)] tw-text-center tw-p-[var(--wh40k-space-xl)]">
+                    <i class="fa-solid fa-hand-pointer tw-text-[3rem] tw-mb-[var(--wh40k-space-md)] tw-opacity-50"></i>
+                    <p class="tw-m-0 tw-text-[0.9rem]">{{localize "WH40K.OriginPath.SelectOriginPrompt"}}</p>
                 </div>
             {{/if}}
         </aside>
@@ -675,21 +689,23 @@
     </main>
 
     {{!-- Preview Panel --}}
-    <section class="preview-panel">
-        <div class="preview-header">
-            <h3>
-                <i class="fa-solid fa-eye"></i>
+    <section class="preview-panel tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-t-2 tw-border-t-[var(--wh40k-gold)] tw-p-[var(--wh40k-space-md)]">
+        <div class="preview-header tw-flex tw-justify-between tw-items-center tw-mb-[var(--wh40k-space-md)]">
+            <h3 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1rem] tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[1px]">
+                <i class="fa-solid fa-eye tw-mr-[var(--wh40k-space-xs)]"></i>
                 {{localize "WH40K.OriginPath.TotalBonuses"}}
             </h3>
         </div>
-        <div class="preview-grid">
+        <div class="preview-grid tw-grid tw-grid-cols-[repeat(auto-fit,minmax(200px,1fr))] tw-gap-[var(--wh40k-space-md)]">
             {{#if preview.characteristics.length}}
                 <div class="preview-category">
-                    <div class="category-title">{{localize "WH40K.Characteristics"}}</div>
-                    <div class="category-items">
+                    <div class="category-title tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize "WH40K.Characteristics"}}</div>
+                    <div class="category-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[120px] tw-overflow-y-auto tw-overflow-x-hidden">
                         {{#each preview.characteristics as |char|}}
-                            <span class="preview-item {{#if (gt char.value 0)}}positive{{else}}negative{{/if}} {{#if char.fromChoice}}from-choice{{/if}}">
-                                {{char.short}}: {{#if (gt char.value 0)}}+{{/if}}{{char.value}}
+                            <span class="preview-item tw-py-[2px] tw-px-[6px] tw-bg-[rgba(0,0,0,0.3)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)]
+                                {{#if (gt char.value 0)}}tw-border tw-border-[#4caf50] tw-text-[#4caf50]{{else}}negative tw-border tw-border-[color:var(--wh40k-accent-red)] tw-text-[color:var(--wh40k-accent-red)]{{/if}}
+                                {{#if char.fromChoice}}from-choice tw-border-dashed{{/if}}">
+                                {{char.short}}: {{#if (gt char.value 0)}}+{{/if}}{{char.value}}{{#if char.fromChoice}}*{{/if}}
                             </span>
                         {{/each}}
                     </div>
@@ -697,17 +713,17 @@
             {{/if}}
             {{#if preview.skills.length}}
                 <div class="preview-category">
-                    <div class="category-title">{{localize "WH40K.Skills.Header"}}</div>
-                    <div class="category-items">
+                    <div class="category-title tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize "WH40K.Skills.Header"}}</div>
+                    <div class="category-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[120px] tw-overflow-y-auto tw-overflow-x-hidden">
                         {{#each preview.skills as |skill|}}
-                            <div class="grant-tag skill-tag {{#if skill.uuid}}clickable{{/if}} {{#if skill.fromChoice}}from-choice{{/if}}"
+                            <div class="grant-tag skill-tag tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3] tw-max-w-full tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap {{#if skill.uuid}}clickable tw-cursor-pointer hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-[1px]{{/if}} {{#if skill.fromChoice}}from-choice tw-border-dashed{{/if}}"
                                   {{#if skill.uuid}}data-action="openItem" data-uuid="{{skill.uuid}}"{{/if}}
                                   data-wh40k-tooltip="generic"
                                   data-wh40k-tooltip-data="{{skill.tooltipData}}"
                                   data-tooltip="{{skill.name}}">
-                                <i class="fa-solid fa-book-open"></i>
-                                <span class="tag-label">{{skill.name}}</span>
-                                {{#if skill.uuid}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
+                                <i class="fa-solid fa-book-open tw-text-[0.7rem] tw-flex-shrink-0 tw-text-[color:var(--wh40k-accent-info)]"></i>
+                                <span class="tag-label tw-flex-1 tw-min-w-0 tw-overflow-hidden tw-text-ellipsis">{{skill.name}}</span>
+                                {{#if skill.uuid}}<i class="fa-solid fa-external-link tag-link tw-text-[0.65rem] tw-opacity-60 tw-text-[color:var(--wh40k-gold)]"></i>{{/if}}
                             </div>
                         {{/each}}
                     </div>
@@ -715,17 +731,17 @@
             {{/if}}
             {{#if preview.talents.length}}
                 <div class="preview-category">
-                    <div class="category-title">{{localize "WH40K.Talents"}}</div>
-                    <div class="category-items">
+                    <div class="category-title tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize "WH40K.Talents"}}</div>
+                    <div class="category-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[120px] tw-overflow-y-auto tw-overflow-x-hidden">
                         {{#each preview.talents as |talent|}}
-                            <div class="grant-tag talent-tag {{#if talent.uuid}}clickable{{/if}} {{#if talent.fromChoice}}from-choice{{/if}}"
+                            <div class="grant-tag talent-tag tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3] tw-max-w-full tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap {{#if talent.uuid}}clickable tw-cursor-pointer hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-[1px]{{/if}} {{#if talent.fromChoice}}from-choice tw-border-dashed{{/if}}"
                                   {{#if talent.uuid}}data-action="openItem" data-uuid="{{talent.uuid}}"{{/if}}
                                   data-wh40k-tooltip="generic"
                                   data-wh40k-tooltip-data="{{talent.tooltipData}}"
                                   data-tooltip="{{talent.name}}">
-                                <i class="fa-solid fa-star"></i>
-                                <span class="tag-label">{{talent.name}}</span>
-                                {{#if talent.uuid}}<i class="fa-solid fa-external-link tag-link"></i>{{/if}}
+                                <i class="fa-solid fa-star tw-text-[0.7rem] tw-flex-shrink-0 tw-text-[#f39c12]"></i>
+                                <span class="tag-label tw-flex-1 tw-min-w-0 tw-overflow-hidden tw-text-ellipsis">{{talent.name}}</span>
+                                {{#if talent.uuid}}<i class="fa-solid fa-external-link tag-link tw-text-[0.65rem] tw-opacity-60 tw-text-[color:var(--wh40k-gold)]"></i>{{/if}}
                             </div>
                         {{/each}}
                     </div>
@@ -733,12 +749,12 @@
             {{/if}}
             {{#if preview.aptitudes.length}}
                 <div class="preview-category">
-                    <div class="category-title">Aptitudes</div>
-                    <div class="category-items">
+                    <div class="category-title tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">Aptitudes</div>
+                    <div class="category-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[120px] tw-overflow-y-auto tw-overflow-x-hidden">
                         {{#each preview.aptitudes as |apt|}}
-                            <span class="grant-tag aptitude-tag">
-                                <i class="fa-solid fa-bullseye"></i>
-                                <span class="tag-label">{{apt}}</span>
+                            <span class="grant-tag aptitude-tag tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3]">
+                                <i class="fa-solid fa-bullseye tw-text-[0.7rem] tw-flex-shrink-0 tw-text-[color:var(--wh40k-gold)]"></i>
+                                <span class="tag-label tw-flex-1 tw-min-w-0 tw-overflow-hidden tw-text-ellipsis">{{apt}}</span>
                             </span>
                         {{/each}}
                     </div>
@@ -746,22 +762,22 @@
             {{/if}}
             {{#if preview.wounds}}
                 <div class="preview-category">
-                    <div class="category-title">{{localize "WH40K.Wounds"}}</div>
-                    <div class="category-items">
-                        <div class="grant-tag positive">
-                            <i class="fa-solid fa-heart"></i>
-                            <span class="tag-label">{{preview.wounds}}</span>
+                    <div class="category-title tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize "WH40K.Wounds"}}</div>
+                    <div class="category-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)]">
+                        <div class="grant-tag positive tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3]">
+                            <i class="fa-solid fa-heart tw-text-[0.7rem] tw-flex-shrink-0 tw-text-[color:var(--wh40k-gold)]"></i>
+                            <span class="tag-label tw-flex-1 tw-min-w-0 tw-overflow-hidden tw-text-ellipsis">{{preview.wounds}}</span>
                         </div>
                     </div>
                 </div>
             {{/if}}
             {{#if preview.fate}}
                 <div class="preview-category">
-                    <div class="category-title">{{localize "WH40K.Fate"}}</div>
-                    <div class="category-items">
-                        <div class="grant-tag positive">
-                            <i class="fa-solid fa-star"></i>
-                            <span class="tag-label">{{preview.fate}}</span>
+                    <div class="category-title tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize "WH40K.Fate"}}</div>
+                    <div class="category-items tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)]">
+                        <div class="grant-tag positive tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3]">
+                            <i class="fa-solid fa-star tw-text-[0.7rem] tw-flex-shrink-0 tw-text-[color:var(--wh40k-gold)]"></i>
+                            <span class="tag-label tw-flex-1 tw-min-w-0 tw-overflow-hidden tw-text-ellipsis">{{preview.fate}}</span>
                         </div>
                     </div>
                 </div>
@@ -770,14 +786,14 @@
     </section>
 
     {{!-- Footer --}}
-    <footer class="builder-footer">
-        <div class="footer-status">
-            <span class="status-item {{#if status.stepsComplete}}complete{{else}}pending{{/if}}">
-                <i class="fa-solid {{#if status.stepsComplete}}fa-check-circle{{else}}fa-circle-half-stroke{{/if}}"></i>
+    <footer class="builder-footer tw-flex tw-justify-between tw-items-center tw-p-[var(--wh40k-space-md)] tw-bg-[linear-gradient(180deg,rgba(0,0,0,0.8),var(--wh40k-bronze-dark))] tw-border-t-2 tw-border-t-[var(--wh40k-gold)]">
+        <div class="footer-status tw-flex tw-gap-[var(--wh40k-space-md)]">
+            <span class="status-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem] {{#if status.stepsComplete}}complete{{else}}pending{{/if}}">
+                <i class="fa-solid {{#if status.stepsComplete}}fa-check-circle tw-text-[#4caf50]{{else}}fa-circle-half-stroke tw-text-[#ffaa00]{{/if}} tw-text-[1rem]"></i>
                 {{status.stepsCount}}/{{status.totalSteps}} {{localize "WH40K.OriginPath.Steps"}}
             </span>
-            <span class="status-item {{#if status.choicesComplete}}complete{{else}}pending{{/if}}">
-                <i class="fa-solid {{#if status.choicesComplete}}fa-check-circle{{else}}fa-exclamation-triangle{{/if}}"></i>
+            <span class="status-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem] {{#if status.choicesComplete}}complete{{else}}pending{{/if}}">
+                <i class="fa-solid {{#if status.choicesComplete}}fa-check-circle tw-text-[#4caf50]{{else}}fa-exclamation-triangle tw-text-[#ffaa00]{{/if}} tw-text-[1rem]"></i>
                 {{#if status.choicesComplete}}
                     {{localize "WH40K.OriginPath.AllChoicesComplete"}}
                 {{else}}
@@ -785,14 +801,14 @@
                 {{/if}}
             </span>
             {{#if status.pendingRolls}}
-                <span class="status-item warning">
-                    <i class="fa-solid fa-dice"></i>
+                <span class="status-item warning tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem]">
+                    <i class="fa-solid fa-dice tw-text-[#ff9800] tw-text-[1rem]"></i>
                     {{status.pendingRolls}} {{localize "WH40K.OriginPath.RollsPending"}}
                 </span>
             {{/if}}
         </div>
-        <div class="footer-actions">
-            <button type="button" class="commit-btn" data-action="commit" {{#unless status.canCommit}}disabled{{/unless}}>
+        <div class="footer-actions tw-flex tw-gap-[var(--wh40k-space-sm)] tw-items-center">
+            <button type="button" class="commit-btn tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-lg)] tw-bg-[linear-gradient(135deg,var(--wh40k-gold),#b8860b)] tw-border-2 tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-font-[var(--wh40k-font-header)] tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[1px] tw-cursor-pointer hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_15px_rgba(var(--wh40k-gold-rgb),0.5)] disabled:tw-opacity-50 disabled:tw-cursor-not-allowed disabled:tw-grayscale-[0.5]" data-action="commit" {{#unless status.canCommit}}disabled{{/unless}}>
                 <i class="fa-solid fa-save"></i>
                 {{localize "WH40K.OriginPath.CommitToCharacter"}}
             </button>

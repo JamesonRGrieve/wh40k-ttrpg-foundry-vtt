@@ -2,41 +2,41 @@
   Rogue Trader Trait Item Sheet - Modern Tabbed Redesign
   Clean trait configuration with tabbed interface
 --}}
-<div class="wh40k-trait-sheet">
-  <form autocomplete="off">
-    
+<div class="wh40k-trait-sheet tw-flex tw-flex-col tw-h-full tw-bg-[var(--wh40k-sheet-bg)] tw-text-[color:var(--wh40k-text-dark)] tw-font-ui tw-text-[0.9rem] tw-overflow-hidden">
+  <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0 tw-overflow-hidden">
+
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact trait identity with inline badges
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="wh40k-trait-header">
-      <div class="wh40k-trait-header__image" data-action="editImage" data-edit="img">
-        <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="wh40k-trait-header__image-overlay">
-          <i class="fas fa-edit"></i>
+    <header class="wh40k-trait-header tw-flex tw-items-center tw-gap-3 tw-p-3 tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-traits-primary,#6a2090)_r_g_b_/_0.15)] tw-to-transparent tw-border-b-2 tw-border-b-[rgb(from_var(--wh40k-traits-primary,#6a2090)_r_g_b_/_0.3)] tw-shrink-0">
+      <div class="wh40k-trait-header__image tw-relative tw-w-16 tw-h-16 tw-shrink-0 tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[6px] tw-overflow-hidden tw-cursor-pointer tw-transition-[transform,box-shadow] tw-duration-200" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
+        <div class="wh40k-trait-header__image-overlay tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/60 tw-opacity-0 tw-transition-opacity hover:tw-opacity-100">
+          <i class="fas fa-edit tw-text-white tw-text-xl"></i>
         </div>
       </div>
-      
-      <div class="wh40k-trait-header__info">
-        <input type="text" class="wh40k-trait-header__name tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure" name="name" value="{{item.name}}" placeholder="Trait Name" />
-        
-        <div class="wh40k-trait-header__meta">
+
+      <div class="wh40k-trait-header__info tw-flex-1 tw-min-w-0">
+        <input type="text" class="wh40k-trait-header__name tw-w-full tw-px-2 tw-py-1 tw-m-0 tw-bg-transparent tw-border-none tw-border-b tw-border-b-transparent tw-font-display tw-text-xl tw-font-semibold tw-text-[color:var(--wh40k-text-dark)] tw-transition-colors focus:tw-outline-none focus:tw-border-b-[color:var(--wh40k-gold)] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure" name="name" value="{{item.name}}" placeholder="Trait Name" />
+
+        <div class="wh40k-trait-header__meta tw-flex tw-flex-wrap tw-gap-1.5 tw-mt-1.5 tw-pl-2">
           {{!-- Category Badge --}}
-          <span class="wh40k-trait-badge wh40k-trait-badge--category" title="{{item.system.categoryLabel}}">
+          <span class="wh40k-trait-badge wh40k-trait-badge--category tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-md tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-bg-[rgb(from_var(--wh40k-accent-combat,#8b0000)_r_g_b_/_0.15)] tw-border tw-border-[rgb(from_var(--wh40k-accent-combat,#8b0000)_r_g_b_/_0.3)] tw-text-[color:color-mix(in_srgb,var(--wh40k-accent-combat,#8b0000),white_15%)]" title="{{item.system.categoryLabel}}">
             <i class="fas fa-shield-alt"></i>
             {{item.system.categoryLabel}}
           </span>
-          
+
           {{!-- Level Badge (if applicable) --}}
           {{#if item.system.hasLevel}}
-          <span class="wh40k-trait-badge wh40k-trait-badge--level" title="Trait Level/Rating">
+          <span class="wh40k-trait-badge wh40k-trait-badge--level tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-md tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-bg-[rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.15)] tw-border tw-border-[rgb(from_var(--wh40k-color-gold)_r_g_b_/_0.3)] tw-text-[color:var(--wh40k-color-gold)]" title="Trait Level/Rating">
             <i class="fas fa-layer-group"></i>
             Level {{item.system.level}}
           </span>
           {{/if}}
-          
+
           {{!-- Variable Indicator --}}
           {{#if item.system.isVariable}}
-          <span class="wh40k-trait-badge wh40k-trait-badge--variable" title="Variable Trait (X)">
+          <span class="wh40k-trait-badge wh40k-trait-badge--variable tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-md tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-bg-[rgb(from_var(--wh40k-accent-psychic,#7b4a9e)_r_g_b_/_0.15)] tw-border tw-border-[rgb(from_var(--wh40k-accent-psychic,#7b4a9e)_r_g_b_/_0.3)] tw-text-[#c39bd3]" title="Variable Trait (X)">
             <i class="fas fa-question"></i>
             Variable
           </span>
@@ -48,40 +48,40 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          STATS BAR: Key trait info at a glance
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-trait-stats">
+    <div class="wh40k-trait-stats tw-flex tw-flex-wrap tw-gap-0.5 tw-p-2 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-b-[var(--wh40k-border-color-light)] tw-shrink-0">
       {{!-- Category --}}
-      <div class="wh40k-trait-stat wh40k-trait-stat--category">
-        <div class="wh40k-trait-stat__icon">
+      <div class="wh40k-trait-stat wh40k-trait-stat--category tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[60px] tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+        <div class="wh40k-trait-stat__icon tw-text-base tw-text-[var(--wh40k-bronze)] tw-mb-1">
           <i class="fas fa-shield-alt"></i>
         </div>
-        <div class="wh40k-trait-stat__content">
-          <span class="wh40k-trait-stat__label">Category</span>
-          <span class="wh40k-trait-stat__value">{{item.system.categoryLabel}}</span>
+        <div class="wh40k-trait-stat__content tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+          <span class="wh40k-trait-stat__label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Category</span>
+          <span class="wh40k-trait-stat__value tw-font-display tw-text-base tw-font-bold tw-text-[color:var(--wh40k-text-dark)]">{{item.system.categoryLabel}}</span>
         </div>
       </div>
-      
+
       {{!-- Level/Rating --}}
       {{#if (gt item.system.level 0)}}
-      <div class="wh40k-trait-stat wh40k-trait-stat--level">
-        <div class="wh40k-trait-stat__icon">
+      <div class="wh40k-trait-stat wh40k-trait-stat--level tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[60px] tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+        <div class="wh40k-trait-stat__icon tw-text-base tw-text-[color:var(--wh40k-traits-primary,#6a2090)] tw-mb-1">
           <i class="fas fa-layer-group"></i>
         </div>
-        <div class="wh40k-trait-stat__content">
-          <span class="wh40k-trait-stat__label">Level</span>
-          <span class="wh40k-trait-stat__value">{{item.system.level}}</span>
+        <div class="wh40k-trait-stat__content tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+          <span class="wh40k-trait-stat__label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Level</span>
+          <span class="wh40k-trait-stat__value tw-font-display tw-text-base tw-font-bold tw-text-[color:var(--wh40k-traits-primary,#6a2090)]">{{item.system.level}}</span>
         </div>
       </div>
       {{/if}}
-      
+
       {{!-- Variable indicator --}}
       {{#if item.system.isVariable}}
-      <div class="wh40k-trait-stat">
-        <div class="wh40k-trait-stat__icon">
+      <div class="wh40k-trait-stat tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[60px] tw-p-2 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+        <div class="wh40k-trait-stat__icon tw-text-base tw-text-[var(--wh40k-bronze)] tw-mb-1">
           <i class="fas fa-question"></i>
         </div>
-        <div class="wh40k-trait-stat__content">
-          <span class="wh40k-trait-stat__label">Type</span>
-          <span class="wh40k-trait-stat__value">Variable (X)</span>
+        <div class="wh40k-trait-stat__content tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+          <span class="wh40k-trait-stat__label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">Type</span>
+          <span class="wh40k-trait-stat__value tw-font-display tw-text-base tw-font-bold tw-text-[color:var(--wh40k-text-dark)]">Variable (X)</span>
         </div>
       </div>
       {{/if}}
@@ -109,19 +109,19 @@
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
     <section class="wh40k-trait-content wh40k-tab-content wh40k-tab-content--trait tw-flex-1 tw-overflow-y-auto tw-min-h-0 tw-p-3">
-      
+
       {{!-- PROPERTIES TAB --}}
       <div class="wh40k-trait-panel tab active" data-tab="properties" data-group="primary">
-        <div class="wh40k-trait-section">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)]">
-            <i class="fas fa-info-circle"></i> Basic Properties
+        <div class="wh40k-trait-section tw-mb-4">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)] tw-mb-3 tw-pb-2 tw-border-b-2 tw-border-[var(--color-border-secondary)]">
+            <i class="fas fa-info-circle tw-text-[color:var(--wh40k-color-gold)]"></i> Basic Properties
           </h3>
-          
-          <div class="wh40k-properties-grid">
+
+          <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
             {{!-- Category --}}
-            <div class="wh40k-property">
-              <label class="wh40k-property-label">Category</label>
-              <select name="system.category" class="wh40k-property-input">
+            <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+              <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--color-text-secondary)]">Category</label>
+              <select name="system.category" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]">
                 {{#select item.system.category}}
                 <option value="general">General</option>
                 <option value="creature">Creature</option>
@@ -135,50 +135,50 @@
                 {{/select}}
               </select>
             </div>
-            
+
             {{!-- Level/Rating --}}
-            <div class="wh40k-property">
-              <label class="wh40k-property-label">Level / Rating <span class="wh40k-field-hint">(0 = none)</span></label>
-              <input type="number" name="system.level" value="{{item.system.level}}" min="0" class="wh40k-property-input" placeholder="0" />
+            <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+              <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--color-text-secondary)]">Level / Rating <span class="wh40k-field-hint tw-text-[0.7rem] tw-italic tw-text-[color:var(--color-text-tertiary)] tw-normal-case">(0 = none)</span></label>
+              <input type="number" name="system.level" value="{{item.system.level}}" min="0" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="0" />
             </div>
           </div>
         </div>
-        
+
         {{!-- Requirements --}}
-        <div class="wh40k-trait-section">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)]">
-            <i class="fas fa-lock"></i> Requirements
+        <div class="wh40k-trait-section tw-mb-4">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)] tw-mb-3 tw-pb-2 tw-border-b-2 tw-border-[var(--color-border-secondary)]">
+            <i class="fas fa-lock tw-text-[color:var(--wh40k-color-gold)]"></i> Requirements
           </h3>
-          
-          <div class="wh40k-property">
-            <label class="wh40k-property-label">Prerequisites <span class="wh40k-field-hint">(to acquire this trait)</span></label>
-            <input type="text" name="system.requirements" value="{{item.system.requirements}}" class="wh40k-property-input" placeholder="e.g., Mutant origin, Corruption 50+" />
+
+          <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+            <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--color-text-secondary)]">Prerequisites <span class="wh40k-field-hint tw-text-[0.7rem] tw-italic tw-text-[color:var(--color-text-tertiary)] tw-normal-case">(to acquire this trait)</span></label>
+            <input type="text" name="system.requirements" value="{{item.system.requirements}}" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., Mutant origin, Corruption 50+" />
           </div>
-          
+
           {{#if item.system.requirements}}
-          <div class="wh40k-requirements-display tw-mt-3">
-            <div class="wh40k-requirement-tag">
-              <i class="fas fa-exclamation-triangle"></i>
+          <div class="wh40k-requirements-display tw-mt-3 tw-p-2 tw-bg-[rgb(from_var(--wh40k-accent-combat,#8b0000)_r_g_b_/_0.05)] tw-border tw-border-[rgb(from_var(--wh40k-accent-combat,#8b0000)_r_g_b_/_0.2)] tw-rounded-sm">
+            <div class="wh40k-requirement-tag tw-flex tw-items-center tw-gap-2 tw-text-[color:color-mix(in_srgb,var(--wh40k-accent-combat,#8b0000),white_10%)] tw-text-sm tw-font-semibold">
+              <i class="fas fa-exclamation-triangle tw-text-[color:var(--wh40k-accent-combat,#8b0000)]"></i>
               {{item.system.requirements}}
             </div>
           </div>
           {{/if}}
         </div>
       </div>
-      
+
       {{!-- EFFECTS TAB --}}
       <div class="wh40k-trait-panel tab" data-tab="effects" data-group="primary">
         {{!-- Benefit/Effect Description --}}
-        <div class="wh40k-trait-section">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)]">
-            <i class="fas fa-magic"></i> Benefit
+        <div class="wh40k-trait-section tw-mb-4">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)] tw-mb-3 tw-pb-2 tw-border-b-2 tw-border-[var(--color-border-secondary)]">
+            <i class="fas fa-magic tw-text-[color:var(--wh40k-color-gold)]"></i> Benefit
           </h3>
-          
-          <p class="wh40k-field-hint tw-mb-3">
+
+          <p class="wh40k-field-hint tw-text-[0.7rem] tw-italic tw-text-[color:var(--color-text-tertiary)] tw-mb-3">
             <i class="fas fa-info-circle"></i> Describe the mechanical effect or benefit of this trait.
           </p>
-          
-          <div class="wh40k-editor-container">
+
+          <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2">
             {{#if inEditMode}}
             {{editor system.benefit target="system.benefit" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -186,120 +186,110 @@
             {{/if}}
           </div>
         </div>
-        
+
         {{!-- Modifiers Display --}}
         {{#if (or item.system.modifiers.characteristics item.system.modifiers.skills item.system.modifiers.combat item.system.modifiers.wounds item.system.modifiers.movement)}}
-        <div class="wh40k-trait-section">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)]">
-            <i class="fas fa-chart-line"></i> Modifiers
+        <div class="wh40k-trait-section tw-mb-4">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)] tw-mb-3 tw-pb-2 tw-border-b-2 tw-border-[var(--color-border-secondary)]">
+            <i class="fas fa-chart-line tw-text-[color:var(--wh40k-color-gold)]"></i> Modifiers
           </h3>
-          
-          <div class="wh40k-modifiers-display">
+
+          <div class="wh40k-modifiers-display tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md">
             {{#if item.system.modifiers.characteristics}}
-            <div class="wh40k-modifier-group">
-              <h4 class="wh40k-modifier-group-title">Characteristics</h4>
-              <div class="wh40k-modifier-list">
+            <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-2">
+              <h4 class="wh40k-modifier-group-title tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-color-gold)] tw-m-0 tw-pb-1.5 tw-border-b tw-border-[var(--color-border-light)]">Characteristics</h4>
+              <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                 {{#each item.system.modifiers.characteristics}}
-                <div class="wh40k-modifier-item">
-                  <span class="wh40k-modifier-name">{{capitalize @key}}</span>
-                  <span class="wh40k-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
-                    {{signedNumber this}}
-                  </span>
+                <div class="wh40k-modifier-item tw-flex tw-justify-between tw-items-center tw-px-2.5 tw-py-1.5 tw-bg-[var(--color-bg-secondary)] tw-rounded-sm tw-text-sm">
+                  <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{capitalize @key}}</span>
+                  <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-base {{#if (gt this 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">{{signedNumber this}}</span>
                 </div>
                 {{/each}}
               </div>
             </div>
             {{/if}}
-            
+
             {{#if item.system.modifiers.skills}}
-            <div class="wh40k-modifier-group">
-              <h4 class="wh40k-modifier-group-title">Skills</h4>
-              <div class="wh40k-modifier-list">
+            <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-2">
+              <h4 class="wh40k-modifier-group-title tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-color-gold)] tw-m-0 tw-pb-1.5 tw-border-b tw-border-[var(--color-border-light)]">Skills</h4>
+              <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                 {{#each item.system.modifiers.skills}}
-                <div class="wh40k-modifier-item">
-                  <span class="wh40k-modifier-name">{{capitalize @key}}</span>
-                  <span class="wh40k-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
-                    {{signedNumber this}}
-                  </span>
+                <div class="wh40k-modifier-item tw-flex tw-justify-between tw-items-center tw-px-2.5 tw-py-1.5 tw-bg-[var(--color-bg-secondary)] tw-rounded-sm tw-text-sm">
+                  <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{capitalize @key}}</span>
+                  <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-base {{#if (gt this 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">{{signedNumber this}}</span>
                 </div>
                 {{/each}}
               </div>
             </div>
             {{/if}}
-            
+
             {{#if item.system.modifiers.combat}}
-            <div class="wh40k-modifier-group">
-              <h4 class="wh40k-modifier-group-title">Combat</h4>
-              <div class="wh40k-modifier-list">
+            <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-2">
+              <h4 class="wh40k-modifier-group-title tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-color-gold)] tw-m-0 tw-pb-1.5 tw-border-b tw-border-[var(--color-border-light)]">Combat</h4>
+              <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                 {{#each item.system.modifiers.combat}}
-                <div class="wh40k-modifier-item">
-                  <span class="wh40k-modifier-name">{{capitalize @key}}</span>
-                  <span class="wh40k-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
-                    {{signedNumber this}}
-                  </span>
+                <div class="wh40k-modifier-item tw-flex tw-justify-between tw-items-center tw-px-2.5 tw-py-1.5 tw-bg-[var(--color-bg-secondary)] tw-rounded-sm tw-text-sm">
+                  <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{capitalize @key}}</span>
+                  <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-base {{#if (gt this 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">{{signedNumber this}}</span>
                 </div>
                 {{/each}}
               </div>
             </div>
             {{/if}}
-            
+
             {{#if item.system.modifiers.wounds}}
-            <div class="wh40k-modifier-group">
-              <h4 class="wh40k-modifier-group-title">Other</h4>
-              <div class="wh40k-modifier-list">
-                <div class="wh40k-modifier-item">
-                  <span class="wh40k-modifier-name">Wounds</span>
-                  <span class="wh40k-modifier-value {{#if (gt item.system.modifiers.wounds 0)}}positive{{else}}negative{{/if}}">
-                    {{signedNumber item.system.modifiers.wounds}}
-                  </span>
+            <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-2">
+              <h4 class="wh40k-modifier-group-title tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-color-gold)] tw-m-0 tw-pb-1.5 tw-border-b tw-border-[var(--color-border-light)]">Other</h4>
+              <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
+                <div class="wh40k-modifier-item tw-flex tw-justify-between tw-items-center tw-px-2.5 tw-py-1.5 tw-bg-[var(--color-bg-secondary)] tw-rounded-sm tw-text-sm">
+                  <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">Wounds</span>
+                  <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-base {{#if (gt item.system.modifiers.wounds 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">{{signedNumber item.system.modifiers.wounds}}</span>
                 </div>
               </div>
             </div>
             {{/if}}
-            
+
             {{#if item.system.modifiers.movement}}
-            <div class="wh40k-modifier-group">
-              <h4 class="wh40k-modifier-group-title">Movement</h4>
-              <div class="wh40k-modifier-list">
-                <div class="wh40k-modifier-item">
-                  <span class="wh40k-modifier-name">Movement Bonus</span>
-                  <span class="wh40k-modifier-value {{#if (gt item.system.modifiers.movement 0)}}positive{{else}}negative{{/if}}">
-                    {{signedNumber item.system.modifiers.movement}}
-                  </span>
+            <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-2">
+              <h4 class="wh40k-modifier-group-title tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-color-gold)] tw-m-0 tw-pb-1.5 tw-border-b tw-border-[var(--color-border-light)]">Movement</h4>
+              <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
+                <div class="wh40k-modifier-item tw-flex tw-justify-between tw-items-center tw-px-2.5 tw-py-1.5 tw-bg-[var(--color-bg-secondary)] tw-rounded-sm tw-text-sm">
+                  <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">Movement Bonus</span>
+                  <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-base {{#if (gt item.system.modifiers.movement 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">{{signedNumber item.system.modifiers.movement}}</span>
                 </div>
               </div>
             </div>
             {{/if}}
           </div>
-          
-          <p class="wh40k-field-hint tw-mt-4">
+
+          <p class="wh40k-field-hint tw-text-[0.7rem] tw-italic tw-text-[color:var(--color-text-tertiary)] tw-mt-4">
             <i class="fas fa-info-circle"></i> Modifiers are configured via Active Effects. This panel is read-only.
           </p>
         </div>
         {{else}}
-        <div class="wh40k-trait-section">
+        <div class="wh40k-trait-section tw-mb-4">
           <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-4 tw-text-center tw-text-[color:var(--wh40k-text-subtle)] tw-italic">
-            <i class="fas fa-chart-line"></i>
-            <p>No modifiers defined</p>
-            <p class="wh40k-field-hint">Use Active Effects tab to add stat bonuses</p>
+            <i class="fas fa-chart-line tw-text-5xl tw-opacity-50 tw-mb-3"></i>
+            <p class="tw-text-[color:var(--color-text-secondary)] tw-text-sm">No modifiers defined</p>
+            <p class="wh40k-field-hint tw-text-[0.7rem] tw-italic tw-text-[color:var(--color-text-tertiary)]">Use Active Effects tab to add stat bonuses</p>
           </div>
         </div>
         {{/if}}
       </div>
-      
+
       {{!-- DESCRIPTION TAB --}}
       <div class="wh40k-trait-panel tab" data-tab="description" data-group="primary">
         {{!-- Description --}}
-        <div class="wh40k-trait-section">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)]">
-            <i class="fas fa-book"></i> Description
+        <div class="wh40k-trait-section tw-mb-4">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)] tw-mb-3 tw-pb-2 tw-border-b-2 tw-border-[var(--color-border-secondary)]">
+            <i class="fas fa-book tw-text-[color:var(--wh40k-color-gold)]"></i> Description
           </h3>
-          
-          <p class="wh40k-field-hint tw-mb-3">
+
+          <p class="wh40k-field-hint tw-text-[0.7rem] tw-italic tw-text-[color:var(--color-text-tertiary)] tw-mb-3">
             <i class="fas fa-info-circle"></i> Additional lore, flavor text, or detailed explanation.
           </p>
-          
-          <div class="wh40k-editor-container">
+
+          <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2">
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -307,30 +297,30 @@
             {{/if}}
           </div>
         </div>
-        
+
         {{!-- Notes --}}
-        <div class="wh40k-trait-section">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)]">
-            <i class="fas fa-sticky-note"></i> Notes
+        <div class="wh40k-trait-section tw-mb-4">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)] tw-mb-3 tw-pb-2 tw-border-b-2 tw-border-[var(--color-border-secondary)]">
+            <i class="fas fa-sticky-note tw-text-[color:var(--wh40k-color-gold)]"></i> Notes
           </h3>
-          
-          <div class="wh40k-property">
-            <textarea name="system.notes" rows="4" class="wh40k-property-textarea" placeholder="GM notes, clarifications, house rules, etc.">{{item.system.notes}}</textarea>
+
+          <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+            <textarea name="system.notes" rows="4" class="wh40k-property-textarea tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm tw-resize-y tw-min-h-[80px] focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="GM notes, clarifications, house rules, etc.">{{item.system.notes}}</textarea>
           </div>
         </div>
-        
+
         {{!-- Source --}}
-        <div class="wh40k-trait-section">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)]">
-            <i class="fas fa-book-bookmark"></i> Source
+        <div class="wh40k-trait-section tw-mb-4">
+          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-uppercase tw-tracking-wide tw-text-sm tw-text-[color:var(--color-text-secondary)] tw-mb-3 tw-pb-2 tw-border-b-2 tw-border-[var(--color-border-secondary)]">
+            <i class="fas fa-book-bookmark tw-text-[color:var(--wh40k-color-gold)]"></i> Source
           </h3>
-          
-          <div class="wh40k-property">
-            <input type="text" name="system.source" value="{{item.system.source}}" class="wh40k-property-input" placeholder="Core Rulebook, pg. XX" />
+
+          <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+            <input type="text" name="system.source" value="{{item.system.source}}" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="Core Rulebook, pg. XX" />
           </div>
         </div>
       </div>
-      
+
     </section>{{!-- .wh40k-trait-content --}}
   </form>
 </div>{{!-- .wh40k-trait-sheet --}}

@@ -12,6 +12,8 @@
 
     Optional hash params:
         outerExtraClass  — extra Tailwind classes on the outer card div
+        headerExtraClass — extra Tailwind classes on the header element
+        headerStyle      — raw inline style string for the header element
         image            — image src URL (renders <img>); skip for icon variant
         imageAlt         — alt text (defaults to title)
         iconClass        — Font Awesome class (e.g. "fa-tag") for icon-wrapper variant
@@ -31,7 +33,7 @@
 --}}
 <div class="wh40k-chat-card {{cardClass}}{{#if outerExtraClass}} {{outerExtraClass}}{{/if}}"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
     {{#if (or image iconClass title badges)}}
-    <header class="wh40k-card__header{{#unless (eq legacyClasses false)}} wh40k-card-header{{/unless}} tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-3 tw-border-b tw-border-[rgba(0,0,0,0.1)] dh2e:tw-border-bronze rt:tw-border-accent-dynasty bc:tw-border-crimson dw:tw-border-bronze ow:tw-border-brass im:tw-border-crimson-light dh1e:tw-border-gold-raw">
+    <header class="wh40k-card__header{{#unless (eq legacyClasses false)}} wh40k-card-header{{/unless}} tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)] tw-p-3 tw-border-b tw-border-[rgba(0,0,0,0.1)] dh2e:tw-border-bronze rt:tw-border-accent-dynasty bc:tw-border-crimson dw:tw-border-bronze ow:tw-border-brass im:tw-border-crimson-light dh1e:tw-border-gold-raw{{#if headerExtraClass}} {{headerExtraClass}}{{/if}}"{{#if headerStyle}} style="{{headerStyle}}"{{/if}}>
         {{#if image}}
             <img class="wh40k-card__icon{{#unless (eq legacyClasses false)}} wh40k-card-icon{{/unless}} tw-w-12 tw-h-12 tw-rounded-full tw-border-2 tw-border-[rgba(255,255,255,0.8)] tw-object-cover tw-shrink-0" src="{{image}}" alt="{{#if imageAlt}}{{imageAlt}}{{else}}{{title}}{{/if}}" />
         {{else if iconClass}}
