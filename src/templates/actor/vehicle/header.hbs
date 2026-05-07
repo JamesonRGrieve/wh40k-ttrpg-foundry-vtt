@@ -4,20 +4,20 @@
 
 {{#> systems/wh40k-rpg/templates/actor/partial/header-base.hbs
     variant="horizontal"
-    cardClass="wh40k-vehicle-header"}}
-    <div class="wh40k-header__info">
+    cardClass="tw-grid tw-grid-cols-[auto_1fr_auto] tw-gap-4 tw-p-4"}}
+    <div class="wh40k-header__info tw-contents">
         {{!-- Identity: name input above portrait --}}
-        <div class="wh40k-vehicle-identity tw-w-44 tw-shrink-0">
+        <div class="wh40k-vehicle-identity tw-w-44 tw-shrink-0 tw-flex tw-flex-col tw-gap-2">
             {{> systems/wh40k-rpg/templates/actor/partial/actor-identity.hbs nameLabelKey="WH40K.Vehicle.Name" portraitWidthClass="tw-w-44"}}
         </div>
 
         {{!-- Meta: type + faction --}}
-        <div class="wh40k-vehicle-meta">
-            <div class="wh40k-vehicle-meta-row">
+        <div class="wh40k-vehicle-meta tw-flex tw-flex-1">
+            <div class="wh40k-vehicle-meta-row tw-flex tw-gap-4 tw-flex-wrap">
                 {{!-- Type --}}
-                <div class="wh40k-vehicle-field">
-                    <label>{{localize "WH40K.Vehicle.Type"}}</label>
-                    <select name="system.type" class="wh40k-vehicle-select">
+                <div class="wh40k-vehicle-field tw-flex tw-flex-col tw-gap-0.5">
+                    <label class="tw-text-[0.7rem] tw-uppercase tw-text-[var(--wh40k-text-muted,#888)]">{{localize "WH40K.Vehicle.Type"}}</label>
+                    <select name="system.type" class="wh40k-vehicle-select tw-bg-[var(--wh40k-input-bg,rgba(0,0,0,0.3))] tw-border tw-border-[var(--wh40k-border-color,#444)] tw-text-[var(--wh40k-text-dark,#f0f0f0)] tw-px-2 tw-py-1 tw-rounded-sm tw-text-[0.85rem] focus:tw-border-gold focus:tw-outline-none">
                         <option value="vehicle" {{#if (eq system.type "vehicle")}}selected{{/if}}>Vehicle</option>
                         <option value="walker" {{#if (eq system.type "walker")}}selected{{/if}}>Walker</option>
                         <option value="flyer" {{#if (eq system.type "flyer")}}selected{{/if}}>Flyer</option>
@@ -26,25 +26,26 @@
                 </div>
 
                 {{!-- Faction --}}
-                <div class="wh40k-vehicle-field wh40k-vehicle-field--wide">
-                    <label>{{localize "WH40K.NPC.Faction"}}</label>
+                <div class="wh40k-vehicle-field tw-flex tw-flex-col tw-gap-0.5 tw-flex-1 tw-min-w-[150px]">
+                    <label class="tw-text-[0.7rem] tw-uppercase tw-text-[var(--wh40k-text-muted,#888)]">{{localize "WH40K.NPC.Faction"}}</label>
                     <input type="text"
                            name="system.faction"
                            value="{{source.faction}}"
-                           placeholder="e.g., Imperial Guard, Ork" />
+                           placeholder="e.g., Imperial Guard, Ork"
+                           class="tw-bg-[var(--wh40k-input-bg,rgba(0,0,0,0.3))] tw-border tw-border-[var(--wh40k-border-color,#444)] tw-text-[var(--wh40k-text-dark,#f0f0f0)] tw-px-2 tw-py-1 tw-rounded-sm tw-text-[0.85rem] focus:tw-border-gold focus:tw-outline-none" />
                 </div>
             </div>
         </div>
 
         {{!-- Quick Stats --}}
-        <div class="wh40k-vehicle-quick-stats tw-border-l-gold bc:tw-border-l-crimson-light dh1e:tw-border-l-gold-raw-l5 dh2e:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure">
+        <div class="wh40k-vehicle-quick-stats tw-flex tw-flex-col tw-gap-2 tw-border-l tw-border-l-gold bc:tw-border-l-crimson-light dh1e:tw-border-l-gold-raw-l5 dh2e:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure tw-pl-4">
             {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
                 label="Structure"
-                boxBaseClass="wh40k-vehicle-stat-box"
-                labelBaseClass="wh40k-vehicle-stat-label"
-                valuesBaseClass="wh40k-vehicle-stat-values"
-                inputBaseClass="wh40k-vehicle-stat-input"
-                sepBaseClass="wh40k-vehicle-stat-separator"
+                boxBaseClass="tw-flex tw-flex-col tw-items-center tw-p-2 tw-bg-[var(--wh40k-input-bg,rgba(0,0,0,0.3))] tw-border tw-border-[var(--wh40k-border-color,#444)] tw-rounded-md tw-min-w-[70px]"
+                labelBaseClass="tw-text-[0.65rem] tw-uppercase tw-text-[var(--wh40k-text-muted,#888)]"
+                valuesBaseClass="tw-flex tw-items-center tw-gap-0.5"
+                inputBaseClass="tw-w-[45px] tw-text-center tw-text-[1.1rem] tw-font-bold tw-bg-transparent tw-border-0 tw-text-[var(--wh40k-text-dark,#f0f0f0)] focus:tw-outline focus:tw-outline-1 focus:tw-outline-gold"
+                sepBaseClass="tw-text-[1rem] tw-text-[var(--wh40k-text-muted,#888)]"
                 boxClass="wh40k-vehicle-structure"
                 valueName="system.wounds.value"
                 value=source.wounds.value
@@ -55,9 +56,9 @@
 
             {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
                 label="Armour"
-                boxBaseClass="wh40k-vehicle-stat-box"
-                labelBaseClass="wh40k-vehicle-stat-label"
-                inputBaseClass="wh40k-vehicle-stat-input"
+                boxBaseClass="tw-flex tw-flex-col tw-items-center tw-p-2 tw-bg-[var(--wh40k-input-bg,rgba(0,0,0,0.3))] tw-border tw-border-[var(--wh40k-border-color,#444)] tw-rounded-md tw-min-w-[70px]"
+                labelBaseClass="tw-text-[0.65rem] tw-uppercase tw-text-[var(--wh40k-text-muted,#888)]"
+                inputBaseClass="tw-w-[45px] tw-text-center tw-text-[1.1rem] tw-font-bold tw-bg-transparent tw-border-0 tw-text-[var(--wh40k-text-dark,#f0f0f0)] focus:tw-outline focus:tw-outline-1 focus:tw-outline-gold"
                 boxClass="wh40k-vehicle-armour"
                 valueName="system.armour.total"
                 value=source.armour.total
@@ -65,9 +66,9 @@
 
             {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
                 label="Size"
-                boxBaseClass="wh40k-vehicle-stat-box"
-                labelBaseClass="wh40k-vehicle-stat-label"
-                inputBaseClass="wh40k-vehicle-stat-input"
+                boxBaseClass="tw-flex tw-flex-col tw-items-center tw-p-2 tw-bg-[var(--wh40k-input-bg,rgba(0,0,0,0.3))] tw-border tw-border-[var(--wh40k-border-color,#444)] tw-rounded-md tw-min-w-[70px]"
+                labelBaseClass="tw-text-[0.65rem] tw-uppercase tw-text-[var(--wh40k-text-muted,#888)]"
+                inputBaseClass="tw-w-[45px] tw-text-center tw-text-[1.1rem] tw-font-bold tw-bg-transparent tw-border-0 tw-text-[var(--wh40k-text-dark,#f0f0f0)] focus:tw-outline focus:tw-outline-1 focus:tw-outline-gold"
                 boxClass="wh40k-vehicle-size"
                 valueName="system.size"
                 value=source.size

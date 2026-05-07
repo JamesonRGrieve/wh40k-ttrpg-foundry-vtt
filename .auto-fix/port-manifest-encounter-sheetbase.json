@@ -1,0 +1,29 @@
+{
+  "session": "encounter-sheetbase",
+  "blocks_deleted": [
+    {
+      "source": "src/css/apps/_encounter-builder.css",
+      "lines_deleted": 424,
+      "reason": "Template was already fully ported to Tailwind utilities. Dynamic drag-over state (.encounter-drop-zone.drag-over) preserved as a standalone CSS rule added just before the block in the monolith, scoped to .encounter-builder. Also added tw-transition-all to the drop zone element in the template.",
+      "js_hooks_preserved": [
+        ".encounter-drop-zone (querySelector in encounter-builder.ts)",
+        ".drag-over (classList.add/remove in encounter-builder.ts)"
+      ]
+    },
+    {
+      "source": "src/css/actor/_sheet-base.css",
+      "lines_deleted": 696,
+      "reason": "Entire block was nested under .wh40k-wrapper which has ZERO usages in any template (.hbs) or TypeScript file. All CSS rules in this block were dead code — they could never apply because .wh40k-wrapper selector does not exist in any rendered DOM. Active styling for wh40k-panel, wh40k-sheet, wh40k-char-hud-* classes exists in OTHER live blocks in the monolith (lines 436, 1100, etc.)."
+    }
+  ],
+  "ratchet_results": {
+    "css:ratchet": "PASS — tw-only=129 mixed=115 css-only=0 (unchanged, already at baseline)",
+    "animation:ratchet": "PASS — exit 0"
+  },
+  "notes": [
+    "The encounter-builder template was already 100% ported prior to this session. This session confirmed correctness, preserved the JS-toggled drag-over state, and deleted the block.",
+    "The sheet-base block was entirely dead code due to the .wh40k-wrapper wrapper selector having no DOM presence. Deletion carries zero risk of visual regression.",
+    "The wh40k-panel, wh40k-sheet, wh40k-char-hud-* classes referenced in the sheet-base block continue to be styled by live blocks at lines 436, 1100, 15798, and elsewhere in the monolith.",
+    "No ratchet:update was needed — css:ratchet passed without regression."
+  ]
+}
