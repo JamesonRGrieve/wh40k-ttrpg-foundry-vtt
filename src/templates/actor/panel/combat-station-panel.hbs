@@ -78,18 +78,18 @@
                             </div>
                             {{/if}}
                             <div class="wh40k-panel-details combat_wounds_details {{#unless (isExpanded 'combat_wounds_details' actor)}}wh40k-panel-details--collapsed{{/unless}}">
-                                <div class="wh40k-vital-edit-section">
+                                <div class="wh40k-vital-edit-section tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-mt-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.02)] tw-border tw-border-solid tw-border-[rgba(0,0,0,0.08)] tw-rounded-[var(--wh40k-radius-md)]">
                                     <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
-                                        <span class="wh40k-vital-edit-label">Max Wounds</span>
-                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.wounds.max" value="{{source.wounds.max}}" min="1" placeholder="Max" />
+                                        <span class="wh40k-vital-edit-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-secondary)]">Max Wounds</span>
+                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]" name="system.wounds.max" value="{{source.wounds.max}}" min="1" placeholder="Max" />
                                     </label>
                                     <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
-                                        <span class="wh40k-vital-edit-label">Current Wounds</span>
-                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.wounds.value" value="{{source.wounds.value}}" min="0" max="{{system.wounds.max}}" placeholder="Current" />
+                                        <span class="wh40k-vital-edit-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-secondary)]">Current Wounds</span>
+                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]" name="system.wounds.value" value="{{source.wounds.value}}" min="0" max="{{system.wounds.max}}" placeholder="Current" />
                                     </label>
                                     <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
-                                        <span class="wh40k-vital-edit-label">Critical Damage</span>
-                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.wounds.critical" value="{{source.wounds.critical}}" min="0" max="10" placeholder="Critical" />
+                                        <span class="wh40k-vital-edit-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-secondary)]">Critical Damage</span>
+                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]" name="system.wounds.critical" value="{{source.wounds.critical}}" min="0" max="10" placeholder="Critical" />
                                     </label>
                                 </div>
                             </div>
@@ -103,7 +103,7 @@
                             <span class="tw-pointer-events-none tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-animate-pulse-warn-intense" style="background: var(--vital-color, var(--wh40k-border-medium));"></span>
                             {{/if}}
                             <div class="wh40k-vital-stat-header">
-                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control tw-cursor-pointer tw-select-none"
+                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control tw-cursor-pointer tw-select-none tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-flex-1 tw-transition-colors tw-duration-200 tw-p-[var(--wh40k-space-xs)] tw-mx-[calc(-1*var(--wh40k-space-xs))] tw-mr-0 tw-rounded-[var(--wh40k-radius-md)]"
                                      data-toggle="combat_fatigue_details"
                                      title="Click to {{#if (isExpanded 'combat_fatigue_details' actor)}}collapse{{else}}expand{{/if}}">
                                     <div class="wh40k-vital-label">
@@ -112,9 +112,9 @@
                                     </div>
                                     <i class="fas fa-chevron-down wh40k-panel-chevron tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-transition-[transform,color] tw-duration-200 tw-ml-auto tw-flex-shrink-0 {{#if (isExpanded 'combat_fatigue_details' actor)}}wh40k-panel-chevron--open tw-rotate-180{{/if}}"></i>
                                 </div>
-                                <div class="wh40k-vital-controls">
-                                    <button type="button" class="wh40k-vital-ctrl-btn" data-action="decrement" data-field="system.fatigue.value" data-min="0" title="Decrease"><i class="fas fa-minus"></i></button>
-                                    <button type="button" class="wh40k-vital-ctrl-btn" data-action="increment" data-field="system.fatigue.value" title="Increase"><i class="fas fa-plus"></i></button>
+                                <div class="wh40k-vital-controls tw-flex tw-gap-[var(--wh40k-space-xs)] tw-shrink-0">
+                                    <button type="button" class="wh40k-vital-ctrl-btn tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-0 tw-m-0 tw-cursor-pointer tw-transition-all tw-font-bold tw-rounded-[6px] tw-w-[22px] tw-h-[22px] tw-text-[0.7rem] tw-bg-[rgba(var(--vital-color-rgb,0,0,0),0.08)] tw-border tw-border-solid tw-border-[rgba(var(--vital-color-rgb,0,0,0),0.2)] tw-text-[color:var(--vital-color,var(--wh40k-text-primary))]" data-action="decrement" data-field="system.fatigue.value" data-min="0" title="Decrease"><i class="fas fa-minus tw-text-[0.65rem] tw-leading-none"></i></button>
+                                    <button type="button" class="wh40k-vital-ctrl-btn tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-0 tw-m-0 tw-cursor-pointer tw-transition-all tw-font-bold tw-rounded-[6px] tw-w-[22px] tw-h-[22px] tw-text-[0.7rem] tw-bg-[rgba(var(--vital-color-rgb,0,0,0),0.08)] tw-border tw-border-solid tw-border-[rgba(var(--vital-color-rgb,0,0,0),0.2)] tw-text-[color:var(--vital-color,var(--wh40k-text-primary))]" data-action="increment" data-field="system.fatigue.value" title="Increase"><i class="fas fa-plus tw-text-[0.65rem] tw-leading-none"></i></button>
                                 </div>
                             </div>
                             <div class="wh40k-vital-stat-body">
@@ -127,20 +127,20 @@
                                 </div>
                             </div>
                             {{#if (gt system.fatigue.value 0)}}
-                            <div class="wh40k-vital-alert wh40k-alert-fatigue">
-                                <i class="fas fa-exclamation-triangle tw-animate-alert-pulse"></i>
+                            <div class="wh40k-vital-alert wh40k-alert-fatigue tw-flex tw-items-center tw-gap-[6px] tw-px-2 tw-py-1 tw-bg-[rgba(var(--vital-color-rgb,0,0,0),0.12)] tw-border tw-border-solid tw-border-[rgba(var(--vital-color-rgb,0,0,0),0.25)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--vital-color,var(--wh40k-text-primary))]" style="--vital-color-rgb:192,128,32;--vital-color:#c08020">
+                                <i class="fas fa-exclamation-triangle tw-animate-alert-pulse tw-text-[0.75rem]"></i>
                                 <span>{{#if (gt system.fatigue.value system.fatigue.max)}}UNCONSCIOUS{{else}}−10 ALL TESTS{{/if}}</span>
                             </div>
                             {{/if}}
                             <div class="wh40k-panel-details combat_fatigue_details {{#unless (isExpanded 'combat_fatigue_details' actor)}}wh40k-panel-details--collapsed{{/unless}}">
-                                <div class="wh40k-vital-edit-section">
+                                <div class="wh40k-vital-edit-section tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-mt-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.02)] tw-border tw-border-solid tw-border-[rgba(0,0,0,0.08)] tw-rounded-[var(--wh40k-radius-md)]">
                                     <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
-                                        <span class="wh40k-vital-edit-label">Threshold (TB)</span>
-                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fatigue.max" value="{{system.fatigue.max}}" min="0" readonly placeholder="Threshold" />
+                                        <span class="wh40k-vital-edit-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-secondary)]">Threshold (TB)</span>
+                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]" name="system.fatigue.max" value="{{system.fatigue.max}}" min="0" readonly placeholder="Threshold" />
                                     </label>
                                     <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
-                                        <span class="wh40k-vital-edit-label">Current Fatigue</span>
-                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fatigue.value" value="{{system.fatigue.value}}" min="0" placeholder="Current" />
+                                        <span class="wh40k-vital-edit-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-secondary)]">Current Fatigue</span>
+                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]" name="system.fatigue.value" value="{{system.fatigue.value}}" min="0" placeholder="Current" />
                                     </label>
                                 </div>
                             </div>
@@ -183,7 +183,7 @@
                         {{!-- Fate --}}
                         <div class="wh40k-vital-stat wh40k-vital-fate">
                             <div class="wh40k-vital-stat-header">
-                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control tw-cursor-pointer tw-select-none"
+                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control tw-cursor-pointer tw-select-none tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-flex-1 tw-transition-colors tw-duration-200 tw-p-[var(--wh40k-space-xs)] tw-mx-[calc(-1*var(--wh40k-space-xs))] tw-mr-0 tw-rounded-[var(--wh40k-radius-md)]"
                                      data-toggle="combat_fate_details"
                                      title="Click to {{#if (isExpanded 'combat_fate_details' actor)}}collapse{{else}}expand{{/if}}">
                                     <div class="wh40k-vital-label">
@@ -192,9 +192,9 @@
                                     </div>
                                     <i class="fas fa-chevron-down wh40k-panel-chevron tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-transition-[transform,color] tw-duration-200 tw-ml-auto tw-flex-shrink-0 {{#if (isExpanded 'combat_fate_details' actor)}}wh40k-panel-chevron--open tw-rotate-180{{/if}}"></i>
                                 </div>
-                                <div class="wh40k-vital-controls">
-                                    <button type="button" class="wh40k-vital-ctrl-btn" data-action="decrement" data-field="system.fate.value" data-min="0" title="Spend"><i class="fas fa-minus"></i></button>
-                                    <button type="button" class="wh40k-vital-ctrl-btn" data-action="increment" data-field="system.fate.value" title="Restore"><i class="fas fa-plus"></i></button>
+                                <div class="wh40k-vital-controls tw-flex tw-gap-[var(--wh40k-space-xs)] tw-shrink-0">
+                                    <button type="button" class="wh40k-vital-ctrl-btn tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-0 tw-m-0 tw-cursor-pointer tw-transition-all tw-font-bold tw-rounded-[6px] tw-w-[22px] tw-h-[22px] tw-text-[0.7rem] tw-bg-[rgba(var(--vital-color-rgb,0,0,0),0.08)] tw-border tw-border-solid tw-border-[rgba(var(--vital-color-rgb,0,0,0),0.2)] tw-text-[color:var(--vital-color,var(--wh40k-text-primary))]" data-action="decrement" data-field="system.fate.value" data-min="0" title="Spend"><i class="fas fa-minus tw-text-[0.65rem] tw-leading-none"></i></button>
+                                    <button type="button" class="wh40k-vital-ctrl-btn tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-0 tw-m-0 tw-cursor-pointer tw-transition-all tw-font-bold tw-rounded-[6px] tw-w-[22px] tw-h-[22px] tw-text-[0.7rem] tw-bg-[rgba(var(--vital-color-rgb,0,0,0),0.08)] tw-border tw-border-solid tw-border-[rgba(var(--vital-color-rgb,0,0,0),0.2)] tw-text-[color:var(--vital-color,var(--wh40k-text-primary))]" data-action="increment" data-field="system.fate.value" title="Restore"><i class="fas fa-plus tw-text-[0.65rem] tw-leading-none"></i></button>
                                 </div>
                             </div>
                             <div class="wh40k-vital-stat-body">
@@ -207,14 +207,14 @@
                                 </div>
                             </div>
                             <div class="wh40k-panel-details combat_fate_details {{#unless (isExpanded 'combat_fate_details' actor)}}wh40k-panel-details--collapsed{{/unless}}">
-                                <div class="wh40k-vital-edit-section">
+                                <div class="wh40k-vital-edit-section tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-mt-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.02)] tw-border tw-border-solid tw-border-[rgba(0,0,0,0.08)] tw-rounded-[var(--wh40k-radius-md)]">
                                     <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
-                                        <span class="wh40k-vital-edit-label">Max Fate</span>
-                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fate.max" value="{{system.fate.max}}" min="0" placeholder="Max" />
+                                        <span class="wh40k-vital-edit-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-secondary)]">Max Fate</span>
+                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]" name="system.fate.max" value="{{system.fate.max}}" min="0" placeholder="Max" />
                                     </label>
                                     <label class="wh40k-vital-edit-field tw-flex tw-flex-col tw-gap-1">
-                                        <span class="wh40k-vital-edit-label">Current Fate</span>
-                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fate.value" value="{{system.fate.value}}" min="0" max="{{system.fate.max}}" placeholder="Current" />
+                                        <span class="wh40k-vital-edit-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-secondary)]">Current Fate</span>
+                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]" name="system.fate.value" value="{{system.fate.value}}" min="0" max="{{system.fate.max}}" placeholder="Current" />
                                     </label>
                                 </div>
                             </div>
@@ -228,25 +228,25 @@
                                     <span>MOBILITY</span>
                                 </div>
                             </div>
-                            <div class="wh40k-vital-stat-body">
-                                <div class="wh40k-mobility-speeds-inline">
-                                    <button type="button" class="wh40k-speed-inline wh40k-speed-half" data-action="vocalizeMovement" data-movement-type="half" title="Click to announce movement">
-                                        <i class="fas fa-walking"></i>
+                            <div class="wh40k-vital-stat-body tw-p-0">
+                                <div class="wh40k-mobility-speeds-inline tw-flex tw-flex-col tw-gap-[var(--wh40k-space-xs)] tw-w-full">
+                                    <button type="button" class="wh40k-speed-inline wh40k-speed-half tw-flex tw-items-center tw-gap-[6px] tw-px-2 tw-py-1 tw-bg-[linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] tw-rounded-[3px] tw-border tw-border-solid tw-border-transparent tw-transition-all tw-cursor-pointer tw-w-full" data-action="vocalizeMovement" data-movement-type="half" title="Click to announce movement">
+                                        <i class="fas fa-walking tw-text-[0.85rem] tw-opacity-90 tw-w-[14px] tw-text-center tw-shrink-0"></i>
                                         <span class="wh40k-speed-value tw-font-alt tw-text-[1.5rem] tw-font-bold tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.movement.half}}m</span>
                                         <span class="wh40k-speed-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">Half</span>
                                     </button>
-                                    <button type="button" class="wh40k-speed-inline wh40k-speed-full" data-action="vocalizeMovement" data-movement-type="full" title="Click to announce movement">
-                                        <i class="fas fa-shoe-prints"></i>
+                                    <button type="button" class="wh40k-speed-inline wh40k-speed-full tw-flex tw-items-center tw-gap-[6px] tw-px-2 tw-py-1 tw-bg-[linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] tw-rounded-[3px] tw-border tw-border-solid tw-border-transparent tw-transition-all tw-cursor-pointer tw-w-full" data-action="vocalizeMovement" data-movement-type="full" title="Click to announce movement">
+                                        <i class="fas fa-shoe-prints tw-text-[0.85rem] tw-opacity-90 tw-w-[14px] tw-text-center tw-shrink-0"></i>
                                         <span class="wh40k-speed-value tw-font-alt tw-text-[1.5rem] tw-font-bold tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.movement.full}}m</span>
                                         <span class="wh40k-speed-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">Full</span>
                                     </button>
-                                    <button type="button" class="wh40k-speed-inline wh40k-speed-charge" data-action="vocalizeMovement" data-movement-type="charge" title="Click to announce movement">
-                                        <i class="fas fa-running"></i>
+                                    <button type="button" class="wh40k-speed-inline wh40k-speed-charge tw-flex tw-items-center tw-gap-[6px] tw-px-2 tw-py-1 tw-bg-[linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] tw-rounded-[3px] tw-border tw-border-solid tw-border-transparent tw-transition-all tw-cursor-pointer tw-w-full" data-action="vocalizeMovement" data-movement-type="charge" title="Click to announce movement">
+                                        <i class="fas fa-running tw-text-[0.85rem] tw-opacity-90 tw-w-[14px] tw-text-center tw-shrink-0"></i>
                                         <span class="wh40k-speed-value tw-font-alt tw-text-[1.5rem] tw-font-bold tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.movement.charge}}m</span>
                                         <span class="wh40k-speed-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">Charge</span>
                                     </button>
-                                    <button type="button" class="wh40k-speed-inline wh40k-speed-run" data-action="vocalizeMovement" data-movement-type="run" title="Click to announce movement">
-                                        <i class="fas fa-wind"></i>
+                                    <button type="button" class="wh40k-speed-inline wh40k-speed-run tw-flex tw-items-center tw-gap-[6px] tw-px-2 tw-py-1 tw-bg-[linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] tw-rounded-[3px] tw-border tw-border-solid tw-border-transparent tw-transition-all tw-cursor-pointer tw-w-full" data-action="vocalizeMovement" data-movement-type="run" title="Click to announce movement">
+                                        <i class="fas fa-wind tw-text-[0.85rem] tw-opacity-90 tw-w-[14px] tw-text-center tw-shrink-0"></i>
                                         <span class="wh40k-speed-value tw-font-alt tw-text-[1.5rem] tw-font-bold tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.movement.run}}m</span>
                                         <span class="wh40k-speed-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">Run</span>
                                     </button>
@@ -263,18 +263,18 @@
                 <div class="wh40k-combat-armour-wide tw-flex tw-flex-col tw-gap-2">
                     {{> systems/wh40k-rpg/templates/actor/panel/armour-display-panel.hbs}}
                     {{#if hasForceField}}
-                    <div class="wh40k-panel wh40k-panel-forcefield">
+                    <div class="wh40k-panel wh40k-panel-forcefield tw-mt-[var(--wh40k-space-xs)]">
                         <div class="wh40k-panel-header">
-                            <span class="wh40k-panel-title"><i class="fas fa-circle-notch"></i> Force Field</span>
+                            <span class="wh40k-panel-title"><i class="fas fa-circle-notch tw-text-[color:var(--wh40k-accent-powers)]"></i> Force Field</span>
                         </div>
                         <div class="wh40k-panel-body">
-                            <div class="wh40k-forcefield-bar {{#if forceField.system.activated}}wh40k-ff-active{{/if}} {{#if forceField.system.overloaded}}wh40k-ff-overloaded{{/if}}">
-                                <span class="wh40k-ff-name">{{forceField.name}}</span>
-                                <span class="wh40k-ff-rating">({{forceField.system.protectionRating}})</span>
+                            <div class="wh40k-forcefield-bar tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] {{#if forceField.system.activated}}wh40k-ff-active{{/if}} {{#if forceField.system.overloaded}}wh40k-ff-overloaded{{/if}}">
+                                <span class="wh40k-ff-name tw-font-semibold">{{forceField.name}}</span>
+                                <span class="wh40k-ff-rating tw-text-[color:var(--color-text-secondary)] tw-text-[var(--wh40k-font-size-sm)]">({{forceField.system.protectionRating}})</span>
                                 {{#if forceField.system.overloaded}}
-                                    <span class="wh40k-ff-status wh40k-ff-down">OVERLOADED</span>
+                                    <span class="wh40k-ff-status wh40k-ff-down tw-ml-auto tw-text-[var(--wh40k-font-size-xs)] tw-font-bold tw-uppercase tw-text-[color:var(--wh40k-accent-combat)]">OVERLOADED</span>
                                 {{else}}
-                                    <span class="wh40k-ff-status {{#if forceField.system.activated}}wh40k-ff-on{{else}}wh40k-ff-off{{/if}}">
+                                    <span class="wh40k-ff-status {{#if forceField.system.activated}}wh40k-ff-on{{else}}wh40k-ff-off{{/if}} tw-ml-auto tw-text-[var(--wh40k-font-size-xs)] tw-font-bold tw-uppercase {{#if forceField.system.activated}}tw-text-[color:var(--wh40k-color-success)]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}">
                                         {{#if forceField.system.activated}}ACTIVE{{else}}OFF{{/if}}
                                     </span>
                                 {{/if}}
@@ -286,22 +286,22 @@
             </div>
             {{!-- Row 2: Weapons (full width) --}}
             <div class="wh40k-panel wh40k-panel-arsenal tw-flex-1 tw-min-h-0" data-drop-zone="general" data-accepts="weapon">
-                <div class="wh40k-panel-header">
-                    <span class="wh40k-panel-title"><i class="fas fa-fist-raised"></i> Weapons</span>
+                <div class="wh40k-panel-header tw-order-[-1] tw-shrink-0">
+                    <span class="wh40k-panel-title"><i class="fas fa-fist-raised tw-text-[color:var(--wh40k-accent-talents)]"></i> Weapons</span>
                 </div>
-                <div class="wh40k-panel-body">
+                <div class="wh40k-panel-body tw-flex-1 tw-min-h-0 tw-overflow-y-auto tw-overflow-x-hidden">
                     {{#if actor.items}}
                     <div class="tw-flex tw-flex-col">
-                        <div class="tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-px-2 tw-py-1 wh40k-weapon-grid-header">
+                        <div class="tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-px-2 tw-py-1 wh40k-weapon-grid-header tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.08)] tw-border-b-2 tw-border-b-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.2)] tw-text-[color:var(--wh40k-text-secondary)]">
                             <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">Weapon</span>
                             <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center tw-min-w-12">Dmg</span>
                             <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center tw-min-w-12">Range</span>
                         </div>
                         {{#each actor.items as |item|}}
                         {{#if item.isWeapon}}
-                        <div class="tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer item-drag item-edit wh40k-weapon-grid-row {{#if item.system.equipped}}wh40k-row-equipped{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
+                        <div class="tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer tw-border-b tw-border-b-[rgba(0,0,0,0.08)] tw-transition-[background] hover:tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.04)] item-drag item-edit wh40k-weapon-grid-row {{#if item.system.equipped}}wh40k-row-equipped tw-bg-[rgb(from_var(--wh40k-color-success)_r_g_b_/_0.08)]{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
                             <span class="tw-flex tw-items-center tw-gap-1 tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap tw-text-sm">
-                                {{#if item.system.equipped}}<i class="fas fa-check-circle wh40k-equipped-icon"></i>{{/if}}
+                                {{#if item.system.equipped}}<i class="fas fa-check-circle wh40k-equipped-icon tw-text-[color:var(--wh40k-color-success)] tw-mr-[var(--wh40k-space-xs)] tw-text-[0.8em]"></i>{{/if}}
                                 {{item.name}}
                             </span>
                             <span class="tw-text-sm tw-text-center tw-min-w-12">{{item.system.damageLabel}}</span>
