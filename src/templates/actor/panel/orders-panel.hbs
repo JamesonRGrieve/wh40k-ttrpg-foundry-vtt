@@ -1,13 +1,13 @@
 {{!-- Orders Panel --}}
-{{#> systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs panelId="orders" label="Ship Orders" icon="fa-ship" count=ordersCount rootClass="wh40k-panel-powers wh40k-panel-orders" bodyClass="tw-p-0" titleClass="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"}}
+{{#> systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs panelId="orders" label="Ship Orders" icon="fa-ship" count=ordersCount rootClass="wh40k-panel-powers wh40k-panel-orders" bodyClass="tw-p-0" titleClass="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure" accentBg="linear-gradient(135deg,rgb(from #0284c7 r g b / 0.15) 0%,rgb(from #0284c7 r g b / 0.05) 100%)" accentBorder="rgb(from #0284c7 r g b / 0.3)" accentIcon="#0284c7"}}
     {{!-- Category Filter Tabs --}}
     {{#if orderCategories.length}}
-    <div class="wh40k-power-filters">
-        <button type="button" class="wh40k-filter-btn {{#unless activeOrderCategory}}active{{/unless}}" data-action="filterOrders" data-category="">
+    <div class="wh40k-power-filters tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-[var(--wh40k-radius-sm)] tw-mb-[var(--wh40k-space-md)]">
+        <button type="button" class="wh40k-filter-btn tw-px-[10px] tw-py-1 tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-[12px] tw-bg-transparent tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.75rem] tw-font-medium tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg)] hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-border-[color:var(--wh40k-border-color)] {{#unless activeOrderCategory}}tw-bg-accent-powers tw-text-white tw-border-accent-powers{{/unless}}" data-action="filterOrders" data-category="">
             All
         </button>
         {{#each orderCategories as |cat|}}
-        <button type="button" class="wh40k-filter-btn wh40k-filter-{{cat.id}}" data-action="filterOrders" data-category="{{cat.id}}">
+        <button type="button" class="wh40k-filter-btn wh40k-filter-{{cat.id}} tw-px-[10px] tw-py-1 tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-[12px] tw-bg-transparent tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.75rem] tw-font-medium tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg)] hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-border-[color:var(--wh40k-border-color)]" data-action="filterOrders" data-category="{{cat.id}}">
             {{cat.label}}
         </button>
         {{/each}}

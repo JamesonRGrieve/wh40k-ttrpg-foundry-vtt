@@ -1,4 +1,4 @@
-<div class="wh40k-skills-panel tw-p-2">
+<div class="wh40k-skills-panel tw-p-2 tw-font-alt">
     {{!-- Trained / Basic Skills (2 columns) --}}
     <div class="wh40k-skills-columns tw-grid tw-grid-cols-2 tw-gap-4 tw-relative">
         <!-- Left Column -->
@@ -17,20 +17,20 @@
 
     {{!-- Untrained Advanced Skills (4 columns, compact) --}}
     {{#if skillLists.advancedUntrained.length}}
-    <div class="wh40k-advanced-untrained-section">
-        <h4 class="wh40k-section-divider tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">Advanced Skills (Untrained)</h4>
+    <div class="wh40k-advanced-untrained-section tw-mt-2 tw-pt-2 tw-border-t tw-border-solid tw-border-[var(--color-border-secondary)]">
+        <h4 class="wh40k-section-divider tw-text-[0.75rem] tw-uppercase tw-tracking-[0.08em] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-m-0 tw-mb-1 tw-px-1 tw-font-semibold tw-text-center">Advanced Skills (Untrained)</h4>
         <div class="tw-grid tw-grid-cols-4 tw-gap-0.5">
             {{#each skillLists.advancedUntrained as |entry|}}
-            <div class="wh40k-skill-row wh40k-skill-row--advanced wh40k-skill-row--compact tw-grid tw-grid-cols-skill-row-compact tw-gap-1 tw-items-center tw-py-0.5 tw-px-1.5" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="0">
+            <div class="wh40k-skill-row wh40k-skill-row--advanced wh40k-skill-row--compact tw-grid tw-grid-cols-skill-row-compact tw-gap-1 tw-items-center tw-py-0.5 tw-px-1.5 tw-text-[0.8em] tw-opacity-55 tw-rounded-[3px] hover:tw-opacity-75" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="0">
                 <div class="wh40k-skill-info tw-flex tw-items-center tw-gap-1">
-                    <button type="button" class="wh40k-skill-name"
+                    <button type="button" class="wh40k-skill-name tw-bg-transparent tw-border-none tw-p-0 tw-italic tw-text-[firebrick] tw-font-[var(--wh40k-font-body)] tw-text-[0.9em] tw-text-left tw-cursor-pointer tw-inline-flex tw-items-center tw-flex-1 hover:tw-text-[#d73030]"
                             data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
                             title="{{entry.[1].label}} (untrained)">
-                        <span class="wh40k-skill-label">{{entry.[1].label}} <span class="wh40k-skill-char">({{entry.[1].charShort}})</span></span>
+                        <span class="wh40k-skill-label">{{entry.[1].label}} <span class="wh40k-skill-char tw-text-[firebrick] tw-opacity-70">({{entry.[1].charShort}})</span></span>
                     </button>
                 </div>
-                <div class="wh40k-skill-total tw-inline-flex tw-items-center tw-justify-center" title="Half characteristic (untrained)">
-                    <span>{{entry.[1].current}}</span>
+                <div class="wh40k-skill-total tw-inline-flex tw-items-center tw-justify-center tw-min-w-[24px] tw-h-[20px] tw-text-[0.85em] tw-rounded tw-border tw-border-solid tw-border-[var(--color-border-primary)] tw-bg-[var(--color-bg-option)]" title="Half characteristic (untrained)">
+                    <span class="tw-font-alt tw-font-bold">{{entry.[1].current}}</span>
                 </div>
             </div>
             {{/each}}
