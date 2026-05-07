@@ -135,14 +135,14 @@
             <h3>Cybernetic Configuration</h3>
           </div>
           <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-properties-grid">
+            <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
               
               {{!-- Type --}}
-              <div class="wh40k-property">
-                <label class="wh40k-property-label">
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-tag"></i> Type
                 </label>
-                <select name="system.type" class="wh40k-property-input">
+                <select name="system.type" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]">
                   {{#select system.type}}
                   <option value="replacement">Replacement</option>
                   <option value="implant">Implant</option>
@@ -155,8 +155,8 @@
               </div>
               
               {{!-- Slot/Location Toggles --}}
-              <div class="wh40k-property wh40k-property--full">
-                <label class="wh40k-property-label">
+              <div class="wh40k-property wh40k-property--full tw-flex tw-flex-col tw-gap-1.5 tw-col-span-2">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-location-dot"></i> Body Locations
                 </label>
                 <div class="wh40k-cybernetic-locations">
@@ -264,23 +264,23 @@
             <h3>Physical Properties</h3>
           </div>
           <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-properties-grid">
+            <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
               
               {{!-- Weight --}}
-              <div class="wh40k-property">
-                <label class="wh40k-property-label">
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-weight-hanging"></i> Weight (kg)
                 </label>
                 <input type="number" name="system.weight" value="{{source.weight}}" 
-                       step="0.1" min="0" class="wh40k-property-input" />
+                       step="0.1" min="0" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" />
               </div>
               
               {{!-- Craftsmanship --}}
-              <div class="wh40k-property">
-                <label class="wh40k-property-label">
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-hammer"></i> Craftsmanship
                 </label>
-                <select name="system.craftsmanship" class="wh40k-property-input">
+                <select name="system.craftsmanship" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]">
                   {{#select system.craftsmanship}}
                   <option value="poor">Poor</option>
                   <option value="common">Common</option>
@@ -291,11 +291,11 @@
               </div>
               
               {{!-- Availability --}}
-              <div class="wh40k-property">
-                <label class="wh40k-property-label">
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-store"></i> Availability
                 </label>
-                <select name="system.availability" class="wh40k-property-input">
+                <select name="system.availability" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]">
                   {{#select system.availability}}
                   <option value="ubiquitous">Ubiquitous</option>
                   <option value="abundant">Abundant</option>
@@ -327,10 +327,10 @@
             <h3>Effect</h3>
           </div>
           <div class="wh40k-cybernetic-section__body">
-            <p class="wh40k-field-hint">
+            <p class="wh40k-field-hint tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
               <i class="fas fa-info-circle"></i> Describe the mechanical benefits or abilities granted by this cybernetic.
             </p>
-            <div class="wh40k-editor-container">
+            <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{#if inEditMode}}
               {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
               {{else}}
@@ -347,10 +347,10 @@
             <h3>Drawbacks</h3>
           </div>
           <div class="wh40k-cybernetic-section__body">
-            <p class="wh40k-field-hint">
+            <p class="wh40k-field-hint tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
               <i class="fas fa-info-circle"></i> Any negative effects, limitations, or complications from this cybernetic.
             </p>
-            <div class="wh40k-editor-container">
+            <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{#if inEditMode}}
               {{editor system.drawbacks target="system.drawbacks" button=true editable=editable engine="prosemirror"}}
               {{else}}
@@ -368,16 +368,16 @@
             <h3>Stat Modifiers</h3>
           </div>
           <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-modifiers-display">
+            <div class="wh40k-modifiers-display tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md">
               
               {{#if system.modifiers.characteristics}}
               <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-title">Characteristics</h4>
-                <div class="wh40k-modifier-list">
+                <h4 class="wh40k-modifier-group-title tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Characteristics</h4>
+                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   {{#each system.modifiers.characteristics}}
                   <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
-                    <span class="wh40k-modifier-name">{{capitalize @key}}</span>
-                    <span class="wh40k-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
+                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{capitalize @key}}</span>
+                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt this 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{signedNumber this}}
                     </span>
                   </div>
@@ -388,12 +388,12 @@
 
               {{#if system.modifiers.skills}}
               <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-title">Skills</h4>
-                <div class="wh40k-modifier-list">
+                <h4 class="wh40k-modifier-group-title tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Skills</h4>
+                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   {{#each system.modifiers.skills}}
                   <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
-                    <span class="wh40k-modifier-name">{{capitalize @key}}</span>
-                    <span class="wh40k-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
+                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{capitalize @key}}</span>
+                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt this 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{signedNumber this}}
                     </span>
                   </div>
@@ -404,12 +404,12 @@
 
               {{#if system.modifiers.combat}}
               <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-title">Combat</h4>
-                <div class="wh40k-modifier-list">
+                <h4 class="wh40k-modifier-group-title tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Combat</h4>
+                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   {{#each system.modifiers.combat}}
                   <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
-                    <span class="wh40k-modifier-name">{{capitalize @key}}</span>
-                    <span class="wh40k-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
+                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{capitalize @key}}</span>
+                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt this 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{signedNumber this}}
                     </span>
                   </div>
@@ -420,11 +420,11 @@
 
               {{#if system.modifiers.wounds}}
               <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-title">Other</h4>
-                <div class="wh40k-modifier-list">
+                <h4 class="wh40k-modifier-group-title tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Other</h4>
+                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
-                    <span class="wh40k-modifier-name">Wounds</span>
-                    <span class="wh40k-modifier-value {{#if (gt system.modifiers.wounds 0)}}positive{{else}}negative{{/if}}">
+                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">Wounds</span>
+                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt system.modifiers.wounds 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{signedNumber system.modifiers.wounds}}
                     </span>
                   </div>
@@ -434,11 +434,11 @@
 
               {{#if system.modifiers.movement}}
               <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-title">Movement</h4>
-                <div class="wh40k-modifier-list">
+                <h4 class="wh40k-modifier-group-title tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Movement</h4>
+                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
                   <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
-                    <span class="wh40k-modifier-name">Movement Bonus</span>
-                    <span class="wh40k-modifier-value {{#if (gt system.modifiers.movement 0)}}positive{{else}}negative{{/if}}">
+                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">Movement Bonus</span>
+                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt system.modifiers.movement 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{signedNumber system.modifiers.movement}}
                     </span>
                   </div>
@@ -447,7 +447,7 @@
               {{/if}}
             </div>
             
-            <p class="wh40k-field-hint tw-mt-4">
+            <p class="wh40k-field-hint tw-mt-4 tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic">
               <i class="fas fa-info-circle"></i> Modifiers are configured via Active Effects. This panel is read-only.
             </p>
           </div>
@@ -457,7 +457,7 @@
           <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
             <i class="fas fa-chart-line"></i>
             <p>No stat modifiers defined</p>
-            <p class="wh40k-field-hint">Use Active Effects tab to add bonuses</p>
+            <p class="wh40k-field-hint tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">Use Active Effects tab to add bonuses</p>
           </div>
         </div>
         {{/if}}
@@ -474,8 +474,8 @@
             <h3>Armour Protection</h3>
           </div>
           <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-property wh40k-property--checkbox">
-              <label class="wh40k-property-label-inline">
+            <div class="wh40k-property wh40k-property--checkbox tw-flex tw-flex-col tw-gap-1.5 tw-justify-center">
+              <label class="wh40k-property-label-inline tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-[0.85rem] tw-text-[color:var(--color-text-primary)]">
                 <input type="checkbox" name="system.hasArmourPoints" {{checked system.hasArmourPoints}} />
                 <span>This cybernetic provides armour protection</span>
               </label>
@@ -523,7 +523,7 @@
                        data-dtype="Number" min="0" />
               </div>
             </div>
-            <p class="wh40k-field-hint tw-mt-4">
+            <p class="wh40k-field-hint tw-mt-4 tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic">
               <i class="fas fa-info-circle"></i> Cybernetic armour stacks with worn armour at the affected locations.
             </p>
           </div>
@@ -533,7 +533,7 @@
           <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
             <i class="fas fa-shield-halved"></i>
             <p>This cybernetic does not provide armour</p>
-            <p class="wh40k-field-hint">Enable armour protection above to configure AP values</p>
+            <p class="wh40k-field-hint tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">Enable armour protection above to configure AP values</p>
           </div>
         </div>
         {{/if}}
@@ -550,37 +550,37 @@
             <h3>Installation Requirements</h3>
           </div>
           <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-properties-grid">
+            <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
               
               {{!-- Surgery Required --}}
-              <div class="wh40k-property">
-                <label class="wh40k-property-label">
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-user-doctor"></i> Surgery Type
                 </label>
                 <input type="text" name="system.installation.surgery" value="{{source.installation.surgery}}" 
-                       class="wh40k-property-input" placeholder="e.g., Major, Simple, Complex" />
+                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., Major, Simple, Complex" />
               </div>
               
               {{!-- Difficulty --}}
-              <div class="wh40k-property">
-                <label class="wh40k-property-label">
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-gauge-high"></i> Difficulty
                 </label>
                 <input type="text" name="system.installation.difficulty" value="{{source.installation.difficulty}}" 
-                       class="wh40k-property-input" placeholder="e.g., Challenging (-10), Difficult (-20)" />
+                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., Challenging (-10), Difficult (-20)" />
               </div>
               
               {{!-- Recovery Time --}}
-              <div class="wh40k-property">
-                <label class="wh40k-property-label">
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-clock"></i> Recovery Time
                 </label>
                 <input type="text" name="system.installation.recoveryTime" value="{{source.installation.recoveryTime}}" 
-                       class="wh40k-property-input" placeholder="e.g., 1d5 days, 2 weeks" />
+                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., 1d5 days, 2 weeks" />
               </div>
             </div>
             
-            <p class="wh40k-field-hint tw-mt-4">
+            <p class="wh40k-field-hint tw-mt-4 tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic">
               <i class="fas fa-info-circle"></i> Installation typically requires a successful Medicae test. Failed installations may cause complications or injury.
             </p>
           </div>
@@ -598,10 +598,10 @@
             <h3>Description</h3>
           </div>
           <div class="wh40k-cybernetic-section__body">
-            <p class="wh40k-field-hint">
+            <p class="wh40k-field-hint tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
               <i class="fas fa-info-circle"></i> Flavor text, appearance, and background information.
             </p>
-            <div class="wh40k-editor-container">
+            <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{#if inEditMode}}
               {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
               {{else}}
@@ -618,8 +618,8 @@
             <h3>Notes</h3>
           </div>
           <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-property">
-              <textarea name="system.notes" rows="4" class="wh40k-property-textarea" 
+            <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+              <textarea name="system.notes" rows="4" class="wh40k-property-textarea tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm tw-min-h-[80px] tw-resize-y focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]"
                         placeholder="GM notes, house rules, special considerations...">{{system.notes}}</textarea>
             </div>
           </div>
@@ -632,21 +632,21 @@
             <h3>Source</h3>
           </div>
           <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-properties-grid">
-              <div class="wh40k-property">
-                <label class="wh40k-property-label">Book</label>
+            <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Book</label>
                 <input type="text" name="system.source.book" value="{{source.source.book}}" 
-                       class="wh40k-property-input" placeholder="RT: Core Rulebook" />
+                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="RT: Core Rulebook" />
               </div>
-              <div class="wh40k-property">
-                <label class="wh40k-property-label">Page</label>
+              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Page</label>
                 <input type="text" name="system.source.page" value="{{source.source.page}}" 
-                       class="wh40k-property-input" placeholder="142" />
+                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="142" />
               </div>
-              <div class="wh40k-property wh40k-property--full">
-                <label class="wh40k-property-label">Custom Reference</label>
+              <div class="wh40k-property wh40k-property--full tw-flex tw-flex-col tw-gap-1.5 tw-col-span-2">
+                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Custom Reference</label>
                 <input type="text" name="system.source.custom" value="{{source.source.custom}}" 
-                       class="wh40k-property-input" placeholder="Optional: Custom source text overrides book/page" />
+                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="Optional: Custom source text overrides book/page" />
               </div>
             </div>
           </div>

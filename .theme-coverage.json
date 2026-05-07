@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-07T12:22:22.967Z",
+  "generatedAt": "2026-05-07T12:55:18.846Z",
   "total": 244,
   "adopted": 244,
   "perSystemHits": {
-    "bc": 434,
-    "dh1e": 434,
-    "dh2e": 438,
-    "dw": 434,
-    "ow": 434,
-    "rt": 438,
-    "im": 438
+    "bc": 427,
+    "dh1e": 427,
+    "dh2e": 431,
+    "dw": 427,
+    "ow": 427,
+    "rt": 431,
+    "im": 431
   },
   "adoptedTemplates": [
     "src/templates/actor/npc/tab-npc.hbs",
