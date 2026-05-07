@@ -1,0 +1,283 @@
+[
+  {
+    "source": "src/css/components/_settings.css",
+    "classification": "SAFE",
+    "line_count": 363,
+    "active_classes": [],
+    "chrome_selectors": ["body", "button", "input", "select"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-wrapper has zero usages in any .hbs, .ts, or .js file — all rules are dead. Chrome element selectors appear only as nested descendants of .wh40k-wrapper and never fire."
+  },
+  {
+    "source": "src/css/components/_characteristic_roller.css",
+    "classification": "SAFE",
+    "line_count": 44,
+    "active_classes": [],
+    "chrome_selectors": ["body", "button"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-char-roller not found in any template or module file. All rules dead."
+  },
+  {
+    "source": "src/css/components/_characteristics.css",
+    "classification": "SAFE",
+    "line_count": 248,
+    "active_classes": [],
+    "chrome_selectors": ["button", "input", "select"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. All 19 class tokens (wh40k-char-bonus, wh40k-char-box, wh40k-chartable, wh40k-unnatural-select, etc.) exist only inside the dead .wh40k-wrapper scope."
+  },
+  {
+    "source": "src/css/components/_skills.css",
+    "classification": "SAFE",
+    "line_count": 550,
+    "active_classes": [],
+    "chrome_selectors": ["button", "input", "select"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. The wh40k-skills-panel, wh40k-specialist-group, spec_skills_* classes are all inside the .wh40k-wrapper scope. Note: there is also a top-level actor/_skills.css block (separate) that IS active — this components/_skills.css block is safe independently."
+  },
+  {
+    "source": "src/css/components/_compendium.css",
+    "classification": "SAFE",
+    "line_count": 173,
+    "active_classes": [],
+    "chrome_selectors": ["body"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. Generic-looking class names (compendium, folder, item-name) are inside the dead wrapper scope; the compendium-browser template uses its own classes outside this scope."
+  },
+  {
+    "source": "src/css/components/_enhanced-skill-roll.css",
+    "classification": "SAFE",
+    "line_count": 439,
+    "active_classes": [],
+    "chrome_selectors": ["button", "input"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. The enhanced-skill-roll template and unified-roll-dialog.ts reference class names like enhanced-skill-roll, difficulty-btn, modifier-checkbox — but those templates no longer have a .wh40k-wrapper ancestor, so these nested rules never fire."
+  },
+  {
+    "source": "src/css/components/_stat-animations.css",
+    "classification": "SAFE",
+    "line_count": 183,
+    "active_classes": [],
+    "chrome_selectors": ["input"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-wounds-bar, wh40k-brief-notification, progress-bar, rollable etc. are referenced in templates but those templates have no .wh40k-wrapper ancestor; the nested CSS rules never fire."
+  },
+  {
+    "source": "src/css/components/_collapsible-panels.css",
+    "classification": "SAFE",
+    "line_count": 377,
+    "active_classes": [],
+    "chrome_selectors": ["body", "select"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-collapsible-panel, wh40k-panel-badge, wh40k-panel-body, wh40k-panel-content, wh40k-panel-toggle-icon etc. appear in templates but have no .wh40k-wrapper ancestor. Rules are dead."
+  },
+  {
+    "source": "src/css/components/_context-menu.css",
+    "classification": "SAFE",
+    "line_count": 157,
+    "active_classes": [],
+    "chrome_selectors": ["body"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-context-menu is referenced in context-menu-mixin.ts and character-sheet.ts but those components produce no .wh40k-wrapper ancestor in their DOM; rules are dead."
+  },
+  {
+    "source": "src/css/components/_enrichers.css",
+    "classification": "SAFE",
+    "line_count": 238,
+    "active_classes": [],
+    "chrome_selectors": ["ProseMirror"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-enricher-* classes are used in enrichers.ts but the enricher output is injected into Foundry's ProseMirror editor, which has no .wh40k-wrapper ancestor. ProseMirror selector appears nested inside wrapper and never fires."
+  },
+  {
+    "source": "src/css/components/_enhanced-drag-drop.css",
+    "classification": "SAFE",
+    "line_count": 471,
+    "active_classes": [],
+    "chrome_selectors": ["input"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-drag-ghost, wh40k-split-dialog, drop-hover, ghost-* classes are referenced in drag-drop-visual-mixin.ts but no .wh40k-wrapper wrapper exists in the DOM. Rules are dead."
+  },
+  {
+    "source": "src/css/components/_combat-quick-panel.css",
+    "classification": "SAFE",
+    "line_count": 169,
+    "active_classes": [],
+    "chrome_selectors": ["button"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. combat-hud, vital-bar, vital-bar-fill, weapon-stats etc. are referenced in combat-quick-panel.hbs and related templates, but those templates have no .wh40k-wrapper ancestor. Rules never fire. This is the known Tier 1 candidate confirmed safe."
+  },
+  {
+    "source": "src/css/components/_quick-actions.css",
+    "classification": "SAFE",
+    "line_count": 158,
+    "active_classes": [],
+    "chrome_selectors": ["select"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-quick-action, wh40k-quick-actions-bar, wh40k-item-list are referenced in quick-actions-bar.ts and item-preview-card.ts but have no .wh40k-wrapper ancestor in rendered DOM. Rules dead."
+  },
+  {
+    "source": "src/css/components/_stat-breakdown.css",
+    "classification": "SAFE",
+    "line_count": 235,
+    "active_classes": [],
+    "chrome_selectors": ["body"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-stat-breakdown-* and wh40k-stat-clickable are used in stat-breakdown-mixin.ts but the mixin produces no .wh40k-wrapper ancestor. Rules dead."
+  },
+  {
+    "source": "src/css/components/_what-if-mode.css",
+    "classification": "SAFE",
+    "line_count": 392,
+    "active_classes": [],
+    "chrome_selectors": ["button"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. what-if-mode, what-if-comparison-panel, commit-btn etc. are referenced in what-if-mixin.ts and origin-path-builder.hbs but no .wh40k-wrapper ancestor exists. Rules dead."
+  },
+  {
+    "source": "src/css/components/_acquisition-dialog.css",
+    "classification": "SAFE",
+    "line_count": 107,
+    "active_classes": [],
+    "chrome_selectors": ["button"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. acquisition-dialog, acquisition-content, pf-value etc. are used in acquisition-dialog.ts and tab-dynasty.hbs but no .wh40k-wrapper ancestor in rendered DOM. Rules dead."
+  },
+  {
+    "source": "src/css/actor/_index.css",
+    "classification": "SAFE",
+    "line_count": 13,
+    "active_classes": [],
+    "chrome_selectors": [],
+    "notes": "EMPTY — contains only comments documenting import structure and removed legacy imports. No CSS rules at all."
+  },
+  {
+    "source": "src/css/actor/_mixins.css",
+    "classification": "SAFE",
+    "line_count": 11,
+    "active_classes": [],
+    "chrome_selectors": [],
+    "notes": "Effectively EMPTY — contains .wh40k-wrapper { /* comment: all mixins removed */ }. Body has no rules; comment confirms all mixins were removed previously. .wh40k-wrapper itself has 0 usages."
+  },
+  {
+    "source": "src/css/actor/_sheet-base.css",
+    "classification": "ACTIVE",
+    "line_count": 697,
+    "active_classes": [
+      "wh40k-panel-details",
+      "wh40k-panel-toggle",
+      "wh40k-panel-header-toggle",
+      "wh40k-effects-panel",
+      "wh40k-char-hud-item",
+      "wh40k-char-hud-name",
+      "wh40k-char-hud-circle",
+      "wh40k-char-hud-mod",
+      "wh40k-char-hud-base",
+      "wh40k-char-hud-toggle",
+      "wh40k-char-hud-toggle-icon",
+      "wh40k-char-hud-details",
+      "wh40k-char-hud-field",
+      "wh40k-char-hud-field-label",
+      "wh40k-char-hud-mod-label",
+      "wh40k-header",
+      "wh40k-actor",
+      "wh40k-character-header"
+    ],
+    "chrome_selectors": ["body", "input", "select"],
+    "notes": "Has TWO scopes: (1) .wh40k-wrapper { ... } — dead, and (2) many TOP-LEVEL selectors outside .wh40k-wrapper. The top-level selectors include wh40k-char-hud-* (used in tab-skills.hbs and base-actor-sheet.ts), wh40k-effects-panel (used in active-effects-panel.hbs), wh40k-panel-details (used in movement-panel-full.hbs and combat-station-panel.hbs), wh40k-panel-toggle (used in active-modifiers-panel.hbs), wh40k-header (used in header-base.hbs). CANNOT be deleted until all these are ported to Tailwind."
+  },
+  {
+    "source": "src/css/actor/_input-override.css",
+    "classification": "SAFE",
+    "line_count": 132,
+    "active_classes": [],
+    "chrome_selectors": ["input", "select"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-ability-input, wh40k-combat-input, wh40k-stat-input, wh40k-settings__input, wh40k-field__input etc. appear in templates but have no .wh40k-wrapper ancestor. Rules dead."
+  },
+  {
+    "source": "src/css/actor/_skills.css",
+    "classification": "ACTIVE",
+    "line_count": 312,
+    "active_classes": [
+      "wh40k-skills-columns",
+      "wh40k-character-header",
+      "wh40k-rank-input",
+      "csd-divination",
+      "csd-divination-input",
+      "csd-divination-result",
+      "csd-divination-reroll",
+      "csd-divination-actions",
+      "csd-resource-grid",
+      "csd-resource-item",
+      "csd-resource-label",
+      "csd-resource-formula",
+      "csd-resource-value",
+      "csd-resource-value-row",
+      "wh40k-header-right",
+      "wh40k-divination",
+      "wh40k-origin-builder-btn",
+      "wh40k-quick-status-gothic",
+      "wh40k-header-value",
+      "wh40k-header-single-column",
+      "wh40k-header-hud"
+    ],
+    "chrome_selectors": ["input", "select"],
+    "notes": "Has BOTH a .wh40k-wrapper { ... } section (dead) AND top-level selectors outside it (active). wh40k-skills-columns is used in skills-panel.hbs and base-actor-sheet.ts scroll config. wh40k-rank-input emitted by base-system-config.ts. csd-divination-* classes used in origin-path-builder.hbs and origin-path-builder.ts. Cannot be deleted until these are ported."
+  },
+  {
+    "source": "src/css/actor/_status.css",
+    "classification": "SAFE",
+    "line_count": 483,
+    "active_classes": [],
+    "chrome_selectors": ["body", "button", "input"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. degree-*, wh40k-corruption-panel, wh40k-crit-panel, wh40k-degree-* etc. appear in corruption-panel.hbs and handlebars-helpers.ts but have no .wh40k-wrapper ancestor. Rules dead."
+  },
+  {
+    "source": "src/css/actor/_origin-path.css",
+    "classification": "SAFE",
+    "line_count": 326,
+    "active_classes": [],
+    "chrome_selectors": ["body", "input"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-dashboard, wh40k-main-layout, wh40k-nav-item, wh40k-stat-box, wh40k-panel, wh40k-tab etc. appear in many templates but all without a .wh40k-wrapper ancestor. Rules dead."
+  },
+  {
+    "source": "src/css/actor/_characteristics.css",
+    "classification": "SAFE",
+    "line_count": 208,
+    "active_classes": [],
+    "chrome_selectors": ["body"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-origin-step*, wh40k-effect-card, wh40k-origin-item* etc. appear in backpack-split-panel.hbs and effect-row.hbs but no .wh40k-wrapper ancestor exists. Rules dead."
+  },
+  {
+    "source": "src/css/actor/_ship.css",
+    "classification": "SAFE",
+    "line_count": 659,
+    "active_classes": [],
+    "chrome_selectors": ["body", "button", "input", "select"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-char-list, wh40k-bonus-badge, wh40k-empty-state, wh40k-bio-grid etc. appear in npc-sheet, starship templates etc. but all without a .wh40k-wrapper ancestor. Rules dead."
+  },
+  {
+    "source": "src/css/actor/_combat.css",
+    "classification": "SAFE",
+    "line_count": 89,
+    "active_classes": [],
+    "chrome_selectors": [],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. Unique classes wh40k-armour__*, wh40k-controls, wh40k-controls__wrapper are not found in any template/module. Shared classes (wh40k-panel, wh40k-tab, wh40k-field__wrapper) are defined in other blocks (_unified-components.css, _gothic-theme.css). All nested rules are dead."
+  },
+  {
+    "source": "src/css/actor/_abilities.css",
+    "classification": "SAFE",
+    "line_count": 182,
+    "active_classes": [],
+    "chrome_selectors": ["body", "button", "input", "select"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-combat-controls, wh40k-initiative-panel, wh40k-initiative-grid, wh40k-chartable, wh40k-talenttable--border etc. are 0 hits in templates/modules. wh40k-panel-body appears in templates but is defined independently in _unified-components.css and panels/_core.css. Rules dead."
+  },
+  {
+    "source": "src/css/actor/_equipment.css",
+    "classification": "SAFE",
+    "line_count": 132,
+    "active_classes": [],
+    "chrome_selectors": [],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-armourtable--border, wh40k-geartable--border, wh40k-profit-current, wh40k-field__header are 0 hits in templates. table-cell--description IS used in item-table-row.hbs but the CSS rule for it here is nested inside .wh40k-wrapper .wh40k-tab[data-tab='equipment'] — never fires. Rules dead."
+  },
+  {
+    "source": "src/css/actor/_tables.css",
+    "classification": "SAFE",
+    "line_count": 103,
+    "active_classes": [],
+    "chrome_selectors": ["button"],
+    "notes": "Entirely scoped inside .wh40k-wrapper { ... }. wh40k-abilities-layout, wh40k-abilities-right-col, wh40k-table--border, wh40k-corruption-tracker, wh40k-wounds-tracker, wh40k-control-button are 0 hits in templates. Shared classes (wh40k-panel, wh40k-tab) are defined elsewhere. Rules dead."
+  },
+  {
+    "source": "src/css/foundry-chrome.css",
+    "classification": "CHROME",
+    "line_count": 28,
+    "active_classes": ["origin-detail-dialog", "window-content"],
+    "chrome_selectors": ["ProseMirror", "window-content"],
+    "notes": "CHROME preservation layer — do not delete. Contains .origin-detail-dialog { .window-content { padding: 0; ... } } which is actively used (origin-detail-dialog.ts sets classes: ['wh40k-rpg', 'origin-detail-dialog']). Also contains the @tailwind components; @tailwind utilities; directives that drive the entire Tailwind CSS emission pipeline."
+  }
+]

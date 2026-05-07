@@ -103,7 +103,7 @@
       <div class="wh40k-panel-body">
         <div class="wh40k-tags-row">
           {{#each tags}}
-          <span class="wh40k-tag">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-py-0.5 tw-px-2 tw-bg-[color:var(--wh40k-panel-bg-translucent)] tw-border tw-border-[color:var(--wh40k-border-color-light)] tw-rounded-full tw-text-xs tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-cursor-default">
             {{this}}
             {{#if ../editable}}
             <button type="button" class="wh40k-tag-remove" data-action="removeTag" data-tag="{{this}}">×</button>

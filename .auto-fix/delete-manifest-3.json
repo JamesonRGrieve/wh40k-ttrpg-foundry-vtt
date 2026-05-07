@@ -1,0 +1,1102 @@
+[
+  {
+    "source": "src/css/chat/_index.css",
+    "classification": "EMPTY",
+    "line_count": 5,
+    "active_classes": [],
+    "chrome_selectors": [],
+    "notes": "Only marker comment and whitespace; no rules."
+  },
+  {
+    "source": "src/css/chat/_foundry-overrides.css",
+    "classification": "ACTIVE",
+    "line_count": 217,
+    "active_classes": [
+      {
+        "class": "wh40k-hit-location-result",
+        "example_files": [
+          "src/module/applications/actor/character-sheet.ts",
+          "src/module/documents/starship.ts"
+        ]
+      },
+      {
+        "class": "wh40k-location-armour",
+        "example_files": [
+          "src/module/applications/actor/character-sheet.ts",
+          "src/module/documents/starship.ts"
+        ]
+      },
+      {
+        "class": "wh40k-roll-card",
+        "example_files": [
+          "src/templates/chat/partial/roll-card-shell.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-roll-result",
+        "example_files": [
+          "src/module/applications/actor/character-sheet.ts",
+          "src/module/documents/starship.ts"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element",
+      "Foundry-#chat-log",
+      "Foundry-.message-header",
+      "Foundry-.message-content",
+      "Foundry-.message-sender",
+      "Foundry-.message-metadata"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 4 classes actively referenced."
+  },
+  {
+    "source": "src/css/chat/_roll-cards.css",
+    "classification": "ACTIVE",
+    "line_count": 964,
+    "active_classes": [
+      {
+        "class": "wh40k-chat",
+        "example_files": [
+          "src/templates/chat/partial/chat-card-shell.hbs",
+          "src/templates/chat/trait-card.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-degree-badge",
+        "example_files": [
+          "src/module/documents/chat-message.ts"
+        ]
+      },
+      {
+        "class": "wh40k-dice-critical",
+        "example_files": [
+          "src/module/dice/d100-roll.ts"
+        ]
+      },
+      {
+        "class": "wh40k-dice-doubles",
+        "example_files": [
+          "src/module/dice/d100-roll.ts"
+        ]
+      },
+      {
+        "class": "wh40k-dice-failure",
+        "example_files": [
+          "src/module/dice/d100-roll.ts"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element",
+      "Foundry-#chat-log",
+      "Foundry-.message-header",
+      "Foundry-.message-content",
+      "Foundry-.message-sender",
+      "Foundry-.message-metadata"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 13 classes actively referenced."
+  },
+  {
+    "source": "src/css/chat/_item-cards.css",
+    "classification": "ACTIVE",
+    "line_count": 772,
+    "active_classes": [
+      {
+        "class": "wh40k-card-body",
+        "example_files": [
+          "src/templates/chat/partial/chat-card-shell.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-card-header",
+        "example_files": [
+          "src/templates/chat/partial/chat-card-shell.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-card-icon-wrapper",
+        "example_files": [
+          "src/templates/chat/partial/chat-card-shell.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-card-subtitle",
+        "example_files": [
+          "src/templates/chat/partial/chat-card-shell.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-card-title",
+        "example_files": [
+          "src/templates/chat/partial/chat-card-shell.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 8 classes actively referenced."
+  },
+  {
+    "source": "src/css/prompts/_index.css",
+    "classification": "EMPTY",
+    "line_count": 5,
+    "active_classes": [],
+    "chrome_selectors": [],
+    "notes": "Only marker comment and whitespace; no rules."
+  },
+  {
+    "source": "src/css/prompts/_dialogs.css",
+    "classification": "ACTIVE",
+    "line_count": 1629,
+    "active_classes": [
+      {
+        "class": "add-xp-dialog",
+        "example_files": [
+          "src/module/applications/prompts/add-xp-dialog.ts",
+          "src/module/applications/prompts/_module.ts"
+        ]
+      },
+      {
+        "class": "close",
+        "example_files": [
+          "src/templates/prompt/weapon-roll-prompt.hbs",
+          "src/templates/prompt/force-field-prompt.hbs"
+        ]
+      },
+      {
+        "class": "default",
+        "example_files": [
+          "src/templates/actor/partial/header-base.stories.ts",
+          "src/templates/actor/partial/pip-tracker-row.hbs"
+        ]
+      },
+      {
+        "class": "dialog-buttons",
+        "example_files": [
+          "src/templates/prompt/weapon-roll-prompt.hbs",
+          "src/templates/prompt/force-field-prompt.hbs"
+        ]
+      },
+      {
+        "class": "dialog-content",
+        "example_files": [
+          "src/templates/prompt/weapon-roll-prompt.hbs",
+          "src/templates/prompt/force-field-prompt.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element",
+      "Foundry-.dialog"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 41 classes actively referenced."
+  },
+  {
+    "source": "src/css/prompts/_unified-roll-dialog.css",
+    "classification": "ACTIVE",
+    "line_count": 1026,
+    "active_classes": [
+      {
+        "class": "unified-roll-dialog",
+        "example_files": [
+          "src/module/applications/prompts/unified-roll-dialog.ts",
+          "src/module/applications/prompts/_module.ts"
+        ]
+      },
+      {
+        "class": "urd-difficulty-picker",
+        "example_files": [
+          "src/templates/prompt/unified/target-display.hbs",
+          "src/module/applications/prompts/unified-roll-dialog.ts"
+        ]
+      },
+      {
+        "class": "urd-difficulty-picker__item-label",
+        "example_files": [
+          "src/templates/prompt/unified/target-display.hbs"
+        ]
+      },
+      {
+        "class": "urd-target",
+        "example_files": [
+          "src/module/applications/prompts/unified-roll-dialog.ts"
+        ]
+      }
+    ],
+    "chrome_selectors": [],
+    "notes": "4 classes actively referenced in templates or TS."
+  },
+  {
+    "source": "src/css/dialogs/_threat-scaler.css",
+    "classification": "ACTIVE",
+    "line_count": 550,
+    "active_classes": [
+      {
+        "class": "decreased",
+        "example_files": [
+          "src/templates/prompt/enhanced-skill-roll.hbs",
+          "src/module/applications/actor/character-sheet.ts"
+        ]
+      },
+      {
+        "class": "increased",
+        "example_files": [
+          "src/templates/prompt/enhanced-skill-roll.hbs",
+          "src/module/applications/actor/character-sheet.ts"
+        ]
+      },
+      {
+        "class": "negative",
+        "example_files": [
+          "src/templates/applications/compendium-browser.hbs",
+          "src/templates/actor/player/tab-dynasty.hbs"
+        ]
+      },
+      {
+        "class": "neutral",
+        "example_files": [
+          "src/templates/actor/partial/circular-icon-button.hbs",
+          "src/templates/item/item-ammo-sheet.hbs"
+        ]
+      },
+      {
+        "class": "npc-threat-scaler-dialog",
+        "example_files": [
+          "src/module/applications/npc/threat-scaler-dialog.ts"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 11 classes actively referenced."
+  },
+  {
+    "source": "src/css/dialogs/_characteristic-setup.css",
+    "classification": "ACTIVE",
+    "line_count": 622,
+    "active_classes": [
+      {
+        "class": "assigned",
+        "example_files": [
+          "src/templates/character-creation/origin-path-builder.hbs",
+          "src/module/applications/character-creation/origin-path-builder.ts"
+        ]
+      },
+      {
+        "class": "characteristic-setup-dialog",
+        "example_files": [
+          "src/module/applications/actor/character-sheet.ts",
+          "src/module/applications/dialogs/characteristic-setup-dialog.ts"
+        ]
+      },
+      {
+        "class": "csd-assigned-roll",
+        "example_files": [
+          "src/templates/character-creation/origin-path-builder.hbs",
+          "src/module/applications/character-creation/origin-path-builder.ts"
+        ]
+      },
+      {
+        "class": "csd-bank-hint",
+        "example_files": [
+          "src/templates/character-creation/origin-path-builder.hbs"
+        ]
+      },
+      {
+        "class": "csd-bank-roll-btn",
+        "example_files": [
+          "src/templates/character-creation/origin-path-builder.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 44 classes actively referenced."
+  },
+  {
+    "source": "src/css/dialogs/_advancement-dialog.css",
+    "classification": "ACTIVE",
+    "line_count": 713,
+    "active_classes": [
+      {
+        "class": "advancement-dialog",
+        "example_files": [
+          "src/module/applications/actor/character-sheet.ts",
+          "src/module/applications/dialogs/advancement-dialog.ts"
+        ]
+      },
+      {
+        "class": "wh40k-adv",
+        "example_files": [
+          "src/templates/dialogs/advancement-dialog.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-adv__advance-badge",
+        "example_files": [
+          "src/templates/dialogs/advancement-dialog.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-adv__advance-blocked",
+        "example_files": [
+          "src/templates/dialogs/advancement-dialog.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-adv__advance-btn",
+        "example_files": [
+          "src/templates/dialogs/advancement-dialog.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 59 classes actively referenced."
+  },
+  {
+    "source": "src/css/apps/_encounter-builder.css",
+    "classification": "ACTIVE",
+    "line_count": 424,
+    "active_classes": [
+      {
+        "class": "action-comparison",
+        "example_files": [
+          "src/templates/apps/encounter-builder.hbs"
+        ]
+      },
+      {
+        "class": "action-economy",
+        "example_files": [
+          "src/templates/apps/encounter-builder.hbs"
+        ]
+      },
+      {
+        "class": "actions",
+        "example_files": [
+          "src/templates/hud/combat-quick-panel.hbs",
+          "src/templates/actor/panel/fatigue-panel.hbs"
+        ]
+      },
+      {
+        "class": "advantage",
+        "example_files": [
+          "src/templates/apps/encounter-builder.hbs",
+          "src/module/applications/npc/encounter-builder.ts"
+        ]
+      },
+      {
+        "class": "difficulty",
+        "example_files": [
+          "src/templates/actor/npc/tab-npc.hbs",
+          "src/templates/prompt/weapon-roll-prompt.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 30 classes actively referenced."
+  },
+  {
+    "source": "src/css/components/_origin-path-builder.css",
+    "classification": "ACTIVE",
+    "line_count": 1360,
+    "active_classes": [
+      {
+        "class": "advanced",
+        "example_files": [
+          "src/templates/actor/panel/skills-panel.hbs",
+          "src/templates/actor/panel/skills-specialist-panel.hbs"
+        ]
+      },
+      {
+        "class": "builder-footer",
+        "example_files": [
+          "src/templates/character-creation/origin-path-builder.hbs"
+        ]
+      },
+      {
+        "class": "builder-main",
+        "example_files": [
+          "src/templates/character-creation/origin-path-builder.hbs"
+        ]
+      },
+      {
+        "class": "builder-toolbar",
+        "example_files": [
+          "src/templates/character-creation/origin-path-builder.hbs"
+        ]
+      },
+      {
+        "class": "card-badge",
+        "example_files": [
+          "src/templates/character-creation/origin-path-builder.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 96 classes actively referenced."
+  },
+  {
+    "source": "src/css/components/_origin-path-choice-dialog.css",
+    "classification": "ACTIVE",
+    "line_count": 417,
+    "active_classes": [
+      {
+        "class": "cancel-button",
+        "example_files": [
+          "src/templates/character-creation/origin-path-choice-dialog.hbs"
+        ]
+      },
+      {
+        "class": "choice-card",
+        "example_files": [
+          "src/templates/character-creation/origin-path-choice-dialog.hbs"
+        ]
+      },
+      {
+        "class": "choice-card-header",
+        "example_files": [
+          "src/templates/character-creation/origin-path-choice-dialog.hbs"
+        ]
+      },
+      {
+        "class": "choice-checkmark",
+        "example_files": [
+          "src/templates/character-creation/origin-path-choice-dialog.hbs"
+        ]
+      },
+      {
+        "class": "choice-complete",
+        "example_files": [
+          "src/templates/character-creation/origin-path-builder.hbs",
+          "src/templates/character-creation/origin-path-choice-dialog.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 31 classes actively referenced."
+  },
+  {
+    "source": "src/css/components/_origin-roll-dialog.css",
+    "classification": "ACTIVE",
+    "line_count": 368,
+    "active_classes": [
+      {
+        "class": "character-name",
+        "example_files": [
+          "src/templates/character-creation/origin-roll-dialog.hbs"
+        ]
+      },
+      {
+        "class": "current",
+        "example_files": [
+          "src/templates/hud/combat-quick-panel.hbs",
+          "src/templates/actor/panel/fatigue-panel.hbs"
+        ]
+      },
+      {
+        "class": "dialog-actions",
+        "example_files": [
+          "src/templates/character-creation/origin-roll-dialog.hbs"
+        ]
+      },
+      {
+        "class": "formula-display",
+        "example_files": [
+          "src/templates/character-creation/origin-roll-dialog.hbs"
+        ]
+      },
+      {
+        "class": "formula-expanded",
+        "example_files": [
+          "src/templates/character-creation/origin-roll-dialog.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element",
+      "Foundry-.dialog"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 31 classes actively referenced."
+  },
+  {
+    "source": "src/css/_journals.css",
+    "classification": "ACTIVE",
+    "line_count": 221,
+    "active_classes": [
+      {
+        "class": "wh40k-header",
+        "example_files": [
+          "src/templates/actor/starship/header.hbs",
+          "src/templates/actor/partial/header-base.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-section",
+        "example_files": [
+          "src/templates/actor/panel/skills-panel.hbs",
+          "src/templates/item/item-origin-path-sheet.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-skill",
+        "example_files": [
+          "src/templates/actor/panel/skills-panel.hbs",
+          "src/templates/actor/player/tab-overview.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-table",
+        "example_files": [
+          "src/templates/actor/partial/item-table.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-talent",
+        "example_files": [
+          "src/templates/actor/player/tab-overview.hbs",
+          "src/templates/chat/talent-card.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "Foundry-.editor"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 5 classes actively referenced."
+  },
+  {
+    "source": "src/css/components/_wh40k-tooltip.css",
+    "classification": "ACTIVE",
+    "line_count": 441,
+    "active_classes": [
+      {
+        "class": "wh40k-tooltip",
+        "example_files": [
+          "src/templates/actor/panel/characteristic-panel.hbs",
+          "src/templates/actor/panel/armour-display-panel.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-tooltip__action",
+        "example_files": [
+          "src/module/applications/components/wh40k-tooltip.ts"
+        ]
+      },
+      {
+        "class": "wh40k-tooltip__badge",
+        "example_files": [
+          "src/module/applications/components/wh40k-tooltip.ts"
+        ]
+      },
+      {
+        "class": "wh40k-tooltip__bonus",
+        "example_files": [
+          "src/module/applications/components/wh40k-tooltip.ts"
+        ]
+      },
+      {
+        "class": "wh40k-tooltip__bonus-calc",
+        "example_files": [
+          "src/module/applications/components/wh40k-tooltip.ts"
+        ]
+      }
+    ],
+    "chrome_selectors": [],
+    "notes": "34 classes actively referenced in templates or TS."
+  },
+  {
+    "source": "src/css/components/_item-preview.css",
+    "classification": "ACTIVE",
+    "line_count": 266,
+    "active_classes": [
+      {
+        "class": "wh40k-armour-location",
+        "example_files": [
+          "src/module/applications/components/item-preview-card.ts"
+        ]
+      },
+      {
+        "class": "wh40k-armour-preview-locations",
+        "example_files": [
+          "src/module/applications/components/item-preview-card.ts"
+        ]
+      },
+      {
+        "class": "wh40k-condition-preview-meta",
+        "example_files": [
+          "src/module/applications/components/item-preview-card.ts"
+        ]
+      },
+      {
+        "class": "wh40k-gear-quantity",
+        "example_files": [
+          "src/module/applications/components/item-preview-card.ts"
+        ]
+      },
+      {
+        "class": "wh40k-gear-uses",
+        "example_files": [
+          "src/module/applications/components/item-preview-card.ts"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 23 classes actively referenced."
+  },
+  {
+    "source": "src/css/components/_active-modifiers.css",
+    "classification": "ACTIVE",
+    "line_count": 257,
+    "active_classes": [
+      {
+        "class": "wh40k-modifier-count",
+        "example_files": [
+          "src/templates/components/active-modifiers-panel.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-modifier-group",
+        "example_files": [
+          "src/templates/item/talent-sheet.hbs",
+          "src/templates/item/item-trait-sheet.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-modifier-group-header",
+        "example_files": [
+          "src/templates/item/talent-sheet.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-modifier-item",
+        "example_files": [
+          "src/templates/components/active-modifiers-panel.hbs",
+          "src/templates/item/talent-sheet.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-modifier-item--inactive",
+        "example_files": [
+          "src/templates/components/active-modifiers-panel.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 8 classes actively referenced."
+  },
+  {
+    "source": "src/css/components/_armour.css",
+    "classification": "ACTIVE",
+    "line_count": 308,
+    "active_classes": [
+      {
+        "class": "wh40k-armour-box",
+        "example_files": [
+          "src/templates/actor/panel/armour-display-panel.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-armour-box-icon",
+        "example_files": [
+          "src/templates/actor/panel/armour-display-panel.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-armour-box-icons",
+        "example_files": [
+          "src/templates/actor/panel/armour-display-panel.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-armour-panel",
+        "example_files": [
+          "src/templates/actor/panel/armour-display-panel.hbs",
+          "src/templates/item/item-armour-sheet.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-armour-silhouette",
+        "example_files": [
+          "src/templates/actor/panel/armour-display-panel.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 20 classes actively referenced."
+  },
+  {
+    "source": "src/css/actor/_biography-origin-panel.css",
+    "classification": "ACTIVE",
+    "line_count": 506,
+    "active_classes": [
+      {
+        "class": "collapsed",
+        "example_files": [
+          "src/templates/actor/panel/combat-station-panel.hbs",
+          "src/templates/actor/partial/collapsible-panel.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-empty",
+        "example_files": [
+          "src/templates/actor/panel/backpack-split-panel.hbs",
+          "src/templates/actor/partial/empty-state.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-empty-text",
+        "example_files": [
+          "src/templates/actor/panel/backpack-split-panel.hbs",
+          "src/templates/item/item-ammo-sheet.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-panel-header",
+        "example_files": [
+          "src/templates/actor/panel/combat-actions-panel.hbs",
+          "src/templates/actor/panel/ship-crew-panel.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-panel-title",
+        "example_files": [
+          "src/templates/actor/panel/combat-actions-panel.hbs",
+          "src/templates/actor/panel/ship-crew-panel.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [],
+    "notes": "5 classes actively referenced in templates or TS."
+  },
+  {
+    "source": "src/css/actor/_npc-sheet.css",
+    "classification": "ACTIVE",
+    "line_count": 3266,
+    "active_classes": [
+      {
+        "class": "default",
+        "example_files": [
+          "src/templates/actor/partial/header-base.stories.ts",
+          "src/templates/actor/partial/pip-tracker-row.hbs"
+        ]
+      },
+      {
+        "class": "dialog-buttons",
+        "example_files": [
+          "src/templates/prompt/weapon-roll-prompt.hbs",
+          "src/templates/prompt/force-field-prompt.hbs"
+        ]
+      },
+      {
+        "class": "drag-over",
+        "example_files": [
+          "src/module/applications/api/drag-drop-visual-mixin.ts",
+          "src/module/applications/npc/encounter-builder.ts"
+        ]
+      },
+      {
+        "class": "melee",
+        "example_files": [
+          "src/templates/item/panel/modifiers-editor-panel.hbs",
+          "src/templates/item/item-weapon-sheet.hbs"
+        ]
+      },
+      {
+        "class": "pinned",
+        "example_files": [
+          "src/module/applications/prompts/effect-creation-dialog.stories.ts",
+          "src/module/rules/combat-actions.ts"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element",
+      "Foundry-.ProseMirror",
+      "Foundry-.dialog"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 89 classes actively referenced."
+  },
+  {
+    "source": "src/css/actor/_vehicle-sheet.css",
+    "classification": "ACTIVE",
+    "line_count": 462,
+    "active_classes": [
+      {
+        "class": "vehicle",
+        "example_files": [
+          "src/templates/actor/vehicle/tabs.hbs",
+          "src/templates/actor/vehicle/header.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-body",
+        "example_files": [
+          "src/templates/actor/player/body.hbs",
+          "src/templates/item/item-weapon-sheet.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-header",
+        "example_files": [
+          "src/templates/actor/starship/header.hbs",
+          "src/templates/actor/partial/header-base.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-header__info",
+        "example_files": [
+          "src/templates/actor/starship/header.hbs",
+          "src/templates/actor/vehicle/header.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-navigation",
+        "example_files": [
+          "src/templates/actor/starship/tabs.hbs",
+          "src/templates/actor/partial/tab-strip.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element",
+      "Foundry-.editor"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 18 classes actively referenced."
+  },
+  {
+    "source": "src/css/base/_reset.css",
+    "classification": "CHROME",
+    "line_count": 76,
+    "active_classes": [],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "CSS reset scoped to .wh40k-wrapper targeting html elements (*, fieldset, span, input, h1-h5, a, p, input, textarea, select, button, label). No custom class names."
+  },
+  {
+    "source": "src/css/_fonts.css",
+    "classification": "CHROME",
+    "line_count": 54,
+    "active_classes": [
+      {
+        "class": "mt-5",
+        "example_files": [
+          "src/templates/prompt/add-xp-prompt.hbs",
+          "src/templates/character-creation/origin-roll-dialog.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Font assignment rules inside .wh40k-wrapper targeting html elements (button, input, select, h1-h3, label, textarea). .mt-5/.mt-10 classes not referenced in templates (the grep hit was tw-mt-5). wh40k-wrapper not referenced in templates."
+  },
+  {
+    "source": "src/css/components/_chat.css",
+    "classification": "SAFE",
+    "line_count": 11,
+    "active_classes": [],
+    "chrome_selectors": [],
+    "notes": "Contains only a deprecated comment block inside an empty .wh40k-wrapper{}. No rules defined. wh40k-wrapper not referenced in any template or TS."
+  },
+  {
+    "source": "src/css/components/_grids_templates.css",
+    "classification": "CHROME",
+    "line_count": 38,
+    "active_classes": [],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Grid styles for .rt-field/.rt-textarea inside .wh40k-wrapper. Neither rt-field nor rt-textarea referenced in any template or TS file. Contains nested input[type='number'] html-element selector."
+  },
+  {
+    "source": "src/css/components/_grids.css",
+    "classification": "ACTIVE",
+    "line_count": 409,
+    "active_classes": [
+      {
+        "class": "table-row",
+        "example_files": [
+          "src/templates/actor/panel/armour-panel.hbs",
+          "src/templates/actor/panel/vehicle-weapons-panel.hbs"
+        ]
+      },
+      {
+        "class": "table-row--head",
+        "example_files": [
+          "src/templates/actor/partial/item-table.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 2 classes actively referenced."
+  },
+  {
+    "source": "src/css/components/_panel.css",
+    "classification": "ACTIVE",
+    "line_count": 80,
+    "active_classes": [
+      {
+        "class": "spacer",
+        "example_files": [
+          "src/templates/actor/starship/tab-stats.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-divider",
+        "example_files": [
+          "src/templates/actor/panel/backpack-split-panel.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-item-img",
+        "example_files": [
+          "src/templates/actor/panel/ship-role-panel.hbs",
+          "src/templates/actor/partial/item-table-row.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-panel",
+        "example_files": [
+          "src/templates/actor/panel/combat-actions-panel.hbs",
+          "src/templates/actor/panel/navigator-powers-panel.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-panel__header",
+        "example_files": [
+          "src/templates/item/item-sheet.hbs",
+          "src/templates/item/ship-weapon-sheet.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 5 classes actively referenced."
+  },
+  {
+    "source": "src/css/components/_controls.css",
+    "classification": "ACTIVE",
+    "line_count": 129,
+    "active_classes": [
+      {
+        "class": "wh40k-control-button",
+        "example_files": [
+          "src/templates/actor/panel/vehicle-integrity-panel.hbs",
+          "src/templates/actor/partial/item-table.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 1 classes actively referenced."
+  },
+  {
+    "source": "src/css/components/_form_fields.css",
+    "classification": "ACTIVE",
+    "line_count": 155,
+    "active_classes": [
+      {
+        "class": "check",
+        "example_files": [
+          "src/templates/actor/panel/orders-panel.hbs",
+          "src/templates/actor/panel/backpack-split-panel.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-field",
+        "example_files": [
+          "src/templates/actor/player/tab-biography.hbs",
+          "src/templates/actor/player/tab-dynasty.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-textarea",
+        "example_files": [
+          "src/templates/actor/player/tab-biography.hbs",
+          "src/templates/actor/player/tab-dynasty.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 3 classes actively referenced."
+  },
+  {
+    "source": "src/css/components/_header.css",
+    "classification": "ACTIVE",
+    "line_count": 157,
+    "active_classes": [
+      {
+        "class": "mode-slider",
+        "example_files": [
+          "src/module/applications/actor/npc-sheet.ts",
+          "src/module/applications/api/primary-sheet-mixin.ts"
+        ]
+      },
+      {
+        "class": "wh40k-header",
+        "example_files": [
+          "src/templates/actor/starship/header.hbs",
+          "src/templates/actor/partial/header-base.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-rpg",
+        "example_files": [
+          "src/templates/actor/panel/fatigue-panel.hbs",
+          "src/templates/actor/panel/vehicle-crew-panel.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [],
+    "notes": "3 classes actively referenced in templates or TS."
+  },
+  {
+    "source": "src/css/components/_navigation.css",
+    "classification": "ACTIVE",
+    "line_count": 68,
+    "active_classes": [
+      {
+        "class": "wh40k-body",
+        "example_files": [
+          "src/templates/actor/player/body.hbs",
+          "src/templates/item/item-weapon-sheet.hbs"
+        ]
+      },
+      {
+        "class": "wh40k-panel",
+        "example_files": [
+          "src/templates/actor/panel/combat-actions-panel.hbs",
+          "src/templates/actor/panel/navigator-powers-panel.hbs"
+        ]
+      }
+    ],
+    "chrome_selectors": [
+      "html-element"
+    ],
+    "notes": "Contains both active class references and chrome/html-element selectors. 2 classes actively referenced."
+  }
+]

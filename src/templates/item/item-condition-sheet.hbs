@@ -160,7 +160,7 @@
             {{#if inEditMode}}
             {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
             {{else}}
-            <div class="wh40k-description-content">{{{system.effect}}}</div>
+            <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.effect}}}</div>
             {{/if}}
           </div>
         </div>
@@ -175,7 +175,7 @@
             {{#if inEditMode}}
             {{editor system.removal target="system.removal" button=true editable=editable engine="prosemirror"}}
             {{else}}
-            <div class="wh40k-description-content">{{{system.removal}}}</div>
+            <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.removal}}}</div>
             {{/if}}
           </div>
         </div>
@@ -206,7 +206,7 @@
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             {{else}}
-            <div class="wh40k-description-content">{{{system.description.value}}}</div>
+            <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.description.value}}}</div>
             {{/if}}
           </div>
         </div>

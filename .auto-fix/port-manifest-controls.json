@@ -1,0 +1,14 @@
+{
+  "ported_blocks": ["src/css/components/_controls.css"],
+  "modified_templates": [
+    "src/templates/actor/panel/vehicle-integrity-panel.hbs",
+    "src/templates/actor/partial/item-table-row.hbs",
+    "src/templates/actor/partial/item-table.hbs"
+  ],
+  "remaining_active_classes": [],
+  "chrome_rules_to_preserve": [
+    "button[type='roll'] { margin: 0; cursor: pointer; &:hover { color: red; } }",
+    "button.wh40k-material[type='action'] { &:hover { color: red; } }"
+  ],
+  "notes": "All wh40k-control-button and wh40k-control-button__span references ported to inline Tailwind utilities (tw-cursor-pointer, hover:tw-opacity-100, tw-pt-[3px], tw-pl-[2px], tw-inline-grid, tw-opacity-50). The item-edit JS hook class was preserved alongside Tailwind utilities on item-table-row.hbs line 57. The wh40k-material, wh40k-trait-toggle, and wh40k-vocalise classes from the _controls.css block had no active template references — they were already unused. The button[type=roll] and button.wh40k-material[type=action] chrome rules are attribute-selector rules; they cannot be ported to inline Tailwind. They must be moved to src/css/foundry-chrome.css before the block is deleted from the monolith."
+}

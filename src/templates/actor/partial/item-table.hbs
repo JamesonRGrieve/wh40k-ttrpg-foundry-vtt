@@ -49,8 +49,8 @@
         {{/each}}
         {{#if addAction}}
             <div class="table-cell--last">
-                <label class="wh40k-control-button" data-action="{{addAction}}"{{#if addType}} data-type="{{addType}}"{{/if}}{{#if addTitleKey}} title="{{localize addTitleKey}}" aria-label="{{localize addTitleKey}}"{{/if}}>
-                    <span class="wh40k-control-button__span">{{iconSvg (defaultVal addIconKey 'fa:plus-circle') class="tw-w-3.5 tw-h-3.5"}}</span>
+                <label class="tw-cursor-pointer hover:tw-opacity-100" data-action="{{addAction}}"{{#if addType}} data-type="{{addType}}"{{/if}}{{#if addTitleKey}} title="{{localize addTitleKey}}" aria-label="{{localize addTitleKey}}"{{/if}}>
+                    <span class="tw-pt-[3px] tw-pl-[2px] tw-inline-grid tw-opacity-50">{{iconSvg (defaultVal addIconKey 'fa:plus-circle') class="tw-w-3.5 tw-h-3.5"}}</span>
                 </label>
             </div>
         {{/if}}

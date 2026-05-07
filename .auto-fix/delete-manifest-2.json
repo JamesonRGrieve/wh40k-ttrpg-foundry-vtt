@@ -1,0 +1,525 @@
+[
+  {
+    "source": "src/css/item/_origin-path.css",
+    "classification": "CHROME",
+    "line_count": 914,
+    "active_classes": [
+      "ProseMirror",
+      "editor",
+      "wh40k-ability-card",
+      "wh40k-ability-description",
+      "wh40k-ability-name",
+      "wh40k-ability-name",
+      "wh40k-char-label",
+      "wh40k-aptitude-tag"
+    ],
+    "chrome_selectors": [
+      "input[type='checkbox'] {",
+      "p {",
+      ".editor {",
+      ".ProseMirror {"
+    ],
+    "notes": "Both active classes and chrome selectors present. wh40k-ability-card/name/description used in item-origin-path-sheet.hbs and talent-sheet.hbs."
+  },
+  {
+    "source": "src/css/item/_talents.css",
+    "classification": "CHROME",
+    "line_count": 576,
+    "active_classes": [
+      "editor",
+      "editor-content",
+      "wh40k-field",
+      "wh40k-field-grid",
+      "wh40k-field-hint",
+      "wh40k-panel",
+      "wh40k-panel-body",
+      "wh40k-panel-header"
+    ],
+    "chrome_selectors": [
+      "input,",
+      "select,",
+      "textarea {",
+      "input[type='checkbox'] {"
+    ],
+    "notes": "Both active classes and chrome selectors. Active: wh40k-field/field-grid/field-hint used in item panels; editor-content in vehicle tabs."
+  },
+  {
+    "source": "src/css/item/_talent-trait-modern.css",
+    "classification": "CHROME",
+    "line_count": 601,
+    "active_classes": [
+      "editor",
+      "wh40k-aptitude-tag",
+      "wh40k-aptitudes-display",
+      "wh40k-editor-container",
+      "wh40k-empty-state",
+      "wh40k-modifier-group",
+      "wh40k-modifier-item",
+      "wh40k-modifier-name",
+      "wh40k-modifier-value"
+    ],
+    "chrome_selectors": [
+      "input[type='checkbox'] {",
+      ".editor {",
+      "p {"
+    ],
+    "notes": "Both active classes and chrome selectors. wh40k-aptitude-tag/aptitudes-display/modifier-* classes used in talent-sheet.hbs."
+  },
+  {
+    "source": "src/css/item/_actor-styles.css",
+    "classification": "SAFE",
+    "line_count": 231,
+    "active_classes": [],
+    "chrome_selectors": [],
+    "notes": "All unique classes (wh40k-actor-header/info/name/portrait, wh40k-armour-display/item/points, wh40k-char-abbr/button/grid/item/value, wh40k-weapon-info/name/row/stats, wh40k-panel-grid) have zero template references. Shared class names (wh40k-char-label, wh40k-item-icon) are referenced via OTHER blocks."
+  },
+  {
+    "source": "src/css/item/_npc-template-sheet.css",
+    "classification": "CHROME",
+    "line_count": 768,
+    "active_classes": [
+      "npc-template-header"
+    ],
+    "chrome_selectors": [
+      "input {",
+      "input,",
+      "select {",
+      "input[type='number'] {"
+    ],
+    "notes": "npc-template-header IS used in src/templates/item/npc-template/header.hbs. Also has chrome input/select selectors."
+  },
+  {
+    "source": "src/css/panels/_index.css",
+    "classification": "EMPTY",
+    "line_count": 6,
+    "active_classes": [],
+    "chrome_selectors": [],
+    "notes": "6 lines, only comment/import references, no actual rules."
+  },
+  {
+    "source": "src/css/panels/_grid.css",
+    "classification": "EMPTY",
+    "line_count": 6,
+    "active_classes": [],
+    "chrome_selectors": [],
+    "notes": "6 lines, no rules."
+  },
+  {
+    "source": "src/css/panels/_core.css",
+    "classification": "ACTIVE",
+    "line_count": 178,
+    "active_classes": [
+      "wh40k-btn-icon",
+      "wh40k-control-button",
+      "wh40k-header-btn",
+      "wh40k-panel",
+      "wh40k-panel-body",
+      "wh40k-panel-chevron",
+      "wh40k-panel-header",
+      "wh40k-panel-title"
+    ],
+    "chrome_selectors": [],
+    "notes": "Core panel classes (wh40k-panel, wh40k-panel-header, wh40k-panel-body, wh40k-panel-title) heavily used across actor panel templates."
+  },
+  {
+    "source": "src/css/panels/_vitals.css",
+    "classification": "ACTIVE",
+    "line_count": 458,
+    "active_classes": [
+      "wh40k-checkbox",
+      "wh40k-vital-btn",
+      "wh40k-vital-input",
+      "wh40k-vital-tracker",
+      "wh40k-panel-body",
+      "wh40k-panel-header"
+    ],
+    "chrome_selectors": [],
+    "notes": "wh40k-vital-btn used in vital-inline-row.hbs; wh40k-vital-input used in psy-panel.hbs and tab-dynasty.hbs; wh40k-checkbox used in psy-panel.hbs, weapon/force-field sheets."
+  },
+  {
+    "source": "src/css/panels/_overview-vitals.css",
+    "classification": "ACTIVE",
+    "line_count": 419,
+    "active_classes": [
+      "wh40k-xp-display",
+      "wh40k-xp-label",
+      "wh40k-xp-row",
+      "wh40k-xp-available-label",
+      "wh40k-xp-available-value",
+      "wh40k-panel-body",
+      "wh40k-panel-header",
+      "wh40k-panel-title"
+    ],
+    "chrome_selectors": [],
+    "notes": "Defines wh40k-xp-row/label/display (lines 19447-19498) used in tab-overview.hbs and tab-dynasty.hbs. wh40k-vital-current/max/sep also defined here."
+  },
+  {
+    "source": "src/css/panels/_overview-dashboard.css",
+    "classification": "CHROME",
+    "line_count": 1523,
+    "active_classes": [
+      "wh40k-armour-loc",
+      "wh40k-crit-pip-mini",
+      "wh40k-crit-pip-mini--filled",
+      "wh40k-critical",
+      "wh40k-critical-pips-inline",
+      "wh40k-dashboard-row",
+      "wh40k-xp-action-btn",
+      "wh40k-xp-ring-header",
+      "wh40k-xp-ring-header-svg"
+    ],
+    "chrome_selectors": [
+      "p {"
+    ],
+    "notes": "Active: wh40k-crit-pip-mini used in combat-station-panel/tab-overview; wh40k-critical-pips-inline in tab-overview; wh40k-xp-action-btn/ring-header in tab-overview. Chrome: bare p { selector."
+  },
+  {
+    "source": "src/css/panels/_wounds.css",
+    "classification": "ACTIVE",
+    "line_count": 602,
+    "active_classes": [
+      "wh40k-crit-pip",
+      "wh40k-critical-pips",
+      "wh40k-injury-card",
+      "wh40k-injury-delete",
+      "wh40k-injury-name"
+    ],
+    "chrome_selectors": [],
+    "notes": "wh40k-injury-card used in critical-injury-card.hbs chat template; wh40k-injury-delete/name in combat-station-panel.hbs; wh40k-critical-pips-inline referenced in tab-overview.hbs."
+  },
+  {
+    "source": "src/css/panels/_fatigue.css",
+    "classification": "CHROME",
+    "line_count": 553,
+    "active_classes": [
+      "wh40k-panel-header",
+      "wh40k-threshold-marker"
+    ],
+    "chrome_selectors": [
+      "p {"
+    ],
+    "notes": "wh40k-threshold-marker used in vital-progress-bar.hbs. Chrome: bare p { selector."
+  },
+  {
+    "source": "src/css/panels/_fate.css",
+    "classification": "CHROME",
+    "line_count": 560,
+    "active_classes": [
+      "wh40k-fate-pip",
+      "wh40k-fate-pip--filled",
+      "wh40k-fate-tracker",
+      "wh40k-panel-header"
+    ],
+    "chrome_selectors": [
+      "p {",
+      "ul {",
+      "li {"
+    ],
+    "notes": "Active fate pip/tracker classes may be used. Chrome: bare p/ul/li selectors."
+  },
+  {
+    "source": "src/css/panels/_corruption.css",
+    "classification": "SAFE",
+    "line_count": 190,
+    "active_classes": [],
+    "chrome_selectors": [],
+    "notes": "All unique classes (wh40k-panel-corruption, wh40k-panel-insanity, wh40k-panel-vitality, wh40k-tracker-effect/main/row, wh40k-degree-badge) have zero template references. wh40k-degree-badge defined again in a later block. Shared classes (wh40k-panel-header/title) are covered by _core.css."
+  },
+  {
+    "source": "src/css/panels/_corruption-v2.css",
+    "classification": "CHROME",
+    "line_count": 848,
+    "active_classes": [
+      "wh40k-badge-label",
+      "wh40k-degree-damned",
+      "wh40k-dropzone-empty",
+      "wh40k-dropzone-icon",
+      "wh40k-dropzone-text"
+    ],
+    "chrome_selectors": [
+      "p {",
+      "li {"
+    ],
+    "notes": "wh40k-degree-damned used as extraClass in corruption-panel.hbs; wh40k-dropzone-empty/icon/text used in degree-meter-panel.hbs and effects panels; wh40k-badge-label in vital-panel-shell.hbs. Chrome: p/li selectors."
+  },
+  {
+    "source": "src/css/panels/_insanity.css",
+    "classification": "CHROME",
+    "line_count": 759,
+    "active_classes": [
+      "wh40k-badge-label",
+      "wh40k-dropzone-empty",
+      "wh40k-dropzone-icon",
+      "wh40k-dropzone-text"
+    ],
+    "chrome_selectors": [
+      "p {",
+      "li {"
+    ],
+    "notes": "Active: wh40k-dropzone-empty/icon/text used in degree-meter-panel.hbs, effects panels, dropzone.hbs; wh40k-badge-label in vital-panel-shell.hbs. Chrome: p/li selectors."
+  },
+  {
+    "source": "src/css/panels/_experience.css",
+    "classification": "CHROME",
+    "line_count": 292,
+    "active_classes": [],
+    "chrome_selectors": [
+      "p {"
+    ],
+    "notes": "All unique wh40k-experience-panel-v2/xp-compact-display/xp-edit-*/xp-ring-inline/xp-inline-*/xp-separator classes have zero template references. The xp-row/label/display classes referenced in templates are defined in _overview-vitals.css, not here. Chrome: bare p { selector."
+  },
+  {
+    "source": "src/css/panels/_equipment-cards.css",
+    "classification": "ACTIVE",
+    "line_count": 643,
+    "active_classes": [
+      "drag-over",
+      "dragging",
+      "wh40k-btn-danger",
+      "wh40k-card-header",
+      "wh40k-card-icon",
+      "wh40k-card-info",
+      "wh40k-card-meta",
+      "wh40k-card-actions"
+    ],
+    "chrome_selectors": [],
+    "notes": "drag-over/dragging used in drag-drop-visual-mixin.ts and item sheets. wh40k-card-* classes used in equipment panel templates."
+  },
+  {
+    "source": "src/css/panels/_dynasty-modern.css",
+    "classification": "ACTIVE",
+    "line_count": 1010,
+    "active_classes": [
+      "wh40k-acquisition-btn",
+      "wh40k-acquisition-card",
+      "wh40k-field-label",
+      "wh40k-panel-header",
+      "wh40k-panel-profit-v2",
+      "wh40k-bio-field"
+    ],
+    "chrome_selectors": [
+      "input[type='checkbox'] {"
+    ],
+    "notes": "wh40k-panel-profit-v2 used in tab-dynasty.hbs; wh40k-acquisition-btn/card in acquisition templates; wh40k-field-label in dynasty panels. Also has checkbox chrome selector."
+  },
+  {
+    "source": "src/css/panels/_movement.css",
+    "classification": "ACTIVE",
+    "line_count": 649,
+    "active_classes": [
+      "wh40k-add-btn",
+      "wh40k-affliction-del",
+      "wh40k-affliction-header",
+      "wh40k-affliction-list",
+      "wh40k-affliction-name",
+      "wh40k-affliction-row"
+    ],
+    "chrome_selectors": [],
+    "notes": "wh40k-affliction-* classes used in tab-biography.hbs. wh40k-add-btn used in biography panel."
+  },
+  {
+    "source": "src/css/panels/_specialist.css",
+    "classification": "CHROME",
+    "line_count": 256,
+    "active_classes": [
+      "wh40k-panel",
+      "wh40k-panel-header",
+      "wh40k-spec-delete",
+      "wh40k-spec-favorite",
+      "wh40k-spec-info",
+      "wh40k-spec-name",
+      "wh40k-specialist-add-btn",
+      "wh40k-specialist-char",
+      "wh40k-specialist-entries",
+      "wh40k-specialist-entry",
+      "wh40k-specialist-group",
+      "wh40k-specialist-name"
+    ],
+    "chrome_selectors": [
+      "p {"
+    ],
+    "notes": "Active: wh40k-specialist-add-btn/group/name/char/entries used in skills-specialist-panel.hbs. wh40k-spec-* classes also active. Chrome: bare p { selector."
+  },
+  {
+    "source": "src/css/panels/_talents.css",
+    "classification": "CHROME",
+    "line_count": 537,
+    "active_classes": [
+      "dragging",
+      "drop-invalid",
+      "drop-valid",
+      "wh40k-action-btn",
+      "wh40k-btn-danger",
+      "wh40k-count-badge",
+      "wh40k-detail-content",
+      "wh40k-dropzone",
+      "wh40k-group-header"
+    ],
+    "chrome_selectors": [
+      "p {"
+    ],
+    "notes": "Active: dragging/drop-valid/invalid in drag-drop mixin; wh40k-count-badge in talent-panel.hbs; wh40k-dropzone in effects-panel/active-effects-panel.hbs. Chrome: bare p { selector."
+  },
+  {
+    "source": "src/css/panels/_effects.css",
+    "classification": "CHROME",
+    "line_count": 228,
+    "active_classes": [
+      "wh40k-badge",
+      "wh40k-change-value",
+      "wh40k-effect-btn",
+      "wh40k-effect-card",
+      "wh40k-effect-card-header",
+      "wh40k-effect-icon",
+      "wh40k-effect-name",
+      "wh40k-effects-list",
+      "wh40k-effects-panel"
+    ],
+    "chrome_selectors": [
+      "p {"
+    ],
+    "notes": "Active: wh40k-effects-panel/list used in active-effects-panel.hbs; wh40k-effect-icon/name-mini used in tab-overview.hbs. Chrome: bare p { selector."
+  },
+  {
+    "source": "src/css/panels/_skills.css",
+    "classification": "ACTIVE",
+    "line_count": 412,
+    "active_classes": [
+      "wh40k-advanced-untrained-section",
+      "wh40k-no-results",
+      "wh40k-panel",
+      "wh40k-section-divider",
+      "wh40k-skill-char",
+      "wh40k-skill-icon",
+      "wh40k-skill-label",
+      "wh40k-skill-name",
+      "wh40k-skill-roll",
+      "wh40k-skill-row"
+    ],
+    "chrome_selectors": [],
+    "notes": "wh40k-skill-row/icon used in skill-row.hbs partial; wh40k-skill-row-compact/name-compact/roll-btn in tab-overview.hbs."
+  },
+  {
+    "source": "src/css/panels/_accents.css",
+    "classification": "ACTIVE",
+    "line_count": 174,
+    "active_classes": [
+      "wh40k-grid-col-3",
+      "wh40k-grid-col-6",
+      "wh40k-panel",
+      "wh40k-panel-header",
+      "wh40k-panel-title"
+    ],
+    "chrome_selectors": [],
+    "notes": "wh40k-grid-col-3/6 used in starship tab-stats.hbs and header.hbs."
+  },
+  {
+    "source": "src/css/panels/_backpack-split-panel.css",
+    "classification": "CHROME",
+    "line_count": 743,
+    "active_classes": [
+      "wh40k-action-btn",
+      "wh40k-backpack-inventory",
+      "wh40k-backpack-item-row",
+      "wh40k-col-actions",
+      "wh40k-col-check",
+      "wh40k-col-icon",
+      "wh40k-col-name",
+      "wh40k-col-type",
+      "wh40k-col-weight",
+      "wh40k-column-body",
+      "wh40k-column-header"
+    ],
+    "chrome_selectors": [
+      "th {",
+      "td {"
+    ],
+    "notes": "Active: wh40k-backpack-inventory/item-row/column-header/body used in backpack-split-panel.hbs. Chrome: bare th/td scoped inside thead (table context)."
+  },
+  {
+    "source": "src/css/panels/_powers.css",
+    "classification": "ACTIVE",
+    "line_count": 130,
+    "active_classes": [
+      "wh40k-armour-panel",
+      "wh40k-tab",
+      "wh40k-tab-powers"
+    ],
+    "chrome_selectors": [],
+    "notes": "wh40k-armour-panel used in armour-display-panel.hbs and item-armour-sheet.hbs; wh40k-tab-powers used in tab-powers.hbs."
+  },
+  {
+    "source": "src/css/panels/_powers-v2.css",
+    "classification": "CHROME",
+    "line_count": 967,
+    "active_classes": [
+      "dragging",
+      "drop-valid",
+      "expanded",
+      "wh40k-btn-danger",
+      "wh40k-checkbox"
+    ],
+    "chrome_selectors": [
+      "p {"
+    ],
+    "notes": "Active: dragging/drop-valid in drag-drop mixin; expanded in effects/active-effects panels; wh40k-checkbox in multiple item sheets. Chrome: bare p { selector."
+  },
+  {
+    "source": "src/css/panels/_dynasty.css",
+    "classification": "ACTIVE",
+    "line_count": 136,
+    "active_classes": [
+      "wh40k-ap-tracker",
+      "wh40k-endeavour-fields",
+      "wh40k-panel-header",
+      "wh40k-panel-profit",
+      "wh40k-tab",
+      "wh40k-vital-input",
+      "wh40k-xp-display",
+      "wh40k-xp-item"
+    ],
+    "chrome_selectors": [],
+    "notes": "wh40k-vital-input used in psy-panel.hbs and tab-dynasty.hbs; wh40k-xp-item/display in tab-dynasty.hbs; wh40k-panel-profit scoped in dynasty block."
+  },
+  {
+    "source": "src/css/panels/_biography.css",
+    "classification": "CHROME",
+    "line_count": 582,
+    "active_classes": [
+      "ProseMirror",
+      "wh40k-add-btn",
+      "wh40k-connection-bonus",
+      "wh40k-connection-penalty",
+      "wh40k-connections-section",
+      "wh40k-entry-delete",
+      "wh40k-entry-header",
+      "wh40k-entry-meta",
+      "wh40k-entry-name",
+      "wh40k-field-row"
+    ],
+    "chrome_selectors": [
+      ".ProseMirror {",
+      "p {",
+      "ul,",
+      "ol {",
+      "h1,"
+    ],
+    "notes": "Active: wh40k-connections-section/bonus/penalty in tab-biography.hbs; wh40k-field-row in tab-dynasty.hbs. Chrome: .ProseMirror, p, ul, ol, h1 bare selectors."
+  },
+  {
+    "source": "src/css/panels/_combat-station.css",
+    "classification": "ACTIVE",
+    "line_count": 1184,
+    "active_classes": [
+      "wh40k-alert-fatigue",
+      "wh40k-btn-icon",
+      "wh40k-btn-icon--bordered",
+      "wh40k-combat-action-attack",
+      "wh40k-combat-action-btn",
+      "wh40k-combat-action-movement",
+      "wh40k-combat-action-name"
+    ],
+    "chrome_selectors": [],
+    "notes": "wh40k-alert-fatigue/combat-action-*/combat-action-btn classes heavily used in combat-station-panel.hbs and combat-actions-panel.hbs."
+  }
+]
