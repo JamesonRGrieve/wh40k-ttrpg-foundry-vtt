@@ -1,0 +1,134 @@
+{
+  "task": "port-panels-small",
+  "date": "2026-05-06",
+  "blocks_deleted": [
+    {
+      "source": "src/css/panels/_dynasty.css",
+      "lines": 136,
+      "status": "deleted",
+      "active_classes": [
+        "wh40k-xp-display",
+        "wh40k-xp-item",
+        "wh40k-xp-label",
+        "wh40k-xp-available",
+        "wh40k-endeavour-fields",
+        "wh40k-ap-tracker"
+      ],
+      "dead_classes": [
+        "wh40k-tab-dynasty",
+        "wh40k-panel-profit",
+        "wh40k-profit-main-display",
+        "wh40k-profit-current",
+        "wh40k-profit-label",
+        "wh40k-profit-value-input",
+        "wh40k-profit-starting",
+        "wh40k-misfortunes"
+      ],
+      "templates_updated": [
+        "src/templates/actor/player/tab-dynasty.hbs"
+      ]
+    },
+    {
+      "source": "src/css/panels/_experience.css",
+      "lines": 292,
+      "status": "deleted",
+      "active_classes": [],
+      "dead_classes": [
+        "wh40k-experience-panel-v2",
+        "wh40k-xp-compact-display",
+        "wh40k-xp-ring-inline",
+        "wh40k-xp-ring-svg",
+        "wh40k-xp-ring-progress",
+        "wh40k-xp-ring-percent",
+        "wh40k-xp-available-box",
+        "wh40k-xp-available-value",
+        "wh40k-xp-available-label",
+        "wh40k-xp-separator",
+        "wh40k-xp-inline-stat",
+        "wh40k-xp-inline-value",
+        "wh40k-xp-inline-label",
+        "wh40k-xp-add-button-inline",
+        "wh40k-xp-advancement-button",
+        "wh40k-xp-edit-section",
+        "wh40k-xp-edit-header",
+        "wh40k-xp-edit-grid",
+        "wh40k-edit-field",
+        "wh40k-edit-label",
+        "wh40k-edit-input",
+        "wh40k-xp-info-section",
+        "wh40k-xp-info-box",
+        "wh40k-info-content"
+      ],
+      "note": "Entire block was dead code — no template references to wh40k-experience-panel-v2 or any nested classes",
+      "templates_updated": []
+    },
+    {
+      "source": "src/css/panels/_specialist.css",
+      "lines": 256,
+      "status": "deleted",
+      "active_classes": [
+        "wh40k-specialist-group",
+        "wh40k-specialist-group--advanced",
+        "wh40k-specialist-header",
+        "wh40k-specialist-entries",
+        "wh40k-specialist-entry",
+        "wh40k-specialist-add-btn",
+        "wh40k-specialist-name",
+        "wh40k-specialist-char",
+        "wh40k-specialist-empty",
+        "wh40k-spec-roll",
+        "wh40k-spec-favorite",
+        "wh40k-spec-delete",
+        "wh40k-spec-total"
+      ],
+      "dead_classes": [
+        "wh40k-tab-combat",
+        "wh40k-armour-col",
+        "wh40k-injuries-section"
+      ],
+      "note": "wh40k-tab-combat/armour-col/injuries-section dead — tab-combat.hbs already fully Tailwind. Active classes ported inline; JS-hook names preserved on elements.",
+      "templates_updated": [
+        "src/templates/actor/panel/skills-specialist-panel.hbs"
+      ]
+    },
+    {
+      "source": "src/css/panels/_effects.css",
+      "lines": 228,
+      "status": "deleted",
+      "active_classes": [
+        "wh40k-badge (scoped inside .wh40k-effects-panel)"
+      ],
+      "dead_classes": [
+        "wh40k-effects-list",
+        "wh40k-effect-card",
+        "wh40k-effect-card-header",
+        "wh40k-effect-icon",
+        "wh40k-effect-info",
+        "wh40k-effect-name",
+        "wh40k-effect-source",
+        "wh40k-effect-controls",
+        "wh40k-effect-btn",
+        "wh40k-effect-toggle",
+        "wh40k-effect-edit",
+        "wh40k-effect-delete",
+        "wh40k-effect-changes",
+        "wh40k-effect-change",
+        "wh40k-change-key",
+        "wh40k-change-mode",
+        "wh40k-change-value",
+        "wh40k-empty-state",
+        "wh40k-panel-footer",
+        "wh40k-btn-create-effect"
+      ],
+      "note": "effect-row.hbs already fully tw-* ported. wh40k-effects-list already had tw-* in both effects-panel.hbs and active-effects-panel.hbs. wh40k-panel-footer and wh40k-btn-create-effect have no template usages. wh40k-empty-state defined in other blocks. .wh40k-effects-panel .wh40k-badge count badge ported inline to active-effects-panel.hbs.",
+      "templates_updated": [
+        "src/templates/actor/panel/active-effects-panel.hbs"
+      ]
+    }
+  ],
+  "ratchets": {
+    "css:ratchet": "PASS — tw-only=129 mixed=115 css-only=0 (baseline updated)",
+    "animation:ratchet": "PASS — no change"
+  },
+  "total_lines_deleted": 912
+}

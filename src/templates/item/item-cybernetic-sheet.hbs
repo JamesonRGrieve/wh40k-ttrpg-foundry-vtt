@@ -97,25 +97,25 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs wh40k-tabs--cybernetic wh40k-cybernetic-tabs" data-group="primary">
-      <button type="button" class="wh40k-tab wh40k-cybernetic-tab active" data-tab="properties" data-group="primary">
-        <i class="fas fa-cog"></i>
+    <nav class="wh40k-tabs wh40k-tabs--cybernetic wh40k-cybernetic-tabs tw-flex tw-flex-shrink-0 tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-cybernetic-tab active tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-gold)] tw-bg-transparent tw-border-b-2 tw-border-b-[var(--wh40k-gold)] tw--mb-0.5 tw-cursor-pointer" data-tab="properties" data-group="primary">
+        <i class="fas fa-cog tw-mr-1"></i>
         <span>Properties</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-cybernetic-tab" data-tab="effects" data-group="primary">
-        <i class="fas fa-bolt"></i>
+      <button type="button" class="wh40k-tab wh40k-cybernetic-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="effects" data-group="primary">
+        <i class="fas fa-bolt tw-mr-1"></i>
         <span>Effects</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-cybernetic-tab" data-tab="armour" data-group="primary">
-        <i class="fas fa-shield-halved"></i>
+      <button type="button" class="wh40k-tab wh40k-cybernetic-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="armour" data-group="primary">
+        <i class="fas fa-shield-halved tw-mr-1"></i>
         <span>Armour</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-cybernetic-tab" data-tab="installation" data-group="primary">
-        <i class="fas fa-syringe"></i>
+      <button type="button" class="wh40k-tab wh40k-cybernetic-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="installation" data-group="primary">
+        <i class="fas fa-syringe tw-mr-1"></i>
         <span>Installation</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-cybernetic-tab" data-tab="description" data-group="primary">
-        <i class="fas fa-book"></i>
+      <button type="button" class="wh40k-tab wh40k-cybernetic-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="description" data-group="primary">
+        <i class="fas fa-book tw-mr-1"></i>
         <span>Description</span>
       </button>
     </nav>
@@ -123,7 +123,7 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-cybernetic-content wh40k-tab-content wh40k-tab-content--cybernetic scrollable">
+    <div class="wh40k-cybernetic-content wh40k-tab-content wh40k-tab-content--cybernetic scrollable tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3">
       
       {{!-- PROPERTIES TAB --}}
       <div class="wh40k-cybernetic-panel tab active" data-tab="properties" data-group="primary">
@@ -454,7 +454,7 @@
         </div>
         {{else}}
         <div class="wh40k-cybernetic-section">
-          <div class="wh40k-empty-state">
+          <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
             <i class="fas fa-chart-line"></i>
             <p>No stat modifiers defined</p>
             <p class="wh40k-field-hint">Use Active Effects tab to add bonuses</p>
@@ -530,7 +530,7 @@
         </div>
         {{else}}
         <div class="wh40k-cybernetic-section">
-          <div class="wh40k-empty-state">
+          <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
             <i class="fas fa-shield-halved"></i>
             <p>This cybernetic does not provide armour</p>
             <p class="wh40k-field-hint">Enable armour protection above to configure AP values</p>

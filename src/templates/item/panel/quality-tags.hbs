@@ -52,7 +52,7 @@
 <div class="tw-mt-3">
   {{#each qualities}}
   {{#if this.description}}
-  <div class="wh40k-expansion-panel" data-quality-panel="{{this.name}}" style="display: none;">
+  <div class="wh40k-expansion-panel tw-p-2 tw-mt-1 tw-bg-[rgba(20,20,30,0.85)] tw-rounded-md tw-border-l-[3px] tw-border-solid tw-border-[var(--wh40k-accent,#3b82f6)] tw-shadow-inset" data-quality-panel="{{this.name}}" style="display: none;">
     <h4>{{this.name}}{{#if this.rating}} ({{this.rating}}){{/if}}</h4>
     <div class="tw-text-sm tw-leading-6 tw-text-[var(--color-text-secondary)]">
       {{{this.description}}}

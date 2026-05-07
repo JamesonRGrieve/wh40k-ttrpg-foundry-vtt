@@ -48,7 +48,7 @@
                 <div class="wh40k-card__badges{{#unless (eq legacyClasses false)}} wh40k-card-badges{{/unless}} tw-flex tw-gap-[var(--wh40k-space-xs)] tw-mt-[var(--wh40k-space-xs)] tw-flex-wrap">
                     {{#each badges as |badge|}}
                         {{#if badge.label}}
-                        <span class="wh40k-badge{{#if badge.class}} {{badge.class}}{{/if}}">
+                        <span class="wh40k-badge{{#if badge.class}} {{badge.class}}{{/if}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
                             {{#if badge.icon}}<i class="fas {{badge.icon}}"></i>{{/if}}
                             {{badge.label}}
                         </span>
