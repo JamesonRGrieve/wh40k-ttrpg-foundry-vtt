@@ -7,11 +7,11 @@
         <div class="wh40k-field__wrapper">
             <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Integrity.Current"}}</span>
             <div class="tw-flex tw-items-center tw-gap-1">
-                <button class="wh40k-control-button" data-action="adjustIntegrity" data-delta="-1" title="Damage">
+                <button class="tw-cursor-pointer hover:tw-opacity-100" data-action="adjustIntegrity" data-delta="-1" title="Damage">
                     <i class="fas fa-minus"></i>
                 </button>
                 <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.integrity.value" value="{{source.integrity.value}}" />
-                <button class="wh40k-control-button" data-action="adjustIntegrity" data-delta="1" title="Repair">
+                <button class="tw-cursor-pointer hover:tw-opacity-100" data-action="adjustIntegrity" data-delta="1" title="Repair">
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
