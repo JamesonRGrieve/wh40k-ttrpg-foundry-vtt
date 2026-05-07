@@ -82,7 +82,6 @@
         {{!-- Edit Mode (Expandable) --}}
         {{#> systems/wh40k-rpg/templates/actor/partial/vital-edit-body.hbs
               key="experience" actor=actor
-              wrapperClass="experience_details"
               fields=(array
                   (object name="system.experience.total" label=(localize "WH40K.VitalEditBody.ExperienceTotalLabel") value=system.experience.total min="0" placeholder="0")
                   (object name="system.experience.used"  label=(localize "WH40K.VitalEditBody.ExperienceSpentLabel") value=system.experience.used  min="0" max=system.experience.total placeholder="0"))}}

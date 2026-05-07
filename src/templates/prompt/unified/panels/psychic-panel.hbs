@@ -6,12 +6,12 @@
         <h4 class="tw-font-display tw-text-xs tw-font-semibold tw-text-gold-raw bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">Select Power</h4>
         <div class="tw-flex tw-flex-col tw-gap-2 tw-my-2">
             {{#each psychicPowers as |power|}}
-                <label class="tw-flex tw-items-center tw-gap-[14px] tw-py-3 tw-px-[14px] tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(0,0,0,0.35)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-translate-x-1 {{#if power.isSelected}}tw-bg-[rgba(201,162,39,0.08)] tw-border-gold-raw tw-shadow-[0_0_20px_rgba(201,162,39,0.2),inset_0_0_20px_rgba(201,162,39,0.05)] [&_.urd-power-name]:tw-text-gold-raw{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}}"
+                <label class="tw-flex tw-items-center tw-gap-[14px] tw-py-3 tw-px-[14px] tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(0,0,0,0.35)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-translate-x-1 {{#if power.isSelected}}tw-bg-[rgba(201,162,39,0.08)] tw-border-gold-raw tw-shadow-[0_0_20px_rgba(201,162,39,0.2),inset_0_0_20px_rgba(201,162,39,0.05)]{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}}"
                        data-action="selectPower" data-power-id="{{power.id}}">
                     <input class="tw-w-5 tw-h-5 tw-cursor-pointer tw-shrink-0 tw-[accent-color:#c9a227]" type="checkbox" {{checked power.isSelected}} name="{{power.id}}" tabindex="-1" />
                     <img class="tw-w-[42px] tw-h-[42px] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-object-cover tw-shrink-0 tw-bg-[rgba(0,0,0,0.3)]" alt="{{power.name}}" src="{{power.img}}" />
                     <div class="tw-flex-1 tw-min-w-0">
-                        <div class="urd-power-name tw-font-semibold tw-text-[0.95rem] tw-text-[#e8e4d9] tw-mb-[3px] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">{{power.name}}</div>
+                        <div class="tw-font-semibold tw-text-[0.95rem] {{#if power.isSelected}}tw-text-gold-raw{{else}}tw-text-[#e8e4d9]{{/if}} tw-mb-[3px] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">{{power.name}}</div>
                     </div>
                 </label>
             {{/each}}
