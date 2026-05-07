@@ -1,24 +1,24 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Vehicle.Integrity") icon="fa-heart-broken" rootClass="tw-col-span-2" bodyClass="tw-p-0"}}
     <div class="tw-flex tw-flex-col tw-gap-2 tw-p-2">
-        <div class="wh40k-field__wrapper">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Integrity.Max"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.integrity.max" value="{{source.integrity.max}}" />
+        <div class="tw-flex tw-flex-col tw-gap-1">
+            <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.Integrity.Max"}}</span>
+            <input type="number" data-dtype="Number" class="tw-w-full tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-center tw-font-numeric" name="system.integrity.max" value="{{source.integrity.max}}" />
         </div>
-        <div class="wh40k-field__wrapper">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Integrity.Current"}}</span>
+        <div class="tw-flex tw-flex-col tw-gap-1">
+            <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.Integrity.Current"}}</span>
             <div class="tw-flex tw-items-center tw-gap-1">
                 <button class="tw-cursor-pointer hover:tw-opacity-100" data-action="adjustIntegrity" data-delta="-1" title="Damage">
                     <i class="fas fa-minus"></i>
                 </button>
-                <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.integrity.value" value="{{source.integrity.value}}" />
+                <input type="number" data-dtype="Number" class="tw-w-full tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-center tw-font-numeric" name="system.integrity.value" value="{{source.integrity.value}}" />
                 <button class="tw-cursor-pointer hover:tw-opacity-100" data-action="adjustIntegrity" data-delta="1" title="Repair">
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
         </div>
-        <div class="wh40k-field__wrapper">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Integrity.Critical"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.integrity.critical" value="{{source.integrity.critical}}" />
+        <div class="tw-flex tw-flex-col tw-gap-1">
+            <span class="tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.Integrity.Critical"}}</span>
+            <input type="number" data-dtype="Number" class="tw-w-full tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-center tw-font-numeric" name="system.integrity.critical" value="{{source.integrity.critical}}" />
         </div>
         {{#if actor.system.isDamaged}}
             <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-warning tw-text-sm tw-font-semibold tw-px-2 tw-py-1 tw-rounded-md tw-bg-[rgba(200,120,0,0.1)]">
