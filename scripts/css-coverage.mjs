@@ -157,15 +157,49 @@ const JS_HOOKS = new Set([
     'wh40k-card-body',
     'wh40k-card-footer',
     'wh40k-source-ref',
+    // Foundry ApplicationV2 tab panel selector — Foundry's tab engine reads .tab to
+    // find panel content divs; actual show/hide is already driven by tw-hidden / tw-flex
+    // on these templates, so .tab is a permanent JS structural hook, not project CSS.
+    'tab',
+    // Foundry ProseMirror editor content area — queried by Foundry's editor JS, not project CSS.
+    'editor-content',
+    'editor',
+    // Foundry item-row action class hooks — trigger Foundry's built-in item row handlers;
+    // the Tailwind port does not replace these because Foundry reads them by class name.
+    'item-delete',
+    'item-edit',
+    'item-drag',
+    // Foundry dialog role classes — Foundry's dialog system resolves buttons by these class names.
+    'dialog-button',
+    'dialog-buttons',
+    'dialog-content',
+    'cancel',
+    'roll',
+    'weapon-select',
+    // Foundry ApplicationV2 helpers — read by Foundry JS, not project CSS selectors.
+    'scrollable',
+    'form-group',
+    'form-row',
+    // actor-drag and roll-characteristic are set and queried by character-sheet.ts for
+    // drag registration and roll dispatch; they are not CSS classes.
+    'actor-drag',
+    'roll-characteristic',
+    // Collapsible section structural identifiers wired to data-collapse JS handlers.
+    'collapsible-body',
+    'collapsible-header',
+    'collapse-icon',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
-// class attr. Two forms:
-//   Leading-strip:  `{{cssPrefix}}-bar-container` → `-bar-container`  (starts with hyphen)
-//   Trailing-strip: `wh40k-{{key}}-badge`         → `wh40k-`          (ends with hyphen)
-// Neither form is a valid CSS class name (CSS identifiers cannot start or end with a
-// bare hyphen in this way), so they are safely exempt from the non-tw check.
-const HBS_FRAGMENT_RE = /^-[a-z][a-z0-9-]*$|^[a-z][a-z0-9-]+-$/;
+// class attr. Several forms:
+//   Leading-strip:         `{{cssPrefix}}-bar-container` → `-bar-container`  (starts with hyphen)
+//   Trailing-strip:        `wh40k-{{key}}-badge`         → `wh40k-`          (ends with hyphen)
+//   BEM modifier conditional: `{{#if filled}}--filled{{/if}}` → `--filled`  (double-hyphen prefix)
+//   Multi-line HBS helper: `{{#if (eq foo "bar")}}` split across lines leaves `(eq` or `(or` etc.
+//   Multi-line HBS block:  `{{#if` left as a leading fragment from a multi-line opening tag.
+//   Pure numeric token:    `3` from `{{someVar}}3` fragments.
+// None of these forms are valid standalone CSS class names.
+const HBS_FRAGMENT_RE = /^-{1,2}[a-z][a-z0-9-]*$|^[a-z][a-z0-9-]+-$|^\(|^\{\{|^\d+$/;
 
 /** Return true when a bare utility string is a Tailwind utility (any polarity). */
 function isTwBare(s) {
