@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-07T13:51:00.500Z",
+  "generatedAt": "2026-05-08T00:06:37.211Z",
   "total": 244,
-  "adopted": 244,
+  "adopted": 243,
   "perSystemHits": {
-    "bc": 427,
-    "dh1e": 427,
-    "dh2e": 431,
-    "dw": 427,
-    "ow": 427,
-    "rt": 431,
-    "im": 431
+    "bc": 426,
+    "dh1e": 426,
+    "dh2e": 430,
+    "dw": 426,
+    "ow": 426,
+    "rt": 430,
+    "im": 430
   },
   "adoptedTemplates": [
     "src/templates/actor/npc/tab-npc.hbs",
@@ -68,7 +68,6 @@
     "src/templates/actor/partial/dashboard-zone.hbs",
     "src/templates/actor/partial/degree-meter-panel.hbs",
     "src/templates/actor/partial/display-toggle.hbs",
-    "src/templates/actor/partial/dropzone.hbs",
     "src/templates/actor/partial/effect-row.hbs",
     "src/templates/actor/partial/empty-state.hbs",
     "src/templates/actor/partial/header-base.hbs",

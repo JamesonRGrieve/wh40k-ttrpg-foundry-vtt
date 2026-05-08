@@ -3,8 +3,8 @@
  * Enhanced compendium browsing with filtering, searching, and type organization
  */
 
-import ApplicationV2Mixin from './api/application-v2-mixin.ts';
 import type { ApplicationV2Ctor } from './api/application-types.ts';
+import ApplicationV2Mixin from './api/application-v2-mixin.ts';
 
 /** A single result entry in the compendium browser list. */
 interface BrowserResult extends CompendiumIndexEntry {
@@ -111,7 +111,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
     /** @inheritDoc */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-        const context = (await super._prepareContext(options)) as Record<string, unknown>;
+        const context = await super._prepareContext(options);
 
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg');
 
@@ -139,7 +139,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         // Add armour-specific filters if filtering armour
         const hasArmour = results.some((r) => r.type === 'armour');
         if (hasArmour) {
-            context.armourTypes = CONFIG.WH40K?.armourTypes || {};
+            context.armourTypes = (CONFIG.WH40K as unknown as Record<string, unknown> | undefined)?.armourTypes ?? {};
             context.hasArmourFilters = true;
         }
 
@@ -147,7 +147,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         const hasArmourMods = results.some((r) => r.type === 'armourModification');
         if (hasArmourMods) {
             context.hasArmourModFilters = true;
-            context.armourTypesForMods = CONFIG.WH40K?.armourTypes || {};
+            context.armourTypesForMods = (CONFIG.WH40K as unknown as Record<string, unknown> | undefined)?.armourTypes ?? {};
         }
 
         return context;
@@ -182,7 +182,9 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             const hEl = el as HTMLElement;
             hEl.setAttribute('draggable', 'true');
             hEl.addEventListener('dragstart', this._onDragStart.bind(this));
-            hEl.addEventListener('click', this._onItemClick.bind(this));
+            hEl.addEventListener('click', (e) => {
+                void this._onItemClick(e);
+            });
         });
     }
 
@@ -296,8 +298,8 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      * @returns {object}       Prepared armour data
      */
     _prepareArmourData(system: Record<string, unknown>): Record<string, unknown> {
-        const ap = (system.armourPoints || {}) as Record<string, number>;
-        const coverage = (system.coverage || []) as string[];
+        const ap = (system.armourPoints ?? {}) as Record<string, number>;
+        const coverage = (system.coverage ?? []) as string[];
 
         // Calculate AP summary
         const locations: Array<'head' | 'body' | 'leftArm' | 'rightArm' | 'leftLeg' | 'rightLeg'> = [
@@ -344,8 +346,8 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             coverageIcons = icons.join('');
         }
 
-        // Get type label
-        const typeKey = String(system.type || 'flak')
+        // Get type label — system.type is unknown, coerce to string safely
+        const typeKey = (typeof system.type === 'string' ? system.type : 'flak')
             .split('-')
             .map((s: string) => s.capitalize())
             .join('');
@@ -359,7 +361,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             maxAP: Math.max(...values),
             minAP: Math.min(...values),
             maxAgility: system.maxAgility,
-            properties: system.properties || [],
+            properties: system.properties ?? [],
         };
     }
 
@@ -369,16 +371,20 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      * @returns {object}       Prepared armour mod data
      */
     _prepareArmourModData(system: Record<string, unknown>): Record<string, unknown> {
-        const restrictions = (system.restrictions || {}) as { armourTypes?: string[] };
-        const modifiers = (system.modifiers || {}) as { armourPoints?: number; maxAgility?: number; weight?: number };
+        const restrictions = (system.restrictions ?? {}) as { armourTypes?: string[] };
+        const modifiers = (system.modifiers ?? {}) as { armourPoints?: number; maxAgility?: number; weight?: number };
 
         // Restriction summary
-        const armourTypes = restrictions.armourTypes || [];
+        const armourTypes = restrictions.armourTypes ?? [];
         let restrictionLabel = game.i18n.localize('WH40K.Modification.AnyArmour');
-        if (armourTypes.length && !armourTypes.includes('any')) {
+        if (armourTypes.length > 0 && !armourTypes.includes('any')) {
+            interface ArmourTypeConfig {
+                label: string;
+            }
+            const wh40kArmourTypes = (CONFIG.WH40K as unknown as Record<string, Record<string, ArmourTypeConfig>> | undefined)?.armourTypes;
             const labels = armourTypes.map((type: string) => {
-                const config = CONFIG.WH40K?.armourTypes?.[type];
-                return config ? game.i18n.localize(config.label) : type;
+                const config = wh40kArmourTypes?.[type];
+                return config !== undefined ? game.i18n.localize(config.label) : type;
             });
             restrictionLabel = labels.join(', ');
         }
@@ -408,13 +414,13 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         }
 
         // Properties summary
-        const addedCount = (system.addedProperties as unknown[] | undefined)?.length || 0;
-        const removedCount = (system.removedProperties as unknown[] | undefined)?.length || 0;
+        const addedCount = (system.addedProperties as unknown[] | undefined)?.length ?? 0;
+        const removedCount = (system.removedProperties as unknown[] | undefined)?.length ?? 0;
         let propertiesSummary = '';
-        if (addedCount || removedCount) {
+        if (addedCount > 0 || removedCount > 0) {
             const parts = [];
-            if (addedCount) parts.push(`+${addedCount}`);
-            if (removedCount) parts.push(`-${removedCount}`);
+            if (addedCount > 0) parts.push(`+${addedCount}`);
+            if (removedCount > 0) parts.push(`-${removedCount}`);
             propertiesSummary = `${parts.join(' ')} props`;
         }
 
@@ -433,38 +439,47 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      * @returns {object}       Prepared quality data
      */
     _prepareQualityData(system: Record<string, unknown>): Record<string, unknown> {
+        interface QualityDef {
+            label: string;
+            description: string;
+            hasLevel?: boolean;
+        }
+        interface WH40KConfigShape {
+            weaponQualities?: Record<string, QualityDef>;
+            armourTypes?: Record<string, { label: string }>;
+        }
         // Access CONFIG.WH40K (set during init hook)
-        const wh40kConfig = CONFIG?.WH40K;
+        const wh40kConfig = CONFIG.WH40K as unknown as WH40KConfigShape | undefined;
 
-        if (!wh40kConfig) {
+        if (wh40kConfig === undefined) {
             console.warn('WH40K | CONFIG.WH40K not available in compendium browser');
             return {
-                identifier: system.identifier || '',
-                label: system.name || 'Unknown Quality',
+                identifier: system.identifier ?? '',
+                label: system.name ?? 'Unknown Quality',
                 description: '',
             };
         }
 
         // Try to get quality definition from CONFIG
-        const identifier = String(system.identifier || '');
-        const def = wh40kConfig.weaponQualities?.[identifier];
+        const identifier = typeof system.identifier === 'string' ? system.identifier : '';
+        const def: QualityDef | undefined = wh40kConfig.weaponQualities?.[identifier];
 
         // Get localized label
-        let label;
-        if (def) {
+        let label: unknown;
+        if (def !== undefined) {
             label = game.i18n.localize(def.label);
         } else {
             // Fallback to system name
-            label = system.name || 'Unknown Quality';
+            label = system.name ?? 'Unknown Quality';
         }
 
         // Get description (truncated for browser display)
-        let description;
-        if (def) {
+        let description: string;
+        if (def !== undefined) {
             description = game.i18n.localize(def.description);
-        } else if (system.effect) {
+        } else if (typeof system.effect === 'string' && system.effect !== '') {
             // Legacy: system.effect might be HTML or page number
-            if (typeof system.effect === 'string' && !system.effect.match(/^\d+$/)) {
+            if (!system.effect.match(/^\d+$/)) {
                 description = system.effect.replace(/<[^>]*>/g, ''); // Strip HTML
             } else {
                 description = `See rulebook page ${system.effect}`;
@@ -480,8 +495,8 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         }
 
         // Check if quality has level parameter
-        const hasLevel = def?.hasLevel || system.hasLevel || false;
-        const level = system.level || null;
+        const hasLevel = def?.hasLevel === true || system.hasLevel === true;
+        const level = system.level ?? null;
 
         return {
             identifier,
@@ -509,7 +524,8 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             if (!groups.has(label)) {
                 groups.set(label, []);
             }
-            groups.get(label)!.push(entry);
+            const groupItems = groups.get(label);
+            if (groupItems !== undefined) groupItems.push(entry);
         }
 
         return Array.from(groups.entries())
@@ -520,41 +536,45 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     _getGroupLabel(entry: BrowserResult): string {
         switch (this._filters.groupBy) {
             case 'pack':
-                return entry.pack || 'Unknown Pack';
+                return entry.pack !== '' ? entry.pack : 'Unknown Pack';
             case 'type':
-                return entry.type || 'Unknown Type';
+                return entry.type !== undefined && entry.type !== '' ? entry.type : 'Unknown Type';
             case 'category':
-                return entry.categoryLabel || 'Uncategorized';
+                return entry.categoryLabel !== '' ? entry.categoryLabel : 'Uncategorized';
             case 'source':
             default:
-                return entry.sourceLabel || 'Unknown Source';
+                return entry.sourceLabel !== '' ? entry.sourceLabel : 'Unknown Source';
         }
     }
 
     _getEntrySource(entry: CompendiumIndexEntry & { system?: Record<string, unknown> }): string {
         const rawSource = entry.system?.source;
-        if (!rawSource) return '';
+        if (rawSource === undefined || rawSource === null) return '';
         if (typeof rawSource === 'string') return rawSource;
-        if (typeof rawSource === 'object' && rawSource !== null) {
+        if (typeof rawSource === 'object') {
             const src = rawSource as Record<string, unknown>;
-            return String(src.book || src.custom || '');
+            const val = src.book ?? src.custom;
+            return typeof val === 'string' ? val : '';
         }
         return '';
     }
 
     _getEntryCategory(entry: CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> }): string {
-        if (entry.system?.category) return String(entry.system.category);
+        if (typeof entry.system?.category === 'string' && entry.system.category !== '') return entry.system.category;
         const flags = entry.flags as Record<string, Record<string, unknown>> | undefined;
-        if (flags?.rt?.kind) return String(flags.wh40k?.kind || '');
-        if (entry.type === 'skill' && entry.system?.skillType) {
-            return String(entry.system.skillType);
+        if (flags?.rt.kind !== undefined) {
+            const kind = flags.wh40k.kind;
+            return typeof kind === 'string' ? kind : '';
+        }
+        if (entry.type === 'skill' && typeof entry.system?.skillType === 'string' && entry.system.skillType !== '') {
+            return entry.system.skillType;
         }
         return '';
     }
 
     _passesFilters(entry: CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> }, pack: CompendiumPack): boolean {
         // Search filter
-        if (this._filters.search) {
+        if (this._filters.search !== '') {
             const searchLower = this._filters.search.toLowerCase();
             if (!entry.name.toLowerCase().includes(searchLower)) return false;
         }
@@ -570,22 +590,22 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         }
 
         // Armour-specific filters
-        if (entry.type === 'armour' && entry.system) {
+        if (entry.type === 'armour' && entry.system !== undefined) {
             // Armour type filter
-            if (this._filters.armourType && this._filters.armourType !== 'all') {
+            if (this._filters.armourType !== undefined && this._filters.armourType !== 'all') {
                 if (entry.system.type !== this._filters.armourType) return false;
             }
 
             // Minimum AP filter
-            if (this._filters.minAP && this._filters.minAP > 0) {
-                const ap = (entry.system.armourPoints || {}) as Record<string, number>;
+            if (this._filters.minAP !== undefined && this._filters.minAP > 0) {
+                const ap = (entry.system.armourPoints ?? {}) as Record<string, number>;
                 const maxAP = Math.max(ap.head || 0, ap.body || 0, ap.leftArm || 0, ap.rightArm || 0, ap.leftLeg || 0, ap.rightLeg || 0);
                 if (maxAP < this._filters.minAP) return false;
             }
 
             // Coverage filter
-            if (this._filters.coverage && this._filters.coverage !== 'all') {
-                const coverage = (entry.system.coverage || []) as string[];
+            if (this._filters.coverage !== undefined && this._filters.coverage !== 'all') {
+                const coverage = (entry.system.coverage ?? []) as string[];
                 if (this._filters.coverage === 'full') {
                     if (!coverage.includes('all')) return false;
                 } else if (this._filters.coverage === 'partial') {
@@ -595,19 +615,19 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         }
 
         // Armour modification filters
-        if (entry.type === 'armourModification' && entry.system) {
+        if (entry.type === 'armourModification' && entry.system !== undefined) {
             // Filter by applicable armour type
-            if (this._filters.modType && this._filters.modType !== 'all') {
-                const restrictions = (entry.system.restrictions || {}) as { armourTypes?: string[] };
-                const types = restrictions.armourTypes || [];
+            if (this._filters.modType !== undefined && this._filters.modType !== 'all') {
+                const restrictions = (entry.system.restrictions ?? {}) as { armourTypes?: string[] };
+                const types = restrictions.armourTypes ?? [];
                 if (!types.includes('any') && !types.includes(this._filters.modType)) {
                     return false;
                 }
             }
 
             // Filter by has modifiers
-            if (this._filters.hasModifiers) {
-                const mods = (entry.system.modifiers || {}) as { armourPoints?: number; maxAgility?: number; weight?: number };
+            if (this._filters.hasModifiers === true) {
+                const mods = (entry.system.modifiers ?? {}) as { armourPoints?: number; maxAgility?: number; weight?: number };
                 const hasAny =
                     (mods.armourPoints !== undefined && mods.armourPoints !== 0) ||
                     (mods.maxAgility !== undefined && mods.maxAgility !== 0) ||
@@ -616,9 +636,9 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             }
 
             // Filter by has properties
-            if (this._filters.hasProperties) {
-                const added = (entry.system.addedProperties as unknown[] | undefined)?.length || 0;
-                const removed = (entry.system.removedProperties as unknown[] | undefined)?.length || 0;
+            if (this._filters.hasProperties === true) {
+                const added = (entry.system.addedProperties as unknown[] | undefined)?.length ?? 0;
+                const removed = (entry.system.removedProperties as unknown[] | undefined)?.length ?? 0;
                 if (added === 0 && removed === 0) return false;
             }
         }
@@ -632,65 +652,65 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
     _onSearch(event: InputEvent): void {
         this._filters.search = (event.target as HTMLInputElement).value;
-        this.render();
+        void this.render();
     }
 
     _onFilterSource(event: Event): void {
         this._filters.source = (event.target as HTMLSelectElement).value;
-        this.render();
+        void this.render();
     }
 
     _onFilterCategory(event: Event): void {
         this._filters.category = (event.target as HTMLSelectElement).value;
-        this.render();
+        void this.render();
     }
 
     _onGroupBy(event: Event): void {
         this._filters.groupBy = (event.target as HTMLSelectElement).value;
-        this.render();
+        void this.render();
     }
 
     _onFilterArmourType(event: Event): void {
         this._filters.armourType = (event.target as HTMLSelectElement).value;
-        this.render();
+        void this.render();
     }
 
     _onFilterMinAP(event: Event): void {
         this._filters.minAP = parseInt((event.target as HTMLInputElement).value) || 0;
-        this.render();
+        void this.render();
     }
 
     _onFilterCoverage(event: Event): void {
         this._filters.coverage = (event.target as HTMLSelectElement).value;
-        this.render();
+        void this.render();
     }
 
     _onFilterModType(event: Event): void {
         this._filters.modType = (event.target as HTMLSelectElement).value;
-        this.render();
+        void this.render();
     }
 
     _onFilterHasModifiers(event: Event): void {
         this._filters.hasModifiers = (event.target as HTMLInputElement).checked;
-        this.render();
+        void this.render();
     }
 
     _onFilterHasProperties(event: Event): void {
         this._filters.hasProperties = (event.target as HTMLInputElement).checked;
-        this.render();
+        void this.render();
     }
 
     async _onItemClick(event: PointerEvent): Promise<void> {
         event.preventDefault();
         const uuid = (event.currentTarget as HTMLElement).dataset.uuid;
-        if (!uuid) return;
+        if (uuid === undefined) return;
         const doc = await fromUuid(uuid);
-        if (doc) (doc as unknown as FoundryDocWithSheet).sheet.render(true);
+        if (doc !== null) (doc as unknown as FoundryDocWithSheet).sheet.render(true);
     }
 
     _onDragStart(event: DragEvent): void {
         const uuid = (event.currentTarget as HTMLElement).dataset.uuid;
-        if (!uuid || !event.dataTransfer) return;
+        if (uuid === undefined || event.dataTransfer === null) return;
         event.dataTransfer.setData(
             'text/plain',
             JSON.stringify({
@@ -712,7 +732,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      */
     static #clearFilters(this: RTCompendiumBrowser, event: Event, target: HTMLElement): void {
         this._filters = { type: 'all', search: '', source: 'all', category: 'all', groupBy: 'source' };
-        this.render();
+        void this.render();
     }
 
     /**
@@ -723,9 +743,9 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      */
     static async #openItem(event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
-        if (!uuid) return;
+        if (uuid === undefined) return;
         const doc = await fromUuid(uuid);
-        if (doc) (doc as unknown as FoundryDocWithSheet).sheet.render(true);
+        if (doc !== null) (doc as unknown as FoundryDocWithSheet).sheet.render(true);
     }
 
     /* -------------------------------------------- */
@@ -739,7 +759,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      */
     static open(options: Record<string, unknown> = {}): RTCompendiumBrowser {
         const browser = new RTCompendiumBrowser(options);
-        browser.render(true);
+        void browser.render(true);
         return browser;
     }
 }

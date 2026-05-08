@@ -1,7 +1,41 @@
-import CreatureTemplate from './templates/creature.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import CreatureTemplate from './templates/creature.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
+/** Minimal shape of an actor parent that character data methods depend on. */
+interface ActorParent {
+    items: {
+        filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[];
+        get: (id: string) => WH40KItem | undefined;
+        [Symbol.iterator](): Iterator<WH40KItem>;
+    };
+}
+
+/** Option in a grant choice. */
+interface GrantChoiceOption {
+    value?: string;
+    name?: string;
+}
+
+/** A single choice entry in a grant. */
+interface GrantChoice {
+    label?: string;
+    name?: string;
+    type?: string;
+    options?: GrantChoiceOption[];
+}
+
+/** Shape of origin-path grants data object. */
+interface OriginPathGrants {
+    aptitudes?: string[];
+    choices?: GrantChoice[];
+    woundsFormula?: string;
+}
+
+/** Shape of a stored roll result. */
+interface RollResult {
+    rolled?: number;
+    breakdown?: string;
+}
 
 /**
  * List of characteristic keys used for character generation.
@@ -293,13 +327,13 @@ export default class CharacterData extends CreatureTemplate {
 
     /** @inheritDoc */
     static _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
         // Handle old characteristic field names or other character-specific migrations
     }
 
     /** @inheritDoc */
     static override _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown> = {}): void {
-        super._cleanData?.(source, options);
+        super._cleanData(source, options);
         CharacterData.#cleanExperience(source);
         CharacterData.#cleanMentalState(source);
         CharacterData.#cleanRogueTrader(source);
@@ -310,7 +344,7 @@ export default class CharacterData extends CreatureTemplate {
      * @param {Record<string, unknown>} source - The source data
      */
     static #cleanExperience(source: Record<string, unknown> | undefined): void {
-        if (!source || !source.experience || typeof source.experience !== 'object') return;
+        if (typeof source?.experience !== 'object' || source.experience === null) return;
         const experience = source.experience as Record<string, unknown>;
 
         const fields = ['used', 'total', 'available', 'spentCharacteristics', 'spentSkills', 'spentTalents', 'spentPsychicPowers', 'calculatedTotal'];
@@ -405,8 +439,8 @@ export default class CharacterData extends CreatureTemplate {
      * @protected
      */
     _computeOriginPathEffects(): void {
-        const actor = this.parent;
-        if (!actor?.items) return;
+        const actor = this.parent as ActorParent | null | undefined;
+        if (actor?.items === undefined) return;
 
         const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
 
@@ -441,17 +475,23 @@ export default class CharacterData extends CreatureTemplate {
 
         for (const item of originItems) {
             // Get step from system data (camelCase like "homeWorld", "career")
-            const step: string = String(item.system?.step || (item.flags?.rt as Record<string, unknown> | undefined)?.step || '');
+            const rtFlags = item.flags['rt'] as Record<string, unknown>;
+            const step: string = item.system.step ?? (rtFlags['step'] as string | undefined) ?? '';
             if (Object.prototype.hasOwnProperty.call(stepMap, step)) {
                 stepMap[step] = item;
             }
 
             // Get human-readable step name for display
             const stepLabel = this._getStepLabel(step);
+            const sysData = item.system as Record<string, unknown>;
+            const sysEffects = typeof sysData['effects'] === 'string' ? sysData['effects'] : '';
+            const sysDescText = typeof sysData['descriptionText'] === 'string' ? sysData['descriptionText'] : '';
+            const descValue = typeof item.system.description === 'object' ? (item.system.description as { value?: string }).value ?? '' : '';
+            const benefit = sysEffects !== '' ? sysEffects : sysDescText !== '' ? sysDescText : descValue;
             this.backgroundEffects.abilities.push({
-                source: stepLabel || 'Origin Path',
+                source: stepLabel !== '' ? stepLabel : 'Origin Path',
                 name: item.name,
-                benefit: item.system?.effects || item.system?.descriptionText || item.system?.description?.value || '',
+                benefit,
             });
         }
 
@@ -459,29 +499,27 @@ export default class CharacterData extends CreatureTemplate {
         this.backgroundEffects.originPath = stepMap;
 
         // Update the originPath system data with the names (only if origin builder items exist)
-        if (this.originPath) {
-            // RT steps
-            if (stepMap.homeWorld?.name) this.originPath.homeWorld = stepMap.homeWorld.name;
-            if (stepMap.birthright?.name) this.originPath.birthright = stepMap.birthright.name;
-            if (stepMap.lureOfTheVoid?.name) this.originPath.lureOfTheVoid = stepMap.lureOfTheVoid.name;
-            if (stepMap.trialsAndTravails?.name) this.originPath.trialsAndTravails = stepMap.trialsAndTravails.name;
-            if (stepMap.motivation?.name) this.originPath.motivation = stepMap.motivation.name;
-            if (stepMap.career?.name) this.originPath.career = stepMap.career.name;
-            // DH2e steps
-            if (stepMap.background?.name) this.originPath.background = stepMap.background.name;
-            if (stepMap.role?.name) this.originPath.role = stepMap.role.name;
-            if (stepMap.elite?.name) this.originPath.elite = stepMap.elite.name;
-            if (stepMap.divination?.name) this.originPath.divination = stepMap.divination.name;
-            // BC steps
-            if (stepMap.race?.name) this.originPath.race = stepMap.race.name;
-            if (stepMap.archetype?.name) this.originPath.archetype = stepMap.archetype.name;
-            if (stepMap.pride?.name) this.originPath.pride = stepMap.pride.name;
-            if (stepMap.disgrace?.name) this.originPath.disgrace = stepMap.disgrace.name;
-            // OW / DW steps
-            if (stepMap.regiment?.name) this.originPath.regiment = stepMap.regiment.name;
-            if (stepMap.speciality?.name) this.originPath.speciality = stepMap.speciality.name;
-            if (stepMap.chapter?.name) this.originPath.chapter = stepMap.chapter.name;
-        }
+        // RT steps
+        if (stepMap.homeWorld !== null) this.originPath.homeWorld = stepMap.homeWorld.name;
+        if (stepMap.birthright !== null) this.originPath.birthright = stepMap.birthright.name;
+        if (stepMap.lureOfTheVoid !== null) this.originPath.lureOfTheVoid = stepMap.lureOfTheVoid.name;
+        if (stepMap.trialsAndTravails !== null) this.originPath.trialsAndTravails = stepMap.trialsAndTravails.name;
+        if (stepMap.motivation !== null) this.originPath.motivation = stepMap.motivation.name;
+        if (stepMap.career !== null) this.originPath.career = stepMap.career.name;
+        // DH2e steps
+        if (stepMap.background !== null) this.originPath.background = stepMap.background.name;
+        if (stepMap.role !== null) this.originPath.role = stepMap.role.name;
+        if (stepMap.elite !== null) this.originPath.elite = stepMap.elite.name;
+        if (stepMap.divination !== null) this.originPath.divination = stepMap.divination.name;
+        // BC steps
+        if (stepMap.race !== null) this.originPath.race = stepMap.race.name;
+        if (stepMap.archetype !== null) this.originPath.archetype = stepMap.archetype.name;
+        if (stepMap.pride !== null) this.originPath.pride = stepMap.pride.name;
+        if (stepMap.disgrace !== null) this.originPath.disgrace = stepMap.disgrace.name;
+        // OW / DW steps
+        if (stepMap.regiment !== null) this.originPath.regiment = stepMap.regiment.name;
+        if (stepMap.speciality !== null) this.originPath.speciality = stepMap.speciality.name;
+        if (stepMap.chapter !== null) this.originPath.chapter = stepMap.chapter.name;
 
         // Collect aptitudes from origin path (DH2e/BC/OW use aptitudes for XP costs).
         // Sources: fixed grants.aptitudes + resolved grants.choices[type=aptitude].
@@ -491,42 +529,42 @@ export default class CharacterData extends CreatureTemplate {
         const allAptitudes = new Set<string>();
 
         for (const item of originItems) {
-            const grants = item.system?.grants;
-            if (!grants) continue;
+            const grants = item.system.grants as OriginPathGrants | undefined;
+            if (grants === undefined) continue;
 
             // Fixed aptitudes
             if (Array.isArray(grants.aptitudes)) {
                 for (const apt of grants.aptitudes) {
-                    if (apt) allAptitudes.add(apt);
+                    if (apt !== '') allAptitudes.add(apt);
                 }
             }
 
             // Resolved aptitude choices — mirrors the key logic in origin-path-builder._prepareChoices
-            const choices = (grants.choices ?? []) as any[];
-            const selectedChoices = (item.system?.selectedChoices ?? {}) as Record<string, string[]>;
-            const labelCounts: Record<string, number> = {};
+            const choices: GrantChoice[] = Array.isArray(grants.choices) ? grants.choices : [];
+            const selectedChoices = (item.system.selectedChoices ?? {}) as Record<string, string[]>;
+            const labelCounts: Partial<Record<string, number>> = {};
             for (const choice of choices) {
-                const baseLabel = choice.label || choice.name || '';
-                labelCounts[baseLabel] = (labelCounts[baseLabel] || 0) + 1;
-                const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
+                const baseLabel = choice.label ?? choice.name ?? '';
+                labelCounts[baseLabel] = (labelCounts[baseLabel] ?? 0) + 1;
+                const suffix = (labelCounts[baseLabel] ?? 0) > 1 ? ` (${labelCounts[baseLabel]})` : '';
                 const choiceKey = `${baseLabel}${suffix}`;
                 if (choice.type !== 'aptitude') continue;
                 const picks = selectedChoices[choiceKey];
                 if (!Array.isArray(picks)) continue;
                 for (const pick of picks) {
-                    const option = choice.options?.find((o: any) => o.value === pick || o.name === pick);
-                    const value = option?.value || option?.name || pick;
-                    if (value) allAptitudes.add(value);
+                    const option = choice.options?.find((o: GrantChoiceOption) => o.value === pick || o.name === pick);
+                    const value = option?.value ?? option?.name ?? pick;
+                    if (value !== '') allAptitudes.add(value);
                 }
             }
         }
         this.aptitudes = [...allAptitudes];
 
         // Derive gameSystem from origin path items if not already set
-        if (originItems.length > 0 && (!this.gameSystem || this.gameSystem === 'rt')) {
+        if (originItems.length > 0 && this.gameSystem === 'rt') {
             const firstSystem = originItems[0]?.system?.gameSystem;
-            if (firstSystem && firstSystem !== this.gameSystem) {
-                this.gameSystem = firstSystem;
+            if (typeof firstSystem === 'string' && firstSystem !== this.gameSystem) {
+                this.gameSystem = firstSystem as CharacterData['gameSystem'];
             }
         }
     }
@@ -570,15 +608,15 @@ export default class CharacterData extends CreatureTemplate {
      * @protected
      */
     _computeExperienceSpent(): void {
-        const actor = this.parent;
-        if (!actor?.items || !this.experience) return;
+        const actor = this.parent as ActorParent | null | undefined;
+        if (actor?.items === undefined) return;
 
         this.experience.spentCharacteristics = 0;
         this.experience.spentSkills = 0;
         this.experience.spentTalents = 0;
 
-        const psy = (this as any).psy as { cost: number } | undefined;
-        this.experience.spentPsychicPowers = psy?.cost || 0;
+        const psySelf = this as unknown as { psy?: { cost?: number } };
+        this.experience.spentPsychicPowers = psySelf.psy?.cost ?? 0;
 
         for (const characteristic of Object.values(this.characteristics) as Array<{ cost: number | string }>) {
             this.experience.spentCharacteristics += parseInt(String(characteristic.cost), 10);
@@ -590,15 +628,16 @@ export default class CharacterData extends CreatureTemplate {
                     this.experience.spentSkills += parseInt(String(speciality.cost ?? 0), 10);
                 }
             } else {
-                this.experience.spentSkills += parseInt(String(skill.cost ?? 0), 10);
+                this.experience.spentSkills += parseInt(String(skill.cost), 10);
             }
         }
 
         for (const item of actor.items) {
-            if ((item as any).isTalent) {
-                this.experience.spentTalents += parseInt((item as any).system?.cost || '0', 10);
-            } else if ((item as any).isPsychicPower) {
-                this.experience.spentPsychicPowers += parseInt((item as any).system?.cost || '0', 10);
+            const itemCost = String(item.system.cost ?? '0');
+            if (item.isTalent) {
+                this.experience.spentTalents += parseInt(itemCost, 10);
+            } else if (item.isPsychicPower) {
+                this.experience.spentPsychicPowers += parseInt(itemCost, 10);
             }
         }
 
@@ -611,12 +650,24 @@ export default class CharacterData extends CreatureTemplate {
      * @protected
      */
     _updateWoundsFateModifiers(): void {
-        const modifierSources = (this as any).modifierSources as { wounds?: Array<{ value?: number }>; fate?: Array<{ value?: number }> } | undefined;
-        const itemWounds = modifierSources?.wounds?.reduce((total: number, src: { value?: number }) => total + (src.value || 0), 0) || 0;
-        const itemFate = modifierSources?.fate?.reduce((total: number, src: { value?: number }) => total + (src.value || 0), 0) || 0;
+        type ModifierSrc = { value?: number };
+        interface ModifierSources {
+            wounds?: ModifierSrc[];
+            fate?: ModifierSrc[];
+        }
+        interface ExtendedData {
+            modifierSources?: ModifierSources;
+            _getOriginPathWoundsModifier?: () => number;
+            _getOriginPathFateModifier?: () => number;
+            totalWoundsModifier: number;
+            totalFateModifier: number;
+        }
+        const extSelf = this as unknown as ExtendedData;
+        const itemWounds = extSelf.modifierSources?.wounds?.reduce((total, src) => total + (src.value ?? 0), 0) ?? 0;
+        const itemFate = extSelf.modifierSources?.fate?.reduce((total, src) => total + (src.value ?? 0), 0) ?? 0;
 
-        (this as any).totalWoundsModifier = itemWounds + ((this as any)._getOriginPathWoundsModifier?.() || 0);
-        (this as any).totalFateModifier = itemFate + ((this as any)._getOriginPathFateModifier?.() || 0);
+        extSelf.totalWoundsModifier = itemWounds + (extSelf._getOriginPathWoundsModifier?.() ?? 0);
+        extSelf.totalFateModifier = itemFate + (extSelf._getOriginPathFateModifier?.() ?? 0);
     }
 
     /**
@@ -627,19 +678,22 @@ export default class CharacterData extends CreatureTemplate {
      * @protected
      */
     _computeWoundsMax(): void {
-        const actor = this.parent;
-        if (!actor?.items) return;
+        const actor = this.parent as ActorParent | null | undefined;
+        if (actor?.items === undefined) return;
 
         const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
-        const tb = this.characteristics?.toughness?.bonus ?? 0;
+        const tb = this.characteristics.toughness.bonus;
 
         let computedMax = 0;
         let hasWoundFormula = false;
 
         for (const item of originItems) {
-            const formula = item.system?.grants?.woundsFormula;
-            const rollResult = item.system?.rollResults?.wounds;
-            if (!formula || rollResult?.rolled == null) continue;
+            const itemSys = item.system as Record<string, unknown>;
+            const grants = itemSys['grants'] as OriginPathGrants | undefined;
+            const formula: string | undefined = grants?.woundsFormula;
+            const rollResults = itemSys['rollResults'] as Record<string, RollResult> | undefined;
+            const rollResult: RollResult | undefined = rollResults?.['wounds'];
+            if (formula === undefined || formula === '' || rollResult?.rolled === undefined) continue;
 
             hasWoundFormula = true;
 
@@ -682,17 +736,18 @@ export default class CharacterData extends CreatureTemplate {
                 //
                 // Best approach: the rolled value minus (old evaluated non-die, non-TB) gives the die.
                 // But we don't have old TB. Use the breakdown.
-                const breakdown = rollResult.breakdown || '';
+                const breakdown = rollResult.breakdown ?? '';
                 const dieMatch = breakdown.match(/\b(\d+)\s*\[.*?d/i);
                 let dieValue = 0;
-                if (dieMatch) {
+                const rolledValue = rollResult.rolled;
+                if (dieMatch !== null) {
                     dieValue = parseInt(dieMatch[1]) || 0;
                 } else {
                     // Fallback: assume die portion = rolled - (flat bonus)
                     // This works for "N+1d5" style (no TB in formula, but we're in TB branch...)
                     // For TB formulas without breakdown, store the full value and accept
                     // it won't be perfectly separated. Use: rolled - flat as approximation.
-                    dieValue = rollResult.rolled - flatBonus;
+                    dieValue = rolledValue - flatBonus;
                 }
 
                 computedMax += tbComponent + dieValue + flatBonus;
@@ -706,7 +761,7 @@ export default class CharacterData extends CreatureTemplate {
         // Only override wounds.max if we found origin path wound formulas
         if (hasWoundFormula) {
             // Add item/modifier bonuses
-            const modifierBonus = this.totalWoundsModifier || 0;
+            const modifierBonus = this.totalWoundsModifier;
             this.wounds.max = computedMax + modifierBonus;
         }
     }

@@ -1,6 +1,6 @@
 # TypeScript Typing Standards
 
-This codebase is on a **strict-mode TypeScript ratchet**. New code must obey the rules below; existing weak-typing islands are tracked by `.tsc-error-baseline` and are expected to shrink, not grow.
+This codebase is on **strict-mode TypeScript with a hard typecheck gate**. `tsc --noEmit` must pass with zero errors — every commit, no exceptions. New code must obey the rules below.
 
 ## Compiler configuration
 
@@ -21,7 +21,7 @@ under `src/module/types/`, not in the V14 override file.
 | `allowJs`                     | false | No `.js` files in `src/`. New files must be `.ts`. |
 | `skipLibCheck`                | true  | Foundry V14 types are still in flux.         |
 
-The `pnpm typecheck:ratchet` script gates new tsc errors via the pre-commit hook. A parallel `pnpm lint:ratchet` script gates new ESLint warnings the same way (baseline in `.eslint-warning-baseline`). Both run in `.husky/pre-commit` after `lint-staged`.
+`pnpm typecheck` runs as a hard pre-commit gate — any tsc error blocks the commit. The `pnpm lint:ratchet` script (baseline in `.eslint-warning-baseline`) still ratchets ESLint warnings downward. Both run in `.husky/pre-commit` after `lint-staged`.
 
 ## Established patterns
 
@@ -50,39 +50,18 @@ When unsure how to type something new, mirror the closest example above.
 
 6. **System-data shapes live on `WH40KActorSystemData` / `WH40KItemSystemData`.** When you add a new schema field in `defineSchema()`, mirror it in the corresponding type. If a property is subclass-specific (vehicle-only, starship-only, etc.), put it on the subclass interface rather than the union.
 
-## When the ratchet fails
+## When the typecheck gate fails
 
-`pre-commit` runs `pnpm typecheck:ratchet`. If it fails:
+`pre-commit` runs `pnpm typecheck`. If it fails:
 
 1. **You added new errors.** Read them and fix. Common causes: a new file touched a previously-typed surface, or a type narrowed somewhere in your changes.
-2. **You can't fix them in this commit.** Bail out: revert the offending change. Don't disable the hook (`--no-verify`) — the baseline drift hides regressions and burns hours later.
-3. **The errors are pre-existing in the file you touched** but you haven't increased the count. The ratchet should pass. If it doesn't, run `pnpm typecheck` directly and read the full output — likely there's an indirect cascade.
-
-When you reduce the count, update the baseline in the same commit:
-
-```sh
-pnpm typecheck:ratchet:update
-git add .tsc-error-baseline
-```
-
-## Incremental cleanup
-
-The remaining error backlog (see `.tsc-error-baseline` for the current number) is concentrated in:
-
-- `src/module/applications/actor/character-sheet.ts` (heaviest)
-- `src/module/applications/actor/npc-sheet.ts`
-- `src/module/applications/character-creation/origin-path-builder.ts`
-- `src/module/applications/prompts/unified-roll-dialog.ts`
-- `src/module/applications/actor/base-actor-sheet.ts`
-
-These need per-file work to lift `Record<string, unknown>` render contexts to typed shapes. The pattern is: define a `<Sheet>RenderContext` interface near the class, replace `Record<string, unknown>` returns with that interface, and let the cascade resolve. Each conversion typically clears 50–100 errors.
+2. **You can't fix them in this commit.** Bail out: revert the offending change. Don't disable the hook (`--no-verify`).
 
 ## What `100% strong typing` means here
 
 - `strict: true`, `strictNullChecks: true`, `allowJs: false` — enforced by `tsconfig.json`.
+- Zero tsc errors — enforced by the pre-commit hard gate.
 - Zero `@ts-ignore` (verified in CI).
-- Zero unused `@ts-expect-error` (TS2578 — verified by the ratchet).
+- Zero unused `@ts-expect-error` (TS2578 — caught by the typecheck gate).
 - Foundry globals are real interfaces, not `any`.
-- The `any` count and tsc error count both ratchet downward; `.tsc-error-baseline` records current truth.
-
-The goal of zero `any` and zero tsc errors is approached by ratcheting, not by a single sweep. New work pays its own way; legacy hotspots are fixed file-by-file in dedicated commits.
+- The `any` count ratchets downward via `pnpm ts:ratchet`.

@@ -27,34 +27,34 @@
                         (object action="itemRoll" iconKey="fa:dice-d20" titleKey="WH40K.Common.Roll")
                         (object action="itemDamage" iconKey="fa:bolt" titleKey="WH40K.Weapon.RollDamage")
                         (object action="itemDelete" iconKey="fa:trash" titleKey="WH40K.Common.Delete"))}}
-                    <div class="wh40k-settings tw-grid tw-grid-cols-2 tw-gap-2">
-                        <div class="wh40k-field__wrapper">
-                            <span class="wh40k-field__header tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{localize "WH40K.Weapon.Damage"}}</span>
-                            <span class="wh40k-field__span">{{item.system.damageLabel}}</span>
+                    <div class="tw-grid tw-grid-cols-2 tw-gap-2">
+                        <div class="tw-flex tw-flex-col tw-gap-0.5">
+                            <span class="tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{localize "WH40K.Weapon.Damage"}}</span>
+                            <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{item.system.damageLabel}}</span>
                         </div>
-                        <div class="wh40k-field__wrapper">
-                            <span class="wh40k-field__header">{{localize "WH40K.Weapon.Pen"}}</span>
-                            <span class="wh40k-field__span">{{item.system.damage.penetration}}</span>
+                        <div class="tw-flex tw-flex-col tw-gap-0.5">
+                            <span class="tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Weapon.Pen"}}</span>
+                            <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{item.system.damage.penetration}}</span>
                         </div>
-                        <div class="wh40k-field__wrapper">
-                            <span class="wh40k-field__header">{{localize "WH40K.Weapon.Range"}}</span>
-                            <span class="wh40k-field__span">{{item.system.rangeLabel}}</span>
+                        <div class="tw-flex tw-flex-col tw-gap-0.5">
+                            <span class="tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Weapon.Range"}}</span>
+                            <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{item.system.rangeLabel}}</span>
                         </div>
-                        <div class="wh40k-field__wrapper">
-                            <span class="wh40k-field__header">{{localize "WH40K.Weapon.RoF"}}</span>
-                            <span class="wh40k-field__span">{{item.system.rateOfFireLabel}}</span>
+                        <div class="tw-flex tw-flex-col tw-gap-0.5">
+                            <span class="tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Weapon.RoF"}}</span>
+                            <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{item.system.rateOfFireLabel}}</span>
                         </div>
-                        <div class="wh40k-field__wrapper">
-                            <span class="wh40k-field__header">{{localize "WH40K.Weapon.Clip"}}</span>
-                            <span class="wh40k-field__span">{{item.system.clip.value}} / {{item.system.effectiveClipMax}}</span>
+                        <div class="tw-flex tw-flex-col tw-gap-0.5">
+                            <span class="tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Weapon.Clip"}}</span>
+                            <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{item.system.clip.value}} / {{item.system.effectiveClipMax}}</span>
                         </div>
-                        <div class="wh40k-field__wrapper">
-                            <span class="wh40k-field__header">{{localize "WH40K.Weapon.Reload"}}</span>
-                            <span class="wh40k-field__span">{{item.system.reload}}</span>
+                        <div class="tw-flex tw-flex-col tw-gap-0.5">
+                            <span class="tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Weapon.Reload"}}</span>
+                            <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{item.system.reload}}</span>
                         </div>
-                        <div class="wh40k-field__wrapper">
-                            <span class="wh40k-field__header">{{localize "WH40K.Weapon.Special"}}</span>
-                            <span class="wh40k-field__span">{{specialDisplay item.system.special}}</span>
+                        <div class="tw-flex tw-flex-col tw-gap-0.5">
+                            <span class="tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Weapon.Special"}}</span>
+                            <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{specialDisplay item.system.special}}</span>
                         </div>
                     </div>
                 {{/systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs}}

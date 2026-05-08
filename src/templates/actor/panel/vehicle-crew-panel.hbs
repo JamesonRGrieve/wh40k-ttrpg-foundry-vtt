@@ -1,26 +1,26 @@
 {{! Vehicle Crew Panel }}
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Vehicle.Crew") icon="fa-users" rootClass="tw-col-span-2" bodyClass="tw-p-0" titleClass="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"}}
     <div class="tw-flex tw-flex-col tw-gap-2 tw-p-2">
-        <div class="wh40k-field__wrapper">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Crew.Required"}}</span>
+        <div class="tw-flex tw-flex-col tw-gap-1">
+            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.Crew.Required"}}</span>
             <input
                 type="number"
                 data-dtype="Number"
-                class="wh40k-field__input"
+                class="tw-w-full tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-center tw-font-numeric"
                 name="system.crew.required"
                 value="{{source.crew.required}}"
                 min="0"
                 placeholder="1"
             />
         </div>
-        <div class="wh40k-field__wrapper">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Passengers"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.passengers" value="{{source.passengers}}" min="0" placeholder="0" />
+        <div class="tw-flex tw-flex-col tw-gap-1">
+            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.Passengers"}}</span>
+            <input type="number" data-dtype="Number" class="tw-w-full tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-center tw-font-numeric" name="system.passengers" value="{{source.passengers}}" min="0" placeholder="0" />
         </div>
-        <div class="wh40k-field__wrapper tw-col-span-full">
-            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Crew.Notes"}}</span>
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-col-span-full">
+            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.Crew.Notes"}}</span>
             <textarea
-                class="wh40k-field__textarea tw-w-full tw-min-h-[4.5rem]"
+                class="tw-w-full tw-min-h-[4.5rem]"
                 name="system.crew.notes"
                 rows="3"
                 placeholder="Crew positions, roles, requirements..."

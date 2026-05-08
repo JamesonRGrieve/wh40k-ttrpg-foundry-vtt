@@ -24,8 +24,7 @@
 
     Hash arguments:
         item             — { id, name, img? } (required).
-        dragType         — value emitted on data-item-type. When set, the row
-                           also gets `item-drag` class for drop-zone wiring.
+        dragType         — value emitted on data-item-type for drag-and-drop wiring.
         nameToggleId     — when set, the name cell becomes a trait-toggle that
                            expands the description body. Pass e.g.
                            `(concat 'description_' item.id)` to match the
@@ -51,33 +50,33 @@
     Theming: the row hover background uses inline per-system variants so each
     game system tints its hover highlight distinctly without a helper.
 --}}
-<div class="table-row tw-border-b dh2e:tw-border-bronze/20 rt:tw-border-amber-700/20 im:tw-border-crimson/20 {{#if dragType}}item-drag {{/if}}dh2e:hover:tw-bg-bronze/5 rt:hover:tw-bg-amber-700/5 im:hover:tw-bg-crimson/5{{#if rowClass}} {{rowClass}}{{/if}}" data-item-id="{{item.id}}"{{#if dragType}} data-item-type="{{dragType}}"{{/if}}>
+<div class="tw-border-b dh2e:tw-border-bronze/20 rt:tw-border-amber-700/20 im:tw-border-crimson/20 {{#if dragType}}item-drag {{/if}}dh2e:hover:tw-bg-bronze/5 rt:hover:tw-bg-amber-700/5 im:hover:tw-bg-crimson/5{{#if rowClass}} {{rowClass}}{{/if}}" data-item-id="{{item.id}}"{{#if dragType}} data-item-type="{{dragType}}"{{/if}}>
     {{#unless (eq editAction false)}}
-        <div class="table-cell--settingstoggle">
+        <div>
             <label class="item-edit tw-cursor-pointer hover:tw-opacity-100" data-action="{{#if editAction}}{{editAction}}{{else}}itemEdit{{/if}}" data-item-id="{{item.id}}"{{#if editTitleKey}} title="{{localize editTitleKey}}" aria-label="{{localize editTitleKey}}"{{/if}}>
                 <span class="tw-pt-[3px] tw-pl-[2px] tw-inline-grid tw-opacity-50">{{iconSvg (defaultVal editIconKey 'fa:cog') class="tw-w-3.5 tw-h-3.5"}}</span>
             </label>
         </div>
     {{/unless}}
-    <div class="table-cell--left">
+    <div>
         {{#if nameToggleId}}
             {{> systems/wh40k-rpg/templates/actor/partial/trait-toggle.hbs toggle=nameToggleId text=item.name}}
         {{else if showImg}}
-            <button class="item-name wh40k-item-button" data-action="{{#if editAction}}{{editAction}}{{else}}itemEdit{{/if}}" data-item-id="{{item.id}}" type="button">
-                {{#if item.img}}<img class="wh40k-item-img" src="{{item.img}}" alt="{{item.name}}" />{{/if}}
+            <button class="tw-cursor-pointer tw-bg-transparent tw-border-none tw-text-left" data-action="{{#if editAction}}{{editAction}}{{else}}itemEdit{{/if}}" data-item-id="{{item.id}}" type="button">
+                {{#if item.img}}<img class="tw-w-6 tw-h-6 tw-object-cover tw-rounded-sm" src="{{item.img}}" alt="{{item.name}}" />{{/if}}
                 {{item.name}}
             </button>
         {{else}}
-            <span class="display">{{item.name}}</span>
+            <span>{{item.name}}</span>
         {{/if}}
     </div>
     {{#each cells as |cell|}}
-        <div class="{{#if cell.cellClass}}{{cell.cellClass}}{{else}}table-cell{{/if}}"{{#if cell.title}} title="{{cell.title}}"{{/if}}>
-            {{#if cell.isHtml}}{{{cell.value}}}{{else}}<span class="display">{{cell.value}}</span>{{/if}}
+        <div class="{{#if cell.cellClass}}{{cell.cellClass}}{{/if}}"{{#if cell.title}} title="{{cell.title}}"{{/if}}>
+            {{#if cell.isHtml}}{{{cell.value}}}{{else}}<span>{{cell.value}}</span>{{/if}}
         </div>
     {{/each}}
     {{#if actions.length}}
-        <div class="table-cell--last">
+        <div>
             {{#each actions as |btn|}}
                 <label class="tw-cursor-pointer hover:tw-opacity-100 {{#if btn.hoverClass}}{{btn.hoverClass}}{{/if}}" data-action="{{btn.action}}" data-item-id="{{../item.id}}"{{#if btn.titleKey}} title="{{localize btn.titleKey}}" aria-label="{{localize btn.titleKey}}"{{else if btn.title}} title="{{btn.title}}"{{/if}}{{#if btn.dataAttrs}} {{{btn.dataAttrs}}}{{/if}}>
                     <span class="tw-pt-[3px] tw-pl-[2px] tw-inline-grid tw-opacity-50">{{iconSvg btn.iconKey class="tw-w-3.5 tw-h-3.5"}}</span>
@@ -86,7 +85,7 @@
         </div>
     {{/if}}
     {{#if nameToggleId}}
-        <div class="table-cell--description description_{{item.id}}" {{hideIfNot (isExpanded nameToggleId)}}>
+        <div data-description-id="{{nameToggleId}}" {{hideIfNot (isExpanded nameToggleId)}}>
             {{> @partial-block}}
         </div>
     {{/if}}

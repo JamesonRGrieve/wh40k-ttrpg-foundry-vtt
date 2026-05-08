@@ -34,40 +34,39 @@
         valueClass  — class on the value span (default "wh40k-vital-value"; mental rows use
                       "wh40k-mental-value")
         controlsExtraClass — extra classes appended to the controls flex container (e.g. "tw-ml-auto")
-        penaltyText — when truthy, renders <span class="wh40k-vital-penalty">{{penaltyText}}</span>
-                      after the controls cluster
-        degreeText  — when truthy, renders <span class="wh40k-mental-degree {{stateClass}}">…</span>
+        penaltyText — when truthy, renders a penalty span after the controls cluster
+        degreeText  — when truthy, renders a degree span
                       AFTER the controls (used by mental rows; stateClass holds the degree class).
                       When degreeText is set, stateClass is NOT applied to valueClass.
 
     NOTE: This is a regular (non-block) partial. Rows that need extra content after the controls
     (e.g. the Fate row's restoreFate button) should remain inline rather than use this partial.
 --}}
-<div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5 tw-border-l-2 tw-border-l-gold bc:tw-border-l-crimson-light dh1e:tw-border-l-gold-raw-l5 dh2e:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure tw-pl-1{{#if rowClass}} {{rowClass}}{{/if}}"{{#if tooltip}} data-tooltip="{{tooltip}}"{{/if}}>
+<div class="tw-flex tw-items-center tw-gap-1.5 tw-py-0.5 tw-border-l-2 tw-border-l-gold bc:tw-border-l-crimson-light dh1e:tw-border-l-gold-raw-l5 dh2e:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure tw-pl-1{{#if rowClass}} {{rowClass}}{{/if}}"{{#if tooltip}} data-tooltip="{{tooltip}}"{{/if}}>
     {{#if labelGroupClass}}
     <span class="{{labelGroupClass}}">
-        <span class="{{#if iconClass}}{{iconClass}}{{else}}wh40k-vital-icon{{/if}}"><i class="fas {{icon}}"></i></span>
-        <span class="{{#if labelClass}}{{labelClass}}{{else}}wh40k-vital-label{{/if}}">{{label}}</span>
+        <span class="{{#if iconClass}}{{iconClass}}{{else}}tw-text-[0.75rem] tw-text-[color:var(--vital-color,var(--wh40k-text-secondary))]{{/if}}"><i class="fas {{icon}}"></i></span>
+        <span class="{{#if labelClass}}{{labelClass}}{{else}}tw-flex tw-items-center tw-gap-1.5 tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--vital-color,var(--wh40k-text-secondary))] tw-whitespace-nowrap [&_i]:tw-text-[0.75rem]{{/if}}">{{label}}</span>
     </span>
     {{else}}
-    <span class="{{#if iconClass}}{{iconClass}}{{else}}wh40k-vital-icon{{/if}}"><i class="fas {{icon}}"></i></span>
-    <span class="{{#if labelClass}}{{labelClass}}{{else}}wh40k-vital-label{{/if}}">{{label}}</span>
+    <span class="{{#if iconClass}}{{iconClass}}{{else}}tw-text-[0.75rem] tw-text-[color:var(--vital-color,var(--wh40k-text-secondary))]{{/if}}"><i class="fas {{icon}}"></i></span>
+    <span class="{{#if labelClass}}{{labelClass}}{{else}}tw-flex tw-items-center tw-gap-1.5 tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--vital-color,var(--wh40k-text-secondary))] tw-whitespace-nowrap [&_i]:tw-text-[0.75rem]{{/if}}">{{label}}</span>
     {{/if}}
-    <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1{{#unless degreeText}} tw-ml-auto{{/unless}}{{#if controlsExtraClass}} {{controlsExtraClass}}{{/if}}">
-        <button type="button" class="wh40k-vital-btn tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="{{field}}" data-min="{{#if min}}{{min}}{{else}}0{{/if}}" title="{{#if decTitle}}{{decTitle}}{{else}}−1{{/if}}">
+    <div class="tw-flex tw-items-center tw-gap-1{{#unless degreeText}} tw-ml-auto{{/unless}}{{#if controlsExtraClass}} {{controlsExtraClass}}{{/if}}">
+        <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="{{field}}" data-min="{{#if min}}{{min}}{{else}}0{{/if}}" title="{{#if decTitle}}{{decTitle}}{{else}}−1{{/if}}">
             <i class="fas fa-minus"></i>
         </button>
-        <span class="{{#if valueClass}}{{valueClass}}{{else}}wh40k-vital-value{{/if}}{{#unless degreeText}}{{#if stateClass}} {{stateClass}}{{/if}}{{/unless}}">
+        <span class="{{#if valueClass}}{{valueClass}}{{else}}{{/if}}{{#unless degreeText}}{{#if stateClass}} {{stateClass}}{{/if}}{{/unless}}">
             {{current}}{{#if max}}/{{max}}{{/if}}
         </span>
-        <button type="button" class="wh40k-vital-btn tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="{{field}}"{{#if maxAttr}} data-max="{{maxAttr}}"{{/if}} title="{{#if incTitle}}{{incTitle}}{{else}}+1{{/if}}">
+        <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="{{field}}"{{#if maxAttr}} data-max="{{maxAttr}}"{{/if}} title="{{#if incTitle}}{{incTitle}}{{else}}+1{{/if}}">
             <i class="fas fa-plus"></i>
         </button>
     </div>
     {{#if penaltyText}}
-    <span class="wh40k-vital-penalty">{{penaltyText}}</span>
+    <span>{{penaltyText}}</span>
     {{/if}}
     {{#if degreeText}}
-    <span class="wh40k-mental-degree{{#if stateClass}} {{stateClass}}{{/if}}">{{degreeText}}</span>
+    <span class="{{#if stateClass}}{{stateClass}}{{/if}}">{{degreeText}}</span>
     {{/if}}
 </div>

@@ -50,7 +50,7 @@ Every direction in the previous section is backed by a coverage script and a rat
 | Animation migration (`animation:` rule → `tw-animate-<name>`) | `pnpm animation:coverage` | `pnpm animation:ratchet` | `.animation-baseline` |
 | Per-system theme adoption (`<system>:tw-*` variants) — count must NOT FALL | `pnpm theme:coverage` | `pnpm theme:ratchet` | `.theme-baseline` |
 | Strong TS (per-rule, per-dir) | `pnpm ts:coverage` | `pnpm ts:ratchet` | `.ts-coverage-baseline` |
-| `tsc --noEmit` total errors | (built into ratchet) | `pnpm typecheck:ratchet` | `.tsc-error-baseline` |
+| `tsc --noEmit` total errors | (hard gate — must be zero) | `pnpm typecheck` | — |
 | ESLint warnings | (built into ratchet) | `pnpm lint:ratchet` | `.eslint-warning-baseline` |
 | Sheet → story / data → test pairing | `pnpm symmetry` | `pnpm symmetry:ratchet` | `.symmetry-baseline` |
 | Preload-list integrity (Handlebars partials) | `pnpm preload:drift` | hard gate (no ratchet) | — |
@@ -115,7 +115,7 @@ These rules are a starting point, not a contract. When you encounter a case the 
 ### TS strictness tooling
 
 - `pnpm ts:coverage` — counts `: any`, ` as any`, `@ts-expect-error`, `@ts-ignore` per top-level directory under `src/module/`. Output at `.ts-coverage.json`.
-- The per-rule per-directory baseline catches the case where one directory cleans up while another regresses. The aggregate `tsc --noEmit` ratchet (`.tsc-error-baseline`) is independent and gates total errors.
+- The per-rule per-directory baseline catches the case where one directory cleans up while another regresses. The aggregate `tsc --noEmit` total is now a hard gate (must be zero) rather than a ratcheted baseline — see the pre-commit pipeline below.
 - Foundry V14 type overrides live in `foundry-v14-overrides.d.ts` at the repo root. Both V14 gotchas (cleanData `_state` and registerSheet anonymous-class collisions) are encoded as patterns in the codebase — extend those patterns rather than introducing new wrappers.
 
 ### Casting policy
@@ -219,7 +219,7 @@ Per-file logs land in `.auto-fix/file-logs/<sanitized-path>.attempt<N>.<runner>-
 1. `lint-staged` — eslint --fix and prettier on staged files.
 2. `i18n:gen` — regenerate `i18n-keys.d.ts` from the langpack.
 3. `css:block-index` — refresh `.css-blocks.json` from the monolith.
-4. `typecheck:ratchet` — `tsc --noEmit` total error count cannot rise.
+4. `typecheck` — `tsc --noEmit` must pass with zero errors (hard gate).
 5. `lint:ratchet` — ESLint warning count cannot rise; errors are never allowed.
 6. `css:ratchet` — `tailwind-only` cannot fall, `css-only` cannot rise.
 7. `animation:ratchet` — count of `animation:` / `animation-name:` rules in the monolith cannot rise.
@@ -336,7 +336,6 @@ pnpm css:block delete <src>           # remove every range for <src>
 pnpm css:ratchet:update
 pnpm ts:ratchet:update
 pnpm symmetry:ratchet:update
-pnpm typecheck:ratchet:update
 pnpm lint:ratchet:update
 
 # Codegen and scaffolds

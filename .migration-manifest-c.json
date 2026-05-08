@@ -1,0 +1,14 @@
+{
+  "batch": "C",
+  "ported": [],
+  "false_positives": [
+    "src/templates/actor/partial/circular-icon-button.hbs (already tailwind-only, no changes needed)",
+    "src/templates/actor/partial/panel.hbs (already tailwind-only, no changes needed)",
+    "src/templates/actor/partial/pip-tracker-row.hbs (already tailwind-only, no changes needed)",
+    "src/templates/actor/partial/stat-breakdown-button.hbs (already tailwind-only, no changes needed)",
+    "src/templates/actor/partial/tab-strip.hbs (already tailwind-only, no changes needed)",
+    "src/templates/actor/partial/vital-info-card.hbs (already tailwind-only, no changes needed)"
+  ],
+  "skipped": [],
+  "notes": "All 6 templates are already functionally Tailwind-only. Every flagged token is a false positive produced by the coverage tool's naive word-split on class attribute values that contain Handlebars expressions.\n\ncircular-icon-button.hbs — '(eq' and 'tone' are fragments from '{{#if (eq tone \"success\")}}' embedded in the class string. 'tone' is a Handlebars hash param, not a CSS class name.\n\npanel.hbs — '(eq' and 'headerActionTone' are fragments from '{{#if (eq headerActionTone \"gold\")}}'. The non-tw classes present (wh40k-panel, wh40k-panel-header, wh40k-panel-title, wh40k-panel-count, wh40k-panel-body) are all real CSS classes with active definitions in the monolith; they are not ghosts.\n\npip-tracker-row.hbs — '--filled' is the suffix of '{{../pipClass}}--filled', a dynamically-built BEM modifier (e.g. 'wh40k-fate-pip--filled'). The monolith has an '&--filled' block at line 3527. Real class, not a ghost.\n\nstat-breakdown-button.hbs — '(eq' and 'position' are fragments from '{{#if (eq position \"absolute\")}}'. 'position' is a Handlebars hash param.\n\ntab-strip.hbs — '...' appears inside a Handlebars comment path token in the template header comment; 'tabs' is a real Foundry V14 hook class on <nav class=\"tabs wh40k-navigation ...\">. Foundry core (foundry.mjs line 31426) uses closest(\".tabs\") to walk up the DOM during tab activation, so this class must be preserved.\n\nvital-info-card.hbs — '(eq', 'accent', and '{{#if' are fragments of '{{#if (eq accent \"gold\")}}'. 'accent' is a Handlebars hash param."
+}

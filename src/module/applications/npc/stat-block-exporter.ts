@@ -2,6 +2,28 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+/** Shape of an NPC actor's system data used for export. All fields are optional because NPC subtypes vary. */
+interface NpcSystemExport {
+    faction?: string;
+    subfaction?: string;
+    type?: { titleCase?: () => string };
+    role?: { titleCase?: () => string };
+    threatLevel?: number;
+    characteristics?: Record<string, { short?: string; total?: number } | undefined>;
+    wounds?: { value?: number; max?: number };
+    horde?: { enabled?: boolean; magnitude?: { current?: number; max?: number } };
+    movement?: { half?: number; full?: number; charge?: number; run?: number };
+    armour?: {
+        mode?: string;
+        total?: number;
+        locations?: { head?: number; body?: number; leftArm?: number; rightArm?: number; leftLeg?: number; rightLeg?: number };
+    };
+    trainedSkills?: Record<string, { name?: string; plus20?: boolean; plus10?: boolean; bonus?: number }>;
+    weapons?: { simple?: Array<{ name?: string; damage?: string; pen?: string; range?: string; rof?: string; special?: string }> };
+    specialAbilities?: string;
+    quickNotes?: string;
+}
+
 /**
  * Dialog for exporting NPC stat blocks in various formats.
  * @extends {ApplicationV2}
@@ -76,8 +98,8 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
-        return game.i18n.format('WH40K.NPC.Export.Title', { name: this.#actor?.name || 'NPC' });
+    get title(): string {
+        return game.i18n.format('WH40K.NPC.Export.Title', { name: this.#actor?.name ?? 'NPC' });
     }
 
     /* -------------------------------------------- */
@@ -90,8 +112,8 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @returns {string} Formatted text stat block.
      */
     static toText(actor: WH40KBaseActor): string {
-        const sys = actor.system as any;
-        const lines = [];
+        const sys = actor.system as NpcSystemExport;
+        const lines: string[] = [];
 
         // Header
         lines.push('═'.repeat(50));
@@ -100,10 +122,10 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         lines.push('');
 
         // Identity
-        if (sys.faction) lines.push(`Faction: ${sys.faction}`);
-        if (sys.subfaction) lines.push(`Subfaction: ${sys.subfaction}`);
-        lines.push(`Type: ${sys.type?.titleCase() || 'Unknown'} | Role: ${sys.role?.titleCase() || 'Unknown'}`);
-        lines.push(`Threat Level: ${sys.threatLevel || 5}`);
+        if (sys.faction !== undefined) lines.push(`Faction: ${sys.faction}`);
+        if (sys.subfaction !== undefined) lines.push(`Subfaction: ${sys.subfaction}`);
+        lines.push(`Type: ${sys.type?.titleCase?.() ?? 'Unknown'} | Role: ${sys.role?.titleCase?.() ?? 'Unknown'}`);
+        lines.push(`Threat Level: ${sys.threatLevel ?? 5}`);
         lines.push('');
 
         // Characteristics
@@ -112,14 +134,14 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         lines.push('─'.repeat(50));
 
         const chars = sys.characteristics;
-        if (chars) {
-            const charLine1 = [];
-            const charLine2 = [];
+        if (chars !== undefined) {
+            const charLine1: string[] = [];
+            const charLine2: string[] = [];
 
             const order = ['weaponSkill', 'ballisticSkill', 'strength', 'toughness', 'agility'];
             for (const key of order) {
                 const c = chars[key];
-                if (c) {
+                if (c !== undefined) {
                     charLine1.push(`${c.short}: ${c.total}`);
                 }
             }
@@ -127,7 +149,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
             const order2 = ['intelligence', 'perception', 'willpower', 'fellowship', 'influence'];
             for (const key of order2) {
                 const c = chars[key];
-                if (c) {
+                if (c !== undefined) {
                     charLine2.push(`${c.short}: ${c.total}`);
                 }
             }
@@ -141,14 +163,14 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         lines.push('─'.repeat(50));
         lines.push('VITALS');
         lines.push('─'.repeat(50));
-        lines.push(`Wounds: ${sys.wounds?.value || 0}/${sys.wounds?.max || 0}`);
+        lines.push(`Wounds: ${sys.wounds?.value ?? 0}/${sys.wounds?.max ?? 0}`);
 
-        if (sys.horde?.enabled) {
-            lines.push(`Magnitude: ${sys.horde.magnitude?.current || 0}/${sys.horde.magnitude?.max || 100}`);
+        if (sys.horde?.enabled === true) {
+            lines.push(`Magnitude: ${sys.horde.magnitude?.current ?? 0}/${sys.horde.magnitude?.max ?? 100}`);
         }
 
         const mv = sys.movement;
-        if (mv) {
+        if (mv !== undefined) {
             lines.push(`Movement: H${mv.half} / F${mv.full} / C${mv.charge} / R${mv.run}`);
         }
         lines.push('');
@@ -158,41 +180,42 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         lines.push('ARMOUR');
         lines.push('─'.repeat(50));
         if (sys.armour?.mode === 'simple') {
-            lines.push(`Total AP: ${sys.armour.total || 0}`);
-        } else if (sys.armour?.locations) {
+            lines.push(`Total AP: ${sys.armour.total ?? 0}`);
+        } else if (sys.armour?.locations !== undefined) {
             const locs = sys.armour.locations;
-            lines.push(`Head: ${locs.head || 0} | Body: ${locs.body || 0}`);
-            lines.push(`Arms: ${locs.leftArm || 0}/${locs.rightArm || 0} | Legs: ${locs.leftLeg || 0}/${locs.rightLeg || 0}`);
+            lines.push(`Head: ${locs.head ?? 0} | Body: ${locs.body ?? 0}`);
+            lines.push(`Arms: ${locs.leftArm ?? 0}/${locs.rightArm ?? 0} | Legs: ${locs.leftLeg ?? 0}/${locs.rightLeg ?? 0}`);
         }
         lines.push('');
 
         // Trained Skills
-        if (sys.trainedSkills && Object.keys(sys.trainedSkills).length > 0) {
+        if (sys.trainedSkills !== undefined && Object.keys(sys.trainedSkills).length > 0) {
             lines.push('─'.repeat(50));
             lines.push('SKILLS');
             lines.push('─'.repeat(50));
 
-            const skillLines = [];
-            for (const [key, skill] of Object.entries(sys.trainedSkills) as any) {
+            const skillLines: string[] = [];
+            for (const [key, skill] of Object.entries(sys.trainedSkills)) {
                 let level = '';
-                if (skill.plus20) level = '+20';
-                else if (skill.plus10) level = '+10';
+                if (skill.plus20 === true) level = '+20';
+                else if (skill.plus10 === true) level = '+10';
 
-                const bonus = skill.bonus ? ` (+${skill.bonus})` : '';
-                skillLines.push(`${skill.name || key}${level}${bonus}`);
+                const bonus = skill.bonus !== undefined ? ` (+${skill.bonus})` : '';
+                skillLines.push(`${skill.name ?? key}${level}${bonus}`);
             }
             lines.push(skillLines.join(', '));
             lines.push('');
         }
 
         // Weapons
-        if (sys.weapons?.simple?.length > 0) {
+        const weaponsSimple = sys.weapons?.simple ?? [];
+        if (weaponsSimple.length > 0) {
             lines.push('─'.repeat(50));
             lines.push('WEAPONS');
             lines.push('─'.repeat(50));
 
-            for (const w of sys.weapons.simple) {
-                const special = w.special ? ` [${w.special}]` : '';
+            for (const w of weaponsSimple) {
+                const special = w.special !== undefined ? ` [${w.special}]` : '';
                 lines.push(`${w.name}: ${w.damage} Pen ${w.pen} | ${w.range} | RoF: ${w.rof}${special}`);
             }
             lines.push('');
@@ -219,7 +242,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         }
 
         // Special Abilities
-        if (sys.specialAbilities) {
+        if (sys.specialAbilities !== undefined) {
             const plainText = this._stripHtml(sys.specialAbilities);
             if (plainText.trim()) {
                 lines.push('─'.repeat(50));
@@ -231,7 +254,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         }
 
         // Notes
-        if (sys.quickNotes) {
+        if (sys.quickNotes !== undefined) {
             const plainText = this._stripHtml(sys.quickNotes);
             if (plainText.trim()) {
                 lines.push('─'.repeat(50));
@@ -272,7 +295,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
                   }))
                 : [],
             exportedAt: new Date().toISOString(),
-            exportedBy: game.user?.name || 'Unknown',
+            exportedBy: game.user.name || 'Unknown',
             systemVersion: game.system.version,
         };
 
@@ -286,7 +309,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @private
      */
     static _stripHtml(html: string): string {
-        if (!html) return '';
+        if (html === '') return '';
         const div = document.createElement('div');
         div.innerHTML = html;
         return div.textContent || div.innerText || '';
@@ -351,7 +374,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {HTMLElement} target
      */
     static async #onCopyToClipboard(this: StatBlockExporter, event: PointerEvent, target: HTMLElement): Promise<void> {
-        if (!this.#actor) return;
+        if (this.#actor === null) return;
         const content = this.#format === 'json' ? StatBlockExporter.toJSON(this.#actor) : StatBlockExporter.toText(this.#actor);
 
         try {
@@ -370,7 +393,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {HTMLElement} target
      */
     static #onExportJson(this: StatBlockExporter, event: PointerEvent, target: HTMLElement): void {
-        if (!this.#actor) return;
+        if (this.#actor === null) return;
         const content = StatBlockExporter.toJSON(this.#actor);
         const filename = `${this.#actor.name.slugify()}.json`;
 
@@ -385,7 +408,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {HTMLElement} target
      */
     static #onExportText(this: StatBlockExporter, event: PointerEvent, target: HTMLElement): void {
-        if (!this.#actor) return;
+        if (this.#actor === null) return;
         const content = StatBlockExporter.toText(this.#actor);
         const filename = `${this.#actor.name.slugify()}.txt`;
 

@@ -6,8 +6,8 @@
  * their current count; removed directories are dropped. Update via
  * `pnpm ts:ratchet:update`.
  *
- * This is independent of the existing tsc-error-baseline ratchet — that
- * gates total tsc errors; this gates the four manual-suppression patterns
+ * This is independent of the `pnpm typecheck` hard gate — that gates total
+ * tsc errors (must be zero); this gates the four manual-suppression patterns
  * agents are most likely to introduce when fixing types under time pressure.
  */
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';

@@ -103,7 +103,7 @@
     {{/if}}
 
     {{!-- Edit Mode (Expandable) --}}
-    <div class="{{key}}_details tw-mt-2 tw-p-1 tw-bg-[rgba(0,0,0,0.02)] tw-border-t tw-border-[var(--wh40k-border-color-light)]" {{hideIfNot (isExpanded (concat key '_details') actor)}}>
+    <div class="tw-mt-2 tw-p-1 tw-bg-[rgba(0,0,0,0.02)] tw-border-t tw-border-[var(--wh40k-border-color-light)]" {{hideIfNot (isExpanded (concat key '_details') actor)}}>
 
         {{!-- Direct Edit Section --}}
         {{#> systems/wh40k-rpg/templates/actor/partial/section-card icon="fa-cog" title=editTitle}}
@@ -152,11 +152,11 @@
             {{/if}}
 
             {{!-- Drop Zone (always visible) --}}
-            <div class="wh40k-dropzone {{#unless (any actor.items itemFlag)}}wh40k-dropzone-empty{{/unless}} tw-mt-2 tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-p-2 tw-border tw-border-dashed tw-border-gray-600 tw-rounded tw-cursor-pointer tw-text-center hover:tw-border-gold bc:hover:tw-border-crimson-light dh1e:hover:tw-border-gold-raw-l5 dh2e:hover:tw-border-gold-raw dw:hover:tw-border-accent-combat ow:hover:tw-border-brass-l20 rt:hover:tw-border-gold im:hover:tw-border-failure hover:tw-bg-gold/5 bc:hover:tw-bg-crimson-light/5 dh1e:hover:tw-bg-gold-raw-l5/5 dh2e:hover:tw-bg-gold-raw/5 dw:hover:tw-bg-accent-combat/5 ow:hover:tw-bg-brass-l20/5 rt:hover:tw-bg-gold/5 im:hover:tw-bg-failure/5"
+            <div class="tw-group tw-mt-2 tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-p-2 tw-border tw-border-dashed tw-border-gray-600 tw-rounded tw-cursor-pointer tw-text-center hover:tw-border-gold bc:hover:tw-border-crimson-light dh1e:hover:tw-border-gold-raw-l5 dh2e:hover:tw-border-gold-raw dw:hover:tw-border-accent-combat ow:hover:tw-border-brass-l20 rt:hover:tw-border-gold im:hover:tw-border-failure hover:tw-bg-gold/5 bc:hover:tw-bg-crimson-light/5 dh1e:hover:tw-bg-gold-raw-l5/5 dh2e:hover:tw-bg-gold-raw/5 dw:hover:tw-bg-accent-combat/5 ow:hover:tw-bg-brass-l20/5 rt:hover:tw-bg-gold/5 im:hover:tw-bg-failure/5"
                  data-action="itemCreate"
                  data-type="{{dropType}}">
-                <i class="fas fa-shield-alt tw-text-[2rem] tw-text-muted"></i>
-                <span class="wh40k-dropzone-text tw-text-xs tw-text-muted tw-uppercase tw-tracking-wide tw-text-center" data-dropzone-text>
+                <i class="fas fa-shield-alt tw-text-[2rem] tw-text-[color:var(--wh40k-text-muted)] tw-transition-colors group-hover:tw-text-[color:var(--wh40k-accent-gold)]"></i>
+                <span class="tw-text-xs tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-wide tw-text-center tw-transition-colors group-hover:tw-text-[color:var(--wh40k-text-light)]" data-dropzone-text>
                     {{#if (any actor.items itemFlag)}}{{dropCompactLabel}}{{else}}{{dropLabel}}{{/if}}
                 </span>
             </div>

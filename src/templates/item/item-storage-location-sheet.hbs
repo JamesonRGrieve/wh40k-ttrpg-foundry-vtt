@@ -1,12 +1,13 @@
-<form class="wh40k-item-sheet wh40k-item-sheet--storage tw-flex tw-flex-col tw-h-full tw-overflow-hidden tw-bg-[var(--wh40k-sheet-bg)] tw-text-[var(--wh40k-text-dark)]" autocomplete="off">
+{{! Storage Location Item Sheet }}
+<form class="tw-flex tw-flex-col tw-h-full tw-overflow-hidden tw-bg-[var(--wh40k-sheet-bg)] tw-text-[var(--wh40k-text-dark)]" autocomplete="off">
     {{! Header }}
-    <header class="wh40k-item-sheet__header tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0">
-        <div class="wh40k-item-sheet__portrait tw-flex tw-items-center tw-justify-center tw-w-14 tw-h-14 tw-shrink-0 tw-rounded-md tw-overflow-hidden">
-            <img class="wh40k-item-sheet__portrait-img tw-w-full tw-h-full tw-object-cover" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
+    <header class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0">
+        <div class="tw-flex tw-items-center tw-justify-center tw-w-14 tw-h-14 tw-shrink-0 tw-rounded-md tw-overflow-hidden">
+            <img class="tw-w-full tw-h-full tw-object-cover" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
         </div>
-        <div class="wh40k-item-sheet__header-info tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
-            <input class="wh40k-item-sheet__name-input tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" type="text" value="{{item.name}}" placeholder="Storage Location Name" />
-            <div class="wh40k-item-sheet__type-badge tw-inline-flex tw-items-center tw-gap-1 tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
+            <input class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" type="text" value="{{item.name}}" placeholder="Storage Location Name" />
+            <div class="tw-inline-flex tw-items-center tw-gap-1 tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">
                 <span class="material-icons tw-text-sm">inventory_2</span>
                 <span>Storage Location</span>
             </div>
@@ -14,45 +15,45 @@
     </header>
 
     {{! Tab Navigation }}
-    <nav class="wh40k-item-sheet__tabs tw-flex tw-shrink-0" data-group="primary">
-        <a class="wh40k-item-sheet__tab item tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="items" data-group="primary">
+    <nav class="wh40k-tabs tw-flex tw-shrink-0" data-group="primary">
+        <a class="wh40k-tab item tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="items" data-group="primary">
             <span class="material-icons tw-text-base">category</span>
             Contents
         </a>
-        <a class="wh40k-item-sheet__tab item tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="description" data-group="primary">
+        <a class="wh40k-tab item tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="description" data-group="primary">
             <span class="material-icons tw-text-base">description</span>
             Description
         </a>
     </nav>
 
     {{! Items Tab }}
-    <section class="wh40k-item-sheet__body tab tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3" data-group="primary" data-tab="items">
-        <div class="wh40k-item-sheet__panel tw-p-3">
-            <h2 class="wh40k-item-sheet__panel-title tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-text-base tw-mt-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-solid">
+    <section class="wh40k-tab-content tab tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3" data-group="primary" data-tab="items">
+        <div class="tw-p-3">
+            <h2 class="tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-text-base tw-mt-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-solid">
                 <span class="material-icons tw-text-base">inventory</span>
                 Stored Items
-                <span class="wh40k-item-sheet__panel-count tw-inline-flex tw-items-center tw-justify-center tw-min-w-[22px] tw-h-[22px] tw-px-1.5 tw-ml-2 tw-rounded-full tw-bg-gold tw-text-xs tw-font-bold tw-text-black">{{item.items.length}}</span>
+                <span class="tw-inline-flex tw-items-center tw-justify-center tw-min-w-[22px] tw-h-[22px] tw-px-1.5 tw-ml-2 tw-rounded-full tw-bg-gold tw-text-xs tw-font-bold tw-text-black">{{item.items.length}}</span>
             </h2>
 
             {{#if item.items.length}}
-                <div class="wh40k-item-sheet__storage-list tw-flex tw-flex-col tw-gap-1">
+                <div class="tw-flex tw-flex-col tw-gap-1">
                     {{#each item.items as |embedded|}}
-                        <div class="wh40k-item-sheet__storage-item item-drag tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-cursor-default" data-item-id="{{embedded.id}}" data-item-type="{{embedded.type}}">
-                            <button type="button" class="wh40k-item-sheet__storage-edit item-edit tw-inline-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-rounded-sm tw-cursor-pointer tw-border tw-border-solid tw-shrink-0" data-item-id="{{embedded.id}}" title="Edit Item">
+                        <div class="item-drag tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-cursor-default" data-item-id="{{embedded.id}}" data-item-type="{{embedded.type}}">
+                            <button type="button" class="item-edit tw-inline-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-rounded-sm tw-cursor-pointer tw-border tw-border-solid tw-shrink-0" data-item-id="{{embedded.id}}" title="Edit Item">
                                 <span class="material-icons tw-text-sm">settings</span>
                             </button>
-                            <div class="wh40k-item-sheet__storage-info tw-flex tw-flex-col tw-flex-1 tw-min-w-0">
-                                <span class="wh40k-item-sheet__storage-name tw-text-sm tw-font-medium tw-truncate">{{embedded.name}}</span>
-                                <span class="wh40k-item-sheet__storage-type tw-text-xs tw-opacity-60">{{capitalize embedded.type}}</span>
+                            <div class="tw-flex tw-flex-col tw-flex-1 tw-min-w-0">
+                                <span class="tw-text-sm tw-font-medium tw-truncate">{{embedded.name}}</span>
+                                <span class="tw-text-xs tw-opacity-60">{{capitalize embedded.type}}</span>
                             </div>
-                            <button type="button" class="wh40k-item-sheet__storage-delete item-delete tw-inline-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-rounded-sm tw-cursor-pointer tw-border tw-border-solid tw-shrink-0" data-item-id="{{embedded.id}}" title="Remove Item">
+                            <button type="button" class="item-delete tw-inline-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-rounded-sm tw-cursor-pointer tw-border tw-border-solid tw-shrink-0" data-item-id="{{embedded.id}}" title="Remove Item">
                                 <span class="material-icons tw-text-sm">delete</span>
                             </button>
                         </div>
                     {{/each}}
                 </div>
             {{else}}
-                <div class="wh40k-item-sheet__empty tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-60">
+                <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-60">
                     <span class="material-icons tw-text-5xl tw-mb-3 tw-opacity-40">inbox</span>
                     <p class="tw-m-0 tw-text-sm tw-max-w-[240px]">No items stored. Drag items here to store them.</p>
                 </div>
@@ -61,15 +62,15 @@
     </section>
 
     {{! Description Tab }}
-    <section class="wh40k-item-sheet__body tab tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3" data-group="primary" data-tab="description">
-        <div class="wh40k-item-sheet__panel wh40k-item-sheet__panel--description tw-flex-1 tw-p-3 tw-flex tw-flex-col">
-            <h2 class="wh40k-item-sheet__panel-title tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-text-base tw-mt-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-solid tw-shrink-0">
+    <section class="wh40k-tab-content tab tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3" data-group="primary" data-tab="description">
+        <div class="tw-flex-1 tw-p-3 tw-flex tw-flex-col">
+            <h2 class="tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-text-base tw-mt-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-solid tw-shrink-0">
                 <span class="material-icons tw-text-base">description</span>
                 Description
             </h2>
-            <div class="wh40k-item-sheet__field wh40k-item-sheet__field--full tw-flex-1 tw-flex tw-flex-col">
+            <div class="tw-flex-1 tw-flex tw-flex-col">
                 <textarea
-                    class="wh40k-item-sheet__textarea wh40k-item-sheet__textarea--large tw-flex-1 tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-none"
+                    class="tw-flex-1 tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-none"
                     name="system.description.value"
                     placeholder="Describe this storage location..."
                 >{{item.system.description.value}}</textarea>

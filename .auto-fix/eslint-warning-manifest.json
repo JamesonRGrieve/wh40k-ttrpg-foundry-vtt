@@ -1,0 +1,3305 @@
+{
+  "mode": "lint",
+  "tiers": {
+    "1": [
+      {
+        "file": "src/module/applications/item/critical-injury-sheet.ts",
+        "lines": 55,
+        "items": {
+          "import/order": 2
+        },
+        "total": 2,
+        "strategy": "import/order \u2014 Reorder imports per groups:"
+      },
+      {
+        "file": "src/module/helpers/effects.test.ts",
+        "lines": 91,
+        "items": {
+          "import/order": 1
+        },
+        "total": 1,
+        "strategy": "import/order \u2014 Reorder imports per groups:"
+      },
+      {
+        "file": "src/module/types/global.d.ts",
+        "lines": 478,
+        "items": {
+          "@typescript-eslint/consistent-type-imports": 4,
+          "import/order": 4,
+          "@typescript-eslint/no-redundant-type-constituents": 1
+        },
+        "total": 9,
+        "strategy": "consistent-type-imports \u2014; import/order \u2014 Reorder imports per groups:; no-redundant-type-constituents \u2014"
+      },
+      {
+        "file": "src/module/utils/text-pattern-extractor.ts",
+        "lines": 296,
+        "items": {
+          "@typescript-eslint/prefer-nullish-coalescing": 1
+        },
+        "total": 1,
+        "strategy": "prefer-nullish-coalescing \u2014"
+      }
+    ],
+    "2": [
+      {
+        "file": "src/module/actions/basic-action-manager.ts",
+        "lines": 289,
+        "items": {
+          "@typescript-eslint/consistent-type-imports": 2,
+          "import/order": 2,
+          "@typescript-eslint/no-misused-promises": 7,
+          "@typescript-eslint/await-thenable": 4,
+          "@typescript-eslint/return-await": 7,
+          "@typescript-eslint/no-unnecessary-condition": 12,
+          "@typescript-eslint/strict-boolean-expressions": 13,
+          "@typescript-eslint/no-unsafe-assignment": 2,
+          "@typescript-eslint/no-explicit-any": 7,
+          "@typescript-eslint/no-unsafe-member-access": 7,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 64,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-misused-promises \u2014 A"
+      },
+      {
+        "file": "src/module/actions/combat-action-manager.ts",
+        "lines": 73,
+        "items": {
+          "@typescript-eslint/no-misused-promises": 2,
+          "@typescript-eslint/await-thenable": 2,
+          "@typescript-eslint/return-await": 2,
+          "no-await-in-loop": 3,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2
+        },
+        "total": 13,
+        "strategy": "no-await-in-loop \u2014 Awaiting in each iteration; no-misused-promises \u2014 A; await-thenable \u2014 `await` on a"
+      },
+      {
+        "file": "src/module/actions/reload-action-manager.ts",
+        "lines": 428,
+        "items": {
+          "@typescript-eslint/consistent-type-imports": 4,
+          "import/order": 2,
+          "@typescript-eslint/naming-convention": 1,
+          "complexity": 1,
+          "@typescript-eslint/no-unnecessary-condition": 20,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/strict-boolean-expressions": 12,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2,
+          "@typescript-eslint/prefer-nullish-coalescing": 5,
+          "@typescript-eslint/no-shadow": 1
+        },
+        "total": 49,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; prefer-nullish-coalescing \u2014"
+      },
+      {
+        "file": "src/module/actions/targeted-action-manager.ts",
+        "lines": 198,
+        "items": {
+          "@typescript-eslint/consistent-type-imports": 2,
+          "import/order": 2,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/strict-boolean-expressions": 8,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-unsafe-member-access": 2,
+          "@typescript-eslint/no-unnecessary-condition": 7,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/await-thenable": 2
+        },
+        "total": 27,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; consistent-type-imports \u2014"
+      },
+      {
+        "file": "src/module/applications/actor/game-system-sheets.ts",
+        "lines": 120,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-explicit-any": 3,
+          "@typescript-eslint/no-unsafe-assignment": 4,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/no-unsafe-member-access": 6
+        },
+        "total": 16,
+        "strategy": "no-unsafe-member-access \u2014; no-unsafe-assignment \u2014 The; no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/applications/actor/starship-sheet.ts",
+        "lines": 221,
+        "items": {
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/unbound-method": 2,
+          "@typescript-eslint/strict-boolean-expressions": 13,
+          "@typescript-eslint/prefer-nullish-coalescing": 10,
+          "@typescript-eslint/no-unsafe-assignment": 3,
+          "@typescript-eslint/no-unsafe-call": 1,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-member-access": 5,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/no-floating-promises": 1,
+          "@typescript-eslint/no-unnecessary-condition": 1
+        },
+        "total": 41,
+        "strategy": "strict-boolean-expressions \u2014; prefer-nullish-coalescing \u2014; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/applications/actor/vehicle-sheet.ts",
+        "lines": 473,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/unbound-method": 10,
+          "@typescript-eslint/no-unnecessary-condition": 16,
+          "@typescript-eslint/strict-boolean-expressions": 27,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/no-misused-promises": 1,
+          "@typescript-eslint/require-await": 1,
+          "@typescript-eslint/no-explicit-any": 5,
+          "@typescript-eslint/switch-exhaustiveness-check": 1
+        },
+        "total": 66,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; unbound-method \u2014 A class method is"
+      },
+      {
+        "file": "src/module/applications/api/application-types.ts",
+        "lines": 34,
+        "items": {
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/naming-convention": 1
+        },
+        "total": 3,
+        "strategy": "no-explicit-any \u2014 Replace `any`; @typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/applications/api/application-v2-mixin.ts",
+        "lines": 259,
+        "items": {
+          "@typescript-eslint/unbound-method": 2,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/naming-convention": 4,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/strict-boolean-expressions": 7,
+          "@typescript-eslint/prefer-nullish-coalescing": 1,
+          "@typescript-eslint/no-non-null-assertion": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2
+        },
+        "total": 22,
+        "strategy": "strict-boolean-expressions \u2014; @typescript-eslint/naming-convention; unbound-method \u2014 A class method is"
+      },
+      {
+        "file": "src/module/applications/api/collapsible-panel-mixin.ts",
+        "lines": 507,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/naming-convention": 4,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/strict-boolean-expressions": 17,
+          "@typescript-eslint/no-unnecessary-condition": 9,
+          "@typescript-eslint/prefer-nullish-coalescing": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2,
+          "no-await-in-loop": 4
+        },
+        "total": 41,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; @typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/applications/api/context-menu-mixin.ts",
+        "lines": 481,
+        "items": {
+          "@typescript-eslint/no-unsafe-return": 1,
+          "@typescript-eslint/no-unsafe-call": 4,
+          "@typescript-eslint/no-explicit-any": 9,
+          "@typescript-eslint/no-unsafe-member-access": 8,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/strict-boolean-expressions": 11,
+          "@typescript-eslint/promise-function-async": 25,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/no-shadow": 2,
+          "@typescript-eslint/no-floating-promises": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 68,
+        "strategy": "promise-function-async \u2014; strict-boolean-expressions \u2014; no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/applications/api/dialog.ts",
+        "lines": 147,
+        "items": {
+          "@typescript-eslint/consistent-type-imports": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/no-floating-promises": 1,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-return": 1
+        },
+        "total": 7,
+        "strategy": "@typescript-eslint/naming-convention; consistent-type-imports \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/applications/api/drag-drop-api-mixin.ts",
+        "lines": 105,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-explicit-any": 3,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/strict-boolean-expressions": 4,
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "@typescript-eslint/no-unsafe-member-access": 4,
+          "@typescript-eslint/no-unsafe-assignment": 1
+        },
+        "total": 20,
+        "strategy": "strict-boolean-expressions \u2014; no-unsafe-member-access \u2014; @typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/applications/api/drag-drop-visual-mixin.ts",
+        "lines": 778,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 9,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-explicit-any": 10,
+          "@typescript-eslint/no-misused-promises": 4,
+          "@typescript-eslint/promise-function-async": 5,
+          "@typescript-eslint/no-unsafe-return": 1,
+          "@typescript-eslint/no-unsafe-call": 2,
+          "@typescript-eslint/no-unsafe-member-access": 11,
+          "@typescript-eslint/prefer-nullish-coalescing": 1,
+          "@typescript-eslint/no-unnecessary-condition": 4,
+          "@typescript-eslint/no-unnecessary-type-assertion": 16,
+          "@typescript-eslint/no-unsafe-assignment": 3,
+          "@typescript-eslint/no-unsafe-argument": 2
+        },
+        "total": 72,
+        "strategy": "no-unnecessary-type-assertion \u2014; no-unsafe-member-access \u2014; no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/applications/api/enhanced-animations-mixin.ts",
+        "lines": 450,
+        "items": {
+          "@typescript-eslint/no-unused-vars": 1,
+          "import/order": 1,
+          "@typescript-eslint/explicit-function-return-type": 3,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-unnecessary-condition": 5,
+          "@typescript-eslint/strict-boolean-expressions": 6,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-unsafe-member-access": 5,
+          "@typescript-eslint/no-unnecessary-type-assertion": 7,
+          "@typescript-eslint/no-non-null-assertion": 1,
+          "@typescript-eslint/prefer-nullish-coalescing": 1,
+          "no-useless-concat": 2
+        },
+        "total": 38,
+        "strategy": "no-unnecessary-type-assertion \u2014; strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/applications/api/expandable-tooltip-mixin.ts",
+        "lines": 227,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-unnecessary-condition": 1,
+          "@typescript-eslint/unbound-method": 1,
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "no-await-in-loop": 1,
+          "@typescript-eslint/no-unsafe-member-access": 1
+        },
+        "total": 12,
+        "strategy": "@typescript-eslint/naming-convention; no-explicit-any \u2014 Replace `any`; explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/applications/api/primary-sheet-mixin.ts",
+        "lines": 460,
+        "items": {
+          "import/order": 2,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/naming-convention": 5,
+          "@typescript-eslint/no-explicit-any": 9,
+          "@typescript-eslint/no-unsafe-argument": 3,
+          "@typescript-eslint/unbound-method": 3,
+          "@typescript-eslint/no-unsafe-assignment": 5,
+          "@typescript-eslint/no-unsafe-member-access": 6,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/strict-boolean-expressions": 6,
+          "@typescript-eslint/no-unnecessary-condition": 5,
+          "@typescript-eslint/require-await": 2,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 49,
+        "strategy": "no-explicit-any \u2014 Replace `any`; no-unsafe-member-access \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/applications/api/sheet-mixin-types.ts",
+        "lines": 353,
+        "items": {
+          "@typescript-eslint/no-explicit-any": 2
+        },
+        "total": 2,
+        "strategy": "no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/applications/api/stat-adjustment-actions.ts",
+        "lines": 277,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 15,
+          "@typescript-eslint/no-unnecessary-condition": 1,
+          "@typescript-eslint/prefer-nullish-coalescing": 8,
+          "@typescript-eslint/switch-exhaustiveness-check": 1
+        },
+        "total": 25,
+        "strategy": "strict-boolean-expressions \u2014; prefer-nullish-coalescing \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/applications/api/stat-breakdown-mixin.ts",
+        "lines": 302,
+        "items": {
+          "@typescript-eslint/no-unused-vars": 1,
+          "import/order": 1,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-explicit-any": 4,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/unbound-method": 2,
+          "@typescript-eslint/strict-boolean-expressions": 6,
+          "@typescript-eslint/no-unsafe-member-access": 3,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-unsafe-call": 2
+        },
+        "total": 27,
+        "strategy": "strict-boolean-expressions \u2014; no-explicit-any \u2014 Replace `any`; @typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/applications/api/tooltip-mixin.ts",
+        "lines": 115,
+        "items": {
+          "import/order": 3,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/consistent-type-imports": 1
+        },
+        "total": 9,
+        "strategy": "import/order \u2014 Reorder imports per groups:; @typescript-eslint/naming-convention; explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/applications/api/visual-feedback-mixin.ts",
+        "lines": 304,
+        "items": {
+          "@typescript-eslint/no-unused-vars": 1,
+          "@typescript-eslint/explicit-function-return-type": 2,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2
+        },
+        "total": 9,
+        "strategy": "explicit-function-return-type \u2014; @typescript-eslint/naming-convention; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/applications/api/what-if-mixin.ts",
+        "lines": 410,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/explicit-function-return-type": 2,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/no-explicit-any": 5,
+          "@typescript-eslint/no-unsafe-argument": 3,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2,
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "@typescript-eslint/strict-boolean-expressions": 3,
+          "@typescript-eslint/no-unsafe-assignment": 4,
+          "prettier/prettier": 1,
+          "@typescript-eslint/no-unsafe-member-access": 12
+        },
+        "total": 38,
+        "strategy": "no-unsafe-member-access \u2014; no-explicit-any \u2014 Replace `any`; no-unsafe-assignment \u2014 The"
+      },
+      {
+        "file": "src/module/applications/character-creation/origin-detail-dialog.ts",
+        "lines": 371,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 3,
+          "@typescript-eslint/strict-boolean-expressions": 34,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-condition": 13,
+          "@typescript-eslint/no-unnecessary-type-assertion": 4,
+          "@typescript-eslint/no-explicit-any": 10,
+          "@typescript-eslint/no-unsafe-assignment": 22,
+          "@typescript-eslint/no-unsafe-member-access": 31,
+          "@typescript-eslint/no-unsafe-argument": 4,
+          "@typescript-eslint/no-unsafe-call": 1,
+          "@typescript-eslint/prefer-nullish-coalescing": 1,
+          "no-await-in-loop": 2,
+          "@typescript-eslint/no-floating-promises": 2
+        },
+        "total": 131,
+        "strategy": "strict-boolean-expressions \u2014; no-unsafe-member-access \u2014; no-unsafe-assignment \u2014 The"
+      },
+      {
+        "file": "src/module/applications/character-creation/origin-path-choice-dialog.ts",
+        "lines": 684,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/unbound-method": 6,
+          "@typescript-eslint/no-unnecessary-condition": 11,
+          "@typescript-eslint/prefer-nullish-coalescing": 7,
+          "@typescript-eslint/strict-boolean-expressions": 51,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "complexity": 2,
+          "@typescript-eslint/await-thenable": 1,
+          "no-await-in-loop": 1,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-call": 1,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/no-base-to-string": 6,
+          "eqeqeq": 2,
+          "@typescript-eslint/restrict-template-expressions": 3,
+          "@typescript-eslint/no-floating-promises": 3,
+          "@typescript-eslint/no-non-null-assertion": 2
+        },
+        "total": 103,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; prefer-nullish-coalescing \u2014"
+      },
+      {
+        "file": "src/module/applications/character-creation/system-origin-builders.ts",
+        "lines": 46,
+        "items": {
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 1,
+        "strategy": "no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/applications/compendium-browser.ts",
+        "lines": 745,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/unbound-method": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/no-unnecessary-condition": 16,
+          "@typescript-eslint/strict-boolean-expressions": 44,
+          "@typescript-eslint/no-misused-promises": 1,
+          "no-await-in-loop": 3,
+          "@typescript-eslint/no-base-to-string": 7,
+          "@typescript-eslint/prefer-nullish-coalescing": 6,
+          "@typescript-eslint/restrict-template-expressions": 1,
+          "@typescript-eslint/no-non-null-assertion": 1,
+          "complexity": 1,
+          "@typescript-eslint/no-floating-promises": 12
+        },
+        "total": 99,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-floating-promises \u2014 A"
+      },
+      {
+        "file": "src/module/applications/components/active-modifiers-panel.ts",
+        "lines": 292,
+        "items": {
+          "@typescript-eslint/no-unused-vars": 1,
+          "import/order": 1,
+          "@typescript-eslint/no-explicit-any": 7,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/unbound-method": 3,
+          "@typescript-eslint/strict-boolean-expressions": 12,
+          "@typescript-eslint/no-unsafe-member-access": 4,
+          "@typescript-eslint/no-floating-promises": 1,
+          "complexity": 1,
+          "@typescript-eslint/no-unnecessary-condition": 22,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-unsafe-return": 1
+        },
+        "total": 59,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/applications/components/item-preview-card.ts",
+        "lines": 525,
+        "items": {
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/unbound-method": 1,
+          "@typescript-eslint/strict-boolean-expressions": 33,
+          "@typescript-eslint/no-unsafe-assignment": 2,
+          "@typescript-eslint/no-unsafe-call": 5,
+          "@typescript-eslint/no-unsafe-member-access": 5,
+          "@typescript-eslint/no-non-null-assertion": 3,
+          "@typescript-eslint/switch-exhaustiveness-check": 1,
+          "@typescript-eslint/prefer-nullish-coalescing": 1,
+          "@typescript-eslint/restrict-template-expressions": 2,
+          "@typescript-eslint/no-base-to-string": 5,
+          "@typescript-eslint/no-unnecessary-condition": 4
+        },
+        "total": 68,
+        "strategy": "strict-boolean-expressions \u2014; no-unsafe-call \u2014 Calling a value; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/applications/components/quick-actions-bar.ts",
+        "lines": 167,
+        "items": {
+          "@typescript-eslint/switch-exhaustiveness-check": 1,
+          "@typescript-eslint/strict-boolean-expressions": 3
+        },
+        "total": 4,
+        "strategy": "strict-boolean-expressions \u2014; @typescript-eslint/switch-exhaustiveness-check"
+      },
+      {
+        "file": "src/module/applications/components/wh40k-tooltip.ts",
+        "lines": 740,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 2,
+          "no-await-in-loop": 1,
+          "@typescript-eslint/strict-boolean-expressions": 52,
+          "@typescript-eslint/prefer-nullish-coalescing": 5,
+          "@typescript-eslint/no-unnecessary-condition": 22,
+          "@typescript-eslint/no-unsafe-assignment": 20,
+          "@typescript-eslint/no-unsafe-argument": 6,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/return-await": 1,
+          "@typescript-eslint/no-explicit-any": 13,
+          "@typescript-eslint/no-unsafe-member-access": 40,
+          "complexity": 1,
+          "@typescript-eslint/restrict-template-expressions": 1,
+          "@typescript-eslint/no-base-to-string": 1,
+          "@typescript-eslint/no-unsafe-call": 9,
+          "no-param-reassign": 1
+        },
+        "total": 176,
+        "strategy": "strict-boolean-expressions \u2014; no-unsafe-member-access \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/applications/dialogs/acquisition-dialog.ts",
+        "lines": 435,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 3,
+          "@typescript-eslint/prefer-nullish-coalescing": 1,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unsafe-assignment": 8,
+          "@typescript-eslint/strict-boolean-expressions": 8,
+          "@typescript-eslint/no-explicit-any": 5,
+          "@typescript-eslint/no-unsafe-member-access": 9,
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "@typescript-eslint/no-unnecessary-type-assertion": 8,
+          "@typescript-eslint/no-non-null-assertion": 4
+        },
+        "total": 52,
+        "strategy": "no-unsafe-member-access \u2014; no-unsafe-assignment \u2014 The; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/applications/dialogs/ammo-picker-dialog.ts",
+        "lines": 194,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 2,
+          "@typescript-eslint/no-unnecessary-condition": 5,
+          "@typescript-eslint/strict-boolean-expressions": 5,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/prefer-nullish-coalescing": 1
+        },
+        "total": 17,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; @typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/applications/dialogs/characteristic-setup-dialog.ts",
+        "lines": 491,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 3,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unsafe-assignment": 11,
+          "@typescript-eslint/strict-boolean-expressions": 5,
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "@typescript-eslint/no-unsafe-member-access": 8,
+          "@typescript-eslint/no-floating-promises": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "@typescript-eslint/no-non-null-assertion": 4,
+          "@typescript-eslint/require-await": 2
+        },
+        "total": 45,
+        "strategy": "no-unsafe-assignment \u2014 The; no-unsafe-member-access \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/applications/dialogs/confirmation-dialog.ts",
+        "lines": 158,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 2,
+          "@typescript-eslint/strict-boolean-expressions": 4,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 10,
+        "strategy": "strict-boolean-expressions \u2014; @typescript-eslint/naming-convention; unbound-method \u2014 A class method is"
+      },
+      {
+        "file": "src/module/applications/dialogs/convert-actor-system-dialog.ts",
+        "lines": 97,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 2,
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "prettier/prettier": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2
+        },
+        "total": 8,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/applications/dialogs/create-actor-dialog.ts",
+        "lines": 139,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2
+        },
+        "total": 4,
+        "strategy": "no-unnecessary-type-assertion \u2014; strict-boolean-expressions \u2014; explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/applications/dialogs/roll-configuration-dialog.ts",
+        "lines": 387,
+        "items": {
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/unbound-method": 4,
+          "@typescript-eslint/prefer-nullish-coalescing": 7,
+          "@typescript-eslint/strict-boolean-expressions": 13,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/no-explicit-any": 6,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-unsafe-member-access": 9,
+          "@typescript-eslint/no-unsafe-call": 8,
+          "@typescript-eslint/no-unsafe-assignment": 1
+        },
+        "total": 53,
+        "strategy": "strict-boolean-expressions \u2014; no-unsafe-member-access \u2014; no-unsafe-call \u2014 Calling a value"
+      },
+      {
+        "file": "src/module/applications/dialogs/transaction-request-dialog.ts",
+        "lines": 220,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 3,
+          "@typescript-eslint/no-unnecessary-condition": 8,
+          "@typescript-eslint/strict-boolean-expressions": 12,
+          "@typescript-eslint/no-unused-vars": 1,
+          "@typescript-eslint/no-unsafe-assignment": 2,
+          "@typescript-eslint/no-explicit-any": 4,
+          "@typescript-eslint/no-unsafe-member-access": 4,
+          "@typescript-eslint/no-floating-promises": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 4
+        },
+        "total": 41,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/applications/item/ammo-sheet.ts",
+        "lines": 122,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unnecessary-condition": 7,
+          "@typescript-eslint/unbound-method": 3,
+          "@typescript-eslint/strict-boolean-expressions": 8,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 4
+        },
+        "total": 27,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/applications/item/armour-mod-sheet.ts",
+        "lines": 275,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/no-unused-vars": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unnecessary-condition": 8,
+          "@typescript-eslint/unbound-method": 4,
+          "@typescript-eslint/strict-boolean-expressions": 13,
+          "@typescript-eslint/prefer-nullish-coalescing": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 33,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; unbound-method \u2014 A class method is"
+      },
+      {
+        "file": "src/module/applications/item/armour-sheet.ts",
+        "lines": 253,
+        "items": {
+          "import/order": 2,
+          "@typescript-eslint/no-unused-vars": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unnecessary-condition": 13,
+          "@typescript-eslint/unbound-method": 6,
+          "@typescript-eslint/strict-boolean-expressions": 14,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/no-unsafe-member-access": 2,
+          "@typescript-eslint/no-unsafe-call": 1
+        },
+        "total": 46,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; unbound-method \u2014 A class method is"
+      },
+      {
+        "file": "src/module/applications/item/base-item-sheet.ts",
+        "lines": 426,
+        "items": {
+          "import/order": 3,
+          "@typescript-eslint/no-unused-vars": 1,
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/unbound-method": 7,
+          "@typescript-eslint/no-unnecessary-condition": 10,
+          "@typescript-eslint/strict-boolean-expressions": 11,
+          "@typescript-eslint/no-unsafe-call": 1,
+          "@typescript-eslint/no-unsafe-member-access": 3,
+          "@typescript-eslint/no-unnecessary-type-assertion": 4,
+          "@typescript-eslint/promise-function-async": 1,
+          "@typescript-eslint/no-floating-promises": 2,
+          "@typescript-eslint/no-non-null-assertion": 3
+        },
+        "total": 51,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; unbound-method \u2014 A class method is"
+      },
+      {
+        "file": "src/module/applications/item/container-item-sheet.ts",
+        "lines": 278,
+        "items": {
+          "@typescript-eslint/naming-convention": 1,
+          "@typescript-eslint/no-unnecessary-condition": 7,
+          "@typescript-eslint/unbound-method": 4,
+          "@typescript-eslint/strict-boolean-expressions": 6,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-unsafe-member-access": 5,
+          "@typescript-eslint/no-unnecessary-type-assertion": 6,
+          "@typescript-eslint/no-unsafe-argument": 2,
+          "@typescript-eslint/no-unsafe-call": 2,
+          "@typescript-eslint/no-unused-vars": 1,
+          "@typescript-eslint/no-non-null-assertion": 1,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 37,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/applications/item/define-simple-item-sheet.ts",
+        "lines": 161,
+        "items": {
+          "@typescript-eslint/no-redundant-type-constituents": 1,
+          "prettier/prettier": 1,
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-unsafe-call": 2,
+          "@typescript-eslint/no-unsafe-member-access": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-unsafe-return": 1
+        },
+        "total": 16,
+        "strategy": "@typescript-eslint/naming-convention; no-unnecessary-type-assertion \u2014; no-unsafe-call \u2014 Calling a value"
+      },
+      {
+        "file": "src/module/applications/item/gear-sheet.ts",
+        "lines": 91,
+        "items": {
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/unbound-method": 2,
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unsafe-call": 2,
+          "@typescript-eslint/no-unsafe-member-access": 2
+        },
+        "total": 11,
+        "strategy": "@typescript-eslint/naming-convention; unbound-method \u2014 A class method is; no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/applications/item/npc-template-sheet.ts",
+        "lines": 550,
+        "items": {
+          "@typescript-eslint/no-explicit-any": 18,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/unbound-method": 12,
+          "@typescript-eslint/no-unsafe-assignment": 31,
+          "@typescript-eslint/no-unsafe-call": 32,
+          "@typescript-eslint/no-unsafe-member-access": 62,
+          "@typescript-eslint/strict-boolean-expressions": 26,
+          "@typescript-eslint/no-unsafe-return": 2,
+          "@typescript-eslint/no-unnecessary-condition": 10,
+          "@typescript-eslint/no-unsafe-argument": 4,
+          "no-await-in-loop": 2
+        },
+        "total": 202,
+        "strategy": "no-unsafe-member-access \u2014; no-unsafe-call \u2014 Calling a value; no-unsafe-assignment \u2014 The"
+      },
+      {
+        "file": "src/module/applications/item/origin-path-sheet.ts",
+        "lines": 196,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-condition": 10,
+          "@typescript-eslint/strict-boolean-expressions": 12,
+          "@typescript-eslint/prefer-nullish-coalescing": 1
+        },
+        "total": 26,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; @typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/applications/item/storage-location-sheet.ts",
+        "lines": 23,
+        "items": {
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/consistent-type-imports": 1
+        },
+        "total": 2,
+        "strategy": "no-unnecessary-type-assertion \u2014; consistent-type-imports \u2014"
+      },
+      {
+        "file": "src/module/applications/npc/batch-create-dialog.ts",
+        "lines": 472,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 3,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "@typescript-eslint/no-unsafe-assignment": 3,
+          "@typescript-eslint/no-unsafe-call": 3,
+          "@typescript-eslint/no-explicit-any": 12,
+          "@typescript-eslint/no-unsafe-member-access": 27,
+          "@typescript-eslint/no-unsafe-return": 4,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/strict-boolean-expressions": 10,
+          "@typescript-eslint/no-floating-promises": 2,
+          "@typescript-eslint/no-unsafe-argument": 2,
+          "no-await-in-loop": 2,
+          "@typescript-eslint/require-await": 1
+        },
+        "total": 76,
+        "strategy": "no-unsafe-member-access \u2014; no-explicit-any \u2014 Replace `any`; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/applications/npc/combat-preset-dialog.ts",
+        "lines": 459,
+        "items": {
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/unbound-method": 6,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/strict-boolean-expressions": 10,
+          "@typescript-eslint/prefer-nullish-coalescing": 1,
+          "@typescript-eslint/no-unsafe-assignment": 20,
+          "@typescript-eslint/no-explicit-any": 7,
+          "@typescript-eslint/no-unsafe-member-access": 19,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2,
+          "@typescript-eslint/no-floating-promises": 5,
+          "@typescript-eslint/no-unsafe-call": 2
+        },
+        "total": 77,
+        "strategy": "no-unsafe-assignment \u2014 The; no-unsafe-member-access \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/applications/npc/difficulty-calculator-dialog.ts",
+        "lines": 251,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 1,
+          "@typescript-eslint/no-explicit-any": 6,
+          "@typescript-eslint/no-unsafe-assignment": 8,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "@typescript-eslint/no-unsafe-member-access": 11,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 32,
+        "strategy": "no-unsafe-member-access \u2014; no-unsafe-assignment \u2014 The; no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/applications/npc/encounter-builder.ts",
+        "lines": 664,
+        "items": {
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/unbound-method": 8,
+          "@typescript-eslint/await-thenable": 1,
+          "@typescript-eslint/no-unsafe-assignment": 26,
+          "@typescript-eslint/no-unsafe-member-access": 61,
+          "@typescript-eslint/no-unsafe-argument": 2,
+          "@typescript-eslint/strict-boolean-expressions": 17,
+          "@typescript-eslint/no-unsafe-call": 21,
+          "@typescript-eslint/no-explicit-any": 17,
+          "@typescript-eslint/prefer-nullish-coalescing": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "no-await-in-loop": 2
+        },
+        "total": 161,
+        "strategy": "no-unsafe-member-access \u2014; no-unsafe-assignment \u2014 The; no-unsafe-call \u2014 Calling a value"
+      },
+      {
+        "file": "src/module/applications/npc/quick-create-dialog.ts",
+        "lines": 476,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 3,
+          "@typescript-eslint/no-explicit-any": 10,
+          "@typescript-eslint/no-unsafe-assignment": 14,
+          "@typescript-eslint/no-unsafe-member-access": 26,
+          "@typescript-eslint/strict-boolean-expressions": 17,
+          "@typescript-eslint/no-unsafe-call": 1,
+          "@typescript-eslint/no-unsafe-return": 3,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/no-unnecessary-condition": 7,
+          "@typescript-eslint/no-floating-promises": 1,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "no-await-in-loop": 1
+        },
+        "total": 87,
+        "strategy": "no-unsafe-member-access \u2014; strict-boolean-expressions \u2014; no-unsafe-assignment \u2014 The"
+      },
+      {
+        "file": "src/module/applications/npc/stat-block-exporter.ts",
+        "lines": 462,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 4,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/strict-boolean-expressions": 31,
+          "complexity": 1,
+          "@typescript-eslint/no-unsafe-assignment": 6,
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unsafe-member-access": 55,
+          "@typescript-eslint/no-unsafe-call": 2,
+          "@typescript-eslint/no-unsafe-argument": 4,
+          "@typescript-eslint/no-unnecessary-condition": 1
+        },
+        "total": 109,
+        "strategy": "no-unsafe-member-access \u2014; strict-boolean-expressions \u2014; no-unsafe-assignment \u2014 The"
+      },
+      {
+        "file": "src/module/applications/npc/template-selector.ts",
+        "lines": 512,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 4,
+          "@typescript-eslint/strict-boolean-expressions": 8,
+          "@typescript-eslint/no-unnecessary-type-assertion": 5,
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unsafe-member-access": 2,
+          "no-await-in-loop": 4,
+          "@typescript-eslint/no-floating-promises": 3
+        },
+        "total": 30,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-type-assertion \u2014; unbound-method \u2014 A class method is"
+      },
+      {
+        "file": "src/module/applications/npc/threat-scaler-dialog.ts",
+        "lines": 477,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 5,
+          "@typescript-eslint/no-unsafe-assignment": 10,
+          "@typescript-eslint/strict-boolean-expressions": 4,
+          "@typescript-eslint/no-explicit-any": 6,
+          "@typescript-eslint/no-unsafe-member-access": 11,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unsafe-argument": 5,
+          "@typescript-eslint/no-unnecessary-type-assertion": 4,
+          "@typescript-eslint/no-floating-promises": 2,
+          "@typescript-eslint/no-unnecessary-condition": 1
+        },
+        "total": 51,
+        "strategy": "no-unsafe-member-access \u2014; no-unsafe-assignment \u2014 The; no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/applications/prompts/add-xp-dialog.ts",
+        "lines": 158,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 3,
+          "@typescript-eslint/no-unsafe-function-type": 2,
+          "@typescript-eslint/no-unsafe-assignment": 3,
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unsafe-member-access": 2,
+          "@typescript-eslint/no-unsafe-argument": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 18,
+        "strategy": "unbound-method \u2014 A class method is; no-unsafe-assignment \u2014 The; @typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/applications/prompts/assign-damage-dialog.ts",
+        "lines": 101,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/no-misused-promises": 2,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 6,
+        "strategy": "@typescript-eslint/naming-convention; no-misused-promises \u2014 A; explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/applications/prompts/base-roll-dialog.ts",
+        "lines": 182,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 3,
+          "@typescript-eslint/no-unsafe-function-type": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2
+        },
+        "total": 10,
+        "strategy": "unbound-method \u2014 A class method is; @typescript-eslint/naming-convention; @typescript-eslint/no-unsafe-function-type"
+      },
+      {
+        "file": "src/module/applications/prompts/damage-roll-dialog.ts",
+        "lines": 84,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 4,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 8,
+        "strategy": "no-unnecessary-type-assertion \u2014; @typescript-eslint/naming-convention; explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/applications/prompts/effect-creation-dialog.ts",
+        "lines": 467,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 3,
+          "@typescript-eslint/no-floating-promises": 1,
+          "@typescript-eslint/require-await": 1,
+          "@typescript-eslint/strict-boolean-expressions": 7,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2,
+          "@typescript-eslint/no-explicit-any": 5,
+          "@typescript-eslint/no-unsafe-assignment": 3,
+          "@typescript-eslint/no-unsafe-member-access": 2,
+          "@typescript-eslint/no-unsafe-return": 1
+        },
+        "total": 27,
+        "strategy": "strict-boolean-expressions \u2014; no-explicit-any \u2014 Replace `any`; unbound-method \u2014 A class method is"
+      },
+      {
+        "file": "src/module/applications/prompts/enhanced-skill-dialog.ts",
+        "lines": 391,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 4,
+          "@typescript-eslint/unbound-method": 6,
+          "@typescript-eslint/no-unsafe-function-type": 6,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/no-unsafe-call": 4,
+          "@typescript-eslint/no-explicit-any": 5,
+          "@typescript-eslint/no-unsafe-member-access": 4,
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 35,
+        "strategy": "unbound-method \u2014 A class method is; @typescript-eslint/no-unsafe-function-type; no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/applications/prompts/force-field-dialog.ts",
+        "lines": 121,
+        "items": {
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/no-misused-promises": 2,
+          "@typescript-eslint/strict-boolean-expressions": 2,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 10,
+        "strategy": "@typescript-eslint/naming-convention; no-misused-promises \u2014 A; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/applications/prompts/psychic-power-dialog.ts",
+        "lines": 139,
+        "items": {
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 1,
+          "@typescript-eslint/no-unsafe-function-type": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "@typescript-eslint/no-unsafe-call": 4,
+          "@typescript-eslint/no-unsafe-member-access": 3,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 19,
+        "strategy": "no-unsafe-call \u2014 Calling a value; no-unnecessary-type-assertion \u2014; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/applications/prompts/righteous-fury-dialog.ts",
+        "lines": 221,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 2,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 6,
+        "strategy": "@typescript-eslint/naming-convention; unbound-method \u2014 A class method is; import/order \u2014 Reorder imports per groups:"
+      },
+      {
+        "file": "src/module/applications/prompts/simple-roll-dialog.ts",
+        "lines": 79,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 7,
+        "strategy": "@typescript-eslint/naming-convention; no-unnecessary-type-assertion \u2014; import/order \u2014 Reorder imports per groups:"
+      },
+      {
+        "file": "src/module/applications/prompts/specialist-skill-dialog.ts",
+        "lines": 257,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 2,
+          "@typescript-eslint/no-unsafe-function-type": 2,
+          "no-await-in-loop": 2,
+          "@typescript-eslint/strict-boolean-expressions": 7,
+          "@typescript-eslint/no-unnecessary-condition": 5,
+          "@typescript-eslint/no-unnecessary-type-assertion": 6,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 29,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-type-assertion \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/applications/prompts/weapon-attack-dialog.ts",
+        "lines": 146,
+        "items": {
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 1,
+          "@typescript-eslint/no-unsafe-function-type": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "@typescript-eslint/no-unsafe-call": 4,
+          "@typescript-eslint/no-unsafe-member-access": 4,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 20,
+        "strategy": "no-unsafe-call \u2014 Calling a value; no-unsafe-member-access \u2014; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/canvas/ruler.ts",
+        "lines": 62,
+        "items": {
+          "@typescript-eslint/consistent-type-imports": 1,
+          "@typescript-eslint/explicit-function-return-type": 3,
+          "@typescript-eslint/no-unsafe-assignment": 6,
+          "@typescript-eslint/no-explicit-any": 4,
+          "@typescript-eslint/no-unnecessary-condition": 1,
+          "@typescript-eslint/strict-boolean-expressions": 3,
+          "@typescript-eslint/no-unsafe-member-access": 4,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3
+        },
+        "total": 25,
+        "strategy": "no-unsafe-assignment \u2014 The; no-explicit-any \u2014 Replace `any`; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/config/advancements/index.ts",
+        "lines": 169,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 7,
+          "@typescript-eslint/no-unnecessary-condition": 6,
+          "@typescript-eslint/strict-boolean-expressions": 3,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2,
+          "@typescript-eslint/no-non-null-assertion": 2
+        },
+        "total": 21,
+        "strategy": "explicit-function-return-type \u2014; no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/config/game-systems/aptitude-based-system-config.ts",
+        "lines": 215,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 12,
+          "eqeqeq": 1
+        },
+        "total": 13,
+        "strategy": "no-unnecessary-condition \u2014; eqeqeq \u2014 Replace `==` with `===` and `!=` with `!==`. The only"
+      },
+      {
+        "file": "src/module/config/game-systems/base-system-config.ts",
+        "lines": 199,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 2
+        },
+        "total": 2,
+        "strategy": "no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/config/game-systems/bc-config.ts",
+        "lines": 178,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 11,
+          "eqeqeq": 2
+        },
+        "total": 13,
+        "strategy": "no-unnecessary-condition \u2014; eqeqeq \u2014 Replace `==` with `===` and `!=` with `!==`. The only"
+      },
+      {
+        "file": "src/module/config/game-systems/career-based-system-config.ts",
+        "lines": 141,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/no-non-null-assertion": 1,
+          "eqeqeq": 1
+        },
+        "total": 5,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-type-assertion \u2014; no-non-null-assertion \u2014"
+      },
+      {
+        "file": "src/module/config/game-systems/dh1e-config.ts",
+        "lines": 44,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 6
+        },
+        "total": 6,
+        "strategy": "no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/config/game-systems/dh2e-config.ts",
+        "lines": 133,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 5
+        },
+        "total": 5,
+        "strategy": "no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/config/game-systems/dw-config.ts",
+        "lines": 50,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 6
+        },
+        "total": 6,
+        "strategy": "no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/config/game-systems/im-config.ts",
+        "lines": 90,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 5
+        },
+        "total": 5,
+        "strategy": "no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/config/game-systems/index.ts",
+        "lines": 107,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/strict-boolean-expressions": 1
+        },
+        "total": 3,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/config/game-systems/ow-config.ts",
+        "lines": 107,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 5
+        },
+        "total": 5,
+        "strategy": "no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/config/game-systems/rt-config.ts",
+        "lines": 88,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 5,
+          "@typescript-eslint/strict-boolean-expressions": 1
+        },
+        "total": 6,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/data/abstract/item-data-model.ts",
+        "lines": 328,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/no-unnecessary-condition": 7,
+          "@typescript-eslint/strict-boolean-expressions": 5,
+          "@typescript-eslint/no-explicit-any": 3,
+          "@typescript-eslint/no-unsafe-return": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "@typescript-eslint/no-unsafe-member-access": 3
+        },
+        "total": 23,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/data/abstract/system-data-model.ts",
+        "lines": 295,
+        "items": {
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unnecessary-condition": 4,
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2,
+          "@typescript-eslint/no-unsafe-call": 1,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/no-unsafe-assignment": 1
+        },
+        "total": 12,
+        "strategy": "no-unnecessary-condition \u2014; no-explicit-any \u2014 Replace `any`; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/data/actor/character.ts",
+        "lines": 746,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/no-unused-vars": 7,
+          "@typescript-eslint/no-unnecessary-condition": 9,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/strict-boolean-expressions": 51,
+          "complexity": 1,
+          "@typescript-eslint/no-unsafe-assignment": 24,
+          "@typescript-eslint/no-unsafe-member-access": 57,
+          "@typescript-eslint/no-unsafe-call": 13,
+          "@typescript-eslint/no-unsafe-argument": 6,
+          "@typescript-eslint/no-explicit-any": 12,
+          "@typescript-eslint/prefer-nullish-coalescing": 5,
+          "@typescript-eslint/no-unnecessary-type-assertion": 4,
+          "eqeqeq": 1
+        },
+        "total": 192,
+        "strategy": "no-unsafe-member-access \u2014; strict-boolean-expressions \u2014; no-unsafe-assignment \u2014 The"
+      },
+      {
+        "file": "src/module/data/actor/mixins/horde-template.ts",
+        "lines": 234,
+        "items": {
+          "@typescript-eslint/no-explicit-any": 4,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/promise-function-async": 1
+        },
+        "total": 13,
+        "strategy": "no-explicit-any \u2014 Replace `any`; no-unnecessary-condition \u2014; @typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/data/actor/starship.ts",
+        "lines": 321,
+        "items": {
+          "@typescript-eslint/no-unsafe-assignment": 5,
+          "@typescript-eslint/strict-boolean-expressions": 10,
+          "@typescript-eslint/no-unsafe-member-access": 16,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-unnecessary-condition": 1
+        },
+        "total": 33,
+        "strategy": "no-unsafe-member-access \u2014; strict-boolean-expressions \u2014; no-unsafe-assignment \u2014 The"
+      },
+      {
+        "file": "src/module/data/actor/templates/common.ts",
+        "lines": 70,
+        "items": {
+          "@typescript-eslint/no-unsafe-return": 1,
+          "@typescript-eslint/no-unsafe-call": 1,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/no-unnecessary-condition": 2
+        },
+        "total": 6,
+        "strategy": "no-unnecessary-condition \u2014; no-unsafe-return \u2014 Returning a; no-unsafe-call \u2014 Calling a value"
+      },
+      {
+        "file": "src/module/data/actor/vehicle.ts",
+        "lines": 286,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 7,
+          "@typescript-eslint/no-unnecessary-condition": 11
+        },
+        "total": 18,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/data/fields/formula-field.ts",
+        "lines": 57,
+        "items": {
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unsafe-member-access": 3,
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/no-unsafe-argument": 1
+        },
+        "total": 8,
+        "strategy": "no-unsafe-member-access \u2014; no-explicit-any \u2014 Replace `any`; no-unsafe-assignment \u2014 The"
+      },
+      {
+        "file": "src/module/data/fields/identifier-field.ts",
+        "lines": 59,
+        "items": {
+          "@typescript-eslint/no-unsafe-member-access": 2,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unsafe-call": 1
+        },
+        "total": 4,
+        "strategy": "no-unsafe-member-access \u2014; explicit-function-return-type \u2014; no-unsafe-call \u2014 Calling a value"
+      },
+      {
+        "file": "src/module/data/fields/mapping-field.ts",
+        "lines": 89,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "@typescript-eslint/strict-boolean-expressions": 1
+        },
+        "total": 4,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/data/grant/_module.ts",
+        "lines": 63,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 2,
+          "@typescript-eslint/strict-boolean-expressions": 2,
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "@typescript-eslint/restrict-template-expressions": 3,
+          "@typescript-eslint/no-base-to-string": 2
+        },
+        "total": 12,
+        "strategy": "no-unnecessary-condition \u2014; restrict-template-expressions \u2014; explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/data/grant/base-grant.ts",
+        "lines": 298,
+        "items": {
+          "@typescript-eslint/no-explicit-any": 4,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 5,
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "@typescript-eslint/strict-boolean-expressions": 3,
+          "@typescript-eslint/require-await": 1,
+          "@typescript-eslint/no-unsafe-argument": 1
+        },
+        "total": 19,
+        "strategy": "no-unnecessary-type-assertion \u2014; no-explicit-any \u2014 Replace `any`; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/data/grant/characteristic-grant.ts",
+        "lines": 185,
+        "items": {
+          "@typescript-eslint/consistent-type-imports": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unnecessary-condition": 10,
+          "@typescript-eslint/no-explicit-any": 4,
+          "@typescript-eslint/no-unsafe-member-access": 3,
+          "@typescript-eslint/no-unsafe-assignment": 2
+        },
+        "total": 23,
+        "strategy": "no-unnecessary-condition \u2014; no-explicit-any \u2014 Replace `any`; @typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/data/grant/choice-grant.ts",
+        "lines": 304,
+        "items": {
+          "@typescript-eslint/consistent-type-imports": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unnecessary-condition": 12,
+          "no-await-in-loop": 3,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/strict-boolean-expressions": 5,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "@typescript-eslint/no-unsafe-assignment": 1
+        },
+        "total": 29,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; @typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/data/grant/item-grant.ts",
+        "lines": 324,
+        "items": {
+          "@typescript-eslint/consistent-type-imports": 1,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unused-vars": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unnecessary-condition": 11,
+          "no-await-in-loop": 2,
+          "@typescript-eslint/strict-boolean-expressions": 3,
+          "@typescript-eslint/no-non-null-assertion": 2,
+          "@typescript-eslint/restrict-template-expressions": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 26,
+        "strategy": "no-unnecessary-condition \u2014; @typescript-eslint/naming-convention; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/data/grant/resource-grant.ts",
+        "lines": 396,
+        "items": {
+          "@typescript-eslint/consistent-type-imports": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unnecessary-condition": 14,
+          "@typescript-eslint/strict-boolean-expressions": 9,
+          "no-await-in-loop": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 29,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; @typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/data/grant/skill-grant.ts",
+        "lines": 492,
+        "items": {
+          "@typescript-eslint/consistent-type-imports": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unnecessary-condition": 16,
+          "@typescript-eslint/strict-boolean-expressions": 19,
+          "@typescript-eslint/no-unsafe-assignment": 6,
+          "@typescript-eslint/no-explicit-any": 10,
+          "@typescript-eslint/no-unsafe-member-access": 14,
+          "@typescript-eslint/no-unsafe-call": 2
+        },
+        "total": 71,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/data/item/ammunition.ts",
+        "lines": 181,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/no-unnecessary-condition": 13,
+          "@typescript-eslint/no-unsafe-argument": 2,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/no-unsafe-assignment": 3,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/strict-boolean-expressions": 1
+        },
+        "total": 25,
+        "strategy": "no-unnecessary-condition \u2014; no-unsafe-assignment \u2014 The; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/data/item/armour-modification.ts",
+        "lines": 395,
+        "items": {
+          "@typescript-eslint/no-unsafe-call": 1,
+          "@typescript-eslint/no-explicit-any": 4,
+          "@typescript-eslint/no-unnecessary-condition": 6,
+          "@typescript-eslint/strict-boolean-expressions": 7,
+          "@typescript-eslint/no-unsafe-member-access": 3,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2,
+          "@typescript-eslint/explicit-function-return-type": 3
+        },
+        "total": 27,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/data/item/armour.ts",
+        "lines": 735,
+        "items": {
+          "import/order": 2,
+          "@typescript-eslint/no-unnecessary-condition": 18,
+          "@typescript-eslint/strict-boolean-expressions": 5,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "@typescript-eslint/no-unsafe-call": 1,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-argument": 2,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/no-unsafe-assignment": 2,
+          "@typescript-eslint/explicit-function-return-type": 15,
+          "@typescript-eslint/naming-convention": 1
+        },
+        "total": 51,
+        "strategy": "no-unnecessary-condition \u2014; explicit-function-return-type \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/data/item/attack-special.ts",
+        "lines": 56,
+        "items": {
+          "@typescript-eslint/no-unsafe-member-access": 2,
+          "@typescript-eslint/no-unsafe-return": 1
+        },
+        "total": 3,
+        "strategy": "no-unsafe-member-access \u2014; no-unsafe-return \u2014 Returning a"
+      },
+      {
+        "file": "src/module/data/item/backpack.ts",
+        "lines": 45,
+        "items": {
+          "@typescript-eslint/no-base-to-string": 1,
+          "@typescript-eslint/no-unnecessary-condition": 3
+        },
+        "total": 4,
+        "strategy": "no-unnecessary-condition \u2014; no-base-to-string \u2014 A value's"
+      },
+      {
+        "file": "src/module/data/item/condition.ts",
+        "lines": 197,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 4,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/no-unsafe-return": 1
+        },
+        "total": 7,
+        "strategy": "explicit-function-return-type \u2014; no-unsafe-assignment \u2014 The; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/data/item/critical-injury.ts",
+        "lines": 196,
+        "items": {
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/explicit-function-return-type": 6,
+          "@typescript-eslint/strict-boolean-expressions": 2,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/prefer-nullish-coalescing": 1
+        },
+        "total": 12,
+        "strategy": "explicit-function-return-type \u2014; strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/data/item/cybernetic.ts",
+        "lines": 173,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/no-unsafe-argument": 2,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/no-unnecessary-condition": 8,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2
+        },
+        "total": 15,
+        "strategy": "no-unnecessary-condition \u2014; no-unsafe-argument \u2014 Passing; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/data/item/force-field.ts",
+        "lines": 301,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/no-unsafe-call": 4,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/explicit-function-return-type": 2,
+          "@typescript-eslint/no-unsafe-member-access": 4,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/strict-boolean-expressions": 1
+        },
+        "total": 15,
+        "strategy": "no-unsafe-call \u2014 Calling a value; no-unsafe-member-access \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/data/item/gear.ts",
+        "lines": 352,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/no-unsafe-call": 3,
+          "@typescript-eslint/no-unnecessary-condition": 20,
+          "@typescript-eslint/no-unsafe-argument": 2,
+          "@typescript-eslint/no-unsafe-member-access": 5,
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/no-base-to-string": 2,
+          "@typescript-eslint/explicit-function-return-type": 6,
+          "@typescript-eslint/no-unsafe-assignment": 2
+        },
+        "total": 42,
+        "strategy": "no-unnecessary-condition \u2014; explicit-function-return-type \u2014; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/data/item/navigator-power.ts",
+        "lines": 148,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-condition": 1
+        },
+        "total": 2,
+        "strategy": "explicit-function-return-type \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/data/item/npc-template.ts",
+        "lines": 548,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 7,
+          "@typescript-eslint/strict-boolean-expressions": 4,
+          "@typescript-eslint/no-unsafe-member-access": 1
+        },
+        "total": 12,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/data/item/order.ts",
+        "lines": 144,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1
+        },
+        "total": 1,
+        "strategy": "explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/data/item/origin-path.ts",
+        "lines": 584,
+        "items": {
+          "@typescript-eslint/no-unsafe-call": 1,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/explicit-function-return-type": 9,
+          "@typescript-eslint/strict-boolean-expressions": 9,
+          "@typescript-eslint/no-unnecessary-condition": 13
+        },
+        "total": 33,
+        "strategy": "no-unnecessary-condition \u2014; explicit-function-return-type \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/data/item/psychic-power.ts",
+        "lines": 189,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-condition": 2
+        },
+        "total": 3,
+        "strategy": "no-unnecessary-condition \u2014; explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/data/item/ritual.ts",
+        "lines": 148,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-condition": 1
+        },
+        "total": 2,
+        "strategy": "explicit-function-return-type \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/data/item/ship-component.ts",
+        "lines": 277,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/explicit-function-return-type": 2
+        },
+        "total": 6,
+        "strategy": "no-unnecessary-condition \u2014; explicit-function-return-type \u2014; prefer-optional-chain \u2014"
+      },
+      {
+        "file": "src/module/data/item/ship-role.ts",
+        "lines": 196,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 2,
+          "@typescript-eslint/strict-boolean-expressions": 2,
+          "@typescript-eslint/no-unnecessary-condition": 2
+        },
+        "total": 6,
+        "strategy": "explicit-function-return-type \u2014; strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/data/item/ship-upgrade.ts",
+        "lines": 185,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/explicit-function-return-type": 2
+        },
+        "total": 4,
+        "strategy": "no-unnecessary-condition \u2014; explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/data/item/ship-weapon.ts",
+        "lines": 283,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/strict-boolean-expressions": 4,
+          "@typescript-eslint/prefer-optional-chain": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2
+        },
+        "total": 10,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; prefer-optional-chain \u2014"
+      },
+      {
+        "file": "src/module/data/item/skill.ts",
+        "lines": 199,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-condition": 1,
+          "@typescript-eslint/no-unsafe-assignment": 2,
+          "@typescript-eslint/no-unsafe-member-access": 2
+        },
+        "total": 6,
+        "strategy": "no-unsafe-assignment \u2014 The; no-unsafe-member-access \u2014; explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/data/item/storage-location.ts",
+        "lines": 44,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1
+        },
+        "total": 1,
+        "strategy": "explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/data/item/talent.ts",
+        "lines": 425,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 4,
+          "@typescript-eslint/strict-boolean-expressions": 2,
+          "@typescript-eslint/no-unsafe-member-access": 7,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/explicit-function-return-type": 3,
+          "@typescript-eslint/no-unsafe-assignment": 5,
+          "@typescript-eslint/no-unsafe-return": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 24,
+        "strategy": "no-unsafe-member-access \u2014; no-unsafe-assignment \u2014 The; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/data/item/trait.ts",
+        "lines": 179,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 2,
+          "@typescript-eslint/no-unsafe-assignment": 6,
+          "@typescript-eslint/no-unsafe-member-access": 5,
+          "@typescript-eslint/no-unsafe-return": 2,
+          "@typescript-eslint/strict-boolean-expressions": 2,
+          "@typescript-eslint/no-unsafe-call": 2
+        },
+        "total": 19,
+        "strategy": "no-unsafe-assignment \u2014 The; no-unsafe-member-access \u2014; explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/data/item/vehicle-trait.ts",
+        "lines": 119,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 3,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/no-unsafe-return": 1
+        },
+        "total": 8,
+        "strategy": "explicit-function-return-type \u2014; no-unnecessary-type-assertion \u2014; no-unsafe-assignment \u2014 The"
+      },
+      {
+        "file": "src/module/data/item/vehicle-upgrade.ts",
+        "lines": 200,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2,
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "@typescript-eslint/strict-boolean-expressions": 2
+        },
+        "total": 9,
+        "strategy": "no-unnecessary-condition \u2014; explicit-function-return-type \u2014; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/data/item/weapon-modification.ts",
+        "lines": 180,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 4,
+          "@typescript-eslint/no-unnecessary-condition": 1
+        },
+        "total": 7,
+        "strategy": "no-unnecessary-type-assertion \u2014; explicit-function-return-type \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/data/item/weapon-quality.ts",
+        "lines": 77,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/no-unsafe-return": 1
+        },
+        "total": 4,
+        "strategy": "explicit-function-return-type \u2014; no-unsafe-assignment \u2014 The; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/data/shared/activation-template.ts",
+        "lines": 187,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 6,
+          "@typescript-eslint/explicit-function-return-type": 2,
+          "@typescript-eslint/no-unsafe-call": 2,
+          "@typescript-eslint/no-unsafe-member-access": 2
+        },
+        "total": 12,
+        "strategy": "no-unnecessary-condition \u2014; explicit-function-return-type \u2014; no-unsafe-call \u2014 Calling a value"
+      },
+      {
+        "file": "src/module/data/shared/attack-template.ts",
+        "lines": 171,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "@typescript-eslint/no-unsafe-argument": 2,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/explicit-function-return-type": 1
+        },
+        "total": 8,
+        "strategy": "no-unnecessary-condition \u2014; no-unsafe-argument \u2014 Passing; import/order \u2014 Reorder imports per groups:"
+      },
+      {
+        "file": "src/module/data/shared/body-locations.ts",
+        "lines": 20,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1
+        },
+        "total": 1,
+        "strategy": "explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/data/shared/damage-template.ts",
+        "lines": 173,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/no-unnecessary-condition": 6,
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/no-unsafe-argument": 2,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 13,
+        "strategy": "no-unnecessary-condition \u2014; no-unsafe-argument \u2014 Passing; import/order \u2014 Reorder imports per groups:"
+      },
+      {
+        "file": "src/module/data/shared/description-template.ts",
+        "lines": 161,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/no-unnecessary-condition": 4,
+          "@typescript-eslint/strict-boolean-expressions": 2,
+          "@typescript-eslint/no-unsafe-argument": 2,
+          "@typescript-eslint/no-unsafe-member-access": 3,
+          "@typescript-eslint/no-unsafe-assignment": 2,
+          "@typescript-eslint/no-unsafe-call": 1
+        },
+        "total": 15,
+        "strategy": "no-unnecessary-condition \u2014; no-unsafe-member-access \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/data/shared/equippable-template.ts",
+        "lines": 176,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/require-await": 1,
+          "@typescript-eslint/no-unsafe-assignment": 3,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/strict-boolean-expressions": 2,
+          "@typescript-eslint/no-unsafe-member-access": 5,
+          "consistent-return": 2,
+          "@typescript-eslint/no-unsafe-call": 2
+        },
+        "total": 19,
+        "strategy": "no-unsafe-member-access \u2014; no-unsafe-assignment \u2014 The; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/data/shared/modifiers-template.ts",
+        "lines": 427,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 14,
+          "@typescript-eslint/strict-boolean-expressions": 5,
+          "@typescript-eslint/explicit-function-return-type": 2,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-member-access": 4
+        },
+        "total": 27,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/data/shared/physical-item-template.ts",
+        "lines": 262,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 6,
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/explicit-function-return-type": 1
+        },
+        "total": 8,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/dice/basic-roll.ts",
+        "lines": 291,
+        "items": {
+          "@typescript-eslint/naming-convention": 1,
+          "@typescript-eslint/explicit-function-return-type": 9,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/require-await": 1,
+          "@typescript-eslint/strict-boolean-expressions": 3
+        },
+        "total": 19,
+        "strategy": "explicit-function-return-type \u2014; no-unnecessary-type-assertion \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/dice/d100-roll.ts",
+        "lines": 396,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/no-unnecessary-condition": 7,
+          "@typescript-eslint/explicit-function-return-type": 16,
+          "@typescript-eslint/strict-boolean-expressions": 8
+        },
+        "total": 32,
+        "strategy": "explicit-function-return-type \u2014; strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/documents/acolyte.ts",
+        "lines": 677,
+        "items": {
+          "import/order": 1,
+          "eqeqeq": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 4,
+          "@typescript-eslint/strict-boolean-expressions": 22,
+          "@typescript-eslint/prefer-nullish-coalescing": 4,
+          "@typescript-eslint/no-unsafe-member-access": 5,
+          "@typescript-eslint/no-unsafe-assignment": 4,
+          "@typescript-eslint/no-unnecessary-condition": 22,
+          "@typescript-eslint/await-thenable": 5,
+          "@typescript-eslint/switch-exhaustiveness-check": 2,
+          "@typescript-eslint/consistent-type-imports": 1,
+          "no-useless-return": 1
+        },
+        "total": 73,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/documents/active-effect.ts",
+        "lines": 313,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 9,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/no-unnecessary-condition": 7
+        },
+        "total": 17,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/documents/actor-proxy.ts",
+        "lines": 15,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 1,
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 3,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/documents/base-actor.ts",
+        "lines": 781,
+        "items": {
+          "import/order": 2,
+          "@typescript-eslint/consistent-type-imports": 1,
+          "@typescript-eslint/require-await": 1,
+          "@typescript-eslint/strict-boolean-expressions": 22,
+          "@typescript-eslint/no-unnecessary-condition": 40,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/await-thenable": 1,
+          "@typescript-eslint/prefer-nullish-coalescing": 11
+        },
+        "total": 79,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; prefer-nullish-coalescing \u2014"
+      },
+      {
+        "file": "src/module/documents/chat-message.ts",
+        "lines": 336,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 6,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 5,
+          "@typescript-eslint/no-unsafe-call": 6,
+          "no-await-in-loop": 2,
+          "@typescript-eslint/switch-exhaustiveness-check": 1,
+          "@typescript-eslint/explicit-function-return-type": 3,
+          "@typescript-eslint/prefer-nullish-coalescing": 2,
+          "@typescript-eslint/no-misused-promises": 1
+        },
+        "total": 28,
+        "strategy": "strict-boolean-expressions \u2014; no-unsafe-call \u2014 Calling a value; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/documents/item-container.ts",
+        "lines": 224,
+        "items": {
+          "@typescript-eslint/no-unnecessary-type-assertion": 9,
+          "@typescript-eslint/prefer-nullish-coalescing": 2,
+          "@typescript-eslint/strict-boolean-expressions": 8,
+          "@typescript-eslint/return-await": 1,
+          "@typescript-eslint/await-thenable": 1,
+          "no-await-in-loop": 1,
+          "@typescript-eslint/promise-function-async": 1,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-condition": 1
+        },
+        "total": 25,
+        "strategy": "no-unnecessary-type-assertion \u2014; strict-boolean-expressions \u2014; prefer-nullish-coalescing \u2014"
+      },
+      {
+        "file": "src/module/documents/npc.ts",
+        "lines": 532,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 19,
+          "@typescript-eslint/no-unnecessary-type-assertion": 5,
+          "@typescript-eslint/strict-boolean-expressions": 13,
+          "@typescript-eslint/await-thenable": 3,
+          "@typescript-eslint/switch-exhaustiveness-check": 1,
+          "@typescript-eslint/prefer-nullish-coalescing": 4
+        },
+        "total": 45,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/documents/starship.ts",
+        "lines": 213,
+        "items": {
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/strict-boolean-expressions": 3,
+          "@typescript-eslint/no-unnecessary-condition": 1
+        },
+        "total": 5,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-type-assertion \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/documents/token.ts",
+        "lines": 240,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 8,
+          "@typescript-eslint/strict-boolean-expressions": 3
+        },
+        "total": 11,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/documents/vehicle.ts",
+        "lines": 113,
+        "items": {
+          "@typescript-eslint/no-unnecessary-type-assertion": 5,
+          "@typescript-eslint/switch-exhaustiveness-check": 1,
+          "no-useless-return": 1
+        },
+        "total": 7,
+        "strategy": "no-unnecessary-type-assertion \u2014; @typescript-eslint/switch-exhaustiveness-check; no-useless-return \u2014 Remove a trailing `return;`"
+      },
+      {
+        "file": "src/module/enrichers.ts",
+        "lines": 524,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 10,
+          "@typescript-eslint/prefer-optional-chain": 3,
+          "@typescript-eslint/no-unnecessary-condition": 25,
+          "@typescript-eslint/strict-boolean-expressions": 6,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/switch-exhaustiveness-check": 1
+        },
+        "total": 46,
+        "strategy": "no-unnecessary-condition \u2014; explicit-function-return-type \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/handlebars/handlebars-manager.ts",
+        "lines": 245,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 3,
+          "@typescript-eslint/promise-function-async": 1
+        },
+        "total": 4,
+        "strategy": "explicit-function-return-type \u2014; promise-function-async \u2014"
+      },
+      {
+        "file": "src/module/helpers/craftsmanship-helper.ts",
+        "lines": 329,
+        "items": {
+          "@typescript-eslint/no-redundant-type-constituents": 9,
+          "@typescript-eslint/switch-exhaustiveness-check": 1,
+          "@typescript-eslint/strict-boolean-expressions": 17,
+          "@typescript-eslint/prefer-nullish-coalescing": 7,
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2
+        },
+        "total": 39,
+        "strategy": "strict-boolean-expressions \u2014; no-redundant-type-constituents \u2014; prefer-nullish-coalescing \u2014"
+      },
+      {
+        "file": "src/module/helpers/effects.ts",
+        "lines": 122,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 1
+        },
+        "total": 1,
+        "strategy": "strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/helpers/game-icons.ts",
+        "lines": 243,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/promise-function-async": 1
+        },
+        "total": 2,
+        "strategy": "strict-boolean-expressions \u2014; promise-function-async \u2014"
+      },
+      {
+        "file": "src/module/helpers/skill-key-helper.ts",
+        "lines": 460,
+        "items": {
+          "@typescript-eslint/naming-convention": 5,
+          "@typescript-eslint/no-unnecessary-condition": 5,
+          "@typescript-eslint/strict-boolean-expressions": 1,
+          "@typescript-eslint/explicit-function-return-type": 4
+        },
+        "total": 15,
+        "strategy": "@typescript-eslint/naming-convention; no-unnecessary-condition \u2014; explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/helpers/skill-uuid-helper.ts",
+        "lines": 219,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 4,
+          "@typescript-eslint/strict-boolean-expressions": 6,
+          "@typescript-eslint/no-unsafe-return": 1,
+          "@typescript-eslint/await-thenable": 1
+        },
+        "total": 12,
+        "strategy": "strict-boolean-expressions \u2014; explicit-function-return-type \u2014; no-unsafe-return \u2014 Returning a"
+      },
+      {
+        "file": "src/module/i18n/t.ts",
+        "lines": 27,
+        "items": {
+          "@typescript-eslint/no-shadow": 1
+        },
+        "total": 1,
+        "strategy": "no-shadow \u2014 A binding shadows an outer"
+      },
+      {
+        "file": "src/module/macros/macro-manager.ts",
+        "lines": 152,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 10,
+          "@typescript-eslint/strict-boolean-expressions": 11,
+          "@typescript-eslint/no-unnecessary-type-assertion": 8,
+          "@typescript-eslint/prefer-nullish-coalescing": 1,
+          "@typescript-eslint/no-unnecessary-condition": 6,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/restrict-template-expressions": 9
+        },
+        "total": 46,
+        "strategy": "strict-boolean-expressions \u2014; explicit-function-return-type \u2014; restrict-template-expressions \u2014"
+      },
+      {
+        "file": "src/module/managers/event-tracker.ts",
+        "lines": 505,
+        "items": {
+          "@typescript-eslint/no-unsafe-assignment": 4,
+          "@typescript-eslint/no-unsafe-member-access": 4,
+          "prefer-template": 1,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-unsafe-return": 1,
+          "@typescript-eslint/strict-boolean-expressions": 20,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-misused-promises": 1
+        },
+        "total": 35,
+        "strategy": "strict-boolean-expressions \u2014; no-unsafe-assignment \u2014 The; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/managers/grants-manager.ts",
+        "lines": 766,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "complexity": 1,
+          "@typescript-eslint/no-unnecessary-condition": 38,
+          "@typescript-eslint/strict-boolean-expressions": 37,
+          "no-await-in-loop": 9,
+          "@typescript-eslint/consistent-type-imports": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2
+        },
+        "total": 91,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; no-await-in-loop \u2014 Awaiting in each iteration"
+      },
+      {
+        "file": "src/module/rolls/action-data.ts",
+        "lines": 448,
+        "items": {
+          "@typescript-eslint/consistent-type-imports": 1,
+          "import/order": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 5,
+          "@typescript-eslint/no-unnecessary-condition": 7,
+          "@typescript-eslint/strict-boolean-expressions": 10,
+          "complexity": 1,
+          "no-await-in-loop": 1,
+          "@typescript-eslint/await-thenable": 2
+        },
+        "total": 28,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/rolls/assign-damage-data.ts",
+        "lines": 183,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 4,
+          "@typescript-eslint/no-unnecessary-condition": 1,
+          "no-lonely-if": 1
+        },
+        "total": 6,
+        "strategy": "explicit-function-return-type \u2014; no-unnecessary-condition \u2014; no-lonely-if \u2014 Replace `else { if (...) { ... } }` with"
+      },
+      {
+        "file": "src/module/rolls/damage-data.ts",
+        "lines": 528,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 9,
+          "@typescript-eslint/strict-boolean-expressions": 4,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "no-await-in-loop": 3,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "complexity": 3,
+          "@typescript-eslint/await-thenable": 5
+        },
+        "total": 29,
+        "strategy": "explicit-function-return-type \u2014; await-thenable \u2014 `await` on a; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/rolls/force-field-data.ts",
+        "lines": 76,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/explicit-function-return-type": 2
+        },
+        "total": 3,
+        "strategy": "explicit-function-return-type \u2014; import/order \u2014 Reorder imports per groups:"
+      },
+      {
+        "file": "src/module/rolls/roll-data.ts",
+        "lines": 488,
+        "items": {
+          "@typescript-eslint/consistent-type-imports": 4,
+          "import/order": 2,
+          "@typescript-eslint/no-unnecessary-condition": 23,
+          "@typescript-eslint/strict-boolean-expressions": 12,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "@typescript-eslint/await-thenable": 5,
+          "@typescript-eslint/no-unsafe-assignment": 5,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-member-access": 7,
+          "@typescript-eslint/no-unsafe-argument": 4
+        },
+        "total": 66,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/rolls/roll-helpers.ts",
+        "lines": 118,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 2,
+          "@typescript-eslint/strict-boolean-expressions": 3,
+          "no-lonely-if": 1
+        },
+        "total": 6,
+        "strategy": "strict-boolean-expressions \u2014; explicit-function-return-type \u2014; no-lonely-if \u2014 Replace `else { if (...) { ... } }` with"
+      },
+      {
+        "file": "src/module/rules/active-effects.ts",
+        "lines": 353,
+        "items": {
+          "@typescript-eslint/return-await": 6,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/strict-boolean-expressions": 1
+        },
+        "total": 10,
+        "strategy": "return-await \u2014 In `try`/`catch`,; no-unnecessary-condition \u2014; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/rules/aim.ts",
+        "lines": 15,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 2
+        },
+        "total": 2,
+        "strategy": "explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/rules/ammo.ts",
+        "lines": 280,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 11,
+          "@typescript-eslint/no-unnecessary-condition": 10
+        },
+        "total": 21,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/rules/attack-specials.ts",
+        "lines": 284,
+        "items": {
+          "import/order": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/strict-boolean-expressions": 2,
+          "@typescript-eslint/await-thenable": 2,
+          "@typescript-eslint/explicit-function-return-type": 1
+        },
+        "total": 8,
+        "strategy": "import/order \u2014 Reorder imports per groups:; strict-boolean-expressions \u2014; await-thenable \u2014 `await` on a"
+      },
+      {
+        "file": "src/module/rules/combat-actions.ts",
+        "lines": 296,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/strict-boolean-expressions": 2
+        },
+        "total": 4,
+        "strategy": "strict-boolean-expressions \u2014; import/order \u2014 Reorder imports per groups:; prefer-optional-chain \u2014"
+      },
+      {
+        "file": "src/module/rules/critical-damage.ts",
+        "lines": 104,
+        "items": {
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-unsafe-call": 2,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-member-access": 2,
+          "@typescript-eslint/strict-boolean-expressions": 6,
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "require-atomic-updates": 2
+        },
+        "total": 16,
+        "strategy": "strict-boolean-expressions \u2014; no-unsafe-call \u2014 Calling a value; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/rules/damage-type.ts",
+        "lines": 28,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 3
+        },
+        "total": 3,
+        "strategy": "explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/rules/difficulties.ts",
+        "lines": 13,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1
+        },
+        "total": 1,
+        "strategy": "explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/rules/hit-locations.ts",
+        "lines": 66,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 5
+        },
+        "total": 5,
+        "strategy": "explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/rules/range.ts",
+        "lines": 169,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/require-await": 1,
+          "@typescript-eslint/no-unnecessary-condition": 4,
+          "@typescript-eslint/strict-boolean-expressions": 3,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 11,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; import/order \u2014 Reorder imports per groups:"
+      },
+      {
+        "file": "src/module/rules/weapon-modifiers.ts",
+        "lines": 191,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/no-unused-vars": 1,
+          "@typescript-eslint/no-unnecessary-condition": 15,
+          "@typescript-eslint/strict-boolean-expressions": 12,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 30,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; import/order \u2014 Reorder imports per groups:"
+      },
+      {
+        "file": "src/module/rules/weapon-quality-effects.ts",
+        "lines": 540,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 18,
+          "@typescript-eslint/no-unnecessary-condition": 15,
+          "@typescript-eslint/prefer-nullish-coalescing": 6
+        },
+        "total": 39,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; prefer-nullish-coalescing \u2014"
+      },
+      {
+        "file": "src/module/rules/weapon-training.ts",
+        "lines": 125,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/strict-boolean-expressions": 5
+        },
+        "total": 7,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/tours/wh40k-rpg-tour.ts",
+        "lines": 82,
+        "items": {
+          "@typescript-eslint/no-redundant-type-constituents": 1,
+          "@typescript-eslint/explicit-function-return-type": 3,
+          "@typescript-eslint/strict-boolean-expressions": 1
+        },
+        "total": 5,
+        "strategy": "explicit-function-return-type \u2014; no-redundant-type-constituents \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/transactions/transaction-manager.ts",
+        "lines": 467,
+        "items": {
+          "@typescript-eslint/no-base-to-string": 1,
+          "@typescript-eslint/naming-convention": 1,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/switch-exhaustiveness-check": 1,
+          "@typescript-eslint/strict-boolean-expressions": 5,
+          "@typescript-eslint/no-unnecessary-condition": 6,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/require-await": 1,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unsafe-member-access": 4,
+          "@typescript-eslint/no-unsafe-call": 1,
+          "@typescript-eslint/no-unsafe-return": 1,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/explicit-function-return-type": 1
+        },
+        "total": 28,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/types/fvtt-config.ts",
+        "lines": 199,
+        "items": {
+          "import/order": 6,
+          "@typescript-eslint/no-unused-vars": 4
+        },
+        "total": 10,
+        "strategy": "import/order \u2014 Reorder imports per groups:; no-unused-vars \u2014 Remove the unused"
+      },
+      {
+        "file": "src/module/utils/actor-system-converter.ts",
+        "lines": 251,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 3,
+          "@typescript-eslint/no-unnecessary-condition": 4
+        },
+        "total": 7,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/utils/armour-calculator.ts",
+        "lines": 148,
+        "items": {
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unnecessary-condition": 5,
+          "@typescript-eslint/strict-boolean-expressions": 8,
+          "@typescript-eslint/no-unsafe-return": 2,
+          "@typescript-eslint/no-unsafe-call": 2,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2
+        },
+        "total": 23,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/utils/encumbrance-calculator.ts",
+        "lines": 98,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 4,
+          "@typescript-eslint/no-unnecessary-condition": 11
+        },
+        "total": 15,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/utils/formula-evaluator.ts",
+        "lines": 215,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 8,
+          "@typescript-eslint/strict-boolean-expressions": 1
+        },
+        "total": 9,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/utils/item-variant-utils.ts",
+        "lines": 142,
+        "items": {
+          "@typescript-eslint/no-shadow": 1,
+          "@typescript-eslint/no-unnecessary-condition": 9,
+          "@typescript-eslint/strict-boolean-expressions": 2,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-member-access": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 15,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; no-shadow \u2014 A binding shadows an outer"
+      },
+      {
+        "file": "src/module/utils/origin-chart-layout.ts",
+        "lines": 391,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "@typescript-eslint/strict-boolean-expressions": 18,
+          "@typescript-eslint/prefer-nullish-coalescing": 6
+        },
+        "total": 27,
+        "strategy": "strict-boolean-expressions \u2014; prefer-nullish-coalescing \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/utils/origin-grants-processor.ts",
+        "lines": 33,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1
+        },
+        "total": 1,
+        "strategy": "explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/utils/origin-ui-labels.ts",
+        "lines": 93,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 1
+        },
+        "total": 1,
+        "strategy": "no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/utils/prerequisite-validator.ts",
+        "lines": 333,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 11,
+          "@typescript-eslint/strict-boolean-expressions": 5,
+          "@typescript-eslint/restrict-template-expressions": 1
+        },
+        "total": 17,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; restrict-template-expressions \u2014"
+      },
+      {
+        "file": "src/module/utils/range-calculator.ts",
+        "lines": 340,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 3,
+          "@typescript-eslint/no-unnecessary-condition": 2
+        },
+        "total": 5,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/utils/roll-table-utils.ts",
+        "lines": 246,
+        "items": {
+          "@typescript-eslint/prefer-nullish-coalescing": 1,
+          "no-await-in-loop": 2,
+          "@typescript-eslint/explicit-function-return-type": 7,
+          "@typescript-eslint/strict-boolean-expressions": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2,
+          "@typescript-eslint/no-unnecessary-condition": 1
+        },
+        "total": 15,
+        "strategy": "explicit-function-return-type \u2014; no-await-in-loop \u2014 Awaiting in each iteration; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/utils/stat-block-validator.ts",
+        "lines": 395,
+        "items": {
+          "@typescript-eslint/strict-boolean-expressions": 10,
+          "@typescript-eslint/no-unnecessary-condition": 2
+        },
+        "total": 12,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/utils/talent-grants.ts",
+        "lines": 49,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 3,
+          "@typescript-eslint/strict-boolean-expressions": 2
+        },
+        "total": 5,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/utils/xp-transaction.ts",
+        "lines": 215,
+        "items": {
+          "@typescript-eslint/no-unnecessary-condition": 10,
+          "@typescript-eslint/strict-boolean-expressions": 2
+        },
+        "total": 12,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/wh40k-rpg-migrations.ts",
+        "lines": 539,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/require-await": 1,
+          "@typescript-eslint/no-unsafe-assignment": 1
+        },
+        "total": 3,
+        "strategy": "explicit-function-return-type \u2014; require-await \u2014 An `async` function; no-unsafe-assignment \u2014 The"
+      },
+      {
+        "file": "src/module/wh40k-rpg-settings.ts",
+        "lines": 127,
+        "items": {
+          "@typescript-eslint/naming-convention": 1,
+          "@typescript-eslint/no-unsafe-assignment": 2,
+          "@typescript-eslint/no-unnecessary-condition": 4,
+          "@typescript-eslint/explicit-function-return-type": 1
+        },
+        "total": 8,
+        "strategy": "no-unnecessary-condition \u2014; no-unsafe-assignment \u2014 The; @typescript-eslint/naming-convention"
+      }
+    ],
+    "3": [
+      {
+        "file": "src/module/applications/actor/base-actor-sheet.ts",
+        "lines": 2462,
+        "items": {
+          "@typescript-eslint/no-explicit-any": 18,
+          "@typescript-eslint/naming-convention": 1,
+          "@typescript-eslint/unbound-method": 17,
+          "@typescript-eslint/no-unnecessary-condition": 61,
+          "@typescript-eslint/await-thenable": 4,
+          "@typescript-eslint/strict-boolean-expressions": 115,
+          "@typescript-eslint/no-unsafe-member-access": 78,
+          "@typescript-eslint/no-unsafe-assignment": 22,
+          "@typescript-eslint/no-unsafe-argument": 10,
+          "@typescript-eslint/no-unnecessary-type-assertion": 27,
+          "@typescript-eslint/no-unsafe-call": 7,
+          "@typescript-eslint/no-unsafe-return": 3,
+          "@typescript-eslint/prefer-nullish-coalescing": 3,
+          "@typescript-eslint/explicit-function-return-type": 2,
+          "@typescript-eslint/no-floating-promises": 3,
+          "@typescript-eslint/no-misused-promises": 1,
+          "@typescript-eslint/promise-function-async": 1,
+          "@typescript-eslint/switch-exhaustiveness-check": 1,
+          "no-useless-return": 1,
+          "eqeqeq": 2
+        },
+        "total": 377,
+        "strategy": "strict-boolean-expressions \u2014; no-unsafe-member-access \u2014; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/applications/actor/character-sheet.ts",
+        "lines": 3572,
+        "items": {
+          "import/order": 6,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unnecessary-condition": 147,
+          "@typescript-eslint/no-unnecessary-type-assertion": 41,
+          "@typescript-eslint/unbound-method": 57,
+          "@typescript-eslint/explicit-function-return-type": 3,
+          "@typescript-eslint/no-explicit-any": 10,
+          "@typescript-eslint/strict-boolean-expressions": 133,
+          "@typescript-eslint/prefer-nullish-coalescing": 16,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/return-await": 2,
+          "@typescript-eslint/await-thenable": 4,
+          "no-await-in-loop": 4,
+          "@typescript-eslint/consistent-type-imports": 3,
+          "complexity": 2,
+          "@typescript-eslint/restrict-template-expressions": 7,
+          "@typescript-eslint/no-base-to-string": 5,
+          "max-depth": 5,
+          "@typescript-eslint/no-unsafe-call": 4,
+          "@typescript-eslint/no-unsafe-member-access": 7,
+          "@typescript-eslint/switch-exhaustiveness-check": 1,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 462,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; unbound-method \u2014 A class method is"
+      },
+      {
+        "file": "src/module/applications/actor/npc-sheet.ts",
+        "lines": 1936,
+        "items": {
+          "import/order": 3,
+          "@typescript-eslint/naming-convention": 4,
+          "@typescript-eslint/no-unnecessary-condition": 63,
+          "@typescript-eslint/unbound-method": 41,
+          "@typescript-eslint/no-unnecessary-type-assertion": 21,
+          "@typescript-eslint/await-thenable": 4,
+          "@typescript-eslint/strict-boolean-expressions": 65,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/prefer-nullish-coalescing": 6,
+          "@typescript-eslint/no-floating-promises": 2,
+          "@typescript-eslint/no-non-null-assertion": 3
+        },
+        "total": 213,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; unbound-method \u2014 A class method is"
+      },
+      {
+        "file": "src/module/applications/character-creation/origin-path-builder.ts",
+        "lines": 3895,
+        "items": {
+          "import/order": 6,
+          "@typescript-eslint/naming-convention": 8,
+          "@typescript-eslint/unbound-method": 30,
+          "@typescript-eslint/no-unsafe-assignment": 3,
+          "@typescript-eslint/strict-boolean-expressions": 191,
+          "@typescript-eslint/no-unnecessary-condition": 162,
+          "@typescript-eslint/prefer-nullish-coalescing": 59,
+          "@typescript-eslint/explicit-function-return-type": 5,
+          "@typescript-eslint/no-non-null-assertion": 5,
+          "@typescript-eslint/no-unnecessary-type-assertion": 35,
+          "@typescript-eslint/no-floating-promises": 45,
+          "no-await-in-loop": 20,
+          "@typescript-eslint/no-shadow": 1,
+          "@typescript-eslint/prefer-optional-chain": 3,
+          "@typescript-eslint/no-base-to-string": 7,
+          "complexity": 3,
+          "@typescript-eslint/await-thenable": 5,
+          "max-depth": 13,
+          "@typescript-eslint/restrict-template-expressions": 2,
+          "no-self-compare": 1,
+          "@typescript-eslint/no-unsafe-member-access": 2,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/require-await": 1,
+          "@typescript-eslint/no-redundant-type-constituents": 1,
+          "eqeqeq": 2
+        },
+        "total": 611,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; prefer-nullish-coalescing \u2014"
+      },
+      {
+        "file": "src/module/applications/character-creation/origin-roll-dialog.ts",
+        "lines": 906,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/unbound-method": 6,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/strict-boolean-expressions": 10,
+          "@typescript-eslint/prefer-nullish-coalescing": 6,
+          "@typescript-eslint/no-explicit-any": 6,
+          "@typescript-eslint/no-unsafe-member-access": 31,
+          "@typescript-eslint/no-unsafe-assignment": 6,
+          "@typescript-eslint/no-unsafe-call": 15,
+          "@typescript-eslint/no-unnecessary-condition": 9,
+          "@typescript-eslint/no-unsafe-return": 1,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-shadow": 1,
+          "consistent-return": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 99,
+        "strategy": "no-unsafe-member-access \u2014; no-unsafe-call \u2014 Calling a value; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/applications/dialogs/advancement-dialog.ts",
+        "lines": 1674,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/unbound-method": 7,
+          "@typescript-eslint/no-unnecessary-type-assertion": 4,
+          "@typescript-eslint/no-unnecessary-condition": 53,
+          "@typescript-eslint/strict-boolean-expressions": 61,
+          "complexity": 3,
+          "@typescript-eslint/no-non-null-assertion": 3,
+          "@typescript-eslint/no-shadow": 14,
+          "eqeqeq": 10,
+          "no-await-in-loop": 9,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/no-floating-promises": 12,
+          "@typescript-eslint/consistent-type-imports": 1,
+          "@typescript-eslint/prefer-nullish-coalescing": 1
+        },
+        "total": 183,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-shadow \u2014 A binding shadows an outer"
+      },
+      {
+        "file": "src/module/applications/hud/combat-quick-panel.ts",
+        "lines": 802,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 16,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 6,
+          "@typescript-eslint/no-unsafe-assignment": 16,
+          "@typescript-eslint/no-explicit-any": 19,
+          "@typescript-eslint/no-unsafe-member-access": 66,
+          "@typescript-eslint/strict-boolean-expressions": 27,
+          "@typescript-eslint/no-unsafe-return": 1,
+          "@typescript-eslint/prefer-nullish-coalescing": 9,
+          "@typescript-eslint/no-unnecessary-condition": 4,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/no-unsafe-call": 18,
+          "@typescript-eslint/no-unsafe-argument": 2,
+          "@typescript-eslint/promise-function-async": 1
+        },
+        "total": 190,
+        "strategy": "no-unsafe-member-access \u2014; strict-boolean-expressions \u2014; no-explicit-any \u2014 Replace `any`"
+      },
+      {
+        "file": "src/module/applications/item/ship-component-sheet.ts",
+        "lines": 143,
+        "items": {
+          "@typescript-eslint/naming-convention": 3
+        },
+        "total": 3,
+        "strategy": "@typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/applications/item/ship-upgrade-sheet.ts",
+        "lines": 86,
+        "items": {
+          "@typescript-eslint/naming-convention": 3
+        },
+        "total": 3,
+        "strategy": "@typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/applications/item/ship-weapon-sheet.ts",
+        "lines": 133,
+        "items": {
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-explicit-any": 1,
+          "@typescript-eslint/no-unsafe-member-access": 1
+        },
+        "total": 5,
+        "strategy": "@typescript-eslint/naming-convention; no-explicit-any \u2014 Replace `any`; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/applications/item/talent-editor-dialog.ts",
+        "lines": 999,
+        "items": {
+          "@typescript-eslint/no-unsafe-assignment": 5,
+          "@typescript-eslint/no-unsafe-member-access": 14,
+          "@typescript-eslint/no-unsafe-call": 9,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 4,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-condition": 25,
+          "@typescript-eslint/strict-boolean-expressions": 53,
+          "@typescript-eslint/no-unnecessary-type-assertion": 23,
+          "@typescript-eslint/no-unsafe-return": 3,
+          "@typescript-eslint/no-explicit-any": 7,
+          "complexity": 1
+        },
+        "total": 147,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-unnecessary-type-assertion \u2014"
+      },
+      {
+        "file": "src/module/applications/item/talent-sheet.ts",
+        "lines": 882,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unnecessary-condition": 31,
+          "@typescript-eslint/unbound-method": 5,
+          "@typescript-eslint/strict-boolean-expressions": 41,
+          "@typescript-eslint/prefer-optional-chain": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 9,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-explicit-any": 6,
+          "@typescript-eslint/no-unsafe-member-access": 16,
+          "@typescript-eslint/no-unsafe-assignment": 4,
+          "@typescript-eslint/no-unsafe-call": 5,
+          "eqeqeq": 1,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/restrict-template-expressions": 1,
+          "@typescript-eslint/no-base-to-string": 1
+        },
+        "total": 128,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/applications/item/trait-sheet.ts",
+        "lines": 46,
+        "items": {
+          "@typescript-eslint/naming-convention": 3
+        },
+        "total": 3,
+        "strategy": "@typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/applications/item/weapon-sheet.ts",
+        "lines": 995,
+        "items": {
+          "import/order": 4,
+          "@typescript-eslint/naming-convention": 2,
+          "@typescript-eslint/unbound-method": 16,
+          "@typescript-eslint/no-unnecessary-condition": 24,
+          "@typescript-eslint/strict-boolean-expressions": 52,
+          "@typescript-eslint/no-explicit-any": 19,
+          "@typescript-eslint/no-unsafe-assignment": 22,
+          "@typescript-eslint/no-unsafe-call": 29,
+          "@typescript-eslint/no-unsafe-member-access": 76,
+          "@typescript-eslint/no-unsafe-argument": 6,
+          "@typescript-eslint/prefer-nullish-coalescing": 2,
+          "@typescript-eslint/no-misused-promises": 1,
+          "@typescript-eslint/await-thenable": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 3,
+          "@typescript-eslint/no-non-null-assertion": 1,
+          "@typescript-eslint/no-floating-promises": 1
+        },
+        "total": 259,
+        "strategy": "no-unsafe-member-access \u2014; strict-boolean-expressions \u2014; no-unsafe-call \u2014 Calling a value"
+      },
+      {
+        "file": "src/module/applications/npc/stat-block-parser.ts",
+        "lines": 1328,
+        "items": {
+          "@typescript-eslint/no-unused-vars": 1,
+          "@typescript-eslint/naming-convention": 5,
+          "@typescript-eslint/unbound-method": 4,
+          "@typescript-eslint/no-unnecessary-condition": 21,
+          "@typescript-eslint/strict-boolean-expressions": 34,
+          "@typescript-eslint/prefer-nullish-coalescing": 1,
+          "@typescript-eslint/prefer-optional-chain": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 6,
+          "@typescript-eslint/no-base-to-string": 1,
+          "@typescript-eslint/no-explicit-any": 4,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-unsafe-member-access": 16,
+          "@typescript-eslint/no-unsafe-call": 4
+        },
+        "total": 100,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/applications/npc/threat-calculator.ts",
+        "lines": 983,
+        "items": {
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unnecessary-condition": 4,
+          "@typescript-eslint/strict-boolean-expressions": 10,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 18,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; @typescript-eslint/naming-convention"
+      },
+      {
+        "file": "src/module/applications/prompts/unified-roll-dialog.ts",
+        "lines": 1280,
+        "items": {
+          "import/order": 3,
+          "@typescript-eslint/consistent-type-imports": 1,
+          "@typescript-eslint/no-unused-vars": 1,
+          "@typescript-eslint/strict-boolean-expressions": 42,
+          "@typescript-eslint/naming-convention": 4,
+          "@typescript-eslint/unbound-method": 25,
+          "@typescript-eslint/explicit-function-return-type": 6,
+          "@typescript-eslint/no-unnecessary-condition": 22,
+          "@typescript-eslint/prefer-nullish-coalescing": 8,
+          "complexity": 1,
+          "@typescript-eslint/no-floating-promises": 8,
+          "@typescript-eslint/no-non-null-assertion": 4,
+          "@typescript-eslint/no-base-to-string": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1
+        },
+        "total": 127,
+        "strategy": "strict-boolean-expressions \u2014; unbound-method \u2014 A class method is; no-unnecessary-condition \u2014"
+      },
+      {
+        "file": "src/module/config.ts",
+        "lines": 1693,
+        "items": {
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-condition": 5,
+          "@typescript-eslint/prefer-nullish-coalescing": 1,
+          "@typescript-eslint/strict-boolean-expressions": 4
+        },
+        "total": 11,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; explicit-function-return-type \u2014"
+      },
+      {
+        "file": "src/module/data/actor/npc.ts",
+        "lines": 1030,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/no-unnecessary-condition": 44,
+          "@typescript-eslint/no-explicit-any": 5,
+          "@typescript-eslint/no-unsafe-member-access": 24,
+          "@typescript-eslint/strict-boolean-expressions": 25,
+          "@typescript-eslint/no-unsafe-assignment": 4,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/no-unsafe-call": 16,
+          "@typescript-eslint/no-unsafe-return": 2
+        },
+        "total": 125,
+        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; no-unsafe-member-access \u2014"
+      },
+      {
+        "file": "src/module/data/actor/templates/creature.ts",
+        "lines": 1449,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/naming-convention": 3,
+          "@typescript-eslint/explicit-function-return-type": 1,
+          "@typescript-eslint/no-unnecessary-condition": 29,
+          "@typescript-eslint/strict-boolean-expressions": 54,
+          "@typescript-eslint/no-unsafe-member-access": 57,
+          "@typescript-eslint/no-unsafe-assignment": 33,
+          "@typescript-eslint/no-explicit-any": 3,
+          "@typescript-eslint/no-unsafe-argument": 10,
+          "@typescript-eslint/no-unsafe-call": 8,
+          "@typescript-eslint/prefer-nullish-coalescing": 2,
+          "complexity": 1,
+          "@typescript-eslint/no-unnecessary-type-assertion": 2
+        },
+        "total": 204,
+        "strategy": "no-unsafe-member-access \u2014; strict-boolean-expressions \u2014; no-unsafe-assignment \u2014 The"
+      },
+      {
+        "file": "src/module/data/item/weapon.ts",
+        "lines": 1172,
+        "items": {
+          "import/order": 2,
+          "@typescript-eslint/no-unsafe-call": 4,
+          "@typescript-eslint/no-unnecessary-condition": 51,
+          "@typescript-eslint/strict-boolean-expressions": 13,
+          "@typescript-eslint/no-unsafe-argument": 5,
+          "@typescript-eslint/no-unsafe-member-access": 8,
+          "@typescript-eslint/no-unnecessary-type-assertion": 4,
+          "@typescript-eslint/explicit-function-return-type": 17,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/no-unsafe-assignment": 2,
+          "@typescript-eslint/prefer-nullish-coalescing": 3,
+          "@typescript-eslint/no-unused-vars": 1
+        },
+        "total": 111,
+        "strategy": "no-unnecessary-condition \u2014; explicit-function-return-type \u2014; strict-boolean-expressions \u2014"
+      },
+      {
+        "file": "src/module/documents/item.ts",
+        "lines": 893,
+        "items": {
+          "import/order": 1,
+          "@typescript-eslint/no-unused-vars": 1,
+          "@typescript-eslint/strict-boolean-expressions": 30,
+          "@typescript-eslint/restrict-template-expressions": 7,
+          "@typescript-eslint/no-unnecessary-type-assertion": 14,
+          "@typescript-eslint/prefer-nullish-coalescing": 16,
+          "@typescript-eslint/no-unnecessary-condition": 20,
+          "complexity": 1,
+          "no-await-in-loop": 4
+        },
+        "total": 94,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; prefer-nullish-coalescing \u2014"
+      },
+      {
+        "file": "src/module/handlebars/handlebars-helpers.ts",
+        "lines": 1009,
+        "items": {
+          "import/order": 1,
+          "no-duplicate-imports": 1,
+          "@typescript-eslint/explicit-function-return-type": 4,
+          "@typescript-eslint/strict-boolean-expressions": 61,
+          "prefer-arrow-callback": 2,
+          "@typescript-eslint/no-unnecessary-condition": 20,
+          "@typescript-eslint/prefer-optional-chain": 3,
+          "@typescript-eslint/no-unsafe-member-access": 48,
+          "@typescript-eslint/no-unsafe-return": 14,
+          "@typescript-eslint/no-unsafe-call": 11,
+          "eqeqeq": 3,
+          "@typescript-eslint/no-unsafe-argument": 17,
+          "@typescript-eslint/no-unsafe-assignment": 26,
+          "@typescript-eslint/naming-convention": 1
+        },
+        "total": 212,
+        "strategy": "strict-boolean-expressions \u2014; no-unsafe-member-access \u2014; no-unsafe-assignment \u2014 The"
+      },
+      {
+        "file": "src/module/hooks-manager.ts",
+        "lines": 820,
+        "items": {
+          "import/order": 2,
+          "@typescript-eslint/no-misused-promises": 2,
+          "@typescript-eslint/promise-function-async": 11,
+          "@typescript-eslint/no-unnecessary-type-assertion": 12,
+          "@typescript-eslint/no-unsafe-function-type": 6,
+          "@typescript-eslint/explicit-function-return-type": 3,
+          "@typescript-eslint/no-unnecessary-condition": 12,
+          "@typescript-eslint/strict-boolean-expressions": 6,
+          "@typescript-eslint/prefer-optional-chain": 1,
+          "@typescript-eslint/require-await": 8,
+          "@typescript-eslint/consistent-type-imports": 2
+        },
+        "total": 65,
+        "strategy": "no-unnecessary-type-assertion \u2014; no-unnecessary-condition \u2014; promise-function-async \u2014"
+      },
+      {
+        "file": "src/module/utils/grants-processor.ts",
+        "lines": 992,
+        "items": {
+          "@typescript-eslint/no-unused-vars": 1,
+          "@typescript-eslint/strict-boolean-expressions": 62,
+          "@typescript-eslint/prefer-nullish-coalescing": 14,
+          "@typescript-eslint/no-unnecessary-type-assertion": 4,
+          "@typescript-eslint/no-unnecessary-condition": 47,
+          "complexity": 1,
+          "@typescript-eslint/no-explicit-any": 8,
+          "no-await-in-loop": 14,
+          "@typescript-eslint/await-thenable": 3,
+          "@typescript-eslint/no-unsafe-argument": 1,
+          "@typescript-eslint/restrict-template-expressions": 2,
+          "@typescript-eslint/no-base-to-string": 1,
+          "@typescript-eslint/no-unsafe-assignment": 4,
+          "eqeqeq": 2,
+          "@typescript-eslint/no-unsafe-member-access": 6,
+          "@typescript-eslint/no-unsafe-call": 1
+        },
+        "total": 171,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; prefer-nullish-coalescing \u2014"
+      }
+    ]
+  },
+  "summary": {
+    "tier1_files": 4,
+    "tier1_items": 13,
+    "tier2_files": 196,
+    "tier2_items": 5105,
+    "tier3_files": 25,
+    "tier3_items": 3921
+  }
+}

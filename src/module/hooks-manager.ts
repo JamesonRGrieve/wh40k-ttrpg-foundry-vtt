@@ -40,6 +40,7 @@ import {
 import * as characterCreation from './applications/character-creation/_module.ts';
 import { RTCompendiumBrowser } from './applications/compendium-browser.ts';
 import { TooltipsWH40K } from './applications/components/_module.ts';
+import { ConvertActorSystemDialog } from './applications/dialogs/convert-actor-system-dialog.ts';
 import {
     BaseItemSheet,
     WeaponSheet,
@@ -67,9 +68,9 @@ import {
     ShipUpgradeSheet,
     NPCTemplateSheet,
 } from './applications/item/_module.ts';
-import { ConvertActorSystemDialog } from './applications/dialogs/convert-actor-system-dialog.ts';
 import * as npcApplications from './applications/npc/_module.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
+import type { WH40KSystemConfig } from './config.ts';
 import { SYSTEM_ID } from './constants.ts';
 import * as dataModels from './data/_module.ts';
 import * as dice from './dice/_module.ts';
@@ -89,10 +90,11 @@ import {
 import { WH40K } from './rules/config.ts';
 import { DHTourMain } from './tours/main-tour.ts';
 import { TransactionManager } from './transactions/transaction-manager.ts';
+import type { WH40KGameSystem } from './types/global.d.ts';
+import { isConvertibleCharacterActorType } from './utils/actor-system-converter.ts';
 import { RollTableUtils } from './utils/roll-table-utils.ts';
 import { checkAndMigrateWorld } from './wh40k-rpg-migrations.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
-import { isConvertibleCharacterActorType } from './utils/actor-system-converter.ts';
 
 export { SYSTEM_ID };
 
@@ -105,28 +107,24 @@ interface DirectoryContextOption {
 
 export class HooksManager {
     static registerHooks(): void {
-        Hooks.once('init', () => HooksManager.init());
-        Hooks.on('ready', () => HooksManager.ready());
-        (Hooks.on as (hook: string, fn: Function) => number)('hotbarDrop', (bar: unknown, data: Record<string, unknown>, slot: number) =>
-            HooksManager.hotbarDrop(bar, data, slot),
-        );
-        (Hooks.on as (hook: string, fn: Function) => number)(
-            'renderCompendiumDirectory',
-            (app: CompendiumDirectory, html: JQuery, data: Record<string, unknown>) => HooksManager.renderCompendiumDirectory(app, html, data),
-        );
-        (Hooks.on as (hook: string, fn: Function) => number)('renderActorDirectory', (app: ActorDirectory, html: JQuery, data: Record<string, unknown>) =>
-            HooksManager.renderActorDirectory(app, html, data),
-        );
-        (Hooks.on as (hook: string, fn: Function) => number)('renderDocumentSheetConfig', (app: Application, html: JQuery, data: Record<string, unknown>) =>
-            HooksManager.renderDocumentSheetConfig(app, html, data),
-        );
-        (Hooks.on as (hook: string, fn: Function) => number)('getActorDirectoryEntryContext', (_html: JQuery, options: DirectoryContextOption[]) =>
-            HooksManager.getActorDirectoryEntryContext(options),
-        );
-        (Hooks.on as (hook: string, fn: Function) => number)(
-            'getActorSheetClass',
-            (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) => HooksManager.getActorSheetClass(actor, sheetData),
-        );
+        const hooksOn = Hooks.on.bind(Hooks) as unknown as (hook: string, fn: (...args: never[]) => unknown) => number;
+        Hooks.once('init', () => {
+            HooksManager.init();
+        });
+        hooksOn('ready', () => {
+            void HooksManager.ready();
+        });
+        hooksOn('hotbarDrop', ((bar: unknown, data: Record<string, unknown>, slot: number) => HooksManager.hotbarDrop(bar, data, slot)) as never);
+        hooksOn('renderCompendiumDirectory', ((app: CompendiumDirectory, html: JQuery, data: Record<string, unknown>) =>
+            HooksManager.renderCompendiumDirectory(app, html, data)) as never);
+        hooksOn('renderActorDirectory', ((app: ActorDirectory, html: JQuery, data: Record<string, unknown>) =>
+            HooksManager.renderActorDirectory(app, html, data)) as never);
+        hooksOn('renderDocumentSheetConfig', ((app: Application, html: JQuery, data: Record<string, unknown>) =>
+            HooksManager.renderDocumentSheetConfig(app, html, data)) as never);
+        hooksOn('getActorDirectoryEntryContext', ((_html: JQuery, options: DirectoryContextOption[]) =>
+            HooksManager.getActorDirectoryEntryContext(options)) as never);
+        hooksOn('getActorSheetClass', ((actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) =>
+            HooksManager.getActorSheetClass(actor, sheetData)) as never);
 
         DHTargetedActionManager.initializeHooks();
         DHBasicActionManager.initializeHooks();
@@ -138,24 +136,26 @@ export class HooksManager {
      * WH40KCreateActorDialog so users pick system + kind rather than a
      * flat type list.
      */
-    static renderActorDirectory(_app: ActorDirectory, html: JQuery, _data: Record<string, unknown>) {
-        const root = html[0];
-        if (!root) return;
-        const createBtn = root.querySelector(
+    static renderActorDirectory(_app: ActorDirectory, html: JQuery, _data: Record<string, unknown>): void {
+        const root = html[0] as HTMLElement | undefined;
+        if (root === undefined) return;
+        const createBtn = root.querySelector<HTMLElement>(
             'button.create-document, a.create-document, button[data-action="createEntry"], button[data-action="createFolder"]',
-        ) as HTMLElement | null;
+        );
         // The header "Create Actor" button — Foundry changes the selector
         // over versions, so match by visible text as a fallback.
-        const headerButton =
-            createBtn ?? (Array.from(root.querySelectorAll('button, a')).find((el) => /create\s+actor/i.test(el.textContent ?? '')) as HTMLElement | undefined);
-        if (!headerButton) return;
+        const headerButton: HTMLElement | undefined =
+            createBtn ?? Array.from(root.querySelectorAll<HTMLElement>('button, a')).find((el) => /create\s+actor/i.test(String(el.textContent)));
+        if (headerButton === undefined) return;
         headerButton.addEventListener(
             'click',
-            async (event) => {
+            (event) => {
                 event.preventDefault();
                 event.stopImmediatePropagation();
-                const { WH40KCreateActorDialog } = await import('./applications/dialogs/create-actor-dialog.ts');
-                await WH40KCreateActorDialog.open({});
+                void (async () => {
+                    const { WH40KCreateActorDialog } = await import('./applications/dialogs/create-actor-dialog.ts');
+                    await WH40KCreateActorDialog.open({});
+                })();
             },
             true,
         ); // capture-phase so we beat Foundry's own handler
@@ -163,17 +163,17 @@ export class HooksManager {
 
     static renderDocumentSheetConfig(app: Application, html: JQuery, _data: Record<string, unknown>): void {
         const document = (app as Application & { document?: Actor | Item }).document;
-        if (!document || document.documentName !== 'Actor') return;
+        if (document?.documentName !== 'Actor') return;
 
-        const root = html[0];
-        if (!root) return;
+        const root = html[0] as HTMLElement | undefined;
+        if (root === undefined) return;
 
         const sheetSelect = root.querySelector('select[name="sheetClass"]');
         if (!(sheetSelect instanceof HTMLSelectElement)) return;
 
         const defaultOptions = Array.from(sheetSelect.options).filter((option) => {
             const value = option.value.trim();
-            const label = option.textContent?.trim().toLowerCase() ?? '';
+            const label = String(option.textContent).trim().toLowerCase();
             return value === '' || value === 'default' || label === 'default sheet';
         });
 
@@ -208,11 +208,11 @@ export class HooksManager {
             element.dataset.entryId ??
             element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-document-id') ??
             element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-entry-id');
-        if (!actorId) return null;
-        return (game.actors?.get(actorId) as WH40KBaseActor | undefined) ?? null;
+        if (actorId == null) return null;
+        return (game.actors.get(actorId) as WH40KBaseActor | undefined) ?? null;
     }
 
-    static init() {
+    static init(): void {
         console.log('Loading WH40K RPG System v1.0.0');
 
         const consolePrefix = 'WH40K RPG | ';
@@ -227,69 +227,56 @@ export class HooksManager {
             // Roll table utilities
             rollTable: RollTableUtils,
             // Convenience methods for common roll tables
-            rollPsychicPhenomena: (actor: WH40KBaseActor, mod: unknown) => RollTableUtils.rollPsychicPhenomena(actor, mod as number | undefined),
-            rollPerilsOfTheWarp: (actor: WH40KBaseActor) => RollTableUtils.rollPerilsOfTheWarp(actor),
-            rollFearEffects: (fear: unknown, dof: unknown) => RollTableUtils.rollFearEffects(fear as number | undefined, dof as number | undefined),
-            rollMutation: () => RollTableUtils.rollMutation(),
-            rollMalignancy: () => RollTableUtils.rollMalignancy(),
-            showRollTableDialog: async () => {
-                RollTableUtils.showRollTableDialog();
-            },
+            rollPsychicPhenomena: async (actor: WH40KBaseActor, mod: unknown) => RollTableUtils.rollPsychicPhenomena(actor, mod as number | undefined),
+            rollPerilsOfTheWarp: async (actor: WH40KBaseActor) => RollTableUtils.rollPerilsOfTheWarp(actor),
+            rollFearEffects: async (fear: unknown, dof: unknown) => RollTableUtils.rollFearEffects(fear as number | undefined, dof as number | undefined),
+            rollMutation: async () => RollTableUtils.rollMutation(),
+            rollMalignancy: async () => RollTableUtils.rollMalignancy(),
+            showRollTableDialog: async () => Promise.resolve(RollTableUtils.showRollTableDialog()),
             // Compendium browser
-            openCompendiumBrowser: async (options: Record<string, unknown> = {}) => RTCompendiumBrowser.open(options),
+            openCompendiumBrowser: async (options: Record<string, unknown> = {}) => Promise.resolve(RTCompendiumBrowser.open(options)),
             // Character creation
             OriginPathBuilder: characterCreation.OriginPathBuilder,
             openOriginPathBuilder: async (actor: WH40KBaseActor, options: Record<string, unknown> = {}) =>
-                characterCreation.OriginPathBuilder.show(actor, options),
+                Promise.resolve(characterCreation.OriginPathBuilder.show(actor, options)),
             // NPC utilities
             npc: npcApplications,
             applications: npcApplications,
             ThreatCalculator: npcApplications.ThreatCalculator,
-            quickCreateNPC: (config: unknown) =>
+            quickCreateNPC: async (config: unknown) =>
                 npcApplications.NPCQuickCreateDialog.create(config as Parameters<typeof npcApplications.NPCQuickCreateDialog.create>[0]),
-            batchCreateNPCs: (config: unknown) =>
+            batchCreateNPCs: async (config: unknown) =>
                 npcApplications.BatchCreateDialog.open(config as Parameters<typeof npcApplications.BatchCreateDialog.open>[0]),
-            openEncounterBuilder: async () => {
-                npcApplications.EncounterBuilder.show();
-            },
-            exportStatBlock: (actor: WH40KBaseActor, format: unknown) =>
+            openEncounterBuilder: async () => Promise.resolve(npcApplications.EncounterBuilder.show()),
+            exportStatBlock: async (actor: WH40KBaseActor, format: unknown) =>
                 npcApplications.StatBlockExporter.quickExport(actor, format as 'text' | 'json' | undefined),
-            importStatBlock: (input: unknown) => npcApplications.StatBlockParser.open(input),
-            openTemplateSelector: (options: Record<string, unknown> = {}) =>
-                npcApplications.TemplateSelector.open(options as Parameters<typeof npcApplications.TemplateSelector.open>[0]),
+            importStatBlock: async (input: unknown) => npcApplications.StatBlockParser.open(input),
+            openTemplateSelector: async (options: Record<string, unknown> = {}) => npcApplications.TemplateSelector.open(options),
             // Phase 7: QoL Features
             DifficultyCalculatorDialog: npcApplications.DifficultyCalculatorDialog,
-            calculateDifficulty: async (actor: WH40KBaseActor) => {
-                npcApplications.DifficultyCalculatorDialog.show(actor as never);
-            },
+            calculateDifficulty: async (actor: WH40KBaseActor) => Promise.resolve(npcApplications.DifficultyCalculatorDialog.show(actor as never)),
             CombatPresetDialog: npcApplications.CombatPresetDialog,
-            savePreset: async (actor: WH40KBaseActor) => {
-                npcApplications.CombatPresetDialog.savePreset(actor as never);
-            },
-            loadPreset: async (actor: WH40KBaseActor) => {
-                npcApplications.CombatPresetDialog.loadPreset(actor as never);
-            },
-            openPresetLibrary: async () => {
-                npcApplications.CombatPresetDialog.showLibrary();
-            },
+            savePreset: async (actor: WH40KBaseActor) => Promise.resolve(npcApplications.CombatPresetDialog.savePreset(actor as never)),
+            loadPreset: async (actor: WH40KBaseActor) => Promise.resolve(npcApplications.CombatPresetDialog.loadPreset(actor as never)),
+            openPresetLibrary: async () => Promise.resolve(npcApplications.CombatPresetDialog.showLibrary()),
             transaction: TransactionManager,
             // Dice/Roll classes
             dice: dice,
             BasicRollWH40K: dice.BasicRollWH40K,
             D100Roll: dice.D100Roll,
             // tooltips is initialized in ready()
-            tooltips: null as unknown as import('./types/global.d.ts').WH40KGameSystem['tooltips'],
+            tooltips: null as unknown as WH40KGameSystem['tooltips'],
         };
 
         //CONFIG.debug.hooks = true;
 
         // Add custom constants for configuration.
-        CONFIG.wh40k = WH40K as unknown as import('./config.ts').WH40KSystemConfig;
+        CONFIG.wh40k = WH40K as unknown as WH40KSystemConfig;
         CONFIG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
         CONFIG.MeasuredTemplate.defaults.angle = 30.0;
 
         // Define custom Document classes
-        CONFIG.Actor.documentClass = WH40KActorProxy as unknown as typeof WH40KActorProxy;
+        CONFIG.Actor.documentClass = WH40KActorProxy;
         // Per (system, kind) document class registrations. The generic proxy
         // dispatches to the right concrete class based on the actor's `type`.
         (CONFIG.Actor as Record<string, unknown>).documentClasses = {
@@ -332,7 +319,7 @@ export class HooksManager {
         CONFIG.Token.rulerClass = TokenRulerWH40K;
 
         // Register custom Roll classes for serialization/deserialization
-        CONFIG.Dice.rolls.push(dice.BasicRollWH40K as never, dice.D100Roll as never);
+        CONFIG.Dice.rolls.push(dice.BasicRollWH40K, dice.D100Roll);
 
         // Register data models for actors — one per (system, kind) type.
         // DataModels handle schema validation and data preparation.
@@ -426,8 +413,9 @@ export class HooksManager {
         // Unregister both core actor sheet generations so "Default Sheet"
         // never appears alongside the system's type-bound sheets.
         DocumentSheetConfig.unregisterSheet(Actor, 'core', foundry.appv1.sheets.ActorSheet);
-        if (foundry.applications.sheets.ActorSheetV2) {
-            DocumentSheetConfig.unregisterSheet(Actor, 'core', foundry.applications.sheets.ActorSheetV2);
+        const actorSheetV2 = (foundry.applications.sheets as Record<string, unknown>).ActorSheetV2;
+        if (actorSheetV2 !== undefined) {
+            DocumentSheetConfig.unregisterSheet(Actor, 'core', actorSheetV2 as Parameters<typeof DocumentSheetConfig.unregisterSheet>[2]);
         }
 
         // Per-type sheet registration. Each concrete actor type gets exactly
@@ -737,7 +725,7 @@ export class HooksManager {
         };
     }
 
-    static async ready() {
+    static async ready(): Promise<void> {
         await checkAndMigrateWorld();
 
         // Initialize rich tooltip system
@@ -747,7 +735,7 @@ export class HooksManager {
 
         game.tours.register(SYSTEM_ID, 'main-tour', new DHTourMain());
 
-        if (!game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.processActiveEffectsDuringCombat)) {
+        if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.processActiveEffectsDuringCombat) === false) {
             DHCombatActionManager.disableHooks();
         }
     }
@@ -771,12 +759,13 @@ export class HooksManager {
     }
 
     static renderCompendiumDirectory(_app: CompendiumDirectory, html: JQuery, _data: Record<string, unknown>): void {
-        const root = html?.[0] ?? (html as unknown as HTMLElement) ?? null;
-        if (!root || typeof (root as HTMLElement).querySelector !== 'function') return;
+        const rawRoot = html[0] as HTMLElement | undefined;
+        const root: HTMLElement | null = rawRoot instanceof HTMLElement ? rawRoot : (html as unknown as HTMLElement | null);
+        if (root === null || typeof root.querySelector !== 'function') return;
         const header = root.querySelector('.directory-header');
-        if (!header) return;
+        if (header === null) return;
 
-        if (header.querySelector('.wh40k-compendium-browser-btn')) return;
+        if (header.querySelector('.wh40k-compendium-browser-btn') !== null) return;
 
         const browserBtn = document.createElement('button');
         browserBtn.type = 'button';
@@ -791,7 +780,7 @@ export class HooksManager {
         });
 
         const actions = header.querySelector('.header-actions');
-        if (actions) actions.prepend(browserBtn);
+        if (actions !== null) actions.prepend(browserBtn);
     }
 
     /**
@@ -803,7 +792,7 @@ export class HooksManager {
         if ((actor.type as string) !== 'npcV2') return null;
 
         // Check primaryUse field
-        const primaryUse = actor.system?.primaryUse;
+        const primaryUse = (actor.system as Record<string, unknown>).primaryUse;
 
         // Auto-select vehicle sheet for vehicle/ship NPCs
         if (primaryUse === 'vehicle' || primaryUse === 'ship') {

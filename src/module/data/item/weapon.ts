@@ -1,3 +1,5 @@
+import { capitalize } from '../../handlebars/handlebars-helpers.ts';
+import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import AttackTemplate from '../shared/attack-template.ts';
@@ -5,8 +7,6 @@ import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
-import { capitalize } from '../../handlebars/handlebars-helpers.ts';
-import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
  * Data model for Weapon items.
@@ -81,8 +81,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            identifier: new (IdentifierField as any)({ required: true, blank: true }) as foundry.data.fields.StringField,
+            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.StringField,
 
             // Weapon classification (usage pattern only)
             class: new fields.StringField({
@@ -192,7 +191,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @protected
      */
     static _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
         WeaponData.#migrateSpecial(source);
         WeaponData.#migrateClass(source);
         WeaponData.#migrateProficiency(source);
@@ -258,16 +257,20 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         super.prepareBaseData();
 
         const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
-        this.class = (resolveLineVariant(this.class, lineKey) as string) ?? 'melee';
-        this.type = (resolveLineVariant(this.type, lineKey) as string) ?? 'primitive';
+        this.class = (resolveLineVariant(this.class, lineKey) as string | undefined) ?? 'melee';
+        this.type = (resolveLineVariant(this.type, lineKey) as string | undefined) ?? 'primitive';
         this.twoHanded = Boolean(resolveLineVariant(this.twoHanded, lineKey));
         this.melee = Boolean(resolveLineVariant(this.melee, lineKey));
-        this.clip = foundry.utils.mergeObject({ max: 0, value: 0, type: '' }, (resolveLineVariant(this.clip, lineKey) as Record<string, unknown>) ?? {}, {
-            inplace: false,
-        }) as typeof this.clip;
-        (this as Record<string, unknown>)['reload'] = (resolveLineVariant((this as Record<string, unknown>)['reload'], lineKey) as string) ?? '-';
-        this.requiredTraining = (resolveLineVariant(this.requiredTraining as unknown, lineKey) as string) ?? '';
-        this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';
+        this.clip = foundry.utils.mergeObject(
+            { max: 0, value: 0, type: '' },
+            (resolveLineVariant(this.clip, lineKey) as Record<string, unknown> | undefined) ?? {},
+            {
+                inplace: false,
+            },
+        ) as typeof this.clip;
+        (this as Record<string, unknown>)['reload'] = (resolveLineVariant((this as Record<string, unknown>)['reload'], lineKey) as string | undefined) ?? '-';
+        this.requiredTraining = (resolveLineVariant(this.requiredTraining as unknown, lineKey) as string | undefined) ?? '';
+        this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string | undefined) ?? '';
     }
 
     /**
@@ -286,20 +289,20 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
 
         // Sum up all active modification modifiers
         for (const mod of this.modifications) {
-            if (mod.active && mod.cachedModifiers) {
-                this._modificationModifiers.damage += mod.cachedModifiers.damage ?? 0;
-                this._modificationModifiers.penetration += mod.cachedModifiers.penetration ?? 0;
-                this._modificationModifiers.toHit += mod.cachedModifiers.toHit ?? 0;
-                this._modificationModifiers.range += mod.cachedModifiers.range ?? 0;
-                this._modificationModifiers.weight += mod.cachedModifiers.weight ?? 0;
+            if (mod.active) {
+                this._modificationModifiers.damage += mod.cachedModifiers.damage;
+                this._modificationModifiers.penetration += mod.cachedModifiers.penetration;
+                this._modificationModifiers.toHit += mod.cachedModifiers.toHit;
+                this._modificationModifiers.range += mod.cachedModifiers.range;
+                this._modificationModifiers.weight += mod.cachedModifiers.weight;
             }
         }
 
         // Add loaded ammunition modifiers
-        if (this.loadedAmmo?.uuid && this.loadedAmmo.modifiers) {
-            this._modificationModifiers.damage += this.loadedAmmo.modifiers.damage ?? 0;
-            this._modificationModifiers.penetration += this.loadedAmmo.modifiers.penetration ?? 0;
-            this._modificationModifiers.range += this.loadedAmmo.modifiers.range ?? 0;
+        if (this.loadedAmmo?.uuid) {
+            this._modificationModifiers.damage += this.loadedAmmo.modifiers.damage;
+            this._modificationModifiers.penetration += this.loadedAmmo.modifiers.penetration;
+            this._modificationModifiers.range += this.loadedAmmo.modifiers.range;
         }
     }
 
@@ -340,7 +343,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Alias for isPrimitive (for consistency with armour API).
      * @type {boolean}
      */
-    get primitive() {
+    get primitive(): boolean {
         return this.isPrimitive;
     }
 
@@ -348,7 +351,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Does this weapon use ammunition?
      * @type {boolean}
      */
-    get usesAmmo() {
+    get usesAmmo(): boolean {
         return this.clip.max > 0;
     }
 
@@ -356,7 +359,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Is the weapon jammed or out of ammo?
      * @type {boolean}
      */
-    get isOutOfAmmo() {
+    get isOutOfAmmo(): boolean {
         return this.usesAmmo && this.clip.value <= 0;
     }
 
@@ -372,7 +375,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {Set<string>}
      */
     get effectiveSpecial(): Set<string> {
-        const qualities = new Set<string>(this.special ?? []);
+        const qualities = new Set<string>(this.special);
 
         // Add craftsmanship-derived qualities for RANGED weapons only
         // Melee weapons get toHit/damage modifiers instead
@@ -424,16 +427,12 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         // Apply loaded ammunition quality modifications
         if (this.loadedAmmo?.uuid) {
             // Add qualities from ammo
-            if (this.loadedAmmo.addedQualities) {
-                for (const quality of this.loadedAmmo.addedQualities) {
-                    qualities.add(quality);
-                }
+            for (const quality of this.loadedAmmo.addedQualities) {
+                qualities.add(quality);
             }
             // Remove qualities blocked by ammo
-            if (this.loadedAmmo.removedQualities) {
-                for (const quality of this.loadedAmmo.removedQualities) {
-                    qualities.delete(quality);
-                }
+            for (const quality of this.loadedAmmo.removedQualities) {
+                qualities.delete(quality);
             }
         }
 
@@ -458,7 +457,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      *
      * @type {object}
      */
-    get craftsmanshipModifiers() {
+    get craftsmanshipModifiers(): { toHit: number; damage: number; weight: number } {
         const mods = {
             toHit: 0, // WS/BS modifier
             damage: 0, // Damage bonus
@@ -513,7 +512,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         const baseDamage = this.damage.formula || '1d10';
         const baseBonus = this.damage.bonus || 0;
         const craftBonus = this.craftsmanshipModifiers.damage;
-        const modBonus = this._modificationModifiers?.damage ?? 0;
+        const modBonus = this._modificationModifiers.damage;
 
         const totalBonus = baseBonus + craftBonus + modBonus;
 
@@ -541,9 +540,9 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get effective penetration (base + modifications).
      * @type {number}
      */
-    get effectivePenetration() {
+    get effectivePenetration(): number {
         const basePen = this.damage.penetration || 0;
-        const modPen = this._modificationModifiers?.penetration ?? 0;
+        const modPen = this._modificationModifiers.penetration;
         return basePen + modPen;
     }
 
@@ -551,9 +550,9 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get effective to-hit modifier (craftsmanship + modifications).
      * @type {number}
      */
-    get effectiveToHit() {
+    get effectiveToHit(): number {
         const craftMod = this.craftsmanshipModifiers.toHit;
-        const modMod = this._modificationModifiers?.toHit ?? 0;
+        const modMod = this._modificationModifiers.toHit;
         return craftMod + modMod;
     }
 
@@ -563,10 +562,10 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {object}
      */
     get effectiveRange(): Record<string, unknown> | null {
-        if (!this.attack?.range) return null;
+        if (!this.attack.range) return null;
 
         const baseRange = this.attack.range.value || 0;
-        const rangeModifier = this._modificationModifiers?.range ?? 0;
+        const rangeModifier = this._modificationModifiers.range;
 
         return {
             value: baseRange + rangeModifier,
@@ -579,9 +578,9 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get effective weight (base + modifications).
      * @type {number}
      */
-    get effectiveWeight() {
+    get effectiveWeight(): number {
         const baseWeight = this.weight || 0;
-        const modWeight = this._modificationModifiers?.weight ?? 0;
+        const modWeight = this._modificationModifiers.weight;
         return baseWeight + modWeight;
     }
 
@@ -680,7 +679,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the reload time label.
      * @type {string}
      */
-    get reloadLabel() {
+    get reloadLabel(): string {
         const labels: Record<string, string> = {
             '-': '-',
             'free': game.i18n.localize('WH40K.Reload.Free'),
@@ -700,12 +699,12 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Customised quality halves reload time.
      * @type {string}
      */
-    get effectiveReloadTime() {
+    get effectiveReloadTime(): string {
         // Access schema field via index — see reloadLabel comment
         const baseReload = (this as Record<string, unknown>)['reload'] as string;
 
         // Check for Customised quality
-        if (!this.effectiveSpecial?.has('customised')) {
+        if (!this.effectiveSpecial.has('customised')) {
             return baseReload;
         }
 
@@ -726,7 +725,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get effective reload time label.
      * @type {string}
      */
-    get effectiveReloadLabel() {
+    get effectiveReloadLabel(): string {
         const labels: Record<string, string> = {
             '-': '-',
             'free': game.i18n.localize('WH40K.Reload.Free'),
@@ -766,9 +765,9 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     /** @override */
     get chatProperties(): string[] {
         const props = [
-            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
-            ...((Object.getOwnPropertyDescriptor(AttackTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
-            ...((Object.getOwnPropertyDescriptor(DamageTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
+            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []),
+            ...((Object.getOwnPropertyDescriptor(AttackTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []),
+            ...((Object.getOwnPropertyDescriptor(DamageTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []),
         ];
 
         props.unshift(`${this.classLabel} (${this.typeLabel})`);
@@ -779,8 +778,8 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         }
 
         // Show effective qualities (including craftsmanship)
-        if (this.effectiveSpecial?.size) {
-            props.push(`Qualities: ${Array.from(this.effectiveSpecial as Set<string>).join(', ')}`);
+        if (this.effectiveSpecial.size > 0) {
+            props.push(`Qualities: ${Array.from(this.effectiveSpecial).join(', ')}`);
         }
 
         // Show craftsmanship modifiers if any
@@ -819,7 +818,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get icon class for weapon class.
      * @type {string}
      */
-    get classIcon() {
+    get classIcon(): string {
         const icons: Record<string, string> = {
             melee: 'fa-sword',
             pistol: 'fa-gun',
@@ -835,7 +834,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get icon class for weapon type.
      * @type {string}
      */
-    get typeIcon() {
+    get typeIcon(): string {
         const icons: Record<string, string> = {
             'primitive': 'fa-axe',
             'las': 'fa-laser-pointer',
@@ -907,7 +906,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get a compact summary string for compendium/list display.
      * @type {string}
      */
-    get compendiumSummary() {
+    get compendiumSummary(): string {
         const parts = [];
         parts.push(this.damageLabel || '-');
         if (this.damage.penetration > 0) parts.push(`Pen ${this.damage.penetration}`);
@@ -919,7 +918,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get full stat line for display.
      * @type {string}
      */
-    get statLine() {
+    get statLine(): string {
         const parts = [];
         parts.push(`${this.classLabel}`);
         if (this.isRangedWeapon) {
@@ -936,7 +935,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get qualities as array of objects with labels and descriptions.
      * @type {Array<{id: string, label: string, description: string, level: number|null}>}
      */
-    get qualitiesArray() {
+    get qualitiesArray(): Array<{ id: string; baseId: string; label: string; description: string; level: number | null; hasLevel: boolean }> {
         const qualities = [];
         const config = CONFIG.WH40K?.weaponQualities ?? {};
 
@@ -965,7 +964,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Check if weapon is two-handed.
      * @type {boolean}
      */
-    get isTwoHanded() {
+    get isTwoHanded(): boolean {
         return this.twoHanded || this.class === 'heavy';
     }
 
@@ -973,7 +972,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get hands required string.
      * @type {string}
      */
-    get handsLabel() {
+    get handsLabel(): string {
         return this.isTwoHanded ? game.i18n.localize('WH40K.Weapon.TwoHanded') : game.i18n.localize('WH40K.Weapon.OneHanded');
     }
 
@@ -1041,15 +1040,16 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             removedQualities?: Set<string>;
         };
     }): Promise<unknown> {
-        if (!ammoItem || ammoItem.type !== 'ammunition') {
+        if (ammoItem.type !== 'ammunition') {
             ui.notifications.warn('Invalid ammunition item');
             return this.parent;
         }
 
-        const actor = this.parent?.actor;
+        const actorRaw: unknown = this.parent?.actor;
+        const actor = actorRaw !== null ? (actorRaw as Parameters<typeof this._returnRoundsToInventory>[0]) : null;
 
         // Eject current ammo first (return remaining rounds to inventory)
-        if (this.clip.value > 0 && this.hasLoadedAmmo && actor) {
+        if (this.clip.value > 0 && this.hasLoadedAmmo && actor !== null) {
             await this._returnRoundsToInventory(actor, this.clip.value);
         }
 
@@ -1065,13 +1065,13 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
                 range: ammoItem.system.modifiers?.range ?? 0,
             },
             clipModifier: clipMod,
-            addedQualities: ammoItem.system.addedQualities || new Set(),
-            removedQualities: ammoItem.system.removedQualities || new Set(),
+            addedQualities: ammoItem.system.addedQualities ?? new Set(),
+            removedQualities: ammoItem.system.removedQualities ?? new Set(),
         };
 
         // Deduct rounds from inventory
-        const roundsToLoad = actor ? Math.min(effectiveMax, ammoItem.system.quantity ?? effectiveMax) : effectiveMax;
-        if (actor && ammoItem.system.quantity !== undefined) {
+        const roundsToLoad = actor !== null ? Math.min(effectiveMax, ammoItem.system.quantity ?? effectiveMax) : effectiveMax;
+        if (actor !== null && ammoItem.system.quantity !== undefined) {
             await ammoItem.update({ 'system.quantity': ammoItem.system.quantity - roundsToLoad });
         }
 
@@ -1095,8 +1095,9 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         }
 
         // Return remaining rounds to inventory
-        const actor = this.parent?.actor;
-        if (this.clip.value > 0 && actor) {
+        const actorRaw: unknown = this.parent?.actor;
+        const actor = actorRaw !== null ? (actorRaw as Parameters<typeof this._returnRoundsToInventory>[0]) : null;
+        if (this.clip.value > 0 && actor !== null) {
             await this._returnRoundsToInventory(actor, this.clip.value);
         }
 
@@ -1143,7 +1144,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         },
         rounds: number,
     ): Promise<void> {
-        if (rounds <= 0 || !this.loadedAmmo?.uuid) return;
+        if (rounds <= 0 || !this.loadedAmmo.uuid) return;
 
         // Try to find the ammo item by UUID first
         let ammoItem = actor.items.find((i) => i.uuid === this.loadedAmmo.uuid);
@@ -1164,7 +1165,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
                     itemData.system.quantity = rounds;
                     await actor.createEmbeddedDocuments('Item', [itemData]);
                 }
-            } catch (e) {
+            } catch (_e) {
                 console.warn(`wh40k-rpg | Could not return ${rounds} rounds of ${this.loadedAmmo.name} to inventory`);
             }
         }

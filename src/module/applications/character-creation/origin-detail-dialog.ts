@@ -5,8 +5,8 @@
  * with a confirm button to select it.
  */
 
-import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -85,13 +85,13 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
 
         this.origin = origin;
         this.allowSelection = options.allowSelection !== false;
-        this.isSelected = !!options.isSelected;
+        this.isSelected = options.isSelected === true;
     }
 
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
+    get title(): string {
         return this.origin.name;
     }
 
@@ -103,8 +103,8 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         const system = this.origin.system as Record<string, unknown>;
-        const grants = (system?.grants as Record<string, unknown>) || {};
-        const modifiers = ((system?.modifiers as Record<string, unknown>)?.characteristics as Record<string, number>) || {};
+        const grants = (system.grants as Record<string, unknown> | undefined) ?? {};
+        const modifiers = ((system.modifiers as Record<string, unknown> | undefined)?.characteristics as Record<string, number> | undefined) ?? {};
 
         context.origin = this.origin;
         context.allowSelection = this.allowSelection;
@@ -113,19 +113,19 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         // Basic info
         context.name = this.origin.name;
         context.img = this.origin.img;
-        context.step = system?.step;
-        context.stepLabel = this._getStepLabel(system?.step as string);
-        context.xpCost = (system?.xpCost as number) || 0;
-        context.isAdvanced = (system?.isAdvancedOrigin as boolean) || false;
+        context.step = system.step;
+        context.stepLabel = this._getStepLabel((system.step as string | undefined) ?? '');
+        context.xpCost = system.xpCost ?? 0;
+        context.isAdvanced = system.isAdvancedOrigin ?? false;
 
         // Description - parse HTML properly
-        context.description = ((system?.description as Record<string, unknown>)?.value as string) || '';
-        context.hasDescription = !!context.description;
+        context.description = (system.description as Record<string, unknown> | undefined)?.value ?? '';
+        context.hasDescription = (context.description as string) !== '';
 
         // Source info
-        context.source = system?.source || {};
+        context.source = system.source ?? {};
         const source = context.source as Record<string, unknown>;
-        context.hasSource = !!(source.book || source.page);
+        context.hasSource = source.book !== undefined || source.page !== undefined;
 
         // Characteristic modifiers
         const contextData = context as Record<string, unknown> & {
@@ -138,7 +138,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             choices: Array<Record<string, unknown>>;
         };
         contextData.characteristics = [];
-        for (const [key, value] of Object.entries(modifiers as Record<string, number>)) {
+        for (const [key, value] of Object.entries(modifiers)) {
             if (value !== 0) {
                 contextData.characteristics.push({
                     key: key,
@@ -152,33 +152,53 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         context.hasCharacteristics = contextData.characteristics.length > 0;
 
         // Wounds/Fate formulas
-        context.woundsFormula = grants.woundsFormula || null;
-        context.fateFormula = grants.fateFormula || null;
-        context.hasFormulas = !!(context.woundsFormula || context.fateFormula);
+        context.woundsFormula = grants.woundsFormula ?? null;
+        context.fateFormula = grants.fateFormula ?? null;
+        context.hasFormulas = context.woundsFormula !== null || context.fateFormula !== null;
 
         // Skills
-        contextData.skills = (Array.isArray(grants.skills) ? grants.skills : []).map((skill: any) => ({
+        interface GrantSkill {
+            name: string;
+            specialization?: string;
+            level?: string;
+        }
+        contextData.skills = (Array.isArray(grants.skills) ? (grants.skills as GrantSkill[]) : []).map((skill) => ({
             name: skill.name,
-            specialization: skill.specialization || null,
-            level: skill.level || 'trained',
-            levelLabel: getTrainingLabel(skill.level),
-            displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
+            specialization: skill.specialization ?? null,
+            level: skill.level ?? 'trained',
+            levelLabel: getTrainingLabel(skill.level ?? ''),
+            displayName: skill.specialization !== undefined ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
         context.hasSkills = contextData.skills.length > 0;
 
         // Talents
-        contextData.talents = await this._prepareTalents(Array.isArray(grants.talents) ? grants.talents : []);
+        interface GrantTalent {
+            name: string;
+            specialization?: string;
+            uuid?: string;
+        }
+        contextData.talents = await this._prepareTalents(Array.isArray(grants.talents) ? (grants.talents as GrantTalent[]) : []);
         context.hasTalents = contextData.talents.length > 0;
 
         // Traits
-        contextData.traits = await this._prepareTraits(Array.isArray(grants.traits) ? grants.traits : []);
+        interface GrantTrait {
+            name: string;
+            level?: string;
+            uuid?: string;
+        }
+        contextData.traits = await this._prepareTraits(Array.isArray(grants.traits) ? (grants.traits as GrantTrait[]) : []);
         context.hasTraits = contextData.traits.length > 0;
 
         // Equipment
-        contextData.equipment = (Array.isArray(grants.equipment) ? grants.equipment : []).map((item: any) => ({
-            name: item.name || item,
-            quantity: item.quantity || 1,
-            uuid: item.uuid || null,
+        interface GrantEquipment {
+            name?: string;
+            quantity?: number;
+            uuid?: string;
+        }
+        contextData.equipment = (Array.isArray(grants.equipment) ? (grants.equipment as GrantEquipment[]) : []).map((item) => ({
+            name: item.name ?? '',
+            quantity: item.quantity ?? 1,
+            uuid: item.uuid ?? null,
         }));
         context.hasEquipment = contextData.equipment.length > 0;
 
@@ -187,42 +207,52 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         context.hasSpecialAbilities = contextData.specialAbilities.length > 0;
 
         // Choices
-        contextData.choices = (Array.isArray(grants.choices) ? grants.choices : []).map((choice: any) => ({
+        interface GrantChoiceOption {
+            label: string;
+            value: string;
+            description?: string;
+        }
+        interface GrantChoice {
+            type: string;
+            label: string;
+            count?: number;
+            options: GrantChoiceOption[];
+        }
+        contextData.choices = (Array.isArray(grants.choices) ? (grants.choices as GrantChoice[]) : []).map((choice) => ({
             type: choice.type,
             typeLabel: getChoiceTypeLabel(choice.type),
             label: choice.label,
-            count: choice.count || 1,
-            options: choice.options.map((opt: any) => ({
+            count: choice.count ?? 1,
+            options: choice.options.map((opt) => ({
                 label: opt.label,
                 value: opt.value,
-                description: opt.description || '',
+                description: opt.description ?? '',
             })),
         }));
-        context.hasChoices = (context.choices as unknown[]).length > 0;
+        context.hasChoices = contextData.choices.length > 0;
 
         // Requirements
-        context.requirements = system?.requirements || {};
+        context.requirements = system.requirements ?? {};
         const requirements = context.requirements as Record<string, unknown>;
-        context.hasRequirements = !!(
-            requirements.text ||
-            (requirements.previousSteps as unknown[] | undefined)?.length ||
-            (requirements.excludedSteps as unknown[] | undefined)?.length
-        );
+        const prevStepsLen = (requirements.previousSteps as unknown[] | undefined)?.length ?? 0;
+        const exclStepsLen = (requirements.excludedSteps as unknown[] | undefined)?.length ?? 0;
+        context.hasRequirements = requirements.text !== undefined || prevStepsLen > 0 || exclStepsLen > 0;
 
         return context;
     }
 
     /**
      * Prepare talents with item lookup
-     * @param {any[]} talents
-     * @returns {Promise<any[]>}
+     * @param talents
      * @private
      */
-    async _prepareTalents(talents: any[]): Promise<any[]> {
+    async _prepareTalents(
+        talents: { name: string; specialization?: string; uuid?: string }[],
+    ): Promise<{ name: string; specialization: string | null; uuid: string | null; description: string | null; hasItem: boolean }[]> {
         const prepared = [];
         for (const talent of talents) {
-            let item: any = null;
-            if (talent.uuid) {
+            let item: { system?: { description?: { value?: string } } } | null = null;
+            if (talent.uuid !== undefined) {
                 try {
                     item = await fromUuid(talent.uuid);
                 } catch {
@@ -231,10 +261,10 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             }
             prepared.push({
                 name: talent.name,
-                specialization: talent.specialization || null,
-                uuid: talent.uuid || null,
-                description: item?.system?.description?.value || null,
-                hasItem: !!item,
+                specialization: talent.specialization ?? null,
+                uuid: talent.uuid ?? null,
+                description: item?.system?.description?.value ?? null,
+                hasItem: item !== null,
             });
         }
         return prepared;
@@ -242,15 +272,16 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
 
     /**
      * Prepare traits with item lookup
-     * @param {any[]} traits
-     * @returns {Promise<any[]>}
+     * @param traits
      * @private
      */
-    async _prepareTraits(traits: any[]): Promise<any[]> {
+    async _prepareTraits(
+        traits: { name: string; level?: string; uuid?: string }[],
+    ): Promise<{ name: string; level: string | null; uuid: string | null; description: string | null; hasItem: boolean }[]> {
         const prepared = [];
         for (const trait of traits) {
-            let item: any = null;
-            if (trait.uuid) {
+            let item: { system?: { description?: { value?: string } } } | null = null;
+            if (trait.uuid !== undefined) {
                 try {
                     item = await fromUuid(trait.uuid);
                 } catch {
@@ -259,10 +290,10 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             }
             prepared.push({
                 name: trait.name,
-                level: trait.level || null,
-                uuid: trait.uuid || null,
-                description: item?.system?.description?.value || null,
-                hasItem: !!item,
+                level: trait.level ?? null,
+                uuid: trait.uuid ?? null,
+                description: item?.system?.description?.value ?? null,
+                hasItem: item !== null,
             });
         }
         return prepared;
@@ -279,7 +310,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @private
      */
     _getStepLabel(step: string): string {
-        if (!step) return '';
+        if (step === '') return '';
         const key = step.charAt(0).toUpperCase() + step.slice(1);
         return game.i18n.localize(`WH40K.OriginPath.${key}`);
     }
@@ -296,10 +327,10 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @private
      */
     static #confirm(this: OriginDetailDialog, event: PointerEvent, target: HTMLElement): void {
-        if (this._resolvePromise) {
+        if (this._resolvePromise !== null) {
             this._resolvePromise({ selected: true, origin: this.origin });
         }
-        this.close();
+        void this.close();
     }
 
     /**
@@ -310,10 +341,10 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @private
      */
     static #cancel(this: OriginDetailDialog, event: PointerEvent, target: HTMLElement): void {
-        if (this._resolvePromise) {
+        if (this._resolvePromise !== null) {
             this._resolvePromise({ selected: false, origin: null });
         }
-        this.close();
+        void this.close();
     }
 
     /**
@@ -325,11 +356,11 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      */
     static async #openItem(this: OriginDetailDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
-        if (!uuid) return;
+        if (uuid === undefined || uuid === '') return;
 
         try {
             const item = (await fromUuid(uuid)) as unknown as { sheet?: { render(force: boolean): void } } | null;
-            if (item?.sheet) {
+            if (item?.sheet !== undefined) {
                 item.sheet.render(true);
             }
         } catch {
@@ -362,7 +393,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     /** @override */
     async close(options: Record<string, unknown> = {}): Promise<void> {
         // Resolve with cancelled if not already resolved
-        if (this._resolvePromise) {
+        if (this._resolvePromise !== null) {
             this._resolvePromise({ selected: false, origin: null });
             this._resolvePromise = null;
         }

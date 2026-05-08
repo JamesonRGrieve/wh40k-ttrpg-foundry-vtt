@@ -37,7 +37,7 @@ describe('item-table.hbs', () => {
         const root = renderTable(
             'addAction="itemCreate" addType="weapon" headers=(array (object cellClass="table-cell--span2" label="Name") (object label="Class") (object label="Type"))',
         );
-        const headRow = root.querySelector('.table-row--head');
+        const headRow = root.querySelector('[data-table-header]');
         expect(headRow).not.toBeNull();
         // 3 header cells + 1 trailing add cell
         expect(headRow!.children.length).toBe(4);
@@ -60,7 +60,7 @@ describe('item-table.hbs', () => {
 
     it('applies per-system theme variants on the table border', () => {
         const root = renderTable('headers=(array)');
-        const tbl = root.querySelector('.wh40k-table--border');
+        const tbl = root.querySelector('[data-table]');
         expect(tbl).not.toBeNull();
         // The literal class names must be present in the rendered DOM so
         // Tailwind's template scan picks them up at build time.
@@ -95,12 +95,13 @@ describe('item-table-row.hbs', () => {
 
     it('suppresses the leading edit cell when editAction is false', () => {
         const root = renderRow('item=item editAction=false', '', ctx);
-        expect(root.querySelector('.table-cell--settingstoggle')).toBeNull();
+        expect(root.querySelector('.item-edit')).toBeNull();
     });
 
     it('renders one cell per entry in `cells`', () => {
         const root = renderRow('item=item cells=(array (object value="A") (object value="B") (object value="C"))', '', ctx);
-        const valueCells = root.querySelectorAll('.table-cell .display');
+        // Value spans have no class attr; icon spans do — exclude them.
+        const valueCells = Array.from(root.querySelectorAll('span:not([class])')).filter((s) => s.textContent !== ctx.item.name);
         expect(valueCells.length).toBe(3);
         expect(valueCells[0].textContent).toBe('A');
         expect(valueCells[2].textContent).toBe('C');
@@ -112,9 +113,7 @@ describe('item-table-row.hbs', () => {
             '',
             ctx,
         );
-        const toolbar = root.querySelector('.table-cell--last');
-        expect(toolbar).not.toBeNull();
-        const buttons = toolbar!.querySelectorAll('[data-action]');
+        const buttons = root.querySelectorAll('[data-action]:not(.item-edit)');
         expect(buttons.length).toBe(2);
         expect(buttons[0].getAttribute('data-action')).toBe('itemRoll');
         expect(buttons[1].getAttribute('data-action')).toBe('itemDelete');
@@ -133,7 +132,7 @@ describe('item-table-row.hbs', () => {
 
     it('emits the row-level data-item-id attr for drop-zone wiring', () => {
         const root = renderRow('item=item dragType="weapon"', '', ctx);
-        const row = root.querySelector('.table-row');
+        const row = root.querySelector('[data-item-id]');
         expect(row).not.toBeNull();
         expect(row!.getAttribute('data-item-id')).toBe('itm-1');
         expect(row!.getAttribute('data-item-type')).toBe('weapon');
@@ -142,14 +141,14 @@ describe('item-table-row.hbs', () => {
 
     it('renders a description toggle cell when nameToggleId is provided', () => {
         const root = renderRow('item=item nameToggleId="description_itm-1"', '<span class="custom-desc">desc body</span>', ctx);
-        const descCell = root.querySelector('.table-cell--description');
+        const descCell = root.querySelector('[data-description-id]');
         expect(descCell).not.toBeNull();
-        expect(descCell!.classList.contains('description_itm-1')).toBe(true);
+        expect(descCell!.getAttribute('data-description-id')).toBe('description_itm-1');
         expect(descCell!.querySelector('.custom-desc')?.textContent).toBe('desc body');
     });
 
     it('omits the description cell when nameToggleId is unset', () => {
         const root = renderRow('item=item', '', ctx);
-        expect(root.querySelector('.table-cell--description')).toBeNull();
+        expect(root.querySelector('[data-description-id]')).toBeNull();
     });
 });

@@ -5,25 +5,94 @@
 
 import BaseItemSheet from './base-item-sheet.ts';
 
+/** System shape for npcTemplate items. */
+interface NPCTemplateSystem {
+    category: string;
+    role: string;
+    type: string;
+    equipmentPreset: string;
+    baseCharacteristics: Record<string, number>;
+    unnaturals: Record<string, number>;
+    trainedSkills: TrainedSkill[];
+    customWeapons: CustomWeapon[];
+    traits: TraitRef[];
+    talents: TalentRef[];
+    variants: Variant[];
+    scaling: unknown;
+    previewAtThreat: (threat: number) => Record<string, unknown>;
+    generateAtThreat: (threat: number) => Record<string, unknown>;
+}
+
+interface TrainedSkill {
+    key: string;
+    name: string;
+    characteristic: string;
+    level: string;
+}
+
+interface CustomWeapon {
+    name: string;
+    damage: string;
+    pen: number;
+    range: string;
+    rof: string;
+    clip: number;
+    reload: string;
+    special: string;
+    class: string;
+}
+
+interface TraitRef {
+    uuid: string;
+    name: string;
+    description: string;
+}
+
+interface TalentRef {
+    uuid: string;
+    name: string;
+    description: string;
+}
+
+interface Variant {
+    name: string;
+    description: string;
+    threatModifier: number;
+    characteristicModifiers: Record<string, number>;
+    additionalEquipment: unknown[];
+    additionalTraits: unknown[];
+    additionalTalents: unknown[];
+}
+
+interface ResolvedItem {
+    name: string | null;
+    type: string;
+    img: string | null;
+    system: unknown;
+}
+
 /**
  * Item sheet for npcTemplate type items.
  * Provides a template editor UI for creating reusable NPC configurations.
  *
  * @extends {BaseItemSheet}
  */
-export default class NPCTemplateSheet extends (BaseItemSheet as any) {
+export default class NPCTemplateSheet extends BaseItemSheet {
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    static override DEFAULT_OPTIONS = {
+        ...BaseItemSheet.DEFAULT_OPTIONS,
         classes: ['sheet', 'wh40k-rpg', 'npc-template-sheet'],
         position: {
             width: 700,
             height: 700,
         },
         actions: {
+            ...BaseItemSheet.DEFAULT_OPTIONS.actions,
             // Skill actions
             addSkill: NPCTemplateSheet.#addSkill,
             removeSkill: NPCTemplateSheet.#removeSkill,
@@ -43,11 +112,12 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
             // Instantiate
             createFromTemplate: NPCTemplateSheet.#createFromTemplate,
         },
-    };
+    } satisfies typeof BaseItemSheet.DEFAULT_OPTIONS & Partial<ApplicationV2Config.DefaultOptions>;
 
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     static PARTS = {
         header: {
             template: 'systems/wh40k-rpg/templates/item/npc-template/header.hbs',
@@ -85,6 +155,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     static TABS = [
         { tab: 'basics', group: 'primary', icon: 'fa-solid fa-user', label: 'WH40K.NPC.Template.Tabs.Basics' },
         { tab: 'characteristics', group: 'primary', icon: 'fa-solid fa-chart-bar', label: 'WH40K.NPC.Template.Tabs.Characteristics' },
@@ -110,11 +181,13 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      */
     #previewThreat = 5;
 
+    #renderTimeout: ReturnType<typeof setTimeout> | undefined;
+
     get _previewThreat(): number {
-        return this._previewThreat;
+        return this.#previewThreat;
     }
     set _previewThreat(value: number) {
-        this._previewThreat = value;
+        this.#previewThreat = value;
     }
 
     /* -------------------------------------------- */
@@ -126,12 +199,12 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @returns {object} Tab configuration object.
      * @protected
      */
-    _getTabs(): Record<string, Record<string, unknown>> {
+    override _getTabs(): Record<string, Record<string, unknown>> {
         const tabs = super._getTabs();
 
         // Add icons from TABS definition
-        for (const tabDef of (this.constructor as any).TABS) {
-            if (tabs[tabDef.tab] && tabDef.icon) {
+        for (const tabDef of NPCTemplateSheet.TABS) {
+            if (tabDef.tab in tabs) {
                 tabs[tabDef.tab].icon = tabDef.icon;
             }
         }
@@ -140,23 +213,9 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
     }
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const sys = this.item.system as {
-            category: string;
-            role: string;
-            type: string;
-            equipmentPreset: string;
-            baseCharacteristics: Record<string, number>;
-            unnaturals: Record<string, number>;
-            trainedSkills: any[];
-            customWeapons: any[];
-            traits: any[];
-            talents: any[];
-            variants: any[];
-            scaling: any;
-            previewAtThreat: (threat: number) => any;
-        };
+        const sys = this.item.system as unknown as NPCTemplateSystem;
 
         // Prepare categories
         const categories = [
@@ -216,12 +275,12 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
             { key: 'influence', label: 'Influence', short: 'Inf' },
         ].map((c) => ({
             ...c,
-            value: sys.baseCharacteristics[c.key] || 30,
-            unnatural: sys.unnaturals[c.key] || 0,
+            value: sys.baseCharacteristics[c.key] ?? 30,
+            unnatural: sys.unnaturals[c.key] ?? 0,
         }));
 
         // Generate preview data
-        const preview = sys.previewAtThreat(this._previewThreat);
+        const preview = sys.previewAtThreat(this.#previewThreat);
 
         return {
             ...context,
@@ -234,26 +293,26 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
             characteristics,
 
             // Skills
-            skills: sys.trainedSkills || [],
-            hasSkills: (sys.trainedSkills?.length || 0) > 0,
+            skills: sys.trainedSkills,
+            hasSkills: sys.trainedSkills.length > 0,
 
             // Weapons
-            weapons: sys.customWeapons || [],
-            hasWeapons: (sys.customWeapons?.length || 0) > 0,
+            weapons: sys.customWeapons,
+            hasWeapons: sys.customWeapons.length > 0,
             isCustomPreset: sys.equipmentPreset === 'custom',
 
             // Abilities
-            traits: sys.traits || [],
-            talents: sys.talents || [],
-            hasTraits: (sys.traits?.length || 0) > 0,
-            hasTalents: (sys.talents?.length || 0) > 0,
+            traits: sys.traits,
+            talents: sys.talents,
+            hasTraits: sys.traits.length > 0,
+            hasTalents: sys.talents.length > 0,
 
             // Variants
-            variants: sys.variants || [],
-            hasVariants: (sys.variants?.length || 0) > 0,
+            variants: sys.variants,
+            hasVariants: sys.variants.length > 0,
 
             // Preview
-            previewThreat: this._previewThreat,
+            previewThreat: this.#previewThreat,
             preview,
 
             // Scaling rules
@@ -262,16 +321,16 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
-        super._onRender(context, options);
+    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        await super._onRender(context, options);
 
         // Preview threat slider
-        const threatSlider = this.element.querySelector('[name="previewThreat"]');
-        const threatValue = this.element.querySelector('.preview-threat-value');
-        if (threatSlider) {
+        const threatSlider = this.element.querySelector<HTMLInputElement>('[name="previewThreat"]');
+        const threatValue = this.element.querySelector<HTMLElement>('.preview-threat-value');
+        if (threatSlider !== null) {
             threatSlider.addEventListener('input', () => {
-                this._previewThreat = parseInt(threatSlider.value, 10);
-                if (threatValue) threatValue.textContent = this._previewThreat;
+                this.#previewThreat = parseInt(threatSlider.value, 10);
+                if (threatValue !== null) threatValue.textContent = String(this.#previewThreat);
                 this._debounceRender();
             });
         }
@@ -282,9 +341,9 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @private
      */
     _debounceRender(): void {
-        if (this._renderTimeout) clearTimeout(this._renderTimeout);
-        this._renderTimeout = setTimeout(() => {
-            this.render({ parts: ['preview'] });
+        if (this.#renderTimeout !== undefined) clearTimeout(this.#renderTimeout);
+        this.#renderTimeout = setTimeout(() => {
+            void this.render({ parts: ['preview'] });
         }, 150);
     }
 
@@ -300,7 +359,8 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
     static async #addSkill(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const skills = foundry.utils.deepClone(this.item.system.trainedSkills || []);
+        const sys = this.item.system as unknown as NPCTemplateSystem;
+        const skills = foundry.utils.deepClone(sys.trainedSkills);
         skills.push({
             key: 'awareness',
             name: 'Awareness',
@@ -308,7 +368,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
             level: 'trained',
         });
 
-        await this.item.update({ 'system.trainedSkills': skills });
+        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.trainedSkills': skills });
     }
 
     /**
@@ -321,10 +381,11 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
         const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
-        const skills = foundry.utils.deepClone(this.item.system.trainedSkills || []);
+        const sys = this.item.system as unknown as NPCTemplateSystem;
+        const skills = foundry.utils.deepClone(sys.trainedSkills);
         skills.splice(index, 1);
 
-        await this.item.update({ 'system.trainedSkills': skills });
+        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.trainedSkills': skills });
     }
 
     /**
@@ -332,10 +393,11 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #addWeapon(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const weapons = foundry.utils.deepClone(this.item.system.customWeapons || []);
+        const sys = this.item.system as unknown as NPCTemplateSystem;
+        const weapons = foundry.utils.deepClone(sys.customWeapons);
         weapons.push({
             name: 'New Weapon',
             damage: '1d10',
@@ -348,7 +410,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
             class: 'melee',
         });
 
-        await this.item.update({ 'system.customWeapons': weapons });
+        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.customWeapons': weapons });
     }
 
     /**
@@ -356,15 +418,16 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #removeWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #removeWeapon(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
-        const weapons = foundry.utils.deepClone(this.item.system.customWeapons || []);
+        const sys = this.item.system as unknown as NPCTemplateSystem;
+        const weapons = foundry.utils.deepClone(sys.customWeapons);
         weapons.splice(index, 1);
 
-        await this.item.update({ 'system.customWeapons': weapons });
+        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.customWeapons': weapons });
     }
 
     /**
@@ -372,17 +435,18 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addTrait(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #addTrait(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const traits = foundry.utils.deepClone(this.item.system.traits || []);
+        const sys = this.item.system as unknown as NPCTemplateSystem;
+        const traits = foundry.utils.deepClone(sys.traits);
         traits.push({
             uuid: '',
             name: 'New Trait',
             description: '',
         });
 
-        await this.item.update({ 'system.traits': traits });
+        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.traits': traits });
     }
 
     /**
@@ -395,10 +459,11 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
         const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
-        const traits = foundry.utils.deepClone(this.item.system.traits || []);
+        const sys = this.item.system as unknown as NPCTemplateSystem;
+        const traits = foundry.utils.deepClone(sys.traits);
         traits.splice(index, 1);
 
-        await this.item.update({ 'system.traits': traits });
+        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.traits': traits });
     }
 
     /**
@@ -406,17 +471,18 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addTalent(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #addTalent(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const talents = foundry.utils.deepClone(this.item.system.talents || []);
+        const sys = this.item.system as unknown as NPCTemplateSystem;
+        const talents = foundry.utils.deepClone(sys.talents);
         talents.push({
             uuid: '',
             name: 'New Talent',
             description: '',
         });
 
-        await this.item.update({ 'system.talents': talents });
+        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.talents': talents });
     }
 
     /**
@@ -424,15 +490,16 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #removeTalent(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #removeTalent(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
-        const talents = foundry.utils.deepClone(this.item.system.talents || []);
+        const sys = this.item.system as unknown as NPCTemplateSystem;
+        const talents = foundry.utils.deepClone(sys.talents);
         talents.splice(index, 1);
 
-        await this.item.update({ 'system.talents': talents });
+        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.talents': talents });
     }
 
     /**
@@ -440,10 +507,11 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addVariant(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #addVariant(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const variants = foundry.utils.deepClone(this.item.system.variants || []);
+        const sys = this.item.system as unknown as NPCTemplateSystem;
+        const variants = foundry.utils.deepClone(sys.variants);
         variants.push({
             name: 'New Variant',
             description: '',
@@ -454,7 +522,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
             additionalTalents: [],
         });
 
-        await this.item.update({ 'system.variants': variants });
+        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.variants': variants });
     }
 
     /**
@@ -462,15 +530,16 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #removeVariant(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #removeVariant(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
-        const variants = foundry.utils.deepClone(this.item.system.variants || []);
+        const sys = this.item.system as unknown as NPCTemplateSystem;
+        const variants = foundry.utils.deepClone(sys.variants);
         variants.splice(index, 1);
 
-        await this.item.update({ 'system.variants': variants });
+        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.variants': variants });
     }
 
     /**
@@ -478,8 +547,8 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #updatePreview(this: any, event: Event, target: HTMLElement): void {
-        this.render({ parts: ['preview'] });
+    static #updatePreview(this: NPCTemplateSheet, event: Event, _target: HTMLElement): void {
+        void this.render({ parts: ['preview'] });
     }
 
     /**
@@ -490,27 +559,34 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
     static async #createFromTemplate(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const threatLevel = this._previewThreat;
-        const systemData = this.item.system.generateAtThreat(threatLevel);
+        const threatLevel = this.#previewThreat;
+        const sys = this.item.system as unknown as NPCTemplateSystem;
+        const systemData = sys.generateAtThreat(threatLevel);
 
         const actorData = {
             name: this.item.name,
             type: 'npcV2',
-            img: this.item.img || 'icons/svg/mystery-man.svg',
+            img: this.item.img ?? 'icons/svg/mystery-man.svg',
             system: systemData,
         };
 
         try {
-            const actor = await (Actor as any).create(actorData);
+            const actor = (await (Actor as unknown as { create: (data: Record<string, unknown>) => Promise<Record<string, unknown> | null> }).create(
+                actorData,
+            )) as {
+                name: string | null;
+                sheet: { render: (force: boolean) => void } | null;
+                createEmbeddedDocuments: (type: string, items: unknown[]) => Promise<unknown>;
+            } | null;
 
-            if (actor) {
+            if (actor !== null) {
                 // Create embedded traits and talents
-                const itemsToCreate = [];
+                const itemsToCreate: Record<string, unknown>[] = [];
 
-                for (const trait of this.item.system.traits || []) {
-                    if (trait.uuid) {
-                        const item = (await fromUuid(trait.uuid)) as { name: string | null; type: string; img: string | null; system: unknown } | null;
-                        if (item) {
+                for (const trait of sys.traits) {
+                    if (trait.uuid !== '') {
+                        const item = (await fromUuid(trait.uuid)) as ResolvedItem | null;
+                        if (item !== null) {
                             itemsToCreate.push({
                                 name: item.name,
                                 type: item.type,
@@ -521,10 +597,10 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
                     }
                 }
 
-                for (const talent of this.item.system.talents || []) {
-                    if (talent.uuid) {
-                        const item = (await fromUuid(talent.uuid)) as { name: string | null; type: string; img: string | null; system: unknown } | null;
-                        if (item) {
+                for (const talent of sys.talents) {
+                    if (talent.uuid !== '') {
+                        const item = (await fromUuid(talent.uuid)) as ResolvedItem | null;
+                        if (item !== null) {
                             itemsToCreate.push({
                                 name: item.name,
                                 type: item.type,
@@ -539,7 +615,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
                     await actor.createEmbeddedDocuments('Item', itemsToCreate);
                 }
 
-                ui.notifications.info(`Created NPC: ${actor.name}`);
+                ui.notifications.info(`Created NPC: ${actor.name ?? 'Unknown'}`);
                 actor.sheet?.render(true);
             }
         } catch (err) {

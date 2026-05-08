@@ -1,28 +1,28 @@
 {{! Rogue Trader Peer/Enemy Sheet - Modern Design }}
-<form class="wh40k-item-sheet tw-flex tw-flex-col tw-h-full" autocomplete="off">
+<form class="tw-flex tw-flex-col tw-h-full" autocomplete="off">
     {{! Header }}
-    <div class="wh40k-item-sheet__header">
-        <div class="wh40k-item-sheet__title-area tw-pl-4">
-            <div class="wh40k-item-sheet__name-field tw-flex tw-flex-col tw-gap-1">
-                <label class="wh40k-item-sheet__name-label">Name</label>
-                <input class="wh40k-item-sheet__name-input" name="name" type="text" value="{{item.name}}" />
+    <div>
+        <div class="tw-pl-4">
+            <div class="tw-flex tw-flex-col tw-gap-1">
+                <label>Name</label>
+                <input name="name" type="text" value="{{item.name}}" />
             </div>
         </div>
     </div>
 
     {{! Main Fields }}
-    <div class="wh40k-item-sheet__panel tw-p-3">
-        <div class="wh40k-item-sheet__field tw-flex tw-flex-col tw-gap-1">
-            <label class="wh40k-item-sheet__label">Modifier</label>
-            <input class="wh40k-item-sheet__input tw-w-24" name="system.modifier" type="number" data-dtype="Number" value="{{item.system.modifier}}" />
+    <div class="tw-p-3">
+        <div class="tw-flex tw-flex-col tw-gap-1">
+            <label>Modifier</label>
+            <input class="tw-w-24" name="system.modifier" type="number" data-dtype="Number" value="{{item.system.modifier}}" />
         </div>
     </div>
 
     {{! Description }}
-    <div class="wh40k-item-sheet__description tw-p-4 tw-border-t tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure">
-        <div class="wh40k-item-sheet__field tw-flex tw-flex-col tw-gap-1">
-            <label class="wh40k-item-sheet__label">Description</label>
-            <textarea class="wh40k-item-sheet__textarea tw-w-full tw-p-2 tw-rounded tw-border tw-border-[rgba(255,255,255,0.1)] tw-bg-[rgba(0,0,0,0.2)] tw-text-[var(--color-text-primary)]" name="system.description.value">{{item.system.description.value}}</textarea>
+    <div class="tw-p-4 tw-border-t tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure">
+        <div class="tw-flex tw-flex-col tw-gap-1">
+            <label>Description</label>
+            <textarea class="tw-w-full tw-p-2 tw-rounded tw-border tw-border-[rgba(255,255,255,0.1)] tw-bg-[rgba(0,0,0,0.2)] tw-text-[var(--color-text-primary)]" name="system.description.value">{{item.system.description.value}}</textarea>
         </div>
     </div>
 </form>
