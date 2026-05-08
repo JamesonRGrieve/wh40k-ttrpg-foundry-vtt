@@ -45,12 +45,12 @@
       </div>
       
       <div class="tw-flex tw-items-center tw-justify-end tw-shrink-0">
-        <label class="wh40k-toggle-equipped" title="Toggle Equipped">
-          <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
-          <span class="wh40k-toggle-equipped__indicator">
+        <label class="tw-flex tw-items-center tw-cursor-pointer tw-gap-1" title="Toggle Equipped">
+          <input type="checkbox" name="system.equipped" {{checked system.equipped}} class="tw-sr-only" />
+          <span class="tw-text-xl tw-transition-colors {{#if system.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-white/50{{/if}}">
             <i class="fas {{#if system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
           </span>
-          <span class="wh40k-toggle-equipped__label">{{#if system.equipped}}Installed{{else}}Uninstalled{{/if}}</span>
+          <span class="tw-text-xs {{#if system.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-[color:rgba(214,221,235,0.7)]{{/if}}">{{#if system.equipped}}Installed{{else}}Uninstalled{{/if}}</span>
         </label>
       </div>
     </header>

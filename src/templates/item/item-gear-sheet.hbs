@@ -197,15 +197,15 @@
               </div>
               <div class="tw-mb-3">
                 <div class="tw-flex tw-flex-col tw-gap-1">
-                  <label class="wh40k-checkbox">
-                    <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
+                  <label class="tw-flex tw-items-center tw-gap-1.5 tw-cursor-pointer">
+                    <input type="checkbox" name="system.equipped" {{checked system.equipped}} class="tw-w-3.5 tw-h-3.5 [accent-color:var(--wh40k-gold)]" />
                     <i class="fas {{#if system.equipped}}fa-check-square{{else}}fa-square{{/if}}"></i>
-                    <span>Equipped</span>
+                    <span class="tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-medium)]">Equipped</span>
                   </label>
-                  <label class="wh40k-checkbox">
-                    <input type="checkbox" name="system.inBackpack" {{checked system.inBackpack}} />
+                  <label class="tw-flex tw-items-center tw-gap-1.5 tw-cursor-pointer">
+                    <input type="checkbox" name="system.inBackpack" {{checked system.inBackpack}} class="tw-w-3.5 tw-h-3.5 [accent-color:var(--wh40k-gold)]" />
                     <i class="fas {{#if system.inBackpack}}fa-check-square{{else}}fa-square{{/if}}"></i>
-                    <span>In Backpack</span>
+                    <span class="tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-medium)]">In Backpack</span>
                   </label>
                 </div>
               </div>
@@ -266,10 +266,10 @@
                 <h3>Consumable</h3>
               </div>
               <div class="tw-mb-3">
-                <label class="wh40k-checkbox">
-                  <input type="checkbox" name="system.consumable" {{checked system.consumable}} />
+                <label class="tw-flex tw-items-center tw-gap-1.5 tw-cursor-pointer">
+                  <input type="checkbox" name="system.consumable" {{checked system.consumable}} class="tw-w-3.5 tw-h-3.5 [accent-color:var(--wh40k-gold)]" />
                   <i class="fas {{#if system.consumable}}fa-check-square{{else}}fa-square{{/if}}"></i>
-                  <span>Has Limited Uses</span>
+                  <span class="tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-medium)]">Has Limited Uses</span>
                 </label>
                 
                 {{#if system.consumable}}

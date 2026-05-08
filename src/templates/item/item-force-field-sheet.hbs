@@ -39,12 +39,12 @@
       </div>
 
       <div class="tw-shrink-0">
-        <label class="wh40k-toggle-equipped tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" title="Toggle Equipped">
+        <label class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" title="Toggle Equipped">
           <input type="checkbox" name="system.equipped" {{checked system.equipped}} class="tw-sr-only" />
-          <span class="wh40k-toggle-equipped__indicator tw-inline-flex tw-items-center tw-justify-center tw-w-6 tw-h-6">
+          <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-6 tw-h-6 tw-text-xl tw-transition-colors {{#if system.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-white/50{{/if}}">
             <i class="fas {{#if system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
           </span>
-          <span class="wh40k-toggle-equipped__label tw-text-xs">{{#if system.equipped}}Equipped{{else}}Stowed{{/if}}</span>
+          <span class="tw-text-xs {{#if system.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-[color:rgba(214,221,235,0.7)]{{/if}}">{{#if system.equipped}}Equipped{{else}}Stowed{{/if}}</span>
         </label>
       </div>
     </header>
@@ -118,23 +118,23 @@
         </div>
         <div class="tw-p-3">
           <div class="tw-flex tw-flex-col tw-gap-2">
-            <label class="wh40k-checkbox wh40k-checkbox--large tw-flex tw-items-center tw-gap-3 tw-cursor-pointer tw-p-2 tw-rounded-md">
-              <input type="checkbox" name="system.activated" {{checked system.activated}} />
-              <span class="wh40k-checkbox__indicator tw-inline-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-md tw-text-lg">
+            <label class="tw-flex tw-items-center tw-gap-3 tw-cursor-pointer tw-p-2 tw-rounded-md">
+              <input type="checkbox" name="system.activated" {{checked system.activated}} class="tw-w-3.5 tw-h-3.5 [accent-color:var(--wh40k-gold)]" />
+              <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-md tw-text-lg">
                 <i class="fas fa-shield"></i>
               </span>
-              <span class="wh40k-checkbox__label tw-flex tw-flex-col">
+              <span class="tw-flex tw-flex-col">
                 <strong class="tw-text-sm">Activated</strong>
                 <small class="tw-text-xs tw-opacity-70">Force field is currently active and providing protection</small>
               </span>
             </label>
 
-            <label class="wh40k-checkbox wh40k-checkbox--large wh40k-checkbox--danger tw-flex tw-items-center tw-gap-3 tw-cursor-pointer tw-p-2 tw-rounded-md">
-              <input type="checkbox" name="system.overloaded" {{checked system.overloaded}} />
-              <span class="wh40k-checkbox__indicator tw-inline-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-md tw-text-lg">
+            <label class="tw-flex tw-items-center tw-gap-3 tw-cursor-pointer tw-p-2 tw-rounded-md">
+              <input type="checkbox" name="system.overloaded" {{checked system.overloaded}} class="tw-w-3.5 tw-h-3.5 [accent-color:var(--wh40k-gold)]" />
+              <span class="tw-inline-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-md tw-text-lg">
                 <i class="fas fa-exclamation-triangle"></i>
               </span>
-              <span class="wh40k-checkbox__label tw-flex tw-flex-col">
+              <span class="tw-flex tw-flex-col">
                 <strong class="tw-text-sm">Overloaded</strong>
                 <small class="tw-text-xs tw-opacity-70">Force field has overloaded and is temporarily disabled</small>
               </span>
