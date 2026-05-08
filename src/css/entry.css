@@ -18,6 +18,9 @@
 @import './actor/_actor-scroll.css';
 @import './foundry-chrome.css';
 
-/* Tailwind layers — must follow the legacy CSS so utility classes win the cascade. */
+/* Tailwind layers — base holds design tokens (see tailwind/design-tokens.js
+   emitted via the addBase plugin). Components and utilities follow the legacy
+   CSS so utility classes win the cascade. */
+@tailwind base;
 @tailwind components;
 @tailwind utilities;

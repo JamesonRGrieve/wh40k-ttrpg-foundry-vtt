@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const plugin = require('tailwindcss/plugin');
+const designTokens = require('./tailwind/design-tokens.js');
 
 module.exports = {
   content: [
@@ -8,6 +9,12 @@ module.exports = {
   ],
   prefix: 'tw-',
   important: '.wh40k-rpg',
+  // Disable Tailwind's preflight reset — Foundry ships its own normalize-style
+  // base CSS via foundry2.css and the legacy gothic-theme tokens cascade on
+  // top of it. Enabling preflight here would clobber Foundry's defaults
+  // (margins on headings, list-style on nav lists, etc.). We still need
+  // `@tailwind base;` in entry.css so the design-tokens addBase plugin emits.
+  corePlugins: { preflight: false },
   safelist: [
     // The legacy CSS files under src/css/** still carry `animation: <name> ...`
     // rules on selectors like `.wh40k-panel`, `.wh40k-prompt::before`, etc. Those
@@ -1328,6 +1335,12 @@ module.exports = {
     },
   },
   plugins: [
+    // Gothic 40K design tokens — `:root` / `body.theme-*` CSS custom properties
+    // sourced from `tailwind/design-tokens.js`. Emitted via Tailwind's base layer
+    // so all `var(--wh40k-foo)` consumers across templates and legacy CSS resolve.
+    plugin(function ({ addBase }) {
+      addBase(designTokens);
+    }),
     // Per-system theme variants — apply a utility only when the sheet root
     // (or any ancestor) carries the matching `data-wh40k-system="<id>"` attr.
     // Usage in templates: `tw-bg-gold dh2e:tw-bg-bronze rt:tw-bg-amber-700`.
