@@ -6,11 +6,11 @@
  <div class="tw-flex tw-gap-[var(--wh40k-space-sm)] tw-items-center">
  <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-text-light)] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="randomize" data-tooltip="{{localize 'WH40K.OriginPath.RandomizeHint'}}">
  <i class="fa-solid fa-dice"></i>
- <span>{{localize"WH40K.OriginPath.Randomize"}}</span>
+ <span>{{localize "WH40K.OriginPath.Randomize"}}</span>
  </button>
  <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-text-light)] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="reset" data-tooltip="{{localize 'WH40K.OriginPath.ResetHint'}}">
  <i class="fa-solid fa-rotate-left"></i>
- <span>{{localize"WH40K.OriginPath.Reset"}}</span>
+ <span>{{localize "WH40K.OriginPath.Reset"}}</span>
  </button>
  </div>
 
@@ -24,12 +24,12 @@
  <label class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-[color:var(--wh40k-text-light)] {{#if guidedMode}}tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] tw-text-[color:var(--wh40k-gold)]{{/if}}" data-tooltip="{{localize 'WH40K.OriginPath.GuidedHint'}}">
  <input type="radio" name="mode" value="guided" {{#if guidedMode}}checked{{/if}} data-action="setMode">
  <i class="fa-solid fa-route"></i>
- <span>{{localize"WH40K.OriginPath.Guided"}}</span>
+ <span>{{localize "WH40K.OriginPath.Guided"}}</span>
  </label>
  <label class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-[color:var(--wh40k-text-light)] {{#unless guidedMode}}tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] tw-text-[color:var(--wh40k-gold)]{{/unless}}" data-tooltip="{{localize 'WH40K.OriginPath.FreeHint'}}">
  <input type="radio" name="mode" value="free" {{#unless guidedMode}}checked{{/unless}} data-action="setMode">
  <i class="fa-solid fa-unlock"></i>
- <span>{{localize"WH40K.OriginPath.Free"}}</span>
+ <span>{{localize "WH40K.OriginPath.Free"}}</span>
  </label>
  </div>
 
@@ -39,12 +39,12 @@
  <label class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-[color:var(--wh40k-text-light)] {{#if isBackward}}tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] tw-text-[color:var(--wh40k-gold)]{{/if}}" data-tooltip="{{localize 'WH40K.OriginPath.DirectionBackwardHint'}}">
  <input type="radio" name="direction" value="backward" {{#if isBackward}}checked{{/if}} data-action="setDirection">
  <i class="fa-solid fa-arrow-left"></i>
- <span>{{localize"WH40K.OriginPath.DirectionBackward"}}</span>
+ <span>{{localize "WH40K.OriginPath.DirectionBackward"}}</span>
  </label>
  <label class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-[color:var(--wh40k-text-light)] {{#if isForward}}tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] tw-text-[color:var(--wh40k-gold)]{{/if}}" data-tooltip="{{localize 'WH40K.OriginPath.DirectionForwardHint'}}">
  <input type="radio" name="direction" value="forward" {{#if isForward}}checked{{/if}} data-action="setDirection">
  <i class="fa-solid fa-arrow-right"></i>
- <span>{{localize"WH40K.OriginPath.DirectionForward"}}</span>
+ <span>{{localize "WH40K.OriginPath.DirectionForward"}}</span>
  </label>
  </div>
  {{/if}}
@@ -103,16 +103,16 @@
  </div>
  <div class="tw-flex-1">
  {{#if showEquipment}}
- <h2 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.3rem] tw-text-[color:var(--wh40k-gold)]"><i class="fa-solid fa-box"></i> {{localize"WH40K.OriginPath.EquipmentTitle"}}</h2>
- <p class="tw-mt-[var(--wh40k-space-xs)] tw-mb-0 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize"WH40K.OriginPath.EquipmentDesc"}}</p>
+ <h2 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.3rem] tw-text-[color:var(--wh40k-gold)]"><i class="fa-solid fa-box"></i> {{localize "WH40K.OriginPath.EquipmentTitle"}}</h2>
+ <p class="tw-mt-[var(--wh40k-space-xs)] tw-mb-0 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OriginPath.EquipmentDesc"}}</p>
  {{else if currentStep.isCharacteristics}}
- <h2 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.3rem] tw-text-[color:var(--wh40k-gold)]"><i class="fa-solid fa-dice-d20"></i> {{localize"WH40K.CharacteristicSetup.Title"}}</h2>
- <p class="tw-mt-[var(--wh40k-space-xs)] tw-mb-0 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize"WH40K.CharacteristicSetup.Instructions"}}</p>
+ <h2 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.3rem] tw-text-[color:var(--wh40k-gold)]"><i class="fa-solid fa-dice-d20"></i> {{localize "WH40K.CharacteristicSetup.Title"}}</h2>
+ <p class="tw-mt-[var(--wh40k-space-xs)] tw-mb-0 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.CharacteristicSetup.Instructions"}}</p>
  {{else if currentStep.isLineage}}
- <h2 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.3rem] tw-text-[color:var(--wh40k-gold)]">{{optionalStepLabel}} <span class="tw-text-[0.65rem] tw-font-normal tw-py-[2px] tw-px-[6px] tw-bg-[rgba(156,39,176,0.2)] tw-border tw-border-[rgba(156,39,176,0.4)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[#ce93d8] tw-uppercase tw-tracking-[0.5px] tw-align-middle tw-ml-[var(--wh40k-space-sm)]">{{localize"WH40K.OriginPath.Optional"}}</span></h2>
+ <h2 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.3rem] tw-text-[color:var(--wh40k-gold)]">{{optionalStepLabel}} <span class="tw-text-[0.65rem] tw-font-normal tw-py-[2px] tw-px-[6px] tw-bg-[rgba(156,39,176,0.2)] tw-border tw-border-[rgba(156,39,176,0.4)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[#ce93d8] tw-uppercase tw-tracking-[0.5px] tw-align-middle tw-ml-[var(--wh40k-space-sm)]">{{localize "WH40K.OriginPath.Optional"}}</span></h2>
  <p class="tw-mt-[var(--wh40k-space-xs)] tw-mb-0 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)]">{{optionalStepDesc}}</p>
  {{else}}
- <h2 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.3rem] tw-text-[color:var(--wh40k-gold)]">{{localize"WH40K.OriginPath.Step"}} {{add currentStep.index 1}}: {{currentStep.label}}</h2>
+ <h2 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1.3rem] tw-text-[color:var(--wh40k-gold)]">{{localize "WH40K.OriginPath.Step"}} {{add currentStep.index 1}}: {{currentStep.label}}</h2>
  <p class="tw-mt-[var(--wh40k-space-xs)] tw-mb-0 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)]">{{currentStep.description}}</p>
  {{/if}}
  </div>
@@ -125,12 +125,12 @@
  {{#if equipment.hasInfluence}}
  <div class="tw-flex tw-items-center tw-gap-1.5 tw-font-semibold {{#if equipment.atLimit}}tw-text-amber-400{{/if}}">
  <i class="fa-solid fa-hashtag"></i>
- <span>{{equipment.selectedCount}} / {{equipment.maxSelections}} {{localize"WH40K.OriginPath.EquipmentSelectedLabel"}}</span>
+ <span>{{equipment.selectedCount}} / {{equipment.maxSelections}} {{localize "WH40K.OriginPath.EquipmentSelectedLabel"}}</span>
  </div>
  {{else}}
  <div class="tw-flex tw-items-center tw-gap-1.5 tw-font-semibold tw-text-amber-400">
  <i class="fa-solid fa-triangle-exclamation"></i>
- <span>{{localize"WH40K.OriginPath.EquipmentNoInfluence"}}</span>
+ <span>{{localize "WH40K.OriginPath.EquipmentNoInfluence"}}</span>
  </div>
  {{/if}}
  {{#if equipment.selectedItems.length}}
@@ -140,7 +140,7 @@
  {{/each}}
  </ul>
  {{/if}}
- <div class="tw-text-sm tw-italic tw-opacity-75">{{localize"WH40K.OriginPath.EquipmentRuleHint"}}</div>
+ <div class="tw-text-sm tw-italic tw-opacity-75">{{localize "WH40K.OriginPath.EquipmentRuleHint"}}</div>
  </div>
 
  <div class="tw-flex tw-items-center tw-gap-2">
@@ -153,7 +153,7 @@
  </select>
  <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-text-light)] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="clearEquipment" data-tooltip="{{localize 'WH40K.OriginPath.EquipmentClearAll'}}">
  <i class="fa-solid fa-rotate-left"></i>
- <span>{{localize"WH40K.OriginPath.EquipmentClearAll"}}</span>
+ <span>{{localize "WH40K.OriginPath.EquipmentClearAll"}}</span>
  </button>
  </div>
 
@@ -162,12 +162,12 @@
  <tr class="tw-text-xs tw-uppercase tw-opacity-75 tw-border-b tw-border-white/15">
  <th class="tw-w-8 tw-text-center tw-px-2 tw-py-1"></th>
  <th class="tw-w-6 tw-px-2 tw-py-1"></th>
- <th class="tw-text-left tw-px-2 tw-py-1">{{localize"WH40K.OriginPath.EquipmentColName"}}</th>
- <th class="tw-text-left tw-px-2 tw-py-1 tw-w-32">{{localize"WH40K.OriginPath.EquipmentColType"}}</th>
- <th class="tw-text-left tw-px-2 tw-py-1 tw-w-28">{{localize"WH40K.OriginPath.EquipmentColAvailability"}}</th>
+ <th class="tw-text-left tw-px-2 tw-py-1">{{localize "WH40K.OriginPath.EquipmentColName"}}</th>
+ <th class="tw-text-left tw-px-2 tw-py-1 tw-w-32">{{localize "WH40K.OriginPath.EquipmentColType"}}</th>
+ <th class="tw-text-left tw-px-2 tw-py-1 tw-w-28">{{localize "WH40K.OriginPath.EquipmentColAvailability"}}</th>
  {{#if equipment.isHomebrew}}
- <th class="tw-text-right tw-px-2 tw-py-1 tw-w-16">{{localize"WH40K.OriginPath.EquipmentColRequisition"}}</th>
- <th class="tw-text-right tw-px-2 tw-py-1 tw-w-24">{{localize"WH40K.OriginPath.EquipmentColThroneGelt"}}</th>
+ <th class="tw-text-right tw-px-2 tw-py-1 tw-w-16">{{localize "WH40K.OriginPath.EquipmentColRequisition"}}</th>
+ <th class="tw-text-right tw-px-2 tw-py-1 tw-w-24">{{localize "WH40K.OriginPath.EquipmentColThroneGelt"}}</th>
  {{/if}}
  </tr>
  </thead>
@@ -194,7 +194,7 @@
  {{/if}}
  </tr>
  {{else}}
- <tr><td colspan="{{#if equipment.isHomebrew}}7{{else}}5{{/if}}" class="tw-text-center tw-py-3 tw-italic tw-opacity-70">{{localize"WH40K.OriginPath.EquipmentNoneAvailable"}}</td></tr>
+ <tr><td colspan="{{#if equipment.isHomebrew}}7{{else}}5{{/if}}" class="tw-text-center tw-py-3 tw-italic tw-opacity-70">{{localize "WH40K.OriginPath.EquipmentNoneAvailable"}}</td></tr>
  {{/each}}
  </tbody>
  </table>
@@ -206,31 +206,31 @@
  <button type="button" role="tab" aria-selected="{{#if charGen.isModePointBuy}}true{{else}}false{{/if}}"
  class="tw-flex-1 tw-px-3 tw-py-1.5 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-rounded tw-border-0 tw-cursor-pointer tw-transition-colors {{#if charGen.isModePointBuy}}tw-bg-gold/20 tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure{{else}}tw-bg-transparent tw-text-white/70 hover:tw-bg-white/5{{/if}}"
  data-action="setCharGenMode" data-mode="point-buy">
- {{localize"WH40K.CharacteristicSetup.Mode.PointBuy"}}
+ {{localize "WH40K.CharacteristicSetup.Mode.PointBuy"}}
  </button>
  <button type="button" role="tab" aria-selected="{{#if charGen.isModeRoll}}true{{else}}false{{/if}}"
  class="tw-flex-1 tw-px-3 tw-py-1.5 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-rounded tw-border-0 tw-cursor-pointer tw-transition-colors {{#if charGen.isModeRoll}}tw-bg-gold/20 tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure{{else}}tw-bg-transparent tw-text-white/70 hover:tw-bg-white/5{{/if}}"
  data-action="setCharGenMode" data-mode="roll">
- {{localize"WH40K.CharacteristicSetup.Mode.Roll"}}
+ {{localize "WH40K.CharacteristicSetup.Mode.Roll"}}
  </button>
  <button type="button" role="tab" aria-selected="{{#if charGen.isModeRollPoolHB}}true{{else}}false{{/if}}"
  class="tw-flex-1 tw-px-3 tw-py-1.5 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-rounded tw-border-0 tw-cursor-pointer tw-transition-colors {{#if charGen.isModeRollPoolHB}}tw-bg-gold/20 tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure{{else}}tw-bg-transparent tw-text-white/70 hover:tw-bg-white/5{{/if}}"
  data-action="setCharGenMode" data-mode="roll-pool-hb">
- {{localize"WH40K.CharacteristicSetup.Mode.RollPoolHB"}}
+ {{localize "WH40K.CharacteristicSetup.Mode.RollPoolHB"}}
  </button>
  </div>
 
  {{#if charGen.isModePointBuy}}
  <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-py-12 tw-px-6 tw-text-center tw-text-white/70 tw-border tw-border-dashed tw-border-white/20 tw-rounded-md">
  <i class="fa-solid fa-screwdriver-wrench tw-text-4xl tw-text-white/40"></i>
- <h3 class="tw-text-lg tw-font-semibold tw-text-white/85 tw-m-0">{{localize"WH40K.CharacteristicSetup.Mode.PointBuy"}}</h3>
- <p class="tw-m-0">{{localize"WH40K.CharacteristicSetup.Mode.NotImplemented"}}</p>
+ <h3 class="tw-text-lg tw-font-semibold tw-text-white/85 tw-m-0">{{localize "WH40K.CharacteristicSetup.Mode.PointBuy"}}</h3>
+ <p class="tw-m-0">{{localize "WH40K.CharacteristicSetup.Mode.NotImplemented"}}</p>
  </div>
  {{else if charGen.isModeRoll}}
  <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-py-12 tw-px-6 tw-text-center tw-text-white/70 tw-border tw-border-dashed tw-border-white/20 tw-rounded-md">
  <i class="fa-solid fa-screwdriver-wrench tw-text-4xl tw-text-white/40"></i>
- <h3 class="tw-text-lg tw-font-semibold tw-text-white/85 tw-m-0">{{localize"WH40K.CharacteristicSetup.Mode.Roll"}}</h3>
- <p class="tw-m-0">{{localize"WH40K.CharacteristicSetup.Mode.NotImplemented"}}</p>
+ <h3 class="tw-text-lg tw-font-semibold tw-text-white/85 tw-m-0">{{localize "WH40K.CharacteristicSetup.Mode.Roll"}}</h3>
+ <p class="tw-m-0">{{localize "WH40K.CharacteristicSetup.Mode.NotImplemented"}}</p>
  </div>
  {{else}}
  <div >
@@ -238,7 +238,7 @@
  <div >
  <h3 >
  <i class="fa-solid fa-dice-d20"></i>
- {{localize"WH40K.CharacteristicSetup.RollsBank"}}
+ {{localize "WH40K.CharacteristicSetup.RollsBank"}}
  </h3>
  <button type="button" class="tw-max-w-full tw-whitespace-nowrap" data-action="rollCharacteristicsBank" data-tooltip="{{localize 'WH40K.CharacteristicSetup.RollBank'}}">
  <i class="fa-solid fa-dice"></i>
@@ -255,7 +255,7 @@
  </div>
  {{/each}}
  </div>
- <p class="tw-text-center tw-text-xs tw-text-[rgba(232,220,196,0.5)] tw-mt-2 tw-m-0 tw-italic">{{localize"WH40K.CharacteristicSetup.ClickToEdit"}}</p>
+ <p class="tw-text-center tw-text-xs tw-text-[rgba(232,220,196,0.5)] tw-mt-2 tw-m-0 tw-italic">{{localize "WH40K.CharacteristicSetup.ClickToEdit"}}</p>
  </section>
 
  <div >
@@ -263,7 +263,7 @@
  <div >
  <h3 >
  <i class="fa-solid fa-user-gear"></i>
- {{localize"WH40K.CharacteristicSetup.Characteristics"}}
+ {{localize "WH40K.CharacteristicSetup.Characteristics"}}
  </h3>
  <div >
  <button type="button" data-action="charToggleAdvanced" data-tooltip="{{#if charGen.advancedMode}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOn'}}{{else}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOff'}}{{/if}}">
@@ -294,7 +294,7 @@
  {{else}}
  <span >{{base}}</span>
  {{/if}}
- <span >{{localize"WH40K.CharacteristicSetup.Base"}}</span>
+ <span >{{localize "WH40K.CharacteristicSetup.Base"}}</span>
  </div>
  <span >+</span>
  <div >
@@ -367,10 +367,10 @@
  {{#if origin.badges}}
  <div class="tw-flex tw-gap-[var(--wh40k-space-xs)] tw-justify-center tw-mt-[var(--wh40k-space-xs)] tw-flex-wrap">
  {{#if origin.hasChoices}}
- <span class="tw-py-[2px] tw-px-[5px] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-bg-[rgba(255,170,0,0.2)] tw-text-[#ffaa00] tw-border tw-border-[rgba(255,170,0,0.4)]">{{localize"WH40K.OriginPath.HasChoices"}}</span>
+ <span class="tw-py-[2px] tw-px-[5px] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-bg-[rgba(255,170,0,0.2)] tw-text-[#ffaa00] tw-border tw-border-[rgba(255,170,0,0.4)]">{{localize "WH40K.OriginPath.HasChoices"}}</span>
  {{/if}}
  {{#if origin.isAdvanced}}
- <span class="tw-py-[2px] tw-px-[5px] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-bg-[rgba(156,39,176,0.2)] tw-text-[#ce93d8] tw-border tw-border-[rgba(156,39,176,0.4)]">{{localize"WH40K.OriginPath.Advanced"}}</span>
+ <span class="tw-py-[2px] tw-px-[5px] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-bg-[rgba(156,39,176,0.2)] tw-text-[#ce93d8] tw-border tw-border-[rgba(156,39,176,0.4)]">{{localize "WH40K.OriginPath.Advanced"}}</span>
  {{/if}}
  {{#if origin.xpCost}}
  <span class="tw-py-[2px] tw-px-[5px] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-font-semibold tw-uppercase tw-bg-[rgba(33,150,243,0.2)] tw-text-[#64b5f6] tw-border tw-border-[rgba(33,150,243,0.4)]">{{origin.xpCost}} XP</span>
@@ -383,7 +383,7 @@
  </button>
  </div>
  {{else}}
- <p class="tw-col-span-full tw-text-center tw-text-[color:var(--wh40k-text-muted)] tw-py-8">{{localize"WH40K.OriginPath.NoOriginsAvailable"}}</p>
+ <p class="tw-col-span-full tw-text-center tw-text-[color:var(--wh40k-text-muted)] tw-py-8">{{localize "WH40K.OriginPath.NoOriginsAvailable"}}</p>
  {{/each}}
  </div>
  {{/if}}
@@ -425,13 +425,13 @@
  <div class="tw-border-t tw-border-t-[var(--wh40k-bronze)] tw-pt-[var(--wh40k-space-md)]">
  <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[0.5px]">
  <i class="fa-solid fa-gift tw-text-[0.9rem]"></i>
- {{localize"WH40K.OriginPath.Grants"}}
+ {{localize "WH40K.OriginPath.Grants"}}
  </h4>
  <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
  {{!-- Characteristics --}}
  {{#if selectedOrigin.grants.hasCharacteristics}}
  <div >
- <span class="tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize"WH40K.Characteristics"}}</span>
+ <span class="tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize "WH40K.Characteristics"}}</span>
  <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[150px] tw-overflow-y-auto tw-overflow-x-hidden">
  {{#each selectedOrigin.grants.characteristics as |char|}}
  <span class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[2px] tw-px-[8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-leading-[1.3] {{#if char.positive}}tw-border tw-border-[rgba(76,175,80,0.3)] tw-text-[#4caf50]{{else}}tw-border tw-border-[rgba(231,76,60,0.3)] tw-text-[color:var(--wh40k-accent-red)]{{/if}}">
@@ -445,7 +445,7 @@
  {{!-- Skills (clickable) --}}
  {{#if selectedOrigin.grants.hasSkills}}
  <div >
- <span class="tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize"WH40K.Skills.Header"}}</span>
+ <span class="tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize "WH40K.Skills.Header"}}</span>
  <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[150px] tw-overflow-y-auto tw-overflow-x-hidden">
  {{#each selectedOrigin.grants.skills as |skill|}}
  <div class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3] tw-max-w-full tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap {{#if skill.uuid}}tw-cursor-pointer hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-[1px]{{/if}}"
@@ -466,7 +466,7 @@
  {{!-- Talents (clickable if they have uuid) --}}
  {{#if selectedOrigin.grants.hasTalents}}
  <div >
- <span class="tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize"WH40K.Talents"}}</span>
+ <span class="tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize "WH40K.Talents"}}</span>
  <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[150px] tw-overflow-y-auto tw-overflow-x-hidden">
  {{#each selectedOrigin.grants.talents as |talent|}}
  <div class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3] tw-max-w-full tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap {{#if talent.hasItem}}tw-cursor-pointer hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-[1px]{{/if}}"
@@ -486,7 +486,7 @@
  {{!-- Traits (clickable if they have uuid) --}}
  {{#if selectedOrigin.grants.hasTraits}}
  <div >
- <span class="tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize"WH40K.Traits"}}</span>
+ <span class="tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize "WH40K.Traits"}}</span>
  <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[150px] tw-overflow-y-auto tw-overflow-x-hidden">
  {{#each selectedOrigin.grants.traits as |trait|}}
  <div class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3] tw-max-w-full tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap {{#if trait.hasItem}}tw-cursor-pointer hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-[1px]{{/if}}"
@@ -504,7 +504,7 @@
  {{!-- Equipment --}}
  {{#if selectedOrigin.grants.hasEquipment}}
  <div >
- <span class="tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize"WH40K.EquipmentGranted"}}</span>
+ <span class="tw-block tw-text-[0.7rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-1">{{localize "WH40K.EquipmentGranted"}}</span>
  <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[150px] tw-overflow-y-auto tw-overflow-x-hidden">
  {{#each selectedOrigin.grants.equipment as |item|}}
  <div class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3] tw-max-w-full tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">
@@ -524,7 +524,7 @@
  <div class="tw-border-t tw-border-t-[var(--wh40k-bronze)] tw-pt-[var(--wh40k-space-md)]">
  <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[0.5px]">
  <i class="fa-solid fa-list-check tw-text-[0.9rem]"></i>
- {{localize"WH40K.OriginPath.ChoicesRequired"}}
+ {{localize "WH40K.OriginPath.ChoicesRequired"}}
  </h4>
  {{#each selectedOrigin.choices as |choice|}}
  <div class="tw-rounded-[var(--wh40k-radius-sm)] tw-p-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-sm)] {{#if choice.isComplete}}tw-border tw-border-[rgba(76,175,80,0.4)] tw-bg-[rgba(76,175,80,0.1)]{{else}}tw-border tw-border-[rgba(255,170,0,0.3)] tw-bg-[rgba(255,170,0,0.1)]{{/if}}">
@@ -545,7 +545,7 @@
  {{/if}}
  <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(255,170,0,0.15)] tw-border tw-border-[rgba(255,170,0,0.4)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[#ffaa00] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[rgba(255,170,0,0.25)] hover:tw-border-[#ffaa00]" data-action="editChoice" data-choice-label="{{choice.label}}">
  <i class="fa-solid fa-pen"></i>
- {{#if choice.isComplete}}{{localize"WH40K.OriginPath.ChangeChoice"}}{{else}}{{localize"WH40K.OriginPath.MakeChoice"}}{{/if}}
+ {{#if choice.isComplete}}{{localize "WH40K.OriginPath.ChangeChoice"}}{{else}}{{localize "WH40K.OriginPath.MakeChoice"}}{{/if}}
  </button>
  </div>
  {{/each}}
@@ -557,13 +557,13 @@
  <div class="tw-border-t tw-border-t-[var(--wh40k-bronze)] tw-pt-[var(--wh40k-space-md)]">
  <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-m-0 tw-mb-[var(--wh40k-space-sm)] tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[0.5px]">
  <i class="fa-solid fa-dice tw-text-[0.9rem]"></i>
- {{localize"WH40K.OriginPath.StartingStats"}}
+ {{localize "WH40K.OriginPath.StartingStats"}}
  </h4>
  {{#if selectedOrigin.rolls.wounds}}
  <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-mb-[var(--wh40k-space-xs)] {{#if selectedOrigin.rolls.wounds.hasValue}}tw-border tw-border-[rgba(76,175,80,0.3)] tw-bg-[rgba(76,175,80,0.05)]{{else}}tw-border tw-border-transparent{{/if}}">
  <div class="tw-flex-1">
  <div class="tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-light)]">
- <i class="fa-solid fa-heart tw-mr-[var(--wh40k-space-xs)]"></i> {{localize"WH40K.Wounds"}}
+ <i class="fa-solid fa-heart tw-mr-[var(--wh40k-space-xs)]"></i> {{localize "WH40K.Wounds"}}
  </div>
  {{#if selectedOrigin.rolls.wounds.hasValue}}
  <div class="tw-text-[0.9rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)]">{{selectedOrigin.rolls.wounds.value}} <span class="tw-text-[0.75rem] tw-font-normal tw-text-[color:var(--wh40k-text-muted)]">({{selectedOrigin.rolls.wounds.breakdown}})</span></div>
@@ -574,7 +574,7 @@
  <div class="tw-flex tw-gap-[var(--wh40k-space-xs)]">
  <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105 hover:tw-shadow-[0_2px_8px_rgba(var(--wh40k-gold-rgb),0.4)]" data-action="rollStat" data-stat-type="wounds" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
  <i class="fa-solid fa-dice"></i>
- {{#if selectedOrigin.rolls.wounds.hasValue}}{{localize"WH40K.OriginPath.Reroll"}}{{else}}{{localize"WH40K.Roll.Roll"}}{{/if}}
+ {{#if selectedOrigin.rolls.wounds.hasValue}}{{localize "WH40K.OriginPath.Reroll"}}{{else}}{{localize "WH40K.Roll.Roll"}}{{/if}}
  </button>
  <button type="button" class="tw-flex tw-items-center tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105" data-action="manualStat" data-stat-type="wounds" data-tooltip="{{localize 'WH40K.OriginPath.ManualTooltip'}}">
  <i class="fa-solid fa-keyboard"></i>
@@ -586,7 +586,7 @@
  <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-mb-[var(--wh40k-space-xs)] {{#if selectedOrigin.rolls.fate.hasValue}}tw-border tw-border-[rgba(76,175,80,0.3)] tw-bg-[rgba(76,175,80,0.05)]{{else}}tw-border tw-border-transparent{{/if}}">
  <div class="tw-flex-1">
  <div class="tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-light)]">
- <i class="fa-solid fa-star tw-mr-[var(--wh40k-space-xs)]"></i> {{localize"WH40K.Fate"}}
+ <i class="fa-solid fa-star tw-mr-[var(--wh40k-space-xs)]"></i> {{localize "WH40K.Fate"}}
  </div>
  {{#if selectedOrigin.rolls.fate.hasValue}}
  <div class="tw-text-[0.9rem] tw-font-semibold tw-text-[color:var(--wh40k-gold)]">{{selectedOrigin.rolls.fate.value}} <span class="tw-text-[0.75rem] tw-font-normal tw-text-[color:var(--wh40k-text-muted)]">({{selectedOrigin.rolls.fate.breakdown}})</span></div>
@@ -597,7 +597,7 @@
  <div class="tw-flex tw-gap-[var(--wh40k-space-xs)]">
  <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105 hover:tw-shadow-[0_2px_8px_rgba(var(--wh40k-gold-rgb),0.4)]" data-action="rollStat" data-stat-type="fate" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
  <i class="fa-solid fa-dice"></i>
- {{#if selectedOrigin.rolls.fate.hasValue}}{{localize"WH40K.OriginPath.Reroll"}}{{else}}{{localize"WH40K.Roll.Roll"}}{{/if}}
+ {{#if selectedOrigin.rolls.fate.hasValue}}{{localize "WH40K.OriginPath.Reroll"}}{{else}}{{localize "WH40K.Roll.Roll"}}{{/if}}
  </button>
  <button type="button" class="tw-flex tw-items-center tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105" data-action="manualStat" data-stat-type="fate" data-tooltip="{{localize 'WH40K.OriginPath.ManualTooltip'}}">
  <i class="fa-solid fa-keyboard"></i>
@@ -620,7 +620,7 @@
  <div class="tw-flex tw-gap-[var(--wh40k-space-xs)]">
  <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105 hover:tw-shadow-[0_2px_8px_rgba(var(--wh40k-gold-rgb),0.4)]" data-action="rollStat" data-stat-type="thrones" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
  <i class="fa-solid fa-dice"></i>
- {{#if selectedOrigin.rolls.thrones.hasValue}}{{localize"WH40K.OriginPath.Reroll"}}{{else}}{{localize"WH40K.Roll.Roll"}}{{/if}}
+ {{#if selectedOrigin.rolls.thrones.hasValue}}{{localize "WH40K.OriginPath.Reroll"}}{{else}}{{localize "WH40K.Roll.Roll"}}{{/if}}
  </button>
  <button type="button" class="tw-flex tw-items-center tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-gold)] tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-scale-105" data-action="manualStat" data-stat-type="thrones" data-tooltip="{{localize 'WH40K.OriginPath.ManualTooltip'}}">
  <i class="fa-solid fa-keyboard"></i>
@@ -666,7 +666,7 @@
  <div class="tw-mt-auto tw-pt-[var(--wh40k-space-md)] tw-border-t-2 tw-border-t-[var(--wh40k-bronze)]">
  <button type="button" class="tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-sm)] tw-p-[var(--wh40k-space-md)] tw-bg-[linear-gradient(135deg,var(--wh40k-gold),var(--wh40k-gold-dark))] tw-border-2 tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[rgba(0,0,0,0.9)] tw-font-[var(--wh40k-font-header)] tw-text-[1rem] tw-font-bold tw-uppercase tw-tracking-[1px] tw-cursor-pointer tw-shadow-[0_4px_12px_rgba(var(--wh40k-gold-rgb),0.3)] hover:tw-bg-[linear-gradient(135deg,var(--wh40k-gold-light),var(--wh40k-gold))] hover:tw--translate-y-[2px] hover:tw-shadow-[0_6px_20px_rgba(var(--wh40k-gold-rgb),0.5)]" data-action="confirmSelection" data-tooltip="{{localize 'WH40K.OriginPath.ConfirmSelectionHint'}}">
  <i class="fa-solid fa-check tw-text-[1.1rem]"></i>
- <span>{{localize"WH40K.OriginPath.ConfirmSelection"}}</span>
+ <span>{{localize "WH40K.OriginPath.ConfirmSelection"}}</span>
  </button>
  </div>
  {{/unless}}
@@ -674,7 +674,7 @@
  {{!-- Empty State --}}
  <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full tw-text-[color:var(--wh40k-text-muted)] tw-text-center tw-p-[var(--wh40k-space-xl)]">
  <i class="fa-solid fa-hand-pointer tw-text-[3rem] tw-mb-[var(--wh40k-space-md)] tw-opacity-50"></i>
- <p class="tw-m-0 tw-text-[0.9rem]">{{localize"WH40K.OriginPath.SelectOriginPrompt"}}</p>
+ <p class="tw-m-0 tw-text-[0.9rem]">{{localize "WH40K.OriginPath.SelectOriginPrompt"}}</p>
  </div>
  {{/if}}
  </aside>
@@ -686,13 +686,13 @@
  <div class="tw-flex tw-justify-between tw-items-center tw-mb-[var(--wh40k-space-md)]">
  <h3 class="tw-m-0 tw-font-[var(--wh40k-font-header)] tw-text-[1rem] tw-text-[color:var(--wh40k-gold)] tw-uppercase tw-tracking-[1px]">
  <i class="fa-solid fa-eye tw-mr-[var(--wh40k-space-xs)]"></i>
- {{localize"WH40K.OriginPath.TotalBonuses"}}
+ {{localize "WH40K.OriginPath.TotalBonuses"}}
  </h3>
  </div>
  <div class="tw-grid tw-grid-cols-[repeat(auto-fit,minmax(200px,1fr))] tw-gap-[var(--wh40k-space-md)]">
  {{#if preview.characteristics.length}}
  <div >
- <div class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize"WH40K.Characteristics"}}</div>
+ <div class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize "WH40K.Characteristics"}}</div>
  <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[120px] tw-overflow-y-auto tw-overflow-x-hidden">
  {{#each preview.characteristics as |char|}}
  <span class="tw-py-[2px] tw-px-[6px] tw-bg-[rgba(0,0,0,0.3)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] {{#if (gt char.value 0)}}tw-border tw-border-[#4caf50] tw-text-[#4caf50]{{else}}tw-border tw-border-[color:var(--wh40k-accent-red)] tw-text-[color:var(--wh40k-accent-red)]{{/if}} {{#if char.fromChoice}}tw-border-dashed{{/if}}">
@@ -704,7 +704,7 @@
  {{/if}}
  {{#if preview.skills.length}}
  <div >
- <div class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize"WH40K.Skills.Header"}}</div>
+ <div class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize "WH40K.Skills.Header"}}</div>
  <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[120px] tw-overflow-y-auto tw-overflow-x-hidden">
  {{#each preview.skills as |skill|}}
  <div class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3] tw-max-w-full tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap {{#if skill.uuid}}tw-cursor-pointer hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-[1px]{{/if}} {{#if skill.fromChoice}}tw-border-dashed{{/if}}"
@@ -722,7 +722,7 @@
  {{/if}}
  {{#if preview.talents.length}}
  <div >
- <div class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize"WH40K.Talents"}}</div>
+ <div class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize "WH40K.Talents"}}</div>
  <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)] tw-max-h-[120px] tw-overflow-y-auto tw-overflow-x-hidden">
  {{#each preview.talents as |talent|}}
  <div class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3] tw-max-w-full tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap {{#if talent.uuid}}tw-cursor-pointer hover:tw-bg-[rgba(var(--wh40k-gold-rgb),0.15)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-[1px]{{/if}} {{#if talent.fromChoice}}tw-border-dashed{{/if}}"
@@ -753,7 +753,7 @@
  {{/if}}
  {{#if preview.wounds}}
  <div >
- <div class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize"WH40K.Wounds"}}</div>
+ <div class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize "WH40K.Wounds"}}</div>
  <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)]">
  <div class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3]">
  <i class="fa-solid fa-heart tw-text-[0.7rem] tw-flex-shrink-0 tw-text-[color:var(--wh40k-gold)]"></i>
@@ -764,7 +764,7 @@
  {{/if}}
  {{#if preview.fate}}
  <div >
- <div class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize"WH40K.Fate"}}</div>
+ <div class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.5px] tw-mb-[var(--wh40k-space-xs)]">{{localize "WH40K.Fate"}}</div>
  <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)]">
  <div class="tw-inline-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[4px] tw-px-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-light)] tw-border tw-border-transparent tw-leading-[1.3]">
  <i class="fa-solid fa-star tw-text-[0.7rem] tw-flex-shrink-0 tw-text-[color:var(--wh40k-gold)]"></i>
@@ -781,27 +781,27 @@
  <div class="tw-flex tw-gap-[var(--wh40k-space-md)]">
  <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem]">
  <i class="fa-solid {{#if status.stepsComplete}}fa-check-circle tw-text-[#4caf50]{{else}}fa-circle-half-stroke tw-text-[#ffaa00]{{/if}} tw-text-[1rem]"></i>
- {{status.stepsCount}}/{{status.totalSteps}} {{localize"WH40K.OriginPath.Steps"}}
+ {{status.stepsCount}}/{{status.totalSteps}} {{localize "WH40K.OriginPath.Steps"}}
  </span>
  <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem]">
  <i class="fa-solid {{#if status.choicesComplete}}fa-check-circle tw-text-[#4caf50]{{else}}fa-exclamation-triangle tw-text-[#ffaa00]{{/if}} tw-text-[1rem]"></i>
  {{#if status.choicesComplete}}
- {{localize"WH40K.OriginPath.AllChoicesComplete"}}
+ {{localize "WH40K.OriginPath.AllChoicesComplete"}}
  {{else}}
- {{status.pendingChoices}} {{localize"WH40K.OriginPath.ChoicesPending"}}
+ {{status.pendingChoices}} {{localize "WH40K.OriginPath.ChoicesPending"}}
  {{/if}}
  </span>
  {{#if status.pendingRolls}}
  <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem]">
  <i class="fa-solid fa-dice tw-text-[#ff9800] tw-text-[1rem]"></i>
- {{status.pendingRolls}} {{localize"WH40K.OriginPath.RollsPending"}}
+ {{status.pendingRolls}} {{localize "WH40K.OriginPath.RollsPending"}}
  </span>
  {{/if}}
  </div>
  <div class="tw-flex tw-gap-[var(--wh40k-space-sm)] tw-items-center">
  <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-lg)] tw-bg-[linear-gradient(135deg,var(--wh40k-gold),#b8860b)] tw-border-2 tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-panel-bg-solid)] tw-font-[var(--wh40k-font-header)] tw-text-[1rem] tw-font-semibold tw-uppercase tw-tracking-[1px] tw-cursor-pointer hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_15px_rgba(var(--wh40k-gold-rgb),0.5)] disabled:tw-opacity-50 disabled:tw-cursor-not-allowed disabled:tw-grayscale-[0.5]" data-action="commit" {{#unless status.canCommit}}disabled{{/unless}}>
  <i class="fa-solid fa-save"></i>
- {{localize"WH40K.OriginPath.CommitToCharacter"}}
+ {{localize "WH40K.OriginPath.CommitToCharacter"}}
  </button>
  </div>
  </footer>
