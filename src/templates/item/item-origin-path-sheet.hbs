@@ -2,42 +2,42 @@
   Rogue Trader Origin Path Item Sheet - Modern Tabbed Redesign
   Character creation lifepath configuration with tabbed interface
 --}}
-<div class="wh40k-origin-sheet tw-flex tw-flex-col tw-h-full">
+<div class="tw-flex tw-flex-col tw-h-full">
   <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact identity with step badge
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="wh40k-origin-header tw-flex tw-items-start tw-gap-3 tw-p-3 tw-shrink-0">
-      <div class="wh40k-origin-header__image tw-relative tw-w-16 tw-h-16 tw-shrink-0 tw-rounded-md tw-overflow-hidden tw-cursor-pointer" data-action="editImage" data-edit="img">
+    <header class="tw-flex tw-items-start tw-gap-3 tw-p-3 tw-shrink-0">
+      <div class="tw-relative tw-w-16 tw-h-16 tw-shrink-0 tw-rounded-md tw-overflow-hidden tw-cursor-pointer" data-action="editImage" data-edit="img">
         <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
-        <div class="wh40k-origin-header__image-overlay tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/60 tw-opacity-0 hover:tw-opacity-100 tw-transition-opacity">
+        <div class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/60 tw-opacity-0 hover:tw-opacity-100 tw-transition-opacity">
           <i class="fas fa-edit"></i>
         </div>
       </div>
 
-      <div class="wh40k-origin-header__info tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
-        <input type="text" class="wh40k-origin-header__name tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" value="{{item.name}}" placeholder="Origin Path Name" />
+      <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
+        <input type="text" class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" value="{{item.name}}" placeholder="Origin Path Name" />
 
-        <div class="wh40k-origin-header__meta tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
+        <div class="tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
           {{!-- Step Badge --}}
-          <span class="wh40k-origin-badge wh40k-origin-badge--step wh40k-origin-badge--step{{item.system.stepIndex}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{item.system.stepLabel}}">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{item.system.stepLabel}}">
             <i class="fas fa-map-signs"></i>
             {{item.system.stepLabel}}
           </span>
 
           {{!-- Step Index Badge --}}
-          <span class="wh40k-origin-badge wh40k-origin-badge--index tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Order in path">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Order in path">
             <i class="fas fa-sort-numeric-up"></i>
             Step {{add item.system.stepIndex 1}}
           </span>
         </div>
 
         {{!-- Step Configuration --}}
-        <div class="wh40k-origin-header__config tw-flex tw-gap-2 tw-mt-1">
-          <div class="wh40k-config-field tw-flex tw-flex-col tw-gap-1 tw-flex-1">
+        <div class="tw-flex tw-gap-2 tw-mt-1">
+          <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
             <label class="tw-text-xs tw-opacity-70">Step Type</label>
-            <select name="system.step" class="wh40k-config-select tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+            <select name="system.step" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
               <option value="homeWorld" {{#if (eq item.system.step "homeWorld")}}selected{{/if}}>Home World</option>
               <option value="birthright" {{#if (eq item.system.step "birthright")}}selected{{/if}}>Birthright</option>
               <option value="lureOfTheVoid" {{#if (eq item.system.step "lureOfTheVoid")}}selected{{/if}}>Lure of the Void</option>
@@ -49,9 +49,9 @@
             </select>
           </div>
 
-          <div class="wh40k-config-field tw-flex tw-flex-col tw-gap-1 tw-w-20">
+          <div class="tw-flex tw-flex-col tw-gap-1 tw-w-20">
             <label class="tw-text-xs tw-opacity-70">Step Index</label>
-            <input type="number" name="system.stepIndex" value="{{item.system.stepIndex}}" min="0" max="8" class="wh40k-config-input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+            <input type="number" name="system.stepIndex" value="{{item.system.stepIndex}}" min="0" max="8" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
           </div>
         </div>
       </div>
@@ -60,20 +60,20 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-origin-tabs tw-flex tw-shrink-0 tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)]" data-group="primary">
-      <button type="button" class="wh40k-origin-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-text-[color:var(--wh40k-dynasty-primary)] tw-bg-[var(--wh40k-dynasty-bg)] tw-border-b-[color:var(--wh40k-dynasty-primary)]" data-tab="grants" data-group="primary">
+    <nav class="tw-flex tw-shrink-0 tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)]" data-group="primary">
+      <button type="button" class="active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-text-[color:var(--wh40k-dynasty-primary)] tw-bg-[var(--wh40k-dynasty-bg)] tw-border-b-[color:var(--wh40k-dynasty-primary)]" data-tab="grants" data-group="primary">
         <i class="fas fa-gift tw-text-[0.9rem]"></i>
         <span>Grants</span>
       </button>
-      <button type="button" class="wh40k-origin-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="requirements" data-group="primary">
+      <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="requirements" data-group="primary">
         <i class="fas fa-lock tw-text-[0.9rem]"></i>
         <span>Requirements</span>
       </button>
-      <button type="button" class="wh40k-origin-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="choices" data-group="primary">
+      <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="choices" data-group="primary">
         <i class="fas fa-question-circle tw-text-[0.9rem]"></i>
         <span>Choices</span>
       </button>
-      <button type="button" class="wh40k-origin-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="description" data-group="primary">
+      <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2.5 tw-text-sm tw-font-medium tw-cursor-pointer tw-border-0 tw-border-b-[3px] tw-border-b-transparent tw-text-[color:var(--wh40k-text-muted)] tw-bg-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]" data-tab="description" data-group="primary">
         <i class="fas fa-book tw-text-[0.9rem]"></i>
         <span>Description</span>
       </button>
@@ -82,76 +82,76 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="wh40k-origin-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-2">
+    <section class="tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-2">
 
       {{!-- GRANTS TAB --}}
-      <div class="wh40k-origin-panel active tw-block" data-tab="grants" data-group="primary">
+      <div class="active tw-block" data-tab="grants" data-group="primary">
 
         {{!-- Characteristic Modifiers --}}
-        <div class="wh40k-origin-section tw-mb-3">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+        <div class="tw-mb-3">
+          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
             <i class="fas fa-dumbbell tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{localize "WH40K.CharacteristicModifiers"}}
           </h3>
 
-          <div class="wh40k-characteristics-grid tw-grid tw-grid-cols-[repeat(9,1fr)] tw-gap-1">
-            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="wh40k-char-label tw-text-xs tw-opacity-70">WS</label>
-              <input type="number" name="system.modifiers.characteristics.weaponSkill" value="{{item.system.modifiers.characteristics.weaponSkill}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
+          <div class="tw-grid tw-grid-cols-[repeat(9,1fr)] tw-gap-1">
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="tw-text-xs tw-opacity-70">WS</label>
+              <input type="number" name="system.modifiers.characteristics.weaponSkill" value="{{item.system.modifiers.characteristics.weaponSkill}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="wh40k-char-label tw-text-xs tw-opacity-70">BS</label>
-              <input type="number" name="system.modifiers.characteristics.ballisticSkill" value="{{item.system.modifiers.characteristics.ballisticSkill}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="tw-text-xs tw-opacity-70">BS</label>
+              <input type="number" name="system.modifiers.characteristics.ballisticSkill" value="{{item.system.modifiers.characteristics.ballisticSkill}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="wh40k-char-label tw-text-xs tw-opacity-70">S</label>
-              <input type="number" name="system.modifiers.characteristics.strength" value="{{item.system.modifiers.characteristics.strength}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="tw-text-xs tw-opacity-70">S</label>
+              <input type="number" name="system.modifiers.characteristics.strength" value="{{item.system.modifiers.characteristics.strength}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="wh40k-char-label tw-text-xs tw-opacity-70">T</label>
-              <input type="number" name="system.modifiers.characteristics.toughness" value="{{item.system.modifiers.characteristics.toughness}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="tw-text-xs tw-opacity-70">T</label>
+              <input type="number" name="system.modifiers.characteristics.toughness" value="{{item.system.modifiers.characteristics.toughness}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="wh40k-char-label tw-text-xs tw-opacity-70">Ag</label>
-              <input type="number" name="system.modifiers.characteristics.agility" value="{{item.system.modifiers.characteristics.agility}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="tw-text-xs tw-opacity-70">Ag</label>
+              <input type="number" name="system.modifiers.characteristics.agility" value="{{item.system.modifiers.characteristics.agility}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="wh40k-char-label tw-text-xs tw-opacity-70">Int</label>
-              <input type="number" name="system.modifiers.characteristics.intelligence" value="{{item.system.modifiers.characteristics.intelligence}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="tw-text-xs tw-opacity-70">Int</label>
+              <input type="number" name="system.modifiers.characteristics.intelligence" value="{{item.system.modifiers.characteristics.intelligence}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="wh40k-char-label tw-text-xs tw-opacity-70">Per</label>
-              <input type="number" name="system.modifiers.characteristics.perception" value="{{item.system.modifiers.characteristics.perception}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="tw-text-xs tw-opacity-70">Per</label>
+              <input type="number" name="system.modifiers.characteristics.perception" value="{{item.system.modifiers.characteristics.perception}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="wh40k-char-label tw-text-xs tw-opacity-70">WP</label>
-              <input type="number" name="system.modifiers.characteristics.willpower" value="{{item.system.modifiers.characteristics.willpower}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="tw-text-xs tw-opacity-70">WP</label>
+              <input type="number" name="system.modifiers.characteristics.willpower" value="{{item.system.modifiers.characteristics.willpower}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
-            <div class="wh40k-char-field tw-flex tw-flex-col tw-items-center tw-gap-0.5">
-              <label class="wh40k-char-label tw-text-xs tw-opacity-70">Fel</label>
-              <input type="number" name="system.modifiers.characteristics.fellowship" value="{{item.system.modifiers.characteristics.fellowship}}" class="wh40k-char-input tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+              <label class="tw-text-xs tw-opacity-70">Fel</label>
+              <input type="number" name="system.modifiers.characteristics.fellowship" value="{{item.system.modifiers.characteristics.fellowship}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
           </div>
         </div>
 
         {{!-- Other Bonuses --}}
-        <div class="wh40k-origin-section tw-mb-3">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+        <div class="tw-mb-3">
+          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
             <i class="fas fa-heart tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{localize "WH40K.OtherBonuses"}}
           </h3>
 
-          <div class="wh40k-bonuses-grid tw-flex tw-flex-wrap tw-gap-3">
-            <div class="wh40k-bonus-field tw-flex tw-flex-col tw-gap-1">
-              <label class="wh40k-bonus-label tw-text-xs tw-opacity-70">Wounds</label>
-              <input type="number" name="system.grants.wounds" value="{{item.system.grants.wounds}}" class="wh40k-bonus-input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-w-20" placeholder="0" />
+          <div class="tw-flex tw-flex-wrap tw-gap-3">
+            <div class="tw-flex tw-flex-col tw-gap-1">
+              <label class="tw-text-xs tw-opacity-70">Wounds</label>
+              <input type="number" name="system.grants.wounds" value="{{item.system.grants.wounds}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-w-20" placeholder="0" />
             </div>
 
-            <div class="wh40k-bonus-field tw-flex tw-flex-col tw-gap-1">
-              <label class="wh40k-bonus-label tw-text-xs tw-opacity-70">Fate Threshold</label>
-              <input type="number" name="system.grants.fateThreshold" value="{{item.system.grants.fateThreshold}}" min="0" class="wh40k-bonus-input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-w-20" placeholder="0" />
+            <div class="tw-flex tw-flex-col tw-gap-1">
+              <label class="tw-text-xs tw-opacity-70">Fate Threshold</label>
+              <input type="number" name="system.grants.fateThreshold" value="{{item.system.grants.fateThreshold}}" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-w-20" placeholder="0" />
             </div>
 
-            <div class="wh40k-bonus-field wh40k-bonus-field--checkbox tw-flex tw-flex-col tw-justify-end">
-              <label class="wh40k-bonus-label-inline tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm">
+            <div class="tw-flex tw-flex-col tw-justify-end">
+              <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm">
                 <input type="checkbox" name="system.grants.blessedByEmperor" {{checked item.system.grants.blessedByEmperor}} />
                 <span>Blessed by Emperor</span>
               </label>
@@ -160,22 +160,22 @@
         </div>
 
         {{!-- Skills Granted --}}
-        <div class="wh40k-origin-section tw-mb-3">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+        <div class="tw-mb-3">
+          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
             <i class="fas fa-graduation-cap tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{localize "WH40K.SkillsGranted"}}
           </h3>
 
           {{#if item.system.grants.skills.length}}
-          <div class="wh40k-grants-list tw-flex tw-flex-col tw-gap-1">
+          <div class="tw-flex tw-flex-col tw-gap-1">
             {{#each item.system.grants.skills as |skill index|}}
-            <div class="wh40k-grant-card wh40k-grant-card--skill tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-              <div class="wh40k-grant-card__content tw-flex tw-items-center tw-gap-1 tw-flex-1">
-                <span class="wh40k-grant-name tw-font-medium">{{skill.name}}</span>
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+              <div class="tw-flex tw-items-center tw-gap-1 tw-flex-1">
+                <span class="tw-font-medium">{{skill.name}}</span>
                 {{#if skill.specialization}}
-                <span class="wh40k-grant-spec tw-opacity-70">({{skill.specialization}})</span>
+                <span class="tw-opacity-70">({{skill.specialization}})</span>
                 {{/if}}
               </div>
-              <span class="wh40k-grant-badge wh40k-grant-badge--{{skill.level}} tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold">
+              <span class="tw-inline-flex tw-items-center tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-semibold">
                 {{#if (eq skill.level "trained")}}T{{/if}}
                 {{#if (eq skill.level "plus10")}}+10{{/if}}
                 {{#if (eq skill.level "plus20")}}+20{{/if}}
@@ -184,7 +184,7 @@
             {{/each}}
           </div>
           {{else}}
-          <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
             <i class="fas fa-graduation-cap tw-opacity-40"></i>
             <p class="tw-m-0">No skills granted</p>
           </div>
@@ -192,27 +192,27 @@
         </div>
 
         {{!-- Talents Granted --}}
-        <div class="wh40k-origin-section tw-mb-3">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+        <div class="tw-mb-3">
+          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
             <i class="fas fa-star tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{localize "WH40K.TalentsGranted"}}
           </h3>
 
           {{#if item.system.grants.talents.length}}
-          <div class="wh40k-grants-list tw-flex tw-flex-col tw-gap-1">
+          <div class="tw-flex tw-flex-col tw-gap-1">
             {{#each item.system.grants.talents as |talent index|}}
-            <div class="wh40k-grant-card wh40k-grant-card--talent tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-              <div class="wh40k-grant-card__content tw-flex tw-items-center tw-gap-1 tw-flex-1">
-                <span class="wh40k-grant-name tw-font-medium">{{talent.name}}</span>
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+              <div class="tw-flex tw-items-center tw-gap-1 tw-flex-1">
+                <span class="tw-font-medium">{{talent.name}}</span>
                 {{#if talent.specialization}}
-                <span class="wh40k-grant-spec tw-opacity-70">({{talent.specialization}})</span>
+                <span class="tw-opacity-70">({{talent.specialization}})</span>
                 {{/if}}
               </div>
-              <i class="fas fa-star wh40k-grant-icon tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-opacity-70"></i>
+              <i class="fas fa-star tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-opacity-70"></i>
             </div>
             {{/each}}
           </div>
           {{else}}
-          <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
             <i class="fas fa-star tw-opacity-40"></i>
             <p class="tw-m-0">No talents granted</p>
           </div>
@@ -220,27 +220,27 @@
         </div>
 
         {{!-- Traits Granted --}}
-        <div class="wh40k-origin-section tw-mb-3">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+        <div class="tw-mb-3">
+          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
             <i class="fas fa-shield-alt tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{localize "WH40K.TraitsGranted"}}
           </h3>
 
           {{#if item.system.grants.traits.length}}
-          <div class="wh40k-grants-list tw-flex tw-flex-col tw-gap-1">
+          <div class="tw-flex tw-flex-col tw-gap-1">
             {{#each item.system.grants.traits as |trait index|}}
-            <div class="wh40k-grant-card wh40k-grant-card--trait tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-              <div class="wh40k-grant-card__content tw-flex tw-items-center tw-gap-1 tw-flex-1">
-                <span class="wh40k-grant-name tw-font-medium">{{trait.name}}</span>
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+              <div class="tw-flex tw-items-center tw-gap-1 tw-flex-1">
+                <span class="tw-font-medium">{{trait.name}}</span>
                 {{#if trait.level}}
-                <span class="wh40k-grant-level tw-opacity-70">({{trait.level}})</span>
+                <span class="tw-opacity-70">({{trait.level}})</span>
                 {{/if}}
               </div>
-              <i class="fas fa-shield-alt wh40k-grant-icon tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-opacity-70"></i>
+              <i class="fas fa-shield-alt tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-opacity-70"></i>
             </div>
             {{/each}}
           </div>
           {{else}}
-          <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
             <i class="fas fa-shield-alt tw-opacity-40"></i>
             <p class="tw-m-0">No traits granted</p>
           </div>
@@ -248,19 +248,19 @@
         </div>
 
         {{!-- Aptitudes Granted --}}
-        <div class="wh40k-origin-section tw-mb-3">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+        <div class="tw-mb-3">
+          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
             <i class="fas fa-brain tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{localize "WH40K.AptitudesGranted"}}
           </h3>
 
           {{#if item.system.grants.aptitudes.length}}
-          <div class="wh40k-aptitudes-display tw-flex tw-flex-wrap tw-gap-1">
+          <div class="tw-flex tw-flex-wrap tw-gap-1">
             {{#each item.system.grants.aptitudes as |apt|}}
-            <span class="wh40k-aptitude-tag tw-inline-flex tw-items-center tw-px-2.5 tw-py-1 tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.15),rgba(212,175,55,0.05))] tw-border tw-border-[rgba(212,175,55,0.3)] tw-rounded-sm tw-text-xs tw-font-semibold tw-text-gold">{{apt}}</span>
+            <span class="tw-inline-flex tw-items-center tw-px-2.5 tw-py-1 tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.15),rgba(212,175,55,0.05))] tw-border tw-border-[rgba(212,175,55,0.3)] tw-rounded-sm tw-text-xs tw-font-semibold tw-text-gold">{{apt}}</span>
             {{/each}}
           </div>
           {{else}}
-          <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-p-3 tw-text-sm tw-italic tw-rounded-md">
             <i class="fas fa-brain tw-opacity-40"></i>
             <p class="tw-m-0">No aptitudes granted</p>
           </div>
@@ -269,21 +269,21 @@
 
         {{!-- Equipment Granted --}}
         {{#if item.system.grants.equipment.length}}
-        <div class="wh40k-origin-section tw-mb-3">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+        <div class="tw-mb-3">
+          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
             <i class="fas fa-toolbox tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{localize "WH40K.EquipmentGranted"}}
           </h3>
 
-          <div class="wh40k-grants-list tw-flex tw-flex-col tw-gap-1">
+          <div class="tw-flex tw-flex-col tw-gap-1">
             {{#each item.system.grants.equipment as |equip index|}}
-            <div class="wh40k-grant-card wh40k-grant-card--equipment tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-              <div class="wh40k-grant-card__content tw-flex tw-items-center tw-gap-1 tw-flex-1">
-                <span class="wh40k-grant-name tw-font-medium">{{equip.name}}</span>
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
+              <div class="tw-flex tw-items-center tw-gap-1 tw-flex-1">
+                <span class="tw-font-medium">{{equip.name}}</span>
                 {{#if (gt equip.quantity 1)}}
-                <span class="wh40k-grant-qty tw-opacity-70">×{{equip.quantity}}</span>
+                <span class="tw-opacity-70">×{{equip.quantity}}</span>
                 {{/if}}
               </div>
-              <i class="fas fa-toolbox wh40k-grant-icon tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-opacity-70"></i>
+              <i class="fas fa-toolbox tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-opacity-70"></i>
             </div>
             {{/each}}
           </div>
@@ -292,15 +292,15 @@
 
         {{!-- Special Abilities --}}
         {{#if item.system.grants.specialAbilities.length}}
-        <div class="wh40k-origin-section tw-mb-3">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+        <div class="tw-mb-3">
+          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
             <i class="fas fa-bolt tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{localize "WH40K.SpecialAbilities"}}
           </h3>
 
           {{#each item.system.grants.specialAbilities as |ability index|}}
-          <div class="wh40k-ability-card tw-mb-2 tw-p-2 tw-rounded-md">
-            <h4 class="wh40k-ability-name tw-m-0 tw-mb-1 tw-text-sm tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{ability.name}}</h4>
-            <div class="wh40k-ability-description tw-text-sm tw-opacity-80">
+          <div class="tw-mb-2 tw-p-2 tw-rounded-md">
+            <h4 class="tw-m-0 tw-mb-1 tw-text-sm tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{ability.name}}</h4>
+            <div class="tw-text-sm tw-opacity-80">
               {{{ability.description}}}
             </div>
           </div>
@@ -310,21 +310,21 @@
       </div>
 
       {{!-- REQUIREMENTS TAB --}}
-      <div class="wh40k-origin-panel tw-hidden" data-tab="requirements" data-group="primary">
+      <div class="tw-hidden" data-tab="requirements" data-group="primary">
         {{#if item.system.hasRequirements}}
           {{!-- Text Requirements --}}
           {{#if item.system.requirements.text}}
-          <div class="wh40k-origin-section tw-mb-3">
-            <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+          <div class="tw-mb-3">
+            <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
               <i class="fas fa-file-alt tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Text Description
             </h3>
 
-            <div class="wh40k-property tw-flex tw-flex-col tw-gap-1">
-              <label class="wh40k-property-label tw-text-xs tw-opacity-70">Requirements</label>
-              <textarea name="system.requirements.text" rows="3" class="wh40k-property-textarea tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y" placeholder="e.g., Must have Void Born homeworld">{{item.system.requirements.text}}</textarea>
+            <div class="tw-flex tw-flex-col tw-gap-1">
+              <label class="tw-text-xs tw-opacity-70">Requirements</label>
+              <textarea name="system.requirements.text" rows="3" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y" placeholder="e.g., Must have Void Born homeworld">{{item.system.requirements.text}}</textarea>
             </div>
 
-            <div class="wh40k-requirement-display tw-mt-2 tw-text-sm tw-p-2 tw-rounded-sm">
+            <div class="tw-mt-2 tw-text-sm tw-p-2 tw-rounded-sm">
               <p class="tw-m-0">{{item.system.requirements.text}}</p>
             </div>
           </div>
@@ -332,15 +332,15 @@
 
           {{!-- Previous Steps Required --}}
           {{#if item.system.requirements.previousSteps.length}}
-          <div class="wh40k-origin-section tw-mb-3">
-            <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+          <div class="tw-mb-3">
+            <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
               <i class="fas fa-check-circle tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Required Previous Steps
             </h3>
 
-            <div class="wh40k-requirement-list tw-flex tw-flex-col tw-gap-1">
-              <p class="wh40k-requirement-note tw-m-0 tw-mb-1 tw-text-xs tw-italic tw-opacity-70">Character must have ONE of these:</p>
+            <div class="tw-flex tw-flex-col tw-gap-1">
+              <p class="tw-m-0 tw-mb-1 tw-text-xs tw-italic tw-opacity-70">Character must have ONE of these:</p>
               {{#each item.system.requirements.previousSteps as |step|}}
-              <div class="wh40k-requirement-tag wh40k-requirement-tag--required tw-inline-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-text-success">
+              <div class="tw-inline-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-text-success">
                 <i class="fas fa-check"></i>
                 {{step}}
               </div>
@@ -351,15 +351,15 @@
 
           {{!-- Excluded Steps --}}
           {{#if item.system.requirements.excludedSteps.length}}
-          <div class="wh40k-origin-section tw-mb-3">
-            <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+          <div class="tw-mb-3">
+            <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
               <i class="fas fa-ban tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Excluded Steps
             </h3>
 
-            <div class="wh40k-requirement-list tw-flex tw-flex-col tw-gap-1">
-              <p class="wh40k-requirement-note tw-m-0 tw-mb-1 tw-text-xs tw-italic tw-opacity-70">Character cannot have ANY of these:</p>
+            <div class="tw-flex tw-flex-col tw-gap-1">
+              <p class="tw-m-0 tw-mb-1 tw-text-xs tw-italic tw-opacity-70">Character cannot have ANY of these:</p>
               {{#each item.system.requirements.excludedSteps as |step|}}
-              <div class="wh40k-requirement-tag wh40k-requirement-tag--excluded tw-inline-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-text-crimson">
+              <div class="tw-inline-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-text-crimson">
                 <i class="fas fa-times"></i>
                 {{step}}
               </div>
@@ -368,34 +368,34 @@
           </div>
           {{/if}}
         {{else}}
-        <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-italic tw-rounded-md">
+        <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-italic tw-rounded-md">
           <i class="fas fa-unlock tw-opacity-40 tw-text-3xl tw-mb-2"></i>
           <p class="tw-m-0 tw-text-sm">No requirements defined</p>
-          <p class="wh40k-field-hint tw-m-0 tw-text-xs tw-opacity-70 tw-mt-1">This origin path is available to all characters</p>
+          <p class="tw-m-0 tw-text-xs tw-opacity-70 tw-mt-1">This origin path is available to all characters</p>
         </div>
         {{/if}}
       </div>
 
       {{!-- CHOICES TAB --}}
-      <div class="wh40k-origin-panel tw-hidden" data-tab="choices" data-group="primary">
+      <div class="tw-hidden" data-tab="choices" data-group="primary">
         {{#if item.system.grants.choices.length}}
           {{#each item.system.grants.choices as |choice index|}}
-          <div class="wh40k-origin-section tw-mb-3">
-            <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+          <div class="tw-mb-3">
+            <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
               <i class="fas fa-random tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> {{choice.label}}
             </h3>
 
-            <div class="wh40k-choice-info tw-flex tw-items-center tw-gap-2 tw-mb-2">
-              <span class="wh40k-choice-badge wh40k-choice-badge--{{choice.type}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
+            <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+              <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
                 <i class="fas {{#if (eq choice.type "skill")}}fa-graduation-cap{{else if (eq choice.type "talent")}}fa-star{{else if (eq choice.type "characteristic")}}fa-dumbbell{{else}}fa-toolbox{{/if}}"></i>
                 {{capitalize choice.type}}
               </span>
-              <span class="wh40k-choice-count tw-text-xs tw-opacity-70">Choose {{choice.count}}</span>
+              <span class="tw-text-xs tw-opacity-70">Choose {{choice.count}}</span>
             </div>
 
-            <div class="wh40k-choice-options tw-flex tw-flex-col tw-gap-1">
+            <div class="tw-flex tw-flex-col tw-gap-1">
               {{#each choice.options as |option|}}
-              <div class="wh40k-choice-option tw-flex tw-items-center tw-gap-2 tw-text-sm tw-px-2 tw-py-0.5">
+              <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-px-2 tw-py-0.5">
                 <i class="fas fa-circle tw-text-xs tw-opacity-50"></i>
                 {{option}}
               </div>
@@ -404,27 +404,27 @@
           </div>
           {{/each}}
         {{else}}
-        <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-italic tw-rounded-md">
+        <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-italic tw-rounded-md">
           <i class="fas fa-question-circle tw-opacity-40 tw-text-3xl tw-mb-2"></i>
           <p class="tw-m-0 tw-text-sm">No player choices required</p>
-          <p class="wh40k-field-hint tw-m-0 tw-text-xs tw-opacity-70 tw-mt-1">All grants are automatic</p>
+          <p class="tw-m-0 tw-text-xs tw-opacity-70 tw-mt-1">All grants are automatic</p>
         </div>
         {{/if}}
       </div>
 
       {{!-- DESCRIPTION TAB --}}
-      <div class="wh40k-origin-panel tw-hidden" data-tab="description" data-group="primary">
+      <div class="tw-hidden" data-tab="description" data-group="primary">
         {{!-- Effect Text --}}
-        <div class="wh40k-origin-section tw-mb-3">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+        <div class="tw-mb-3">
+          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
             <i class="fas fa-magic tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Effect Text
           </h3>
 
-          <p class="wh40k-field-hint tw-m-0 tw-mb-3 tw-text-xs tw-italic tw-opacity-70">
+          <p class="tw-m-0 tw-mb-3 tw-text-xs tw-italic tw-opacity-70">
             <i class="fas fa-info-circle"></i> Brief mechanical summary or flavor text
           </p>
 
-          <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
+          <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
             {{#if inEditMode}}
             {{editor system.effectText target="system.effectText" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -434,16 +434,16 @@
         </div>
 
         {{!-- Description --}}
-        <div class="wh40k-origin-section tw-mb-3">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+        <div class="tw-mb-3">
+          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
             <i class="fas fa-book tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Description
           </h3>
 
-          <p class="wh40k-field-hint tw-m-0 tw-mb-3 tw-text-xs tw-italic tw-opacity-70">
+          <p class="tw-m-0 tw-mb-3 tw-text-xs tw-italic tw-opacity-70">
             <i class="fas fa-info-circle"></i> Full lore and background information
           </p>
 
-          <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
+          <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -453,28 +453,28 @@
         </div>
 
         {{!-- Notes --}}
-        <div class="wh40k-origin-section tw-mb-3">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+        <div class="tw-mb-3">
+          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
             <i class="fas fa-sticky-note tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Notes
           </h3>
 
-          <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-            <textarea name="system.notes" rows="4" class="wh40k-property-textarea tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y" placeholder="GM notes, balance considerations, etc.">{{item.system.notes}}</textarea>
+          <div class="tw-flex tw-flex-col tw-gap-1.5">
+            <textarea name="system.notes" rows="4" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y" placeholder="GM notes, balance considerations, etc.">{{item.system.notes}}</textarea>
           </div>
         </div>
 
         {{!-- Source --}}
-        <div class="wh40k-origin-section tw-mb-3">
-          <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+        <div class="tw-mb-3">
+          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
             <i class="fas fa-book-bookmark tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i> Source
           </h3>
 
-          <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-            <input type="text" name="system.source" value="{{item.system.source}}" class="wh40k-property-input tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" placeholder="Core Rulebook, pg. XX" />
+          <div class="tw-flex tw-flex-col tw-gap-1.5">
+            <input type="text" name="system.source" value="{{item.system.source}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" placeholder="Core Rulebook, pg. XX" />
           </div>
         </div>
       </div>
 
-    </section>{{!-- .wh40k-origin-content --}}
+    </section>
   </form>
-</div>{{!-- .wh40k-origin-sheet --}}
+</div>
