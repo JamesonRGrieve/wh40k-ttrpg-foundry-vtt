@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 const plugin = require('tailwindcss/plugin');
 const designTokens = require('./tailwind/design-tokens.js');
+const panelComponents = require('./tailwind/panel-components.js');
 
 module.exports = {
   content: [
@@ -1354,6 +1355,7 @@ module.exports = {
     plugin(function ({ addComponents }) {
       // Selectors here are auto-prefixed by Tailwind's `prefix: 'tw-'` config,
       // so write them WITHOUT the tw- prefix.
+      addComponents(panelComponents);
       addComponents({
         // Shared form-group: standard label-over-input pattern used in nearly every dialog.
         '.form-group': {
