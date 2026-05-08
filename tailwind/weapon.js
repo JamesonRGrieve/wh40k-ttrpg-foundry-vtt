@@ -253,23 +253,6 @@ module.exports = {
             },
         },
     },
-    ".wh40k-weapon-sheet": {
-        "display": "flex",
-        "flex-direction": "column",
-        "height": "100%",
-        "background": "linear-gradient(150deg, rgba(10, 12, 18, 0.96) 0%, rgba(36, 26, 20, 0.9) 100%)",
-        "color": "var(--wh40k-text-dark)",
-        "font-family": "var(--wh40k-font-body)",
-        "font-size": "0.9rem",
-        "overflow": "hidden",
-        "form": {
-            "display": "flex",
-            "flex-direction": "column",
-            "flex": "1",
-            "min-height": "0",
-            "overflow": "hidden",
-        },
-    },
     ".wh40k-prose-editor": {
         ".prosemirror": {
             "min-height": "120px",
