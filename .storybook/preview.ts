@@ -6,7 +6,7 @@ import { initializeStoryHandlebars } from '../stories/template-support';
 // because Tailwind interprets Foundry's native CSS @layer cascade directives as its own
 // @layer directives and errors out. The system CSS does run through PostCSS so Tailwind
 // utilities still get generated.
-import '../src/css/wh40k-rpg.css';
+import '../src/css/entry.css';
 initializeStoryHandlebars();
 
 const preview: Preview = {

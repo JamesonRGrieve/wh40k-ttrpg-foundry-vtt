@@ -8,6 +8,7 @@ const yaml = require("js-yaml");
 const merge = require("merge-stream");
 const clean = require("gulp-clean");
 const postcssNested = require('postcss-nested');
+const postcssImport = require('postcss-import');
 const fs = require("fs");
 const path = require("path");
 const zip = require("gulp-zip");
@@ -20,7 +21,7 @@ if (!util.isDate) {
 }
 
 const SYSTEM = JSON.parse(fs.readFileSync("src/system.json"));
-const SYSTEM_CSS = ["src/css/wh40k-rpg.css"];
+const SYSTEM_CSS = ["src/css/entry.css"];
 const STATIC_FILES = [
   "src/icons/**/*",
   "src/module/**/*",
@@ -299,6 +300,7 @@ function compileTypeScript(done) {
 function compileCss() {
   return gulp.src(SYSTEM_CSS)
     .pipe(postcss([
+      postcssImport,
       postcssNested,
       tailwindcss,
       autoprefixer({ cascade: false }),
@@ -311,6 +313,7 @@ function compileCss() {
 function compileCssWatch() {
   return gulp.src(SYSTEM_CSS)
     .pipe(postcss([
+      postcssImport,
       postcssNested,
       tailwindcss,
       autoprefixer({ cascade: false }),
