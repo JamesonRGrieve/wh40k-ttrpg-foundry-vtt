@@ -22,11 +22,9 @@ pnpm -s icons:gen
 echo "[pre-commit] refreshing CSS block index…"
 pnpm -s css:block-index
 
-# Type-check ratchet: blocks commits that increase tsc --noEmit error count.
-# Update the baseline (.tsc-error-baseline) in the same commit when the
-# count drops, via: pnpm typecheck:ratchet:update
-echo "[pre-commit] running tsc ratchet…"
-pnpm -s typecheck:ratchet
+# Hard typecheck gate: tsc --noEmit must pass with zero errors.
+echo "[pre-commit] running tsc…"
+pnpm -s typecheck
 
 # ESLint warning ratchet: blocks commits that increase the eslint warning
 # count. Update via: pnpm lint:ratchet:update

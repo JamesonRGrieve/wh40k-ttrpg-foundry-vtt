@@ -12,6 +12,7 @@ import {
     prepareModifierTooltipData,
     prepareQualityTooltipData,
 } from '../components/wh40k-tooltip.ts';
+import type { ModifierTooltipSource } from '../components/wh40k-tooltip.ts';
 import type { WH40KArmourLocation, WH40KCharacteristic, WH40KSkill } from '../../types/global.d.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 
@@ -96,7 +97,7 @@ export default function TooltipMixin<T extends ApplicationV2Ctor>(Base: T) {
          * @param {unknown[]} sources   Modifier sources.
          * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
-        prepareModifierTooltip(title: string, sources: unknown[]): string {
+        prepareModifierTooltip(title: string, sources: ModifierTooltipSource[]): string {
             return prepareModifierTooltipData(title, sources);
         }
 

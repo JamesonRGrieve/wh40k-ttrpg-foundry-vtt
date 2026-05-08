@@ -9,6 +9,36 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KArmourLocation } from '../../types/global.d.ts';
 
+/** Minimal typed interface for the Foundry tooltip manager. */
+interface TooltipManager {
+    element: HTMLElement & { dataset: DOMStringMap };
+    _setAnchor?: (direction: string) => void;
+}
+
+/** Skill rank definition from system config. */
+interface SkillRank {
+    level: number;
+    key: string;
+    tooltip: string;
+    bonus: number;
+}
+
+/** Source modifier entry for tooltip breakdown. */
+interface TooltipModifierSource {
+    name: string;
+    value: number;
+}
+
+/** Quality definition from config. */
+interface QualityDefinition {
+    label: string;
+    description: string;
+    hasLevel?: boolean;
+    category?: string;
+    mechanicalEffect?: boolean;
+    source?: string | null;
+}
+
 /**
  * A class responsible for orchestrating rich tooltips in the WH40K RPG system.
  */
@@ -17,17 +47,17 @@ export class TooltipsWH40K {
     #tooltip: HTMLElement | null = null;
     #skillDescriptions = new Map<string, Record<string, unknown>>();
 
-    get tooltip() {
+    get tooltip(): HTMLElement | null {
         return this.#tooltip;
     }
 
-    get skillDescriptions() {
+    get skillDescriptions(): Map<string, Record<string, unknown>> {
         return this.#skillDescriptions;
     }
 
     async initialize(): Promise<void> {
         this.#tooltip = document.getElementById('tooltip');
-        if (!this.#tooltip) {
+        if (this.#tooltip === null) {
             console.warn('WH40K Tooltips | Could not find #tooltip element');
             return;
         }
@@ -38,17 +68,19 @@ export class TooltipsWH40K {
     async _loadSkillDescriptions(): Promise<void> {
         try {
             const skillPackNames = ['wh40k-rpg.dh2-core-stats-skills', 'wh40k-rpg.rt-core-items-skills', 'wh40k-rpg.dw-core-items-skills'];
-            const pack = skillPackNames.map((n) => game.packs.get(n)).find((p) => !!p) ?? null;
-            if (!pack) {
+            const pack = skillPackNames.map((n) => game.packs.get(n)).find((p) => p != null) ?? null;
+            if (pack === null) {
                 console.warn('WH40K Tooltips | Could not find skills compendium');
                 return;
             }
 
             const index = await pack.getIndex();
             for (const entry of index) {
+                // eslint-disable-next-line no-await-in-loop
                 const item = (await pack.getDocument(entry._id)) as WH40KItem | null;
-                if (item) {
-                    const key = (entry.name ?? '').toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
+                if (item !== null) {
+                    const entryName = (entry.name as string | undefined) ?? '';
+                    const key = entryName.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
                     const system = item.system as {
                         descriptor?: string;
                         uses?: string;
@@ -59,11 +91,11 @@ export class TooltipsWH40K {
 
                     this.#skillDescriptions.set(key, {
                         name: entry.name,
-                        descriptor: system.descriptor || '',
-                        uses: system.uses || '',
-                        useTime: system.useTime || '',
+                        descriptor: system.descriptor ?? '',
+                        uses: system.uses ?? '',
+                        useTime: system.useTime ?? '',
                         isBasic: system.isBasic ?? true,
-                        aptitudes: system.aptitudes || [],
+                        aptitudes: system.aptitudes ?? [],
                     });
                 }
             }
@@ -74,12 +106,12 @@ export class TooltipsWH40K {
 
     getSkillDescription(skillKey: string): Record<string, unknown> | null {
         const normalizedKey = skillKey.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
-        return this.#skillDescriptions.get(normalizedKey) || null;
+        return this.#skillDescriptions.get(normalizedKey) ?? null;
     }
 
     observe(): void {
         this.#observer?.disconnect();
-        if (!this.#tooltip) return;
+        if (this.#tooltip === null) return;
 
         this.#observer = new MutationObserver(this._onMutation.bind(this));
         this.#observer.observe(this.#tooltip, {
@@ -91,7 +123,7 @@ export class TooltipsWH40K {
     _onMutation(mutationList: MutationRecord[]): void {
         let isActive = false;
         const tooltip = this.#tooltip;
-        if (!tooltip) return;
+        if (tooltip === null) return;
 
         for (const { type, attributeName, oldValue } of mutationList) {
             if (type === 'attributes' && attributeName === 'class') {
@@ -105,17 +137,18 @@ export class TooltipsWH40K {
     }
 
     async _onTooltipActivate(): Promise<void> {
-        const element = game.tooltip.element as HTMLElement;
-        if (!element) return;
+        const tooltipManager = (game as unknown as { tooltip: TooltipManager }).tooltip;
+        const element = tooltipManager.element;
+        if (element == null) return;
 
         const tooltipType = element.dataset.wh40kTooltip;
         const tooltipDataAttr = element.dataset.wh40kTooltipData;
 
-        if (tooltipType && tooltipDataAttr) {
+        if (tooltipType !== undefined && tooltipType !== '' && tooltipDataAttr !== undefined && tooltipDataAttr !== '') {
             try {
-                const data = JSON.parse(tooltipDataAttr);
+                const data = JSON.parse(tooltipDataAttr) as Record<string, unknown>;
                 const content = await this._buildTooltipContent(data, tooltipType);
-                if (content && this.#tooltip) {
+                if (content !== '' && this.#tooltip !== null) {
                     this.#tooltip.innerHTML = content;
                     this.#tooltip.classList.add('wh40k-tooltip', `wh40k-tooltip--${tooltipType}`);
                     requestAnimationFrame(() => this._repositionTooltip());
@@ -126,9 +159,9 @@ export class TooltipsWH40K {
             return;
         }
 
-        if (element.classList.contains('content-link') && element.dataset.uuid) {
+        if (element.classList.contains('content-link') && element.dataset.uuid !== undefined) {
             const doc = await fromUuid(element.dataset.uuid);
-            if (doc) {
+            if (doc !== null) {
                 await this._onHoverContentLink(doc as WH40KItem);
             }
         }
@@ -141,12 +174,12 @@ export class TooltipsWH40K {
         const result: RichTooltipResult = await (docWithTooltip.richTooltip?.() ?? sysWithTooltip.richTooltip?.() ?? {});
         const { content, classes } = result;
 
-        if (!content || !this.#tooltip) return;
+        if (content === undefined || content === '' || this.#tooltip === null) return;
 
         this.#tooltip.innerHTML = content;
         this.#tooltip.classList.add('wh40k-tooltip');
-        if (classes?.length) {
-            this.#tooltip.classList.add(...(classes as string[]));
+        if (classes !== undefined && classes.length > 0) {
+            this.#tooltip.classList.add(...classes);
         }
 
         requestAnimationFrame(() => this._repositionTooltip());
@@ -172,12 +205,20 @@ export class TooltipsWH40K {
         }
     }
 
-    _buildCharacteristicTooltip(data: Record<string, any>): string {
-        const { name, label, base = 0, advance = 0, modifier = 0, unnatural = 1, total = 0, bonus = 0, sources = [] } = data;
+    _buildCharacteristicTooltip(data: Record<string, unknown>): string {
+        const name = data.name as string | undefined;
+        const label = data.label as string | undefined;
+        const base = (data.base as number | undefined) ?? 0;
+        const advance = (data.advance as number | undefined) ?? 0;
+        const modifier = (data.modifier as number | undefined) ?? 0;
+        const unnatural = (data.unnatural as number | undefined) ?? 1;
+        const total = (data.total as number | undefined) ?? 0;
+        const bonus = (data.bonus as number | undefined) ?? 0;
+        const sources = (data.sources as TooltipModifierSource[] | undefined) ?? [];
 
         let html = `
             <div class="wh40k-tooltip__header">
-                <h4 class="wh40k-tooltip__title">${label || name}</h4>
+                <h4 class="wh40k-tooltip__title">${label ?? name ?? ''}</h4>
                 <div class="wh40k-tooltip__total">${total}</div>
             </div>
             <div class="wh40k-tooltip__divider"></div>
@@ -203,7 +244,7 @@ export class TooltipsWH40K {
 
         html += `</div>`;
 
-        if (sources?.length > 0) {
+        if (sources.length > 0) {
             html += `
                 <div class="wh40k-tooltip__divider"></div>
                 <div class="wh40k-tooltip__sources">
@@ -236,36 +277,48 @@ export class TooltipsWH40K {
         return html;
     }
 
-    async _buildSkillTooltip(data: Record<string, any>): Promise<string> {
-        const { name, label, baseValue, basic = false, trainingBonus: dataTB, actorUuid } = data;
-        let { characteristic, charValue = 0, trained = false, plus10 = false, plus20 = false, current = 0, bonus: dataBonus } = data;
+    async _buildSkillTooltip(data: Record<string, unknown>): Promise<string> {
+        const name = (data.name as string | undefined) ?? '';
+        const label = data.label as string | undefined;
+        const baseValue = data.baseValue as number | undefined;
+        const basic = (data.basic as boolean | undefined) ?? false;
+        const dataTB = data.trainingBonus as number | undefined;
+        const actorUuid = data.actorUuid as string | undefined;
 
-        if (actorUuid) {
-            const actor = (await fromUuid(actorUuid)) as WH40KBaseActor;
-            if (actor) {
-                const skill = actor.system.skills?.[name];
-                const charKey = skill?.characteristic || characteristic;
-                const char = actor.system.characteristics?.[charKey];
+        let characteristic = (data.characteristic as string | undefined) ?? '';
+        let charValue = (data.charValue as number | undefined) ?? 0;
+        let trained = (data.trained as boolean | undefined) ?? false;
+        let plus10 = (data.plus10 as boolean | undefined) ?? false;
+        let plus20 = (data.plus20 as boolean | undefined) ?? false;
+        let current = (data.current as number | undefined) ?? 0;
+        let dataBonus = data.bonus as number | undefined;
 
-                if (skill && char) {
-                    trained = skill.trained || false;
-                    plus10 = skill.plus10 || false;
-                    plus20 = skill.plus20 || false;
-                    current = skill.current || 0;
-                    charValue = char.total || 0;
-                    characteristic = char.label || characteristic;
-                    dataBonus = skill.bonus || 0;
+        if (actorUuid !== undefined && actorUuid !== '') {
+            const actor = (await fromUuid(actorUuid)) as WH40KBaseActor | null;
+            if (actor !== null) {
+                const skill = actor.system.skills?.[name] as WH40KSkill | undefined;
+                const charKey = skill?.characteristic ?? characteristic;
+                const char = actor.system.characteristics?.[charKey] as WH40KCharacteristic | undefined;
+
+                if (skill !== undefined && char !== undefined) {
+                    trained = skill.trained ?? false;
+                    plus10 = skill.plus10 ?? false;
+                    plus20 = skill.plus20 ?? false;
+                    current = skill.current ?? 0;
+                    charValue = char.total ?? 0;
+                    characteristic = char.label ?? characteristic;
+                    dataBonus = skill.bonus ?? 0;
                 }
             }
         }
 
         let gameSystem: string | null = null;
-        if (actorUuid) {
-            const actor = (await fromUuid(actorUuid)) as WH40KBaseActor;
+        if (actorUuid !== undefined && actorUuid !== '') {
+            const actor = (await fromUuid(actorUuid)) as WH40KBaseActor | null;
             gameSystem = (actor?.system as unknown as { gameSystem?: string })?.gameSystem ?? null;
         }
-        const systemConfig = gameSystem ? SystemConfigRegistry.getOrNull(gameSystem) : null;
-        const skillRanks: any[] = systemConfig?.getSkillRanks() ?? [
+        const systemConfig = gameSystem !== null ? SystemConfigRegistry.getOrNull(gameSystem) : null;
+        const skillRanks: SkillRank[] = systemConfig?.getSkillRanks() ?? [
             { level: 1, key: 'trained', tooltip: 'Trained', bonus: 0 },
             { level: 2, key: 'plus10', tooltip: '+10', bonus: 10 },
             { level: 3, key: 'plus20', tooltip: '+20', bonus: 20 },
@@ -282,19 +335,18 @@ export class TooltipsWH40K {
 
         const calculatedBase = baseValue ?? (level > 0 ? charValue : Math.floor(charValue / 2));
         const bonus = dataBonus ?? 0;
-        const skillInfo = (game.wh40k?.tooltips as unknown as { getSkillDescription: (key: string) => Record<string, unknown> | null })?.getSkillDescription?.(
-            name,
-        );
-        const descriptor = skillInfo?.descriptor || '';
+        const tooltipSystem = game.wh40k?.tooltips as unknown as { getSkillDescription?: (key: string) => Record<string, unknown> | null } | undefined;
+        const skillInfo = tooltipSystem?.getSkillDescription?.(name) ?? null;
+        const descriptor = typeof skillInfo?.descriptor === 'string' ? skillInfo.descriptor : '';
 
         let html = `
             <div class="wh40k-tooltip__header">
-                <h4 class="wh40k-tooltip__title">${label || name}</h4>
+                <h4 class="wh40k-tooltip__title">${label ?? name}</h4>
                 <div class="wh40k-tooltip__total">${current}</div>
             </div>
         `;
 
-        if (descriptor) {
+        if (descriptor !== '') {
             html += `
             <div class="wh40k-tooltip__description">
                 ${descriptor}
@@ -353,10 +405,7 @@ export class TooltipsWH40K {
                 <div class="wh40k-tooltip__training-track">
                     <span class="${level === 0 ? 'active' : ''}">Untrained</span>
                     ${skillRanks
-                        .map(
-                            (rank: any, i: number) =>
-                                `<i class="fas fa-arrow-right"></i><span class="${level === i + 1 ? 'active' : ''}">${rank.tooltip}</span>`,
-                        )
+                        .map((rank, i) => `<i class="fas fa-arrow-right"></i><span class="${level === i + 1 ? 'active' : ''}">${rank.tooltip}</span>`)
                         .join('')}
                 </div>
             </div>
@@ -369,12 +418,17 @@ export class TooltipsWH40K {
         return html;
     }
 
-    _buildArmorTooltip(data: Record<string, any>): string {
-        const { location, total = 0, toughnessBonus = 0, traitBonus = 0, armorValue = 0, equipped = [] } = data;
+    _buildArmorTooltip(data: Record<string, unknown>): string {
+        const location = data.location as string | undefined;
+        const total = (data.total as number | undefined) ?? 0;
+        const toughnessBonus = (data.toughnessBonus as number | undefined) ?? 0;
+        const traitBonus = (data.traitBonus as number | undefined) ?? 0;
+        const armorValue = (data.armorValue as number | undefined) ?? 0;
+        const equipped = (data.equipped as Array<{ img: string; name: string; ap?: number }> | undefined) ?? [];
 
         let html = `
             <div class="wh40k-tooltip__header">
-                <h4 class="wh40k-tooltip__title">${location || 'Armour'}</h4>
+                <h4 class="wh40k-tooltip__title">${location ?? 'Armour'}</h4>
                 <div class="wh40k-tooltip__total">AP ${total}</div>
             </div>
             <div class="wh40k-tooltip__divider"></div>
@@ -405,7 +459,7 @@ export class TooltipsWH40K {
 
         html += `</div>`;
 
-        if (equipped?.length > 0) {
+        if (equipped.length > 0) {
             html += `
                 <div class="wh40k-tooltip__divider"></div>
                 <div class="wh40k-tooltip__equipped">
@@ -416,7 +470,7 @@ export class TooltipsWH40K {
                     <div class="wh40k-tooltip__equipped-item">
                         <img src="${item.img}" alt="${item.name}" />
                         <span>${item.name}</span>
-                        <span class="ap">+${item.ap || 0}</span>
+                        <span class="ap">+${item.ap ?? 0}</span>
                     </div>
                 `;
             }
@@ -426,8 +480,13 @@ export class TooltipsWH40K {
         return html;
     }
 
-    _buildWeaponTooltip(data: Record<string, any>): string {
-        const { name, damage, penetration = 0, range, rof, qualities = [] } = data;
+    _buildWeaponTooltip(data: Record<string, unknown>): string {
+        const name = (data.name as string | undefined) ?? '';
+        const damage = (data.damage as string | undefined) ?? '—';
+        const penetration = (data.penetration as number | undefined) ?? 0;
+        const range = (data.range as string | undefined) ?? '—';
+        const rof = (data.rof as string | undefined) ?? '—';
+        const qualities = (data.qualities as string[] | undefined) ?? [];
 
         let html = `
             <div class="wh40k-tooltip__header">
@@ -454,7 +513,7 @@ export class TooltipsWH40K {
             </div>
         `;
 
-        if (qualities?.length > 0) {
+        if (qualities.length > 0) {
             html += `
                 <div class="wh40k-tooltip__divider"></div>
                 <div class="wh40k-tooltip__qualities">
@@ -476,12 +535,13 @@ export class TooltipsWH40K {
         return html;
     }
 
-    _buildModifierTooltip(data: Record<string, any>): string {
-        const { title, sources = [] } = data;
+    _buildModifierTooltip(data: Record<string, unknown>): string {
+        const title = data.title as string | undefined;
+        const sources = (data.sources as TooltipModifierSource[] | undefined) ?? [];
 
         let html = `
             <div class="wh40k-tooltip__header">
-                <h4 class="wh40k-tooltip__title">${title || 'Modifiers'}</h4>
+                <h4 class="wh40k-tooltip__title">${title ?? 'Modifiers'}</h4>
             </div>
             <div class="wh40k-tooltip__divider"></div>
             <div class="wh40k-tooltip__sources">
@@ -500,13 +560,19 @@ export class TooltipsWH40K {
         return html;
     }
 
-    _buildQualityTooltip(data: Record<string, any>): string {
-        const { label, description, level = null, hasLevel = false, category = 'other', mechanicalEffect = false, source = null } = data;
+    _buildQualityTooltip(data: Record<string, unknown>): string {
+        const label = (data.label as string | undefined) ?? '';
+        const description = data.description as string | undefined;
+        const level = data.level as number | null | undefined;
+        const hasLevel = (data.hasLevel as boolean | undefined) ?? false;
+        const category = (data.category as string | undefined) ?? 'other';
+        const mechanicalEffect = (data.mechanicalEffect as boolean | undefined) ?? false;
+        const source = data.source as string | null | undefined;
 
         let html = `
             <div class="wh40k-tooltip__header">
                 <h4 class="wh40k-tooltip__title">
-                    ${label}${hasLevel && level !== null ? ` (${level})` : ''}
+                    ${label}${hasLevel && level != null ? ` (${level})` : ''}
                 </h4>
         `;
 
@@ -517,7 +583,7 @@ export class TooltipsWH40K {
                 ? 'Damage Modifier'
                 : category
                       .split('-')
-                      .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
+                      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
                       .join(' ');
 
         html += `
@@ -527,7 +593,7 @@ export class TooltipsWH40K {
             </div>
         `;
 
-        if (description) {
+        if (description !== undefined && description !== '') {
             html += `
             <div class="wh40k-tooltip__description">
                 ${description}
@@ -545,7 +611,7 @@ export class TooltipsWH40K {
             `;
         }
 
-        if (source) {
+        if (source != null && source !== '') {
             html += `
             <div class="wh40k-tooltip__source-ref">
                 <i class="fas fa-book"></i>
@@ -557,29 +623,30 @@ export class TooltipsWH40K {
         return html;
     }
 
-    _buildGenericTooltip(data: Record<string, any>): string {
-        const { title, content } = data;
+    _buildGenericTooltip(data: Record<string, unknown>): string {
+        const title = data.title as string | undefined;
+        const content = data.content as string | undefined;
         return `
             <div class="wh40k-tooltip__header">
-                <h4 class="wh40k-tooltip__title">${title || 'Information'}</h4>
+                <h4 class="wh40k-tooltip__title">${title ?? 'Information'}</h4>
             </div>
             <div class="wh40k-tooltip__content">
-                ${content || ''}
+                ${content ?? ''}
             </div>
         `;
     }
 
     _repositionTooltip(): void {
         const tooltip = this.#tooltip;
-        const tooltipManager = (game as any).tooltip;
-        if (!tooltip || !tooltipManager) return;
+        const tooltipManager = (game as unknown as { tooltip: TooltipManager | null }).tooltip;
+        if (tooltip === null || tooltipManager === null) return;
 
         const pos = tooltip.getBoundingClientRect();
         const { innerHeight, innerWidth } = window;
 
         let direction = tooltipManager.element?.dataset.tooltipDirection;
 
-        if (!direction) {
+        if (direction === undefined || direction === '') {
             direction = 'LEFT';
             tooltipManager._setAnchor?.(direction);
         }
@@ -607,19 +674,19 @@ export function prepareCharacteristicTooltipData(
     characteristic: WH40KCharacteristic,
     modifierSources: Record<string, WH40KModifierEntry[]> = {},
 ): string {
-    const sources = modifierSources[key] || [];
+    const sources = modifierSources[key] ?? [];
     const data = {
         name: key,
-        label: characteristic.label || key,
-        base: characteristic.base || 0,
-        advance: characteristic.advance || 0,
-        modifier: characteristic.modifier || 0,
-        unnatural: characteristic.unnatural || 1,
-        total: characteristic.total || 0,
-        bonus: characteristic.bonus || 0,
+        label: characteristic.label ?? key,
+        base: characteristic.base ?? 0,
+        advance: characteristic.advance ?? 0,
+        modifier: characteristic.modifier ?? 0,
+        unnatural: characteristic.unnatural ?? 1,
+        total: characteristic.total ?? 0,
+        bonus: characteristic.bonus ?? 0,
         sources: sources.map((s) => ({
-            name: s.source || 'Unknown',
-            value: s.value || 0,
+            name: s.source ?? 'Unknown',
+            value: s.value ?? 0,
         })),
     };
     return JSON.stringify(data);
@@ -631,28 +698,28 @@ export function prepareSkillTooltipData(
     characteristics: Record<string, WH40KCharacteristic> = {},
     _actorUuid?: string,
 ): string {
-    const charKey = skill.characteristic || (skill as unknown as { char?: string }).char || 'strength';
-    const char = characteristics[charKey] || {};
-    const charTotal = char.total || 0;
-    const charLabel = char.label || charKey;
-    const trained = skill.trained || false;
-    const plus10 = skill.plus10 || false;
-    const plus20 = skill.plus20 || false;
-    const basic = skill.basic || false;
+    const charKey = skill.characteristic ?? (skill as unknown as { char?: string }).char ?? 'strength';
+    const char = characteristics[charKey] ?? {};
+    const charTotal = char.total ?? 0;
+    const charLabel = char.label ?? charKey;
+    const trained = skill.trained ?? false;
+    const plus10 = skill.plus10 ?? false;
+    const plus20 = skill.plus20 ?? false;
+    const basic = skill.basic ?? false;
     const level = plus20 ? 3 : plus10 ? 2 : trained ? 1 : 0;
     const baseValue = level > 0 ? charTotal : Math.floor(charTotal / 2);
     const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;
-    const bonus = skill.bonus || 0;
+    const bonus = skill.bonus ?? 0;
     const data = {
         name: key,
-        label: skill.label || (skill as unknown as { name?: string }).name || key,
+        label: skill.label ?? (skill as unknown as { name?: string }).name ?? key,
         characteristic: charLabel,
         charValue: charTotal,
         baseValue,
         trained,
         plus10,
         plus20,
-        current: skill.current || 0,
+        current: skill.current ?? 0,
         basic,
         trainingBonus,
         bonus,
@@ -670,15 +737,15 @@ export function prepareArmorTooltipData(location: string, armorData: WH40KArmour
         leftLeg: 'Left Leg',
     };
     const data = {
-        location: locationLabels[location] || location,
-        total: armorData.total || 0,
-        toughnessBonus: armorData.toughnessBonus || 0,
-        traitBonus: armorData.traitBonus || 0,
-        armorValue: armorData.value || 0,
+        location: locationLabels[location] ?? location,
+        total: armorData.total ?? 0,
+        toughnessBonus: armorData.toughnessBonus ?? 0,
+        traitBonus: armorData.traitBonus ?? 0,
+        armorValue: armorData.value ?? 0,
         equipped: equipped.map((item) => ({
             name: item.name,
             img: item.img,
-            ap: ((item.system as Record<string, unknown>)?.armour as Record<string, number>)?.[location] || 0,
+            ap: ((item.system as Record<string, unknown>).armour as Record<string, number> | undefined)?.[location] ?? 0,
         })),
     };
     return JSON.stringify(data);
@@ -694,34 +761,42 @@ export function prepareWeaponTooltipData(weapon: WH40KItem): string {
     };
     const data = {
         name: weapon.name,
-        damage: sys?.damage || '—',
-        penetration: sys?.penetration || 0,
-        range: sys?.range || '—',
-        rof: sys?.rof || '—',
-        qualities: sys?.qualities?.map((q) => (typeof q === 'string' ? q : q.name)) || [],
+        damage: sys.damage ?? '—',
+        penetration: sys.penetration ?? 0,
+        range: sys.range ?? '—',
+        rof: sys.rof ?? '—',
+        qualities: sys.qualities?.map((q) => (typeof q === 'string' ? q : q.name)) ?? [],
     };
     return JSON.stringify(data);
 }
 
-export function prepareModifierTooltipData(title: string, sources: any[]): string {
+export interface ModifierTooltipSource {
+    name?: string;
+    source?: string;
+    value?: number;
+    modifier?: number;
+}
+
+export function prepareModifierTooltipData(title: string, sources: ModifierTooltipSource[]): string {
     const data = {
         title,
-        sources: sources.map((s: any) => ({
-            name: s.name || s.source || 'Unknown',
-            value: s.value || s.modifier || 0,
+        sources: sources.map((s) => ({
+            name: s.name ?? s.source ?? 'Unknown',
+            value: s.value ?? s.modifier ?? 0,
         })),
     };
     return JSON.stringify(data);
 }
 
 export function prepareQualityTooltipData(identifier: string, level: number | null = null): string {
-    const config = (CONFIG as any).ROGUE_TRADER;
-    if (!config) return '{}';
-    const def = config.getQualityDefinition?.(identifier);
-    if (!def) return '{}';
-    if (level === null) {
+    const config = (CONFIG as unknown as { ROGUE_TRADER?: { getQualityDefinition?: (id: string) => QualityDefinition | null } }).ROGUE_TRADER;
+    if (config == null) return '{}';
+    const def = config.getQualityDefinition?.(identifier) ?? null;
+    if (def === null) return '{}';
+    let resolvedLevel = level;
+    if (resolvedLevel === null) {
         const match = identifier.match(/-(\d+)$/);
-        if (match) level = parseInt(match[1]);
+        if (match !== null) resolvedLevel = parseInt(match[1]);
     }
     const label = game.i18n.localize(def.label);
     const description = game.i18n.localize(def.description);
@@ -730,11 +805,11 @@ export function prepareQualityTooltipData(identifier: string, level: number | nu
         identifier,
         label,
         description,
-        level,
+        level: resolvedLevel,
         hasLevel: def.hasLevel ?? false,
-        category: def.category || 'other',
+        category: def.category ?? 'other',
         mechanicalEffect: def.mechanicalEffect ?? false,
-        source: def.source || null,
+        source: def.source ?? null,
     };
     return JSON.stringify(data);
 }

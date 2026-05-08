@@ -1,5 +1,5 @@
-import ActorDataModel from '../abstract/actor-data-model.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import ActorDataModel from '../abstract/actor-data-model.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
@@ -398,7 +398,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @type {number}
      */
     get toughnessBonus(): number {
-        return this.characteristics.toughness?.bonus ?? 0;
+        return this.characteristics.toughness.bonus;
     }
 
     /**
@@ -418,8 +418,14 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * Get effective stats with custom overrides applied.
      * @type {Object}
      */
-    get effectiveStats(): Record<string, any> {
-        const stats: Record<string, any> = {
+    get effectiveStats(): {
+        characteristics: Record<string, number>;
+        skills: Record<string, number>;
+        combat: { initiative: number; dodge: number; parry: number };
+        wounds: number;
+        movement: number;
+    } {
+        const stats = {
             characteristics: {} as Record<string, number>,
             skills: {} as Record<string, number>,
             combat: {
@@ -442,35 +448,31 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         }
 
         // Apply custom overrides if enabled
-        if (this.customStats?.enabled) {
-            // Override characteristics
-            for (const [key, value] of Object.entries(this.customStats.characteristics || {})) {
-                if (value !== null && value !== undefined) {
-                    stats.characteristics[key] = value;
-                }
+        if (this.customStats.enabled) {
+            // Override characteristics (always number, no null check needed)
+            for (const [key, value] of Object.entries(this.customStats.characteristics)) {
+                stats.characteristics[key] = value;
             }
-            // Override skills
-            for (const [key, value] of Object.entries(this.customStats.skills || {})) {
-                if (value !== null && value !== undefined) {
-                    stats.skills[key] = value;
-                }
+            // Override skills (always number, no null check needed)
+            for (const [key, value] of Object.entries(this.customStats.skills)) {
+                stats.skills[key] = value;
             }
-            // Override combat stats
-            if (this.customStats.combat?.initiative !== null && this.customStats.combat?.initiative !== undefined) {
+            // Override combat stats (number | null — null means "use derived value")
+            if (this.customStats.combat.initiative !== null) {
                 stats.combat.initiative = this.customStats.combat.initiative;
             }
-            if (this.customStats.combat?.dodge !== null && this.customStats.combat?.dodge !== undefined) {
+            if (this.customStats.combat.dodge !== null) {
                 stats.combat.dodge = this.customStats.combat.dodge;
             }
-            if (this.customStats.combat?.parry !== null && this.customStats.combat?.parry !== undefined) {
+            if (this.customStats.combat.parry !== null) {
                 stats.combat.parry = this.customStats.combat.parry;
             }
             // Override wounds
-            if (this.customStats.wounds !== null && this.customStats.wounds !== undefined) {
+            if (this.customStats.wounds !== null) {
                 stats.wounds = this.customStats.wounds;
             }
             // Override movement
-            if (this.customStats.movement !== null && this.customStats.movement !== undefined) {
+            if (this.customStats.movement !== null) {
                 stats.movement = this.customStats.movement;
             }
         }
@@ -482,8 +484,26 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * Get the list of trained skills as an array for display.
      * @type {Array<Object>}
      */
-    get trainedSkillsList(): Array<Record<string, any>> {
-        const list: Array<Record<string, any>> = [];
+    get trainedSkillsList(): Array<{
+        key: string;
+        name: string;
+        characteristic: string;
+        trained: boolean;
+        plus10: boolean;
+        plus20: boolean;
+        bonus: number;
+        target: number;
+    }> {
+        const list: Array<{
+            key: string;
+            name: string;
+            characteristic: string;
+            trained: boolean;
+            plus10: boolean;
+            plus20: boolean;
+            bonus: number;
+            target: number;
+        }> = [];
         for (const [key, skill] of Object.entries(this.trainedSkills)) {
             list.push({
                 key,
@@ -496,7 +516,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
                 target: this.getSkillTarget(key),
             });
         }
-        return list.sort((a, b) => (a.name as string).localeCompare(b.name as string));
+        return list.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     /* -------------------------------------------- */
@@ -526,11 +546,11 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {object|null}
      */
     getCharacteristic(key: string): NPCCharacteristicData | null {
-        if (this.characteristics[key]) {
+        if (key in this.characteristics) {
             return this.characteristics[key];
         }
         const fullKey = NPCData.CHARACTERISTIC_MAP[key];
-        if (fullKey && this.characteristics[fullKey]) {
+        if (fullKey !== null && fullKey in this.characteristics) {
             return this.characteristics[fullKey];
         }
         return null;
@@ -587,25 +607,25 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         const char = this.getCharacteristic(charKey);
         if (!char) return 0;
 
-        const gameSystem = (this.constructor as any).gameSystem;
+        const gameSystem = (this.constructor as { gameSystem?: string }).gameSystem;
         const systemConfig = gameSystem ? SystemConfigRegistry.getOrNull(gameSystem) : null;
         let target = char.total;
 
         // Apply training bonuses
         if (skill) {
-            if (skill.trained) target += 0; // Known/Trained baseline: no bonus
-            if (skill.plus10) target += 10;
-            if (skill.plus20) target += 10; // cumulative: plus10 + plus20 = +20
-            if (skill.plus30) target += 10; // cumulative: plus10 + plus20 + plus30 = +30 (DH2e Veteran)
+            // trained baseline: no bonus
+            if (skill.plus10 === true) target += 10;
+            if (skill.plus20 === true) target += 10; // cumulative: plus10 + plus20 = +20
+            if (skill.plus30 === true) target += 10; // cumulative: plus10 + plus20 + plus30 = +30 (DH2e Veteran)
             target += skill.bonus || 0;
         } else {
             // Untrained: flat -20 in DH2e (Known/Trained/Experienced/Veteran ladder),
             // half characteristic for career-based systems.
-            target = systemConfig?.usesAptitudes ? char.total - 20 : Math.floor(char.total / 2);
+            target = systemConfig?.usesAptitudes === true ? char.total - 20 : Math.floor(char.total / 2);
         }
 
         // Apply custom override if enabled
-        if (this.customStats?.enabled && this.customStats.skills?.[skillName] !== null && this.customStats.skills?.[skillName] !== undefined) {
+        if (this.customStats.enabled && this.customStats.skills[skillName] !== null && this.customStats.skills[skillName] !== undefined) {
             return this.customStats.skills[skillName];
         }
 
@@ -623,7 +643,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     addTrainedSkill(name: string, characteristic: string | null = null, level = 'trained', bonus = 0): unknown {
         const skills = foundry.utils.deepClone(this.trainedSkills);
 
-        const charKey = characteristic || NPCData.SKILL_CHARACTERISTIC_MAP[name] || 'perception';
+        const charKey = characteristic ?? NPCData.SKILL_CHARACTERISTIC_MAP[name] ?? 'perception';
 
         skills[name] = {
             name: name,
@@ -682,7 +702,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {Promise<Actor>}
      */
     addSimpleWeapon(data: Record<string, unknown> = {}): unknown {
-        const weapons = foundry.utils.deepClone(this.weapons.simple || []);
+        const weapons = foundry.utils.deepClone(this.weapons.simple);
         const weaponClass = (data.class as NPCV2SimpleWeapon['class']) || 'melee';
         weapons.push({
             name: (data.name as string) || 'New Weapon',
@@ -704,7 +724,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {Promise<Actor>}
      */
     removeSimpleWeapon(index: number): unknown {
-        const weapons = foundry.utils.deepClone(this.weapons.simple || []);
+        const weapons = foundry.utils.deepClone(this.weapons.simple);
         if (index < 0 || index >= weapons.length) return this.parent;
         weapons.splice(index, 1);
         return this.parent.update({ 'system.weapons.simple': weapons });
@@ -716,7 +736,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {Promise<Item|null>} The created weapon item, or null on failure
      */
     async promoteSimpleWeapon(index: number): Promise<unknown> {
-        const weapons = this.weapons.simple || [];
+        const weapons = this.weapons.simple;
         const weapon = weapons[index];
         if (!weapon) return null;
 
@@ -736,10 +756,10 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             },
         };
 
-        const [createdItem] = await this.parent.createEmbeddedDocuments('Item', [itemData]);
+        const [createdItem] = (await this.parent.createEmbeddedDocuments('Item', [itemData])) as [unknown];
 
         // Remove from simple weapons
-        if (createdItem) {
+        if (createdItem !== null) {
             await this.removeSimpleWeapon(index);
         }
 
@@ -769,7 +789,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         if (this.armour.mode === 'simple') {
             return this.armour.total;
         }
-        return this.armour.locations?.[location] ?? 0;
+        return this.armour.locations[location] ?? 0;
     }
 
     /* -------------------------------------------- */
@@ -782,7 +802,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {Promise<Actor>}
      */
     toggleFavoriteSkill(skillKey: string): unknown {
-        const favorites = [...(this.parent.getFlag('wh40k-rpg', 'favoriteSkills') || [])];
+        const flagValue = this.parent.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | null | undefined;
+        const favorites = [...(flagValue ?? [])];
         const index = favorites.indexOf(skillKey);
         if (index >= 0) favorites.splice(index, 1);
         else favorites.push(skillKey);
@@ -795,7 +816,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {Promise<Actor>}
      */
     toggleFavoriteTalent(itemId: string): unknown {
-        const favorites = [...(this.parent.getFlag('wh40k-rpg', 'favoriteTalents') || [])];
+        const flagValue = this.parent.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | null | undefined;
+        const favorites = [...(flagValue ?? [])];
         const index = favorites.indexOf(itemId);
         if (index >= 0) favorites.splice(index, 1);
         else favorites.push(itemId);
@@ -807,7 +829,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @type {Array<string>}
      */
     get favoriteSkills(): string[] {
-        return this.parent.getFlag('wh40k-rpg', 'favoriteSkills') || [];
+        return (this.parent.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | null | undefined) ?? [];
     }
 
     /**
@@ -815,7 +837,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @type {Array<string>}
      */
     get favoriteTalents(): string[] {
-        return this.parent.getFlag('wh40k-rpg', 'favoriteTalents') || [];
+        return (this.parent.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | null | undefined) ?? [];
     }
 
     /* -------------------------------------------- */
@@ -828,7 +850,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {Promise<Actor>}
      */
     pinAbility(itemId: string): unknown {
-        const pinned = foundry.utils.deepClone(this.pinnedAbilities || []);
+        const pinned = foundry.utils.deepClone(this.pinnedAbilities);
         if (!pinned.includes(itemId)) {
             pinned.push(itemId);
             return this.parent.update({ 'system.pinnedAbilities': pinned });
@@ -842,7 +864,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {Promise<Actor>}
      */
     unpinAbility(itemId: string): unknown {
-        const pinned = foundry.utils.deepClone(this.pinnedAbilities || []);
+        const pinned = foundry.utils.deepClone(this.pinnedAbilities);
         const idx = pinned.indexOf(itemId);
         if (idx >= 0) {
             pinned.splice(idx, 1);
@@ -857,7 +879,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {Promise<Actor>}
      */
     togglePinAbility(itemId: string): unknown {
-        const pinned = this.pinnedAbilities || [];
+        const pinned = this.pinnedAbilities;
         if (pinned.includes(itemId)) {
             return this.unpinAbility(itemId);
         }
@@ -909,7 +931,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @protected
      */
     _prepareMovement(): void {
-        const agility = this.characteristics?.agility;
+        const agility = this.characteristics.agility;
         if (!agility) return;
 
         const ab = agility.bonus;
@@ -927,9 +949,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     _prepareInitiative(): void {
         const initChar = this.characteristics[this.initiative.characteristic];
-        if (initChar) {
-            this.initiative.bonus = initChar.bonus;
-        }
+        this.initiative.bonus = initChar.bonus;
     }
 
     /* -------------------------------------------- */

@@ -11,7 +11,7 @@
     </div>
     <div class="wh40k-panel-body">
         {{#if effects.length}}
-            <div class="wh40k-effects-list tw-flex tw-flex-col tw-gap-2 tw-mb-3">
+            <div class="tw-flex tw-flex-col tw-gap-2 tw-mb-3">
                 {{#each effects as |effect|}}
                     {{> systems/wh40k-rpg/templates/actor/partial/effect-row.hbs
                         effect=effect
@@ -26,9 +26,9 @@
         {{/if}}
 
         {{#if editable}}
-            <div class="wh40k-dropzone">
-                <i class="fas fa-magic wh40k-dropzone-icon"></i>
-                <span class="wh40k-dropzone-text" data-dropzone-text>{{localize 'WH40K.Effects.DropHere'}}</span>
+            <div class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-m-2 tw-p-4 tw-rounded tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-border-2 tw-border-dashed tw-border-[var(--wh40k-border-color-light)] tw-bg-[linear-gradient(135deg,rgba(255,255,255,0.02)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.02)_50%,rgba(255,255,255,0.02)_75%,transparent_75%,transparent)] tw-bg-[length:20px_20px] hover:tw-border-[var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.05)]">
+                <i class="fas fa-magic tw-text-[2rem] tw-text-[color:var(--wh40k-text-muted)] tw-transition-colors group-hover:tw-text-[color:var(--wh40k-accent-gold)]"></i>
+                <span class="tw-text-xs tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.05em] tw-text-center tw-transition-colors group-hover:tw-text-[color:var(--wh40k-text-light)]" data-dropzone-text>{{localize 'WH40K.Effects.DropHere'}}</span>
             </div>
         {{/if}}
     </div>

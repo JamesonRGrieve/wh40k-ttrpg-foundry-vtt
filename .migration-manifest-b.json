@@ -1,0 +1,15 @@
+{
+  "batch": "B",
+  "ported": [
+    "src/templates/actor/panel/characteristic-panel.hbs",
+    "src/templates/actor/panel/experience-panel.hbs",
+    "src/templates/actor/panel/movement-panel-compact.hbs",
+    "src/templates/actor/partial/item-list-row.hbs",
+    "src/templates/item/partial/item-tab-strip.hbs",
+    "src/templates/prompt/unified/panels/psychic-panel.hbs"
+  ],
+  "skipped": [
+    "src/templates/dialogs/transaction-request-dialog.hbs"
+  ],
+  "notes": "transaction-request-dialog.hbs was already clean — wh40k-transaction-dialog did not appear in the file. characteristic-panel.hbs: removed roll-characteristic and actor-drag from span class. experience-panel.hbs: removed wrapperClass=\"experience_details\" hash param passed to vital-edit-body partial. movement-panel-compact.hbs: removed rootClass=\"wh40k-panel-movement-compact\" hash param passed to panel partial. item-list-row.hbs: removed item-drag from root div class. item-tab-strip.hbs: removed wh40k-item-tab from button class; retained {{#if active}}active{{/if}} conditional (active is a real JS tab hook). psychic-panel.hbs: removed urd-power-name from div class AND removed the dependent [&_.urd-power-name]:tw-text-gold-raw Tailwind arbitrary-selector variant from the parent label's conditional class (selector would be inert without the target class)."
+}

@@ -1,0 +1,17 @@
+{
+  "batch": "A",
+  "ported": [
+    "src/templates/hud/combat-quick-panel.hbs",
+    "src/templates/chat/armour-card-chat.hbs",
+    "src/templates/chat/condition-card.hbs",
+    "src/templates/chat/navigator-power-chat.hbs",
+    "src/templates/chat/order-roll-chat.hbs",
+    "src/templates/chat/ritual-roll-chat.hbs",
+    "src/templates/chat/ship-weapon-chat.hbs",
+    "src/templates/chat/skill-card.hbs",
+    "src/templates/chat/talent-card.hbs",
+    "src/templates/chat/talent-roll-chat.hbs"
+  ],
+  "skipped": [],
+  "notes": "Removed ghost class names (no CSS definitions, no JS querySelector hooks) from all 10 files. combat-quick-panel.hbs: removed vital-row, wounds-row, fatigue-row, ammo-row, attack-btn, standard-attack, semi-auto-attack, full-auto-attack, action-btn, plus three all-ghost conditionals (critical/low on wounds row, exhausted on fatigue row, low on ammo row). Chat cards: removed single ghost cardClass= values (wh40k-armour-card, wh40k-navigator-power-card, wh40k-order-roll-card, wh40k-ritual-roll-card, wh40k-ship-weapon-card, wh40k-skill-card, wh40k-talent-card, wh40k-talent-roll-card) — replaced with empty string since cardClass is a named partial parameter. condition-card.hbs: removed wh40k-badge--stacks from the object helper (wh40k-condition-description was not present in the file). All tw-* classes, data-* attributes, and HTML structure preserved intact."
+}

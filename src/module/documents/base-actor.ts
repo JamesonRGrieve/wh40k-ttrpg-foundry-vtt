@@ -1,9 +1,9 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
-import type { WH40KItem } from './item.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
+import type { WH40KActorSystemData, WH40KCharacteristic, WH40KStatBreakdown, WH40KModifierEntry, WH40KSkill } from '../types/global.d.ts';
 import { processTalentGrants, handleTalentRemoval } from '../utils/talent-grants.ts';
-import type { WH40KActorSystemData, WH40KCharacteristic, WH40KStatBreakdown, WH40KModifierEntry } from '../types/global.d.ts';
+import type { WH40KItem } from './item.ts';
 
 type RollDataLike = Record<string, unknown> & {
     actor?: WH40KBaseActor;
@@ -16,7 +16,7 @@ type RollDataLike = Record<string, unknown> & {
 };
 
 type CharacteristicLike = Record<string, unknown> & WH40KCharacteristic;
-type SkillLike = Record<string, unknown> & import('../types/global.d.ts').WH40KSkill;
+type SkillLike = Record<string, unknown> & WH40KSkill;
 type ItemModifierCarrier = WH40KItem & {
     system: WH40KItem['system'] & {
         modifiers?: {
@@ -32,7 +32,7 @@ export class WH40KBaseActor extends Actor {
     declare items: Actor['items'] & foundry.utils.Collection<WH40KItem>;
 
     async rollCharacteristicCheck(_characteristic: string): Promise<unknown> {
-        return null;
+        return Promise.resolve(null);
     }
 
     async rollWeaponAction(item: WH40KItem): Promise<unknown> {
@@ -63,7 +63,7 @@ export class WH40KBaseActor extends Actor {
             // Process talent grants for newly added talents
             if (game.user.id === userId) {
                 for (const item of items) {
-                    if (item.type === 'talent' && item.system?.hasGrants) {
+                    if (item.type === 'talent' && (item.system as { hasGrants?: boolean }).hasGrants === true) {
                         setTimeout(() => void processTalentGrants(item, this), 100);
                     }
                 }
@@ -92,7 +92,7 @@ export class WH40KBaseActor extends Actor {
         const items = documents as unknown as WH40KItem[];
         if (collection === 'items' && game.user.id === userId) {
             for (const item of items) {
-                if (item.type === 'talent' && item.system?.hasGrants) {
+                if (item.type === 'talent' && (item.system as { hasGrants?: boolean }).hasGrants === true) {
                     setTimeout(() => void handleTalentRemoval(item, this), 100);
                 }
             }
@@ -113,10 +113,10 @@ export class WH40KBaseActor extends Actor {
             _initializeModifierTracking?: () => void;
             prepareEmbeddedData?: () => void;
         };
-        if (typeof system?._initializeModifierTracking === 'function') {
+        if (typeof system._initializeModifierTracking === 'function') {
             system._initializeModifierTracking();
         }
-        if (typeof system?.prepareEmbeddedData === 'function') {
+        if (typeof system.prepareEmbeddedData === 'function') {
             system.prepareEmbeddedData();
         }
     }
@@ -143,11 +143,11 @@ export class WH40KBaseActor extends Actor {
             initData['token.actorLink'] = true;
 
             // Set default favorite skills for new characters
-            if (!this.getFlag('wh40k-rpg', 'favoriteSkills')) {
+            if (this.getFlag('wh40k-rpg', 'favoriteSkills') === undefined || this.getFlag('wh40k-rpg', 'favoriteSkills') === null) {
                 initData['flags.wh40k-rpg.favoriteSkills'] = ['dodge', 'awareness', 'scrutiny', 'inquiry', 'commerce', 'techUse', 'command', 'medicae'];
             }
         }
-        this.updateSource(initData as never);
+        this.updateSource(initData);
     }
 
     get characteristics(): Record<string, WH40KCharacteristic> {
@@ -175,7 +175,7 @@ export class WH40KBaseActor extends Actor {
 
         // Skip legacy calculations if a DataModel is handling data preparation
         // DataModels have their own prepareDerivedData that already ran
-        const hasDataModel = typeof this.system?.prepareDerivedData === 'function';
+        const hasDataModel = typeof this.system.prepareDerivedData === 'function';
         if (!hasDataModel) {
             this._computeCharacteristics();
             this._computeMovement();
@@ -190,17 +190,17 @@ export class WH40KBaseActor extends Actor {
         // Base implementation does nothing; subclasses override.
     }
 
-    async rollCharacteristic(characteristicName: string, override?: string): Promise<void> {
+    rollCharacteristic(characteristicName: string, override?: string): void {
         const characteristic = this.characteristics[characteristicName];
 
         const simpleSkillData = new SimpleSkillData();
         const rollData = simpleSkillData.rollData as unknown as RollDataLike;
         rollData.actor = this;
         rollData.nameOverride = characteristic.label;
-        rollData.type = override ? override : 'Characteristic';
+        rollData.type = override ?? 'Characteristic';
         rollData.baseTarget = characteristic.total;
         rollData.modifiers.modifier = 0;
-        await prepareUnifiedRoll(simpleSkillData);
+        prepareUnifiedRoll(simpleSkillData);
     }
 
     /* -------------------------------------------- */
@@ -240,7 +240,7 @@ export class WH40KBaseActor extends Actor {
         rollData.baseTarget = opts.target;
         rollData.modifiers.modifier = 0;
 
-        if (opts.situationalKey) {
+        if (opts.situationalKey !== undefined) {
             const sitMod = this._collectSituationalModifierTotal(opts.type, opts.situationalKey);
             if (sitMod !== 0) rollData.modifiers.situational = sitMod;
         }
@@ -268,9 +268,9 @@ export class WH40KBaseActor extends Actor {
         } else {
             modifiers = provider.getCombatSituationalModifiers?.(key);
         }
-        if (!modifiers?.length) return 0;
+        if (modifiers === undefined || modifiers.length === 0) return 0;
         let total = 0;
-        for (const mod of modifiers) total += mod.value || 0;
+        for (const mod of modifiers) total += mod.value;
         return total;
     }
 
@@ -290,13 +290,15 @@ export class WH40KBaseActor extends Actor {
      * @protected
      */
     _computeCharacteristics(): void {
-        if (!this.characteristics) return;
+        if (this.characteristics === undefined || this.characteristics === null) return;
 
-        for (const [, characteristic] of Object.entries(this.characteristics)) {
-            const base = Number(characteristic.base ?? characteristic.starting ?? 0);
-            const advance = Number(characteristic.advance ?? characteristic.advances ?? 0);
-            const modifier = Number(characteristic.modifier ?? 0);
-            const unnatural = Number(characteristic.unnatural ?? 0);
+        const charRecord = this.characteristics as Record<string, WH40KCharacteristic & { starting?: number; advances?: number }>;
+        for (const [, characteristic] of Object.entries(charRecord)) {
+            const charAny = characteristic as unknown as Record<string, unknown>;
+            const base = Number(charAny['base'] !== undefined ? charAny['base'] : charAny['starting'] ?? 0);
+            const advance = Number(charAny['advance'] !== undefined ? charAny['advance'] : charAny['advances'] ?? 0);
+            const modifier = Number(charAny['modifier'] !== undefined ? charAny['modifier'] : 0);
+            const unnatural = Number(charAny['unnatural'] !== undefined ? charAny['unnatural'] : 0);
 
             characteristic.total = base + advance * 5 + modifier;
 
@@ -306,15 +308,20 @@ export class WH40KBaseActor extends Actor {
             characteristic.bonus = unnatural >= 2 ? baseModifier * unnatural : baseModifier;
         }
 
-        if (this.initiative?.characteristic && this.characteristics[this.initiative.characteristic]) {
-            this.initiative.bonus = this.characteristics[this.initiative.characteristic].bonus;
+        const initChar = this.initiative.characteristic;
+        if (initChar !== undefined && initChar !== '') {
+            const charEntry = this.characteristics[initChar];
+            if (charEntry !== undefined) {
+                this.initiative.bonus = charEntry.bonus;
+            }
         }
     }
 
     _computeMovement(): void {
-        const agility = this.characteristics?.agility;
+        const chars = this.characteristics as Record<string, WH40KCharacteristic> | undefined | null;
+        const agility = chars !== undefined && chars !== null ? chars['agility'] : undefined;
         // Skip movement calculation if agility is not available (e.g., for starships)
-        if (!agility) return;
+        if (agility === undefined) return;
         const size = this.size;
         this.system.movement = {
             half: agility.bonus + size - 4,
@@ -336,19 +343,21 @@ export class WH40KBaseActor extends Actor {
     async addSpecialitySkill(skill: string, speciality: string): Promise<void> {
         const parent = this.system.skills[skill];
         const specialityKey = toCamelCase(speciality);
-        if (!parent) {
+        if (parent === undefined || parent === null) {
             ui.notifications.warn(`Skill not specified -- unexpected error.`);
             return;
         }
 
         const entries = Array.isArray(parent.entries) ? [...parent.entries] : [];
 
-        if (entries.some((entry) => entry.name?.toLowerCase() === speciality.toLowerCase() || entry.slug === specialityKey)) {
+        if (
+            entries.some((entry) => (entry.name !== undefined ? entry.name.toLowerCase() === speciality.toLowerCase() : false) || entry.slug === specialityKey)
+        ) {
             ui.notifications.warn(`Speciality already exists. Unable to create.`);
             return;
         }
 
-        const isAdvanced = parent.advanced ?? false;
+        const isAdvanced = parent.advanced === true;
         entries.push({
             name: speciality,
             slug: specialityKey,
@@ -381,14 +390,16 @@ export class WH40KBaseActor extends Actor {
      */
     getStatBreakdown(statKey: string): WH40KStatBreakdown | null {
         // Try characteristic
-        const characteristic = this.system.characteristics?.[statKey];
-        if (characteristic) {
+        const sysChars = (this.system as Record<string, unknown>)['characteristics'] as Record<string, unknown> | undefined;
+        const characteristic = sysChars !== undefined ? sysChars[statKey] : undefined;
+        if (characteristic !== undefined && characteristic !== null) {
             return this.#getCharacteristicBreakdown(statKey, characteristic as CharacteristicLike);
         }
 
         // Try skill
-        const skill = this.system.skills?.[statKey];
-        if (skill) {
+        const sysSkills = (this.system as Record<string, unknown>)['skills'] as Record<string, unknown> | undefined;
+        const skill = sysSkills !== undefined ? sysSkills[statKey] : undefined;
+        if (skill !== undefined && skill !== null) {
             return this.#getSkillBreakdown(statKey, skill as SkillLike);
         }
 
@@ -420,15 +431,16 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #getCharacteristicBreakdown(charKey: string, characteristic: CharacteristicLike): WH40KStatBreakdown {
-        const base = Number(characteristic.base ?? characteristic.starting ?? 0);
-        const advance = Number(characteristic.advance ?? characteristic.advances ?? 0);
-        const modifierValue = Number(characteristic.modifier ?? 0);
+        const charAny = characteristic as Record<string, unknown>;
+        const base = Number(charAny['base'] !== undefined ? charAny['base'] : charAny['starting'] !== undefined ? charAny['starting'] : 0);
+        const advance = Number(charAny['advance'] !== undefined ? charAny['advance'] : charAny['advances'] !== undefined ? charAny['advances'] : 0);
+        const modifierValue = Number(charAny['modifier'] !== undefined ? charAny['modifier'] : 0);
 
         const breakdown: WH40KStatBreakdown = {
-            label: characteristic.label || charKey.toUpperCase(),
+            label: characteristic.label !== '' ? characteristic.label : charKey.toUpperCase(),
             base,
             modifiers: [],
-            total: Number(characteristic.total || 0),
+            total: Number(characteristic.total !== 0 ? characteristic.total : 0),
         };
 
         // Add advances
@@ -459,23 +471,23 @@ export class WH40KBaseActor extends Actor {
     #getSkillBreakdown(skillKey: string, skill: SkillLike): WH40KStatBreakdown {
         const charShort = skill.characteristic;
         const characteristic = this._findCharacteristic(charShort) as { total?: number };
-        const baseTarget = Number(characteristic.total || 0);
+        const baseTarget = Number(characteristic.total !== undefined ? characteristic.total : 0);
 
         const breakdown: WH40KStatBreakdown = {
-            label: skill.label || skillKey,
+            label: skill.label !== undefined && skill.label !== '' ? skill.label : skillKey,
             base: baseTarget,
             modifiers: [],
-            total: Number(skill.current || baseTarget),
+            total: Number(skill.current !== 0 ? skill.current : baseTarget),
         };
 
         // Add training modifiers
-        if (skill.trained) {
+        if (skill.trained === true) {
             breakdown.modifiers.push({
                 source: 'Trained',
-                value: skill.advanced ? 20 : 0, // Advanced skills get +20 when trained (removes -20 penalty)
+                value: skill.advanced === true ? 20 : 0, // Advanced skills get +20 when trained (removes -20 penalty)
                 icon: 'fa-solid fa-graduation-cap',
             });
-        } else if (skill.advanced) {
+        } else if (skill.advanced === true) {
             breakdown.modifiers.push({
                 source: 'Untrained (Advanced)',
                 value: -20,
@@ -483,7 +495,7 @@ export class WH40KBaseActor extends Actor {
             });
         }
 
-        if (skill.plus10) {
+        if (skill.plus10 === true) {
             breakdown.modifiers.push({
                 source: '+10 Training',
                 value: 10,
@@ -491,7 +503,7 @@ export class WH40KBaseActor extends Actor {
             });
         }
 
-        if (skill.plus20) {
+        if (skill.plus20 === true) {
             breakdown.modifiers.push({
                 source: '+20 Training',
                 value: 20,
@@ -500,7 +512,7 @@ export class WH40KBaseActor extends Actor {
         }
 
         // Add skill bonus
-        if (skill.bonus && skill.bonus !== 0) {
+        if (skill.bonus !== 0 && skill.bonus !== undefined) {
             this.#collectSkillModifiers(skillKey, breakdown.modifiers);
         }
 
@@ -514,38 +526,39 @@ export class WH40KBaseActor extends Actor {
      */
     #getWoundsBreakdown(): WH40KStatBreakdown {
         const wounds = this.system.wounds;
-        const toughness = this.system.characteristics?.toughness;
-        const strength = this.system.characteristics?.strength;
-        const willpower = this.system.characteristics?.willpower;
+        const sysChars = (this.system as Record<string, unknown>)['characteristics'] as Record<string, WH40KCharacteristic> | undefined;
+        const toughness = sysChars !== undefined ? sysChars['toughness'] : undefined;
+        const strength = sysChars !== undefined ? sysChars['strength'] : undefined;
+        const willpower = sysChars !== undefined ? sysChars['willpower'] : undefined;
 
         const breakdown: WH40KStatBreakdown = {
             label: 'Wounds',
             base: 0,
             modifiers: [],
-            total: wounds.max || 0,
+            total: wounds.max !== 0 ? wounds.max : 0,
         };
 
         // Base calculation varies by actor type, but typically TB + 2xSB + 2xWPB for characters
-        if (toughness) {
+        if (toughness !== undefined) {
             breakdown.modifiers.push({
                 source: 'Toughness Bonus',
-                value: toughness.bonus || 0,
+                value: toughness.bonus !== 0 ? toughness.bonus : 0,
                 icon: 'fa-solid fa-shield-halved',
             });
         }
 
-        if (strength) {
+        if (strength !== undefined) {
             breakdown.modifiers.push({
                 source: 'Strength Bonus ×2',
-                value: (strength.bonus || 0) * 2,
+                value: (strength.bonus !== 0 ? strength.bonus : 0) * 2,
                 icon: 'fa-solid fa-dumbbell',
             });
         }
 
-        if (willpower) {
+        if (willpower !== undefined) {
             breakdown.modifiers.push({
                 source: 'Willpower Bonus ×2',
-                value: (willpower.bonus || 0) * 2,
+                value: (willpower.bonus !== 0 ? willpower.bonus : 0) * 2,
                 icon: 'fa-solid fa-brain',
             });
         }
@@ -563,13 +576,14 @@ export class WH40KBaseActor extends Actor {
      */
     #getInitiativeBreakdown(): WH40KStatBreakdown {
         const initiative = this.system.initiative;
-        const agility = this.system.characteristics?.agility;
+        const sysCharsI = (this.system as Record<string, unknown>)['characteristics'] as Record<string, WH40KCharacteristic> | undefined;
+        const agility = sysCharsI !== undefined ? sysCharsI['agility'] : undefined;
 
         const breakdown: WH40KStatBreakdown = {
             label: 'Initiative',
-            base: agility?.bonus || 0,
+            base: agility !== undefined ? (agility.bonus !== 0 ? agility.bonus : 0) : 0,
             modifiers: [],
-            total: initiative.bonus || 0,
+            total: initiative.bonus !== 0 ? initiative.bonus : 0,
         };
 
         // Collect modifiers from items
@@ -584,20 +598,21 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #getFateBreakdown(): WH40KStatBreakdown {
-        const fate = this.system.fate;
+        const fate = (this.system as Record<string, unknown>)['fate'] as { rolled?: boolean; max?: number } | undefined | null;
 
-        if (!fate) {
+        if (fate === undefined || fate === null) {
             return { label: 'Fate Points', base: 0, modifiers: [], total: 0 };
         }
 
+        const totalFateMod = (this.system as Record<string, unknown>)['totalFateModifier'] as number | undefined;
         const breakdown: WH40KStatBreakdown = {
             label: 'Fate Points',
-            base: fate.rolled ? fate.max - (this.system.totalFateModifier || 0) : 0,
+            base: fate.rolled === true ? (fate.max !== undefined ? fate.max : 0) - (totalFateMod !== undefined ? totalFateMod : 0) : 0,
             modifiers: [],
-            total: fate.max || 0,
+            total: fate.max !== undefined ? fate.max : 0,
         };
 
-        if (fate.rolled) {
+        if (fate.rolled === true) {
             breakdown.modifiers.push({
                 source: 'Rolled Value',
                 value: breakdown.base,
@@ -618,36 +633,43 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #getArmourBreakdown(location: string): WH40KStatBreakdown | null {
-        const armour = this.system.armour?.[location];
-        if (!armour) return null;
+        const sysArmour = (this.system as Record<string, unknown>)['armour'] as
+            | Record<string, { value?: number; total?: number; toughnessBonus?: number; traitBonus?: number }>
+            | undefined;
+        const armour = sysArmour !== undefined ? sysArmour[location] : undefined;
+        if (armour === undefined || armour === null) return null;
 
         const breakdown: WH40KStatBreakdown = {
             label: `Armour (${location})`,
             base: 0,
             modifiers: [],
-            total: armour.value || 0,
+            total: armour.value !== undefined ? armour.value : 0,
         };
 
-        if (armour.total > 0) {
+        const total = armour.total ?? 0;
+        const toughnessBonus = armour.toughnessBonus ?? 0;
+        const traitBonus = armour.traitBonus ?? 0;
+
+        if (total > 0) {
             breakdown.modifiers.push({
                 source: 'Equipped Armour',
-                value: armour.total,
+                value: total,
                 icon: 'fa-solid fa-vest',
             });
         }
 
-        if (armour.toughnessBonus > 0) {
+        if (toughnessBonus > 0) {
             breakdown.modifiers.push({
                 source: 'Toughness Bonus',
-                value: armour.toughnessBonus,
+                value: toughnessBonus,
                 icon: 'fa-solid fa-shield-halved',
             });
         }
 
-        if (armour.traitBonus > 0) {
+        if (traitBonus > 0) {
             breakdown.modifiers.push({
                 source: 'Trait Bonuses',
-                value: armour.traitBonus,
+                value: traitBonus,
                 icon: 'fa-solid fa-bolt',
             });
         }
