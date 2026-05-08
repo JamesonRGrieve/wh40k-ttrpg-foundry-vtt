@@ -1,12 +1,12 @@
 {{!-- NPC Template - Characteristics Tab --}}
-<section class="tab-content tab-characteristics" data-tab="characteristics" data-group="primary">
+<section data-tab="characteristics" data-group="primary">
     {{!-- Base Characteristics --}}
-    <div class="wh40k-panel">
-        <header class="wh40k-panel-header">
+    <div class="tw-relative tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)]">
+        <header class="tw-flex tw-items-center tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,var(--color-warm-2)_0%,var(--color-warm-4)_100%)] tw-border-b tw-border-[var(--color-border-highlight)] tw-font-[var(--wh40k-font-header)] tw-text-[0.95rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[1px]">
             <h3 class="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-dice-d20"></i> {{localize "WH40K.NPC.Template.BaseCharacteristics"}}</h3>
             <span class="tw-text-sm tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Template.CharacteristicsNote"}}</span>
         </header>
-        <div class="wh40k-panel-content">
+        <div>
             <div class="tw-grid tw-grid-cols-5 tw-gap-3">
                 {{#each characteristics as |char key|}}
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
@@ -20,11 +20,11 @@
     </div>
 
     {{!-- Unnatural Characteristics --}}
-    <div class="wh40k-panel">
-        <header class="wh40k-panel-header">
+    <div class="tw-relative tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)]">
+        <header class="tw-flex tw-items-center tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,var(--color-warm-2)_0%,var(--color-warm-4)_100%)] tw-border-b tw-border-[var(--color-border-highlight)] tw-font-[var(--wh40k-font-header)] tw-text-[0.95rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[1px]">
             <h3><i class="fas fa-bolt"></i> {{localize "WH40K.NPC.Template.UnnaturalCharacteristics"}}</h3>
         </header>
-        <div class="wh40k-panel-content">
+        <div>
             <div class="tw-grid tw-grid-cols-[repeat(10,1fr)] tw-gap-3">
                 {{#each characteristics as |char key|}}
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
@@ -38,11 +38,11 @@
     </div>
 
     {{!-- Wounds & Movement --}}
-    <div class="wh40k-panel">
-        <header class="wh40k-panel-header">
+    <div class="tw-relative tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)]">
+        <header class="tw-flex tw-items-center tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,var(--color-warm-2)_0%,var(--color-warm-4)_100%)] tw-border-b tw-border-[var(--color-border-highlight)] tw-font-[var(--wh40k-font-header)] tw-text-[0.95rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[1px]">
             <h3><i class="fas fa-heart"></i> {{localize "WH40K.NPC.Template.VitalStats"}}</h3>
         </header>
-        <div class="wh40k-panel-content">
+        <div>
             <div class="tw-flex tw-gap-8 tw-justify-center">
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                     <label class="tw-font-semibold">{{localize "WH40K.Wounds"}}</label>
@@ -63,14 +63,14 @@
     </div>
 
     {{!-- Trained Skills --}}
-    <div class="wh40k-panel">
-        <header class="wh40k-panel-header">
+    <div class="tw-relative tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)]">
+        <header class="tw-flex tw-items-center tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,var(--color-warm-2)_0%,var(--color-warm-4)_100%)] tw-border-b tw-border-[var(--color-border-highlight)] tw-font-[var(--wh40k-font-header)] tw-text-[0.95rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[1px]">
             <h3><i class="fas fa-graduation-cap"></i> {{localize "WH40K.NPC.Template.TrainedSkills"}}</h3>
-            <button type="button" class="wh40k-btn wh40k-btn-icon tw-inline-flex tw-items-center tw-justify-center" data-action="addSkill">
+            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--color-text-secondary)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--color-bg-tertiary)] hover:tw-text-[color:var(--color-text-primary)]" data-action="addSkill">
                 <i class="fas fa-plus"></i>
             </button>
         </header>
-        <div class="wh40k-panel-content">
+        <div>
             {{#if (gt system.trainedSkills.length 0)}}
             <div class="tw-flex tw-flex-col tw-gap-2">
                 {{#each system.trainedSkills as |skill idx|}}
@@ -86,7 +86,7 @@
                     </div>
                     <input class="tw-w-[50px] tw-text-center" type="number" name="system.trainedSkills.{{idx}}.bonus"
                            value="{{skill.bonus}}" placeholder="+0" />
-                    <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger tw-inline-flex tw-items-center tw-justify-center"
+                    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--wh40k-accent-combat)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(0,0,0,0.2)]"
                             data-action="removeSkill" data-index="{{idx}}">
                         <i class="fas fa-trash"></i>
                     </button>
