@@ -244,6 +244,13 @@ const JS_HOOKS = new Set([
     'urd-weapon-name',
     'urd-card__icon',
     'urd-difficulty-picker__item-label',
+    // base-actor-sheet.ts queries '[data-characteristic] .wh40k-char-hud-circle' to find the
+    // characteristic circle element for roll animation targeting. Permanent JS selector.
+    // tests/character-sheets.test.ts also queries '.wh40k-char-hud-circle [data-roll-type]'.
+    'wh40k-char-hud-circle',
+    // base-actor-sheet.ts querySelectorAll('.wh40k-char-direct-input') to wire up direct
+    // characteristic input syncing. Permanent JS selector; no CSS rules to migrate.
+    'wh40k-char-direct-input',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a

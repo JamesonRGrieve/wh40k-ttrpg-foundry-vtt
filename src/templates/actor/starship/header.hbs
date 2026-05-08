@@ -5,21 +5,21 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/header-base.hbs
     variant="horizontal"
     cardClass="wh40k-grid-col-6 wh40k-ship-header"}}
-    <div class="wh40k-header__info tw-grid tw-grid-cols-[auto_minmax(0,1fr)_auto] tw-items-start tw-gap-4 tw-px-6 tw-py-2">
-        <div class="wh40k-header__identity tw-w-44 tw-shrink-0">
+    <div class="tw-grid tw-grid-cols-[auto_minmax(0,1fr)_auto] tw-items-start tw-gap-4 tw-px-6 tw-py-2">
+        <div class="tw-w-44 tw-shrink-0">
             {{> systems/wh40k-rpg/templates/actor/partial/actor-identity.hbs nameLabelKey="WH40K.Starship.Name" portraitWidthClass="tw-w-44"}}
         </div>
-        <div class="wh40k-ship-info tw-flex tw-min-w-0 tw-flex-1 tw-flex-col tw-items-stretch tw-gap-1.5">
-            <div class="wh40k-header-row tw-flex tw-min-w-0 tw-items-baseline tw-gap-2.5">
-                <span class="wh40k-header-label tw-min-w-[70px] tw-shrink-0 tw-text-[0.85em] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize "WH40K.Starship.HullType"}}</span>
-                <input class="wh40k-header-input tw-min-w-[80px] tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="system.hullType" type="text" value="{{source.hullType}}" />
+        <div class="tw-flex tw-min-w-0 tw-flex-1 tw-flex-col tw-items-stretch tw-gap-1.5">
+            <div class="tw-flex tw-min-w-0 tw-items-baseline tw-gap-2.5">
+                <span class="tw-min-w-[70px] tw-shrink-0 tw-text-[0.85em] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize "WH40K.Starship.HullType"}}</span>
+                <input class="tw-min-w-[80px] tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="system.hullType" type="text" value="{{source.hullType}}" />
             </div>
-            <div class="wh40k-header-row tw-flex tw-min-w-0 tw-items-baseline tw-gap-2.5">
-                <span class="wh40k-header-label tw-min-w-[70px] tw-shrink-0 tw-text-[0.85em] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize "WH40K.Starship.HullClass"}}</span>
-                <input class="wh40k-header-input tw-min-w-[80px] tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="system.hullClass" type="text" value="{{source.hullClass}}" />
+            <div class="tw-flex tw-min-w-0 tw-items-baseline tw-gap-2.5">
+                <span class="tw-min-w-[70px] tw-shrink-0 tw-text-[0.85em] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize "WH40K.Starship.HullClass"}}</span>
+                <input class="tw-min-w-[80px] tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="system.hullClass" type="text" value="{{source.hullClass}}" />
             </div>
         </div>
-        <div class="wh40k-ship-quick-stats tw-border-l-gold bc:tw-border-l-crimson-light dh1e:tw-border-l-gold-raw-l5 dh2e:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure">
+        <div class="tw-border-l-gold bc:tw-border-l-crimson-light dh1e:tw-border-l-gold-raw-l5 dh2e:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure">
             {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
                 label="Hull Integrity"
                 boxClass="wh40k-hull-box"
