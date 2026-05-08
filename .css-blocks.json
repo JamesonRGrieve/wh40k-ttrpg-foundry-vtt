@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-05-08T05:08:20.452Z",
+  "generatedAt": "2026-05-08T05:11:05.701Z",
   "summary": {
-    "monolithLines": 3477,
+    "monolithLines": 3453,
     "markers": 20,
     "distinctSources": 9,
-    "coveredLines": 3444,
+    "coveredLines": 3420,
     "uncoveredLines": 33
   },
   "ranges": {
@@ -103,7 +103,7 @@
     "src/css/foundry-chrome.css": [
       {
         "start": 3030,
-        "end": 3477
+        "end": 3453
       }
     ]
   }
