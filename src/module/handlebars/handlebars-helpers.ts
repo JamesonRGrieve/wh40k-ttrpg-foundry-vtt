@@ -457,14 +457,14 @@ export function registerHandlebarsHelpers() {
             return `${first} ALL`;
         }
 
-        const locations_array: string[] = [];
+        const locationsArray: string[] = [];
         ARMOUR_LOCATIONS.forEach((part) => {
             if (getValue(part) > 0) {
-                locations_array.push(part);
+                locationsArray.push(part);
             }
         });
 
-        return locations_array
+        return locationsArray
             .map((item) => {
                 return `${getValue(item)} ${
                     item.toLowerCase() === 'head'
