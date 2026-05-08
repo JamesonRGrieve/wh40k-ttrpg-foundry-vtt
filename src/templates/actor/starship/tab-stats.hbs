@@ -1,10 +1,10 @@
 {{!-- Starship Stats Tab --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
-    <div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-1">
+    <div class="wh40k-panel">
         <h1 class="wh40k-panel-header tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{localize "WH40K.Starship.Combat.Header"}}</h1>
         {{!-- Initiative box --}}
         <div class="tw-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-2 tw-mb-2.5 tw-rounded-md tw-border tw-border-[rgba(30,60,90,0.3)] tw-bg-[linear-gradient(135deg,rgba(30,60,90,0.15)_0%,rgba(40,80,120,0.2)_100%)]">
-            <button type="button" class="wh40k-initiative-btn tw-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1.5 tw-rounded-md tw-border tw-border-[#2a4a6a] tw-bg-[linear-gradient(180deg,#4a6b8a_0%,#3a5a7a_100%)] tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer" data-action="rollInitiative" title="{{localize 'WH40K.Starship.Combat.RollInitiative'}}">
+            <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1.5 tw-rounded-md tw-border tw-border-[#2a4a6a] tw-bg-[linear-gradient(180deg,#4a6b8a_0%,#3a5a7a_100%)] tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer" data-action="rollInitiative" title="{{localize 'WH40K.Starship.Combat.RollInitiative'}}">
                 <span class="material-icons tw-text-[1.1em]">radar</span>
                 <span>{{localize "WH40K.Starship.Combat.Initiative"}}</span>
             </button>
@@ -12,31 +12,31 @@
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.Combat.Speed"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.speed" value="{{source.speed}}" />
+            <input type="number" data-dtype="Number" name="system.speed" value="{{source.speed}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.Combat.Manoeuvrability"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.manoeuvrability" value="{{source.manoeuvrability}}" />
+            <input type="number" data-dtype="Number" name="system.manoeuvrability" value="{{source.manoeuvrability}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.Combat.Detection"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.detection" value="{{source.detection}}" />
+            <input type="number" data-dtype="Number" name="system.detection" value="{{source.detection}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.Combat.Armour"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.armour" value="{{source.armour}}" />
+            <input type="number" data-dtype="Number" name="system.armour" value="{{source.armour}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.Combat.VoidShields"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.voidShields" value="{{source.voidShields}}" />
+            <input type="number" data-dtype="Number" name="system.voidShields" value="{{source.voidShields}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.Combat.TurretRating"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.turretRating" value="{{source.turretRating}}" />
+            <input type="number" data-dtype="Number" name="system.turretRating" value="{{source.turretRating}}" />
         </div>
     </div>
 
-    <div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-1">
+    <div class="wh40k-panel">
         <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Resources.Header"}}</h1>
 
         {{!-- Power Status Indicator --}}
@@ -63,55 +63,55 @@
 
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.Resources.SpaceTotal"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.space.total" value="{{source.space.total}}" />
+            <input type="number" data-dtype="Number" name="system.space.total" value="{{source.space.total}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.Resources.SpaceUsed"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.space.used" value="{{source.space.used}}" />
+            <input type="number" data-dtype="Number" name="system.space.used" value="{{source.space.used}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.Resources.PowerTotal"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.power.total" value="{{source.power.total}}" />
+            <input type="number" data-dtype="Number" name="system.power.total" value="{{source.power.total}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.Resources.PowerUsed"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.power.used" value="{{source.power.used}}" />
+            <input type="number" data-dtype="Number" name="system.power.used" value="{{source.power.used}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.Resources.ShipPoints"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.shipPoints" value="{{source.shipPoints}}" />
+            <input type="number" data-dtype="Number" name="system.shipPoints" value="{{source.shipPoints}}" />
         </div>
     </div>
 
-    <div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-1">
+    <div class="wh40k-panel">
         <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.WeaponCapacity.Header"}}</h1>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.WeaponCapacity.Prow"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.weaponCapacity.prow" value="{{source.weaponCapacity.prow}}" />
+            <input type="number" data-dtype="Number" name="system.weaponCapacity.prow" value="{{source.weaponCapacity.prow}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.WeaponCapacity.Dorsal"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.weaponCapacity.dorsal" value="{{source.weaponCapacity.dorsal}}" />
+            <input type="number" data-dtype="Number" name="system.weaponCapacity.dorsal" value="{{source.weaponCapacity.dorsal}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.WeaponCapacity.Port"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.weaponCapacity.port" value="{{source.weaponCapacity.port}}" />
+            <input type="number" data-dtype="Number" name="system.weaponCapacity.port" value="{{source.weaponCapacity.port}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.WeaponCapacity.Starboard"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.weaponCapacity.starboard" value="{{source.weaponCapacity.starboard}}" />
+            <input type="number" data-dtype="Number" name="system.weaponCapacity.starboard" value="{{source.weaponCapacity.starboard}}" />
         </div>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.WeaponCapacity.Keel"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.weaponCapacity.keel" value="{{source.weaponCapacity.keel}}" />
+            <input type="number" data-dtype="Number" name="system.weaponCapacity.keel" value="{{source.weaponCapacity.keel}}" />
         </div>
     </div>
 
-    <div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-1">
+    <div class="wh40k-panel">
         <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Physical.Header"}}</h1>
         <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-mb-0.5 tw-rounded-md tw-bg-white/60">
             <span class="tw-font-semibold tw-uppercase tw-text-[0.85em] tw-tracking-wide tw-text-[#8b6914]">{{localize "WH40K.Starship.Physical.Dimensions"}}</span>
-            <input type="text" class="wh40k-field__input" name="system.dimensions" value="{{source.dimensions}}" />
+            <input type="text" name="system.dimensions" value="{{source.dimensions}}" />
         </div>
     </div>
 </section>
