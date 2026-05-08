@@ -2,42 +2,41 @@
   Rogue Trader Cybernetic Item Sheet - V2 Complete Redesign
   Comprehensive cybernetic augmentation configuration
 --}}
-<div class="wh40k-cybernetic-sheet">
-  <form autocomplete="off">
+<form class="tw-flex tw-flex-col tw-h-full" autocomplete="off">
     
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact cybernetic identity with inline badges
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="wh40k-cybernetic-header">
-      <div class="wh40k-cybernetic-header__image" data-action="editImage" data-edit="img">
-        <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="wh40k-cybernetic-header__image-overlay">
+    <header class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0 tw-border-b tw-border-[var(--wh40k-border-color)]">
+      <div class="tw-relative tw-w-14 tw-h-14 tw-shrink-0 tw-cursor-pointer" data-action="editImage" data-edit="img">
+        <img class="tw-w-full tw-h-full tw-object-cover tw-rounded-md" src="{{item.img}}" alt="{{item.name}}" />
+        <div class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/45 tw-opacity-0 hover:tw-opacity-100 tw-transition-opacity tw-rounded-md">
           <i class="fas fa-edit"></i>
         </div>
       </div>
       
-      <div class="wh40k-cybernetic-header__info">
-        <input type="text" class="wh40k-cybernetic-header__name tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure" name="name" value="{{item.name}}" placeholder="Cybernetic Name" />
+      <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
+        <input type="text" class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure" name="name" value="{{item.name}}" placeholder="Cybernetic Name" />
         
-        <div class="wh40k-cybernetic-header__meta">
-          <span class="wh40k-cybernetic-badge wh40k-cybernetic-badge--type" title="Cybernetic Type">
+        <div class="tw-flex tw-flex-wrap tw-gap-1">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Cybernetic Type">
             <i class="fas fa-microchip"></i>
             {{system.typeLabel}}
           </span>
           {{#if system.locations.size}}
-          <span class="wh40k-cybernetic-badge wh40k-cybernetic-badge--location" title="Body Locations">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Body Locations">
             <i class="fas fa-location-dot"></i>
             {{system.locationsLabel}}
           </span>
           {{/if}}
           {{#if (ne system.craftsmanship "common")}}
-          <span class="wh40k-cybernetic-badge wh40k-cybernetic-badge--craft wh40k-cybernetic-badge--{{system.craftsmanship}}" title="Craftsmanship">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Craftsmanship">
             <i class="fas fa-hammer"></i>
             {{system.craftsmanshipLabel}}
           </span>
           {{/if}}
           {{#if system.hasArmourPoints}}
-          <span class="wh40k-cybernetic-badge wh40k-cybernetic-badge--armour" title="Provides Armour">
+          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Provides Armour">
             <i class="fas fa-shield-halved"></i>
             Armoured
           </span>
@@ -45,7 +44,7 @@
         </div>
       </div>
       
-      <div class="wh40k-cybernetic-header__equipped">
+      <div class="tw-flex tw-items-center tw-justify-end tw-shrink-0">
         <label class="wh40k-toggle-equipped" title="Toggle Equipped">
           <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
           <span class="wh40k-toggle-equipped__indicator">
@@ -59,37 +58,37 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          STATS BAR: Key cybernetic info at a glance
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-cybernetic-stats">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]">
       {{!-- Type --}}
-      <div class="wh40k-cybernetic-stat">
-        <div class="wh40k-cybernetic-stat__icon">
+      <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
+        <div class="tw-opacity-60">
           <i class="fas fa-microchip"></i>
         </div>
-        <div class="wh40k-cybernetic-stat__content">
-          <span class="wh40k-cybernetic-stat__label">Type</span>
-          <span class="wh40k-cybernetic-stat__value">{{system.typeLabel}}</span>
+        <div>
+          <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Type</span>
+          <span class="tw-font-medium">{{system.typeLabel}}</span>
         </div>
       </div>
       
       {{!-- Weight --}}
-      <div class="wh40k-cybernetic-stat">
-        <div class="wh40k-cybernetic-stat__icon">
+      <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
+        <div class="tw-opacity-60">
           <i class="fas fa-weight-hanging"></i>
         </div>
-        <div class="wh40k-cybernetic-stat__content">
-          <span class="wh40k-cybernetic-stat__label">Weight</span>
-          <span class="wh40k-cybernetic-stat__value">{{system.weight}}kg</span>
+        <div>
+          <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Weight</span>
+          <span class="tw-font-medium">{{system.weight}}kg</span>
         </div>
       </div>
       
       {{!-- Availability --}}
-      <div class="wh40k-cybernetic-stat">
-        <div class="wh40k-cybernetic-stat__icon">
+      <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
+        <div class="tw-opacity-60">
           <i class="fas fa-store"></i>
         </div>
-        <div class="wh40k-cybernetic-stat__content">
-          <span class="wh40k-cybernetic-stat__label">Availability</span>
-          <span class="wh40k-cybernetic-stat__value">{{system.availabilityLabel}}</span>
+        <div>
+          <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Availability</span>
+          <span class="tw-font-medium">{{system.availabilityLabel}}</span>
         </div>
       </div>
     </div>
@@ -97,24 +96,24 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs wh40k-tabs--cybernetic wh40k-cybernetic-tabs tw-flex tw-flex-shrink-0 tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]" data-group="primary">
-      <button type="button" class="wh40k-tab wh40k-cybernetic-tab active tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-gold)] tw-bg-transparent tw-border-b-2 tw-border-b-[var(--wh40k-gold)] tw--mb-0.5 tw-cursor-pointer" data-tab="properties" data-group="primary">
+    <nav class="wh40k-tabs tw-flex tw-flex-shrink-0 tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]" data-group="primary">
+      <button type="button" class="wh40k-tab activetw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-gold)] tw-bg-transparent tw-border-b-2 tw-border-b-[var(--wh40k-gold)] tw--mb-0.5 tw-cursor-pointer" data-tab="properties" data-group="primary">
         <i class="fas fa-cog tw-mr-1"></i>
         <span>Properties</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-cybernetic-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="effects" data-group="primary">
+      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="effects" data-group="primary">
         <i class="fas fa-bolt tw-mr-1"></i>
         <span>Effects</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-cybernetic-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="armour" data-group="primary">
+      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="armour" data-group="primary">
         <i class="fas fa-shield-halved tw-mr-1"></i>
         <span>Armour</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-cybernetic-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="installation" data-group="primary">
+      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="installation" data-group="primary">
         <i class="fas fa-syringe tw-mr-1"></i>
         <span>Installation</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-cybernetic-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="description" data-group="primary">
+      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="description" data-group="primary">
         <i class="fas fa-book tw-mr-1"></i>
         <span>Description</span>
       </button>
@@ -123,26 +122,26 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-cybernetic-content wh40k-tab-content wh40k-tab-content--cybernetic scrollable tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3">
+    <div class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3">
       
       {{!-- PROPERTIES TAB --}}
-      <div class="wh40k-cybernetic-panel tab active" data-tab="properties" data-group="primary">
+      <div class="tab active" data-tab="properties" data-group="primary">
         
         {{!-- Cybernetic Type & Locations --}}
-        <div class="wh40k-cybernetic-section">
-          <div class="wh40k-cybernetic-section__header">
+        <div class="tw-mb-4">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-microchip"></i>
             <h3>Cybernetic Configuration</h3>
           </div>
-          <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
+          <div class="tw-mb-3">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               
               {{!-- Type --}}
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-tag"></i> Type
                 </label>
-                <select name="system.type" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]">
+                <select name="system.type" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]">
                   {{#select system.type}}
                   <option value="replacement">Replacement</option>
                   <option value="implant">Implant</option>
@@ -155,99 +154,99 @@
               </div>
               
               {{!-- Slot/Location Toggles --}}
-              <div class="wh40k-property wh40k-property--full tw-flex tw-flex-col tw-gap-1.5 tw-col-span-2">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5 tw-col-span-2">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-location-dot"></i> Body Locations
                 </label>
-                <div class="wh40k-cybernetic-locations">
-                  <label class="wh40k-location-toggle">
+                <div class="tw-flex tw-flex-wrap tw-gap-2">
+                  <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="head" 
                            {{#if (includes system.locations "head")}}checked{{/if}} />
-                    <span class="wh40k-location-toggle__label">
+                    <span class="tw-text-sm">
                       <i class="fas fa-head-side-brain"></i> Head
                     </span>
                   </label>
-                  <label class="wh40k-location-toggle">
+                  <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="eyes" 
                            {{#if (includes system.locations "eyes")}}checked{{/if}} />
-                    <span class="wh40k-location-toggle__label">
+                    <span class="tw-text-sm">
                       <i class="fas fa-eye"></i> Eyes
                     </span>
                   </label>
-                  <label class="wh40k-location-toggle">
+                  <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="ears" 
                            {{#if (includes system.locations "ears")}}checked{{/if}} />
-                    <span class="wh40k-location-toggle__label">
+                    <span class="tw-text-sm">
                       <i class="fas fa-ear-listen"></i> Ears
                     </span>
                   </label>
-                  <label class="wh40k-location-toggle">
+                  <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="mouth" 
                            {{#if (includes system.locations "mouth")}}checked{{/if}} />
-                    <span class="wh40k-location-toggle__label">
+                    <span class="tw-text-sm">
                       <i class="fas fa-face-grin-tongue"></i> Mouth
                     </span>
                   </label>
-                  <label class="wh40k-location-toggle">
+                  <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="brain" 
                            {{#if (includes system.locations "brain")}}checked{{/if}} />
-                    <span class="wh40k-location-toggle__label">
+                    <span class="tw-text-sm">
                       <i class="fas fa-brain"></i> Brain
                     </span>
                   </label>
-                  <label class="wh40k-location-toggle">
+                  <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="leftArm" 
                            {{#if (includes system.locations "leftArm")}}checked{{/if}} />
-                    <span class="wh40k-location-toggle__label">
+                    <span class="tw-text-sm">
                       <i class="fas fa-hand-fist"></i> Left Arm
                     </span>
                   </label>
-                  <label class="wh40k-location-toggle">
+                  <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="rightArm" 
                            {{#if (includes system.locations "rightArm")}}checked{{/if}} />
-                    <span class="wh40k-location-toggle__label">
+                    <span class="tw-text-sm">
                       <i class="fas fa-hand-fist"></i> Right Arm
                     </span>
                   </label>
-                  <label class="wh40k-location-toggle">
+                  <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="body" 
                            {{#if (includes system.locations "body")}}checked{{/if}} />
-                    <span class="wh40k-location-toggle__label">
+                    <span class="tw-text-sm">
                       <i class="fas fa-shield"></i> Body
                     </span>
                   </label>
-                  <label class="wh40k-location-toggle">
+                  <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="organs" 
                            {{#if (includes system.locations "organs")}}checked{{/if}} />
-                    <span class="wh40k-location-toggle__label">
+                    <span class="tw-text-sm">
                       <i class="fas fa-heart-pulse"></i> Organs
                     </span>
                   </label>
-                  <label class="wh40k-location-toggle">
+                  <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="leftLeg" 
                            {{#if (includes system.locations "leftLeg")}}checked{{/if}} />
-                    <span class="wh40k-location-toggle__label">
+                    <span class="tw-text-sm">
                       <i class="fas fa-boot"></i> Left Leg
                     </span>
                   </label>
-                  <label class="wh40k-location-toggle">
+                  <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="rightLeg" 
                            {{#if (includes system.locations "rightLeg")}}checked{{/if}} />
-                    <span class="wh40k-location-toggle__label">
+                    <span class="tw-text-sm">
                       <i class="fas fa-boot"></i> Right Leg
                     </span>
                   </label>
-                  <label class="wh40k-location-toggle">
+                  <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="spine" 
                            {{#if (includes system.locations "spine")}}checked{{/if}} />
-                    <span class="wh40k-location-toggle__label">
+                    <span class="tw-text-sm">
                       <i class="fas fa-spine"></i> Spine
                     </span>
                   </label>
-                  <label class="wh40k-location-toggle">
+                  <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-cursor-pointer">
                     <input type="checkbox" name="system.locations" value="internal" 
                            {{#if (includes system.locations "internal")}}checked{{/if}} />
-                    <span class="wh40k-location-toggle__label">
+                    <span class="tw-text-sm">
                       <i class="fas fa-gears"></i> Internal
                     </span>
                   </label>
@@ -258,29 +257,29 @@
         </div>
         
         {{!-- Physical Properties --}}
-        <div class="wh40k-cybernetic-section">
-          <div class="wh40k-cybernetic-section__header">
+        <div class="tw-mb-4">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-box"></i>
             <h3>Physical Properties</h3>
           </div>
-          <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
+          <div class="tw-mb-3">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               
               {{!-- Weight --}}
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-weight-hanging"></i> Weight (kg)
                 </label>
                 <input type="number" name="system.weight" value="{{source.weight}}" 
-                       step="0.1" min="0" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" />
+                       step="0.1" min="0" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" />
               </div>
               
               {{!-- Craftsmanship --}}
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-hammer"></i> Craftsmanship
                 </label>
-                <select name="system.craftsmanship" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]">
+                <select name="system.craftsmanship" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]">
                   {{#select system.craftsmanship}}
                   <option value="poor">Poor</option>
                   <option value="common">Common</option>
@@ -291,11 +290,11 @@
               </div>
               
               {{!-- Availability --}}
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-store"></i> Availability
                 </label>
-                <select name="system.availability" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]">
+                <select name="system.availability" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]">
                   {{#select system.availability}}
                   <option value="ubiquitous">Ubiquitous</option>
                   <option value="abundant">Abundant</option>
@@ -318,19 +317,19 @@
       </div>
       
       {{!-- EFFECTS TAB --}}
-      <div class="wh40k-cybernetic-panel tab" data-tab="effects" data-group="primary">
+      <div class="tab" data-tab="effects" data-group="primary">
         
         {{!-- Effect Description --}}
-        <div class="wh40k-cybernetic-section">
-          <div class="wh40k-cybernetic-section__header">
+        <div class="tw-mb-4">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-bolt"></i>
             <h3>Effect</h3>
           </div>
-          <div class="wh40k-cybernetic-section__body">
-            <p class="wh40k-field-hint tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
+          <div class="tw-mb-3">
+            <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
               <i class="fas fa-info-circle"></i> Describe the mechanical benefits or abilities granted by this cybernetic.
             </p>
-            <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
+            <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{#if inEditMode}}
               {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
               {{else}}
@@ -341,16 +340,16 @@
         </div>
         
         {{!-- Drawbacks --}}
-        <div class="wh40k-cybernetic-section">
-          <div class="wh40k-cybernetic-section__header">
+        <div class="tw-mb-4">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-exclamation-triangle"></i>
             <h3>Drawbacks</h3>
           </div>
-          <div class="wh40k-cybernetic-section__body">
-            <p class="wh40k-field-hint tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
+          <div class="tw-mb-3">
+            <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
               <i class="fas fa-info-circle"></i> Any negative effects, limitations, or complications from this cybernetic.
             </p>
-            <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
+            <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{#if inEditMode}}
               {{editor system.drawbacks target="system.drawbacks" button=true editable=editable engine="prosemirror"}}
               {{else}}
@@ -362,22 +361,22 @@
         
         {{!-- Modifiers Display --}}
         {{#if (or system.modifiers.characteristics system.modifiers.skills system.modifiers.combat system.modifiers.wounds system.modifiers.movement)}}
-        <div class="wh40k-cybernetic-section">
-          <div class="wh40k-cybernetic-section__header">
+        <div class="tw-mb-4">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-chart-line"></i>
             <h3>Stat Modifiers</h3>
           </div>
-          <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-modifiers-display tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md">
+          <div class="tw-mb-3">
+            <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md">
               
               {{#if system.modifiers.characteristics}}
-              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-title tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Characteristics</h4>
-                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
+              <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Characteristics</h4>
+                <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each system.modifiers.characteristics}}
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
-                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{capitalize @key}}</span>
-                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt this 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
+                  <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
+                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{capitalize @key}}</span>
+                    <span class="tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt this 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{signedNumber this}}
                     </span>
                   </div>
@@ -387,13 +386,13 @@
               {{/if}}
 
               {{#if system.modifiers.skills}}
-              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-title tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Skills</h4>
-                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
+              <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Skills</h4>
+                <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each system.modifiers.skills}}
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
-                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{capitalize @key}}</span>
-                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt this 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
+                  <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
+                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{capitalize @key}}</span>
+                    <span class="tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt this 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{signedNumber this}}
                     </span>
                   </div>
@@ -403,13 +402,13 @@
               {{/if}}
 
               {{#if system.modifiers.combat}}
-              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-title tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Combat</h4>
-                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
+              <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Combat</h4>
+                <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each system.modifiers.combat}}
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
-                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{capitalize @key}}</span>
-                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt this 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
+                  <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
+                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{capitalize @key}}</span>
+                    <span class="tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt this 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{signedNumber this}}
                     </span>
                   </div>
@@ -419,12 +418,12 @@
               {{/if}}
 
               {{#if system.modifiers.wounds}}
-              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-title tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Other</h4>
-                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
-                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">Wounds</span>
-                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt system.modifiers.wounds 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
+              <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Other</h4>
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                  <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
+                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">Wounds</span>
+                    <span class="tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt system.modifiers.wounds 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{signedNumber system.modifiers.wounds}}
                     </span>
                   </div>
@@ -433,12 +432,12 @@
               {{/if}}
 
               {{#if system.modifiers.movement}}
-              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-title tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Movement</h4>
-                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
-                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">Movement Bonus</span>
-                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt system.modifiers.movement 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
+              <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-gold tw-m-0 tw-pb-1.5 tw-border-b tw-border-b-[var(--color-border-light)]">Movement</h4>
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                  <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-md)]">
+                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">Movement Bonus</span>
+                    <span class="tw-font-display tw-font-bold tw-text-[0.95rem] {{#if (gt system.modifiers.movement 0)}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{signedNumber system.modifiers.movement}}
                     </span>
                   </div>
@@ -447,17 +446,17 @@
               {{/if}}
             </div>
             
-            <p class="wh40k-field-hint tw-mt-4 tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic">
+            <p class="tw-mt-4 tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic">
               <i class="fas fa-info-circle"></i> Modifiers are configured via Active Effects. This panel is read-only.
             </p>
           </div>
         </div>
         {{else}}
-        <div class="wh40k-cybernetic-section">
-          <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
+        <div class="tw-mb-4">
+          <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
             <i class="fas fa-chart-line"></i>
             <p>No stat modifiers defined</p>
-            <p class="wh40k-field-hint tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">Use Active Effects tab to add bonuses</p>
+            <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">Use Active Effects tab to add bonuses</p>
           </div>
         </div>
         {{/if}}
@@ -465,17 +464,17 @@
       </div>
       
       {{!-- ARMOUR TAB --}}
-      <div class="wh40k-cybernetic-panel tab" data-tab="armour" data-group="primary">
+      <div class="tab" data-tab="armour" data-group="primary">
         
         {{!-- Armour Points Toggle --}}
-        <div class="wh40k-cybernetic-section">
-          <div class="wh40k-cybernetic-section__header">
+        <div class="tw-mb-4">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-shield-halved"></i>
             <h3>Armour Protection</h3>
           </div>
-          <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-property wh40k-property--checkbox tw-flex tw-flex-col tw-gap-1.5 tw-justify-center">
-              <label class="wh40k-property-label-inline tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-[0.85rem] tw-text-[color:var(--color-text-primary)]">
+          <div class="tw-mb-3">
+            <div class="tw-flex tw-flex-col tw-gap-1.5 tw-justify-center">
+              <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-[0.85rem] tw-text-[color:var(--color-text-primary)]">
                 <input type="checkbox" name="system.hasArmourPoints" {{checked system.hasArmourPoints}} />
                 <span>This cybernetic provides armour protection</span>
               </label>
@@ -485,55 +484,55 @@
         
         {{!-- Armour Points Grid (if enabled) --}}
         {{#if system.hasArmourPoints}}
-        <div class="wh40k-cybernetic-section">
-          <div class="wh40k-cybernetic-section__header">
+        <div class="tw-mb-4">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-shield-halved"></i>
             <h3>Armour Points by Location</h3>
           </div>
-          <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-armour-ap-grid">
-              <div class="wh40k-armour-ap-field">
+          <div class="tw-mb-3">
+            <div class="tw-grid tw-grid-cols-3 tw-gap-3">
+              <div class="tw-flex tw-flex-col tw-gap-1">
                 <label><i class="fas fa-head-side-brain"></i> Head</label>
                 <input type="number" name="system.armourPoints.head" value="{{source.armourPoints.head}}" 
                        data-dtype="Number" min="0" />
               </div>
-              <div class="wh40k-armour-ap-field">
+              <div class="tw-flex tw-flex-col tw-gap-1">
                 <label><i class="fas fa-hand-fist"></i> Left Arm</label>
                 <input type="number" name="system.armourPoints.leftArm" value="{{source.armourPoints.leftArm}}" 
                        data-dtype="Number" min="0" />
               </div>
-              <div class="wh40k-armour-ap-field">
+              <div class="tw-flex tw-flex-col tw-gap-1">
                 <label><i class="fas fa-hand-fist"></i> Right Arm</label>
                 <input type="number" name="system.armourPoints.rightArm" value="{{source.armourPoints.rightArm}}" 
                        data-dtype="Number" min="0" />
               </div>
-              <div class="wh40k-armour-ap-field">
+              <div class="tw-flex tw-flex-col tw-gap-1">
                 <label><i class="fas fa-shield"></i> Body</label>
                 <input type="number" name="system.armourPoints.body" value="{{source.armourPoints.body}}" 
                        data-dtype="Number" min="0" />
               </div>
-              <div class="wh40k-armour-ap-field">
+              <div class="tw-flex tw-flex-col tw-gap-1">
                 <label><i class="fas fa-boot"></i> Left Leg</label>
                 <input type="number" name="system.armourPoints.leftLeg" value="{{source.armourPoints.leftLeg}}" 
                        data-dtype="Number" min="0" />
               </div>
-              <div class="wh40k-armour-ap-field">
+              <div class="tw-flex tw-flex-col tw-gap-1">
                 <label><i class="fas fa-boot"></i> Right Leg</label>
                 <input type="number" name="system.armourPoints.rightLeg" value="{{source.armourPoints.rightLeg}}" 
                        data-dtype="Number" min="0" />
               </div>
             </div>
-            <p class="wh40k-field-hint tw-mt-4 tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic">
+            <p class="tw-mt-4 tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic">
               <i class="fas fa-info-circle"></i> Cybernetic armour stacks with worn armour at the affected locations.
             </p>
           </div>
         </div>
         {{else}}
-        <div class="wh40k-cybernetic-section">
-          <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
+        <div class="tw-mb-4">
+          <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
             <i class="fas fa-shield-halved"></i>
             <p>This cybernetic does not provide armour</p>
-            <p class="wh40k-field-hint tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">Enable armour protection above to configure AP values</p>
+            <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">Enable armour protection above to configure AP values</p>
           </div>
         </div>
         {{/if}}
@@ -541,46 +540,46 @@
       </div>
       
       {{!-- INSTALLATION TAB --}}
-      <div class="wh40k-cybernetic-panel tab" data-tab="installation" data-group="primary">
+      <div class="tab" data-tab="installation" data-group="primary">
         
         {{!-- Installation Requirements --}}
-        <div class="wh40k-cybernetic-section">
-          <div class="wh40k-cybernetic-section__header">
+        <div class="tw-mb-4">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-syringe"></i>
             <h3>Installation Requirements</h3>
           </div>
-          <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
+          <div class="tw-mb-3">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               
               {{!-- Surgery Required --}}
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-user-doctor"></i> Surgery Type
                 </label>
                 <input type="text" name="system.installation.surgery" value="{{source.installation.surgery}}" 
-                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., Major, Simple, Complex" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., Major, Simple, Complex" />
               </div>
               
               {{!-- Difficulty --}}
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-gauge-high"></i> Difficulty
                 </label>
                 <input type="text" name="system.installation.difficulty" value="{{source.installation.difficulty}}" 
-                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., Challenging (-10), Difficult (-20)" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., Challenging (-10), Difficult (-20)" />
               </div>
               
               {{!-- Recovery Time --}}
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fas fa-clock"></i> Recovery Time
                 </label>
                 <input type="text" name="system.installation.recoveryTime" value="{{source.installation.recoveryTime}}" 
-                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., 1d5 days, 2 weeks" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., 1d5 days, 2 weeks" />
               </div>
             </div>
             
-            <p class="wh40k-field-hint tw-mt-4 tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic">
+            <p class="tw-mt-4 tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic">
               <i class="fas fa-info-circle"></i> Installation typically requires a successful Medicae test. Failed installations may cause complications or injury.
             </p>
           </div>
@@ -589,19 +588,19 @@
       </div>
       
       {{!-- DESCRIPTION TAB --}}
-      <div class="wh40k-cybernetic-panel tab" data-tab="description" data-group="primary">
+      <div class="tab" data-tab="description" data-group="primary">
         
         {{!-- Description --}}
-        <div class="wh40k-cybernetic-section">
-          <div class="wh40k-cybernetic-section__header">
+        <div class="tw-mb-4">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-book"></i>
             <h3>Description</h3>
           </div>
-          <div class="wh40k-cybernetic-section__body">
-            <p class="wh40k-field-hint tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
+          <div class="tw-mb-3">
+            <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
               <i class="fas fa-info-circle"></i> Flavor text, appearance, and background information.
             </p>
-            <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
+            <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{#if inEditMode}}
               {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
               {{else}}
@@ -612,41 +611,41 @@
         </div>
         
         {{!-- Notes --}}
-        <div class="wh40k-cybernetic-section">
-          <div class="wh40k-cybernetic-section__header">
+        <div class="tw-mb-4">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-sticky-note"></i>
             <h3>Notes</h3>
           </div>
-          <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-              <textarea name="system.notes" rows="4" class="wh40k-property-textarea tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm tw-min-h-[80px] tw-resize-y focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]"
+          <div class="tw-mb-3">
+            <div class="tw-flex tw-flex-col tw-gap-1.5">
+              <textarea name="system.notes" rows="4" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm tw-min-h-[80px] tw-resize-y focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]"
                         placeholder="GM notes, house rules, special considerations...">{{system.notes}}</textarea>
             </div>
           </div>
         </div>
         
         {{!-- Source --}}
-        <div class="wh40k-cybernetic-section">
-          <div class="wh40k-cybernetic-section__header">
+        <div class="tw-mb-4">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
             <i class="fas fa-book-bookmark"></i>
             <h3>Source</h3>
           </div>
-          <div class="wh40k-cybernetic-section__body">
-            <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Book</label>
+          <div class="tw-mb-3">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Book</label>
                 <input type="text" name="system.source.book" value="{{source.source.book}}" 
-                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="RT: Core Rulebook" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="RT: Core Rulebook" />
               </div>
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Page</label>
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Page</label>
                 <input type="text" name="system.source.page" value="{{source.source.page}}" 
-                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="142" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="142" />
               </div>
-              <div class="wh40k-property wh40k-property--full tw-flex tw-flex-col tw-gap-1.5 tw-col-span-2">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Custom Reference</label>
+              <div class="tw-flex tw-flex-col tw-gap-1.5 tw-col-span-2">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Custom Reference</label>
                 <input type="text" name="system.source.custom" value="{{source.source.custom}}" 
-                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="Optional: Custom source text overrides book/page" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="Optional: Custom source text overrides book/page" />
               </div>
             </div>
           </div>
@@ -654,6 +653,5 @@
         
       </div>
       
-    </div>{{!-- .wh40k-cybernetic-content --}}
-  </form>
-</div>{{!-- .wh40k-cybernetic-sheet --}}
+    </div>
+</form>
