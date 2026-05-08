@@ -1,35 +1,35 @@
 {{!-- Origin Roll Dialog Template --}}
-<div class="origin-roll-dialog-content tw-flex tw-flex-col tw-gap-5 tw-p-4">
+<div class="tw-flex tw-flex-col tw-gap-5 tw-p-4">
 
     {{!-- Header Info --}}
-    <div class="roll-header tw-flex tw-justify-between tw-items-center tw-p-4 tw-bg-[linear-gradient(135deg,var(--wh40k-bronze-dark),var(--wh40k-bronze))] tw-border-2 tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)]">
-        <div class="origin-info tw-flex tw-items-center tw-gap-3">
-            <img src="{{originImg}}" alt="{{originName}}" class="origin-icon tw-w-14 tw-h-14 tw-rounded-[var(--wh40k-radius-sm)] tw-border-2 tw-border-[var(--wh40k-gold)] tw-object-cover" />
-            <div class="origin-details">
+    <div class="tw-flex tw-justify-between tw-items-center tw-p-4 tw-bg-[linear-gradient(135deg,var(--wh40k-bronze-dark),var(--wh40k-bronze))] tw-border-2 tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)]">
+        <div class="tw-flex tw-items-center tw-gap-3">
+            <img src="{{originImg}}" alt="{{originName}}" class="tw-w-14 tw-h-14 tw-rounded-[var(--wh40k-radius-sm)] tw-border-2 tw-border-[var(--wh40k-gold)] tw-object-cover" />
+            <div>
                 <h3 class="tw-m-0 tw-text-[1.2rem] tw-font-[var(--wh40k-font-heading)] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-[text-shadow:0_0_4px_rgba(201,162,39,0.5)]">{{originName}}</h3>
-                <p class="character-name tw-m-0 tw-mt-1 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)]">{{actorName}}</p>
+                <p class="tw-m-0 tw-mt-1 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-muted)]">{{actorName}}</p>
             </div>
         </div>
-        <div class="roll-type-badge tw-flex tw-items-center tw-gap-2 tw-py-2 tw-px-4 tw-bg-[var(--wh40k-panel-bg-solid)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[var(--wh40k-gold)] tw-font-bold tw-text-[color:var(--wh40k-text-light)]">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-py-2 tw-px-4 tw-bg-[var(--wh40k-panel-bg-solid)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[var(--wh40k-gold)] tw-font-bold tw-text-[color:var(--wh40k-text-light)]">
             <i class="fa-solid {{#if (eq rollType 'wounds')}}fa-heart{{else}}fa-star{{/if}} tw-text-[color:var(--wh40k-gold)] tw-text-[1.25rem]"></i>
             <span>{{rollTypeLabel}}</span>
         </div>
     </div>
 
     {{!-- Description --}}
-    <div class="roll-description tw-p-4 tw-bg-[var(--wh40k-input-bg)] tw-border-l-4 tw-border-l-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-sm)]">
+    <div class="tw-p-4 tw-bg-[var(--wh40k-input-bg)] tw-border-l-4 tw-border-l-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-sm)]">
         <p class="tw-m-0 tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-primary)] tw-leading-[1.5]">{{description}}</p>
     </div>
 
     {{!-- Formula Display --}}
-    <div class="formula-display tw-p-4 tw-bg-[var(--wh40k-panel-bg-solid)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[var(--wh40k-bronze)]">
+    <div class="tw-p-4 tw-bg-[var(--wh40k-panel-bg-solid)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[var(--wh40k-bronze)]">
         <label class="tw-flex tw-items-center tw-gap-2 tw-mb-2 tw-font-bold tw-text-[0.9rem] tw-text-[color:var(--wh40k-text-light)] tw-uppercase tw-tracking-[0.5px]"><i class="fa-solid fa-calculator tw-text-[color:var(--wh40k-gold)]"></i> Formula:</label>
-        <div class="formula-text tw-flex tw-items-center tw-flex-wrap tw-gap-2">
+        <div class="tw-flex tw-items-center tw-flex-wrap tw-gap-2">
             <code class="tw-font-mono tw-text-[1.1rem] tw-font-bold tw-text-[color:var(--wh40k-gold)] tw-bg-[rgba(0,0,0,0.4)] tw-py-[0.35rem] tw-px-3 tw-rounded-[var(--wh40k-radius-xs)] tw-border tw-border-[var(--wh40k-bronze)]">{{formula}}</code>
             {{#if actorTB}}
-                <span class="formula-expanded tw-flex tw-items-center tw-gap-2 tw-text-[0.9rem] tw-text-[color:var(--wh40k-text-muted)]">
+                <span class="tw-flex tw-items-center tw-gap-2 tw-text-[0.9rem] tw-text-[color:var(--wh40k-text-muted)]">
                     = <code class="tw-font-mono tw-text-[1.1rem] tw-font-bold tw-text-[color:var(--wh40k-gold)] tw-bg-[rgba(0,0,0,0.4)] tw-py-[0.35rem] tw-px-3 tw-rounded-[var(--wh40k-radius-xs)] tw-border tw-border-[var(--wh40k-bronze)]">{{expandedFormula}}</code>
-                    <span class="tb-note tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.85rem] tw-italic">(TB: {{actorTB}})</span>
+                    <span class="tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.85rem] tw-italic">(TB: {{actorTB}})</span>
                 </span>
             {{/if}}
         </div>
@@ -37,13 +37,13 @@
 
     {{!-- Roll Result --}}
     {{#if hasRolled}}
-        <div class="roll-result-container tw-flex tw-flex-col tw-gap-4">
-            <div class="roll-result {{rollType}} tw-p-7 tw-bg-[linear-gradient(135deg,var(--wh40k-panel-bg-solid)_0%,var(--wh40k-input-bg)_100%)] tw-border-[3px] tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-text-center tw-shadow-[0_0_20px_rgba(201,162,39,0.3)] tw-animate-[slideDown_0.4s_ease-out]">
-                <div class="result-value tw-flex tw-flex-col tw-items-center tw-gap-3">
-                    <span class="result-number tw-text-[4rem] tw-font-black tw-font-[var(--wh40k-font-display)] tw-text-[color:var(--wh40k-gold)] tw-[text-shadow:0_0_15px_rgba(201,162,39,0.5),0_2px_4px_rgba(0,0,0,0.5)] tw-leading-none">{{rollResult.total}}</span>
-                    <span class="result-label tw-text-[1.2rem] tw-font-semibold tw-text-[color:var(--wh40k-text-light)] tw-uppercase tw-tracking-[2px]">{{rollTypeLabel}}</span>
+        <div class="tw-flex tw-flex-col tw-gap-4">
+            <div class="tw-p-7 tw-bg-[linear-gradient(135deg,var(--wh40k-panel-bg-solid)_0%,var(--wh40k-input-bg)_100%)] tw-border-[3px] tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-text-center tw-shadow-[0_0_20px_rgba(201,162,39,0.3)] tw-animate-[slideDown_0.4s_ease-out]">
+                <div class="tw-flex tw-flex-col tw-items-center tw-gap-3">
+                    <span class="tw-text-[4rem] tw-font-black tw-font-[var(--wh40k-font-display)] tw-text-[color:var(--wh40k-gold)] tw-[text-shadow:0_0_15px_rgba(201,162,39,0.5),0_2px_4px_rgba(0,0,0,0.5)] tw-leading-none">{{rollResult.total}}</span>
+                    <span class="tw-text-[1.2rem] tw-font-semibold tw-text-[color:var(--wh40k-text-light)] tw-uppercase tw-tracking-[2px]">{{rollTypeLabel}}</span>
                 </div>
-                <div class="result-breakdown tw-mt-5 tw-pt-5 tw-border-t tw-border-[var(--wh40k-bronze)] tw-flex tw-items-center tw-justify-center tw-gap-3 tw-font-mono tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-muted)]">
+                <div class="tw-mt-5 tw-pt-5 tw-border-t tw-border-[var(--wh40k-bronze)] tw-flex tw-items-center tw-justify-center tw-gap-3 tw-font-mono tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-muted)]">
                     <i class="fa-solid fa-calculator tw-text-[color:var(--wh40k-gold)]"></i>
                     <span>{{rollResult.breakdown}}</span>
                 </div>
@@ -51,13 +51,13 @@
 
             {{!-- Roll History --}}
             {{#if showHistory}}
-                <div class="roll-history tw-p-3 tw-bg-[var(--wh40k-input-bg)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[var(--wh40k-bronze)]">
+                <div class="tw-p-3 tw-bg-[var(--wh40k-input-bg)] tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-[var(--wh40k-bronze)]">
                     <label class="tw-block tw-mb-2 tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.5px] tw-text-[color:var(--wh40k-text-muted)]">Previous Attempts:</label>
-                    <ul class="history-list tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-1">
+                    <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-1">
                         {{#each rollHistory}}
-                            <li class="history-item {{#if @last}}current tw-bg-[linear-gradient(90deg,rgba(201,162,39,0.2),rgba(201,162,39,0.1))] tw-border tw-border-[var(--wh40k-gold)] tw-font-semibold tw-text-[color:var(--wh40k-gold)]{{/if}} tw-flex tw-items-center tw-gap-2 tw-p-2 tw-bg-[var(--wh40k-panel-bg-solid)] tw-rounded-[var(--wh40k-radius-xs)] tw-text-[0.85rem]">
-                                <span class="history-result tw-font-bold tw-min-w-[2.5rem] tw-text-[color:var(--wh40k-gold)]">{{this.result}}</span>
-                                <span class="history-breakdown tw-font-mono tw-text-[color:var(--wh40k-text-muted)]">{{this.breakdown}}</span>
+                            <li class="{{#if @last}}tw-bg-[linear-gradient(90deg,rgba(201,162,39,0.2),rgba(201,162,39,0.1))] tw-border tw-border-[var(--wh40k-gold)] tw-font-semibold tw-text-[color:var(--wh40k-gold)]{{/if}} tw-flex tw-items-center tw-gap-2 tw-p-2 tw-bg-[var(--wh40k-panel-bg-solid)] tw-rounded-[var(--wh40k-radius-xs)] tw-text-[0.85rem]">
+                                <span class="tw-font-bold tw-min-w-[2.5rem] tw-text-[color:var(--wh40k-gold)]">{{this.result}}</span>
+                                <span class="tw-font-mono tw-text-[color:var(--wh40k-text-muted)]">{{this.breakdown}}</span>
                             </li>
                         {{/each}}
                     </ul>
@@ -65,40 +65,40 @@
             {{/if}}
         </div>
     {{else}}
-        <div class="roll-placeholder tw-flex tw-flex-col tw-items-center tw-justify-center tw-py-14 tw-px-8 tw-bg-[var(--wh40k-input-bg)] tw-border-2 tw-border-dashed tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-muted)]">
+        <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-py-14 tw-px-8 tw-bg-[var(--wh40k-input-bg)] tw-border-2 tw-border-dashed tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-muted)]">
             <i class="fa-solid fa-dice-d20 fa-3x tw-text-[color:var(--wh40k-bronze)] tw-mb-5 tw-animate-[pulse_2.5s_ease-in-out_infinite]"></i>
             <p class="tw-m-0 tw-text-center tw-leading-[1.5] tw-max-w-[300px]">Choose how you want to determine your {{rollTypeLabel}}:</p>
         </div>
     {{/if}}
 
     {{!-- Actions --}}
-    <div class="dialog-actions tw-flex tw-justify-between tw-items-center tw-pt-4 tw-mt-2 tw-border-t-2 tw-border-[var(--wh40k-bronze)]">
-        <div class="left-actions tw-flex tw-gap-3">
+    <div class="tw-flex tw-justify-between tw-items-center tw-pt-4 tw-mt-2 tw-border-t-2 tw-border-[var(--wh40k-bronze)]">
+        <div class="tw-flex tw-gap-3">
             {{#unless hasRolled}}
-                <button type="button" class="primary-button roll-button tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-bg-dark)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-gold-hover)] hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_12px_rgba(201,162,39,0.4)] tw-animate-emphasize" data-action="roll">
+                <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-bg-dark)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-gold-hover)] hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_12px_rgba(201,162,39,0.4)] tw-animate-emphasize" data-action="roll">
                     <i class="fa-solid fa-dice tw-text-[1.1rem]"></i>
                     <span>Roll For Me</span>
                 </button>
-                <button type="button" class="secondary-button tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-input-bg)] tw-text-[color:var(--wh40k-text-light)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="manual">
+                <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-input-bg)] tw-text-[color:var(--wh40k-text-light)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="manual">
                     <i class="fa-solid fa-keyboard tw-text-[1.1rem]"></i>
                     <span>I'll Roll Myself</span>
                 </button>
             {{else}}
-                <button type="button" class="secondary-button tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-input-bg)] tw-text-[color:var(--wh40k-text-light)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="reroll">
+                <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-input-bg)] tw-text-[color:var(--wh40k-text-light)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="reroll">
                     <i class="fa-solid fa-rotate-right tw-text-[1.1rem]"></i>
                     <span>Re-roll</span>
                 </button>
             {{/unless}}
         </div>
 
-        <div class="right-actions tw-flex tw-gap-3">
-            <button type="button" class="secondary-button tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-input-bg)] tw-text-[color:var(--wh40k-text-light)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="cancel">
+        <div class="tw-flex tw-gap-3">
+            <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-input-bg)] tw-text-[color:var(--wh40k-text-light)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="cancel">
                 <i class="fa-solid fa-times tw-text-[1.1rem]"></i>
                 <span>Cancel</span>
             </button>
 
             {{#if hasRolled}}
-                <button type="submit" class="primary-button accept-button tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-bg-dark)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-gold-hover)] hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_12px_rgba(201,162,39,0.4)] tw-animate-glow" data-action="accept">
+                <button type="submit" class="tw-flex tw-items-center tw-gap-2 tw-py-3 tw-px-6 tw-border-0 tw-rounded-[var(--wh40k-radius-sm)] tw-text-base tw-font-semibold tw-cursor-pointer tw-bg-[var(--wh40k-gold)] tw-text-[color:var(--wh40k-bg-dark)] tw-font-[var(--wh40k-font-ui)] hover:tw-bg-[var(--wh40k-gold-hover)] hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_12px_rgba(201,162,39,0.4)] tw-animate-glow" data-action="accept">
                     <i class="fa-solid fa-check tw-text-[1.1rem]"></i>
                     <span>Accept</span>
                 </button>
