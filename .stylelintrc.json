@@ -37,6 +37,10 @@
     "ignoreFiles": [
         "dist/**",
         "node_modules/**",
-        "src/css/wh40k-rpg.css"
+        "src/css/abstracts/**",
+        "src/css/actor/**",
+        "src/css/components/**",
+        "src/css/foundry-chrome.css",
+        "src/css/item/**"
     ]
 }

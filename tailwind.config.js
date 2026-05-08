@@ -9,15 +9,15 @@ module.exports = {
   prefix: 'tw-',
   important: '.wh40k-rpg',
   safelist: [
-    // The monolith CSS (src/css/wh40k-rpg.css) still carries `animation: <name> ...`
+    // The legacy CSS files under src/css/** still carry `animation: <name> ...`
     // rules on selectors like `.wh40k-panel`, `.wh40k-prompt::before`, etc. Those
     // rules reference @keyframes by name, and the @keyframes definitions now live
     // in theme.extend.keyframes below. Without this safelist, Tailwind would
     // tree-shake the @keyframes out (no `tw-animate-*` utility appears in any
-    // template yet) and the monolith's animation rules would silently fail.
+    // template yet) and the legacy CSS's animation rules would silently fail.
     // Drop this safelist once every animation is invoked via tw-animate-<name>
     // on its template AND the matching `animation:` rule is removed from the
-    // monolith.
+    // legacy CSS.
     { pattern: /^tw-animate-/ },
     // Per-system theme tokens emitted by `themeClassFor(systemId, role)` in
     // `src/module/config/game-systems/index.ts` — the helper produces these
@@ -1220,8 +1220,8 @@ module.exports = {
           },
         },
       },
-      // Default timing for each animation utility, copied from the monolith
-      // (`src/css/wh40k-rpg.css`). Where the same keyframe is invoked at
+      // Default timing for each animation utility, copied from the legacy CSS
+      // files under src/css/**. Where the same keyframe is invoked at
       // multiple call sites with different timings, the most common tuple is
       // the default; outliers are expressed inline on the consuming template
       // as arbitrary-value utilities (e.g. `tw-animate-[slide-in-up_0.4s_ease-out_backwards]`).

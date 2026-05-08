@@ -1,5 +1,23 @@
-@import './wh40k-rpg.css';
+@import url('https://fonts.googleapis.com/css?family=IM+Fell+DW+Pica:400|Lusitana:400:700|Cinzel:400:700|Roboto:400,500,700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-/* Tailwind layers — must follow the legacy monolith so utility classes win the cascade. */
+/* Legacy CSS — split out of the former monolith src/css/wh40k-rpg.css into
+   per-component files. Cascade order matches the monolith's original ordering;
+   each block remains a candidate for inline-Tailwind porting per
+   docs/tailwind-migration.md. Once a file's rules are fully ported to
+   templates, delete the file and remove the matching @import here. */
+@import './abstracts/_gothic-theme.css';
+@import './abstracts/_unified-components.css';
+@import './item/_base-window.css';
+@import './item/_weapon.css';
+@import './components/_wh40k-tooltip.css';
+@import './components/_item-preview.css';
+@import './components/_armour.css';
+@import './actor/_npc-sheet.css';
+@import './components/_compendium-browser.css';
+@import './actor/_actor-scroll.css';
+@import './foundry-chrome.css';
+
+/* Tailwind layers — must follow the legacy CSS so utility classes win the cascade. */
 @tailwind components;
 @tailwind utilities;

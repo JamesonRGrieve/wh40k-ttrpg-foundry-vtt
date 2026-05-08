@@ -1,0 +1,221 @@
+/* ============================================ */
+/* SCROLL FIX - APPV2 OVERRIDE (High Specificity) */
+/* ============================================ */
+/* This must come LAST to override all other styles */
+
+.wh40k-rpg.sheet.actor {
+    /* Window content should not scroll - children will */
+    .window-content {
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+        height: 100% !important;
+    }
+
+    /* The wrapper takes full height and doesn't scroll */
+
+    /* The form fills the wrapper and is a flex column layout */
+    .wh40k-sheet {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* For ApplicationV2 PARTS: form is the layout container */
+    form.sheet-body,
+    .window-app.wh40k-rpg form {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+        gap: 0 !important;
+    }
+
+    /* ============================================ */
+    /* HEADER LAYOUT - Complete Rebuild */
+    /* ============================================ */
+
+    /* Header container - auto height, overflow for HUD dropdowns */
+    .wh40k-character-header {
+        flex: 0 0 auto !important;
+        overflow: visible !important;
+        z-index: 10 !important;
+    }
+
+    /* Main header layout - two columns */
+
+    /* LEFT: Bio section (portrait + fields) */
+
+    /* RIGHT: Characteristics HUD (V1 enhanced) */
+
+    /* Ensure stats bar displays properly in header */
+
+    /* Navigation bar (tabs) - horizontal strip */
+    nav.wh40k-navigation {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: var(--wh40k-space-xs) !important;
+        padding: 8px !important;
+        background: rgba(0, 0, 0, 0.2) !important;
+        flex: 0 0 auto !important;
+    }
+
+    nav.wh40k-navigation .wh40k-nav-item {
+        padding: 6px 12px !important;
+        border-radius: var(--wh40k-radius-md) !important;
+        cursor: pointer !important;
+        transition: background-color 0.2s !important;
+        text-transform: uppercase !important;
+        font-size: 0.85em !important;
+    }
+
+    nav.wh40k-navigation {
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    nav.wh40k-navigation .wh40k-nav-item:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    nav.wh40k-navigation .wh40k-nav-item.active {
+        background: rgba(196, 135, 29, 0.3) !important;
+        border-bottom: 2px solid #c4871d !important;
+    }
+
+    /* Utility menu button in tabs */
+
+    /* Utility menu dropdown */
+    .wh40k-utility-menu {
+        background: rgba(40, 40, 40, 0.95) !important;
+        border: 1px solid rgba(196, 135, 29, 0.5) !important;
+        border-radius: var(--wh40k-radius-md) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+        min-width: 200px !important;
+        padding: 4px 0 !important;
+
+        .context-menu-item {
+            padding: 8px 12px !important;
+            color: rgba(255, 255, 255, 0.8) !important;
+            cursor: pointer !important;
+            font-size: 0.9rem !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: var(--wh40k-space-sm) !important;
+
+            &:hover {
+                background: rgba(196, 135, 29, 0.2) !important;
+                color: rgba(255, 255, 255, 1) !important;
+            }
+
+            i {
+                width: 16px !important;
+                text-align: center !important;
+                flex-shrink: 0 !important;
+            }
+        }
+    }
+
+    /* The body scrolls and takes remaining space */
+    .wh40k-body,
+    #tab-body {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        min-height: 0 !important;
+        flex: 1 1 auto !important;
+        grid-column: auto !important;
+    }
+
+    /* Tabs should be block/flex, not 6-column grid */
+    .wh40k-body .tab,
+    #tab-body .tab,
+    .wh40k-body section.tab,
+    #tab-body section.tab {
+        display: none !important;
+    }
+
+    .wh40k-body .tab.active,
+    #tab-body .tab.active,
+    .wh40k-body section.tab.active,
+    #tab-body section.tab.active {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: var(--wh40k-space-md) !important;
+        padding: 12px !important;
+    }
+
+    /* Combat tab fills the body viewport so weapons can grow + scroll internally */
+    .wh40k-body section.tab-combat.active,
+    #tab-body section.tab-combat.active {
+        min-height: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* ============================================ */
+    /* CHARACTERISTIC HUD V1 - APPV2 OVERRIDE */
+    /* ============================================ */
+    /* V1 HUD styles for ApplicationV2 sheets */
+
+    /* ---- Name line: four flex spans, left-aligned ---- */
+
+    /* Generic inline-edit (used elsewhere in the sheet) */
+
+    /* .wh40k-player-inline removed — replaced by .wh40k-hdr-player-input */
+
+    .wh40k-char-hud-circle {
+        position: relative !important;
+        width: 48px !important;
+        height: 48px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 1px !important;
+        background: var(--wh40k-circle-bg, linear-gradient(180deg, #f4d03f 0%, var(--wh40k-color-gold) 70%, #b8860b 100%)) !important;
+        border: 2px solid var(--wh40k-border-color-strong, #8b6914) !important;
+        box-shadow: inset 0 1px 2px var(--wh40k-text-shadow, rgba(0, 0, 0, 0.1)), 0 3px 8px var(--wh40k-shadow-soft, rgba(0, 0, 0, 0.15)) !important;
+    }
+
+    .wh40k-char-hud-mod {
+        font-size: 1.2em !important;
+        font-weight: 700 !important;
+        color: var(--wh40k-text-dark, #1a1510) !important;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    }
+
+    .wh40k-char-hud-details {
+        position: absolute !important;
+        top: calc(100% + 6px) !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        display: none !important; /* Hidden by default */
+        gap: 6px !important;
+        padding: 8px !important;
+        width: 170px !important;
+        background: var(--wh40k-panel-bg-solid, #f8f4ec) !important;
+        border: 1px solid var(--wh40k-border-color, rgba(140, 120, 90, 0.5)) !important;
+        border-radius: var(--wh40k-radius-lg) !important;
+        box-shadow: 0 6px 16px var(--wh40k-shadow-medium, rgba(0, 0, 0, 0.2)) !important;
+        z-index: 20 !important;
+
+        /* Show when expanded */
+        &.expanded {
+            display: grid !important;
+        }
+    }
+
+    .wh40k-char-hud-details input,
+    .wh40k-char-hud-details select {
+        width: 100% !important;
+        border: 1px solid var(--wh40k-border-color-light, rgba(140, 120, 90, 0.3)) !important;
+        border-radius: var(--wh40k-radius-md) !important;
+        padding: 2px 4px !important;
+        background: var(--wh40k-input-bg, #fff) !important;
+        color: var(--wh40k-text-dark, #333) !important;
+        font-size: 0.8em !important;
+    }
+}

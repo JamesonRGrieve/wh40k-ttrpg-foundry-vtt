@@ -1,5 +1,5 @@
 {
-  "_comment": "CSS variable → Tailwind utility translation hints. Used by porting agents and by the migration handbook. Keys are the CSS custom-property names found in src/css/wh40k-rpg.css; values are the recommended Tailwind utility (without the tw- prefix; templates author with the prefix). Anything not in this map should fall through to a hand-decision documented in docs/tailwind-migration.md. Source-of-truth for tokens is tailwind.config.js — this file is a translation cheat sheet.",
+  "_comment": "CSS variable → Tailwind utility translation hints. Used by porting agents and by the migration handbook. Keys are the CSS custom-property names found in the legacy CSS files under src/css/**; values are the recommended Tailwind utility (without the tw- prefix; templates author with the prefix). Anything not in this map should fall through to a hand-decision documented in docs/tailwind-migration.md. Source-of-truth for tokens is tailwind.config.js — this file is a translation cheat sheet.",
 
   "colors": {
     "--wh40k-color-gold": "text-gold",
