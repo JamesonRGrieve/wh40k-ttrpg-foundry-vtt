@@ -1,0 +1,1742 @@
+{
+  "summary": {
+    "originalLines": 11731,
+    "newLines": 4729,
+    "rulesRemoved": 424,
+    "bySource": {
+      "src/css/abstracts/_gothic-theme.css": 7,
+      "src/css/abstracts/_unified-components.css": 37,
+      "src/css/item/_weapon.css": 123,
+      "src/css/components/_wh40k-tooltip.css": 5,
+      "src/css/components/_armour.css": 15,
+      "src/css/actor/_npc-sheet.css": 159,
+      "__inline__": 3,
+      "src/css/wh40k-rpg.css": 59,
+      "src/css/foundry-chrome.css": 16
+    }
+  },
+  "removed": [
+    {
+      "selector": ".wh40k-button",
+      "source": "src/css/abstracts/_gothic-theme.css"
+    },
+    {
+      "selector": ".wh40k-input",
+      "source": "src/css/abstracts/_gothic-theme.css"
+    },
+    {
+      "selector": ".wh40k-divider",
+      "source": "src/css/abstracts/_gothic-theme.css"
+    },
+    {
+      "selector": ".wh40k-hover-lift",
+      "source": "src/css/abstracts/_gothic-theme.css"
+    },
+    {
+      "selector": ".wh40k-text-gold",
+      "source": "src/css/abstracts/_gothic-theme.css"
+    },
+    {
+      "selector": ".wh40k-text-red",
+      "source": "src/css/abstracts/_gothic-theme.css"
+    },
+    {
+      "selector": ".wh40k-text-green",
+      "source": "src/css/abstracts/_gothic-theme.css"
+    },
+    {
+      "selector": ".wh40k-btn-primary,\n.wh40k-btn-control,\n.wh40k-btn-icon,\n.wh40k-btn-quick",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-btn-primary",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-btn-control",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-btn-icon",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-btn-quick",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-input,\n.wh40k-input-numeric,\n.wh40k-input-inline,\n.wh40k-select,\n.wh40k-textarea",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-input",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-input-numeric",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-input-inline",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-select",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-textarea",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "partial": [
+        "> .wh40k-control-button",
+        "> .wh40k-header-btn",
+        "> .wh40k-btn-icon",
+        "> .wh40k-btn-control"
+      ],
+      "kept": [
+        "> button",
+        "> label"
+      ],
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-panel-details",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "partial": [
+        ".wh40k-panel-details"
+      ],
+      "kept": [
+        ".wh40k-panel-body"
+      ],
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-vital-stat",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-vital-wounds",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-vital-fatigue",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-vital-fate",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-vital-warning",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-vital-critical",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-vital-stat-header",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-vital-stat-body",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-vital-readout",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-vital-max-label",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-dropzone-icon",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-dropzone-text",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-dropzone-icon",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-dropzone-text",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-dropzone-small",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-actions-group-header",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-group-icon",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-actions-group-label",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-vital-btn-compact,\n.wh40k-vital-ctrl-btn",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-btn-minus",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-btn-plus",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-header-btn",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-add-btn-small",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-weapon-sticky-header",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-header",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-header .wh40k-item-image",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-item-title__name",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "input.wh40k-item-title__name",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-meta",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-meta-badge",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-header-actions",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-edit-toggle",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-stats",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-mosaic",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__label",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__label",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__label",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__label",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__glow",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__glow",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__glow",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__glow",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__glow",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__glow",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__progress::after",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__progress::after",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat__glow",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-quality-chip",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-quality-chip,\n    .wh40k-mod-chip,\n    .wh40k-meta-badge",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-edit-toggle.active",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-fab--main",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-body-toggle",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-toggle-row",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-item-image",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-stat-card",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-qualities-bar",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-quality-pill",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-loaded-ammo-card",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-ammo-mod",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mods-inline",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mod-chip",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-section",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-form-grid",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-form-field",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-form-checkboxes",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-checkbox",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-rof-grid",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-ammo-dropzone",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mods-list",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mod-card",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mod-effect",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-empty-state",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-btn",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat--action",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat--attack",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat--reload",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat--clickable",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat--disabled",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-checkbox--readonly",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "partial": [
+        ".wh40k-weapon-sheet-v2"
+      ],
+      "kept": [
+        ".wh40k-weapon-sheet"
+      ],
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-header",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-header .wh40k-item-image",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-header .wh40k-item-title__name",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-meta",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-header-actions",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-meta-badge--weapon",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-meta-badge--weapon-class",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-meta-badge--weapon-type",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-meta-badge--weapon-craft",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-meta-badge--weapon-hands",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "input:checked ~ .wh40k-toggle-equipped__label",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-edit-toggle",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-stats",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-stat",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-qualities",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-quality-tag",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-quality-tags",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-tabs",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-tab",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-content",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-panel",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-actions",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-edit-notice",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-section",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-field",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-checkbox",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-ammo-display",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-craftsmanship-effects",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-craftsmanship-effect",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-qualities-grid",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-quality-card",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mods-list",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mod-item",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mod-card",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mod-effect",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mod-toggle",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-modifications-banner",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mod-badge",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-weapon-stat",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-empty-state--mods",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-empty-message",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-btn",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&--damage .wh40k-weapon-card__stat-value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&--pen .wh40k-weapon-card__stat-value",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mod-dropzone",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-dropzone-info",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-dropzone-compatibility",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-dropzone-compat__item",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-dropzone-categories",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-dropzone-category__label",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mod-category-badges",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mod-category-badge",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mod-category-icon",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-mods-list[data-drop-zone='modifications']",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "#tooltip.wh40k-tooltip--characteristic",
+      "source": "src/css/components/_wh40k-tooltip.css"
+    },
+    {
+      "selector": "#tooltip.wh40k-tooltip--skill",
+      "source": "src/css/components/_wh40k-tooltip.css"
+    },
+    {
+      "selector": "#tooltip.wh40k-tooltip--armor,\n#tooltip.wh40k-tooltip--armour",
+      "source": "src/css/components/_wh40k-tooltip.css"
+    },
+    {
+      "selector": "#tooltip.wh40k-tooltip--weapon",
+      "source": "src/css/components/_wh40k-tooltip.css"
+    },
+    {
+      "selector": "#tooltip.wh40k-tooltip--quality",
+      "source": "src/css/components/_wh40k-tooltip.css"
+    },
+    {
+      "selector": ".wh40k-hit-location-roll",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-armour-silhouette",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-armour-box",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-box-label",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-box-ap",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-box-range",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-armour-box-icons",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-armour-box-icon",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-box-head",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-box-body",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-box-right-arm",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-box-left-arm",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-box-right-leg",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-box-left-leg",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-location-name",
+      "source": "src/css/components/_armour.css"
+    },
+    {
+      "selector": ".wh40k-npc-sidebar-header .wh40k-header-name-line,\n    .wh40k-npc-sidebar-header .wh40k-header-row",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-npc-origin-grid",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-npc-v2-sidebar",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-npc-identity",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-portrait-container",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-portrait-img",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-portrait-edit-btn",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-name-input",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-threat-badge",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-meta-compact",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-select-compact",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-vertical-nav",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-nav-label",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-nav-item:hover .wh40k-nav-label",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "atrule": "@media (max-width: 600px)"
+    },
+    {
+      "selector": ".wh40k-edit-toggle",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-gm-tools-toggle",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-gm-tools-wrapper.open .wh40k-gm-chevron",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-tool-btn",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-magnitude-compact",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-magnitude-header",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-magnitude-bar-container",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-magnitude-bar",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-magnitude-btns",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-mag-btn",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-npc-v2-header",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-header-actions,\n            .wh40k-header-btn",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-header-btn",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-header-actions",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": "&.wh40k-panel--combat",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": "&.wh40k-panel--armour",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": "&.wh40k-panel--movement",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": "&.wh40k-panel--weapons",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": "&.wh40k-panel--damage",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": "&.wh40k-panel--tracker",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": "&.wh40k-panel--talents",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": "&.wh40k-panel--traits",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": "&.wh40k-panel--powers",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": "&.wh40k-panel--special",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": "&.wh40k-panel--skills",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": "&.wh40k-panel--notes",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-interaction-tab",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-interaction-grid",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-grid-char-dial",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-grid-talents",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-grid-skills",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-char-dial",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-char-cell",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-char-edit-section",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-char-edit-table",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-skills-table",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-skill-row",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-skill-cycle",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-talent-chips,\n    .wh40k-trait-chips",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-talent-chip,\n    .wh40k-trait-chip",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-trait-chip",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-talent-chips-compact,\n    .wh40k-trait-chips-compact",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-talent-chip-mini,\n    .wh40k-trait-chip-mini",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-trait-chip-mini",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-notes-grid",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-note-field",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-editor-mini",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-panel--editable",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-editor-wrapper",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-meta-fields",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-meta-field",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-tags-row",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-tag",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-tag-remove",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-tags-empty",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-tag-add",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-combat-tab",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-combat-topbar",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-combat-wounds",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-wounds-arrows",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-arrow-btn",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-combat-quickstats",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-quickstat",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-movement-cards",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-move-card",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-combat-main",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-hit-locations-grid",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-hit-loc",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-armour-simple-edit",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-panel--armour-locs",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-tb-badge",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-actions-grid",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-action-row",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-action-row-label",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-action-btn",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-inventory-table",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-inv-icon,\n    .wh40k-inv-img",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-inv-name",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-inv-name-input",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-inv-type-badge",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-inv-remove",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-combat-tracker-nav",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-tracker-status",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-combat-add-btn",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-panel--inventory",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-combat-grid",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-combat-vitals",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-panel--wounds",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-wounds-display",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-wounds-fill",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-wounds-actions",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-damage-controls",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-damage-row,\n    .wh40k-heal-row",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-btn-damage,\n    .wh40k-btn-heal",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-btn-damage",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-btn-heal",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-custom-damage",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-combat-stats",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-stat-tile",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-armour-simple",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-armour-big",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-armour-input,\n    .wh40k-armour-value",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-armour-input",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-armour-label",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-dr-calc",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-armour-locations",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-location",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-movement-grid",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-move-tile",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-weapons-list",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-weapon-header",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-weapon-name-input",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-weapon-name",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-btn-attack",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-btn-delete",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-weapon-stats",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-weapon-class",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-weapon-stat",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-stat-input-sm",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-weapon-special",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-embedded-weapons",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-weapon-item",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-btn-add",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-tracker-content",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-status",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-init-value",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-tracker-actions",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-btn-secondary",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-btn-primary",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-btn-danger",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-abilities-tab",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-abilities-grid",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-ability-header",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-ability-img",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-ability-name",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-ability-actions",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-btn-icon",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-btn-toggle-desc",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-psy-badge",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-editor-wrapper",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-special-content",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-empty-state",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-gm-badge",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-personality-grid",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-personality-field",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-material",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-actor",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "partial": [
+        ".wh40k-actor"
+      ],
+      "kept": [
+        ".wh40k-sheet"
+      ],
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-layout",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-bio",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-portrait-box",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-portrait-box .wh40k-portrait",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-portrait-box:hover .wh40k-portrait",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-bio-fields",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-bio-name",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-bio-name:focus",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-bio-row",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-bio-label",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-bio-value",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-bio-input",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-bio-input:focus",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-stats",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-stats .wh40k-stats-bar",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": "nav.wh40k-navigation .wh40k-utility-menu-btn",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-grid",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-left",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-topline",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header__logo,\n    .wh40k-portrait-container",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header__logo-image",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-portrait",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-info",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-info--dh",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-origin-step-strip",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-origin-step-chip",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-origin-step-chip__img",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-row",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-label",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-value",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-input",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-input:focus",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-name-input",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-name-line",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "partial": [
+        ".wh40k-hdr-player"
+      ],
+      "kept": [
+        ".wh40k-hdr-name"
+      ],
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-hdr-name-text",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-hdr-player-text",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-hdr-placeholder",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-hdr-name-input,\n    .wh40k-hdr-player-input",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-hdr-name-input",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-hdr-player-input",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-hdr-paren",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-inline-edit",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-inline-edit-save",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-inline-edit.is-editing .wh40k-inline-edit-save,\n    [data-inline-edit].is-editing .wh40k-inline-edit-save",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-header-right",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-hud-stack",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-hud-stack > .wh40k-dropzone",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-char-hud-item.wh40k-char-buffed",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-char-hud-item.wh40k-char-debuffed",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-char-hud-name",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-char-hud-name:hover",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-char-hud-mod-label",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-char-hud-base",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-char-hud-field",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-char-hud-field-label",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-location-name",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "selector": ".wh40k-item-card",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "selector": ".wh40k-zone-header",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "selector": ".wh40k-zone-header",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "selector": ".wh40k-zone-header",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "selector": ".wh40k-zone-header",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "selector": ".wh40k-zone-progression",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "selector": ".wh40k-zone-header",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "selector": ".wh40k-zone-header",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "selector": ".wh40k-zone-header",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "selector": ".wh40k-zone-header",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "selector": ".wh40k-combat-layout",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "selector": ".wh40k-combat-top-grid",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "atrule": "@container (max-width: 700px)"
+    },
+    {
+      "selector": ".wh40k-combat-top-grid",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "atrule": "@container (max-width: 500px)"
+    },
+    {
+      "selector": ".wh40k-combat-action-btn::before",
+      "source": "src/css/foundry-chrome.css"
+    },
+    {
+      "selector": ".wh40k-combat-action-btn:hover::before",
+      "source": "src/css/foundry-chrome.css"
+    }
+  ]
+}
