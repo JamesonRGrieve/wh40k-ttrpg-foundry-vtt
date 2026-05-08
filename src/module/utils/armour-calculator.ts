@@ -14,6 +14,16 @@ interface ArmourLocationData {
     goodArmourBonus?: number;
 }
 
+interface ArmourPointsLike {
+    [location: string]: number | undefined;
+}
+
+interface ArmourSystemLike {
+    armourPoints?: ArmourPointsLike;
+    getEffectiveAPForLocation?: (location: string) => number;
+    getAPForLocation?: (location: string) => number;
+}
+
 const BODY_LOCATIONS: string[] = ['body', 'head', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
 
 /**
@@ -21,10 +31,10 @@ const BODY_LOCATIONS: string[] = ['body', 'head', 'leftArm', 'rightArm', 'leftLe
  * @param {object} itemSystem - The item's system data
  * @returns {object|null} The armour points object or null
  */
-function getArmourPointsObject(itemSystem: Record<string, unknown>): Record<string, unknown> | null {
-    const raw = (itemSystem as { armourPoints?: any })?.armourPoints;
-    if (!raw || typeof raw !== 'object') return null;
-    return raw as Record<string, unknown>;
+function getArmourPointsObject(itemSystem: ArmourSystemLike): ArmourPointsLike | null {
+    const raw = itemSystem.armourPoints;
+    if (raw === undefined || typeof raw !== 'object') return null;
+    return raw;
 }
 
 /**
@@ -34,17 +44,17 @@ function getArmourPointsObject(itemSystem: Record<string, unknown>): Record<stri
  * @param {string} location - Body location key
  * @returns {number} AP value for that location
  */
-function getArmourAPForLocation(armourSystem: Record<string, unknown>, location: string): number {
-    if (armourSystem && typeof armourSystem.getEffectiveAPForLocation === 'function') {
+function getArmourAPForLocation(armourSystem: ArmourSystemLike, location: string): number {
+    if (typeof armourSystem.getEffectiveAPForLocation === 'function') {
         return armourSystem.getEffectiveAPForLocation(location);
     }
-    if (armourSystem && typeof armourSystem.getAPForLocation === 'function') {
+    if (typeof armourSystem.getAPForLocation === 'function') {
         return armourSystem.getAPForLocation(location);
     }
 
     const armourPoints = getArmourPointsObject(armourSystem);
     if (armourPoints) {
-        const value = Number((armourPoints as any)?.[location] ?? 0);
+        const value = Number(armourPoints[location] ?? 0);
         return Number.isFinite(value) ? value : 0;
     }
     return 0;
@@ -70,7 +80,7 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
             case 'Machine':
             case 'Natural Armor':
             case 'Natural Armour':
-                if (system.level && system.level > traitBonus) {
+                if (system.level !== undefined && system.level > traitBonus) {
                     traitBonus = system.level;
                 }
                 break;
@@ -94,12 +104,12 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
     // Add cybernetic armour (cumulative)
     actor.items
         .filter((item: WH40KItem) => item.type === 'cybernetic')
-        .filter((item: WH40KItem) => (item.system as { equipped?: boolean }).equipped)
-        .filter((item: WH40KItem) => (item.system as { hasArmourPoints?: boolean }).hasArmourPoints)
+        .filter((item: WH40KItem) => (item.system as { equipped?: boolean }).equipped === true)
+        .filter((item: WH40KItem) => (item.system as { hasArmourPoints?: boolean }).hasArmourPoints === true)
         .forEach((cybernetic: WH40KItem) => {
-            const armourPoints = getArmourPointsObject(cybernetic.system as Record<string, unknown>);
+            const armourPoints = getArmourPointsObject(cybernetic.system as ArmourSystemLike);
             BODY_LOCATIONS.forEach((location: string) => {
-                const armourVal = (armourPoints as Record<string, unknown>)?.[location] ?? 0;
+                const armourVal = armourPoints?.[location] ?? 0;
                 armour[location].total += Number(armourVal);
             });
         });
@@ -109,11 +119,11 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
         (acc: Record<string, number>, location: string) => Object.assign(acc, { [location]: 0 }),
         {},
     );
-    let hasGoodArmour = false;
+    let hasGoodArmour: boolean = false;
 
     actor.items
         .filter((item: WH40KItem) => item.type === 'armour')
-        .filter((item: WH40KItem) => (item.system as { equipped?: boolean }).equipped)
+        .filter((item: WH40KItem) => (item.system as { equipped?: boolean }).equipped === true)
         .forEach((armourItem: WH40KItem) => {
             // Check for Good craftsmanship armour
             const system = armourItem.system as { craftsmanship?: string };
@@ -122,7 +132,7 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
             }
 
             BODY_LOCATIONS.forEach((location: string) => {
-                const armourVal = getArmourAPForLocation(armourItem.system as Record<string, unknown>, location);
+                const armourVal = getArmourAPForLocation(armourItem.system as ArmourSystemLike, location);
                 if (armourVal > maxArmour[location]) {
                     maxArmour[location] = armourVal;
                 }
@@ -130,7 +140,7 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
         });
 
     // Apply Good armour bonus (+1 AP on first attack per round)
-    const isFirstAttack = !actor.getFlag('wh40k-rpg', 'hitThisRound');
+    const isFirstAttack = actor.getFlag('wh40k-rpg', 'hitThisRound') !== true;
     const goodArmourBonus = hasGoodArmour && isFirstAttack ? 1 : 0;
 
     // Apply max armour values and update totals
@@ -138,7 +148,7 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
         armour[location].value = maxArmour[location];
         armour[location].total += maxArmour[location] + goodArmourBonus;
         if (goodArmourBonus > 0) {
-            (armour[location] as ArmourLocationData & { goodArmourBonus?: number }).goodArmourBonus = goodArmourBonus;
+            armour[location].goodArmourBonus = goodArmourBonus;
         }
     });
 

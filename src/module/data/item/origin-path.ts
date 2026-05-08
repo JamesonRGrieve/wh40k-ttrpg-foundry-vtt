@@ -284,8 +284,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Returns array of positions where this origin appears in the chart.
      * @type {number[]}
      */
-    get allPositions() {
-        return this.positions && this.positions.length > 0 ? [...this.positions].sort((a, b) => a - b) : [4]; // Default to center position if not set
+    get allPositions(): number[] {
+        return this.positions.length > 0 ? [...this.positions].sort((a, b) => a - b) : [4]; // Default to center position if not set
     }
 
     /**
@@ -293,7 +293,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Used for card placement in the chart.
      * @type {number}
      */
-    get primaryPosition() {
+    get primaryPosition(): number {
         return this.allPositions[0] || 4;
     }
 
@@ -301,7 +301,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Get the step label.
      * @type {string}
      */
-    get stepLabel() {
+    get stepLabel(): string {
         const fallbackLabels: Record<string, string> = {
             homeWorld: 'Home World',
             birthright: 'Birthright',
@@ -313,14 +313,15 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             eliteAdvance: 'Elite Advance',
         };
 
-        const key = this.step?.charAt?.(0)?.toUpperCase() + this.step?.slice?.(1);
-        const localizationKey = key ? `WH40K.OriginPath.${key}` : '';
+        const step = this.step;
+        const key = step ? step.charAt(0).toUpperCase() + step.slice(1) : '';
+        const localizationKey = key !== '' ? `WH40K.OriginPath.${key}` : '';
 
-        if (localizationKey && game.i18n.has?.(localizationKey)) {
+        if (localizationKey !== '' && game.i18n.has(localizationKey)) {
             return game.i18n.localize(localizationKey);
         }
 
-        return fallbackLabels[this.step] || this.step || '';
+        return fallbackLabels[step] || step || '';
     }
 
     /**
@@ -343,16 +344,16 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Does this origin have requirements?
      * @type {boolean}
      */
-    get hasRequirements() {
+    get hasRequirements(): boolean {
         const reqs = this.requirements;
-        return !!(reqs.text || reqs.previousSteps.length || reqs.excludedSteps.length);
+        return Boolean(reqs.text) || reqs.previousSteps.length > 0 || reqs.excludedSteps.length > 0;
     }
 
     /**
      * Does this origin have choices?
      * @type {boolean}
      */
-    get hasChoices() {
+    get hasChoices(): boolean {
         return this.grants.choices.length > 0;
     }
 
@@ -360,10 +361,10 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Get choices that still need selection.
      * @type {object[]}
      */
-    get pendingChoices() {
+    get pendingChoices(): typeof this.grants.choices {
         return this.grants.choices.filter((choice) => {
-            const selected = this.selectedChoices[choice.label] || [];
-            return selected.length < choice.count;
+            const selected = this.selectedChoices[choice.label] as unknown[] | undefined;
+            return (selected?.length ?? 0) < choice.count;
         });
     }
 
@@ -371,7 +372,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Check if all choices have been made.
      * @type {boolean}
      */
-    get choicesComplete() {
+    get choicesComplete(): boolean {
         return this.pendingChoices.length === 0;
     }
 
@@ -379,17 +380,17 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Get the active modifiers derived from selected choices.
      * @type {object[]}
      */
-    get derivedModifiers() {
-        return this.activeModifiers || [];
+    get derivedModifiers(): typeof this.activeModifiers {
+        return this.activeModifiers;
     }
 
     /**
      * Get a summary of grants.
      * @type {object}
      */
-    get grantsSummary() {
+    get grantsSummary(): string[] {
         const grants = this.grants;
-        const summary = [];
+        const summary: string[] = [];
 
         // Characteristics from modifiers
         const charMods = this.modifiers.characteristics;
@@ -400,19 +401,19 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             }
         }
 
-        if (grants.skills.length) {
+        if (grants.skills.length > 0) {
             summary.push(`Skills: ${grants.skills.map((s) => s.name).join(', ')}`);
         }
 
-        if (grants.talents.length) {
+        if (grants.talents.length > 0) {
             summary.push(`Talents: ${grants.talents.map((t) => t.name).join(', ')}`);
         }
 
-        if (grants.traits.length) {
+        if (grants.traits.length > 0) {
             summary.push(`Traits: ${grants.traits.map((t) => t.name).join(', ')}`);
         }
 
-        if (grants.aptitudes.length) {
+        if (grants.aptitudes.length > 0) {
             summary.push(`Aptitudes: ${grants.aptitudes.join(', ')}`);
         }
 
@@ -425,7 +426,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @override */
     prepareDerivedData(): void {
-        super.prepareDerivedData?.();
+        super.prepareDerivedData();
         this._calculateActiveModifiers();
     }
 
@@ -450,16 +451,19 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
         for (const choice of this.grants.choices) {
             // DH2e/BC/OW packs use 'name' while RT uses 'label' — handle both
-            const choiceKey: string = choice.label || choice.name || '';
-            const selected = this.selectedChoices[choiceKey] || [];
+            const choiceKey: string = choice.label !== '' ? choice.label : choice.name ?? '';
+            const selected = (this.selectedChoices[choiceKey] as unknown[] | undefined) ?? [];
 
             for (const selectedValue of selected) {
-                const option = (choice.options as ChoiceOption[]).find((opt) => (opt.value || opt.name) === selectedValue);
-                if (!option?.grants) continue;
+                const option = (choice.options as ChoiceOption[]).find(
+                    (opt) => ((opt.value as string | undefined) ?? (opt.name as string | undefined)) === selectedValue,
+                );
+                if (option?.grants === undefined) continue;
+                const grants = option.grants;
 
                 // Extract characteristic modifiers
-                if (option.grants.characteristics) {
-                    for (const [char, value] of Object.entries(option.grants.characteristics)) {
+                if (grants.characteristics !== undefined) {
+                    for (const [char, value] of Object.entries(grants.characteristics)) {
                         if (value !== 0) {
                             activeModifiers.push({
                                 source: choiceKey,
@@ -473,8 +477,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 }
 
                 // Extract skill grants
-                if (option.grants.skills) {
-                    for (const skill of option.grants.skills) {
+                if (grants.skills !== undefined) {
+                    for (const skill of grants.skills) {
                         activeModifiers.push({
                             source: choiceKey,
                             type: 'skill',
@@ -486,40 +490,40 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 }
 
                 // Extract talent grants
-                if (option.grants.talents) {
-                    for (const talent of option.grants.talents) {
+                if (grants.talents !== undefined) {
+                    for (const talent of grants.talents) {
                         activeModifiers.push({
                             source: choiceKey,
                             type: 'talent',
                             key: talent.name,
                             value: null,
-                            itemUuid: talent.uuid || null,
+                            itemUuid: talent.uuid ?? null,
                         });
                     }
                 }
 
                 // Extract trait grants
-                if (option.grants.traits) {
-                    for (const trait of option.grants.traits) {
+                if (grants.traits !== undefined) {
+                    for (const trait of grants.traits) {
                         activeModifiers.push({
                             source: choiceKey,
                             type: 'trait',
                             key: trait.name,
                             value: trait.level ?? null,
-                            itemUuid: trait.uuid || null,
+                            itemUuid: trait.uuid ?? null,
                         });
                     }
                 }
 
                 // Extract equipment grants
-                if (option.grants.equipment) {
-                    for (const equip of option.grants.equipment) {
+                if (grants.equipment !== undefined) {
+                    for (const equip of grants.equipment) {
                         activeModifiers.push({
                             source: choiceKey,
                             type: 'equipment',
                             key: equip.name,
                             value: equip.quantity ?? null,
-                            itemUuid: equip.uuid || null,
+                            itemUuid: equip.uuid ?? null,
                         });
                     }
                 }
@@ -544,7 +548,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @protected
      */
     static _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
     }
 
     /* -------------------------------------------- */
@@ -558,7 +562,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @protected
      */
     static _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
-        super._cleanData?.(source, options);
+        super._cleanData(source, options);
     }
 
     /* -------------------------------------------- */

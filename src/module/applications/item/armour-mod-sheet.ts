@@ -3,7 +3,19 @@
  */
 
 import ContainerItemSheet from './container-item-sheet.ts';
-import type { WH40KItem } from '../../documents/item.ts';
+
+interface ArmourModSystem {
+    restrictions: { armourTypes: Set<string> };
+    addedProperties: Set<string>;
+    removedProperties: Set<string>;
+    icon: string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: modifiers is a free-form record consumed by templates
+    modifiers: Record<string, unknown>;
+    effect: string;
+    notes: string;
+    restrictionsLabelEnhanced: string;
+    modifierSummary: string;
+}
 
 /**
  * Sheet for armour modification items.
@@ -15,10 +27,14 @@ export default class ArmourModSheet extends ContainerItemSheet {
         ...ContainerItemSheet.DEFAULT_OPTIONS,
         classes: ['wh40k-rpg', 'sheet', 'item', 'armour-modification'],
         actions: {
-            ...ContainerItemSheet.DEFAULT_OPTIONS?.actions,
+            ...ContainerItemSheet.DEFAULT_OPTIONS.actions,
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry V2 actions table receives method references and rebinds `this` to the sheet instance at dispatch time
             toggleArmourType: ArmourModSheet.#onToggleArmourType,
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry V2 actions table receives method references and rebinds `this` to the sheet instance at dispatch time
             adjustModifier: ArmourModSheet.#onAdjustModifier,
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry V2 actions table receives method references and rebinds `this` to the sheet instance at dispatch time
             addProperty: ArmourModSheet.#onAddProperty,
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry V2 actions table receives method references and rebinds `this` to the sheet instance at dispatch time
             removeProperty: ArmourModSheet.#onRemoveProperty,
         },
         position: {
@@ -58,12 +74,14 @@ export default class ArmourModSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
+    /* eslint-disable no-restricted-syntax -- labels are WH40K.* localization keys; rule misfires on string literal form */
     static TABS = [
         { tab: 'restrictions', group: 'primary', label: 'WH40K.Modification.Restrictions' },
         { tab: 'modifiers', group: 'primary', label: 'WH40K.Modification.Modifiers' },
         { tab: 'properties', group: 'primary', label: 'WH40K.Modification.Properties' },
         { tab: 'effect', group: 'primary', label: 'WH40K.Modification.Effect' },
     ];
+    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 
@@ -77,25 +95,17 @@ export default class ArmourModSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext options/return are framework-defined free-form payloads
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const system = this.item.system as unknown as {
-            restrictions: { armourTypes: Set<string> };
-            addedProperties: Set<string>;
-            removedProperties: Set<string>;
-            icon: string;
-            modifiers: Record<string, unknown>;
-            effect: string;
-            notes: string;
-            restrictionsLabelEnhanced: string;
-            modifierSummary: string;
-        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel doesn't expose ArmourModSystem-shaped properties to TS
+        const system = this.item.system as unknown as ArmourModSystem;
 
         // Add CONFIG reference for template helpers
-        context.dh = CONFIG.wh40k || {};
+        context.dh = CONFIG.wh40k;
 
         // Add armour types config for restrictions
-        const armourTypes = (CONFIG.wh40k as { armourTypes?: Record<string, { label: string }> })?.armourTypes || {};
+        const armourTypes = (CONFIG.wh40k as { armourTypes?: Record<string, { label: string }> }).armourTypes ?? {};
         context.armourTypes = armourTypes;
         context.armourTypesArray = Object.entries(armourTypes).map(([key, config]) => ({
             key,
@@ -104,12 +114,12 @@ export default class ArmourModSheet extends ContainerItemSheet {
         }));
 
         // Add properties config
-        const armourProperties = (CONFIG.wh40k as { armourProperties?: Record<string, { label: string; description: string }> })?.armourProperties || {};
+        const armourProperties = (CONFIG.wh40k as { armourProperties?: Record<string, { label: string; description: string }> }).armourProperties ?? {};
         context.armourProperties = armourProperties;
 
         // Prepare added properties array
         context.addedPropertiesArray = Array.from(system.addedProperties).map((key) => {
-            const config = armourProperties[key];
+            const config = armourProperties[key] as { label: string; description: string } | undefined;
             return {
                 key,
                 label: config ? game.i18n.localize(config.label) : key,
@@ -119,7 +129,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
         // Prepare removed properties array
         context.removedPropertiesArray = Array.from(system.removedProperties).map((key) => {
-            const config = armourProperties[key];
+            const config = armourProperties[key] as { label: string; description: string } | undefined;
             return {
                 key,
                 label: config ? game.i18n.localize(config.label) : key,
@@ -141,21 +151,13 @@ export default class ArmourModSheet extends ContainerItemSheet {
     }
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _preparePartContext context/return are framework-defined free-form payloads
     async _preparePartContext(partId: string, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // Get shared context from _prepareContext
         const sharedContext = await this._prepareContext(options);
         const partContext = { ...sharedContext, ...context };
-        const system = this.item.system as unknown as {
-            restrictions: { armourTypes: Set<string> };
-            addedProperties: Set<string>;
-            removedProperties: Set<string>;
-            icon: string;
-            modifiers: Record<string, unknown>;
-            effect: string;
-            notes: string;
-            restrictionsLabelEnhanced: string;
-            modifierSummary: string;
-        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel doesn't expose ArmourModSystem-shaped properties to TS
+        const system = this.item.system as unknown as ArmourModSystem;
 
         switch (partId) {
             case 'header':
@@ -177,8 +179,8 @@ export default class ArmourModSheet extends ContainerItemSheet {
                 break;
 
             case 'effect':
-                partContext.effect = system.effect || '';
-                partContext.notes = system.notes || '';
+                partContext.effect = system.effect;
+                partContext.notes = system.notes;
                 break;
         }
 
@@ -197,8 +199,10 @@ export default class ArmourModSheet extends ContainerItemSheet {
      */
     static async #onToggleArmourType(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const type = target.dataset.type;
-        if (!type) return;
-        const current = new Set((this.item.system as unknown as { restrictions: { armourTypes: string[] } }).restrictions.armourTypes);
+        if (type === undefined || type.length === 0) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel exposes armourTypes as Set but persisted form is array
+        const system = this.item.system as unknown as { restrictions: { armourTypes: string[] | Set<string> } };
+        const current = new Set(system.restrictions.armourTypes);
 
         if (current.has(type)) {
             current.delete(type);
@@ -211,9 +215,10 @@ export default class ArmourModSheet extends ContainerItemSheet {
             current.add('any');
         }
 
-        await this.item.update({
-            'system.restrictions.armourTypes': Array.from(current),
-        } as Record<string, unknown>);
+        await this.item.update(
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update accepts arbitrary path-keyed payloads
+            { 'system.restrictions.armourTypes': Array.from(current) } as Record<string, unknown>,
+        );
     }
 
     /**
@@ -224,9 +229,9 @@ export default class ArmourModSheet extends ContainerItemSheet {
      */
     static async #onAdjustModifier(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const field = target.dataset.field;
-        if (!field) return;
-        const delta = parseInt(target.dataset.delta || '0', 10);
-        const current = foundry.utils.getProperty(this.item.system as object, field) || 0;
+        if (field === undefined || field.length === 0) return;
+        const delta = parseInt(target.dataset.delta ?? '0', 10);
+        const current = (foundry.utils.getProperty(this.item.system, field) as number | undefined) ?? 0;
 
         await this.item.update({
             [`system.${field}`]: Number(current) + delta,
@@ -242,9 +247,10 @@ export default class ArmourModSheet extends ContainerItemSheet {
     static async #onAddProperty(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const property = target.dataset.property;
         const list = target.dataset.list; // "added" or "removed"
-        if (!property || !list) return;
+        if (property === undefined || property.length === 0 || list === undefined || list.length === 0) return;
         const field = `${list}Properties` as 'addedProperties' | 'removedProperties';
-        const current = new Set((this.item.system as { [key: string]: string[] })[field]);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel doesn't expose dynamic property indexing to TS
+        const current = new Set((this.item.system as unknown as Record<'addedProperties' | 'removedProperties', string[]>)[field]);
 
         current.add(property);
 
@@ -262,9 +268,10 @@ export default class ArmourModSheet extends ContainerItemSheet {
     static async #onRemoveProperty(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const property = target.dataset.property;
         const list = target.dataset.list; // "added" or "removed"
-        if (!property || !list) return;
+        if (property === undefined || property.length === 0 || list === undefined || list.length === 0) return;
         const field = `${list}Properties` as 'addedProperties' | 'removedProperties';
-        const current = new Set((this.item.system as { [key: string]: string[] })[field]);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel doesn't expose dynamic property indexing to TS
+        const current = new Set((this.item.system as unknown as Record<'addedProperties' | 'removedProperties', string[]>)[field]);
 
         current.delete(property);
 

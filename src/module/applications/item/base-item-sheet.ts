@@ -4,14 +4,13 @@
  */
 
 import WH40K from '../../config.ts';
+import type { WH40KItemDocument } from '../../types/global.d.ts';
+import { getMaterializedItemSource, remapSubmitDataToVariantPaths } from '../../utils/item-variant-utils.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import ExpandableTooltipMixin from '../api/expandable-tooltip-mixin.ts';
 import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
-import { getMaterializedItemSource, remapSubmitDataToVariantPaths } from '../../utils/item-variant-utils.ts';
-import type { WH40KItem } from '../../documents/item.ts';
-import type { WH40KItemDocument } from '../../types/global.d.ts';
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -164,7 +163,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
             document: this.item, // Required for V13 {{editor}} helper
             system: this.item.system,
             source: this.isEditable ? getMaterializedItemSource(this.item) : this.item.system,
-            fields: this.item.system.schema?.fields ?? {},
+            fields: this.item.system.schema.fields,
             effects: this.item.getEmbeddedCollection('ActiveEffect').contents,
             flags: this.item.flags,
             dh: CONFIG.wh40k || WH40K,
@@ -186,12 +185,13 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         };
 
         // Ensure dh has required config properties for selectOptions (safety measure)
-        const dh = context.dh as Record<string, unknown>;
-        if (!dh.availabilities) {
-            dh.availabilities = CONFIG.WH40K?.availabilities || WH40K.availabilities || {};
+        const dh = context.dh as { availabilities?: unknown; craftsmanships?: unknown };
+        const cfgWh = (CONFIG as { WH40K?: { availabilities?: unknown; craftsmanships?: unknown } }).WH40K;
+        if (dh.availabilities === undefined) {
+            dh.availabilities = cfgWh?.availabilities ?? WH40K.availabilities ?? {};
         }
-        if (!dh.craftsmanships) {
-            dh.craftsmanships = CONFIG.WH40K?.craftsmanships || WH40K.craftsmanships || {};
+        if (dh.craftsmanships === undefined) {
+            dh.craftsmanships = cfgWh?.craftsmanships ?? WH40K.craftsmanships ?? {};
         }
 
         // Merge contexts: parent provides base, our values override
@@ -207,9 +207,15 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      */
     _getTabs(): Record<string, Record<string, unknown>> {
         const tabs: Record<string, Record<string, unknown>> = {};
-        const configTabs = (this.constructor as typeof BaseItemSheet).TABS;
-        for (const { tab, group, label, condition } of configTabs as any) {
-            if (condition && !condition(this.document)) continue;
+        interface TabDescriptor {
+            tab: string;
+            group: string;
+            label?: string;
+            condition?: (doc: unknown) => boolean;
+        }
+        const configTabs = (this.constructor as typeof BaseItemSheet).TABS as unknown as TabDescriptor[];
+        for (const { tab, group, label, condition } of configTabs) {
+            if (condition !== undefined && !condition(this.document)) continue;
             tabs[tab] = {
                 id: tab,
                 tab,
@@ -248,7 +254,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
                 delete submitData.img;
             } else {
                 const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif'];
-                const imgStr = (imgValue as string).toLowerCase().trim();
+                const imgStr = imgValue.toLowerCase().trim();
                 const hasValidExtension = validExtensions.some((ext) => imgStr.endsWith(ext));
 
                 if (!hasValidExtension || imgStr.length < 5 || imgStr === 'null' || imgStr === 'undefined') {
@@ -317,7 +323,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
             if (!isNaN(absolute)) input.value = String(absolute);
         } else if (['+', '-'].includes(firstChar)) {
             // Add or subtract delta
-            const current = (foundry.utils.getProperty(this.item, input.name) as number) ?? 0;
+            const current = Number(foundry.utils.getProperty(this.item, input.name)) || 0;
             const delta = parseFloat(value);
             if (!isNaN(delta)) input.value = String(current + delta);
         }
@@ -335,7 +341,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         const fp = new FilePickerCtor({
             current,
             type: 'image',
-            callback: (path: string) => this.document.update({ [attr]: path }),
+            callback: async (path: string) => this.document.update({ [attr]: path }),
             position: {
                 top: this.position.top + 40,
                 left: this.position.left + 10,
@@ -352,7 +358,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     static #toggleEditMode(this: BaseItemSheet, event: Event, target: HTMLElement): void {
         if (!this.canEdit) return;
         this.#editMode = !this.#editMode;
-        this.render();
+        void this.render();
     }
 
     /* -------------------------------------------- */
@@ -382,7 +388,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      */
     static #effectEdit(this: BaseItemSheet, event: Event, target: HTMLElement): void {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
-        const effect = this.item.effects.get(effectId!);
+        const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
         effect?.sheet?.render(true);
     }
 
@@ -393,7 +399,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      */
     static async #effectDelete(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
-        const effect = this.item.effects.get(effectId!);
+        const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
         await effect?.delete();
     }
 
@@ -404,7 +410,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      */
     static async #effectToggle(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
-        const effect = this.item.effects.get(effectId!);
+        const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
         await effect?.update({ disabled: !effect.disabled });
     }
 
@@ -415,7 +421,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      */
     static #toggleSection(this: BaseItemSheet, event: Event, target: HTMLElement): void {
         const sectionName = target.dataset.toggle;
-        if (!sectionName) return;
+        if (sectionName === undefined || sectionName === '') return;
 
         // Toggle section visibility in the DOM
         const section = this.element.querySelector(`.${sectionName}`);

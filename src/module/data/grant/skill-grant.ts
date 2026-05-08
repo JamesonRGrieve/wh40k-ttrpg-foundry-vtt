@@ -1,5 +1,29 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import BaseGrantData, { GrantApplicationResult, GrantSummary } from './base-grant.ts';
+import BaseGrantData, { type GrantApplicationResult, type GrantSummary } from './base-grant.ts';
+
+/** Specialist-skill sub-entry on the actor schema. */
+interface SkillEntry {
+    name?: string;
+    specialization?: string;
+    trained?: boolean;
+    plus10?: boolean;
+    plus20?: boolean;
+    bonus?: number;
+}
+
+/** Skill object on the actor schema. */
+interface SkillRecord {
+    label?: string;
+    trained?: boolean;
+    plus10?: boolean;
+    plus20?: boolean;
+    entries?: SkillEntry[];
+}
+
+/** Subset of `actor.system` fields read by the skill grant. */
+interface SkillActorSystem {
+    skills: Record<string, SkillRecord>;
+}
 
 /**
  * Interface for a single skill grant configuration.
@@ -121,7 +145,7 @@ export default class SkillGrantData extends BaseGrantData {
                 continue;
             }
 
-            const currentSkill = (actor.system as { skills: Record<string, any> }).skills[schemaKey];
+            const currentSkill = (actor.system as object as SkillActorSystem).skills[schemaKey];
             if (!currentSkill) {
                 result.errors.push(`Skill not found on actor: ${schemaKey}`);
                 continue;
@@ -152,7 +176,7 @@ export default class SkillGrantData extends BaseGrantData {
         result: GrantApplicationResult,
     ): SkillAppliedState | null {
         const ctor = this.constructor as typeof SkillGrantData;
-        const currentSkill = (actor.system as { skills: Record<string, any> }).skills[schemaKey];
+        const currentSkill = (actor.system as object as SkillActorSystem).skills[schemaKey];
         const currentLevel = this._getSchemaSkillLevel(currentSkill);
         const currentOrder = ctor.TRAINING_LEVELS[currentLevel]?.order ?? 0;
         const targetOrder = ctor.TRAINING_LEVELS[targetLevel]?.order ?? 0;
@@ -192,13 +216,12 @@ export default class SkillGrantData extends BaseGrantData {
         result: GrantApplicationResult,
     ): SkillAppliedState | null {
         const ctor = this.constructor as typeof SkillGrantData;
-        const currentSkill = (actor.system as { skills: Record<string, any> }).skills[schemaKey];
-        const entries = (currentSkill.entries as any[]) || [];
+        const currentSkill = (actor.system as object as SkillActorSystem).skills[schemaKey];
+        const entries: SkillEntry[] = currentSkill.entries ?? [];
 
         // Find existing entry with this specialization
         const entryIndex = entries.findIndex(
-            (e: any) =>
-                (e.name || '').toLowerCase() === specialization.toLowerCase() || (e.specialization || '').toLowerCase() === specialization.toLowerCase(),
+            (e) => (e.name ?? '').toLowerCase() === specialization.toLowerCase() || (e.specialization ?? '').toLowerCase() === specialization.toLowerCase(),
         );
 
         if (entryIndex >= 0) {
@@ -340,33 +363,34 @@ export default class SkillGrantData extends BaseGrantData {
      * Get current training level from a schema skill object.
      * @private
      */
-    _getSchemaSkillLevel(skill: any): string {
-        if (skill?.plus20) return 'plus20';
-        if (skill?.plus10) return 'plus10';
-        if (skill?.trained) return 'trained';
+    _getSchemaSkillLevel(skill: SkillRecord | SkillEntry | undefined): string {
+        if (skill?.plus20 === true) return 'plus20';
+        if (skill?.plus10 === true) return 'plus10';
+        if (skill?.trained === true) return 'trained';
         return 'known';
     }
 
     /** @inheritDoc */
-    override async reverse(actor: WH40KBaseActor, appliedState: Record<string, SkillAppliedState>): Promise<any> {
-        const restoreData: { skills: Array<Record<string, any>> } = { skills: [] };
-        const updates: Record<string, any> = {};
+    override async reverse(actor: WH40KBaseActor, appliedState: Record<string, SkillAppliedState>): Promise<{ skills: Array<Record<string, unknown>> }> {
+        const restoreData: { skills: Array<Record<string, unknown>> } = { skills: [] };
+        const updates: Record<string, unknown> = {};
+        const system = actor.system as object as SkillActorSystem;
 
         for (const [key, state] of Object.entries(appliedState)) {
             if (!state.schemaKey) continue;
 
-            if (state.created && state.specialization !== undefined) {
+            if (state.created === true && state.specialization !== undefined) {
                 // Remove created specialist entry
-                const currentSkill = actor.system.skills[state.schemaKey];
-                if (currentSkill?.entries && state.entryIndex !== undefined) {
-                    const newEntries = [...(currentSkill.entries as any[])];
+                const currentSkill = system.skills[state.schemaKey];
+                if (currentSkill?.entries != null && state.entryIndex !== undefined) {
+                    const newEntries: SkillEntry[] = [...currentSkill.entries];
                     newEntries.splice(state.entryIndex, 1);
                     updates[`system.skills.${state.schemaKey}.entries`] = newEntries;
                     restoreData.skills.push({ key, removed: true, specialization: state.specialization });
                 }
-            } else if (state.upgraded && state.previousLevel) {
+            } else if (state.upgraded === true && state.previousLevel != null && state.previousLevel !== '') {
                 // Revert to previous level
-                const levelUpdates = this._getLevelUpdates(state.previousLevel || 'known');
+                const levelUpdates = this._getLevelUpdates(state.previousLevel);
 
                 if (state.specialization !== undefined && state.entryIndex !== undefined) {
                     // Specialist skill entry

@@ -1,11 +1,12 @@
 import { ConfirmationDialog } from '../applications/dialogs/_module.ts';
 import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.ts';
-import { ActorLike, AssignDamageData } from '../rolls/assign-damage-data.ts';
+import type { ActionData } from '../rolls/action-data.ts';
+import type { ActorLike } from '../rolls/assign-damage-data.ts';
+import { AssignDamageData } from '../rolls/assign-damage-data.ts';
 import { Hit } from '../rolls/damage-data.ts';
 import { uuid, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
-import { DHTargetedActionManager } from './targeted-action-manager.ts';
-import { ActionData } from '../rolls/action-data.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+import { DHTargetedActionManager } from './targeted-action-manager.ts';
 
 export class BasicActionManager {
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
@@ -20,17 +21,13 @@ export class BasicActionManager {
             // root, so without this class the chat cards lose all Tailwind styling.
             html.classList.add('wh40k-rpg');
             html.querySelectorAll('.roll-control__hide-control').forEach((el) =>
-                el.addEventListener('click', async (ev: Event) => await this._toggleExpandChatMessage(ev)),
+                el.addEventListener('click', async (ev: Event) => this._toggleExpandChatMessage(ev)),
             );
-            html.querySelectorAll('.roll-control__refund').forEach((el) => el.addEventListener('click', async (ev: Event) => await this._refundResources(ev)));
-            html.querySelectorAll('.roll-control__fate-reroll').forEach((el) => el.addEventListener('click', async (ev: Event) => await this._fateReroll(ev)));
-            html.querySelectorAll('.roll-control__assign-damage').forEach((el) =>
-                el.addEventListener('click', async (ev: Event) => await this._assignDamage(ev)),
-            );
-            html.querySelectorAll('.roll-control__roll-damage').forEach((el) => el.addEventListener('click', async (ev: Event) => await this._rollDamage(ev)));
-            html.querySelectorAll('.roll-control__apply-damage').forEach((el) =>
-                el.addEventListener('click', async (ev: Event) => await this._applyDamage(ev)),
-            );
+            html.querySelectorAll('.roll-control__refund').forEach((el) => el.addEventListener('click', async (ev: Event) => this._refundResources(ev)));
+            html.querySelectorAll('.roll-control__fate-reroll').forEach((el) => el.addEventListener('click', async (ev: Event) => this._fateReroll(ev)));
+            html.querySelectorAll('.roll-control__assign-damage').forEach((el) => el.addEventListener('click', async (ev: Event) => this._assignDamage(ev)));
+            html.querySelectorAll('.roll-control__roll-damage').forEach((el) => el.addEventListener('click', async (ev: Event) => this._rollDamage(ev)));
+            html.querySelectorAll('.roll-control__apply-damage').forEach((el) => el.addEventListener('click', async (ev: Event) => this._applyDamage(ev)));
         });
 
         // Initialize Scene Control Buttons
@@ -44,7 +41,7 @@ export class BasicActionManager {
                 title: 'Assign Damage',
                 icon: 'fas fa-shield',
                 visible: true,
-                onChange: async () => await this.assignDamageTool(),
+                onChange: async () => this.assignDamageTool(),
                 button: true,
                 order: toolOrder,
             };
@@ -60,7 +57,7 @@ export class BasicActionManager {
             span.classList.toggle('active');
         }
         const target = displayToggle.dataset.toggle;
-        const targetEl = target ? document.getElementById(target) : null;
+        const targetEl = target != null && target !== '' ? document.getElementById(target) : null;
         if (targetEl) {
             targetEl.style.display = targetEl.style.display === 'none' ? '' : 'none';
         }
@@ -72,7 +69,7 @@ export class BasicActionManager {
         const rollId = btn.dataset.rollId;
         const actionData = this.getActionData(rollId);
         if (!actionData) {
-            ui.notifications?.warn('Roll data no longer available. Cannot roll damage.');
+            ui.notifications.warn('Roll data no longer available. Cannot roll damage.');
             return;
         }
 
@@ -112,7 +109,7 @@ export class BasicActionManager {
         const actionData = this.getActionData(rollId);
 
         if (!actionData) {
-            ui.notifications?.warn(`Action data expired. Unable to perform action.`);
+            ui.notifications.warn(`Action data expired. Unable to perform action.`);
             return;
         }
 
@@ -125,7 +122,7 @@ export class BasicActionManager {
 
         if (confirmed) {
             await actionData.refundResources();
-            ui.notifications?.info(`Resources refunded`);
+            ui.notifications.info(`Resources refunded`);
         }
     }
 
@@ -136,13 +133,13 @@ export class BasicActionManager {
         const actionData = this.getActionData(rollId);
 
         if (!actionData) {
-            ui.notifications?.warn(`Action data expired. Unable to perform action.`);
+            ui.notifications.warn(`Action data expired. Unable to perform action.`);
             return;
         }
 
-        const sourceActor = actionData.rollData.sourceActor as WH40KBaseActorDocument | null;
+        const sourceActor = actionData.rollData.sourceActor;
         if ((sourceActor?.system as any)?.fate?.value <= 0) {
-            ui.notifications?.warn(`Actor does not have enough fate points!`);
+            ui.notifications.warn(`Actor does not have enough fate points!`);
             return;
         }
 
@@ -187,19 +184,19 @@ export class BasicActionManager {
         const targetUuid = div.dataset.targetUuid;
 
         let targetActor: WH40KBaseActorDocument | undefined;
-        if (targetUuid) {
+        if (targetUuid != null && targetUuid !== '') {
             const doc = await fromUuid(targetUuid);
             const actor = doc instanceof Actor ? doc : (doc as any)?.actor;
             targetActor = actor instanceof Actor ? (actor as unknown as WH40KBaseActorDocument) : undefined;
         } else {
             const targetedObjects = game.user.targets;
-            if (targetedObjects && targetedObjects.size > 0) {
+            if (targetedObjects.size > 0) {
                 const token = targetedObjects.values().next().value as Token;
                 targetActor = token.actor as WH40KBaseActorDocument | undefined;
             }
         }
         if (!targetActor) {
-            ui.notifications?.warn(`Cannot determine target actor to assign hit.`);
+            ui.notifications.warn(`Cannot determine target actor to assign hit.`);
             return;
         }
 
@@ -219,7 +216,7 @@ export class BasicActionManager {
         const fatigue = div.dataset.fatigue;
 
         if (!targetUuid) {
-            ui.notifications?.warn(`Cannot determine target UUID to assign hit.`);
+            ui.notifications.warn(`Cannot determine target UUID to assign hit.`);
             return;
         }
 
@@ -228,22 +225,22 @@ export class BasicActionManager {
             actor instanceof Actor ? (actor as unknown as WH40KBaseActorDocument) : ((actor as any)?.actor as WH40KBaseActorDocument | undefined);
 
         if (!targetActor) {
-            ui.notifications?.warn(`Cannot determine actor to assign hit.`);
+            ui.notifications.warn(`Cannot determine actor to assign hit.`);
             return;
         }
         for (const field of [damage, penetration, fatigue]) {
-            if (field && isNaN(parseInt(field))) {
-                ui.notifications?.warn(`Unable to determine damage/penetration/fatigue to assign.`);
+            if (field != null && field !== '' && isNaN(parseInt(field))) {
+                ui.notifications.warn(`Unable to determine damage/penetration/fatigue to assign.`);
                 return;
             }
         }
 
         const hit = new Hit();
-        if (location) hit.location = location;
-        if (damage) hit.totalDamage = Number.parseInt(damage);
-        if (penetration) hit.totalPenetration = Number.parseInt(penetration);
-        if (fatigue) hit.totalFatigue = Number.parseInt(fatigue);
-        if (damageType) hit.damageType = damageType;
+        if (location != null && location !== '') hit.location = location;
+        if (damage != null && damage !== '') hit.totalDamage = Number.parseInt(damage);
+        if (penetration != null && penetration !== '') hit.totalPenetration = Number.parseInt(penetration);
+        if (fatigue != null && fatigue !== '') hit.totalFatigue = Number.parseInt(fatigue);
+        if (damageType != null && damageType !== '') hit.damageType = damageType;
 
         const assignDamageData = new AssignDamageData(targetActor as unknown as ActorLike, hit);
         if (ignoreArmour === 'true' || ignoreArmour === 'TRUE') {
@@ -266,7 +263,7 @@ export class BasicActionManager {
     }
 
     getActionData(id: string | undefined): ActionData | null {
-        if (!id) return null;
+        if (id == null || id === '') return null;
         return this.storedRolls[id] ?? null;
     }
 

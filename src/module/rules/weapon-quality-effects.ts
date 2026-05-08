@@ -171,12 +171,12 @@ export function weaponHasQuality(weapon: QualityItem | null | undefined, quality
     const normalizedName = qualityName.toLowerCase();
 
     // Check effectiveSpecial set (includes craftsmanship-derived qualities)
-    if (weapon.system?.effectiveSpecial?.has(normalizedName)) {
+    if (weapon.system?.effectiveSpecial?.has(normalizedName) === true) {
         return true;
     }
 
     // Check special set (base qualities)
-    if (weapon.system?.special?.has(normalizedName)) {
+    if (weapon.system?.special?.has(normalizedName) === true) {
         return true;
     }
 
@@ -201,7 +201,7 @@ export function weaponHasQuality(weapon: QualityItem | null | undefined, quality
  * @returns {boolean} True if the quality is present in attackSpecials
  */
 export function rollDataHasQuality(rollData: WeaponRollData, qualityName: string): boolean {
-    if (!rollData?.attackSpecials) return false;
+    if (rollData.attackSpecials == null) return false;
     return rollData.attackSpecials.some((s: AttackSpecialLike) => s.name?.toLowerCase() === qualityName.toLowerCase());
 }
 
@@ -223,7 +223,7 @@ export function calculateQualityAttackModifiers(rollData: WeaponRollData): Quali
 
     // Accurate: +10 BS when using Aim action
     if (weaponHasQuality(weapon, 'accurate')) {
-        if (rollData.modifiers?.aim > 0) {
+        if ((rollData.modifiers?.aim ?? 0) > 0) {
             modifiers['Accurate'] = WEAPON_QUALITY_EFFECTS.accurate.aimBonus;
         }
     }
@@ -358,7 +358,7 @@ export function calculateExoticQualityDamageModifiers(damageContext: ExoticDamag
 
     // Force: Psyker adds Psy Rating to damage
     if (weaponHasQuality(weapon, 'force')) {
-        const psyRating = actor.system?.psyker?.psyRating || 0;
+        const psyRating = actor.system.psyker?.psyRating ?? 0;
         if (psyRating > 0) {
             modifiers['Force (Psy Rating)'] = psyRating;
         }
@@ -368,10 +368,10 @@ export function calculateExoticQualityDamageModifiers(damageContext: ExoticDamag
     // Note: Standard SB is already added for melee weapons, so we add it once more
     if (weaponHasQuality(weapon, 'witch-edge')) {
         const isEldar =
-            actor.system?.species?.toLowerCase().includes('eldar') ||
-            actor.system?.traits?.some((t: { name?: string }) => t.name?.toLowerCase().includes('eldar'));
-        if (isEldar && weapon.system?.isMeleeWeapon) {
-            const strengthBonus = actor.system?.characteristics?.strength?.bonus || 0;
+            actor.system.species?.toLowerCase().includes('eldar') === true ||
+            actor.system.traits?.some((t: { name?: string }) => t.name?.toLowerCase().includes('eldar') === true) === true;
+        if (isEldar && weapon.system?.isMeleeWeapon === true) {
+            const strengthBonus = actor.system.characteristics?.strength?.bonus ?? 0;
             modifiers['Witch-Edge (Extra SB)'] = strengthBonus;
         }
     }
@@ -379,8 +379,9 @@ export function calculateExoticQualityDamageModifiers(damageContext: ExoticDamag
     // Daemonbane: +2d10 damage against Daemons
     if (weaponHasQuality(weapon, 'daemonbane') && target) {
         const isDaemon =
-            target.system?.traits?.some((t: { name?: string }) => t.name?.toLowerCase().includes('daemon') || t.name?.toLowerCase().includes('daemonic')) ||
-            target.system?.species?.toLowerCase().includes('daemon');
+            target.system.traits?.some(
+                (t: { name?: string }) => t.name?.toLowerCase().includes('daemon') === true || t.name?.toLowerCase().includes('daemonic') === true,
+            ) === true || target.system.species?.toLowerCase().includes('daemon') === true;
 
         if (isDaemon) {
             modifiers['Daemonbane (vs Daemon)'] = '2d10';
@@ -404,7 +405,7 @@ export function weaponIgnoresArmor(weapon: QualityItem | null | undefined, armor
     // Warp Weapon: Ignores non-warded armor
     if (weaponHasQuality(weapon, 'warp-weapon')) {
         // Check if armor is warded
-        const isWarded = armor.system?.special?.has('warded') || armor.system?.effectiveSpecial?.has('warded');
+        const isWarded = armor.system?.special?.has('warded') === true || armor.system?.effectiveSpecial?.has('warded') === true;
         return !isWarded; // Ignore if NOT warded
     }
 
@@ -457,7 +458,7 @@ export function checkRighteousFury(weapon: QualityItem | null | undefined, dieRe
  * @param {WeaponRollData} rollData - The weapon roll data
  */
 export function applyQualityModifiersToRollData(rollData: WeaponRollData): void {
-    if (!rollData?.weapon) return;
+    if (rollData.weapon == null) return;
 
     // Get quality modifiers
     const qualityModifiers = calculateQualityAttackModifiers(rollData);

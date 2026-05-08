@@ -1,10 +1,10 @@
 import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
-import { AttackDataLike, Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
+import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+import { type AttackDataLike, Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
 import { getDegree, getOpposedDegrees, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
-import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 export class ActionData {
     id: string = uuid();
@@ -32,8 +32,9 @@ export class ActionData {
 
     checkForPerils(): void {
         if (this.rollData.power) {
-            const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument | null;
-            const psyRating = (sourceActor?.system as { psy?: { rating: number } })?.psy?.rating ?? 0;
+            const sourceActor = this.rollData.sourceActor;
+            const sourceSystem = sourceActor ? (sourceActor.system as { psy?: { rating: number } }) : null;
+            const psyRating = sourceSystem?.psy?.rating ?? 0;
             if (sourceActor && psyRating < (this.rollData as PsychicRollData).pr) {
                 const rollTotal = this.rollData.roll?.total;
                 if (rollTotal !== undefined && !/^(.)\1+$/.test(rollTotal.toString())) {
@@ -50,7 +51,7 @@ export class ActionData {
 
     async checkForOpposed(): Promise<void> {
         if (this.rollData.isOpposed && this.rollData.targetActor) {
-            const targetActor = this.rollData.targetActor as WH40KBaseActorDocument;
+            const targetActor = this.rollData.targetActor;
             const rollCheck = (await targetActor.rollCharacteristicCheck(this.rollData.opposedChar)) as {
                 roll: Roll;
                 dos: number;
@@ -85,9 +86,11 @@ export class ActionData {
             if (this.rollData.targetActor) {
                 const opposedDegrees = getOpposedDegrees(this.rollData.dos, this.rollData.dof, this.rollData.opposedDos, this.rollData.opposedDof);
                 if (opposedDegrees >= 2) {
-                    const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument | null;
-                    const strengthBonus =
-                        (sourceActor?.system as { characteristics?: { strength?: { bonus: number } } })?.characteristics?.strength?.bonus ?? 0;
+                    const sourceActor = this.rollData.sourceActor;
+                    const sourceCharacteristics = sourceActor
+                        ? (sourceActor.system as { characteristics?: { strength?: { bonus: number } } }).characteristics
+                        : undefined;
+                    const strengthBonus = sourceCharacteristics?.strength?.bonus ?? 0;
                     this.addEffect(
                         'Knock Down',
                         `The target is knocked Prone and must use a Stand action in his turn to regain his feet! The impact deals [[1d5-3+${strengthBonus}]] (min 0) damage and one level of fatigue to the target!`,
@@ -112,7 +115,7 @@ export class ActionData {
 
     async _calculateHit(): Promise<void> {
         const weaponRollData = this.rollData as WeaponRollData;
-        if (!(weaponRollData as { isManualRoll?: boolean }).isManualRoll) {
+        if ((weaponRollData as { isManualRoll?: boolean }).isManualRoll !== true) {
             this.rollData.roll = await roll1d100();
         }
         const rollTotal = this.rollData.roll?.total ?? 0;
@@ -120,6 +123,7 @@ export class ActionData {
         this.rollData.success = rollTotal === 1 || (rollTotal <= target && rollTotal !== 100);
     }
 
+    // eslint-disable-next-line complexity -- this method is a deliberate central dispatcher for action resolution branches
     async calculateSuccessOrFailure(): Promise<void> {
         await this._calculateHit();
         const actionItem = this.rollData.weapon ?? this.rollData.power;
@@ -131,16 +135,18 @@ export class ActionData {
             }
 
             if (weaponRollData.isStun) {
-                const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument | null;
-                const bonus =
-                    (sourceActor?.system as { getCharacteristicFuzzy?: (char: string) => { bonus: number } })?.getCharacteristicFuzzy?.('Strength')?.bonus ?? 0;
+                const sourceActor = this.rollData.sourceActor;
+                const sourceSystem = sourceActor
+                    ? (sourceActor.system as { getCharacteristicFuzzy?: (char: string) => { bonus: number } | undefined })
+                    : undefined;
+                const bonus = sourceSystem?.getCharacteristicFuzzy?.('Strength')?.bonus ?? 0;
                 const stunRoll = new Roll(`1d10+${bonus}`, {});
                 await stunRoll.evaluate();
                 this.rollData.roll = stunRoll;
                 const stunTotal = stunRoll.total ?? 0;
 
                 if (this.rollData.targetActor) {
-                    const defense = (this.rollData.targetActor.system as { armour?: { head?: { total: number } } })?.armour?.head?.total ?? 0;
+                    const defense = (this.rollData.targetActor.system as { armour?: { head?: { total: number } } }).armour?.head?.total ?? 0;
                     if (stunTotal >= defense) {
                         this.rollData.success = true;
                         this.addEffect(
@@ -176,17 +182,17 @@ export class ActionData {
                 isPsychicStorm?: boolean;
                 usesAmmo?: boolean;
             };
-            if (itemSystem.isMelee) {
+            if (itemSystem.isMelee === true) {
                 if (!this.rollData.success) {
                     type ActorWithHasTalent = WH40KBaseActorDocument & { hasTalent(name: string): boolean };
                     const sourceActor = this.rollData.sourceActor as ActorWithHasTalent | null;
-                    if (sourceActor?.hasTalent('Blademaster')) {
+                    if (sourceActor?.hasTalent('Blademaster') === true) {
                         this.effects.push('blademaster');
                         if (this.rollData.roll) this.rollData.previousRolls.push(this.rollData.roll);
                         await this._calculateHit();
                     }
                 }
-            } else if (itemSystem.isRanged) {
+            } else if (itemSystem.isRanged === true) {
                 if (this.rollData.action === 'Suppressing Fire - Semi') {
                     this.addEffect('Suppressing', 'All targets within a 30 degree arc must pass a Difficult (-10) Pinning test for become Pinned.');
                 } else if (this.rollData.action === 'Suppressing Fire - Full') {
@@ -242,11 +248,11 @@ export class ActionData {
                 if (
                     this.rollData.action === 'Semi-Auto Burst' ||
                     this.rollData.action === 'Swift Attack' ||
-                    itemSystem.isPsychicBarrage ||
+                    itemSystem.isPsychicBarrage === true ||
                     this.rollData.action === 'Suppressing Fire - Semi' ||
                     this.rollData.action === 'Suppressing Fire - Full'
                 ) {
-                    if (itemSystem.isRanged && weaponRollData.hasWeaponModification('Fluid Action')) {
+                    if (itemSystem.isRanged === true && weaponRollData.hasWeaponModification('Fluid Action')) {
                         this.rollData.dos += 1;
                     }
 
@@ -256,17 +262,17 @@ export class ActionData {
                         this.damageData.additionalHits *= 2;
                     }
 
-                    if (itemSystem.isRanged && this.damageData.additionalHits > weaponRollData.fireRate - 1) {
+                    if (itemSystem.isRanged === true && this.damageData.additionalHits > weaponRollData.fireRate - 1) {
                         this.damageData.additionalHits = weaponRollData.fireRate - 1;
                     }
-                } else if (this.rollData.action === 'Full Auto Burst' || this.rollData.action === 'Lightning Attack' || itemSystem.isPsychicStorm) {
+                } else if (this.rollData.action === 'Full Auto Burst' || this.rollData.action === 'Lightning Attack' || itemSystem.isPsychicStorm === true) {
                     this.damageData.additionalHits += Math.floor(this.rollData.dos - 1);
 
                     if (this.rollData.hasAttackSpecial('Storm')) {
                         this.damageData.additionalHits *= 2;
                     }
 
-                    if (itemSystem.usesAmmo && this.damageData.additionalHits > weaponRollData.fireRate - 1) {
+                    if (itemSystem.usesAmmo === true && this.damageData.additionalHits > weaponRollData.fireRate - 1) {
                         this.damageData.additionalHits = weaponRollData.fireRate - 1;
                     }
                 }
@@ -292,11 +298,13 @@ export class ActionData {
     async calculateHits(): Promise<void> {
         const weaponRollData = this.rollData as WeaponRollData;
         if ((this.rollData.success || weaponRollData.isThrown) && this.damageData) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔AttackDataLike are duck-typed siblings
             const attackData = this as unknown as AttackDataLike;
             let hit = await Hit.createHit(attackData, 0);
             this.damageData.hits.push(hit);
 
             for (let i = 0; i < this.damageData.additionalHits; i++) {
+                // eslint-disable-next-line no-await-in-loop -- sequential roll generation; each createHit advances dice state
                 hit = await Hit.createHit(attackData, i + 1);
                 this.damageData.hits.push(hit);
             }
@@ -330,21 +338,24 @@ export class ActionData {
     }
 
     async useResources(): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔useAmmo's expected parameter type are duck-typed siblings
         await useAmmo(this as unknown as Parameters<typeof useAmmo>[0]);
 
         if (this.rollData.eyeOfVengeance) {
-            const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument | null;
+            const sourceActor = this.rollData.sourceActor;
             await sourceActor?.spendFate();
         }
     }
 
     async refundResources(): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔refundAmmo's expected parameter type are duck-typed siblings
         await refundAmmo(this as unknown as Parameters<typeof refundAmmo>[0]);
 
         if (this.rollData.eyeOfVengeance) {
             const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument;
             const fateSystem = sourceActor.system as { fate?: { value: number } };
             const currentFate = fateSystem.fate?.value ?? 0;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update accepts arbitrary path-keyed payloads
             await (sourceActor.update as (data: Record<string, unknown>) => Promise<unknown>)({
                 'system.fate.value': currentFate + 1,
             });
@@ -360,13 +371,13 @@ export class ActionData {
 
         if (this.rollData.action !== 'Stun') {
             await this.checkForOpposed();
-            await this.checkForPerils();
+            this.checkForPerils();
 
             if (this.rollData.success) {
                 (this.rollData as { hitLocation?: string }).hitLocation = getHitLocationForRoll(this.rollData.roll?.total ?? 0);
             }
 
-            await this.createEffectData();
+            this.createEffectData();
 
             game.wh40k.log('Perform Action', this);
 
@@ -419,11 +430,11 @@ export class PsychicActionData extends ActionData {
     }
 
     async descriptionText(): Promise<void> {
-        if (this.rollData.power) {
-            this.psychicEffect = await TextEditor.enrichHTML((this.rollData.power.system as { description?: string })?.description ?? '', {
-                rollData: this.rollData as unknown as Record<string, unknown>,
-            });
-        }
+        const powerSystem = this.rollData.power.system as { description?: string };
+        this.psychicEffect = await foundry.applications.ux.TextEditor.implementation.enrichHTML(powerSystem.description ?? '', {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: TextEditor.enrichHTML expects a record-shaped rollData payload
+            rollData: this.rollData as unknown as Record<string, unknown>,
+        });
     }
 }
 

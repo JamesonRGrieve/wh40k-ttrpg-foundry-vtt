@@ -12,6 +12,11 @@ interface CollapsiblePanelConfig {
     panels: Record<string, boolean>;
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: mixin operates over varied host classes; sheet-shape access needs unsound widening
+function asSheet(host: unknown): BaseActorSheetMixins {
+    return host as BaseActorSheetMixins;
+}
+
 /**
  * Mixin to add enhanced collapsible panel capabilities.
  * @template {ApplicationV2} T
@@ -19,9 +24,11 @@ interface CollapsiblePanelConfig {
  * @returns {any}
  * @mixin
  */
-export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base: T) {
+export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base: T): T {
     class CollapsiblePanelApplication extends Base {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructors must take any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- mixin constructor forwards untyped args; TS mixin rule requires any[]
             super(...args);
         }
 
@@ -103,7 +110,9 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
         /* -------------------------------------------- */
 
         /** @override */
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext is a framework-defined free-form payload
         async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: super._prepareContext returns framework-defined free-form payload
             const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
 
             // Load saved panel states
@@ -119,6 +128,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
         /* -------------------------------------------- */
 
         /** @override */
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender context is a framework-defined free-form payload
         async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
@@ -126,7 +136,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
             this._applyPanelStates();
 
             // Setup keyboard shortcuts if first render
-            if (options.isFirstRender) {
+            if (options.isFirstRender === true) {
                 this._setupPanelKeyboardShortcuts();
             }
         }
@@ -141,17 +151,16 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
          * @protected
          */
         _loadPanelStates(): void {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- game.user is typed non-null but may be undefined during early init
             if (!game.user) return;
 
             const flagKey = this._getPanelFlagKey();
-            const savedStates = (game.user.getFlag('wh40k-rpg', flagKey) as Record<string, boolean> | undefined) || {};
+            const savedStates = (game.user.getFlag('wh40k-rpg', flagKey) as Record<string, boolean> | undefined) ?? {};
 
             // Merge with current states
-            const actorSheet = this as unknown as BaseActorSheetMixins;
+            const actorSheet = asSheet(this);
             Object.entries(savedStates).forEach(([panelId, isExpanded]) => {
-                if (actorSheet.expandedSections) {
-                    actorSheet.expandedSections.set(panelId, isExpanded);
-                }
+                actorSheet.expandedSections.set(panelId, isExpanded);
             });
         }
 
@@ -165,10 +174,11 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
          * @protected
          */
         async _savePanelState(panelId: string, isExpanded: boolean): Promise<void> {
-            if (!game.user || !panelId) return;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- game.user is typed non-null but may be undefined during early init
+            if (!game.user || panelId.length === 0) return;
 
             const flagKey = this._getPanelFlagKey();
-            const currentStates = (game.user.getFlag('wh40k-rpg', flagKey) as Record<string, boolean> | undefined) || {};
+            const currentStates = (game.user.getFlag('wh40k-rpg', flagKey) as Record<string, boolean> | undefined) ?? {};
 
             currentStates[panelId] = isExpanded;
 
@@ -183,13 +193,14 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
          * @protected
          */
         _getPanelFlagKey(): string {
-            const sheet = this as unknown as BaseActorSheetMixins;
+            const sheet = asSheet(this);
             // Use document UUID if available for per-actor settings
-            if (sheet.document) {
-                return `panelStates.${sheet.document.documentName}.${sheet.document.id}`;
+            const document = sheet.document as { documentName?: string; id?: string } | undefined;
+            if (document) {
+                return `panelStates.${document.documentName}.${document.id}`;
             }
             // Otherwise use application ID for global settings
-            return `panelStates.${(this as unknown as { id?: string | number }).id ?? 'global'}`;
+            return `panelStates.${(this as { id?: string | number }).id ?? 'global'}`;
         }
 
         /* -------------------------------------------- */
@@ -200,9 +211,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
          * @protected
          */
         _getPanelStates(): Record<string, boolean> {
-            const sheet = this as unknown as BaseActorSheetMixins;
-            if (!sheet.expandedSections) return {};
-
+            const sheet = asSheet(this);
             const states: Record<string, boolean> = {};
             sheet.expandedSections.forEach((isExpanded: boolean, panelId: string) => {
                 states[panelId] = isExpanded;
@@ -218,9 +227,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
          * @protected
          */
         _applyPanelStates(): void {
-            const sheet = this as unknown as BaseActorSheetMixins;
-            if (!sheet.expandedSections) return;
-
+            const sheet = asSheet(this);
             sheet.expandedSections.forEach((isExpanded, panelId) => {
                 const panel = this.element.querySelector(`[data-panel-id="${panelId}"]`);
                 if (!panel) return;
@@ -244,7 +251,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
          * @returns {Promise<void>}
          */
         async togglePanel(panelId: string, forceState?: boolean): Promise<void> {
-            const panel = this.element.querySelector(`[data-panel-id="${panelId}"]`) as HTMLElement | null;
+            const panel = this.element.querySelector<HTMLElement>(`[data-panel-id="${panelId}"]`);
             if (!panel) return;
 
             const isCurrentlyExpanded = !panel.classList.contains('collapsed');
@@ -254,10 +261,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
             await this._animatePanelToggle(panel, willBeExpanded);
 
             // Update state
-            const sheet = this as unknown as BaseActorSheetMixins;
-            if (sheet.expandedSections) {
-                sheet.expandedSections.set(panelId, willBeExpanded);
-            }
+            asSheet(this).expandedSections.set(panelId, willBeExpanded);
 
             // Save to user flags
             await this._savePanelState(panelId, willBeExpanded);
@@ -274,7 +278,10 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
-                if (panelId) await this.togglePanel(panelId, true);
+                if (panelId !== undefined && panelId.length > 0) {
+                    // eslint-disable-next-line no-await-in-loop -- sequential toggles persist user-flag state in order
+                    await this.togglePanel(panelId, true);
+                }
             }
         }
 
@@ -289,7 +296,10 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
-                if (panelId) await this.togglePanel(panelId, false);
+                if (panelId !== undefined && panelId.length > 0) {
+                    // eslint-disable-next-line no-await-in-loop -- sequential toggles persist user-flag state in order
+                    await this.togglePanel(panelId, false);
+                }
             }
         }
 
@@ -301,7 +311,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
          * @returns {Promise<void>}
          */
         async applyPanelPreset(presetName: string): Promise<void> {
-            const preset = (this.constructor as typeof CollapsiblePanelApplication).PANEL_PRESETS[presetName];
+            const preset = (this.constructor as typeof CollapsiblePanelApplication).PANEL_PRESETS[presetName] as CollapsiblePanelConfig | undefined;
             if (!preset) return;
 
             // Special handling for "all" and "none"
@@ -319,8 +329,9 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
-                if (panelId) {
+                if (panelId !== undefined && panelId.length > 0) {
                     const shouldExpand = preset.panels[panelId] ?? false;
+                    // eslint-disable-next-line no-await-in-loop -- sequential toggles persist user-flag state in order
                     await this.togglePanel(panelId, shouldExpand);
                 }
             }
@@ -341,8 +352,9 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
-                if (panelId) {
+                if (panelId !== undefined && panelId.length > 0) {
                     const shouldExpand = panelId === exceptPanelId;
+                    // eslint-disable-next-line no-await-in-loop -- sequential toggles persist user-flag state in order
                     await this.togglePanel(panelId, shouldExpand);
                 }
             }
@@ -360,7 +372,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
          * @protected
          */
         async _animatePanelToggle(panel: HTMLElement, willBeExpanded: boolean): Promise<void> {
-            const content = panel.querySelector('.panel-content, .collapsible-content') as HTMLElement | null;
+            const content = panel.querySelector<HTMLElement>('.panel-content, .collapsible-content');
             if (!content) {
                 // No animated content, just toggle class
                 panel.classList.toggle('collapsed', !willBeExpanded);
@@ -442,11 +454,11 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
 
                 // Get the Nth panel
                 const panels = Array.from(this.element.querySelectorAll<HTMLElement>('[data-panel-id]'));
-                const panelEl = panels[num - 1];
+                const panelEl = panels[num - 1] as HTMLElement | undefined;
 
                 if (panelEl) {
                     const panelId = panelEl.dataset.panelId;
-                    if (panelId) {
+                    if (panelId !== undefined && panelId.length > 0) {
                         void this.togglePanel(panelId);
 
                         // Scroll into view
@@ -473,7 +485,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
             if (!panel) return;
 
             const panelId = panel.dataset.panelId;
-            if (!panelId) return;
+            if (panelId === undefined || panelId.length === 0) return;
 
             // Shift+Click = Collapse all except this one
             if ((event as MouseEvent).shiftKey) {
@@ -497,7 +509,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
          */
         static async _onApplyPreset(this: CollapsiblePanelApplication, event: Event, target: HTMLElement): Promise<void> {
             const presetName = target.dataset.preset;
-            if (!presetName) return;
+            if (presetName === undefined || presetName.length === 0) return;
 
             await this.applyPanelPreset(presetName);
         }

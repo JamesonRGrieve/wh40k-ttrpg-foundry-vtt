@@ -4,7 +4,6 @@
 
 import type { ActionData } from '../rolls/action-data.ts';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
-import type { WH40KItem } from '../documents/item.ts';
 import type { WH40KItemDocument } from '../types/global.d.ts';
 
 type AttackSpecialEffect = {
@@ -23,6 +22,7 @@ type WeaponModifierEffects = {
 
 type WeaponModifierItem = WH40KItemDocument & {
     isWeaponModification: boolean;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: weapon mod level surfaces from per-system data
     level?: unknown;
     system: WH40KItemDocument['system'] & {
         enabled?: boolean;
@@ -30,13 +30,15 @@ type WeaponModifierItem = WH40KItemDocument & {
     };
 };
 
-type WeaponModifierBaseRollData = WeaponRollData & {
+type WeaponModifierBaseRollData = Omit<WeaponRollData, 'weapon'> & {
+    weapon?: WeaponRollData['weapon'];
     attackSpecials: Array<{ name: string }>;
     modifiers: Record<string, number>;
     action: string;
 };
 
 type WeaponModifierListRollData = WeaponModifierBaseRollData & {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: mod level varies per game system
     weaponModifications: Array<{ name: string; level?: unknown }>;
 };
 
@@ -52,6 +54,7 @@ type PenetrationHit = {
     penetrationModifiers: Record<string, number>;
 };
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: actionItem.items is Foundry collection, narrowed by cast inside
 function getModifierItems(actionItem: { items: Iterable<unknown> } | null | undefined): WeaponModifierItem[] {
     if (!actionItem) return [];
     return Array.from(actionItem.items as Iterable<WeaponModifierItem>);
@@ -72,7 +75,7 @@ const MOD_EFFECTS: Record<string, WeaponModifierEffects> = {
     },
     'Modified Stock': {
         attackBonus: (rollData): Record<string, number> => {
-            const modifiers = rollData.modifiers ?? {};
+            const modifiers = rollData.modifiers;
             if (modifiers['aim'] === 10) return { 'Modified-Stock': 2 };
             if (modifiers['aim'] === 20) return { 'Modified-Stock': 4 };
             return {};
@@ -111,7 +114,7 @@ export function updateWeaponModifiers(rollData: WeaponModifierListRollData): voi
     if (!actionItem) return;
 
     for (const i of getModifierItems(actionItem)) {
-        if (i.isWeaponModification && (i.system.equipped || i.system.enabled)) {
+        if (i.isWeaponModification && (i.system.equipped === true || i.system.enabled === true)) {
             rollData.weaponModifications.push({
                 name: i.name,
                 level: i.level,
@@ -126,10 +129,10 @@ export function calculateWeaponModifiersDamageBonuses(actionData: WeaponModifier
 
     for (const item of getModifierItems(actionItem)) {
         game.wh40k.log('calculateWeaponModifiersDamageBonuses', item);
-        if (!item.system.equipped) continue;
+        if (item.system.equipped !== true) continue;
         if (!item.isWeaponModification) continue;
         const effects = MOD_EFFECTS[item.name];
-        if (!effects?.damagePhasePenetrationMods) continue;
+        if (effects.damagePhasePenetrationMods === undefined) continue;
         for (const [key, value] of Object.entries(effects.damagePhasePenetrationMods)) {
             hit.penetrationModifiers[key] = value;
         }
@@ -142,10 +145,10 @@ export function calculateWeaponModifiersPenetrationBonuses(actionData: WeaponMod
 
     for (const item of getModifierItems(actionItem)) {
         game.wh40k.log('calculateWeaponModifiersPenetrationBonuses', item);
-        if (!item.system.equipped) continue;
+        if (item.system.equipped !== true) continue;
         if (!item.isWeaponModification) continue;
         const effects = MOD_EFFECTS[item.name];
-        if (!effects?.penetrationModifiers) continue;
+        if (effects.penetrationModifiers === undefined) continue;
         for (const [key, value] of Object.entries(effects.penetrationModifiers)) {
             hit.penetrationModifiers[key] = value;
         }
@@ -158,12 +161,12 @@ export function calculateWeaponModifiersAttackSpecials(rollData: WeaponModifierB
 
     for (const item of getModifierItems(actionItem)) {
         game.wh40k.log('calculateWeaponModifiersAttackSpecials', item);
-        if (!item.system.equipped) continue;
+        if (item.system.equipped !== true) continue;
         if (!item.isWeaponModification) continue;
         const effects = MOD_EFFECTS[item.name];
-        if (!effects?.attackSpecials) continue;
+        if (effects.attackSpecials === undefined) continue;
         for (const spec of effects.attackSpecials) {
-            if (spec.remove) rollData.attackSpecials.findSplice((i: { name: string }) => i.name === spec.remove);
+            if (spec.remove !== undefined && spec.remove !== '') rollData.attackSpecials.findSplice((i: { name: string }) => i.name === spec.remove);
         }
     }
 }
@@ -179,13 +182,13 @@ export function calculateWeaponModifiersAttackBonuses(rollData: WeaponModifierBo
 
     for (const item of getModifierItems(actionItem)) {
         game.wh40k.log('calculateWeaponModifiers', item);
-        if (!item.system.equipped) continue;
+        if (item.system.equipped !== true) continue;
         if (!item.isWeaponModification) continue;
         const effects = MOD_EFFECTS[item.name];
-        if (!effects?.attackBonus) continue;
+        if (effects.attackBonus === undefined) continue;
         const bonuses = effects.attackBonus(rollData, item);
         for (const [key, value] of Object.entries(bonuses)) {
-            (rollData.weaponModifiers as Record<string, number>)[key] = value;
+            rollData.weaponModifiers[key] = value;
         }
     }
 }

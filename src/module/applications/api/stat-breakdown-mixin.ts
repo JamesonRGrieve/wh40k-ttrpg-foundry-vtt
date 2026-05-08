@@ -11,8 +11,8 @@
  * - Popover shows breakdown with clickable source items
  */
 
-import type { AnyApplicationV2, ApplicationV2Ctor } from './application-types.ts';
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../../types/global.d.ts';
+import type { ApplicationV2Ctor } from './application-types.ts';
 
 interface ModifierEntry {
     value: number;
@@ -79,7 +79,7 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
             event.stopPropagation();
 
             const statKey = target.dataset.statKey;
-            if (!statKey) {
+            if (statKey == null || statKey === '') {
                 console.warn('Stat breakdown element missing data-stat-key');
                 return;
             }
@@ -120,7 +120,7 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
             event.stopPropagation();
 
             const uuid = target.dataset.sourceUuid;
-            if (!uuid) return;
+            if (uuid == null || uuid === '') return;
 
             const item = await fromUuid(uuid);
             if (item instanceof foundry.abstract.Document) {
@@ -184,17 +184,18 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
                     </div>
             `;
 
-            if (modifiers && modifiers.length > 0) {
+            if (modifiers.length > 0) {
                 html += '<div class="wh40k-stat-breakdown-modifiers">';
                 for (const modifier of modifiers) {
                     const valueClass = modifier.value > 0 ? 'wh40k-stat-breakdown-value--positive' : 'wh40k-stat-breakdown-value--negative';
-                    const clickable = modifier.uuid ? 'wh40k-stat-breakdown-row--clickable' : '';
+                    const hasUuid = modifier.uuid != null && modifier.uuid !== '';
+                    const clickable = hasUuid ? 'wh40k-stat-breakdown-row--clickable' : '';
 
                     html += `
-                        <div class="wh40k-stat-breakdown-row ${clickable}" 
-                             ${modifier.uuid ? `data-action="viewBreakdownSource" data-source-uuid="${modifier.uuid}"` : ''}>
+                        <div class="wh40k-stat-breakdown-row ${clickable}"
+                             ${hasUuid ? `data-action="viewBreakdownSource" data-source-uuid="${modifier.uuid}"` : ''}>
                             <span class="wh40k-stat-breakdown-source">
-                                ${modifier.icon ? `<i class="${modifier.icon}"></i>` : ''}
+                                ${modifier.icon != null && modifier.icon !== '' ? `<i class="${modifier.icon}"></i>` : ''}
                                 ${modifier.source}
                             </span>
                             <span class="wh40k-stat-breakdown-value ${valueClass}">

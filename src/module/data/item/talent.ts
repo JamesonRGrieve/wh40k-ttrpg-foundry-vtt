@@ -1,3 +1,4 @@
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -14,6 +15,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
     declare identifier: string;
     declare category: string;
     declare tier: number;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites.characteristics is a free-form record from migration source
     declare prerequisites: { text: string; characteristics: Record<string, unknown>; skills: string[]; talents: string[] };
     declare aptitudes: string[];
     declare cost: number;
@@ -38,6 +40,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but TS doesn't see it through Foundry's mixin
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Category/type of talent
@@ -150,8 +153,9 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
     static _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
         TalentData.#migratePrerequisites(source);
         TalentData.#migrateAptitudes(source);
         TalentData.#migrateSpecialization(source);
@@ -161,6 +165,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate flat prerequisites string to structured object.
      * @param {object} source  The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
     static #migratePrerequisites(source: Record<string, unknown>): void {
         if (typeof source.prerequisites === 'string') {
             source.prerequisites = {
@@ -176,6 +181,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate flat aptitudes string to array.
      * @param {object} source  The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
     static #migrateAptitudes(source: Record<string, unknown>): void {
         if (typeof source.aptitudes === 'string' && source.aptitudes) {
             source.aptitudes = source.aptitudes
@@ -189,9 +195,10 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Infer hasSpecialization from existing specialization value.
      * @param {object} source  The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
     static #migrateSpecialization(source: Record<string, unknown>): void {
-        if (source.hasSpecialization === undefined && source.specialization) {
-            source.hasSpecialization = !!(source.specialization as string).trim();
+        if (source.hasSpecialization === undefined && typeof source.specialization === 'string' && source.specialization) {
+            source.hasSpecialization = source.specialization.trim().length > 0;
         }
     }
 
@@ -204,12 +211,13 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * @override
      */
     prepareDerivedData(): void {
-        super.prepareDerivedData?.();
+        super.prepareDerivedData();
 
         // Auto-infer hasSpecialization from name containing (X)
         // Only set if not already explicitly set and name contains (X)
-        if (this.parent?.name) {
-            const nameHasX = /\(X\)/i.test(this.parent.name);
+        const parentName = (this.parent as { name?: string } | null)?.name;
+        if (parentName !== undefined && parentName.length > 0) {
+            const nameHasX = /\(X\)/i.test(parentName);
             if (nameHasX && !this.hasSpecialization) {
                 this.hasSpecialization = true;
             }
@@ -226,7 +234,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * @override
      */
     get isRollable(): boolean {
-        return !this.isPassive && (!!this.rollConfig?.characteristic || !!this.rollConfig?.skill);
+        return !this.isPassive && (this.rollConfig.characteristic.length > 0 || this.rollConfig.skill.length > 0);
     }
 
     /**
@@ -252,8 +260,8 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the full name including specialization and rank.
      * @type {string}
      */
-    get fullName() {
-        let name = this.parent?.name ?? '';
+    get fullName(): string {
+        let name = (this.parent as { name?: string } | null)?.name ?? '';
         if (this.specialization) name += ` (${this.specialization})`;
         if (this.stackable && this.rank > 1) name += ` x${this.rank}`;
         return name;
@@ -276,7 +284,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get a formatted prerequisites string.
      * @type {string}
      */
-    get prerequisitesLabel() {
+    get prerequisitesLabel(): string {
         if (this.prerequisites.text) return this.prerequisites.text;
 
         const parts = [];
@@ -316,7 +324,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get a summary of what this talent grants.
      * @type {string[]}
      */
-    get grantsSummary() {
+    get grantsSummary(): string[] {
         const grants = this.grants;
         const summary = [];
 
@@ -372,6 +380,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels is a free-form record consumed by sheet templates
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             category: this.categoryLabel,
@@ -389,12 +398,17 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * @returns {Promise<ChatMessage>}
      */
     async toChat(): Promise<void> {
-        const parentItem = this.parent as { actor?: { system?: { gameSystem?: string } } | null };
+        const parentItem = this.parent as {
+            id: string;
+            name: string;
+            img: string;
+            actor?: { system?: { gameSystem?: string } } | null;
+        };
         const templateData = {
             talent: {
-                id: this.parent.id,
-                name: this.parent.name,
-                img: this.parent.img,
+                id: parentItem.id,
+                name: parentItem.name,
+                img: parentItem.img,
                 type: 'Talent',
                 tier: this.tier,
                 tierLabel: this.tierLabel,
@@ -419,7 +433,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
         await ChatMessage.create({
             content: html,
-            speaker: ChatMessage.getSpeaker({ actor: this.parent.actor }),
-        } as unknown as Parameters<typeof ChatMessage.create>[0]);
+            speaker: ChatMessage.getSpeaker({ actor: (this.parent as { actor?: WH40KBaseActor | null }).actor ?? undefined }),
+        });
     }
 }
