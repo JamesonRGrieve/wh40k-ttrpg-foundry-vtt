@@ -1,0 +1,264 @@
+{
+  "summary": {
+    "originalLines": 4728,
+    "newLines": 3636,
+    "rulesRemoved": 61,
+    "bySource": {
+      "src/css/abstracts/_unified-components.css": 16,
+      "src/css/item/_weapon.css": 30,
+      "src/css/actor/_npc-sheet.css": 7,
+      "src/css/wh40k-rpg.css": 8
+    }
+  },
+  "removed": [
+    {
+      "selector": "&--wounds",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": "&--fatigue",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": "&--fate",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": "&--corruption",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": "&--insanity",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": "&--skills",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": "&--talents",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": "&--equipment",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": "&--powers",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": "&--dynasty",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": "&--bio",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": "&--combat",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": "&--xp",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-panel-header--clickable",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "partial": [
+        "&--compact"
+      ],
+      "kept": [
+        "&.has-items"
+      ],
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": "&--active",
+      "source": "src/css/abstracts/_unified-components.css"
+    },
+    {
+      "selector": ".wh40k-toggle-equipped",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-iconic-stat",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-section__header",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-fab-container",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-toggle-equipped",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&--filled",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&--error",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&--success",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-fab-container",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-fab",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-toggle-equipped",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&--checkboxes",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__header",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__image",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__title",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__name",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__meta",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__divider",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__craft",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__stats",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__stat",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__craft-mods",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__mod",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__qualities",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__quality",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__description",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__actions",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__btn",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__footer",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": "&__source",
+      "source": "src/css/item/_weapon.css"
+    },
+    {
+      "selector": ".wh40k-gm-tools-wrapper",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-gm-tools",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-wounds-current,\n    .wh40k-wounds-max",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-wounds-current",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-wounds-sep",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-wounds-bar",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-ability-card",
+      "source": "src/css/actor/_npc-sheet.css"
+    },
+    {
+      "selector": ".wh40k-wrapper",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-wrapper",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-hdr-name",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-inline-edit-input",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-char-hud-item",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-char-hud-item:hover",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-char-hud-toggle",
+      "source": "src/css/wh40k-rpg.css"
+    },
+    {
+      "selector": ".wh40k-char-hud-toggle-icon",
+      "source": "src/css/wh40k-rpg.css"
+    }
+  ]
+}

@@ -43,7 +43,10 @@ function* walk(dir) {
         else if (/\.(hbs|ts|js|mjs|tsx|jsx|json|html|md|cjs)$/.test(name)) yield full;
     }
 }
-const roots = ['src', 'stories', 'scripts', 'tests', 'tailwind.config.js', '.storybook'];
+// Only scan the actual application code (templates + module). Tokens that
+// appear ONLY in stories/tests/scripts/docs are considered dead — they cannot
+// drive runtime DOM, so their CSS rules are unreachable.
+const roots = ['src/templates', 'src/module', 'tailwind.config.js'];
 for (const r of roots) {
     try {
         const p = resolve(ROOT, r);

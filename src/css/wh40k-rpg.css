@@ -616,45 +616,6 @@ body.theme-dark {
     }
 
     /* Accent color modifiers */
-    &--wounds {
-        --panel-accent: var(--wh40k-accent-combat);
-    }
-    &--fatigue {
-        --panel-accent: var(--wh40k-color-gold);
-    }
-    &--fate {
-        --panel-accent: var(--wh40k-fate-secondary);
-    }
-    &--corruption {
-        --panel-accent: #2d7a6b;
-    }
-    &--insanity {
-        --panel-accent: #7b5aa6;
-    }
-    &--skills {
-        --panel-accent: var(--wh40k-accent-skills);
-    }
-    &--talents {
-        --panel-accent: var(--wh40k-accent-talents);
-    }
-    &--equipment {
-        --panel-accent: var(--wh40k-accent-equipment);
-    }
-    &--powers {
-        --panel-accent: var(--wh40k-accent-powers);
-    }
-    &--dynasty {
-        --panel-accent: var(--wh40k-accent-dynasty);
-    }
-    &--bio {
-        --panel-accent: var(--wh40k-accent-bio);
-    }
-    &--combat {
-        --panel-accent: var(--wh40k-accent-combat);
-    }
-    &--xp {
-        --panel-accent: var(--wh40k-color-gold);
-    }
 
     /* Apply accent color to header icon when modifier is present */
     &[class*='--'] .wh40k-panel-header .wh40k-panel-title i {
@@ -706,14 +667,6 @@ body.theme-dark {
 }
 
 /* Clickable panel header for expand/collapse */
-.wh40k-panel-header--clickable {
-    cursor: pointer;
-    user-select: none;
-
-    &:hover {
-        background: linear-gradient(180deg, rgb(from var(--wh40k-accent-gold) r g b / 0.2) 0%, rgb(from var(--wh40k-accent-gold) r g b / 0.08) 100%);
-    }
-}
 
 .wh40k-panel-chevron {
     font-size: 0.75rem;
@@ -796,7 +749,6 @@ body.theme-dark {
     }
 
     /* Compact variant when items exist */
-    &--compact,
     &.has-items {
         padding: var(--wh40k-space-sm) var(--wh40k-space-md);
         flex-direction: row;
@@ -805,11 +757,6 @@ body.theme-dark {
     }
 
     /* Active drag-over state */
-    &--active {
-        border-color: var(--wh40k-accent-gold);
-        background-color: rgb(from var(--wh40k-accent-gold) r g b / 0.1);
-        box-shadow: inset 0 0 10px rgb(from var(--wh40k-accent-gold) r g b / 0.2);
-    }
 }
 
 /* Small variant (for inline use) */
@@ -934,425 +881,11 @@ body.theme-dark {
 
     /* ── Header ─────────────────────────────────────────────────────────── */
 
-    .wh40k-toggle-equipped {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-
-        input {
-            display: none;
-        }
-
-        .wh40k-toggle-equipped__indicator {
-            font-size: 1.2rem;
-            color: rgba(214, 221, 235, 0.5);
-            transition: color var(--wh40k-transition-base);
-        }
-
-        input:checked ~ .wh40k-toggle-equipped__indicator {
-            color: var(--wh40k-green-bright);
-        }
-    }
-
     /* ── Color-Coded Stat Cards ─────────────────────────────────────────── */
 
     /* ═══════════════════════════════════════════════════════════════════════ */
     /* ICONIC STAT MOSAIC - Modern Glassmorphism Design */
     /* ═══════════════════════════════════════════════════════════════════════ */
-
-    .wh40k-iconic-stat {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 8px 6px;
-        background: rgba(12, 16, 24, 0.6);
-        border-radius: var(--wh40k-radius-lg);
-        border: 2px solid transparent;
-        backdrop-filter: blur(12px);
-        overflow: hidden;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        cursor: default;
-        aspect-ratio: 1 / 1;
-        grid-column: span 1;
-        grid-row: span 1;
-        min-height: 60px;
-
-        /* Base sizes for 1x1 square */
-        .wh40k-iconic-stat__shape {
-            font-size: 1.2rem;
-            margin-bottom: 4px;
-        }
-
-        /* Size variants with responsive adjustments */
-        &--large {
-            grid-column: span 2;
-            grid-row: span 2;
-            aspect-ratio: 1 / 1;
-            padding: 10px 8px;
-
-            .wh40k-iconic-stat__shape {
-                font-size: 2rem;
-                margin-bottom: 8px;
-            }
-
-            /* Shrink to 2x1 on medium containers */
-            @container (max-width: 520px) {
-                grid-row: span 1;
-                aspect-ratio: 2 / 1;
-
-                .wh40k-iconic-stat__shape {
-                    font-size: 1.5rem;
-                    margin-bottom: 6px;
-                }
-            }
-
-            /* Shrink to 1x1 on narrow containers */
-            @container (max-width: 380px) {
-                grid-column: span 1;
-                grid-row: span 1;
-                aspect-ratio: 1 / 1;
-
-                .wh40k-iconic-stat__shape {
-                    font-size: 1.2rem;
-                    margin-bottom: 4px;
-                }
-            }
-        }
-
-        &--medium {
-            grid-column: span 1;
-            grid-row: span 1;
-            aspect-ratio: 1 / 1;
-
-            .wh40k-iconic-stat__shape {
-                font-size: 1rem;
-                margin-bottom: 3px;
-            }
-
-            /* Expand to 2x1 when there's enough space (wide containers) */
-            @container (min-width: 550px) {
-                grid-column: span 2;
-                aspect-ratio: 2 / 1;
-
-                .wh40k-iconic-stat__shape {
-                    font-size: 1.2rem;
-                    margin-bottom: 4px;
-                }
-            }
-        }
-
-        &--small {
-            /* Already 1x1, just smaller text */
-            .wh40k-iconic-stat__shape {
-                font-size: 1rem;
-                margin-bottom: 3px;
-            }
-        }
-
-        &--wide {
-            grid-column: 1 / -1;
-            aspect-ratio: auto;
-            flex-direction: row;
-            justify-content: flex-start;
-            padding: 8px 12px;
-            gap: 10px;
-
-            .wh40k-iconic-stat__shape {
-                font-size: 1rem;
-                margin-bottom: 0;
-            }
-        }
-
-        /* Hover effects */
-        &:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        }
-
-        /* Shape container */
-        &__shape {
-            position: relative;
-            z-index: 2;
-            font-size: 1.3rem;
-            margin-bottom: 4px;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-            transition: transform 0.3s ease, filter 0.3s ease;
-        }
-
-        /* Content */
-        &__content {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-        }
-
-        &__value {
-            font-family: var(--wh40k-font-display);
-            font-size: 1rem;
-            font-weight: 700;
-            color: rgba(240, 232, 220, 0.95);
-            line-height: 1.1;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-
-            small {
-                font-size: 0.6em;
-                font-weight: 400;
-                opacity: 0.7;
-            }
-
-            &--positive {
-                color: var(--wh40k-green-bright);
-            }
-
-            &--negative {
-                color: var(--wh40k-red-bright);
-            }
-        }
-
-        &__label {
-            font-size: 0.6rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: rgba(202, 210, 222, 0.6);
-        }
-
-        /* Glow effect (animated on hover) */
-        &__glow {
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            opacity: 0;
-            transition: opacity var(--wh40k-transition-medium);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Progress bar for clip */
-        &__progress {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-
-            &::after {
-                content: '';
-                position: absolute;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                width: var(--progress, 100%);
-                background: linear-gradient(90deg, var(--wh40k-green), var(--wh40k-green-bright));
-                transition: width 0.4s ease;
-            }
-        }
-
-        /* Qualities container */
-        &__qualities {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            flex: 1;
-        }
-
-        /* ═══════════════════════════════════════════════════════════════════ */
-        /* STAT TYPE VARIANTS - Colors, Borders, Glows */
-        /* ═══════════════════════════════════════════════════════════════════ */
-
-        /* Damage - Red/Crimson */
-        &--damage {
-            border-color: rgba(182, 62, 46, 0.4);
-            background: linear-gradient(145deg, rgba(182, 62, 46, 0.15), rgba(12, 16, 24, 0.7));
-
-            .wh40k-iconic-stat__shape {
-                color: var(--wh40k-red-bright);
-            }
-
-            &:hover {
-                border-color: rgba(182, 62, 46, 0.7);
-                box-shadow: 0 8px 24px rgba(182, 62, 46, 0.25), 0 0 40px rgba(182, 62, 46, 0.15);
-
-                .wh40k-iconic-stat__shape {
-                    transform: scale(1.1);
-                    filter: drop-shadow(0 0 8px rgba(182, 62, 46, 0.6));
-                }
-            }
-        }
-
-        /* Penetration - Gold */
-        &--pen {
-            border-color: rgba(212, 175, 55, 0.4);
-            background: linear-gradient(145deg, rgba(212, 175, 55, 0.12), rgba(12, 16, 24, 0.7));
-
-            .wh40k-iconic-stat__shape {
-                color: var(--wh40k-gold);
-            }
-
-            &:hover {
-                border-color: rgba(212, 175, 55, 0.7);
-                box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2), 0 0 40px rgba(212, 175, 55, 0.12);
-
-                .wh40k-iconic-stat__shape {
-                    transform: scale(1.1) rotate(45deg);
-                    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
-                }
-            }
-        }
-
-        /* To Hit - Green */
-        &--tohit {
-            border-color: rgba(74, 132, 72, 0.4);
-            background: linear-gradient(145deg, rgba(74, 132, 72, 0.12), rgba(12, 16, 24, 0.7));
-
-            .wh40k-iconic-stat__shape {
-                color: var(--wh40k-green);
-            }
-
-            &:hover {
-                border-color: rgba(74, 132, 72, 0.7);
-                box-shadow: 0 8px 24px rgba(74, 132, 72, 0.2);
-
-                .wh40k-iconic-stat__shape {
-                    transform: scale(1.15);
-                    filter: drop-shadow(0 0 8px rgba(74, 132, 72, 0.6));
-                }
-            }
-        }
-
-        /* Range - Blue */
-        &--range {
-            border-color: rgba(58, 93, 132, 0.4);
-            background: linear-gradient(145deg, rgba(58, 93, 132, 0.15), rgba(12, 16, 24, 0.7));
-
-            .wh40k-iconic-stat__shape {
-                color: rgba(98, 142, 185, 0.9);
-            }
-
-            &:hover {
-                border-color: rgba(98, 142, 185, 0.7);
-                box-shadow: 0 8px 24px rgba(58, 93, 132, 0.25);
-
-                .wh40k-iconic-stat__shape {
-                    transform: scale(1.1);
-                    filter: drop-shadow(0 0 8px rgba(98, 142, 185, 0.6));
-                }
-            }
-        }
-
-        /* Rate of Fire - Bronze/Orange */
-        &--rof {
-            border-color: rgba(143, 76, 38, 0.4);
-            background: linear-gradient(145deg, rgba(143, 76, 38, 0.15), rgba(12, 16, 24, 0.7));
-
-            .wh40k-iconic-stat__shape {
-                color: rgba(212, 140, 80, 0.9);
-            }
-
-            &:hover {
-                border-color: rgba(212, 140, 80, 0.7);
-                box-shadow: 0 8px 24px rgba(143, 76, 38, 0.25);
-
-                .wh40k-iconic-stat__shape {
-                    transform: scale(1.15);
-                    filter: drop-shadow(0 0 8px rgba(212, 140, 80, 0.6));
-                }
-            }
-        }
-
-        /* Clip/Ammo - Dynamic based on status */
-        &--clip {
-            border-color: rgba(74, 132, 72, 0.4);
-            background: linear-gradient(145deg, rgba(74, 132, 72, 0.1), rgba(12, 16, 24, 0.7));
-
-            .wh40k-iconic-stat__shape {
-                color: var(--wh40k-green);
-            }
-
-            &--ammo-low {
-                border-color: rgba(171, 110, 24, 0.5);
-                background: linear-gradient(145deg, rgba(171, 110, 24, 0.12), rgba(12, 16, 24, 0.7));
-
-                .wh40k-iconic-stat__shape {
-                    color: var(--wh40k-warning-primary);
-                }
-            }
-
-            &--ammo-critical,
-            &--ammo-empty {
-                border-color: rgba(182, 62, 46, 0.5);
-                background: linear-gradient(145deg, rgba(182, 62, 46, 0.12), rgba(12, 16, 24, 0.7));
-
-                .wh40k-iconic-stat__shape {
-                    color: var(--wh40k-red-bright);
-                }
-            }
-
-            &:hover {
-                box-shadow: 0 8px 24px rgba(74, 132, 72, 0.2);
-            }
-        }
-
-        /* Weight - Neutral/Gray */
-        &--weight {
-            border-color: rgba(148, 160, 178, 0.3);
-            background: linear-gradient(145deg, rgba(148, 160, 178, 0.08), rgba(12, 16, 24, 0.7));
-
-            .wh40k-iconic-stat__shape {
-                color: rgba(148, 160, 178, 0.8);
-            }
-
-            &:hover {
-                border-color: rgba(148, 160, 178, 0.5);
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            }
-        }
-
-        /* Qualities - Blue accent (individual cards) */
-        &--quality {
-            grid-column: span 1;
-            border-color: rgba(58, 93, 132, 0.4);
-            background: linear-gradient(145deg, rgba(58, 93, 132, 0.15), rgba(12, 16, 24, 0.6));
-            cursor: pointer;
-            padding: 8px 6px;
-
-            .wh40k-iconic-stat__shape {
-                font-size: 0.9rem;
-                color: rgba(178, 208, 234, 0.7);
-                margin-bottom: 2px;
-            }
-
-            &:hover {
-                border-color: rgba(98, 142, 185, 0.7);
-                box-shadow: 0 8px 24px rgba(58, 93, 132, 0.25);
-                transform: translateY(-2px) scale(1.02);
-
-                .wh40k-iconic-stat__shape {
-                    transform: scale(1.2);
-                    filter: drop-shadow(0 0 6px rgba(98, 142, 185, 0.6));
-                }
-            }
-        }
-
-        /* Qualities - wide bar (legacy, kept for backwards compatibility) */
-        &--qualities {
-            border-color: rgba(58, 93, 132, 0.3);
-            background: linear-gradient(145deg, rgba(58, 93, 132, 0.1), rgba(12, 16, 24, 0.6));
-
-            .wh40k-iconic-stat__shape {
-                color: rgba(178, 208, 234, 0.7);
-            }
-        }
-
-        /* Modified indicator */
-    }
 
     /* Quality chip (inside mosaic) */
 
@@ -1376,38 +909,10 @@ body.theme-dark {
     /* Interactive elements hover lift */
 
     /* Section header hover effect */
-    .wh40k-section__header {
-        transition: all var(--wh40k-transition-base);
-
-        &:hover {
-            background: linear-gradient(135deg, rgba(62, 34, 22, 0.5), rgba(16, 20, 28, 0.25));
-
-            .wh40k-section__toggle {
-                color: var(--wh40k-gold);
-            }
-        }
-
-        &:active {
-            background: linear-gradient(135deg, rgba(62, 34, 22, 0.6), rgba(16, 20, 28, 0.3));
-        }
-    }
 
     /* Edit toggle button glow when active */
 
     /* FAB expand animation */
-    .wh40k-fab-container {
-        .wh40k-fab-actions {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        &.expanded {
-            .wh40k-fab-actions {
-                .wh40k-fab {
-                    /* animation now applied via tw-animate-[slide-in-up_0.3s_ease-out_backwards] in JS */
-                }
-            }
-        }
-    }
 
     /* Form field focus ripple effect */
     .wh40k-float-field {
@@ -1506,9 +1011,6 @@ body.theme-dark {
     }
 
     /* Equipped toggle animation */
-    .wh40k-toggle-equipped {
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
 
     /* Image hover zoom */
 
@@ -1706,46 +1208,10 @@ body.theme-dark {
         }
 
         /* Filled state visual feedback */
-        &--filled {
-            input,
-            select {
-                background: rgba(212, 175, 55, 0.08);
-                border-color: rgba(212, 175, 55, 0.25);
-            }
-        }
 
         /* Error state */
-        &--error {
-            input,
-            select {
-                border-color: rgba(182, 62, 46, 0.6);
-                background: rgba(182, 62, 46, 0.08);
-            }
-
-            label {
-                color: var(--wh40k-red-bright);
-            }
-
-            .wh40k-float-field__bar {
-                background: linear-gradient(90deg, var(--wh40k-red), var(--wh40k-red-bright));
-            }
-        }
 
         /* Success state */
-        &--success {
-            input,
-            select {
-                border-color: rgba(74, 132, 72, 0.5);
-            }
-
-            label {
-                color: var(--wh40k-green);
-            }
-
-            .wh40k-float-field__bar {
-                background: linear-gradient(90deg, var(--wh40k-green), var(--wh40k-green-bright));
-            }
-        }
     }
 
     /* ── Ammo Dropzone ──────────────────────────────────────────────────── */
@@ -1755,118 +1221,6 @@ body.theme-dark {
     /* ── Empty State ────────────────────────────────────────────────────── */
 
     /* ── FAB (Floating Action Button) ───────────────────────────────────── */
-    .wh40k-fab-container {
-        position: absolute;
-        bottom: 16px;
-        right: 16px;
-        display: flex;
-        flex-direction: column-reverse;
-        align-items: center;
-        gap: var(--wh40k-space-sm);
-        z-index: 30;
-
-        .wh40k-fab-actions {
-            display: flex;
-            flex-direction: column-reverse;
-            gap: 6px;
-            opacity: 0;
-            transform: translateY(10px) scale(0.9);
-            pointer-events: none;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        &.expanded .wh40k-fab-actions {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: auto;
-        }
-    }
-
-    .wh40k-fab {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: all var(--wh40k-transition-base);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-
-        &--main {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--wh40k-gold), var(--wh40k-gold-dark));
-            color: rgba(10, 12, 18, 0.95);
-            font-size: 1.2rem;
-
-            &:hover {
-                transform: scale(1.08);
-                box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-            }
-
-            .expanded & {
-                transform: rotate(45deg);
-            }
-        }
-
-        &--attack,
-        &--damage,
-        &--reload {
-            width: auto;
-            height: 36px;
-            padding: 0 14px;
-            border-radius: 18px;
-            gap: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-
-            span {
-                display: inline;
-            }
-
-            i {
-                font-size: 0.9rem;
-            }
-        }
-
-        &--attack {
-            background: linear-gradient(135deg, var(--wh40k-red), var(--wh40k-red-dark));
-            color: white;
-
-            &:hover {
-                background: linear-gradient(135deg, var(--wh40k-red-bright), var(--wh40k-red));
-                transform: scale(1.05);
-            }
-        }
-
-        &--damage {
-            background: linear-gradient(135deg, var(--wh40k-gold), var(--wh40k-gold-dark));
-            color: rgba(10, 12, 18, 0.95);
-
-            &:hover {
-                background: linear-gradient(135deg, var(--wh40k-gold-bright), var(--wh40k-gold));
-                transform: scale(1.05);
-            }
-        }
-
-        &--reload {
-            background: rgba(14, 18, 26, 0.9);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            color: var(--wh40k-text-dark);
-
-            &:hover {
-                border-color: rgba(212, 175, 55, 0.5);
-                transform: scale(1.05);
-            }
-        }
-
-        &--disabled {
-            opacity: 0.4;
-            pointer-events: none;
-        }
-    }
 
     /* ── Button Utilities ───────────────────────────────────────────────── */
 
@@ -1936,47 +1290,6 @@ body.theme-dark {
 /* EQUIPPED TOGGLE */
 /* ============================================ */
 
-.wh40k-toggle-equipped {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 6px;
-    background: rgba(14, 18, 26, 0.6);
-    border: 1px solid rgba(212, 175, 55, 0.25);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    transition: all var(--wh40k-transition-base);
-
-    input {
-        display: none;
-    }
-
-    &__indicator {
-        font-size: 1.1rem;
-        color: rgba(214, 221, 235, 0.7);
-        transition: color var(--wh40k-transition-base);
-    }
-
-    &__label {
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: rgba(214, 221, 235, 0.7);
-        transition: color var(--wh40k-transition-base);
-    }
-
-    &:hover {
-        background: rgba(20, 24, 34, 0.7);
-        border-color: rgba(212, 175, 55, 0.4);
-    }
-
-    input:checked ~ .wh40k-toggle-equipped__indicator {
-        color: var(--wh40k-green-bright);
-    }
-}
-
 /* ============================================ */
 /* EDIT TOGGLE BUTTON */
 /* ============================================ */
@@ -2020,11 +1333,6 @@ body.theme-dark {
 
     &:last-child {
         margin-bottom: 0;
-    }
-
-    &--checkboxes {
-        flex-wrap: wrap;
-        gap: var(--wh40k-space-lg);
     }
 }
 
@@ -2092,225 +1400,6 @@ body.theme-dark {
     border-radius: 6px;
     overflow: hidden;
     font-family: var(--wh40k-font-ui);
-
-    &__header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
-        background: linear-gradient(135deg, var(--wh40k-combat-bg) 0%, transparent 100%);
-        border-bottom: 1px solid var(--wh40k-border-color-light);
-    }
-
-    &__image {
-        width: 40px;
-        height: 40px;
-        border: 2px solid var(--wh40k-bronze);
-        border-radius: var(--wh40k-radius-md);
-        object-fit: cover;
-    }
-
-    &__title {
-        flex: 1;
-        min-width: 0;
-    }
-
-    &__name {
-        margin: 0;
-        font-family: var(--wh40k-font-display);
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--wh40k-bronze);
-        line-height: 1.2;
-    }
-
-    &__meta {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: var(--wh40k-space-xs);
-        margin-top: 2px;
-        font-size: 0.75rem;
-        color: var(--wh40k-text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-    }
-
-    &__divider {
-        color: var(--wh40k-border-color);
-    }
-
-    &__craft {
-        font-weight: 600;
-
-        &--poor {
-            color: var(--wh40k-red);
-        }
-        &--good {
-            color: var(--wh40k-green);
-        }
-        &--best,
-        &--master-crafted {
-            color: var(--wh40k-gold);
-        }
-    }
-
-    &__stats {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1px;
-        padding: 1px;
-        background: var(--wh40k-border-color-light);
-    }
-
-    &__stat {
-        display: flex;
-        align-items: baseline;
-        gap: 6px;
-        padding: 8px 10px;
-        background: var(--wh40k-panel-bg);
-
-        &-label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--wh40k-text-muted);
-        }
-
-        &-value {
-            font-family: var(--wh40k-font-display);
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--wh40k-text-dark);
-        }
-    }
-
-    &__craft-mods {
-        display: flex;
-        align-items: center;
-        gap: var(--wh40k-space-sm);
-        padding: 8px 12px;
-        background: rgba(212, 175, 55, 0.1);
-        border-bottom: 1px solid var(--wh40k-border-color-light);
-        font-size: 0.8rem;
-
-        i {
-            color: var(--wh40k-gold);
-        }
-    }
-
-    &__mod {
-        font-weight: 600;
-
-        &--positive {
-            color: var(--wh40k-green-bright);
-        }
-        &--negative {
-            color: var(--wh40k-red-bright);
-        }
-    }
-
-    &__qualities {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--wh40k-space-xs);
-        padding: 8px 12px;
-        border-bottom: 1px solid var(--wh40k-border-color-light);
-    }
-
-    &__quality {
-        padding: 2px 6px;
-        background: var(--wh40k-talents-bg);
-        border: 1px solid var(--wh40k-talents-border);
-        border-radius: 3px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        color: var(--wh40k-talents-primary);
-    }
-
-    &__description {
-        padding: 10px 12px;
-        font-size: 0.85rem;
-        line-height: 1.4;
-        color: var(--wh40k-text-medium);
-        border-bottom: 1px solid var(--wh40k-border-color-light);
-
-        p {
-            margin: 0 0 6px;
-            &:last-child {
-                margin-bottom: 0;
-            }
-        }
-    }
-
-    &__actions {
-        display: flex;
-        gap: 6px;
-        padding: 10px 12px;
-        justify-content: center;
-    }
-
-    &__btn {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        padding: 6px 14px;
-        border: 1px solid;
-        border-radius: var(--wh40k-radius-md);
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-        cursor: pointer;
-        transition: all var(--wh40k-transition-base);
-
-        &--attack {
-            background: linear-gradient(135deg, var(--wh40k-red) 0%, var(--wh40k-red-dark) 100%);
-            border-color: var(--wh40k-red-dark);
-            color: white;
-
-            &:hover {
-                background: linear-gradient(135deg, var(--wh40k-red-bright) 0%, var(--wh40k-red) 100%);
-                transform: translateY(-1px);
-                box-shadow: 0 3px 8px rgba(139, 0, 0, 0.4);
-            }
-        }
-
-        &--damage {
-            background: linear-gradient(135deg, var(--wh40k-gold) 0%, var(--wh40k-gold-dark) 100%);
-            border-color: var(--wh40k-gold-dark);
-            color: white;
-
-            &:hover {
-                background: linear-gradient(135deg, var(--wh40k-gold-bright) 0%, var(--wh40k-gold) 100%);
-                transform: translateY(-1px);
-                box-shadow: 0 3px 8px rgba(212, 175, 55, 0.4);
-            }
-        }
-
-        &--reload {
-            background: var(--wh40k-btn-bg);
-            border-color: var(--wh40k-border-color);
-            color: var(--wh40k-text-dark);
-
-            &:hover {
-                background: var(--wh40k-btn-bg-hover);
-                transform: translateY(-1px);
-            }
-        }
-    }
-
-    &__footer {
-        padding: 6px 12px;
-        border-top: 1px solid var(--wh40k-border-color-light);
-        text-align: right;
-    }
-
-    &__source {
-        font-size: 0.7rem;
-        font-style: italic;
-        color: var(--wh40k-text-muted);
-    }
 }
 
 /* ============================================ */
@@ -3186,17 +2275,6 @@ body.theme-dark {
     /* Edit Mode Toggle */
 
     /* GM Tools (collapsible) */
-    .wh40k-gm-tools-wrapper {
-        margin-top: auto; /* Push to bottom of sidebar */
-    }
-
-    .wh40k-gm-tools {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.35rem;
-        justify-content: center;
-        padding: 0.5rem 0;
-    }
 
     /* Magnitude Compact (for hordes) */
 
@@ -3293,41 +2371,6 @@ body.theme-dark {
 
     /* Legacy selectors preserved */
 
-    .wh40k-wounds-current,
-    .wh40k-wounds-max {
-        width: 50px;
-        font-size: 1.5rem;
-        font-weight: 700;
-        text-align: center;
-        background: transparent;
-        border: 2px solid transparent;
-        color: var(--color-text-light-primary, #f0f0f0);
-        border-radius: var(--wh40k-radius-md);
-
-        &:hover,
-        &:focus {
-            border-color: var(--npc-accent-combat);
-            outline: none;
-        }
-    }
-
-    .wh40k-wounds-current {
-        color: var(--npc-accent-combat);
-    }
-
-    .wh40k-wounds-sep {
-        font-size: 1.2rem;
-        color: var(--color-text-light-secondary, #888);
-    }
-
-    .wh40k-wounds-bar {
-        height: 8px;
-        background: var(--color-bg-primary, #1a1a1a);
-        border-radius: var(--wh40k-radius-md);
-        overflow: hidden;
-        margin-bottom: 0.75rem;
-    }
-
     /* Combat Stats */
 
     /* Armour Panel */
@@ -3378,42 +2421,6 @@ body.theme-dark {
     /* ============================================ */
     /* ABILITIES TAB */
     /* ============================================ */
-
-    .wh40k-ability-card {
-        background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
-        border: 1px solid var(--color-border-secondary, #444);
-        border-radius: 6px;
-        padding: 0.5rem;
-        transition: all var(--wh40k-transition-fast);
-
-        &:hover {
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        }
-
-        &.pinned {
-            border-left: 3px solid var(--npc-accent-primary);
-        }
-        &.trait {
-            border-left: 3px solid var(--npc-accent-skills);
-        }
-        &.power {
-            border-left: 3px solid #e91e63;
-        }
-
-        .wh40k-ability-desc {
-            margin-top: 0.4rem;
-            padding-top: 0.4rem;
-            border-top: 1px solid var(--color-border-secondary, #444);
-            font-size: 0.8rem;
-            color: var(--color-text-light-secondary, #888);
-            max-height: 120px;
-            overflow-y: auto;
-
-            &[hidden] {
-                display: none;
-            }
-        }
-    }
 
     .wh40k-dropzone {
         border: 2px dashed var(--color-border-secondary, #444);
@@ -3577,10 +2584,6 @@ body.theme-dark {
 /* Actor Sheets (split into modules) */
 
 /* ── source: src/css/wh40k-rpg.css ── */
-
-.wh40k-wrapper {
-    position: relative;
-}
 
 /* Alias for wh40k-actor (same as dh-actor) */
 
@@ -3975,14 +2978,6 @@ body.theme-dark {
     }
 
     /* The wrapper takes full height and doesn't scroll */
-    .wh40k-wrapper {
-        display: flex !important;
-        flex-direction: column !important;
-        flex: 1 1 auto !important;
-        min-height: 0 !important;
-        overflow: hidden !important;
-        height: 100% !important;
-    }
 
     /* The form fills the wrapper and is a flex column layout */
     .wh40k-sheet {
@@ -4132,74 +3127,9 @@ body.theme-dark {
 
     /* ---- Name line: four flex spans, left-aligned ---- */
 
-    .wh40k-hdr-name {
-        display: inline-flex !important;
-        align-items: center !important;
-        flex: 0 0 auto !important;
-        min-width: 0 !important;
-        position: relative !important;
-        cursor: text !important;
-
-        /* Default: show text, hide input */
-        .wh40k-inline-edit-text {
-            display: inline !important;
-        }
-        .wh40k-inline-edit-input {
-            display: none !important;
-        }
-
-        /* Editing: hide text, show input */
-        &.is-editing {
-            .wh40k-inline-edit-text {
-                display: none !important;
-            }
-            .wh40k-inline-edit-input {
-                display: inline !important;
-                min-width: 60px !important;
-            }
-        }
-    }
-
     /* Generic inline-edit (used elsewhere in the sheet) */
 
-    .wh40k-inline-edit-input {
-        flex: 0 1 auto !important;
-        min-width: 0 !important;
-        width: auto !important;
-        field-sizing: content !important;
-
-        &[readonly] {
-            border-bottom-color: transparent !important;
-            cursor: text !important;
-        }
-
-        &[readonly]:hover {
-            border-bottom-color: var(--wh40k-border-color-light, rgba(74, 55, 40, 0.3)) !important;
-        }
-    }
-
     /* .wh40k-player-inline removed — replaced by .wh40k-hdr-player-input */
-
-    .wh40k-char-hud-item {
-        display: grid !important;
-        grid-template-rows: auto auto auto auto !important;
-        justify-items: center !important;
-        gap: var(--wh40k-space-xs) !important;
-        padding: 5px !important;
-        flex: 0 0 auto !important;
-        min-width: 0 !important;
-        position: relative !important;
-        text-align: center !important;
-        background: var(--wh40k-hud-item-bg, rgba(255, 255, 255, 0.5)) !important;
-        border: 1px solid var(--wh40k-border-color, rgba(140, 120, 90, 0.3)) !important;
-        border-radius: 6px !important;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease !important;
-    }
-
-    .wh40k-char-hud-item:hover {
-        transform: translateY(-1px) !important;
-        box-shadow: 0 4px 12px var(--wh40k-shadow-medium, rgba(0, 0, 0, 0.15)) !important;
-    }
 
     .wh40k-char-hud-circle {
         position: relative !important;
@@ -4221,28 +3151,6 @@ body.theme-dark {
         font-weight: 700 !important;
         color: var(--wh40k-text-dark, #1a1510) !important;
         text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) !important;
-    }
-
-    .wh40k-char-hud-toggle {
-        width: 18px !important;
-        height: 18px !important;
-        border-radius: 999px !important;
-        background: var(--wh40k-btn-bg, #f0ebe0) !important;
-        border: 1px solid var(--wh40k-border-color, rgba(140, 120, 90, 0.3)) !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        cursor: pointer !important;
-        padding: 0 !important;
-        position: relative !important;
-        z-index: 3 !important;
-    }
-
-    .wh40k-char-hud-toggle-icon {
-        font-size: 0.7em !important;
-        color: var(--wh40k-text-muted, #666) !important;
-        display: inline-block !important;
-        transition: transform 0.15s ease !important;
     }
 
     .wh40k-char-hud-details {
