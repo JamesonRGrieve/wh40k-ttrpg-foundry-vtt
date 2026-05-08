@@ -2,6 +2,7 @@
 const plugin = require('tailwindcss/plugin');
 const designTokens = require('./tailwind/design-tokens.js');
 const panelComponents = require('./tailwind/panel-components.js');
+const legacyComponents = require('./tailwind/legacy-components.js');
 
 module.exports = {
   content: [
@@ -1352,10 +1353,18 @@ module.exports = {
         addVariant(id, `[data-wh40k-system="${id}"] &`);
       });
     }),
+    // Legacy gothic component classes (.wh40k-panel*, .wh40k-hit-location-result,
+    // .wh40k-rpg.sheet.actor scope, etc.) registered via addBase. addComponents
+    // would prefix every selector with `tw-` per the global `prefix: 'tw-'`
+    // config — addBase emits selectors literally, which is what we need
+    // because templates author the bare `.wh40k-panel-header` class.
+    plugin(function ({ addBase }) {
+      addBase(panelComponents);
+      addBase(legacyComponents);
+    }),
     plugin(function ({ addComponents }) {
       // Selectors here are auto-prefixed by Tailwind's `prefix: 'tw-'` config,
       // so write them WITHOUT the tw- prefix.
-      addComponents(panelComponents);
       addComponents({
         // Shared form-group: standard label-over-input pattern used in nearly every dialog.
         '.form-group': {

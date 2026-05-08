@@ -6,14 +6,11 @@
    each block remains a candidate for inline-Tailwind porting per
    docs/tailwind-migration.md. Once a file's rules are fully ported to
    templates, delete the file and remove the matching @import here. */
-@import './item/_base-window.css';
 @import './item/_weapon.css';
 @import './components/_wh40k-tooltip.css';
 @import './components/_item-preview.css';
-@import './components/_armour.css';
 @import './actor/_npc-sheet.css';
 @import './components/_compendium-browser.css';
-@import './actor/_actor-scroll.css';
 @import './foundry-chrome.css';
 
 /* Tailwind layers — base holds design tokens (see tailwind/design-tokens.js
