@@ -6,12 +6,12 @@
             <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-2">
                 {{#each actor.characteristics as |characteristic name|}}
                     {{#unless (eq name "influence")}}
-                    <div class="wh40k-char-hud-item {{#if (gt this.modifier 0)}}wh40k-char-buffed{{/if}}{{#if (lt this.modifier 0)}}wh40k-char-debuffed{{/if}}"
+                    <div class="tw-grid tw-grid-rows-[auto_auto_auto_auto] tw-justify-items-center tw-gap-[var(--wh40k-space-xs)] tw-p-[5px] tw-flex-none tw-min-w-0 tw-relative tw-text-center tw-bg-[var(--wh40k-hud-item-bg,rgba(255,255,255,0.5))] tw-border tw-border-solid tw-rounded-[6px] tw-transition-[border-color,box-shadow,transform] tw-duration-200 hover:tw-translate-y-[-1px] hover:tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium,rgba(0,0,0,0.15))] {{#if (gt this.modifier 0)}}tw-border-[rgba(74,222,128,0.6)] tw-shadow-[0_0_8px_rgba(74,222,128,0.3)]{{else if (lt this.modifier 0)}}tw-border-[rgba(239,68,68,0.6)] tw-shadow-[0_0_8px_rgba(239,68,68,0.3)]{{else}}tw-border-[var(--wh40k-border-color,rgba(140,120,90,0.3))]{{/if}}"
                          data-characteristic="{{name}}"
                          data-advance="{{this.advance}}"
                          style="--advance-progress: {{divide this.advance 5}};">
                         <button
-                            class="wh40k-char-hud-name roll-characteristic actor-drag"
+                            class="tw-bg-transparent tw-border-none tw-p-0 tw-cursor-pointer tw-uppercase tw-tracking-[0.12em] tw-font-bold tw-text-[0.78em] tw-text-[color:var(--wh40k-text-dark,#333)] tw-text-center tw-w-full tw-block tw-transition-colors tw-duration-150 hover:tw-text-gold"
                             type="button"
                             data-action="roll"
                             data-roll-type="characteristic"
@@ -21,9 +21,9 @@
                             data-characteristic="{{name}}"
                             title="{{this.label}}"
                         >{{this.short}}</button>
-                        <div class="wh40k-char-hud-circle tw-overflow-hidden tw-group/characteristic-roll" title="{{this.label}}">
-                            <span class="wh40k-char-hud-mod tw-transition-opacity tw-duration-150 group-hover/characteristic-roll:tw-opacity-15">{{this.bonus}}</span>
-                            <span class="wh40k-char-hud-mod-label tw-transition-opacity tw-duration-150 group-hover/characteristic-roll:tw-opacity-15">MOD</span>
+                        <div class="wh40k-char-hud-circle tw-relative tw-w-[48px] tw-h-[48px] tw-rounded-full tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[1px] tw-bg-[var(--wh40k-circle-bg,linear-gradient(180deg,#f4d03f_0%,var(--wh40k-color-gold)_70%,#b8860b_100%))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,#8b6914)] tw-shadow-[inset_0_1px_2px_var(--wh40k-text-shadow,rgba(0,0,0,0.1)),0_3px_8px_var(--wh40k-shadow-soft,rgba(0,0,0,0.15))] tw-overflow-hidden tw-group/characteristic-roll" title="{{this.label}}">
+                            <span class="tw-text-[1.2em] tw-font-bold tw-text-[color:var(--wh40k-text-dark,#1a1510)] tw-transition-opacity tw-duration-150 group-hover/characteristic-roll:tw-opacity-15">{{this.bonus}}</span>
+                            <span class="tw-text-[0.55em] tw-uppercase tw-tracking-[0.12em] tw-text-[color:var(--wh40k-text-muted,rgba(60,50,40,0.75))] tw-transition-opacity tw-duration-150 group-hover/characteristic-roll:tw-opacity-15">MOD</span>
                             <button
                                 class="tw-absolute tw-inset-0 tw-z-[1] tw-grid tw-place-items-center tw-rounded-full tw-border-0 tw-bg-[rgba(15,23,42,0.08)] tw-text-[rgba(255,255,255,0.78)] tw-opacity-0 tw-transition-all tw-duration-150 hover:tw-bg-[rgba(15,23,42,0.16)] hover:tw-text-white group-hover/characteristic-roll:tw-opacity-100"
                                 type="button"
@@ -40,11 +40,11 @@
                             </button>
                         </div>
                         {{#if ../inEditMode}}
-                        <div class="wh40k-char-hud-base wh40k-char-hud-base--edit">
-                            <input type="number" class="wh40k-char-direct-input wh40k-char-inline-input" data-characteristic="{{name}}" data-field="base" data-dtype="Number" value="{{this.base}}" title="Base {{this.label}}" />
+                        <div class="tw-text-[0.65em] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted,rgba(60,50,40,0.75))] tw-text-center">
+                            <input type="number" class="wh40k-char-direct-input" data-characteristic="{{name}}" data-field="base" data-dtype="Number" value="{{this.base}}" title="Base {{this.label}}" />
                         </div>
                         {{else}}
-                        <div class="wh40k-char-hud-base">Total {{this.total}}</div>
+                        <div class="tw-text-[0.65em] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted,rgba(60,50,40,0.75))] tw-text-center">Total {{this.total}}</div>
                         {{/if}}
                     </div>
                     {{/unless}}
@@ -60,10 +60,10 @@
 
     {{!-- Talents & Traits side by side (equal height) --}}
     <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-w-full tw-items-stretch">
-        <div class="wh40k-talents-col tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
+        <div class="tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{> systems/wh40k-rpg/templates/actor/panel/talent-panel.hbs}}
         </div>
-        <div class="wh40k-talents-col tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
+        <div class="tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{> systems/wh40k-rpg/templates/actor/panel/trait-panel.hbs}}
         </div>
     </div>

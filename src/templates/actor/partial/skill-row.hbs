@@ -5,24 +5,24 @@
     Hash params:
         entry — [skillKey, skillData] tuple from skillLists.standardColumns
 --}}
-<div class="wh40k-skill-row tw-grid tw-grid-cols-skill-row tw-gap-2 tw-items-center tw-py-1 tw-px-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-md hover:tw-bg-[var(--color-bg-tertiary)] hover:tw-border-[var(--color-border-highlight)]{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked tw-opacity-50 hover:tw-opacity-65{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
-    <div class="wh40k-skill-info tw-flex tw-items-center tw-gap-1.5">
-        <span class="wh40k-skill-icon tw-block tw-w-4 tw-h-4 tw-shrink-0 tw-opacity-90 tw-bg-contain tw-bg-no-repeat tw-bg-center" style="--icon-url: url('{{skillIcon entry.[0]}}'); background-image: var(--icon-url);"></span>
-        <div class="wh40k-skill-name-wrapper tw-flex tw-items-center tw-gap-1 tw-flex-1">
-            <button type="button" class="wh40k-skill-name tw-bg-transparent tw-border-none tw-p-0 tw-text-[color:var(--color-text-primary)] tw-font-[var(--wh40k-font-body)] tw-text-[0.95rem] tw-leading-none tw-text-left tw-cursor-pointer tw-inline-flex tw-items-center tw-flex-1 hover:tw-text-accent-skills hover:tw-drop-shadow-[0_0_8px_rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.3)]"
+<div class="tw-grid tw-grid-cols-skill-row tw-gap-2 tw-items-center tw-py-1 tw-px-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-md hover:tw-bg-[var(--color-bg-tertiary)] hover:tw-border-[var(--color-border-highlight)]{{#if (eq entry.[1].advanced true)}}{{/if}}{{#unless entry.[1].isGranted}} tw-opacity-50 hover:tw-opacity-65{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
+    <div class="tw-flex tw-items-center tw-gap-1.5">
+        <span class="tw-block tw-w-4 tw-h-4 tw-shrink-0 tw-opacity-90 tw-bg-contain tw-bg-no-repeat tw-bg-center" style="--icon-url: url('{{skillIcon entry.[0]}}'); background-image: var(--icon-url);"></span>
+        <div class="tw-flex tw-items-center tw-gap-1 tw-flex-1">
+            <button type="button" class="tw-bg-transparent tw-border-none tw-p-0 tw-text-[color:var(--color-text-primary)] tw-font-[var(--wh40k-font-body)] tw-text-[0.95rem] tw-leading-none tw-text-left tw-cursor-pointer tw-inline-flex tw-items-center tw-flex-1 hover:tw-text-accent-skills hover:tw-drop-shadow-[0_0_8px_rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.3)]"
                     data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
                     data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
                     data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
                     title="Click to view {{entry.[1].label}} skill details">
-                <span class="wh40k-skill-label tw-inline-flex tw-items-baseline tw-gap-[var(--wh40k-space-xs)] tw-leading-none tw-font-[var(--wh40k-font-body)]">{{entry.[1].label}} <span class="wh40k-skill-char tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-[var(--wh40k-font-ui)]">({{entry.[1].charShort}})</span></span>
+                <span class="tw-inline-flex tw-items-baseline tw-gap-[var(--wh40k-space-xs)] tw-leading-none tw-font-[var(--wh40k-font-body)]">{{entry.[1].label}} <span class="tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-[var(--wh40k-font-ui)]">({{entry.[1].charShort}})</span></span>
             </button>
-            <button type="button" class="wh40k-skill-roll tw-bg-transparent tw-border-none tw-p-1 tw-text-[color:var(--color-text-secondary)] tw-text-[0.85rem] tw-cursor-pointer tw-flex tw-items-center tw-justify-center tw-rounded-[3px] hover:tw-text-accent-skills hover:tw-bg-[rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.1)] hover:tw-scale-110 active:tw-scale-95"
+            <button type="button" class="tw-bg-transparent tw-border-none tw-p-1 tw-text-[color:var(--color-text-secondary)] tw-text-[0.85rem] tw-cursor-pointer tw-flex tw-items-center tw-justify-center tw-rounded-[3px] hover:tw-text-accent-skills hover:tw-bg-[rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.1)] hover:tw-scale-110 active:tw-scale-95"
                     data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"
                     title="Roll {{entry.[1].label}} Test">
                 <i class="fas fa-dice-d20"></i>
             </button>
             {{#if entry.[1].showFavorite}}
-            <button type="button" class="wh40k-skill-favorite tw-bg-transparent tw-border-none tw-px-1 tw-py-0.5 tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-text-[0.85rem] hover:tw-text-[color:var(--wh40k-color-gold)] hover:tw-scale-110 {{#if entry.[1].isFavorite}}active tw-text-[color:var(--wh40k-color-gold)]{{/if}}"
+            <button type="button" class="tw-bg-transparent tw-border-none tw-px-1 tw-py-0.5 tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-text-[0.85rem] hover:tw-text-[color:var(--wh40k-color-gold)] hover:tw-scale-110 {{#if entry.[1].isFavorite}}active tw-text-[color:var(--wh40k-color-gold)]{{/if}}"
                     data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
                     title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
                 <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
@@ -30,12 +30,12 @@
             {{/if}}
         </div>
     </div>
-    <div class="wh40k-spec-training wh40k-training-display tw-flex tw-gap-0.5 tw-p-0.5 tw-bg-[var(--color-bg-secondary)] tw-rounded-md tw-border tw-border-solid tw-border-[var(--color-border-tertiary)]">
+    <div class="tw-flex tw-gap-0.5 tw-p-0.5 tw-bg-[var(--color-bg-secondary)] tw-rounded-md tw-border tw-border-solid tw-border-[var(--color-border-tertiary)]">
         {{#each entry.[1].trainingIndicators as |ind|}}
-        <span class="wh40k-train-indicator tw-border tw-border-solid tw-rounded-[3px] tw-text-[0.65rem] tw-font-semibold tw-px-1 tw-py-0.5 tw-min-w-[24px] tw-text-center {{#if ind.active}}active tw-bg-[rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.25)] tw-border-accent-skills tw-text-[color:var(--color-text-primary)] tw-opacity-100 tw-font-bold{{else}}tw-bg-[rgba(255,255,255,0.35)] tw-border-[rgba(120,46,34,0.35)] tw-text-[#3a2820] tw-opacity-50{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
+        <span class="tw-border tw-border-solid tw-rounded-[3px] tw-text-[0.65rem] tw-font-semibold tw-px-1 tw-py-0.5 tw-min-w-[24px] tw-text-center {{#if ind.active}}active tw-bg-[rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.25)] tw-border-accent-skills tw-text-[color:var(--color-text-primary)] tw-opacity-100 tw-font-bold{{else}}tw-bg-[rgba(255,255,255,0.35)] tw-border-[rgba(120,46,34,0.35)] tw-text-[#3a2820] tw-opacity-50{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
         {{/each}}
     </div>
-    <div class="wh40k-skill-total tw-min-w-8.5 tw-h-6.5 tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center tw-border tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-rounded-md tw-bg-[var(--color-bg-option)] tw-shadow-[inset_0_1px_2px_rgba(255,255,255,0.1),0_2px_6px_rgba(0,0,0,0.15)]" title="{{entry.[1].breakdown}}">
+    <div class="tw-min-w-8.5 tw-h-6.5 tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center tw-border tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-rounded-md tw-bg-[var(--color-bg-option)] tw-shadow-[inset_0_1px_2px_rgba(255,255,255,0.1),0_2px_6px_rgba(0,0,0,0.15)]" title="{{entry.[1].breakdown}}">
         <span class="tw-font-alt tw-text-[1.05rem] tw-font-bold tw-text-[color:var(--color-text-primary)]">{{entry.[1].current}}</span>
     </div>
 </div>
