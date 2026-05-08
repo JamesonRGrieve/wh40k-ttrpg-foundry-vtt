@@ -4,10 +4,10 @@
  */
 
 import { AmmoPickerDialog, ConfirmationDialog } from '../applications/dialogs/_module.ts';
-import { WH40KBaseActor } from '../documents/base-actor.ts';
-import { WH40KItem } from '../documents/item.ts';
-import WeaponData from '../data/item/weapon.ts';
-import AmmunitionData from '../data/item/ammunition.ts';
+import type AmmunitionData from '../data/item/ammunition.ts';
+import type WeaponData from '../data/item/weapon.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import type { WH40KItem } from '../documents/item.ts';
 
 interface AmmunitionDataWithQuantity extends AmmunitionData {
     quantity?: number;
@@ -39,10 +39,12 @@ export interface ReloadResult {
  */
 export class ReloadActionManager {
     private static getWeaponSystem(weapon: WH40KItem): ReloadWeaponSystem {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: per-system weapon schemas read uniformly via local ReloadWeaponSystem shape
         return weapon.system as unknown as ReloadWeaponSystem;
     }
 
     private static getAmmoSystem(item: WH40KItem): AmmunitionDataWithQuantity {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: per-system ammo schemas read uniformly via local AmmunitionDataWithQuantity shape
         return item.system as unknown as AmmunitionDataWithQuantity;
     }
 
@@ -64,9 +66,10 @@ export class ReloadActionManager {
      * @param options - Reload options
      * @returns Reload result
      */
+    // eslint-disable-next-line complexity -- linear sequence: validate, return rounds, pick ammo, calculate, deduct, update, message
     static async reloadWeapon(weapon: WH40KItem, { skipValidation = false, force = false } = {}): Promise<ReloadResult> {
         // Validate weapon
-        if (!weapon || weapon.type !== 'weapon') {
+        if (weapon.type !== 'weapon') {
             return {
                 success: false,
                 message: 'Invalid weapon',
@@ -75,7 +78,7 @@ export class ReloadActionManager {
         }
 
         const system = this.getWeaponSystem(weapon);
-        const actor = weapon.actor as unknown as WH40KBaseActor | null;
+        const actor = weapon.actor;
 
         // Check if weapon uses ammo
         if (!system.usesAmmo) {
@@ -109,9 +112,10 @@ export class ReloadActionManager {
 
         // Calculate effective reload time (accounting for Customised quality)
         const effectiveReloadTime = this.getEffectiveReloadTime(weapon);
-        const reloadCost = this.RELOAD_ACTION_COSTS[effectiveReloadTime];
+        const reloadCost: ReloadActionCost | undefined = this.RELOAD_ACTION_COSTS[effectiveReloadTime];
 
-        if (!reloadCost) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: effectiveReloadTime may be a value not in the dispatch table
+        if (reloadCost === undefined) {
             return {
                 success: false,
                 message: `Invalid reload time: ${effectiveReloadTime}`,
@@ -160,23 +164,25 @@ export class ReloadActionManager {
                 };
             }
 
-            const selectedAmmo = (await AmmoPickerDialog.pick({
+            const selectedAmmo = await AmmoPickerDialog.pick({
                 ammoItems: spareAmmo,
-                currentAmmoUuid: system.loadedAmmo?.uuid,
+                currentAmmoUuid: system.loadedAmmo.uuid,
                 weaponName: weapon.name,
                 clipMax: effectiveMax,
-            })) as WH40KItem | null;
+            });
 
             if (!selectedAmmo) {
                 // User cancelled — restore the rounds we returned
                 if (previousValue > 0 && system.hasLoadedAmmo) {
                     // Re-deduct the rounds we just returned (reverse the return)
                     const prevAmmoItem =
-                        actor.items.find((i: WH40KItem) => i.uuid === system.loadedAmmo.uuid) ||
+                        actor.items.find((i: WH40KItem) => i.uuid === system.loadedAmmo.uuid) ??
                         actor.items.find((i: WH40KItem) => i.type === 'ammunition' && i.name === system.loadedAmmo.name);
                     if (prevAmmoItem) {
-                        const ammoSystem = this.getAmmoSystem(prevAmmoItem);
-                        await prevAmmoItem.update({ 'system.quantity': (ammoSystem.quantity || 0) - previousValue } as Record<string, unknown>);
+                        const prevAmmoSystem = this.getAmmoSystem(prevAmmoItem);
+                        await prevAmmoItem.update({ 'system.quantity': (prevAmmoSystem.quantity ?? 0) - previousValue } as Parameters<
+                            typeof prevAmmoItem.update
+                        >[0]);
                     }
                 }
                 return {
@@ -188,15 +194,17 @@ export class ReloadActionManager {
 
             // Step 3: Calculate and load rounds
             const ammoSystem = this.getAmmoSystem(selectedAmmo);
-            const clipMod = ammoSystem.clipModifier ?? 0;
+            const clipMod = ammoSystem.clipModifier;
             const newEffectiveMax = Math.max(1, system.clip.max + clipMod);
-            const roundsToLoad = Math.min(newEffectiveMax, ammoSystem.quantity || 0);
+            const ammoQuantity = ammoSystem.quantity ?? 0;
+            const roundsToLoad = Math.min(newEffectiveMax, ammoQuantity);
 
             // Deduct rounds from inventory
-            await selectedAmmo.update({ 'system.quantity': (ammoSystem.quantity || 0) - roundsToLoad } as Record<string, unknown>);
+            await selectedAmmo.update({ 'system.quantity': ammoQuantity - roundsToLoad } as Parameters<typeof selectedAmmo.update>[0]);
 
             // Update weapon — set loadedAmmo reference if different type
-            const isSameAmmo = selectedAmmo.uuid === system.loadedAmmo?.uuid;
+            const isSameAmmo = selectedAmmo.uuid === system.loadedAmmo.uuid;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: weapon.update accepts loose document update payload
             const updateData: Record<string, unknown> = { 'system.clip.value': roundsToLoad };
 
             if (!isSameAmmo) {
@@ -204,13 +212,13 @@ export class ReloadActionManager {
                     uuid: selectedAmmo.uuid,
                     name: selectedAmmo.name,
                     modifiers: {
-                        damage: ammoSystem.modifiers?.damage ?? 0,
-                        penetration: ammoSystem.modifiers?.penetration ?? 0,
-                        range: ammoSystem.modifiers?.range ?? 0,
+                        damage: ammoSystem.modifiers.damage,
+                        penetration: ammoSystem.modifiers.penetration,
+                        range: ammoSystem.modifiers.range,
                     },
                     clipModifier: clipMod,
-                    addedQualities: ammoSystem.addedQualities || new Set(),
-                    removedQualities: ammoSystem.removedQualities || new Set(),
+                    addedQualities: ammoSystem.addedQualities,
+                    removedQualities: ammoSystem.removedQualities,
                 };
             }
 
@@ -235,7 +243,7 @@ export class ReloadActionManager {
         }
 
         // Fallback for unowned weapons (no actor) — simple reload without inventory
-        await weapon.update({ 'system.clip.value': effectiveMax } as Record<string, unknown>);
+        await weapon.update({ 'system.clip.value': effectiveMax } as Parameters<typeof weapon.update>[0]);
 
         return {
             success: true,
@@ -268,7 +276,7 @@ export class ReloadActionManager {
             '-': '-',
         };
 
-        return reloadMap[baseReload] || baseReload;
+        return reloadMap[baseReload] ?? baseReload;
     }
 
     /**
@@ -279,7 +287,7 @@ export class ReloadActionManager {
     static hasCustomisedQuality(weapon: WH40KItem): boolean {
         const system = this.getWeaponSystem(weapon);
         const qualities = system.effectiveSpecial;
-        return qualities?.has('customised') ?? false;
+        return qualities.has('customised');
     }
 
     /**
@@ -296,7 +304,7 @@ export class ReloadActionManager {
 
         // Check if in combat
         const combat = game.combat;
-        const isInCombat = !!(combat?.started && combat.combatants.some((c: Combatant) => c.actor?.id === actor.id));
+        const isInCombat = combat?.started === true && combat.combatants.some((c: Combatant) => c.actor?.id === actor.id);
 
         if (!isInCombat) {
             // Out of combat - allow reload with notification
@@ -304,8 +312,8 @@ export class ReloadActionManager {
         }
 
         // Check if it's the actor's turn
-        const currentCombatant = combat?.combatant;
-        const isActorsTurn = !!(currentCombatant && currentCombatant.actor?.id === actor.id);
+        const currentCombatant = combat.combatant;
+        const isActorsTurn = currentCombatant !== undefined && currentCombatant !== null && currentCombatant.actor?.id === actor.id;
 
         if (!isActorsTurn) {
             // Not actor's turn - ask for confirmation
@@ -344,7 +352,8 @@ export class ReloadActionManager {
         if (actionCost.half > 0) {
             parts.push(`${actionCost.half} Half Action${actionCost.half > 1 ? 's' : ''}`);
         }
-        return parts.join(' + ') || 'Free Action';
+        const joined = parts.join(' + ');
+        return joined === '' ? 'Free Action' : joined;
     }
 
     /**
@@ -373,10 +382,12 @@ export class ReloadActionManager {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor }),
             content: html,
+            // eslint-disable-next-line @typescript-eslint/no-deprecated -- Foundry V14 transition: CHAT_MESSAGE_TYPES still works while CHAT_MESSAGE_STYLES rolls out
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             flavor: `${weapon.name} - Reload`,
         };
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts loose document-data shape
         return ChatMessage.create(chatData as unknown as Parameters<typeof ChatMessage.create>[0]) as Promise<ChatMessage | undefined>;
     }
 
@@ -387,20 +398,18 @@ export class ReloadActionManager {
      * @returns Array of compatible ammunition items
      */
     static findSpareAmmunition(actor: WH40KBaseActor, weapon: WH40KItem): WH40KItem[] {
-        if (!actor || !weapon) return [];
-
         const system = this.getWeaponSystem(weapon);
         const weaponType = system.type;
-        const currentAmmoUuid = system.loadedAmmo?.uuid;
+        const currentAmmoUuid = system.loadedAmmo.uuid;
 
         // Find ammunition items compatible with this weapon type that have rounds available
         const compatible = actor.items.filter((item: WH40KItem) => {
             if (item.type !== 'ammunition') return false;
             const ammoSystem = this.getAmmoSystem(item);
-            if ((ammoSystem.quantity || 0) <= 0) return false;
+            if ((ammoSystem.quantity ?? 0) <= 0) return false;
             const ammoWeaponTypes = ammoSystem.weaponTypes;
             // Universal ammo (empty weaponTypes set) is compatible with all weapons
-            if (!ammoWeaponTypes || ammoWeaponTypes.size === 0) return true;
+            if (ammoWeaponTypes.size === 0) return true;
             return ammoWeaponTypes.has(weaponType);
         }) as WH40KItem[];
 

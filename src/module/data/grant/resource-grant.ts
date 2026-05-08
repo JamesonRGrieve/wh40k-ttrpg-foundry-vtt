@@ -1,5 +1,5 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import BaseGrantData, { GrantApplicationResult, GrantRestoreData, GrantSummary } from './base-grant.ts';
+import BaseGrantData, { type GrantApplicationResult, type GrantRestoreData, type GrantSummary } from './base-grant.ts';
 
 /**
  * A single resource configuration within a resource grant.
@@ -136,17 +136,17 @@ export default class ResourceGrantData extends BaseGrantData {
     override async _applyGrant(actor: WH40KBaseActor, data: GrantRestoreData, options: Record<string, unknown>, result: GrantApplicationResult): Promise<void> {
         const ctor = this.constructor as typeof ResourceGrantData;
         const updates: Record<string, unknown> = {};
-        const selectedResources = (data.selected as string[]) ?? this.resources.map((r) => r.type);
-        const rolledValues = (data.rolledValues as Record<string, number>) ?? {};
+        const selectedResources = (data.selected as string[] | undefined) ?? this.resources.map((r) => r.type);
+        const rolledValues = (data.rolledValues as Record<string, number> | undefined) ?? {};
 
         for (const resourceConfig of this.resources) {
             const { type, formula, optional: resOptional, additive } = resourceConfig;
 
-            const resourceDef = ctor.RESOURCES[type];
-            if (!resourceDef) {
+            if (!(type in ctor.RESOURCES)) {
                 result.errors.push(`Invalid resource type: ${type}`);
                 continue;
             }
+            const resourceDef = ctor.RESOURCES[type];
 
             if (!selectedResources.includes(type)) {
                 if (!resOptional && !this.optional) result.errors.push(`Required resource ${type} not selected`);
@@ -156,18 +156,18 @@ export default class ResourceGrantData extends BaseGrantData {
             const value = rolledValues[type] ?? (await this._evaluateFormula(formula, actor));
             if (value === 0) continue;
 
-            const currentValue = (foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0) as number;
+            const currentValue = Number(foundry.utils.getProperty(actor, resourceDef.valuePath)) || 0;
             let currentMax: number | null = null;
-            if (resourceDef.affectsMax && resourceDef.maxPath) {
-                currentMax = (foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0) as number;
+            if (resourceDef.affectsMax && resourceDef.maxPath !== null) {
+                currentMax = Number(foundry.utils.getProperty(actor, resourceDef.maxPath)) || 0;
             }
 
-            const isAdditive = additive !== false;
+            const isAdditive = additive;
             const newValue = isAdditive ? currentValue + value : value;
             const newMax = currentMax !== null ? (isAdditive ? currentMax + value : value) : null;
 
             updates[resourceDef.valuePath] = newValue;
-            if (resourceDef.affectsMax && resourceDef.maxPath) {
+            if (resourceDef.affectsMax && resourceDef.maxPath !== null) {
                 updates[resourceDef.maxPath] = newMax;
             }
 
@@ -196,21 +196,21 @@ export default class ResourceGrantData extends BaseGrantData {
         const updates: Record<string, unknown> = {};
 
         for (const [type, state] of Object.entries(appliedState) as [string, ResourceAppliedState][]) {
+            if (!(type in ctor.RESOURCES)) continue;
             const resourceDef = ctor.RESOURCES[type];
-            if (!resourceDef) continue;
 
-            if (state.additive === false) {
+            if (!state.additive) {
                 // Replace grants restore the captured previousValue/previousMax exactly.
-                updates[resourceDef.valuePath] = state.previousValue ?? 0;
-                if (resourceDef.affectsMax && resourceDef.maxPath && state.previousMax !== undefined && state.previousMax !== null) {
+                updates[resourceDef.valuePath] = state.previousValue;
+                if (resourceDef.affectsMax && resourceDef.maxPath !== null && state.previousMax !== null) {
                     updates[resourceDef.maxPath] = state.previousMax;
                 }
             } else {
-                const currentValue = (foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0) as number;
+                const currentValue = Number(foundry.utils.getProperty(actor, resourceDef.valuePath)) || 0;
                 updates[resourceDef.valuePath] = currentValue - state.rolledValue;
 
-                if (resourceDef.affectsMax && resourceDef.maxPath) {
-                    const currentMax = (foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0) as number;
+                if (resourceDef.affectsMax && resourceDef.maxPath !== null) {
+                    const currentMax = Number(foundry.utils.getProperty(actor, resourceDef.maxPath)) || 0;
                     updates[resourceDef.maxPath] = currentMax - state.rolledValue;
                 }
             }
@@ -231,15 +231,15 @@ export default class ResourceGrantData extends BaseGrantData {
         const result = this._initResult();
         const updates: Record<string, unknown> = {};
 
-        for (const [type, state] of Object.entries(restoreData.resources ?? {}) as [string, ResourceAppliedState][]) {
+        for (const [type, state] of Object.entries(restoreData.resources)) {
+            if (!(type in ctor.RESOURCES)) continue;
             const resourceDef = ctor.RESOURCES[type];
-            if (!resourceDef) continue;
 
-            const currentValue = (foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0) as number;
+            const currentValue = Number(foundry.utils.getProperty(actor, resourceDef.valuePath)) || 0;
             updates[resourceDef.valuePath] = currentValue + state.rolledValue;
 
-            if (resourceDef.affectsMax && resourceDef.maxPath) {
-                const currentMax = (foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0) as number;
+            if (resourceDef.affectsMax && resourceDef.maxPath !== null) {
+                const currentMax = Number(foundry.utils.getProperty(actor, resourceDef.maxPath)) || 0;
                 updates[resourceDef.maxPath] = currentMax + state.rolledValue;
             }
 
@@ -272,8 +272,8 @@ export default class ResourceGrantData extends BaseGrantData {
         summary.icon = ctor.ICON;
 
         for (const resourceConfig of this.resources) {
-            const resourceDef = ctor.RESOURCES[resourceConfig.type];
-            const label = resourceDef ? game.i18n.localize(resourceDef.label) : resourceConfig.type;
+            const hasDef = resourceConfig.type in ctor.RESOURCES;
+            const label = hasDef ? game.i18n.localize(ctor.RESOURCES[resourceConfig.type].label) : resourceConfig.type;
 
             summary.details.push({
                 label: label,
@@ -335,7 +335,7 @@ export default class ResourceGrantData extends BaseGrantData {
         for (const [abbr, charKey] of Object.entries(charAbbreviations)) {
             const regex = new RegExp(`(\\d*)x?${abbr}`, 'gi');
             processedFormula = processedFormula.replace(regex, (match, multiplier: string) => {
-                const bonus = (actor?.system as { characteristics?: Record<string, { bonus?: number }> })?.characteristics?.[charKey]?.bonus ?? 0;
+                const bonus = (actor.system as { characteristics?: Record<string, { bonus?: number }> }).characteristics?.[charKey]?.bonus ?? 0;
                 const mult = parseInt(multiplier) || 1;
                 return String(bonus * mult);
             });
@@ -344,7 +344,7 @@ export default class ResourceGrantData extends BaseGrantData {
         // Evaluate dice formula
         try {
             const roll = await new Roll(processedFormula).evaluate();
-            return roll.total ?? 0;
+            return roll.total;
         } catch (err) {
             console.error(`ResourceGrantData: Failed to evaluate formula "${normalizedFormula}" (processed: "${processedFormula}"):`, err);
             return 0;
@@ -379,12 +379,12 @@ export default class ResourceGrantData extends BaseGrantData {
 
         // Roll 1d10
         const roll = await new Roll('1d10').evaluate();
-        const rolled = roll.total ?? 0;
+        const rolled = roll.total;
 
         // Find matching entry
         for (const entry of entries) {
             if (rolled >= entry.min && rolled <= entry.max) {
-                game.wh40k?.log(`ResourceGrantData: Rolled ${rolled} on lookup table, result: ${entry.value}`);
+                game.wh40k.log(`ResourceGrantData: Rolled ${rolled} on lookup table, result: ${entry.value}`);
                 return entry.value;
             }
         }

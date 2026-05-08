@@ -122,16 +122,16 @@ export default class StarshipSheet extends BaseActorSheet {
                 space?: number;
             };
             if (sys.condition === 'functional') {
-                powerGenerated += sys.power?.generated || 0;
-                powerUsed += sys.power?.used || 0;
-                spaceUsed += sys.space || 0;
+                powerGenerated += sys.power?.generated ?? 0;
+                powerUsed += sys.power?.used ?? 0;
+                spaceUsed += sys.space ?? 0;
             }
         }
 
         for (const weapon of context.shipWeapons as WH40KItem[]) {
             const sys = weapon.system as { power?: number; space?: number };
-            powerUsed += sys.power || 0;
-            spaceUsed += sys.space || 0;
+            powerUsed += sys.power ?? 0;
+            spaceUsed += sys.space ?? 0;
         }
 
         for (const upgrade of context.shipUpgrades as WH40KItem[]) {
@@ -139,16 +139,16 @@ export default class StarshipSheet extends BaseActorSheet {
                 power?: { generated?: number; used?: number };
                 space?: number;
             };
-            powerGenerated += sys.power?.generated || 0;
-            powerUsed += sys.power?.used || 0;
-            spaceUsed += sys.space || 0;
+            powerGenerated += sys.power?.generated ?? 0;
+            powerUsed += sys.power?.used ?? 0;
+            spaceUsed += sys.space ?? 0;
         }
 
         context.powerGenerated = powerGenerated;
         context.powerUsed = powerUsed;
         context.spaceUsed = spaceUsed;
         context.powerAvailable = powerGenerated - powerUsed;
-        context.spaceAvailable = ((this.actor.system as { space?: { total?: number } }).space?.total || 0) - spaceUsed;
+        context.spaceAvailable = ((this.actor.system as { space?: { total?: number } }).space?.total ?? 0) - spaceUsed;
     }
 
     /* -------------------------------------------- */
@@ -163,12 +163,14 @@ export default class StarshipSheet extends BaseActorSheet {
         // Add tab metadata for tab parts
         const tabParts = ['stats', 'components', 'weapons', 'crew', 'history'];
         if (tabParts.includes(partId)) {
-            const tabConfig = (this.constructor as any).TABS.find((t: HandlebarsApplicationV14.TabDescriptor) => t.tab === partId);
+            const ctor = this.constructor as unknown as { TABS: HandlebarsApplicationV14.TabDescriptor[] };
+            const tabConfig = ctor.TABS.find((t: HandlebarsApplicationV14.TabDescriptor) => t.tab === partId);
+            const group = tabConfig?.group ?? 'primary';
             partContext.tab = {
                 id: partId,
-                group: tabConfig?.group || 'primary',
-                active: this.tabGroups[tabConfig?.group || 'primary'] === partId,
-                cssClass: tabConfig?.cssClass || '',
+                group,
+                active: this.tabGroups[group] === partId,
+                cssClass: tabConfig?.cssClass ?? '',
             };
         }
 
@@ -194,13 +196,13 @@ export default class StarshipSheet extends BaseActorSheet {
         const cardData = {
             actor,
             weapon: weapon,
-            crewRating: (actor.system as { crew?: { crewRating?: number } }).crew?.crewRating || 30,
+            crewRating: (actor.system as { crew?: { crewRating?: number } }).crew?.crewRating ?? 30,
             gameSystem: (actor.system as { gameSystem?: string }).gameSystem,
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
-        ChatMessage.create({
+        void ChatMessage.create({
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor: actor as unknown as Actor.Implementation }),
             content: html,
@@ -216,6 +218,7 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #rollInitiative(this: StarshipSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
-        await this.actor.rollInitiative?.();
+        const a = this.actor as unknown as { rollInitiative?: () => Promise<void> };
+        await a.rollInitiative?.();
     }
 }

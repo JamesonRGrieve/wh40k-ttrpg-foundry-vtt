@@ -7,8 +7,8 @@
  * Uses CONFIG.WH40K.craftsmanshipRules as single source of truth.
  */
 
-type Craftsmanship = 'poor' | 'common' | 'good' | 'best' | 'exceptional' | string;
-type CraftsmanshipItemType = 'weapon' | 'armour' | 'gear' | 'forceField' | string | undefined;
+type Craftsmanship = string;
+type CraftsmanshipItemType = string | undefined;
 
 type CraftsmanshipItem = {
     craftsmanship?: Craftsmanship;
@@ -88,6 +88,7 @@ export default class CraftsmanshipHelper {
                 return rules.gear[craftsmanship] ?? {};
             case 'forceField':
                 return rules.forceField[craftsmanship] ?? {};
+            case undefined:
             default:
                 return {};
         }
@@ -102,7 +103,7 @@ export default class CraftsmanshipHelper {
      * @private
      */
     static #getWeaponModifiers(weapon: CraftsmanshipItem, craftsmanship: Craftsmanship, weaponRules: WeaponCraftsmanshipRules): CraftsmanshipModifierSet {
-        const isMelee = weapon.melee || weapon.isMeleeWeapon;
+        const isMelee = weapon.melee === true || weapon.isMeleeWeapon === true;
         const subType = isMelee ? 'melee' : 'ranged';
         return weaponRules[subType][craftsmanship] ?? {};
     }
@@ -125,11 +126,11 @@ export default class CraftsmanshipHelper {
         if (!rules) return new Set();
 
         // Only ranged weapons get craftsmanship qualities
-        const isMelee = weapon.melee || weapon.isMeleeWeapon;
+        const isMelee = weapon.melee === true || weapon.isMeleeWeapon === true;
         if (isMelee) return new Set();
 
         const rangedRules = rules.ranged[craftsmanship];
-        return new Set(rangedRules?.qualities || []);
+        return new Set(rangedRules.qualities ?? []);
     }
 
     /**
@@ -150,11 +151,11 @@ export default class CraftsmanshipHelper {
         if (!rules) return new Set();
 
         // Only ranged weapons get craftsmanship qualities
-        const isMelee = weapon.melee || weapon.isMeleeWeapon;
+        const isMelee = weapon.melee === true || weapon.isMeleeWeapon === true;
         if (isMelee) return new Set();
 
         const rangedRules = rules.ranged[craftsmanship];
-        return new Set(rangedRules?.removeQualities || []);
+        return new Set(rangedRules.removeQualities ?? []);
     }
 
     /**
@@ -172,7 +173,7 @@ export default class CraftsmanshipHelper {
      */
     static applyWeaponQualities(weapon: CraftsmanshipItem, qualities: Set<string>): Set<string> {
         // Only ranged weapons get craftsmanship qualities
-        const isMelee = weapon.melee || weapon.isMeleeWeapon;
+        const isMelee = weapon.melee === true || weapon.isMeleeWeapon === true;
         if (isMelee) return qualities;
 
         const craftsmanship = weapon.craftsmanship ?? 'common';
@@ -232,7 +233,7 @@ export default class CraftsmanshipHelper {
         if (!rules) return [1, 10]; // Default to common
 
         const tierRules = rules[craftsmanship];
-        return tierRules?.overloadRange ?? [1, 10];
+        return tierRules.overloadRange ?? [1, 10];
     }
 
     /**
@@ -265,40 +266,40 @@ export default class CraftsmanshipHelper {
 
         // Weapon
         if (itemType === 'weapon') {
-            if (modifiers.toHit) {
+            if (modifiers.toHit !== undefined && modifiers.toHit !== 0) {
                 effects.push(`${modifiers.toHit > 0 ? '+' : ''}${modifiers.toHit} to attack`);
             }
-            if (modifiers.damage) {
+            if (modifiers.damage !== undefined && modifiers.damage !== 0) {
                 effects.push(`+${modifiers.damage} damage`);
             }
 
             // Ranged weapon qualities
-            const isMelee = item.melee || item.isMeleeWeapon;
+            const isMelee = item.melee === true || item.isMeleeWeapon === true;
             if (!isMelee) {
                 const addQualities = this.getWeaponQualities(item);
                 const removeQualities = this.getRemoveQualities(item);
 
                 for (const quality of addQualities) {
-                    effects.push(`Gains ${(quality as string).capitalize()} quality`);
+                    effects.push(`Gains ${quality.capitalize()} quality`);
                 }
                 for (const quality of removeQualities) {
-                    effects.push(`Removes ${(quality as string).capitalize()} quality`);
+                    effects.push(`Removes ${quality.capitalize()} quality`);
                 }
             }
         }
 
         // Armour
         if (itemType === 'armour') {
-            if (modifiers.agility) {
+            if (modifiers.agility !== undefined && modifiers.agility !== 0) {
                 effects.push(`${modifiers.agility} to Agility tests`);
             }
-            if (modifiers.armourBonus) {
+            if (modifiers.armourBonus !== undefined && modifiers.armourBonus !== 0) {
                 effects.push(`+${modifiers.armourBonus} AP (permanent)`);
             }
-            if (modifiers.firstAttackBonus) {
+            if (modifiers.firstAttackBonus !== undefined && modifiers.firstAttackBonus !== 0) {
                 effects.push(`+${modifiers.firstAttackBonus} AP on first attack per round`);
             }
-            if (modifiers.weight && modifiers.weight !== 1.0) {
+            if (modifiers.weight !== undefined && modifiers.weight !== 1.0) {
                 const percent = Math.round((modifiers.weight - 1) * 100);
                 effects.push(`${percent > 0 ? '+' : ''}${percent}% weight`);
             }
@@ -306,7 +307,7 @@ export default class CraftsmanshipHelper {
 
         // Gear
         if (itemType === 'gear') {
-            if (modifiers.weight && modifiers.weight !== 1.0) {
+            if (modifiers.weight !== undefined && modifiers.weight !== 1.0) {
                 const percent = Math.round((modifiers.weight - 1) * 100);
                 effects.push(`${percent > 0 ? '+' : ''}${percent}% weight`);
             }

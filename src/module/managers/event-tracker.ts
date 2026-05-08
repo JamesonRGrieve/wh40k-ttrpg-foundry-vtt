@@ -63,6 +63,12 @@ interface CharacterState {
     source_file?: string;
 }
 
+interface EventDataFile {
+    events: EventGraph;
+    version?: number;
+    characters?: Record<string, CharacterState> | null;
+}
+
 const SETTING_KEY = 'event-tracker-state';
 
 export class EventTracker {
@@ -96,15 +102,15 @@ export class EventTracker {
                 console.warn('EventTracker: events.json not found — run export_events.py and copy to system folder');
                 return;
             }
-            const data = await resp.json();
+            const data = (await resp.json()) as EventDataFile;
             EventTracker._graph = data.events;
             EventTracker._dataVersion = data.version ?? 1;
             EventTracker._characters = data.characters ?? null;
             const charCount = EventTracker._characters ? Object.keys(EventTracker._characters).length : 0;
             console.log(
-                `EventTracker: loaded ${Object.keys(data.events).length} events` +
-                    (charCount ? `, ${charCount} characters with disposition/relationship data` : '') +
-                    ` (schema v${EventTracker._dataVersion})`,
+                `EventTracker: loaded ${Object.keys(data.events).length} events${
+                    charCount > 0 ? `, ${charCount} characters with disposition/relationship data` : ''
+                } (schema v${EventTracker._dataVersion})`,
             );
         } catch (err) {
             console.error('EventTracker: failed to load events.json', err);
@@ -113,7 +119,7 @@ export class EventTracker {
 
     /** Get resolved event IDs from world settings. */
     static getResolved(): ResolvedState {
-        return game.settings.get(SYSTEM_ID, SETTING_KEY) ?? {};
+        return (game.settings.get(SYSTEM_ID, SETTING_KEY) as ResolvedState | undefined) ?? {};
     }
 
     /** Mark an event as resolved (or unresolved). */
@@ -133,9 +139,9 @@ export class EventTracker {
         if (!event) return false;
         const resolved = EventTracker.getResolved();
 
-        const reqsMet = !event.requires?.length || event.requires.every((id: string) => id in resolved);
+        const reqsMet = !(event.requires !== undefined && event.requires.length > 0) || event.requires.every((id: string) => id in resolved);
 
-        const reqsAnyMet = !event.requires_any?.length || event.requires_any.some((id: string) => id in resolved);
+        const reqsAnyMet = !(event.requires_any !== undefined && event.requires_any.length > 0) || event.requires_any.some((id: string) => id in resolved);
 
         return reqsMet && reqsAnyMet;
     }
@@ -147,23 +153,23 @@ export class EventTracker {
         const resolved = EventTracker.getResolved();
         const reasons: string[] = [];
 
-        if (event.requires?.length) {
+        if (event.requires !== undefined && event.requires.length > 0) {
             const unmet = event.requires.filter((id: string) => !(id in resolved));
             for (const id of unmet) {
                 const dep = EventTracker._graph?.[id];
                 const depName = dep?.name ?? id;
-                const depLoc = dep?.location ? ` (${dep.location})` : '';
+                const depLoc = dep?.location !== undefined && dep.location !== '' ? ` (${dep.location})` : '';
                 reasons.push(`Requires: ${depName}${depLoc}`);
             }
         }
 
-        if (event.requires_any?.length) {
+        if (event.requires_any !== undefined && event.requires_any.length > 0) {
             const anyMet = event.requires_any.some((id: string) => id in resolved);
             if (!anyMet) {
                 const options = event.requires_any.map((id: string) => {
                     const dep = EventTracker._graph?.[id];
                     const depName = dep?.name ?? id;
-                    const depLoc = dep?.location ? ` (${dep.location})` : '';
+                    const depLoc = dep?.location !== undefined && dep.location !== '' ? ` (${dep.location})` : '';
                     return `${depName}${depLoc}`;
                 });
                 reasons.push(`Requires one of: ${options.join(' OR ')}`);
@@ -214,12 +220,13 @@ export class EventTracker {
             // Dispositions: pick per target, prefer triggered → default → first
             const byTarget: Record<string, DispositionEntry[]> = {};
             for (const d of data.dispositions ?? []) {
-                const t = d.target || 'party';
-                (byTarget[t] ??= []).push(d);
+                const t = d.target !== '' ? d.target : 'party';
+                if (byTarget[t] === undefined) byTarget[t] = [];
+                byTarget[t].push(d);
             }
             for (const [target, entries] of Object.entries(byTarget)) {
-                const triggered = entries.find((e) => e.trigger && e.trigger in resolved);
-                const fallback = entries.find((e) => e.default) ?? entries[0];
+                const triggered = entries.find((e) => e.trigger !== undefined && e.trigger !== '' && e.trigger in resolved);
+                const fallback = entries.find((e) => e.default === true) ?? entries[0];
                 entry.dispositions[target] = triggered ?? fallback;
             }
 
@@ -277,8 +284,13 @@ export class EventTracker {
         // Group events by source
         const groups: Record<string, (EventDef & { id: string })[]> = {};
         for (const [id, event] of Object.entries(graph)) {
-            const src = event.source_name || event.source_file || 'Unknown';
-            if (!groups[src]) groups[src] = [];
+            const src =
+                event.source_name !== undefined && event.source_name !== ''
+                    ? event.source_name
+                    : event.source_file !== undefined && event.source_file !== ''
+                    ? event.source_file
+                    : 'Unknown';
+            if (groups[src] === undefined) groups[src] = [];
             const { id: _id, ...rest } = event;
             groups[src].push({ id, ...rest });
         }
@@ -318,8 +330,8 @@ export class EventTracker {
                 html += `<div class="evt-row ${cls}">`;
                 html += `<input type="checkbox" data-event-id="${evt.id}" ${checked} ${disabled}>`;
                 html += `<span class="evt-name">${evt.name}</span>`;
-                if (evt.location) html += `<span class="evt-loc">${evt.location}</span>`;
-                if (evt.is_day_end) html += `<span class="evt-day-end">[DAY END]</span>`;
+                if (evt.location !== undefined && evt.location !== '') html += `<span class="evt-loc">${evt.location}</span>`;
+                if (evt.is_day_end === true) html += `<span class="evt-day-end">[DAY END]</span>`;
                 html += `</div>`;
 
                 // Show blocking reasons for locked events
@@ -328,7 +340,7 @@ export class EventTracker {
                     for (const reason of reasons) {
                         html += `<div class="evt-block">${reason}</div>`;
                     }
-                    if (evt.excuse) {
+                    if (evt.excuse !== undefined && evt.excuse !== '') {
                         html += `<div class="evt-excuse">Excuse: ${evt.excuse}</div>`;
                     }
                 }
@@ -362,11 +374,14 @@ export class EventTracker {
                 for (const target of dispTargets.sort((a, b) => (a === 'party' ? -1 : b === 'party' ? 1 : a.localeCompare(b)))) {
                     const d = s.dispositions[target];
                     const color = EventTracker._stateColor(d.attitude);
-                    const badge = `<span class="evt-badge" style="background:${color};">${d.attitude || 'unknown'}</span>`;
+                    const badge = `<span class="evt-badge" style="background:${color};">${d.attitude !== '' ? d.attitude : 'unknown'}</span>`;
                     const targetLabel = target === 'party' ? '<strong>Party</strong>' : target;
-                    const triggered = d.trigger ? ` <span class="evt-trigger">(via ${EventTracker._graph?.[d.trigger]?.name ?? d.trigger})</span>` : '';
+                    const triggered =
+                        d.trigger !== undefined && d.trigger !== ''
+                            ? ` <span class="evt-trigger">(via ${EventTracker._graph?.[d.trigger]?.name ?? d.trigger})</span>`
+                            : '';
                     html += `<div class="evt-row"><span class="evt-npc-target">${targetLabel}</span> ${badge}${triggered}`;
-                    if (d.note) html += `<div class="evt-npc-note">${d.note}</div>`;
+                    if (d.note !== undefined && d.note !== '') html += `<div class="evt-npc-note">${d.note}</div>`;
                     html += `</div>`;
                 }
                 html += `</div>`;
@@ -378,9 +393,12 @@ export class EventTracker {
                 for (const r of s.relationships) {
                     const color = EventTracker._stateColor(r.currentState);
                     const badge = `<span class="evt-badge" style="background:${color};">${r.currentState}</span>`;
-                    const triggered = r.trigger ? ` <span class="evt-trigger">(via ${EventTracker._graph?.[r.trigger]?.name ?? r.trigger})</span>` : '';
+                    const triggered =
+                        r.trigger !== undefined && r.trigger !== ''
+                            ? ` <span class="evt-trigger">(via ${EventTracker._graph?.[r.trigger]?.name ?? r.trigger})</span>`
+                            : '';
                     html += `<div class="evt-row"><span class="evt-npc-target">${r.target}</span> <span class="evt-npc-type">${r.type}</span> ${badge}${triggered}`;
-                    if (r.summary) html += `<div class="evt-npc-note">${r.summary}</div>`;
+                    if (r.summary !== undefined && r.summary !== '') html += `<div class="evt-npc-note">${r.summary}</div>`;
                     html += `</div>`;
                 }
                 html += `</div>`;

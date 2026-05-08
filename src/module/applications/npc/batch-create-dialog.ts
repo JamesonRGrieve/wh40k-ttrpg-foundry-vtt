@@ -71,7 +71,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * Form state.
      * @type {BatchState}
      */
-    #state: BatchState = {
+    readonly #state: BatchState = {
         namePattern: 'NPC {n}',
         count: 3,
         threatLevel: 5,
@@ -123,7 +123,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-        const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
+        const context = await super._prepareContext(options);
 
         // Get options
         const roles = ThreatCalculator.getRoles();
@@ -131,12 +131,12 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         const types = ThreatCalculator.getTypes();
 
         // Get available folders
-        const folders = (game.folders as any)
-            .filter((f: { type: string; displayed: boolean }) => f.type === 'Actor' && f.displayed)
-            .map((f: { id: string; name: string }) => ({ id: f.id, name: f.name }));
+        const folders = game.folders
+            .filter((f) => f.type === 'Actor' && (f as { displayed?: boolean }).displayed === true)
+            .map((f) => ({ id: f.id, name: f.name }));
 
         // Generate preview names
-        const previewNames = [];
+        const previewNames: string[] = [];
         for (let i = 1; i <= Math.min(this.#state.count, 5); i++) {
             previewNames.push(this.#state.namePattern.replace('{n}', String(i)));
         }
@@ -152,10 +152,10 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             ...context,
             state: this.#state,
 
-            roles: roles.map((r: any) => ({ ...r, selected: r.key === this.#state.role })),
-            presets: presets.map((p: any) => ({ ...p, selected: p.key === this.#state.preset })),
-            types: types.map((t: any) => ({ ...t, selected: t.key === this.#state.type })),
-            folders: folders.map((f: any) => ({ ...f, selected: f.id === this.#state.folder })),
+            roles: roles.map((r) => ({ ...r, selected: r.key === this.#state.role })),
+            presets: presets.map((p) => ({ ...p, selected: p.key === this.#state.preset })),
+            types: types.map((t) => ({ ...t, selected: t.key === this.#state.type })),
+            folders: folders.map((f) => ({ ...f, selected: f.id === this.#state.folder })),
 
             tierName: tier.name,
             previewNames,
@@ -174,7 +174,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
-        void super._onRender(context, options as never);
+        void super._onRender(context, options);
 
         const form = this.element;
 
@@ -195,25 +195,26 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         ];
 
         for (const field of fields) {
-            const el = form.querySelector(`[name="${field.name}"]`) as HTMLInputElement | HTMLSelectElement;
-            if (!el) continue;
+            const el = form.querySelector<HTMLInputElement | HTMLSelectElement>(`[name="${field.name}"]`);
+            if (el === null) continue;
 
             el.addEventListener(field.type === 'boolean' ? 'change' : 'input', () => {
+                const state = this.#state as unknown as Record<string, unknown>;
                 if (field.type === 'boolean') {
-                    (this.#state as any)[field.name] = (el as HTMLInputElement).checked;
+                    state[field.name] = (el as HTMLInputElement).checked;
                 } else if (field.type === 'number') {
-                    (this.#state as any)[field.name] = parseInt((el as HTMLInputElement).value, 10) || 0;
+                    state[field.name] = parseInt(el.value, 10) || 0;
                 } else {
-                    (this.#state as any)[field.name] = el.value;
+                    state[field.name] = el.value;
                 }
                 this._debounceRender();
             });
         }
 
         // Update threat value display
-        const threatSlider = form.querySelector('[name="threatLevel"]') as HTMLInputElement;
+        const threatSlider = form.querySelector<HTMLInputElement>('[name="threatLevel"]');
         const threatValue = form.querySelector('.threat-value');
-        if (threatSlider && threatValue) {
+        if (threatSlider !== null && threatValue !== null) {
             threatSlider.addEventListener('input', () => {
                 threatValue.textContent = threatSlider.value;
             });
@@ -246,17 +247,17 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         const data = foundry.utils.expandObject(formData.object) as Partial<BatchState>;
 
         // Update state from form
-        this.#state.namePattern = data.namePattern || 'NPC {n}';
+        this.#state.namePattern = data.namePattern ?? 'NPC {n}';
         this.#state.count = Math.max(1, Math.min(100, parseInt(String(data.count), 10) || 1));
         this.#state.threatLevel = parseInt(String(data.threatLevel), 10) || 5;
-        this.#state.role = data.role || 'specialist';
-        this.#state.type = data.type || 'troop';
-        this.#state.preset = data.preset || 'mixed';
-        this.#state.faction = data.faction || '';
+        this.#state.role = data.role ?? 'specialist';
+        this.#state.type = data.type ?? 'troop';
+        this.#state.preset = data.preset ?? 'mixed';
+        this.#state.faction = data.faction ?? '';
         this.#state.isHorde = data.isHorde === true;
         this.#state.randomize = data.randomize === true;
         this.#state.randomizeAmount = parseInt(String(data.randomizeAmount), 10) || 10;
-        this.#state.folder = data.folder || '';
+        this.#state.folder = data.folder ?? '';
         this.#state.openSheets = data.openSheets === true;
 
         // Create the NPCs
@@ -269,15 +270,15 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             if (this.#state.openSheets) {
                 const toOpen = actors.slice(0, 5);
                 for (const actor of toOpen) {
-                    actor.sheet?.render(true);
+                    void actor.sheet?.render(true);
                 }
             }
 
             this.#submitted = true;
-            if (this.#resolve) this.#resolve(actors);
+            this.#resolve?.(actors);
         } else {
             ui.notifications.error(game.i18n.localize('WH40K.NPC.BatchCreate.Failed'));
-            if (this.#resolve) this.#resolve([]);
+            this.#resolve?.([]);
         }
     }
 

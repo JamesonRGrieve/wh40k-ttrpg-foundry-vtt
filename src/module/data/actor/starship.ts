@@ -1,5 +1,18 @@
 import ActorDataModel from '../abstract/actor-data-model.ts';
 
+/** Subset of ship-component item.system fields used in starship preparation. */
+interface ShipComponentSystem {
+    condition?: string;
+    power?: { generated?: number; used?: number } | number;
+    space?: number;
+    modifiers?: Record<string, number>;
+}
+
+interface ShipItemView {
+    type: string;
+    system: ShipComponentSystem;
+}
+
 /**
  * Data model for Starship actors.
  * Matches template.json "starship" structure.
@@ -180,7 +193,9 @@ export default class StarshipData extends ActorDataModel {
      */
     prepareEmbeddedData(): void {
         const actor = this.parent;
-        if (!actor?.items) return;
+        if (actor === null || actor === undefined) return;
+        const items = (actor as { items?: Iterable<unknown> }).items;
+        if (items === undefined) return;
 
         // Calculate power and space from components
         let powerGenerated = 0;
@@ -201,34 +216,38 @@ export default class StarshipData extends ActorDataModel {
         };
 
         // Process ship components
-        for (const item of actor.items) {
-            if (item.type === 'shipComponent' && item.system.condition === 'functional') {
+        for (const rawItem of items) {
+            const item = rawItem as ShipItemView;
+            const sys = item.system;
+            if (item.type === 'shipComponent' && sys.condition === 'functional') {
                 // Power
-                const genPower = item.system.power?.generated || 0;
-                const usePower = item.system.power?.used || 0;
+                const power = typeof sys.power === 'object' ? sys.power : undefined;
+                const genPower = power?.generated ?? 0;
+                const usePower = power?.used ?? 0;
                 powerGenerated += genPower;
                 powerUsed += usePower;
 
                 // Space
-                spaceUsed += item.system.space || 0;
+                spaceUsed += sys.space ?? 0;
 
                 // Modifiers
-                if (item.system.modifiers) {
-                    for (const [key, value] of Object.entries(item.system.modifiers)) {
-                        if (componentModifiers[key] !== undefined) {
+                if (sys.modifiers !== undefined) {
+                    for (const [key, value] of Object.entries(sys.modifiers)) {
+                        if (Object.prototype.hasOwnProperty.call(componentModifiers, key)) {
                             componentModifiers[key] += Number(value);
                         }
                     }
                 }
             } else if (item.type === 'shipWeapon') {
-                powerUsed += item.system.power || 0;
-                spaceUsed += item.system.space || 0;
+                powerUsed += typeof sys.power === 'number' ? sys.power : 0;
+                spaceUsed += sys.space ?? 0;
             } else if (item.type === 'shipUpgrade') {
-                const genPower = item.system.power?.generated || 0;
-                const usePower = item.system.power?.used || 0;
+                const power = typeof sys.power === 'object' ? sys.power : undefined;
+                const genPower = power?.generated ?? 0;
+                const usePower = power?.used ?? 0;
                 powerGenerated += genPower;
                 powerUsed += usePower;
-                spaceUsed += item.system.space || 0;
+                spaceUsed += sys.space ?? 0;
             }
         }
 

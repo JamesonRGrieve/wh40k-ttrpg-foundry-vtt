@@ -8,7 +8,7 @@ import type { WH40KActorSystemData, WH40KSkill, WH40KSkillEntry } from './types/
 /**
  * Register custom text enrichers for WH40K RPG system.
  */
-export function registerCustomEnrichers() {
+export function registerCustomEnrichers(): void {
     // Register enricher patterns
     CONFIG.TextEditor.enrichers.push(
         {
@@ -61,7 +61,7 @@ export function registerCustomEnrichers() {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-async function enrichCharacteristic(match: RegExpMatchArray, options?: TextEditor.EnrichmentOptions) {
+async function enrichCharacteristic(match: RegExpMatchArray, options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
     if (!match.groups) return createErrorElement(match[0], 'No match groups');
     const label = match.groups['label'];
     const config = match.groups['config'].trim().toLowerCase();
@@ -83,7 +83,7 @@ async function enrichCharacteristic(match: RegExpMatchArray, options?: TextEdito
 
     // Get actor from relativeTo
     const actor = options?.relativeTo;
-    if (!actor || actor.documentName !== 'Actor') {
+    if (actor?.documentName !== 'Actor') {
         return createErrorElement(match[0], 'No actor context');
     }
 
@@ -130,7 +130,7 @@ async function enrichCharacteristic(match: RegExpMatchArray, options?: TextEdito
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-async function enrichSkill(match: RegExpMatchArray, options?: TextEditor.EnrichmentOptions) {
+async function enrichSkill(match: RegExpMatchArray, options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
     if (!match.groups) return createErrorElement(match[0], 'No match groups');
     const label = match.groups['label'];
     const config = match.groups['config'].trim().toLowerCase();
@@ -140,7 +140,7 @@ async function enrichSkill(match: RegExpMatchArray, options?: TextEditor.Enrichm
 
     // Get actor from relativeTo
     const actor = options?.relativeTo;
-    if (!actor || actor.documentName !== 'Actor') {
+    if (actor?.documentName !== 'Actor') {
         return createErrorElement(match[0], 'No actor context');
     }
 
@@ -197,7 +197,7 @@ async function enrichSkill(match: RegExpMatchArray, options?: TextEditor.Enrichm
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-async function enrichModifier(match: RegExpMatchArray, _options?: TextEditor.EnrichmentOptions) {
+async function enrichModifier(match: RegExpMatchArray, _options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
     if (!match.groups) return createErrorElement(match[0], 'No match groups');
     const config = match.groups['config'];
     const label = match.groups['label'];
@@ -236,14 +236,14 @@ async function enrichModifier(match: RegExpMatchArray, _options?: TextEditor.Enr
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-async function enrichArmor(match: RegExpMatchArray, options?: TextEditor.EnrichmentOptions) {
+async function enrichArmor(match: RegExpMatchArray, options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
     if (!match.groups) return createErrorElement(match[0], 'No match groups');
     const label = match.groups['label'];
     const config = match.groups['config'].trim().toLowerCase();
 
     // Get actor from relativeTo
     const actor = options?.relativeTo;
-    if (!actor || actor.documentName !== 'Actor') {
+    if (actor?.documentName !== 'Actor') {
         return createErrorElement(match[0], 'No actor context');
     }
 
@@ -311,7 +311,7 @@ async function enrichArmor(match: RegExpMatchArray, options?: TextEditor.Enrichm
  * @param {string} error     Error message.
  * @returns {HTMLElement}    Error span element.
  */
-function createErrorElement(original: string, error: string) {
+function createErrorElement(original: string, error: string): HTMLElement {
     const span = document.createElement('span');
     span.className = 'wh40k-enricher wh40k-enricher-error';
     span.title = error;
@@ -325,8 +325,8 @@ function createErrorElement(original: string, error: string) {
  * Handle clicks on enriched elements.
  * @param {MouseEvent} event  The click event.
  */
-async function handleEnricherClick(event: MouseEvent) {
-    const enricher = (event.target as HTMLElement).closest('.wh40k-enricher') as HTMLElement | null;
+async function handleEnricherClick(event: MouseEvent): Promise<void> {
+    const enricher = (event.target as HTMLElement).closest<HTMLElement>('.wh40k-enricher');
     if (!enricher) return;
 
     const type = enricher.dataset['enricherType'];
@@ -397,7 +397,7 @@ async function handleEnricherClick(event: MouseEvent) {
  * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
-async function enrichQuality(match: RegExpMatchArray, _options?: TextEditor.EnrichmentOptions) {
+async function enrichQuality(match: RegExpMatchArray, _options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
     if (!match.groups) return createErrorElement(match[0], 'No match groups');
     const label = match.groups['label'];
     const config = match.groups['config'].trim().toLowerCase();
@@ -441,7 +441,7 @@ async function enrichQuality(match: RegExpMatchArray, _options?: TextEditor.Enri
  * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
-async function enrichProperty(match: RegExpMatchArray, _options?: TextEditor.EnrichmentOptions) {
+async function enrichProperty(match: RegExpMatchArray, _options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
     if (!match.groups) return createErrorElement(match[0], 'No match groups');
     const label = match.groups['label'];
     const config = match.groups['config'].trim().toLowerCase();
@@ -485,7 +485,7 @@ async function enrichProperty(match: RegExpMatchArray, _options?: TextEditor.Enr
  * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
-async function enrichCondition(match: RegExpMatchArray, _options?: TextEditor.EnrichmentOptions) {
+async function enrichCondition(match: RegExpMatchArray, _options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
     if (!match.groups) return createErrorElement(match[0], 'No match groups');
     const label = match.groups['label'];
     const config = match.groups['config'].trim().toLowerCase();

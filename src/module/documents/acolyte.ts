@@ -6,11 +6,7 @@ import { SYSTEM_ID } from '../constants.ts';
 import { D100Roll } from '../dice/_module.ts';
 import type { ActionData } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
-import { WH40KSettings } from '../wh40k-rpg-settings.ts';
-import { WH40KBaseActor } from './base-actor.ts';
-import type { WH40KItem } from './item.ts';
 import type {
-    WH40KItemDocument,
     WH40KActorSystemData,
     WH40KFatigue,
     WH40KFate,
@@ -22,6 +18,9 @@ import type {
     WH40KArmourLocation,
     WH40KSkill,
 } from '../types/global.d.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { WH40KBaseActor } from './base-actor.ts';
+import type { WH40KItem } from './item.ts';
 
 /** Typed shape of the modifierSources object on a character actor's system data. */
 interface CharacterModifierSources {
@@ -50,7 +49,9 @@ type WH40KCharacterSystemData = WH40KActorSystemData & {
     aptitudes: string[];
     armour: Record<string, WH40KArmourLocation>;
     encumbrance: WH40KEncumbrance;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: backgroundEffects content varies per origin/path config
     backgroundEffects: unknown[];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: originPath schema varies by game system
     originPath: Record<string, unknown>;
     backpack: WH40KBackpack;
     modifierSources: CharacterModifierSources;
@@ -127,9 +128,11 @@ export class WH40KAcolyte extends WH40KBaseActor {
     get encumbrance(): WH40KEncumbrance {
         return this.system.encumbrance;
     }
+    // eslint-disable-next-line no-restricted-syntax -- boundary: forwards backgroundEffects from system data
     get backgroundEffects(): unknown[] {
         return this.system.backgroundEffects;
     }
+    // eslint-disable-next-line no-restricted-syntax -- boundary: forwards originPath record from system data
     get originPath(): Record<string, unknown> {
         return this.system.originPath;
     }
@@ -158,8 +161,12 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     prepareData(): void {
         // Initialize defaults before DataModel runs (cast through unknown for legacy migration paths)
-        if ((this.system as Record<string, unknown>).corruption == null) (this.system as Record<string, unknown>).corruption = 0;
-        if ((this.system as Record<string, unknown>).insanity == null) (this.system as Record<string, unknown>).insanity = 0;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: legacy migration path writes through to system data
+        const sys = this.system as Record<string, unknown>;
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/prefer-nullish-coalescing -- legacy migration: ??= would mask schema default-init bugs
+        if (sys['corruption'] === undefined || sys['corruption'] === null) sys['corruption'] = 0;
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/prefer-nullish-coalescing -- legacy migration: ??= would mask schema default-init bugs
+        if (sys['insanity'] === undefined || sys['insanity'] === null) sys['insanity'] = 0;
 
         // Let the DataModel do base preparation first
         super.prepareData();
@@ -223,7 +230,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     getTotalMovementModifier(): number {
         const sources = this.system.modifierSources.movement;
-        return sources.reduce((total: number, src: { value: number }) => total + (src.value || 0), 0);
+        return sources.reduce((total: number, src: { value: number }) => total + src.value, 0);
     }
 
     /* -------------------------------------------- */
@@ -240,37 +247,39 @@ export class WH40KAcolyte extends WH40KBaseActor {
         type: 'characteristics' | 'skills' | 'combat',
         key: string | null = null,
     ): Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string }> {
-        const modifiers = [];
+        type SituationalEntry = { key: string; value: number; condition: string; icon?: string };
+        const modifiers: Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string }> = [];
 
         // Collect from all modifier-providing items
         const modifierItems = this.items.filter((item: WH40KItem) => {
-            const doc = item as WH40KItemDocument;
-            return !!(
+            const doc = item;
+            return (
                 doc.isTalent ||
                 doc.isTrait ||
                 doc.isCondition ||
-                (item.type === 'armour' && item.system.equipped) ||
-                (item.type === 'cybernetic' && item.system.equipped) ||
-                (item.type === 'gear' && item.system.equipped)
+                (item.type === 'armour' && item.system.equipped === true) ||
+                (item.type === 'cybernetic' && item.system.equipped === true) ||
+                (item.type === 'gear' && item.system.equipped === true)
             );
         });
 
         for (const item of modifierItems) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: per-item modifier blocks vary in shape across systems
             const situationalModifiers = (item.system.modifiers as Record<string, unknown> | undefined)?.['situational'] as Record<string, unknown> | undefined;
             const situational = situationalModifiers?.[type];
-            if (!situational || !Array.isArray(situational)) continue;
+            if (!Array.isArray(situational)) continue;
 
-            for (const mod of situational) {
+            for (const mod of situational as SituationalEntry[]) {
                 // Skip if key filter is provided and doesn't match
-                if (key && mod.key !== key) continue;
+                if (key !== null && mod.key !== key) continue;
 
                 modifiers.push({
                     key: mod.key,
                     value: mod.value,
                     condition: mod.condition,
-                    icon: mod.icon || 'fa-solid fa-exclamation-triangle',
-                    source: item.name ?? '',
-                    itemId: item.id ?? '',
+                    icon: mod.icon ?? 'fa-solid fa-exclamation-triangle',
+                    source: item.name,
+                    itemId: item.id,
                 });
             }
         }
@@ -320,9 +329,11 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {Object} [options] - Additional roll options
      * @returns {Promise<ChatMessage|null>}
      */
+    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/require-await, @typescript-eslint/no-misused-promises -- override returns Promise; consumers may await it. Base impl is sync.
     async rollCharacteristic(charKey: string, flavorOverride?: string, options: Record<string, unknown> = {}): Promise<void> {
-        const char = this.system.characteristics?.[charKey];
-        if (!char) {
+        const char = this.system.characteristics[charKey] as (typeof this.system.characteristics)[string] | undefined;
+        if (char === undefined) {
+            // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.CharacteristicNotFound localization key not yet in en.json
             ui.notifications.warn(`Characteristic "${charKey}" not found`);
             return;
         }
@@ -333,9 +344,9 @@ export class WH40KAcolyte extends WH40KBaseActor {
             label: `${char.label} Test`,
             target: char.total,
             situationalKey: charKey,
-            nameOverride: flavorOverride || undefined,
+            nameOverride: flavorOverride !== undefined && flavorOverride !== '' ? flavorOverride : undefined,
         });
-        await prepareUnifiedRoll(simpleSkillData);
+        prepareUnifiedRoll(simpleSkillData);
     }
 
     /**
@@ -345,10 +356,12 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {Object} [options] - Additional roll options
      * @returns {Promise<ChatMessage|null>}
      */
+    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/require-await -- boundary: roll options accept ad-hoc consumer-supplied fields; signature returns Promise for caller compat
     async rollSkill(skillName: string, specialityName?: string | number, options: Record<string, unknown> = {}): Promise<void> {
         const resolvedSkillName = this._resolveSkillName(skillName);
-        const skill = this.skills[resolvedSkillName];
-        if (!skill) {
+        const skill = this.skills[resolvedSkillName] as WH40KSkill | undefined;
+        if (skill === undefined) {
+            // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.SkillNotFound localization key not yet in en.json
             ui.notifications.warn(`Unable to find skill ${skillName}`);
             return;
         }
@@ -356,7 +369,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         let targetValue = skill.current;
 
         // Handle specialist skills
-        if (specialityName !== undefined && Array.isArray(skill?.entries)) {
+        if (specialityName !== undefined && Array.isArray(skill.entries)) {
             const speciality = this._findSpecialistSkill(skill, specialityName);
             if (speciality) {
                 const specialityLabel = speciality.name ?? speciality.label ?? specialityName;
@@ -372,21 +385,23 @@ export class WH40KAcolyte extends WH40KBaseActor {
             target: targetValue,
             situationalKey: resolvedSkillName,
         });
-        await prepareUnifiedRoll(simpleSkillData);
+        prepareUnifiedRoll(simpleSkillData);
     }
 
     /**
      * Roll weapon damage
      * @param {Item} weapon - The weapon item
      */
+    // eslint-disable-next-line @typescript-eslint/require-await -- signature returns Promise for caller compat
     async rollWeaponDamage(weapon: WH40KItem): Promise<void> {
-        if (!weapon.system.equipped) {
+        if (weapon.system.equipped !== true) {
+            // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.WeaponNotEquipped localization key not yet in en.json
             ui.notifications.warn('Actor must have weapon equipped!');
             return;
         }
 
         // Calculate damage with Strength Bonus for melee/thrown weapons
-        const isMelee = weapon.system.melee || weapon.system.isMeleeWeapon;
+        const isMelee = weapon.system.melee === true || weapon.system.isMeleeWeapon === true;
         const isThrown = weapon.system.class === 'thrown';
         const special = weapon.system.special as string | string[] | undefined;
         const isGrenade = Array.isArray(special) ? special.includes('grenade') : typeof special === 'string' && special.includes('grenade');
@@ -399,21 +414,21 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // weapon.system.damage can be a string formula or an object with formula/bonus fields
         const rawDamage = weapon.system.damage as { formula?: string; value?: string; bonus?: number } | string | undefined;
         const damageFormula = typeof rawDamage === 'string' ? rawDamage : rawDamage?.formula ?? rawDamage?.value ?? '';
-        const damageBonus = typeof rawDamage === 'object' && rawDamage !== null ? rawDamage.bonus ?? 0 : 0;
+        const damageBonus = typeof rawDamage === 'object' ? rawDamage.bonus ?? 0 : 0;
         const damageData = {
             formula: damageFormula,
             bonus: damageBonus + strengthBonus,
         };
 
-        await prepareDamageRoll({
+        prepareDamageRoll({
             name: weapon.name,
             damage: damageData,
             damageType: weapon.system.damageType,
             penetration: weapon.system.penetration,
             targetActor: () => {
                 const targetedObjects = game.user.targets;
-                if (targetedObjects && targetedObjects.size > 0) {
-                    const target = targetedObjects.values().next().value as Token | undefined;
+                if (targetedObjects.size > 0) {
+                    const target = targetedObjects.values().next().value;
                     return target?.actor;
                 }
                 return undefined;
@@ -425,8 +440,9 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * Roll psychic power damage
      * @param {Item} power - The psychic power item
      */
+    // eslint-disable-next-line @typescript-eslint/require-await -- signature returns Promise for caller compat
     async rollPsychicPowerDamage(power: WH40KItem): Promise<void> {
-        await prepareDamageRoll({
+        prepareDamageRoll({
             psychicPower: true,
             pr: this.psy.rating,
             name: power.name,
@@ -445,59 +461,66 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const item = this.items.get(itemId);
         if (!item) return;
 
+        // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check -- default: branch handles all unhandled item types
         switch (item.type) {
             case 'weapon':
-                if (!item.system.equipped) {
+                if (item.system.equipped !== true) {
+                    // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.WeaponNotEquipped localization key not yet in en.json
                     ui.notifications.warn('Actor must have weapon equipped!');
                     return;
                 }
-                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
+                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls) === true) {
                     if (item.isRanged) {
-                        await this.rollCharacteristic('ballisticSkill', item.name ?? undefined);
+                        await this.rollCharacteristic('ballisticSkill', item.name);
                     } else {
-                        await this.rollCharacteristic('weaponSkill', item.name ?? undefined);
+                        await this.rollCharacteristic('weaponSkill', item.name);
                     }
                 } else {
                     await DHTargetedActionManager.performWeaponAttack(this, null, item);
                 }
                 return;
             case 'psychicPower':
-                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
-                    await this.rollCharacteristic('willpower', item.name ?? undefined);
+                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls) === true) {
+                    await this.rollCharacteristic('willpower', item.name);
                 } else {
                     await DHTargetedActionManager.performPsychicAttack(this, null, item);
                 }
                 return;
             case 'forceField':
-                if (!item.system.equipped || !item.system.activated) {
+                if (item.system.equipped !== true || item.system.activated !== true) {
+                    // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.ForceFieldNotReady localization key not yet in en.json
                     ui.notifications.warn('Actor must have force field equipped and activated!');
                     return;
                 }
-                await prepareUnifiedRoll(
-                    new ForceFieldData(
-                        this as unknown as import('../types/global.d.ts').WH40KBaseActorDocument,
-                        item as unknown as ConstructorParameters<typeof ForceFieldData>[1],
-                    ) as unknown as ActionData,
-                );
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ForceFieldData ctor accepts the item document via per-system-typed slot
+                prepareUnifiedRoll(new ForceFieldData(this, item as unknown as ConstructorParameters<typeof ForceFieldData>[1]) as unknown as ActionData);
                 return;
-            default:
+            default: {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: per-item-type field narrowed inline before string-vs-object dispatch
+                const benefit = (item.system as { benefit?: unknown }).benefit;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: per-item-type field narrowed inline before string-vs-object dispatch
+                const description = (item.system as { description?: unknown }).description;
+                const rawDescription =
+                    (typeof benefit === 'string' ? benefit : null) ??
+                    (typeof description === 'string'
+                        ? description
+                        : typeof description === 'object' && description !== null && 'value' in description
+                        ? (description as { value?: string }).value ?? ''
+                        : '');
                 await DHBasicActionManager.sendItemVocalizeChat({
-                    actor: this.name ?? '',
-                    name: item.name ?? '',
-                    type: item.type?.toUpperCase() ?? '',
-                    description: await TextEditor.enrichHTML(
-                        (typeof item.system.benefit === 'string' ? item.system.benefit : null) ??
-                            (typeof item.system.description === 'string' ? item.system.description : item.system.description?.value) ??
-                            '',
-                        {
-                            rollData: {
-                                actor: this,
-                                item: item,
-                                pr: this.psy.rating,
-                            },
+                    actor: this.name,
+                    name: item.name,
+                    type: item.type.toUpperCase(),
+                    // eslint-disable-next-line @typescript-eslint/no-deprecated -- TextEditor.enrichHTML still works in V14; foundry.applications.ux.TextEditor.implementation is the V15 path
+                    description: await TextEditor.enrichHTML(rawDescription, {
+                        rollData: {
+                            actor: this,
+                            item: item,
+                            pr: this.psy.rating,
                         },
-                    ),
+                    }),
                 });
+            }
         }
     }
 
@@ -508,6 +531,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     async damageItem(itemId: string): Promise<void> {
         const item = this.items.get(itemId);
         if (!item) return;
+        // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check -- default: branch handles all unhandled item types
         switch (item.type) {
             case 'weapon':
                 await this.rollWeaponDamage(item);
@@ -516,8 +540,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 await this.rollPsychicPowerDamage(item);
                 return;
             default:
+                // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.NoActionForItemType localization key not yet in en.json
                 ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
-                return;
         }
     }
 
@@ -568,8 +592,10 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {string} characteristic - The characteristic to test
      * @returns {Promise<Object>} The opposed test result
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: opposed test result is a structural shape consumed by chat templates
     async opposedCharacteristicTest(targetActor: Actor | null, characteristic: string): Promise<unknown> {
         const sourceRoll = await this.rollCharacteristicCheck(characteristic);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: target Actor narrowed to WH40KAcolyte for opposed test API
         const wh40kTarget = targetActor as unknown as WH40KAcolyte | null;
         const targetRoll = wh40kTarget ? await wh40kTarget.rollCharacteristicCheck(characteristic) : null;
         return this.opposedTest(sourceRoll, targetRoll);
@@ -581,6 +607,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {D100Roll} rollCheckTarget - The target actor's roll
      * @returns {Object} The opposed test result
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: opposed test result is a structural shape consumed by chat templates
     opposedTest(rollCheckSource: D100RollResult | null | undefined, rollCheckTarget: D100RollResult | null | undefined): unknown {
         if (!rollCheckSource) return null;
 
@@ -610,10 +637,11 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /*  Skill Helpers                               */
     /* -------------------------------------------- */
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: fuzzy lookup returns a per-system skill record shape
     getSkillFuzzy(skillName: string): unknown {
         const resolvedSkillName = this._resolveSkillName(skillName);
-        const skill = this.skills[resolvedSkillName];
-        if (skill) return skill;
+        const skill = this.skills[resolvedSkillName] as WH40KSkill | undefined;
+        if (skill !== undefined) return skill;
 
         for (const [name, foundSkill] of Object.entries(this.skills)) {
             if (skillName.toUpperCase() === name.toUpperCase()) {
@@ -624,22 +652,22 @@ export class WH40KAcolyte extends WH40KBaseActor {
     }
 
     _findSpecialistSkill(skill: WH40KSkill, specialityName: string | number): SkillEntry | undefined {
-        if (!Array.isArray(skill?.entries)) return undefined;
+        if (!Array.isArray(skill.entries)) return undefined;
         const entries = skill.entries as SkillEntry[];
         if (Number.isInteger(specialityName)) return entries[specialityName as number];
 
         const index = Number.parseInt(String(specialityName), 10);
-        if (!Number.isNaN(index) && entries[index]) return entries[index];
+        if (!Number.isNaN(index) && (entries[index] as SkillEntry | undefined) !== undefined) return entries[index];
 
         return entries.find((entry) => entry.name?.toLowerCase() === `${specialityName}`.toLowerCase());
     }
 
     _resolveSkillName(skillName: string): string {
-        if (!skillName) return skillName;
-        if (this.skills[skillName]) return skillName;
+        if (skillName === '') return skillName;
+        if ((this.skills[skillName] as WH40KSkill | undefined) !== undefined) return skillName;
 
-        const alias = SKILL_ALIASES[skillName.toLowerCase()];
-        if (alias && this.skills[alias]) {
+        const alias = SKILL_ALIASES[skillName.toLowerCase()] as string | undefined;
+        if (alias !== undefined && (this.skills[alias] as WH40KSkill | undefined) !== undefined) {
             return alias;
         }
 
@@ -651,18 +679,20 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     hasTalent(talent: string): boolean {
-        return !!this.items.filter((i) => i.type === 'talent').find((t) => t.name === talent);
+        return this.items.filter((i) => i.type === 'talent').find((t) => t.name === talent) !== undefined;
     }
 
     hasTalentFuzzyWords(words: string[]): boolean {
-        return !!this.items
-            .filter((i) => i.type === 'talent')
-            .find((t) => {
-                for (const word of words) {
-                    if (!(t.name ?? '').includes(word)) return false;
-                }
-                return true;
-            });
+        return (
+            this.items
+                .filter((i) => i.type === 'talent')
+                .find((t) => {
+                    for (const word of words) {
+                        if (!t.name.includes(word)) return false;
+                    }
+                    return true;
+                }) !== undefined
+        );
     }
 
     /* -------------------------------------------- */
@@ -672,6 +702,6 @@ export class WH40KAcolyte extends WH40KBaseActor {
     async spendFate(): Promise<void> {
         await this.update({
             system: { fate: { value: this.system.fate.value - 1 } },
-        } as Actor.UpdateInput);
+        });
     }
 }

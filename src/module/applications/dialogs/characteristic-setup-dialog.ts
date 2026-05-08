@@ -73,7 +73,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    #actor: WH40KBaseActor;
+    readonly #actor: WH40KBaseActor;
     #rolls: number[] = [];
     #assignments: Partial<Record<CharacteristicKey, number | null>> = {};
     #customBases: Partial<Record<CharacteristicKey, number>> = {};
@@ -95,7 +95,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
+    get title(): string {
         return game.i18n.localize('WH40K.CharacteristicSetup.Title');
     }
 
@@ -205,7 +205,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         const html = this.element;
 
         html.querySelectorAll('.csd-roll-chip').forEach((chip) => {
-            chip.addEventListener('click', this.#onRollChipClick.bind(this) as EventListener);
+            chip.addEventListener('click', this.#onRollChipClick.bind(this));
             chip.addEventListener('dragstart', this.#onDragStart.bind(this) as EventListener);
             chip.addEventListener('dragend', this.#onDragEnd.bind(this) as EventListener);
         });
@@ -229,7 +229,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         }
 
         html.querySelectorAll('.csd-base-input').forEach((input) => {
-            input.addEventListener('change', this.#onBaseValueChange.bind(this) as EventListener);
+            input.addEventListener('change', this.#onBaseValueChange.bind(this));
         });
     }
 
@@ -254,7 +254,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         input.addEventListener('blur', this.#onRollInputBlur.bind(this));
         input.addEventListener('keydown', this.#onRollInputKeydown.bind(this) as EventListener);
 
-        const valueEl = chip.querySelector('.csd-roll-value') as HTMLElement | null;
+        const valueEl = chip.querySelector<HTMLElement>('.csd-roll-value');
         if (valueEl) valueEl.style.display = 'none';
         chip.appendChild(input);
         input.focus();

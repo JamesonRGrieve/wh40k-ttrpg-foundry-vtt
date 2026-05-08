@@ -78,7 +78,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
             await super._onRender(context, options);
 
             // Setup context menus on first render
-            if (options.isFirstRender) {
+            if (options.isFirstRender === true) {
                 this._createContextMenus();
             }
         }
@@ -141,7 +141,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
          */
         _getCharacteristicContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
             const charKey = target.dataset.characteristic;
-            if (!charKey) return [];
+            if (charKey == null || charKey === '') return [];
             const char = (this.actor as any).system.characteristics?.[charKey] as WH40KCharacteristic | undefined;
             if (!char) return [];
 
@@ -149,33 +149,33 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                 {
                     name: `Roll ${char.label || charKey} Test`,
                     icon: '<i class="fas fa-dice-d20"></i>',
-                    callback: () => this._onCharacteristicRoll(charKey),
+                    callback: async () => this._onCharacteristicRoll(charKey),
                 },
                 {
                     name: 'Roll with Modifier...',
                     icon: '<i class="fas fa-dice-d20"></i>',
-                    callback: () => this._onCharacteristicRollWithModifier(charKey),
+                    callback: async () => this._onCharacteristicRollWithModifier(charKey),
                 },
                 {
                     name: 'View Modifier Sources',
                     icon: '<i class="fas fa-info-circle"></i>',
-                    callback: () => this._showModifierSources(charKey),
+                    callback: async () => this._showModifierSources(charKey),
                 },
                 {
                     name: 'Edit Characteristic',
                     icon: '<i class="fas fa-edit"></i>',
-                    callback: () => this._onEditCharacteristic(charKey),
+                    callback: async () => this._onEditCharacteristic(charKey),
                 },
                 {
                     name: 'Spend XP to Advance',
                     icon: '<i class="fas fa-star"></i>',
-                    callback: () => this._onAdvanceCharacteristic(charKey),
+                    callback: async () => this._onAdvanceCharacteristic(charKey),
                     condition: () => (char.advance ?? 0) < 5,
                 },
                 {
                     name: 'Post to Chat',
                     icon: '<i class="fas fa-comment"></i>',
-                    callback: () => this._postCharacteristicToChat(charKey, char),
+                    callback: async () => this._postCharacteristicToChat(charKey, char),
                 },
             ];
         }
@@ -190,7 +190,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
          */
         _getSkillContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
             const skillKey = target.dataset.skill;
-            if (!skillKey) return [];
+            if (skillKey == null || skillKey === '') return [];
             const skill = (this.actor as any).system.skills?.[skillKey] as WH40KSkill | undefined;
             if (!skill) return [];
 
@@ -198,28 +198,28 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                 {
                     name: `Roll ${skill.label || skillKey} Test`,
                     icon: '<i class="fas fa-dice-d20"></i>',
-                    callback: () => this._onSkillRoll(skillKey),
+                    callback: async () => this._onSkillRoll(skillKey),
                 },
                 {
                     name: 'Roll with Modifier...',
                     icon: '<i class="fas fa-dice-d20"></i>',
-                    callback: () => this._onSkillRollWithModifier(skillKey),
+                    callback: async () => this._onSkillRollWithModifier(skillKey),
                 },
                 {
                     name: skill.trained ? 'Untrain' : 'Train',
                     icon: '<i class="fas fa-graduation-cap"></i>',
-                    callback: () => this._toggleSkillTraining(skillKey, 'trained'),
+                    callback: async () => this._toggleSkillTraining(skillKey, 'trained'),
                 },
                 {
                     name: skill.plus10 ? 'Remove +10' : 'Add +10',
                     icon: '<i class="fas fa-plus-circle"></i>',
-                    callback: () => this._toggleSkillTraining(skillKey, 'plus10'),
+                    callback: async () => this._toggleSkillTraining(skillKey, 'plus10'),
                     condition: () => skill.trained,
                 },
                 {
                     name: skill.plus20 ? 'Remove +20' : 'Add +20',
                     icon: '<i class="fas fa-plus-circle"></i>',
-                    callback: () => this._toggleSkillTraining(skillKey, 'plus20'),
+                    callback: async () => this._toggleSkillTraining(skillKey, 'plus20'),
                     condition: () => skill.plus10,
                 },
                 {
@@ -234,7 +234,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                 options.push({
                     name: 'Add Specialization',
                     icon: '<i class="fas fa-plus"></i>',
-                    callback: () => this._addSkillSpecialization(skillKey),
+                    callback: async () => this._addSkillSpecialization(skillKey),
                 });
             }
 
@@ -251,7 +251,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
          */
         _getItemContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
             const itemId = target.dataset.itemId;
-            if (!itemId) return [];
+            if (itemId == null || itemId === '') return [];
             const item = this.actor.items.get(itemId);
             if (!item) return [];
 
@@ -265,28 +265,28 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                     {
                         name: 'Standard Attack',
                         icon: '<i class="fas fa-crosshairs"></i>',
-                        callback: () => this._weaponAttack(item, 'standard'),
+                        callback: async () => this._weaponAttack(item, 'standard'),
                     },
                     {
                         name: 'Aimed Attack',
                         icon: '<i class="fas fa-bullseye"></i>',
-                        callback: () => this._weaponAttack(item, 'aimed'),
+                        callback: async () => this._weaponAttack(item, 'aimed'),
                     },
                 );
 
-                if (rateOfFire?.includes('S')) {
+                if (rateOfFire?.includes('S') === true) {
                     options.push({
                         name: 'Semi-Auto Burst',
                         icon: '<i class="fas fa-redo"></i>',
-                        callback: () => this._weaponAttack(item, 'semi'),
+                        callback: async () => this._weaponAttack(item, 'semi'),
                     });
                 }
 
-                if (rateOfFire?.includes('–') || rateOfFire?.includes('/-')) {
+                if (rateOfFire?.includes('–') === true || rateOfFire?.includes('/-') === true) {
                     options.push({
                         name: 'Full-Auto Burst',
                         icon: '<i class="fas fa-fire"></i>',
-                        callback: () => this._weaponAttack(item, 'full'),
+                        callback: async () => this._weaponAttack(item, 'full'),
                     });
                 }
             }
@@ -296,9 +296,9 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                 const system = item.system as { equipped?: boolean };
                 const equipped = system.equipped;
                 options.push({
-                    name: equipped ? 'Unequip' : 'Equip',
-                    icon: `<i class="fas ${equipped ? 'fa-times-circle' : 'fa-check-circle'}"></i>`,
-                    callback: () => this._toggleEquipped(item),
+                    name: equipped === true ? 'Unequip' : 'Equip',
+                    icon: `<i class="fas ${equipped === true ? 'fa-times-circle' : 'fa-check-circle'}"></i>`,
+                    callback: async () => this._toggleEquipped(item),
                 });
             }
 
@@ -309,7 +309,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                 options.push({
                     name: activated ? 'Deactivate' : 'Activate',
                     icon: `<i class="fas ${activated ? 'fa-power-off' : 'fa-bolt'}"></i>`,
-                    callback: () => this._toggleActivated(item),
+                    callback: async () => this._toggleActivated(item),
                 });
             }
 
@@ -325,12 +325,12 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                 {
                     name: 'Duplicate',
                     icon: '<i class="fas fa-copy"></i>',
-                    callback: () => this._duplicateItem(item),
+                    callback: async () => this._duplicateItem(item),
                 },
                 {
                     name: 'Delete',
                     icon: '<i class="fas fa-trash"></i>',
-                    callback: () => this._deleteItem(item),
+                    callback: async () => this._deleteItem(item),
                 },
             );
 
@@ -349,27 +349,27 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                 {
                     name: 'Spend for Re-roll',
                     icon: '<i class="fas fa-redo"></i>',
-                    callback: () => this._spendFate('reroll'),
+                    callback: async () => this._spendFate('reroll'),
                 },
                 {
                     name: 'Spend for +10 Bonus',
                     icon: '<i class="fas fa-plus-circle"></i>',
-                    callback: () => this._spendFate('bonus'),
+                    callback: async () => this._spendFate('bonus'),
                 },
                 {
                     name: 'Spend for +1 DoS',
                     icon: '<i class="fas fa-arrow-up"></i>',
-                    callback: () => this._spendFate('dos'),
+                    callback: async () => this._spendFate('dos'),
                 },
                 {
                     name: 'Spend for Healing (1d5)',
                     icon: '<i class="fas fa-heartbeat"></i>',
-                    callback: () => this._spendFate('healing'),
+                    callback: async () => this._spendFate('healing'),
                 },
                 {
                     name: 'Burn Fate Point (Permanent)',
                     icon: '<i class="fas fa-fire"></i>',
-                    callback: () => this._burnFatePoint(),
+                    callback: async () => this._burnFatePoint(),
                     group: 'danger',
                 },
             ];
@@ -397,7 +397,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                 (Bonus: ${char.bonus})
             </div>`;
             await ChatMessage.create({
-                speaker: ChatMessage.getSpeaker({ actor: this.actor as WH40KBaseActor }),
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
                 content,
             });
         }

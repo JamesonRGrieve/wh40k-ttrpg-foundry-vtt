@@ -25,7 +25,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
      * Internal state for the dialog.
      * @type {DialogState}
      */
-    #state: DialogState = {
+    readonly #state: DialogState = {
         npc: null,
         quantity: 1,
     };
@@ -40,14 +40,17 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         classes: ['wh40k-rpg', 'difficulty-calculator-dialog'],
         tag: 'div',
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- this IS a localization key, not hardcoded English
             title: 'WH40K.NPC.DifficultyCalculator',
             icon: 'fa-solid fa-calculator',
         },
         position: {
             width: 600,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height accepts number | 'auto'
             height: 'auto' as unknown as number,
         },
         actions: {
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry action handlers are invoked with the application as `this`
             updateQuantity: DifficultyCalculatorDialog.#updateQuantity,
         },
     };
@@ -68,6 +71,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
      * @param {WH40KNPC} npc - The NPC actor to calculate difficulty for.
      * @param {Record<string, unknown>} options - Application options.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 options is untyped record
     constructor(npc: WH40KNPC, options: Record<string, unknown> = {}) {
         super(options);
         this.#state.npc = npc;
@@ -93,17 +97,31 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
+        type PartyUser = {
+            active: boolean;
+            character?: {
+                name?: string;
+                img?: string;
+                system?: { rank?: number };
+            } | null;
+            name?: string;
+            avatar?: string;
+        };
+        type NPCSystem = { threatLevel?: number; type?: string; horde?: { enabled?: boolean } };
+
         // Get party info
-        const party = game.users.filter((u) => u.active && !!u.character) as any[];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry user collection narrowed to local PartyUser shape
+        const party = game.users.filter((u) => u.active && !!u.character) as unknown as PartyUser[];
         const partySize = party.length;
 
         // Calculate average party rank
         let totalRank = 0;
         for (const user of party) {
-            const rank = (user.character?.system as any)?.rank ?? 1;
+            const rank = user.character?.system?.rank ?? 1;
             totalRank += rank;
         }
         const partyLevel = partySize > 0 ? Math.round(totalRank / partySize) : 1;
@@ -115,7 +133,9 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         const npc = this.#state.npc;
         if (!npc) return context;
 
-        const npcThreat = (npc.system as any).threatLevel;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: per-system NPC schemas read uniformly via local NPCSystem shape
+        const npcSystem = npc.system as unknown as NPCSystem;
+        const npcThreat = npcSystem.threatLevel ?? 0;
         const quantity = this.#state.quantity;
         const totalThreat = npcThreat * quantity;
 
@@ -127,8 +147,8 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
             name: npc.name,
             img: npc.img,
             threatLevel: npcThreat,
-            type: (npc.system as any).type,
-            isHorde: (npc.system as any).horde?.enabled ?? false,
+            type: npcSystem.type,
+            isHorde: npcSystem.horde?.enabled ?? false,
         };
         context.partySize = partySize;
         context.partyLevel = partyLevel;
@@ -141,7 +161,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         // Add party members list
         context.partyMembers = party.map((u) => ({
             name: u.character?.name ?? u.name,
-            rank: (u.character?.system as any)?.rank ?? 1,
+            rank: u.character?.system?.rank ?? 1,
             img: u.character?.img ?? u.avatar,
         }));
 
@@ -223,7 +243,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         if (!input) return;
         const quantity = parseInt(input.value, 10) || 1;
         this.#state.quantity = Math.max(1, quantity);
-        this.render();
+        void this.render();
     }
 
     /* -------------------------------------------- */
@@ -238,7 +258,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         proto._attachPartListeners?.call(this, partId, htmlElement, options);
 
         // Listen for quantity input changes
-        const quantityInput = htmlElement.querySelector('[name="quantity"]') as HTMLInputElement | null;
+        const quantityInput = htmlElement.querySelector('[name="quantity"]');
         if (quantityInput) {
             quantityInput.addEventListener('input', (event: Event) => {
                 const input = event.target as HTMLInputElement;

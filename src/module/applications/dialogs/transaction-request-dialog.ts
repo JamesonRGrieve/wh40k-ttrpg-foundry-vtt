@@ -4,6 +4,15 @@ import { TransactionManager } from '../../transactions/transaction-manager.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+interface TransactionQuote {
+    mode?: string;
+}
+
+interface TransactionItemSystemView {
+    quantity?: number;
+    cost?: { value?: number };
+}
+
 interface TransactionRequestContext extends Record<string, unknown> {
     buyer: WH40KBaseActor;
     hasSources: boolean;
@@ -13,7 +22,7 @@ interface TransactionRequestContext extends Record<string, unknown> {
     selectedItem: WH40KItem | null;
     quantity: number;
     influenceBurn: number;
-    quote: unknown;
+    quote: TransactionQuote | null;
     isBarter: boolean;
     isRequisition: boolean;
 }
@@ -61,10 +70,10 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         this.actor = actor;
 
         const sources = TransactionManager.listSourcesForBuyer(actor);
-        if (sources.length) {
+        if (sources.length > 0) {
             this.sourceId = sources[0].id;
             const items = TransactionManager.listItemsForSource(sources[0]);
-            if (items.length) this.itemId = items[0].id;
+            if (items.length > 0) this.itemId = items[0].id;
         }
     }
 
@@ -77,19 +86,19 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         const sources = TransactionManager.listSourcesForBuyer(this.actor);
         const selectedSource = sources.find((source) => source.id === this.sourceId) ?? sources[0] ?? null;
 
-        if (selectedSource && this.sourceId !== selectedSource.id) {
+        if (selectedSource !== null && this.sourceId !== selectedSource.id) {
             this.sourceId = selectedSource.id;
         }
 
         const items = TransactionManager.listItemsForSource(selectedSource);
         const selectedItem = items.find((item) => item.id === this.itemId) ?? items[0] ?? null;
 
-        if (selectedItem && this.itemId !== selectedItem.id) {
+        if (selectedItem !== null && this.itemId !== selectedItem.id) {
             this.itemId = selectedItem.id;
         }
 
-        let quote: unknown = null;
-        if (selectedSource && selectedItem && this.actor.id && selectedSource.id && selectedItem.id) {
+        let quote: TransactionQuote | null = null;
+        if (selectedSource !== null && selectedItem !== null && this.actor.id !== null && selectedSource.id !== null && selectedItem.id !== null) {
             try {
                 quote = TransactionManager.prepareQuote({
                     buyerActorId: this.actor.id,
@@ -97,8 +106,8 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
                     itemId: selectedItem.id,
                     quantity: this.quantity,
                     influenceBurn: this.influenceBurn,
-                });
-            } catch (error) {
+                }) as TransactionQuote | null;
+            } catch (_error) {
                 quote = null;
             }
         }
@@ -119,56 +128,65 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
                 name: item.name,
                 img: item.img ?? null,
                 type: item.type,
-                quantity: (item.system as any)?.quantity ?? 1,
-                cost: (item.system as any)?.cost?.value ?? 0,
+                quantity: (item.system as TransactionItemSystemView).quantity ?? 1,
+                cost: (item.system as TransactionItemSystemView).cost?.value ?? 0,
                 selected: item.id === selectedItem?.id,
             })),
             selectedItem: selectedItem as unknown as WH40KItem | null,
             quantity: this.quantity,
             influenceBurn: this.influenceBurn,
             quote,
-            isBarter: (quote as any)?.mode === 'barter',
-            isRequisition: (quote as any)?.mode === 'requisition',
+            isBarter: quote?.mode === 'barter',
+            isRequisition: quote?.mode === 'requisition',
         };
     }
 
     _onRender(context: TransactionRequestContext, options: ApplicationV2Config.RenderOptions): void {
         super._onRender(context, options);
 
-        const sourceSelect = this.element.querySelector('[name="sourceId"]') as HTMLSelectElement | null;
-        const quantityInput = this.element.querySelector('[name="quantity"]') as HTMLInputElement | null;
-        const influenceInput = this.element.querySelector('[name="influenceBurn"]') as HTMLInputElement | null;
+        const sourceSelect = this.element.querySelector('[name="sourceId"]');
+        const quantityInput = this.element.querySelector('[name="quantity"]');
+        const influenceInput = this.element.querySelector('[name="influenceBurn"]');
 
-        sourceSelect?.addEventListener('change', () => {
-            this.sourceId = sourceSelect.value;
-            this.itemId = '';
-            this.quantity = 1;
-            this.influenceBurn = 0;
-            void this.render(false);
-        });
+        if (sourceSelect instanceof HTMLSelectElement) {
+            sourceSelect.addEventListener('change', () => {
+                this.sourceId = sourceSelect.value;
+                this.itemId = '';
+                this.quantity = 1;
+                this.influenceBurn = 0;
+                void this.render(false);
+            });
+        }
 
-        quantityInput?.addEventListener('change', () => {
-            this.quantity = Math.max(1, Number.parseInt(quantityInput.value || '1', 10) || 1);
-            void this.render(false);
-        });
+        if (quantityInput instanceof HTMLInputElement) {
+            quantityInput.addEventListener('change', () => {
+                this.quantity = Math.max(1, Number.parseInt(quantityInput.value !== '' ? quantityInput.value : '1', 10) || 1);
+                void this.render(false);
+            });
+        }
 
-        influenceInput?.addEventListener('change', () => {
-            this.influenceBurn = Math.max(0, Number.parseInt(influenceInput.value || '0', 10) || 0);
-            void this.render(false);
-        });
+        if (influenceInput instanceof HTMLInputElement) {
+            influenceInput.addEventListener('change', () => {
+                this.influenceBurn = Math.max(0, Number.parseInt(influenceInput.value !== '' ? influenceInput.value : '0', 10) || 0);
+                void this.render(false);
+            });
+        }
     }
 
     static #onSubmit(this: TransactionRequestDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): void {
         const data = formData.object;
-        this.quantity = Math.max(1, Number.parseInt((data.quantity as string) || '1', 10) || 1);
-        this.influenceBurn = Math.max(0, Number.parseInt((data.influenceBurn as string) || '0', 10) || 0);
-        this.sourceId = (data.sourceId as string) || this.sourceId;
+        const qty = (data.quantity as string | undefined) ?? '';
+        const inf = (data.influenceBurn as string | undefined) ?? '';
+        const src = (data.sourceId as string | undefined) ?? '';
+        this.quantity = Math.max(1, Number.parseInt(qty !== '' ? qty : '1', 10) || 1);
+        this.influenceBurn = Math.max(0, Number.parseInt(inf !== '' ? inf : '0', 10) || 0);
+        this.sourceId = src !== '' ? src : this.sourceId;
     }
 
     static async #selectItem(this: TransactionRequestDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const itemId = target.dataset.itemId;
-        if (!itemId) return;
+        if (itemId === undefined || itemId === '') return;
 
         this.itemId = itemId;
         this.quantity = 1;
@@ -179,7 +197,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         event.preventDefault();
 
         try {
-            if (!this.sourceId || !this.itemId || !this.actor.id) {
+            if (this.sourceId === null || this.sourceId === '' || this.itemId === null || this.itemId === '' || this.actor.id === null) {
                 throw new Error('Choose a source and an item first.');
             }
 
@@ -193,7 +211,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
 
             await TransactionManager.notifyRequester('Transaction request sent to the GM for approval.', 'info');
             this.#resolve?.(true);
-            await this.close({ _skipResolve: true } as Record<string, unknown>);
+            await this.close({ _skipResolve: true });
         } catch (error) {
             await TransactionManager.notifyRequester(error instanceof Error ? error.message : 'Unable to submit transaction request.', 'error');
         }
@@ -207,7 +225,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
     }
 
     async close(options: Record<string, unknown> = {}): Promise<unknown> {
-        if (this.#resolve && !options._skipResolve) {
+        if (this.#resolve !== null && options._skipResolve !== true) {
             this.#resolve(null);
         }
         return super.close(options);

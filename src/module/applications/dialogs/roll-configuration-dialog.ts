@@ -18,6 +18,7 @@ interface DifficultyPreset {
     value: number;
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: RollConfig is the dialog's external contract; consumers attach ad-hoc fields
 interface RollConfig extends Record<string, unknown> {
     actor?: Actor | null;
     target?: number;
@@ -42,23 +43,28 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         classes: ['wh40k-rpg', 'roll-configuration-dialog'],
         tag: 'form',
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- this IS a localization key, not hardcoded English
             title: 'WH40K.Roll.ConfigureRoll',
             icon: 'fa-solid fa-dice-d20',
             resizable: false,
         },
         position: {
             width: 400,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height accepts number | 'auto'
             height: 'auto' as unknown as number,
         },
         form: {
+            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: ApplicationV2 form handler signature differs; bound by framework on action invocation
             handler: RollConfigurationDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: true,
         },
         actions: {
+            /* eslint-disable @typescript-eslint/unbound-method -- Foundry action handlers are invoked with the application as `this` */
             toggleSituational: RollConfigurationDialog.#toggleSituational,
             cancel: RollConfigurationDialog.#cancel,
             viewModifierSource: RollConfigurationDialog.#viewModifierSource,
+            /* eslint-enable @typescript-eslint/unbound-method */
         },
     };
 
@@ -100,6 +106,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     declare selectedDifficulty: string;
     declare customModifier: number;
     declare activeSituationalModifiers: Set<string>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: resolve callback returns the consumer's untyped result object
     #resolve: ((value: unknown) => void) | null = null;
 
     /* -------------------------------------------- */
@@ -111,11 +118,12 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {Object} [options] - Application options
      */
     constructor(config: RollConfig = {}, options: ApplicationV2Config.DefaultOptions = {}) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 super() options is loose record
         super(options as unknown as Record<string, unknown>);
         this.config = foundry.utils.deepClone(config);
-        this.actor = config.actor || null;
-        this.selectedDifficulty = config.difficulty || 'difficult';
-        this.customModifier = config.customModifier || 0;
+        this.actor = config.actor ?? null;
+        this.selectedDifficulty = config.difficulty ?? 'difficult';
+        this.customModifier = config.customModifier ?? 0;
         this.activeSituationalModifiers = new Set();
     }
 
@@ -124,8 +132,9 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext options/return are loose records
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = (await super._prepareContext(options)) as Record<string, unknown>;
+        const context = await super._prepareContext(options);
 
         // Calculate the difficulty modifier
         const difficultyPreset = RollConfigurationDialog.DIFFICULTY_PRESETS.find((p) => p.key === this.selectedDifficulty) ?? { value: 0 };
@@ -135,23 +144,23 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const situationalModifierTotal = this._calculateSituationalTotal();
 
         // Prepare permanent modifiers (from items, conditions, etc.)
-        const permanentModifiers = (this.config.permanentModifiers || []).map((mod) => ({
+        const permanentModifiers = (this.config.permanentModifiers ?? []).map((mod) => ({
             ...mod,
             valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString(),
-            hasSource: !!mod.uuid,
+            hasSource: mod.uuid !== undefined && mod.uuid !== '',
         }));
         const hasPermanentModifiers = permanentModifiers.length > 0;
 
         // Calculate permanent modifier total
-        const permanentModifierTotal = permanentModifiers.reduce((sum: number, mod) => sum + (mod.value || 0), 0);
+        const permanentModifierTotal = permanentModifiers.reduce((sum: number, mod) => sum + mod.value, 0);
 
         // Calculate total modifier and final target
         const totalModifier = difficultyModifier + this.customModifier + situationalModifierTotal + permanentModifierTotal;
-        const baseTarget = this.config.target || 0;
+        const baseTarget = this.config.target ?? 0;
         const finalTarget = Math.max(1, Math.min(100, baseTarget + totalModifier));
 
         // Prepare situational modifiers for display
-        const situationalModifiers = (this.config.situationalModifiers || []).map((mod, index: number) => ({
+        const situationalModifiers = (this.config.situationalModifiers ?? []).map((mod, index: number) => ({
             ...mod,
             id: `sit-${index}`,
             active: this.activeSituationalModifiers.has(`sit-${index}`),
@@ -163,11 +172,11 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             ...context,
             // Actor info
             actor: this.actor,
-            actorName: this.actor?.name || '',
-            actorImg: this.actor?.img || 'icons/svg/mystery-man.svg',
+            actorName: this.actor?.name ?? '',
+            actorImg: this.actor?.img ?? 'icons/svg/mystery-man.svg',
 
             // Roll info
-            rollName: this.config.flavor || this.config.name || 'Test',
+            rollName: this.config.flavor ?? this.config.name ?? 'Test',
             baseTarget: baseTarget,
             finalTarget: finalTarget,
 
@@ -196,10 +205,10 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             selectedDifficulty: this.selectedDifficulty,
 
             // Roll modes - V13: rollModes values are objects with a label property
-            rollModes: Object.entries(CONFIG.Dice.rollModes).map(([key, mode]: [string, any]) => ({
+            rollModes: Object.entries(CONFIG.Dice.rollModes).map(([key, mode]: [string, { label: string }]) => ({
                 key: key,
                 label: game.i18n.localize(mode.label),
-                selected: key === (this.config.rollMode || game.settings.get('core', 'rollMode')),
+                selected: key === (this.config.rollMode ?? game.settings.get('core', 'rollMode')),
             })),
 
             // Form buttons
@@ -217,16 +226,17 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      */
     _calculateSituationalTotal(): number {
         let total = 0;
-        const situationalModifiers = this.config.situationalModifiers || [];
+        const situationalModifiers = this.config.situationalModifiers ?? [];
         for (let i = 0; i < situationalModifiers.length; i++) {
             if (this.activeSituationalModifiers.has(`sit-${i}`)) {
-                total += situationalModifiers[i].value || 0;
+                total += situationalModifiers[i].value;
             }
         }
         return total;
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender context/options are loose records
     _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
@@ -270,9 +280,9 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #cancel(this: any, event: Event, target: HTMLElement): void {
+    static #cancel(this: RollConfigurationDialog, event: Event, target: HTMLElement): void {
         // Note: 'this' is bound to the instance by ApplicationV2 action handler system
-        this.close();
+        void this.close();
     }
 
     /**
@@ -280,18 +290,20 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #viewModifierSource(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #viewModifierSource(this: RollConfigurationDialog, event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
-        if (!uuid) return;
+        if (uuid === undefined || uuid === '') return;
 
-        const item = await (fromUuid as any)(uuid);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: opens per-system item sheet via duck-typed structural shape
+        type ItemWithSheet = { toMessage?: () => void; sheet?: { render: (force?: boolean) => unknown } };
+        const item = (await fromUuid(uuid)) as ItemWithSheet | null;
         if (item) {
             // Check for Shift+Click to post to chat
             if ((event as MouseEvent).shiftKey) {
-                item.toMessage();
+                item.toMessage?.();
             } else {
                 // Default: open sheet
-                item.sheet.render(true);
+                item.sheet?.render(true);
             }
         }
     }
@@ -302,14 +314,15 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static #toggleSituational(this: any, event: Event, target: HTMLElement): void {
+    static #toggleSituational(this: RollConfigurationDialog, event: Event, target: HTMLElement): void {
         const modId = target.dataset.modifierId;
+        if (modId === undefined) return;
         if (this.activeSituationalModifiers.has(modId)) {
             this.activeSituationalModifiers.delete(modId);
         } else {
             this.activeSituationalModifiers.add(modId);
         }
-        this.render({ parts: ['form'] });
+        void this.render({ parts: ['form'] });
     }
 
     /**
@@ -321,7 +334,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     static #onSubmit(this: RollConfigurationDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): void {
         const data = formData.object;
 
-        const difficultyPreset = RollConfigurationDialog.DIFFICULTY_PRESETS.find((p) => p.key === data.difficulty) || { value: 0 };
+        const difficultyPreset = RollConfigurationDialog.DIFFICULTY_PRESETS.find((p) => p.key === data.difficulty) ?? { value: 0 };
         const situationalTotal = this._calculateSituationalTotal();
         const customModifier = parseInt(data.customModifier as string) || 0;
 
@@ -355,6 +368,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * Show the dialog and wait for result
      * @returns {Promise<Object|null>} The configuration result, or null if cancelled
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: wait() resolves with the consumer's untyped config result
     async wait(): Promise<unknown> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
@@ -363,9 +377,10 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close options is loose record
     async close(options: Record<string, unknown> = {}): Promise<void> {
         // Ensure we resolve with null if closed without submitting
-        if (this.#resolve && !(options as any).submitted) {
+        if (this.#resolve && options['submitted'] !== true) {
             this.#resolve(null);
         }
         await super.close(options);
@@ -380,6 +395,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {Object} config - Roll configuration
      * @returns {Promise<Object|null>} Configuration result or null if cancelled
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: configure() is the public façade for ad-hoc consumer config
     static async configure(config: Record<string, unknown> = {}): Promise<unknown> {
         const dialog = new this(config);
         return dialog.wait();
