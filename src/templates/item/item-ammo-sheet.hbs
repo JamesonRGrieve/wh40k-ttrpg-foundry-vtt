@@ -1,402 +1,302 @@
-{{!-- 
-  Rogue Trader Ammunition Item Sheet - V2 Redesign
-  Matches weapon/armour sheet patterns with modern ApplicationV2 structure
---}}
-<div class="wh40k-ammo-sheet">
-  <form autocomplete="off">
-    
-    {{!-- ═══════════════════════════════════════════════════════════════════
-         HEADER: Compact ammo identity with inline stats
-    ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="wh40k-ammo-header">
-      <div class="wh40k-ammo-header__image" data-action="editImage" data-edit="img">
-        <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="wh40k-ammo-header__image-overlay">
-          <i class="fas fa-bullseye"></i>
+{{!-- Rogue Trader Ammunition Item Sheet --}}
+<form class="tw-flex tw-flex-col tw-h-full" autocomplete="off">
+
+    <header class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0 tw-border-b tw-border-[var(--wh40k-border-color)]">
+        <div class="tw-relative tw-w-14 tw-h-14 tw-shrink-0 tw-cursor-pointer" data-action="editImage" data-edit="img">
+            <img class="tw-w-full tw-h-full tw-object-cover tw-rounded-md" src="{{item.img}}" alt="{{item.name}}" />
+            <div class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/45 tw-opacity-0 hover:tw-opacity-100 tw-transition-opacity tw-rounded-md">
+                <i class="fas fa-bullseye"></i>
+            </div>
         </div>
-      </div>
-      
-      <div class="wh40k-ammo-header__info">
-        <input type="text" class="wh40k-ammo-header__name" name="name" value="{{item.name}}" placeholder="Ammunition Name" />
-        
-        <div class="wh40k-ammo-header__meta">
-          <span class="wh40k-ammo-badge wh40k-ammo-badge--type" title="Ammunition">
-            <i class="fas fa-bullseye"></i>
-            Ammunition
-          </span>
-          {{#if item.system.hasModifiers}}
-          <span class="wh40k-ammo-badge wh40k-ammo-badge--modifiers" title="Has Stat Modifiers">
-            <i class="fas fa-plus-circle"></i>
-            Modifiers
-          </span>
-          {{/if}}
-          {{#if item.system.weaponTypes.size}}
-          <span class="wh40k-ammo-badge wh40k-ammo-badge--compatibility" title="Weapon Compatibility">
-            <i class="fas fa-link"></i>
-            {{item.system.weaponTypes.size}} Types
-          </span>
-          {{/if}}
+
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
+            <input type="text" class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" value="{{item.name}}" placeholder="Ammunition Name" />
+
+            <div class="tw-flex tw-flex-wrap tw-gap-1">
+                <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Ammunition">
+                    <i class="fas fa-bullseye"></i>
+                    Ammunition
+                </span>
+                {{#if item.system.hasModifiers}}
+                <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Has Stat Modifiers">
+                    <i class="fas fa-plus-circle"></i>
+                    Modifiers
+                </span>
+                {{/if}}
+                {{#if item.system.weaponTypes.size}}
+                <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Weapon Compatibility">
+                    <i class="fas fa-link"></i>
+                    {{item.system.weaponTypes.size}} Types
+                </span>
+                {{/if}}
+            </div>
         </div>
-      </div>
     </header>
 
-    {{!-- ═══════════════════════════════════════════════════════════════════
-         STAT BAR: Modifier summary at a glance
-    ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-ammo-stats">
-      {{!-- Damage Modifier --}}
-      <div class="wh40k-ammo-stat wh40k-ammo-stat--{{#if (gt item.system.modifiers.damage 0)}}positive{{else}}{{#if (lt item.system.modifiers.damage 0)}}negative{{else}}neutral{{/if}}{{/if}}">
-        <div class="wh40k-ammo-stat__icon">
-          <i class="fas fa-burst"></i>
+    <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]">
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
+            <i class="fas fa-burst tw-opacity-60"></i>
+            <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Damage</span>
+            <span class="tw-font-medium">{{#if (eq item.system.modifiers.damage 0)}}--{{else}}{{signedNumber item.system.modifiers.damage}}{{/if}}</span>
         </div>
-        <div class="wh40k-ammo-stat__content">
-          <span class="wh40k-ammo-stat__label">Damage</span>
-          <span class="wh40k-ammo-stat__value">{{#if (eq item.system.modifiers.damage 0)}}--{{else}}{{signedNumber item.system.modifiers.damage}}{{/if}}</span>
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
+            <i class="fas fa-shield-slash tw-opacity-60"></i>
+            <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Pen</span>
+            <span class="tw-font-medium">{{#if (eq item.system.modifiers.penetration 0)}}--{{else}}{{signedNumber item.system.modifiers.penetration}}{{/if}}</span>
         </div>
-      </div>
-      
-      {{!-- Penetration Modifier --}}
-      <div class="wh40k-ammo-stat wh40k-ammo-stat--{{#if (gt item.system.modifiers.penetration 0)}}positive{{else}}{{#if (lt item.system.modifiers.penetration 0)}}negative{{else}}neutral{{/if}}{{/if}}">
-        <div class="wh40k-ammo-stat__icon">
-          <i class="fas fa-shield-slash"></i>
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
+            <i class="fas fa-ruler tw-opacity-60"></i>
+            <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Range</span>
+            <span class="tw-font-medium">{{#if (eq item.system.modifiers.range 0)}}--{{else}}{{signedNumber item.system.modifiers.range}}%{{/if}}</span>
         </div>
-        <div class="wh40k-ammo-stat__content">
-          <span class="wh40k-ammo-stat__label">Pen</span>
-          <span class="wh40k-ammo-stat__value">{{#if (eq item.system.modifiers.penetration 0)}}--{{else}}{{signedNumber item.system.modifiers.penetration}}{{/if}}</span>
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
+            <i class="fas fa-layer-group tw-opacity-60"></i>
+            <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Clip</span>
+            <span class="tw-font-medium">{{#if (eq item.system.clipModifier 0)}}--{{else}}{{signedNumber item.system.clipModifier}}{{/if}}</span>
         </div>
-      </div>
-      
-      {{!-- Range Modifier --}}
-      <div class="wh40k-ammo-stat wh40k-ammo-stat--{{#if (gt item.system.modifiers.range 0)}}positive{{else}}{{#if (lt item.system.modifiers.range 0)}}negative{{else}}neutral{{/if}}{{/if}}">
-        <div class="wh40k-ammo-stat__icon">
-          <i class="fas fa-ruler"></i>
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
+            <i class="fas fa-weight-hanging tw-opacity-60"></i>
+            <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Weight</span>
+            <span class="tw-font-medium">{{item.system.weight}}kg</span>
         </div>
-        <div class="wh40k-ammo-stat__content">
-          <span class="wh40k-ammo-stat__label">Range</span>
-          <span class="wh40k-ammo-stat__value">{{#if (eq item.system.modifiers.range 0)}}--{{else}}{{signedNumber item.system.modifiers.range}}%{{/if}}</span>
-        </div>
-      </div>
-      
-      {{!-- Clip Modifier --}}
-      <div class="wh40k-ammo-stat wh40k-ammo-stat--{{#if (gt item.system.clipModifier 0)}}positive{{else}}{{#if (lt item.system.clipModifier 0)}}negative{{else}}neutral{{/if}}{{/if}}">
-        <div class="wh40k-ammo-stat__icon">
-          <i class="fas fa-layer-group"></i>
-        </div>
-        <div class="wh40k-ammo-stat__content">
-          <span class="wh40k-ammo-stat__label">Clip</span>
-          <span class="wh40k-ammo-stat__value">{{#if (eq item.system.clipModifier 0)}}--{{else}}{{signedNumber item.system.clipModifier}}{{/if}}</span>
-        </div>
-      </div>
-      
-      {{!-- Weight --}}
-      <div class="wh40k-ammo-stat wh40k-ammo-stat--neutral">
-        <div class="wh40k-ammo-stat__icon">
-          <i class="fas fa-weight-hanging"></i>
-        </div>
-        <div class="wh40k-ammo-stat__content">
-          <span class="wh40k-ammo-stat__label">Weight</span>
-          <span class="wh40k-ammo-stat__value">{{item.system.weight}}kg</span>
-        </div>
-      </div>
     </div>
 
-    {{!-- ═══════════════════════════════════════════════════════════════════
-         TAB NAVIGATION
-    ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs wh40k-tabs--ammo wh40k-ammo-tabs tw-flex tw-flex-shrink-0 tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]" data-group="primary">
-      <button type="button" class="wh40k-tab wh40k-ammo-tab active tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-[var(--wh40k-gold)] tw--mb-0.5 tw-cursor-pointer tw-text-[var(--wh40k-gold)]" data-tab="modifiers" data-group="primary">
-        <i class="fas fa-sliders-h tw-mr-1"></i>
-        <span>Modifiers</span>
-      </button>
-      <button type="button" class="wh40k-tab wh40k-ammo-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="compatibility" data-group="primary">
-        <i class="fas fa-link tw-mr-1"></i>
-        <span>Compatibility</span>
-      </button>
-      <button type="button" class="wh40k-tab wh40k-ammo-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="qualities" data-group="primary">
-        <i class="fas fa-star tw-mr-1"></i>
-        <span>Qualities</span>
-      </button>
-      <button type="button" class="wh40k-tab wh40k-ammo-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="details" data-group="primary">
-        <i class="fas fa-info-circle tw-mr-1"></i>
-        <span>Details</span>
-      </button>
+    <nav class="wh40k-tabs tw-flex tw-shrink-0 tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]" data-group="primary">
+        <button type="button" class="wh40k-tab active tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-[var(--wh40k-gold)] tw--mb-0.5 tw-cursor-pointer tw-text-[var(--wh40k-gold)]" data-tab="modifiers" data-group="primary">
+            <i class="fas fa-sliders-h tw-mr-1"></i>
+            <span>Modifiers</span>
+        </button>
+        <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="compatibility" data-group="primary">
+            <i class="fas fa-link tw-mr-1"></i>
+            <span>Compatibility</span>
+        </button>
+        <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="qualities" data-group="primary">
+            <i class="fas fa-star tw-mr-1"></i>
+            <span>Qualities</span>
+        </button>
+        <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="details" data-group="primary">
+            <i class="fas fa-info-circle tw-mr-1"></i>
+            <span>Details</span>
+        </button>
     </nav>
 
-    {{!-- ═══════════════════════════════════════════════════════════════════
-         TAB CONTENT
-    ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-ammo-content wh40k-tab-content wh40k-tab-content--ammo scrollable tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3">
-      
-      {{!-- MODIFIERS TAB --}}
-      <div class="wh40k-ammo-panel tab active" data-tab="modifiers" data-group="primary">
-        
-        <div class="wh40k-ammo-section">
-          <div class="wh40k-ammo-section__header">
-            <i class="fas fa-sliders-h"></i>
-            <h3 class="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">Weapon Stat Modifiers</h3>
-          </div>
-          <div class="wh40k-ammo-section__body">
-            <div class="wh40k-field-grid wh40k-field-grid--2col tw-grid tw-grid-cols-2 tw-gap-3">
-              <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Damage Modifier</label>
-                <input type="number" name="system.modifiers.damage" value="{{item.system.modifiers.damage}}"
-                       data-dtype="Number" step="1" />
-                <small class="tw-text-xs tw-opacity-70">Applied to weapon base damage</small>
-              </div>
-              <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Penetration Modifier</label>
-                <input type="number" name="system.modifiers.penetration" value="{{item.system.modifiers.penetration}}"
-                       data-dtype="Number" step="1" />
-                <small class="tw-text-xs tw-opacity-70">Applied to weapon penetration</small>
-              </div>
-              <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Range Modifier (%)</label>
-                <input type="number" name="system.modifiers.range" value="{{item.system.modifiers.range}}"
-                       data-dtype="Number" step="1" />
-                <small class="tw-text-xs tw-opacity-70">Percentage change to range</small>
-              </div>
-              <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Clip Size Modifier</label>
-                <input type="number" name="system.clipModifier" value="{{item.system.clipModifier}}"
-                       data-dtype="Number" step="1" />
-                <small class="tw-text-xs tw-opacity-70">Change to magazine capacity</small>
-              </div>
+    <div class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3" data-group="primary">
+
+        {{!-- MODIFIERS TAB --}}
+        <div class="tab active" data-tab="modifiers" data-group="primary">
+            <div class="tw-mb-4">
+                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3 tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+                    <i class="fas fa-sliders-h"></i>
+                    Weapon Stat Modifiers
+                </h3>
+                <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+                    <div class="tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Damage Modifier</label>
+                        <input type="number" name="system.modifiers.damage" value="{{item.system.modifiers.damage}}" data-dtype="Number" step="1" />
+                        <small class="tw-text-xs tw-opacity-70">Applied to weapon base damage</small>
+                    </div>
+                    <div class="tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Penetration Modifier</label>
+                        <input type="number" name="system.modifiers.penetration" value="{{item.system.modifiers.penetration}}" data-dtype="Number" step="1" />
+                        <small class="tw-text-xs tw-opacity-70">Applied to weapon penetration</small>
+                    </div>
+                    <div class="tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Range Modifier (%)</label>
+                        <input type="number" name="system.modifiers.range" value="{{item.system.modifiers.range}}" data-dtype="Number" step="1" />
+                        <small class="tw-text-xs tw-opacity-70">Percentage change to range</small>
+                    </div>
+                    <div class="tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Clip Size Modifier</label>
+                        <input type="number" name="system.clipModifier" value="{{item.system.clipModifier}}" data-dtype="Number" step="1" />
+                        <small class="tw-text-xs tw-opacity-70">Change to magazine capacity</small>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
 
-        {{!-- Rate of Fire Modifiers --}}
-        <div class="wh40k-ammo-section">
-          <div class="wh40k-ammo-section__header">
-            <i class="fas fa-gauge-high"></i>
-            <h3>Rate of Fire Modifiers</h3>
-          </div>
-          <div class="wh40k-ammo-section__body">
-            <div class="wh40k-field-grid wh40k-field-grid--3col tw-grid tw-grid-cols-3 tw-gap-3">
-              <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Single Shot</label>
-                <input type="number" name="system.modifiers.rateOfFire.single" value="{{item.system.modifiers.rateOfFire.single}}"
-                       data-dtype="Number" step="1" />
-              </div>
-              <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Semi-Auto</label>
-                <input type="number" name="system.modifiers.rateOfFire.semi" value="{{item.system.modifiers.rateOfFire.semi}}"
-                       data-dtype="Number" step="1" />
-              </div>
-              <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Full-Auto</label>
-                <input type="number" name="system.modifiers.rateOfFire.full" value="{{item.system.modifiers.rateOfFire.full}}"
-                       data-dtype="Number" step="1" />
-              </div>
+            <div class="tw-mb-4">
+                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
+                    <i class="fas fa-gauge-high"></i>
+                    Rate of Fire Modifiers
+                </h3>
+                <div class="tw-grid tw-grid-cols-3 tw-gap-3">
+                    <div class="tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Single Shot</label>
+                        <input type="number" name="system.modifiers.rateOfFire.single" value="{{item.system.modifiers.rateOfFire.single}}" data-dtype="Number" step="1" />
+                    </div>
+                    <div class="tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Semi-Auto</label>
+                        <input type="number" name="system.modifiers.rateOfFire.semi" value="{{item.system.modifiers.rateOfFire.semi}}" data-dtype="Number" step="1" />
+                    </div>
+                    <div class="tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">Full-Auto</label>
+                        <input type="number" name="system.modifiers.rateOfFire.full" value="{{item.system.modifiers.rateOfFire.full}}" data-dtype="Number" step="1" />
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
 
-      </div>
-
-      {{!-- COMPATIBILITY TAB --}}
-      <div class="wh40k-ammo-panel tab" data-tab="compatibility" data-group="primary">
-        
-        <div class="wh40k-ammo-section">
-          <div class="wh40k-ammo-section__header">
-            <i class="fas fa-link"></i>
-            <h3>Compatible Weapon Types</h3>
-            <span class="wh40k-ammo-section__count">{{item.system.weaponTypes.size}} selected</span>
-          </div>
-          <div class="wh40k-ammo-section__body">
-            <p class="wh40k-help-text">Select which weapon types can use this ammunition. If none selected, ammo is universal.</p>
-            
-            <div class="wh40k-weapon-type-chips">
-              {{#each CONFIG.WH40K.weaponTypes as |type key|}}
-              <label class="wh40k-weapon-type-chip {{#if (setIncludes key system.weaponTypes)}}active{{/if}}">
-                <input type="checkbox" name="system.weaponTypes" value="{{key}}" 
-                       {{#if (setIncludes key system.weaponTypes)}}checked{{/if}} />
-                <span class="wh40k-weapon-type-chip__label">
-                  <i class="{{type.icon}}"></i>
-                  {{type.label}}
-                </span>
-              </label>
-              {{/each}}
+        {{!-- COMPATIBILITY TAB --}}
+        <div class="tab" data-tab="compatibility" data-group="primary">
+            <div class="tw-mb-4">
+                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
+                    <i class="fas fa-link"></i>
+                    Compatible Weapon Types
+                    <span class="tw-ml-auto tw-text-xs tw-opacity-70">{{item.system.weaponTypes.size}} selected</span>
+                </h3>
+                <p class="tw-text-sm tw-opacity-70 tw-mb-3">Select which weapon types can use this ammunition. If none selected, ammo is universal.</p>
+                <div class="tw-flex tw-flex-wrap tw-gap-2">
+                    {{#each CONFIG.WH40K.weaponTypes as |type key|}}
+                    <label class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1.5 tw-rounded-md tw-border tw-cursor-pointer {{#if (setIncludes key system.weaponTypes)}}tw-border-[var(--wh40k-gold)] tw-bg-[rgba(212,175,55,0.15)]{{else}}tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}">
+                        <input type="checkbox" name="system.weaponTypes" value="{{key}}" class="tw-hidden" {{#if (setIncludes key system.weaponTypes)}}checked{{/if}} />
+                        <i class="{{type.icon}}"></i>
+                        <span class="tw-text-sm">{{type.label}}</span>
+                    </label>
+                    {{/each}}
+                </div>
             </div>
-          </div>
         </div>
 
-      </div>
+        {{!-- QUALITIES TAB --}}
+        <div class="tab" data-tab="qualities" data-group="primary">
 
-      {{!-- QUALITIES TAB --}}
-      <div class="wh40k-ammo-panel tab" data-tab="qualities" data-group="primary">
-        
-        {{!-- Added Qualities --}}
-        <div class="wh40k-ammo-section">
-          <div class="wh40k-ammo-section__header">
-            <i class="fas fa-plus-circle"></i>
-            <h3>Added Qualities</h3>
-            {{#if item.system.addedQualities.size}}
-            <span class="wh40k-ammo-section__count">{{item.system.addedQualities.size}}</span>
-            {{/if}}
-          </div>
-          <div class="wh40k-ammo-section__body">
-            {{#if item.system.addedQualities.size}}
-            <div class="wh40k-quality-tags tw-flex tw-flex-wrap tw-items-center tw-gap-1">
-              {{#each (setToArray item.system.addedQualities) as |quality|}}
-              <div class="wh40k-quality-tag wh40k-quality-tag--added tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-border tw-border-[rgba(34,197,94,0.35)] tw-bg-[rgba(34,197,94,0.15)] tw-px-2.5 tw-py-1 tw-text-sm tw-text-[#86efac]">
-                <span class="wh40k-quality-tag__label tw-font-medium">{{quality}}</span>
-                <button type="button" class="wh40k-quality-tag__remove tw--mr-1 tw-ml-0.5 tw-inline-flex tw-h-4 tw-w-4 tw-items-center tw-justify-center tw-border-0 tw-bg-transparent tw-p-0 tw-text-inherit tw-opacity-60 tw-transition-all hover:tw-scale-110 hover:tw-text-[var(--wh40k-stat-negative)] hover:tw-opacity-100" 
-                        data-action="removeAddedQuality" data-quality="{{quality}}"
-                        title="Remove quality">
-                  <i class="fas fa-times"></i>
-                </button>
-              </div>
-              {{/each}}
+            <div class="tw-mb-4">
+                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
+                    <i class="fas fa-plus-circle"></i>
+                    Added Qualities
+                    {{#if item.system.addedQualities.size}}<span class="tw-text-xs tw-opacity-70">{{item.system.addedQualities.size}}</span>{{/if}}
+                </h3>
+                {{#if item.system.addedQualities.size}}
+                <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1 tw-mb-2">
+                    {{#each (setToArray item.system.addedQualities) as |quality|}}
+                    <div class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-border tw-border-[rgba(34,197,94,0.35)] tw-bg-[rgba(34,197,94,0.15)] tw-px-2.5 tw-py-1 tw-text-sm tw-text-[#86efac]">
+                        <span class="tw-font-medium">{{quality}}</span>
+                        <button type="button" class="tw--mr-1 tw-ml-0.5 tw-inline-flex tw-h-4 tw-w-4 tw-items-center tw-justify-center tw-border-0 tw-bg-transparent tw-p-0 tw-text-inherit tw-opacity-60 tw-transition-all hover:tw-scale-110 hover:tw-text-[var(--wh40k-stat-negative)] hover:tw-opacity-100"
+                                data-action="removeAddedQuality" data-quality="{{quality}}" title="Remove quality">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    {{/each}}
+                </div>
+                {{else}}
+                <p class="tw-italic tw-opacity-70 tw-text-sm tw-mb-2">No qualities added</p>
+                {{/if}}
+                <div class="tw-flex tw-gap-2">
+                    <input type="text" class="tw-flex-1" name="new-added-quality" placeholder="Enter quality name..." />
+                    <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-2 tw-bg-gradient-to-br tw-from-[var(--wh40k-gold-dark)] tw-to-[var(--wh40k-gold)] tw-border tw-border-[var(--wh40k-gold)] tw-rounded-md tw-text-[#1a1a1a] tw-text-sm tw-cursor-pointer" data-action="addQuality" data-type="added">
+                        <i class="fas fa-plus"></i>
+                        Add Quality
+                    </button>
+                </div>
             </div>
-            {{else}}
-            <p class="wh40k-empty-text tw-italic tw-opacity-70 tw-text-sm">No qualities added</p>
-            {{/if}}
-            
-            <div class="wh40k-quality-add">
-              <input type="text" class="wh40k-quality-add__input" name="new-added-quality" placeholder="Enter quality name..." />
-              <button type="button" class="wh40k-btn wh40k-btn--primary tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-2 tw-bg-gradient-to-br tw-from-[var(--wh40k-gold-dark)] tw-to-[var(--wh40k-gold)] tw-border tw-border-[var(--wh40k-gold)] tw-rounded-md tw-text-[#1a1a1a] tw-text-sm tw-cursor-pointer" data-action="addQuality" data-type="added">
-                <i class="fas fa-plus"></i>
-                Add Quality
-              </button>
+
+            <div class="tw-mb-4">
+                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
+                    <i class="fas fa-minus-circle"></i>
+                    Removed Qualities
+                    {{#if item.system.removedQualities.size}}<span class="tw-text-xs tw-opacity-70">{{item.system.removedQualities.size}}</span>{{/if}}
+                </h3>
+                {{#if item.system.removedQualities.size}}
+                <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1 tw-mb-2">
+                    {{#each (setToArray item.system.removedQualities) as |quality|}}
+                    <div class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-border tw-border-[rgba(248,113,113,0.35)] tw-bg-[rgba(248,113,113,0.15)] tw-px-2.5 tw-py-1 tw-text-sm tw-text-[#fca5a5]">
+                        <span class="tw-font-medium">{{quality}}</span>
+                        <button type="button" class="tw--mr-1 tw-ml-0.5 tw-inline-flex tw-h-4 tw-w-4 tw-items-center tw-justify-center tw-border-0 tw-bg-transparent tw-p-0 tw-text-inherit tw-opacity-60 tw-transition-all hover:tw-scale-110 hover:tw-text-[var(--wh40k-stat-negative)] hover:tw-opacity-100"
+                                data-action="removeRemovedQuality" data-quality="{{quality}}" title="Remove quality">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    {{/each}}
+                </div>
+                {{else}}
+                <p class="tw-italic tw-opacity-70 tw-text-sm tw-mb-2">No qualities removed</p>
+                {{/if}}
+                <div class="tw-flex tw-gap-2">
+                    <input type="text" class="tw-flex-1" name="new-removed-quality" placeholder="Enter quality name..." />
+                    <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-2 tw-bg-gradient-to-br tw-from-[var(--wh40k-gold-dark)] tw-to-[var(--wh40k-gold)] tw-border tw-border-[var(--wh40k-gold)] tw-rounded-md tw-text-[#1a1a1a] tw-text-sm tw-cursor-pointer" data-action="addQuality" data-type="removed">
+                        <i class="fas fa-plus"></i>
+                        Add Quality
+                    </button>
+                </div>
             </div>
-          </div>
+
         </div>
 
-        {{!-- Removed Qualities --}}
-        <div class="wh40k-ammo-section">
-          <div class="wh40k-ammo-section__header">
-            <i class="fas fa-minus-circle"></i>
-            <h3>Removed Qualities</h3>
-            {{#if item.system.removedQualities.size}}
-            <span class="wh40k-ammo-section__count">{{item.system.removedQualities.size}}</span>
-            {{/if}}
-          </div>
-          <div class="wh40k-ammo-section__body">
-            {{#if item.system.removedQualities.size}}
-            <div class="wh40k-quality-tags tw-flex tw-flex-wrap tw-items-center tw-gap-1">
-              {{#each (setToArray item.system.removedQualities) as |quality|}}
-              <div class="wh40k-quality-tag wh40k-quality-tag--removed tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-border tw-border-[rgba(248,113,113,0.35)] tw-bg-[rgba(248,113,113,0.15)] tw-px-2.5 tw-py-1 tw-text-sm tw-text-[#fca5a5]">
-                <span class="wh40k-quality-tag__label tw-font-medium">{{quality}}</span>
-                <button type="button" class="wh40k-quality-tag__remove tw--mr-1 tw-ml-0.5 tw-inline-flex tw-h-4 tw-w-4 tw-items-center tw-justify-center tw-border-0 tw-bg-transparent tw-p-0 tw-text-inherit tw-opacity-60 tw-transition-all hover:tw-scale-110 hover:tw-text-[var(--wh40k-stat-negative)] hover:tw-opacity-100" 
-                        data-action="removeRemovedQuality" data-quality="{{quality}}"
-                        title="Remove quality">
-                  <i class="fas fa-times"></i>
-                </button>
-              </div>
-              {{/each}}
+        {{!-- DETAILS TAB --}}
+        <div class="tab" data-tab="details" data-group="primary">
+
+            <div class="tw-mb-4">
+                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
+                    <i class="fas fa-box"></i>
+                    Physical Properties
+                </h3>
+                <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+                    <div class="tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Weight (kg)</label>
+                        <input type="number" name="system.weight" value="{{item.system.weight}}" data-dtype="Number" min="0" step="0.1" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]" />
+                    </div>
+                    <div class="tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Availability</label>
+                        <select name="system.availability" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]">
+                            <option value="ubiquitous" {{#if (eq item.system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
+                            <option value="abundant" {{#if (eq item.system.availability "abundant")}}selected{{/if}}>Abundant</option>
+                            <option value="plentiful" {{#if (eq item.system.availability "plentiful")}}selected{{/if}}>Plentiful</option>
+                            <option value="common" {{#if (eq item.system.availability "common")}}selected{{/if}}>Common</option>
+                            <option value="average" {{#if (eq item.system.availability "average")}}selected{{/if}}>Average</option>
+                            <option value="scarce" {{#if (eq item.system.availability "scarce")}}selected{{/if}}>Scarce</option>
+                            <option value="rare" {{#if (eq item.system.availability "rare")}}selected{{/if}}>Rare</option>
+                            <option value="very-rare" {{#if (eq item.system.availability "very-rare")}}selected{{/if}}>Very Rare</option>
+                            <option value="extremely-rare" {{#if (eq item.system.availability "extremely-rare")}}selected{{/if}}>Extremely Rare</option>
+                        </select>
+                    </div>
+                    <div class="tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Cost (Thrones)</label>
+                        <input type="number" name="system.cost" value="{{item.system.cost}}" data-dtype="Number" min="0" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]" />
+                    </div>
+                </div>
             </div>
-            {{else}}
-            <p class="wh40k-empty-text tw-italic tw-opacity-70 tw-text-sm">No qualities removed</p>
-            {{/if}}
-            
-            <div class="wh40k-quality-add">
-              <input type="text" class="wh40k-quality-add__input" name="new-removed-quality" placeholder="Enter quality name..." />
-              <button type="button" class="wh40k-btn wh40k-btn--primary tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-2 tw-bg-gradient-to-br tw-from-[var(--wh40k-gold-dark)] tw-to-[var(--wh40k-gold)] tw-border tw-border-[var(--wh40k-gold)] tw-rounded-md tw-text-[#1a1a1a] tw-text-sm tw-cursor-pointer" data-action="addQuality" data-type="removed">
-                <i class="fas fa-plus"></i>
-                Add Quality
-              </button>
+
+            <div class="tw-mb-4">
+                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
+                    <i class="fas fa-bolt"></i>
+                    Effect
+                </h3>
+                {{#if inEditMode}}
+                {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
+                {{else}}
+                <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.effect}}}</div>
+                {{/if}}
             </div>
-          </div>
-        </div>
 
-      </div>
-
-      {{!-- DETAILS TAB --}}
-      <div class="wh40k-ammo-panel tab" data-tab="details" data-group="primary">
-        
-        {{!-- Physical Properties --}}
-        <div class="wh40k-ammo-section">
-          <div class="wh40k-ammo-section__header">
-            <i class="fas fa-box"></i>
-            <h3>Physical Properties</h3>
-          </div>
-          <div class="wh40k-ammo-section__body">
-            <div class="wh40k-field-grid wh40k-field-grid--2col tw-grid tw-grid-cols-2 tw-gap-3">
-              <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Weight (kg)</label>
-                <input type="number" name="system.weight" value="{{item.system.weight}}"
-                       data-dtype="Number" min="0" step="0.1" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]" />
-              </div>
-              <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Availability</label>
-                <select name="system.availability" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]">
-                  <option value="ubiquitous" {{#if (eq item.system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
-                  <option value="abundant" {{#if (eq item.system.availability "abundant")}}selected{{/if}}>Abundant</option>
-                  <option value="plentiful" {{#if (eq item.system.availability "plentiful")}}selected{{/if}}>Plentiful</option>
-                  <option value="common" {{#if (eq item.system.availability "common")}}selected{{/if}}>Common</option>
-                  <option value="average" {{#if (eq item.system.availability "average")}}selected{{/if}}>Average</option>
-                  <option value="scarce" {{#if (eq item.system.availability "scarce")}}selected{{/if}}>Scarce</option>
-                  <option value="rare" {{#if (eq item.system.availability "rare")}}selected{{/if}}>Rare</option>
-                  <option value="very-rare" {{#if (eq item.system.availability "very-rare")}}selected{{/if}}>Very Rare</option>
-                  <option value="extremely-rare" {{#if (eq item.system.availability "extremely-rare")}}selected{{/if}}>Extremely Rare</option>
-                </select>
-              </div>
-              <div class="wh40k-field tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">Cost (Thrones)</label>
-                <input type="number" name="system.cost" value="{{item.system.cost}}"
-                       data-dtype="Number" min="0" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]" />
-              </div>
+            <div class="tw-mb-4">
+                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
+                    <i class="fas fa-book"></i>
+                    Description
+                </h3>
+                {{#if inEditMode}}
+                {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+                {{else}}
+                <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.description.value}}}</div>
+                {{/if}}
             </div>
-          </div>
-        </div>
 
-        {{!-- Effect Description --}}
-        <div class="wh40k-ammo-section">
-          <div class="wh40k-ammo-section__header">
-            <i class="fas fa-bolt"></i>
-            <h3>Effect</h3>
-          </div>
-          <div class="wh40k-ammo-section__body wh40k-ammo-section__body--editor">
-            {{#if inEditMode}}
-            {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
-            {{else}}
-            <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.effect}}}</div>
-            {{/if}}
-          </div>
-        </div>
+            <div class="tw-mb-4">
+                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
+                    <i class="fas fa-sticky-note"></i>
+                    Notes
+                </h3>
+                <textarea name="system.notes" rows="3" placeholder="Additional notes...">{{item.system.notes}}</textarea>
+            </div>
 
-        {{!-- Description --}}
-        <div class="wh40k-ammo-section">
-          <div class="wh40k-ammo-section__header">
-            <i class="fas fa-book"></i>
-            <h3>Description</h3>
-          </div>
-          <div class="wh40k-ammo-section__body wh40k-ammo-section__body--editor">
-            {{#if inEditMode}}
-            {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
-            {{else}}
-            <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.description.value}}}</div>
-            {{/if}}
-          </div>
-        </div>
+            <div class="tw-mb-4">
+                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
+                    <i class="fas fa-book-open"></i>
+                    Source
+                </h3>
+                <input type="text" name="system.source" value="{{item.system.source}}" placeholder="Rogue Trader Core Rulebook, pg. 123" />
+            </div>
 
-        {{!-- Notes --}}
-        <div class="wh40k-ammo-section">
-          <div class="wh40k-ammo-section__header">
-            <i class="fas fa-sticky-note"></i>
-            <h3>Notes</h3>
-          </div>
-          <div class="wh40k-ammo-section__body">
-            <textarea name="system.notes" rows="3" placeholder="Additional notes...">{{item.system.notes}}</textarea>
-          </div>
         </div>
-
-        {{!-- Source --}}
-        <div class="wh40k-ammo-section">
-          <div class="wh40k-ammo-section__header">
-            <i class="fas fa-book-open"></i>
-            <h3>Source</h3>
-          </div>
-          <div class="wh40k-ammo-section__body">
-            <input type="text" name="system.source" value="{{item.system.source}}" 
-                   placeholder="Rogue Trader Core Rulebook, pg. 123" />
-          </div>
-        </div>
-
-      </div>
 
     </div>
 
-  </form>
-</div>
+</form>
