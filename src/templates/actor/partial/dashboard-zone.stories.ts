@@ -51,7 +51,7 @@ export const Combat: Story = {
         title: 'Combat',
         icon: 'fa-crosshairs',
         body: '<div>Initiative · Movement · Actions</div>',
-        zoneClass: 'wh40k-zone-combat',
+        zoneClass: 'tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-combat)]',
     },
 };
 

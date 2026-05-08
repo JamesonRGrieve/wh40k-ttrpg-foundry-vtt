@@ -125,7 +125,7 @@
             </div>
 
             {{!-- Active Effects --}}
-            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Active Effects" icon="fa-magic" zoneClass="wh40k-zone-effects"}}
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Active Effects" icon="fa-magic" zoneClass="tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-psychic)]"}}
                     {{#if effects.length}}
                     <div class="tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-xs)]">
                         {{#each effects as |effect|}}
@@ -160,7 +160,7 @@
         {{!-- COLUMN 2: Favourite Skills → Favourite Talents → Progression --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Favourite Skills --}}
-            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Favourite Skills" icon="fa-star" zoneClass="wh40k-zone-skills"}}
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Favourite Skills" icon="fa-star" zoneClass="tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-green-bright)]"}}
                     <div class="tw-flex tw-flex-col tw-gap-[3px]">
                         {{#if favoriteSkills}}
                             {{#each favoriteSkills as |skill|}}
@@ -191,7 +191,7 @@
             {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
 
             {{!-- Favourite Talents --}}
-            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Favourite Talents" icon="fa-star-half-alt" zoneClass="wh40k-zone-talents"}}
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Favourite Talents" icon="fa-star-half-alt" zoneClass="tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-talents)]"}}
                     <div class="tw-flex tw-flex-col tw-gap-[3px]">
                         {{#if favoriteTalents}}
                             {{#each favoriteTalents as |talent|}}
@@ -300,7 +300,7 @@
         {{!-- COLUMN 3: Weapons + [Movement | Armour] → Resources --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Equipped Weapons --}}
-            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Equipped Weapons" icon="fa-crosshairs" zoneClass="wh40k-zone-weapons"}}
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Equipped Weapons" icon="fa-crosshairs" zoneClass="tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-combat)]"}}
                     {{#if equippedWeapons.length}}
                     <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-xs)]">
                         {{#each equippedWeapons as |weapon|}}
@@ -328,7 +328,7 @@
             {{!-- Movement & Armour side by side --}}
             <div class="tw-grid tw-grid-cols-2 tw-gap-2">
                 {{!-- Movement 2x2 --}}
-                {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Movement" icon="fa-running" zoneClass="wh40k-zone-movement"}}
+                {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Movement" icon="fa-running" zoneClass="tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-info)]"}}
                         <div class="tw-grid tw-grid-cols-2 tw-gap-1">
                             <div class="tw-flex tw-flex-col tw-items-center tw-px-2 tw-py-1 tw-bg-[var(--color-bg-option)] tw-rounded-[var(--wh40k-radius-md)] tw-flex-1">
                                 <span class="tw-font-alt tw-text-[1.5rem] tw-font-bold tw-text-[color:var(--color-text-primary)] tw-leading-none">{{actor.movement.half}}</span>
@@ -360,7 +360,7 @@
                 {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
 
                 {{!-- Armour --}}
-                {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Armour" icon="fa-shield-alt" zoneClass="wh40k-zone-armour"}}
+                {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Armour" icon="fa-shield-alt" zoneClass="tw-border-l-[3px] tw-border-l-[#7f8c8d]"}}
                         <div class="tw-grid tw-gap-[3px] tw-max-w-[180px] tw-mx-auto" style="grid-template-columns: 1fr 1fr 1fr; grid-template-areas: '. head .' 'rarm body larm' 'rleg . lleg';">
                             <div class=" tw-flex tw-flex-col tw-items-center tw-justify-center tw-px-[2px] tw-py-[3px] tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-justify-self-center tw-min-w-[44px]" title="Head: 01-10">
                                 <span class="tw-text-[0.5rem] tw-font-bold tw-uppercase tw-text-[color:var(--color-text-tertiary)] tw-leading-none tw-mb-[1px]">Head</span>
@@ -392,7 +392,7 @@
 
             {{#unless isNPC}}
             {{!-- Resources (Influence / Requisition / Gelt) — PC-only --}}
-            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Resources" icon="fa-coins" zoneClass="wh40k-zone-resources" contentClass="wh40k-zone-content tw-p-2 tw-flex-1 tw-w-full"}}
+            {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Resources" icon="fa-coins" zoneClass="tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]" contentClass="tw-p-2 tw-flex-1 tw-w-full"}}
                     <div class="tw-grid {{#if hideThroneGelt}}tw-grid-cols-2{{else}}tw-grid-cols-3{{/if}} tw-gap-2 tw-w-full">
                         <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                             <span class="tw-text-xs tw-normal-case tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-tracking-normal" data-tooltip="Social and political pull — calling in favours, securing audiences, persuading officials. Not bought with coin.">Influence</span>
