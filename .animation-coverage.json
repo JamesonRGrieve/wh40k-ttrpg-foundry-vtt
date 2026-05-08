@@ -1,17 +1,5 @@
 {
-  "generatedAt": "2026-05-08T13:53:55.363Z",
-  "sources": [
-    "src/css/abstracts/_gothic-theme.css",
-    "src/css/abstracts/_unified-components.css",
-    "src/css/actor/_actor-scroll.css",
-    "src/css/actor/_npc-sheet.css",
-    "src/css/components/_armour.css",
-    "src/css/components/_compendium-browser.css",
-    "src/css/components/_item-preview.css",
-    "src/css/components/_wh40k-tooltip.css",
-    "src/css/foundry-chrome.css",
-    "src/css/item/_base-window.css",
-    "src/css/item/_weapon.css"
-  ],
+  "generatedAt": "2026-05-08T15:42:33.525Z",
+  "sources": [],
   "animationDeclarations": 0
 }
