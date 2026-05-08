@@ -251,6 +251,11 @@ const JS_HOOKS = new Set([
     // base-actor-sheet.ts querySelectorAll('.wh40k-char-direct-input') to wire up direct
     // characteristic input syncing. Permanent JS selector; no CSS rules to migrate.
     'wh40k-char-direct-input',
+    // wh40k-prose-editor / wh40k-prose-content are CSS hooks that style Foundry-rendered
+    // child elements (.prosemirror, rich text nodes) that cannot be reached from templates.
+    // The CSS rules must stay in the monolith; the classes must stay on their elements.
+    'wh40k-prose-editor',
+    'wh40k-prose-content',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a

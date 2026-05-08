@@ -3,81 +3,81 @@
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-w-full">
         {{!-- Left Column --}}
-        <div class="wh40k-dynasty-col tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
+        <div class="tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{!-- Profit Factor Panel with Visual Gauge --}}
-            <div class="wh40k-panel wh40k-panel-profit-v2">
+            <div class="wh40k-panel">
                 <div class="wh40k-panel-header tw-border-b tw-border-b-gold bc:tw-border-b-crimson-light dh1e:tw-border-b-gold-raw-l5 dh2e:tw-border-b-gold-raw dw:tw-border-b-accent-combat ow:tw-border-b-brass-l20 rt:tw-border-b-gold im:tw-border-b-failure">
                     <span class="wh40k-panel-title"><i class="fas fa-coins"></i> Profit Factor</span>
-                    <button type="button" class="wh40k-acquisition-btn" data-action="openAcquisitionDialog" data-tooltip="Roll Acquisition Test">
+                    <button type="button" class="tw-bg-transparent tw-border tw-border-[var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-py-1 tw-px-2 tw-rounded-md tw-transition-all tw-text-xs hover:tw-border-gold hover:tw-text-gold"data-action="openAcquisitionDialog" data-tooltip="Roll Acquisition Test">
                         <i class="fas fa-dice-d20"></i>
                     </button>
                 </div>
                 <div class="wh40k-panel-body">
                     {{!-- Main PF Display with Wealth Tier --}}
-                    <div class="wh40k-pf-hero">
-                        <div class="wh40k-pf-value-display">
-                            <input type="number" class="wh40k-pf-value-input" name="system.rogueTrader.profitFactor.current" value="{{system.rogueTrader.profitFactor.current}}" data-dtype="Number" />
+                    <div class="tw-flex tw-flex-row tw-items-center tw-justify-between tw-mb-3">
+                        <div class="tw-flex tw-items-center">
+                            <input type="number" class="tw-w-[80px] tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-center tw-font-bold tw-text-2xl" name="system.rogueTrader.profitFactor.current" value="{{system.rogueTrader.profitFactor.current}}" data-dtype="Number" />
                         </div>
-                        <div class="wh40k-pf-tier wh40k-pf-tier--{{dynastyData.wealthTier.key}}">
-                            <span class="wh40k-pf-tier-label">{{dynastyData.wealthTier.label}}</span>
+                        <div class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-muted)]">
+                            <span>{{dynastyData.wealthTier.label}}</span>
                         </div>
                     </div>
 
                     {{!-- Visual Wealth Gauge --}}
-                    <div class="wh40k-pf-gauge">
-                        <div class="wh40k-pf-gauge-track">
-                            <div class="wh40k-pf-gauge-fill" style="width: {{dynastyData.pfPercentage}}%"></div>
-                            <div class="wh40k-pf-gauge-marker tw-animate-pf-marker-pulse" style="left: {{dynastyData.pfPercentage}}%">
+                    <div class="tw-my-2">
+                        <div class="tw-relative tw-h-3 tw-rounded-full tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-overflow-hidden">
+                            <div class="tw-h-full tw-bg-gold tw-rounded-full" style="width: {{dynastyData.pfPercentage}}%"></div>
+                            <div class="tw-absolute tw-top-[-4px] tw-translate-x-[-50%] tw-animate-pf-marker-pulse" style="left: {{dynastyData.pfPercentage}}%">
                                 <i class="fas fa-caret-down"></i>
                             </div>
                         </div>
-                        <div class="wh40k-pf-gauge-labels">
-                            <span class="wh40k-pf-tier-label wh40k-pf-tier--poor" data-tooltip="1-24: Struggling resources">Poor</span>
-                            <span class="wh40k-pf-tier-label wh40k-pf-tier--modest" data-tooltip="25-49: Modest wealth">Modest</span>
-                            <span class="wh40k-pf-tier-label wh40k-pf-tier--notable" data-tooltip="50-74: Notable dynasty">Notable</span>
-                            <span class="wh40k-pf-tier-label wh40k-pf-tier--mighty" data-tooltip="75-99: Mighty empire">Mighty</span>
-                            <span class="wh40k-pf-tier-label wh40k-pf-tier--legendary" data-tooltip="100+: Legendary wealth">Legendary</span>
+                        <div class="tw-flex tw-justify-between tw-text-[0.6rem] tw-mt-1">
+                            <span data-tooltip="1-24: Struggling resources">Poor</span>
+                            <span data-tooltip="25-49: Modest wealth">Modest</span>
+                            <span data-tooltip="50-74: Notable dynasty">Notable</span>
+                            <span data-tooltip="75-99: Mighty empire">Mighty</span>
+                            <span data-tooltip="100+: Legendary wealth">Legendary</span>
                         </div>
                     </div>
 
                     {{!-- PF Breakdown --}}
-                    <div class="wh40k-pf-breakdown">
-                        <div class="wh40k-pf-breakdown-row">
-                            <span class="wh40k-pf-breakdown-label">Starting PF:</span>
-                            <input type="number" class="wh40k-pf-breakdown-input" name="system.rogueTrader.profitFactor.starting" value="{{system.rogueTrader.profitFactor.starting}}" data-dtype="Number" />
+                    <div class="tw-mt-2 tw-flex tw-flex-col tw-gap-1">
+                        <div class="tw-flex tw-items-center tw-justify-between tw-text-sm">
+                            <span>Starting PF:</span>
+                            <input type="number" class="tw-w-[60px] tw-text-center tw-p-1 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-sm" name="system.rogueTrader.profitFactor.starting" value="{{system.rogueTrader.profitFactor.starting}}" data-dtype="Number" />
                         </div>
-                        <div class="wh40k-pf-breakdown-row">
-                            <span class="wh40k-pf-breakdown-label">Modifier:</span>
-                            <input type="number" class="wh40k-pf-breakdown-input" name="system.rogueTrader.profitFactor.modifier" value="{{system.rogueTrader.profitFactor.modifier}}" data-dtype="Number" />
+                        <div class="tw-flex tw-items-center tw-justify-between tw-text-sm">
+                            <span>Modifier:</span>
+                            <input type="number" class="tw-w-[60px] tw-text-center tw-p-1 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-sm" name="system.rogueTrader.profitFactor.modifier" value="{{system.rogueTrader.profitFactor.modifier}}" data-dtype="Number" />
                         </div>
-                        <div class="wh40k-pf-breakdown-row wh40k-pf-breakdown-row--total">
-                            <span class="wh40k-pf-breakdown-label">Effective PF:</span>
-                            <span class="wh40k-pf-breakdown-value bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{dynastyData.effectivePF}}</span>
+                        <div class="tw-flex tw-items-center tw-justify-between tw-text-sm tw-border-t tw-border-t-[var(--wh40k-border-light)] tw-pt-1 tw-font-semibold">
+                            <span>Effective PF:</span>
+                            <span class="bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{dynastyData.effectivePF}}</span>
                         </div>
                     </div>
 
                     {{!-- Misfortunes Section --}}
-                    <div class="wh40k-pf-misfortunes">
-                        <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]"><i class="fas fa-exclamation-triangle"></i> Misfortunes & Notes</label>
-                        <textarea class="wh40k-textarea tw-w-full tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-sm tw-leading-[1.5] tw-resize-y tw-font-[inherit] focus:tw-outline-none focus:tw-border-gold placeholder:tw-text-[color:var(--wh40k-text-muted)] placeholder:tw-italic" name="system.rogueTrader.profitFactor.misfortunes" rows="2" placeholder="Track PF losses, temporary modifiers...">{{system.rogueTrader.profitFactor.misfortunes}}</textarea>
+                    <div class="tw-mt-2 tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]"><i class="fas fa-exclamation-triangle"></i> Misfortunes & Notes</label>
+                        <textarea class="tw-w-full tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-sm tw-leading-[1.5] tw-resize-y tw-font-[inherit] focus:tw-outline-none focus:tw-border-gold placeholder:tw-text-[color:var(--wh40k-text-muted)] placeholder:tw-italic" name="system.rogueTrader.profitFactor.misfortunes" rows="2" placeholder="Track PF losses, temporary modifiers...">{{system.rogueTrader.profitFactor.misfortunes}}</textarea>
                     </div>
 
                     {{!-- Quick Acquisition Reference --}}
-                    <div class="wh40k-pf-acquisition-ref">
-                        <div class="wh40k-pf-ref-header">
+                    <div class="tw-mt-2 tw-bg-[var(--wh40k-bg-paper-light)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-p-2">
+                        <div class="tw-font-semibold tw-text-xs tw-uppercase tw-mb-1">
                             <i class="fas fa-shopping-cart"></i> Acquisition Modifiers
                         </div>
-                        <div class="wh40k-pf-ref-grid">
-                            <span class="wh40k-pf-ref-item wh40k-pf-ref--positive">Ubiquitous +70</span>
-                            <span class="wh40k-pf-ref-item wh40k-pf-ref--positive">Abundant +50</span>
-                            <span class="wh40k-pf-ref-item wh40k-pf-ref--positive">Plentiful +30</span>
-                            <span class="wh40k-pf-ref-item wh40k-pf-ref--positive">Common +10</span>
-                            <span class="wh40k-pf-ref-item">Average +0</span>
-                            <span class="wh40k-pf-ref-item wh40k-pf-ref--negative">Scarce −10</span>
-                            <span class="wh40k-pf-ref-item wh40k-pf-ref--negative">Rare −20</span>
-                            <span class="wh40k-pf-ref-item wh40k-pf-ref--negative">Very Rare −30</span>
-                            <span class="wh40k-pf-ref-item wh40k-pf-ref--negative">Ext. Rare −40</span>
-                            <span class="wh40k-pf-ref-item wh40k-pf-ref--negative">Near Unique −50</span>
+                        <div class="tw-grid tw-grid-cols-2 tw-gap-0.5">
+                            <span class="tw-text-xs tw-px-1 tw-py-0.5 tw-text-success">Ubiquitous +70</span>
+                            <span class="tw-text-xs tw-px-1 tw-py-0.5 tw-text-success">Abundant +50</span>
+                            <span class="tw-text-xs tw-px-1 tw-py-0.5 tw-text-success">Plentiful +30</span>
+                            <span class="tw-text-xs tw-px-1 tw-py-0.5 tw-text-success">Common +10</span>
+                            <span class="tw-text-xs tw-px-1 tw-py-0.5">Average +0</span>
+                            <span class="tw-text-xs tw-px-1 tw-py-0.5 tw-text-accent-combat">Scarce −10</span>
+                            <span class="tw-text-xs tw-px-1 tw-py-0.5 tw-text-accent-combat">Rare −20</span>
+                            <span class="tw-text-xs tw-px-1 tw-py-0.5 tw-text-accent-combat">Very Rare −30</span>
+                            <span class="tw-text-xs tw-px-1 tw-py-0.5 tw-text-accent-combat">Ext. Rare −40</span>
+                            <span class="tw-text-xs tw-px-1 tw-py-0.5 tw-text-accent-combat">Near Unique −50</span>
                         </div>
                     </div>
                 </div>
@@ -89,18 +89,18 @@
                     <span class="wh40k-panel-title"><i class="fas fa-star"></i> Experience</span>
                 </div>
                 <div class="wh40k-panel-body">
-                    <div class="wh40k-xp-display tw-flex tw-flex-row tw-gap-3">
-                        <div class="wh40k-xp-item tw-flex-1 tw-flex tw-flex-col tw-items-center tw-p-2 tw-bg-[var(--wh40k-bg-paper-light)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-md">
-                            <span class="wh40k-xp-label tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[color:var(--wh40k-text-muted)] tw-mb-[var(--wh40k-space-xs)]">Total</span>
-                            <input type="number" class="wh40k-vital-input tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-[70px]" name="system.experience.total" value="{{system.experience.total}}" data-dtype="Number" />
+                    <div class="tw-flex tw-flex-row tw-gap-3">
+                        <div class="tw-flex-1 tw-flex tw-flex-col tw-items-center tw-p-2 tw-bg-[var(--wh40k-bg-paper-light)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-md">
+                            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[color:var(--wh40k-text-muted)] tw-mb-[var(--wh40k-space-xs)]">Total</span>
+                            <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-[70px]" name="system.experience.total" value="{{system.experience.total}}" data-dtype="Number" />
                         </div>
-                        <div class="wh40k-xp-item tw-flex-1 tw-flex tw-flex-col tw-items-center tw-p-2 tw-bg-[var(--wh40k-bg-paper-light)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-md">
-                            <span class="wh40k-xp-label tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[color:var(--wh40k-text-muted)] tw-mb-[var(--wh40k-space-xs)]">Spent</span>
-                            <input type="number" class="wh40k-vital-input tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-[70px]" name="system.experience.used" value="{{system.experience.used}}" data-dtype="Number" />
+                        <div class="tw-flex-1 tw-flex tw-flex-col tw-items-center tw-p-2 tw-bg-[var(--wh40k-bg-paper-light)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-md">
+                            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[color:var(--wh40k-text-muted)] tw-mb-[var(--wh40k-space-xs)]">Spent</span>
+                            <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-[70px]" name="system.experience.used" value="{{system.experience.used}}" data-dtype="Number" />
                         </div>
-                        <div class="wh40k-xp-item wh40k-xp-available tw-flex-1 tw-flex tw-flex-col tw-items-center tw-p-2 tw-bg-[rgba(212,175,55,0.1)] tw-border tw-border-solid tw-border-[rgba(212,175,55,0.3)] tw-rounded-md">
-                            <span class="wh40k-xp-label tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[color:var(--wh40k-text-muted)] tw-mb-[var(--wh40k-space-xs)]">Available</span>
-                            <span class="wh40k-xp-value tw-font-alt tw-text-2xl tw-font-bold tw-text-[color:var(--wh40k-accent-gold)]">{{system.experience.available}}</span>
+                        <div class="tw-flex-1 tw-flex tw-flex-col tw-items-center tw-p-2 tw-bg-[rgba(212,175,55,0.1)] tw-border tw-border-solid tw-border-[rgba(212,175,55,0.3)] tw-rounded-md">
+                            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[color:var(--wh40k-text-muted)] tw-mb-[var(--wh40k-space-xs)]">Available</span>
+                            <span class="tw-font-alt tw-text-2xl tw-font-bold tw-text-[color:var(--wh40k-accent-gold)]">{{system.experience.available}}</span>
                         </div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
         </div>
         
         {{!-- Right Column --}}
-        <div class="wh40k-dynasty-col tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
+        <div class="tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{!-- Acquisitions --}}
             {{> systems/wh40k-rpg/templates/actor/panel/acquisitions-panel.hbs}}
             
@@ -121,28 +121,28 @@
                     <span class="wh40k-panel-title"><i class="fas fa-map-marked-alt"></i> Current Endeavour</span>
                 </div>
                 <div class="wh40k-panel-body">
-                    <div class="wh40k-endeavour-fields tw-flex tw-flex-col tw-gap-2">
-                        <div class="wh40k-field-row tw-flex tw-flex-col tw-gap-1">
-                            <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">Endeavour Name</label>
-                            <input type="text" class="wh40k-field-input tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem] focus:tw-outline-none focus:tw-border-gold" name="system.rogueTrader.endeavour.name" value="{{system.rogueTrader.endeavour.name}}" placeholder="Name of current endeavour..." />
+                    <div class="tw-flex tw-flex-col tw-gap-2">
+                        <div class="tw-flex tw-flex-col tw-gap-1">
+                            <label class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">Endeavour Name</label>
+                            <input type="text" class="tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem] focus:tw-outline-none focus:tw-border-gold" name="system.rogueTrader.endeavour.name" value="{{system.rogueTrader.endeavour.name}}" placeholder="Name of current endeavour..." />
                         </div>
-                        <div class="wh40k-field-row wh40k-field-row-split tw-grid tw-grid-cols-2 tw-gap-3">
-                            <div class="wh40k-field-half tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">Achievement Points</label>
-                                <div class="wh40k-ap-tracker tw-flex tw-items-center tw-gap-1">
-                                    <input type="number" class="wh40k-vital-input tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-[50px]" name="system.rogueTrader.endeavour.achievementCurrent" value="{{system.rogueTrader.endeavour.achievementCurrent}}" data-dtype="Number" />
+                        <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+                            <div class="tw-flex tw-flex-col tw-gap-1">
+                                <label class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">Achievement Points</label>
+                                <div class="tw-flex tw-items-center tw-gap-1">
+                                    <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-[50px]" name="system.rogueTrader.endeavour.achievementCurrent" value="{{system.rogueTrader.endeavour.achievementCurrent}}" data-dtype="Number" />
                                     <span class="tw-text-[color:var(--wh40k-text-muted)]">/</span>
-                                    <input type="number" class="wh40k-vital-input tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-[50px]" name="system.rogueTrader.endeavour.achievementRequired" value="{{system.rogueTrader.endeavour.achievementRequired}}" data-dtype="Number" />
+                                    <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-[50px]" name="system.rogueTrader.endeavour.achievementRequired" value="{{system.rogueTrader.endeavour.achievementRequired}}" data-dtype="Number" />
                                 </div>
                             </div>
-                            <div class="wh40k-field-half tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">PF Reward</label>
-                                <input type="number" class="wh40k-vital-input tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-[50px] tw-max-w-[150px]" name="system.rogueTrader.endeavour.reward" value="{{system.rogueTrader.endeavour.reward}}" data-dtype="Number" />
+                            <div class="tw-flex tw-flex-col tw-gap-1">
+                                <label class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">PF Reward</label>
+                                <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-[50px] tw-max-w-[150px]" name="system.rogueTrader.endeavour.reward" value="{{system.rogueTrader.endeavour.reward}}" data-dtype="Number" />
                             </div>
                         </div>
-                        <div class="wh40k-field-row tw-flex tw-flex-col tw-gap-1">
-                            <label class="wh40k-field-label tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">Objectives & Notes</label>
-                            <textarea class="wh40k-textarea tw-w-full tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-sm tw-leading-[1.5] tw-resize-y tw-font-[inherit] focus:tw-outline-none focus:tw-border-gold placeholder:tw-text-[color:var(--wh40k-text-muted)] placeholder:tw-italic" name="system.rogueTrader.endeavour.notes" rows="3" placeholder="Track objectives and progress...">{{system.rogueTrader.endeavour.notes}}</textarea>
+                        <div class="tw-flex tw-flex-col tw-gap-1">
+                            <label class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)]">Objectives & Notes</label>
+                            <textarea class="tw-w-full tw-p-2 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-sm tw-leading-[1.5] tw-resize-y tw-font-[inherit] focus:tw-outline-none focus:tw-border-gold placeholder:tw-text-[color:var(--wh40k-text-muted)] placeholder:tw-italic" name="system.rogueTrader.endeavour.notes" rows="3" placeholder="Track objectives and progress...">{{system.rogueTrader.endeavour.notes}}</textarea>
                         </div>
                     </div>
                 </div>
