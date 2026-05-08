@@ -3,6 +3,12 @@ const plugin = require('tailwindcss/plugin');
 const designTokens = require('./tailwind/design-tokens.js');
 const panelComponents = require('./tailwind/panel-components.js');
 const legacyComponents = require('./tailwind/legacy-components.js');
+const itemPreview = require('./tailwind/_item-preview.js');
+const wh40kTooltip = require('./tailwind/_wh40k-tooltip.js');
+const compendiumBrowser = require('./tailwind/_compendium-browser.js');
+const npcSheet = require('./tailwind/_npc-sheet.js');
+const foundryChrome = require('./tailwind/_foundry-chrome.js');
+const weapon = require('./tailwind/_weapon.js');
 
 module.exports = {
   content: [
@@ -1361,6 +1367,12 @@ module.exports = {
     plugin(function ({ addBase }) {
       addBase(panelComponents);
       addBase(legacyComponents);
+      addBase(itemPreview);
+      addBase(wh40kTooltip);
+      addBase(compendiumBrowser);
+      addBase(npcSheet);
+      addBase(foundryChrome);
+      addBase(weapon);
     }),
     plugin(function ({ addComponents }) {
       // Selectors here are auto-prefixed by Tailwind's `prefix: 'tw-'` config,
