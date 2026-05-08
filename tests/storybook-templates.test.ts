@@ -163,7 +163,7 @@ describe('storybook composed item sheet templates', () => {
         );
 
         expect(exhausted.querySelector('[data-action="consumeUse"]')?.getAttribute('disabled')).not.toBeNull();
-        expect(exhausted.querySelector('.wh40k-uses-bar__fill--empty')).not.toBeNull();
+        expect(exhausted.querySelector('[data-exhausted="true"]')).not.toBeNull();
         expect(hiddenCost.textContent).not.toContain('Cost');
     });
 });
