@@ -1,6 +1,6 @@
-import type { WH40KItem } from '../../../documents/item.ts';
 import { BaseSystemConfig } from '../../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../../config/game-systems/index.ts';
+import type { WH40KItem } from '../../../documents/item.ts';
 import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
 import { computeArmour } from '../../../utils/armour-calculator.ts';
 import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
@@ -84,6 +84,35 @@ interface ModifierSource {
     value: number;
     label?: string;
     specialization?: string;
+}
+
+/** Shape of an item's modifiers block (accessed via item.system.modifiers). */
+interface ItemModifiersBlock {
+    characteristics?: Record<string, unknown>;
+    skills?: Record<string, unknown>;
+    combat?: Record<string, unknown>;
+    resources?: { wounds?: unknown; fate?: unknown };
+    other?: Array<{ key?: unknown; value?: unknown; label?: unknown }>;
+}
+
+/** Shape of an active-modifier entry from origin path items. */
+interface ActiveModEntry {
+    type?: unknown;
+    key?: unknown;
+    value?: unknown;
+    source?: unknown;
+}
+
+/** Shape of a skill grant entry from origin path items. */
+interface SkillGrantEntry {
+    name?: unknown;
+    specialization?: unknown;
+    level?: unknown;
+}
+
+/** Minimal actor interface used when accessing parent.items. */
+interface ActorWithItems {
+    items?: { filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[] };
 }
 
 export default class CreatureTemplate extends CommonTemplate {
@@ -298,7 +327,7 @@ export default class CreatureTemplate extends CommonTemplate {
         return new SchemaField(schema);
     }
 
-    static CharacteristicField = (label: string, short: string) =>
+    static CharacteristicField = (label: string, short: string): foundry.data.fields.DataField.Any =>
         new SchemaField({
             label: new StringField({ required: true, initial: label }),
             short: new StringField({ required: true, initial: short }),
@@ -523,7 +552,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
             // Also migrate specialist entries
             if (Array.isArray(skill.entries)) {
-                for (const entry of skill.entries) {
+                for (const entry of skill.entries as Record<string, unknown>[]) {
                     if (entry.advance !== undefined) continue;
                     entry.advance = 0;
                     entry.trained = false;
@@ -564,7 +593,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migrateWounds(source: Record<string, unknown>): void {
-        if (source.wounds && typeof source.wounds === 'object') {
+        if (source.wounds !== null && typeof source.wounds === 'object') {
             const wounds = source.wounds as Record<string, unknown>;
             if (wounds.max !== undefined) wounds.max = this._toInt(wounds.max);
             if (wounds.value !== undefined) wounds.value = this._toInt(wounds.value);
@@ -577,7 +606,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migrateFatigue(source: Record<string, unknown>): void {
-        if (source.fatigue && typeof source.fatigue === 'object') {
+        if (source.fatigue !== null && typeof source.fatigue === 'object') {
             const fatigue = source.fatigue as Record<string, unknown>;
             if (fatigue.max !== undefined) fatigue.max = this._toInt(fatigue.max);
             if (fatigue.value !== undefined) fatigue.value = this._toInt(fatigue.value);
@@ -589,7 +618,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migrateCharacteristics(source: Record<string, unknown>): void {
-        if (source.characteristics) {
+        if (source.characteristics !== null) {
             for (const char of Object.values(source.characteristics as Record<string, Record<string, unknown>>)) {
                 if (char.base !== undefined) char.base = this._toInt(char.base);
                 if (char.advance !== undefined) char.advance = this._toInt(char.advance);
@@ -605,7 +634,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migrateFate(source: Record<string, unknown>): void {
-        if (source.fate && typeof source.fate === 'object') {
+        if (source.fate !== null && typeof source.fate === 'object') {
             const fate = source.fate as Record<string, unknown>;
             if (fate.max !== undefined) fate.max = this._toInt(fate.max);
             if (fate.value !== undefined) fate.value = this._toInt(fate.value);
@@ -617,7 +646,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migratePsy(source: Record<string, unknown>): void {
-        if (source.psy && typeof source.psy === 'object') {
+        if (source.psy !== null && typeof source.psy === 'object') {
             const psy = source.psy as Record<string, unknown>;
             if (psy.rating !== undefined) psy.rating = this._toInt(psy.rating);
             if (psy.sustained !== undefined) psy.sustained = this._toInt(psy.sustained);
@@ -632,6 +661,7 @@ export default class CreatureTemplate extends CommonTemplate {
     /** @inheritDoc */
     static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown> = {}): void {
         super._cleanData?.(source, options);
+        if (!source) return;
         CreatureTemplate.#cleanSize(source);
         CreatureTemplate.#cleanWounds(source);
         CreatureTemplate.#cleanFatigue(source);
@@ -670,8 +700,8 @@ export default class CreatureTemplate extends CommonTemplate {
      * Clean wounds fields - convert to proper integers.
      * @param {object} source - The source data
      */
-    static #cleanWounds(source: Record<string, unknown> | undefined): void {
-        if (source?.wounds && typeof source.wounds === 'object') {
+    static #cleanWounds(source: Record<string, unknown>): void {
+        if (source.wounds !== null && typeof source.wounds === 'object') {
             const wounds = source.wounds as Record<string, unknown>;
             if (wounds.max !== undefined) {
                 wounds.max = this._toInt(wounds.max, 0);
@@ -689,8 +719,8 @@ export default class CreatureTemplate extends CommonTemplate {
      * Clean fatigue fields.
      * @param {object} source - The source data
      */
-    static #cleanFatigue(source: Record<string, unknown> | undefined): void {
-        if (source?.fatigue && typeof source.fatigue === 'object') {
+    static #cleanFatigue(source: Record<string, unknown>): void {
+        if (source.fatigue !== null && typeof source.fatigue === 'object') {
             const fatigue = source.fatigue as Record<string, unknown>;
             if (fatigue.max !== undefined) {
                 fatigue.max = this._toInt(fatigue.max, 0);
@@ -705,8 +735,8 @@ export default class CreatureTemplate extends CommonTemplate {
      * Clean fate fields.
      * @param {object} source - The source data
      */
-    static #cleanFate(source: Record<string, unknown> | undefined): void {
-        if (source?.fate && typeof source.fate === 'object') {
+    static #cleanFate(source: Record<string, unknown>): void {
+        if (source.fate !== null && typeof source.fate === 'object') {
             const fate = source.fate as Record<string, unknown>;
             if (fate.max !== undefined) {
                 fate.max = this._toInt(fate.max, 0);
@@ -721,8 +751,8 @@ export default class CreatureTemplate extends CommonTemplate {
      * Clean psy fields.
      * @param {object} source - The source data
      */
-    static #cleanPsy(source: Record<string, unknown> | undefined): void {
-        if (source?.psy && typeof source.psy === 'object') {
+    static #cleanPsy(source: Record<string, unknown>): void {
+        if (source.psy !== null && typeof source.psy === 'object') {
             const psy = source.psy as Record<string, unknown>;
             if (psy.rating !== undefined) {
                 psy.rating = this._toInt(psy.rating, 0);
@@ -758,11 +788,11 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {object|null}
      */
     getCharacteristic(key: string): CharacteristicData | null {
-        if (this.characteristics[key]) {
+        if (key in this.characteristics) {
             return this.characteristics[key];
         }
         const fullKey = CreatureTemplate.CHARACTERISTIC_MAP[key];
-        if (fullKey && this.characteristics[fullKey]) {
+        if (fullKey !== null && fullKey in this.characteristics) {
             return this.characteristics[fullKey];
         }
         return null;
@@ -850,7 +880,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _prepareCharacteristics(): void {
-        for (const [, char] of Object.entries(this.characteristics as Record<string, CharacteristicData>)) {
+        for (const [, char] of Object.entries(this.characteristics)) {
             // Calculate total: base + (advance * 5) + modifier
             char.total = char.base + char.advance * 5 + char.modifier;
 
@@ -877,11 +907,11 @@ export default class CreatureTemplate extends CommonTemplate {
      */
     _prepareSkills(): void {
         // Determine visible skills for this actor's game system
-        const gameSystem = (this as any).gameSystem;
-        const systemConfig = gameSystem ? SystemConfigRegistry.getOrNull(gameSystem) : null;
+        const gameSystem = (this as { gameSystem?: string }).gameSystem;
+        const systemConfig = gameSystem != null ? SystemConfigRegistry.getOrNull(gameSystem) : null;
         const visibleSkills = systemConfig?.getVisibleSkills() ?? null;
 
-        for (const [key, skill] of Object.entries(this.skills as Record<string, SkillData>)) {
+        for (const [key, skill] of Object.entries(this.skills)) {
             // Set visibility based on game system
             if (visibleSkills) {
                 skill.hidden = !visibleSkills.has(key);
@@ -907,7 +937,7 @@ export default class CreatureTemplate extends CommonTemplate {
             // Base value: full characteristic if rank >= 1.
             // Untrained uses flat -20 in DH2e (Known/Trained/Experienced/Veteran ladder);
             // half characteristic for career-based systems.
-            const baseValue = effectiveRank > 0 ? charTotal : systemConfig?.usesAptitudes ? charTotal - 20 : Math.floor(charTotal / 2);
+            const baseValue = effectiveRank > 0 ? charTotal : systemConfig?.usesAptitudes === true ? charTotal - 20 : Math.floor(charTotal / 2);
 
             // Training bonus: rank 2 = +10, rank 3 = +20, rank 4 = +30
             const trainingBonus = effectiveRank >= 4 ? 30 : effectiveRank >= 3 ? 20 : effectiveRank >= 2 ? 10 : 0;
@@ -932,7 +962,7 @@ export default class CreatureTemplate extends CommonTemplate {
                     entry.plus30 = entryEffectiveRank >= 4;
 
                     const entryBaseValue =
-                        entryEffectiveRank > 0 ? entryCharTotal : systemConfig?.usesAptitudes ? entryCharTotal - 20 : Math.floor(entryCharTotal / 2);
+                        entryEffectiveRank > 0 ? entryCharTotal : systemConfig?.usesAptitudes === true ? entryCharTotal - 20 : Math.floor(entryCharTotal / 2);
                     const entryTrainingBonus = entryEffectiveRank >= 4 ? 30 : entryEffectiveRank >= 3 ? 20 : entryEffectiveRank >= 2 ? 10 : 0;
                     entry.current = entryBaseValue + entryTrainingBonus + (entry.bonus || 0);
                 }
@@ -957,9 +987,7 @@ export default class CreatureTemplate extends CommonTemplate {
      */
     _prepareFatigue(): void {
         const toughness = this.characteristics.toughness;
-        if (toughness) {
-            this.fatigue.max = toughness.bonus;
-        }
+        this.fatigue.max = toughness.bonus;
     }
 
     /**
@@ -968,8 +996,8 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _computeItemModifiers(): void {
-        const actor = this.parent;
-        if (!actor?.items) return;
+        const actor = this.parent as { items?: { filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[] } } | null | undefined;
+        if (actor?.items == null) return;
 
         const modifierItems = actor.items.filter(
             (item: WH40KItem) =>
@@ -978,9 +1006,9 @@ export default class CreatureTemplate extends CommonTemplate {
                 (item.isTalent ||
                     item.isTrait ||
                     item.isCondition ||
-                    (item.type === 'armour' && item.system.equipped) ||
-                    (item.type === 'cybernetic' && item.system.equipped) ||
-                    (item.type === 'gear' && item.system.equipped)),
+                    (item.type === 'armour' && item.system.equipped === true) ||
+                    (item.type === 'cybernetic' && item.system.equipped === true) ||
+                    (item.type === 'gear' && item.system.equipped === true)),
         );
 
         for (const item of modifierItems) {
@@ -994,8 +1022,8 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _applyItemModifiers(item: WH40KItem): void {
-        const mods = item.system?.modifiers;
-        if (!mods) return;
+        const mods = item.system?.modifiers as ItemModifiersBlock | null | undefined;
+        if (mods == null) return;
 
         const source = {
             name: item.name,
@@ -1004,9 +1032,9 @@ export default class CreatureTemplate extends CommonTemplate {
         };
 
         // Characteristic modifiers
-        if (mods.characteristics) {
+        if (mods.characteristics != null) {
             for (const [charKey, value] of Object.entries(mods.characteristics)) {
-                if (value && typeof value === 'number') {
+                if (typeof value === 'number') {
                     if (!this.modifierSources.characteristics[charKey]) {
                         this.modifierSources.characteristics[charKey] = [];
                     }
@@ -1016,9 +1044,9 @@ export default class CreatureTemplate extends CommonTemplate {
         }
 
         // Skill modifiers
-        if (mods.skills) {
+        if (mods.skills != null) {
             for (const [skillKey, value] of Object.entries(mods.skills)) {
-                if (value && typeof value === 'number') {
+                if (typeof value === 'number') {
                     if (!this.modifierSources.skills[skillKey]) {
                         this.modifierSources.skills[skillKey] = [];
                     }
@@ -1028,30 +1056,31 @@ export default class CreatureTemplate extends CommonTemplate {
         }
 
         // Combat modifiers
-        if (mods.combat) {
+        if (mods.combat != null) {
             for (const [combatKey, value] of Object.entries(mods.combat)) {
-                if (value && typeof value === 'number' && this.modifierSources.combat[combatKey]) {
+                if (typeof value === 'number' && this.modifierSources.combat[combatKey]) {
                     this.modifierSources.combat[combatKey].push({ ...source, value });
                 }
             }
         }
 
         // Resources modifiers (wounds, fate, insanity, corruption)
-        if (mods.resources) {
-            if (mods.resources.wounds && typeof mods.resources.wounds === 'number') {
+        if (mods.resources != null) {
+            if (typeof mods.resources.wounds === 'number') {
                 this.modifierSources.wounds.push({ ...source, value: mods.resources.wounds });
             }
-            if (mods.resources.fate && typeof mods.resources.fate === 'number') {
+            if (typeof mods.resources.fate === 'number') {
                 this.modifierSources.fate.push({ ...source, value: mods.resources.fate });
             }
             // Note: insanity and corruption modifiers are defined in schema but not yet implemented
         }
 
         // Movement modifier (from other modifiers array)
-        if (mods.other && Array.isArray(mods.other)) {
+        if (Array.isArray(mods.other)) {
             for (const mod of mods.other) {
                 if (mod.key === 'movement' && typeof mod.value === 'number') {
-                    this.modifierSources.movement.push({ ...source, value: mod.value, label: mod.label });
+                    const label = typeof mod.label === 'string' ? mod.label : undefined;
+                    this.modifierSources.movement.push({ ...source, value: mod.value, label });
                 }
             }
         }
@@ -1065,8 +1094,8 @@ export default class CreatureTemplate extends CommonTemplate {
         // Collect origin path modifier sources for tooltip transparency
         this._registerOriginPathModifierSources();
 
-        for (const [name, char] of Object.entries(this.characteristics) as [string, CharacteristicData][]) {
-            const originPathMod = (this as any)._getOriginPathCharacteristicModifier?.(name) || 0;
+        for (const [name, char] of Object.entries(this.characteristics)) {
+            const originPathMod = this._getOriginPathCharacteristicModifier(name);
             const itemMod = this._getTotalCharacteristicModifier(name);
             const totalMod = originPathMod + itemMod;
 
@@ -1088,7 +1117,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
         // Update initiative bonus from characteristic (recalculate from base)
         const initChar = this.characteristics[this.initiative.characteristic];
-        const baseInitBonus = initChar?.bonus ?? 0;
+        const baseInitBonus = initChar.bonus;
 
         // Apply combat modifiers from items
         const initMod = this._getTotalCombatModifier('initiative');
@@ -1096,7 +1125,7 @@ export default class CreatureTemplate extends CommonTemplate {
         this.initiative.itemModifier = initMod;
 
         // Store combat modifiers for display
-        (this as any).combatModifiers = {
+        this.combatModifiers = {
             attack: this._getTotalCombatModifier('attack'), // Schema key: attack
             damage: this._getTotalCombatModifier('damage'),
             penetration: this._getTotalCombatModifier('penetration'),
@@ -1114,7 +1143,7 @@ export default class CreatureTemplate extends CommonTemplate {
         // Recalculate skills from updated characteristic totals (which now include item modifiers)
         this._prepareSkills();
 
-        for (const [skillKey, skill] of Object.entries(this.skills) as [string, SkillData][]) {
+        for (const [skillKey, skill] of Object.entries(this.skills)) {
             const itemMod = this._getTotalSkillModifier(skillKey);
             if (itemMod !== 0) {
                 skill.itemModifier = itemMod;
@@ -1134,8 +1163,8 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _computeArmour(): void {
-        const actor = this.parent;
-        if (!actor) return;
+        const actor = this.parent as Parameters<typeof computeArmour>[0] | null | undefined;
+        if (actor == null) return;
         Object.assign(this.armour, computeArmour(actor));
     }
 
@@ -1144,8 +1173,8 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _computeEncumbrance(): void {
-        const actor = this.parent;
-        if (!actor) return;
+        const actor = this.parent as Parameters<typeof computeEncumbrance>[0] | null | undefined;
+        if (actor == null) return;
         Object.assign(this.encumbrance, computeEncumbrance(actor));
     }
 
@@ -1159,7 +1188,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number}
      */
     _getTotalCharacteristicModifier(charKey: string): number {
-        const sources = this.modifierSources?.characteristics?.[charKey] || [];
+        const sources = this.modifierSources.characteristics[charKey] ?? [];
         return sources.reduce((total, src) => total + (src.value || 0), 0);
     }
 
@@ -1169,7 +1198,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number}
      */
     _getTotalSkillModifier(skillKey: string): number {
-        const sources = this.modifierSources?.skills?.[skillKey] || [];
+        const sources = this.modifierSources.skills[skillKey] ?? [];
         return sources.reduce((total, src) => total + (src.value || 0), 0);
     }
 
@@ -1179,7 +1208,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number}
      */
     _getTotalCombatModifier(combatKey: string): number {
-        const sources = this.modifierSources?.combat?.[combatKey] || [];
+        const sources = this.modifierSources.combat[combatKey] ?? [];
         return sources.reduce((total, src) => total + (src.value || 0), 0);
     }
 
@@ -1188,13 +1217,14 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number}
      */
     _getOriginPathWoundsModifier(): number {
-        const actor = this.parent;
-        if (!actor?.items) return 0;
+        const actor = this.parent as { items?: { filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[] } } | null | undefined;
+        if (actor?.items == null) return 0;
         let total = 0;
         const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
         for (const item of originItems) {
-            if (item.system?.modifiers?.wounds) {
-                total += item.system.modifiers.wounds;
+            const wounds = (item.system?.modifiers as { wounds?: unknown } | null | undefined)?.wounds;
+            if (typeof wounds === 'number') {
+                total += wounds;
             }
         }
         return total;
@@ -1205,13 +1235,14 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number}
      */
     _getOriginPathFateModifier(): number {
-        const actor = this.parent;
-        if (!actor?.items) return 0;
+        const actor = this.parent as { items?: { filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[] } } | null | undefined;
+        if (actor?.items == null) return 0;
         let total = 0;
         const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
         for (const item of originItems) {
-            if (item.system?.modifiers?.fate) {
-                total += item.system.modifiers.fate;
+            const fate = (item.system?.modifiers as { fate?: unknown } | null | undefined)?.fate;
+            if (typeof fate === 'number') {
+                total += fate;
             }
         }
         return total;
@@ -1239,18 +1270,19 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _registerOriginPathModifierSources(): void {
-        const actor = this.parent;
-        if (!actor?.items) return;
+        const actor = this.parent as ActorWithItems | null | undefined;
+        if (actor?.items == null) return;
 
         const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
         for (const item of originItems) {
             const source = { name: item.name, type: 'originPath', id: item.id };
 
             // Base modifiers from ModifiersTemplate
-            const mods = item.system?.modifiers?.characteristics;
-            if (mods) {
+            const modBlock = item.system?.modifiers as ItemModifiersBlock | null | undefined;
+            const mods = modBlock?.characteristics;
+            if (mods !== undefined) {
                 for (const [charKey, value] of Object.entries(mods)) {
-                    if (value && typeof value === 'number') {
+                    if (typeof value === 'number') {
                         if (!this.modifierSources.characteristics[charKey]) {
                             this.modifierSources.characteristics[charKey] = [];
                         }
@@ -1260,15 +1292,15 @@ export default class CreatureTemplate extends CommonTemplate {
             }
 
             // Choice-based modifiers from activeModifiers
-            const activeMods = item.system?.activeModifiers;
+            const activeMods = item.system?.activeModifiers as ActiveModEntry[] | null | undefined;
             if (Array.isArray(activeMods)) {
                 for (const mod of activeMods) {
-                    if (mod.type === 'characteristic' && mod.key && mod.value) {
+                    if (mod.type === 'characteristic' && typeof mod.key === 'string' && typeof mod.value === 'number') {
                         if (!this.modifierSources.characteristics[mod.key]) {
                             this.modifierSources.characteristics[mod.key] = [];
                         }
                         this.modifierSources.characteristics[mod.key].push({
-                            name: `${item.name} (${mod.source})`,
+                            name: `${item.name} (${String(mod.source)})`,
                             type: 'originPath',
                             id: item.id,
                             value: mod.value,
@@ -1291,8 +1323,8 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number} Highest rank granted (0 = not granted, 1-4 = rank)
      */
     _getOriginPathSkillRank(skillKey: string, specialization?: string): number {
-        const actor = this.parent;
-        if (!actor?.items) return 0;
+        const actor = this.parent as ActorWithItems | null | undefined;
+        if (actor?.items == null) return 0;
 
         let maxRank = 0;
         const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
@@ -1302,28 +1334,28 @@ export default class CreatureTemplate extends CommonTemplate {
 
         for (const item of originItems) {
             // Check base skill grants
-            const skills = item.system?.grants?.skills || [];
-            for (const grant of skills) {
-                const grantKey = SkillKeyHelper.nameToKey(grant.name);
+            const grants = (item.system?.grants as { skills?: SkillGrantEntry[] } | null | undefined)?.skills ?? [];
+            for (const grant of grants) {
+                const grantKey = SkillKeyHelper.nameToKey(String(grant.name ?? ''));
 
                 if (grantKey !== skillKey) continue;
 
                 // For specialist skills, also match specialization
                 if (isSpecialist && specialization) {
-                    const grantSpec = (grant.specialization || '').toLowerCase();
-                    if (grantSpec && grantSpec !== specialization.toLowerCase()) continue;
+                    const grantSpec = String(grant.specialization ?? '').toLowerCase();
+                    if (grantSpec.length > 0 && grantSpec !== specialization.toLowerCase()) continue;
                 }
 
-                const rank = BaseSystemConfig.skillLevelToRank(grant.level || 'trained');
+                const rank = BaseSystemConfig.skillLevelToRank(String(grant.level ?? 'trained'));
                 maxRank = Math.max(maxRank, rank);
             }
 
             // Check choice-based skill grants from activeModifiers
-            const activeMods = item.system?.activeModifiers;
+            const activeMods = item.system?.activeModifiers as ActiveModEntry[] | null | undefined;
             if (Array.isArray(activeMods)) {
                 for (const mod of activeMods) {
                     if (mod.type !== 'skill') continue;
-                    const modKey = SkillKeyHelper.nameToKey(mod.key);
+                    const modKey = SkillKeyHelper.nameToKey(String(mod.key ?? ''));
                     if (modKey !== skillKey) continue;
                     maxRank = Math.max(maxRank, 1);
                 }
@@ -1339,27 +1371,28 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _registerOriginPathSkillSources(): void {
-        const actor = this.parent;
-        if (!actor?.items) return;
+        const actor = this.parent as ActorWithItems | null | undefined;
+        if (actor?.items == null) return;
 
         const originItems = actor.items.filter((item: WH40KItem) => item.isOriginPath);
         for (const item of originItems) {
-            const skills = item.system?.grants?.skills || [];
-            for (const grant of skills) {
-                const grantKey = SkillKeyHelper.nameToKey(grant.name);
+            const grants = (item.system?.grants as { skills?: SkillGrantEntry[] } | null | undefined)?.skills ?? [];
+            for (const grant of grants) {
+                const grantKey = SkillKeyHelper.nameToKey(String(grant.name ?? ''));
                 if (!grantKey) continue;
 
-                const rank = BaseSystemConfig.skillLevelToRank(grant.level || 'trained');
+                const rank = BaseSystemConfig.skillLevelToRank(String(grant.level ?? 'trained'));
                 if (rank > 0) {
                     if (!this.modifierSources.skills[grantKey]) {
                         this.modifierSources.skills[grantKey] = [];
                     }
+                    const spec = grant.specialization !== null ? String(grant.specialization) : undefined;
                     this.modifierSources.skills[grantKey].push({
                         name: item.name,
                         type: 'originPath',
                         id: item.id,
                         value: rank,
-                        specialization: grant.specialization || undefined,
+                        specialization: spec,
                     });
                 }
             }
@@ -1394,8 +1427,8 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _prepareMovement(): void {
-        const agility = this.characteristics?.agility;
-        const strength = this.characteristics?.strength;
+        const agility = this.characteristics.agility;
+        const strength = this.characteristics.strength;
         if (!agility) return;
 
         const ab = agility.bonus;
@@ -1434,7 +1467,7 @@ export default class CreatureTemplate extends CommonTemplate {
         const data = super.getRollData();
 
         // Add characteristic values and bonuses for formulas
-        for (const [key, char] of Object.entries(this.characteristics as Record<string, CharacteristicData>)) {
+        for (const [key, char] of Object.entries(this.characteristics)) {
             data[char.short] = char.total;
             data[`${char.short}B`] = char.bonus;
             data[key] = char.total;

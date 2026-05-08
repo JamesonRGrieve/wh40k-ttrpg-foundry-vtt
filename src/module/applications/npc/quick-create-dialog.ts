@@ -1,5 +1,5 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
-import ThreatCalculator, { type NPCMovement } from './threat-calculator.ts';
+import ThreatCalculator from './threat-calculator.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -11,15 +11,6 @@ interface NPCState {
     preset: string;
     faction: string;
     isHorde: boolean;
-}
-
-interface PreviewState {
-    characteristics: Array<{ key: string; label: string; short: string; value: number; bonus: number }>;
-    skills: Array<{ key: string; name: string; level: string; bonus: number }>;
-    weapons: Array<{ name: string; damage: string; pen: string; range: string }>;
-    wounds: number;
-    armour: number;
-    movement: NPCMovement;
 }
 
 /**
@@ -134,7 +125,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const tier = ThreatCalculator.getTier(this.#state.threatLevel);
 
         // Prepare characteristics for display
-        const characteristics = Object.entries(previewData.characteristics as Record<string, any>).map(([key, char]) => ({
+        const characteristics = Object.entries(previewData.characteristics).map(([key, char]) => ({
             key,
             label: char.label,
             short: char.short,
@@ -143,7 +134,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         }));
 
         // Prepare skills for display
-        const skills = Object.entries(previewData.trainedSkills as Record<string, any>).map(([key, skill]) => {
+        const skills = Object.entries(previewData.trainedSkills).map(([key, skill]) => {
             let level = '';
             if (skill.plus20) level = '+20';
             else if (skill.plus10) level = '+10';
@@ -151,14 +142,14 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
             return {
                 key,
-                name: skill.name || key,
+                name: skill.name !== '' ? skill.name : key,
                 level,
-                bonus: skill.bonus || 0,
+                bonus: skill.bonus !== 0 ? skill.bonus : 0,
             };
         });
 
         // Prepare weapons for display
-        const weapons = (previewData.weapons as any).simple.map((w: any) => ({
+        const weapons = previewData.weapons.simple.map((w) => ({
             name: w.name,
             damage: w.damage,
             pen: w.pen,
@@ -172,15 +163,15 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             state: this.#state,
 
             // Options
-            roles: roles.map((r: any) => ({
+            roles: roles.map((r) => ({
                 ...r,
                 selected: r.key === this.#state.role,
             })),
-            presets: presets.map((p: any) => ({
+            presets: presets.map((p) => ({
                 ...p,
                 selected: p.key === this.#state.preset,
             })),
-            types: types.map((t: any) => ({
+            types: types.map((t) => ({
                 ...t,
                 selected: t.key === this.#state.type,
             })),
@@ -194,10 +185,10 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
                 characteristics,
                 skills,
                 weapons,
-                wounds: (previewData.wounds as any).max,
-                armour: (previewData.armour as any).total,
+                wounds: previewData.wounds.max,
+                armour: previewData.armour.total,
                 movement: previewData.movement,
-            } as PreviewState,
+            },
 
             // Buttons
             buttons: [
@@ -231,27 +222,27 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const form = this.element;
 
         // Name input
-        const nameInput = form.querySelector('[name="name"]') as HTMLInputElement;
-        if (nameInput) {
+        const nameInput = form.querySelector<HTMLInputElement>('[name="name"]');
+        if (nameInput !== null) {
             nameInput.addEventListener('input', () => {
-                this.#state.name = nameInput.value || 'New NPC';
+                this.#state.name = nameInput.value !== '' ? nameInput.value : 'New NPC';
             });
         }
 
         // Threat level slider
-        const threatSlider = form.querySelector('[name="threatLevel"]') as HTMLInputElement;
+        const threatSlider = form.querySelector<HTMLInputElement>('[name="threatLevel"]');
         const threatValue = form.querySelector('.threat-value');
-        if (threatSlider) {
+        if (threatSlider !== null) {
             threatSlider.addEventListener('input', () => {
                 this.#state.threatLevel = parseInt(threatSlider.value, 10);
-                if (threatValue) threatValue.textContent = String(this.#state.threatLevel);
+                if (threatValue !== null) threatValue.textContent = String(this.#state.threatLevel);
                 this._debounceRender();
             });
         }
 
         // Role select
-        const roleSelect = form.querySelector('[name="role"]') as HTMLSelectElement;
-        if (roleSelect) {
+        const roleSelect = form.querySelector<HTMLSelectElement>('[name="role"]');
+        if (roleSelect !== null) {
             roleSelect.addEventListener('change', () => {
                 this.#state.role = roleSelect.value;
                 this._debounceRender();
@@ -259,8 +250,8 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         }
 
         // Type select
-        const typeSelect = form.querySelector('[name="type"]') as HTMLSelectElement;
-        if (typeSelect) {
+        const typeSelect = form.querySelector<HTMLSelectElement>('[name="type"]');
+        if (typeSelect !== null) {
             typeSelect.addEventListener('change', () => {
                 this.#state.type = typeSelect.value;
                 // Auto-enable horde mode for horde/swarm types
@@ -272,8 +263,8 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         }
 
         // Equipment preset select
-        const presetSelect = form.querySelector('[name="preset"]') as HTMLSelectElement;
-        if (presetSelect) {
+        const presetSelect = form.querySelector<HTMLSelectElement>('[name="preset"]');
+        if (presetSelect !== null) {
             presetSelect.addEventListener('change', () => {
                 this.#state.preset = presetSelect.value;
                 this._debounceRender();
@@ -281,16 +272,16 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         }
 
         // Faction input
-        const factionInput = form.querySelector('[name="faction"]') as HTMLInputElement;
-        if (factionInput) {
+        const factionInput = form.querySelector<HTMLInputElement>('[name="faction"]');
+        if (factionInput !== null) {
             factionInput.addEventListener('input', () => {
                 this.#state.faction = factionInput.value;
             });
         }
 
         // Horde checkbox
-        const hordeCheckbox = form.querySelector('[name="isHorde"]') as HTMLInputElement;
-        if (hordeCheckbox) {
+        const hordeCheckbox = form.querySelector<HTMLInputElement>('[name="isHorde"]');
+        if (hordeCheckbox !== null) {
             hordeCheckbox.addEventListener('change', () => {
                 this.#state.isHorde = hordeCheckbox.checked;
                 this._debounceRender();
@@ -323,12 +314,12 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const data = foundry.utils.expandObject(formData.object) as Partial<NPCState>;
 
         // Update state from form
-        this.#state.name = data.name || 'New NPC';
-        this.#state.threatLevel = parseInt(String(data.threatLevel), 10) || 5;
-        this.#state.role = data.role || 'specialist';
-        this.#state.type = data.type || 'troop';
-        this.#state.preset = data.preset || 'mixed';
-        this.#state.faction = data.faction || '';
+        this.#state.name = data.name ?? 'New NPC';
+        this.#state.threatLevel = parseInt(String(data.threatLevel ?? '5'), 10) || 5;
+        this.#state.role = data.role ?? 'specialist';
+        this.#state.type = data.type ?? 'troop';
+        this.#state.preset = data.preset ?? 'mixed';
+        this.#state.faction = data.faction ?? '';
         this.#state.isHorde = data.isHorde === true || String(data.isHorde) === 'true';
 
         // Generate NPC data
@@ -379,7 +370,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      */
     static #onUpdatePreview(this: NPCQuickCreateDialog, event: PointerEvent, target: HTMLElement): void {
         // Re-render to update preview
-        this.render({ parts: ['form'] });
+        void this.render({ parts: ['form'] });
     }
 
     /* -------------------------------------------- */
@@ -451,7 +442,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
             if (randomize) {
                 // Randomize characteristics slightly (±5)
-                for (const char of Object.values(systemData.characteristics as Record<string, any>)) {
+                for (const char of Object.values(systemData.characteristics)) {
                     const variance = Math.floor(Math.random() * 11) - 5;
                     char.base = Math.max(10, Math.min(99, char.base + variance));
                     char.total = char.base + char.modifier;

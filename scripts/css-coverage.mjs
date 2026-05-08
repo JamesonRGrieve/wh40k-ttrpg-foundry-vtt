@@ -235,6 +235,8 @@ const JS_HOOKS = new Set([
     // class name to read/update the difficulty selection and target number at runtime.
     'urd-difficulty-picker',
     'urd-target__number',
+    // skill-sheet.ts declares scrollable: ['.wh40k-item-body']. Permanent JS hook.
+    'wh40k-item-body',
     // urd-* are Tailwind arbitrary-variant targeting classes used in patterns like
     //   [&_.urd-weapon-name]:tw-text-gold-raw
     // inside the PARENT element's class attr. The child element must carry the bare class

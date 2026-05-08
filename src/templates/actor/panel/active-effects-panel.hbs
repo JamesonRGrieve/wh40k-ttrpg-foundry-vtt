@@ -1,6 +1,6 @@
 {{!-- Active Effects Panel - Card/Row Structure --}}
-<div class="wh40k-panel wh40k-effects-panel">
-    <div class="wh40k-panel-header wh40k-panel-header--clickable sheet-control__hide-control tw-cursor-pointer tw-select-none"
+<div class="wh40k-panel">
+    <div class="wh40k-panel-header sheet-control__hide-control tw-cursor-pointer tw-select-none hover:tw-bg-gradient-to-b hover:tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] hover:tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)]"
          data-toggle="effects_details"
          title="{{#if (isExpanded 'effects_details' actor)}}{{localize 'WH40K.Effects.ClickToCollapse'}}{{else}}{{localize 'WH40K.Effects.ClickToExpand'}}{{/if}}">
         <span class="wh40k-panel-title tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
@@ -9,12 +9,12 @@
                 <span class="wh40k-badge tw-inline-flex tw-items-center tw-justify-center tw-min-w-[20px] tw-h-5 tw-px-1.5 tw-ml-2 tw-bg-gradient-to-br tw-from-[var(--wh40k-accent-gold)] tw-to-[color-mix(in_srgb,var(--wh40k-accent-gold),black_10%)] tw-text-[#0a0a0f] tw-rounded-[10px] tw-text-[0.7rem] tw-font-bold tw-shadow-sm">{{effects.length}}</span>
             {{/if}}
         </span>
-        <i class="fas fa-chevron-down wh40k-panel-chevron tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-transition-[transform,color] tw-duration-200 tw-ml-auto tw-flex-shrink-0 {{#if (isExpanded 'effects_details' actor)}}wh40k-panel-chevron--open tw-rotate-180{{/if}}"></i>
+        <i class="fas fa-chevron-down wh40k-panel-chevron tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-transition-[transform,color] tw-duration-200 tw-ml-auto tw-flex-shrink-0 {{#if (isExpanded 'effects_details' actor)}}tw-rotate-180{{/if}}"></i>
     </div>
 
     <div class="wh40k-panel-body">
         {{#if effects.length}}
-            <div class="wh40k-effects-list tw-flex tw-flex-col tw-gap-2 tw-mb-3">
+            <div class="tw-flex tw-flex-col tw-gap-2 tw-mb-3">
                 {{#each effects as |effect|}}
                     {{> systems/wh40k-rpg/templates/actor/partial/effect-row.hbs
                         effect=effect
@@ -24,9 +24,9 @@
             </div>
         {{/if}}
 
-        <div class="wh40k-dropzone">
-            <i class="fas fa-sparkles wh40k-dropzone-icon"></i>
-            <span class="wh40k-dropzone-text" data-dropzone-text>{{localize 'WH40K.Effects.DropHere'}}</span>
+        <div class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-m-2 tw-p-4 tw-rounded tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-border-2 tw-border-dashed tw-border-[var(--wh40k-border-color-light)] tw-bg-[linear-gradient(135deg,rgba(255,255,255,0.02)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.02)_50%,rgba(255,255,255,0.02)_75%,transparent_75%,transparent)] tw-bg-[length:20px_20px] hover:tw-border-[var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.05)]">
+            <i class="fas fa-sparkles tw-text-[2rem] tw-text-[color:var(--wh40k-text-muted)] tw-transition-colors group-hover:tw-text-[color:var(--wh40k-accent-gold)]"></i>
+            <span class="tw-text-xs tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.05em] tw-text-center tw-transition-colors group-hover:tw-text-[color:var(--wh40k-text-light)]" data-dropzone-text>{{localize 'WH40K.Effects.DropHere'}}</span>
         </div>
     </div>
 </div>

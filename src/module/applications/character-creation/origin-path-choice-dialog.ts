@@ -9,7 +9,6 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { findSkillUuid } from '../../helpers/skill-uuid-helper.ts';
 import { getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
-
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 const { ApplicationV2, HandlebarsApplicationMixin } = (
     foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor; HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T } }
@@ -146,11 +145,11 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         // Normalize choices: DH2e uses 'name' while RT uses 'label'.
         // Disambiguate duplicate labels (e.g. two "Starting Skill" choices)
         // by appending " (2)", " (3)", etc. so each choice has a unique key.
-        const itemGrants = item.system?.grants as { choices?: RawChoice[] } | undefined;
-        const rawChoices = (itemGrants?.choices || []).map((c: RawChoice) => ({
+        const itemGrants = item.system.grants as { choices?: RawChoice[] } | undefined;
+        const rawChoices = (itemGrants?.choices ?? []).map((c: RawChoice) => ({
             ...c,
-            label: c.label || c.name || '',
-            options: (c.options || []).map((o: ChoiceOption | string) => {
+            label: c.label ?? c.name ?? '',
+            options: (c.options ?? []).map((o: ChoiceOption | string) => {
                 // Handle plain string options (e.g. aptitude choices: ["Offence", "Tech"])
                 if (typeof o === 'string') {
                     return { value: o, label: o, specializations: null };
@@ -158,16 +157,16 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                 // For options with specialization (singular) but no specializations picker,
                 // use the full label as the value to avoid duplicates
                 // (e.g. two "Weapon Training" options with different specializations)
-                let optValue = o.value || o.name || '';
-                if (o.specialization && !o.specializations?.length) {
-                    const fullLabel = o.label || `${o.name} (${o.specialization})`;
+                let optValue = o.value ?? o.name ?? '';
+                if (typeof o.specialization === 'string' && o.specialization !== '' && (o.specializations?.length ?? 0) === 0) {
+                    const fullLabel = o.label ?? `${o.name ?? ''} (${o.specialization})`;
                     optValue = fullLabel;
                 }
                 return {
                     ...o,
                     value: optValue,
-                    label: o.label || o.name || '',
-                    specializations: o.specializations || null,
+                    label: o.label ?? o.name ?? '',
+                    specializations: o.specializations ?? null,
                 };
             }),
         }));
@@ -176,9 +175,9 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         const labelCounts: Record<string, number> = {};
         this.pendingChoices = rawChoices.map((c: RawChoice & { label: string; options: ChoiceOption[] }) => {
             const base = c.label;
-            labelCounts[base] = (labelCounts[base] || 0) + 1;
+            labelCounts[base] = (labelCounts[base] ?? 0) + 1;
             const suffix = labelCounts[base] > 1 ? ` (${labelCounts[base]})` : '';
-            return { ...c, count: c.count ?? 1, _key: `${base}${suffix}` } as PendingChoice;
+            return { ...c, count: c.count ?? 1, _key: `${base}${suffix}` };
         });
 
         /**
@@ -196,19 +195,19 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         this.specializationSelections = new Map();
 
         // Initialize selections from existing selectedChoices
-        const existing = (item.system?.selectedChoices as Record<string, string | string[]> | undefined) ?? {};
+        const existing = (item.system.selectedChoices as Record<string, string | string[]> | undefined) ?? {};
         for (const [key, selected] of Object.entries(existing)) {
-            const selectedValues = Array.isArray(selected) ? selected : [selected].filter(Boolean);
+            const selectedValues = Array.isArray(selected) ? selected : selected !== '' ? [selected] : [];
             this.selections.set(key, new Set(selectedValues));
             // Reverse-engineer specialization selections from composite values
             for (const sel of selectedValues) {
                 const match = sel.match(/^(.+?)\s*\((.+)\)$/);
-                if (match) {
+                if (match !== null) {
                     const baseValue = match[1].trim();
                     const spec = match[2].trim();
                     const choice = this.pendingChoices.find((c) => c._key === key);
-                    const option = choice?.options?.find((o) => o.value === baseValue || o.label === baseValue);
-                    if (option?.specializations) {
+                    const option = choice?.options.find((o) => o.value === baseValue || o.label === baseValue);
+                    if (Array.isArray(option?.specializations) && option.specializations.length > 0) {
                         this.specializationSelections.set(`${key}::${option.value}`, spec);
                     }
                 }
@@ -237,7 +236,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         context.choices = await Promise.all(
             this.pendingChoices.map(async (choice) => {
                 const choiceKey = choice._key;
-                const selections = this.selections.get(choiceKey) || new Set();
+                const selections = this.selections.get(choiceKey) ?? new Set<string>();
                 const remaining = choice.count - selections.size;
 
                 return {
@@ -248,55 +247,51 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                     count: choice.count,
                     remaining: remaining,
                     options: await Promise.all(
-                        (choice.options || []).map(async (option) => {
-                            const optValue = option.value || option.label || '';
-                            const optLabel = option.label || option.value || '';
-                            let optDesc = option.description || null;
-                            const optSpecs = option.specializations || null;
+                        choice.options.map(async (option) => {
+                            const optValue = option.value ?? option.label ?? '';
+                            const optLabel = option.label ?? option.value ?? '';
+                            let optDesc: string | null = option.description ?? null;
+                            const optSpecs = option.specializations ?? null;
                             let statBlock: string | null = null;
 
                             // Extract UUID from option.uuid OR from grants
-                            let optUuid: string | null = typeof option === 'object' ? option.uuid ?? null : null;
-                            if (!optUuid && typeof option === 'object' && option.grants) {
+                            let optUuid: string | null = option.uuid ?? null;
+                            if (optUuid === null && option.grants !== undefined) {
                                 const grants = option.grants;
                                 const firstTalent = (grants.talents ?? [])[0];
                                 const firstTrait = (grants.traits ?? [])[0];
                                 const firstEquip = (grants.equipment ?? [])[0];
-                                if ((grants.talents?.length ?? 0) > 0 && firstTalent?.uuid) {
+                                if ((grants.talents?.length ?? 0) > 0 && firstTalent?.uuid !== undefined) {
                                     optUuid = firstTalent.uuid;
                                 } else if ((grants.skills?.length ?? 0) > 0) {
                                     const skillData = (grants.skills ?? [])[0];
                                     if (typeof skillData === 'string') {
-                                        optUuid = (await findSkillUuid(skillData, null)) ?? null;
-                                    } else if (skillData) {
-                                        if (skillData.uuid) {
+                                        optUuid = findSkillUuid(skillData, null) ?? null;
+                                    } else if (skillData !== undefined) {
+                                        if (skillData.uuid !== undefined) {
                                             optUuid = skillData.uuid;
                                         } else {
                                             const skillName = skillData.name ?? '';
                                             const specialization = skillData.specialization ?? null;
-                                            optUuid =
-                                                (await (findSkillUuid as unknown as (name: string, spec: string | null) => Promise<string | null>)(
-                                                    skillName,
-                                                    specialization,
-                                                )) ?? null;
+                                            optUuid = findSkillUuid(skillName, specialization) ?? null;
                                         }
                                     }
-                                } else if ((grants.traits?.length ?? 0) > 0 && firstTrait?.uuid) {
+                                } else if ((grants.traits?.length ?? 0) > 0 && firstTrait?.uuid !== undefined) {
                                     optUuid = firstTrait.uuid;
-                                } else if ((grants.equipment?.length ?? 0) > 0 && firstEquip?.uuid) {
+                                } else if ((grants.equipment?.length ?? 0) > 0 && firstEquip?.uuid !== undefined) {
                                     optUuid = firstEquip.uuid;
                                 }
                             }
 
                             // Fetch compendium description and stat block for item-type choices
                             const itemChoiceTypes = new Set(['talent', 'skill', 'equipment', 'gear', 'trait', 'psychicPower']);
-                            if (!optDesc && itemChoiceTypes.has(choice.type ?? '')) {
+                            if (optDesc === null && itemChoiceTypes.has(choice.type ?? '')) {
                                 const resolved = await this._resolveCompendiumItem(optLabel, optUuid);
-                                if (resolved) {
+                                if (resolved !== null) {
                                     const resolvedDoc = resolved as { uuid?: string; system?: { description?: { value?: string } }; type?: string };
-                                    if (!optUuid) optUuid = resolvedDoc.uuid ?? null;
-                                    const rawDesc = resolvedDoc.system?.description?.value || '';
-                                    if (rawDesc) {
+                                    optUuid ??= resolvedDoc.uuid ?? null;
+                                    const rawDesc = resolvedDoc.system?.description?.value ?? '';
+                                    if (rawDesc !== '') {
                                         optDesc = rawDesc;
                                     }
                                     statBlock = this._buildStatBlock(resolved as WH40KItem);
@@ -305,11 +300,12 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
 
                             // Determine if this option is selected
                             const specKey = `${choiceKey}::${optValue}`;
-                            const chosenSpec = this.specializationSelections.get(specKey) || '';
-                            const compositeValue = optSpecs && chosenSpec ? `${optValue} (${chosenSpec})` : optValue;
+                            const chosenSpec = this.specializationSelections.get(specKey) ?? '';
+                            const compositeValue = optSpecs !== null && chosenSpec !== '' ? `${optValue} (${chosenSpec})` : optValue;
                             const isSelected = selections.has(compositeValue);
 
-                            const isPendingSpec = this._pendingSpecOption?.choiceKey === choiceKey && this._pendingSpecOption?.optionValue === optValue;
+                            const pendingSpec = this._pendingSpecOption;
+                            const isPendingSpec = pendingSpec !== null && pendingSpec.choiceKey === choiceKey && pendingSpec.optionValue === optValue;
 
                             return {
                                 value: optValue,
@@ -317,10 +313,10 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                                 description: optDesc,
                                 statBlock: statBlock,
                                 uuid: optUuid,
-                                selected: !!isSelected,
-                                disabled: !isSelected && !isPendingSpec && remaining <= 0,
-                                hasSpecializations: !!optSpecs && optSpecs.length > 0,
-                                specializations: optSpecs || [],
+                                selected: isSelected,
+                                disabled: !isSelected && isPendingSpec !== true && remaining <= 0,
+                                hasSpecializations: optSpecs !== null && optSpecs.length > 0,
+                                specializations: optSpecs ?? [],
                                 chosenSpecialization: chosenSpec,
                                 pendingSpec: isPendingSpec,
                             };
@@ -341,21 +337,21 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @private
      */
     async _resolveCompendiumItem(name: string, uuid?: string | null): Promise<unknown> {
-        if (uuid) {
+        if (uuid !== null && uuid !== undefined) {
             try {
                 const item = await fromUuid(uuid);
-                if (item) return item;
+                if (item !== null) return item;
             } catch {
                 /* fall through to name search */
             }
         }
-        if (!name) return null;
+        if (name === '') return null;
         const nameLower = name.toLowerCase();
         for (const pack of game.packs) {
             if (pack.documentName !== 'Item') continue;
             const index = await pack.getIndex();
-            const match = index.find((e: any) => e.name.toLowerCase() === nameLower);
-            if (match) return pack.getDocument(match._id);
+            const match = index.find((e) => (e as CompendiumIndexEntry).name.toLowerCase() === nameLower);
+            if (match !== undefined) return pack.getDocument((match as CompendiumIndexEntry)._id);
         }
         return null;
     }
@@ -379,43 +375,43 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      */
     _buildStatBlock(item: WH40KItem): string | null {
         const rawSys = item.system as Record<string, unknown> | undefined;
-        if (!rawSys) return null;
+        if (rawSys === undefined) return null;
         const parts: string[] = [];
 
         type AtkData = { type?: string; range?: { value?: number }; rateOfFire?: { single?: number; semi?: number; full?: number } };
         type DmgData = { formula?: string; bonus?: number; type?: string; penetration?: number };
 
         if (item.type === 'weapon') {
-            const atk = (rawSys.attack || {}) as AtkData;
-            const dmg = (rawSys.damage || {}) as DmgData;
-            if (atk.type) parts.push(atk.type === 'melee' ? 'Melee' : 'Ranged');
-            if (rawSys.class) parts.push(String(rawSys.class));
-            if (atk.range?.value) parts.push(`Range ${atk.range.value}m`);
+            const atk = (rawSys.attack ?? {}) as AtkData;
+            const dmg = (rawSys.damage ?? {}) as DmgData;
+            if (typeof atk.type === 'string' && atk.type !== '') parts.push(atk.type === 'melee' ? 'Melee' : 'Ranged');
+            if (typeof rawSys.class === 'string' && rawSys.class !== '') parts.push(rawSys.class);
+            if (typeof atk.range?.value === 'number' && atk.range.value !== 0) parts.push(`Range ${atk.range.value}m`);
             const rof = atk.rateOfFire;
-            if (rof) {
+            if (rof !== undefined) {
                 const modes: string[] = [];
-                if (rof.single) modes.push('S');
-                if (rof.semi) modes.push(`${rof.semi}`);
-                if (rof.full) modes.push(`${rof.full}`);
-                if (modes.length) parts.push(`RoF ${modes.join('/')}`);
+                if (rof.single !== undefined && rof.single !== 0) modes.push('S');
+                if (rof.semi !== undefined && rof.semi !== 0) modes.push(`${rof.semi}`);
+                if (rof.full !== undefined && rof.full !== 0) modes.push(`${rof.full}`);
+                if (modes.length > 0) parts.push(`RoF ${modes.join('/')}`);
             }
-            if (dmg.formula) {
+            if (typeof dmg.formula === 'string' && dmg.formula !== '') {
                 let dmgStr = dmg.formula;
-                if (dmg.bonus) dmgStr += `+${dmg.bonus}`;
-                if (dmg.type) dmgStr += ` ${dmg.type[0].toUpperCase()}`;
+                if (dmg.bonus !== undefined && dmg.bonus !== 0) dmgStr += `+${dmg.bonus}`;
+                if (typeof dmg.type === 'string' && dmg.type !== '') dmgStr += ` ${dmg.type[0].toUpperCase()}`;
                 parts.push(`Dmg ${dmgStr}`);
             }
-            if (dmg.penetration) parts.push(`Pen ${dmg.penetration}`);
+            if (typeof dmg.penetration === 'number' && dmg.penetration !== 0) parts.push(`Pen ${dmg.penetration}`);
             const clip = rawSys.clip as { max?: number } | undefined;
-            if (clip?.max) parts.push(`Clip ${clip.max}`);
-            if (rawSys.reload) parts.push(`Rld ${String(rawSys.reload)}`);
+            if (typeof clip?.max === 'number' && clip.max !== 0) parts.push(`Clip ${clip.max}`);
+            if (typeof rawSys.reload === 'string' && rawSys.reload !== '') parts.push(`Rld ${rawSys.reload}`);
         } else if (item.type === 'armour') {
-            if (rawSys.armourPoints != null) parts.push(`AP ${rawSys.armourPoints}`);
-            if (rawSys.maxAgility != null) parts.push(`Max Ag ${rawSys.maxAgility}`);
-            if (rawSys.coverage) parts.push(String(rawSys.coverage));
+            if (typeof rawSys.armourPoints === 'number') parts.push(`AP ${rawSys.armourPoints}`);
+            if (typeof rawSys.maxAgility === 'number') parts.push(`Max Ag ${rawSys.maxAgility}`);
+            if (typeof rawSys.coverage === 'string' && rawSys.coverage !== '') parts.push(rawSys.coverage);
         }
 
-        if (rawSys.weight) parts.push(`${rawSys.weight} kg`);
+        if (typeof rawSys.weight === 'number' && rawSys.weight !== 0) parts.push(`${rawSys.weight} kg`);
         return parts.length > 0 ? parts.join(' · ') : null;
     }
 
@@ -434,8 +430,8 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @private
      */
     _saveScrollPosition(): void {
-        const list = this.element?.querySelector('.choices-list');
-        this._savedScrollTop = list ? list.scrollTop : 0;
+        const list = this.element.querySelector('.choices-list');
+        this._savedScrollTop = list !== null ? list.scrollTop : 0;
     }
 
     /** @override */
@@ -443,9 +439,9 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         await super._onRender(context, options);
 
         // Restore scroll position after re-render
-        if (this._savedScrollTop) {
-            const list = this.element?.querySelector('.choices-list');
-            if (list) list.scrollTop = this._savedScrollTop;
+        if (this._savedScrollTop !== 0) {
+            const list = this.element.querySelector('.choices-list');
+            if (list !== null) list.scrollTop = this._savedScrollTop;
             this._savedScrollTop = 0;
         }
 
@@ -453,7 +449,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         const selects = this.element.querySelectorAll('select[data-action="selectSpecialization"]');
         for (const select of selects) {
             select.addEventListener('change', (event) => {
-                OriginPathChoiceDialog.#selectSpecialization.call(this, event, select as HTMLElement);
+                void OriginPathChoiceDialog.#selectSpecialization.call(this, event, select as HTMLElement);
             });
         }
     }
@@ -472,11 +468,11 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         const choiceKey = target.dataset.choice;
         const optionValue = target.dataset.option;
 
-        if (!choiceKey || !optionValue) return;
+        if (choiceKey === undefined || optionValue === undefined) return;
 
         // Get the choice config
         const choice = this.pendingChoices.find((c) => c._key === choiceKey);
-        if (!choice) return;
+        if (choice === undefined) return;
 
         const option = choice.options.find((o) => o.value === optionValue);
 
@@ -484,25 +480,25 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         if (!this.selections.has(choiceKey)) {
             this.selections.set(choiceKey, new Set());
         }
-        const selections = this.selections.get(choiceKey)!;
+        const selections = this.selections.get(choiceKey) ?? new Set<string>();
         const specKey = `${choiceKey}::${optionValue}`;
 
         // Build the composite value (includes specialization if present)
-        const chosenSpec = this.specializationSelections.get(specKey) || '';
+        const chosenSpec = this.specializationSelections.get(specKey) ?? '';
         const hasSpecs = (option?.specializations?.length ?? 0) > 0;
-        const compositeValue = hasSpecs && chosenSpec ? `${optionValue} (${chosenSpec})` : optionValue;
+        const compositeValue = hasSpecs && chosenSpec !== '' ? `${optionValue} (${chosenSpec})` : optionValue;
 
         // Find any existing composite for this base option (to remove when deselecting)
         const existingComposite = [...selections].find((v) => v === optionValue || v.startsWith(`${optionValue} (`));
 
         // Toggle selection
-        if (existingComposite) {
+        if (existingComposite !== undefined) {
             selections.delete(existingComposite);
             this.specializationSelections.delete(specKey);
         } else {
             // If this option has specializations but none chosen yet, just re-render
             // to show the dropdown — don't add to selections until spec is picked
-            if (hasSpecs && !chosenSpec) {
+            if (hasSpecs && chosenSpec === '') {
                 this._pendingSpecOption = { choiceKey, optionValue };
                 this._saveScrollPosition();
                 await this.render();
@@ -514,7 +510,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                 selections.add(compositeValue);
             } else if (choice.count === 1) {
                 selections.clear();
-                if (hasSpecs && !chosenSpec) {
+                if (hasSpecs && chosenSpec === '') {
                     this._pendingSpecOption = { choiceKey, optionValue };
                     this._saveScrollPosition();
                     await this.render();
@@ -539,17 +535,17 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      */
     static async #selectSpecialization(this: OriginPathChoiceDialog, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation();
-        const select = target.tagName === 'SELECT' ? (target as HTMLSelectElement) : target.querySelector('select');
-        if (!select) return;
+        const select = target.tagName === 'SELECT' ? (target as HTMLSelectElement) : target.querySelector<HTMLSelectElement>('select');
+        if (select === null) return;
 
         const choiceKey = select.dataset.choice;
         const optionValue = select.dataset.option;
         const specValue = select.value;
 
-        if (!choiceKey || !optionValue || !specValue) return;
+        if (choiceKey === undefined || optionValue === undefined || specValue === '') return;
 
         const choice = this.pendingChoices.find((c) => c._key === choiceKey);
-        if (!choice) return;
+        if (choice === undefined) return;
 
         const specKey = `${choiceKey}::${optionValue}`;
         this.specializationSelections.set(specKey, specValue);
@@ -559,11 +555,11 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         if (!this.selections.has(choiceKey)) {
             this.selections.set(choiceKey, new Set());
         }
-        const selections = this.selections.get(choiceKey)!;
+        const selections = this.selections.get(choiceKey) ?? new Set<string>();
 
         // Remove any existing composite for this base option
         const existing = [...selections].find((v) => v === optionValue || v.startsWith(`${optionValue} (`));
-        if (existing) selections.delete(existing);
+        if (existing !== undefined) selections.delete(existing);
 
         // Add the new composite
         if (selections.size < choice.count) {
@@ -587,7 +583,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     static #confirm(this: OriginPathChoiceDialog, event: Event, target: HTMLElement): void {
         // Validate all choices are complete
         const incomplete = this.pendingChoices.filter((choice) => {
-            const selections = this.selections.get(choice._key) || new Set();
+            const selections = this.selections.get(choice._key) ?? new Set<string>();
             return selections.size < choice.count;
         });
 
@@ -603,11 +599,11 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         }
 
         // Resolve promise with selections
-        if (this._resolvePromise) {
+        if (this._resolvePromise !== null) {
             this._resolvePromise(selectedChoices);
         }
 
-        this.close();
+        void this.close();
     }
 
     /**
@@ -617,10 +613,10 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @private
      */
     static #cancel(this: OriginPathChoiceDialog, event: Event, target: HTMLElement): void {
-        if (this._resolvePromise) {
+        if (this._resolvePromise !== null) {
             this._resolvePromise(null);
         }
-        this.close();
+        void this.close();
     }
 
     /**
@@ -634,11 +630,11 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         event.preventDefault(); // Prevent default button behavior
 
         const uuid = target.dataset.uuid;
-        if (!uuid) return;
+        if (uuid === undefined) return;
 
         try {
             const item = await fromUuid(uuid);
-            if (item) {
+            if (item !== null) {
                 (item as { sheet?: { render: (force?: boolean) => void } }).sheet?.render(true);
             }
         } catch (error) {

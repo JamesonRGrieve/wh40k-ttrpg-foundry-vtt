@@ -5,12 +5,11 @@
 
     Block-partial usage:
         (#>) systems/wh40k-rpg/templates/actor/partial/item-table.hbs
-            rootClass="wh40k-weapontable--border"
             addAction="itemCreate"
             addType="weapon"
             addTitleKey="WH40K.Common.Add"
             headers=(array
-                (object cellClass="table-cell--span2" labelKey="WH40K.Weapon.Name")
+                (object cellClass="tw-col-span-2" labelKey="WH40K.Weapon.Name")
                 (object labelKey="WH40K.Weapon.Class")
                 (object labelKey="WH40K.Weapon.Type")
                 (object labelKey="WH40K.Weapon.Equipped"))
@@ -24,8 +23,7 @@
                         plain object with:
                           labelKey  — i18n key (preferred)
                           label     — literal string fallback
-                          cellClass — class on the header cell
-                                      (default `table-cell`).
+                          cellClass — class on the header cell (optional).
                         The trailing add-action cell is rendered automatically
                         when `addAction` is set; do NOT include it in `headers`.
         addAction     — data-action name for the create button (e.g.
@@ -40,15 +38,15 @@
     Per-system theming: the table border + header background lift via inline
     `<system>:tw-*` variants so each game system gets a distinct visual tone.
 --}}
-<div class="wh40k-table--border tw-rounded-md tw-overflow-hidden dh2e:tw-border-bronze rt:tw-border-amber-700 im:tw-border-crimson{{#if rootClass}} {{rootClass}}{{/if}}">
-    <div class="table-row--head dh2e:tw-bg-bronze/10 rt:tw-bg-amber-700/10 im:tw-bg-crimson/10">
+<div class="tw-rounded-md tw-overflow-hidden dh2e:tw-border-bronze rt:tw-border-amber-700 im:tw-border-crimson{{#if rootClass}} {{rootClass}}{{/if}}" data-table>
+    <div class="dh2e:tw-bg-bronze/10 rt:tw-bg-amber-700/10 im:tw-bg-crimson/10" data-table-header>
         {{#each headers as |header|}}
-            <div class="{{#if header.cellClass}}{{header.cellClass}}{{else}}table-cell{{/if}}">
+            <div class="{{#if header.cellClass}}{{header.cellClass}}{{/if}}">
                 {{#if header.labelKey}}{{localize header.labelKey}}{{else}}{{header.label}}{{/if}}
             </div>
         {{/each}}
         {{#if addAction}}
-            <div class="table-cell--last">
+            <div>
                 <label class="tw-cursor-pointer hover:tw-opacity-100" data-action="{{addAction}}"{{#if addType}} data-type="{{addType}}"{{/if}}{{#if addTitleKey}} title="{{localize addTitleKey}}" aria-label="{{localize addTitleKey}}"{{/if}}>
                     <span class="tw-pt-[3px] tw-pl-[2px] tw-inline-grid tw-opacity-50">{{iconSvg (defaultVal addIconKey 'fa:plus-circle') class="tw-w-3.5 tw-h-3.5"}}</span>
                 </label>

@@ -17,9 +17,9 @@
                           the compact layout.
         rootClass       — extra utility classes appended to the wrapper.
 --}}
-<div class="wh40k-dropzone{{#if hasItems}} wh40k-dropzone--compact{{/if}}{{#if rootClass}} {{rootClass}}{{/if}} tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure" data-action="itemCreate" data-type="{{type}}">
-    <i class="fas {{#if iconClass}}{{iconClass}}{{else}}fa-plus{{/if}} wh40k-dropzone-icon"></i>
-    <span class="wh40k-dropzone-text" data-dropzone-text>
+<div class="tw-group {{#if hasItems}}tw-flex tw-flex-row tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-sm)] tw-px-[var(--wh40k-space-md)]{{else}}tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-m-2 tw-p-4 tw-min-h-[80px]{{/if}}{{#if rootClass}} {{rootClass}}{{/if}} tw-rounded tw-cursor-pointer tw-transition-all tw-border-2 tw-border-dashed tw-border-[var(--wh40k-border-color-light)] tw-bg-[linear-gradient(135deg,rgba(255,255,255,0.02)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.02)_50%,rgba(255,255,255,0.02)_75%,transparent_75%,transparent)] tw-bg-[length:20px_20px] hover:tw-border-gold bc:hover:tw-border-crimson-light dh1e:hover:tw-border-gold-raw-l5 dh2e:hover:tw-border-gold-raw dw:hover:tw-border-accent-combat ow:hover:tw-border-brass-l20 rt:hover:tw-border-gold im:hover:tw-border-failure hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.05)]" data-action="itemCreate" data-type="{{type}}">
+    <i class="fas {{#if iconClass}}{{iconClass}}{{else}}fa-plus{{/if}} {{#if hasItems}}tw-text-[0.9rem]{{else}}tw-text-[2rem]{{/if}} tw-text-[color:var(--wh40k-text-muted)] tw-transition-colors group-hover:tw-text-[color:var(--wh40k-accent-gold)]"></i>
+    <span class="{{#if hasItems}}tw-text-[0.7rem]{{else}}tw-text-xs{{/if}} tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-[0.05em] tw-text-center tw-transition-colors group-hover:tw-text-[color:var(--wh40k-text-light)]" data-dropzone-text>
         {{~#if hasItems~}}
             {{#if compactLabelKey}}{{localize compactLabelKey}}{{else if compactLabel}}{{compactLabel}}{{else if labelKey}}{{localize labelKey}}{{else}}{{label}}{{/if}}
         {{~else~}}

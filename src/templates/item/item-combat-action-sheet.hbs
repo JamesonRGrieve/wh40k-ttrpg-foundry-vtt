@@ -21,14 +21,14 @@
 
         <div class="tw-mt-1 tw-flex tw-flex-wrap tw-items-center tw-gap-1">
           {{!-- Action Type Badge --}}
-          <span class="wh40k-badge wh40k-badge--action-type tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium">
+          <span class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium">
             <i class="fas fa-clock"></i>
             {{item.system.actionTypeLabel}}
           </span>
 
           {{!-- Attack Modifier Badge --}}
           {{#if (ne item.system.attackModifier 0)}}
-          <span class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium {{#if (gt item.system.attackModifier 0)}}wh40k-badge--positive tw-bg-[rgba(34,197,94,0.15)] tw-text-[#86efac]{{else}}wh40k-badge--negative tw-bg-[rgba(248,113,113,0.15)] tw-text-[#fca5a5]{{/if}}">
+          <span class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium {{#if (gt item.system.attackModifier 0)}}tw-bg-[rgba(34,197,94,0.15)] tw-text-[#86efac]{{else}}tw-bg-[rgba(248,113,113,0.15)] tw-text-[#fca5a5]{{/if}}">
             <i class="fas fa-crosshairs"></i>
             Attack {{item.system.attackModifierLabel}}
           </span>

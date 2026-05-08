@@ -1,6 +1,6 @@
 import type { WH40KItem } from '../../documents/item.ts';
-import SystemDataModel from './system-data-model.ts';
 import { isLineVariantContainer } from '../../utils/item-variant-utils.ts';
+import SystemDataModel from './system-data-model.ts';
 
 const { NumberField } = foundry.data.fields;
 

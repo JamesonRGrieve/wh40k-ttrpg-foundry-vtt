@@ -87,7 +87,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Ratio = total enemy threat / party threat
      * @type {Object}
      */
-    static DIFFICULTY_RATINGS = {
+    static DIFFICULTY_RATINGS: Record<string, { maxRatio: number; label: string; color: string }> = {
         trivial: { maxRatio: 0.5, label: 'WH40K.Threat.Trivial', color: '#4ade80' },
         easy: { maxRatio: 0.8, label: 'WH40K.Threat.Low', color: '#84cc16' },
         moderate: { maxRatio: 1.2, label: 'WH40K.Threat.Moderate', color: '#facc15' },
@@ -174,16 +174,14 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         const difficulty = this._getDifficulty(ratio);
 
         // Prepare NPC list with expanded details
-        const npcList = await Promise.all(
-            this.#npcs.map((npc, index) => {
-                return {
-                    ...npc,
-                    index,
-                    totalThreat: npc.threat * npc.count,
-                    threatPercent: totalThreat > 0 ? Math.round(((npc.threat * npc.count) / totalThreat) * 100) : 0,
-                };
-            }),
-        );
+        const npcList = this.#npcs.map((npc, index) => {
+            return {
+                ...npc,
+                index,
+                totalThreat: npc.threat * npc.count,
+                threatPercent: totalThreat > 0 ? Math.round(((npc.threat * npc.count) / totalThreat) * 100) : 0,
+            };
+        });
 
         return {
             ...context,
@@ -202,7 +200,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
             // Difficulty
             difficulty,
-            difficultyLabel: game.i18n.localize(difficulty.label as string),
+            difficultyLabel: game.i18n.localize(difficulty.label),
             difficultyColor: difficulty.color,
             threatRatio: ratio.toFixed(1),
 
@@ -271,9 +269,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
             void (async () => {
                 try {
-                    const data = JSON.parse((e as DragEvent).dataTransfer?.getData('text/plain') ?? '{}');
+                    const data = JSON.parse((e as DragEvent).dataTransfer?.getData('text/plain') ?? '{}') as Record<string, unknown>;
 
-                    if (data.type === 'Actor') {
+                    if ((data.type as string | undefined) === 'Actor') {
                         await this._handleActorDrop(data);
                     }
                 } catch (err) {
@@ -289,15 +287,23 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @private
      */
     async _handleActorDrop(data: Record<string, unknown>): Promise<void> {
-        let actor;
-
-        if (data.uuid) {
-            actor = await (fromUuid as any)(data.uuid);
-        } else if (data.id) {
-            actor = game.actors.get(data.id as string);
+        interface DroppedActor {
+            uuid: string;
+            name: string;
+            img: string | null;
+            type: string;
+            system: { threatLevel?: number };
         }
 
-        if (!actor) {
+        let actor: DroppedActor | null = null;
+
+        if (data.uuid !== undefined) {
+            actor = (await fromUuid(data.uuid as string)) as DroppedActor | null;
+        } else if (data.id !== undefined) {
+            actor = (game.actors.get(data.id as string) as unknown as DroppedActor | undefined) ?? null;
+        }
+
+        if (actor === null) {
             ui.notifications.warn('Could not find the dropped actor.');
             return;
         }
@@ -310,14 +316,14 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         // Check if already in list
         const existing = this.#npcs.find((n) => n.uuid === actor.uuid);
-        if (existing) {
+        if (existing !== undefined) {
             existing.count++;
         } else {
             this.#npcs.push({
                 uuid: actor.uuid,
                 name: actor.name,
-                img: actor.img || 'icons/svg/mystery-man.svg',
-                threat: actor.system.threatLevel || 5,
+                img: actor.img ?? 'icons/svg/mystery-man.svg',
+                threat: actor.system.threatLevel ?? 5,
                 count: 1,
             });
         }
@@ -335,13 +341,13 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @returns {Object} Difficulty rating.
      * @private
      */
-    _getDifficulty(ratio: number): Record<string, unknown> {
+    _getDifficulty(ratio: number): { key: string; maxRatio: number; label: string; color: string } {
         for (const [key, rating] of Object.entries(EncounterBuilder.DIFFICULTY_RATINGS)) {
             if (ratio <= rating.maxRatio) {
                 return { key, ...rating };
             }
         }
-        return { key: 'apocalyptic', ...EncounterBuilder.DIFFICULTY_RATINGS.apocalyptic };
+        return { key: 'apocalyptic', ...EncounterBuilder.DIFFICULTY_RATINGS['apocalyptic'] };
     }
 
     /**
@@ -369,16 +375,21 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addNPC(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #addNPC(this: EncounterBuilder, event: Event, target: HTMLElement): Promise<void> {
         // Show a simple actor picker
-        const actors = game.actors.filter((a: { type: string }) => a.type === 'npc' || a.type === 'npcV2');
+        const actors = game.actors.filter((a) => (a as { type: string }).type === 'npc' || (a as { type: string }).type === 'npcV2');
 
         if (actors.length === 0) {
             ui.notifications.warn('No NPC actors found in the world.');
             return;
         }
 
-        const options = actors.map((a: { uuid: string; name: string }) => `<option value="${a.uuid}">${a.name}</option>`).join('');
+        const options = actors
+            .map((a) => {
+                const npcOption = a as { uuid: string; name: string };
+                return `<option value="${npcOption.uuid}">${npcOption.name}</option>`;
+            })
+            .join('');
 
         const content = `
       <form>
@@ -393,7 +404,11 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
       </form>
     `;
 
-        const result = await (Dialog as any).prompt({
+        interface PromptResult {
+            uuid: string;
+            count: number;
+        }
+        const result = await (Dialog as unknown as { prompt: (opts: Record<string, unknown>) => Promise<PromptResult | null> }).prompt({
             title: 'Add NPC',
             content,
             label: 'Add',
@@ -407,25 +422,30 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             rejectClose: false,
         });
 
-        if (!result) return;
+        if (result === null) return;
 
-        const actor = await (fromUuid as any)(result.uuid);
-        if (!actor) return;
+        interface AddedActor {
+            name: string;
+            img: string | null;
+            system: { threatLevel?: number };
+        }
+        const actor = (await fromUuid(result.uuid)) as AddedActor | null;
+        if (actor === null) return;
 
-        const existing = this.#npcs.find((n: { uuid: string }) => n.uuid === result.uuid);
-        if (existing) {
+        const existing = this.#npcs.find((n) => n.uuid === result.uuid);
+        if (existing !== undefined) {
             existing.count += result.count;
         } else {
             this.#npcs.push({
                 uuid: result.uuid,
                 name: actor.name,
-                img: actor.img || 'icons/svg/mystery-man.svg',
-                threat: actor.system.threatLevel || 5,
+                img: actor.img ?? 'icons/svg/mystery-man.svg',
+                threat: actor.system.threatLevel ?? 5,
                 count: result.count,
             });
         }
 
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] });
     }
 
     /**
@@ -433,12 +453,12 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #removeNPC(this: any, event: Event, target: HTMLElement): void {
+    static #removeNPC(this: EncounterBuilder, event: Event, target: HTMLElement): void {
         const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index) || index < 0 || index >= this.#npcs.length) return;
 
         this.#npcs.splice(index, 1);
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] });
     }
 
     /**
@@ -446,17 +466,17 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #adjustCount(this: any, event: Event, target: HTMLElement): void {
+    static #adjustCount(this: EncounterBuilder, event: Event, target: HTMLElement): void {
         const index = parseInt(target.dataset.index ?? '', 10);
         const delta = parseInt(target.dataset.delta ?? '', 10);
 
         if (isNaN(index) || isNaN(delta)) return;
 
+        // index is bounds-checked above
         const npc = this.#npcs[index];
-        if (!npc) return;
 
         npc.count = Math.max(1, Math.min(20, npc.count + delta));
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] });
     }
 
     /**
@@ -464,9 +484,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #clearAll(this: any, event: Event, target: HTMLElement): void {
+    static #clearAll(this: EncounterBuilder, event: Event, target: HTMLElement): void {
         this.#npcs = [];
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] });
     }
 
     /**
@@ -474,13 +494,13 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #saveTemplate(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #saveTemplate(this: EncounterBuilder, event: Event, target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
             ui.notifications.warn('No NPCs to save.');
             return;
         }
 
-        const name = await (Dialog as any).prompt({
+        const name = await (Dialog as unknown as { prompt: (opts: Record<string, unknown>) => Promise<string | null> }).prompt({
             title: 'Save Encounter Template',
             content: '<form><div class="form-group"><label>Template Name</label><input type="text" name="name" placeholder="My Encounter"/></div></form>',
             label: 'Save',
@@ -488,7 +508,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             rejectClose: false,
         });
 
-        if (!name) return;
+        if (name === null || name === '') return;
 
         this.#templates.push({
             name,
@@ -498,7 +518,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         });
 
         ui.notifications.info(`Saved encounter template: ${name}`);
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] });
     }
 
     /**
@@ -506,18 +526,16 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #loadTemplate(this: any, event: Event, target: HTMLElement): void {
+    static #loadTemplate(this: EncounterBuilder, event: Event, target: HTMLElement): void {
         const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index) || index < 0 || index >= this.#templates.length) return;
 
         const template = this.#templates[index];
         this.#npcs = foundry.utils.deepClone(template.npcs);
-        if (template.party) {
-            this.#party = foundry.utils.deepClone(template.party);
-        }
+        this.#party = foundry.utils.deepClone(template.party);
 
         ui.notifications.info(`Loaded encounter: ${template.name}`);
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] });
     }
 
     /**
@@ -525,24 +543,35 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #deployToCombat(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #deployToCombat(this: EncounterBuilder, event: Event, target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
             ui.notifications.warn('No NPCs to deploy.');
             return;
         }
 
-        // Ensure combat exists
-        let combat = game.combat;
-        if (!combat) {
-            combat = await (Combat as any).create({ scene: game.scenes.active?.id } as Record<string, unknown>);
+        interface CombatLike {
+            createEmbeddedDocuments(type: string, data: Record<string, unknown>[]): Promise<unknown>;
         }
-        if (!combat) return;
+        interface CombatConstructor {
+            create(data: Record<string, unknown>): Promise<CombatLike | null>;
+        }
+        interface DeployActor {
+            id: string;
+            name: string;
+            img: string;
+            getTokenDocument(data: Record<string, unknown>): Promise<unknown>;
+        }
+
+        // Ensure combat exists
+        let combat = game.combat as CombatLike | null;
+        combat ??= await (Combat as unknown as CombatConstructor).create({ scene: game.scenes.active?.id });
+        if (combat === null) return;
 
         const combatants: Record<string, unknown>[] = [];
 
         for (const npcEntry of this.#npcs) {
-            const actor = await (fromUuid as any)(npcEntry.uuid);
-            if (!actor) continue;
+            const actor = (await fromUuid(npcEntry.uuid)) as DeployActor | null;
+            if (actor === null) continue;
 
             for (let i = 0; i < npcEntry.count; i++) {
                 // Create token data (side-effect: validates token document)
@@ -559,7 +588,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             }
         }
 
-        await (combat as any).createEmbeddedDocuments('Combatant', combatants);
+        await combat.createEmbeddedDocuments('Combatant', combatants);
 
         ui.notifications.info(game.i18n.format('WH40K.NPC.Encounter.Deployed', { count: String(combatants.length) }));
     }
@@ -569,12 +598,12 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #openNPC(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #openNPC(this: EncounterBuilder, event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
-        if (!uuid) return;
+        if (uuid === undefined || uuid === '') return;
 
-        const actor = await (fromUuid as any)(uuid);
-        if (actor) {
+        const actor = (await fromUuid(uuid)) as { sheet?: { render(force: boolean): void } } | null;
+        if (actor?.sheet !== undefined) {
             actor.sheet.render(true);
         }
     }
@@ -600,23 +629,23 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         if (typeof actorOrUuid === 'string') {
             uuid = actorOrUuid;
-            actor = (await (fromUuid as any)(uuid)) as ActorLike | null;
+            actor = (await fromUuid(uuid)) as ActorLike | null;
         } else {
             actor = actorOrUuid as ActorLike;
             uuid = actor.uuid;
         }
 
-        if (!actor) return;
+        if (actor === null) return;
 
-        const existing = this.#npcs.find((n: { uuid: string }) => n.uuid === uuid);
-        if (existing) {
+        const existing = this.#npcs.find((n) => n.uuid === uuid);
+        if (existing !== undefined) {
             existing.count += count;
         } else {
             this.#npcs.push({
                 uuid,
                 name: actor.name,
-                img: actor.img || 'icons/svg/mystery-man.svg',
-                threat: actor.system.threatLevel || 5,
+                img: actor.img,
+                threat: actor.system.threatLevel ?? 5,
                 count,
             });
         }
