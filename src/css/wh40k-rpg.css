@@ -387,26 +387,7 @@ body.theme-dark {
 
 /* Text Colors - Use Foundry variables with accent overrides */
 
-.wh40k-text-primary {
-    color: var(--color-text-primary);
-}
-
-.wh40k-text-secondary {
-    color: var(--color-text-secondary);
-}
-
 /* Background Colors */
-.wh40k-bg-primary {
-    background: var(--color-bg-primary);
-}
-
-.wh40k-bg-secondary {
-    background: var(--color-bg-secondary);
-}
-
-.wh40k-bg-tertiary {
-    background: var(--color-bg-tertiary);
-}
 
 /* Spacing, flex, and gap utilities removed — use Tailwind tw-* classes instead */
 
@@ -606,61 +587,11 @@ body.theme-dark {
 
 /* Vital stat header */
 
-.wh40k-vital-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--vital-color, var(--wh40k-text-secondary));
-    white-space: nowrap;
-
-    i {
-        font-size: 0.75rem;
-    }
-}
-
 /* Vital stat body */
 
 /* ============================================ */
 /* RT-DROPZONE - Drag-Drop Target Areas */
 /* ============================================ */
-
-.wh40k-dropzone {
-    @apply tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-m-2 tw-p-4 tw-rounded tw-cursor-pointer tw-transition-all tw-min-h-[80px];
-    border: 2px dashed var(--wh40k-border-color-light);
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.02) 25%,
-        transparent 25%,
-        transparent 50%,
-        rgba(255, 255, 255, 0.02) 50%,
-        rgba(255, 255, 255, 0.02) 75%,
-        transparent 75%,
-        transparent
-    );
-    background-size: 20px 20px;
-    cursor: pointer;
-    transition: all var(--wh40k-transition-base);
-    min-height: 80px;
-
-    &:hover {
-        border-color: var(--wh40k-accent-gold);
-        background-color: rgb(from var(--wh40k-accent-gold) r g b / 0.05);
-    }
-
-    /* Compact variant when items exist */
-    &.has-items {
-        padding: var(--wh40k-space-sm) var(--wh40k-space-md);
-        flex-direction: row;
-        gap: var(--wh40k-space-xs);
-        min-height: auto;
-    }
-
-    /* Active drag-over state */
-}
 
 /* Small variant (for inline use) */
 
@@ -675,57 +606,6 @@ body.theme-dark {
 /* These can be removed once all templates are updated */
 
 /* Button aliases — properties duplicated from their target classes above */
-.wh40k-vital-btn {
-    /* from .wh40k-btn-control (inherits base button styles via shared selector above) */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--wh40k-space-xs);
-    padding: 0;
-    margin: 0;
-    background: var(--wh40k-btn-bg);
-    border: 1px solid var(--color-border-secondary);
-    border-radius: 6px;
-    color: var(--color-text-primary);
-    font-family: inherit;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all var(--wh40k-transition-fast);
-    text-decoration: none;
-    white-space: nowrap;
-    user-select: none;
-    width: 28px;
-    height: 28px;
-    font-size: 1rem;
-
-    &:hover:not(:disabled) {
-        background: var(--wh40k-btn-bg-hover);
-        border-color: var(--color-border-highlight);
-        transform: scale(1.08);
-        box-shadow: 0 2px 6px var(--wh40k-shadow-soft);
-    }
-
-    &:active:not(:disabled) {
-        transform: scale(0.95);
-    }
-
-    &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--wh40k-gold);
-        outline-offset: 1px;
-    }
-
-    i,
-    .fas,
-    .far,
-    .fa {
-        line-height: 1;
-    }
-}
 
 /* Note: These aliases ensure existing templates work while migration happens */
 
@@ -1228,16 +1108,6 @@ body.theme-dark {
 /* ============================================ */
 /* FORM FIELDS */
 /* ============================================ */
-
-.wh40k-field-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-
-    &:last-child {
-        margin-bottom: 0;
-    }
-}
 
 /* ============================================ */
 /* AMMO DISPLAY */
@@ -2263,17 +2133,6 @@ body.theme-dark {
     /* ABILITIES TAB */
     /* ============================================ */
 
-    .wh40k-dropzone {
-        border: 2px dashed var(--color-border-secondary, #444);
-        border-radius: 6px;
-        transition: all var(--wh40k-transition-base);
-
-        &.drag-over {
-            border-color: var(--npc-accent-primary);
-            background: rgb(from var(--npc-accent-primary) r g b / 0.1);
-        }
-    }
-
     /* ============================================ */
     /* EMPTY STATES */
     /* ============================================ */
@@ -2845,8 +2704,7 @@ body.theme-dark {
     /* ============================================ */
 
     /* Header container - auto height, overflow for HUD dropdowns */
-    .wh40k-character-header,
-    .wh40k-header {
+    .wh40k-character-header {
         flex: 0 0 auto !important;
         overflow: visible !important;
         z-index: 10 !important;
@@ -3432,10 +3290,6 @@ body.theme-dark {
         }
 
         /* Roll cards */
-        .wh40k-roll-card {
-            background: var(--wh40k-panel-bg-solid) !important;
-            border-color: var(--wh40k-gold) !important;
-        }
 
         /* Item cards */
     }
