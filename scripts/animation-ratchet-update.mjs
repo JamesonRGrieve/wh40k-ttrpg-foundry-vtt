@@ -3,14 +3,28 @@
 // Run after a deliberate reduction (template port from monolith animation rule
 // to `tw-animate-<name>`) to update the gate.
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 
-const MONOLITH = 'src/css/wh40k-rpg.css';
-const text = readFileSync(MONOLITH, 'utf8');
-const current = (text.match(/^\s*animation(?:-name)?\s*:/gm) ?? []).length;
+function walk(dir) {
+    const out = [];
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        const full = join(dir, entry.name);
+        if (entry.isDirectory()) out.push(...walk(full));
+        else if (entry.name.endsWith('.css')) out.push(full);
+    }
+    return out;
+}
+const SOURCES = walk('src/css').filter((p) => p !== 'src/css/entry.css').sort();
+
+let current = 0;
+for (const path of SOURCES) {
+    const text = readFileSync(path, 'utf8');
+    current += (text.match(/^\s*animation(?:-name)?\s*:/gm) ?? []).length;
+}
 writeFileSync('.animation-coverage.json', JSON.stringify({
     generatedAt: new Date().toISOString(),
-    monolith: MONOLITH,
+    sources: SOURCES,
     animationDeclarations: current,
 }, null, 2) + '\n');
 writeFileSync('.animation-baseline', `${current}\n`);

@@ -14,8 +14,6 @@
     "lint:ratchet": "node scripts/lint-ratchet.mjs",
     "lint:ratchet:update": "node scripts/lint-ratchet.mjs --update",
     "css:coverage": "node scripts/css-coverage.mjs",
-    "css:block-index": "node scripts/css-block-index.mjs",
-    "css:block": "node scripts/css-block.mjs",
     "css:ratchet": "node scripts/css-ratchet.mjs",
     "css:ratchet:update": "node scripts/css-ratchet.mjs --update",
     "animation:coverage": "node scripts/animation-coverage.mjs",
