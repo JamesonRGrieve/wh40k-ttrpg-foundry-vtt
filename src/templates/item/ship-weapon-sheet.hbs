@@ -1,4 +1,4 @@
-<div class="wh40k-item-sheet ship-weapon tw-flex tw-flex-col tw-h-full tw-overflow-hidden tw-bg-[var(--wh40k-sheet-bg)] tw-text-[var(--wh40k-text-dark)]">
+<div class="wh40k-item-sheet tw-flex tw-flex-col tw-h-full tw-overflow-hidden tw-bg-[var(--wh40k-sheet-bg)] tw-text-[var(--wh40k-text-dark)]">
     <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0 tw-overflow-hidden">
         {{!-- Item Header (canonical partial) --}}
         {{> systems/wh40k-rpg/templates/item/panel/item-header.hbs
@@ -22,10 +22,10 @@
             <div class="tab active" data-tab="details" data-group="primary">
                 <!-- Weapon Properties -->
                 <div class="wh40k-panel tw-mb-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden">
-                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
                         <h3><i class="fas fa-crosshairs"></i> Weapon Properties</h3>
                     </div>
-                    <div class="wh40k-panel__content tw-p-3">
+                    <div class="tw-p-3">
                         <div class="form-group">
                             <label>{{localize "WH40K.ShipWeapon.Type"}}</label>
                             <select name="system.weaponType">
@@ -59,10 +59,10 @@
 
                 <!-- Weapon Stats -->
                 <div class="wh40k-panel tw-mb-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden">
-                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
                         <h3><i class="fas fa-dice-d20"></i> Weapon Statistics</h3>
                     </div>
-                    <div class="wh40k-panel__content tw-p-3">
+                    <div class="tw-p-3">
                         <div class="form-row tw-flex tw-gap-2">
                             <div class="form-group">
                                 <label>Strength</label>
@@ -89,10 +89,10 @@
 
                 <!-- Resource Requirements -->
                 <div class="wh40k-panel tw-mb-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden">
-                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
                         <h3><i class="fas fa-battery-half"></i> Resource Requirements</h3>
                     </div>
-                    <div class="wh40k-panel__content tw-p-3">
+                    <div class="tw-p-3">
                         <div class="form-row tw-flex tw-gap-2">
                             <div class="form-group">
                                 <label>Power</label>
@@ -112,10 +112,10 @@
 
                 <!-- Special Qualities -->
                 <div class="wh40k-panel tw-mb-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden">
-                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
                         <h3><i class="fas fa-star"></i> Special Qualities</h3>
                     </div>
-                    <div class="wh40k-panel__content tw-p-3">
+                    <div class="tw-p-3">
                         <p class="hint">Enter special qualities as comma-separated values (e.g., "guided, accurate")</p>
                         <input type="text" name="system.special" value="{{join system.special ','}}" placeholder="guided, accurate, etc." />
                     </div>
@@ -123,20 +123,20 @@
 
                 <!-- Notes -->
                 <div class="wh40k-panel tw-mb-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden">
-                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
                         <h3><i class="fas fa-sticky-note"></i> Notes</h3>
                     </div>
-                    <div class="wh40k-panel__content tw-p-3">
+                    <div class="tw-p-3">
                         <textarea name="system.notes" rows="4">{{system.notes}}</textarea>
                     </div>
                 </div>
 
                 <!-- Description -->
                 <div class="wh40k-panel tw-mb-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden">
-                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
                         <h3><i class="fas fa-scroll"></i> Description</h3>
                     </div>
-                    <div class="wh40k-panel__content tw-p-3">
+                    <div class="tw-p-3">
                         {{#if inEditMode}}
                           {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
                         {{else}}
