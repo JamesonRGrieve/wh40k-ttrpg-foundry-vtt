@@ -1,25 +1,25 @@
 <div class="wh40k-item-sheet tw-flex tw-flex-col tw-h-full tw-overflow-hidden tw-bg-[var(--wh40k-sheet-bg)] tw-text-[var(--wh40k-text-dark)]">
     <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
         <!-- Item Header -->
-        <header class="wh40k-item-header tw-grid tw-gap-3 tw-px-4 tw-py-3 tw-shrink-0 tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-border-b-2 tw-border-gold-dark" style="grid-template-columns: 80px 1fr;">
-            <div class="wh40k-item-image tw-w-20 tw-h-20 tw-rounded-md tw-overflow-hidden tw-cursor-pointer tw-shrink-0 tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105 hover:tw-shadow-[var(--wh40k-shadow-lg),0_0_20px_rgba(212,175,55,0.5)]" data-edit="img">
+        <header class="tw-grid tw-gap-3 tw-px-4 tw-py-3 tw-shrink-0 tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-border-b-2 tw-border-gold-dark" style="grid-template-columns: 80px 1fr;">
+            <div class="tw-w-20 tw-h-20 tw-rounded-md tw-overflow-hidden tw-cursor-pointer tw-shrink-0 tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105 hover:tw-shadow-[var(--wh40k-shadow-lg),0_0_20px_rgba(212,175,55,0.5)]" data-edit="img">
                 <img src="{{item.img}}" alt="{{item.name}}" title="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
             </div>
 
-            <div class="wh40k-item-title tw-flex tw-flex-col tw-justify-center tw-gap-1 tw-min-w-0">
-                <input type="text" class="wh40k-item-title__name tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-px-1 tw-py-0.5" name="name" value="{{item.name}}" placeholder="Psychic Power Name" />
-                <div class="wh40k-item-title__type tw-flex tw-items-center tw-gap-2 tw-text-sm tw-opacity-70 tw-uppercase tw-tracking-wide">
+            <div class="tw-flex tw-flex-col tw-justify-center tw-gap-1 tw-min-w-0">
+                <input type="text" class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-px-1 tw-py-0.5" name="name" value="{{item.name}}" placeholder="Psychic Power Name" />
+                <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-opacity-70 tw-uppercase tw-tracking-wide">
                     <i class="fas fa-brain tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
                     <span>{{item.system.discipline}} Power</span>
                 </div>
-                <div class="wh40k-item-meta tw-flex tw-flex-wrap tw-gap-1 tw-mt-1 tw-items-center">
+                <div class="tw-flex tw-flex-wrap tw-gap-1 tw-mt-1 tw-items-center">
                     {{#if item.system.subtype}}
-                    <span class="wh40k-meta-badge wh40k-meta-badge--psychic tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
+                    <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
                         <i class="fas fa-tags"></i> {{item.system.subtype}}
                     </span>
                     {{/if}}
                     {{#if item.system.source}}
-                    <span class="wh40k-meta-badge wh40k-meta-badge--source tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
+                    <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
                         <i class="fas fa-book"></i> {{item.system.source}}
                     </span>
                     {{/if}}
@@ -91,41 +91,41 @@
             <!-- Power Tab -->
             <div class="tab active" data-tab="power" data-group="primary">
                 <div class="wh40k-panel tw-rounded-lg tw-mb-3 tw-overflow-hidden">
-                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
                         <h3 class="tw-m-0 tw-font-display tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-wide tw-text-sm"><i class="fas fa-brain tw-mr-2 tw-opacity-80"></i> Power Details</h3>
                     </div>
-                    <div class="wh40k-panel__content tw-p-3">
+                    <div class="tw-p-3">
                         <div class="tw-grid tw-grid-cols-3 tw-gap-3">
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Discipline</label>
-                                <input type="text" class="wh40k-field__input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.discipline" value="{{item.system.discipline}}" placeholder="e.g., Telepathy" />
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Discipline</label>
+                                <input type="text" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.discipline" value="{{item.system.discipline}}" placeholder="e.g., Telepathy" />
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">XP Cost</label>
-                                <input type="number" class="wh40k-field__input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.cost" value="{{item.system.cost}}" />
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">XP Cost</label>
+                                <input type="number" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.cost" value="{{item.system.cost}}" />
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Source</label>
-                                <input type="text" class="wh40k-field__input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.source" value="{{item.system.source}}" />
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Source</label>
+                                <input type="text" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.source" value="{{item.system.source}}" />
                             </div>
                         </div>
 
                         <div class="tw-grid tw-grid-cols-3 tw-gap-3 tw-mt-4">
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Action</label>
-                                <select class="wh40k-field__select tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.action">
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Action</label>
+                                <select class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.action">
                                     {{selectOptions (arrayToObject dh.combat.action_speeds) selected=item.system.action}}
                                 </select>
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Sustained</label>
-                                <select class="wh40k-field__select tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.sustained">
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Sustained</label>
+                                <select class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.sustained">
                                     {{selectOptions (arrayToObject dh.combat.sustained_speeds) selected=item.system.sustained}}
                                 </select>
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Subtype</label>
-                                <select class="wh40k-field__select tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.subtype">
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Subtype</label>
+                                <select class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.subtype">
                                     {{selectOptions (arrayToObject dh.combat.psychic_subtypes) selected=item.system.subtype}}
                                 </select>
                             </div>
@@ -133,42 +133,42 @@
 
                         <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-mt-4">
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Range</label>
-                                <input type="text" class="wh40k-field__input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.range" value="{{item.system.range}}" placeholder="e.g., 10m x PR" />
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Range</label>
+                                <input type="text" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.range" value="{{item.system.range}}" placeholder="e.g., 10m x PR" />
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Prerequisites</label>
-                                <input type="text" class="wh40k-field__input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.prerequisites" value="{{item.system.prerequisites}}" />
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Prerequisites</label>
+                                <input type="text" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.prerequisites" value="{{item.system.prerequisites}}" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="wh40k-panel tw-rounded-lg tw-mb-3 tw-overflow-hidden">
-                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
                         <h3 class="tw-m-0 tw-font-display tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-wide tw-text-sm"><i class="fas fa-crosshairs tw-mr-2 tw-opacity-80"></i> Focus Test</h3>
                     </div>
-                    <div class="wh40k-panel__content tw-p-3">
+                    <div class="tw-p-3">
                         <div class="tw-grid tw-grid-cols-3 tw-gap-3">
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Bonus</label>
-                                <input type="text" class="wh40k-field__input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.target.bonus" value="{{item.system.target.bonus}}" placeholder="+0" />
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Bonus</label>
+                                <input type="text" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.target.bonus" value="{{item.system.target.bonus}}" placeholder="+0" />
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Use Skill</label>
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Use Skill</label>
                                 <div class="tw-pt-2">
                                     <input type="checkbox" name="system.target.useSkill" {{checked item.system.target.useSkill}} />
                                 </div>
                             </div>
                             {{#if item.system.target.useSkill}}
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Skill</label>
-                                <input type="text" class="wh40k-field__input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.target.skill" value="{{item.system.target.skill}}" />
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Skill</label>
+                                <input type="text" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.target.skill" value="{{item.system.target.skill}}" />
                             </div>
                             {{else}}
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Characteristic</label>
-                                <select class="wh40k-field__select tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.target.characteristic">
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Characteristic</label>
+                                <select class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.target.characteristic">
                                     {{selectOptions dh.combat.characteristics selected=item.system.target.characteristic}}
                                 </select>
                             </div>
@@ -177,26 +177,26 @@
 
                         <div class="tw-grid tw-grid-cols-3 tw-gap-3 tw-mt-4">
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Is Opposed</label>
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Is Opposed</label>
                                 <div class="tw-pt-2">
                                     <input type="checkbox" name="system.target.isOpposed" {{checked item.system.target.isOpposed}} />
                                 </div>
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Use Opposed Skill</label>
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Use Opposed Skill</label>
                                 <div class="tw-pt-2">
                                     <input type="checkbox" name="system.target.useOpposedSkill" {{checked item.system.target.useOpposedSkill}} />
                                 </div>
                             </div>
                             {{#if item.system.target.useOpposedSkill}}
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Opposed Skill</label>
-                                <input type="text" class="wh40k-field__input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.target.opposedSkill" value="{{item.system.target.opposedSkill}}" />
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Opposed Skill</label>
+                                <input type="text" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.target.opposedSkill" value="{{item.system.target.opposedSkill}}" />
                             </div>
                             {{else}}
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Opposed Characteristic</label>
-                                <select class="wh40k-field__select tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.target.opposed">
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Opposed Characteristic</label>
+                                <select class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.target.opposed">
                                     {{selectOptions dh.combat.characteristics selected=item.system.target.opposed}}
                                 </select>
                             </div>
@@ -209,45 +209,45 @@
             <!-- Damage Tab -->
             <div class="tab" data-tab="damage" data-group="primary">
                 <div class="wh40k-panel tw-rounded-lg tw-mb-3 tw-overflow-hidden">
-                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
                         <h3 class="tw-m-0 tw-font-display tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-wide tw-text-sm"><i class="fas fa-burst tw-mr-2 tw-opacity-80"></i> Damage</h3>
                     </div>
-                    <div class="wh40k-panel__content tw-p-3">
+                    <div class="tw-p-3">
                         <div class="tw-grid tw-grid-cols-4 tw-gap-3">
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Attack Type</label>
-                                <select class="wh40k-field__select tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.attackType">
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Attack Type</label>
+                                <select class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.attackType">
                                     {{selectOptions (arrayToObject dh.combat.psychic_attacks) selected=item.system.attackType}}
                                 </select>
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Damage</label>
-                                <input type="text" class="wh40k-field__input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.damage" value="{{item.system.damage}}" placeholder="e.g., 1d10+PR" />
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Damage</label>
+                                <input type="text" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.damage" value="{{item.system.damage}}" placeholder="e.g., 1d10+PR" />
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Type</label>
-                                <select class="wh40k-field__select tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.damageType">
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Type</label>
+                                <select class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-cursor-pointer" name="system.damageType">
                                     {{selectOptions (arrayToObject dh.combat.damage_types) selected=item.system.damageType}}
                                 </select>
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-1">
-                                <label class="wh40k-field__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Penetration</label>
-                                <input type="text" class="wh40k-field__input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.penetration" value="{{item.system.penetration}}" placeholder="0" />
+                                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Penetration</label>
+                                <input type="text" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.penetration" value="{{item.system.penetration}}" placeholder="0" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="wh40k-panel tw-rounded-lg tw-mb-3 tw-overflow-hidden">
-                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
                         <h3 class="tw-m-0 tw-font-display tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-wide tw-text-sm"><i class="fas fa-star tw-mr-2 tw-opacity-80"></i> Attack Specials</h3>
-                        <div class="wh40k-panel__actions tw-flex tw-gap-1">
-                            <button type="button" class="wh40k-btn wh40k-btn--primary add-quality tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-1 tw-rounded-md tw-cursor-pointer tw-text-sm">
+                        <div class="tw-flex tw-gap-1">
+                            <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-1 tw-rounded-md tw-cursor-pointer tw-text-sm">
                                 <i class="fas fa-plus"></i> Add Special
                             </button>
                         </div>
                     </div>
-                    <div class="wh40k-panel__content tw-p-3">
+                    <div class="tw-p-3">
                         <div class="tw-flex tw-flex-wrap tw-gap-1">
                             {{#each item.items as |embedded|}}
                             {{#if embedded.isAttackSpecial}}
@@ -261,7 +261,7 @@
                         </div>
 
                         {{#unless item.items.length}}
-                        <p class="wh40k-empty-state tw-text-center tw-p-4 tw-italic tw-rounded-md">No attack specials. Drag attack specials here to add them.</p>
+                        <p class="tw-text-center tw-p-4 tw-italic tw-rounded-md">No attack specials. Drag attack specials here to add them.</p>
                         {{/unless}}
                     </div>
                 </div>
@@ -270,11 +270,11 @@
             <!-- Description Tab -->
             <div class="tab" data-tab="description" data-group="primary">
                 <div class="wh40k-panel tw-rounded-lg tw-mb-3 tw-overflow-hidden">
-                    <div class="wh40k-panel__header tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
+                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
                         <h3 class="tw-m-0 tw-font-display tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-wide tw-text-sm"><i class="fas fa-scroll tw-mr-2 tw-opacity-80"></i> Description</h3>
                     </div>
-                    <div class="wh40k-panel__content tw-p-3">
-                        <div class="wh40k-description tw-rounded-md tw-p-3 tw-min-h-[80px]">
+                    <div class="tw-p-3">
+                        <div class="tw-rounded-md tw-p-3 tw-min-h-[80px]">
                             {{#if inEditMode}}
                               {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
                             {{else}}
