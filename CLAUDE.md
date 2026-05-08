@@ -60,31 +60,36 @@ Every direction in the previous section is backed by a coverage script and a rat
 
 The hard gates (preload-drift, i18n) cannot be ratcheted because regression is a real bug, not a velocity tradeoff. Fix the underlying issue.
 
-### CSS migration tooling
+### CSS architecture
 
-The CSS pipeline is an in-progress migration from a single concatenated monolith (`src/css/wh40k-rpg.css`) toward inline Tailwind utilities. The monolith preserves original component boundaries via `/* ── source: <path> ── */` markers.
+Styling is now expressed almost entirely through Tailwind configuration patterns. The complete inventory of CSS-bearing files in this repo:
 
-- `pnpm css:coverage` — classifies every `.hbs` template as `tailwind-only`, `mixed`, or `css-only`. Output at `.css-coverage.json`.
-- `pnpm css:block-index` — parses the monolith markers into `.css-blocks.json` (which source path occupies which line range). Refreshed automatically pre-commit.
-- `pnpm css:block list` — list every source path still present in the monolith.
-- `pnpm css:block show <source>` — print the rule block for a source path.
-- `pnpm css:block delete <source>` — remove every range for a source path. Run only after every consumer template has been ported (verified by grepping the relevant classes).
-- The CSS variable → Tailwind utility translation map is `scripts/css-token-map.json`. Extend this file when a new variable becomes worth a token rather than re-deriving on every port.
-- The full migration recipe lives in `docs/tailwind-migration.md` — read it before porting templates.
+- `src/css/entry.css` — sole CSS source. Twelve lines: Google Fonts `@import url(...)` + the three `@tailwind base/components/utilities` directives. Do not add rules here.
+- `tailwind.config.js` — Tailwind v3 config with `important: '.wh40k-rpg'` (utility specificity) and `prefix: 'tw-'` (utility namespace). Animations live under `theme.extend.keyframes` / `theme.extend.animation`. Per-system variants (`bc:`, `dh1e:`, `dh2e:`, `dw:`, `ow:`, `rt:`, `im:`) live in the `addVariant` plugin call.
+- `tailwind/*.js` — nine CSS-in-JS plugin objects, registered via a single `addBase(...)` call. They hold (a) the `:root`/`body.theme-*` design tokens (`design-tokens.js`) and (b) every legacy gothic-theme component class (`panel-components.js`, `legacy-components.js`, `item-preview.js`, `wh40k-tooltip.js`, `compendium-browser.js`, `npc-sheet.js`, `foundry-chrome.js`, `weapon.js`).
 
-Never add new rule blocks to `src/css/wh40k-rpg.css` outside the trailing `@tailwind` directives. The CSS pipeline is being phased out; new styling is `tw-*` utilities inline on templates.
+Why `addBase` and not `addComponents`: Tailwind's `prefix: 'tw-'` config prepends `tw-` to every class registered through `addComponents`, mangling the bare `wh40k-*` class names that templates author. `addBase` emits selectors literally and produces the cascade order we want (legacy components → utilities), since `@tailwind base` precedes `@tailwind utilities` in `entry.css`.
+
+Adding new component CSS to `tailwind/*.js` should be the exception, not the rule. Prefer:
+- inline `tw-*` utilities on `.hbs` templates / sheet PARTS classes for one-off layout;
+- `addComponents({ '.form-group': ... })` in `tailwind.config.js` for shared form/dialog patterns that templates write WITHOUT the `tw-` prefix only when they're system-internal scaffolding (utility classes that benefit from the prefix go through `addUtilities` instead);
+- `theme.extend.keyframes` + `theme.extend.animation` for new animations so `tw-animate-foo` resolves.
+
+The `tailwind/*.js` plugin files are the absorbed tail of an old `src/css/**.css` tree — they are migration debt, not the target architecture. Each one remains a candidate for inline-Tailwind porting per `docs/tailwind-migration.md`. Once a file's rules are fully ported (every consumer template uses bare utilities), delete the file and remove its require from `tailwind.config.js`.
+
+The CSS variable → Tailwind utility translation map is `scripts/css-token-map.json`. Extend this file when a new variable becomes worth a token rather than re-deriving on every port.
 
 ### Animation migration tooling
 
 All `@keyframes` definitions live in `tailwind.config.js` under `theme.extend.keyframes`, with paired entries in `theme.extend.animation`. Each animation generates a `tw-animate-<name>` utility class.
 
-The monolith currently still contains `animation: <name> ...` rules on selectors like `.wh40k-panel`, `.wh40k-prompt::before`, etc. — those rules reference the keyframes by name and continue to work via the cascade. A `safelist: [{ pattern: /^tw-animate-/ }]` entry in `tailwind.config.js` forces every `tw-animate-*` utility (and its `@keyframes`) to be emitted regardless of template usage, so the monolith's rules don't break when no template references the utility yet. **Drop the safelist once every animation is invoked via `tw-animate-<name>` on its template AND the matching `animation:` rule is removed from the monolith.**
+Some legacy gothic-theme components in `tailwind/*.js` still carry `animation: <name> ...` declarations (e.g. on `.wh40k-panel-*` or weapon-sheet selectors). Those declarations reference the keyframes by name and continue to work via the cascade. A `safelist: [{ pattern: /^tw-animate-/ }]` entry in `tailwind.config.js` forces every `tw-animate-*` utility (and its `@keyframes`) to be emitted regardless of template usage, so the legacy rules don't break when no template references the utility yet. **Drop the safelist once every animation is invoked via `tw-animate-<name>` on its template AND the matching `animation:` declaration is removed from the legacy plugin files.**
 
-- `pnpm animation:coverage` — counts `animation:` / `animation-name:` declarations in `src/css/wh40k-rpg.css`. Output at `.animation-coverage.json`.
+- `pnpm animation:coverage` — counts `animation:` / `animation-name:` declarations across every CSS file under `src/css/**/*.css`. Output at `.animation-coverage.json`. (When the legacy plugin files in `tailwind/*.js` move back to CSS for porting, or when a port adds rules to a new CSS file, both surfaces are covered.)
 - `pnpm animation:ratchet` — pre-commit gate; baseline at `.animation-baseline`. Update via `pnpm animation:ratchet:update` after a port.
-- Per-template port: replace each `animation: <name> ...` rule applied via a class with `tw-animate-<name>` on the consuming element. Delete the source rule. Run `pnpm animation:ratchet:update` and commit.
-- **Pseudo-element animations are refactored, not preserved.** When the source rule's selector is a pseudo (`::before`, `::after`, `::marker`, etc.), do **not** leave it in the monolith and do **not** count it as exempt. Instead, replace the pseudo-element in the consuming Handlebars template with a real DOM child (`<span>` / `<div>` / `<i>` with a descriptive `wh40k-…__<role>` class), then apply `tw-animate-<name>` to that new element. Add `tw-pointer-events-none` and `tw-absolute` (or whatever positioning the pseudo had) so the new element behaves like the old pseudo. Stacked pseudos (e.g. `::before` + `::after` on the same parent) become two sibling elements. The terminal state for every monolith animation rule is: invoked from a template via `tw-animate-*` on a real element. Keeping a pseudo-element animation rule in the monolith is not an acceptable terminal state.
-- **Animation timing in `tailwind.config.js` must match the source.** The `theme.extend.animation` map defines the duration / timing-function / iteration / fill-mode for each utility. Entries use real values copied from the monolith (e.g., `'burst-pulse 0.6s ease'`, `'pulse-warn-intense 1.5s ease-in-out infinite'`, `'fade-spend 0.5s ease-out forwards'`), not placeholder `'1s ease'`. When the same keyframe name is invoked at multiple monolith call sites with different timings, the config holds the most common tuple and outliers are expressed as arbitrary-value utilities on the consuming template (`tw-animate-[slide-in-up_0.4s_ease-out_backwards]`). A port that uses the wrong duration is a regression even when the ratchet count drops.
+- Per-template port: replace each `animation: <name> ...` declaration applied via a class with `tw-animate-<name>` on the consuming element. Delete the source declaration. Run `pnpm animation:ratchet:update` and commit.
+- **Pseudo-element animations are refactored, not preserved.** When the source rule's selector is a pseudo (`::before`, `::after`, `::marker`, etc.), do **not** leave it in the plugin file and do **not** count it as exempt. Instead, replace the pseudo-element in the consuming Handlebars template with a real DOM child (`<span>` / `<div>` / `<i>` with a descriptive `wh40k-…__<role>` class), then apply `tw-animate-<name>` to that new element. Add `tw-pointer-events-none` and `tw-absolute` (or whatever positioning the pseudo had) so the new element behaves like the old pseudo. Stacked pseudos (e.g. `::before` + `::after` on the same parent) become two sibling elements. The terminal state for every legacy animation rule is: invoked from a template via `tw-animate-*` on a real element.
+- **Animation timing in `tailwind.config.js` must match the source.** The `theme.extend.animation` map defines the duration / timing-function / iteration / fill-mode for each utility. Entries use real values copied from the legacy plugin files (e.g., `'burst-pulse 0.6s ease'`, `'pulse-warn-intense 1.5s ease-in-out infinite'`, `'fade-spend 0.5s ease-out forwards'`), not placeholder `'1s ease'`. When the same keyframe name is invoked at multiple call sites with different timings, the config holds the most common tuple and outliers are expressed as arbitrary-value utilities on the consuming template (`tw-animate-[slide-in-up_0.4s_ease-out_backwards]`). A port that uses the wrong duration is a regression even when the ratchet count drops.
 
 ### Per-system theme tooling — the ultimate target
 
@@ -162,14 +167,14 @@ ai gemini 1 --model gemini-3.1-flash-lite-preview -p '<task brief>'
 
 **Operator's notebook for prompting agents lives at `PROMPTING_AGENTS.md`** — invocation flags, model failure modes, brief template, worktree hygiene, partition shapes. Update it as new models are tried or new failure modes surface; do not duplicate that material here.
 
-Background workers run in **isolated git worktrees** (one per task) so concurrent grinders don't collide on shared files like `src/css/wh40k-rpg.css`. The orchestrator handles the merge — workers only modify files in their scope, never delete from the monolith, and write a `.migration-manifest.json` at the worktree root listing what they ported and what is now safe to delete. After all workers report, the orchestrator copies template changes to main and runs `pnpm css:block delete <source>` for each safe-to-delete entry.
+Background workers run in **isolated git worktrees** (one per task) so concurrent grinders don't collide on shared files. The orchestrator handles the merge — workers only modify files in their scope and write a `.migration-manifest.json` at the worktree root listing what they ported and what is now safe to delete. After all workers report, the orchestrator copies template changes to main and removes the relevant rules from `tailwind/*.js` plugin files (or deletes a fully-ported plugin file outright and removes its require from `tailwind.config.js`).
 
 Tasks that suit cheap-model grinders (each map to a ratchet that gates regression):
 
 | Task | Metric to drive |
 | --- | --- |
 | Port one `.hbs` template's classes to `tw-*` per `docs/tailwind-migration.md` | `pnpm css:coverage` (`css-only` ↓, `tailwind-only` ↑) |
-| Move one `animation: <name>` rule from monolith onto its consuming template as `tw-animate-<name>` | `pnpm animation:coverage` (count ↓) |
+| Move one `animation: <name>` declaration from a `tailwind/*.js` plugin file onto its consuming template as `tw-animate-<name>` | `pnpm animation:coverage` (count ↓) |
 | Add per-system theme variants (`dh2e:tw-bg-bronze rt:tw-bg-amber-700`) to one template's elements | `pnpm theme:coverage` (count ↑) |
 | Replace one ` as any` cast in a sheet with a narrow type | `pnpm ts:coverage` (per-dir `asAny` ↓) |
 | Add a `*.stories.ts` for one Sheet/Dialog using `pnpm scaffold:story` and `stories/test-helpers.ts` | `pnpm symmetry` (sheet missing-pair count ↓) |
@@ -220,18 +225,17 @@ Per-file logs land in `.auto-fix/file-logs/<sanitized-path>.attempt<N>.<runner>-
 
 1. `lint-staged` — eslint --fix and prettier on staged files.
 2. `i18n:gen` — regenerate `i18n-keys.d.ts` from the langpack.
-3. `css:block-index` — refresh `.css-blocks.json` from the monolith.
-4. `typecheck` — `tsc --noEmit` must pass with zero errors (hard gate).
-5. `lint:ratchet` — ESLint warning count cannot rise; errors are never allowed.
-6. `css:ratchet` — `tailwind-only` cannot fall, `css-only` cannot rise.
-7. `animation:ratchet` — count of `animation:` / `animation-name:` rules in the monolith cannot rise.
-8. `theme:ratchet` — count of templates using per-system `<system>:tw-*` variants cannot fall (adoption ratchet — opposite direction; rises as templates gain per-system theming).
-9. `ts:ratchet` — per-rule per-directory suppression counts cannot rise.
-10. `symmetry:ratchet` — missing-story / missing-test counts cannot rise.
-11. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
-12. Pack validation if `gulpfile.js` or `src/packs/` changed.
-13. `vitest run` — full Vitest suite must pass.
-14. Storybook Playwright integration tests.
+3. `typecheck` — `tsc --noEmit` must pass with zero errors (hard gate).
+4. `lint:ratchet` — ESLint warning count cannot rise; errors are never allowed.
+5. `css:ratchet` — `tailwind-only` cannot fall, `css-only` cannot rise.
+6. `animation:ratchet` — count of `animation:` / `animation-name:` declarations across `src/css/**/*.css` cannot rise.
+7. `theme:ratchet` — count of templates using per-system `<system>:tw-*` variants cannot fall (adoption ratchet — opposite direction; rises as templates gain per-system theming).
+8. `ts:ratchet` — per-rule per-directory suppression counts cannot rise.
+9. `symmetry:ratchet` — missing-story / missing-test counts cannot rise.
+10. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
+11. Pack validation if `gulpfile.js` or `src/packs/` changed.
+12. `vitest run` — full Vitest suite must pass.
+13. Storybook Playwright integration tests.
 
 Hooks run for 30–60s on large commits. Wait for them; do not interrupt or `--no-verify` past failures. If a hook fails, investigate and fix; do not silence.
 
@@ -327,12 +331,6 @@ pnpm css:coverage                     # template tailwind/mixed/css-only classif
 pnpm ts:coverage                      # per-rule, per-directory TS suppression counts
 pnpm symmetry                         # sheets without stories, data/documents without tests
 pnpm preload:drift                    # Handlebars partial references vs preload list
-
-# CSS monolith surgery
-pnpm css:block-index                  # refresh .css-blocks.json from markers
-pnpm css:block list                   # list every source path in the monolith
-pnpm css:block show <src>             # print the rule block
-pnpm css:block delete <src>           # remove every range for <src>
 
 # Ratchet baselines (run after a metric drops, in the same commit)
 pnpm css:ratchet:update

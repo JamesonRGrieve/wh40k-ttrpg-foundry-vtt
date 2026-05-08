@@ -1,14 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 const plugin = require('tailwindcss/plugin');
+// Legacy gothic-theme component classes — every wh40k-* selector that used to
+// live in src/css/**.css now lives as a CSS-in-JS object in tailwind/*.js,
+// merged below and registered via addBase. addBase emits selectors literally;
+// addComponents would prefix them with `tw-` per the global `prefix` option
+// and break consumer templates that author `class="wh40k-panel"` etc.
+const legacyComponents = {
+  ...require('./tailwind/panel-components.js'),
+  ...require('./tailwind/legacy-components.js'),
+  ...require('./tailwind/item-preview.js'),
+  ...require('./tailwind/wh40k-tooltip.js'),
+  ...require('./tailwind/compendium-browser.js'),
+  ...require('./tailwind/npc-sheet.js'),
+  ...require('./tailwind/foundry-chrome.js'),
+  ...require('./tailwind/weapon.js'),
+};
 const designTokens = require('./tailwind/design-tokens.js');
-const panelComponents = require('./tailwind/panel-components.js');
-const legacyComponents = require('./tailwind/legacy-components.js');
-const itemPreview = require('./tailwind/_item-preview.js');
-const wh40kTooltip = require('./tailwind/_wh40k-tooltip.js');
-const compendiumBrowser = require('./tailwind/_compendium-browser.js');
-const npcSheet = require('./tailwind/_npc-sheet.js');
-const foundryChrome = require('./tailwind/_foundry-chrome.js');
-const weapon = require('./tailwind/_weapon.js');
 
 module.exports = {
   content: [
@@ -1360,19 +1367,11 @@ module.exports = {
       });
     }),
     // Legacy gothic component classes (.wh40k-panel*, .wh40k-hit-location-result,
-    // .wh40k-rpg.sheet.actor scope, etc.) registered via addBase. addComponents
-    // would prefix every selector with `tw-` per the global `prefix: 'tw-'`
-    // config — addBase emits selectors literally, which is what we need
-    // because templates author the bare `.wh40k-panel-header` class.
+    // .wh40k-rpg.sheet.actor scope, weapon sheet, NPC sheet, tooltip, compendium
+    // browser, foundry chrome) registered via addBase. The merged object lives
+    // at module scope (`legacyComponents`) — see top-of-file requires.
     plugin(function ({ addBase }) {
-      addBase(panelComponents);
       addBase(legacyComponents);
-      addBase(itemPreview);
-      addBase(wh40kTooltip);
-      addBase(compendiumBrowser);
-      addBase(npcSheet);
-      addBase(foundryChrome);
-      addBase(weapon);
     }),
     plugin(function ({ addComponents }) {
       // Selectors here are auto-prefixed by Tailwind's `prefix: 'tw-'` config,
