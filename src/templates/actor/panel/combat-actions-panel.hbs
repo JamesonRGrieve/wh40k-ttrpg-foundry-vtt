@@ -17,26 +17,27 @@
 
         {{! COMBAT TALENTS }}
         {{#if combatTalents.length}}
-            <div class="wh40k-combat-actions-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
-                <div class="wh40k-combat-actions-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
+            <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
+                <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
                     <i class="fas fa-star tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-gold)]"></i>
-                    <span class="wh40k-combat-actions-group-label tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Combat Talents</span>
+                    <span class="tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Combat Talents</span>
                 </div>
-                <div class="wh40k-combat-actions-grid tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
+                <div class="tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
                     {{#each combatTalents as |talent|}}
                         <button
                             type="button"
-                            class="wh40k-combat-action-btn wh40k-combat-action-attack tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-combat)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
+                            class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-combat)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
                             data-action="itemVocalize"
                             data-item-id="{{talent.id}}"
                             data-tooltip
                             aria-label="{{talent.name}}"
                             title="{{talent.name}}"
                         >
+                            <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                             <i class="fas fa-star tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
-                            <span class="wh40k-combat-action-name tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{talent.name}}</span>
+                            <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{talent.name}}</span>
                             {{#if talent.system.tier}}
-                                <span class="wh40k-combat-action-type tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">T{{talent.system.tier}}</span>
+                                <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">T{{talent.system.tier}}</span>
                             {{/if}}
                         </button>
                     {{/each}}
@@ -46,25 +47,26 @@
 
         {{! GENERAL ATTACK ACTIONS (Melee or Ranged) }}
         {{#if generalAttacks.length}}
-        <div class="wh40k-combat-actions-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
-            <div class="wh40k-combat-actions-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
+        <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
+            <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
                 <i class="fas fa-crosshairs tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-gold)]"></i>
-                <span class="wh40k-combat-actions-group-label tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Attack Actions</span>
+                <span class="tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Attack Actions</span>
             </div>
-            <div class="wh40k-combat-actions-grid tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
+            <div class="tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
                 {{#each generalAttacks as |action|}}
                     <button
                         type="button"
-                        class="wh40k-combat-action-btn wh40k-combat-action-attack tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-combat)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
+                        class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-combat)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
                         data-action="vocalizeCombatAction"
                         data-action-key="{{action.key}}"
                         data-tooltip
                         aria-label="{{localize action.label}}: {{localize action.description}}"
                         title="{{localize action.label}}"
                     >
+                        <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                         <i class="fas {{action.icon}} tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
-                        <span class="wh40k-combat-action-name tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize action.label}}</span>
-                        <span class="wh40k-combat-action-type tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{action.type}}</span>
+                        <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize action.label}}</span>
+                        <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{action.type}}</span>
                     </button>
                 {{/each}}
             </div>
@@ -73,25 +75,26 @@
 
         {{! MELEE ATTACK ACTIONS }}
         {{#if meleeAttacks.length}}
-        <div class="wh40k-combat-actions-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
-            <div class="wh40k-combat-actions-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
+        <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
+            <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
                 <i class="fas fa-fist-raised tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-gold)]"></i>
-                <span class="wh40k-combat-actions-group-label tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Melee Attacks</span>
+                <span class="tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Melee Attacks</span>
             </div>
-            <div class="wh40k-combat-actions-grid tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
+            <div class="tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
                 {{#each meleeAttacks as |action|}}
                     <button
                         type="button"
-                        class="wh40k-combat-action-btn wh40k-combat-action-attack tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-combat)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
+                        class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-combat)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
                         data-action="vocalizeCombatAction"
                         data-action-key="{{action.key}}"
                         data-tooltip
                         aria-label="{{localize action.label}}: {{localize action.description}}"
                         title="{{localize action.label}}"
                     >
+                        <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                         <i class="fas {{action.icon}} tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
-                        <span class="wh40k-combat-action-name tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize action.label}}</span>
-                        <span class="wh40k-combat-action-type tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{action.type}}</span>
+                        <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize action.label}}</span>
+                        <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{action.type}}</span>
                     </button>
                 {{/each}}
             </div>
@@ -100,25 +103,26 @@
 
         {{! RANGED ATTACK ACTIONS }}
         {{#if rangedAttacks.length}}
-        <div class="wh40k-combat-actions-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
-            <div class="wh40k-combat-actions-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
+        <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
+            <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
                 <i class="fas fa-bullseye tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-gold)]"></i>
-                <span class="wh40k-combat-actions-group-label tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Ranged Attacks</span>
+                <span class="tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Ranged Attacks</span>
             </div>
-            <div class="wh40k-combat-actions-grid tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
+            <div class="tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
                 {{#each rangedAttacks as |action|}}
                     <button
                         type="button"
-                        class="wh40k-combat-action-btn wh40k-combat-action-attack tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-combat)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
+                        class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-combat)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
                         data-action="vocalizeCombatAction"
                         data-action-key="{{action.key}}"
                         data-tooltip
                         aria-label="{{localize action.label}}: {{localize action.description}}"
                         title="{{localize action.label}}"
                     >
+                        <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                         <i class="fas {{action.icon}} tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
-                        <span class="wh40k-combat-action-name tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize action.label}}</span>
-                        <span class="wh40k-combat-action-type tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{action.type}}</span>
+                        <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize action.label}}</span>
+                        <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{action.type}}</span>
                     </button>
                 {{/each}}
             </div>
@@ -126,100 +130,105 @@
         {{/if}}
 
         {{! MOVEMENT ACTIONS }}
-        <div class="wh40k-combat-actions-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
-            <div class="wh40k-combat-actions-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
+        <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
+            <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
                 <i class="fas fa-walking tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-gold)]"></i>
-                <span class="wh40k-combat-actions-group-label tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Movement Actions</span>
+                <span class="tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Movement Actions</span>
             </div>
-            <div class="wh40k-combat-actions-grid tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
+            <div class="tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
                 {{#each dh.combatActions.movement as |action|}}
                     <button
                         type="button"
-                        class="wh40k-combat-action-btn wh40k-combat-action-movement tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-equipment)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
+                        class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-equipment)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
                         data-action="vocalizeCombatAction"
                         data-action-key="{{action.key}}"
                         data-tooltip
                         aria-label="{{localize action.label}}: {{localize action.description}}"
                         title="{{localize action.label}}"
                     >
+                        <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                         <i class="fas {{action.icon}} tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
-                        <span class="wh40k-combat-action-name tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize action.label}}</span>
-                        <span class="wh40k-combat-action-type tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{action.type}}</span>
+                        <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize action.label}}</span>
+                        <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{action.type}}</span>
                     </button>
                 {{/each}}
             </div>
         </div>
 
         {{! REACTION ACTIONS }}
-        <div class="wh40k-combat-actions-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
-            <div class="wh40k-combat-actions-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
+        <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
+            <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
                 <i class="fas fa-bolt tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-gold)]"></i>
-                <span class="wh40k-combat-actions-group-label tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Reactions</span>
+                <span class="tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Reactions</span>
             </div>
-            <div class="wh40k-combat-actions-grid tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
+            <div class="tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
                 {{! Dodge }}
                 <button
                     type="button"
-                    class="wh40k-combat-action-btn wh40k-combat-action-reaction tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-skills)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
+                    class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-skills)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
                     data-action="dodge"
                     data-tooltip
                     aria-label="Dodge: Reaction"
                     title="Dodge"
                 >
+                    <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                     <i class="fas fa-running tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
-                    <span class="wh40k-combat-action-name tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">Dodge</span>
-                    <span class="wh40k-combat-action-type tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">Reaction</span>
+                    <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">Dodge</span>
+                    <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">Reaction</span>
                 </button>
                 {{! Parry }}
                 <button
                     type="button"
-                    class="wh40k-combat-action-btn wh40k-combat-action-reaction tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-skills)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
+                    class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-skills)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
                     data-action="parry"
                     data-tooltip
                     aria-label="Parry: Reaction"
                     title="Parry"
                 >
+                    <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                     <i class="fas fa-shield-alt tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
-                    <span class="wh40k-combat-action-name tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">Parry</span>
-                    <span class="wh40k-combat-action-type tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">Reaction</span>
+                    <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">Parry</span>
+                    <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">Reaction</span>
                 </button>
             </div>
         </div>
 
         {{! UTILITY ACTIONS }}
-        <div class="wh40k-combat-actions-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
-            <div class="wh40k-combat-actions-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
+        <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)] tw-mb-[var(--wh40k-space-md)] last:tw-mb-0">
+            <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-py-[6px] tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.08)] tw-to-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.03)] tw-border-l-[3px] tw-border-l-[color:var(--wh40k-accent-gold)] tw-rounded-r">
                 <i class="fas fa-tools tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-gold)]"></i>
-                <span class="wh40k-combat-actions-group-label tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Utility Actions</span>
+                <span class="tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-secondary)]">Utility Actions</span>
             </div>
-            <div class="wh40k-combat-actions-grid tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
+            <div class="tw-grid tw-gap-[6px]" style="grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); grid-auto-rows: 80px;">
                 {{! Assign Damage }}
-                <button type="button" class="wh40k-combat-action-btn wh40k-combat-action-utility tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-talents)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0" data-action="assign-damage" title="Assign Damage">
+                <button type="button" class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-talents)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0" data-action="assign-damage" title="Assign Damage">
+                    <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                     <i class="fas fa-heart-broken tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
-                    <span class="wh40k-combat-action-name tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">Assign Damage</span>
-                    <span class="wh40k-combat-action-type tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">Tool</span>
+                    <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">Assign Damage</span>
+                    <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">Tool</span>
                 </button>
                 {{! Other utility actions from config }}
                 {{#each dh.combatActions.utility as |action|}}
                     <button
                         type="button"
-                        class="wh40k-combat-action-btn wh40k-combat-action-utility tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-talents)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
+                        class="tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-relative tw-overflow-hidden [--action-color:var(--wh40k-accent-talents)] hover:tw-border-[color:var(--action-color)] hover:tw-translate-y-[-2px] hover:tw-shadow-[0_2px_6px_rgba(0,0,0,0.08)] active:tw-translate-y-0"
                         data-action="vocalizeCombatAction"
                         data-action-key="{{action.key}}"
                         data-tooltip
                         aria-label="{{localize action.label}}: {{localize action.description}}"
                         title="{{localize action.label}}"
                     >
+                        <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                         <i class="fas {{action.icon}} tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
-                        <span class="wh40k-combat-action-name tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize action.label}}</span>
-                        <span class="wh40k-combat-action-type tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{action.type}}</span>
+                        <span class="tw-text-[0.65rem] tw-font-semibold tw-text-center tw-leading-[1.2] tw-text-[color:var(--wh40k-text-primary)]">{{localize action.label}}</span>
+                        <span class="tw-text-[0.55rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--action-color)] tw-opacity-80">{{action.type}}</span>
                     </button>
                 {{/each}}
             </div>
         </div>
 
         {{! Info Note }}
-        <div class="wh40k-combat-actions-info tw-flex tw-items-start tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-mt-[var(--wh40k-space-md)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.06)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.15)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.65rem] tw-leading-[1.4] tw-text-[color:var(--wh40k-text-secondary)]">
+        <div class="tw-flex tw-items-start tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-mt-[var(--wh40k-space-md)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.06)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.15)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.65rem] tw-leading-[1.4] tw-text-[color:var(--wh40k-text-secondary)]">
             <i class="fas fa-info-circle tw-text-[0.75rem] tw-text-[color:var(--wh40k-accent-gold)] tw-shrink-0 tw-mt-[2px]"></i>
             <span>Click any action for a detailed description. Action types:
                 <strong class="tw-text-[color:var(--wh40k-text-primary)] tw-font-bold">Half</strong>

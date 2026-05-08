@@ -1,7 +1,7 @@
 {{!-- Backpack Split Panel - Personal & Ship Storage --}}
 {{!-- Checkbox selection with swap button --}}
 
-<div class="wh40k-panel wh40k-panel-backpack-split">
+<div class="wh40k-panel">
     {{!-- Panel Header with Encumbrance Bar --}}
     <div class="wh40k-panel-header">
         <div class="tw-flex tw-items-center tw-gap-3">
@@ -19,73 +19,73 @@
                 {{/if}}
             </button>
         </div>
-        <div class="wh40k-encumbrance-display">
-            <span class="wh40k-enc-label">Carry:</span>
-            <div class="wh40k-encumbrance-bar-container">
-                <div class="wh40k-encumbrance-bar-fill {{#if (gte encumbrancePercent 100)}}wh40k-enc-danger{{else if (gte encumbrancePercent 75)}}wh40k-enc-warning{{else if (gte encumbrancePercent 50)}}wh40k-enc-caution{{/if}}"
+        <div class="tw-flex tw-items-center tw-gap-2 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-secondary)]">
+            <span>Carry:</span>
+            <div class="tw-relative tw-h-2 tw-w-24 tw-rounded-full tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-overflow-hidden">
+                <div class="tw-h-full tw-rounded-full tw-transition-all {{#if (gte encumbrancePercent 100)}}tw-bg-accent-combat{{else if (gte encumbrancePercent 75)}}tw-bg-yellow-500{{else if (gte encumbrancePercent 50)}}tw-bg-yellow-400{{else}}tw-bg-success{{/if}}"
                      style="width: {{encumbrancePercent}}%"></div>
             </div>
-            <span class="wh40k-enc-value">{{actor.encumbrance.value}} / {{actor.encumbrance.max}} kg</span>
+            <span>{{actor.encumbrance.value}} / {{actor.encumbrance.max}} kg</span>
             {{#if actor.encumbrance.encumbered}}
-            <i class="fas fa-exclamation-triangle wh40k-enc-alert tw-animate-pulse-glow" title="Encumbered!"></i>
+            <i class="fas fa-exclamation-triangle tw-text-accent-combat tw-animate-pulse-glow" title="Encumbered!"></i>
             {{/if}}
         </div>
     </div>
 
     {{!-- Split Panel Body --}}
-    <div class="wh40k-panel-body wh40k-split-container">
+    <div class="wh40k-panel-body tw-flex tw-gap-3">
         {{!-- LEFT: Backpack --}}
-        <div class="wh40k-split-column wh40k-backpack-inventory">
-            <div class="wh40k-column-header">
+        <div class="tw-flex tw-flex-col tw-flex-1 tw-min-w-0">
+            <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-light)] tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-secondary)]">
                 <i class="fas fa-suitcase"></i>
                 <span>Backpack</span>
-                <span class="wh40k-item-badge">{{allCarriedItems.length}}</span>
+                <span class="tw-ml-auto tw-rounded-full tw-bg-[var(--wh40k-bg-input)] tw-px-1.5 tw-py-0.5 tw-text-[0.65rem] tw-font-bold">{{allCarriedItems.length}}</span>
             </div>
-            <div class="wh40k-column-body">
+            <div class="tw-flex-1 tw-overflow-y-auto">
                 {{#if allCarriedItems.length}}
-                <div class="wh40k-inventory-table">
-                    <table class="wh40k-item-table">
+                <div class="tw-w-full tw-overflow-x-auto">
+                    <table class="tw-w-full tw-text-[0.78rem] tw-border-collapse">
                         <thead>
                             <tr>
-                                <th class="wh40k-col-check"></th>
-                                <th class="wh40k-col-icon"></th>
-                                <th class="wh40k-col-name">Item</th>
-                                <th class="wh40k-col-type">Type</th>
-                                <th class="wh40k-col-weight">Weight</th>
-                                <th class="wh40k-col-actions"></th>
+                                <th class="tw-w-6 tw-p-1 tw-text-left tw-text-[0.65rem] tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-border-b tw-border-[rgba(255,255,255,0.1)] tw-font-semibold"></th>
+                                <th class="tw-w-6 tw-p-1 tw-text-left tw-text-[0.65rem] tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-border-b tw-border-[rgba(255,255,255,0.1)] tw-font-semibold"></th>
+                                <th class="tw-p-1 tw-text-left tw-text-[0.65rem] tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-border-b tw-border-[rgba(255,255,255,0.1)] tw-font-semibold">Item</th>
+                                <th class="tw-p-1 tw-text-left tw-text-[0.65rem] tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-border-b tw-border-[rgba(255,255,255,0.1)] tw-font-semibold">Type</th>
+                                <th class="tw-p-1 tw-text-right tw-text-[0.65rem] tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-border-b tw-border-[rgba(255,255,255,0.1)] tw-font-semibold">Weight</th>
+                                <th class="tw-w-8 tw-p-1 tw-border-b tw-border-[rgba(255,255,255,0.1)]"></th>
                             </tr>
                         </thead>
                         <tbody>
                             {{#each allCarriedItems as |item|}}
-                            <tr class="wh40k-backpack-item-row"
+                            <tr class="tw-border-b tw-border-[rgba(255,255,255,0.04)] hover:tw-bg-[rgba(255,255,255,0.03)] tw-transition-colors"
                                 data-item-id="{{item.id}}"
                                 data-item-type="{{item.type}}"
                                 data-disable-drag="true"
                                 draggable="false">
-                                <td class="wh40k-col-check">
-                                    <input type="checkbox" class="wh40k-transfer-check" data-item-id="{{item.id}}" />
+                                <td class="tw-p-1 tw-align-middle">
+                                    <input type="checkbox" data-item-id="{{item.id}}" />
                                 </td>
-                                <td class="wh40k-col-icon">
-                                    <img src="{{item.img}}" alt="{{item.name}}" class="wh40k-item-icon" />
+                                <td class="tw-p-1 tw-align-middle">
+                                    <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-[22px] tw-h-[22px] tw-object-cover tw-rounded" />
                                 </td>
-                                <td class="wh40k-col-name">
-                                    <button type="button" class="wh40k-item-name" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">
+                                <td class="tw-p-1 tw-align-middle">
+                                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-text-[color:var(--color-text-primary)] tw-text-left tw-p-0 tw-max-w-[120px] tw-truncate tw-block hover:tw-text-gold" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">
                                         {{item.name}}
                                     </button>
                                 </td>
-                                <td class="wh40k-col-type">
-                                    <span class="wh40k-item-type">{{item.type}}</span>
+                                <td class="tw-p-1 tw-align-middle tw-text-[color:var(--wh40k-text-muted)] tw-capitalize">
+                                    <span>{{item.type}}</span>
                                 </td>
-                                <td class="wh40k-col-weight">
+                                <td class="tw-p-1 tw-align-middle tw-text-right">
                                     {{#if item.system.weight}}
-                                    <span class="wh40k-item-weight">{{item.system.weight}}kg</span>
+                                    <span>{{item.system.weight}}kg</span>
                                     {{else}}
-                                    <span class="wh40k-item-weight wh40k-weight-none">—</span>
+                                    <span class="tw-text-[color:var(--wh40k-text-muted)] tw-italic">—</span>
                                     {{/if}}
                                 </td>
-                                <td class="wh40k-col-actions">
-                                    <button type="button" class="wh40k-inv-btn wh40k-inv-danger" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
-                                        <i class="fas fa-trash"></i>
+                                <td class="tw-p-1 tw-align-middle">
+                                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-0.5 tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-accent-combat" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
+                                        <i class="fas fa-trash tw-text-[0.75rem]"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -94,79 +94,79 @@
                     </table>
                 </div>
                 {{else}}
-                <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
-                    <i class="fas fa-box-open wh40k-empty-icon"></i>
-                    <p class="wh40k-empty-text tw-italic tw-opacity-70 tw-text-sm">No items in backpack</p>
-                    <p class="wh40k-empty-hint">Select items from ship storage and click the swap button</p>
+                <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
+                    <i class="fas fa-box-open tw-text-[2rem] tw-mb-2 tw-opacity-50"></i>
+                    <p class="tw-italic tw-opacity-70 tw-text-sm tw-m-0">No items in backpack</p>
+                    <p class="tw-text-[0.75rem] tw-italic tw-mt-1 tw-text-[color:var(--wh40k-text-muted)] tw-m-0">Select items from ship storage and click the swap button</p>
                 </div>
                 {{/if}}
             </div>
         </div>
 
         {{!-- DIVIDER with Give To + Swap Buttons --}}
-        <div class="wh40k-split-divider">
-            <div class="wh40k-divider-line"></div>
-            <button type="button" class="wh40k-divider-icon wh40k-divider-give" data-action="giveCheckedItems" title="Give selected items to another character">
-                <i class="fas fa-hand-holding"></i>
+        <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-py-2">
+            <div class="tw-flex-1 tw-w-px tw-bg-[var(--wh40k-border-light)]"></div>
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-full tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-[var(--wh40k-border-light)] tw-cursor-pointer tw-text-[color:var(--wh40k-text-secondary)] hover:tw-border-gold hover:tw-text-gold tw-transition-all" data-action="giveCheckedItems" title="Give selected items to another character">
+                <i class="fas fa-hand-holding tw-text-[0.85rem]"></i>
             </button>
-            <button type="button" class="wh40k-divider-icon" data-action="swapCheckedItems" title="Move selected items between backpack and ship">
-                <i class="fas fa-exchange-alt"></i>
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-full tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-[var(--wh40k-border-light)] tw-cursor-pointer tw-text-[color:var(--wh40k-text-secondary)] hover:tw-border-gold hover:tw-text-gold tw-transition-all" data-action="swapCheckedItems" title="Move selected items between backpack and ship">
+                <i class="fas fa-exchange-alt tw-text-[0.85rem]"></i>
             </button>
-            <div class="wh40k-divider-line"></div>
+            <div class="tw-flex-1 tw-w-px tw-bg-[var(--wh40k-border-light)]"></div>
         </div>
 
         {{!-- RIGHT: Ship Storage --}}
-        <div class="wh40k-split-column wh40k-ship-storage">
-            <div class="wh40k-column-header">
+        <div class="tw-flex tw-flex-col tw-flex-1 tw-min-w-0">
+            <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2 tw-pb-1 tw-border-b tw-border-[var(--wh40k-border-light)] tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-secondary)]">
                 <i class="fas fa-rocket"></i>
                 <span>Ship Storage</span>
-                <span class="wh40k-item-badge">{{allShipItems.length}}</span>
+                <span class="tw-ml-auto tw-rounded-full tw-bg-[var(--wh40k-bg-input)] tw-px-1.5 tw-py-0.5 tw-text-[0.65rem] tw-font-bold">{{allShipItems.length}}</span>
             </div>
-            <div class="wh40k-column-body">
+            <div class="tw-flex-1 tw-overflow-y-auto">
                 {{#if allShipItems.length}}
-                <div class="wh40k-inventory-table">
-                    <table class="wh40k-item-table">
+                <div class="tw-w-full tw-overflow-x-auto">
+                    <table class="tw-w-full tw-text-[0.78rem] tw-border-collapse">
                         <thead>
                             <tr>
-                                <th class="wh40k-col-check"></th>
-                                <th class="wh40k-col-icon"></th>
-                                <th class="wh40k-col-name">Item</th>
-                                <th class="wh40k-col-type">Type</th>
-                                <th class="wh40k-col-weight">Weight</th>
-                                <th class="wh40k-col-actions"></th>
+                                <th class="tw-w-6 tw-p-1 tw-text-left tw-text-[0.65rem] tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-border-b tw-border-[rgba(255,255,255,0.1)] tw-font-semibold"></th>
+                                <th class="tw-w-6 tw-p-1 tw-text-left tw-text-[0.65rem] tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-border-b tw-border-[rgba(255,255,255,0.1)] tw-font-semibold"></th>
+                                <th class="tw-p-1 tw-text-left tw-text-[0.65rem] tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-border-b tw-border-[rgba(255,255,255,0.1)] tw-font-semibold">Item</th>
+                                <th class="tw-p-1 tw-text-left tw-text-[0.65rem] tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-border-b tw-border-[rgba(255,255,255,0.1)] tw-font-semibold">Type</th>
+                                <th class="tw-p-1 tw-text-right tw-text-[0.65rem] tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-border-b tw-border-[rgba(255,255,255,0.1)] tw-font-semibold">Weight</th>
+                                <th class="tw-w-8 tw-p-1 tw-border-b tw-border-[rgba(255,255,255,0.1)]"></th>
                             </tr>
                         </thead>
                         <tbody>
                             {{#each allShipItems as |item|}}
-                            <tr class="wh40k-backpack-item-row wh40k-row-ship"
+                            <tr class="tw-border-b tw-border-[rgba(255,255,255,0.04)] hover:tw-bg-[rgba(255,255,255,0.03)] tw-transition-colors"
                                 data-item-id="{{item.id}}"
                                 data-item-type="{{item.type}}"
                                 data-disable-drag="true"
                                 draggable="false">
-                                <td class="wh40k-col-check">
-                                    <input type="checkbox" class="wh40k-transfer-check" data-item-id="{{item.id}}" />
+                                <td class="tw-p-1 tw-align-middle">
+                                    <input type="checkbox" data-item-id="{{item.id}}" />
                                 </td>
-                                <td class="wh40k-col-icon">
-                                    <img src="{{item.img}}" alt="{{item.name}}" class="wh40k-item-icon" />
+                                <td class="tw-p-1 tw-align-middle">
+                                    <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-[22px] tw-h-[22px] tw-object-cover tw-rounded" />
                                 </td>
-                                <td class="wh40k-col-name">
-                                    <button type="button" class="wh40k-item-name" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">
+                                <td class="tw-p-1 tw-align-middle">
+                                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-text-[color:var(--color-text-primary)] tw-text-left tw-p-0 tw-max-w-[120px] tw-truncate tw-block hover:tw-text-gold" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">
                                         {{item.name}}
                                     </button>
                                 </td>
-                                <td class="wh40k-col-type">
-                                    <span class="wh40k-item-type">{{item.type}}</span>
+                                <td class="tw-p-1 tw-align-middle tw-text-[color:var(--wh40k-text-muted)] tw-capitalize">
+                                    <span>{{item.type}}</span>
                                 </td>
-                                <td class="wh40k-col-weight">
+                                <td class="tw-p-1 tw-align-middle tw-text-right">
                                     {{#if item.system.weight}}
-                                    <span class="wh40k-item-weight">{{item.system.weight}}kg</span>
+                                    <span>{{item.system.weight}}kg</span>
                                     {{else}}
-                                    <span class="wh40k-item-weight wh40k-weight-none">—</span>
+                                    <span class="tw-text-[color:var(--wh40k-text-muted)] tw-italic">—</span>
                                     {{/if}}
                                 </td>
-                                <td class="wh40k-col-actions">
-                                    <button type="button" class="wh40k-inv-btn wh40k-inv-danger" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
-                                        <i class="fas fa-trash"></i>
+                                <td class="tw-p-1 tw-align-middle">
+                                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-0.5 tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-accent-combat" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
+                                        <i class="fas fa-trash tw-text-[0.75rem]"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -175,10 +175,10 @@
                     </table>
                 </div>
                 {{else}}
-                <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
-                    <i class="fas fa-rocket wh40k-empty-icon"></i>
-                    <p class="wh40k-empty-text tw-italic tw-opacity-70 tw-text-sm">No items in ship storage</p>
-                    <p class="wh40k-empty-hint">Select items from backpack and click the swap button</p>
+                <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
+                    <i class="fas fa-rocket tw-text-[2rem] tw-mb-2 tw-opacity-50"></i>
+                    <p class="tw-italic tw-opacity-70 tw-text-sm tw-m-0">No items in ship storage</p>
+                    <p class="tw-text-[0.75rem] tw-italic tw-mt-1 tw-text-[color:var(--wh40k-text-muted)] tw-m-0">Select items from backpack and click the swap button</p>
                 </div>
                 {{/if}}
             </div>
