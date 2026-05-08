@@ -97,13 +97,6 @@ module.exports = {
             marginLeft: 'auto',
         },
     },
-    '.wh40k-panel-chevron': {
-        fontSize: '0.75rem',
-        color: 'var(--wh40k-text-muted)',
-        transition: 'transform var(--wh40k-transition-base)',
-        flexShrink: '0',
-        marginLeft: 'auto',
-    },
     '.wh40k-panel-body': {
         padding: 'var(--wh40k-space-md)',
         background: 'var(--wh40k-panel-body-bg)',
@@ -111,9 +104,6 @@ module.exports = {
     '.wh40k-panel.collapsed': {
         '& .wh40k-panel-body': {
             display: 'none',
-        },
-        '& .wh40k-panel-chevron': {
-            transform: 'rotate(-90deg)',
         },
     },
 };

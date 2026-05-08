@@ -2,19 +2,27 @@
 const plugin = require('tailwindcss/plugin');
 // Legacy gothic-theme component classes — every wh40k-* selector that used to
 // live in src/css/**.css now lives as a CSS-in-JS object in tailwind/*.js,
-// merged below and registered via addBase. addBase emits selectors literally;
-// addComponents would prefix them with `tw-` per the global `prefix` option
-// and break consumer templates that author `class="wh40k-panel"` etc.
-const legacyComponents = {
-  ...require('./tailwind/panel-components.js'),
-  ...require('./tailwind/legacy-components.js'),
-  ...require('./tailwind/item-preview.js'),
-  ...require('./tailwind/wh40k-tooltip.js'),
-  ...require('./tailwind/compendium-browser.js'),
-  ...require('./tailwind/npc-sheet.js'),
-  ...require('./tailwind/foundry-chrome.js'),
-  ...require('./tailwind/weapon.js'),
-};
+// registered via addBase below. addBase emits selectors literally; addComponents
+// would prefix them with `tw-` per the global `prefix` option and break
+// consumer templates that author `class="wh40k-panel"` etc.
+//
+// Order matters: this list mirrors the original CSS @import order from the
+// pre-explode src/css/entry.css. When two plugin files define the same
+// selector with different nested children (e.g. foundry-chrome and weapon
+// both target `.wh40k-prose-editor`), separate addBase calls layer the
+// declarations into the base cascade so both rules emit. A merged-object
+// spread would silently let the later object's value REPLACE the earlier
+// one — a real bug we hit during the explode pass.
+const legacyComponents = [
+  require('./tailwind/panel-components.js'),
+  require('./tailwind/legacy-components.js'),
+  require('./tailwind/item-preview.js'),
+  require('./tailwind/wh40k-tooltip.js'),
+  require('./tailwind/compendium-browser.js'),
+  require('./tailwind/npc-sheet.js'),
+  require('./tailwind/weapon.js'),
+  require('./tailwind/foundry-chrome.js'),
+];
 const designTokens = require('./tailwind/design-tokens.js');
 
 module.exports = {
@@ -1368,10 +1376,12 @@ module.exports = {
     }),
     // Legacy gothic component classes (.wh40k-panel*, .wh40k-hit-location-result,
     // .wh40k-rpg.sheet.actor scope, weapon sheet, NPC sheet, tooltip, compendium
-    // browser, foundry chrome) registered via addBase. The merged object lives
-    // at module scope (`legacyComponents`) — see top-of-file requires.
+    // browser, foundry chrome) — see top-of-file legacyComponents declaration
+    // for the cascade-ordered list and the rationale for separate calls.
     plugin(function ({ addBase }) {
-      addBase(legacyComponents);
+      for (const block of legacyComponents) {
+        addBase(block);
+      }
     }),
     plugin(function ({ addComponents }) {
       // Selectors here are auto-prefixed by Tailwind's `prefix: 'tw-'` config,
