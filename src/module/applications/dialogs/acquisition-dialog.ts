@@ -109,7 +109,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     constructor(actor: WH40KBaseActor, options: { item?: WH40KItem | null } & Record<string, unknown> = {}) {
         super(options);
         this.actor = actor;
-        this.item = options.item || null;
+        this.item = options.item ?? null;
         this.selectedModifiers = new Set();
         this.customModifier = 0;
     }
@@ -117,7 +117,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
+    get title(): string {
         return this.item ? `Acquire: ${this.item.name}` : 'Profit Factor Acquisition Test';
     }
 
@@ -234,7 +234,8 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _getRecentAcquisitions(): AcquisitionHistoryEntry[] {
-        return (this.actor.getFlag('wh40k-rpg', 'acquisitionHistory') as AcquisitionHistoryEntry[])?.slice(-5).reverse() || [];
+        const history = this.actor.getFlag('wh40k-rpg', 'acquisitionHistory') as AcquisitionHistoryEntry[] | undefined;
+        return history?.slice(-5).reverse() ?? [];
     }
 
     /* -------------------------------------------- */
@@ -246,7 +247,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      */
     static async #toggleModifier(this: AcquisitionDialog, event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset.modifier;
-        if (!key) return;
+        if (key == null || key === '') return;
 
         if (this.selectedModifiers.has(key)) {
             this.selectedModifiers.delete(key);
@@ -281,17 +282,17 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
         // Calculate final target
         const context = await this._prepareContext({ force: true });
-        const finalTarget = context.finalTarget as number;
+        const finalTarget = context.finalTarget;
 
         // Roll d100
         const roll = await new Roll('1d100').evaluate();
-        const success = roll.total! <= finalTarget;
-        const dos = Math.floor((finalTarget - roll.total!) / 10);
+        const success = roll.total <= finalTarget;
+        const dos = Math.floor((finalTarget - roll.total) / 10);
 
         // Log acquisition
         await this._logAcquisition({
             item: this.item,
-            roll: roll.total!,
+            roll: roll.total,
             target: finalTarget,
             success,
             dos,
@@ -306,8 +307,8 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             dos,
             item: this.item,
             modifiers: {
-                base: context.baseModifier as number,
-                common: context.commonTotal as number,
+                base: context.baseModifier,
+                common: context.commonTotal,
                 custom: this.customModifier,
             },
         });
@@ -331,7 +332,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             this.#resolve({
                 success,
                 dos,
-                roll: roll.total!,
+                roll: roll.total,
                 target: finalTarget,
             });
         }
@@ -349,7 +350,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _logAcquisition(data: AcquisitionHistoryEntry): Promise<void> {
-        const history = (this.actor.getFlag('wh40k-rpg', 'acquisitionHistory') as AcquisitionHistoryEntry[]) || [];
+        const history = (this.actor.getFlag('wh40k-rpg', 'acquisitionHistory') as AcquisitionHistoryEntry[] | undefined) ?? [];
         history.push(data);
 
         // Keep last 20
@@ -389,7 +390,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             content,
             flavor: 'Profit Factor Acquisition Test',
             rolls: [data.roll],
-        } as unknown as Record<string, unknown>);
+        });
     }
 
     /* -------------------------------------------- */

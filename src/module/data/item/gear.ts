@@ -1,9 +1,9 @@
+import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
-import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
  * Data model for Gear items (general equipment).
@@ -86,23 +86,26 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
     static _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
     }
 
     /** @inheritdoc */
     prepareBaseData(): void {
         super.prepareBaseData();
 
-        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
-        this.category = (resolveLineVariant(this.category as unknown, lineKey) as string) ?? 'general';
-        this.consumable = Boolean(resolveLineVariant(this.consumable as unknown, lineKey));
-        this.uses = foundry.utils.mergeObject({ value: 0, max: 0 }, (resolveLineVariant(this.uses as unknown, lineKey) as Record<string, unknown>) ?? {}, {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: parent _source is Foundry's pre-processed raw payload, untyped at this layer
+        const parent = this.parent as { _source?: { system?: Record<string, unknown> }; actor?: unknown } | null;
+        const lineKey = inferActiveGameLine(parent?._source?.system ?? {}, parent);
+        this.category = resolveLineVariant(this.category, lineKey);
+        this.consumable = Boolean(resolveLineVariant(this.consumable, lineKey));
+        this.uses = foundry.utils.mergeObject({ value: 0, max: 0 }, resolveLineVariant(this.uses, lineKey), {
             inplace: false,
-        }) as typeof this.uses;
-        this.effect = (resolveLineVariant(this.effect as unknown, lineKey) as string) ?? '';
-        this.duration = (resolveLineVariant(this.duration as unknown, lineKey) as string) ?? '';
-        this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';
+        });
+        this.effect = resolveLineVariant(this.effect, lineKey);
+        this.duration = resolveLineVariant(this.duration, lineKey);
+        this.notes = resolveLineVariant(this.notes, lineKey);
     }
 
     /* -------------------------------------------- */
@@ -115,16 +118,20 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @param {object} options    Additional options
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry _cleanData receives untyped legacy source
     static _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
-        super._cleanData?.(source, options);
+        super._cleanData(source, options);
         // Ensure uses values are integers
-        if (source?.uses && typeof source.uses === 'object' && source.uses !== null) {
+        if (source?.uses !== undefined && source.uses !== null && typeof source.uses === 'object') {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry _cleanData receives untyped legacy source
             const uses = source.uses as Record<string, unknown>;
-            if (uses.value !== undefined) {
-                uses.value = parseInt(String(uses.value)) || 0;
+            const usesValue = uses.value;
+            if (usesValue !== undefined) {
+                uses.value = parseInt(typeof usesValue === 'string' || typeof usesValue === 'number' ? String(usesValue) : '') || 0;
             }
-            if (uses.max !== undefined) {
-                uses.max = parseInt(String(uses.max)) || 0;
+            const usesMax = uses.max;
+            if (usesMax !== undefined) {
+                uses.max = parseInt(typeof usesMax === 'string' || typeof usesMax === 'number' ? String(usesMax) : '') || 0;
             }
         }
     }
@@ -138,8 +145,8 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @type {string}
      */
     get categoryLabel(): string {
-        const config = CONFIG.WH40K?.gearCategories?.[this.category];
-        if (config?.label) return game.i18n.localize(config.label);
+        const config = CONFIG.WH40K.gearCategories[this.category] as { label?: string; icon?: string } | undefined;
+        if (config?.label !== undefined && config.label.length > 0) return game.i18n.localize(config.label);
         return game.i18n.localize(`WH40K.GearCategory.${this.category.capitalize()}`);
     }
 
@@ -147,16 +154,16 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Get the category icon.
      * @type {string}
      */
-    get categoryIcon() {
-        const config = CONFIG.WH40K?.gearCategories?.[this.category];
-        return config?.icon || 'fa-box';
+    get categoryIcon(): string {
+        const config = CONFIG.WH40K.gearCategories[this.category] as { icon?: string } | undefined;
+        return config?.icon ?? 'fa-box';
     }
 
     /**
      * Does this item have limited uses?
      * @type {boolean}
      */
-    get hasLimitedUses() {
+    get hasLimitedUses(): boolean {
         return this.uses.max > 0;
     }
 
@@ -182,15 +189,15 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @type {string}
      */
     get weightLabel(): string {
-        return `${this.weight ?? 0} kg`;
+        return `${this.weight} kg`;
     }
 
     /**
      * Get total weight (weight × quantity).
      * @type {number}
      */
-    get totalWeight() {
-        return (this.weight ?? 0) * (this.quantity ?? 1);
+    get totalWeight(): number {
+        return this.weight * this.quantity;
     }
 
     /**
@@ -202,7 +209,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      *
      * @type {object}
      */
-    get craftsmanshipModifiers() {
+    get craftsmanshipModifiers(): { weight: number } {
         const mods = {
             weight: 1.0, // Weight multiplier
         };
@@ -235,17 +242,16 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Get effective total weight (effective weight × quantity).
      * @type {number}
      */
-    get effectiveTotalWeight() {
-        return this.effectiveWeight * (this.quantity ?? 1);
+    get effectiveTotalWeight(): number {
+        return this.effectiveWeight * this.quantity;
     }
 
     /**
      * Check if gear has craftsmanship-derived effects.
      * @type {boolean}
      */
-    get hasCraftsmanshipEffects() {
-        const craft = this.craftsmanship ?? 'common';
-        return craft !== 'common';
+    get hasCraftsmanshipEffects(): boolean {
+        return this.craftsmanship !== 'common';
     }
 
     /* -------------------------------------------- */
@@ -254,10 +260,9 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [
-            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
-            this.categoryLabel,
-        ];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: prototype getter call returns generic value type
+        const inherited = (Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? [];
+        const props = [...inherited, this.categoryLabel];
 
         if (this.hasLimitedUses) {
             props.push(game.i18n.format('WH40K.Gear.UsesRemaining', { uses: this.usesDisplay }));
@@ -275,6 +280,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels is a free-form record consumed by sheet templates
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         const labels = [];
 
@@ -306,47 +312,53 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Consume one use.
      * @returns {Promise<Item>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns Foundry Item (untyped at this layer)
     async consume(): Promise<unknown> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.parent (Foundry Item) needs narrowing for update + name access
+        const parent = this.parent as { name: string; update: (data: Record<string, unknown>) => Promise<unknown> };
         if (!this.hasLimitedUses) {
             ui.notifications.warn(game.i18n.localize('WH40K.Gear.NoConsumableUses'));
-            return this.parent;
+            return parent;
         }
 
         if (this.usesExhausted) {
             ui.notifications.warn(game.i18n.localize('WH40K.Gear.UsesExhausted'));
-            return this.parent;
+            return parent;
         }
 
         const newValue = Math.max(0, this.uses.value - 1);
-        await this.parent?.update({ 'system.uses.value': newValue });
+        await parent.update({ 'system.uses.value': newValue });
 
         // Notification
         ui.notifications.info(
             game.i18n.format('WH40K.Gear.ConsumedUse', {
-                name: this.parent.name,
+                name: parent.name,
                 remaining: `${newValue}/${this.uses.max}`,
             }),
         );
 
-        return this.parent;
+        return parent;
     }
 
     /**
      * Reset uses to maximum.
      * @returns {Promise<Item>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns Foundry Item (untyped at this layer)
     async resetUses(): Promise<unknown> {
-        if (!this.hasLimitedUses) return this.parent;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.parent (Foundry Item) needs narrowing for update + name access
+        const parent = this.parent as { name: string; update: (data: Record<string, unknown>) => Promise<unknown> };
+        if (!this.hasLimitedUses) return parent;
 
-        await this.parent?.update({ 'system.uses.value': this.uses.max });
+        await parent.update({ 'system.uses.value': this.uses.max });
 
         ui.notifications.info(
             game.i18n.format('WH40K.Gear.UsesReset', {
-                name: this.parent.name,
+                name: parent.name,
                 max: String(this.uses.max),
             }),
         );
 
-        return this.parent;
+        return parent;
     }
 }

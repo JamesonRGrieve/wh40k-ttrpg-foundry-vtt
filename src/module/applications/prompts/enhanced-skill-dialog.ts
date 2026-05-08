@@ -8,9 +8,10 @@
  * - Animated feedback
  */
 
+import type { ActionData } from '../../rolls/action-data.ts';
 import { sendActionDataToChat } from '../../rolls/roll-helpers.ts';
-import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -62,12 +63,12 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'enhanced-skill-roll', 'standard-form'],
         actions: {
-            selectDifficulty: EnhancedSkillDialog.#onSelectDifficulty as Function,
-            toggleModifier: EnhancedSkillDialog.#onToggleModifier as Function,
-            updateCustom: EnhancedSkillDialog.#onUpdateCustom as Function,
-            roll: EnhancedSkillDialog.#onRoll as Function,
-            rollRepeat: EnhancedSkillDialog.#onRollRepeat as Function,
-            cancel: EnhancedSkillDialog.#onCancel as Function,
+            selectDifficulty: EnhancedSkillDialog.#onSelectDifficulty,
+            toggleModifier: EnhancedSkillDialog.#onToggleModifier,
+            updateCustom: EnhancedSkillDialog.#onUpdateCustom,
+            roll: EnhancedSkillDialog.#onRoll,
+            rollRepeat: EnhancedSkillDialog.#onRollRepeat,
+            cancel: EnhancedSkillDialog.#onCancel,
         },
         form: {
             submitOnChange: false,
@@ -202,7 +203,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         setupNumberInputAutoSelect(this.element);
 
         // Focus custom modifier input
-        const customInput = this.element.querySelector('#customModifier') as HTMLInputElement | null;
+        const customInput = this.element.querySelector('#customModifier');
         customInput?.addEventListener('input', (e: Event) => {
             const input = e.target as HTMLInputElement;
             this._customModifier = parseInt(input.value, 10) || 0;
@@ -246,7 +247,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @private
      */
     _getRecentRolls(): Array<{ name: string; modifier: number; timestamp: number }> {
-        const recent = (game.user as any).getFlag('wh40k-rpg', 'recentRolls') as Array<{ name: string; modifier: number; timestamp: number }> | undefined;
+        const recent = game.user.getFlag('wh40k-rpg', 'recentRolls') as Array<{ name: string; modifier: number; timestamp: number }> | undefined;
         return recent?.slice(0, 3) ?? [];
     }
 
@@ -258,8 +259,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @private
      */
     async _saveToRecentRolls(modifier: number): Promise<void> {
-        const recent =
-            ((game.user as any).getFlag('wh40k-rpg', 'recentRolls') as Array<{ name: string; modifier: number; timestamp: number }> | undefined) ?? [];
+        const recent = (game.user.getFlag('wh40k-rpg', 'recentRolls') as Array<{ name: string; modifier: number; timestamp: number }> | undefined) ?? [];
         recent.unshift({
             name: this.simpleSkillData.name ?? 'Test',
             modifier,
@@ -267,7 +267,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         });
 
         const trimmed = recent.slice(0, 10);
-        await (game.user as any).setFlag('wh40k-rpg', 'recentRolls', trimmed);
+        await game.user.setFlag('wh40k-rpg', 'recentRolls', trimmed);
     }
 
     /* -------------------------------------------- */
@@ -297,7 +297,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      */
     static async #onToggleModifier(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset.modifierKey;
-        if (key) {
+        if (key !== undefined && key !== '') {
             this._commonModifiers[key] = (target as HTMLInputElement).checked;
             await this.render(false, { parts: ['form'] });
         }
@@ -370,8 +370,11 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
         // Execute roll
         await rollData.calculateTotalModifiers();
-        await (this.simpleSkillData as any).calculateSuccessOrFailure?.();
-        await sendActionDataToChat(this.simpleSkillData as any);
+        const data = this.simpleSkillData as EnhancedSkillDialogData & {
+            calculateSuccessOrFailure?: () => Promise<void> | void;
+        };
+        await data.calculateSuccessOrFailure?.();
+        await sendActionDataToChat(this.simpleSkillData as unknown as ActionData);
 
         await this.close();
     }
@@ -385,7 +388,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
  * Open an enhanced skill roll dialog.
  * @param {object} simpleSkillData  The skill data.
  */
-export function prepareEnhancedSkillRoll(simpleSkillData: EnhancedSkillDialogData) {
+export function prepareEnhancedSkillRoll(simpleSkillData: EnhancedSkillDialogData): void {
     const prompt = new EnhancedSkillDialog(simpleSkillData);
-    prompt.render(true);
+    void prompt.render(true);
 }

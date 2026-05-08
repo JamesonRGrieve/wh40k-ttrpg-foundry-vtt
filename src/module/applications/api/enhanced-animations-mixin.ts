@@ -4,8 +4,8 @@
  * Extends the basic VisualFeedbackMixin with more sophisticated animations
  */
 
-import type { AnyApplicationV2, ApplicationV2Ctor } from './application-types.ts';
 import type { WH40KBaseActorDocument, WH40KWounds } from '../../types/global.d.ts';
+import type { ApplicationV2Ctor } from './application-types.ts';
 import type { EnhancedAnimationsMixinAPI } from './sheet-mixin-types.js';
 
 interface AnimationSnapshot {
@@ -23,9 +23,12 @@ interface AnimationSnapshot {
  * @returns {any}
  * @mixin
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- mixin return type is the inferred derived class shape
 export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class EnhancedAnimationsApplication extends Base implements EnhancedAnimationsMixinAPI {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructor must use any[] per TS 2545 for class merging
         constructor(...args: any[]) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- super spread accepts any[] from mixin constructor
             super(...args);
         }
 
@@ -67,6 +70,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
         /* -------------------------------------------- */
 
         /** @override */
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender context is untyped record
         async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
@@ -85,22 +89,30 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
          */
         _captureAnimationState(): void {
             const document = this.document;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- defensive: document may be unset early in lifecycle
             if (!document) return;
 
-            const system = document.system as any;
+            type AnimSystem = {
+                wounds?: { value?: number; max?: number };
+                experience?: { total?: number };
+                fatigue?: { value?: number };
+                characteristics?: Record<string, { total: number; bonus: number }>;
+            };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: per-system actor schemas read uniformly via local AnimSystem shape
+            const system = document.system as unknown as AnimSystem;
             this._previousState = {
-                wounds: system.wounds?.value as number | undefined,
-                woundsMax: system.wounds?.max as number | undefined,
-                characteristics: {} as Record<string, { total: number; bonus: number }>,
-                experience: system.experience?.total as number | undefined,
-                fatigue: system.fatigue?.value as number | undefined,
+                wounds: system.wounds?.value,
+                woundsMax: system.wounds?.max,
+                characteristics: {},
+                experience: system.experience?.total,
+                fatigue: system.fatigue?.value,
             };
 
             // Capture characteristic bonuses
-            const chars = system.characteristics as Record<string, { total: number; bonus: number }> | undefined;
+            const chars = system.characteristics;
             if (chars) {
+                this._previousState.characteristics = {};
                 for (const [key, char] of Object.entries(chars)) {
-                    this._previousState.characteristics ??= {};
                     this._previousState.characteristics[key] = {
                         total: char.total,
                         bonus: char.bonus,
@@ -145,17 +157,19 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
          * @param {number} toValue          Ending value
          * @param {Object} options          Animation options
          */
+        // eslint-disable-next-line no-restricted-syntax -- boundary: animation options accept ad-hoc consumer-supplied fields
         animateCounter(element: HTMLElement, fromValue: number, toValue: number, options: Record<string, unknown> = {}): void {
-            if (!element || fromValue === toValue) return;
+            if (fromValue === toValue) return;
             if (this._shouldSkipAnimation()) return;
 
-            const duration = (options.duration as number) || this._animationConfig.counterDuration;
-            const formatFn = (options.format as (v: number) => string) || ((v: number) => Math.round(v).toString());
-            const animationKey = element.dataset.animationKey || `counter-${Date.now()}`;
+            const duration = (options.duration as number | undefined) ?? this._animationConfig.counterDuration;
+            const formatFn = (options.format as ((v: number) => string) | undefined) ?? ((v: number) => Math.round(v).toString());
+            const animationKey = element.dataset.animationKey ?? `counter-${Date.now()}`;
 
             // Cancel existing animation on this element
-            if (this._runningAnimations.has(animationKey)) {
-                cancelAnimationFrame(this._runningAnimations.get(animationKey)!);
+            const runningId = this._runningAnimations.get(animationKey);
+            if (runningId !== undefined) {
+                cancelAnimationFrame(runningId);
             }
 
             // Add counter class for styling
@@ -171,7 +185,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
             const startTime = Date.now();
             const difference = toValue - fromValue;
 
-            const animate = () => {
+            const animate = (): void => {
                 const elapsed = Date.now() - startTime;
                 const progress = Math.min(elapsed / duration, 1);
 
@@ -241,13 +255,13 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
          * @protected
          */
         _animateWoundsBar(barElement: HTMLElement, fromPercent: number, toPercent: number): void {
-            const fill = barElement.querySelector('.wh40k-wounds-bar-fill') as HTMLElement | null;
+            const fill = barElement.querySelector('.wh40k-wounds-bar-fill');
             if (!fill) return;
 
             const duration = this._animationConfig.barDuration;
             const startTime = Date.now();
 
-            const animate = () => {
+            const animate = (): void => {
                 const elapsed = Date.now() - startTime;
                 const progress = Math.min(elapsed / duration, 1);
 
@@ -279,7 +293,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
             if (this._shouldSkipAnimation()) return;
 
             // Find the characteristic display
-            const charElement = this.element.querySelector(`[data-characteristic="${charKey}"] .char-total`) as HTMLElement | null;
+            const charElement = this.element.querySelector<HTMLElement>(`[data-characteristic="${charKey}"] .char-total`);
 
             if (charElement) {
                 this.animateCounter(charElement, oldValue, newValue);
@@ -307,12 +321,9 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
             if (this._shouldSkipAnimation()) return;
 
             // Find bonus display - try V1 HUD first, then fallback
-            let bonusElement = this.element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-mod`) as HTMLElement | null;
-
-            // Fallback to generic bonus-val class
-            if (!bonusElement) {
-                bonusElement = this.element.querySelector(`[data-characteristic="${charKey}"] .bonus-val`) as HTMLElement | null;
-            }
+            const bonusElement =
+                this.element.querySelector<HTMLElement>(`[data-characteristic="${charKey}"] .wh40k-char-hud-mod`) ??
+                this.element.querySelector<HTMLElement>(`[data-characteristic="${charKey}"] .bonus-val`);
 
             if (!bonusElement) return;
 
@@ -345,9 +356,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
             if (this._shouldSkipAnimation()) return;
             if (newXP <= oldXP) return; // Only animate gains
 
-            const xpElement = this.element.querySelector(
-                '[name="system.experience.total"], ' + '.xp-total, ' + '[data-field="experience-total"]',
-            ) as HTMLElement | null;
+            const xpElement = this.element.querySelector<HTMLElement>('[name="system.experience.total"], .xp-total, [data-field="experience-total"]');
 
             if (!xpElement) return;
 
@@ -355,7 +364,8 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
             this.animateCounter(xpElement, oldXP, newXP);
 
             // Add golden radiance effect
-            this._flashElement((xpElement.closest('.xp-display') as HTMLElement) || xpElement, 'tw-animate-stat-advance', 1000);
+            const flashTarget = xpElement.closest<HTMLElement>('.xp-display') ?? xpElement;
+            this._flashElement(flashTarget, 'tw-animate-stat-advance', 1000);
         }
 
         /* -------------------------------------------- */
@@ -370,7 +380,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
         _animateProgressBar(barElement: HTMLElement): void {
             if (this._shouldSkipAnimation()) return;
 
-            const fill = barElement.querySelector('.wh40k-wounds-bar-fill, .progress-fill') as HTMLElement | null;
+            const fill = barElement.querySelector<HTMLElement>('.wh40k-wounds-bar-fill, .progress-fill');
 
             if (fill) {
                 fill.style.transition = `width ${this._animationConfig.barDuration}ms ease-out`;
@@ -389,8 +399,6 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
          * @protected
          */
         _flashElement(element: HTMLElement, animClass: string, duration: number = 500): void {
-            if (!element) return;
-
             element.classList.remove(animClass);
             void element.offsetWidth; // Force reflow
             element.classList.add(animClass);

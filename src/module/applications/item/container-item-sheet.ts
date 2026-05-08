@@ -16,7 +16,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
     static DEFAULT_OPTIONS = {
         ...BaseItemSheet.DEFAULT_OPTIONS,
         actions: {
-            ...BaseItemSheet.DEFAULT_OPTIONS?.actions,
+            ...BaseItemSheet.DEFAULT_OPTIONS.actions,
             nestedItemCreate: ContainerItemSheet.#nestedItemCreate,
             nestedItemEdit: ContainerItemSheet.#nestedItemEdit,
             nestedItemDelete: ContainerItemSheet.#nestedItemDelete,
@@ -34,8 +34,8 @@ export default class ContainerItemSheet extends BaseItemSheet {
         const sys = this.item.system as { container?: boolean };
 
         // Add nested items if this is a container
-        if (sys.container) {
-            context.nestedItems = this.item.items?.contents ?? [];
+        if (sys.container === true) {
+            context.nestedItems = this.item.items.contents;
             context.isContainer = true;
         }
 
@@ -52,7 +52,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
 
         // Set up drag-drop for container items
         const sys = this.item.system as { container?: boolean };
-        if (this.isEditable && sys.container) {
+        if (this.isEditable && sys.container === true) {
             this._setupContainerDragDrop();
         }
     }
@@ -67,13 +67,17 @@ export default class ContainerItemSheet extends BaseItemSheet {
         const form = this.element.querySelector('form') ?? this.element;
 
         form.addEventListener('dragover', this._onDragOver.bind(this));
-        form.addEventListener('drop', this._onDrop.bind(this) as unknown as EventListener);
+        form.addEventListener('drop', (e) => {
+            void this._onDrop(e as DragEvent);
+        });
         form.addEventListener('dragend', this._onDragEnd.bind(this));
 
         // Set up draggable nested items
         this.element.querySelectorAll('[data-nested-item-id]').forEach((el) => {
             el.setAttribute('draggable', 'true');
-            el.addEventListener('dragstart', this._onNestedItemDragStart.bind(this) as unknown as EventListener);
+            el.addEventListener('dragstart', (e) => {
+                this._onNestedItemDragStart(e as DragEvent);
+            });
         });
     }
 
@@ -109,23 +113,27 @@ export default class ContainerItemSheet extends BaseItemSheet {
         event.preventDefault();
         event.stopPropagation();
 
-        let data;
+        interface DropPayload {
+            type?: string;
+            uuid?: string;
+        }
+        let data: DropPayload;
         let droppedItem: WH40KItem | null = null;
         let sourceActor: Actor | null = null;
 
         try {
-            data = JSON.parse(event.dataTransfer?.getData('text/plain') ?? '{}');
+            data = JSON.parse(event.dataTransfer?.getData('text/plain') ?? '{}') as DropPayload;
             if (data.type !== 'Item') {
                 return false;
             }
 
-            droppedItem = (await fromUuid(data.uuid)) as WH40KItem | null;
+            droppedItem = (await fromUuid(data.uuid ?? '')) as WH40KItem | null;
             if (!droppedItem) return false;
 
             const resolvedItem = droppedItem;
 
             // Get source actor if applicable
-            if (data.uuid?.startsWith('Actor.')) {
+            if (data.uuid?.startsWith('Actor.') === true) {
                 sourceActor = (await fromUuid(data.uuid.split('.Item.')[0])) as Actor | null;
             }
 
@@ -133,7 +141,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
             if (this.item.items?.find((i) => i._id === resolvedItem._id)) {
                 return false;
             }
-        } catch (err) {
+        } catch {
             return false;
         }
 
@@ -152,9 +160,9 @@ export default class ContainerItemSheet extends BaseItemSheet {
         await this.item.createNestedDocuments([droppedItem as unknown as Record<string, unknown>]);
 
         // Remove from source actor if applicable
-        if (sourceActor && ['acolyte', 'character'].includes(sourceActor.type)) {
+        if (sourceActor !== null && ['acolyte', 'character'].includes(sourceActor.type)) {
             const itemId = droppedItem._id;
-            if (itemId) await sourceActor.deleteEmbeddedDocuments('Item', [itemId]);
+            if (itemId !== null && itemId !== '') await sourceActor.deleteEmbeddedDocuments('Item', [itemId]);
         }
 
         return false;
@@ -168,7 +176,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      */
     _validateDropTarget(droppedItem: WH40KItem): boolean {
         let canAdd = this.item.id !== droppedItem._id;
-        let parent: { id: string | null; parent?: unknown } | null = this.item.parent as { id: string | null; parent?: unknown } | null;
+        let parent: { id: string | null; parent?: unknown } | null = this.item.parent;
         let count = 0;
 
         while (parent && count < 10) {
@@ -240,8 +248,9 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * Handle editing a nested item.
      */
     static #nestedItemEdit(this: ContainerItemSheet, event: Event, target: HTMLElement): void {
-        const itemId = (target.closest('[data-nested-item-id]') as HTMLElement | null)?.dataset.nestedItemId;
-        const nestedItem = this.item.items?.get(itemId!);
+        const itemId = target.closest<HTMLElement>('[data-nested-item-id]')?.dataset.nestedItemId;
+        if (itemId === undefined) return;
+        const nestedItem = this.item.items?.get(itemId);
         nestedItem?.sheet?.render(true);
     }
 
@@ -251,7 +260,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * Handle deleting a nested item.
      */
     static async #nestedItemDelete(this: ContainerItemSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-nested-item-id]') as HTMLElement | null)?.dataset.nestedItemId;
+        const itemId = target.closest<HTMLElement>('[data-nested-item-id]')?.dataset.nestedItemId;
         if (!itemId) return;
 
         const confirmed = await ConfirmationDialog.confirm({

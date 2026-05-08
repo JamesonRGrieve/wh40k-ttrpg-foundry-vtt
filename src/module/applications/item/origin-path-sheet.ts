@@ -41,15 +41,15 @@ export default class OriginPathSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
-        return this.document?.name || 'Origin Path';
+    get title(): string {
+        return this.document.name || 'Origin Path';
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax, complexity -- boundary: ApplicationV2 _prepareContext options/return are framework-defined free-form payloads; complexity is inherent to context assembly
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
-        const system = this.document.system as Record<string, unknown>;
         interface OriginGrants {
             woundsFormula?: string;
             fateFormula?: string;
@@ -57,17 +57,29 @@ export default class OriginPathSheet extends BaseItemSheet {
             talents?: Array<{ name: string; specialization?: string; uuid?: string }>;
             traits?: Array<{ name: string; level?: string; uuid?: string }>;
             equipment?: Array<{ name?: string; quantity?: number; uuid?: string } | string>;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: specialAbilities content shape varies and is rendered raw by the template
             specialAbilities?: unknown[];
             choices?: Array<{ type: string; label: string; count?: number; options: Array<{ label: string; value: string; description?: string }> }>;
         }
-        const grants = (system?.grants ?? {}) as OriginGrants;
-        const charModifiers = system?.modifiers as Record<string, unknown> | undefined;
-        const modifiers = (charModifiers?.characteristics ?? {}) as Record<string, number>;
+        interface OriginSystem {
+            grants?: OriginGrants;
+            modifiers?: { characteristics?: Record<string, number> };
+            step?: string;
+            description?: { value?: string };
+            source?: { book?: string; page?: string };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: requirements step lists hold arbitrary identifier shapes
+            requirements?: { text?: string; previousSteps?: unknown[]; excludedSteps?: unknown[] };
+            xpCost?: number;
+            isAdvancedOrigin?: boolean;
+        }
+        const system = this.document.system as OriginSystem;
+        const grants = system.grants ?? {};
+        const modifiers = system.modifiers?.characteristics ?? {};
 
-        const step = system?.step as string | undefined;
-        const descriptionObj = system?.description as Record<string, unknown> | undefined;
-        const sourceObj = (system?.source as Record<string, unknown> | undefined) ?? {};
-        const requirementsObj = (system?.requirements as Record<string, unknown> | undefined) ?? {};
+        const step = system.step;
+        const descriptionObj = system.description;
+        const sourceObj = system.source ?? {};
+        const requirementsObj = system.requirements ?? {};
 
         // Characteristic modifiers
         const characteristics: Array<{ key: string; label: string; short: string; value: number; positive: boolean }> = [];
@@ -89,7 +101,7 @@ export default class OriginPathSheet extends BaseItemSheet {
             specialization: skill.specialization ?? null,
             level: skill.level ?? 'trained',
             levelLabel: getTrainingLabel(skill.level ?? 'trained'),
-            displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
+            displayName: skill.specialization !== undefined && skill.specialization.length > 0 ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
 
         // Talents
@@ -97,7 +109,7 @@ export default class OriginPathSheet extends BaseItemSheet {
             name: talent.name,
             specialization: talent.specialization ?? null,
             uuid: talent.uuid ?? null,
-            hasItem: !!talent.uuid,
+            hasItem: talent.uuid !== undefined && talent.uuid.length > 0,
         }));
 
         // Traits
@@ -105,7 +117,7 @@ export default class OriginPathSheet extends BaseItemSheet {
             name: trait.name,
             level: trait.level ?? null,
             uuid: trait.uuid ?? null,
-            hasItem: !!trait.uuid,
+            hasItem: trait.uuid !== undefined && trait.uuid.length > 0,
         }));
 
         // Equipment
@@ -139,17 +151,17 @@ export default class OriginPathSheet extends BaseItemSheet {
             img: this.document.img,
             step,
             stepLabel: this._getStepLabel(step),
-            xpCost: (system?.xpCost as number) || 0,
-            isAdvanced: (system?.isAdvancedOrigin as boolean) || false,
-            description: (descriptionObj?.value as string) || '',
-            hasDescription: !!descriptionObj?.value,
+            xpCost: system.xpCost ?? 0,
+            isAdvanced: system.isAdvancedOrigin ?? false,
+            description: descriptionObj?.value ?? '',
+            hasDescription: descriptionObj?.value !== undefined && descriptionObj.value.length > 0,
             source: sourceObj,
-            hasSource: !!(sourceObj.book || sourceObj.page),
+            hasSource: (sourceObj.book !== undefined && sourceObj.book.length > 0) || (sourceObj.page !== undefined && sourceObj.page.length > 0),
             characteristics,
             hasCharacteristics: characteristics.length > 0,
             woundsFormula,
             fateFormula,
-            hasFormulas: !!(woundsFormula || fateFormula),
+            hasFormulas: (woundsFormula !== null && woundsFormula.length > 0) || (fateFormula !== null && fateFormula.length > 0),
             skills,
             hasSkills: skills.length > 0,
             talents,
@@ -163,11 +175,10 @@ export default class OriginPathSheet extends BaseItemSheet {
             choices,
             hasChoices: choices.length > 0,
             requirements: requirementsObj,
-            hasRequirements: !!(
-                requirementsObj.text ||
-                (requirementsObj.previousSteps as unknown[] | undefined)?.length ||
-                (requirementsObj.excludedSteps as unknown[] | undefined)?.length
-            ),
+            hasRequirements:
+                (requirementsObj.text !== undefined && requirementsObj.text.length > 0) ||
+                (requirementsObj.previousSteps?.length ?? 0) > 0 ||
+                (requirementsObj.excludedSteps?.length ?? 0) > 0,
         });
 
         return context;
@@ -178,7 +189,7 @@ export default class OriginPathSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     _getStepLabel(step: string | undefined): string {
-        if (!step) return '';
+        if (step === undefined || step.length === 0) return '';
         const labels: Record<string, string> = {
             homeWorld: 'Home World',
             birthright: 'Birthright',
@@ -191,6 +202,6 @@ export default class OriginPathSheet extends BaseItemSheet {
         };
         const key = step.charAt(0).toUpperCase() + step.slice(1);
         const localizationKey = `WH40K.OriginPath.${key}`;
-        return game.i18n.has?.(localizationKey) ? game.i18n.localize(localizationKey) : labels[step] ?? step;
+        return game.i18n.has(localizationKey) ? game.i18n.localize(localizationKey) : labels[step] ?? step;
     }
 }

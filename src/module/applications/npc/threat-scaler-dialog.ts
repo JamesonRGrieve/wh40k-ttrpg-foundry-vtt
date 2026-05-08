@@ -1,13 +1,25 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import ThreatCalculator from './threat-calculator.ts';
+import ThreatCalculator, { type NPCSystemData } from './threat-calculator.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+interface CharacteristicChange {
+    current: number;
+    new: number;
+    change: number;
+    label?: string;
+    short?: string;
+}
+
 interface ScalingPreview {
-    characteristics: Record<string, unknown>;
+    characteristics: Record<string, CharacteristicChange>;
     wounds: { current: number; new: number };
     armour: { current: number | string; new: number | string };
     [key: string]: unknown;
+}
+
+interface NPCSystemView {
+    threatLevel: number;
 }
 
 interface ScalerState {
@@ -75,13 +87,13 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * The actor being scaled.
      * @type {WH40KBaseActor | null}
      */
-    #actor: WH40KBaseActor | null = null;
+    readonly #actor: WH40KBaseActor | null = null;
 
     /**
      * Current form state.
      * @type {ScalerState}
      */
-    #state: ScalerState = {
+    readonly #state: ScalerState = {
         newThreatLevel: 5,
         scaleCharacteristics: true,
         scaleWounds: true,
@@ -107,7 +119,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * Original threat level for reset functionality.
      * @type {number}
      */
-    #originalThreat = 5;
+    readonly #originalThreat: number = 5;
 
     /**
      * Render timeout.
@@ -126,15 +138,16 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     constructor(actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
         super(options);
         this.#actor = actor;
-        this.#originalThreat = (actor.system as any).threatLevel || 5;
+        this.#originalThreat = (actor.system as NPCSystemView).threatLevel;
         this.#state.newThreatLevel = this.#originalThreat;
     }
 
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
-        return game.i18n.format('WH40K.NPC.ScaleThreatTitle', { name: this.#actor?.name || 'NPC' });
+    get title(): string {
+        const name = this.#actor?.name;
+        return game.i18n.format('WH40K.NPC.ScaleThreatTitle', { name: name !== undefined && name !== '' ? name : 'NPC' });
     }
 
     /* -------------------------------------------- */
@@ -147,12 +160,12 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
 
         if (!this.#actor) return context;
 
-        const currentThreat = (this.#actor.system as any).threatLevel;
+        const currentThreat = (this.#actor.system as NPCSystemView).threatLevel;
         const newThreat = this.#state.newThreatLevel;
         const threatDifference = Math.abs(newThreat - currentThreat);
 
         // Get scaling preview
-        const preview = ThreatCalculator.previewScaling(this.#actor.system as any, currentThreat, newThreat, {
+        const preview = ThreatCalculator.previewScaling(this.#actor.system as object as NPCSystemData, currentThreat, newThreat, {
             scaleCharacteristics: this.#state.scaleCharacteristics,
             scaleWounds: this.#state.scaleWounds,
             scaleSkills: this.#state.scaleSkills,
@@ -161,7 +174,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         }) as unknown as ScalingPreview;
 
         // Prepare characteristics for display
-        const characteristicChanges = Object.entries(preview.characteristics as Record<string, any>).map(([key, char]) => {
+        const characteristicChanges = Object.entries(preview.characteristics).map(([key, char]) => {
             const change = this.#state.scaleCharacteristics ? char.change : 0;
             const newValue = this.#state.scaleCharacteristics ? char.new : char.current;
             const percentChange = char.current > 0 ? Math.round((change / char.current) * 100) : 0;
@@ -233,7 +246,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         const form = this.element;
 
         // Threat level slider - live update
-        const threatSlider = form.querySelector('[name="newThreatLevel"]') as HTMLInputElement | null;
+        const threatSlider = form.querySelector<HTMLInputElement>('[name="newThreatLevel"]');
         if (threatSlider) {
             threatSlider.addEventListener('input', () => {
                 this.#state.newThreatLevel = parseInt(threatSlider.value, 10);
@@ -245,7 +258,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         const checkboxes: (keyof ScalerState)[] = ['scaleCharacteristics', 'scaleWounds', 'scaleSkills', 'scaleWeapons', 'scaleArmour'];
 
         for (const name of checkboxes) {
-            const checkbox = form.querySelector(`[name="${name}"]`) as HTMLInputElement | null;
+            const checkbox = form.querySelector<HTMLInputElement>(`[name="${name}"]`);
             if (checkbox) {
                 checkbox.addEventListener('change', () => {
                     (this.#state as unknown as Record<string, unknown>)[name] = checkbox.checked;
@@ -308,7 +321,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         this.#state.newThreatLevel = newValue;
 
         // Update slider
-        const slider = this.element.querySelector('[name="newThreatLevel"]') as HTMLInputElement | null;
+        const slider = this.element.querySelector<HTMLInputElement>('[name="newThreatLevel"]');
         if (slider) slider.value = String(newValue);
 
         this.render({ parts: ['form'] });
@@ -324,7 +337,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         this.#state.newThreatLevel = this.#originalThreat;
 
         // Update slider
-        const slider = this.element.querySelector('[name="newThreatLevel"]') as HTMLInputElement | null;
+        const slider = this.element.querySelector<HTMLInputElement>('[name="newThreatLevel"]');
         if (slider) slider.value = String(this.#originalThreat);
 
         this.render({ parts: ['form'] });
@@ -366,7 +379,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         this.#state.scaleWeapons = data.scaleWeapons === true || String(data.scaleWeapons) === 'true';
         this.#state.scaleArmour = data.scaleArmour === true || String(data.scaleArmour) === 'true';
 
-        const currentThreat = (this.#actor.system as any).threatLevel;
+        const currentThreat = (this.#actor.system as NPCSystemView).threatLevel;
         const newThreat = this.#state.newThreatLevel;
 
         // Check for no change

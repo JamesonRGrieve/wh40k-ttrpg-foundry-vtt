@@ -1,5 +1,15 @@
 import SystemDataModel from '../abstract/system-data-model.ts';
 
+interface UpdatableActor {
+    updateEmbeddedDocuments?: (type: string, updates: object[], options: object) => Promise<object>;
+}
+
+interface UpdatableItem {
+    id: string;
+    parent: UpdatableActor | null;
+    update: (data: object) => Promise<object>;
+}
+
 /**
  * Template for items that can be equipped.
  * @mixin
@@ -32,7 +42,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @protected
      */
     static _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
         // Ensure boolean fields are proper booleans
         if (source.equipped !== undefined && typeof source.equipped !== 'boolean') {
             source.equipped = Boolean(source.equipped);
@@ -56,7 +66,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @protected
      */
     static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
-        super._cleanData?.(source, options);
+        super._cleanData(source, options);
     }
 
     /* -------------------------------------------- */
@@ -76,7 +86,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @type {boolean}
      */
     get isInShipStorage(): boolean {
-        return this.inShipStorage === true;
+        return this.inShipStorage;
     }
 
     /* -------------------------------------------- */
@@ -89,9 +99,9 @@ export default class EquippableTemplate extends SystemDataModel {
      * updated with a ForcedReplacement operator." Routed through the parent
      * Actor's updateEmbeddedDocuments with diff:false so name/type stay intact.
      */
-    private async _applyForcedSystemUpdate(patch: Record<string, unknown>): Promise<unknown> {
-        const item = this.parent as any;
-        if (!item) return;
+    private _applyForcedSystemUpdate(patch: Record<string, unknown>): Promise<object> | undefined {
+        const item = this.parent as UpdatableItem | null;
+        if (item === null) return undefined;
 
         // Different approach: mutate the item's source data directly, then
         // persist via a minimal dotted-path update that doesn't round-trip
@@ -101,7 +111,7 @@ export default class EquippableTemplate extends SystemDataModel {
         // when Foundry re-validates the full system source during dryRun.
         const actor = item.parent;
         const patchEntries = Object.entries(patch);
-        if (!patchEntries.length) return;
+        if (patchEntries.length === 0) return undefined;
 
         // Build a flat dotted-path update for only the fields we care about.
         const dottedUpdate: Record<string, unknown> = {};
@@ -123,7 +133,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Toggle the equipped state.
      * @returns {Promise<Item>}
      */
-    toggleEquipped(): unknown {
+    toggleEquipped(): Promise<object> | undefined {
         return this._applyForcedSystemUpdate({ equipped: !this.equipped });
     }
 
@@ -133,7 +143,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Move to backpack.
      * @returns {Promise<Item>}
      */
-    stowInBackpack(): unknown {
+    stowInBackpack(): Promise<object> | undefined {
         return this._applyForcedSystemUpdate({
             equipped: false,
             inBackpack: true,
@@ -146,7 +156,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Remove from backpack.
      * @returns {Promise<Item>}
      */
-    removeFromBackpack(): unknown {
+    removeFromBackpack(): Promise<object> | undefined {
         return this._applyForcedSystemUpdate({ inBackpack: false });
     }
 
@@ -156,7 +166,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Move to ship storage.
      * @returns {Promise<Item>}
      */
-    stowInShipStorage(): unknown {
+    stowInShipStorage(): Promise<object> | undefined {
         return this._applyForcedSystemUpdate({
             equipped: false,
             inBackpack: false,
@@ -170,7 +180,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Remove from ship storage.
      * @returns {Promise<Item>}
      */
-    removeFromShipStorage(): unknown {
+    removeFromShipStorage(): Promise<object> | undefined {
         return this._applyForcedSystemUpdate({ inShipStorage: false });
     }
 }

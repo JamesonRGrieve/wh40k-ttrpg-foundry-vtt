@@ -40,7 +40,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * Internal state for the dialog.
      * @type {DialogState}
      */
-    #state: DialogState = {
+    readonly #state: DialogState = {
         mode: 'library', // "library", "save", "load"
         npc: null,
         selectedPreset: null,
@@ -151,7 +151,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @returns {Preset[]} Array of preset objects.
      */
     static getPresets(): Preset[] {
-        return (game.settings.get('wh40k-rpg', this.SETTING_KEY) as Preset[]) || [];
+        return (game.settings.get('wh40k-rpg', this.SETTING_KEY) as Preset[] | undefined) ?? [];
     }
 
     /**
@@ -202,7 +202,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      */
     static getPreset(id: string): Preset | null {
         const presets = this.getPresets();
-        return presets.find((p: Preset) => p.id === id) || null;
+        return presets.find((p: Preset) => p.id === id) ?? null;
     }
 
     /* -------------------------------------------- */
@@ -217,7 +217,22 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @returns {Omit<Preset, 'id' | 'createdAt'>} The preset data.
      */
     static createPresetFromNPC(npc: WH40KNPC, name: string, description: string = ''): Omit<Preset, 'id' | 'createdAt'> {
-        const system = npc.system as any;
+        const system = npc.system as unknown as {
+            faction: string;
+            type: string;
+            role: string;
+            threatLevel: number;
+            characteristics: Record<string, unknown>;
+            wounds: Record<string, unknown>;
+            movement: Record<string, unknown>;
+            size: string;
+            initiative: Record<string, unknown>;
+            trainedSkills: Record<string, unknown>;
+            weapons: Record<string, unknown>;
+            armour: Record<string, unknown>;
+            horde: Record<string, unknown>;
+            tags?: string[];
+        };
         return {
             name,
             description,
@@ -234,7 +249,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
             weapons: foundry.utils.deepClone(system.weapons),
             armour: foundry.utils.deepClone(system.armour),
             horde: foundry.utils.deepClone(system.horde),
-            tags: [...(system.tags || [])],
+            tags: [...(system.tags ?? [])],
         };
     }
 
@@ -272,16 +287,17 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
     /** @override */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-        const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
+        const context = await super._prepareContext(options);
 
         context.mode = this.#state.mode;
-        context.npc = this.#state.npc
+        const npc = this.#state.npc;
+        context.npc = npc
             ? {
-                  name: this.#state.npc.name,
-                  img: this.#state.npc.img,
-                  threatLevel: (this.#state.npc.system as any).threatLevel,
-                  type: (this.#state.npc.system as any).type,
-                  role: (this.#state.npc.system as any).role,
+                  name: npc.name,
+                  img: npc.img,
+                  threatLevel: (npc.system as { threatLevel?: number }).threatLevel,
+                  type: (npc.system as { type?: string }).type,
+                  role: (npc.system as { role?: string }).role,
               }
             : null;
 
@@ -294,7 +310,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         }));
         context.hasPresets = presets.length > 0;
 
-        context.selectedPreset = this.#state.selectedPreset ? CombatPresetDialog.getPreset(this.#state.selectedPreset) : null;
+        context.selectedPreset = this.#state.selectedPreset !== null ? CombatPresetDialog.getPreset(this.#state.selectedPreset) : null;
 
         return context;
     }
@@ -315,12 +331,12 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         const name = (form?.querySelector('[name="presetName"]') as HTMLInputElement | null)?.value.trim();
         const description = (form?.querySelector('[name="presetDescription"]') as HTMLTextAreaElement | null)?.value.trim();
 
-        if (!name) {
+        if (name === undefined || name === '') {
             ui.notifications.warn('Please enter a preset name.');
             return;
         }
 
-        if (!this.#state.npc) {
+        if (this.#state.npc === null) {
             ui.notifications.error('No NPC selected.');
             return;
         }
@@ -329,7 +345,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         await CombatPresetDialog.addPreset(preset);
 
         ui.notifications.info(`Saved preset "${name}"`);
-        this.close();
+        void this.close();
     }
 
     /**
@@ -340,24 +356,24 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
     static async #loadSelected(this: CombatPresetDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        if (!this.#state.selectedPreset) {
+        if (this.#state.selectedPreset === null) {
             ui.notifications.warn('Please select a preset to load.');
             return;
         }
 
-        if (!this.#state.npc) {
+        if (this.#state.npc === null) {
             ui.notifications.error('No NPC selected.');
             return;
         }
 
         const preset = CombatPresetDialog.getPreset(this.#state.selectedPreset);
-        if (!preset) {
+        if (preset === null) {
             ui.notifications.error('Preset not found.');
             return;
         }
 
         await CombatPresetDialog.applyPresetToNPC(this.#state.npc, preset);
-        this.close();
+        void this.close();
     }
 
     /**
@@ -369,21 +385,21 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         event.preventDefault();
 
         const presetId = target.dataset.presetId;
-        if (!presetId) return;
+        if (presetId === undefined || presetId === '') return;
 
         const preset = CombatPresetDialog.getPreset(presetId);
-        if (!preset) return;
+        if (preset === null) return;
 
-        const confirmed = await (foundry as any).applications.api.DialogV2.confirm({
+        const confirmed = await foundry.applications.api.DialogV2.confirm({
             window: { title: 'Delete Preset' },
             content: `<p>Delete preset <strong>${preset.name}</strong>?</p>`,
             rejectClose: false,
         });
 
-        if (confirmed) {
+        if (confirmed === true) {
             await CombatPresetDialog.deletePresetById(presetId);
             ui.notifications.info(`Deleted preset "${preset.name}"`);
-            this.render();
+            void this.render();
         }
     }
 

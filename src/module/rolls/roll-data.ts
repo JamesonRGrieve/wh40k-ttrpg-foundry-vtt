@@ -1,3 +1,5 @@
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import type { WH40KItem } from '../documents/item.ts';
 import { aimModifiers } from '../rules/aim.ts';
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.ts';
 import { calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../rules/attack-specials.ts';
@@ -8,9 +10,7 @@ import { hitDropdown } from '../rules/hit-locations.ts';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.ts';
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.ts';
 import { getWeaponTrainingModifier } from '../rules/weapon-training.ts';
-import { WH40KBaseActor } from '../documents/base-actor.ts';
-import { WH40KItem } from '../documents/item.ts';
-import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+import type { WH40KBaseActorDocument, WH40KPsy } from '../types/global.d.ts';
 
 /**
  * Base class for all roll-related data
@@ -19,7 +19,7 @@ export class RollData {
     difficulties: Record<string, string> = rollDifficulties();
     aims: Record<string, string> = aimModifiers();
     locations: Record<string, string> = hitDropdown();
-    lasModes: string[] = (WH40K.combat as { las_fire_modes?: string[] })?.las_fire_modes ?? [];
+    lasModes: string[] = (WH40K.combat as { las_fire_modes?: string[] }).las_fire_modes ?? [];
 
     // Chat Controls
     ignoreModifiers: boolean = false;
@@ -36,7 +36,9 @@ export class RollData {
     rangeName: string = '';
     rangeBonus: number = 0;
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: combat action info populated by per-system rule modules
     combatActionInformation: Record<string, unknown> = {};
+    // eslint-disable-next-line no-restricted-syntax -- boundary: actions populated by per-system rule modules
     actions: Record<string, unknown> = {};
     action: string = '';
 
@@ -81,6 +83,7 @@ export class RollData {
     template?: string;
 
     get showDamage(): boolean {
+        // eslint-disable-next-line no-restricted-syntax -- isThrown is set externally on per-weapon basis; nullish coalesce is the read-time default
         return this.success || (this.isThrown ?? false);
     }
 
@@ -92,34 +95,37 @@ export class RollData {
 
     nameOverride?: string;
     get name(): string {
-        if (this.nameOverride) return this.nameOverride;
+        if (this.nameOverride !== undefined && this.nameOverride !== '') return this.nameOverride;
 
+        // eslint-disable-next-line no-restricted-syntax -- nameOverride is opt-in caller-supplied; nullish coalesce is the read-time default
         const actionItem = this.weapon ?? this.power;
-        if (actionItem) return actionItem.name ?? '';
+        if (actionItem) return actionItem.name;
 
         return '';
     }
 
     get effectString(): string {
+        // eslint-disable-next-line no-restricted-syntax -- power is set on PsychicRollData subclass; nullish coalesce is the read-time default
         const actionItem = this.weapon ?? this.power;
         if (!actionItem) return '';
 
         const str: string[] = [];
 
-        const ammoName = (actionItem.system as { loadedAmmo?: { name: string } })?.loadedAmmo?.name;
-        if (ammoName) {
+        const ammoName = (actionItem.system as { loadedAmmo?: { name: string } }).loadedAmmo?.name;
+        if (ammoName !== undefined && ammoName !== '') {
             str.push(ammoName);
         }
 
         const specials = this.attackSpecials.map((s: { name: string }) => s.name).join(',');
-        if (specials) {
+        if (specials !== '') {
             str.push(specials);
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- structural cast to detect WeaponRollData via duck-typed method check
         const weaponRollData = this as unknown as WeaponRollData;
         if (typeof weaponRollData.hasWeaponModification === 'function') {
-            const mods = weaponRollData.weaponModifications?.map((m: { name: string }) => m.name).join(',');
-            if (mods) {
+            const mods = weaponRollData.weaponModifications.map((m: { name: string }) => m.name).join(',');
+            if (mods !== '') {
                 str.push(mods);
             }
         }
@@ -139,7 +145,7 @@ export class RollData {
                     modifiers[m.toUpperCase()] = value;
                 }
             } catch (err) {
-                game.wh40k.error('Error while calculate roll data modifiers:', err as string);
+                game.wh40k.error('Error while calculate roll data modifiers:', err);
             }
         }
         return modifiers;
@@ -234,7 +240,7 @@ export class WeaponRollData extends RollData {
 
     async update(): Promise<void> {
         const weaponSystem = this.weapon.system as { attackBonus?: number; type?: string; usesAmmo?: boolean };
-        if (weaponSystem.attackBonus) {
+        if (weaponSystem.attackBonus !== undefined && weaponSystem.attackBonus !== 0) {
             this.modifiers['attack'] = weaponSystem.attackBonus;
         }
 
@@ -258,25 +264,26 @@ export class WeaponRollData extends RollData {
         this.ignoreSuccess = this.isSpray;
         this.ignoreControls = this.isFeint || this.isStun || this.isKnockDown;
         this.ignoreDamage = this.isStun || this.isFeint || this.isKnockDown;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: isThrown is a per-weapon flag set by item document
         this.isThrown = (this.weapon as { isThrown?: boolean }).isThrown ?? false;
 
         this.isOpposed = this.isKnockDown || this.isFeint;
         if (this.isOpposed && this.targetActor) {
-            const targetActor = this.targetActor as WH40KBaseActorDocument;
+            const targetActor = this.targetActor;
             if (this.isFeint) {
-                this.opposedTarget = targetActor.characteristics?.weaponSkill?.total ?? 0;
+                this.opposedTarget = targetActor.characteristics.weaponSkill.total;
                 this.opposedChar = 'WS';
             } else if (this.isKnockDown) {
-                this.opposedTarget = targetActor.characteristics?.strength?.total ?? 0;
+                this.opposedTarget = targetActor.characteristics.strength.total;
                 this.opposedChar = 'S';
             }
         }
 
-        await updateWeaponModifiers(this);
+        updateWeaponModifiers(this);
         await updateAttackSpecials(this);
         updateAvailableCombatActions(this);
         calculateCombatActionModifier(this);
-        if (weaponSystem.usesAmmo) {
+        if (weaponSystem.usesAmmo === true) {
             this.usesAmmo = true;
             calculateAmmoInformation(this as Parameters<typeof calculateAmmoInformation>[0]);
         } else {
@@ -295,11 +302,12 @@ export class WeaponRollData extends RollData {
 
         // Size Bonus should not change after initial targeting
         const targetActorSystem = this.targetActor?.system as { size?: string | number };
-        if (this.targetActor && targetActorSystem.size) {
+        if (this.targetActor && targetActorSystem.size !== undefined && targetActorSystem.size !== '' && targetActorSystem.size !== 0) {
             try {
                 const size = Number.parseInt(targetActorSystem.size.toString());
                 this.modifiers['target-size'] = (size - 4) * 10;
             } catch {
+                // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.RollData.TargetSizeNotANumber localization key not yet in en.json
                 ui.notifications.warn('Target size is not a number. Unexpected error.');
             }
         }
@@ -328,28 +336,28 @@ export class WeaponRollData extends RollData {
     }
 
     updateBaseTarget(): void {
-        const sourceActor = this.sourceActor as WH40KBaseActorDocument | null;
+        const sourceActor = this.sourceActor;
         if (!sourceActor) return;
 
         const weaponSystem = this.weapon.system as { isRanged?: boolean };
-        if (weaponSystem.isRanged) {
-            this.baseTarget = sourceActor.characteristics?.ballisticSkill?.total ?? 0;
+        if (weaponSystem.isRanged === true) {
+            this.baseTarget = sourceActor.characteristics.ballisticSkill.total;
             this.baseChar = 'BS';
         } else {
-            this.baseTarget = sourceActor.characteristics?.weaponSkill?.total ?? 0;
+            this.baseTarget = sourceActor.characteristics.weaponSkill.total;
             this.baseChar = 'WS';
         }
 
         if (this.action === 'Knock Down') {
-            this.baseTarget = sourceActor.characteristics?.strength?.total ?? 0;
+            this.baseTarget = sourceActor.characteristics.strength.total;
             this.baseChar = 'S';
         }
     }
 
     async finalize(): Promise<void> {
-        await calculateAmmoAttackBonuses(this as Parameters<typeof calculateAmmoAttackBonuses>[0]);
-        await calculateAttackSpecialAttackBonuses(this);
-        await calculateWeaponModifiersAttackBonuses(this);
+        calculateAmmoAttackBonuses(this as Parameters<typeof calculateAmmoAttackBonuses>[0]);
+        calculateAttackSpecialAttackBonuses(this);
+        calculateWeaponModifiersAttackBonuses(this);
         this.modifiers = {
             ...this.modifiers,
             ...this.specialModifiers,
@@ -358,6 +366,7 @@ export class WeaponRollData extends RollData {
         };
 
         // Unselect Weapon -- UI issues if it's selected on start
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- defensive: weapon may be unset before initialize() runs
         if (this.weapon) {
             (this.weapon as { isSelected?: boolean }).isSelected = false;
         }
@@ -398,9 +407,9 @@ export class PsychicRollData extends RollData {
         this.modifiers['bonus'] = 0;
         this.modifiers['difficulty'] = 0;
         this.modifiers['modifier'] = 0;
-        type ActorWithPsy = WH40KBaseActorDocument & { psy?: import('../types/global.d.ts').WH40KPsy };
+        type ActorWithPsy = WH40KBaseActorDocument & { psy?: WH40KPsy };
         this.pr = (this.sourceActor as ActorWithPsy).psy?.rating ?? 0;
-        this.hasFocus = !!(this.sourceActor as ActorWithPsy).psy?.hasFocus;
+        this.hasFocus = (this.sourceActor as ActorWithPsy).psy?.hasFocus === true;
 
         this.powerSelect = this.psychicPowers.length > 1;
         this.power = this.psychicPowers[0];
@@ -419,13 +428,13 @@ export class PsychicRollData extends RollData {
 
     async update(): Promise<void> {
         if (!this.sourceActor) return;
-        type ActorWithPsy = WH40KBaseActorDocument & { psy?: import('../types/global.d.ts').WH40KPsy };
+        type ActorWithPsy = WH40KBaseActorDocument & { psy?: WH40KPsy };
         const sourceActor = this.sourceActor as ActorWithPsy;
 
         this.modifiers['bonus'] = 10 * Math.floor((sourceActor.psy?.rating ?? 0) - this.pr);
         this.modifiers['focus'] = this.hasFocus ? 10 : 0;
-        this.modifiers['power'] = (this.power.system as { target?: { bonus?: number } })?.target?.bonus ?? 0;
-        this.hasDamage = (this.power.system as { subtype?: string })?.subtype?.includes('Attack') ?? false;
+        this.modifiers['power'] = (this.power.system as { target?: { bonus?: number } }).target?.bonus ?? 0;
+        this.hasDamage = (this.power.system as { subtype?: string }).subtype?.includes('Attack') ?? false;
         await updateAttackSpecials(this);
         this.updateBaseTarget();
         await calculatePsychicPowerRange(this);
@@ -437,20 +446,32 @@ export class PsychicRollData extends RollData {
         // type doesn't declare it. Power rolls only target actors that implement it,
         // so cast through a structural type rather than widening the base class.
         type FuzzySkill = { current: number; label?: string };
-        type SkillResolver = WH40KBaseActorDocument & { getSkillFuzzy(skill: string): FuzzySkill | undefined };
+        type SkillResolver = WH40KBaseActorDocument & {
+            getSkillFuzzy(skill: string): FuzzySkill | undefined;
+            getCharacteristicFuzzy(characteristic: string): { total: number; short: string } | undefined;
+        };
+        type PowerTarget = {
+            useSkill?: boolean;
+            skill?: string;
+            characteristic?: string;
+            isOpposed?: boolean;
+            useOpposedSkill?: boolean;
+            opposedSkill?: string;
+            opposed?: string;
+        };
         const sourceActor = this.sourceActor as SkillResolver;
-        const target = (this.power.system as { target?: any })?.target;
+        const target = (this.power.system as { target?: PowerTarget }).target;
         if (!target) return;
 
-        if (target.useSkill) {
-            const skill = target.skill;
+        if (target.useSkill === true) {
+            const skill = target.skill ?? '';
             const actorSkill = sourceActor.getSkillFuzzy(skill);
             if (actorSkill) {
                 this.baseTarget = actorSkill.current;
                 this.baseChar = actorSkill.label ?? '';
             }
         } else {
-            const characteristic = target.characteristic;
+            const characteristic = target.characteristic ?? '';
             const actorCharacteristic = sourceActor.getCharacteristicFuzzy(characteristic);
             if (actorCharacteristic) {
                 this.baseTarget = actorCharacteristic.total;
@@ -458,19 +479,19 @@ export class PsychicRollData extends RollData {
             }
         }
 
-        if (target.isOpposed && this.targetActor) {
+        if (target.isOpposed === true && this.targetActor) {
             this.isOpposed = true;
             const targetActor = this.targetActor as SkillResolver;
 
-            if (target.useOpposedSkill) {
-                const skill = target.opposedSkill;
+            if (target.useOpposedSkill === true) {
+                const skill = target.opposedSkill ?? '';
                 const actorSkill = targetActor.getSkillFuzzy(skill);
                 if (actorSkill) {
                     this.opposedTarget = actorSkill.current;
                     this.opposedChar = actorSkill.label ?? '';
                 }
             } else {
-                const characteristic = target.opposed;
+                const characteristic = target.opposed ?? '';
                 const actorCharacteristic = targetActor.getCharacteristicFuzzy(characteristic);
                 if (actorCharacteristic) {
                     this.opposedTarget = actorCharacteristic.total;
@@ -481,7 +502,7 @@ export class PsychicRollData extends RollData {
     }
 
     async finalize(): Promise<void> {
-        await calculateAttackSpecialAttackBonuses(this);
+        calculateAttackSpecialAttackBonuses(this);
         this.modifiers = { ...this.modifiers, ...this.specialModifiers };
         await this.calculateTotalModifiers();
     }
