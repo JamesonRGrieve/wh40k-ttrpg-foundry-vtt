@@ -256,6 +256,49 @@ const JS_HOOKS = new Set([
     // The CSS rules must stay in the monolith; the classes must stay on their elements.
     'wh40k-prose-editor',
     'wh40k-prose-content',
+    // ── Weapon Sheet V3 interactive CSS classes ──────────────────────────────
+    // These classes drive CSS behaviors that require sibling selectors, pseudo-elements,
+    // or :has() — patterns that cannot be expressed as inline Tailwind utilities without
+    // restructuring the HTML. The CSS rules live inside .wh40k-weapon-sheet-v3 {} in the
+    // monolith; removing either the scope class or these component classes breaks behavior.
+    //
+    // wh40k-weapon-sheet-v3: CSS scope ancestor — all nested component rules cascade from it.
+    'wh40k-weapon-sheet-v3',
+    // wh40k-float-field: floating-label component — label position is driven by
+    //   input:focus ~ label  and  input:not(:placeholder-shown) ~ label  CSS sibling selectors.
+    //   __bar expands via  input:focus ~ .wh40k-float-field__bar  (CSS sibling).
+    //   __arrow rotates via  select:focus ~ .wh40k-float-field__arrow  (CSS sibling).
+    'wh40k-float-field',
+    'wh40k-float-field--narrow',
+    'wh40k-float-field--select',
+    'wh40k-float-field__bar',
+    'wh40k-float-field__arrow',
+    // wh40k-toggle-switch: toggle switch component — slider knob position and color change via
+    //   input:checked + .wh40k-toggle-switch__slider  (CSS sibling + ::after pseudo-element).
+    //   Label color changes via  input:checked ~ .wh40k-toggle-switch__label  (CSS sibling).
+    'wh40k-toggle-switch',
+    'wh40k-toggle-switch--readonly',
+    'wh40k-toggle-switch__slider',
+    'wh40k-toggle-switch__label',
+    // wh40k-input--readonly: readonly state for inputs inside wh40k-float-field; uses CSS
+    //   !important overrides to win specificity battle against the float-field input rules.
+    'wh40k-input--readonly',
+    // wh40k-weapon-body: weapon-sheet.ts#toggleBody queries `.wh40k-weapon-body` by class name
+    //   to toggle the `collapsed` class. JS hook; cannot be renamed without updating the TS.
+    'wh40k-weapon-body',
+    // wh40k-section__body: CSS rule `.wh40k-section__body.collapsed { display:none }` targets
+    //   this class name. JS adds/removes `collapsed` on elements with `data-section-content`.
+    //   Both the class name AND the collapsed state must stay for the toggle to work.
+    'wh40k-section__body',
+    // wh40k-section__toggle: CSS :has() rule targets this class for chevron rotation:
+    //   .wh40k-section__header:has(~ .wh40k-section__body.collapsed) .wh40k-section__toggle
+    'wh40k-section__toggle',
+    // wh40k-body-toggle__icon: weapon-sheet.ts#toggleBody queries `.wh40k-body-toggle__icon`
+    //   by class name to swap fa-chevron-up / fa-chevron-down icons. JS hook.
+    'wh40k-body-toggle__icon',
+    // collapsed: JS-managed state class — toggleSection/toggleBody add this via classList.toggle.
+    //   CSS `.wh40k-section__body.collapsed` and `.wh40k-weapon-body.collapsed` use it for display:none.
+    'collapsed',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
 // Tokens that are artifacts of stripping a `{{someVar}}` expression from the middle of a
