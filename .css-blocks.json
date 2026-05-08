@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-05-08T05:04:37.205Z",
+  "generatedAt": "2026-05-08T05:08:20.452Z",
   "summary": {
-    "monolithLines": 3494,
+    "monolithLines": 3477,
     "markers": 20,
     "distinctSources": 9,
-    "coveredLines": 3461,
+    "coveredLines": 3444,
     "uncoveredLines": 33
   },
   "ranges": {
@@ -38,36 +38,36 @@
         "end": 1891
       },
       {
-        "start": 2002,
-        "end": 2004
+        "start": 1985,
+        "end": 1987
       },
       {
-        "start": 2005,
-        "end": 2007
+        "start": 1988,
+        "end": 1990
       },
       {
-        "start": 2429,
-        "end": 2431
+        "start": 2412,
+        "end": 2414
       },
       {
-        "start": 2432,
-        "end": 2434
+        "start": 2415,
+        "end": 2417
       },
       {
-        "start": 2435,
-        "end": 2437
+        "start": 2418,
+        "end": 2420
       },
       {
-        "start": 2438,
-        "end": 2440
+        "start": 2421,
+        "end": 2423
       },
       {
-        "start": 2441,
-        "end": 2443
+        "start": 2424,
+        "end": 2426
       },
       {
-        "start": 2444,
-        "end": 3046
+        "start": 2427,
+        "end": 3029
       }
     ],
     "src/css/item/_weapon.css": [
@@ -91,19 +91,19 @@
     "src/css/components/_armour.css": [
       {
         "start": 1892,
-        "end": 2001
+        "end": 1984
       }
     ],
     "src/css/actor/_npc-sheet.css": [
       {
-        "start": 2008,
-        "end": 2428
+        "start": 1991,
+        "end": 2411
       }
     ],
     "src/css/foundry-chrome.css": [
       {
-        "start": 3047,
-        "end": 3494
+        "start": 3030,
+        "end": 3477
       }
     ]
   }

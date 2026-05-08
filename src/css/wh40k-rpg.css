@@ -3442,30 +3442,6 @@ body.theme-dark {
 }
 
 /* salvaged from src/css/panels/_overview-dashboard.css — zone accent colors (descendant selectors can't be expressed in Tailwind) */
-.wh40k-zone-vitals {
-    border-left: 3px solid var(--wh40k-accent-combat);
-}
-.wh40k-zone-skills {
-    border-left: 3px solid var(--wh40k-accent-green-bright);
-}
-.wh40k-zone-talents {
-    border-left: 3px solid var(--wh40k-accent-talents);
-}
-.wh40k-zone-movement {
-    border-left: 3px solid var(--wh40k-accent-info);
-}
-.wh40k-zone-weapons {
-    border-left: 3px solid var(--wh40k-accent-combat);
-}
-.wh40k-zone-armour {
-    border-left: 3px solid #7f8c8d;
-}
-.wh40k-zone-resources {
-    border-left: 3px solid var(--wh40k-color-gold);
-}
-.wh40k-zone-effects {
-    border-left: 3px solid var(--wh40k-accent-psychic);
-}
 
 /* salvaged from src/css/panels/_combat-station.css — @container breakpoints (can't be expressed in Tailwind) */
 
