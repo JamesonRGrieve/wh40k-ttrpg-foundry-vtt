@@ -1,0 +1,5 @@
+@import './wh40k-rpg.css';
+
+/* Tailwind layers — must follow the legacy monolith so utility classes win the cascade. */
+@tailwind components;
+@tailwind utilities;

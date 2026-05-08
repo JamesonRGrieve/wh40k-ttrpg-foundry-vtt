@@ -3300,7 +3300,3 @@ body.theme-dark {
 /* salvaged from src/css/panels/_combat-station.css — @container breakpoints (can't be expressed in Tailwind) */
 
 /* salvaged from src/css/panels/_combat-station.css — ::before pseudo on action button (accent strip) */
-
-/* Tailwind layers — processed by PostCSS after legacy CSS imports */
-@tailwind components;
-@tailwind utilities;

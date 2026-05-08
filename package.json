@@ -123,6 +123,7 @@
     "lucide": "^0.500.0",
     "merge-stream": "2.0.0",
     "postcss": "^8.5.9",
+    "postcss-import": "^16.1.1",
     "postcss-nested": "^7.0.2",
     "prettier": "2.8.8",
     "storybook": "^10.3.5",
