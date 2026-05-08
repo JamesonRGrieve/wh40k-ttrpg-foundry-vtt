@@ -1,109 +1,109 @@
 {
-  "generatedAt": "2026-05-08T04:45:23.249Z",
+  "generatedAt": "2026-05-08T05:04:37.205Z",
   "summary": {
-    "monolithLines": 4728,
+    "monolithLines": 3494,
     "markers": 20,
     "distinctSources": 9,
-    "coveredLines": 4695,
+    "coveredLines": 3461,
     "uncoveredLines": 33
   },
   "ranges": {
     "src/css/abstracts/_gothic-theme.css": [
       {
         "start": 34,
-        "end": 504
+        "end": 416
       }
     ],
     "src/css/abstracts/_unified-components.css": [
       {
-        "start": 505,
-        "end": 881
+        "start": 417,
+        "end": 731
       }
     ],
     "src/css/wh40k-rpg.css": [
       {
-        "start": 882,
-        "end": 886
+        "start": 732,
+        "end": 736
       },
       {
-        "start": 887,
-        "end": 898
+        "start": 737,
+        "end": 748
       },
       {
-        "start": 2326,
-        "end": 2328
+        "start": 1318,
+        "end": 1320
       },
       {
-        "start": 2942,
-        "end": 2944
+        "start": 1889,
+        "end": 1891
       },
       {
-        "start": 3055,
-        "end": 3057
+        "start": 2002,
+        "end": 2004
       },
       {
-        "start": 3058,
-        "end": 3060
+        "start": 2005,
+        "end": 2007
       },
       {
-        "start": 3564,
-        "end": 3566
+        "start": 2429,
+        "end": 2431
       },
       {
-        "start": 3567,
-        "end": 3569
+        "start": 2432,
+        "end": 2434
       },
       {
-        "start": 3570,
-        "end": 3572
+        "start": 2435,
+        "end": 2437
       },
       {
-        "start": 3573,
-        "end": 3575
+        "start": 2438,
+        "end": 2440
       },
       {
-        "start": 3576,
-        "end": 3578
+        "start": 2441,
+        "end": 2443
       },
       {
-        "start": 3579,
-        "end": 4280
+        "start": 2444,
+        "end": 3046
       }
     ],
     "src/css/item/_weapon.css": [
       {
-        "start": 899,
-        "end": 2325
+        "start": 749,
+        "end": 1317
       }
     ],
     "src/css/components/_wh40k-tooltip.css": [
       {
-        "start": 2329,
-        "end": 2675
+        "start": 1321,
+        "end": 1667
       }
     ],
     "src/css/components/_item-preview.css": [
       {
-        "start": 2676,
-        "end": 2941
+        "start": 1668,
+        "end": 1888
       }
     ],
     "src/css/components/_armour.css": [
       {
-        "start": 2945,
-        "end": 3054
+        "start": 1892,
+        "end": 2001
       }
     ],
     "src/css/actor/_npc-sheet.css": [
       {
-        "start": 3061,
-        "end": 3563
+        "start": 2008,
+        "end": 2428
       }
     ],
     "src/css/foundry-chrome.css": [
       {
-        "start": 4281,
-        "end": 4728
+        "start": 3047,
+        "end": 3494
       }
     ]
   }
