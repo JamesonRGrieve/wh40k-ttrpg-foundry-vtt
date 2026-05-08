@@ -1,20 +1,20 @@
 {{!-- Advancement Dialog Template --}}
 <div class="tw-flex tw-flex-col tw-h-full tw-gap-0 tw-font-[var(--wh40k-font-ui)]" data-wh40k-system="{{_gameSystemId}}">
-  
+
   {{!-- Header with XP Display --}}
-  <header class="wh40k-adv__header">
-    <div class="wh40k-adv__xp-display">
-      <div class="wh40k-adv__xp-bar">
-        <div class="wh40k-adv__xp-fill" style="width: {{xp.usedPercent}}%">
-          <span class="wh40k-adv__xp-fill-shimmer tw-pointer-events-none tw-absolute tw-inset-0 tw-animate-xp-shimmer tw-bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)]"></span>
+  <header>
+    <div>
+      <div>
+        <div style="width: {{xp.usedPercent}}%">
+          <span class="tw-pointer-events-none tw-absolute tw-inset-0 tw-animate-xp-shimmer tw-bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)]"></span>
         </div>
       </div>
-      <div class="wh40k-adv__xp-info">
-        <span class="wh40k-adv__xp-available bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat im:tw-text-failure ow:tw-text-brass-l20 rt:tw-text-gold">
+      <div>
+        <span class="bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat im:tw-text-failure ow:tw-text-brass-l20 rt:tw-text-gold">
           <i class="fas fa-bolt"></i>
           <strong>{{xp.available}}</strong> {{localize "WH40K.Advancement.XPAvailable"}}
         </span>
-        <span class="wh40k-adv__xp-total">
+        <span>
           ({{xp.used}} / {{xp.total}} {{localize "WH40K.Advancement.XPUsed"}})
         </span>
       </div>
@@ -23,13 +23,13 @@
 
   {{!-- No Career Selected - Blocked State --}}
   {{#unless hasCareer}}
-  <div class="wh40k-adv__blocked-state tw-animate-[fadeIn_250ms_ease]">
-    <div class="wh40k-adv__blocked-icon">
+  <div class="tw-animate-[fadeIn_250ms_ease]">
+    <div>
       <i class="fas fa-route"></i>
     </div>
-    <h3 class="wh40k-adv__blocked-title">{{localize "WH40K.Advancement.NoCareerTitle"}}</h3>
-    <p class="wh40k-adv__blocked-message">{{localize "WH40K.Advancement.NoCareerMessage"}}</p>
-    <div class="wh40k-adv__blocked-hint">
+    <h3>{{localize "WH40K.Advancement.NoCareerTitle"}}</h3>
+    <p>{{localize "WH40K.Advancement.NoCareerMessage"}}</p>
+    <div>
       <i class="fas fa-info-circle"></i>
       <span>{{localize "WH40K.Advancement.NoCareerHint"}}</span>
     </div>
@@ -37,10 +37,10 @@
   {{else}}
 
   {{!-- Tab Navigation --}}
-  <nav class="wh40k-adv__tabs">
+  <nav>
     {{#each tabs}}
-    <button 
-      class="wh40k-adv__tab {{#if this.active}}wh40k-adv__tab--active{{/if}}"
+    <button
+      class="{{#if this.active}}active{{/if}}"
       data-action="switchTab"
       data-tab="{{this.id}}"
       type="button"
@@ -52,34 +52,34 @@
   </nav>
 
   {{!-- Content Area --}}
-  <div class="wh40k-adv__content">
+  <div>
 
     {{!-- Characteristics Tab --}}
     {{#if (eq activeTab "characteristics")}}
-    <div class="wh40k-adv__panel tw-animate-[fadeIn_250ms_ease] wh40k-adv__panel--characteristics">
-      <div class="wh40k-adv__char-grid">
+    <div class="tw-animate-[fadeIn_250ms_ease]">
+      <div>
         {{#each characteristics}}
-        <div class="wh40k-adv__char-card {{#if this.recentlyPurchased}}wh40k-adv__char-card--purchased tw-animate-purchasePulse{{/if}} {{#if this.isMaxed}}wh40k-adv__char-card--maxed{{/if}}">
-          
-          <div class="wh40k-adv__char-header">
-            <span class="wh40k-adv__char-abbr">{{this.abbreviation}}</span>
-            <span class="wh40k-adv__char-value">{{this.currentValue}}</span>
+        <div class="{{#if this.recentlyPurchased}}tw-animate-purchasePulse{{/if}}">
+
+          <div>
+            <span>{{this.abbreviation}}</span>
+            <span>{{this.currentValue}}</span>
           </div>
-          
-          <div class="wh40k-adv__char-name">{{this.label}}</div>
+
+          <div>{{this.label}}</div>
 
           {{#if this.aptitudeMatch}}
-          <div class="wh40k-adv__apt-dots" data-tooltip="Aptitudes: {{#each this.aptitudeMatch.all}}{{this}}{{#unless @last}}, {{/unless}}{{/each}} — Matched {{this.aptitudeMatch.matches}}/{{this.aptitudeMatch.all.length}}">
-            {{#each this.aptitudeMatch.matched}}<span class="wh40k-adv__apt-dot wh40k-adv__apt-dot--matched"></span>{{/each}}
-            {{#each this.aptitudeMatch.unmatched}}<span class="wh40k-adv__apt-dot"></span>{{/each}}
+          <div data-tooltip="Aptitudes: {{#each this.aptitudeMatch.all}}{{this}}{{#unless @last}}, {{/unless}}{{/each}} — Matched {{this.aptitudeMatch.matches}}/{{this.aptitudeMatch.all.length}}">
+            {{#each this.aptitudeMatch.matched}}<span></span>{{/each}}
+            {{#each this.aptitudeMatch.unmatched}}<span></span>{{/each}}
           </div>
           {{/if}}
 
           {{!-- Tier Progress Dots --}}
-          <div class="wh40k-adv__char-tiers">
+          <div>
             {{#each this.tiers}}
-            <div 
-              class="wh40k-adv__tier-dot {{#if this.purchased}}wh40k-adv__tier-dot--purchased{{/if}} {{#if this.current}}wh40k-adv__tier-dot--current tw-animate-currentPulse{{/if}}"
+            <div
+              class="{{#if this.current}}tw-animate-currentPulse{{/if}}"
               title="{{this.label}}"
             ></div>
             {{/each}}
@@ -87,24 +87,23 @@
 
           {{!-- Purchase Button or Status --}}
           {{#if this.isMaxed}}
-          <div class="wh40k-adv__char-status wh40k-adv__char-status--maxed">
+          <div>
             <i class="fas fa-crown"></i>
             {{localize "WH40K.Advancement.Maxed"}}
           </div>
           {{else if this.canPurchase}}
-          <button 
-            class="wh40k-adv__char-btn"
+          <button
             data-action="purchaseCharacteristic"
             data-characteristic="{{this.key}}"
             type="button"
           >
-            <span class="wh40k-adv__char-tier-label">{{this.nextTierLabel}}</span>
-            <span class="wh40k-adv__char-cost">{{this.nextCost}} XP</span>
+            <span>{{this.nextTierLabel}}</span>
+            <span>{{this.nextCost}} XP</span>
           </button>
           {{else if this.cantAfford}}
-          <div class="wh40k-adv__char-status wh40k-adv__char-status--cant-afford" title="{{localize 'WH40K.Advancement.CannotAfford'}}">
+          <div title="{{localize 'WH40K.Advancement.CannotAfford'}}">
             <i class="fas fa-coins"></i>
-            <span class="wh40k-adv__char-cost wh40k-adv__char-cost--expensive">{{this.nextCost}} XP</span>
+            <span>{{this.nextCost}} XP</span>
           </div>
           {{/if}}
 
@@ -116,19 +115,14 @@
 
     {{!-- Skills Tab --}}
     {{#if (eq activeTab "skills")}}
-    <div class="wh40k-adv__panel tw-animate-[fadeIn_250ms_ease] wh40k-adv__panel--skills">
+    <div class="tw-animate-[fadeIn_250ms_ease]">
       {{#if skills.length}}
-      <div class="wh40k-adv__advance-list">
+      <div>
         {{#each skills}}
-        <div class="wh40k-adv__advance-card 
-          {{#if this.owned}}wh40k-adv__advance-card--owned{{/if}}
-          {{#if this.blocked}}wh40k-adv__advance-card--blocked{{/if}}
-          {{#if this.cantAfford}}wh40k-adv__advance-card--cant-afford{{/if}}
-          {{#if this.recentlyPurchased}}wh40k-adv__advance-card--purchased tw-animate-purchasePulse{{/if}}"
-        >
-          <div class="wh40k-adv__advance-info">
-            <span class="wh40k-adv__advance-name">{{this.displayName}}</span>
-            <a class="wh40k-adv__advance-link"
+        <div class="{{#if this.recentlyPurchased}}tw-animate-purchasePulse{{/if}}">
+          <div>
+            <span>{{this.displayName}}</span>
+            <a
                data-action="openCompendiumItem"
                data-name="{{this.displayName}}"
                data-type="skill"
@@ -136,9 +130,9 @@
               <i class="fas fa-external-link-alt"></i>
             </a>
             {{#if this.aptitudeMatch}}
-            <span class="wh40k-adv__apt-dots" data-tooltip="Aptitudes: {{#each this.aptitudeMatch.all}}{{this}}{{#unless @last}}, {{/unless}}{{/each}} — Matched {{this.aptitudeMatch.matches}}/{{this.aptitudeMatch.all.length}}">
-              {{#each this.aptitudeMatch.matched}}<span class="wh40k-adv__apt-dot wh40k-adv__apt-dot--matched"></span>{{/each}}
-              {{#each this.aptitudeMatch.unmatched}}<span class="wh40k-adv__apt-dot"></span>{{/each}}
+            <span data-tooltip="Aptitudes: {{#each this.aptitudeMatch.all}}{{this}}{{#unless @last}}, {{/unless}}{{/each}} — Matched {{this.aptitudeMatch.matches}}/{{this.aptitudeMatch.all.length}}">
+              {{#each this.aptitudeMatch.matched}}<span></span>{{/each}}
+              {{#each this.aptitudeMatch.unmatched}}<span></span>{{/each}}
             </span>
             {{/if}}
             {{#if this.owned}}
@@ -151,10 +145,10 @@
           {{#if this.blocked}}
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-[color:var(--color-text-secondary)] tw-cursor-help [&_i]:tw-text-[color:var(--wh40k-color-warning)]" title="{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
             <i class="fas fa-lock"></i>
-            <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
+            <span>{{this.cost}} XP</span>
           </div>
           {{else if this.owned}}
-          <div class="wh40k-adv__advance-status">
+          <div>
             <i class="fas fa-check-circle"></i>
           </div>
           {{else if this.canPurchase}}
@@ -165,19 +159,19 @@
             data-type="skill"
             type="button"
           >
-            <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
+            <span>{{this.cost}} XP</span>
           </button>
           {{else if this.cantAfford}}
-          <div class="wh40k-adv__advance-status wh40k-adv__advance-status--cant-afford" title="{{localize 'WH40K.Advancement.CannotAfford'}}">
+          <div title="{{localize 'WH40K.Advancement.CannotAfford'}}">
             <i class="fas fa-coins"></i>
-            <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
+            <span>{{this.cost}} XP</span>
           </div>
           {{/if}}
         </div>
         {{/each}}
       </div>
       {{else}}
-      <div class="wh40k-adv__empty">
+      <div>
         <i class="fas fa-book"></i>
         <p>{{localize "WH40K.Advancement.NoSkillsAvailable"}}</p>
       </div>
@@ -187,20 +181,15 @@
 
     {{!-- Talents Tab --}}
     {{#if (eq activeTab "talents")}}
-    <div class="wh40k-adv__panel tw-animate-[fadeIn_250ms_ease] wh40k-adv__panel--talents">
+    <div class="tw-animate-[fadeIn_250ms_ease]">
       {{#if talents.length}}
-      <div class="wh40k-adv__advance-list">
+      <div>
         {{#each talents}}
-        <div class="wh40k-adv__advance-card 
-          {{#if this.owned}}wh40k-adv__advance-card--owned{{/if}}
-          {{#if this.blocked}}wh40k-adv__advance-card--blocked{{/if}}
-          {{#if this.cantAfford}}wh40k-adv__advance-card--cant-afford{{/if}}
-          {{#if this.recentlyPurchased}}wh40k-adv__advance-card--purchased tw-animate-purchasePulse{{/if}}"
-        >
-          <div class="wh40k-adv__advance-info">
-            <span class="wh40k-adv__advance-tier-badge" title="Tier {{this.tier}}">T{{this.tier}}</span>
-            <span class="wh40k-adv__advance-name">{{this.displayName}}</span>
-            <a class="wh40k-adv__advance-link"
+        <div class="{{#if this.recentlyPurchased}}tw-animate-purchasePulse{{/if}}">
+          <div>
+            <span title="Tier {{this.tier}}">T{{this.tier}}</span>
+            <span>{{this.displayName}}</span>
+            <a
                data-action="openCompendiumItem"
                data-name="{{this.name}}"
                data-type="talent"
@@ -208,9 +197,9 @@
               <i class="fas fa-external-link-alt"></i>
             </a>
             {{#if this.aptitudeMatch}}
-            <span class="wh40k-adv__apt-dots" data-tooltip="Aptitudes: {{#each this.aptitudeMatch.all}}{{this}}{{#unless @last}}, {{/unless}}{{/each}} — Matched {{this.aptitudeMatch.matches}}/{{this.aptitudeMatch.all.length}}">
-              {{#each this.aptitudeMatch.matched}}<span class="wh40k-adv__apt-dot wh40k-adv__apt-dot--matched"></span>{{/each}}
-              {{#each this.aptitudeMatch.unmatched}}<span class="wh40k-adv__apt-dot"></span>{{/each}}
+            <span data-tooltip="Aptitudes: {{#each this.aptitudeMatch.all}}{{this}}{{#unless @last}}, {{/unless}}{{/each}} — Matched {{this.aptitudeMatch.matches}}/{{this.aptitudeMatch.all.length}}">
+              {{#each this.aptitudeMatch.matched}}<span></span>{{/each}}
+              {{#each this.aptitudeMatch.unmatched}}<span></span>{{/each}}
             </span>
             {{/if}}
             {{#if this.owned}}
@@ -219,43 +208,43 @@
             </span>
             {{/if}}
             {{#if this.blocked}}
-            <span class="wh40k-adv__advance-prereq" title="{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
+            <span title="{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
               <i class="fas fa-exclamation-triangle"></i>
               {{localize "WH40K.Advancement.RequiresPrereq"}}
             </span>
             {{/if}}
           </div>
-          
+
           {{#if this.blocked}}
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-[color:var(--color-text-secondary)] tw-cursor-help [&_i]:tw-text-[color:var(--wh40k-color-warning)]" title="{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
             <i class="fas fa-lock"></i>
-            <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
+            <span>{{this.cost}} XP</span>
           </div>
           {{else if this.owned}}
-          <div class="wh40k-adv__advance-status">
+          <div>
             <i class="fas fa-check-circle"></i>
           </div>
           {{else if this.canPurchase}}
-          <button 
+          <button
             class="tw-py-[0.4rem] tw-px-[0.8rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]"
             data-action="purchaseAdvance"
             data-index="{{this.index}}"
             data-type="talent"
             type="button"
           >
-            <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
+            <span>{{this.cost}} XP</span>
           </button>
           {{else if this.cantAfford}}
-          <div class="wh40k-adv__advance-status wh40k-adv__advance-status--cant-afford" title="{{localize 'WH40K.Advancement.CannotAfford'}}">
+          <div title="{{localize 'WH40K.Advancement.CannotAfford'}}">
             <i class="fas fa-coins"></i>
-            <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
+            <span>{{this.cost}} XP</span>
           </div>
           {{/if}}
         </div>
         {{/each}}
       </div>
       {{else}}
-      <div class="wh40k-adv__empty">
+      <div>
         <i class="fas fa-star"></i>
         <p>{{localize "WH40K.Advancement.NoTalentsAvailable"}}</p>
       </div>
@@ -265,23 +254,23 @@
 
     {{!-- Psychic Powers Tab (psykers only) --}}
     {{#if (eq activeTab "psychic")}}
-    <div class="wh40k-adv__panel tw-animate-[fadeIn_250ms_ease] wh40k-adv__panel--psychic">
+    <div class="tw-animate-[fadeIn_250ms_ease]">
       {{#if psychic}}
-      <div class="wh40k-adv__psy-rating-card">
-        <div class="wh40k-adv__psy-rating-info">
+      <div>
+        <div>
           <i class="fas fa-brain"></i>
-          <span class="wh40k-adv__psy-rating-label">Psy Rating</span>
-          <span class="wh40k-adv__psy-rating-value">{{psychic.psyAdvance.currentRating}}</span>
+          <span>Psy Rating</span>
+          <span>{{psychic.psyAdvance.currentRating}}</span>
         </div>
         {{#if psychic.psyAdvance.maxed}}
-        <span class="wh40k-adv__psy-rating-maxed"><i class="fas fa-crown"></i> Maximum</span>
+        <span><i class="fas fa-crown"></i> Maximum</span>
         {{else if psychic.psyAdvance.canPurchase}}
         <button class="tw-py-[0.4rem] tw-px-[0.8rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]" data-action="purchasePsyRating" type="button">
           <span>Advance to {{psychic.psyAdvance.nextRating}}</span>
-          <span class="wh40k-adv__advance-cost">{{psychic.psyAdvance.cost}} XP</span>
+          <span>{{psychic.psyAdvance.cost}} XP</span>
         </button>
         {{else}}
-        <div class="wh40k-adv__advance-status wh40k-adv__advance-status--cant-afford">
+        <div>
           <i class="fas fa-coins"></i>
           <span>Advance to {{psychic.psyAdvance.nextRating}} — {{psychic.psyAdvance.cost}} XP</span>
         </div>
@@ -289,22 +278,22 @@
       </div>
 
       {{#if psychic.chips.length}}
-      <div class="wh40k-adv__psy-controls">
-        <nav class="wh40k-adv__psy-chips">
+      <div>
+        <nav>
           {{#each psychic.chips as |chip|}}
           <button type="button"
-                  class="wh40k-adv__psy-chip {{#if chip.active}}wh40k-adv__psy-chip--active{{/if}}"
+                  class="{{#if chip.active}}active{{/if}}"
                   data-action="switchDiscipline"
                   data-discipline="{{chip.key}}"
                   title="{{chip.accessible}} accessible / {{chip.count}} total">
-            <span class="wh40k-adv__psy-chip-label">{{chip.label}}</span>
-            <span class="wh40k-adv__psy-chip-count">{{chip.accessible}}/{{chip.count}}</span>
+            <span>{{chip.label}}</span>
+            <span>{{chip.accessible}}/{{chip.count}}</span>
           </button>
           {{/each}}
         </nav>
         {{#if psychic.hasBlocked}}
         <button type="button"
-                class="wh40k-adv__psy-filter {{#if psychic.availableOnly}}wh40k-adv__psy-filter--active{{/if}}"
+                class="{{#if psychic.availableOnly}}active{{/if}}"
                 data-action="toggleAvailableOnly"
                 title="Show only powers at or below your Psy Rating">
           <i class="fas {{#if psychic.availableOnly}}fa-check-square{{else}}fa-square{{/if}}"></i>
@@ -315,18 +304,14 @@
       {{/if}}
 
       {{#each psychic.disciplines as |discipline|}}
-      <h4 class="wh40k-adv__psy-disc-header">{{discipline.label}}</h4>
-      <div class="wh40k-adv__advance-list">
+      <h4>{{discipline.label}}</h4>
+      <div>
         {{#each discipline.items}}
-        <div class="wh40k-adv__advance-card
-          {{#if this.owned}}wh40k-adv__advance-card--owned{{/if}}
-          {{#if this.blocked}}wh40k-adv__advance-card--blocked{{/if}}
-          {{#if this.cantAfford}}wh40k-adv__advance-card--cant-afford{{/if}}"
-        >
-          <div class="wh40k-adv__advance-info">
-            <span class="wh40k-adv__advance-tier-badge" title="Psy Rating {{this.prCost}}">PR{{this.prCost}}</span>
-            <span class="wh40k-adv__advance-name">{{this.displayName}}</span>
-            <a class="wh40k-adv__advance-link"
+        <div>
+          <div>
+            <span title="Psy Rating {{this.prCost}}">PR{{this.prCost}}</span>
+            <span>{{this.displayName}}</span>
+            <a
                data-action="openCompendiumItem"
                data-name="{{this.name}}"
                data-type="psychicPower"
@@ -339,7 +324,7 @@
             </span>
             {{/if}}
             {{#if this.blocked}}
-            <span class="wh40k-adv__advance-prereq" title="{{#each this.prereqDisplay}}{{this}}{{/each}}">
+            <span title="{{#each this.prereqDisplay}}{{this}}{{/each}}">
               <i class="fas fa-exclamation-triangle"></i>
               Requires PR {{this.prCost}}
             </span>
@@ -348,22 +333,22 @@
           {{#if this.blocked}}
           <div class="tw-flex tw-items-center tw-gap-2 tw-text-[color:var(--color-text-secondary)] tw-cursor-help [&_i]:tw-text-[color:var(--wh40k-color-warning)]">
             <i class="fas fa-lock"></i>
-            <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
+            <span>{{this.cost}} XP</span>
           </div>
           {{else if this.owned}}
-          <div class="wh40k-adv__advance-status"><i class="fas fa-check-circle"></i></div>
+          <div><i class="fas fa-check-circle"></i></div>
           {{else if this.canPurchase}}
           <button class="tw-py-[0.4rem] tw-px-[0.8rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]"
             data-action="purchaseAdvance"
             data-index="{{this.index}}"
             data-type="psychic-power"
             type="button">
-            <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
+            <span>{{this.cost}} XP</span>
           </button>
           {{else if this.cantAfford}}
-          <div class="wh40k-adv__advance-status wh40k-adv__advance-status--cant-afford">
+          <div>
             <i class="fas fa-coins"></i>
-            <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
+            <span>{{this.cost}} XP</span>
           </div>
           {{/if}}
         </div>
@@ -372,13 +357,13 @@
       {{/each}}
 
       {{#unless psychic.disciplines.length}}
-      <div class="wh40k-adv__empty">
+      <div>
         <i class="fas fa-filter"></i>
         <p>No powers match the current filter.</p>
       </div>
       {{/unless}}
       {{else}}
-      <div class="wh40k-adv__empty">
+      <div>
         <i class="fas fa-brain"></i>
         <p>No psychic powers available. Take the Psyker elite advance to unlock.</p>
       </div>
@@ -388,14 +373,14 @@
 
     {{!-- Traits Tab --}}
     {{#if (eq activeTab "traits")}}
-    <div class="wh40k-adv__panel tw-animate-[fadeIn_250ms_ease] wh40k-adv__panel--traits">
+    <div class="tw-animate-[fadeIn_250ms_ease]">
       {{#if traits.owned.length}}
-      <h4 class="wh40k-adv__psy-disc-header">Current Traits</h4>
-      <div class="wh40k-adv__advance-list">
+      <h4>Current Traits</h4>
+      <div>
         {{#each traits.owned}}
-        <div class="wh40k-adv__advance-card wh40k-adv__advance-card--owned">
-          <div class="wh40k-adv__advance-info">
-            <span class="wh40k-adv__advance-name">{{this.name}}</span>
+        <div>
+          <div>
+            <span>{{this.name}}</span>
             <span class="tw-text-[0.7rem] tw-py-[0.15rem] tw-px-[0.4rem] tw-rounded-[3px] tw-inline-flex tw-items-center tw-gap-1 tw-w-fit">
               <i class="fas fa-seedling"></i> {{this.source}}
             </span>
@@ -406,19 +391,16 @@
       {{/if}}
 
       {{#if traits.elites.length}}
-      <h4 class="wh40k-adv__psy-disc-header">Elite Advances</h4>
-      <p class="notes tw-text-xs tw-opacity-70 tw-mb-2 tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+      <h4>Elite Advances</h4>
+      <p class="tw-text-xs tw-opacity-70 tw-mb-2 tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
         Elite advances are fundamental character changes that grant new traits, talents, and unlocks. Requires GM approval in play.
       </p>
-      <div class="wh40k-adv__advance-list">
+      <div>
         {{#each traits.elites}}
-        <div class="wh40k-adv__advance-card
-          {{#if this.owned}}wh40k-adv__advance-card--owned{{/if}}
-          {{#if this.cantAfford}}wh40k-adv__advance-card--cant-afford{{/if}}"
-        >
-          <div class="wh40k-adv__advance-info">
-            <span class="wh40k-adv__advance-name">{{this.name}}</span>
-            <a class="wh40k-adv__advance-link"
+        <div>
+          <div>
+            <span>{{this.name}}</span>
+            <a
                data-action="openCompendiumItem"
                data-name="{{this.name}}"
                data-type="originPath"
@@ -432,19 +414,19 @@
             {{/if}}
           </div>
           {{#if this.owned}}
-          <div class="wh40k-adv__advance-status"><i class="fas fa-check-circle"></i></div>
+          <div><i class="fas fa-check-circle"></i></div>
           {{else if this.canPurchase}}
           <button class="tw-py-[0.4rem] tw-px-[0.8rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]"
             data-action="purchaseAdvance"
             data-index="{{this.index}}"
             data-type="elite"
             type="button">
-            <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
+            <span>{{this.cost}} XP</span>
           </button>
           {{else if this.cantAfford}}
-          <div class="wh40k-adv__advance-status wh40k-adv__advance-status--cant-afford">
+          <div>
             <i class="fas fa-coins"></i>
-            <span class="wh40k-adv__advance-cost">{{this.cost}} XP</span>
+            <span>{{this.cost}} XP</span>
           </div>
           {{/if}}
         </div>
@@ -453,7 +435,7 @@
       {{/if}}
 
       {{#unless (or traits.owned.length traits.elites.length)}}
-      <div class="wh40k-adv__empty">
+      <div>
         <i class="fas fa-dna"></i>
         <p>No traits yet. Traits are granted by home world, background, or elite advances — they can't be bought directly with XP.</p>
       </div>

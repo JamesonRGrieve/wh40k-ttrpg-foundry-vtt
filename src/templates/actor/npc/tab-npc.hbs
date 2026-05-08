@@ -4,15 +4,15 @@
       GM utility tools, stat-block import/export, threat scaling, and the
       per-sheet quick/tactics notes. --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
-  <div class="wh40k-npc-tab">
+  <div>
 
     {{!-- ═══ HORDE ═══ --}}
-    <div class="wh40k-panel wh40k-panel--horde">
+    <div class="wh40k-panel">
       <div class="wh40k-panel-header">
         <i class="fa-solid fa-users"></i>
         <span class="tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">Horde</span>
         {{#if editable}}
-        <button class="wh40k-header-btn tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-0 tw-m-0 tw-cursor-pointer tw-w-auto tw-h-[22px] tw-px-1.5 tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] tw-text-[0.65rem] tw-leading-none tw-select-none tw-whitespace-nowrap hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" type="button" data-action="toggleHordeMode" title="Toggle horde mode">
+        <button class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-p-0 tw-m-0 tw-cursor-pointer tw-w-auto tw-h-[22px] tw-px-1.5 tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] tw-text-[0.65rem] tw-leading-none tw-select-none tw-whitespace-nowrap hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" type="button" data-action="toggleHordeMode" title="Toggle horde mode">
           <i class="fa-solid fa-power-off"></i>
           <span>{{#if horde.enabled}}Enabled{{else}}Disabled{{/if}}</span>
         </button>
@@ -20,22 +20,22 @@
       </div>
       {{#if horde.enabled}}
       <div class="wh40k-panel-body">
-        <div class="wh40k-magnitude-compact">
-          <div class="wh40k-magnitude-header">
+        <div class="tw-p-2 tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-rounded-[6px] tw-border tw-border-[var(--color-border-secondary,#444)]">
+          <div class="tw-flex tw-items-center tw-gap-[0.35rem] tw-text-[0.8rem] tw-font-semibold tw-mb-[0.35rem]">
             <i class="fa-solid fa-users bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
             <span>Magnitude {{horde.magnitude}} / {{horde.magnitudeMax}}</span>
-            {{#if horde.destroyed}}<span class="wh40k-horde-destroyed">DESTROYED</span>{{/if}}
+            {{#if horde.destroyed}}<span class="tw-text-[color:var(--npc-accent-combat)] tw-font-bold tw-uppercase tw-text-xs">DESTROYED</span>{{/if}}
           </div>
-          <div class="wh40k-magnitude-bar-container">
-            <div class="wh40k-magnitude-bar wh40k-magnitude-bar--{{horde.barClass}}" style="width: {{horde.magnitudePercent}}%"></div>
+          <div class="tw-h-[6px] tw-bg-[var(--color-bg-primary,#1a1a1a)] tw-rounded-[3px] tw-overflow-hidden tw-mb-2">
+            <div class="tw-h-full tw-rounded-[3px] tw-transition-all {{#if (eq horde.barClass 'high')}}tw-bg-[var(--npc-accent-movement)]{{else if (eq horde.barClass 'low')}}tw-bg-[var(--npc-accent-combat)]{{else}}tw-bg-[var(--npc-accent-primary)]{{/if}}" style="width: {{horde.magnitudePercent}}%"></div>
           </div>
-          <div class="wh40k-magnitude-btns">
-            <button type="button" class="wh40k-mag-btn" data-action="applyMagnitudeDamage" data-amount="1" {{#unless editable}}disabled{{/unless}}>−1</button>
-            <button type="button" class="wh40k-mag-btn" data-action="applyMagnitudeDamage" data-amount="5" {{#unless editable}}disabled{{/unless}}>−5</button>
-            <button type="button" class="wh40k-mag-btn" data-action="restoreMagnitude" data-amount="1" {{#unless editable}}disabled{{/unless}}>+1</button>
-            <button type="button" class="wh40k-mag-btn" data-action="restoreMagnitude" data-amount="5" {{#unless editable}}disabled{{/unless}}>+5</button>
+          <div class="tw-flex tw-gap-1">
+            <button type="button" class="tw-flex-1 tw-p-1 tw-text-[0.7rem] tw-font-semibold tw-bg-[var(--color-bg-option,rgba(0,0,0,0.3))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--color-text-light-primary,#f0f0f0)] tw-cursor-pointer hover:tw-border-[color:var(--npc-accent-primary)]" data-action="applyMagnitudeDamage" data-amount="1" {{#unless editable}}disabled{{/unless}}>−1</button>
+            <button type="button" class="tw-flex-1 tw-p-1 tw-text-[0.7rem] tw-font-semibold tw-bg-[var(--color-bg-option,rgba(0,0,0,0.3))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--color-text-light-primary,#f0f0f0)] tw-cursor-pointer hover:tw-border-[color:var(--npc-accent-primary)]" data-action="applyMagnitudeDamage" data-amount="5" {{#unless editable}}disabled{{/unless}}>−5</button>
+            <button type="button" class="tw-flex-1 tw-p-1 tw-text-[0.7rem] tw-font-semibold tw-bg-[var(--color-bg-option,rgba(0,0,0,0.3))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--color-text-light-primary,#f0f0f0)] tw-cursor-pointer hover:tw-border-[color:var(--npc-accent-primary)]" data-action="restoreMagnitude" data-amount="1" {{#unless editable}}disabled{{/unless}}>+1</button>
+            <button type="button" class="tw-flex-1 tw-p-1 tw-text-[0.7rem] tw-font-semibold tw-bg-[var(--color-bg-option,rgba(0,0,0,0.3))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--color-text-light-primary,#f0f0f0)] tw-cursor-pointer hover:tw-border-[color:var(--npc-accent-primary)]" data-action="restoreMagnitude" data-amount="5" {{#unless editable}}disabled{{/unless}}>+5</button>
           </div>
-          <div class="wh40k-horde-stats">
+          <div class="tw-flex tw-gap-3 tw-mt-1 tw-text-[0.75rem] tw-text-[color:var(--color-text-light-secondary,#888)]">
             <span>Damage ×{{horde.damageMultiplier}}</span>
             <span>Size +{{horde.sizeModifier}}</span>
           </div>
@@ -43,18 +43,18 @@
       </div>
       {{else}}
       <div class="wh40k-panel-body">
-        <p class="wh40k-empty-state-inline">Enable horde mode to track magnitude as a pool of wounds.</p>
+        <p class="tw-text-[0.8rem] tw-text-[color:var(--color-text-light-secondary,#888)] tw-italic">Enable horde mode to track magnitude as a pool of wounds.</p>
       </div>
       {{/if}}
     </div>
 
     {{!-- ═══ BARTER / REQUISITION ═══ --}}
     {{#if isGM}}
-    <div class="wh40k-panel wh40k-panel--barter">
+    <div class="wh40k-panel">
       <div class="wh40k-panel-header">
         <i class="fa-solid fa-store"></i>
         <span>Transaction Source</span>
-        <span class="wh40k-count-badge">{{transactionProfile.mode}}</span>
+        <span class="tw-ml-auto tw-bg-[var(--color-bg-primary,#1a1a1a)] tw-py-[0.15rem] tw-px-2 tw-rounded-[10px] tw-text-[0.7rem] tw-font-bold">{{transactionProfile.mode}}</span>
       </div>
       <div class="wh40k-panel-body">
         <div class="tw-flex tw-flex-wrap tw-gap-2">
@@ -69,23 +69,23 @@
 
     {{!-- ═══ COMBAT TRACKER ═══ --}}
     {{#if isGM}}
-    <div class="wh40k-panel wh40k-panel--combat-tracker">
+    <div class="wh40k-panel">
       <div class="wh40k-panel-header">
         <i class="fa-solid fa-swords"></i>
         <span>Combat Tracker</span>
       </div>
       <div class="wh40k-panel-body">
         {{#if actor.inCombat}}
-        <div class="wh40k-tracker-status wh40k-tracker-status--active">
+        <div class="tw-flex tw-items-center tw-gap-[0.4rem] tw-text-[0.75rem] tw-text-[color:var(--color-text-light-secondary,#aaa)] [&_i]:tw-text-[color:var(--npc-accent-combat)] [&_strong]:tw-text-[color:var(--color-text-light-primary,#f0f0f0)]">
           <i class="fa-solid fa-swords"></i>
           <span>Initiative: {{actor.combatant.initiative}}</span>
         </div>
-        <div class="wh40k-tracker-nav-actions">
-          <button type="button" class="wh40k-tool-btn" data-action="rerollInitiative" data-tooltip="Reroll Initiative"><i class="fa-solid fa-dice"></i> Reroll</button>
-          <button type="button" class="wh40k-tool-btn wh40k-tool-btn--danger" data-action="removeFromCombat" data-tooltip="Remove from Combat"><i class="fa-solid fa-xmark"></i> Remove</button>
+        <div class="tw-flex tw-gap-2 tw-mt-2">
+          <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-[0.3rem] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[6px] tw-text-[color:var(--color-text-light-secondary,#888)] tw-text-xs tw-cursor-pointer hover:tw-bg-[var(--color-bg-secondary,#333)] hover:tw-border-[color:var(--npc-accent-primary)] hover:tw-text-[color:var(--npc-accent-primary)]" data-action="rerollInitiative" data-tooltip="Reroll Initiative"><i class="fa-solid fa-dice"></i> Reroll</button>
+          <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-[0.3rem] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[6px] tw-text-[color:var(--color-text-light-secondary,#888)] tw-text-xs tw-cursor-pointer hover:tw-bg-[var(--color-bg-secondary,#333)] hover:tw-border-[color:var(--npc-accent-combat)] hover:tw-text-[color:var(--npc-accent-combat)]" data-action="removeFromCombat" data-tooltip="Remove from Combat"><i class="fa-solid fa-xmark"></i> Remove</button>
         </div>
         {{else}}
-        <button type="button" class="wh40k-combat-add-btn" data-action="addToCombat" data-tooltip="Add to Combat">
+        <button type="button" class="tw-flex tw-items-center tw-justify-center tw-gap-[0.3rem] tw-w-full tw-py-[0.35rem] tw-border tw-border-[color:rgb(from_var(--npc-accent-combat)_r_g_b_/_0.3)] tw-rounded-[var(--wh40k-radius-md)] tw-bg-[rgb(from_var(--npc-accent-combat)_r_g_b_/_0.1)] tw-text-[color:var(--npc-accent-combat)] tw-cursor-pointer tw-text-[0.7rem] hover:tw-bg-[rgb(from_var(--npc-accent-combat)_r_g_b_/_0.2)] hover:tw-border-[color:var(--npc-accent-combat)]" data-action="addToCombat" data-tooltip="Add to Combat">
           <i class="fa-solid fa-swords"></i>
           <span>Add to Combat</span>
         </button>
@@ -95,25 +95,25 @@
     {{/if}}
 
     {{!-- ═══ TAGS ═══ --}}
-    <div class="wh40k-panel wh40k-panel--tags">
+    <div class="wh40k-panel">
       <div class="wh40k-panel-header">
         <i class="fa-solid fa-tags"></i>
         <span>Tags</span>
       </div>
       <div class="wh40k-panel-body">
-        <div class="wh40k-tags-row">
+        <div class="tw-flex tw-flex-wrap tw-gap-[0.35rem] tw-items-center">
           {{#each tags}}
           <span class="tw-inline-flex tw-items-center tw-gap-1 tw-py-0.5 tw-px-2 tw-bg-[color:var(--wh40k-panel-bg-translucent)] tw-border tw-border-[color:var(--wh40k-border-color-light)] tw-rounded-full tw-text-xs tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)] tw-cursor-default">
             {{this}}
             {{#if ../editable}}
-            <button type="button" class="wh40k-tag-remove" data-action="removeTag" data-tag="{{this}}">×</button>
+            <button type="button" class="tw-bg-transparent tw-border-0 tw-text-[color:var(--color-text-light-secondary,#888)] tw-cursor-pointer tw-text-[0.8rem] tw-p-0 tw-leading-none hover:tw-text-[color:var(--npc-accent-combat)]" data-action="removeTag" data-tag="{{this}}">×</button>
             {{/if}}
           </span>
           {{else}}
-          <span class="wh40k-tags-empty">No tags</span>
+          <span class="tw-text-[0.75rem] tw-text-[color:var(--color-text-light-secondary,#888)] tw-italic">No tags</span>
           {{/each}}
           {{#if editable}}
-          <button type="button" class="wh40k-tag-add" data-action="addTag" title="Add Tag">
+          <button type="button" class="tw-w-6 tw-h-6 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-dashed tw-border-[var(--color-border-secondary,#444)] tw-rounded-full tw-text-[color:var(--color-text-light-secondary,#888)] tw-cursor-pointer tw-text-[0.75rem] hover:tw-border-[color:var(--npc-accent-primary)] hover:tw-text-[color:var(--npc-accent-primary)]" data-action="addTag" title="Add Tag">
             <i class="fa-solid fa-plus"></i>
           </button>
           {{/if}}
@@ -122,22 +122,22 @@
     </div>
 
     {{!-- ═══ FACTION META ═══ --}}
-    <div class="wh40k-panel wh40k-panel--meta">
+    <div class="wh40k-panel">
       <div class="wh40k-panel-header">
         <i class="fa-solid fa-flag"></i>
         <span>Faction & Allegiance</span>
       </div>
       <div class="wh40k-panel-body">
-        <div class="wh40k-meta-fields">
-          <div class="wh40k-meta-field">
+        <div class="tw-flex tw-gap-3 tw-mb-2">
+          <div class="tw-flex-1 tw-flex tw-items-center tw-gap-[0.35rem]">
             <label>Subfaction</label>
             <input type="text" name="system.subfaction" value="{{source.subfaction}}" placeholder="Subfaction" {{#unless editable}}disabled{{/unless}} />
           </div>
-          <div class="wh40k-meta-field">
+          <div class="tw-flex-1 tw-flex tw-items-center tw-gap-[0.35rem]">
             <label>Allegiance</label>
             <input type="text" name="system.allegiance" value="{{source.allegiance}}" placeholder="e.g. Imperium, Chaos, Xenos" {{#unless editable}}disabled{{/unless}} />
           </div>
-          <div class="wh40k-meta-field">
+          <div class="tw-flex-1 tw-flex tw-items-center tw-gap-[0.35rem]">
             <label>Source Reference</label>
             <input type="text" name="system.source" value="{{source.source}}" placeholder="e.g. Core p.123" {{#unless editable}}disabled{{/unless}} />
           </div>
@@ -147,32 +147,32 @@
 
     {{!-- ═══ GM NOTES (quick notes / tactics) ═══ --}}
     {{#if isGM}}
-    <div class="wh40k-panel wh40k-panel--notes">
+    <div class="wh40k-panel">
       <div class="wh40k-panel-header">
         <i class="fa-solid fa-sticky-note"></i>
         <span>GM Notes</span>
-        <span class="wh40k-gm-badge"><i class="fa-solid fa-lock"></i></span>
+        <span class="tw-ml-auto tw-py-[0.15rem] tw-px-[0.4rem] tw-bg-[rgb(from_var(--npc-accent-combat)_r_g_b_/_0.2)] tw-border tw-border-[color:var(--npc-accent-combat)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.65rem] tw-text-[color:var(--npc-accent-combat)]"><i class="fa-solid fa-lock tw-mr-[0.2rem]"></i></span>
       </div>
       <div class="wh40k-panel-body">
-        <div class="wh40k-notes-grid">
-          <div class="wh40k-note-field wh40k-note-field--editable">
-            <label><i class="fa-solid fa-note-sticky"></i> Quick Notes</label>
+        <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-mb-3">
+          <div>
+            <label class="tw-flex tw-items-center tw-gap-[0.35rem] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[color:var(--color-text-light-secondary,#888)] tw-mb-1 [&_i:first-child]:tw-text-[color:var(--npc-accent-primary)]"><i class="fa-solid fa-note-sticky"></i> Quick Notes</label>
             {{#if editable}}
-            <div class="wh40k-editor-mini">
+            <div class="tw-min-h-[80px] tw-max-h-[150px] tw-overflow-y-auto tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[var(--wh40k-radius-md)] tw-p-[0.4rem] hover:tw-border-[color:rgb(from_var(--npc-accent-primary)_r_g_b_/_0.5)] focus-within:tw-border-[color:var(--npc-accent-primary)]">
               {{editor system.quickNotes target="system.quickNotes" button=true editable=editable engine="prosemirror"}}
             </div>
             {{else}}
-            <div class="wh40k-note-display">{{{system.quickNotes}}}</div>
+            <div>{{{system.quickNotes}}}</div>
             {{/if}}
           </div>
-          <div class="wh40k-note-field wh40k-note-field--editable">
-            <label><i class="fa-solid fa-chess"></i> Tactics</label>
+          <div>
+            <label class="tw-flex tw-items-center tw-gap-[0.35rem] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[color:var(--color-text-light-secondary,#888)] tw-mb-1 [&_i:first-child]:tw-text-[color:var(--npc-accent-primary)]"><i class="fa-solid fa-chess"></i> Tactics</label>
             {{#if editable}}
-            <div class="wh40k-editor-mini">
+            <div class="tw-min-h-[80px] tw-max-h-[150px] tw-overflow-y-auto tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[var(--wh40k-radius-md)] tw-p-[0.4rem] hover:tw-border-[color:rgb(from_var(--npc-accent-primary)_r_g_b_/_0.5)] focus-within:tw-border-[color:var(--npc-accent-primary)]">
               {{editor system.tactics target="system.tactics" button=true editable=editable engine="prosemirror"}}
             </div>
             {{else}}
-            <div class="wh40k-note-display">{{{system.tactics}}}</div>
+            <div>{{{system.tactics}}}</div>
             {{/if}}
           </div>
         </div>
@@ -182,38 +182,38 @@
 
     {{!-- ═══ GM TOOLS ═══ --}}
     {{#if isGM}}
-    <div class="wh40k-panel wh40k-panel--gm-tools">
+    <div class="wh40k-panel">
       <div class="wh40k-panel-header">
         <i class="fa-solid fa-toolbox"></i>
         <span>GM Tools</span>
       </div>
       <div class="wh40k-panel-body">
-        <div class="wh40k-gm-tools wh40k-gm-tools--inline">
-          <button class="wh40k-tool-btn" data-action="setupToken" type="button" data-tooltip="Auto-configure prototype token for this NPC">
+        <div class="tw-flex tw-flex-wrap tw-gap-[0.35rem] tw-justify-center tw-py-2">
+          <button class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-[0.3rem] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[6px] tw-text-[color:var(--color-text-light-secondary,#888)] tw-text-xs tw-cursor-pointer hover:tw-bg-[var(--color-bg-secondary,#333)] hover:tw-border-[color:var(--npc-accent-primary)] hover:tw-text-[color:var(--npc-accent-primary)]" data-action="setupToken" type="button" data-tooltip="Auto-configure prototype token for this NPC">
             <i class="fa-solid fa-chess-pawn"></i> <span>Configure Token</span>
           </button>
-          <button class="wh40k-tool-btn" data-action="duplicateNPC" type="button" data-tooltip="Clone this NPC">
+          <button class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-[0.3rem] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[6px] tw-text-[color:var(--color-text-light-secondary,#888)] tw-text-xs tw-cursor-pointer hover:tw-bg-[var(--color-bg-secondary,#333)] hover:tw-border-[color:var(--npc-accent-primary)] hover:tw-text-[color:var(--npc-accent-primary)]" data-action="duplicateNPC" type="button" data-tooltip="Clone this NPC">
             <i class="fa-solid fa-clone"></i> <span>Clone</span>
           </button>
-          <button class="wh40k-tool-btn" data-action="scaleToThreat" type="button" data-tooltip="Rescale stats to a different threat level">
+          <button class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-[0.3rem] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[6px] tw-text-[color:var(--color-text-light-secondary,#888)] tw-text-xs tw-cursor-pointer hover:tw-bg-[var(--color-bg-secondary,#333)] hover:tw-border-[color:var(--npc-accent-primary)] hover:tw-text-[color:var(--npc-accent-primary)]" data-action="scaleToThreat" type="button" data-tooltip="Rescale stats to a different threat level">
             <i class="fa-solid fa-scale-balanced"></i> <span>Scale to Threat</span>
           </button>
-          <button class="wh40k-tool-btn" data-action="calculateDifficulty" type="button" data-tooltip="Calculate encounter difficulty against a party">
+          <button class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-[0.3rem] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[6px] tw-text-[color:var(--color-text-light-secondary,#888)] tw-text-xs tw-cursor-pointer hover:tw-bg-[var(--color-bg-secondary,#333)] hover:tw-border-[color:var(--npc-accent-primary)] hover:tw-text-[color:var(--npc-accent-primary)]" data-action="calculateDifficulty" type="button" data-tooltip="Calculate encounter difficulty against a party">
             <i class="fa-solid fa-calculator"></i> <span>Calculate Difficulty</span>
           </button>
-          <button class="wh40k-tool-btn" data-action="exportStatBlock" type="button" data-tooltip="Export stat block as text">
+          <button class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-[0.3rem] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[6px] tw-text-[color:var(--color-text-light-secondary,#888)] tw-text-xs tw-cursor-pointer hover:tw-bg-[var(--color-bg-secondary,#333)] hover:tw-border-[color:var(--npc-accent-primary)] hover:tw-text-[color:var(--npc-accent-primary)]" data-action="exportStatBlock" type="button" data-tooltip="Export stat block as text">
             <i class="fa-solid fa-file-export"></i> <span>Export Stat Block</span>
           </button>
-          <button class="wh40k-tool-btn" data-action="importStatBlock" type="button" data-tooltip="Import stat block from text">
+          <button class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-[0.3rem] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[6px] tw-text-[color:var(--color-text-light-secondary,#888)] tw-text-xs tw-cursor-pointer hover:tw-bg-[var(--color-bg-secondary,#333)] hover:tw-border-[color:var(--npc-accent-primary)] hover:tw-text-[color:var(--npc-accent-primary)]" data-action="importStatBlock" type="button" data-tooltip="Import stat block from text">
             <i class="fa-solid fa-file-import"></i> <span>Import Stat Block</span>
           </button>
-          <button class="wh40k-tool-btn" data-action="saveCombatPreset" type="button" data-tooltip="Save current weapons/armour as a combat preset">
+          <button class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-[0.3rem] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[6px] tw-text-[color:var(--color-text-light-secondary,#888)] tw-text-xs tw-cursor-pointer hover:tw-bg-[var(--color-bg-secondary,#333)] hover:tw-border-[color:var(--npc-accent-primary)] hover:tw-text-[color:var(--npc-accent-primary)]" data-action="saveCombatPreset" type="button" data-tooltip="Save current weapons/armour as a combat preset">
             <i class="fa-solid fa-floppy-disk"></i> <span>Save Preset</span>
           </button>
-          <button class="wh40k-tool-btn" data-action="loadCombatPreset" type="button" data-tooltip="Load a saved combat preset">
+          <button class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-[0.3rem] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[6px] tw-text-[color:var(--color-text-light-secondary,#888)] tw-text-xs tw-cursor-pointer hover:tw-bg-[var(--color-bg-secondary,#333)] hover:tw-border-[color:var(--npc-accent-primary)] hover:tw-text-[color:var(--npc-accent-primary)]" data-action="loadCombatPreset" type="button" data-tooltip="Load a saved combat preset">
             <i class="fa-solid fa-folder-open"></i> <span>Load Preset</span>
           </button>
-          <button class="wh40k-tool-btn wh40k-tool-btn--danger" data-action="deleteNPC" type="button" data-tooltip="Delete this NPC permanently">
+          <button class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-[0.3rem] tw-bg-[var(--color-bg-tertiary,rgba(30,30,30,0.9))] tw-border tw-border-[var(--color-border-secondary,#444)] tw-rounded-[6px] tw-text-[color:var(--color-text-light-secondary,#888)] tw-text-xs tw-cursor-pointer hover:tw-bg-[var(--color-bg-secondary,#333)] hover:tw-border-[color:var(--npc-accent-combat)] hover:tw-text-[color:var(--npc-accent-combat)]" data-action="deleteNPC" type="button" data-tooltip="Delete this NPC permanently">
             <i class="fa-solid fa-trash-can"></i> <span>Delete NPC</span>
           </button>
         </div>
