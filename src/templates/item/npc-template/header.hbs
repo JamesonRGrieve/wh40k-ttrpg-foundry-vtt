@@ -5,17 +5,17 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/header-base.hbs
     variant="horizontal"
     cardClass="wh40k-sheet-header npc-template-header tw-gap-4 tw-p-3 tw-bg-[var(--wh40k-bg-secondary)] tw-border-[var(--wh40k-border-color)] bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure"}}
-    <div class="portrait-section tw-shrink-0">
+    <div class="tw-shrink-0">
         <img class="tw-w-20 tw-h-20 tw-object-cover tw-border-2 tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-cursor-pointer tw-transition-[border-color] hover:tw-border-gold bc:hover:tw-border-crimson-light dh1e:hover:tw-border-gold-raw-l5 dh2e:hover:tw-border-gold-raw dw:hover:tw-border-accent-combat ow:hover:tw-border-brass-l20 rt:hover:tw-border-gold im:hover:tw-border-failure" src="{{item.img}}" alt="{{item.name}}" data-action="editImage" data-tooltip="{{localize 'WH40K.Sheet.ChangeImage'}}">
     </div>
 
-    <div class="header-details tw-flex tw-flex-1 tw-flex-col tw-gap-2">
-        <div class="name-row">
+    <div class="tw-flex tw-flex-1 tw-flex-col tw-gap-2">
+        <div>
             <input class="tw-text-xl tw-font-bold tw-w-full tw-border-0 tw-bg-transparent tw-px-1 focus:tw-bg-[var(--wh40k-bg-primary)] focus:tw-outline focus:tw-outline-1 focus:tw-outline-[var(--wh40k-accent-color)]" type="text" name="name" value="{{item.name}}" placeholder="{{localize 'WH40K.NPC.Template.Name'}}" />
         </div>
 
-        <div class="info-row tw-flex tw-gap-4 tw-flex-wrap">
-            <div class="field-group tw-flex tw-flex-col tw-gap-1 tw-flex-1 tw-min-w-[120px]">
+        <div class="tw-flex tw-gap-4 tw-flex-wrap">
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1 tw-min-w-[120px]">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Category"}}</label>
                 <select class="tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-bg-[var(--wh40k-bg-primary)] focus:tw-outline focus:tw-outline-1 focus:tw-outline-[var(--wh40k-accent-color)]" name="system.category">
                     {{#each categories}}
@@ -24,7 +24,7 @@
                 </select>
             </div>
 
-            <div class="field-group tw-flex tw-flex-col tw-gap-1 tw-flex-1 tw-min-w-[120px]">
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1 tw-min-w-[120px]">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Role"}}</label>
                 <select class="tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-bg-[var(--wh40k-bg-primary)] focus:tw-outline focus:tw-outline-1 focus:tw-outline-[var(--wh40k-accent-color)]" name="system.role">
                     {{#each roles}}
@@ -33,19 +33,19 @@
                 </select>
             </div>
 
-            <div class="field-group tw-flex tw-flex-col tw-gap-1 tw-flex-1 tw-min-w-[120px]">
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1 tw-min-w-[120px]">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.ThreatLevel"}}</label>
                 <input class="tw-w-[60px] tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-bg-[var(--wh40k-bg-primary)] focus:tw-outline focus:tw-outline-1 focus:tw-outline-[var(--wh40k-accent-color)]" type="number" name="system.baseThreatLevel" value="{{source.baseThreatLevel}}" min="1" max="30" />
             </div>
         </div>
 
-        <div class="faction-row tw-flex tw-gap-4 tw-flex-wrap">
-            <div class="field-group tw-flex tw-flex-col tw-gap-1 tw-flex-1 tw-min-w-[120px]">
+        <div class="tw-flex tw-gap-4 tw-flex-wrap">
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1 tw-min-w-[120px]">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Faction"}}</label>
                 <input class="tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-bg-[var(--wh40k-bg-primary)] focus:tw-outline focus:tw-outline-1 focus:tw-outline-[var(--wh40k-accent-color)]" type="text" name="system.faction" value="{{source.faction}}" placeholder="{{localize 'WH40K.NPC.FactionPlaceholder'}}" />
             </div>
 
-            <div class="field-group tw-flex tw-flex-col tw-gap-1 tw-flex-1 tw-min-w-[120px]">
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1 tw-min-w-[120px]">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Subfaction"}}</label>
                 <input class="tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-bg-[var(--wh40k-bg-primary)] focus:tw-outline focus:tw-outline-1 focus:tw-outline-[var(--wh40k-accent-color)]" type="text" name="system.subfaction" value="{{source.subfaction}}" placeholder="{{localize 'WH40K.NPC.SubfactionPlaceholder'}}" />
             </div>

@@ -1,18 +1,18 @@
 {{! NPC Template - Preview Tab }}
-<section class="tab-content tab-preview" data-tab="preview" data-group="primary">
+<section data-tab="preview" data-group="primary">
     {{! Threat Selector }}
-    <div class="wh40k-panel">
-        <header class="wh40k-panel-header">
+    <div class="tw-relative tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)]">
+        <header class="tw-flex tw-items-center tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,var(--color-warm-2)_0%,var(--color-warm-4)_100%)] tw-border-b tw-border-[var(--color-border-highlight)] tw-font-[var(--wh40k-font-header)] tw-text-[0.95rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[1px]">
             <h3><i class="fas fa-eye"></i> {{localize "WH40K.NPC.Template.PreviewSettings"}}</h3>
         </header>
-        <div class="wh40k-panel-content">
+        <div>
             <div class="tw-flex tw-items-center tw-gap-4">
                 <label>{{localize "WH40K.NPC.Template.PreviewAtThreat"}}</label>
                 <input class="tw-flex-1" type="range" min="1" max="30" value="{{previewThreat}}" data-action="updatePreview" />
                 <span class="tw-text-2xl tw-font-bold tw-min-w-[40px] tw-text-center">{{previewThreat}}</span>
             </div>
             <div class="tw-mt-4 tw-text-right">
-                <button type="button" class="wh40k-btn wh40k-btn-primary tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-2 tw-bg-gradient-to-br tw-from-[var(--wh40k-gold-dark)] tw-to-[var(--wh40k-gold)] tw-border tw-border-[var(--wh40k-gold)] tw-rounded-md tw-text-[#1a1a1a] tw-text-sm tw-cursor-pointer" data-action="createFromPreview">
+                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-3 tw-py-2 tw-bg-gradient-to-br tw-from-[var(--wh40k-gold-dark)] tw-to-[var(--wh40k-gold)] tw-border tw-border-[var(--wh40k-gold)] tw-rounded-md tw-text-[#1a1a1a] tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-action="createFromPreview">
                     <i class="fas fa-user-plus"></i>
                     {{localize "WH40K.NPC.Template.CreateNPC"}}
                 </button>
@@ -21,11 +21,11 @@
     </div>
 
     {{! Preview Stat Block }}
-    <div class="wh40k-panel">
-        <header class="wh40k-panel-header">
+    <div class="tw-relative tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)]">
+        <header class="tw-flex tw-items-center tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,var(--color-warm-2)_0%,var(--color-warm-4)_100%)] tw-border-b tw-border-[var(--color-border-highlight)] tw-font-[var(--wh40k-font-header)] tw-text-[0.95rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[1px]">
             <h3>{{item.name}} <span class="tw-text-sm tw-px-2 tw-py-0.5 tw-rounded-md tw-ml-2" style="background: var(--wh40k-warning)">{{localize "WH40K.NPC.ThreatLevel"}} {{previewThreat}}</span></h3>
         </header>
-        <div class="wh40k-panel-content">
+        <div>
             {{! Characteristics Preview }}
             <div class="tw-mb-4 tw-pb-4 tw-border-b tw-border-[var(--wh40k-border-color)] last:tw-border-b-0">
                 <h4 class="tw-text-sm tw-font-semibold tw-uppercase tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-mb-2">{{localize "WH40K.Characteristics"}}</h4>
