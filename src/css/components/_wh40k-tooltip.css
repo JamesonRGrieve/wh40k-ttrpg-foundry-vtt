@@ -1,0 +1,346 @@
+/* ── source: src/css/components/_wh40k-tooltip.css ── */
+/**
+ * RT Rich Tooltips
+ * Gothic 40K themed contextual tooltips with breakdowns
+ * Applied to Foundry's #tooltip element when .wh40k-tooltip class is added
+ */
+
+/* When Foundry's tooltip gets the .wh40k-tooltip class, apply our styling */
+#tooltip.wh40k-tooltip {
+    /* Override Foundry's default tooltip styling */
+    min-width: 250px;
+    max-width: 350px;
+    padding: 0;
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.98) 0%, rgba(30, 30, 30, 0.98) 100%);
+    border: 2px solid var(--wh40k-bronze, #cd7f32);
+    border-radius: var(--wh40k-radius-md);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.3), inset 0 1px 0 rgba(212, 175, 55, 0.2);
+    color: var(--wh40k-bone, #e8dcc8);
+    font-family: var(--wh40k-font-body, 'Garamond', serif);
+    font-size: 0.9rem;
+
+    /* Parchment texture overlay */
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(212, 175, 55, 0.03) 2px, rgba(212, 175, 55, 0.03) 4px);
+        pointer-events: none;
+        border-radius: var(--wh40k-radius-md);
+        z-index: -1;
+    }
+
+    /* Header */
+    .wh40k-tooltip__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        background: linear-gradient(135deg, rgba(205, 127, 50, 0.3) 0%, rgba(62, 62, 62, 0.3) 100%);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.5);
+
+        .wh40k-tooltip__title {
+            margin: 0;
+            font-family: var(--wh40k-font-header, 'Caslon Antique', serif);
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--wh40k-gold, var(--wh40k-color-gold));
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .wh40k-tooltip__total {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
+        }
+    }
+
+    /* Divider */
+    .wh40k-tooltip__divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+        margin: 0 1rem;
+    }
+
+    /* Breakdown Section */
+    .wh40k-tooltip__breakdown {
+        padding: 0.75rem 1rem;
+
+        .wh40k-tooltip__line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.35rem 0;
+            font-size: 0.9rem;
+
+            &.wh40k-tooltip__line--modifier {
+                color: rgba(232, 220, 200, 0.9);
+            }
+
+            .wh40k-tooltip__label {
+                color: rgba(232, 220, 200, 0.7);
+                font-size: 0.85rem;
+            }
+
+            .wh40k-tooltip__value {
+                font-weight: 600;
+                color: var(--wh40k-bone, #e8dcc8);
+
+                &.wh40k-tooltip__value--bonus {
+                    font-size: 1.2rem;
+                    color: var(--wh40k-gold, var(--wh40k-color-gold));
+                }
+            }
+        }
+    }
+
+    /* Modifier Sources */
+    .wh40k-tooltip__sources {
+        padding: 0.75rem 1rem;
+
+        .wh40k-tooltip__sources-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--wh40k-gold, var(--wh40k-color-gold));
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .wh40k-tooltip__source {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.35rem 0.5rem;
+            background: rgba(62, 62, 62, 0.3);
+            border-left: 2px solid rgba(212, 175, 55, 0.5);
+            margin-bottom: 0.25rem;
+            font-size: 0.85rem;
+
+            .wh40k-tooltip__source-name {
+                color: rgba(232, 220, 200, 0.8);
+            }
+
+            .wh40k-tooltip__source-value {
+                font-weight: bold;
+                color: var(--wh40k-gold, var(--wh40k-color-gold));
+            }
+        }
+    }
+
+    /* Bonus Display */
+    .wh40k-tooltip__bonus {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        background: rgba(212, 175, 55, 0.1);
+
+        .wh40k-tooltip__label {
+            font-size: 0.9rem;
+            color: rgba(232, 220, 200, 0.7);
+        }
+
+        .wh40k-tooltip__value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--wh40k-gold, var(--wh40k-color-gold));
+            text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+        }
+
+        .wh40k-tooltip__bonus-calc {
+            font-size: 0.8rem;
+            color: rgba(232, 220, 200, 0.6);
+            font-style: italic;
+        }
+    }
+
+    /* Training Track */
+    .wh40k-tooltip__training {
+        padding: 0.75rem 1rem;
+
+        .wh40k-tooltip__training-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--wh40k-gold, var(--wh40k-color-gold));
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .wh40k-tooltip__training-track {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(62, 62, 62, 0.3);
+            border-radius: var(--wh40k-radius-md);
+
+            span {
+                font-size: 0.8rem;
+                padding: 0.25rem 0.5rem;
+                border-radius: 3px;
+                background: rgba(0, 0, 0, 0.3);
+                color: rgba(232, 220, 200, 0.5);
+                white-space: nowrap;
+
+                &.active {
+                    background: linear-gradient(135deg, rgba(205, 127, 50, 0.5) 0%, rgba(212, 175, 55, 0.5) 100%);
+                    color: white;
+                    font-weight: bold;
+                    box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+                }
+            }
+
+            i {
+                font-size: 0.7rem;
+                color: rgba(212, 175, 55, 0.5);
+            }
+        }
+    }
+
+    /* Equipped Items */
+    .wh40k-tooltip__equipped {
+        padding: 0.75rem 1rem;
+
+        .wh40k-tooltip__equipped-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--wh40k-gold, var(--wh40k-color-gold));
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .wh40k-tooltip__equipped-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.5rem;
+            background: rgba(62, 62, 62, 0.3);
+            border-left: 2px solid rgba(212, 175, 55, 0.5);
+            margin-bottom: 0.25rem;
+
+            img {
+                width: 24px;
+                height: 24px;
+                object-fit: cover;
+                border-radius: 3px;
+                border: 1px solid rgba(212, 175, 55, 0.3);
+            }
+
+            span {
+                flex: 1;
+                font-size: 0.85rem;
+                color: rgba(232, 220, 200, 0.8);
+            }
+
+            .ap {
+                font-weight: bold;
+                color: var(--wh40k-gold, var(--wh40k-color-gold));
+            }
+        }
+    }
+
+    /* Qualities */
+    .wh40k-tooltip__qualities {
+        padding: 0.75rem 1rem;
+
+        .wh40k-tooltip__qualities-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--wh40k-gold, var(--wh40k-color-gold));
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .wh40k-tooltip__quality {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            margin-right: 0.25rem;
+            margin-bottom: 0.25rem;
+            background: rgba(62, 62, 62, 0.5);
+            border: 1px solid rgba(205, 127, 50, 0.5);
+            border-radius: 3px;
+            font-size: 0.75rem;
+            color: rgba(232, 220, 200, 0.9);
+        }
+    }
+
+    /* Action Hint */
+    .wh40k-tooltip__action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: rgba(205, 127, 50, 0.2);
+        border-top: 1px solid rgba(212, 175, 55, 0.3);
+        font-size: 0.85rem;
+        color: var(--wh40k-gold, var(--wh40k-color-gold));
+        font-style: italic;
+
+        i {
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Hint text (non-interactive guidance) */
+    .wh40k-tooltip__hint {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: rgba(50, 50, 50, 0.5);
+        border-top: 1px solid rgba(212, 175, 55, 0.2);
+        font-size: 0.8rem;
+        color: rgba(232, 220, 200, 0.7);
+        font-style: italic;
+
+        i {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+    }
+
+    /* Skill description */
+    .wh40k-tooltip__description {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        color: rgba(232, 220, 200, 0.85);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    /* Generic Content */
+    .wh40k-tooltip__content {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        color: rgba(232, 220, 200, 0.9);
+    }
+}
+
+/* Type-specific styling */
+
+/* Hover state for elements with tooltips */
+[data-wh40k-tooltip] {
+    cursor: help;
+    position: relative;
+
+    &:hover {
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-decoration-color: rgba(212, 175, 55, 0.5);
+    }
+}

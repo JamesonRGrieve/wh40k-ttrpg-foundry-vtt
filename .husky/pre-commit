@@ -16,12 +16,6 @@ pnpm -s i18n:gen
 echo "[pre-commit] regenerating icon registry…"
 pnpm -s icons:gen
 
-# Refresh the CSS block index so .css-blocks.json stays current with the
-# monolith. Cheap (one file scan); avoids the manual `pnpm css:block-index`
-# step after every CSS edit.
-echo "[pre-commit] refreshing CSS block index…"
-pnpm -s css:block-index
-
 # Hard typecheck gate: tsc --noEmit must pass with zero errors.
 echo "[pre-commit] running tsc…"
 pnpm -s typecheck
@@ -37,8 +31,8 @@ echo "[pre-commit] running css coverage ratchet…"
 pnpm -s css:ratchet
 
 # Animation ratchet: blocks commits that increase the count of `animation:` /
-# `animation-name:` declarations in src/css/wh40k-rpg.css. Each declaration is
-# a rule that should migrate to `tw-animate-<name>` on the consuming template.
+# `animation-name:` declarations across the legacy CSS files under src/css/**.
+# Each declaration is a rule that should migrate to `tw-animate-<name>` on the consuming template.
 # Once the count reaches 0, the @keyframes safelist in tailwind.config.js can
 # be dropped. Update via: pnpm animation:ratchet:update
 echo "[pre-commit] running animation ratchet…"

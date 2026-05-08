@@ -1,0 +1,415 @@
+/* ── source: src/css/foundry-chrome.css ── */
+/**
+ * Foundry V14 chrome salvage.
+ *
+ * Rules in this block target Foundry-internal selectors (e.g. .window-content,
+ * .ProseMirror, .editor-content) that cannot be ported to template-inline
+ * Tailwind utilities because their elements are emitted by Foundry, not by
+ * our templates. As source-blocks are deleted from the monolith during the
+ * Tailwind migration, any chrome rules they contained are salvaged here.
+ *
+ * Eventually this block will be extracted to src/css/foundry-chrome.css
+ * proper, wired into gulpfile.js SYSTEM_CSS, and registered in system.json.
+ */
+
+/* salvaged from src/css/components/_origin-detail-dialog.css */
+.origin-detail-dialog {
+    .window-content {
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+    }
+}
+
+/* salvaged from src/css/panels/_biography.css — ProseMirror content styling */
+.wh40k-prose-editor {
+    .ProseMirror {
+        padding: var(--wh40k-space-sm);
+        min-height: 100%;
+        outline: none;
+
+        p {
+            margin: 0 0 var(--wh40k-space-sm) 0;
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        ul,
+        ol {
+            margin: 0 0 var(--wh40k-space-sm) var(--wh40k-space-lg);
+            padding-left: var(--wh40k-space-md);
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--wh40k-font-alt);
+            margin: var(--wh40k-space-md) 0 var(--wh40k-space-sm) 0;
+            color: var(--color-text-primary);
+            font-weight: 700;
+
+            &:first-child {
+                margin-top: 0;
+            }
+        }
+
+        h1 {
+            font-size: 1.8rem;
+        }
+        h2 {
+            font-size: 1.5rem;
+        }
+        h3 {
+            font-size: 1.2rem;
+        }
+        h4 {
+            font-size: 1.1rem;
+        }
+
+        blockquote {
+            margin: var(--wh40k-space-sm) 0;
+            padding: var(--wh40k-space-sm) var(--wh40k-space-md);
+            border-left: 3px solid var(--wh40k-accent-bio);
+            background: rgb(from var(--wh40k-accent-bio) r g b / 0.05);
+            font-style: italic;
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.1);
+            padding: var(--wh40k-space-sm);
+            border-radius: var(--wh40k-radius-md);
+            overflow-x: auto;
+
+            code {
+                background: none;
+                padding: 0;
+            }
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: var(--wh40k-space-sm) 0;
+
+            th,
+            td {
+                border: 1px solid var(--wh40k-border-light);
+                padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
+                text-align: left;
+            }
+
+            th {
+                background: rgb(from var(--wh40k-accent-bio) r g b / 0.1);
+                font-weight: 600;
+            }
+        }
+
+        a {
+            color: var(--wh40k-accent-bio);
+            text-decoration: underline;
+
+            &:hover {
+                color: color-mix(in srgb, var(--wh40k-accent-bio), white 10%);
+            }
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--wh40k-radius-md);
+            margin: var(--wh40k-space-sm) 0;
+        }
+
+        hr {
+            margin: var(--wh40k-space-md) 0;
+            border: none;
+            border-top: 2px solid var(--wh40k-border-light);
+        }
+    }
+}
+
+/* salvaged from src/css/panels/_biography.css — read-only prose content typography */
+.wh40k-prose-content {
+    p {
+        margin: 0 0 var(--wh40k-space-sm) 0;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    ul,
+    ol {
+        margin: 0 0 var(--wh40k-space-sm) var(--wh40k-space-lg);
+    }
+
+    h1,
+    h2,
+    h3 {
+        font-family: var(--wh40k-font-alt);
+        margin: var(--wh40k-space-sm) 0;
+    }
+
+    &:empty::before {
+        content: 'No notes recorded...';
+        color: var(--wh40k-text-muted);
+        font-style: italic;
+    }
+}
+
+/* salvaged from src/css/actor/_vehicle-sheet.css — Foundry window-content/form layout for vehicle sheet */
+.wh40k-rpg.sheet.actor.vehicle {
+    .window-content {
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+        height: 100% !important;
+    }
+
+    form {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+        gap: 0 !important;
+        height: 100% !important;
+    }
+}
+
+/* salvaged from src/css/prompts/_dialogs.css — dialog window-content padding reset */
+.roll-configuration-dialog {
+    .window-content {
+        padding: 0;
+    }
+}
+
+.add-xp-dialog {
+    .window-content {
+        padding: 0;
+    }
+}
+
+/* salvaged from src/css/chat/_foundry-overrides.css — dark mode chat message overrides */
+/* ============================================ */
+/* Foundry VTT Chat Message Dark Mode Overrides */
+/* ============================================ */
+/* These styles must be extremely specific to override Foundry's default styles */
+/* Applied globally to #chat-log for all systems */
+
+/* ========================================
+   DARK MODE CHAT MESSAGES - GLOBAL OVERRIDE
+   ======================================== */
+
+/* Use body.theme-dark to ensure these only apply in dark mode */
+body.theme-dark {
+    /* Target the chat log container */
+    #chat-log {
+        /* Override message background */
+        .message {
+            background-color: var(--wh40k-panel-bg-solid) !important;
+            border-color: var(--wh40k-border-color) !important;
+            box-shadow: 0 2px 4px var(--wh40k-shadow-medium) !important;
+
+            /* Message header (sender name, timestamp) */
+            .message-header {
+                background: var(--wh40k-panel-bg) !important;
+                border-bottom: 1px solid var(--wh40k-border-color) !important;
+                color: var(--wh40k-text-dark) !important;
+
+                .message-sender {
+                    color: var(--wh40k-gold) !important;
+                    font-weight: 600 !important;
+                }
+
+                .message-metadata {
+                    color: var(--wh40k-text-muted) !important;
+
+                    .message-timestamp {
+                        color: var(--wh40k-text-subtle) !important;
+                    }
+                }
+            }
+
+            /* Message content area */
+            .message-content {
+                background: transparent !important;
+                color: var(--wh40k-text-dark) !important;
+
+                /* All text elements */
+                p,
+                span,
+                div,
+                td,
+                th,
+                li,
+                label {
+                    color: var(--wh40k-text-dark) !important;
+                }
+
+                /* Links */
+                a {
+                    color: var(--wh40k-gold) !important;
+
+                    &:hover {
+                        color: var(--wh40k-gold-bright) !important;
+                    }
+                }
+
+                /* Emphasis */
+                strong,
+                b {
+                    color: var(--wh40k-text-dark) !important;
+                    font-weight: 700 !important;
+                }
+
+                em,
+                i {
+                    color: var(--wh40k-text-medium) !important;
+                }
+
+                /* Headings */
+                h1,
+                h2,
+                h3,
+                h4,
+                h5,
+                h6 {
+                    color: var(--wh40k-text-dark) !important;
+                }
+
+                /* Tables */
+                table {
+                    background: transparent !important;
+                    border-color: var(--wh40k-border-color) !important;
+
+                    th {
+                        background: var(--wh40k-panel-bg) !important;
+                        border-color: var(--wh40k-border-color) !important;
+                        color: var(--wh40k-text-dark) !important;
+                    }
+
+                    td {
+                        border-color: var(--wh40k-border-color) !important;
+                        background: transparent !important;
+                        color: var(--wh40k-text-dark) !important;
+                    }
+                }
+
+                /* Code blocks */
+                code,
+                pre {
+                    background: var(--wh40k-panel-bg) !important;
+                    color: var(--wh40k-text-dark) !important;
+                    border-color: var(--wh40k-border-color) !important;
+                }
+            }
+
+            /* Flavor text (whispers, etc.) */
+            .flavor-text {
+                color: var(--wh40k-text-muted) !important;
+                background: var(--wh40k-panel-bg) !important;
+            }
+        }
+
+        /* Whisper messages (GM only) */
+        .message.whisper {
+            background: rgba(106, 90, 74, 0.3) !important;
+            border-color: var(--wh40k-bio-border) !important;
+
+            .message-header {
+                background: rgba(106, 90, 74, 0.4) !important;
+            }
+        }
+
+        /* Blind messages (hidden from players) */
+        .message.blind {
+            background: rgba(74, 55, 40, 0.3) !important;
+            border-color: var(--wh40k-border-color-strong) !important;
+        }
+    }
+
+    /* Chat form (message input area) */
+    #chat-form {
+        background: var(--wh40k-panel-bg-solid) !important;
+        border-color: var(--wh40k-border-color) !important;
+
+        textarea {
+            background: var(--wh40k-input-bg) !important;
+            color: var(--wh40k-text-dark) !important;
+            border-color: var(--wh40k-border-color) !important;
+
+            &:focus {
+                background: var(--wh40k-input-bg-focus) !important;
+                border-color: var(--wh40k-gold) !important;
+            }
+        }
+
+        button {
+            background: var(--wh40k-btn-bg) !important;
+            color: var(--wh40k-text-dark) !important;
+            border-color: var(--wh40k-border-color) !important;
+
+            &:hover {
+                background: var(--wh40k-btn-bg-hover) !important;
+                border-color: var(--wh40k-gold) !important;
+            }
+        }
+    }
+}
+
+/* ========================================
+   ROGUE TRADER SPECIFIC CHAT CARDS
+   ======================================== */
+
+/* These cards work in both light and dark mode via CSS vars */
+body.theme-dark {
+    #chat-log {
+        /* Hit location / Initiative cards */
+        .wh40k-hit-location-result {
+            background: var(--wh40k-panel-bg-solid) !important;
+            border-color: var(--wh40k-border-color) !important;
+
+            h3 {
+                color: var(--wh40k-text-dark) !important;
+
+                i {
+                    color: var(--wh40k-gold) !important;
+                }
+            }
+
+            .wh40k-roll-result {
+                background: var(--wh40k-panel-bg) !important;
+                color: var(--wh40k-text-dark) !important;
+                border-color: var(--wh40k-border-color-strong) !important;
+            }
+
+            .wh40k-location-armour {
+                color: var(--wh40k-text-muted) !important;
+            }
+        }
+
+        /* Roll cards */
+
+        /* Item cards */
+    }
+}
+
+/* salvaged from src/css/panels/_overview-dashboard.css — zone accent colors (descendant selectors can't be expressed in Tailwind) */
+
+/* salvaged from src/css/panels/_combat-station.css — @container breakpoints (can't be expressed in Tailwind) */
+
+/* salvaged from src/css/panels/_combat-station.css — ::before pseudo on action button (accent strip) */
