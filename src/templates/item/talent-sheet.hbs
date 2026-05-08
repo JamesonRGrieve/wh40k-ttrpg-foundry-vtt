@@ -3,32 +3,32 @@
   Modern tabbed interface with translucent gothic styling
   Font Awesome 6 Pro icons throughout
 --}}
-<div class="wh40k-talent-sheet-v2 tw-flex tw-flex-col tw-h-full">
+<div class="tw-flex tw-flex-col tw-h-full">
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Portrait, name, key badges, and quick actions
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="wh40k-talent-header tw-flex tw-items-start tw-flex-shrink-0 tw-gap-3 tw-p-3 tw-bg-gradient-to-b tw-from-[var(--color-bg-secondary)] tw-to-[var(--color-bg-primary)] tw-border-b-2 tw-border-b-[var(--color-border-secondary)]">
+    <header class="tw-flex tw-items-start tw-flex-shrink-0 tw-gap-3 tw-p-3 tw-bg-gradient-to-b tw-from-[var(--color-bg-secondary)] tw-to-[var(--color-bg-primary)] tw-border-b-2 tw-border-b-[var(--color-border-secondary)]">
       {{!-- Portrait --}}
-      <div class="wh40k-talent-portrait tw-relative tw-flex-shrink-0 tw-cursor-pointer tw-overflow-hidden" data-action="editImage">
+      <div class="tw-relative tw-flex-shrink-0 tw-cursor-pointer tw-overflow-hidden" data-action="editImage">
         <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
         {{#if inEditMode}}
-        <div class="wh40k-talent-portrait-overlay tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-opacity-0">
+        <div class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-opacity-0">
           <i class="fa-solid fa-camera"></i>
         </div>
         {{/if}}
       </div>
 
       {{!-- Title & Meta --}}
-      <div class="wh40k-talent-title tw-flex-1 tw-flex tw-flex-col tw-min-w-0">
+      <div class="tw-flex-1 tw-flex tw-flex-col tw-min-w-0">
         {{#if inEditMode}}
-        <input type="text" class="wh40k-talent-name tw-w-full" name="name" value="{{item.name}}" placeholder="Talent Name" />
+        <input type="text" class="tw-w-full" name="name" value="{{item.name}}" placeholder="Talent Name" />
         {{else}}
-        <h1 class="wh40k-talent-name tw-w-full tw-m-0">{{item.name}}</h1>
+        <h1 class="tw-w-full tw-m-0">{{item.name}}</h1>
         {{/if}}
 
         {{!-- Quick Badges --}}
-        <div class="wh40k-talent-badges tw-flex tw-flex-wrap tw-gap-1">
+        <div class="tw-flex tw-flex-wrap tw-gap-1">
           {{!-- Type Badge --}}
           <span class="wh40k-badge wh40k-badge--type tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
             <i class="fa-solid {{#if talentData.isPassive}}fa-circle-check{{else}}fa-bolt{{/if}}"></i>
@@ -51,7 +51,7 @@
 
           {{!-- XP Cost Badge --}}
           {{#if (gt talentData.cost 0)}}
-          <span class="wh40k-badge wh40k-badge--cost tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
+          <span class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
             <i class="fa-solid fa-coins"></i>
             {{talentData.cost}} XP
           </span>
@@ -59,7 +59,7 @@
 
           {{!-- Stackable Badge --}}
           {{#if talentData.stackable}}
-          <span class="wh40k-badge wh40k-badge--stackable tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
+          <span class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
             <i class="fa-solid fa-layer-group"></i>
             Rank {{talentData.rank}}
           </span>
@@ -67,7 +67,7 @@
 
           {{!-- Rollable Badge --}}
           {{#if talentData.isRollable}}
-          <span class="wh40k-badge wh40k-badge--rollable tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
+          <span class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-border tw-border-transparent tw-whitespace-nowrap">
             <i class="fa-solid fa-dice-d20"></i>
             Rollable
           </span>
@@ -76,11 +76,11 @@
       </div>
 
       {{!-- Action Buttons --}}
-      <div class="wh40k-talent-actions tw-flex tw-gap-[6px] tw-flex-shrink-0">
+      <div class="tw-flex tw-gap-[6px] tw-flex-shrink-0">
         {{!-- Edit Mode Toggle (only for actor-owned items) --}}
         {{#if isOwnedByActor}}
         {{#if canEdit}}
-        <button type="button" class="wh40k-action-btn wh40k-action-btn--edit tw-flex tw-items-center tw-justify-center tw-cursor-pointer {{#if inEditMode}}active{{/if}}"
+        <button type="button" class="tw-flex tw-items-center tw-justify-center tw-cursor-pointer {{#if inEditMode}}active{{/if}}"
                 data-action="toggleEditMode" title="{{#if inEditMode}}Exit Edit Mode{{else}}Enter Edit Mode{{/if}}">
           <i class="fa-solid {{#if inEditMode}}fa-lock-open{{else}}fa-pen-to-square{{/if}}"></i>
         </button>
@@ -89,13 +89,13 @@
 
         {{!-- Roll Button --}}
         {{#if talentData.isRollable}}
-        <button type="button" class="wh40k-action-btn wh40k-action-btn--roll tw-flex tw-items-center tw-justify-center tw-cursor-pointer" data-action="rollTalent" title="Roll Talent">
+        <button type="button" class="tw-flex tw-items-center tw-justify-center tw-cursor-pointer" data-action="rollTalent" title="Roll Talent">
           <i class="fa-solid fa-dice-d20"></i>
         </button>
         {{/if}}
 
         {{!-- Chat Button --}}
-        <button type="button" class="wh40k-action-btn wh40k-action-btn--chat tw-flex tw-items-center tw-justify-center tw-cursor-pointer" data-action="postToChat" title="Post to Chat">
+        <button type="button" class="tw-flex tw-items-center tw-justify-center tw-cursor-pointer" data-action="postToChat" title="Post to Chat">
           <i class="fa-solid fa-comment"></i>
         </button>
       </div>
@@ -104,24 +104,24 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          QUICK STATS BAR: Key info at a glance
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-talent-quickstats tw-flex tw-flex-wrap tw-gap-2">
+    <div class="tw-flex tw-flex-wrap tw-gap-2">
       {{!-- Prerequisites Summary --}}
       {{#if prerequisitesData.hasAny}}
-      <div class="wh40k-quickstat wh40k-quickstat--prereqs tw-flex tw-items-center tw-gap-1">
+      <div class="tw-flex tw-items-center tw-gap-1">
         <i class="fa-solid fa-lock"></i>
-        <span class="wh40k-quickstat-label">Prerequisites</span>
-        <span class="wh40k-quickstat-value">{{prerequisitesData.label}}</span>
+        <span >Prerequisites</span>
+        <span >{{prerequisitesData.label}}</span>
       </div>
       {{/if}}
 
       {{!-- Aptitudes --}}
       {{#if talentData.hasAptitudes}}
-      <div class="wh40k-quickstat wh40k-quickstat--aptitudes tw-flex tw-items-center tw-gap-1">
+      <div class="tw-flex tw-items-center tw-gap-1">
         <i class="fa-solid fa-brain"></i>
-        <span class="wh40k-quickstat-label">Aptitudes</span>
-        <div class="wh40k-quickstat-tags tw-flex tw-flex-wrap tw-gap-1">
+        <span >Aptitudes</span>
+        <div class="tw-flex tw-flex-wrap tw-gap-1">
           {{#each talentData.aptitudes}}
-          <span class="wh40k-aptitude-tag tw-inline-flex tw-items-center tw-px-2.5 tw-py-1 tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.15),rgba(212,175,55,0.05))] tw-border tw-border-[rgba(212,175,55,0.3)] tw-rounded-sm tw-text-xs tw-font-semibold tw-text-gold">{{this}}</span>
+          <span class="tw-inline-flex tw-items-center tw-px-2.5 tw-py-1 tw-bg-[linear-gradient(135deg,rgba(212,175,55,0.15),rgba(212,175,55,0.05))] tw-border tw-border-[rgba(212,175,55,0.3)] tw-rounded-sm tw-text-xs tw-font-semibold tw-text-gold">{{this}}</span>
           {{/each}}
         </div>
       </div>
@@ -129,10 +129,10 @@
 
       {{!-- Specialization --}}
       {{#if talentData.specialization}}
-      <div class="wh40k-quickstat wh40k-quickstat--spec tw-flex tw-items-center tw-gap-1">
+      <div class="tw-flex tw-items-center tw-gap-1">
         <i class="fa-solid fa-bullseye"></i>
-        <span class="wh40k-quickstat-label">Specialization</span>
-        <span class="wh40k-quickstat-value">{{talentData.specialization}}</span>
+        <span >Specialization</span>
+        <span >{{talentData.specialization}}</span>
       </div>
       {{/if}}
     </div>
@@ -141,40 +141,40 @@
          EFFECTS BANNER: Quick summary of talent effects (visible on all tabs)
     ═══════════════════════════════════════════════════════════════════ --}}
     {{#if (or modifiersData.hasAny situationalData.hasAny grantsData.hasAny)}}
-    <div class="wh40k-effects-banner tw-flex tw-items-center tw-gap-2">
-      <div class="wh40k-effects-banner__header tw-flex tw-items-center tw-gap-1">
+    <div class="tw-flex tw-items-center tw-gap-2">
+      <div class="tw-flex tw-items-center tw-gap-1">
         <i class="fa-solid fa-sparkles"></i>
         <span>Effects</span>
       </div>
-      <div class="wh40k-effects-banner__pills tw-flex tw-flex-wrap tw-gap-1">
+      <div class="tw-flex tw-flex-wrap tw-gap-1">
         {{!-- Permanent Modifiers Pill --}}
         {{#if modifiersData.hasAny}}
-        <div class="wh40k-effect-pill wh40k-effect-pill--modifiers tw-flex tw-items-center tw-gap-1" title="Permanent modifiers applied while talent is possessed">
+        <div class="tw-flex tw-items-center tw-gap-1" title="Permanent modifiers applied while talent is possessed">
           <i class="fa-solid fa-chart-line"></i>
-          <span class="wh40k-effect-pill__label">Modifiers</span>
-          <span class="wh40k-effect-pill__count">{{#if modifiersData.hasCharacteristics}}{{modifiersData.characteristics.length}}{{/if}}{{#if (and modifiersData.hasCharacteristics modifiersData.hasSkills)}}+{{/if}}{{#if modifiersData.hasSkills}}{{modifiersData.skills.length}}{{/if}}{{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills) modifiersData.hasCombat)}}+{{/if}}{{#if modifiersData.hasCombat}}{{modifiersData.combat.length}}{{/if}}{{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills modifiersData.hasCombat) modifiersData.hasResources)}}+{{/if}}{{#if modifiersData.hasResources}}{{modifiersData.resources.length}}{{/if}}</span>
+          <span >Modifiers</span>
+          <span >{{#if modifiersData.hasCharacteristics}}{{modifiersData.characteristics.length}}{{/if}}{{#if (and modifiersData.hasCharacteristics modifiersData.hasSkills)}}+{{/if}}{{#if modifiersData.hasSkills}}{{modifiersData.skills.length}}{{/if}}{{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills) modifiersData.hasCombat)}}+{{/if}}{{#if modifiersData.hasCombat}}{{modifiersData.combat.length}}{{/if}}{{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills modifiersData.hasCombat) modifiersData.hasResources)}}+{{/if}}{{#if modifiersData.hasResources}}{{modifiersData.resources.length}}{{/if}}</span>
         </div>
         {{/if}}
 
         {{!-- Situational Modifiers Pill --}}
         {{#if situationalData.hasAny}}
-        <div class="wh40k-effect-pill wh40k-effect-pill--situational tw-flex tw-items-center tw-gap-1" title="Conditional bonuses that appear in roll dialogs">
+        <div class="tw-flex tw-items-center tw-gap-1" title="Conditional bonuses that appear in roll dialogs">
           <i class="fa-solid fa-clock-rotate-left"></i>
-          <span class="wh40k-effect-pill__label">Situational</span>
-          <span class="wh40k-effect-pill__count">{{#if situationalData.hasCharacteristics}}{{situationalData.characteristics.length}}{{/if}}{{#if (and situationalData.hasCharacteristics situationalData.hasSkills)}}+{{/if}}{{#if situationalData.hasSkills}}{{situationalData.skills.length}}{{/if}}{{#if (and (or situationalData.hasCharacteristics situationalData.hasSkills) situationalData.hasCombat)}}+{{/if}}{{#if situationalData.hasCombat}}{{situationalData.combat.length}}{{/if}}</span>
+          <span >Situational</span>
+          <span >{{#if situationalData.hasCharacteristics}}{{situationalData.characteristics.length}}{{/if}}{{#if (and situationalData.hasCharacteristics situationalData.hasSkills)}}+{{/if}}{{#if situationalData.hasSkills}}{{situationalData.skills.length}}{{/if}}{{#if (and (or situationalData.hasCharacteristics situationalData.hasSkills) situationalData.hasCombat)}}+{{/if}}{{#if situationalData.hasCombat}}{{situationalData.combat.length}}{{/if}}</span>
         </div>
         {{/if}}
 
         {{!-- Grants Pill --}}
         {{#if grantsData.hasAny}}
-        <div class="wh40k-effect-pill wh40k-effect-pill--grants tw-flex tw-items-center tw-gap-1" title="Skills, talents, and traits automatically granted">
+        <div class="tw-flex tw-items-center tw-gap-1" title="Skills, talents, and traits automatically granted">
           <i class="fa-solid fa-gift"></i>
-          <span class="wh40k-effect-pill__label">Grants</span>
-          <span class="wh40k-effect-pill__count">{{#if grantsData.hasSkills}}{{grantsData.skills.length}}{{/if}}{{#if (and grantsData.hasSkills grantsData.hasTalents)}}+{{/if}}{{#if grantsData.hasTalents}}{{grantsData.talents.length}}{{/if}}{{#if (and (or grantsData.hasSkills grantsData.hasTalents) grantsData.hasTraits)}}+{{/if}}{{#if grantsData.hasTraits}}{{grantsData.traits.length}}{{/if}}</span>
+          <span >Grants</span>
+          <span >{{#if grantsData.hasSkills}}{{grantsData.skills.length}}{{/if}}{{#if (and grantsData.hasSkills grantsData.hasTalents)}}+{{/if}}{{#if grantsData.hasTalents}}{{grantsData.talents.length}}{{/if}}{{#if (and (or grantsData.hasSkills grantsData.hasTalents) grantsData.hasTraits)}}+{{/if}}{{#if grantsData.hasTraits}}{{grantsData.traits.length}}{{/if}}</span>
         </div>
         {{/if}}
       </div>
-      <a class="wh40k-effects-banner__link tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" data-tab="effects" data-group="primary">
+      <a class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" data-tab="effects" data-group="primary">
         <span>View Details</span>
         <i class="fa-solid fa-arrow-right"></i>
       </a>
@@ -184,23 +184,23 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-talent-tabs tw-flex tw-flex-shrink-0 tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)]" data-group="primary">
-      <button type="button" class="wh40k-talent-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab "overview")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
+    <nav class="tw-flex tw-flex-shrink-0 tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)]" data-group="primary">
+      <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab"overview")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
               data-tab="overview" data-group="primary">
         <i class="fa-solid fa-eye tw-text-[0.9rem]"></i>
         <span>Overview</span>
       </button>
-      <button type="button" class="wh40k-talent-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab "effects")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
+      <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab"effects")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
               data-tab="effects" data-group="primary">
         <i class="fa-solid fa-wand-magic-sparkles tw-text-[0.9rem]"></i>
         <span>Effects</span>
       </button>
-      <button type="button" class="wh40k-talent-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab "properties")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
+      <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab"properties")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
               data-tab="properties" data-group="primary">
         <i class="fa-solid fa-sliders tw-text-[0.9rem]"></i>
         <span>Properties</span>
       </button>
-      <button type="button" class="wh40k-talent-tab tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab "description")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
+      <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab"description")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
               data-tab="description" data-group="primary">
         <i class="fa-solid fa-book tw-text-[0.9rem]"></i>
         <span>Description</span>
@@ -210,42 +210,42 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="wh40k-talent-content tw-flex-1 tw-overflow-y-auto tw-min-h-0 tw-p-3 [&::-webkit-scrollbar]:tw-w-2 [&::-webkit-scrollbar-track]:tw-bg-[var(--wh40k-panel-bg)] [&::-webkit-scrollbar-thumb]:tw-bg-[var(--wh40k-border-color)] [&::-webkit-scrollbar-thumb]:tw-rounded-md">
+    <section class="tw-flex-1 tw-overflow-y-auto tw-min-h-0 tw-p-3 [&::-webkit-scrollbar]:tw-w-2 [&::-webkit-scrollbar-track]:tw-bg-[var(--wh40k-panel-bg)] [&::-webkit-scrollbar-thumb]:tw-bg-[var(--wh40k-border-color)] [&::-webkit-scrollbar-thumb]:tw-rounded-md">
 
       {{!-- ─────────────────────────────────────────────────────────────────
            OVERVIEW TAB: Benefit and effects summary
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="wh40k-talent-panel {{#if (eq activeTab "overview")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="overview" data-group="primary">
+      <div class="{{#if (eq activeTab"overview")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="overview" data-group="primary">
 
         {{!-- Benefit Section (Editable with hover button) --}}
-        <div class="wh40k-section wh40k-section--editable {{#if inEditMode}}wh40k-section--editing{{/if}}">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
+        <div class="{{#if inEditMode}}tw-ring-1 tw-ring-[color:var(--wh40k-accent-gold)]{{/if}}">
+          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">
             <i class="fa-solid fa-star"></i>
             Benefit
             {{#if canEdit}}
             {{#unless inEditMode}}
-            <button type="button" class="wh40k-header-btn wh40k-header-btn--hover tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="toggleEditMode" title="Edit Benefit">
+            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="toggleEditMode" title="Edit Benefit">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             {{else}}
-            <button type="button" class="wh40k-header-btn wh40k-header-btn--done tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="toggleEditMode" title="Done Editing">
+            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="toggleEditMode" title="Done Editing">
               <i class="fa-solid fa-check"></i>
             </button>
             {{/unless}}
             {{/if}}
           </h3>
-          <div class="wh40k-section-body">
+          <div >
             {{#if inEditMode}}
-            <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
+            <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{editor system.benefit target="system.benefit" button=true editable=canEdit engine="prosemirror"}}
             </div>
             {{else}}
               {{#if talentData.hasBenefit}}
-              <div class="wh40k-benefit-text">
+              <div >
                 {{{talentData.benefit}}}
               </div>
               {{else}}
-              <div class="wh40k-empty-state wh40k-empty-state--compact wh40k-empty-state--clickable tw-flex tw-flex-col tw-items-center tw-cursor-pointer" data-action="toggleEditMode">
+              <div class="tw-flex tw-flex-col tw-items-center tw-cursor-pointer" data-action="toggleEditMode">
                 <i class="fa-solid fa-file-lines"></i>
                 <p>Click to add benefit description</p>
               </div>
@@ -255,37 +255,37 @@
         </div>
 
         {{!-- Special Abilities Section --}}
-        <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+        <div >
+          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-bolt-lightning"></i>
             Special Abilities
             {{#if inEditMode}}
-            <button type="button" class="wh40k-header-btn tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="grants" title="Edit Grants & Abilities">
+            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="grants" title="Edit Grants & Abilities">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             {{/if}}
           </h3>
-          <div class="wh40k-section-body">
+          <div >
             {{#if grantsData.hasSpecialAbilities}}
-            <div class="wh40k-abilities-list tw-flex tw-flex-col tw-gap-2">
+            <div class="tw-flex tw-flex-col tw-gap-2">
               {{#each grantsData.specialAbilities}}
-              <div class="wh40k-ability-card">
-                <h4 class="wh40k-ability-name tw-flex tw-items-center tw-gap-1">
+              <div >
+                <h4 class="tw-flex tw-items-center tw-gap-1">
                   <i class="fa-solid fa-circle-dot"></i>
                   {{this.name}}
                 </h4>
-                <div class="wh40k-ability-description">
+                <div >
                   {{{this.description}}}
                 </div>
               </div>
               {{/each}}
             </div>
             {{else}}
-            <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-flex-col tw-items-center">
+            <div class="tw-flex tw-flex-col tw-items-center">
               <i class="fa-solid fa-bolt-lightning"></i>
               <p>No special abilities</p>
               {{#if inEditMode}}
-              <button type="button" class="wh40k-btn-add-data tw-cursor-pointer" data-action="openTalentEditor" data-section="grants">
+              <button type="button" class="tw-cursor-pointer" data-action="openTalentEditor" data-section="grants">
                 <i class="fa-solid fa-plus"></i> Add Abilities & Grants
               </button>
               {{/if}}
@@ -299,86 +299,86 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            PROPERTIES TAB: Configuration and details
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="wh40k-talent-panel {{#if (eq activeTab "properties")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="properties" data-group="primary">
+      <div class="{{#if (eq activeTab"properties")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="properties" data-group="primary">
 
         {{!-- Basic Properties --}}
-        <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+        <div >
+          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-cog"></i>
             Basic Properties
           </h3>
-          <div class="wh40k-section-body">
-            <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
+          <div >
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               {{!-- Category --}}
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fa-solid fa-tag"></i>
                   Category
                 </label>
                 {{#if inEditMode}}
-                <select name="system.category" class="wh40k-property-select">
+                <select name="system.category" >
                   {{#each categoryOptions}}
                   <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
                   {{/each}}
                 </select>
                 {{else}}
-                <div class="wh40k-property-value">{{talentData.categoryLabel}}</div>
+                <div >{{talentData.categoryLabel}}</div>
                 {{/if}}
               </div>
 
               {{!-- Tier --}}
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fa-solid fa-layer-group"></i>
                   Tier
                 </label>
                 {{#if inEditMode}}
-                <select name="system.tier" class="wh40k-property-select">
+                <select name="system.tier" >
                   {{#each tierOptions}}
                   <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
                   {{/each}}
                 </select>
                 {{else}}
-                <div class="wh40k-property-value">{{talentData.tierLabel}}</div>
+                <div >{{talentData.tierLabel}}</div>
                 {{/if}}
               </div>
 
               {{!-- XP Cost --}}
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fa-solid fa-coins"></i>
                   XP Cost
                 </label>
                 {{#if inEditMode}}
-                <input type="number" name="system.cost" value="{{talentData.cost}}" min="0" class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" />
+                <input type="number" name="system.cost" value="{{talentData.cost}}" min="0" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" />
                 {{else}}
-                <div class="wh40k-property-value">{{talentData.cost}}</div>
+                <div >{{talentData.cost}}</div>
                 {{/if}}
               </div>
 
               {{!-- Type (Passive/Active) - Radio Buttons --}}
-              <div class="wh40k-property wh40k-property--radio tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fa-solid fa-circle-check"></i>
                   Type
                 </label>
                 {{#if inEditMode}}
-                <div class="wh40k-radio-group tw-flex tw-gap-2">
-                  <label class="wh40k-radio-label tw-flex tw-items-center tw-gap-1 tw-cursor-pointer">
+                <div class="tw-flex tw-gap-2">
+                  <label class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer">
                     <input type="radio" name="system.isPassive" value="true" {{#if talentData.isPassive}}checked{{/if}} />
-                    <span class="wh40k-radio-indicator"></span>
+                    <span ></span>
                     <i class="fa-solid fa-circle-check"></i>
                     <span>Passive</span>
                   </label>
-                  <label class="wh40k-radio-label tw-flex tw-items-center tw-gap-1 tw-cursor-pointer">
+                  <label class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer">
                     <input type="radio" name="system.isPassive" value="false" {{#unless talentData.isPassive}}checked{{/unless}} />
-                    <span class="wh40k-radio-indicator"></span>
+                    <span ></span>
                     <i class="fa-solid fa-bolt"></i>
                     <span>Active</span>
                   </label>
                 </div>
                 {{else}}
-                <div class="wh40k-property-value tw-flex tw-items-center tw-gap-1">
+                <div class="tw-flex tw-items-center tw-gap-1">
                   <i class="fa-solid {{#if talentData.isPassive}}fa-circle-check{{else}}fa-bolt{{/if}}"></i>
                   {{#if talentData.isPassive}}Passive{{else}}Active{{/if}}
                 </div>
@@ -386,40 +386,40 @@
               </div>
 
               {{!-- Stackable --}}
-              <div class="wh40k-property wh40k-property--checkbox tw-flex tw-flex-col tw-gap-1.5 tw-justify-center">
-                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5 tw-justify-center">
+                <label class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fa-solid fa-layer-group"></i>
                   Stackable
                 </label>
                 {{#if inEditMode}}
-                <label class="wh40k-checkbox-label tw-flex tw-items-center tw-gap-1 tw-cursor-pointer tw-text-[0.85rem] tw-font-semibold tw-text-[var(--color-text-primary)] tw-select-none">
+                <label class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer tw-text-[0.85rem] tw-font-semibold tw-text-[var(--color-text-primary)] tw-select-none">
                   <input type="checkbox" name="system.stackable" {{checked talentData.stackable}} />
                   <span>Can Take Multiple Times</span>
                 </label>
                 {{else}}
-                <div class="wh40k-property-value">{{#if talentData.stackable}}Yes{{else}}No{{/if}}</div>
+                <div >{{#if talentData.stackable}}Yes{{else}}No{{/if}}</div>
                 {{/if}}
               </div>
 
               {{!-- Rank (if stackable) --}}
               {{#if talentData.stackable}}
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">
                   <i class="fa-solid fa-hashtag"></i>
                   Current Rank
                 </label>
                 {{#if inEditMode}}
-                <div class="wh40k-rank-controls tw-flex tw-items-center tw-gap-1">
-                  <button type="button" class="wh40k-rank-btn tw-cursor-pointer" data-action="adjustRank" data-delta="-1">
+                <div class="tw-flex tw-items-center tw-gap-1">
+                  <button type="button" class="tw-cursor-pointer" data-action="adjustRank" data-delta="-1">
                     <i class="fa-solid fa-minus"></i>
                   </button>
-                  <input type="number" name="system.rank" value="{{talentData.rank}}" min="1" class="wh40k-property-input wh40k-property-input--rank tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" />
-                  <button type="button" class="wh40k-rank-btn tw-cursor-pointer" data-action="adjustRank" data-delta="1">
+                  <input type="number" name="system.rank" value="{{talentData.rank}}" min="1" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" />
+                  <button type="button" class="tw-cursor-pointer" data-action="adjustRank" data-delta="1">
                     <i class="fa-solid fa-plus"></i>
                   </button>
                 </div>
                 {{else}}
-                <div class="wh40k-property-value">{{talentData.rank}}</div>
+                <div >{{talentData.rank}}</div>
                 {{/if}}
               </div>
               {{/if}}
@@ -428,34 +428,34 @@
         </div>
 
         {{!-- Specialization (with Has Specialization checkbox) --}}
-        <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+        <div >
+          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-bullseye"></i>
             Specialization (X)
           </h3>
-          <div class="wh40k-section-body">
+          <div >
             {{#if inEditMode}}
-            <div class="wh40k-specialization-edit tw-flex tw-flex-col tw-gap-2">
-              <label class="wh40k-checkbox-inline tw-flex tw-items-center tw-gap-1 tw-cursor-pointer">
+            <div class="tw-flex tw-flex-col tw-gap-2">
+              <label class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer">
                 <input type="checkbox" name="system.hasSpecialization" {{checked talentData.hasSpecialization}} />
                 <span>This talent has a specialization (e.g., Peer (X), Weapon Training (X))</span>
               </label>
               {{#if talentData.hasSpecialization}}
-              <div class="wh40k-specialization-field">
+              <div >
                 <input type="text" name="system.specialization" value="{{talentData.specialization}}"
-                       class="wh40k-property-input wh40k-property-input--inline tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., Las, Mechanicum, Nobility" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., Las, Mechanicum, Nobility" />
               </div>
               {{/if}}
             </div>
             {{else if talentData.hasSpecialization}}
-            <div class="wh40k-property-display">
-              <span class="wh40k-specialization-badge tw-flex tw-items-center tw-gap-1">
+            <div >
+              <span class="tw-flex tw-items-center tw-gap-1">
                 <i class="fa-solid fa-bullseye"></i>
                 {{talentData.specialization}}
               </span>
             </div>
             {{else}}
-            <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-flex-col tw-items-center">
+            <div class="tw-flex tw-flex-col tw-items-center">
               <i class="fa-solid fa-bullseye"></i>
               <p>Not a specialization talent</p>
             </div>
@@ -464,56 +464,56 @@
         </div>
 
         {{!-- Prerequisites --}}
-        <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+        <div >
+          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-lock"></i>
             Prerequisites
             {{#if inEditMode}}
-            <button type="button" class="wh40k-header-btn tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="prerequisites" title="Edit Prerequisites">
+            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="prerequisites" title="Edit Prerequisites">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             {{/if}}
           </h3>
-          <div class="wh40k-section-body">
+          <div >
             {{#if prerequisitesData.hasAny}}
-            <div class="wh40k-prerequisites-display tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md">
+            <div class="tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md">
               {{#if prerequisitesData.hasText}}
-              <div class="wh40k-prereq-text">{{prerequisitesData.text}}</div>
+              <div >{{prerequisitesData.text}}</div>
               {{/if}}
 
               {{#if prerequisitesData.hasCharacteristics}}
-              <div class="wh40k-prereq-group tw-flex tw-flex-wrap tw-items-center tw-gap-1">
-                <span class="wh40k-prereq-group-label">Characteristics:</span>
+              <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1">
+                <span >Characteristics:</span>
                 {{#each prerequisitesData.characteristics}}
-                <span class="wh40k-prereq-tag">{{this.short}} {{this.value}}+</span>
+                <span >{{this.short}} {{this.value}}+</span>
                 {{/each}}
               </div>
               {{/if}}
 
               {{#if prerequisitesData.hasSkills}}
-              <div class="wh40k-prereq-group tw-flex tw-flex-wrap tw-items-center tw-gap-1">
-                <span class="wh40k-prereq-group-label">Skills:</span>
+              <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1">
+                <span >Skills:</span>
                 {{#each prerequisitesData.skills}}
-                <span class="wh40k-prereq-tag">{{this}}</span>
+                <span >{{this}}</span>
                 {{/each}}
               </div>
               {{/if}}
 
               {{#if prerequisitesData.hasTalents}}
-              <div class="wh40k-prereq-group tw-flex tw-flex-wrap tw-items-center tw-gap-1">
-                <span class="wh40k-prereq-group-label">Talents:</span>
+              <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1">
+                <span >Talents:</span>
                 {{#each prerequisitesData.talents}}
-                <span class="wh40k-prereq-tag">{{this}}</span>
+                <span >{{this}}</span>
                 {{/each}}
               </div>
               {{/if}}
             </div>
             {{else}}
-            <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-flex-col tw-items-center">
+            <div class="tw-flex tw-flex-col tw-items-center">
               <i class="fa-solid fa-unlock"></i>
               <p>No prerequisites — available to all characters</p>
               {{#if inEditMode}}
-              <button type="button" class="wh40k-btn-add-data tw-cursor-pointer" data-action="openTalentEditor" data-section="prerequisites">
+              <button type="button" class="tw-cursor-pointer" data-action="openTalentEditor" data-section="prerequisites">
                 <i class="fa-solid fa-plus"></i> Add Prerequisites
               </button>
               {{/if}}
@@ -524,69 +524,69 @@
 
         {{!-- Roll Configuration (if active talent) --}}
         {{#unless talentData.isPassive}}
-        <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+        <div >
+          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-dice-d20"></i>
             Roll Configuration
           </h3>
-          <div class="wh40k-section-body">
+          <div >
             {{#if inEditMode}}
-            <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Characteristic</label>
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Characteristic</label>
                 <input type="text" name="system.rollConfig.characteristic"
                        value="{{rollConfigData.characteristic}}"
-                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., willpower" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., willpower" />
               </div>
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Skill</label>
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Skill</label>
                 <input type="text" name="system.rollConfig.skill"
                        value="{{rollConfigData.skill}}"
-                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., psyniscience" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="e.g., psyniscience" />
               </div>
-              <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-                <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Modifier</label>
+              <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Modifier</label>
                 <input type="number" name="system.rollConfig.modifier"
                        value="{{rollConfigData.modifier}}"
-                       class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" />
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" />
               </div>
             </div>
-            <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5 tw-mt-3">
-              <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Roll Description</label>
+            <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mt-3">
+              <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Roll Description</label>
               <input type="text" name="system.rollConfig.description"
                      value="{{rollConfigData.description}}"
-                     class="wh40k-property-input tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="Description for roll dialog" />
+                     class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="Description for roll dialog" />
             </div>
             {{else if rollConfigData.isConfigured}}
-            <div class="wh40k-roll-config-display tw-flex tw-flex-col tw-gap-1">
+            <div class="tw-flex tw-flex-col tw-gap-1">
               {{#if rollConfigData.characteristic}}
-              <div class="wh40k-config-item tw-flex tw-items-center tw-gap-1">
+              <div class="tw-flex tw-items-center tw-gap-1">
                 <i class="fa-solid fa-dumbbell"></i>
                 <span>{{rollConfigData.characteristicLabel}} Test</span>
                 {{#if (ne rollConfigData.modifier 0)}}
-                <span class="wh40k-config-mod {{#if (gt rollConfigData.modifier 0)}}positive{{else}}negative{{/if}}">
+                <span class="{{#if (gt rollConfigData.modifier 0)}}tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                   {{#if (gt rollConfigData.modifier 0)}}+{{/if}}{{rollConfigData.modifier}}
                 </span>
                 {{/if}}
               </div>
               {{/if}}
               {{#if rollConfigData.skill}}
-              <div class="wh40k-config-item tw-flex tw-items-center tw-gap-1">
+              <div class="tw-flex tw-items-center tw-gap-1">
                 <i class="fa-solid fa-graduation-cap"></i>
                 <span>{{rollConfigData.skillLabel}} Test</span>
                 {{#if (ne rollConfigData.modifier 0)}}
-                <span class="wh40k-config-mod {{#if (gt rollConfigData.modifier 0)}}positive{{else}}negative{{/if}}">
+                <span class="{{#if (gt rollConfigData.modifier 0)}}tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                   {{#if (gt rollConfigData.modifier 0)}}+{{/if}}{{rollConfigData.modifier}}
                 </span>
                 {{/if}}
               </div>
               {{/if}}
               {{#if rollConfigData.description}}
-              <p class="wh40k-config-desc">{{rollConfigData.description}}</p>
+              <p >{{rollConfigData.description}}</p>
               {{/if}}
             </div>
             {{else}}
-            <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-flex-col tw-items-center">
+            <div class="tw-flex tw-flex-col tw-items-center">
               <i class="fa-solid fa-dice-d20"></i>
               <p>No roll configuration defined</p>
             </div>
@@ -600,38 +600,38 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            EFFECTS TAB: Modifiers and mechanical effects
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="wh40k-talent-panel wh40k-talent-panel--effects {{#if (eq activeTab "effects")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="effects" data-group="primary">
+      <div class="{{#if (eq activeTab"effects")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="effects" data-group="primary">
 
         {{!-- Permanent Modifiers --}}
-        <div class="wh40k-section wh40k-section--effects" data-section-id="modifiers" data-has-data="{{modifiersData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "modifiers")}}{{@index}}{{/if}}{{/each}}">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+        <div  data-section-id="modifiers" data-has-data="{{modifiersData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "modifiers")}}{{@index}}{{/if}}{{/each}}">
+          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-chart-line"></i>
             Permanent Modifiers
             {{#if inEditMode}}
-            <button type="button" class="wh40k-header-btn tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="modifiers" title="Edit Modifiers">
+            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="modifiers" title="Edit Modifiers">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             {{/if}}
           </h3>
-          <div class="wh40k-section-body">
+          <div >
             {{#if modifiersData.hasAny}}
-            <p class="wh40k-hint-text tw-flex tw-items-center tw-gap-1">
+            <p class="tw-flex tw-items-center tw-gap-1">
               <i class="fa-solid fa-info-circle"></i>
               These modifiers are automatically applied while this talent is possessed.
             </p>
-            <div class="wh40k-modifiers-grid tw-grid">
+            <div class="tw-grid">
               {{!-- Characteristic Modifiers --}}
               {{#if modifiersData.hasCharacteristics}}
-              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
+              <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                   <i class="fa-solid fa-dumbbell"></i>
                   Characteristics
                 </h4>
-                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
+                <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.characteristics}}
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
-                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
-                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
+                  <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
+                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
+                    <span class="tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
                     </span>
                   </div>
@@ -642,16 +642,16 @@
 
               {{!-- Skill Modifiers --}}
               {{#if modifiersData.hasSkills}}
-              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
+              <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                   <i class="fa-solid fa-graduation-cap"></i>
                   Skills
                 </h4>
-                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
+                <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.skills}}
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
-                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
-                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
+                  <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
+                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
+                    <span class="tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
                     </span>
                   </div>
@@ -662,16 +662,16 @@
 
               {{!-- Combat Modifiers --}}
               {{#if modifiersData.hasCombat}}
-              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
+              <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                   <i class="fa-solid fa-swords"></i>
                   Combat
                 </h4>
-                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
+                <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.combat}}
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
-                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
-                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
+                  <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
+                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
+                    <span class="tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
                     </span>
                   </div>
@@ -682,16 +682,16 @@
 
               {{!-- Resource Modifiers --}}
               {{#if modifiersData.hasResources}}
-              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
+              <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                   <i class="fa-solid fa-heart"></i>
                   Resources
                 </h4>
-                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
+                <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.resources}}
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
-                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
-                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
+                  <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
+                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
+                    <span class="tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
                     </span>
                   </div>
@@ -702,16 +702,16 @@
 
               {{!-- Other Modifiers --}}
               {{#if modifiersData.hasOther}}
-              <div class="wh40k-modifier-group tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="wh40k-modifier-group-header tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
+              <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
+                <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
                   <i class="fa-solid fa-ellipsis"></i>
                   Other
                 </h4>
-                <div class="wh40k-modifier-list tw-flex tw-flex-col tw-gap-1">
+                <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.other}}
-                  <div class="wh40k-modifier-item tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
-                    <span class="wh40k-modifier-name tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
-                    <span class="wh40k-modifier-value tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}positive tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}negative tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
+                  <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
+                    <span class="tw-text-[color:var(--color-text-secondary)] tw-font-semibold">{{this.label}}</span>
+                    <span class="tw-font-display tw-font-bold tw-text-[0.95rem] {{#if this.positive}}tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                       {{#if this.positive}}+{{/if}}{{this.value}}
                     </span>
                   </div>
@@ -721,15 +721,15 @@
               {{/if}}
             </div>
             {{else}}
-            <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-flex-col tw-items-center">
+            <div class="tw-flex tw-flex-col tw-items-center">
               <i class="fa-solid fa-chart-line"></i>
               <p>No permanent modifiers</p>
               {{#if inEditMode}}
-              <button type="button" class="wh40k-btn-add-data tw-cursor-pointer" data-action="openTalentEditor" data-section="modifiers">
+              <button type="button" class="tw-cursor-pointer" data-action="openTalentEditor" data-section="modifiers">
                 <i class="fa-solid fa-plus"></i> Add Modifiers
               </button>
               {{else}}
-              <p class="wh40k-hint">This talent provides benefits through its special abilities or rules text.</p>
+              <p >This talent provides benefits through its special abilities or rules text.</p>
               {{/if}}
             </div>
             {{/if}}
@@ -737,70 +737,70 @@
         </div>
 
         {{!-- Situational Modifiers --}}
-        <div class="wh40k-section wh40k-section--effects" data-section-id="situational" data-has-data="{{situationalData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "situational")}}{{@index}}{{/if}}{{/each}}">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+        <div  data-section-id="situational" data-has-data="{{situationalData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "situational")}}{{@index}}{{/if}}{{/each}}">
+          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-clock-rotate-left"></i>
             Situational Modifiers
             {{#if inEditMode}}
-            <button type="button" class="wh40k-header-btn tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="situational" title="Edit Situational Modifiers">
+            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="situational" title="Edit Situational Modifiers">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             {{/if}}
           </h3>
-          <div class="wh40k-section-body">
+          <div >
             {{#if situationalData.hasAny}}
-            <p class="wh40k-hint-text tw-flex tw-items-center tw-gap-1">
+            <p class="tw-flex tw-items-center tw-gap-1">
               <i class="fa-solid fa-info-circle"></i>
               These modifiers appear as optional checkboxes in roll dialogs when conditions apply.
             </p>
-            <div class="wh40k-situational-list tw-flex tw-flex-col tw-gap-2">
+            <div class="tw-flex tw-flex-col tw-gap-2">
               {{#each situationalData.characteristics}}
-              <div class="wh40k-situational-item">
-                <div class="wh40k-situational-header tw-flex tw-items-center tw-gap-1">
+              <div >
+                <div class="tw-flex tw-items-center tw-gap-1">
                   <i class="{{this.icon}}"></i>
-                  <span class="wh40k-situational-stat">{{this.label}}</span>
-                  <span class="wh40k-situational-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                  <span >{{this.label}}</span>
+                  <span class="{{#if this.positive}}tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                     {{#if this.positive}}+{{/if}}{{this.value}}
                   </span>
                 </div>
-                <p class="wh40k-situational-condition">{{this.condition}}</p>
+                <p >{{this.condition}}</p>
               </div>
               {{/each}}
               {{#each situationalData.skills}}
-              <div class="wh40k-situational-item">
-                <div class="wh40k-situational-header tw-flex tw-items-center tw-gap-1">
+              <div >
+                <div class="tw-flex tw-items-center tw-gap-1">
                   <i class="{{this.icon}}"></i>
-                  <span class="wh40k-situational-stat">{{this.label}}</span>
-                  <span class="wh40k-situational-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                  <span >{{this.label}}</span>
+                  <span class="{{#if this.positive}}tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                     {{#if this.positive}}+{{/if}}{{this.value}}
                   </span>
                 </div>
-                <p class="wh40k-situational-condition">{{this.condition}}</p>
+                <p >{{this.condition}}</p>
               </div>
               {{/each}}
               {{#each situationalData.combat}}
-              <div class="wh40k-situational-item">
-                <div class="wh40k-situational-header tw-flex tw-items-center tw-gap-1">
+              <div >
+                <div class="tw-flex tw-items-center tw-gap-1">
                   <i class="{{this.icon}}"></i>
-                  <span class="wh40k-situational-stat">{{this.label}}</span>
-                  <span class="wh40k-situational-value {{#if this.positive}}positive{{else}}negative{{/if}}">
+                  <span >{{this.label}}</span>
+                  <span class="{{#if this.positive}}tw-text-[color:var(--wh40k-accent-green-bright)]{{else}}tw-text-[color:var(--wh40k-accent-combat)]{{/if}}">
                     {{#if this.positive}}+{{/if}}{{this.value}}
                   </span>
                 </div>
-                <p class="wh40k-situational-condition">{{this.condition}}</p>
+                <p >{{this.condition}}</p>
               </div>
               {{/each}}
             </div>
             {{else}}
-            <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-flex-col tw-items-center">
+            <div class="tw-flex tw-flex-col tw-items-center">
               <i class="fa-solid fa-clock-rotate-left"></i>
               <p>No situational modifiers</p>
               {{#if inEditMode}}
-              <button type="button" class="wh40k-btn-add-data tw-cursor-pointer" data-action="openTalentEditor" data-section="situational">
+              <button type="button" class="tw-cursor-pointer" data-action="openTalentEditor" data-section="situational">
                 <i class="fa-solid fa-plus"></i> Add Situational Modifiers
               </button>
               {{else}}
-              <p class="wh40k-hint">This talent applies consistent bonuses without situational conditions.</p>
+              <p >This talent applies consistent bonuses without situational conditions.</p>
               {{/if}}
             </div>
             {{/if}}
@@ -808,35 +808,35 @@
         </div>
 
         {{!-- Grants Section --}}
-        <div class="wh40k-section wh40k-section--effects" data-section-id="grants" data-has-data="{{grantsData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "grants")}}{{@index}}{{/if}}{{/each}}">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+        <div  data-section-id="grants" data-has-data="{{grantsData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "grants")}}{{@index}}{{/if}}{{/each}}">
+          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-gift"></i>
             Grants
             {{#if inEditMode}}
-            <button type="button" class="wh40k-header-btn tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="grants" title="Edit Grants">
+            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="grants" title="Edit Grants">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             {{/if}}
           </h3>
-          <div class="wh40k-section-body">
+          <div >
             {{#if grantsData.hasAny}}
-            <p class="wh40k-hint-text tw-flex tw-items-center tw-gap-1">
+            <p class="tw-flex tw-items-center tw-gap-1">
               <i class="fa-solid fa-info-circle"></i>
               These skills, talents, and traits are automatically granted when this talent is acquired.
             </p>
-            <div class="wh40k-grants-grid tw-grid tw-gap-2">
+            <div class="tw-grid tw-gap-2">
               {{!-- Skills Granted --}}
               {{#if grantsData.hasSkills}}
-              <div class="wh40k-grants-category">
-                <h4 class="wh40k-grants-category-header tw-flex tw-items-center tw-gap-1">
+              <div >
+                <h4 class="tw-flex tw-items-center tw-gap-1">
                   <i class="fa-solid fa-graduation-cap"></i>
                   Skills
                 </h4>
-                <div class="wh40k-grants-items tw-flex tw-flex-wrap tw-gap-1">
+                <div class="tw-flex tw-flex-wrap tw-gap-1">
                   {{#each grantsData.skills}}
-                  <div class="wh40k-grant-tag wh40k-grant-tag--skill tw-flex tw-items-center tw-gap-1">
-                    <span class="wh40k-grant-name">{{this.displayName}}</span>
-                    <span class="wh40k-grant-level wh40k-grant-level--{{this.level}}">{{this.levelLabel}}</span>
+                  <div class="tw-flex tw-items-center tw-gap-1">
+                    <span >{{this.displayName}}</span>
+                    <span class="wh40k-grant-level--{{this.level}}">{{this.levelLabel}}</span>
                   </div>
                   {{/each}}
                 </div>
@@ -845,21 +845,21 @@
 
               {{!-- Talents Granted --}}
               {{#if grantsData.hasTalents}}
-              <div class="wh40k-grants-category">
-                <h4 class="wh40k-grants-category-header tw-flex tw-items-center tw-gap-1">
+              <div >
+                <h4 class="tw-flex tw-items-center tw-gap-1">
                   <i class="fa-solid fa-star"></i>
                   Talents
                 </h4>
-                <div class="wh40k-grants-items tw-flex tw-flex-wrap tw-gap-1">
+                <div class="tw-flex tw-flex-wrap tw-gap-1">
                   {{#each grantsData.talents}}
-                  <div class="wh40k-grant-tag wh40k-grant-tag--talent tw-flex tw-items-center tw-gap-1 {{#if this.hasLink}}wh40k-grant-tag--clickable tw-cursor-pointer{{/if}}"
+                  <div class="tw-flex tw-items-center tw-gap-1 {{#if this.hasLink}}tw-cursor-pointer{{/if}}"
                        {{#if this.hasLink}}data-action="viewGrantedItem" data-uuid="{{this.uuid}}"{{/if}}>
-                    <span class="wh40k-grant-name">{{this.name}}</span>
+                    <span >{{this.name}}</span>
                     {{#if this.specialization}}
-                    <span class="wh40k-grant-spec">({{this.specialization}})</span>
+                    <span >({{this.specialization}})</span>
                     {{/if}}
                     {{#if this.hasLink}}
-                    <i class="fa-solid fa-external-link wh40k-grant-link"></i>
+                    <i class="fa-solid fa-external-link"></i>
                     {{/if}}
                   </div>
                   {{/each}}
@@ -869,21 +869,21 @@
 
               {{!-- Traits Granted --}}
               {{#if grantsData.hasTraits}}
-              <div class="wh40k-grants-category">
-                <h4 class="wh40k-grants-category-header tw-flex tw-items-center tw-gap-1">
+              <div >
+                <h4 class="tw-flex tw-items-center tw-gap-1">
                   <i class="fa-solid fa-dna"></i>
                   Traits
                 </h4>
-                <div class="wh40k-grants-items tw-flex tw-flex-wrap tw-gap-1">
+                <div class="tw-flex tw-flex-wrap tw-gap-1">
                   {{#each grantsData.traits}}
-                  <div class="wh40k-grant-tag wh40k-grant-tag--trait tw-flex tw-items-center tw-gap-1 {{#if this.hasLink}}wh40k-grant-tag--clickable tw-cursor-pointer{{/if}}"
+                  <div class="tw-flex tw-items-center tw-gap-1 {{#if this.hasLink}}tw-cursor-pointer{{/if}}"
                        {{#if this.hasLink}}data-action="viewGrantedItem" data-uuid="{{this.uuid}}"{{/if}}>
-                    <span class="wh40k-grant-name">{{this.name}}</span>
+                    <span >{{this.name}}</span>
                     {{#if this.level}}
-                    <span class="wh40k-grant-level">({{this.level}})</span>
+                    <span >({{this.level}})</span>
                     {{/if}}
                     {{#if this.hasLink}}
-                    <i class="fa-solid fa-external-link wh40k-grant-link"></i>
+                    <i class="fa-solid fa-external-link"></i>
                     {{/if}}
                   </div>
                   {{/each}}
@@ -892,15 +892,15 @@
               {{/if}}
             </div>
             {{else}}
-            <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-flex-col tw-items-center">
+            <div class="tw-flex tw-flex-col tw-items-center">
               <i class="fa-solid fa-gift"></i>
               <p>No grants defined</p>
               {{#if inEditMode}}
-              <button type="button" class="wh40k-btn-add-data tw-cursor-pointer" data-action="openTalentEditor" data-section="grants">
+              <button type="button" class="tw-cursor-pointer" data-action="openTalentEditor" data-section="grants">
                 <i class="fa-solid fa-plus"></i> Add Grants
               </button>
               {{else}}
-              <p class="wh40k-hint">This talent does not automatically grant additional skills, talents, or traits.</p>
+              <p >This talent does not automatically grant additional skills, talents, or traits.</p>
               {{/if}}
             </div>
             {{/if}}
@@ -912,28 +912,28 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            DESCRIPTION TAB: Benefit, notes, technical
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="wh40k-talent-panel {{#if (eq activeTab "description")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="description" data-group="primary">
+      <div class="{{#if (eq activeTab"description")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="description" data-group="primary">
 
         {{!-- Benefit (Editable with hover button) --}}
-        <div class="wh40k-section wh40k-section--editable {{#if inEditMode}}wh40k-section--editing{{/if}}">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+        <div class="{{#if inEditMode}}tw-ring-1 tw-ring-[color:var(--wh40k-accent-gold)]{{/if}}">
+          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-star"></i>
             Benefit
             {{#if canEdit}}
             {{#unless inEditMode}}
-            <button type="button" class="wh40k-header-btn wh40k-header-btn--hover tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="toggleEditMode" title="Edit Benefit">
+            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="toggleEditMode" title="Edit Benefit">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             {{else}}
-            <button type="button" class="wh40k-header-btn wh40k-header-btn--done tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="toggleEditMode" title="Done Editing">
+            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="toggleEditMode" title="Done Editing">
               <i class="fa-solid fa-check"></i>
             </button>
             {{/unless}}
             {{/if}}
           </h3>
-          <div class="wh40k-section-body">
+          <div >
             {{#if inEditMode}}
-            <div class="wh40k-editor-container tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
+            <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{editor system.benefit target="system.benefit" button=true editable=canEdit engine="prosemirror"}}
             </div>
             {{else}}
@@ -942,7 +942,7 @@
                 {{{talentData.benefit}}}
               </div>
               {{else}}
-              <div class="wh40k-empty-state wh40k-empty-state--compact wh40k-empty-state--clickable tw-flex tw-flex-col tw-items-center tw-cursor-pointer" data-action="toggleEditMode">
+              <div class="tw-flex tw-flex-col tw-items-center tw-cursor-pointer" data-action="toggleEditMode">
                 <i class="fa-solid fa-file-lines"></i>
                 <p>Click to add benefit description</p>
               </div>
@@ -952,21 +952,21 @@
         </div>
 
         {{!-- Notes --}}
-        <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+        <div >
+          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-sticky-note"></i>
             Notes
           </h3>
-          <div class="wh40k-section-body">
+          <div >
             {{#if inEditMode}}
-            <textarea name="system.notes" rows="4" class="wh40k-property-textarea tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm tw-min-h-[80px] tw-resize-y focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]"
+            <textarea name="system.notes" rows="4" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm tw-min-h-[80px] tw-resize-y focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]"
                       placeholder="GM notes, house rules, clarifications...">{{talentData.notes}}</textarea>
             {{else if talentData.notes}}
-            <div class="wh40k-notes-content">
+            <div >
               {{talentData.notes}}
             </div>
             {{else}}
-            <div class="wh40k-empty-state wh40k-empty-state--compact tw-flex tw-flex-col tw-items-center">
+            <div class="tw-flex tw-flex-col tw-items-center">
               <i class="fa-solid fa-sticky-note"></i>
               <p>No notes</p>
             </div>
@@ -976,16 +976,16 @@
 
         {{!-- Identifier (for developers) --}}
         {{#if inEditMode}}
-        <div class="wh40k-section">
-          <h3 class="wh40k-section-header tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
+        <div >
+          <h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)]">
             <i class="fa-solid fa-code"></i>
             Technical
           </h3>
-          <div class="wh40k-section-body">
-            <div class="wh40k-property tw-flex tw-flex-col tw-gap-1.5">
-              <label class="wh40k-property-label tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Identifier <span class="wh40k-hint">(for macros/scripts)</span></label>
+          <div >
+            <div class="tw-flex tw-flex-col tw-gap-1.5">
+              <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">Identifier <span >(for macros/scripts)</span></label>
               <input type="text" name="system.identifier" value="{{talentData.identifier}}"
-                     class="wh40k-property-input wh40k-property-input--mono tw-w-full tw-px-3 tw-py-2 tw-font-mono tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="camelCaseIdentifier" />
+                     class="tw-w-full tw-px-3 tw-py-2 tw-font-mono tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="camelCaseIdentifier" />
             </div>
           </div>
         </div>
@@ -998,33 +998,33 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          FOOTER: Source Reference
     ═══════════════════════════════════════════════════════════════════ --}}
-    <footer class="wh40k-talent-footer tw-flex-shrink-0">
+    <footer class="tw-flex-shrink-0">
       {{#if inEditMode}}
-      <div class="wh40k-footer-edit tw-flex tw-gap-2">
-        <div class="wh40k-footer-field tw-flex tw-flex-col tw-gap-1">
-          <label class="wh40k-footer-label tw-flex tw-items-center tw-gap-1">
+      <div class="tw-flex tw-gap-2">
+        <div class="tw-flex tw-flex-col tw-gap-1">
+          <label class="tw-flex tw-items-center tw-gap-1">
             <i class="fa-solid fa-book"></i>
             Book
           </label>
           <input type="text" name="system.source.book" value="{{talentData.sourceBook}}"
-                 class="wh40k-footer-input" placeholder="Core Rulebook" />
+                  placeholder="Core Rulebook" />
         </div>
-        <div class="wh40k-footer-field wh40k-footer-field--page tw-flex tw-flex-col tw-gap-1">
-          <label class="wh40k-footer-label tw-flex tw-items-center tw-gap-1">
+        <div class="tw-flex tw-flex-col tw-gap-1">
+          <label class="tw-flex tw-items-center tw-gap-1">
             <i class="fa-solid fa-bookmark"></i>
             Page
           </label>
           <input type="text" name="system.source.page" value="{{talentData.sourcePage}}"
-                 class="wh40k-footer-input" placeholder="123" />
+                  placeholder="123" />
         </div>
       </div>
       {{else}}
-      <div class="wh40k-footer-display tw-flex tw-items-center tw-gap-1">
+      <div class="tw-flex tw-items-center tw-gap-1">
         <i class="fa-solid fa-book-open"></i>
         {{#if talentData.source}}
-        <span class="wh40k-footer-source">{{talentData.source}}</span>
+        <span >{{talentData.source}}</span>
         {{else}}
-        <span class="wh40k-footer-source wh40k-footer-source--empty">No source specified</span>
+        <span >No source specified</span>
         {{/if}}
       </div>
       {{/if}}
