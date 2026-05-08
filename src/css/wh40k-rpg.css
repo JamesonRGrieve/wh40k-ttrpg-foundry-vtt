@@ -1774,11 +1774,6 @@ body.theme-dark {
     }
 }
 
-.wh40k-item-preview-empty {
-    color: var(--wh40k-text-disabled, rgba(255, 255, 255, 0.4));
-    font-style: italic;
-}
-
 /* Weapon Preview */
 .wh40k-weapon-preview-stats {
     display: flex;
@@ -1793,22 +1788,6 @@ body.theme-dark {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 6px;
     margin-bottom: 8px;
-}
-
-.wh40k-armour-location {
-    padding: 6px 8px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: var(--wh40k-radius-md);
-    font-size: 0.9em;
-
-    .wh40k-location-label {
-        color: var(--wh40k-text-secondary, rgba(255, 255, 255, 0.7));
-        margin-right: 4px;
-    }
-
-    strong {
-        color: var(--wh40k-stat-positive, #4ade80);
-    }
 }
 
 /* Qualities/Properties */
@@ -1845,30 +1824,6 @@ body.theme-dark {
     margin-bottom: 8px;
     line-height: 1.5;
     color: var(--wh40k-text-secondary, rgba(255, 255, 255, 0.8));
-}
-
-.wh40k-item-preview-modifiers {
-    margin-top: 8px;
-    padding: 8px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: var(--wh40k-radius-md);
-
-    strong {
-        display: block;
-        margin-bottom: 4px;
-        color: var(--wh40k-text-primary, #fff);
-    }
-
-    ul {
-        margin: 0;
-        padding-left: 20px;
-        list-style-type: disc;
-    }
-
-    li {
-        margin: 2px 0;
-        color: var(--wh40k-text-secondary, rgba(255, 255, 255, 0.8));
-    }
 }
 
 /* Gear Preview */
