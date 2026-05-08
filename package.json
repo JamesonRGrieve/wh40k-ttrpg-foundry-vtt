@@ -14,6 +14,7 @@
     "lint:ratchet": "node scripts/lint-ratchet.mjs",
     "lint:ratchet:update": "node scripts/lint-ratchet.mjs --update",
     "css:coverage": "node scripts/css-coverage.mjs",
+    "css:plugin-audit": "node scripts/legacy-plugin-audit.mjs",
     "css:ratchet": "node scripts/css-ratchet.mjs",
     "css:ratchet:update": "node scripts/css-ratchet.mjs --update",
     "animation:coverage": "node scripts/animation-coverage.mjs",

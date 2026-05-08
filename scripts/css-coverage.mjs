@@ -80,9 +80,9 @@ const FA_RE = /^fa[rsbldt]$|^fa-(solid|regular|brands|light|thin|duotone)$|^fa-/
 // basic-action-manager.ts queries all roll-control__* selectors by class name
 const ROLL_CONTROL_RE = /^roll-control__/;
 // chat-card-shell.hbs BEM structural names (wh40k-chat-card, wh40k-card__*)
-// These are outer-wrapper / BEM-element class names with no backing CSS rules in the
-// monolith. They're not CSS classes being migrated; they're semantic identifiers that
-// callers use for JS queries and future theming hooks.
+// These are outer-wrapper / BEM-element class names with no backing CSS rules in
+// the legacy plugin files. They're not CSS classes being migrated; they're
+// semantic identifiers that callers use for JS queries and future theming hooks.
 const CHAT_CARD_STRUCTURAL_RE = /^wh40k-chat-card$|^wh40k-card__/;
 const JS_HOOKS = new Set([
     'sheet-control__hide-control',
@@ -143,10 +143,8 @@ const JS_HOOKS = new Set([
     'origin-detail-tab-content',
     // chat-card-shell.hbs legacy back-compat classes emitted via {{#unless (eq legacyClasses false)}}.
     // These are transitional: Tailwind equivalents are already on the elements; these are retained
-    // only so that CSS rules in the monolith (owned by other source blocks) still apply to messages
-    // that were rendered before the Tailwind port. They are NOT the class names driving the
-    // _item-cards.css / _roll-cards.css migration — they will be deleted when those source blocks
-    // are deleted from the monolith.
+    // only so that CSS rules in the legacy plugin files still apply to messages that were rendered
+    // before the Tailwind port. They will be deleted when those plugin entries are deleted.
     'wh40k-card-header',
     'wh40k-card-icon',
     'wh40k-card-icon-wrapper',
@@ -253,14 +251,16 @@ const JS_HOOKS = new Set([
     'wh40k-char-direct-input',
     // wh40k-prose-editor / wh40k-prose-content are CSS hooks that style Foundry-rendered
     // child elements (.prosemirror, rich text nodes) that cannot be reached from templates.
-    // The CSS rules must stay in the monolith; the classes must stay on their elements.
+    // The rules live in tailwind/foundry-chrome.js + tailwind/weapon.js; the classes must
+    // stay on their elements so the descendant selectors fire.
     'wh40k-prose-editor',
     'wh40k-prose-content',
     // ── Weapon Sheet V3 interactive CSS classes ──────────────────────────────
     // These classes drive CSS behaviors that require sibling selectors, pseudo-elements,
     // or :has() — patterns that cannot be expressed as inline Tailwind utilities without
-    // restructuring the HTML. The CSS rules live inside .wh40k-weapon-sheet-v3 {} in the
-    // monolith; removing either the scope class or these component classes breaks behavior.
+    // restructuring the HTML. The rules live inside .wh40k-weapon-sheet-v3 {} in
+    // tailwind/weapon.js; removing either the scope class or these component classes
+    // breaks behavior.
     //
     // wh40k-weapon-sheet-v3: CSS scope ancestor — all nested component rules cascade from it.
     'wh40k-weapon-sheet-v3',
