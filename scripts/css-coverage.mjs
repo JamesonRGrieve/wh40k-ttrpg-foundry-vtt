@@ -292,6 +292,12 @@ function isTwOrExempt(token) {
     // prefix but are unambiguously Tailwind constructs, not project CSS class names.
     if (/^\[--[a-zA-Z]/.test(token)) return true;
 
+    // Tailwind arbitrary CSS property tokens: `[accent-color:var(--foo)]`, `[grid-area:main]`.
+    // These are Tailwind's `[property:value]` arbitrary-property syntax — a standard CSS
+    // property name (lowercase, hyphens, no `--` prefix) followed by `:` and a value, all
+    // wrapped in brackets. Not a project CSS class name; unambiguously Tailwind syntax.
+    if (/^\[[a-z][a-z-]*:[^\]]+\]$/.test(token)) return true;
+
     // Strip one Tailwind variant prefix by finding the last colon at bracket-depth 0.
     // This handles all variant forms: `hover:`, `[&>label]:`, `data-[active=true]:`, etc.
     const sep = lastTopLevelColon(token);
