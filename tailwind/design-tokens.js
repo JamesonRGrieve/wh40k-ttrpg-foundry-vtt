@@ -54,8 +54,8 @@ const palette = {
 
 const typography = {
     '--wh40k-font-header': "'Caslon Antique', 'Trajan Pro', serif",
-    '--wh40k-font-display': "'Cinzel', serif",
-    '--wh40k-font-heading': "'IM Fell DW Pica', serif",
+    '--wh40k-font-display': "'Modesto Condensed', 'Cinzel', serif",
+    '--wh40k-font-heading': "'Modesto Condensed', 'IM Fell DW Pica', serif",
     '--wh40k-font-body': "'Lusitana', serif",
     '--wh40k-font-ui': "'Roboto', sans-serif",
     '--wh40k-font-alt': "'Modesto Condensed', 'Palatino Linotype', serif",
@@ -63,6 +63,7 @@ const typography = {
     '--wh40k-font-size-sm': '0.8rem',
     '--wh40k-font-size-base': '0.9rem',
     '--wh40k-font-size-md': '1rem',
+    '--wh40k-text-h3': '1.1rem',
 };
 
 const layout = {
