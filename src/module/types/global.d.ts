@@ -90,7 +90,7 @@ export interface WH40KMovement {
 export interface WH40KModifierEntry {
     source: string;
     value: number;
-    uuid?: string;
+    uuid?: string | null;
     icon: string;
 }
 
@@ -284,14 +284,14 @@ export type WH40KItemSystemData = import('../data/abstract/item-data-model.ts').
     [key: string]: unknown;
 };
 
+import type * as characterCreation from '../applications/character-creation/_module.ts';
+import type { RTCompendiumBrowser } from '../applications/compendium-browser.ts';
+import type * as npcApplications from '../applications/npc/_module.ts';
+import type * as dice from '../dice/_module.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
-import type { RTCompendiumBrowser } from '../applications/compendium-browser.ts';
 import type { TransactionManager } from '../transactions/transaction-manager.ts';
 import type { RollTableUtils } from '../utils/roll-table-utils.ts';
-import type * as dice from '../dice/_module.ts';
-import type * as npcApplications from '../applications/npc/_module.ts';
-import type * as characterCreation from '../applications/character-creation/_module.ts';
 
 // =========================================================================
 // WH40K System Namespace on Game

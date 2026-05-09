@@ -1630,7 +1630,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // is hidden from the table but still counts against the 3-item cap.
         for (const [uuid, entry] of Array.from(this.equipmentSelections.entries())) {
             if (entry.type !== 'ammunition') continue;
-            const types = Array.isArray((entry as EquipmentItemEntry).weaponTypes) ? ((entry as EquipmentItemEntry).weaponTypes as string[]) : [];
+            const types = Array.isArray((entry as EquipmentItemEntry).weaponTypes) ? (entry as EquipmentItemEntry).weaponTypes : [];
             if (!types.some((id) => availableWeaponIdentifiers.has(id))) {
                 this.equipmentSelections.delete(uuid);
             }
@@ -1644,7 +1644,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (search && !String(item.name).toLowerCase().includes(search)) return false;
             // Hide ammunition rows unless at least one compatible weapon is granted or picked.
             if (item.type === 'ammunition') {
-                const types = Array.isArray((item as EquipmentItemEntry).weaponTypes) ? ((item as EquipmentItemEntry).weaponTypes as string[]) : [];
+                const types = Array.isArray((item as EquipmentItemEntry).weaponTypes) ? (item as EquipmentItemEntry).weaponTypes : [];
                 if (!types.some((id) => availableWeaponIdentifiers.has(id))) return false;
             }
             return true;
@@ -3213,7 +3213,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             throneGelt: item.throneGelt ?? null,
             identifier: item.identifier ?? null,
             clipMax: item.clipMax ?? null,
-            weaponTypes: Array.isArray(item.weaponTypes) ? [...(item.weaponTypes as string[])] : [],
+            weaponTypes: Array.isArray(item.weaponTypes) ? [...item.weaponTypes] : [],
         });
         void this.render();
     }
@@ -3826,7 +3826,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (entry.type === 'ammunition') {
                 // Size user-picked ammo to one clip of the primary ranged weapon that supports it.
                 // Prefer origin-granted weapons over weapons the player also picked.
-                const types = Array.isArray((entry as EquipmentItemEntry).weaponTypes) ? ((entry as EquipmentItemEntry).weaponTypes as string[]) : [];
+                const types = Array.isArray((entry as EquipmentItemEntry).weaponTypes) ? (entry as EquipmentItemEntry).weaponTypes : [];
                 const compatible =
                     availableWeapons.find((w) => types.includes(w.identifier) && w.source === 'granted') ??
                     availableWeapons.find((w) => types.includes(w.identifier));

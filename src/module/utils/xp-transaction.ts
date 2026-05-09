@@ -29,12 +29,12 @@ type XPSummary = {
 };
 
 type ExperienceLike = {
-    total?: number;
-    used?: number;
-    spentCharacteristics?: number;
-    spentSkills?: number;
-    spentTalents?: number;
-    spentPsychicPowers?: number;
+    total: number;
+    used: number;
+    spentCharacteristics: number;
+    spentSkills: number;
+    spentTalents: number;
+    spentPsychicPowers: number;
 };
 
 /**
@@ -50,11 +50,11 @@ type ExperienceLike = {
  * @returns {number} Available XP
  */
 export function getAvailableXP(actor: WH40KBaseActorDocument): number {
-    const experience = actor.system?.experience;
-    if (!experience) return 0;
+    const experience = actor.system.experience as ExperienceLike | undefined;
+    if (experience === undefined) return 0;
 
     // Available = total - used
-    return (experience.total ?? 0) - (experience.used ?? 0);
+    return experience.total - experience.used;
 }
 
 /**
@@ -78,10 +78,6 @@ export function canAfford(actor: WH40KBaseActorDocument, cost: number): boolean 
  */
 export async function spendXP(actor: WH40KBaseActorDocument, cost: number, reason = ''): Promise<TransactionResult> {
     // Validate inputs
-    if (!actor) {
-        return { success: false, error: 'No actor provided' };
-    }
-
     if (cost <= 0) {
         return { success: false, error: 'Invalid cost: must be positive' };
     }
@@ -137,12 +133,12 @@ export async function spendXP(actor: WH40KBaseActorDocument, cost: number, reaso
  * @returns {Promise<TransactionResult>}
  */
 export async function spendXPBatch(actor: WH40KBaseActorDocument, purchases: XPPurchase[]): Promise<TransactionResult> {
-    if (!actor || !purchases?.length) {
+    if (purchases.length === 0) {
         return { success: false, error: 'Invalid arguments' };
     }
 
     // Calculate total cost
-    const totalCost = purchases.reduce((sum, p) => sum + (p.cost ?? 0), 0);
+    const totalCost = purchases.reduce((sum, p) => sum + p.cost, 0);
     const available = getAvailableXP(actor);
 
     if (available < totalCost) {
@@ -191,7 +187,7 @@ export async function spendXPBatch(actor: WH40KBaseActorDocument, purchases: XPP
  * @returns {Object} Summary of XP allocation
  */
 export function getXPSummary(actor: WH40KBaseActorDocument): XPSummary {
-    const exp = (actor.system?.experience as ExperienceLike | undefined) ?? {};
+    const exp = (actor.system.experience as ExperienceLike | undefined) ?? ({} as Partial<ExperienceLike>);
 
     return {
         total: exp.total ?? 0,
@@ -210,6 +206,6 @@ export function getXPSummary(actor: WH40KBaseActorDocument): XPSummary {
  * @returns {number} Total cost
  */
 export function calculateTotalCost(advancements: Array<{ cost: number }>): number {
-    if (!advancements?.length) return 0;
-    return advancements.reduce((sum: number, adv: { cost: number }) => sum + (adv.cost ?? 0), 0);
+    if (advancements.length === 0) return 0;
+    return advancements.reduce((sum: number, adv: { cost: number }) => sum + adv.cost, 0);
 }

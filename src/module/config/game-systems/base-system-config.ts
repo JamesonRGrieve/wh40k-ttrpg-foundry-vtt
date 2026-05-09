@@ -151,8 +151,27 @@ export abstract class BaseSystemConfig {
      * The "Player" row that prefixes every system's header field list.
      */
     protected makePlayerField(actor: WH40KBaseActor): SidebarHeaderField {
-        const bio = (actor.system?.bio ?? {}) as Record<string, string | number>;
-        return this.makeField(game.i18n.localize('WH40K.Character.Player'), 'system.bio.playerName', bio.playerName ?? '', 'Player Name');
+        const playerName = actor.system.bio?.playerName;
+        return this.makeField(
+            game.i18n.localize('WH40K.Character.Player'),
+            'system.bio.playerName',
+            typeof playerName === 'string' ? playerName : '',
+            'Player Name',
+        );
+    }
+
+    /**
+     * Read a field from the character's originPath as a string or number, coercing
+     * missing or non-scalar values to the empty string. Centralized so per-system
+     * header builders don't repeat the same null-safety dance against the freeform
+     * `originPath` record.
+     */
+    protected readOriginPathField(actor: WH40KBaseActor, key: string): string | number {
+        const source = actor.system.originPath;
+        if (source === null || source === undefined) return '';
+        const value = source[key];
+        if (typeof value === 'string' || typeof value === 'number') return value;
+        return '';
     }
 
     // ── UI Labels ─────────────────────────────────────────────────

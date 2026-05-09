@@ -24,6 +24,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: false, blank: true }),
 
             // Category/type of trait
@@ -71,8 +72,9 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      * Get the full name including level.
      * @type {string}
      */
-    get fullName() {
-        let name = this.parent?.name ?? '';
+    get fullName(): string {
+        const parent = this.parent as { name?: string } | undefined;
+        let name: string = parent?.name ?? '';
         if (this.hasLevel) {
             name += ` (${this.level})`;
         }
@@ -99,6 +101,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             level: this.hasLevel ? this.level : '-',
@@ -110,7 +113,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      * @type {string}
      */
     get categoryLabel(): string {
-        if (!this.category) return game.i18n.localize('WH40K.TraitCategory.General');
+        if (this.category === '') return game.i18n.localize('WH40K.TraitCategory.General');
         const key = `WH40K.TraitCategory.${this.category.capitalize()}`;
         const localized = game.i18n.localize(key);
         return localized === key ? this.category : localized;
@@ -120,8 +123,9 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      * Is this a variable trait (name contains (X))?
      * @type {boolean}
      */
-    get isVariable() {
-        const name = this.parent?.name ?? '';
+    get isVariable(): boolean {
+        const parent = this.parent as { name?: string } | undefined;
+        const name: string = parent?.name ?? '';
         return name.includes('(X)') || name.includes('(x)');
     }
 
@@ -135,9 +139,10 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      * @returns {Promise<ChatMessage>}
      */
     async toChat(options: { rollMode?: string } = {}): Promise<void> {
+        const parent = this.parent as { id?: string } | undefined;
         // Prepare template data
         const templateData = {
-            trait: this.parent,
+            trait: parent,
             category: this.category,
             categoryLabel: this.categoryLabel,
             level: this.level,
@@ -157,23 +162,28 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         const chatData = {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker(),
+            // eslint-disable-next-line @typescript-eslint/no-deprecated -- V14 still supports CHAT_MESSAGE_TYPES; migration tracked separately
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             content: content,
             flags: {
                 'wh40k-rpg': {
-                    itemId: this.parent.id,
+                    itemId: parent?.id,
                     itemType: 'trait',
                 },
             },
         };
 
         // Apply roll mode
+        const rollMode = (options.rollMode ?? '') !== '' ? (options.rollMode as string) : (game.settings.get('core', 'rollMode') as string);
+        /* eslint-disable no-restricted-syntax -- boundary: Foundry chat-message API */
         ChatMessage.applyRollMode(
             chatData as unknown as Parameters<typeof ChatMessage.applyRollMode>[0],
-            (options.rollMode || game.settings.get('core', 'rollMode')) as Parameters<typeof ChatMessage.applyRollMode>[1],
+            rollMode as Parameters<typeof ChatMessage.applyRollMode>[1],
         );
+        /* eslint-enable no-restricted-syntax */
 
         // Create and return chat message
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry chat-message API
         await ChatMessage.create(chatData as unknown as Parameters<typeof ChatMessage.create>[0]);
     }
 }

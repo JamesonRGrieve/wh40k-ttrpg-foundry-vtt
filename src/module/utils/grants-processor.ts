@@ -97,7 +97,7 @@ class GrantContext {
             insanityBonus: 0,
             aptitudes: [],
             notifications: [],
-        } as GrantResult;
+        };
     }
 }
 
@@ -550,7 +550,7 @@ export class GrantsProcessor {
         let talentItem: WH40KItem | null = null;
         if (talentGrant.uuid) {
             try {
-                talentItem = (await fromUuid(talentGrant.uuid)) as WH40KItem | null;
+                talentItem = await fromUuid(talentGrant.uuid);
                 if (!talentItem) {
                     console.warn(`Failed to resolve talent UUID: ${talentGrant.uuid} (${talentGrant.name})`);
                 }
@@ -657,7 +657,7 @@ export class GrantsProcessor {
         let traitItem: WH40KItem | null = null;
         if (traitGrant.uuid) {
             try {
-                traitItem = (await fromUuid(traitGrant.uuid)) as WH40KItem | null;
+                traitItem = await fromUuid(traitGrant.uuid);
             } catch (err) {
                 console.error(`Error loading trait ${traitGrant.uuid}:`, err);
             }
@@ -725,7 +725,7 @@ export class GrantsProcessor {
         // Try UUID first
         if (equipGrant.uuid) {
             try {
-                doc = (await fromUuid(equipGrant.uuid)) as WH40KItem | null;
+                doc = await fromUuid(equipGrant.uuid);
                 if (!doc) {
                     console.warn(`Could not find equipment with UUID: ${equipGrant.uuid}`);
                 }

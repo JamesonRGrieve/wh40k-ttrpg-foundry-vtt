@@ -4,18 +4,30 @@
 
 import BaseRollDialog from './base-roll-dialog.ts';
 
+interface PsychicRollData {
+    selectPower?: (name: string) => void;
+    update?: () => Promise<void>;
+    finalize?: () => Promise<void>;
+}
+
+interface PsychicAttackData {
+    rollData: PsychicRollData;
+    performActionAndSendToChat?: () => Promise<void>;
+}
+
 /**
  * Dialog for configuring psychic power uses.
  */
 export default class PsychicPowerDialog extends BaseRollDialog {
-    declare psychicAttackData: Record<string, any>;
+    declare psychicAttackData: PsychicAttackData;
 
     /**
-     * @param {Record<string, any>} psychicActionData  The psychic action data.
+     * @param {PsychicAttackData} psychicActionData  The psychic action data.
      * @param {ApplicationV2Config.DefaultOptions} [options={}]                  Dialog options.
      */
-    constructor(psychicActionData: Record<string, any> = {}, options: ApplicationV2Config.DefaultOptions = {}) {
-        super(psychicActionData.rollData, options);
+    constructor(psychicActionData: PsychicAttackData = { rollData: {} }, options: ApplicationV2Config.DefaultOptions = {}) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseRollDialog accepts an arbitrary roll-config record
+        super(psychicActionData.rollData as Record<string, unknown>, options);
         this.psychicAttackData = psychicActionData;
     }
 
@@ -27,7 +39,8 @@ export default class PsychicPowerDialog extends BaseRollDialog {
         classes: ['psychic-power'],
         actions: {
             ...BaseRollDialog.DEFAULT_OPTIONS.actions,
-            selectPower: PsychicPowerDialog.#onSelectPower as Function,
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
+            selectPower: PsychicPowerDialog.#onSelectPower,
         },
         window: {
             title: 'Psychic Power',
@@ -50,17 +63,18 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
     async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Set up power selection listeners
         this.element.querySelectorAll('.power-select').forEach((el) => {
-            el.addEventListener('change', this._onPowerSelectChange.bind(this) as EventListener);
+            el.addEventListener('change', (e) => void this._onPowerSelectChange(e));
         });
 
         // Set up button listeners
-        this.element.querySelector('#power-roll')?.addEventListener('click', this._onPowerRoll.bind(this) as EventListener);
-        this.element.querySelector('#power-cancel')?.addEventListener('click', this._onPowerCancel.bind(this) as EventListener);
+        this.element.querySelector('#power-roll')?.addEventListener('click', (e) => void this._onPowerRoll(e));
+        this.element.querySelector('#power-cancel')?.addEventListener('click', (e) => void this._onPowerCancel(e));
     }
 
     /* -------------------------------------------- */
@@ -71,8 +85,9 @@ export default class PsychicPowerDialog extends BaseRollDialog {
      * @protected
      */
     async _onPowerSelectChange(event: Event): Promise<void> {
-        if (typeof this.rollData.selectPower === 'function') (this.rollData.selectPower as (name: string) => void)((event.target as HTMLInputElement).name);
-        if (typeof this.rollData.update === 'function') await (this.rollData.update as () => Promise<void>)();
+        const data = this.psychicAttackData.rollData;
+        if (typeof data.selectPower === 'function') data.selectPower((event.target as HTMLInputElement).name);
+        if (typeof data.update === 'function') await data.update();
         void this.render();
     }
 
@@ -108,7 +123,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
      * Handle power selection via action.
      */
     static async #onSelectPower(this: PsychicPowerDialog, event: Event, target: HTMLElement): Promise<void> {
-        await this.psychicAttackData.rollData.selectPower?.(target.getAttribute('name') ?? '');
+        this.psychicAttackData.rollData.selectPower?.(target.getAttribute('name') ?? '');
         await this.psychicAttackData.rollData.update?.();
         void this.render();
     }
@@ -133,7 +148,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
  * Open a psychic power dialog.
  * @param {PsychicActionData} psychicAttackData  The psychic action data.
  */
-export function preparePsychicPowerRoll(psychicAttackData: Record<string, unknown>) {
+export function preparePsychicPowerRoll(psychicAttackData: PsychicAttackData): void {
     const prompt = new PsychicPowerDialog(psychicAttackData);
-    prompt.render(true);
+    void prompt.render({ force: true });
 }

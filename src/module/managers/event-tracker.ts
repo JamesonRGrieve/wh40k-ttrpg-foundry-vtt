@@ -136,7 +136,7 @@ export class EventTracker {
     /** Check if an event's prerequisites are all met. */
     static isAvailable(eventId: string): boolean {
         const event = EventTracker._graph?.[eventId];
-        if (!event) return false;
+        if (event == null) return false;
         const resolved = EventTracker.getResolved();
 
         const reqsMet = !(event.requires !== undefined && event.requires.length > 0) || event.requires.every((id: string) => id in resolved);
@@ -149,7 +149,7 @@ export class EventTracker {
     /** Get the unmet prerequisites for a locked event. */
     static getBlockingReasons(eventId: string): string[] {
         const event = EventTracker._graph?.[eventId];
-        if (!event) return [];
+        if (event == null) return [];
         const resolved = EventTracker.getResolved();
         const reasons: string[] = [];
 

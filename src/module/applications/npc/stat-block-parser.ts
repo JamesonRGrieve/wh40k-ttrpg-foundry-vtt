@@ -261,25 +261,25 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * Parsed data preview.
      * @type {Object|null}
      */
-    #parsedData: ParsedActorData | null = null;
+    readonly #parsedData: ParsedActorData | null = null;
 
     /**
      * Parse errors.
      * @type {Array<string>}
      */
-    #errors: string[] = [];
+    readonly #errors: string[] = [];
 
     /**
      * Parse warnings.
      * @type {Array<string>}
      */
-    #warnings: string[] = [];
+    readonly #warnings: string[] = [];
 
     /**
      * Parse info messages.
      * @type {Array<string>}
      */
-    #info: string[] = [];
+    readonly #info: string[] = [];
 
     /**
      * Promise resolver.
@@ -1090,7 +1090,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     static _extractSection(lines: string[], label: string): string | null {
-        return TextPatternExtractor.extractSection(lines, label, this.SECTION_HEADERS) as string | null;
+        return TextPatternExtractor.extractSection(lines, label, this.SECTION_HEADERS);
     }
 
     static _isSectionHeader(line: string): boolean {
@@ -1106,19 +1106,19 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     static _extractValueTokens(line: string): string[] {
-        return TextPatternExtractor.extractValueTokens(line) as string[];
+        return TextPatternExtractor.extractValueTokens(line);
     }
 
     static _extractParentheticalNumbers(line: string): Array<number | null> {
-        return TextPatternExtractor.extractParentheticalNumbers(line) as Array<number | null>;
+        return TextPatternExtractor.extractParentheticalNumbers(line);
     }
 
     static _parseNumericValue(value: string): number {
-        return TextPatternExtractor.parseNumericValue(value) as number;
+        return TextPatternExtractor.parseNumericValue(value);
     }
 
     static _toSkillKey(text: string, capitalize: boolean = false): string {
-        return TextPatternExtractor.toKey(text, capitalize) as string;
+        return TextPatternExtractor.toKey(text, capitalize);
     }
 
     static _extractSkillSectionFallback(input: string): string {
@@ -1231,10 +1231,10 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             }
 
             ui.notifications.info(game.i18n.format('WH40K.NPC.Import.Success', { name: (actor as unknown as { name?: string }).name ?? '' }));
-            void (actor as unknown as { sheet?: { render: (force: boolean) => void } }).sheet?.render(true);
+            (actor as unknown as { sheet?: { render: (force: boolean) => void } }).sheet?.render(true);
 
             this.#submitted = true;
-            if (this.#resolve) this.#resolve(actor as unknown);
+            if (this.#resolve) this.#resolve(actor);
         } catch (err) {
             console.error('Failed to import NPC:', err);
             ui.notifications.error(game.i18n.localize('WH40K.NPC.Import.Failed'));

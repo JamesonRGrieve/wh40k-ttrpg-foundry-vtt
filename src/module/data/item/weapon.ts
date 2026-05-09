@@ -257,8 +257,8 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         super.prepareBaseData();
 
         const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
-        this.class = (resolveLineVariant(this.class, lineKey) as string | undefined) ?? 'melee';
-        this.type = (resolveLineVariant(this.type, lineKey) as string | undefined) ?? 'primitive';
+        this.class = resolveLineVariant(this.class, lineKey) ?? 'melee';
+        this.type = resolveLineVariant(this.type, lineKey) ?? 'primitive';
         this.twoHanded = Boolean(resolveLineVariant(this.twoHanded, lineKey));
         this.melee = Boolean(resolveLineVariant(this.melee, lineKey));
         this.clip = foundry.utils.mergeObject(
@@ -268,7 +268,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
                 inplace: false,
             },
         ) as typeof this.clip;
-        (this as Record<string, unknown>)['reload'] = (resolveLineVariant((this as Record<string, unknown>)['reload'], lineKey) as string | undefined) ?? '-';
+        (this as Record<string, unknown>)['reload'] = resolveLineVariant((this as Record<string, unknown>)['reload'], lineKey) ?? '-';
         this.requiredTraining = (resolveLineVariant(this.requiredTraining as unknown, lineKey) as string | undefined) ?? '';
         this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string | undefined) ?? '';
     }

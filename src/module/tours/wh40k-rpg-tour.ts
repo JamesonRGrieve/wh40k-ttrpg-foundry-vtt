@@ -4,7 +4,7 @@ type TourStepExtras = {
     target?: string;
 };
 
-type TourStatus = 'completed' | string;
+type TourStatus = string;
 
 export class WH40KTour extends foundry.nue.Tour {
     //This class overcharge the "step" data structure with the following properties:
@@ -43,12 +43,12 @@ export class WH40KTour extends foundry.nue.Tour {
         });
     }
 
-    async _preStep() {
+    async _preStep(): Promise<void> {
         await super._preStep();
         await this.waitForElement(this.currentWh40KStep.selector);
     }
 
-    async _postStep() {
+    async _postStep(): Promise<void> {
         await super._postStep();
         const stepIndex = this.stepIndex ?? -1;
         if (stepIndex < 0 || !this.hasNext) return;
@@ -59,7 +59,8 @@ export class WH40KTour extends foundry.nue.Tour {
             this.triggerReset = false;
             return;
         }
-        const target = this.currentWh40KStep.target ? this.currentWh40KStep.target : this.currentWh40KStep.selector;
+        const target =
+            this.currentWh40KStep.target !== undefined && this.currentWh40KStep.target !== '' ? this.currentWh40KStep.target : this.currentWh40KStep.selector;
         const element = document.querySelector<HTMLElement>(target);
         if (!element) return;
         switch (this.currentWh40KStep.action) {
@@ -75,7 +76,7 @@ export class WH40KTour extends foundry.nue.Tour {
     /**
      * Detect when a reset is triggered and stop the actions in _postStep
      */
-    async reset() {
+    async reset(): Promise<void> {
         if ((this.status as TourStatus) !== 'completed') this.triggerReset = true;
         await super.reset();
     }

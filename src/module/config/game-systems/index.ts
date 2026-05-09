@@ -34,14 +34,13 @@ export const SystemConfigRegistry = {
      * @throws If the ID is unknown
      */
     get(id: GameSystemId): BaseSystemConfig {
-        const config = SYSTEM_CONFIGS[id];
-        if (!config) throw new Error(`Unknown game system: ${id}`);
-        return config;
+        return SYSTEM_CONFIGS[id];
     },
 
     /** Get a system config by ID, or null if unknown */
     getOrNull(id: string): BaseSystemConfig | null {
-        return SYSTEM_CONFIGS[id as GameSystemId] ?? null;
+        if (!(id in SYSTEM_CONFIGS)) return null;
+        return SYSTEM_CONFIGS[id as GameSystemId];
     },
 
     /** Get all registered system configs */

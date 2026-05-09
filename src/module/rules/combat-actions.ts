@@ -1,5 +1,5 @@
-import { hitLocationNames } from './hit-locations.ts';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
+import { hitLocationNames } from './hit-locations.ts';
 
 type CombatAction = {
     name: string;
@@ -20,7 +20,7 @@ export function calculateCombatActionModifier(rollData: WeaponRollData): void {
 
     game.wh40k.log('calculateCombatActionModifier', currentAction);
     if (rollData.action === 'Called Shot') {
-        if (rollData.isCalledShot === false) {
+        if (!rollData.isCalledShot) {
             rollData.isCalledShot = true;
             rollData.calledShotLocation = hitLocationNames()[0];
         }
@@ -29,7 +29,7 @@ export function calculateCombatActionModifier(rollData: WeaponRollData): void {
     }
 
     const actionInfo = allCombatActions().find((action: CombatAction) => action.name === currentAction);
-    if (actionInfo && actionInfo.attack?.modifier) {
+    if (actionInfo?.attack?.modifier) {
         rollData.modifiers['attack'] = actionInfo.attack.modifier;
     } else {
         rollData.modifiers['attack'] = 0;

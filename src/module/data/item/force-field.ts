@@ -4,6 +4,13 @@ import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
+/* eslint-disable no-restricted-syntax -- boundary: Foundry parent document API */
+interface ForceFieldParent {
+    name?: string;
+    update?: (data: Record<string, unknown>) => Promise<unknown>;
+}
+/* eslint-enable no-restricted-syntax */
+
 /**
  * Data model for Force Field items.
  * @extends ItemDataModel
@@ -35,12 +42,13 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source data
     static _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
         // Migrate old overloadThreshold field to overloadMin/overloadMax
-        if (source.overloadThreshold !== undefined && source.overloadMin === undefined) {
-            source.overloadMin = 1;
-            source.overloadMax = source.overloadThreshold;
+        if (source['overloadThreshold'] !== undefined && source['overloadMin'] === undefined) {
+            source['overloadMin'] = 1;
+            source['overloadMax'] = source['overloadThreshold'];
         }
     }
 
@@ -50,7 +58,8 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            identifier: new (IdentifierField as any)({ required: true, blank: true }) as foundry.data.fields.StringField,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Protection rating (1-100 roll threshold)
             protectionRating: new fields.NumberField({
@@ -120,7 +129,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Is the field currently providing protection?
      * @type {boolean}
      */
-    get isProtecting() {
+    get isProtecting(): boolean {
         return this.activated && !this.overloaded;
     }
 
@@ -136,7 +145,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      *
      * @type {object}
      */
-    get craftsmanshipModifiers() {
+    get craftsmanshipModifiers(): { overloadMin: number; overloadMax: number } {
         const mods = {
             overloadMin: 1,
             overloadMax: 10,
@@ -164,7 +173,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Get effective overload range (including craftsmanship).
      * @type {object}
      */
-    get effectiveOverloadRange(): Record<string, unknown> {
+    get effectiveOverloadRange(): { min: number; max: number } {
         const craftMods = this.craftsmanshipModifiers;
 
         // If item has explicit overload values, use those
@@ -188,7 +197,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @returns {boolean}
      */
     checksOverload(roll: number): boolean {
-        const range = this.effectiveOverloadRange as { min: number; max: number };
+        const range = this.effectiveOverloadRange;
         return roll >= range.min && roll <= range.max;
     }
 
@@ -197,7 +206,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @type {string}
      */
     get overloadRangeLabel(): string {
-        const range = this.effectiveOverloadRange as { min: number; max: number };
+        const range = this.effectiveOverloadRange;
         if (range.min === range.max) {
             return `${String(range.min).padStart(2, '0')}`;
         }
@@ -210,12 +219,10 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [
-            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
-            `Protection: ${this.protectionRating}%`,
-            `Overload: ${this.overloadRangeLabel}`,
-            this.statusLabel,
-        ];
+        // eslint-disable-next-line @typescript-eslint/unbound-method -- intentionally invoke the prototype getter via .call
+        const inheritedGetter = Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get;
+        const inheritedProps = (inheritedGetter?.call(this) ?? []) as string[];
+        const props = [...inheritedProps, `Protection: ${this.protectionRating}%`, `Overload: ${this.overloadRangeLabel}`, this.statusLabel];
 
         return props;
     }
@@ -225,6 +232,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             protection: `${this.protectionRating}%`,
@@ -241,8 +249,10 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Toggle activation state.
      * @returns {Promise<Item>}
      */
-    toggleActivated(): unknown {
-        return this.parent?.update({ 'system.activated': !this.activated });
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update return type
+    toggleActivated(): Promise<unknown> | undefined {
+        const parent = this.parent as ForceFieldParent | undefined;
+        return parent?.update?.({ 'system.activated': !this.activated });
     }
 
     /**
@@ -250,16 +260,20 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {boolean} overloaded
      * @returns {Promise<Item>}
      */
-    setOverloaded(overloaded: boolean): unknown {
-        return this.parent?.update({ 'system.overloaded': overloaded });
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update return type
+    setOverloaded(overloaded: boolean): Promise<unknown> | undefined {
+        const parent = this.parent as ForceFieldParent | undefined;
+        return parent?.update?.({ 'system.overloaded': overloaded });
     }
 
     /**
      * Recover from overload.
      * @returns {Promise<Item>}
      */
-    recover(): unknown {
-        return this.parent?.update({ 'system.overloaded': false });
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update return type
+    recover(): Promise<unknown> | undefined {
+        const parent = this.parent as ForceFieldParent | undefined;
+        return parent?.update?.({ 'system.overloaded': false });
     }
 
     /**
@@ -267,6 +281,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} [options] - Roll options
      * @returns {Promise<object>} - Result object with { isProtected: boolean, overloaded: boolean, roll: Roll }
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: rollProtection result varies; consumers cast as needed
     async rollProtection(options: { speaker?: ReturnType<(typeof ChatMessage)['getSpeaker']> } = {}): Promise<unknown> {
         if (!this.isProtecting) {
             return { isProtected: false, overloaded: false, roll: null, inactive: true };
@@ -284,7 +299,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
         // Show roll to chat
         await roll.toMessage({
             flavor: game.i18n.format('WH40K.ForceField.ProtectionRoll', {
-                name: this.parent?.name || 'Force Field',
+                name: (this.parent as { name?: string } | undefined)?.name ?? 'Force Field',
                 isProtected: isProtected ? game.i18n.localize('WH40K.ForceField.Protected') : game.i18n.localize('WH40K.ForceField.NotProtected'),
                 overloaded: overloaded ? ` (${game.i18n.localize('WH40K.ForceField.Overloaded')}!)` : '',
             }),

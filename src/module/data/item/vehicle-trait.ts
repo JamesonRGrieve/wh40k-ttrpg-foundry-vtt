@@ -22,6 +22,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField brand mismatch with DataField.Any
             identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Plain text description (for search/tooltips)
@@ -52,7 +53,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
      * Has any non-zero modifiers?
      * @type {boolean}
      */
-    get hasModifiers() {
+    get hasModifiers(): boolean {
         return Object.values(this.modifiers).some((v) => v !== 0);
     }
 
@@ -60,7 +61,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
      * Get modifiers as a formatted list.
      * @type {object[]}
      */
-    get modifiersList() {
+    get modifiersList(): Array<{ key: string; label: string; value: number; formatted: string }> {
         const list = [];
         for (const [key, value] of Object.entries(this.modifiers)) {
             if (value !== 0) {
@@ -69,7 +70,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
                     key,
                     label,
                     value,
-                    formatted: `${(value as number) >= 0 ? '+' : ''}${value as number}`,
+                    formatted: `${value >= 0 ? '+' : ''}${value}`,
                 });
             }
         }
@@ -80,8 +81,9 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
      * Get the full name including level.
      * @type {string}
      */
-    get fullName() {
-        let name = this.parent?.name ?? '';
+    get fullName(): string {
+        const parent = this.parent as { name?: string } | undefined;
+        let name: string = parent?.name ?? '';
         if (this.hasLevel && this.level !== null) {
             name += ` ${this.level}`;
         }
@@ -111,6 +113,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             level: this.hasLevel ? this.level : '-',

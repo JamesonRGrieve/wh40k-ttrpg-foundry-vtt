@@ -33,8 +33,8 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            identifier: new (IdentifierField as any)({ required: true, blank: true }) as foundry.data.fields.StringField,
+            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unsafe-call -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Gear category
             category: new fields.StringField({

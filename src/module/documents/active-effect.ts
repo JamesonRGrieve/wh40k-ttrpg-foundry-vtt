@@ -26,7 +26,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      */
     get isTemporary(): boolean {
         const duration = this.duration.seconds ?? this.duration.rounds ?? this.duration.turns;
-        return duration !== null && duration !== undefined && duration > 0;
+        return duration != null && duration > 0;
     }
 
     /**
@@ -55,7 +55,7 @@ export class WH40KActiveEffect extends ActiveEffect {
     get nature(): string {
         // Check explicit flag — getFlag returns unknown, narrow to string
         const flagNature = (this as unknown as { getFlag(scope: string, key: string): unknown }).getFlag('wh40k-rpg', 'nature');
-        if (typeof flagNature === 'string' && flagNature) return flagNature;
+        if (typeof flagNature === 'string' && flagNature.length > 0) return flagNature;
 
         // Analyze changes to determine nature
         let positiveCount = 0;
@@ -96,7 +96,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      */
     override apply(target: Actor.Implementation, change: ActiveEffect.ChangeData): AnyMutableObject {
         // Narrow the target to our system type for internal helpers
-        const actor = target as unknown as WH40KBaseActor;
+        const actor = target;
         // Handle WH40K RPG-specific change keys
         const key = change.key;
         const internalChange: EffectChange = {
@@ -252,15 +252,15 @@ export class WH40KActiveEffect extends ActiveEffect {
             return game.i18n.localize('WH40K.ActiveEffect.Permanent');
         }
 
-        if (d.rounds) {
+        if (d.rounds != null && d.rounds > 0) {
             return game.i18n.format('WH40K.ActiveEffect.DurationRounds', { rounds: String(d.rounds) });
         }
 
-        if (d.turns) {
+        if (d.turns != null && d.turns > 0) {
             return game.i18n.format('WH40K.ActiveEffect.DurationTurns', { turns: String(d.turns) });
         }
 
-        if (d.seconds) {
+        if (d.seconds != null && d.seconds > 0) {
             return game.i18n.format('WH40K.ActiveEffect.DurationSeconds', { seconds: String(d.seconds) });
         }
 
@@ -277,13 +277,13 @@ export class WH40KActiveEffect extends ActiveEffect {
         const d = this.duration;
         const combat = game.combat;
 
-        if (d.rounds && combat) {
+        if (d.rounds != null && d.rounds > 0 && combat) {
             const startRound = d.startRound ?? 0;
             const currentRound = combat.round ?? 0;
             return Math.max(0, startRound + d.rounds - currentRound);
         }
 
-        if (d.turns && combat) {
+        if (d.turns != null && d.turns > 0 && combat) {
             const startTurn = d.startTurn ?? 0;
             const currentTurn = combat.turn ?? 0;
             const startRound = d.startRound ?? 0;
@@ -293,7 +293,7 @@ export class WH40KActiveEffect extends ActiveEffect {
             return Math.max(0, totalStart + d.turns - totalCurrent);
         }
 
-        if (d.seconds) {
+        if (d.seconds != null && d.seconds > 0) {
             const startTime = d.startTime ?? 0;
             const currentTime = game.time.worldTime ?? 0;
             return Math.max(0, startTime + d.seconds - currentTime);

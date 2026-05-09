@@ -2,9 +2,9 @@
  * @file CriticalInjurySheet - ApplicationV2 sheet for critical injury items
  */
 
-import defineSimpleItemSheet from './define-simple-item-sheet.ts';
-import type BaseItemSheet from './base-item-sheet.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import type BaseItemSheet from './base-item-sheet.ts';
+import defineSimpleItemSheet from './define-simple-item-sheet.ts';
 
 /**
  * Handle severity change - re-render to update displayed effect.
@@ -14,7 +14,7 @@ async function changeSeverity(this: BaseItemSheet, _event: Event, target: HTMLEl
     const newSeverity = parseInt((target as HTMLInputElement).value, 10);
     const sys = item.system as { severity?: number };
     if (newSeverity !== sys.severity) {
-        await item.update({ 'system.severity': newSeverity } as Record<string, unknown>);
+        await item.update({ 'system.severity': newSeverity });
     }
 }
 

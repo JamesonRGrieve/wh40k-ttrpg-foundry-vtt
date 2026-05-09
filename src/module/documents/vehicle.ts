@@ -17,6 +17,8 @@ type VehicleSystemData = WH40KBaseActor['system'] & {
     integrity: { value: number; max: number };
     speed: number;
     vehicleClass: string;
+    crew: Record<string, unknown>;
+    size: number;
 };
 
 export class WH40KVehicle extends WH40KBaseActor {
@@ -24,15 +26,15 @@ export class WH40KVehicle extends WH40KBaseActor {
 
     protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | void> {
         await super._preCreate(data, options, user);
-        const dataAsRecord = data as unknown as Record<string, unknown>;
+        const dataWithName = data as { name?: string } | undefined;
         const initData: Record<string, unknown> = {
             'token.bar1': { attribute: 'integrity' },
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
-            'token.name': dataAsRecord.name,
+            'token.name': dataWithName?.name,
         };
-        this.updateSource(initData as never);
+        this.updateSource(initData);
     }
 
     prepareData(): void {
@@ -79,13 +81,13 @@ export class WH40KVehicle extends WH40KBaseActor {
         return this.system.speed;
     }
     get crew(): Record<string, unknown> {
-        return this.system.crew ?? {};
+        return this.system.crew;
     }
     get vehicleClass(): string {
         return this.system.vehicleClass;
     }
     get size(): number {
-        return this.system.size as number;
+        return this.system.size;
     }
 
     async rollItem(itemId: string): Promise<void> {
@@ -100,14 +102,13 @@ export class WH40KVehicle extends WH40KBaseActor {
             return;
         }
 
-        game.wh40k.log(`Vehicle ${this.name as string} is rolling ${item.name as string} for character ${character.name as string}`);
+        game.wh40k.log(`Vehicle ${this.name} is rolling ${item.name} for character ${character.name}`);
         switch (item.type) {
             case 'weapon':
-                await DHTargetedActionManager.performWeaponAttack(character, null, item as never);
-                return;
+                await DHTargetedActionManager.performWeaponAttack(character, null, item);
+                break;
             default:
                 ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
-                return;
         }
     }
 }

@@ -34,17 +34,18 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
     }
 
     resolveCareerKey(actor: WH40KBaseActor): string | null {
-        return (actor.system?.originPath?.speciality as string | undefined) ?? null;
+        const speciality = actor.system.originPath?.speciality;
+        return typeof speciality === 'string' ? speciality : null;
     }
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
-        const originPath = (actor.system?.originPath ?? {}) as Record<string, string | number>;
+        const get = (key: string): string | number => this.readOriginPathField(actor, key);
         return [
             this.makePlayerField(actor),
-            this.makeField('Chapter', 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Chapter'),
-            this.makeField('Speciality', 'system.originPath.role', originPath.role ?? '', 'Speciality'),
-            this.makeField('Rank', 'system.originPath.career', originPath.career ?? ''),
-            this.makeField('Demeanour', 'system.originPath.motivation', originPath.motivation ?? '', 'Demeanour'),
+            this.makeField('Chapter', 'system.originPath.homeWorld', get('homeWorld'), 'Chapter'),
+            this.makeField('Speciality', 'system.originPath.role', get('role'), 'Speciality'),
+            this.makeField('Rank', 'system.originPath.career', get('career')),
+            this.makeField('Demeanour', 'system.originPath.motivation', get('motivation'), 'Demeanour'),
         ];
     }
 }

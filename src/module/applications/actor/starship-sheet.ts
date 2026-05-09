@@ -14,11 +14,13 @@ export default class StarshipSheet extends BaseActorSheet {
     /** @override */
     static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         ...BaseActorSheet.DEFAULT_OPTIONS,
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             ...BaseActorSheet.DEFAULT_OPTIONS.actions,
             fireShipWeapon: StarshipSheet.#fireShipWeapon,
             rollInitiative: StarshipSheet.#rollInitiative,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         classes: ['starship'],
         position: {
             width: 900,
@@ -63,6 +65,7 @@ export default class StarshipSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @override */
+    /* eslint-disable no-restricted-syntax -- labels here ARE WH40K.* keys; the rule's literal-detection cannot see that */
     static TABS: HandlebarsApplicationV14.TabDescriptor[] = [
         { tab: 'stats', label: 'WH40K.Starship.Tabs.Stats', group: 'primary', cssClass: 'tab-stats' },
         { tab: 'components', label: 'WH40K.Starship.Tabs.Components', group: 'primary', cssClass: 'tab-components' },
@@ -70,6 +73,7 @@ export default class StarshipSheet extends BaseActorSheet {
         { tab: 'crew', label: 'WH40K.Starship.Tabs.Crew', group: 'primary', cssClass: 'tab-crew' },
         { tab: 'history', label: 'WH40K.Starship.Tabs.History', group: 'primary', cssClass: 'tab-history' },
     ];
+    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 
@@ -83,6 +87,7 @@ export default class StarshipSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         // isGM + dh now come from BaseActorSheet._prepareCommonContext via super.
@@ -100,7 +105,9 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {object} context  The template render context.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: render context is an untyped Record per ApplicationV2 contract
     _prepareShipData(context: Record<string, unknown>): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
         const actor = this.actor as unknown as WH40KStarship;
         const items = actor.items;
 
@@ -157,12 +164,15 @@ export default class StarshipSheet extends BaseActorSheet {
      * Prepare context for specific parts.
      * @inheritDoc
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _preparePartContext signature uses untyped records
     async _preparePartContext(partId: string, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: super signature varies between V13/V14 typings
         const partContext = await super._preparePartContext(partId, context, options as unknown as Record<string, unknown>);
 
         // Add tab metadata for tab parts
         const tabParts = ['stats', 'components', 'weapons', 'crew', 'history'];
         if (tabParts.includes(partId)) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: subclass TABS not on shipped ApplicationV2 ctor type
             const ctor = this.constructor as unknown as { TABS: HandlebarsApplicationV14.TabDescriptor[] };
             const tabConfig = ctor.TABS.find((t: HandlebarsApplicationV14.TabDescriptor) => t.tab === partId);
             const group = tabConfig?.group ?? 'primary';
@@ -188,8 +198,9 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #fireShipWeapon(this: StarshipSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
         const actor = this.actor as unknown as WH40KStarship;
-        const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
         const weapon = actor.items.get(itemId ?? '');
         if (!weapon) return;
 
@@ -202,11 +213,13 @@ export default class StarshipSheet extends BaseActorSheet {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
-        void ChatMessage.create({
-            user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor: actor as unknown as Actor.Implementation }),
-            content: html,
-        } as unknown as Parameters<typeof ChatMessage.create>[0]);
+        const speaker = ChatMessage.getSpeaker({
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarship satisfies Actor.Implementation but typings widen
+            actor: actor as unknown as Actor.Implementation,
+        });
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
+        const payload = { user: game.user.id, speaker, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+        void ChatMessage.create(payload);
     }
 
     /* -------------------------------------------- */
@@ -218,6 +231,7 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #rollInitiative(this: StarshipSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollInitiative is defined on Starship document; not on Actor.Implementation
         const a = this.actor as unknown as { rollInitiative?: () => Promise<void> };
         await a.rollInitiative?.();
     }

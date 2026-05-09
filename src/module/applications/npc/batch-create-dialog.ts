@@ -18,6 +18,26 @@ interface BatchState {
     openSheets: boolean;
 }
 
+interface NPCCharacteristic {
+    base: number;
+    modifier: number;
+    total: number;
+    bonus: number;
+}
+
+interface NPCSystemDataView {
+    characteristics: Record<string, NPCCharacteristic>;
+    wounds: { value: number; max: number };
+}
+
+interface NPCActorData {
+    name: string;
+    type: string;
+    img: string;
+    system: NPCSystemDataView;
+    folder?: string;
+}
+
 /**
  * Dialog for creating multiple NPCs at once.
  * @extends {ApplicationV2}
@@ -28,6 +48,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
+    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 form/action handlers accept method references and bind `this` itself */
     static DEFAULT_OPTIONS = {
         id: 'batch-create-dialog-{id}',
         classes: ['wh40k-rpg', 'batch-create-dialog'],
@@ -53,6 +74,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             updatePreview: BatchCreateDialog.#onUpdatePreview,
         },
     };
+    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 
@@ -112,6 +134,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {Partial<BatchState>} [config] - Initial configuration.
      * @param {Record<string, unknown>} [options] - Application options.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 ctor accepts arbitrary options record
     constructor(config: Partial<BatchState> = {}, options: Record<string, unknown> = {}) {
         super(options);
         Object.assign(this.#state, config);
@@ -122,6 +145,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -173,6 +197,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
     _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
@@ -199,6 +224,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             if (el === null) continue;
 
             el.addEventListener(field.type === 'boolean' ? 'change' : 'input', () => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: writing to BatchState via dynamic key requires loosened indexer
                 const state = this.#state as unknown as Record<string, unknown>;
                 if (field.type === 'boolean') {
                     state[field.name] = (el as HTMLInputElement).checked;
@@ -306,13 +332,14 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             const name = this.#state.namePattern.replace('{n}', String(i));
 
             // Clone and optionally randomize
-            const systemData = foundry.utils.deepClone(baseData);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ThreatCalculator returns generic system data; narrowed locally
+            const systemData = foundry.utils.deepClone(baseData) as unknown as NPCSystemDataView;
 
             if (this.#state.randomize) {
                 const variance = this.#state.randomizeAmount / 100;
 
                 // Randomize characteristics
-                for (const char of Object.values(systemData.characteristics as Record<string, any>)) {
+                for (const char of Object.values(systemData.characteristics)) {
                     const delta = Math.floor((Math.random() * 2 - 1) * char.base * variance);
                     char.base = Math.max(10, Math.min(99, char.base + delta));
                     char.total = char.base + char.modifier;
@@ -325,7 +352,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 systemData.wounds.value = systemData.wounds.max;
             }
 
-            const actorData: any = {
+            const actorData: NPCActorData = {
                 name,
                 type: 'npcV2',
                 img: 'icons/svg/mystery-man.svg',
@@ -333,12 +360,14 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             };
 
             // Add folder if specified
-            if (this.#state.folder) {
+            if (this.#state.folder !== '') {
                 actorData.folder = this.#state.folder;
             }
 
             try {
-                const actor = (await Actor.create(actorData)) as WH40KNPC | undefined;
+                // eslint-disable-next-line no-await-in-loop -- batch creation is sequential by design to surface errors per actor
+                // eslint-disable-next-line no-restricted-syntax -- boundary: NPCActorData is the system-internal shape; Foundry's Actor.create accepts the same record at runtime
+                const actor = (await Actor.create(actorData as unknown as Actor.CreateData)) as WH40KNPC | undefined;
                 if (actor) actors.push(actor);
             } catch (err) {
                 console.error(`Failed to create NPC "${name}":`, err);
@@ -365,7 +394,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {HTMLElement} target
      */
     static #onUpdatePreview(this: BatchCreateDialog, event: PointerEvent, target: HTMLElement): void {
-        this.render({ parts: ['form'] });
+        void this.render({ parts: ['form'] });
     }
 
     /* -------------------------------------------- */
@@ -373,10 +402,11 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/require-await -- boundary: ApplicationV2 close accepts arbitrary options record; method must remain async to satisfy super signature
     async close(options: Record<string, unknown> = {}): Promise<void> {
-        if (this._renderTimeout) clearTimeout(this._renderTimeout);
+        if (this._renderTimeout !== null) clearTimeout(this._renderTimeout);
 
-        if (!this.#submitted && this.#resolve) {
+        if (!this.#submitted && this.#resolve !== null) {
             this.#resolve([]);
         }
 
@@ -394,7 +424,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     async wait(): Promise<WH40KNPC[]> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
-            void this.render(true);
+            void this.render({ force: true });
         });
     }
 
@@ -413,6 +443,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {Record<string, unknown>} config - Configuration.
      * @returns {Promise<WH40KNPC[]>} Created actors.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: quickCreate accepts a partial config object from external callers
     static async quickCreate(config: Record<string, unknown>): Promise<WH40KNPC[]> {
         const {
             namePattern = 'NPC {n}',
@@ -440,11 +471,12 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
         for (let i = 1; i <= (count as number); i++) {
             const name = (namePattern as string).replace('{n}', String(i));
-            const systemData = foundry.utils.deepClone(baseData);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ThreatCalculator returns generic system data; narrowed locally
+            const systemData = foundry.utils.deepClone(baseData) as unknown as NPCSystemDataView;
 
-            if (randomize) {
+            if (randomize === true) {
                 const variance = (randomizeAmount as number) / 100;
-                for (const char of Object.values(systemData.characteristics as Record<string, any>)) {
+                for (const char of Object.values(systemData.characteristics)) {
                     const delta = Math.floor((Math.random() * 2 - 1) * char.base * variance);
                     char.base = Math.max(10, Math.min(99, char.base + delta));
                     char.total = char.base + char.modifier;
@@ -452,15 +484,17 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 }
             }
 
-            const actorData: any = {
+            const actorData: NPCActorData = {
                 name,
                 type: 'npcV2',
                 img: 'icons/svg/mystery-man.svg',
                 system: systemData,
-                folder: folder || undefined,
+                folder: typeof folder === 'string' && folder !== '' ? folder : undefined,
             };
 
-            const actor = (await Actor.create(actorData)) as WH40KNPC | undefined;
+            // eslint-disable-next-line no-await-in-loop -- batch creation is sequential by design
+            // eslint-disable-next-line no-restricted-syntax -- boundary: NPCActorData is the system-internal shape; Foundry's Actor.create accepts the same record at runtime
+            const actor = (await Actor.create(actorData as unknown as Actor.CreateData)) as WH40KNPC | undefined;
             if (actor) actors.push(actor);
         }
 

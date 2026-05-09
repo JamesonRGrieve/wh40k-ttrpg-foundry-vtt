@@ -18,6 +18,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record; we extend with strict fields
 interface AcquisitionContext extends Record<string, unknown> {
     profitFactor: { current: number; starting: number };
     item: {
@@ -36,7 +37,20 @@ interface AcquisitionContext extends Record<string, unknown> {
     customModifier: number;
     totalModifier: number;
     finalTarget: number;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: recentAcquisitions read from flag store; opaque shape
     recentAcquisitions: unknown[];
+}
+
+interface RogueTraderSystem {
+    rogueTrader?: {
+        profitFactor?: { current: number; starting: number };
+    };
+}
+
+interface AcquireableItemSystem {
+    availability?: string;
+    craftsmanship?: string;
+    cost?: number;
 }
 
 interface AcquisitionHistoryEntry {
@@ -65,17 +79,21 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         },
         position: {
             width: 480,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 position.height accepts 'auto' but typings list number
             height: 'auto' as unknown as number,
         },
         form: {
+            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- ApplicationV2 form handler signature differs from shipped typings
             handler: AcquisitionDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: true,
         },
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             toggleModifier: AcquisitionDialog.#toggleModifier,
             roll: AcquisitionDialog.#roll,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -95,6 +113,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     declare item: WH40KItem | null;
     declare selectedModifiers: Set<string>;
     declare customModifier: number;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: resolve receives an opaque result object whose shape depends on outcome
     #resolve: ((value: unknown) => void) | null = null;
 
     /* -------------------------------------------- */
@@ -106,6 +125,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @param {WH40KBaseActor} actor  The actor
      * @param {object} options  Additional options
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 ctor accepts arbitrary options record
     constructor(actor: WH40KBaseActor, options: { item?: WH40KItem | null } & Record<string, unknown> = {}) {
         super(options);
         this.actor = actor;
@@ -118,6 +138,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     get title(): string {
+        // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Acquisition.AcquireItem and WH40K.Acquisition.PFTest localization keys
         return this.item ? `Acquire: ${this.item.name}` : 'Profit Factor Acquisition Test';
     }
 
@@ -130,7 +151,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         const context = (await super._prepareContext(options)) as AcquisitionContext;
 
         // Profit Factor
-        const pf = (this.actor.system as any).rogueTrader?.profitFactor || { current: 0, starting: 0 };
+        const pf = (this.actor.system as RogueTraderSystem).rogueTrader?.profitFactor ?? { current: 0, starting: 0 };
         context.profitFactor = {
             current: pf.current,
             starting: pf.starting,
@@ -138,13 +159,14 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
         // Item data
         if (this.item) {
+            const itemSys = this.item.system as AcquireableItemSystem;
             context.item = {
-                name: this.item.name || 'Unknown',
+                name: this.item.name !== '' ? this.item.name : 'Unknown',
                 img: this.item.img ?? null,
                 type: this.item.type,
-                availability: (this.item.system as any)?.availability || 'Common',
-                craftsmanship: (this.item.system as any)?.craftsmanship || 'Common',
-                cost: (this.item.system as any)?.cost || 0,
+                availability: itemSys.availability !== undefined && itemSys.availability !== '' ? itemSys.availability : 'Common',
+                craftsmanship: itemSys.craftsmanship !== undefined && itemSys.craftsmanship !== '' ? itemSys.craftsmanship : 'Common',
+                cost: itemSys.cost ?? 0,
             };
 
             // Calculate availability modifier
@@ -193,7 +215,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _getAvailabilityModifier(availability: string): number {
-        const modifiers = {
+        const modifiers: Record<string, number> = {
             'Abundant': 30,
             'Plentiful': 20,
             'Common': 10,
@@ -205,7 +227,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             'Near Unique': -50,
             'Unique': -60,
         };
-        return modifiers[availability as keyof typeof modifiers] || 0;
+        return modifiers[availability] ?? 0;
     }
 
     /* -------------------------------------------- */
@@ -217,13 +239,13 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _getCraftsmanshipModifier(craftsmanship: string): number {
-        const modifiers = {
+        const modifiers: Record<string, number> = {
             Poor: 10,
             Common: 0,
             Good: -10,
             Best: -20,
         };
-        return modifiers[craftsmanship as keyof typeof modifiers] || 0;
+        return modifiers[craftsmanship] ?? 0;
     }
 
     /* -------------------------------------------- */
@@ -247,7 +269,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      */
     static async #toggleModifier(this: AcquisitionDialog, event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset.modifier;
-        if (key == null || key === '') return;
+        if (key === undefined || key === '') return;
 
         if (this.selectedModifiers.has(key)) {
             this.selectedModifiers.delete(key);
@@ -255,7 +277,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             this.selectedModifiers.add(key);
         }
 
-        await this.render(false);
+        await this.render();
     }
 
     /* -------------------------------------------- */
@@ -316,19 +338,22 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         // On success, add item to inventory
         if (success && this.item) {
             await this.actor.createEmbeddedDocuments('Item', [this.item]);
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Acquisition.Acquired localization key
             ui.notifications.info(`Acquired ${this.item.name}`);
         }
 
         // Critical failure: reduce PF
         if (dos <= -3) {
-            const rogueTrader = (this.actor.system as any).rogueTrader;
-            const newPF = Math.max(0, rogueTrader.profitFactor.current - 1);
-            await this.actor.update({ 'system.rogueTrader.profitFactor.current': newPF } as Record<string, unknown>);
+            const rogueTrader = (this.actor.system as RogueTraderSystem).rogueTrader;
+            const currentPF = rogueTrader?.profitFactor?.current ?? 0;
+            const newPF = Math.max(0, currentPF - 1);
+            await this.actor.update({ 'system.rogueTrader.profitFactor.current': newPF });
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Acquisition.CriticalFailure localization key
             ui.notifications.warn(`Critical failure! Profit Factor reduced to ${newPF}`);
         }
 
         // Resolve and close
-        if (this.#resolve) {
+        if (this.#resolve !== null) {
             this.#resolve({
                 success,
                 dos,
@@ -401,6 +426,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * Wait for dialog to complete
      * @returns {Promise<object|null>}  Result or null if cancelled
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: result shape depends on outcome (success object or null on cancel)
     async wait(): Promise<unknown> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
@@ -410,8 +436,9 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options record
     async close(options: Record<string, unknown> = {}): Promise<unknown> {
-        if (this.#resolve && !options._skipResolve) {
+        if (this.#resolve !== null && options._skipResolve !== true) {
             this.#resolve(null);
         }
         return super.close(options);
@@ -428,9 +455,10 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<object|null>}  Result or null
      * @static
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: result shape depends on outcome (success object or null on cancel)
     static async show(actor: WH40KBaseActor, item: WH40KItem | null = null): Promise<unknown> {
         const dialog = new AcquisitionDialog(actor, { item });
-        void dialog.render(true);
+        void dialog.render({ force: true });
         return dialog.wait();
     }
 }

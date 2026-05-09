@@ -74,7 +74,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * The actor being exported.
      * @type {WH40KBaseActor | null}
      */
-    #actor: WH40KBaseActor | null = null;
+    readonly #actor: WH40KBaseActor | null = null;
 
     /**
      * Current export format.

@@ -1,9 +1,9 @@
+import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
-import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
  * Data model for Ammunition items.
@@ -106,9 +106,11 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         this.clipModifier = Number(resolveLineVariant(this.clipModifier as unknown, lineKey) ?? 0);
         this.effect = (resolveLineVariant(this.effect as unknown, lineKey) as string) ?? '';
         this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';
-        this.source =
-            (resolveLineVariant(this.source as unknown, lineKey) as { book: string; page: string; custom: string }) ??
-            ({ book: '', page: '', custom: '' } as Record<string, string>);
+        this.source = (resolveLineVariant(this.source as unknown, lineKey) as { book: string; page: string; custom: string }) ?? {
+            book: '',
+            page: '',
+            custom: '',
+        };
     }
 
     /* -------------------------------------------- */
@@ -120,8 +122,8 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
      * @type {string}
      */
     get weaponTypesLabel(): string {
-        if (!this.weaponTypes || !this.weaponTypes.size) return game.i18n.localize('WH40K.Ammunition.AllWeapons');
-        return Array.from(this.weaponTypes as Set<string>)
+        if (!this.weaponTypes?.size) return game.i18n.localize('WH40K.Ammunition.AllWeapons');
+        return Array.from(this.weaponTypes)
             .map((t) => {
                 const label = CONFIG.WH40K?.weaponTypes?.[t]?.label;
                 return label ? game.i18n.localize(label) : t;
@@ -162,7 +164,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         }
 
         if (this.addedQualities.size) {
-            props.push(`Adds: ${Array.from(this.addedQualities as Set<string>).join(', ')}`);
+            props.push(`Adds: ${Array.from(this.addedQualities).join(', ')}`);
         }
 
         return props;

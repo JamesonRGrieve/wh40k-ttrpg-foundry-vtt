@@ -290,15 +290,15 @@ export class WH40KBaseActor extends Actor {
      * @protected
      */
     _computeCharacteristics(): void {
-        if (this.characteristics === undefined || this.characteristics === null) return;
+        if (this.characteristics === undefined) return;
 
         const charRecord = this.characteristics as Record<string, WH40KCharacteristic & { starting?: number; advances?: number }>;
         for (const [, characteristic] of Object.entries(charRecord)) {
             const charAny = characteristic as unknown as Record<string, unknown>;
-            const base = Number(charAny['base'] !== undefined ? charAny['base'] : charAny['starting'] ?? 0);
-            const advance = Number(charAny['advance'] !== undefined ? charAny['advance'] : charAny['advances'] ?? 0);
-            const modifier = Number(charAny['modifier'] !== undefined ? charAny['modifier'] : 0);
-            const unnatural = Number(charAny['unnatural'] !== undefined ? charAny['unnatural'] : 0);
+            const base = Number(charAny['base'] ?? charAny['starting'] ?? 0);
+            const advance = Number(charAny['advance'] ?? charAny['advances'] ?? 0);
+            const modifier = Number(charAny['modifier'] ?? 0);
+            const unnatural = Number(charAny['unnatural'] ?? 0);
 
             characteristic.total = base + advance * 5 + modifier;
 
@@ -357,7 +357,7 @@ export class WH40KBaseActor extends Actor {
             return;
         }
 
-        const isAdvanced = parent.advanced === true;
+        const isAdvanced = parent.advanced;
         entries.push({
             name: speciality,
             slug: specialityKey,
@@ -432,15 +432,15 @@ export class WH40KBaseActor extends Actor {
      */
     #getCharacteristicBreakdown(charKey: string, characteristic: CharacteristicLike): WH40KStatBreakdown {
         const charAny = characteristic as Record<string, unknown>;
-        const base = Number(charAny['base'] !== undefined ? charAny['base'] : charAny['starting'] !== undefined ? charAny['starting'] : 0);
-        const advance = Number(charAny['advance'] !== undefined ? charAny['advance'] : charAny['advances'] !== undefined ? charAny['advances'] : 0);
-        const modifierValue = Number(charAny['modifier'] !== undefined ? charAny['modifier'] : 0);
+        const base = Number(charAny['base'] ?? charAny['starting'] ?? 0);
+        const advance = Number(charAny['advance'] ?? charAny['advances'] ?? 0);
+        const modifierValue = Number(charAny['modifier'] ?? 0);
 
         const breakdown: WH40KStatBreakdown = {
             label: characteristic.label !== '' ? characteristic.label : charKey.toUpperCase(),
             base,
             modifiers: [],
-            total: Number(characteristic.total !== 0 ? characteristic.total : 0),
+            total: Number(characteristic.total),
         };
 
         // Add advances
@@ -471,7 +471,7 @@ export class WH40KBaseActor extends Actor {
     #getSkillBreakdown(skillKey: string, skill: SkillLike): WH40KStatBreakdown {
         const charShort = skill.characteristic;
         const characteristic = this._findCharacteristic(charShort) as { total?: number };
-        const baseTarget = Number(characteristic.total !== undefined ? characteristic.total : 0);
+        const baseTarget = Number(characteristic.total ?? 0);
 
         const breakdown: WH40KStatBreakdown = {
             label: skill.label !== undefined && skill.label !== '' ? skill.label : skillKey,
@@ -481,13 +481,13 @@ export class WH40KBaseActor extends Actor {
         };
 
         // Add training modifiers
-        if (skill.trained === true) {
+        if (skill.trained) {
             breakdown.modifiers.push({
                 source: 'Trained',
-                value: skill.advanced === true ? 20 : 0, // Advanced skills get +20 when trained (removes -20 penalty)
+                value: skill.advanced ? 20 : 0, // Advanced skills get +20 when trained (removes -20 penalty)
                 icon: 'fa-solid fa-graduation-cap',
             });
-        } else if (skill.advanced === true) {
+        } else if (skill.advanced) {
             breakdown.modifiers.push({
                 source: 'Untrained (Advanced)',
                 value: -20,
@@ -495,7 +495,7 @@ export class WH40KBaseActor extends Actor {
             });
         }
 
-        if (skill.plus10 === true) {
+        if (skill.plus10) {
             breakdown.modifiers.push({
                 source: '+10 Training',
                 value: 10,
@@ -503,7 +503,7 @@ export class WH40KBaseActor extends Actor {
             });
         }
 
-        if (skill.plus20 === true) {
+        if (skill.plus20) {
             breakdown.modifiers.push({
                 source: '+20 Training',
                 value: 20,
@@ -535,14 +535,14 @@ export class WH40KBaseActor extends Actor {
             label: 'Wounds',
             base: 0,
             modifiers: [],
-            total: wounds.max !== 0 ? wounds.max : 0,
+            total: wounds.max,
         };
 
         // Base calculation varies by actor type, but typically TB + 2xSB + 2xWPB for characters
         if (toughness !== undefined) {
             breakdown.modifiers.push({
                 source: 'Toughness Bonus',
-                value: toughness.bonus !== 0 ? toughness.bonus : 0,
+                value: toughness.bonus,
                 icon: 'fa-solid fa-shield-halved',
             });
         }
@@ -550,7 +550,7 @@ export class WH40KBaseActor extends Actor {
         if (strength !== undefined) {
             breakdown.modifiers.push({
                 source: 'Strength Bonus ×2',
-                value: (strength.bonus !== 0 ? strength.bonus : 0) * 2,
+                value: strength.bonus * 2,
                 icon: 'fa-solid fa-dumbbell',
             });
         }
@@ -558,7 +558,7 @@ export class WH40KBaseActor extends Actor {
         if (willpower !== undefined) {
             breakdown.modifiers.push({
                 source: 'Willpower Bonus ×2',
-                value: (willpower.bonus !== 0 ? willpower.bonus : 0) * 2,
+                value: willpower.bonus * 2,
                 icon: 'fa-solid fa-brain',
             });
         }
@@ -581,9 +581,9 @@ export class WH40KBaseActor extends Actor {
 
         const breakdown: WH40KStatBreakdown = {
             label: 'Initiative',
-            base: agility !== undefined ? (agility.bonus !== 0 ? agility.bonus : 0) : 0,
+            base: agility !== undefined ? agility.bonus : 0,
             modifiers: [],
-            total: initiative.bonus !== 0 ? initiative.bonus : 0,
+            total: initiative.bonus,
         };
 
         // Collect modifiers from items
@@ -607,9 +607,9 @@ export class WH40KBaseActor extends Actor {
         const totalFateMod = (this.system as Record<string, unknown>)['totalFateModifier'] as number | undefined;
         const breakdown: WH40KStatBreakdown = {
             label: 'Fate Points',
-            base: fate.rolled === true ? (fate.max !== undefined ? fate.max : 0) - (totalFateMod !== undefined ? totalFateMod : 0) : 0,
+            base: fate.rolled === true ? (fate.max ?? 0) - (totalFateMod ?? 0) : 0,
             modifiers: [],
-            total: fate.max !== undefined ? fate.max : 0,
+            total: fate.max ?? 0,
         };
 
         if (fate.rolled === true) {
@@ -643,7 +643,7 @@ export class WH40KBaseActor extends Actor {
             label: `Armour (${location})`,
             base: 0,
             modifiers: [],
-            total: armour.value !== undefined ? armour.value : 0,
+            total: armour.value ?? 0,
         };
 
         const total = armour.total ?? 0;
@@ -691,9 +691,9 @@ export class WH40KBaseActor extends Actor {
             const value = modifiers.characteristics[charKey];
             if (value && value !== 0) {
                 modifiersArray.push({
-                    source: item.name !== null ? item.name : '',
+                    source: item.name,
                     value: value,
-                    uuid: item.uuid !== null ? item.uuid : undefined,
+                    uuid: item.uuid,
                     icon: this.#getItemIcon(item),
                 });
             }
@@ -714,9 +714,9 @@ export class WH40KBaseActor extends Actor {
             const value = modifiers.skills[skillKey];
             if (value && value !== 0) {
                 modifiersArray.push({
-                    source: item.name !== null ? item.name : '',
+                    source: item.name,
                     value: value,
-                    uuid: item.uuid !== null ? item.uuid : undefined,
+                    uuid: item.uuid,
                     icon: this.#getItemIcon(item),
                 });
             }
@@ -736,9 +736,9 @@ export class WH40KBaseActor extends Actor {
             const woundsMod = modifiers.other.find((m: { key: string; value: number }) => m.key === 'wounds' || m.key === 'wounds.max');
             if (woundsMod && woundsMod.value !== 0) {
                 modifiersArray.push({
-                    source: item.name !== null ? item.name : '',
+                    source: item.name,
                     value: woundsMod.value,
-                    uuid: item.uuid !== null ? item.uuid : undefined,
+                    uuid: item.uuid,
                     icon: this.#getItemIcon(item),
                 });
             }
@@ -758,9 +758,9 @@ export class WH40KBaseActor extends Actor {
             const initiativeMod = modifiers.other.find((m: { key: string; value: number }) => m.key === 'initiative');
             if (initiativeMod && initiativeMod.value !== 0) {
                 modifiersArray.push({
-                    source: item.name !== null ? item.name : '',
+                    source: item.name,
                     value: initiativeMod.value,
-                    uuid: item.uuid !== null ? item.uuid : undefined,
+                    uuid: item.uuid,
                     icon: this.#getItemIcon(item),
                 });
             }
@@ -773,7 +773,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectFateModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        const totalMod = this.system.totalFateModifier || 0;
+        const totalMod = this.system.totalFateModifier ?? 0;
         if (totalMod !== 0) {
             modifiersArray.push({
                 source: 'Talents & Traits',
@@ -798,6 +798,6 @@ export class WH40KBaseActor extends Actor {
             armour: 'fa-solid fa-vest',
             gear: 'fa-solid fa-box',
         };
-        return iconMap[item.type] || 'fa-solid fa-circle';
+        return iconMap[item.type] ?? 'fa-solid fa-circle';
     }
 }

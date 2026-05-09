@@ -1,12 +1,5 @@
 import type { I18nKey } from '../types/i18n-keys';
 
-declare const game: {
-    i18n: {
-        localize: (key: string) => string;
-        format: (key: string, params: Record<string, string | number | boolean>) => string;
-    };
-};
-
 /**
  * Typed wrapper for `game.i18n.localize` / `game.i18n.format`. Accepts only
  * keys present in `src/lang/en.json` at build time (string-literal union
@@ -23,5 +16,9 @@ declare const game: {
  */
 export function t(key: I18nKey, params?: Record<string, string | number | boolean>): string {
     if (params === undefined) return game.i18n.localize(key);
-    return game.i18n.format(key, params);
+    // Foundry's runtime accepts string|number|boolean values; fvtt-types narrows to string.
+    // Stringify non-string values at the boundary so callers don't have to.
+    const stringParams: Record<string, string> = {};
+    for (const k of Object.keys(params)) stringParams[k] = String(params[k]);
+    return game.i18n.format(key, stringParams);
 }

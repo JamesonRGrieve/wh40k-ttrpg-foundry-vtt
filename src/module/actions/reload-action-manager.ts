@@ -100,7 +100,7 @@ export class ReloadActionManager {
         }
 
         // Check that actor has spare ammunition
-        if (actor) {
+        if (actor != null) {
             if (!this.hasSpareAmmunition(actor, weapon)) {
                 return {
                     success: false,
@@ -133,7 +133,7 @@ export class ReloadActionManager {
         }
 
         // Check action economy (only in combat if not skipped)
-        if (!skipValidation && actor) {
+        if (!skipValidation && actor != null) {
             const canAfford = await this.validateActionEconomy(actor, reloadCost);
             if (!canAfford.success) {
                 return {
@@ -147,7 +147,7 @@ export class ReloadActionManager {
         // --- Inventory-aware reload ---
         const previousValue = system.clip.value;
 
-        if (actor) {
+        if (actor != null) {
             // Step 1: Return remaining rounds to inventory
             if (previousValue > 0 && system.hasLoadedAmmo) {
                 await system._returnRoundsToInventory(actor as Parameters<WeaponData['_returnRoundsToInventory']>[0], previousValue);
@@ -171,18 +171,16 @@ export class ReloadActionManager {
                 clipMax: effectiveMax,
             });
 
-            if (!selectedAmmo) {
+            if (selectedAmmo == null) {
                 // User cancelled — restore the rounds we returned
                 if (previousValue > 0 && system.hasLoadedAmmo) {
                     // Re-deduct the rounds we just returned (reverse the return)
                     const prevAmmoItem =
                         actor.items.find((i: WH40KItem) => i.uuid === system.loadedAmmo.uuid) ??
                         actor.items.find((i: WH40KItem) => i.type === 'ammunition' && i.name === system.loadedAmmo.name);
-                    if (prevAmmoItem) {
+                    if (prevAmmoItem != null) {
                         const prevAmmoSystem = this.getAmmoSystem(prevAmmoItem);
-                        await prevAmmoItem.update({ 'system.quantity': (prevAmmoSystem.quantity ?? 0) - previousValue } as Parameters<
-                            typeof prevAmmoItem.update
-                        >[0]);
+                        await prevAmmoItem.update({ 'system.quantity': (prevAmmoSystem.quantity ?? 0) - previousValue });
                     }
                 }
                 return {
@@ -200,7 +198,7 @@ export class ReloadActionManager {
             const roundsToLoad = Math.min(newEffectiveMax, ammoQuantity);
 
             // Deduct rounds from inventory
-            await selectedAmmo.update({ 'system.quantity': ammoQuantity - roundsToLoad } as Parameters<typeof selectedAmmo.update>[0]);
+            await selectedAmmo.update({ 'system.quantity': ammoQuantity - roundsToLoad });
 
             // Update weapon — set loadedAmmo reference if different type
             const isSameAmmo = selectedAmmo.uuid === system.loadedAmmo.uuid;
@@ -243,7 +241,7 @@ export class ReloadActionManager {
         }
 
         // Fallback for unowned weapons (no actor) — simple reload without inventory
-        await weapon.update({ 'system.clip.value': effectiveMax } as Parameters<typeof weapon.update>[0]);
+        await weapon.update({ 'system.clip.value': effectiveMax });
 
         return {
             success: true,

@@ -30,7 +30,7 @@ type AttackSpecialLike = {
 
 type QualityItem = {
     name?: string;
-    items?: Iterable<unknown>;
+    items?: Iterable<WH40KItemDocument>;
     isAttackSpecial?: boolean;
     system?: WH40KItemSystemData & {
         enabled?: boolean;
@@ -48,7 +48,7 @@ type QualityActor = WH40KBaseActorDocument & {
         };
         characteristics?: {
             strength?: {
-                bonus?: number;
+                bonus: number;
             };
         };
     };
@@ -181,9 +181,9 @@ export function weaponHasQuality(weapon: QualityItem | null | undefined, quality
     }
 
     // Check embedded attackSpecial items
-    if (weapon.items) {
-        for (const item of weapon.items as Iterable<WH40KItemDocument>) {
-            if (item.isAttackSpecial && item.name?.toLowerCase() === normalizedName) {
+    if (weapon.items !== undefined) {
+        for (const item of weapon.items) {
+            if (item.isAttackSpecial && item.name.toLowerCase() === normalizedName) {
                 return true;
             }
         }
@@ -201,7 +201,6 @@ export function weaponHasQuality(weapon: QualityItem | null | undefined, quality
  * @returns {boolean} True if the quality is present in attackSpecials
  */
 export function rollDataHasQuality(rollData: WeaponRollData, qualityName: string): boolean {
-    if (rollData.attackSpecials == null) return false;
     return rollData.attackSpecials.some((s: AttackSpecialLike) => s.name?.toLowerCase() === qualityName.toLowerCase());
 }
 
@@ -218,12 +217,12 @@ export function rollDataHasQuality(rollData: WeaponRollData, qualityName: string
  */
 export function calculateQualityAttackModifiers(rollData: WeaponRollData): QualityModifierMap {
     const modifiers: QualityModifierMap = {};
-    const weapon = rollData.weapon;
-    if (!weapon) return modifiers;
+    // boundary: WeaponRollData.weapon is the real WH40KItem document; QualityItem is a structural subset
+    const weapon = rollData.weapon as unknown as QualityItem;
 
     // Accurate: +10 BS when using Aim action
     if (weaponHasQuality(weapon, 'accurate')) {
-        if ((rollData.modifiers?.aim ?? 0) > 0) {
+        if (rollData.modifiers.aim > 0) {
             modifiers['Accurate'] = WEAPON_QUALITY_EFFECTS.accurate.aimBonus;
         }
     }
@@ -458,15 +457,8 @@ export function checkRighteousFury(weapon: QualityItem | null | undefined, dieRe
  * @param {WeaponRollData} rollData - The weapon roll data
  */
 export function applyQualityModifiersToRollData(rollData: WeaponRollData): void {
-    if (rollData.weapon == null) return;
-
     // Get quality modifiers
     const qualityModifiers = calculateQualityAttackModifiers(rollData);
-
-    // Apply to specialModifiers (used in attack-specials.mjs pattern)
-    if (!rollData.specialModifiers) {
-        rollData.specialModifiers = {};
-    }
 
     Object.assign(rollData.specialModifiers, qualityModifiers);
 }

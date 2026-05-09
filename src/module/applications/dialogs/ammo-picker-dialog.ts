@@ -75,7 +75,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    #config: AmmoPickerConfig;
+    readonly #config: AmmoPickerConfig;
     #resolve: ((value: WH40KItem | null) => void) | null = null;
     #resolved = false;
 
@@ -141,7 +141,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     static async #onSelect(this: AmmoPickerDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const form = this.element.querySelector('.ammo-picker-content') as HTMLFormElement | null;
+        const form = this.element.querySelector('.ammo-picker-content');
         const selected = form?.querySelector('input[name="selectedAmmo"]:checked') as HTMLInputElement | null;
         if (!selected) return;
 

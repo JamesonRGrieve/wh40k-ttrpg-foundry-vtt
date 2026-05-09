@@ -272,7 +272,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      */
     get restrictionsLabel(): string {
         if (this.restrictions.armourTypes.size) {
-            return `Types: ${Array.from(this.restrictions.armourTypes as Set<string>).join(', ')}`;
+            return `Types: ${Array.from(this.restrictions.armourTypes).join(', ')}`;
         }
         return game.i18n.localize('WH40K.Modification.NoRestrictions');
     }
@@ -282,7 +282,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * @type {string}
      */
     get restrictionsLabelEnhanced(): string {
-        const types = Array.from(this.restrictions.armourTypes as Set<string>);
+        const types = Array.from(this.restrictions.armourTypes);
         if (!types.length) return game.i18n.localize('WH40K.Modification.NoRestrictions');
         if (types.includes('any')) return game.i18n.localize('WH40K.Modification.AnyArmour');
 

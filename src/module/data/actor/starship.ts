@@ -192,9 +192,10 @@ export default class StarshipData extends ActorDataModel {
      * Called by the Document after items are ready.
      */
     prepareEmbeddedData(): void {
-        const actor = this.parent;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.items collection
+        const actor = this.parent as { items?: Iterable<unknown> } | null | undefined;
         if (actor === null || actor === undefined) return;
-        const items = (actor as { items?: Iterable<unknown> }).items;
+        const items = actor.items;
         if (items === undefined) return;
 
         // Calculate power and space from components
@@ -324,6 +325,7 @@ export default class StarshipData extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry getRollData() returns dynamic shorthand keys
     getRollData(): Record<string, unknown> {
         const data = super.getRollData();
 

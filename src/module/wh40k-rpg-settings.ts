@@ -17,8 +17,7 @@ export class WH40KSettings {
     /** Integer offset added to the 20-point characteristic baseline during character generation. Defaults to 0. */
     static getCharacteristicOffset(): number {
         try {
-            const value = game.settings?.get?.(SYSTEM_ID, WH40KSettings.SETTINGS.characteristicOffset);
-            const n = Number(value);
+            const n = Number(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.characteristicOffset));
             return Number.isFinite(n) ? Math.trunc(n) : 0;
         } catch {
             return 0;
@@ -33,8 +32,7 @@ export class WH40KSettings {
     /** Current DH2e ruleset (raw vs homebrew). Safe to call before setting is registered (returns homebrew). */
     static getRuleset(): DH2Ruleset {
         try {
-            const value = game.settings?.get?.(SYSTEM_ID, WH40KSettings.SETTINGS.dh2Ruleset);
-            return value === 'raw' ? 'raw' : 'homebrew';
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.dh2Ruleset) === 'raw' ? 'raw' : 'homebrew';
         } catch {
             return 'homebrew';
         }
@@ -44,7 +42,7 @@ export class WH40KSettings {
         return WH40KSettings.getRuleset() === 'homebrew';
     }
 
-    static registerSettings() {
+    static registerSettings(): void {
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, {
             name: 'World Version',
             hint: 'Used to handle data migration during system upgrades.',

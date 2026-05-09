@@ -1,12 +1,38 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 
+/** Per-grant `applied` map values are grant-specific; opaque at base level. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: each grant subclass defines its own applied shape
+export type GrantAppliedEntry = unknown;
+
+/** Options accepted by {@link BaseGrantData.apply}. */
+export interface GrantApplyOptions {
+    /** When true, skip persistence; only compute the would-be result. */
+    dryRun?: boolean;
+    /** When true, this is a restore from a previously reversed grant. */
+    restore?: boolean;
+    /** Recursion depth, used by GrantsManager to prevent infinite item-grant chains. */
+    depth?: number;
+}
+
+/** Module-flag payload attached to granted items so reversal can find them. */
+export interface GrantFlags {
+    'wh40k-rpg': {
+        sourceId: string;
+        grantId: string;
+        grantType: string;
+        grantedBy: string | null | undefined;
+        grantedById: string | null | undefined;
+        autoGranted: boolean;
+    };
+}
+
 /**
  * Result of applying a grant to an actor.
  */
 export interface GrantApplicationResult {
     success: boolean;
-    applied: Record<string, unknown>;
+    applied: Record<string, GrantAppliedEntry>;
     notifications: string[];
     errors: string[];
 }
@@ -28,10 +54,8 @@ export interface GrantSummary {
 /**
  * Data needed to restore a grant.
  */
-export interface GrantRestoreData {
-    uuid: string;
-    [key: string]: unknown;
-}
+// eslint-disable-next-line no-restricted-syntax -- boundary: grant restore payload from item flags
+export type GrantRestoreData = { uuid?: string } & Record<string, unknown>;
 
 /**
  * Base DataModel for all grant types.
@@ -43,7 +67,7 @@ export interface GrantRestoreData {
  *
  * @abstract
  */
-export default class BaseGrantData extends foundry.abstract.DataModel<Record<string, foundry.data.fields.DataField.Any>, any> {
+export default class BaseGrantData extends foundry.abstract.DataModel<Record<string, foundry.data.fields.DataField.Any>, foundry.abstract.DataModel.Any> {
     declare _id: string;
     declare type: string;
     declare optional: boolean;
@@ -88,9 +112,9 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
             // Grant type identifier
             type: new fields.StringField({
                 required: true,
-                initial: () => (this as typeof BaseGrantData).TYPE,
-                validate: (v: string) => v === (this as typeof BaseGrantData).TYPE,
-                validationError: `Type must be "${(this as typeof BaseGrantData).TYPE}"`,
+                initial: () => this.TYPE,
+                validate: (v: string) => v === this.TYPE,
+                validationError: `Type must be "${this.TYPE}"`,
             }),
 
             // Optional flag - can player skip this grant?
@@ -113,7 +137,8 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      * @type {WH40KItem|null}
      */
     get item(): WH40KItem | null {
-        return (this.parent as { parent: WH40KItem })?.parent ?? null;
+        const parent = this.parent as { parent?: WH40KItem } | null;
+        return parent?.parent ?? null;
     }
 
     /**
@@ -121,7 +146,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      * @type {WH40KBaseActor|null}
      */
     get actor(): WH40KBaseActor | null {
-        return (this.item?.actor as WH40KBaseActor | null | undefined) ?? null;
+        return this.item?.actor ?? null;
     }
 
     /**
@@ -130,7 +155,8 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      */
     get displayLabel(): string {
         const ctor = this.constructor as typeof BaseGrantData;
-        return this.label || game.i18n.localize(ctor.typeLabel);
+        if (this.label !== undefined && this.label !== '') return this.label;
+        return game.i18n.localize(ctor.typeLabel);
     }
 
     /* -------------------------------------------- */
@@ -155,13 +181,9 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      * @param {boolean} [options.dryRun=false]
      * @returns {Promise<GrantApplicationResult>}
      */
-    async apply(
-        actor: WH40KBaseActor,
-        data: GrantRestoreData = {} as GrantRestoreData,
-        options: Record<string, unknown> = {},
-    ): Promise<GrantApplicationResult> {
+    async apply(actor: WH40KBaseActor | null, data: GrantRestoreData = {}, options: GrantApplyOptions = {}): Promise<GrantApplicationResult> {
         const result = this._initResult();
-        if (!actor) {
+        if (actor === null) {
             result.success = false;
             result.errors.push('No actor provided');
             return result;
@@ -180,7 +202,8 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      * @protected
      * @abstract
      */
-    async _applyGrant(actor: WH40KBaseActor, data: GrantRestoreData, options: Record<string, unknown>, result: GrantApplicationResult): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/require-await -- abstract; subclasses await
+    async _applyGrant(actor: WH40KBaseActor, data: GrantRestoreData, options: GrantApplyOptions, result: GrantApplicationResult): Promise<void> {
         throw new Error(`${this.constructor.name} must implement _applyGrant()`);
     }
 
@@ -191,18 +214,17 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      * @returns {Promise<object>} Data needed to restore the grant
      * @abstract
      */
-    // eslint-disable-next-line @typescript-eslint/require-await
-    async reverse(actor: WH40KBaseActor, appliedState: Record<string, any>): Promise<any> {
+    /* eslint-disable-next-line @typescript-eslint/require-await, no-restricted-syntax -- abstract; subclass-specific reverse return */
+    async reverse(actor: WH40KBaseActor, appliedState: Record<string, GrantAppliedEntry>): Promise<unknown> {
         throw new Error(`${this.constructor.name} must implement reverse()`);
     }
 
     /**
      * Restore a previously reversed grant.
-     * @param {WH40KBaseActor} actor - The actor to restore the grant to
-     * @param {object} restoreData - Data returned from reverse()
-     * @returns {Promise<GrantApplicationResult>}
+     * @param actor - The actor to restore the grant to
+     * @param restoreData - Data returned from reverse()
      */
-    async restore(actor: WH40KBaseActor, restoreData: any): Promise<GrantApplicationResult> {
+    async restore(actor: WH40KBaseActor, restoreData: GrantRestoreData): Promise<GrantApplicationResult> {
         return this.apply(actor, restoreData, { restore: true });
     }
 
@@ -213,8 +235,9 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      * @param {object} options
      * @protected
      */
-    async _applyUpdates(actor: WH40KBaseActor, updates: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
-        if (!options.dryRun && Object.keys(updates).length > 0) {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
+    async _applyUpdates(actor: WH40KBaseActor, updates: Record<string, unknown>, options: GrantApplyOptions): Promise<void> {
+        if (options.dryRun !== true && Object.keys(updates).length > 0) {
             await actor.update(updates);
         }
     }
@@ -223,7 +246,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      * Check if this grant can be automatically applied without user interaction.
      * @returns {object|false} Data to auto-apply, or false if user input needed
      */
-    getAutomaticValue(): Record<string, unknown> | false {
+    getAutomaticValue(): GrantRestoreData | false {
         if (this.optional) return false;
         return {};
     }
@@ -266,7 +289,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      * @returns {object}
      * @protected
      */
-    _createGrantFlags(sourceUuid: string): Record<string, unknown> {
+    _createGrantFlags(sourceUuid: string): GrantFlags {
         const ctor = this.constructor as typeof BaseGrantData;
         return {
             'wh40k-rpg': {
@@ -287,9 +310,10 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      * @protected
      */
     async _fetchItem(uuid: string): Promise<WH40KItem | null> {
-        if (!uuid) return null;
+        if (uuid === '') return null;
         try {
-            return (await fromUuid(uuid)) as WH40KItem | null;
+            const doc = await fromUuid(uuid);
+            return (doc as WH40KItem | null | undefined) ?? null;
         } catch (err) {
             console.error(`BaseGrantData: Failed to fetch item ${uuid}:`, err);
             return null;

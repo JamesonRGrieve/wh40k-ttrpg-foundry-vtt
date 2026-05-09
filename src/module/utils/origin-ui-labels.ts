@@ -69,7 +69,8 @@ export function getTrainingLabel(level: string, systemConfig?: BaseSystemConfig)
         experienced: 'Experienced',
         veteran: 'Veteran',
     };
-    return GENERIC_LABELS[level] ?? level ?? 'Trained';
+    if (level in GENERIC_LABELS) return GENERIC_LABELS[level];
+    return level !== '' ? level : 'Trained';
 }
 
 /* -------------------------------------------- */

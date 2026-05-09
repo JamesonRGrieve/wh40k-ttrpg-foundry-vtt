@@ -9,9 +9,9 @@
  * - Translucent gothic styling
  */
 
-import BaseItemSheet from './base-item-sheet.ts';
 import type TalentData from '../../data/item/talent.ts';
 import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
+import BaseItemSheet from './base-item-sheet.ts';
 
 /** TalentData with mixin-inherited fields visible to the type system. */
 type TalentSystem = TalentData & Pick<ModifiersTemplate, 'modifiers'> & { source: { book?: string; page?: string } | string | undefined };
@@ -180,10 +180,10 @@ export default class TalentSheet extends BaseItemSheet {
             hasText: !!(prereqs.text && prereqs.text.trim()),
             characteristics: characteristicReqs,
             hasCharacteristics: characteristicReqs.length > 0,
-            skills: (skills as string[]).filter((s: string) => s),
-            hasSkills: (skills as string[]).filter((s: string) => s).length > 0,
-            talents: (talents as string[]).filter((t: string) => t),
-            hasTalents: (talents as string[]).filter((t: string) => t).length > 0,
+            skills: skills.filter((s: string) => s),
+            hasSkills: skills.filter((s: string) => s).length > 0,
+            talents: talents.filter((t: string) => t),
+            hasTalents: talents.filter((t: string) => t).length > 0,
             hasAny: system.hasPrerequisites ?? false,
             label: system.prerequisitesLabel || '',
         };
@@ -229,7 +229,7 @@ export default class TalentSheet extends BaseItemSheet {
                 key,
                 label: this._formatCombatLabel(key),
                 value,
-                positive: (value as number) > 0,
+                positive: value > 0,
             }));
 
         // Resource modifiers
@@ -240,7 +240,7 @@ export default class TalentSheet extends BaseItemSheet {
                 key,
                 label: this._formatResourceLabel(key),
                 value,
-                positive: (value as number) > 0,
+                positive: value > 0,
             }));
 
         // Other modifiers
@@ -275,7 +275,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _prepareGrantsData(system: TalentSystem): Record<string, unknown> {
-        const grants = system.grants || ({ skills: [], talents: [], traits: [], specialAbilities: [] } as TalentData['grants']);
+        const grants = system.grants || { skills: [], talents: [], traits: [], specialAbilities: [] };
 
         const skills = (grants.skills || []).map((skill: { name: string; specialization: string; level: string }) => ({
             name: skill.name,
@@ -328,7 +328,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _prepareSituationalData(system: TalentSystem): Record<string, unknown> {
-        const situational = system.modifiers?.situational || ({ characteristics: [], skills: [], combat: [] } as TalentSystem['modifiers']['situational']);
+        const situational = system.modifiers?.situational || { characteristics: [], skills: [], combat: [] };
 
         const characteristics = (situational.characteristics || []).map((mod: { key: string; value: number; condition: string }) => ({
             key: mod.key,
@@ -379,7 +379,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _prepareRollConfigData(system: TalentSystem): Record<string, unknown> {
-        const config = system.rollConfig || ({ characteristic: '', skill: '', modifier: 0, description: '' } as TalentData['rollConfig']);
+        const config = system.rollConfig || { characteristic: '', skill: '', modifier: 0, description: '' };
         return {
             characteristic: config.characteristic || '',
             characteristicLabel: config.characteristic ? this._getCharacteristicLabel(config.characteristic) : '',

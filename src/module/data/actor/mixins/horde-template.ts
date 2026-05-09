@@ -171,7 +171,7 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
             return (await this.parentActor.update({
                 'system.horde.magnitude.current': newMagnitude,
                 'system.horde.magnitudeLog': [...this.horde.magnitudeLog, logEntry],
-            } as Record<string, unknown>)) as WH40KBaseActor;
+            })) as WH40KBaseActor;
         }
 
         /**
@@ -193,17 +193,17 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
             return (await this.parentActor.update({
                 'system.horde.magnitude.current': newMagnitude,
                 'system.horde.magnitudeLog': [...this.horde.magnitudeLog, logEntry],
-            } as Record<string, unknown>)) as WH40KBaseActor;
+            })) as WH40KBaseActor;
         }
 
         /**
          * Toggle horde mode on/off.
          * @returns {Promise<WH40KBaseActor>} The updated actor.
          */
-        toggleHordeMode(): Promise<WH40KBaseActor> {
+        async toggleHordeMode(): Promise<WH40KBaseActor> {
             return this.parentActor.update({
                 'system.horde.enabled': !this.horde.enabled,
-            } as Record<string, unknown>) as Promise<WH40KBaseActor>;
+            }) as Promise<WH40KBaseActor>;
         }
 
         /**

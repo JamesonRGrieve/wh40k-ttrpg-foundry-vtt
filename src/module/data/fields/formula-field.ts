@@ -4,6 +4,7 @@
  */
 export default class FormulaField extends foundry.data.fields.StringField {
     /** @inheritdoc */
+    /* eslint-disable-next-line @typescript-eslint/naming-convention, no-restricted-syntax -- boundary: Foundry DataField static `_defaults` shape */
     static get _defaults(): Record<string, unknown> {
         return foundry.utils.mergeObject(super._defaults, {
             deterministic: false,
@@ -42,9 +43,14 @@ export default class FormulaField extends foundry.data.fields.StringField {
      * @param {object} data   Roll data for formula evaluation.
      * @returns {number|null}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry roll-data payload
+    /* eslint-disable no-restricted-syntax -- boundary: Foundry roll-data payload + DataField parent/name introspection */
     evaluate(data: Record<string, unknown> = {}): number | null {
-        const value = (this as any).parent?.[(this as any).name];
-        if (!value) return null;
+        const ctx = this as unknown as { parent?: Record<string, unknown>; name?: string };
+        /* eslint-enable no-restricted-syntax */
+        const fieldName = ctx.name;
+        const value = fieldName !== undefined ? (ctx.parent?.[fieldName] as string | undefined) : undefined;
+        if (value === undefined || value === '') return null;
 
         try {
             const roll = Roll.create(value, data);

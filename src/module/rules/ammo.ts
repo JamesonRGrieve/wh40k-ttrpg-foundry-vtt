@@ -8,7 +8,7 @@ import type { WH40KItemDocument } from '../types/global.d.ts';
 
 type AttackSpecialEffect = {
     remove?: string;
-    add?: { name: string; level: unknown };
+    add?: { name: string; level: number | boolean };
 };
 
 type HitEffect = {
@@ -43,7 +43,7 @@ type AmmoItem = WH40KItemDocument & {
 
 type AmmoRollData = WeaponRollData & {
     weapon: AmmoItem;
-    attackSpecials: Array<{ name: string; level?: unknown }>;
+    attackSpecials: Array<{ name: string; level?: number | boolean }>;
 };
 
 type AmmoActionData = ActionData & {
@@ -63,7 +63,7 @@ type AmmoHit = {
  * All ammo type effects in one place.
  * To add a new ammo type, add a single entry here — no function changes needed.
  */
-const AMMO_EFFECTS: Record<string, AmmoEffects> = {
+const AMMO_EFFECTS: Partial<Record<string, AmmoEffects>> = {
     'Amputator Shells': {
         damageModifiers: { 'amputator shells': 2 },
     },
@@ -108,7 +108,8 @@ const AMMO_EFFECTS: Record<string, AmmoEffects> = {
 export function ammoText(item: AmmoItem): string | undefined {
     game.wh40k.log('ammoText', item);
     if (item.usesAmmo) {
-        const name = item.system.loadedAmmo?.name || 'Standard';
+        const loadedName = item.system.loadedAmmo?.name;
+        const name = loadedName !== undefined && loadedName !== '' ? loadedName : 'Standard';
         game.wh40k.log('ammoName', name);
         return `${name} (${item.system.clip.value}/${item.system.effectiveClipMax})`;
     }
@@ -116,8 +117,7 @@ export function ammoText(item: AmmoItem): string | undefined {
 }
 
 export async function useAmmo(actionData: AmmoActionData): Promise<void> {
-    const actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
-    if (!actionItem) return;
+    const actionItem = actionData.rollData.weapon;
     if (actionItem.usesAmmo) {
         let newValue = (actionItem.system.clip.value -= actionData.rollData.ammoUsed);
         // Reset to 0 if there was a problem
@@ -127,20 +127,20 @@ export async function useAmmo(actionData: AmmoActionData): Promise<void> {
 
         await actionItem.update({
             'system.clip.value': newValue,
-        } as Record<string, unknown>);
+        });
 
         if (actionItem.system.clip.value === 0) {
-            ui.notifications.warn(`Clip is now empty. Ammo should be removed or reloaded.`);
+            ui.notifications.warn(game.i18n.localize('WH40K.AMMO.ClipEmpty'));
         }
     }
 }
 
 export async function refundAmmo(actionData: AmmoActionData): Promise<void> {
-    const actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
+    const actionItem = actionData.rollData.weapon;
     if (actionItem.usesAmmo) {
         await actionItem.update({
             'system.clip.value': actionItem.system.clip.value + actionData.rollData.ammoUsed,
-        } as Record<string, unknown>);
+        });
     }
 }
 
@@ -153,7 +153,7 @@ export async function refundAmmo(actionData: AmmoActionData): Promise<void> {
  */
 export function calculateAmmoAttackBonuses(rollData: AmmoRollData): void {
     const ammoName = rollData.weapon.system.loadedAmmo?.name;
-    if (!ammoName) return;
+    if (ammoName === undefined || ammoName === '') return;
     const effects = AMMO_EFFECTS[ammoName];
     if (!effects?.attackBonuses) return;
     for (const [key, value] of Object.entries(effects.attackBonuses)) {
@@ -163,13 +163,13 @@ export function calculateAmmoAttackBonuses(rollData: AmmoRollData): void {
 
 export function calculateAmmoAttackSpecials(rollData: AmmoRollData): void {
     const ammoName = rollData.weapon.system.loadedAmmo?.name;
-    if (!ammoName) return;
+    if (ammoName === undefined || ammoName === '') return;
     game.wh40k.log('calculateAmmoAttackSpecials', ammoName);
     const effects = AMMO_EFFECTS[ammoName];
     if (!effects?.attackSpecials) return;
     for (const spec of effects.attackSpecials) {
-        if (spec.remove) rollData.attackSpecials.findSplice((i: { name: string }) => i.name === spec.remove);
-        if (spec.add) rollData.attackSpecials.push(spec.add);
+        if (spec.remove !== undefined && spec.remove !== '') rollData.attackSpecials.findSplice((i: { name: string }) => i.name === spec.remove);
+        if (spec.add !== undefined) rollData.attackSpecials.push(spec.add);
     }
 }
 
@@ -179,13 +179,13 @@ export function calculateAmmoAttackSpecials(rollData: AmmoRollData): void {
 
 export function calculateAmmoSpecials(actionData: AmmoActionData, hit: AmmoHit): void {
     const ammoName = actionData.rollData.weapon.system.loadedAmmo?.name;
-    if (!ammoName) return;
+    if (ammoName === undefined || ammoName === '') return;
     const effects = AMMO_EFFECTS[ammoName];
     if (!effects) return;
-    if (effects.hitEffects) {
+    if (effects.hitEffects !== undefined) {
         for (const e of effects.hitEffects) hit.addEffect(e.key, e.description);
     }
-    if (effects.hitDamageType) hit.damageType = effects.hitDamageType;
+    if (effects.hitDamageType !== undefined && effects.hitDamageType !== '') hit.damageType = effects.hitDamageType;
 }
 
 /**
@@ -194,7 +194,7 @@ export function calculateAmmoSpecials(actionData: AmmoActionData, hit: AmmoHit):
  */
 export function calculateAmmoDamageBonuses(actionData: AmmoActionData, hit: AmmoHit): void {
     const ammoName = actionData.rollData.weapon.system.loadedAmmo?.name;
-    if (!ammoName) return;
+    if (ammoName === undefined || ammoName === '') return;
     const effects = AMMO_EFFECTS[ammoName];
     if (!effects?.damageModifiers) return;
     for (const [key, value] of Object.entries(effects.damageModifiers)) {
@@ -208,7 +208,7 @@ export function calculateAmmoDamageBonuses(actionData: AmmoActionData, hit: Ammo
  */
 export function calculateAmmoPenetrationBonuses(actionData: AmmoActionData, hit: AmmoHit): void {
     const ammoName = actionData.rollData.weapon.system.loadedAmmo?.name;
-    if (!ammoName) return;
+    if (ammoName === undefined || ammoName === '') return;
     const effects = AMMO_EFFECTS[ammoName];
     if (!effects?.penetrationModifiers) return;
     for (const [key, value] of Object.entries(effects.penetrationModifiers)) {
@@ -253,7 +253,7 @@ export function calculateAmmoInformation(rollData: AmmoRollData): void {
         const rateOfFire = rollData.weapon.system.attack?.rateOfFire;
         if (rollData.action === 'Full Auto Burst') {
             fireRate = rateOfFire?.full ?? 0;
-        } else if (rollData.action === 'Semi-Auto Burst') {
+        } else {
             fireRate = rateOfFire?.semi ?? 0;
         }
         if (rollData.hasAttackSpecial('Storm')) {
@@ -268,7 +268,7 @@ export function calculateAmmoInformation(rollData: AmmoRollData): void {
 
     // Ammunition fire rate override
     const ammoName = rollData.weapon.system.loadedAmmo?.name;
-    if (ammoName) {
+    if (ammoName !== undefined && ammoName !== '') {
         const effects = AMMO_EFFECTS[ammoName];
         if (effects?.fireRate !== undefined) fireRate = effects.fireRate;
     }

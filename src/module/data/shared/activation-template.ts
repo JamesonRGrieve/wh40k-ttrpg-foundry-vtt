@@ -9,7 +9,7 @@ export default class ActivationTemplate extends SystemDataModel {
     declare activation: { type: string; cost: number; condition: string };
     declare target: { type: string; value: number; units: string; width: number; length: number };
     declare duration: { value: number; units: string; sustained: boolean };
-    declare uses: { value: number; max: number; per: string; recovery: string };
+    declare uses: { value: number | null; max: number | null; per: string; recovery: string };
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -66,8 +66,9 @@ export default class ActivationTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source data
+    static override _migrateData(source: Record<string, unknown>): void {
+        super._migrateData(source);
     }
 
     /* -------------------------------------------- */
@@ -80,8 +81,9 @@ export default class ActivationTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
-        super._cleanData?.(source, options);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry _cleanData source data
+    static override _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
+        super._cleanData(source, options);
     }
 
     /* -------------------------------------------- */
@@ -103,7 +105,7 @@ export default class ActivationTemplate extends SystemDataModel {
     get targetLabel(): string {
         const target = this.target;
         if (target.type === 'self') return game.i18n.localize('WH40K.Target.Self');
-        if (target.value) {
+        if (target.value > 0) {
             return `${target.value}${target.units} ${game.i18n.localize(`WH40K.Target.${target.type.capitalize()}`)}`;
         }
         return game.i18n.localize(`WH40K.Target.${target.type.capitalize()}`);
@@ -119,7 +121,7 @@ export default class ActivationTemplate extends SystemDataModel {
         const duration = this.duration;
         if (duration.units === 'instant') return game.i18n.localize('WH40K.Duration.Instant');
         if (duration.sustained) return game.i18n.localize('WH40K.Duration.Sustained');
-        if (duration.value) {
+        if (duration.value > 0) {
             return `${duration.value} ${game.i18n.localize(`WH40K.Duration.${duration.units.capitalize()}`)}`;
         }
         return game.i18n.localize(`WH40K.Duration.${duration.units.capitalize()}`);
@@ -131,7 +133,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * Does this item have limited uses?
      * @type {boolean}
      */
-    get hasLimitedUses() {
+    get hasLimitedUses(): boolean {
         return this.uses.max !== null && this.uses.max > 0;
     }
 
@@ -141,8 +143,8 @@ export default class ActivationTemplate extends SystemDataModel {
      * Are uses exhausted?
      * @type {boolean}
      */
-    get usesExhausted() {
-        return this.hasLimitedUses && this.uses.value <= 0;
+    get usesExhausted(): boolean {
+        return this.hasLimitedUses && (this.uses.value ?? 0) <= 0;
     }
 
     /* -------------------------------------------- */
@@ -151,10 +153,13 @@ export default class ActivationTemplate extends SystemDataModel {
      * Consume a use.
      * @returns {Promise<Item>}
      */
+    /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update return type */
     consumeUse(): unknown {
         if (!this.hasLimitedUses) return this.parent;
         const newValue = Math.max(0, (this.uses.value ?? 0) - 1);
-        return this.parent?.update({ 'system.uses.value': newValue });
+        /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry parent document update API */
+        const parent = this.parent as { update?: (data: Record<string, unknown>) => Promise<unknown> } | undefined;
+        return parent?.update?.({ 'system.uses.value': newValue });
     }
 
     /* -------------------------------------------- */
@@ -164,11 +169,14 @@ export default class ActivationTemplate extends SystemDataModel {
      * @param {number} [amount=1]   Number of uses to recover.
      * @returns {Promise<Item>}
      */
+    /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update return type */
     recoverUses(amount = 1): unknown {
         if (!this.hasLimitedUses) return this.parent;
         const max = this.uses.max ?? 0;
         const newValue = Math.min(max, (this.uses.value ?? 0) + amount);
-        return this.parent?.update({ 'system.uses.value': newValue });
+        /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry parent document update API */
+        const parent = this.parent as { update?: (data: Record<string, unknown>) => Promise<unknown> } | undefined;
+        return parent?.update?.({ 'system.uses.value': newValue });
     }
 
     /* -------------------------------------------- */

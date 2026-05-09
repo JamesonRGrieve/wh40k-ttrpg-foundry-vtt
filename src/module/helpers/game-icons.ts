@@ -170,7 +170,7 @@ export function getColoredIconUrl(iconPath: string, fgColor = 'ffffff', bgColor:
     const parts = iconPath.split('/');
     if (parts.length === 2) {
         const [author, name] = parts;
-        const bg = bgColor || '000000';
+        const bg = bgColor !== null && bgColor !== '' ? bgColor : '000000';
         return `https://game-icons.net/icons/${bg}/${fgColor}/${author}/${name}.svg`;
     }
     return getIconUrl(iconPath);
@@ -228,7 +228,7 @@ export async function preloadCommonIcons(): Promise<void> {
 
     // Preload by creating Image objects
     return Promise.all(
-        uniqueIcons.map((iconPath) => {
+        uniqueIcons.map(async (iconPath) => {
             return new Promise((resolve) => {
                 const img = new Image();
                 img.onload = resolve;

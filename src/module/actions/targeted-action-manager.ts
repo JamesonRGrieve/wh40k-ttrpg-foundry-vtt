@@ -1,10 +1,10 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import type { WH40KItem } from '../documents/item.ts';
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.ts';
 import { calculateTokenDistance } from '../utils/range-calculator.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
-import { WH40KBaseActor } from '../documents/base-actor.ts';
-import { WH40KItem } from '../documents/item.ts';
 
 /**
  * Interface for combined source and target data
@@ -100,7 +100,7 @@ export class TargetedActionManager {
                 ui.notifications.warn('You need to target a single token! Multi-token targeting is not yet added.');
                 return undefined;
             }
-            targetToken = [...targetedObjects.values()][0] as Token;
+            targetToken = [...targetedObjects.values()][0];
         }
 
         if (targetToken && !targetToken.actor) {

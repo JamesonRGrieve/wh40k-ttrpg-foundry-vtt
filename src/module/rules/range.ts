@@ -1,5 +1,5 @@
-import { calculateRangeModifier } from '../utils/range-calculator.ts';
 import type { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.ts';
+import { calculateRangeModifier } from '../utils/range-calculator.ts';
 
 type RangeAnnotatedRollData = RollData & {
     rangeBracket?: string;
@@ -110,7 +110,7 @@ async function calculatePsychicAbilityMaxRange(rollData: PsychicRollData): Promi
  */
 function calculateRangeNameAndBonus(rollData: RollData): void {
     const mutableRollData = rollData as RangeAnnotatedRollData;
-    if (rollData.weapon && rollData.weapon.isMelee) {
+    if (rollData.weapon?.isMelee) {
         rollData.rangeName = 'Melee';
         rollData.rangeBonus = 0;
         mutableRollData.rangeBracket = 'melee';
@@ -122,7 +122,7 @@ function calculateRangeNameAndBonus(rollData: RollData): void {
     const maxRange = rollData.maxRange ?? 0;
 
     // Get weapon qualities if available
-    const weaponQualities = ((rollData.weapon?.system as WeaponRangeSystem | undefined)?.effectiveSpecial ?? new Set<string>()) as Set<string>;
+    const weaponQualities = (rollData.weapon?.system as WeaponRangeSystem | undefined)?.effectiveSpecial ?? new Set<string>();
 
     // Use new range calculator
     const rangeInfo = calculateRangeModifier({

@@ -172,7 +172,7 @@ export default class EffectCreationDialog extends DialogV2 {
         const conditionId = target.dataset.conditionId;
         if (!conditionId) return;
 
-        const form = this.element.querySelector('form') as HTMLFormElement | null;
+        const form = this.element.querySelector('form');
         if (form) {
             (form.elements.namedItem('effectType') as HTMLInputElement).value = 'condition';
             (form.elements.namedItem('conditionId') as HTMLInputElement).value = conditionId;
@@ -221,7 +221,7 @@ export default class EffectCreationDialog extends DialogV2 {
 
         // Create the effect
         const effects = await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData as Record<string, unknown> & { name: string }]);
-        return this.resolve(effects[0] as ActiveEffect);
+        return this.resolve(effects[0]);
     }
 
     /* -------------------------------------------- */

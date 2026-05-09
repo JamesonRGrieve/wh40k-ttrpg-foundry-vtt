@@ -218,7 +218,7 @@ export class TransactionManager {
         const availableResource = normalizeInt((buyer.system as Record<string, unknown> | undefined)?.[resourceType] ?? 0, 0);
 
         return {
-            mode: profile.mode as Exclude<TransactionMode, 'none'>,
+            mode: profile.mode,
             buyer,
             source,
             item,
@@ -315,7 +315,7 @@ export class TransactionManager {
     }
 
     static async #onSocketMessage(payload: Record<string, unknown>): Promise<void> {
-        if (!payload || payload.scope !== 'transactions') return;
+        if (payload?.scope !== 'transactions') return;
 
         if (payload.action === REQUEST_APPROVAL && payload.targetUserId === game.user.id && game.user.isGM) {
             await TransactionManager.#handleApprovalRequest(payload.request as TransactionRequestPayload);
@@ -413,7 +413,7 @@ export class TransactionManager {
         if (stackTarget && hasQuantityField) {
             await stackTarget.update({
                 'system.quantity': normalizeInt((stackTarget.system as Record<string, unknown> | undefined)?.quantity ?? 0, 0) + quote.quantity,
-            } as Record<string, unknown>);
+            });
         } else {
             await quote.buyer.createEmbeddedDocuments('Item', [itemData] as unknown as Parameters<typeof quote.buyer.createEmbeddedDocuments<'Item'>>[1]);
         }
@@ -428,7 +428,7 @@ export class TransactionManager {
 
         await quote.item.update({
             'system.quantity': sourceQuantity - quote.quantity,
-        } as Record<string, unknown>);
+        });
     }
 
     static #findStackTarget(actor: Actor.Implementation, sourceItem: Item.Implementation): Item.Implementation | undefined {

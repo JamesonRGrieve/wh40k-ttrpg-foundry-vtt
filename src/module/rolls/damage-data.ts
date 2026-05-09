@@ -120,11 +120,11 @@ export class Hit {
     }
 
     _totalDamage() {
-        this.totalDamage = this.damage + (Object.values(this.modifiers) as number[]).reduce((a, b) => a + b, 0);
+        this.totalDamage = this.damage + Object.values(this.modifiers).reduce((a, b) => a + b, 0);
     }
 
     _totalPenetration() {
-        this.totalPenetration = this.penetration + (Object.values(this.penetrationModifiers) as number[]).reduce((a, b) => a + b, 0);
+        this.totalPenetration = this.penetration + Object.values(this.penetrationModifiers).reduce((a, b) => a + b, 0);
     }
 
     /**
@@ -294,7 +294,7 @@ export class Hit {
         const exoticModifiers = calculateExoticQualityDamageModifiers({
             weapon: actionItem as unknown as Parameters<typeof calculateExoticQualityDamageModifiers>[0]['weapon'],
             actor: sourceActor as unknown as Parameters<typeof calculateExoticQualityDamageModifiers>[0]['actor'],
-            target: attackData.damageData?.targetActor as unknown as Parameters<typeof calculateExoticQualityDamageModifiers>[0]['target'],
+            target: attackData.damageData?.targetActor as Parameters<typeof calculateExoticQualityDamageModifiers>[0]['target'],
         });
 
         // Handle exotic modifiers - most are numeric, but Daemonbane is a dice formula

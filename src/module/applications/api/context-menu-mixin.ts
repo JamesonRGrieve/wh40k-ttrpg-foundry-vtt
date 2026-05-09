@@ -10,7 +10,9 @@ import type { WH40KNPC } from '../../documents/npc.ts';
 import type { WH40KCharacteristic, WH40KSkill } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor, ContextMenuEntryLike, DialogV2Like, FoundryApplicationUXLike } from './application-types.ts';
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications.ux not on shipped types
 const applicationUX = (foundry.applications as unknown as { ux: FoundryApplicationUXLike }).ux;
+// eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 not on shipped foundry.applications.api types
 const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2Like } }).api.DialogV2;
 
 type ActorType = WH40KAcolyte | WH40KNPC | WH40KBaseActor;
@@ -21,13 +23,20 @@ type ActorType = WH40KAcolyte | WH40KNPC | WH40KBaseActor;
  */
 export class WH40KContextMenu extends applicationUX.ContextMenu {
     constructor(...args: ConstructorParameters<typeof applicationUX.ContextMenu>) {
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- boundary: ContextMenu super-call deprecated jQuery default; we always pass jQuery: false at call sites
         super(...args);
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ContextMenu options record varies between V13/V14 typings
     _setPosition(html: HTMLElement, target: HTMLElement, options: Record<string, unknown> = {}): void {
         html.classList.add('wh40k-context-menu');
-        return (this as any)._setFixedPosition(html, target, options);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _setFixedPosition is V13 internal, not on shipped types
+        return (this as unknown as { _setFixedPosition: (h: HTMLElement, t: HTMLElement, o: Record<string, unknown>) => void })._setFixedPosition(
+            html,
+            target,
+            options,
+        );
     }
 
     /**
@@ -61,8 +70,9 @@ export class WH40KContextMenu extends applicationUX.ContextMenu {
  * @returns {any}
  * @mixin
  */
-export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
+export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): T {
     class ContextMenuApplication extends Base {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixin requirement
         constructor(...args: any[]) {
             super(...args);
         }
@@ -74,6 +84,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
         /* -------------------------------------------- */
 
         /** @override */
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
         async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
@@ -141,13 +152,15 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
          */
         _getCharacteristicContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
             const charKey = target.dataset.characteristic;
-            if (charKey == null || charKey === '') return [];
-            const char = (this.actor as any).system.characteristics?.[charKey] as WH40KCharacteristic | undefined;
+            if (charKey === undefined || charKey === '') return [];
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies by gameSystem
+            const characteristics = (this.actor.system as { characteristics?: Record<string, WH40KCharacteristic> }).characteristics;
+            const char = characteristics?.[charKey];
             if (!char) return [];
 
             return [
                 {
-                    name: `Roll ${char.label || charKey} Test`,
+                    name: `Roll ${char.label !== '' ? char.label : charKey} Test`,
                     icon: '<i class="fas fa-dice-d20"></i>',
                     callback: async () => this._onCharacteristicRoll(charKey),
                 },
@@ -170,7 +183,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                     name: 'Spend XP to Advance',
                     icon: '<i class="fas fa-star"></i>',
                     callback: async () => this._onAdvanceCharacteristic(charKey),
-                    condition: () => (char.advance ?? 0) < 5,
+                    condition: () => char.advance < 5,
                 },
                 {
                     name: 'Post to Chat',
@@ -190,13 +203,15 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
          */
         _getSkillContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
             const skillKey = target.dataset.skill;
-            if (skillKey == null || skillKey === '') return [];
-            const skill = (this.actor as any).system.skills?.[skillKey] as WH40KSkill | undefined;
+            if (skillKey === undefined || skillKey === '') return [];
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies by gameSystem
+            const skills = (this.actor.system as { skills?: Record<string, WH40KSkill> }).skills;
+            const skill = skills?.[skillKey];
             if (!skill) return [];
 
             const options: ContextMenuEntryLike[] = [
                 {
-                    name: `Roll ${skill.label || skillKey} Test`,
+                    name: `Roll ${skill.label !== '' ? skill.label : skillKey} Test`,
                     icon: '<i class="fas fa-dice-d20"></i>',
                     callback: async () => this._onSkillRoll(skillKey),
                 },
@@ -251,7 +266,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
          */
         _getItemContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
             const itemId = target.dataset.itemId;
-            if (itemId == null || itemId === '') return [];
+            if (itemId === undefined || itemId === '') return [];
             const item = this.actor.items.get(itemId);
             if (!item) return [];
 
@@ -303,8 +318,8 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
             }
 
             // Activate/Deactivate for force fields, etc.
-            const system = item.system as { activated?: boolean };
-            const activated = system.activated;
+            const activatableSystem = item.system as { activated?: boolean };
+            const activated = activatableSystem.activated;
             if (activated !== undefined) {
                 options.push({
                     name: activated ? 'Deactivate' : 'Activate',
@@ -319,7 +334,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
                     name: 'Edit Item',
                     icon: '<i class="fas fa-edit"></i>',
                     callback: () => {
-                        item.sheet?.render(true);
+                        void item.sheet?.render(true);
                     },
                 },
                 {
@@ -380,8 +395,10 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
         /* -------------------------------------------- */
 
         async _onCharacteristicRoll(charKey: string): Promise<void> {
-            if ('rollCharacteristic' in this.actor && typeof (this.actor as any).rollCharacteristic === 'function') {
-                await (this.actor as any).rollCharacteristic(charKey);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: rollCharacteristic exists on game-system actor subclasses, not on Actor.Implementation
+            const a = this.actor as unknown as { rollCharacteristic?: (key: string) => Promise<void> };
+            if (typeof a.rollCharacteristic === 'function') {
+                await a.rollCharacteristic(charKey);
             }
         }
 
@@ -392,8 +409,9 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
         async _onAdvanceCharacteristic(charKey: string): Promise<void> {}
 
         async _postCharacteristicToChat(charKey: string, char: WH40KCharacteristic): Promise<void> {
+            const label = char.label !== '' ? char.label : charKey;
             const content = `<div class="wh40k-char-chat">
-                <strong>${char.label || charKey}</strong>: ${char.total}
+                <strong>${label}</strong>: ${char.total}
                 (Bonus: ${char.bonus})
             </div>`;
             await ChatMessage.create({
@@ -405,12 +423,18 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
         async _onEditCharacteristic(charKey: string): Promise<void> {
             const fakeTarget = document.createElement('div');
             fakeTarget.dataset.characteristic = charKey;
-            await (this.constructor as any).actions.editCharacteristic.call(this, null, fakeTarget);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: subclass action map shape varies; static action ref accessed via constructor
+            const ctor = this.constructor as unknown as {
+                actions: { editCharacteristic: (this: ContextMenuApplication, e: Event | null, t: HTMLElement) => Promise<void> };
+            };
+            await ctor.actions.editCharacteristic.call(this, null, fakeTarget);
         }
 
         async _onSkillRoll(skillKey: string): Promise<void> {
-            if ('rollSkill' in this.actor && typeof (this.actor as any).rollSkill === 'function') {
-                await (this.actor as any).rollSkill(skillKey);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: rollSkill exists on game-system actor subclasses, not on Actor.Implementation
+            const a = this.actor as unknown as { rollSkill?: (key: string) => Promise<void> };
+            if (typeof a.rollSkill === 'function') {
+                await a.rollSkill(skillKey);
             }
         }
 
@@ -419,13 +443,16 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
         async _toggleSkillTraining(skillKey: string, level: string): Promise<void> {}
 
         _showGoverningCharacteristic(skillKey: string, skill: WH40KSkill): void {
-            ui.notifications.info(`${skill.label || skillKey} is governed by ${skill.characteristic}`);
+            const label = skill.label !== '' ? skill.label : skillKey;
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Skill.GovernedBy localization key
+            ui.notifications.info(`${label} is governed by ${skill.characteristic}`);
         }
 
         async _addSkillSpecialization(skillKey: string): Promise<void> {}
 
         async _duplicateItem(item: WH40KItem): Promise<void> {
             await item.clone({ name: `${item.name} (Copy)` }, { save: true });
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Item.Duplicated localization key
             ui.notifications.info(`Duplicated ${item.name}`);
         }
 
@@ -439,6 +466,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
 
             if (confirmed) {
                 await item.delete();
+                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Item.Deleted localization key
                 ui.notifications.info(`Deleted ${item.name}`);
             }
         }
@@ -446,13 +474,13 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
         async _weaponAttack(item: WH40KItem, mode: string): Promise<void> {}
 
         async _toggleEquipped(item: WH40KItem): Promise<void> {
-            const system = item.system as Record<string, unknown>;
-            await item.update({ 'system.equipped': !(system.equipped as boolean) } as Record<string, unknown>);
+            const sys = item.system as { equipped?: boolean };
+            await item.update({ 'system.equipped': sys.equipped !== true });
         }
 
         async _toggleActivated(item: WH40KItem): Promise<void> {
-            const system = item.system as Record<string, unknown>;
-            await item.update({ 'system.activated': !(system.activated as boolean) } as Record<string, unknown>);
+            const sys = item.system as { activated?: boolean };
+            await item.update({ 'system.activated': sys.activated !== true });
         }
 
         async _spendFate(purpose: string): Promise<void> {}
@@ -466,11 +494,12 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
             });
 
             if (confirmed) {
-                const system = this.actor.system as Record<string, unknown>;
-                const fate = system.fate as Record<string, unknown> | undefined;
-                const currentTotal = (fate?.total as number) ?? 0;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system.fate shape varies by gameSystem
+                const fate = (this.actor.system as { fate?: { total?: number } }).fate;
+                const currentTotal = fate?.total ?? 0;
                 if (currentTotal > 0) {
-                    await this.actor.update({ 'system.fate.total': currentTotal - 1 } as Record<string, unknown>);
+                    await this.actor.update({ 'system.fate.total': currentTotal - 1 });
+                    // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Fate.Burned localization key
                     ui.notifications.warn('Fate Point burned! Maximum reduced permanently.');
                 }
             }

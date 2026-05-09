@@ -1,6 +1,12 @@
-import { WH40KBaseActor } from '../documents/base-actor.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 
 type StyleWithColor = { color?: PIXI.ColorSource };
+
+type RulerToken = { _plannedMovement?: unknown };
+type WH40KConfig = {
+    Token: { movement: { actions: Record<string, { teleport?: boolean } | undefined> } };
+    wh40k: { tokenRulerColors: { normal?: PIXI.ColorSource; double?: PIXI.ColorSource; triple?: PIXI.ColorSource } };
+};
 
 /**
  * Custom Token Ruler for the WH40K RPG system.
@@ -8,7 +14,7 @@ type StyleWithColor = { color?: PIXI.ColorSource };
  */
 export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.TokenRuler {
     /** @inheritDoc */
-    _getWaypointStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint) {
+    _getWaypointStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint): foundry.canvas.interaction.Ruler.WaypointStyle {
         const style = super._getWaypointStyle(waypoint);
         return this.#getSpeedBasedStyle(waypoint, style);
     }
@@ -16,7 +22,7 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
     /* -------------------------------------------- */
 
     /** @override */
-    _getSegmentStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint) {
+    _getSegmentStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint): foundry.canvas.interaction.Ruler.SegmentStyle {
         const style = super._getSegmentStyle(waypoint);
         return this.#getSpeedBasedStyle(waypoint, style);
     }
@@ -24,8 +30,8 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
     /* -------------------------------------------- */
 
     /** @override */
-    _getGridHighlightStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint, offset: foundry.grid.BaseGrid.Offset3D) {
-        const style = super._getGridHighlightStyle(waypoint, offset);
+    _getGridHighlightStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint, offset: foundry.grid.BaseGrid.Offset3D): StyleWithColor {
+        const style = super._getGridHighlightStyle(waypoint, offset) as StyleWithColor;
         return this.#getSpeedBasedStyle(waypoint, style);
     }
 
@@ -40,19 +46,21 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
      */
     #getSpeedBasedStyle<T extends StyleWithColor>(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint, style: T): T {
         // Only apply to the local user's movement
-        const token = this.token as any;
-        if (!(game.user?.id && token?._plannedMovement) || (CONFIG as any).Token.movement.actions[waypoint.action as string]?.teleport) return style;
+        const token = this.token as unknown as RulerToken;
+        const config = CONFIG as unknown as WH40KConfig;
+        const action = waypoint.action;
+        if (!(game.user?.id != null && token._plannedMovement != null) || config.Token.movement.actions[action]?.teleport === true) return style;
 
         // Get actor's movement speed for the current action
-        const actor = this.token.actor as WH40KBaseActor | null;
-        const movement = actor?.movement;
+        const actor = this.token.actor;
+        const movement = actor?.movement as Record<string, number> | undefined;
         if (!movement) return style;
 
-        const speed = (movement as any)[waypoint.action as string] ?? 0;
-        if (!speed) return style;
+        const speed = movement[action] ?? 0;
+        if (speed === 0) return style;
 
         // Color based on cost/speed ratio
-        const { normal, double, triple } = (CONFIG as any).wh40k.tokenRulerColors;
+        const { normal, double, triple } = config.wh40k.tokenRulerColors;
         const increment = (waypoint.measurement.cost - 0.1) / speed;
         if (increment <= 1) style.color = normal ?? style.color;
         else if (increment <= 2) style.color = double ?? style.color;

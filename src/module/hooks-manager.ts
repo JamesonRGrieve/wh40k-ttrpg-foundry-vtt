@@ -107,24 +107,30 @@ interface DirectoryContextOption {
 
 export class HooksManager {
     static registerHooks(): void {
-        const hooksOn = Hooks.on.bind(Hooks) as unknown as (hook: string, fn: (...args: never[]) => unknown) => number;
+        // Foundry's Hooks.on overloads in fvtt-types are tightly typed by hook name;
+        // cast to a permissive shim so non-core hooks (system-emitted events) compile.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- framework boundary: hook payload typing varies by hook name
+        const hooksOn = Hooks.on.bind(Hooks) as (event: string, fn: (...args: any[]) => unknown) => number;
         Hooks.once('init', () => {
             HooksManager.init();
         });
         hooksOn('ready', () => {
             void HooksManager.ready();
         });
-        hooksOn('hotbarDrop', ((bar: unknown, data: Record<string, unknown>, slot: number) => HooksManager.hotbarDrop(bar, data, slot)) as never);
-        hooksOn('renderCompendiumDirectory', ((app: CompendiumDirectory, html: JQuery, data: Record<string, unknown>) =>
-            HooksManager.renderCompendiumDirectory(app, html, data)) as never);
-        hooksOn('renderActorDirectory', ((app: ActorDirectory, html: JQuery, data: Record<string, unknown>) =>
-            HooksManager.renderActorDirectory(app, html, data)) as never);
-        hooksOn('renderDocumentSheetConfig', ((app: Application, html: JQuery, data: Record<string, unknown>) =>
-            HooksManager.renderDocumentSheetConfig(app, html, data)) as never);
-        hooksOn('getActorDirectoryEntryContext', ((_html: JQuery, options: DirectoryContextOption[]) =>
-            HooksManager.getActorDirectoryEntryContext(options)) as never);
-        hooksOn('getActorSheetClass', ((actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) =>
-            HooksManager.getActorSheetClass(actor, sheetData)) as never);
+        hooksOn('hotbarDrop', (bar: unknown, data: Record<string, unknown>, slot: number) => HooksManager.hotbarDrop(bar, data, slot));
+        hooksOn('renderCompendiumDirectory', (app: CompendiumDirectory, html: JQuery, data: Record<string, unknown>) =>
+            HooksManager.renderCompendiumDirectory(app, html, data),
+        );
+        hooksOn('renderActorDirectory', (app: ActorDirectory, html: JQuery, data: Record<string, unknown>) =>
+            HooksManager.renderActorDirectory(app, html, data),
+        );
+        hooksOn('renderDocumentSheetConfig', (app: Application, html: JQuery, data: Record<string, unknown>) =>
+            HooksManager.renderDocumentSheetConfig(app, html, data),
+        );
+        hooksOn('getActorDirectoryEntryContext', (_html: JQuery, options: DirectoryContextOption[]) => HooksManager.getActorDirectoryEntryContext(options));
+        hooksOn('getActorSheetClass', (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) =>
+            HooksManager.getActorSheetClass(actor, sheetData),
+        );
 
         DHTargetedActionManager.initializeHooks();
         DHBasicActionManager.initializeHooks();
@@ -208,16 +214,18 @@ export class HooksManager {
             element.dataset.entryId ??
             element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-document-id') ??
             element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-entry-id');
-        if (actorId == null) return null;
+        if (actorId === null || actorId === undefined) return null;
         return (game.actors.get(actorId) as WH40KBaseActor | undefined) ?? null;
     }
 
     static init(): void {
+        // eslint-disable-next-line no-console -- system bootstrap log before game.wh40k.log is defined
         console.log('Loading WH40K RPG System v1.0.0');
 
         const consolePrefix = 'WH40K RPG | ';
         game.wh40k = {
             debug: false,
+            // eslint-disable-next-line no-console -- the wh40k.log/warn/error wrappers are the canonical console interface
             log: (s: string, o?: unknown) => (game.wh40k.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
             warn: (s: string, o?: unknown) => console.warn(`${consolePrefix}${s}`, o),
             error: (s: string, o?: unknown) => console.error(`${consolePrefix}${s}`, o),

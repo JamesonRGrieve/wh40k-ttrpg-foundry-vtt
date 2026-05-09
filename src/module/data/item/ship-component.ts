@@ -147,7 +147,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
     static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData?.(source, options);
         // Ensure hullType is array for Set field
-        if (source && source.hullType && !Array.isArray(source.hullType)) {
+        if (source?.hullType && !Array.isArray(source.hullType)) {
             if (typeof source.hullType === 'string') {
                 source.hullType = [source.hullType];
             } else if (source.hullType instanceof Set) {

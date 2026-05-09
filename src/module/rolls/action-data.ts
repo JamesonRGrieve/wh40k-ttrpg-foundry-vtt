@@ -31,11 +31,11 @@ export class ActionData {
     }
 
     checkForPerils(): void {
-        if (this.rollData.power) {
+        if (this.rollData.power != null) {
             const sourceActor = this.rollData.sourceActor;
-            const sourceSystem = sourceActor ? (sourceActor.system as { psy?: { rating: number } }) : null;
+            const sourceSystem = sourceActor != null ? (sourceActor.system as { psy?: { rating: number } }) : null;
             const psyRating = sourceSystem?.psy?.rating ?? 0;
-            if (sourceActor && psyRating < (this.rollData as PsychicRollData).pr) {
+            if (sourceActor != null && psyRating < (this.rollData as PsychicRollData).pr) {
                 const rollTotal = this.rollData.roll?.total;
                 if (rollTotal !== undefined && !/^(.)\1+$/.test(rollTotal.toString())) {
                     this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
@@ -50,7 +50,7 @@ export class ActionData {
     }
 
     async checkForOpposed(): Promise<void> {
-        if (this.rollData.isOpposed && this.rollData.targetActor) {
+        if (this.rollData.isOpposed && this.rollData.targetActor != null) {
             const targetActor = this.rollData.targetActor;
             const rollCheck = (await targetActor.rollCharacteristicCheck(this.rollData.opposedChar)) as {
                 roll: Roll;
@@ -72,7 +72,7 @@ export class ActionData {
         if (weaponRollData.isFeint) {
             if (!this.rollData.success) {
                 this.addEffect('Feint', `The character fails to feint against the target!`);
-            } else if (this.rollData.targetActor) {
+            } else if (this.rollData.targetActor != null) {
                 this.addEffect('Feint', `The next melee Standard Attack action against that same target during this turn cannot be Evaded!`);
             } else {
                 this.addEffect(
@@ -83,13 +83,12 @@ export class ActionData {
         }
 
         if (weaponRollData.isKnockDown) {
-            if (this.rollData.targetActor) {
+            if (this.rollData.targetActor != null) {
                 const opposedDegrees = getOpposedDegrees(this.rollData.dos, this.rollData.dof, this.rollData.opposedDos, this.rollData.opposedDof);
                 if (opposedDegrees >= 2) {
                     const sourceActor = this.rollData.sourceActor;
-                    const sourceCharacteristics = sourceActor
-                        ? (sourceActor.system as { characteristics?: { strength?: { bonus: number } } }).characteristics
-                        : undefined;
+                    const sourceCharacteristics =
+                        sourceActor != null ? (sourceActor.system as { characteristics?: { strength?: { bonus: number } } }).characteristics : undefined;
                     const strengthBonus = sourceCharacteristics?.strength?.bonus ?? 0;
                     this.addEffect(
                         'Knock Down',
@@ -129,23 +128,22 @@ export class ActionData {
         const actionItem = this.rollData.weapon ?? this.rollData.power;
         const weaponRollData = this.rollData as WeaponRollData;
 
-        if (actionItem) {
+        if (actionItem != null) {
             if (this.rollData.action === 'All Out Attack') {
                 this.addEffect('All Out Attack', 'The character cannot attempt Evasion reactions until the beginning of his next turn.');
             }
 
             if (weaponRollData.isStun) {
                 const sourceActor = this.rollData.sourceActor;
-                const sourceSystem = sourceActor
-                    ? (sourceActor.system as { getCharacteristicFuzzy?: (char: string) => { bonus: number } | undefined })
-                    : undefined;
+                const sourceSystem =
+                    sourceActor != null ? (sourceActor.system as { getCharacteristicFuzzy?: (char: string) => { bonus: number } | undefined }) : undefined;
                 const bonus = sourceSystem?.getCharacteristicFuzzy?.('Strength')?.bonus ?? 0;
                 const stunRoll = new Roll(`1d10+${bonus}`, {});
                 await stunRoll.evaluate();
                 this.rollData.roll = stunRoll;
                 const stunTotal = stunRoll.total ?? 0;
 
-                if (this.rollData.targetActor) {
+                if (this.rollData.targetActor != null) {
                     const defense = (this.rollData.targetActor.system as { armour?: { head?: { total: number } } }).armour?.head?.total ?? 0;
                     if (stunTotal >= defense) {
                         this.rollData.success = true;
@@ -188,7 +186,7 @@ export class ActionData {
                     const sourceActor = this.rollData.sourceActor as ActorWithHasTalent | null;
                     if (sourceActor?.hasTalent('Blademaster') === true) {
                         this.effects.push('blademaster');
-                        if (this.rollData.roll) this.rollData.previousRolls.push(this.rollData.roll);
+                        if (this.rollData.roll != null) this.rollData.previousRolls.push(this.rollData.roll);
                         await this._calculateHit();
                     }
                 }
@@ -243,7 +241,7 @@ export class ActionData {
             this.rollData.dof = 0;
             this.rollData.dos = 1 + getDegree(this.rollData.modifiedTarget, this.rollData.roll?.total ?? 0);
 
-            if (actionItem && this.damageData) {
+            if (actionItem != null && this.damageData != null) {
                 const itemSystem = actionItem.system as { isRanged?: boolean; isPsychicBarrage?: boolean; isPsychicStorm?: boolean; usesAmmo?: boolean };
                 if (
                     this.rollData.action === 'Semi-Auto Burst' ||
@@ -278,7 +276,7 @@ export class ActionData {
                 }
             }
 
-            if (this.rollData.dos > 1 && this.rollData.hasAttackSpecial('Twin-Linked') && this.damageData) {
+            if (this.rollData.dos > 1 && this.rollData.hasAttackSpecial('Twin-Linked') && this.damageData != null) {
                 this.damageData.additionalHits++;
             }
         } else {
@@ -297,7 +295,7 @@ export class ActionData {
 
     async calculateHits(): Promise<void> {
         const weaponRollData = this.rollData as WeaponRollData;
-        if ((this.rollData.success || weaponRollData.isThrown) && this.damageData) {
+        if ((this.rollData.success || weaponRollData.isThrown) && this.damageData != null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔AttackDataLike are duck-typed siblings
             const attackData = this as unknown as AttackDataLike;
             let hit = await Hit.createHit(attackData, 0);
