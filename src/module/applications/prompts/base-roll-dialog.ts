@@ -1,5 +1,5 @@
-import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -85,7 +85,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
             await (this.rollData['update'] as () => Promise<void>)();
         }
 
-        const context = (await super._prepareContext(options)) as Record<string, unknown>;
+        const context = await super._prepareContext(options);
         return {
             ...context,
             ...this.rollData,
@@ -114,7 +114,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
      * @param {FormDataExtended} formData  The form data.
      */
     static async #onFormSubmit(this: BaseRollDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
-        const data = foundry.utils.expandObject(formData.object as Record<string, unknown>);
+        const data = foundry.utils.expandObject(formData.object);
         this._updateRollData(data as Record<string, unknown>);
 
         if (typeof this.rollData['update'] === 'function') {

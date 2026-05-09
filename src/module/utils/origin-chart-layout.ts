@@ -141,8 +141,8 @@ export class OriginChartLayout {
         // Sort each group by primary position
         for (const step in groups) {
             groups[step]?.sort((a: OriginLike, b: OriginLike) => {
-                const posA = a.system?.primaryPosition || 4;
-                const posB = b.system?.primaryPosition || 4;
+                const posA = a.system?.primaryPosition ?? 4;
+                const posB = b.system?.primaryPosition ?? 4;
                 return posA - posB;
             });
         }
@@ -225,7 +225,7 @@ export class OriginChartLayout {
             seenOrigins.add(originId);
 
             const positions = this._getPositions(origin);
-            const position = origin.system?.primaryPosition || 4;
+            const position = origin.system?.primaryPosition ?? 4;
             maxPosition = Math.max(maxPosition, position);
 
             const selectedIds = new Set(
@@ -258,9 +258,9 @@ export class OriginChartLayout {
                 isMultiPosition: positions.length > 1,
                 allPositions: positions,
 
-                xpCost: origin.system?.xpCost || 0,
-                isAdvanced: origin.system?.isAdvancedOrigin || false,
-                hasChoices: origin.system?.hasChoices || false,
+                xpCost: origin.system?.xpCost ?? 0,
+                isAdvanced: origin.system?.isAdvancedOrigin ?? false,
+                hasChoices: origin.system?.hasChoices ?? false,
             });
         }
 

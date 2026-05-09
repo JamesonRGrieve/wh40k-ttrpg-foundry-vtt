@@ -26,6 +26,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField brand mismatch with DataField.Any
             identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Upgrade type (Standard, Integral, Custom)
@@ -95,7 +96,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
      * Has any non-zero modifiers?
      * @type {boolean}
      */
-    get hasModifiers() {
+    get hasModifiers(): boolean {
         return Object.values(this.modifiers).some((v) => v !== 0);
     }
 
@@ -103,8 +104,8 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
      * Get modifiers as a formatted list.
      * @type {object[]}
      */
-    get modifiersList() {
-        const list = [];
+    get modifiersList(): Array<{ key: string; label: string; value: number; formatted: string }> {
+        const list: Array<{ key: string; label: string; value: number; formatted: string }> = [];
         for (const [key, value] of Object.entries(this.modifiers)) {
             if (value !== 0) {
                 const label = game.i18n.localize(`WH40K.VehicleStat.${key.charAt(0).toUpperCase()}${key.slice(1)}`);
@@ -112,7 +113,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
                     key,
                     label,
                     value,
-                    formatted: `${(value as number) >= 0 ? '+' : ''}${value as number}`,
+                    formatted: `${value >= 0 ? '+' : ''}${value}`,
                 });
             }
         }
@@ -146,9 +147,10 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
      * @type {string}
      */
     get upgradeTypeLabel(): string {
-        const types = CONFIG.wh40k?.vehicleUpgradeTypes || {};
+        const wh40kCfg = CONFIG.wh40k as { vehicleUpgradeTypes?: Record<string, { label: string } | undefined> } | undefined;
+        const types = wh40kCfg?.vehicleUpgradeTypes ?? {};
         const typeData = types[this.upgradeType];
-        if (typeData) {
+        if (typeData !== undefined) {
             return game.i18n.localize(typeData.label);
         }
         return this.upgradeType;
@@ -191,6 +193,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             availability: this.availability,

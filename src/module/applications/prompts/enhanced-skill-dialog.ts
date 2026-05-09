@@ -43,6 +43,7 @@ interface EnhancedSkillDialogData {
 /**
  * Enhanced dialog for configuring skill or characteristic rolls.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 ApplicationV2 base class shape narrowed via local ctor type
 export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     /**
      * @param {EnhancedSkillDialogData} simpleSkillData  The skill data.
@@ -62,6 +63,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'enhanced-skill-roll', 'standard-form'],
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             selectDifficulty: EnhancedSkillDialog.#onSelectDifficulty,
             toggleModifier: EnhancedSkillDialog.#onToggleModifier,
@@ -70,12 +72,14 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
             rollRepeat: EnhancedSkillDialog.#onRollRepeat,
             cancel: EnhancedSkillDialog.#onCancel,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         form: {
             submitOnChange: false,
             closeOnSubmit: false,
         },
         position: {
             width: 450,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 position.height accepts the literal 'auto' but typings list number
             height: 'auto' as unknown as number,
         },
         window: {
@@ -152,6 +156,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         const rollData = this.simpleSkillData.rollData;
@@ -197,6 +202,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
     async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
@@ -207,7 +213,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         customInput?.addEventListener('input', (e: Event) => {
             const input = e.target as HTMLInputElement;
             this._customModifier = parseInt(input.value, 10) || 0;
-            void this.render(false, { parts: ['form'] });
+            void this.render({ parts: ['form'] });
         });
 
         // Add keyboard shortcut (Enter to roll)
@@ -287,7 +293,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
             delete target.dataset.flash;
         }, 300);
 
-        await this.render(false, { parts: ['form'] });
+        await this.render({ parts: ['form'] });
     }
 
     /* -------------------------------------------- */
@@ -299,7 +305,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         const key = target.dataset.modifierKey;
         if (key !== undefined && key !== '') {
             this._commonModifiers[key] = (target as HTMLInputElement).checked;
-            await this.render(false, { parts: ['form'] });
+            await this.render({ parts: ['form'] });
         }
     }
 
@@ -310,7 +316,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      */
     static async #onUpdateCustom(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
         this._customModifier = parseInt((target as HTMLInputElement).value) || 0;
-        await this.render(false, { parts: ['form'] });
+        await this.render({ parts: ['form'] });
     }
 
     /* -------------------------------------------- */
@@ -374,6 +380,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
             calculateSuccessOrFailure?: () => Promise<void> | void;
         };
         await data.calculateSuccessOrFailure?.();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: simpleSkillData is augmented with ActionData fields by callers
         await sendActionDataToChat(this.simpleSkillData as unknown as ActionData);
 
         await this.close();
@@ -390,5 +397,5 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
  */
 export function prepareEnhancedSkillRoll(simpleSkillData: EnhancedSkillDialogData): void {
     const prompt = new EnhancedSkillDialog(simpleSkillData);
-    void prompt.render(true);
+    void prompt.render({ force: true });
 }

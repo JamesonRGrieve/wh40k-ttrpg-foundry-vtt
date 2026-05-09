@@ -35,6 +35,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Modification category (for visual grouping and icons)
@@ -88,23 +89,24 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
      * Get restrictions label.
      * @type {string}
      */
-    get restrictionsLabel() {
-        const parts = [];
-        if (this.restrictions.weaponClasses.size) {
-            parts.push(`Classes: ${Array.from(this.restrictions.weaponClasses as Set<string>).join(', ')}`);
+    get restrictionsLabel(): string {
+        const parts: string[] = [];
+        if (this.restrictions.weaponClasses.size > 0) {
+            parts.push(`Classes: ${Array.from(this.restrictions.weaponClasses).join(', ')}`);
         }
-        if (this.restrictions.weaponTypes.size) {
-            parts.push(`Types: ${Array.from(this.restrictions.weaponTypes as Set<string>).join(', ')}`);
+        if (this.restrictions.weaponTypes.size > 0) {
+            parts.push(`Types: ${Array.from(this.restrictions.weaponTypes).join(', ')}`);
         }
-        return parts.join('; ') || game.i18n.localize('WH40K.Modification.NoRestrictions');
+        const joined = parts.join('; ');
+        return joined !== '' ? joined : game.i18n.localize('WH40K.Modification.NoRestrictions');
     }
 
     /**
      * Get category icon class.
      * @type {string}
      */
-    get categoryIcon() {
-        const icons: Record<string, string> = {
+    get categoryIcon(): string {
+        const icons: Record<string, string | undefined> = {
             sight: 'fa-crosshairs',
             barrel: 'fa-gun',
             stock: 'fa-wrench',
@@ -112,7 +114,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
             accessory: 'fa-cog',
             other: 'fa-tools',
         };
-        return icons[this.category] || 'fa-cog';
+        return icons[this.category] ?? 'fa-cog';
     }
 
     /**
@@ -146,10 +148,10 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [
-            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
-            this.restrictionsLabel,
-        ];
+        // eslint-disable-next-line @typescript-eslint/unbound-method -- intentionally invoke the prototype getter via .call
+        const inheritedGetter = Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get;
+        const inheritedProps = (inheritedGetter?.call(this) ?? []) as string[];
+        const props: string[] = [...inheritedProps, this.restrictionsLabel];
 
         const mods = this.modifiers;
         if (mods.damage !== 0) props.push(`Damage: ${mods.damage >= 0 ? '+' : ''}${mods.damage}`);
@@ -157,11 +159,11 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
         if (mods.toHit !== 0) props.push(`To Hit: ${mods.toHit >= 0 ? '+' : ''}${mods.toHit}`);
         if (mods.range !== 0) props.push(`Range: ${mods.range >= 0 ? '+' : ''}${mods.range}`);
 
-        if (this.addedQualities.size) {
-            props.push(`Adds: ${Array.from(this.addedQualities as Set<string>).join(', ')}`);
+        if (this.addedQualities.size > 0) {
+            props.push(`Adds: ${Array.from(this.addedQualities).join(', ')}`);
         }
-        if (this.removedQualities.size) {
-            props.push(`Removes: ${Array.from(this.removedQualities as Set<string>).join(', ')}`);
+        if (this.removedQualities.size > 0) {
+            props.push(`Removes: ${Array.from(this.removedQualities).join(', ')}`);
         }
 
         return props;
@@ -172,6 +174,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             restrictions: this.restrictionsLabel,

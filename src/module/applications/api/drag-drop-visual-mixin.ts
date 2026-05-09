@@ -90,7 +90,8 @@ function ensureGlobalDragTracking(): void {
  * @returns {any}
  * @mixin
  */
-export default function EnhancedDragDropMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructor signature must accept open-ended args to compose with other mixins
+export default function EnhancedDragDropMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T): T {
     return class EnhancedDragDropApplication extends Base implements EnhancedDragDropMixinAPI {
         #actorDocument(): WH40KBaseActorDocument {
             return this.document as WH40KBaseActorDocument;
@@ -113,6 +114,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
         /* -------------------------------------------- */
 
         /** @inheritDoc */
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
         async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
@@ -298,11 +300,12 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const system = item.system as DragDropItemSystem;
             const quantity = system.quantity ?? 1;
 
-            return (
-                foundry.applications.api.DialogV2 as unknown as {
-                    prompt(opts: unknown): Promise<{ quantity: number } | null>;
-                }
-            ).prompt({
+            // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2.prompt typings are V13 vs V14 mixed; opts/result narrowed locally
+            const dialog = foundry.applications.api.DialogV2 as unknown as {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 prompt opts vary by version
+                prompt(opts: unknown): Promise<{ quantity: number } | null>;
+            };
+            return dialog.prompt({
                 window: { title: `Split ${item.name}` },
                 content: `
                     <form class="wh40k-split-dialog">
@@ -316,12 +319,13 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                 ok: {
                     icon: 'fas fa-split',
                     label: 'Split',
-                    callback: (event: SubmitEvent, button: HTMLButtonElement, dialog: HTMLElement) => {
-                        const input = dialog.querySelector<HTMLInputElement>('[name="quantity"]');
+                    callback: (event: SubmitEvent, button: HTMLButtonElement, dialogEl: HTMLElement) => {
+                        const input = dialogEl.querySelector<HTMLInputElement>('[name="quantity"]');
                         const qty = input ? parseInt(input.value) : 0;
                         if (qty > 0 && qty <= quantity) {
                             return { quantity: qty };
                         }
+                        // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.InvalidQuantity localization key
                         ui.notifications.warn('Invalid quantity');
                         return null;
                     },
@@ -385,7 +389,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const textEl = zone.querySelector('[data-dropzone-text]');
             if (textEl) {
                 const type = _activeDragType ?? this._draggedItem?.item.type ?? null;
-                textEl.textContent = type != null && DROP_ZONE_LABELS[type] != null ? DROP_ZONE_LABELS[type] : DROP_ZONE_DEFAULT_LABEL;
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: type may be null at runtime even if narrowed by optional chains
+                textEl.textContent = type !== null && DROP_ZONE_LABELS[type] !== undefined ? DROP_ZONE_LABELS[type] : DROP_ZONE_DEFAULT_LABEL;
             }
         }
 
@@ -468,10 +473,13 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const zone = event.currentTarget as HTMLElement;
             zone.classList.remove('drop-hover');
 
-            const data = TextEditor.getDragEventData(event) as DragEventPayload;
+            // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- boundary: Foundry V14 TextEditor.getDragEventData returns untyped record; new namespace not yet on shipped types
+            const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event) as DragEventPayload;
             if (data.uuid === undefined || data.uuid === '') return;
 
-            const item = (await fromUuid(data.uuid)) as WH40KItem | null;
+            const fetched = await fromUuid(data.uuid);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns generic Document; narrowed to WH40KItem at consumer
+            const item = fetched as unknown as WH40KItem | null;
             if (!item) return;
 
             const zoneType = zone.dataset.dropZone;
@@ -479,18 +487,22 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             if (zoneType === 'personal') {
                 if (item.actor?.id !== this.document.id) {
-                    const itemData = item.toObject();
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: item.toObject() returns generic source data; system shape is gameSystem-specific
+                    const itemData = item.toObject() as unknown as Item.CreateData & {
+                        system: { inShipStorage?: boolean; equipped?: boolean; inBackpack?: boolean };
+                    };
                     itemData.system.inShipStorage = false;
                     itemData.system.equipped = false;
                     await this.#actorDocument().createEmbeddedDocuments('Item', [itemData]);
                 } else {
-                    await item.update({
-                        'system.inShipStorage': false,
-                    } as Record<string, unknown>);
+                    await item.update({ 'system.inShipStorage': false });
                 }
             } else if (zoneType === 'ship') {
                 if (item.actor?.id !== this.document.id) {
-                    const itemData = item.toObject();
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: item.toObject() returns generic source data; system shape is gameSystem-specific
+                    const itemData = item.toObject() as unknown as Item.CreateData & {
+                        system: { inShipStorage?: boolean; equipped?: boolean; inBackpack?: boolean };
+                    };
                     itemData.system.inShipStorage = true;
                     itemData.system.equipped = false;
                     itemData.system.inBackpack = false;
@@ -500,7 +512,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                         'system.equipped': false,
                         'system.inBackpack': false,
                         'system.inShipStorage': true,
-                    } as Record<string, unknown>);
+                    });
                 }
             } else if (zoneType === 'equipment') {
                 await this._handleEquipmentDrop(item, slot ?? '');
@@ -521,17 +533,20 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          */
         async _handleEquipmentDrop(item: WH40KItem, slot: string): Promise<void> {
             if (item.actor?.id !== this.document.id) {
+                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.CannotEquipFromOtherActor localization key
                 ui.notifications.warn('Cannot equip items from other actors');
                 return;
             }
 
             const validSlot = this._validateEquipmentSlot(item, slot);
             if (!validSlot) {
+                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.CannotEquipInSlot localization key
                 ui.notifications.warn(`${item.name} cannot be equipped in ${slot} slot`);
                 return;
             }
 
-            await item.update({ 'system.equipped': true } as Record<string, unknown>);
+            await item.update({ 'system.equipped': true });
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.Equipped localization key
             ui.notifications.info(`Equipped ${item.name}`);
             this._animateSnapToSlot(item);
         }
@@ -572,13 +587,16 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                 return;
             }
 
-            const behavior = (this as any)._dropBehavior(event);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: _dropBehavior is added by sibling DragDropAPIMixin; cross-mixin access
+            const behavior = (this as unknown as { _dropBehavior(e: DragEvent): string })._dropBehavior(event);
 
             if (behavior === 'copy') {
                 const itemData = item.toObject();
                 await this.#actorDocument().createEmbeddedDocuments('Item', [itemData]);
+                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.AddedToInventory localization key
                 ui.notifications.info(`Added ${item.name} to inventory`);
             } else if (behavior === 'move') {
+                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.Moved localization key
                 ui.notifications.info(`Moved ${item.name}`);
             }
         }
@@ -593,22 +611,24 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          */
         async _handleSplitDrop(item: WH40KItem, quantity: number): Promise<void> {
             const system = item.system as DragDropItemSystem;
-            const currentQty = (system.quantity as number) || 1;
+            const currentQty = system.quantity ?? 1;
             const remaining = currentQty - quantity;
 
             if (remaining <= 0) {
+                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.CannotSplitFullStack localization key
                 ui.notifications.error('Cannot split entire stack');
                 return;
             }
 
-            const newItemData = item.toObject();
-            const newSystem = newItemData.system as Record<string, unknown>;
-            newSystem.quantity = quantity;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.toObject() returns generic source data; system shape is gameSystem-specific
+            const newItemData = item.toObject() as unknown as Item.CreateData & { name: string; system: { quantity?: number } };
+            newItemData.system.quantity = quantity;
             newItemData.name = `${item.name} (${quantity})`;
 
             await this.#actorDocument().createEmbeddedDocuments('Item', [newItemData]);
-            await item.update({ 'system.quantity': remaining } as Record<string, unknown>);
+            await item.update({ 'system.quantity': remaining });
 
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.Split localization key
             ui.notifications.info(`Split ${item.name}: ${quantity} moved, ${remaining} remaining`);
         }
 
@@ -664,6 +684,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             }));
 
             await this.#actorDocument().updateEmbeddedDocuments('Item', updates);
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.ItemsReordered localization key
             ui.notifications.info('Items reordered');
         }
 
@@ -681,10 +702,13 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const favBar = event.currentTarget as HTMLElement;
             favBar.classList.remove('drop-hover');
 
-            const data = TextEditor.getDragEventData(event) as DragEventPayload;
+            // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- boundary: Foundry V14 TextEditor.getDragEventData returns untyped record; new namespace not yet on shipped types
+            const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event) as DragEventPayload;
             if (data.uuid === undefined || data.uuid === '') return;
 
-            const item = (await fromUuid(data.uuid)) as WH40KItem | null;
+            const fetched = await fromUuid(data.uuid);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns generic Document; narrowed to WH40KItem at consumer
+            const item = fetched as unknown as WH40KItem | null;
             if (!item || item.actor?.id !== this.document.id) return;
 
             await this._addToFavorites(item);
@@ -699,21 +723,24 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @private
          */
         async _addToFavorites(item: WH40KItem): Promise<void> {
-            const favorites = (this.#actorDocument().getFlag('wh40k-rpg', 'favorites') as string[]) || [];
+            const favorites = (this.#actorDocument().getFlag('wh40k-rpg', 'favorites') as string[] | undefined) ?? [];
 
-            if (!item.id) return;
+            if (item.id === null || item.id === '') return;
             if (favorites.includes(item.id)) {
+                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.AlreadyInFavorites localization key
                 ui.notifications.warn(`${item.name} is already in favorites`);
                 return;
             }
 
             if (favorites.length >= 8) {
+                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.FavoritesFull localization key
                 ui.notifications.warn('Favorites bar is full (max 8 items)');
                 return;
             }
 
             favorites.push(item.id);
             await this.#actorDocument().setFlag('wh40k-rpg', 'favorites', favorites);
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.AddedToFavorites localization key
             ui.notifications.info(`Added ${item.name} to favorites`);
         }
 
@@ -737,7 +764,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @private
          */
         _resetDrag(): void {
-            if (this._draggedItem?.element) {
+            if (this._draggedItem !== null) {
                 this._draggedItem.element.classList.remove('dragging');
             }
 
@@ -779,7 +806,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
         /* -------------------------------------------- */
 
         async removeFromFavorites(itemId: string): Promise<void> {
-            const favorites = (this.#actorDocument().getFlag('wh40k-rpg', 'favorites') as string[]) || [];
+            const favorites = (this.#actorDocument().getFlag('wh40k-rpg', 'favorites') as string[] | undefined) ?? [];
             const newFavorites = favorites.filter((id) => id !== itemId);
             await this.#actorDocument().setFlag('wh40k-rpg', 'favorites', newFavorites);
         }
@@ -788,9 +815,10 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             await this.#actorDocument().setFlag('wh40k-rpg', 'favorites', []);
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: returns Item.Implementation values from a heterogeneous flag store
         getFavoriteItems(): unknown[] {
-            const favorites = (this.#actorDocument().getFlag('wh40k-rpg', 'favorites') as string[]) || [];
-            return favorites.map((id) => this.#actorDocument().items.get(id)).filter((i) => i);
+            const favorites = (this.#actorDocument().getFlag('wh40k-rpg', 'favorites') as string[] | undefined) ?? [];
+            return favorites.map((id) => this.#actorDocument().items.get(id)).filter((i) => i !== undefined);
         }
     };
 }

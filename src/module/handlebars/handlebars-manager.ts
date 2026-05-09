@@ -9,11 +9,11 @@ export class HandlebarManager {
     /**
      * Load all templates at startup.
      */
-    static async loadTemplates() {
-        return this.preloadHandlebarsTemplates();
+    static async loadTemplates(): Promise<void> {
+        await this.preloadHandlebarsTemplates();
     }
 
-    static registerHelpers() {
+    static registerHelpers(): void {
         registerHandlebarsHelpers();
         registerIconHelper();
     }
@@ -22,7 +22,7 @@ export class HandlebarManager {
      * Load all system templates at startup.
      * This is simpler and more reliable than lazy-loading.
      */
-    static preloadHandlebarsTemplates() {
+    static async preloadHandlebarsTemplates(): Promise<void> {
         const templates = [
             // Essential partials
             'systems/wh40k-rpg/templates/actor/partial/actor-identity.hbs',
@@ -240,6 +240,6 @@ export class HandlebarManager {
                 map[path.slice(0, -4)] = path;
             }
         }
-        return foundry.applications.handlebars.loadTemplates(map);
+        await foundry.applications.handlebars.loadTemplates(map);
     }
 }

@@ -1,8 +1,8 @@
 import { capitalize } from '../handlebars/handlebars-helpers.ts';
 import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
-import { WH40KItemContainer } from './item-container.ts';
-import type { WH40KItemDocument, WH40KItemSystemData, WH40KBaseActorDocument } from '../types/global.d.ts';
+import type { WH40KItemSystemData } from '../types/global.d.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
+import { WH40KItemContainer } from './item-container.ts';
 
 type AttackSpecialIndexEntry = {
     _id: string;
@@ -104,7 +104,7 @@ export class WH40KItem extends WH40KItemContainer {
         // Note: If img is not in source, that's fine - it just won't be updated
         // No need to add a default since the existing document img will remain
 
-        return (super.cleanData as DataModelV14.CleanDataSignature)(source, options, _state);
+        return (super.cleanData as unknown as DataModelV14.CleanDataSignature)(source, options, _state);
     }
 
     /**
@@ -138,17 +138,18 @@ export class WH40KItem extends WH40KItemContainer {
         };
 
         // Return type-specific icon or generic mystery-man fallback
-        return defaultIcons[type] || 'icons/svg/mystery-man.svg';
+        return defaultIcons[type] ?? 'icons/svg/mystery-man.svg';
     }
 
     /** Helper to get the item type as a plain string for comparison. */
+    // eslint-disable-next-line @typescript-eslint/naming-convention -- legacy public alias
     get _type(): string {
-        return this.type as string;
+        return this.type;
     }
 
     get totalWeight(): number {
-        let weight = this.system.weight || 0;
-        if (this.items && this.items.size > 0) {
+        let weight = this.system.weight ?? 0;
+        if (this.items.size > 0) {
             this.items.forEach((item) => {
                 weight += (item as unknown as WH40KItem).totalWeight;
             });
@@ -157,7 +158,7 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get equipped(): boolean {
-        return !!this.system.equipped;
+        return this.system.equipped === true;
     }
 
     get isMentalDisorder(): boolean {
@@ -209,7 +210,7 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isOriginPath(): boolean {
-        const rtFlags = this.flags['rt'] as Record<string, unknown> | undefined;
+        const rtFlags = this.flags['rt'];
         return this._type === 'originPath' || (this._type === 'trait' && rtFlags?.['kind'] === 'origin');
     }
 
@@ -254,13 +255,15 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isCondition(): boolean {
-        const rtFlags = this.flags['rt'] as Record<string, unknown> | undefined;
+        const rtFlags = this.flags['rt'];
         return this._type === 'trait' && rtFlags?.['kind'] === 'condition';
     }
 
     get originPathStep(): string {
-        const rtFlags = this.flags['rt'] as Record<string, unknown> | undefined;
-        return (rtFlags?.['step'] as string | undefined) || (this.system?.step as string | undefined) || '';
+        const rtFlags = this.flags['rt'];
+        const flagStep = rtFlags?.['step'];
+        if (typeof flagStep === 'string' && flagStep !== '') return flagStep;
+        return this.system.step ?? '';
     }
 
     get isWeapon(): boolean {
@@ -276,7 +279,7 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get usesAmmo(): boolean {
-        return this.isRanged && !!this.system.reload && this.system.reload !== 'N/A';
+        return this.isRanged && this.system.reload !== undefined && this.system.reload !== '' && this.system.reload !== 'N/A';
     }
 
     get isMelee(): boolean {
@@ -336,7 +339,7 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isInBackpack(): boolean {
-        return !!(this.system.backpack as { inBackpack?: boolean } | undefined)?.inBackpack;
+        return (this.system.backpack as { inBackpack?: boolean } | undefined)?.inBackpack === true;
     }
 
     get isJournalEntry(): boolean {
@@ -364,19 +367,20 @@ export class WH40KItem extends WH40KItemContainer {
         void this.convertNestedToItems();
 
         if (this.isPsychicPower) {
-            if (!this.system.damage || this.system.damage === '') {
+            if (this.system.damage === undefined || this.system.damage === '') {
                 this.system.damage = '0';
             }
-            if (!this.system.penetration || (this.system.penetration as unknown) === '') {
+            const pen = this.system.penetration as unknown;
+            if (pen === undefined || pen === '' || pen === null) {
                 this.system.penetration = 0;
             }
         }
 
         // Fix Broken Selects
-        if (!this.system.craftsmanship || this.system.craftsmanship === '') {
+        if (this.system.craftsmanship === undefined || this.system.craftsmanship === '') {
             this.system.craftsmanship = 'Common';
         }
-        if (!this.system.availability || this.system.availability === '') {
+        if (this.system.availability === undefined || this.system.availability === '') {
             this.system.availability = 'Common';
         }
     }
@@ -387,15 +391,15 @@ export class WH40KItem extends WH40KItemContainer {
      */
     async _determineNestedItems(): Promise<unknown> {
         // Already has items just skip
-        if ((this.items && this.items.size > 0) || this.hasNested()) return;
+        if (this.items.size > 0 || this.hasNested()) return;
 
         // Check for specials
-        if (this.system.special) {
+        if (this.system.special !== undefined && this.system.special !== null) {
             const specialData = this.system.special as Record<string, unknown>;
-            game.wh40k.log(`Performing first time nested item configuration for item: ${this.name as string} with specials: `, this.system.special);
+            game.wh40k.log(`Performing first time nested item configuration for item: ${this.name} with specials: `, this.system.special);
             if (this.isWeapon) await this._updateSpecialsFromPack('wh40k-rpg.weapons', specialData);
             if (this.isAmmunition) await this._updateSpecialsFromPack('wh40k-rpg.ammo', specialData);
-            game.wh40k.log(`Special migrated for item: ${this.name as string}`, this.system.special);
+            game.wh40k.log(`Special migrated for item: ${this.name}`, this.system.special);
             this.system.special = undefined;
 
             await this.convertNestedToItems();
@@ -458,7 +462,7 @@ export class WH40KItem extends WH40KItemContainer {
             ammunition: 'Ammunition',
             forceField: 'Force Field',
         };
-        return typeLabels[this.type as string] || (this.type as string);
+        return typeLabels[this.type as string] || this.type;
     }
 
     /**
@@ -546,11 +550,11 @@ export class WH40KItem extends WH40KItemContainer {
     async performAction(): Promise<unknown> {
         if (this.isWeapon) {
             // Weapon attack - handled by the actor sheet
-            const weaponActor = this.actor as unknown as WH40KBaseActorDocument | null;
+            const weaponActor = this.actor;
             return weaponActor?.rollWeaponAction?.(this) || this.sendToChat();
         } else if (this.isPsychicPower) {
             // Psychic power - handled by the actor sheet
-            const psychicActor = this.actor as unknown as WH40KBaseActorDocument | null;
+            const psychicActor = this.actor;
             return psychicActor?.rollPsychicPower?.(this) || this.sendToChat();
         } else if (this.isNavigatorPower) {
             // Navigator power - roll navigator power
@@ -849,7 +853,7 @@ export class WH40KItem extends WH40KItemContainer {
         // Add the origin path itself
         await actor.createEmbeddedDocuments('Item', [this.toObject() as never]);
 
-        ui.notifications.info(`Applied ${this.name as string} to ${actor.name}`);
+        ui.notifications.info(`Applied ${this.name} to ${actor.name}`);
     }
 
     /**
@@ -882,7 +886,7 @@ export class WH40KItem extends WH40KItemContainer {
                     const charName = key.charAt(0).toUpperCase() + key.slice(1);
                     preview.characteristics.push({
                         name: charName,
-                        value: (value as number) > 0 ? `+${value as number}` : value,
+                        value: value > 0 ? `+${value}` : value,
                     });
                 }
             }

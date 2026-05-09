@@ -18,7 +18,22 @@ import * as WH40K from './wh40k-rpg.ts';
  * Registry of all career advancement configurations
  * @type {Object<string, Object>}
  */
-const CAREER_REGISTRY = {
+type RankAdvance = {
+    name: string;
+    cost: number;
+    type: string;
+    specialization?: string;
+    prerequisites?: unknown[];
+    [extra: string]: unknown;
+};
+
+type CareerModule = {
+    CAREER_INFO?: { name?: string };
+    CHARACTERISTIC_COSTS?: Record<string, Record<string, number>>;
+    RANK_1_ADVANCES?: RankAdvance[];
+};
+
+const CAREER_REGISTRY: Record<string, CareerModule> = {
     rogueTrader: WH40K,
     archMilitant: ArchMilitant,
     astropath: Astropath,
@@ -51,13 +66,12 @@ export const TIER_ORDER = ['simple', 'intermediate', 'trained', 'expert'];
  * @param {string} careerKey - The career key (e.g., 'rogueTrader')
  * @returns {Object|null} Career advancement configuration or null if not found
  */
-export function getCareerAdvancements(careerKey: string) {
-    const career = CAREER_REGISTRY[careerKey as keyof typeof CAREER_REGISTRY];
-    if (!career) {
+export function getCareerAdvancements(careerKey: string): CareerModule | null {
+    if (!Object.prototype.hasOwnProperty.call(CAREER_REGISTRY, careerKey)) {
         console.warn(`Career '${careerKey}' not found in advancement registry`);
         return null;
     }
-    return career;
+    return CAREER_REGISTRY[careerKey];
 }
 
 /**
@@ -65,7 +79,7 @@ export function getCareerAdvancements(careerKey: string) {
  * @param {string} careerKey - The career key
  * @returns {Object|null} Characteristic cost table
  */
-export function getCharacteristicCosts(careerKey: string) {
+export function getCharacteristicCosts(careerKey: string): Record<string, Record<string, number>> | null {
     const career = getCareerAdvancements(careerKey);
     return career?.CHARACTERISTIC_COSTS ?? null;
 }
@@ -76,9 +90,9 @@ export function getCharacteristicCosts(careerKey: string) {
  * @param {number} rank - The rank number (1-based)
  * @returns {Array|null} Array of advancement options
  */
-export function getRankAdvancements(careerKey: string, rank = 1) {
+export function getRankAdvancements(careerKey: string, rank = 1): RankAdvance[] | null {
     const career = getCareerAdvancements(careerKey);
-    if (!career) return null;
+    if (career === null) return null;
 
     // Currently only Rank 1 is defined
     if (rank === 1) {
@@ -96,14 +110,15 @@ export function getRankAdvancements(careerKey: string, rank = 1) {
  * @param {number} currentAdvances - Number of advances already purchased (0-4)
  * @returns {{cost: number, tier: string}|null} Cost and tier name, or null if maxed
  */
-export function getNextCharacteristicCost(careerKey: string, characteristicKey: string, currentAdvances: number) {
-    const costs = getCharacteristicCosts(careerKey) as Record<string, Record<string, number>> | null;
-    if (!costs || !costs[characteristicKey]) return null;
+export function getNextCharacteristicCost(careerKey: string, characteristicKey: string, currentAdvances: number): { cost: number; tier: string } | null {
+    const costs = getCharacteristicCosts(careerKey);
+    const charCosts = costs?.[characteristicKey];
+    if (charCosts === undefined) return null;
 
     if (currentAdvances >= TIER_ORDER.length) return null; // Already maxed
 
-    const tier = TIER_ORDER[currentAdvances]!;
-    const cost = costs[characteristicKey]![tier];
+    const tier = TIER_ORDER[currentAdvances];
+    const cost = charCosts[tier];
 
     return { cost, tier };
 }
@@ -112,7 +127,7 @@ export function getNextCharacteristicCost(careerKey: string, characteristicKey: 
  * Get all available careers
  * @returns {Array<{key: string, name: string}>} List of career keys and names
  */
-export function getAvailableCareers() {
+export function getAvailableCareers(): { key: string; name: string }[] {
     return Object.entries(CAREER_REGISTRY).map(([key, career]) => ({
         key,
         name: career.CAREER_INFO?.name ?? key,
@@ -124,13 +139,13 @@ export function getAvailableCareers() {
  * @param {string} careerName - The career name (e.g., "Arch-Militant", "Rogue Trader")
  * @returns {string|null} The career key or null if not found
  */
-export function getCareerKeyFromName(careerName: string) {
-    if (!careerName) return null;
+export function getCareerKeyFromName(careerName: string): string | null {
+    if (careerName === '') return null;
 
     const normalized = careerName.toLowerCase().trim();
 
     // Direct mapping of common name variations to keys
-    const nameToKey = {
+    const nameToKey: Record<string, string> = {
         'wh40k rpg': 'rogueTrader',
         'roguetrader': 'rogueTrader',
         'arch-militant': 'archMilitant',
@@ -147,12 +162,13 @@ export function getCareerKeyFromName(careerName: string) {
         'void master': 'voidMaster',
     };
 
-    if (nameToKey[normalized as keyof typeof nameToKey]) {
-        return nameToKey[normalized as keyof typeof nameToKey];
+    const mapped = nameToKey[normalized];
+    if (mapped !== undefined) {
+        return mapped;
     }
 
     // Fallback: check if it matches a key directly
-    if (CAREER_REGISTRY[careerName as keyof typeof CAREER_REGISTRY]) {
+    if (Object.prototype.hasOwnProperty.call(CAREER_REGISTRY, careerName)) {
         return careerName;
     }
 
@@ -164,6 +180,6 @@ export function getCareerKeyFromName(careerName: string) {
  * @param {string} careerKey - The career key to check
  * @returns {boolean}
  */
-export function hasCareer(careerKey: string) {
+export function hasCareer(careerKey: string): boolean {
     return careerKey in CAREER_REGISTRY;
 }

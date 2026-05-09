@@ -36,11 +36,20 @@ interface SystemSheetConfig {
     gameSystemId: GameSystemId;
 }
 
+type SkillRanks = ReturnType<ReturnType<typeof SystemConfigRegistry.get>['getSkillRanks']>;
+
+interface SystemVariantBase {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixin requirement: must accept any[] for `class extends baseCls`
+    new (...args: any[]): object;
+    DEFAULT_OPTIONS?: Partial<ApplicationV2Config.DefaultOptions>;
+    PARTS: Record<string, { template?: string }>;
+}
+
 /**
  * Build a concrete sheet class on top of a base (CharacterSheet or NPCSheet),
  * adding the system's CSS class, header template, and skill-rank config.
  */
-function makeSystemVariant(baseCls: any, className: string, cfg: SystemSheetConfig) {
+function makeSystemVariant<TBase extends SystemVariantBase>(baseCls: TBase, className: string, cfg: SystemSheetConfig): TBase {
     const cls = class extends baseCls {
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             ...baseCls.DEFAULT_OPTIONS,
@@ -53,10 +62,11 @@ function makeSystemVariant(baseCls: any, className: string, cfg: SystemSheetConf
     };
     const systemConfig = SystemConfigRegistry.get(cfg.gameSystemId);
     const skillRanks = systemConfig.getSkillRanks();
-    (cls.prototype as any)._getSkillTrainingConfig = function () {
+    const proto = cls.prototype as { _getSkillTrainingConfig?: () => SkillRanks; _gameSystemId?: GameSystemId };
+    proto._getSkillTrainingConfig = function () {
         return skillRanks;
     };
-    (cls.prototype as any)._gameSystemId = cfg.gameSystemId;
+    proto._gameSystemId = cfg.gameSystemId;
     Object.defineProperty(cls, 'name', { value: className });
     return cls;
 }

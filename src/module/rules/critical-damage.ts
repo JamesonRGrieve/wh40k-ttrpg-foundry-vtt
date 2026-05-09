@@ -17,8 +17,7 @@ type ConsolidatedCriticalInjuryItem = {
     };
 };
 
-let CACHED_TABLE: CriticalDamageTable | null = null;
-let CACHED_PACK_ID: string | null = null;
+let CACHED_TABLE_PROMISE: Promise<CriticalDamageTable> | null = null;
 
 /**
  * Build the damageType × bodyPart × severity lookup from the
@@ -28,52 +27,56 @@ let CACHED_PACK_ID: string | null = null;
  * minimal fallback string.
  */
 export async function loadCriticalDamageTable(): Promise<CriticalDamageTable> {
-    if (CACHED_TABLE && CACHED_PACK_ID === CRITICAL_INJURY_PACK) return CACHED_TABLE;
-    const pack = (globalThis as any).game?.packs?.get?.(CRITICAL_INJURY_PACK);
-    if (!pack) {
-        CACHED_TABLE = {};
-        CACHED_PACK_ID = CRITICAL_INJURY_PACK;
-        return CACHED_TABLE;
+    if (CACHED_TABLE_PROMISE !== null) return CACHED_TABLE_PROMISE;
+    const promise = buildCriticalDamageTable();
+    CACHED_TABLE_PROMISE = promise;
+    try {
+        return await promise;
+    } catch (err) {
+        CACHED_TABLE_PROMISE = null;
+        throw err;
     }
+}
+
+async function buildCriticalDamageTable(): Promise<CriticalDamageTable> {
+    const pack = game.packs.get(CRITICAL_INJURY_PACK);
+    if (pack === undefined) return {};
     const docs = (await pack.getDocuments()) as ConsolidatedCriticalInjuryItem[];
     const table: CriticalDamageTable = {};
     for (const doc of docs) {
         const dt = normalizeKey(doc.system?.damageType);
         const bp = normalizeKey(doc.system?.bodyPart);
-        if (!dt || !bp) continue;
-        table[dt] ??= {};
-        table[dt][bp] ??= {};
+        if (dt === null || bp === null) continue;
+        const dtRow = table[dt] ?? (table[dt] = {});
+        const bpRow = dtRow[bp] ?? (dtRow[bp] = {});
         const effects = doc.system?.effects ?? {};
         for (const [severityStr, effect] of Object.entries(effects)) {
             const severity = Number.parseInt(severityStr, 10);
             if (!Number.isFinite(severity)) continue;
-            const raw = effect?.text ?? '';
-            table[dt][bp][severity] = stripOuterParagraph(raw);
+            const raw = effect.text ?? '';
+            bpRow[severity] = stripOuterParagraph(raw);
         }
     }
-    CACHED_TABLE = table;
-    CACHED_PACK_ID = CRITICAL_INJURY_PACK;
     return table;
 }
 
 /** Discard the cached lookup — call after editing pack items at runtime. */
 export function invalidateCriticalDamageCache(): void {
-    CACHED_TABLE = null;
-    CACHED_PACK_ID = null;
+    CACHED_TABLE_PROMISE = null;
 }
 
-function normalizeKey(value: unknown): string | null {
-    if (typeof value !== 'string' || !value) return null;
+function normalizeKey(value: string | undefined): string | null {
+    if (typeof value !== 'string' || value === '') return null;
     return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 }
 
 function stripOuterParagraph(html: string): string {
     const trimmed = html.trim();
     const match = /^<p>([\s\S]*?)<\/p>$/.exec(trimmed);
-    return match ? match[1] : trimmed;
+    return match !== null ? match[1] : trimmed;
 }
 
-export function getFuzzy(obj: Record<string, unknown>, term: string): unknown {
+export function getFuzzy<T>(obj: Record<string, T>, term: string): T | undefined {
     let resolvedTerm = term;
     if (resolvedTerm.toUpperCase() === 'LEFT LEG' || resolvedTerm.toUpperCase() === 'RIGHT LEG') {
         resolvedTerm = 'Leg';
@@ -83,7 +86,8 @@ export function getFuzzy(obj: Record<string, unknown>, term: string): unknown {
         resolvedTerm = 'Arm';
     }
 
-    if (obj[resolvedTerm]) return obj[resolvedTerm];
+    const direct = obj[resolvedTerm];
+    if (direct !== undefined) return direct;
     for (const [name, entry] of Object.entries(obj)) {
         if (resolvedTerm.toUpperCase() === name.toUpperCase()) {
             return entry;
@@ -95,10 +99,10 @@ export function getFuzzy(obj: Record<string, unknown>, term: string): unknown {
 export async function getCriticalDamage(type: string, location: string, amount: number): Promise<string | null> {
     const table = await loadCriticalDamageTable();
     const damageMap = getFuzzy(table, type);
-    if (!damageMap) return null;
-    const locationMap = getFuzzy(damageMap as Record<string, unknown>, location);
-    if (!locationMap) return null;
+    if (damageMap === undefined) return null;
+    const locationMap = getFuzzy(damageMap, location);
+    if (locationMap === undefined) return null;
     const clamped = amount > 10 ? 10 : amount;
-    const text = (locationMap as Record<number, string>)[clamped];
-    return text ?? null;
+    if (!Object.prototype.hasOwnProperty.call(locationMap, clamped)) return null;
+    return locationMap[clamped];
 }

@@ -77,7 +77,7 @@ export function materializeItemVariants(source: Record<string, unknown>, lineKey
 
         if (isLineVariantContainer(rawValue)) {
             const resolved = resolveLineVariant(rawValue, lineKey);
-            source[key] = isPlainObject(resolved) ? materializeItemVariants(resolved, lineKey, nextPath) : (resolved as Record<string, unknown>);
+            source[key] = isPlainObject(resolved) ? materializeItemVariants(resolved, lineKey, nextPath) : resolved;
             continue;
         }
 

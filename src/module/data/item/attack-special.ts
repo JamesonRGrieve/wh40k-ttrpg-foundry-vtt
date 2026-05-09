@@ -35,6 +35,7 @@ export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTe
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         const labels = [];
         if (this.hasLevel && this.level > 0) {
@@ -48,9 +49,11 @@ export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTe
      * @returns {string}
      */
     get displayName(): string {
+        const parent = this.parent as { name?: string } | undefined;
+        const name = parent?.name ?? '';
         if (this.hasLevel && this.level > 0) {
-            return `${this.parent.name} (${this.level})`;
+            return `${name} (${this.level})`;
         }
-        return this.parent.name;
+        return name;
     }
 }

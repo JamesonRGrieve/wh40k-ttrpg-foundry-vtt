@@ -102,7 +102,7 @@ export class ChatMessageWH40K extends ChatMessage {
         }
 
         const item = (await fromUuid(itemUuid)) as RollableItem | null;
-        if (!item) {
+        if (item == null) {
             // eslint-disable-next-line no-restricted-syntax -- string is a localization key passed via { localize: true }
             ui.notifications.warn('WH40K.Chat.ItemNotFound', { localize: true });
             return;
@@ -114,7 +114,7 @@ export class ChatMessageWH40K extends ChatMessage {
         } else if (item.type === 'weapon') {
             // Fallback for weapons without rollDamage method
             const actor = item.actor;
-            if (actor && typeof actor.rollWeaponDamage === 'function') {
+            if (actor != null && typeof actor.rollWeaponDamage === 'function') {
                 await actor.rollWeaponDamage(item);
             }
         }
@@ -141,7 +141,7 @@ export class ChatMessageWH40K extends ChatMessage {
 
         for (const token of targets) {
             const actor = token.actor as ActorWithCombatActions | null;
-            if (!actor) continue;
+            if (actor == null) continue;
 
             if (typeof actor.applyDamage === 'function') {
                 // eslint-disable-next-line no-await-in-loop -- damage application is sequenced per target by design
@@ -169,7 +169,7 @@ export class ChatMessageWH40K extends ChatMessage {
         }
 
         const item = (await fromUuid(itemUuid)) as RollableItem | null;
-        if (!item) {
+        if (item == null) {
             // eslint-disable-next-line no-restricted-syntax -- string is a localization key passed via { localize: true }
             ui.notifications.warn('WH40K.Chat.ItemNotFound', { localize: true });
             return;
@@ -201,12 +201,12 @@ export class ChatMessageWH40K extends ChatMessage {
 
         // Get the message from the card
         const card = button.closest<HTMLElement>('.chat-message');
-        if (!card) return;
+        if (card == null) return;
 
         const messageId = card.dataset.messageId ?? '';
         const message = game.messages.get(messageId);
 
-        if (!message) {
+        if (message == null) {
             console.warn('WH40K | ChatMessage not found for action:', action);
             return;
         }
@@ -219,10 +219,10 @@ export class ChatMessageWH40K extends ChatMessage {
                 return;
 
             case 'applyDamage': {
-                const damage = parseInt(button.dataset.damage ?? '0') || 0;
+                const damage = parseInt(button.dataset.damage ?? '0', 10) || 0;
                 const options = {
                     damageType: button.dataset.damageType,
-                    penetration: parseInt(button.dataset.penetration ?? '0') || 0,
+                    penetration: parseInt(button.dataset.penetration ?? '0', 10) || 0,
                     location: button.dataset.location,
                 };
                 await (message as ChatMessageWH40K).applyDamage(damage, options);
@@ -239,7 +239,7 @@ export class ChatMessageWH40K extends ChatMessage {
                 if (itemUuid !== null && itemUuid !== '') {
                     const item = (await fromUuid(itemUuid)) as RollableItem | null;
                     const actor = item?.actor;
-                    if (item && actor) {
+                    if (item != null && actor != null) {
                         // Import and use targeted action manager
                         const { DHTargetedActionManager } = await import('../actions/targeted-action-manager.ts');
                         await DHTargetedActionManager.performWeaponAttack(actor as never, null, item as never);
@@ -252,7 +252,7 @@ export class ChatMessageWH40K extends ChatMessage {
                 const itemUuid = button.dataset.itemUuid ?? (message as ChatMessageWH40K).itemUuid;
                 if (itemUuid !== null && itemUuid !== '') {
                     const item = (await fromUuid(itemUuid)) as RollableItem | null;
-                    if (item && typeof item.roll === 'function') {
+                    if (item != null && typeof item.roll === 'function') {
                         await item.roll();
                     }
                 }
@@ -274,16 +274,16 @@ export class ChatMessageWH40K extends ChatMessage {
      */
     static enrichDegreeBadge(html: HTMLElement, message: ChatMessageWH40K): void {
         const result = message.calculateDegrees();
-        if (!result) return;
+        if (result == null) return;
 
         const { success, degrees } = result;
 
         // Find the dice total element
         const diceTotal = html.querySelector('.dice-total');
-        if (!diceTotal) return;
+        if (diceTotal == null) return;
 
         // Check if badge already exists
-        if (diceTotal.querySelector('.wh40k-degree-badge')) return;
+        if (diceTotal.querySelector('.wh40k-degree-badge') != null) return;
 
         // Create degree badge
         const badge = document.createElement('span');
@@ -305,13 +305,13 @@ export class ChatMessageWH40K extends ChatMessage {
      */
     static enrichSpeakerPortrait(html: HTMLElement, message: ChatMessageWH40K): void {
         const actor = message.speakerActor;
-        if (!actor) return;
+        if (actor == null) return;
 
         const sender = html.querySelector('.message-sender');
-        if (!sender) return;
+        if (sender == null) return;
 
         // Check if portrait already exists
-        if (sender.querySelector('.wh40k-message-portrait')) return;
+        if (sender.querySelector('.wh40k-message-portrait') != null) return;
 
         const portrait = document.createElement('img');
         portrait.className =

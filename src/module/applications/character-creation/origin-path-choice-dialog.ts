@@ -314,7 +314,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                                 statBlock: statBlock,
                                 uuid: optUuid,
                                 selected: isSelected,
-                                disabled: !isSelected && isPendingSpec !== true && remaining <= 0,
+                                disabled: !isSelected && !isPendingSpec && remaining <= 0,
                                 hasSpecializations: optSpecs !== null && optSpecs.length > 0,
                                 specializations: optSpecs ?? [],
                                 chosenSpecialization: chosenSpec,

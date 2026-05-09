@@ -25,8 +25,8 @@ export default class CommonTemplate extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        return (this as any).mergeSchema(super.defineSchema(), {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+        return this.mergeSchema(super.defineSchema(), {
             // Truly shared schema elements go here
             // Currently empty - creature-specific data stays in CreatureTemplate
         });
@@ -37,16 +37,18 @@ export default class CommonTemplate extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source data
+    static override _migrateData(source: Record<string, unknown>): void {
+        super._migrateData(source);
         // Add shared migrations here that apply to ALL actor types
     }
 
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown> = {}): void {
-        super._cleanData?.(source, options);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry _cleanData source data
+    static override _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
+        super._cleanData(source, options);
         // Add shared cleaning here that applies to ALL actor types
     }
 

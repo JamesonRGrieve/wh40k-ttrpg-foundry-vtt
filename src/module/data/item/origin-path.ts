@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax -- boundary: schema-derived dynamic shapes (choice options, modifier maps, restore payloads); per-field interfaces would not capture the per-system variability */
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -66,7 +67,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            identifier: new (IdentifierField as any)({ required: true, blank: true }) as foundry.data.fields.StringField,
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Origin path step
             step: new fields.StringField({

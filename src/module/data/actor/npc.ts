@@ -614,8 +614,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         // Apply training bonuses
         if (skill) {
             // trained baseline: no bonus
-            if (skill.plus10 === true) target += 10;
-            if (skill.plus20 === true) target += 10; // cumulative: plus10 + plus20 = +20
+            if (skill.plus10) target += 10;
+            if (skill.plus20) target += 10; // cumulative: plus10 + plus20 = +20
             if (skill.plus30 === true) target += 10; // cumulative: plus10 + plus20 + plus30 = +30 (DH2e Veteran)
             target += skill.bonus || 0;
         } else {

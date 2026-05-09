@@ -215,10 +215,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
             current.add('any');
         }
 
-        await this.item.update(
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update accepts arbitrary path-keyed payloads
-            { 'system.restrictions.armourTypes': Array.from(current) } as Record<string, unknown>,
-        );
+        await this.item.update({ 'system.restrictions.armourTypes': Array.from(current) });
     }
 
     /**

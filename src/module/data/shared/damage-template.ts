@@ -1,6 +1,6 @@
+import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
 import FormulaField from '../fields/formula-field.ts';
-import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
  * Template for items that deal damage.
@@ -16,6 +16,7 @@ export default class DamageTemplate extends SystemDataModel {
         const fields = foundry.data.fields;
         return {
             damage: new fields.SchemaField({
+                // eslint-disable-next-line no-restricted-syntax -- boundary: FormulaField extends StringField, ctor param shape mismatch
                 formula: new FormulaField({ required: true, blank: true, initial: '' } as unknown as ConstructorParameters<typeof FormulaField>[0]),
                 type: new fields.StringField({
                     required: true,
@@ -38,8 +39,9 @@ export default class DamageTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source data
     static _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
         DamageTemplate.#migrateSpecial(source);
     }
 
@@ -47,12 +49,14 @@ export default class DamageTemplate extends SystemDataModel {
      * Migrate special from Array to Set.
      * @param {object} source  The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source data
     static #migrateSpecial(source: Record<string, unknown>): void {
-        if (source.special && Array.isArray(source.special)) {
-            source.special = new Set(source.special);
+        if (Array.isArray(source['special'])) {
+            source['special'] = new Set(source['special']);
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: damage merge target
     static #emptyDamage(): Record<string, unknown> {
         return {
             formula: '',
@@ -72,19 +76,23 @@ export default class DamageTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry _cleanData source data
     static _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
-        super._cleanData?.(source, options);
+        super._cleanData(source, options);
     }
 
     /** @inheritdoc */
     prepareBaseData(): void {
         super.prepareBaseData();
 
-        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry parent _source data
+        const parent = this.parent as { _source?: { system?: Record<string, unknown> }; actor?: unknown } | undefined;
+        const lineKey = inferActiveGameLine(parent?._source?.system ?? {}, parent ?? null);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: per-line variant resolved at runtime
         const resolvedDamage = resolveLineVariant(this.damage, lineKey) as Record<string, unknown>;
         const resolvedSpecial = resolveLineVariant(this.special, lineKey) as string[] | Set<string> | null;
 
-        this.damage = foundry.utils.mergeObject(DamageTemplate.#emptyDamage(), resolvedDamage ?? {}, { inplace: false }) as typeof this.damage;
+        this.damage = foundry.utils.mergeObject(DamageTemplate.#emptyDamage(), resolvedDamage, { inplace: false }) as typeof this.damage;
 
         if (resolvedSpecial instanceof Set) {
             this.special = resolvedSpecial;
@@ -103,7 +111,7 @@ export default class DamageTemplate extends SystemDataModel {
      */
     get damageLabel(): string {
         const dmg = this.damage;
-        if (!dmg.formula) return '-';
+        if (dmg.formula === '') return '-';
 
         let label = dmg.formula;
         if (dmg.bonus > 0) label += `+${dmg.bonus}`;
@@ -118,8 +126,8 @@ export default class DamageTemplate extends SystemDataModel {
      * Get the damage type abbreviation.
      * @type {string}
      */
-    get damageTypeAbbr() {
-        const abbrs: Record<string, string> = {
+    get damageTypeAbbr(): string {
+        const abbrs: Record<string, string | undefined> = {
             impact: 'I',
             rending: 'R',
             explosive: 'X',
@@ -149,13 +157,13 @@ export default class DamageTemplate extends SystemDataModel {
      * @type {string[]}
      */
     get chatProperties(): string[] {
-        const props = [];
-        if (this.damage.formula) {
+        const props: string[] = [];
+        if (this.damage.formula !== '') {
             props.push(`Damage: ${this.damageLabel}`);
             props.push(`Pen: ${this.damage.penetration}`);
         }
-        if (this.special?.size) {
-            props.push(`Special: ${Array.from(this.special as Set<string>).join(', ')}`);
+        if (this.special.size > 0) {
+            props.push(`Special: ${Array.from(this.special).join(', ')}`);
         }
         return props;
     }
@@ -168,6 +176,6 @@ export default class DamageTemplate extends SystemDataModel {
      * @returns {boolean}
      */
     hasSpecial(quality: string): boolean {
-        return this.special?.has(quality.toLowerCase()) ?? false;
+        return this.special.has(quality.toLowerCase());
     }
 }

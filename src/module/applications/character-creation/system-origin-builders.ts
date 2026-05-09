@@ -24,7 +24,7 @@ function make(gameSystem: string, className: string): typeof OriginPathBuilder {
         }
     }
     Object.defineProperty(SystemOriginPathBuilder, 'name', { value: className });
-    return SystemOriginPathBuilder as typeof OriginPathBuilder;
+    return SystemOriginPathBuilder;
 }
 
 export const DH2OriginPathBuilder = make('dh2e', 'DH2OriginPathBuilder');

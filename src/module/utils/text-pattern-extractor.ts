@@ -198,8 +198,7 @@ export default class TextPatternExtractor {
      * @returns {Object|null} Matched key-value or null
      */
     static extractPattern(text: string, pattern: RegExp): RegExpMatchArray | null {
-        const match = text.match(pattern);
-        return match || null;
+        return text.match(pattern);
     }
 
     /**

@@ -2,8 +2,8 @@
  * @file RighteousFuryDialog - Confirmation dialog for Righteous Fury
  */
 
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 

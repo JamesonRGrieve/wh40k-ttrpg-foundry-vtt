@@ -3,18 +3,18 @@
  * Works with TooltipsWH40K system for rich tooltip display
  */
 
-import type { ApplicationV2Ctor } from './application-types.ts';
+import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KArmourLocation, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill } from '../../types/global.d.ts';
 import {
-    prepareCharacteristicTooltipData,
-    prepareSkillTooltipData,
     prepareArmorTooltipData,
-    prepareWeaponTooltipData,
+    prepareCharacteristicTooltipData,
     prepareModifierTooltipData,
     prepareQualityTooltipData,
+    prepareSkillTooltipData,
+    prepareWeaponTooltipData,
+    type ModifierTooltipSource,
 } from '../components/wh40k-tooltip.ts';
-import type { ModifierTooltipSource } from '../components/wh40k-tooltip.ts';
-import type { WH40KArmourLocation, WH40KCharacteristic, WH40KSkill } from '../../types/global.d.ts';
-import type { WH40KItem } from '../../documents/item.ts';
+import type { ApplicationV2Ctor } from './application-types.ts';
 
 /**
  * Mixin to add rich tooltip data preparation helpers to sheets.
@@ -24,12 +24,8 @@ import type { WH40KItem } from '../../documents/item.ts';
  * @returns {any}
  * @mixin
  */
-export default function TooltipMixin<T extends ApplicationV2Ctor>(Base: T) {
+export default function TooltipMixin<T extends ApplicationV2Ctor>(Base: T): T {
     return class TooltipSheet extends Base {
-        constructor(...args: any[]) {
-            super(...args);
-        }
-
         declare document: { uuid?: string } | null;
 
         /* -------------------------------------------- */
@@ -43,11 +39,7 @@ export default function TooltipMixin<T extends ApplicationV2Ctor>(Base: T) {
          * @param {Record<string, unknown>} [modifierSources]  Modifier sources.
          * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
-        prepareCharacteristicTooltip(
-            key: string,
-            characteristic: WH40KCharacteristic,
-            modifierSources: Record<string, import('../../types/global.d.ts').WH40KModifierEntry[]> = {},
-        ): string {
+        prepareCharacteristicTooltip(key: string, characteristic: WH40KCharacteristic, modifierSources: Record<string, WH40KModifierEntry[]> = {}): string {
             return prepareCharacteristicTooltipData(key, characteristic, modifierSources);
         }
 

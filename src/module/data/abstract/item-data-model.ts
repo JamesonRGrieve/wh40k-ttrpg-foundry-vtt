@@ -217,7 +217,7 @@ export default class ItemDataModel extends SystemDataModel {
      * @type {Actor|null}
      */
     get actor(): any {
-        return (this.parent as any)?.actor ?? null;
+        return this.parent?.actor ?? null;
     }
 
     /**
@@ -225,7 +225,7 @@ export default class ItemDataModel extends SystemDataModel {
      * @type {string}
      */
     get typeLabel(): string {
-        return game.i18n.localize(CONFIG.Item.typeLabels[(this.parent as any).type]);
+        return game.i18n.localize(CONFIG.Item.typeLabels[this.parent.type]);
     }
 
     /**
@@ -288,7 +288,7 @@ export default class ItemDataModel extends SystemDataModel {
      */
     get sourceReference(): string {
         if (typeof this.source === 'string') return this.source;
-        const { book, page, custom } = (this.source as { book: string; page: string; custom: string }) ?? {};
+        const { book, page, custom } = this.source ?? {};
         if (custom) return custom;
         if (book && page) return `${book}, p.${page}`;
         if (book) return book;

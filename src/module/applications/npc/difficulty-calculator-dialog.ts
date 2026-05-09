@@ -115,7 +115,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
 
         // Get party info
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry user collection narrowed to local PartyUser shape
-        const party = game.users.filter((u) => u.active && !!u.character) as unknown as PartyUser[];
+        const party = (game.users as unknown as PartyUser[]).filter((u) => u.active && u.character !== null && u.character !== undefined);
         const partySize = party.length;
 
         // Calculate average party rank

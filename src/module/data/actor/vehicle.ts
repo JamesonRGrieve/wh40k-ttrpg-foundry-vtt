@@ -222,12 +222,15 @@ export default class VehicleData extends ActorDataModel {
      * @type {string}
      */
     get sizeLabel(): string {
-        const sizeConfig = CONFIG.wh40k?.vehicleSizes || CONFIG.wh40k?.sizes || {};
+        const wh40kCfg = CONFIG.wh40k as
+            | { vehicleSizes?: Record<string, { label: string } | undefined>; sizes?: Record<string, { label: string } | undefined> }
+            | undefined;
+        const sizeConfig = wh40kCfg?.vehicleSizes ?? wh40kCfg?.sizes ?? {};
         const sizeData = sizeConfig[this.size];
-        if (sizeData) {
+        if (sizeData !== undefined) {
             return game.i18n.localize(sizeData.label);
         }
-        return this.sizeDescriptor || `Size ${this.size}`;
+        return this.sizeDescriptor !== '' ? this.sizeDescriptor : `Size ${this.size}`;
     }
 
     /**
@@ -235,9 +238,10 @@ export default class VehicleData extends ActorDataModel {
      * @type {string}
      */
     get vehicleClassLabel(): string {
-        const classes = CONFIG.wh40k?.vehicleClasses || {};
+        const wh40kCfg = CONFIG.wh40k as { vehicleClasses?: Record<string, { label: string } | undefined> } | undefined;
+        const classes = wh40kCfg?.vehicleClasses ?? {};
         const classData = classes[this.vehicleClass];
-        if (classData) {
+        if (classData !== undefined) {
             return game.i18n.localize(classData.label);
         }
         return this.vehicleClass;
@@ -248,9 +252,10 @@ export default class VehicleData extends ActorDataModel {
      * @type {string}
      */
     get vehicleTypeLabel(): string {
-        const types = CONFIG.wh40k?.vehicleTypes || {};
+        const wh40kCfg = CONFIG.wh40k as { vehicleTypes?: Record<string, { label: string } | undefined> } | undefined;
+        const types = wh40kCfg?.vehicleTypes ?? {};
         const typeData = types[this.type];
-        if (typeData) {
+        if (typeData !== undefined) {
             return game.i18n.localize(typeData.label);
         }
         return this.type;
@@ -270,6 +275,7 @@ export default class VehicleData extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry getRollData() returns dynamic shorthand keys
     getRollData(): Record<string, unknown> {
         const data = super.getRollData();
 

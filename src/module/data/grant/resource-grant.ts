@@ -1,5 +1,5 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import BaseGrantData, { type GrantApplicationResult, type GrantRestoreData, type GrantSummary } from './base-grant.ts';
+import BaseGrantData, { type GrantApplicationResult, type GrantApplyOptions, type GrantRestoreData, type GrantSummary } from './base-grant.ts';
 
 /**
  * A single resource configuration within a resource grant.
@@ -133,11 +133,12 @@ export default class ResourceGrantData extends BaseGrantData {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    override async _applyGrant(actor: WH40KBaseActor, data: GrantRestoreData, options: Record<string, unknown>, result: GrantApplicationResult): Promise<void> {
+    override async _applyGrant(actor: WH40KBaseActor, data: GrantRestoreData, options: GrantApplyOptions, result: GrantApplicationResult): Promise<void> {
         const ctor = this.constructor as typeof ResourceGrantData;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
         const updates: Record<string, unknown> = {};
-        const selectedResources = (data.selected as string[] | undefined) ?? this.resources.map((r) => r.type);
-        const rolledValues = (data.rolledValues as Record<string, number> | undefined) ?? {};
+        const selectedResources = (data['selected'] as string[] | undefined) ?? this.resources.map((r) => r.type);
+        const rolledValues = (data['rolledValues'] as Record<string, number> | undefined) ?? {};
 
         for (const resourceConfig of this.resources) {
             const { type, formula, optional: resOptional, additive } = resourceConfig;
@@ -153,6 +154,7 @@ export default class ResourceGrantData extends BaseGrantData {
                 continue;
             }
 
+            // eslint-disable-next-line no-await-in-loop -- formulas may reference actor state mutated by prior iterations
             const value = rolledValues[type] ?? (await this._evaluateFormula(formula, actor));
             if (value === 0) continue;
 
@@ -190,12 +192,13 @@ export default class ResourceGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    override async reverse(actor: WH40KBaseActor, appliedState: Record<string, unknown>): Promise<ResourceRestoreData> {
+    override async reverse(actor: WH40KBaseActor, appliedState: Record<string, ResourceAppliedState>): Promise<ResourceRestoreData> {
         const ctor = this.constructor as typeof ResourceGrantData;
         const restoreData: ResourceRestoreData = { resources: {} };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
         const updates: Record<string, unknown> = {};
 
-        for (const [type, state] of Object.entries(appliedState) as [string, ResourceAppliedState][]) {
+        for (const [type, state] of Object.entries(appliedState)) {
             if (!(type in ctor.RESOURCES)) continue;
             const resourceDef = ctor.RESOURCES[type];
 
@@ -226,9 +229,10 @@ export default class ResourceGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    override async restore(actor: WH40KBaseActor, restoreData: ResourceRestoreData): Promise<GrantApplicationResult> {
+    override async restore(actor: WH40KBaseActor, restoreData: GrantRestoreData & ResourceRestoreData): Promise<GrantApplicationResult> {
         const ctor = this.constructor as typeof ResourceGrantData;
         const result = this._initResult();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
         const updates: Record<string, unknown> = {};
 
         for (const [type, state] of Object.entries(restoreData.resources)) {
@@ -251,6 +255,7 @@ export default class ResourceGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: payload feeds into apply() data
     override getAutomaticValue(): Record<string, unknown> | false {
         // Resources with formulas typically need user confirmation
         // Only auto-apply if all are flat values

@@ -6,10 +6,10 @@
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 type BackpackLike = {
-    hasBackpack?: boolean;
-    isCombatVest?: boolean;
-    weight?: {
-        max?: number;
+    hasBackpack: boolean;
+    isCombatVest: boolean;
+    weight: {
+        max: number;
     };
 };
 
@@ -38,21 +38,21 @@ export function computeEncumbrance(actor: WH40KBaseActorDocument): {
     let currentWeight = 0;
     let backpackWeight = 0;
     const backpack = actor.system.backpack as BackpackLike | undefined;
-    const backpackMax = backpack?.hasBackpack ? backpack.weight?.max ?? 0 : 0;
+    const backpackMax = backpack?.hasBackpack === true ? backpack.weight.max : 0;
 
     // Filter out storage location items and ship-stowed items
     const carriedItems = actor.items.filter((item) => {
         if (item.isStorageLocation) return false;
-        if (item.system?.inShipStorage === true) return false;
+        if (item.system.inShipStorage === true) return false;
         return true;
     });
 
-    if (backpack?.hasBackpack) {
+    if (backpack?.hasBackpack === true) {
         for (const item of carriedItems) {
-            if (item.system?.inBackpack) {
-                backpackWeight += item.totalWeight ?? 0;
+            if (item.system?.inBackpack === true) {
+                backpackWeight += item.totalWeight;
             } else {
-                currentWeight += item.totalWeight ?? 0;
+                currentWeight += item.totalWeight;
             }
         }
         // Combat vest adds backpack weight to current (no separate carry)
@@ -61,15 +61,15 @@ export function computeEncumbrance(actor: WH40KBaseActorDocument): {
         }
     } else {
         for (const item of carriedItems) {
-            currentWeight += item.totalWeight ?? 0;
+            currentWeight += item.totalWeight;
         }
     }
 
     // Calculate max carry capacity from S+T bonus using lookup table
-    const strengthBonus = Number(actor.characteristics?.strength?.bonus ?? 0);
-    const toughnessBonus = Number(actor.characteristics?.toughness?.bonus ?? 0);
+    const strengthBonus = Number(actor.characteristics.strength.bonus);
+    const toughnessBonus = Number(actor.characteristics.toughness.bonus);
     const attrBonus = Math.max(0, Math.min(strengthBonus + toughnessBonus, ENCUMBRANCE_TABLE.length - 1));
-    const maxWeight = ENCUMBRANCE_TABLE[attrBonus] ?? ENCUMBRANCE_TABLE[ENCUMBRANCE_TABLE.length - 1];
+    const maxWeight = ENCUMBRANCE_TABLE[attrBonus];
 
     // Round weights to 2 decimal places for display
     currentWeight = Math.round(currentWeight * 100) / 100;
@@ -92,7 +92,7 @@ export function computeEncumbrance(actor: WH40KBaseActorDocument): {
  */
 export function getCarryCapacity(bonus: number): number {
     const index = Math.max(0, Math.min(bonus, ENCUMBRANCE_TABLE.length - 1));
-    return ENCUMBRANCE_TABLE[index] ?? ENCUMBRANCE_TABLE[ENCUMBRANCE_TABLE.length - 1];
+    return ENCUMBRANCE_TABLE[index];
 }
 
 export { ENCUMBRANCE_TABLE };

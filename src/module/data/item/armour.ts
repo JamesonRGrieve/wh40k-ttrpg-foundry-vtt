@@ -1,10 +1,10 @@
+import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
+import { bodyLocationsSchema } from '../shared/body-locations.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
-import { bodyLocationsSchema } from '../shared/body-locations.ts';
-import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
  * Data model for Armour items.
@@ -100,7 +100,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         const lineKey = inferActiveGameLine(data);
         const armourPoints = resolveLineVariant(data.armourPoints as Record<string, unknown>, lineKey) as Record<string, number> | undefined;
         const coverageValue = resolveLineVariant(data.coverage as Record<string, unknown>, lineKey);
-        const maxAgility = resolveLineVariant(data.maxAgility as unknown, lineKey) as number | null | undefined;
+        const maxAgility = resolveLineVariant(data.maxAgility, lineKey) as number | null | undefined;
 
         // Validate AP values (0-20 reasonable range)
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
@@ -117,7 +117,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         if (coverageValue instanceof Set) {
             coverage = coverageValue;
         } else if (coverageValue && typeof coverageValue === 'object') {
-            coverage = new Set(Object.keys(coverageValue).filter((k) => (coverageValue as Record<string, unknown>)[k]));
+            coverage = new Set(Object.keys(coverageValue).filter((k) => coverageValue[k]));
         } else {
             coverage = new Set();
         }
@@ -218,7 +218,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         super.prepareBaseData();
 
         const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
-        this.type = (resolveLineVariant(this.type, lineKey) as string) ?? 'flak';
+        this.type = resolveLineVariant(this.type, lineKey) ?? 'flak';
         this.armourPoints = foundry.utils.mergeObject(
             {
                 head: 0,
@@ -685,7 +685,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {boolean}
      */
     get isWorn(): boolean {
-        return this.equipped === true;
+        return this.equipped;
     }
 
     /**

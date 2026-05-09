@@ -72,8 +72,8 @@ export function evaluateWoundsFormula(formula: string, actor: WH40KBaseActorDocu
             // Match patterns like "2xTB" or "TB" (with or without multiplier)
             const regex = new RegExp(`(\\d+)x${abbr}|${abbr}`, 'gi');
             evaluated = evaluated.replace(regex, (_match: string, multiplier?: string) => {
-                const bonus = actor?.system?.characteristics?.[charName]?.bonus || 0;
-                const mult = multiplier ? parseInt(multiplier, 10) : 1;
+                const bonus = actor.system.characteristics[charName].bonus;
+                const mult = multiplier !== undefined && multiplier !== '' ? parseInt(multiplier, 10) : 1;
                 return (bonus * mult).toString();
             });
         }
@@ -113,9 +113,9 @@ export function evaluateFateFormula(formula: string): number {
 
         while ((match = conditionRegex.exec(trimmedFormula)) !== null) {
             conditions.push({
-                min: parseInt(match[1] ?? '0', 10),
-                max: parseInt(match[2] ?? '0', 10),
-                value: parseInt(match[3] ?? '0', 10),
+                min: parseInt(match[1], 10),
+                max: parseInt(match[2], 10),
+                value: parseInt(match[3], 10),
             });
         }
 
@@ -155,7 +155,7 @@ export function parseTBMultiplier(formula: string): number {
     }
 
     const match = formula.match(/(\d+)xTB/i);
-    return match ? parseInt(match[1] ?? '0', 10) : formula.match(/TB/i) ? 1 : 0;
+    return match ? parseInt(match[1], 10) : formula.match(/TB/i) ? 1 : 0;
 }
 
 /**

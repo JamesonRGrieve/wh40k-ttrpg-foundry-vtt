@@ -187,7 +187,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
     static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData?.(source, options);
         // Ensure hullType is array
-        if (source && source.hullType && !Array.isArray(source.hullType)) {
+        if (source?.hullType && !Array.isArray(source.hullType)) {
             if (typeof source.hullType === 'string') {
                 source.hullType = [source.hullType];
             } else if (source.hullType instanceof Set) {
@@ -195,9 +195,9 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
             }
         }
         // Ensure special is array
-        if (source && source.special && !Array.isArray(source.special)) {
+        if (source?.special && !Array.isArray(source.special)) {
             if (typeof source.special === 'string') {
-                source.special = (source.special as string).split(',').map((s) => s.trim());
+                source.special = source.special.split(',').map((s) => s.trim());
             } else if (source.special instanceof Set) {
                 source.special = Array.from(source.special);
             }
@@ -260,7 +260,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         ];
 
         if (this.special.size) {
-            props.push(`Special: ${Array.from(this.special as Set<string>).join(', ')}`);
+            props.push(`Special: ${Array.from(this.special).join(', ')}`);
         }
 
         return props;

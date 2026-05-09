@@ -107,7 +107,7 @@ export class RollData {
     get effectString(): string {
         // eslint-disable-next-line no-restricted-syntax -- power is set on PsychicRollData subclass; nullish coalesce is the read-time default
         const actionItem = this.weapon ?? this.power;
-        if (!actionItem) return '';
+        if (actionItem == null) return '';
 
         const str: string[] = [];
 

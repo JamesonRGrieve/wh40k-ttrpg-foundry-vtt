@@ -22,16 +22,16 @@ export class WH40KStarship extends WH40KBaseActor {
 
     protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | void> {
         await super._preCreate(data, options, user);
-        const dataAsRecord = data as unknown as Record<string, unknown>;
+        const dataWithName = data as { name?: string } | undefined;
         const initData: Record<string, unknown> = {
             'token.bar1': { attribute: 'hullIntegrity' },
             'token.bar2': { attribute: 'crew.morale' },
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
-            'token.name': dataAsRecord.name,
+            'token.name': dataWithName?.name,
         };
-        this.updateSource(initData as never);
+        this.updateSource(initData);
     }
 
     /** @override */
@@ -149,8 +149,9 @@ export class WH40KStarship extends WH40KBaseActor {
         };
         for (const weapon of this.shipWeapons) {
             const weaponItem = weapon as { system: Record<string, unknown> };
-            const loc = (weaponItem.system.location as string | undefined) || 'dorsal';
-            if (grouped[loc]) grouped[loc].push(weapon);
+            const loc = (weaponItem.system.location as string | undefined) ?? 'dorsal';
+            const bucket = grouped[loc];
+            if (bucket !== undefined) bucket.push(weapon);
         }
         return grouped;
     }

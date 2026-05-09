@@ -1,5 +1,5 @@
-import { roll1d100, applyRollModeWhispers } from './roll-helpers.ts';
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../types/global.d.ts';
+import { roll1d100, applyRollModeWhispers } from './roll-helpers.ts';
 
 type ForceFieldItem = WH40KItemDocument & {
     system: WH40KItemDocument['system'] & {
@@ -58,7 +58,7 @@ export class ForceFieldData {
         if (this.overload) {
             this.forceField = (await this.forceField.update({
                 'system.overloaded': true,
-            } as Record<string, unknown>)) as ForceFieldItem;
+            })) as ForceFieldItem;
         }
 
         const html = await foundry.applications.handlebars.renderTemplate(

@@ -92,9 +92,7 @@ export interface DefineSimpleItemSheetOptions<TBase extends BaseItemSheetCtor = 
  * @param opts Sheet configuration. See {@link DefineSimpleItemSheetOptions}.
  * @returns A class suitable for `DocumentSheetConfig.registerSheet`.
  */
-export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = BaseItemSheetCtor>(
-    opts: DefineSimpleItemSheetOptions<TBase>,
-): TBase {
+export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = BaseItemSheetCtor>(opts: DefineSimpleItemSheetOptions<TBase>): TBase {
     const Base = (opts.baseClass ?? BaseItemSheet) as TBase;
     const tabs = opts.tabs ?? [];
     const hasTabs = tabs.length > 0;
@@ -138,7 +136,7 @@ export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = 
             }
 
             if (opts.prepareContext) {
-                await opts.prepareContext(this as unknown as BaseItemSheet, context);
+                await opts.prepareContext(this, context);
             }
 
             return context;
@@ -148,7 +146,7 @@ export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             await (super._onRender as any).call(this, context, renderOptions);
             if (opts.onRender) {
-                await opts.onRender(this as unknown as BaseItemSheet, context, renderOptions);
+                await opts.onRender(this, context, renderOptions);
             }
         }
     };
@@ -157,5 +155,5 @@ export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = 
     // inside DocumentSheetConfig.registerSheet. Set the class name explicitly.
     Object.defineProperty(Cls, 'name', { value: opts.className, configurable: true });
 
-    return Cls as unknown as TBase;
+    return Cls;
 }

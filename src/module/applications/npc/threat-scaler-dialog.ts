@@ -15,6 +15,7 @@ interface ScalingPreview {
     characteristics: Record<string, CharacteristicChange>;
     wounds: { current: number; new: number };
     armour: { current: number | string; new: number | string };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ThreatCalculator returns dynamic keys; index signature required
     [key: string]: unknown;
 }
 
@@ -42,6 +43,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     /* -------------------------------------------- */
 
     /** @override */
+    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 form/action handlers accept method references and bind `this` itself */
     static DEFAULT_OPTIONS = {
         id: 'npc-threat-scaler-{id}',
         classes: ['wh40k-rpg', 'npc-threat-scaler-dialog'],
@@ -69,6 +71,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
             updatePreview: NPCThreatScalerDialog.#onUpdatePreview,
         },
     };
+    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 
@@ -135,6 +138,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {WH40KBaseActor} actor - The NPC actor to scale.
      * @param {Record<string, unknown>} [options] - Application options.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 ctor accepts arbitrary options record
     constructor(actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
         super(options);
         this.#actor = actor;
@@ -155,6 +159,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -171,6 +176,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
             scaleSkills: this.#state.scaleSkills,
             scaleWeapons: this.#state.scaleWeapons,
             scaleArmour: this.#state.scaleArmour,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ThreatCalculator returns untyped object; refined to ScalingPreview at consumer
         }) as unknown as ScalingPreview;
 
         // Prepare characteristics for display
@@ -240,6 +246,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
     _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
@@ -261,6 +268,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
             const checkbox = form.querySelector<HTMLInputElement>(`[name="${name}"]`);
             if (checkbox) {
                 checkbox.addEventListener('change', () => {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: writing to a known-but-string-keyed field of #state via dynamic key
                     (this.#state as unknown as Record<string, unknown>)[name] = checkbox.checked;
                     this._debounceRender();
                 });
@@ -314,8 +322,8 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {HTMLElement} target
      */
     static #onAdjustThreat(this: NPCThreatScalerDialog, event: PointerEvent, target: HTMLElement): void {
-        const amount = parseInt(target.dataset.amount || '0', 10);
-        if (!amount) return;
+        const amount = parseInt(target.dataset.amount ?? '0', 10);
+        if (amount === 0 || Number.isNaN(amount)) return;
 
         const newValue = Math.max(1, Math.min(30, this.#state.newThreatLevel + amount));
         this.#state.newThreatLevel = newValue;
@@ -324,7 +332,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         const slider = this.element.querySelector<HTMLInputElement>('[name="newThreatLevel"]');
         if (slider) slider.value = String(newValue);
 
-        this.render({ parts: ['form'] });
+        void this.render({ parts: ['form'] });
     }
 
     /**
@@ -340,7 +348,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         const slider = this.element.querySelector<HTMLInputElement>('[name="newThreatLevel"]');
         if (slider) slider.value = String(this.#originalThreat);
 
-        this.render({ parts: ['form'] });
+        void this.render({ parts: ['form'] });
     }
 
     /**
@@ -384,6 +392,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
 
         // Check for no change
         if (currentThreat === newThreat) {
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.NoThreatChange localization key
             ui.notifications.info('No threat level change specified');
             this.#submitted = true;
             if (this.#resolve) this.#resolve(false);
@@ -391,7 +400,8 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         }
 
         // Get the updates
-        const updates = ThreatCalculator.scaleToThreat(this.#actor.system as any, currentThreat, newThreat, {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies by gameSystem; ThreatCalculator narrows internally
+        const updates = ThreatCalculator.scaleToThreat(this.#actor.system as unknown as NPCSystemData, currentThreat, newThreat, {
             scaleCharacteristics: this.#state.scaleCharacteristics,
             scaleWounds: this.#state.scaleWounds,
             scaleSkills: this.#state.scaleSkills,
@@ -400,6 +410,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         });
 
         // Prepare update object with system prefix
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry .update() accepts arbitrary path-keyed payload
         const actorUpdates: Record<string, unknown> = {};
         for (const [key, value] of Object.entries(updates)) {
             actorUpdates[`system.${key}`] = value;
@@ -420,6 +431,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
             if (this.#resolve) this.#resolve(true);
         } catch (error) {
             console.error('Failed to scale NPC:', error);
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.ScaleFailed localization key
             ui.notifications.error('Failed to scale NPC');
             if (this.#resolve) this.#resolve(false);
         }
@@ -442,6 +454,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options record
     async close(options: Record<string, unknown> = {}): Promise<void> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
@@ -465,7 +478,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     async wait(): Promise<boolean> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
-            void this.render(true);
+            void this.render({ force: true });
         });
     }
 
@@ -479,7 +492,8 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @returns {Promise<boolean>} True if scaling was applied, false otherwise.
      */
     static async scale(actor: WH40KBaseActor): Promise<boolean> {
-        if (!actor || (actor.type as string) !== 'npcV2') {
+        if ((actor.type as string) !== 'npcV2') {
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.ScaleOnlyV2 localization key
             ui.notifications.warn('Can only scale npcV2 type actors');
             return false;
         }

@@ -72,15 +72,16 @@ export class TokenDocumentWH40K extends TokenDocument {
                 walls: 'move',
                 visualize: true,
                 canSelect: (token: TokenDocument | null | undefined) => {
-                    return token?.actor?.system?.movement !== undefined;
+                    return token?.actor?.system.movement !== undefined;
                 },
             };
 
             const actionConfig = tokenConfig.movement.actions[type];
             actionConfig.getAnimationOptions = (token: TokenDocument | null | undefined) => {
-                const movement = token?.actor?.system?.movement as Record<string, number> | undefined;
+                const movement = token?.actor?.system.movement as Record<string, number> | undefined;
                 // Slow animation if actor has no speed for this type
-                if (!movement?.[type]) {
+                const speed = movement?.[type];
+                if (speed === undefined || speed === 0) {
                     return { movementSpeed: tokenConfig.movement.defaultSpeed / 2 };
                 }
                 return {};
@@ -103,12 +104,15 @@ export class TokenDocumentWH40K extends TokenDocument {
     static #getMovementCostFunction(type: string, token: TokenDocument, options?: Record<string, unknown>): MovementCostFunction {
         const noAutomation = game.settings.get(SYSTEM_ID, 'movementAutomation') === 'none';
         const { actor } = token;
-        const movement = actor?.system?.movement as Record<string, number> | undefined;
+        const movement = actor?.system.movement as Record<string, number> | undefined;
         const hasMovement = movement !== undefined;
         const speed = movement?.[type];
+        const hasSpeed = speed !== undefined && speed !== 0;
 
         // If automation is disabled, actor has no movement data, or speed is available, use default cost
-        return noAutomation || !hasMovement || speed ? (cost: number) => cost : (cost: number, _from?: unknown, _to?: unknown, distance = 0) => cost + distance;
+        return noAutomation || !hasMovement || hasSpeed
+            ? (cost: number) => cost
+            : (cost: number, _from?: unknown, _to?: unknown, distance = 0) => cost + distance;
     }
 
     /* -------------------------------------------- */
@@ -130,13 +134,13 @@ export class TokenDocumentWH40K extends TokenDocument {
     static onTokenHUDRender(app: TokenHUDLike, html: HTMLElement | JQuery<HTMLElement>): void {
         const token = app.object?.document;
         const actor = token?.actor;
-        const movement = actor?.system?.movement as Record<string, number> | undefined;
-        if (!movement) return;
+        const movement = actor?.system.movement as Record<string, number> | undefined;
+        if (movement === undefined) return;
 
         const movementTypes = (CONFIG.wh40k as Wh40kTokenConfig).movementTypes;
-        if (!token) return;
+        if (token === undefined) return;
         const activeType = (token as TokenWithFlags).getFlag(SYSTEM_ID, 'movementAction');
-        const $html = html instanceof HTMLElement ? html : html[0] ?? html;
+        const $html = html instanceof HTMLElement ? html : html[0];
 
         // Build movement buttons container
         const container = document.createElement('div');
@@ -154,7 +158,7 @@ export class TokenDocumentWH40K extends TokenDocument {
         });
 
         for (const [type, config] of Object.entries(movementTypes)) {
-            const speed = movement[type];
+            const speed: number | undefined = movement[type];
             if (speed === undefined) continue;
 
             const btn = document.createElement('button');
@@ -231,9 +235,9 @@ export class TokenDocumentWH40K extends TokenDocument {
      */
     static #setMovementAction(token: TokenDocument, type: string): void {
         const movementTypes = (CONFIG.wh40k as Wh40kTokenConfig).movementTypes;
-        const config = movementTypes[type];
-        const label = config ? game.i18n.localize(config.label) : type;
-        const speed = (token.actor?.system?.movement as Record<string, number> | undefined)?.[type];
+        const config: MovementTypeConfig | undefined = movementTypes[type];
+        const label = config !== undefined ? game.i18n.localize(config.label) : type;
+        const speed = (token.actor?.system.movement as Record<string, number> | undefined)?.[type];
         void token.update({ flags: { 'wh40k-rpg': { movementAction: type } } } as TokenDocument.UpdateInput);
         ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);
     }

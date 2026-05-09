@@ -11,6 +11,7 @@ interface Preset {
     type: string;
     role: string;
     threatLevel: number;
+    /* eslint-disable no-restricted-syntax -- boundary: persisted preset blob preserves arbitrary game-system fields */
     characteristics: Record<string, unknown>;
     wounds: Record<string, unknown>;
     movement: Record<string, unknown>;
@@ -20,6 +21,7 @@ interface Preset {
     weapons: Record<string, unknown>;
     armour: Record<string, unknown>;
     horde: Record<string, unknown>;
+    /* eslint-enable no-restricted-syntax */
     tags: string[];
 }
 
@@ -63,6 +65,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
             width: 700,
             height: 600,
         },
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             saveNew: CombatPresetDialog.#saveNew,
             loadSelected: CombatPresetDialog.#loadSelected,
@@ -71,6 +74,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
             importPreset: CombatPresetDialog.#importPreset,
             selectPreset: CombatPresetDialog.#selectPreset,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /** @override */
@@ -100,6 +104,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {'library' | 'save' | 'load'} mode - The dialog mode ("library", "save", "load").
      * @param {Record<string, unknown>} options - Application options.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 ctor accepts arbitrary options record
     constructor(npc: WH40KNPC | null = null, mode: 'library' | 'save' | 'load' = 'library', options: Record<string, unknown> = {}) {
         super(options);
         this.#state.npc = npc;
@@ -116,7 +121,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      */
     static showLibrary(): CombatPresetDialog {
         const dialog = new CombatPresetDialog(null, 'library');
-        void dialog.render(true);
+        void dialog.render({ force: true });
         return dialog;
     }
 
@@ -127,7 +132,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      */
     static savePreset(npc: WH40KNPC): CombatPresetDialog {
         const dialog = new CombatPresetDialog(npc, 'save');
-        void dialog.render(true);
+        void dialog.render({ force: true });
         return dialog;
     }
 
@@ -138,7 +143,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      */
     static loadPreset(npc: WH40KNPC): CombatPresetDialog {
         const dialog = new CombatPresetDialog(npc, 'load');
-        void dialog.render(true);
+        void dialog.render({ force: true });
         return dialog;
     }
 
@@ -217,11 +222,13 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @returns {Omit<Preset, 'id' | 'createdAt'>} The preset data.
      */
     static createPresetFromNPC(npc: WH40KNPC, name: string, description: string = ''): Omit<Preset, 'id' | 'createdAt'> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: NPC system shape varies by gameSystem; cast to local view to extract preset fields
         const system = npc.system as unknown as {
             faction: string;
             type: string;
             role: string;
             threatLevel: number;
+            /* eslint-disable no-restricted-syntax -- boundary: persisted preset blob preserves arbitrary game-system fields */
             characteristics: Record<string, unknown>;
             wounds: Record<string, unknown>;
             movement: Record<string, unknown>;
@@ -231,6 +238,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
             weapons: Record<string, unknown>;
             armour: Record<string, unknown>;
             horde: Record<string, unknown>;
+            /* eslint-enable no-restricted-syntax */
             tags?: string[];
         };
         return {
@@ -277,7 +285,8 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
             'system.tags': preset.tags,
         };
 
-        await npc.update(updates as Record<string, unknown>);
+        await npc.update(updates);
+        // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetApplied localization key
         ui.notifications.info(`Applied preset "${preset.name}" to ${npc.name}`);
     }
 
@@ -286,6 +295,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -332,11 +342,13 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         const description = (form?.querySelector('[name="presetDescription"]') as HTMLTextAreaElement | null)?.value.trim();
 
         if (name === undefined || name === '') {
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetNameRequired localization key
             ui.notifications.warn('Please enter a preset name.');
             return;
         }
 
         if (this.#state.npc === null) {
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.NoNPCSelected localization key
             ui.notifications.error('No NPC selected.');
             return;
         }
@@ -344,6 +356,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         const preset = CombatPresetDialog.createPresetFromNPC(this.#state.npc, name, description);
         await CombatPresetDialog.addPreset(preset);
 
+        // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetSaved localization key
         ui.notifications.info(`Saved preset "${name}"`);
         void this.close();
     }
@@ -357,17 +370,20 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         event.preventDefault();
 
         if (this.#state.selectedPreset === null) {
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.SelectPresetToLoad localization key
             ui.notifications.warn('Please select a preset to load.');
             return;
         }
 
         if (this.#state.npc === null) {
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.NoNPCSelected localization key
             ui.notifications.error('No NPC selected.');
             return;
         }
 
         const preset = CombatPresetDialog.getPreset(this.#state.selectedPreset);
         if (preset === null) {
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetNotFound localization key
             ui.notifications.error('Preset not found.');
             return;
         }
@@ -396,8 +412,9 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
             rejectClose: false,
         });
 
-        if (confirmed === true) {
+        if (confirmed) {
             await CombatPresetDialog.deletePresetById(presetId);
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetDeleted localization key
             ui.notifications.info(`Deleted preset "${preset.name}"`);
             void this.render();
         }
@@ -412,13 +429,13 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         event.preventDefault();
 
         const presetId = target.dataset.presetId;
-        if (!presetId) return;
+        if (presetId === undefined || presetId === '') return;
 
         const preset = CombatPresetDialog.getPreset(presetId);
-        if (!preset) return;
+        if (preset === null) return;
 
         const json = JSON.stringify(preset, null, 2);
-        (saveDataToFile as any)(json, 'application/json', `${preset.name.slugify()}.json`);
+        foundry.utils.saveDataToFile(json, 'application/json', `${preset.name.slugify()}.json`);
     }
 
     /**
@@ -440,18 +457,23 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
                 try {
                     const text = await file.text();
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse returns any; narrowed to Preset at consumer
                     const preset = JSON.parse(text) as Preset;
 
                     // Basic validation
-                    if (!preset.name || !preset.characteristics) {
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- preset is parsed from arbitrary JSON; runtime shape may not match the type
+                    if (typeof preset.name !== 'string' || preset.name === '' || preset.characteristics === undefined) {
                         throw new Error('Invalid preset format');
                     }
 
                     await CombatPresetDialog.addPreset(preset);
+                    // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetImported localization key
                     ui.notifications.info(`Imported preset "${preset.name}"`);
-                    this.render();
-                } catch (error: any) {
-                    ui.notifications.error(`Failed to import preset: ${error.message}`);
+                    void this.render();
+                } catch (error) {
+                    const msg = error instanceof Error ? error.message : String(error);
+                    // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetImportFailed localization key
+                    ui.notifications.error(`Failed to import preset: ${msg}`);
                 }
             })();
         });
@@ -467,9 +489,9 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
     static #selectPreset(this: CombatPresetDialog, event: PointerEvent, target: HTMLElement): void {
         event.preventDefault();
         const presetId = target.dataset.presetId;
-        if (presetId) {
+        if (presetId !== undefined && presetId !== '') {
             this.#state.selectedPreset = presetId;
-            this.render();
+            void this.render();
         }
     }
 }

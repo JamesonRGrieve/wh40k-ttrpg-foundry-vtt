@@ -25,6 +25,7 @@ const { ItemSheetV2 } = foundry.applications.sheets;
  * - ExpandableTooltipMixin (click-to-expand tooltips)
  * - StatBreakdownMixin (stat calculation breakdowns)
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: Foundry V14 ItemSheetV2 mixin chain requires `any` to compose; full typing pending
 export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2 as any)))) {
     declare document: WH40KItemDocument;
 
@@ -35,6 +36,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /* -------------------------------------------- */
 
     /** @override */
+    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static DEFAULT_OPTIONS = {
         tag: 'form',
         actions: {
@@ -65,6 +67,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
             resizable: true,
         },
     };
+    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 
@@ -79,10 +82,12 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /* -------------------------------------------- */
 
     /** @override */
+    /* eslint-disable no-restricted-syntax -- TODO: BaseItemSheet TAB labels need WH40K.* localization keys */
     static TABS = [
         { tab: 'description', group: 'primary', label: 'Description' },
         { tab: 'effects', group: 'primary', label: 'Effects' },
     ];
+    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 
@@ -150,6 +155,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // Get parent context first
         const parentContext = await super._prepareContext(options);
@@ -158,6 +164,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         const ruleset = WH40KSettings.getRuleset();
 
         // Build our context
+        // eslint-disable-next-line no-restricted-syntax -- boundary: render context is untyped per ApplicationV2 contract
         const context: Record<string, unknown> = {
             item: this.item,
             document: this.item, // Required for V13 {{editor}} helper
@@ -166,7 +173,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
             fields: this.item.system.schema.fields,
             effects: this.item.getEmbeddedCollection('ActiveEffect').contents,
             flags: this.item.flags,
-            dh: CONFIG.wh40k || WH40K,
+            dh: CONFIG.wh40k,
             ruleset,
             isHomebrew: ruleset === 'homebrew',
             isRaw: ruleset === 'raw',
@@ -185,13 +192,15 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         };
 
         // Ensure dh has required config properties for selectOptions (safety measure)
+        // eslint-disable-next-line no-restricted-syntax -- boundary: dh is built from heterogeneous CONFIG sources; loose shape required
         const dh = context.dh as { availabilities?: unknown; craftsmanships?: unknown };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.WH40K is untyped at the global Foundry CONFIG level
         const cfgWh = (CONFIG as { WH40K?: { availabilities?: unknown; craftsmanships?: unknown } }).WH40K;
         if (dh.availabilities === undefined) {
-            dh.availabilities = cfgWh?.availabilities ?? WH40K.availabilities ?? {};
+            dh.availabilities = cfgWh?.availabilities ?? WH40K.availabilities;
         }
         if (dh.craftsmanships === undefined) {
-            dh.craftsmanships = cfgWh?.craftsmanships ?? WH40K.craftsmanships ?? {};
+            dh.craftsmanships = cfgWh?.craftsmanships ?? WH40K.craftsmanships;
         }
 
         // Merge contexts: parent provides base, our values override
@@ -205,14 +214,18 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Prepare the tabs for the sheet.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: tab descriptor map is untyped per ApplicationV2 contract
     _getTabs(): Record<string, Record<string, unknown>> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: tab map is keyed by arbitrary tab id strings
         const tabs: Record<string, Record<string, unknown>> = {};
         interface TabDescriptor {
             tab: string;
             group: string;
             label?: string;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: predicate operates on heterogeneous documents
             condition?: (doc: unknown) => boolean;
         }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: subclass TABS shape varies; narrowed locally to TabDescriptor
         const configTabs = (this.constructor as typeof BaseItemSheet).TABS as unknown as TabDescriptor[];
         for (const { tab, group, label, condition } of configTabs) {
             if (condition !== undefined && !condition(this.document)) continue;
@@ -238,7 +251,9 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @override
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareSubmitData returns untyped record
     _prepareSubmitData(event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Record<string, unknown> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: super signature varies between V13/V14 typings
         type SuperWithPrepare = { _prepareSubmitData?: (e: SubmitEvent, f: HTMLFormElement, fd: FormDataExtended) => Record<string, unknown> };
         const proto = Object.getPrototypeOf(BaseItemSheet.prototype) as SuperWithPrepare;
         let submitData = proto._prepareSubmitData?.call(this, event, form, formData) ?? {};
@@ -250,7 +265,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
             // If img is invalid (empty, null, undefined, or no extension), remove it
             // This prevents validation errors and lets the document use its existing value
-            if (!imgValue || imgValue === '' || typeof imgValue !== 'string' || imgValue.trim() === '') {
+            if (typeof imgValue !== 'string' || imgValue.trim() === '') {
                 delete submitData.img;
             } else {
                 const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif'];
@@ -272,6 +287,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
     async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
@@ -279,7 +295,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         if (this.isEditable) {
             this.element
                 .querySelectorAll('input[type="text"][data-dtype="Number"]')
-                .forEach((i) => i.addEventListener('change', this._onChangeInputDelta.bind(this)));
+                .forEach((i) => i.addEventListener('change', (e) => this._onChangeInputDelta(e)));
         }
 
         // Auto-select number input values on focus for easy editing
@@ -337,6 +353,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     static async #onEditImage(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
         const attr = target.dataset.edit ?? 'img';
         const current = foundry.utils.getProperty(this.document._source, attr);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.ux.FilePicker is the V14 file-picker constructor; not in shipped types
         const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse(): Promise<void> };
         const fp = new FilePickerCtor({
             current,
@@ -367,7 +384,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Handle creating an effect.
      */
     static async #effectCreate(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
-        await (this.item.createEmbeddedDocuments as (type: string, data: Record<string, unknown>[], options?: Record<string, unknown>) => Promise<unknown>)(
+        await this.item.createEmbeddedDocuments(
             'ActiveEffect',
             [
                 {
@@ -387,9 +404,9 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Handle editing an effect.
      */
     static #effectEdit(this: BaseItemSheet, event: Event, target: HTMLElement): void {
-        const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
+        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset.effectId;
         const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
-        effect?.sheet?.render(true);
+        void effect?.sheet?.render(true);
     }
 
     /* -------------------------------------------- */
@@ -398,7 +415,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Handle deleting an effect.
      */
     static async #effectDelete(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
-        const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
+        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset.effectId;
         const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
         await effect?.delete();
     }
@@ -409,7 +426,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Handle toggling an effect.
      */
     static async #effectToggle(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
-        const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
+        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset.effectId;
         const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
         await effect?.update({ disabled: !effect.disabled });
     }

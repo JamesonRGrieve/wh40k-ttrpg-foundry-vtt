@@ -27,7 +27,7 @@ export class WH40KItemContainer extends Item {
         return this.parent instanceof Actor ? this.parent : null;
     }
 
-    override async update(data: Item.UpdateInput = {} as Item.UpdateInput, options?: Parameters<Item['update']>[1]): Promise<this | undefined> {
+    override async update(data: Item.UpdateInput = {}, options?: Parameters<Item['update']>[1]): Promise<this | undefined> {
         const dataRecord = data as Record<string, unknown>;
         dataRecord['_id'] = this.id;
         if (this.isNestedItem()) {
@@ -45,8 +45,8 @@ export class WH40KItemContainer extends Item {
 
     setNestedManual(data: Record<string, unknown> | Record<string, unknown>[]): void {
         // Check if each layer of the object exists, and create it if it doesn't
-        if (!this.flags[SYSTEM_ID]) this.flags[SYSTEM_ID] = {};
-        if (!this.flags[SYSTEM_ID][DH_CONTAINER_ID]) this.flags[SYSTEM_ID][DH_CONTAINER_ID] = [];
+        if (this.flags[SYSTEM_ID] === undefined) this.flags[SYSTEM_ID] = {};
+        if (this.flags[SYSTEM_ID][DH_CONTAINER_ID] === undefined) this.flags[SYSTEM_ID][DH_CONTAINER_ID] = [];
         // Set the value at the deepest level of the object
         // Make array if not
         const dataArray = Array.isArray(data) ? data : [data];
@@ -56,7 +56,7 @@ export class WH40KItemContainer extends Item {
     async setNested(data: Record<string, unknown> | Record<string, unknown>[]): Promise<unknown> {
         // Make array if not
         const dataArray = Array.isArray(data) ? data : [data];
-        return await this.setFlag(SYSTEM_ID, DH_CONTAINER_ID, dataArray);
+        return this.setFlag(SYSTEM_ID, DH_CONTAINER_ID, dataArray);
     }
 
     getNested(): NestedItemData[] {
@@ -69,14 +69,14 @@ export class WH40KItemContainer extends Item {
 
     async convertNestedToItems(): Promise<void> {
         // Convert Nested to Items
-        game.wh40k.log(`Convert ${this.name as string} Nested`, this.hasNested());
+        game.wh40k.log(`Convert ${this.name} Nested`, this.hasNested());
         this.items = new foundry.utils.Collection();
         const itemClass = CONFIG.Item.documentClass;
         for (const nestedData of this.getNested()) {
             const item = new itemClass(nestedData as unknown as never, { parent: this as unknown as never });
             await this.items.set(nestedData._id, item as unknown as Item);
         }
-        game.wh40k.log(`Item ${this.name as string} items:`, this.items);
+        game.wh40k.log(`Item ${this.name} items:`, this.items);
     }
 
     static async _onCreateOperation(
@@ -87,7 +87,7 @@ export class WH40KItemContainer extends Item {
         const superClass = Object.getPrototypeOf(WH40KItemContainer) as {
             _onCreateOperation?: (items: never, context: never, user: never) => Promise<unknown>;
         };
-        const callSuper = () => superClass._onCreateOperation?.(items as never, context as never, user as never);
+        const callSuper = async () => superClass._onCreateOperation?.(items as never, context as never, user as never);
         const typedItems = items as unknown as Array<{
             system: ContainerSystemData;
             effects: Iterable<{ data: { transfer: unknown }; toJSON(): Record<string, unknown>; uuid: string }>;
@@ -96,18 +96,18 @@ export class WH40KItemContainer extends Item {
         // Parent is not an item -- ignore
         if (!(context.parent instanceof Item)) return callSuper();
         // None of the items being created are containers -- ignore
-        if (typedItems.filter((item) => item.system.container).length === 0) return callSuper();
+        if (typedItems.filter((item) => item.system.container !== undefined && item.system.container !== null).length === 0) return callSuper();
 
         const toCreate: Record<string, unknown>[] = [];
         for (const item of typedItems) {
             for (const e of item.effects) {
-                if (!e.data.transfer) continue;
+                if (e.data.transfer === undefined || e.data.transfer === null || e.data.transfer === false) continue;
                 const effectData = e.toJSON();
                 effectData['origin'] = item.uuid;
                 toCreate.push(effectData);
             }
         }
-        if (!toCreate.length) return [];
+        if (toCreate.length === 0) return [];
         game.wh40k.log(`ItemContainer: ${this.name} _onCreateDocuments`);
         const cls = getDocumentClass('ActiveEffect');
         return (cls as unknown as { createDocuments(data: Record<string, unknown>[], context: Record<string, unknown>): Promise<unknown> }).createDocuments(
@@ -122,11 +122,13 @@ export class WH40KItemContainer extends Item {
 
     hasItemByType(item: string, type: string): boolean {
         game.wh40k.log('Check for Has Nested Item', item);
-        if (!this.system.container) return false;
-        return !!this.items.find((i) => {
-            const sys = i.system as unknown as ContainerSystemData;
-            return i.name === item && i.type === type && !!(sys.equipped || sys.enabled);
-        });
+        if (this.system.container === undefined || this.system.container === null) return false;
+        return (
+            this.items.find((i) => {
+                const sys = i.system as unknown as ContainerSystemData;
+                return i.name === item && i.type === type && (sys.equipped === true || sys.enabled === true);
+            }) !== undefined
+        );
     }
 
     getWeaponModification(mod: string): Item | undefined {
@@ -135,13 +137,13 @@ export class WH40KItemContainer extends Item {
 
     getItemByName(item: string, type: string): Item | undefined {
         game.wh40k.log('Check for item by name', item);
-        if (!this.system.container) return undefined;
+        if (this.system.container === undefined || this.system.container === null) return undefined;
         return this.items.find((i) => i.name === item && i.type === type);
     }
 
     async createNestedDocuments(data: Record<string, unknown> | Record<string, unknown>[]): Promise<void> {
         const dataArray = Array.isArray(data) ? data : [data];
-        game.wh40k.log(`ItemContainer: ${this.name as string} createNestedDocuments`, dataArray);
+        game.wh40k.log(`ItemContainer: ${this.name} createNestedDocuments`, dataArray);
         const currentItems = this.getNested();
         const itemClass = CONFIG.Item.documentClass;
 
@@ -158,7 +160,7 @@ export class WH40KItemContainer extends Item {
     }
 
     async deleteNestedDocuments(ids: string[] = []): Promise<unknown[]> {
-        game.wh40k.log(`ItemContainer: ${this.name as string} deleteNestedDocuments`, ids);
+        game.wh40k.log(`ItemContainer: ${this.name} deleteNestedDocuments`, ids);
         const containedItems = this.getNested();
         const newContained = containedItems.filter((itemData) => !ids.includes(itemData._id));
         const deletedItems = this.items.filter((item) => ids.includes(item.id ?? ''));
@@ -169,13 +171,13 @@ export class WH40KItemContainer extends Item {
     async updateNestedDocuments(data: Record<string, unknown> | Record<string, unknown>[]): Promise<unknown[]> {
         const contained = this.getNested();
         const dataArray = Array.isArray(data) ? data : [data];
-        game.wh40k.log(`ItemContainer: ${this.name as string} updateNestedDocuments`, dataArray);
+        game.wh40k.log(`ItemContainer: ${this.name} updateNestedDocuments`, dataArray);
         const updated: NestedItemData[] = [];
         const newContained = contained.map((existing) => {
             const theUpdate = dataArray.find((update) => update._id === existing._id);
-            if (theUpdate) {
+            if (theUpdate !== undefined) {
                 game.wh40k.log('Found Update object', theUpdate);
-                const newData = foundry.utils.mergeObject(theUpdate as object, existing as object, {
+                const newData = foundry.utils.mergeObject(theUpdate, existing, {
                     overwrite: false,
                     insertKeys: true,
                     insertValues: true,
@@ -201,24 +203,24 @@ export class WH40KItemContainer extends Item {
         // subclass like WH40KItem extends this class, two prototype hops land back on
         // WH40KItemContainer.prototype and recurse into this same method → stack overflow.
         (Item.prototype as { prepareEmbeddedDocuments?: () => void }).prepareEmbeddedDocuments?.call(this);
-        if (!(this instanceof Item && this.system.container)) return;
-        game.wh40k.log(`ItemContainer: ${this.name as string}`, 'prepareEmbeddedDocuments');
+        if (!(this instanceof Item) || this.system.container === undefined || this.system.container === null) return;
+        game.wh40k.log(`ItemContainer: ${this.name}`, 'prepareEmbeddedDocuments');
         const containedItems = this.getNested();
         const oldItems = this.items;
         this.items = new foundry.utils.Collection();
         const itemClass = CONFIG.Item.documentClass;
         containedItems.forEach((idata) => {
-            if (!oldItems?.has(idata._id)) {
+            if (!oldItems.has(idata._id)) {
                 const theItem = new itemClass(idata as unknown as never, { parent: this as unknown as never });
                 this.items.set(idata._id, theItem as unknown as Item);
             } else {
                 // Reuse existing item instance and update its data
                 const currentItem = oldItems.get(idata._id);
-                if (!currentItem) return;
+                if (currentItem === undefined) return;
                 currentItem.updateSource(idata);
                 currentItem.prepareData();
                 this.items.set(idata._id, currentItem);
-                if (this.sheet) {
+                if (this.sheet !== null) {
                     currentItem.render(false);
                 }
             }

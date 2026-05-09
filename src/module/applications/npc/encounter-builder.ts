@@ -121,7 +121,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Saved templates.
      * @type {Template[]}
      */
-    #templates: Template[] = [];
+    readonly #templates: Template[] = [];
 
     /* -------------------------------------------- */
     /*  Singleton Pattern                           */

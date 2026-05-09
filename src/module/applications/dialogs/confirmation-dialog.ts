@@ -67,7 +67,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    #config: ConfirmationConfig;
+    readonly #config: ConfirmationConfig;
     #resolve: ((value: boolean) => void) | null = null;
     #resolved = false;
 
@@ -105,7 +105,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
             content: this.#config.content,
             confirmLabel: this.#config.confirmLabel,
             cancelLabel: this.#config.cancelLabel,
-        } as ConfirmationContext;
+        };
     }
 
     /* -------------------------------------------- */

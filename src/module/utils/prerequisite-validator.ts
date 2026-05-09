@@ -292,12 +292,12 @@ function getSkillKey(name: string): string {
 function checkSkillLevel(skill: SkillLike, requiredLevel: 'trained' | 'plus10' | 'plus20'): boolean {
     switch (requiredLevel) {
         case 'plus20':
-            return skill.plus20 === true;
+            return skill.plus20;
         case 'plus10':
-            return skill.plus10 === true || skill.plus20 === true;
+            return skill.plus10 || skill.plus20;
         case 'trained':
         default:
-            return skill.trained === true || skill.plus10 === true || skill.plus20 === true;
+            return skill.trained || skill.plus10 || skill.plus20;
     }
 }
 
