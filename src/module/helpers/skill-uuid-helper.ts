@@ -17,7 +17,7 @@ const _skillUuidCache = new Map();
  * Clear the skill UUID cache
  * Useful when compendium packs are reloaded or modified
  */
-export function clearSkillUuidCache() {
+export function clearSkillUuidCache(): void {
     _skillUuidCache.clear();
 }
 
@@ -48,13 +48,13 @@ export function clearSkillUuidCache() {
  * // Returns: "Compendium.wh40k-rpg.dh2-core-stats-skills.yyy"
  */
 export function findSkillUuid(skillName: string | null | undefined, specialization: string | null = null): string | null | undefined {
-    if (!skillName) return null;
+    if (skillName === null || skillName === undefined || skillName === '') return null;
 
     // Check if specialization is embedded in the name
     // Pattern: "Skill Name (Specialization)"
     let resolvedSkillName: string = skillName;
     let resolvedSpecialization: string | null = specialization;
-    if (!resolvedSpecialization && resolvedSkillName.includes('(') && resolvedSkillName.includes(')')) {
+    if ((resolvedSpecialization === null || resolvedSpecialization === '') && resolvedSkillName.includes('(') && resolvedSkillName.includes(')')) {
         const match = resolvedSkillName.match(/^(.+?)\s*\((.+?)\)\s*$/);
         if (match) {
             resolvedSkillName = match[1].trim();
@@ -63,7 +63,7 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
     }
 
     // Build cache key
-    const cacheKey = resolvedSpecialization ? `${resolvedSkillName}::${resolvedSpecialization}` : resolvedSkillName;
+    const cacheKey = resolvedSpecialization !== null && resolvedSpecialization !== '' ? `${resolvedSkillName}::${resolvedSpecialization}` : resolvedSkillName;
 
     // Check cache first
     if (_skillUuidCache.has(cacheKey)) {
@@ -85,7 +85,7 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
 
         // Build search variants
         const searchVariants = [];
-        if (resolvedSpecialization) {
+        if (resolvedSpecialization !== null && resolvedSpecialization !== '') {
             // Try with parentheses
             searchVariants.push(`${resolvedSkillName} (${resolvedSpecialization})`);
             // Try without parentheses
@@ -118,7 +118,7 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
             if (!entryNameLower.includes(skillNameLower)) continue;
 
             // If we have a specialization, check for that too
-            if (specializationLower && !entryNameLower.includes(specializationLower)) continue;
+            if (specializationLower !== undefined && specializationLower !== '' && !entryNameLower.includes(specializationLower)) continue;
 
             // Found a match
             const uuid = `Compendium.${skillPack.metadata.id}.${id}`;
@@ -153,13 +153,13 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
  * const results = await batchFindSkillUuids(skills);
  * // Returns: Map { "Awareness" => "Compendium...", "Common Lore::Imperium" => "Compendium...", ... }
  */
-export async function batchFindSkillUuids(skills: Array<{ name: string; specialization?: string }>) {
+export async function batchFindSkillUuids(skills: Array<{ name: string; specialization?: string }>): Promise<Map<string, string | null | undefined>> {
     const results = new Map<string, string | null | undefined>();
 
     // Process all skills in parallel
-    const promises = skills.map(async (skill: { name: string; specialization?: string }) => {
-        const uuid = await findSkillUuid(skill.name, skill.specialization);
-        const cacheKey = skill.specialization ? `${skill.name}::${skill.specialization}` : skill.name;
+    const promises = skills.map((skill: { name: string; specialization?: string }) => {
+        const uuid = findSkillUuid(skill.name, skill.specialization);
+        const cacheKey = skill.specialization !== undefined && skill.specialization !== '' ? `${skill.name}::${skill.specialization}` : skill.name;
         results.set(cacheKey, uuid);
     });
 
@@ -173,12 +173,14 @@ export async function batchFindSkillUuids(skills: Array<{ name: string; speciali
  * @param {string} uuid - Compendium UUID
  * @returns {Promise<Item|null>} - The skill Item or null
  */
-export async function getSkillFromUuid(uuid: string) {
-    if (!uuid) return null;
+type SkillItemLike = { type: string };
+
+export async function getSkillFromUuid(uuid: string): Promise<SkillItemLike | null> {
+    if (uuid === '') return null;
 
     try {
-        const item = await fromUuid(uuid);
-        if (item && (item as unknown as { type: string }).type === 'skill') {
+        const item = (await fromUuid(uuid)) as SkillItemLike | null;
+        if (item !== null && item.type === 'skill') {
             return item;
         }
         return null;
@@ -201,8 +203,8 @@ export async function getSkillFromUuid(uuid: string) {
  * parseSkillName("Awareness")
  * // Returns: { name: "Awareness", specialization: null }
  */
-export function parseSkillName(fullName: string) {
-    if (!fullName) return { name: '', specialization: null };
+export function parseSkillName(fullName: string): { name: string; specialization: string | null } {
+    if (fullName === '') return { name: '', specialization: null };
 
     const match = fullName.match(/^(.+?)\s*\((.+?)\)\s*$/);
     if (match) {

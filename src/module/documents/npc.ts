@@ -80,7 +80,7 @@ export class WH40KNPC extends WH40KBaseActor {
 
     /** @inheritDoc */
     protected override async _preCreate(data: never, options: never, user: User.Internal.Implementation): Promise<boolean | void> {
-        await super._preCreate(data, options, user as never);
+        await super._preCreate(data, options, user);
         const createData = data as Record<string, unknown>;
 
         // Configure token defaults for NPC V2
@@ -98,7 +98,7 @@ export class WH40KNPC extends WH40KBaseActor {
             initData['token.bar1'] = { attribute: 'horde.magnitude' };
         }
 
-        this.updateSource(initData as never);
+        this.updateSource(initData);
     }
 
     /* -------------------------------------------- */
@@ -106,18 +106,20 @@ export class WH40KNPC extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     hasTalent(talent: string): boolean {
-        return !!this.items.filter((i) => i.type === 'talent').find((t) => t.name === talent);
+        return this.items.filter((i) => i.type === 'talent').find((t) => t.name === talent) !== undefined;
     }
 
     hasTalentFuzzyWords(words: string[]): boolean {
-        return !!this.items
-            .filter((i) => i.type === 'talent')
-            .find((t) => {
-                for (const word of words) {
-                    if (!(t.name ?? '').includes(word)) return false;
-                }
-                return true;
-            });
+        return (
+            this.items
+                .filter((i) => i.type === 'talent')
+                .find((t) => {
+                    for (const word of words) {
+                        if (!(t.name ?? '').includes(word)) return false;
+                    }
+                    return true;
+                }) !== undefined
+        );
     }
 
     /* -------------------------------------------- */
@@ -132,7 +134,7 @@ export class WH40KNPC extends WH40KBaseActor {
      */
     async rollCharacteristic(characteristicKey: string, flavor?: string): Promise<void> {
         const char = this.system.characteristics[characteristicKey];
-        if (!char) {
+        if (char === undefined) {
             ui.notifications.warn(`Unknown characteristic: ${characteristicKey}`);
             return;
         }
@@ -142,9 +144,9 @@ export class WH40KNPC extends WH40KBaseActor {
             type: 'characteristic',
             label: `${char.label} Test`,
             target: char.total,
-            nameOverride: flavor || undefined,
+            nameOverride: flavor !== undefined && flavor !== '' ? flavor : undefined,
         });
-        await prepareUnifiedRoll(simpleSkillData);
+        prepareUnifiedRoll(simpleSkillData);
     }
 
     /**
@@ -153,9 +155,9 @@ export class WH40KNPC extends WH40KBaseActor {
      * @returns {Promise<Roll>}
      */
     async rollSimpleWeapon(weaponIndex: number): Promise<void> {
-        const weapons = this.system.weapons?.simple || [];
+        const weapons = this.system.weapons?.simple ?? [];
         const weapon = weapons[weaponIndex];
-        if (!weapon) {
+        if (weapon === undefined) {
             ui.notifications.warn(`No weapon at index ${weaponIndex}`);
             return;
         }
@@ -163,7 +165,7 @@ export class WH40KNPC extends WH40KBaseActor {
         // Determine attack characteristic
         const attackCharKey = weapon.class === 'melee' ? 'weaponSkill' : 'ballisticSkill';
         const char = this.system.characteristics[attackCharKey];
-        if (!char) return;
+        if (char === undefined) return;
 
         const simpleSkillData = this._buildSimpleSkillRoll({
             key: attackCharKey,
@@ -171,7 +173,7 @@ export class WH40KNPC extends WH40KBaseActor {
             label: `${weapon.name} Attack`,
             target: char.total,
         });
-        await prepareUnifiedRoll(simpleSkillData);
+        prepareUnifiedRoll(simpleSkillData);
     }
 
     /**
@@ -180,25 +182,25 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {string} itemId - The embedded item ID.
      * @returns {Promise}
      */
-    async rollItem(itemId: string): Promise<void> {
+    override async rollItem(itemId: string): Promise<void> {
         const item = this.items.get(itemId);
-        if (!item) return;
+        if (item === undefined) return;
 
         switch (item.type) {
             case 'weapon': {
                 if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
                     const charKey = item.system.isMeleeWeapon ? 'weaponSkill' : 'ballisticSkill';
-                    await this.rollCharacteristic(charKey, item.name !== null ? item.name : undefined);
+                    await this.rollCharacteristic(charKey, item.name ?? undefined);
                 } else {
-                    await DHTargetedActionManager.performWeaponAttack(this as unknown as WH40KBaseActor, null, item);
+                    await DHTargetedActionManager.performWeaponAttack(this, null, item);
                 }
                 return;
             }
             case 'psychicPower': {
                 if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
-                    await this.rollCharacteristic('willpower', item.name !== null ? item.name : undefined);
+                    await this.rollCharacteristic('willpower', item.name ?? undefined);
                 } else {
-                    await DHTargetedActionManager.performPsychicAttack(this as unknown as WH40KBaseActor, null, item);
+                    await DHTargetedActionManager.performPsychicAttack(this, null, item);
                 }
                 return;
             }
@@ -208,9 +210,9 @@ export class WH40KNPC extends WH40KBaseActor {
                 const rawDescription = item.system.description;
                 const htmlContent = typeof rawBenefit === 'string' ? rawBenefit : typeof rawDescription === 'string' ? rawDescription : '';
                 await DHBasicActionManager.sendItemVocalizeChat({
-                    actor: this.name !== null ? this.name : '',
-                    name: item.name !== null ? item.name : '',
-                    type: item.type !== null ? item.type.toUpperCase() : '',
+                    actor: this.name ?? '',
+                    name: item.name ?? '',
+                    type: item.type.toUpperCase(),
                     description: await TextEditor.enrichHTML(htmlContent, {
                         rollData: { actor: this, item },
                     }),
@@ -228,16 +230,16 @@ export class WH40KNPC extends WH40KBaseActor {
     async rollSkill(skillName: string, flavor?: string): Promise<void> {
         const target = this.system.getSkillTarget(skillName);
         const skill = this.system.trainedSkills[skillName];
-        const skillLabel = skill?.name || skillName;
+        const skillLabel = skill?.name !== undefined && skill.name !== '' ? skill.name : skillName;
 
         const simpleSkillData = this._buildSimpleSkillRoll({
             key: skillName,
             type: 'skill',
             label: `${skillLabel} Test`,
             target,
-            nameOverride: flavor || undefined,
+            nameOverride: flavor !== undefined && flavor !== '' ? flavor : undefined,
         });
-        await prepareUnifiedRoll(simpleSkillData);
+        prepareUnifiedRoll(simpleSkillData);
     }
 
     /* -------------------------------------------- */
@@ -268,7 +270,7 @@ export class WH40KNPC extends WH40KBaseActor {
         }
 
         if (!ignoreToughness) {
-            reduction += this.system.characteristics.toughness?.bonus || 0;
+            reduction += this.system.characteristics.toughness?.bonus ?? 0;
         }
 
         const finalDamage = Math.max(0, amount - reduction);
@@ -285,7 +287,7 @@ export class WH40KNPC extends WH40KBaseActor {
         return this.update({
             'system.wounds.value': newWounds,
             'system.wounds.critical': critical,
-        } as Record<string, unknown>);
+        });
     }
 
     /**
@@ -295,7 +297,7 @@ export class WH40KNPC extends WH40KBaseActor {
      */
     healWounds(amount: number): unknown {
         const newWounds = Math.min(this.system.wounds.max, this.system.wounds.value + amount);
-        return this.update({ 'system.wounds.value': newWounds } as Record<string, unknown>);
+        return this.update({ 'system.wounds.value': newWounds });
     }
 
     /* -------------------------------------------- */
@@ -372,7 +374,7 @@ export class WH40KNPC extends WH40KBaseActor {
         return this.update({
             'system.horde.enabled': false,
             'system.type': this.system.type === 'swarm' ? 'creature' : 'elite',
-        } as Record<string, unknown>);
+        });
     }
 
     /* -------------------------------------------- */
@@ -390,20 +392,23 @@ export class WH40KNPC extends WH40KBaseActor {
         const data = this.toObject() as Record<string, unknown>;
 
         // Modify name
-        if (options.name) {
+        if (typeof options.name === 'string' && options.name !== '') {
             data['name'] = options.name;
         } else {
             data['name'] = `${this.name ?? ''} (Copy)`;
         }
 
         // Randomize stats slightly if requested
-        if (options.randomize) {
+        if (options.randomize === true) {
             const systemData = data['system'] as Record<string, unknown> | undefined;
             const characteristics = systemData?.['characteristics'] as Record<string, Record<string, number>> | undefined;
-            if (characteristics) {
+            if (characteristics !== undefined) {
                 for (const key of Object.keys(characteristics)) {
                     const variance = Math.floor(Math.random() * 11) - 5; // -5 to +5
-                    characteristics[key]['base'] = Math.max(1, Math.min(99, (characteristics[key]['base'] ?? 0) + variance));
+                    const entry = characteristics[key];
+                    if (entry !== undefined) {
+                        entry['base'] = Math.max(1, Math.min(99, (entry['base'] ?? 0) + variance));
+                    }
                 }
             }
         }
@@ -420,9 +425,9 @@ export class WH40KNPC extends WH40KBaseActor {
      */
     exportStatBlock(): string {
         const s = this.system;
-        let block = `=== ${this.name as string} ===\n`;
+        let block = `=== ${this.name ?? ''} ===\n`;
         block += `${s.typeLabel} | Threat ${s.threatLevel} | ${s.roleLabel}\n`;
-        if (s.faction) block += `Faction: ${s.faction}\n`;
+        if (s.faction !== '') block += `Faction: ${s.faction}\n`;
         block += `\n`;
 
         // Characteristics
@@ -445,18 +450,18 @@ export class WH40KNPC extends WH40KBaseActor {
             block += `--- Skills ---\n`;
             for (const [key, skill] of Object.entries(s.trainedSkills)) {
                 const level = skill.plus20 ? '+20' : skill.plus10 ? '+10' : '';
-                block += `${skill.name || key}${level}: ${s.getSkillTarget(key)}\n`;
+                block += `${skill.name !== undefined && skill.name !== '' ? skill.name : key}${level}: ${s.getSkillTarget(key)}\n`;
             }
             block += `\n`;
         }
 
         // Weapons
-        if (s.weapons.simple?.length > 0) {
+        if ((s.weapons.simple?.length ?? 0) > 0) {
             block += `--- Weapons ---\n`;
             for (const w of s.weapons.simple) {
                 block += `${w.name}: ${w.damage}, Pen ${w.pen}`;
                 if (w.range !== 'Melee') block += `, ${w.range}, RoF ${w.rof}`;
-                if (w.special) block += ` [${w.special}]`;
+                if (w.special !== '' && w.special !== undefined) block += ` [${w.special}]`;
                 block += `\n`;
             }
             block += `\n`;
@@ -477,7 +482,7 @@ export class WH40KNPC extends WH40KBaseActor {
         }
 
         // Special Abilities
-        if (s.specialAbilities) {
+        if (s.specialAbilities !== '' && s.specialAbilities !== undefined) {
             block += `--- Special Abilities ---\n`;
             // Strip HTML tags for plain text export
             block += `${s.specialAbilities.replace(/<[^>]*>/g, '')}\n`;

@@ -16,8 +16,12 @@ import type { DragDropMixinAPI } from './sheet-mixin-types.js';
  * @returns {any}
  * @mixin
  */
-export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixin requirement
+type DragDropMixed<T extends abstract new (...args: any[]) => unknown> = T & (new (...args: any[]) => DragDropMixinAPI);
+
+export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T): DragDropMixed<T> {
     return class DragDropApplication extends Base implements DragDropMixinAPI {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixin requirement
         constructor(...args: any[]) {
             super(...args);
         }
@@ -41,8 +45,9 @@ export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T) {
          * @returns {Set<string>}    The allowed drop behaviors.
          * @protected
          */
+        // eslint-disable-next-line no-restricted-syntax -- boundary: drop-event payload is framework-supplied untyped data
         _allowedDropBehaviors(event: DragEvent, data: Record<string, unknown>): Set<string> {
-            if (!data?.uuid) return new Set(['copy', 'link']);
+            if (data.uuid === undefined || data.uuid === null || data.uuid === '') return new Set(['copy', 'link']);
             return new Set(['copy', 'move', 'link']);
         }
 
@@ -55,12 +60,14 @@ export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T) {
          * @returns {string}         The default drop behavior.
          * @protected
          */
+        // eslint-disable-next-line no-restricted-syntax -- boundary: drop-event payload is framework-supplied untyped data
         _defaultDropBehavior(event: DragEvent, data: Record<string, unknown>): string {
-            if (!data?.uuid || typeof data.uuid !== 'string') return 'copy';
+            if (typeof data.uuid !== 'string') return 'copy';
             const d = foundry.utils.parseUuid(data.uuid);
-            const doc = (this as any).document as { uuid: string };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: mixin sees `this` typed as ApplicationV2 but document is bound by sheet subclass
+            const doc = (this as unknown as { document: { uuid: string } }).document;
             const t = foundry.utils.parseUuid(doc.uuid);
-            const base = d.embedded?.length ? 'document' : 'primary';
+            const base = d.embedded.length > 0 ? 'document' : 'primary';
             const dId = d[`${base}Id`] as string;
             const tId = t[`${base}Id`] as string;
             const dType = d[`${base}Type`] as string;
@@ -77,7 +84,8 @@ export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T) {
          * @protected
          */
         _dropBehavior(event: DragEvent): string {
-            const data = TextEditor.getDragEventData(event) as Record<string, unknown>;
+            // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- boundary: Foundry V14 TextEditor.getDragEventData returns untyped record; new namespace not yet on shipped types
+            const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event) as Record<string, unknown>;
             const allowed = this._allowedDropBehaviors(event, data);
             if (event.shiftKey && allowed.has('copy')) return 'copy';
             if (event.altKey && allowed.has('link')) return 'link';
@@ -96,8 +104,9 @@ export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T) {
                 _onDragStart?: (this: DragDropApplication, event: DragEvent) => Promise<void>;
             };
             await prototype._onDragStart?.call(this, event);
-            const doc = (this as any).document;
-            if (!doc.isOwner || doc.collection?.locked) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: mixin sees `this` typed as ApplicationV2 but document is bound by sheet subclass
+            const doc = (this as unknown as { document: { isOwner: boolean; collection?: { locked?: boolean } } }).document;
+            if (!doc.isOwner || doc.collection?.locked === true) {
                 dataTransfer.effectAllowed = 'copyLink';
             }
         }

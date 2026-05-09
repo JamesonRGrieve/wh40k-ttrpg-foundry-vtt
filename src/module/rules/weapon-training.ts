@@ -25,19 +25,15 @@ type WeaponTrainingResult = {
  * @returns {{trained: boolean, talent: WH40KItem|null}} Training status and talent if found
  */
 export function checkWeaponTraining(actor: WH40KBaseActorDocument, weapon: WeaponTrainingWeapon): WeaponTrainingResult {
-    if (!actor || !weapon) {
-        return { trained: true, talent: null }; // Default to trained if missing data
-    }
-
     const requiredTraining = weapon.system.requiredTraining;
 
     // No training required (e.g., primitive weapons, unarmed)
-    if (!requiredTraining || requiredTraining === '' || requiredTraining === '-') {
+    if (requiredTraining === undefined || requiredTraining === '' || requiredTraining === '-') {
         return { trained: true, talent: null };
     }
 
     // Grenades don't require weapon training
-    const isGrenade = weapon.system.special?.includes('grenade');
+    const isGrenade = weapon.system.special?.includes('grenade') ?? false;
     if (isGrenade) {
         return { trained: true, talent: null };
     }
@@ -119,7 +115,8 @@ export function getWeaponTrainingDescription(actor: WH40KBaseActorDocument, weap
     } else if (trained) {
         return 'No training required';
     } else {
-        const required = weapon.system.requiredTraining || 'Unknown';
+        const requiredTraining = weapon.system.requiredTraining;
+        const required = requiredTraining === undefined || requiredTraining === '' ? 'Unknown' : requiredTraining;
         return `Untrained (-20 penalty, requires: ${required})`;
     }
 }

@@ -1,5 +1,19 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import BaseGrantData, { GrantApplicationResult, GrantSummary } from './base-grant.ts';
+import BaseGrantData, { type GrantApplicationResult, type GrantApplyOptions, type GrantRestoreData, type GrantSummary } from './base-grant.ts';
+
+interface CharacteristicAppliedState {
+    previousValue: number;
+    appliedValue: number;
+    newValue?: number;
+}
+
+interface CharacteristicRestoreData {
+    characteristics: Record<string, CharacteristicAppliedState>;
+}
+
+interface CharacteristicActorSystem {
+    characteristics: Record<string, { advance?: number } | undefined>;
+}
 
 /**
  * Grant that provides characteristic bonuses to an actor.
@@ -69,15 +83,11 @@ export default class CharacteristicGrantData extends BaseGrantData {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    override async _applyGrant(
-        actor: WH40KBaseActor,
-        data: Record<string, unknown>,
-        options: Record<string, unknown>,
-        result: GrantApplicationResult,
-    ): Promise<void> {
+    override async _applyGrant(actor: WH40KBaseActor, data: GrantRestoreData, options: GrantApplyOptions, result: GrantApplicationResult): Promise<void> {
         const ctor = this.constructor as typeof CharacteristicGrantData;
-        const selectedChars = (data.selected as string[]) ?? this.characteristics.map((c) => c.key);
+        const selectedChars: string[] = Array.isArray(data['selected']) ? (data['selected'] as string[]) : this.characteristics.map((c) => c.key);
         const updates: Record<string, number> = {};
+        const charSystem = actor.system as CharacteristicActorSystem;
 
         for (const charConfig of this.characteristics) {
             const { key, value, optional: charOptional } = charConfig;
@@ -92,7 +102,7 @@ export default class CharacteristicGrantData extends BaseGrantData {
             }
             if (value === 0) continue;
 
-            const currentAdvance = actor.system?.characteristics?.[key]?.advance ?? 0;
+            const currentAdvance: number = charSystem.characteristics[key]?.advance ?? 0;
             const newAdvance = currentAdvance + value;
 
             updates[`system.characteristics.${key}.advance`] = newAdvance;
@@ -106,15 +116,13 @@ export default class CharacteristicGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    override async reverse(actor: WH40KBaseActor, appliedState: Record<string, any>): Promise<Record<string, any>> {
-        const restoreData: { characteristics: Record<string, any> } = { characteristics: {} };
+    override async reverse(actor: WH40KBaseActor, appliedState: Record<string, CharacteristicAppliedState>): Promise<CharacteristicRestoreData> {
+        const restoreData: CharacteristicRestoreData = { characteristics: {} };
         const updates: Record<string, number> = {};
 
         for (const [key, state] of Object.entries(appliedState)) {
-            if (state.previousValue !== undefined) {
-                updates[`system.characteristics.${key}.advance`] = state.previousValue;
-                restoreData.characteristics[key] = state;
-            }
+            updates[`system.characteristics.${key}.advance`] = state.previousValue;
+            restoreData.characteristics[key] = state;
         }
 
         if (Object.keys(updates).length > 0) {
@@ -125,13 +133,15 @@ export default class CharacteristicGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    override async restore(actor: WH40KBaseActor, restoreData: any): Promise<GrantApplicationResult> {
+    override async restore(actor: WH40KBaseActor, restoreData: GrantRestoreData): Promise<GrantApplicationResult> {
         const result = this._initResult();
         const updates: Record<string, number> = {};
+        const charSystem = actor.system as CharacteristicActorSystem;
 
-        const characteristics = (restoreData.characteristics ?? {}) as Record<string, { appliedValue: number }>;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: GrantRestoreData payload typed at base
+        const characteristics = (restoreData as Partial<CharacteristicRestoreData>).characteristics ?? {};
         for (const [key, state] of Object.entries(characteristics)) {
-            const currentAdvance = actor.system?.characteristics?.[key]?.advance ?? 0;
+            const currentAdvance: number = charSystem.characteristics[key]?.advance ?? 0;
             const newAdvance = currentAdvance + state.appliedValue;
             updates[`system.characteristics.${key}.advance`] = newAdvance;
             result.applied[key] = { previousValue: currentAdvance, appliedValue: state.appliedValue, newValue: newAdvance };
@@ -142,6 +152,7 @@ export default class CharacteristicGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: payload feeds into apply() data
     override getAutomaticValue(): Record<string, unknown> | false {
         if (this.optional) return false;
         if (this.characteristics.some((c) => c.optional)) return false;
@@ -173,8 +184,7 @@ export default class CharacteristicGrantData extends BaseGrantData {
         const ctor = this.constructor as typeof CharacteristicGrantData;
         const errors = super.validateGrant();
 
-        const characteristics = this.characteristics ?? [];
-        for (const charConfig of characteristics) {
+        for (const charConfig of this.characteristics) {
             if (!ctor.VALID_CHARACTERISTICS.has(charConfig.key)) {
                 errors.push(`Invalid characteristic key: ${charConfig.key}`);
             }

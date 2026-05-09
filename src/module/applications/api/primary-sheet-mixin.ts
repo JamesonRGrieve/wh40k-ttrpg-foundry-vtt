@@ -3,9 +3,9 @@
  * Based on dnd5e's PrimarySheetMixin pattern
  */
 
-import DragDropMixin from './drag-drop-api-mixin.ts';
-import type { ApplicationV2Ctor } from './application-types.ts';
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../../types/global.d.ts';
+import type { ApplicationV2Ctor } from './application-types.ts';
+import DragDropMixin from './drag-drop-api-mixin.ts';
 import type { PrimarySheetMixinAPI } from './sheet-mixin-types.js';
 
 interface SheetTab {
@@ -182,7 +182,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                 ) => Promise<Record<string, unknown>>;
             };
             const partContext = (await prototype._preparePartContext?.call(this, partId, context, options)) ?? {};
-            (partContext as Record<string, unknown>).tab = (context.tabs as Record<string, unknown>)[partId];
+            partContext.tab = (context.tabs as Record<string, unknown>)[partId];
             return partContext;
         }
 

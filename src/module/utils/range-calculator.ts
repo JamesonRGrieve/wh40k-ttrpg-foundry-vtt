@@ -254,7 +254,10 @@ export function calculateRangeModifier(options: RangeCalculationOptions): RangeC
  * @param {Token} token2 - Second token
  * @returns {number} - Distance in grid units (converted to meters)
  */
-export function calculateTokenDistance(token1: Token | null | undefined, token2: Token | null | undefined): number {
+export function calculateTokenDistance(
+    token1: foundry.canvas.placeables.Token | null | undefined,
+    token2: foundry.canvas.placeables.Token | null | undefined,
+): number {
     if (!token1 || !token2) return 0;
     const grid = canvas.grid;
     if (!grid) return 0;

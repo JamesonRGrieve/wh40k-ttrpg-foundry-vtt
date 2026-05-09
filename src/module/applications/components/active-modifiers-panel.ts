@@ -112,7 +112,7 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
             const system = item.system as { active?: boolean };
             const isActive = system.active ?? true;
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update accepts arbitrary path-keyed payloads
-            await item.update({ 'system.active': !isActive } as Record<string, unknown>);
+            await item.update({ 'system.active': !isActive });
         }
 
         /**

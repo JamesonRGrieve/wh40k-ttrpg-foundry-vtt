@@ -667,4 +667,28 @@ declare global {
     }
 }
 
+// =========================================================================
+// UpdateData widening — accept dotted-path keys
+// =========================================================================
+//
+// Foundry's runtime `Document#update()` accepts dotted-path string keys
+// (e.g. { 'system.wounds.value': 5 }), but fvtt-types' generated `UpdateData`
+// derives from the schema and doesn't include an index signature for those
+// flat-form keys. This codebase uses the dotted-path idiom widely — augment
+// the relevant document UpdateData interfaces to allow string-indexed unknowns
+// alongside the schema-derived properties.
+declare global {
+    namespace Item {
+        interface UpdateData {
+            [path: string]: unknown;
+        }
+    }
+
+    namespace Actor {
+        interface UpdateData {
+            [path: string]: unknown;
+        }
+    }
+}
+
 export {};

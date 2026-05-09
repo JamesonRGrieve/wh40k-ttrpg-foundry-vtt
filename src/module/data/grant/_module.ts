@@ -26,38 +26,47 @@ export const GRANT_TYPES = {
     choice: ChoiceGrantData,
 };
 
+/** Grant configuration object with a discriminating `type` field. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: external grant config from item flags
+export type GrantConfig = { type?: string } & Record<string, unknown>;
+
 /**
  * Create a grant instance from configuration data.
- * @param {object} config - Grant configuration with type field
- * @returns {BaseGrantData|null}
+ * @param config - Grant configuration with type field
  */
-export function createGrant(config: Record<string, unknown>) {
-    if (!config?.['type']) {
+export function createGrant(config: GrantConfig): BaseGrantData | null {
+    const type = config.type;
+    if (typeof type !== 'string' || type === '') {
         console.warn('createGrant: Missing type in config', config);
         return null;
     }
 
-    const GrantClass = GRANT_TYPES[config['type'] as keyof typeof GRANT_TYPES];
-    if (!GrantClass) {
-        console.warn(`createGrant: Unknown grant type "${config['type']}"`);
+    if (!(type in GRANT_TYPES)) {
+        console.warn(`createGrant: Unknown grant type "${type}"`);
         return null;
     }
+    const GrantClass = GRANT_TYPES[type as keyof typeof GRANT_TYPES];
 
     try {
         return new GrantClass(config);
     } catch (error) {
-        console.warn(`createGrant: Failed to create ${config['type']} grant:`, (error as Error).message, config);
+        const message = error instanceof Error ? error.message : String(error);
+        console.warn(`createGrant: Failed to create ${type} grant:`, message, config);
         return null;
     }
 }
 
 /**
  * Validate a grant configuration.
- * @param {object} config - Grant configuration
- * @returns {string[]} Array of validation errors
+ * @param config - Grant configuration
+ * @returns Array of validation errors
  */
-export function validateGrantConfig(config: Record<string, unknown>) {
+// eslint-disable-next-line no-restricted-syntax -- boundary: external grant config from item flags
+export function validateGrantConfig(config: GrantConfig): string[] {
     const grant = createGrant(config);
-    if (!grant) return [`Invalid grant type: ${config?.type}`];
+    if (!grant) {
+        const type = config.type;
+        return [`Invalid grant type: ${typeof type === 'string' ? type : '(none)'}`];
+    }
     return grant.validateGrant();
 }

@@ -1,3 +1,4 @@
+import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import { bodyLocationsSchema } from '../shared/body-locations.ts';
@@ -5,7 +6,6 @@ import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
-import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
  * Data model for Cybernetic items.
@@ -149,8 +149,8 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
 
         if (this.hasArmourPoints) {
             const apValues = Object.entries(this.armourPoints)
-                .filter(([_, v]) => (v as number) > 0)
-                .map(([k, v]) => `${k}: ${v as number}`);
+                .filter(([_, v]) => v > 0)
+                .map(([k, v]) => `${k}: ${v}`);
             if (apValues.length) {
                 props.push(`AP: ${apValues.join(', ')}`);
             }

@@ -13,6 +13,7 @@ interface TransactionItemSystemView {
     cost?: { value?: number };
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record; we extend with strict fields
 interface TransactionRequestContext extends Record<string, unknown> {
     buyer: WH40KBaseActor;
     hasSources: boolean;
@@ -39,17 +40,21 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         },
         position: {
             width: 720,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 position.height accepts 'auto' but typings list number
             height: 'auto' as unknown as number,
         },
         form: {
+            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- ApplicationV2 form handler signature differs from shipped typings
             handler: TransactionRequestDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: false,
         },
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             selectItem: TransactionRequestDialog.#selectItem,
             requestApproval: TransactionRequestDialog.#requestApproval,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
@@ -66,6 +71,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
     #resolve: ((value: boolean | null) => void) | null = null;
 
     constructor(actor: WH40KBaseActor, options: ApplicationV2Config.DefaultOptions = {}) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 ctor accepts a partial options record; shipped typings narrower than runtime
         super(options as unknown as Record<string, unknown>);
         this.actor = actor;
 
@@ -84,20 +90,25 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<TransactionRequestContext> {
         const context = (await super._prepareContext(options)) as TransactionRequestContext;
         const sources = TransactionManager.listSourcesForBuyer(this.actor);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive null fallback against array .find()/indexed access
         const selectedSource = sources.find((source) => source.id === this.sourceId) ?? sources[0] ?? null;
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- selectedSource may legitimately be null when sources empty
         if (selectedSource !== null && this.sourceId !== selectedSource.id) {
             this.sourceId = selectedSource.id;
         }
 
         const items = TransactionManager.listItemsForSource(selectedSource);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive null fallback against array .find()/indexed access
         const selectedItem = items.find((item) => item.id === this.itemId) ?? items[0] ?? null;
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- selectedItem may legitimately be null when items empty
         if (selectedItem !== null && this.itemId !== selectedItem.id) {
             this.itemId = selectedItem.id;
         }
 
         let quote: TransactionQuote | null = null;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- guards against null cases the type system narrows away after defensive fallbacks
         if (selectedSource !== null && selectedItem !== null && this.actor.id !== null && selectedSource.id !== null && selectedItem.id !== null) {
             try {
                 quote = TransactionManager.prepareQuote({
@@ -106,8 +117,8 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
                     itemId: selectedItem.id,
                     quantity: this.quantity,
                     influenceBurn: this.influenceBurn,
-                }) as TransactionQuote | null;
-            } catch (_error) {
+                });
+            } catch {
                 quote = null;
             }
         }
@@ -120,6 +131,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
                 id: source.id,
                 name: source.name,
                 modeLabel: TransactionManager.getSourceLabel(source),
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- selectedSource may be null
                 selected: source.id === selectedSource?.id,
             })),
             selectedSource,
@@ -128,10 +140,14 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
                 name: item.name,
                 img: item.img ?? null,
                 type: item.type,
+                // eslint-disable-next-line no-restricted-syntax -- boundary: TransactionManager surfaces items as base Item.Implementation; system shape is system-specific
                 quantity: (item.system as TransactionItemSystemView).quantity ?? 1,
+                // eslint-disable-next-line no-restricted-syntax -- boundary: TransactionManager surfaces items as base Item.Implementation; system shape is system-specific
                 cost: (item.system as TransactionItemSystemView).cost?.value ?? 0,
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- selectedItem may be null
                 selected: item.id === selectedItem?.id,
             })),
+            // eslint-disable-next-line no-restricted-syntax -- boundary: items returned by TransactionManager are Item.Implementation; refine to WH40KItem at the consumer
             selectedItem: selectedItem as unknown as WH40KItem | null,
             quantity: this.quantity,
             influenceBurn: this.influenceBurn,
@@ -142,6 +158,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
     }
 
     _onRender(context: TransactionRequestContext, options: ApplicationV2Config.RenderOptions): void {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises -- ApplicationV2 _onRender base may return Promise<void> | void
         super._onRender(context, options);
 
         const sourceSelect = this.element.querySelector('[name="sourceId"]');
@@ -224,6 +241,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         });
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options; we add a private _skipResolve marker
     async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (this.#resolve !== null && options._skipResolve !== true) {
             this.#resolve(null);

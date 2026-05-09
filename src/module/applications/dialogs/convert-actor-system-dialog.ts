@@ -6,25 +6,19 @@ import {
     type ConvertibleCharacterSystem,
 } from '../../utils/actor-system-converter.ts';
 
-type DialogV2CtorLike = {
-    new (config: Record<string, unknown>): { render: (force?: boolean) => Promise<unknown> };
-};
-
-const dialogV2Ctor = (foundry.applications as unknown as { api: { DialogV2: DialogV2CtorLike } }).api.DialogV2;
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 DialogV2 ctor not in shipped types
+const dialogV2Ctor = foundry.applications.api.DialogV2;
 
 export class ConvertActorSystemDialog {
     static async open(actor: WH40KBaseActor): Promise<WH40KBaseActor | null> {
         const currentSystem = getCharacterSystemId(actor.type);
-        if (!currentSystem) {
-            ui.notifications?.warn(game.i18n.localize('WH40K.Actor.ConvertSystem.NotConvertible'));
+        if (currentSystem === null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Actor.ConvertSystem.NotConvertible'));
             return null;
         }
 
         const targetOptions = CONVERTIBLE_CHARACTER_SYSTEMS.filter((systemId) => systemId !== currentSystem)
-            .map(
-                (systemId) =>
-                    `<option value="${systemId}">${game.i18n.localize(`WH40K.TYPES.Actor.${systemId}-character`)}</option>`,
-            )
+            .map((systemId) => `<option value="${systemId}">${game.i18n.localize(`WH40K.TYPES.Actor.${systemId}-character`)}</option>`)
             .join('');
 
         const content = `
@@ -56,25 +50,28 @@ export class ConvertActorSystemDialog {
                         callback: async (_event: Event, button: HTMLElement) => {
                             const form = button.closest('form');
                             const targetField = form?.querySelector('[name="targetSystem"]');
-                            const targetSystem = targetField instanceof HTMLSelectElement ? targetField.value : null;
-                            if (!targetSystem || !CONVERTIBLE_CHARACTER_SYSTEMS.includes(targetSystem as ConvertibleCharacterSystem)) {
+                            const targetValue = targetField instanceof HTMLSelectElement ? targetField.value : '';
+                            const validSystems: readonly string[] = CONVERTIBLE_CHARACTER_SYSTEMS;
+                            const isValid = (v: string): v is ConvertibleCharacterSystem => validSystems.includes(v);
+                            if (targetValue === '' || !isValid(targetValue)) {
                                 resolve(null);
                                 return;
                             }
+                            const targetSystem: ConvertibleCharacterSystem = targetValue;
 
                             try {
-                                const converted = await convertCharacterActorSystem(actor, targetSystem as ConvertibleCharacterSystem);
-                                ui.notifications?.info(
+                                const converted = await convertCharacterActorSystem(actor, targetSystem);
+                                ui.notifications.info(
                                     game.i18n.format('WH40K.Actor.ConvertSystem.Success', {
                                         actor: converted.name,
                                         system: game.i18n.localize(`WH40K.TYPES.Actor.${targetSystem}-character`),
                                     }),
                                 );
-                                await converted.sheet?.render(true);
+                                if (converted.sheet) await converted.sheet.render(true);
                                 resolve(converted);
                             } catch (error) {
                                 console.error(error);
-                                ui.notifications?.error(game.i18n.localize('WH40K.Actor.ConvertSystem.Failure'));
+                                ui.notifications.error(game.i18n.localize('WH40K.Actor.ConvertSystem.Failure'));
                                 resolve(null);
                             }
                         },

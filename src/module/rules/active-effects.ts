@@ -107,11 +107,7 @@ export async function createEffect(actor: WH40KBaseActorDocument, effectData: Ef
         flags: effectData.flags ?? {},
     };
 
-    return await actor.createEmbeddedDocuments(
-        'ActiveEffect',
-        [data] as unknown as Parameters<typeof actor.createEmbeddedDocuments<'ActiveEffect'>>[1],
-        options,
-    );
+    return actor.createEmbeddedDocuments('ActiveEffect', [data] as unknown as Parameters<typeof actor.createEmbeddedDocuments<'ActiveEffect'>>[1], options);
 }
 
 /**
@@ -131,7 +127,7 @@ export async function createCharacteristicEffect(
     const charLabel = game.i18n.localize(`WH40K.Characteristic.${characteristic.capitalize()}`);
     const name = options.name ?? `${charLabel} ${value > 0 ? '+' : ''}${value}`;
 
-    return await createEffect(actor, {
+    return createEffect(actor, {
         name,
         icon: options.icon ?? 'icons/svg/upgrade.svg',
         changes: [
@@ -159,7 +155,7 @@ export async function createSkillEffect(actor: WH40KBaseActorDocument, skill: st
     const skillLabel = game.i18n.localize(`WH40K.Skill.${skill}`);
     const name = options.name ?? `${skillLabel} ${value > 0 ? '+' : ''}${value}`;
 
-    return await createEffect(actor, {
+    return createEffect(actor, {
         name,
         icon: options.icon ?? 'icons/svg/upgrade.svg',
         changes: [
@@ -187,7 +183,7 @@ export async function createCombatEffect(actor: WH40KBaseActorDocument, type: st
     const typeLabel = game.i18n.localize(`WH40K.Combat.${type.capitalize()}`);
     const name = options.name ?? `${typeLabel} ${value > 0 ? '+' : ''}${value}`;
 
-    return await createEffect(actor, {
+    return createEffect(actor, {
         name,
         icon: options.icon ?? 'icons/svg/combat.svg',
         changes: [
@@ -269,13 +265,13 @@ export async function createConditionEffect(actor: WH40KBaseActorDocument, condi
         },
     };
 
-    const conditionData = conditions[condition.toLowerCase() as keyof typeof conditions];
+    const conditionData = conditions[condition.toLowerCase()];
     if (!conditionData) {
         ui.notifications.warn(`Unknown condition: ${condition}`);
         return null;
     }
 
-    return await createEffect(actor, {
+    return createEffect(actor, {
         ...conditionData,
         ...options,
         changes: options.changes ?? conditionData.changes,
@@ -301,7 +297,7 @@ export async function createTemporaryEffect(
 ): Promise<unknown> {
     const combat = game.combat;
 
-    return await createEffect(actor, {
+    return createEffect(actor, {
         name,
         icon: options.icon ?? 'icons/svg/clockwork.svg',
         changes,

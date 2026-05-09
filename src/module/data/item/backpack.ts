@@ -32,13 +32,16 @@ export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplat
         if (this.isCombatVest) {
             props.push('Combat Vest');
         }
-        if (this.availability) {
-            props.push(String(CONFIG.wh40k?.availabilities?.[this.availability] ?? this.availability));
+        if (this.availability !== '') {
+            const wh40kCfg = CONFIG.wh40k as { availabilities?: Record<string, { label?: string } | undefined> } | undefined;
+            const availLabel = wh40kCfg?.availabilities?.[this.availability]?.label ?? this.availability;
+            props.push(availLabel);
         }
         return props;
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return [{ label: `${this.capacity} kg`, icon: 'fa-solid fa-weight-hanging' }];
     }

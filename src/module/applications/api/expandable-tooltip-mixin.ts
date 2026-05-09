@@ -32,7 +32,7 @@ export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base
          * @type {Set<string>}
          * @private
          */
-        #openPanels: Set<string> = new Set();
+        readonly #openPanels: Set<string> = new Set();
 
         /**
          * Add expandable tooltip action handlers

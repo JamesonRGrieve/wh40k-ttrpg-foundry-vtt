@@ -1,5 +1,5 @@
-import SystemDataModel from '../abstract/system-data-model.ts';
 import { resolveLineVariant, inferActiveGameLine, isLineVariantContainer } from '../../utils/item-variant-utils.ts';
+import SystemDataModel from '../abstract/system-data-model.ts';
 
 /**
  * Template for items with descriptions and source references.

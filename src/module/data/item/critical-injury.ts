@@ -15,7 +15,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
     declare damageType: string;
     declare bodyPart: string;
     declare severity: number;
-    declare effects: Record<string, { text?: string; permanent?: boolean; [key: string]: any }>;
+    declare effects: Record<string, { text?: string; permanent?: boolean } | undefined>;
     declare notes: string;
 
     /** @inheritdoc */
@@ -24,6 +24,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Damage type that caused this
@@ -63,16 +64,16 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Get the current effect text for the active severity level.
      * @type {string}
      */
-    get currentEffect() {
-        return this.effects[this.severity]?.text || '';
+    get currentEffect(): string {
+        return this.effects[this.severity]?.text ?? '';
     }
 
     /**
      * Check if current severity is permanent.
      * @type {boolean}
      */
-    get isPermanent() {
-        return this.effects[this.severity]?.permanent || false;
+    get isPermanent(): boolean {
+        return this.effects[this.severity]?.permanent ?? false;
     }
 
     /**
@@ -80,7 +81,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Returns array of numbers.
      * @type {number[]}
      */
-    get availableSeverities() {
+    get availableSeverities(): number[] {
         return Object.keys(this.effects)
             .map((k) => parseInt(k))
             .sort((a, b) => a - b);
@@ -118,28 +119,28 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Get icon for damage type.
      * @type {string}
      */
-    get damageTypeIcon() {
+    get damageTypeIcon(): string {
         const icons: Record<string, string> = {
             impact: 'fa-hammer',
             rending: 'fa-cut',
             explosive: 'fa-bomb',
             energy: 'fa-bolt',
         };
-        return icons[this.damageType] || 'fa-band-aid';
+        return icons[this.damageType] ?? 'fa-band-aid';
     }
 
     /**
      * Get icon for body part.
      * @type {string}
      */
-    get bodyPartIcon() {
+    get bodyPartIcon(): string {
         const icons: Record<string, string> = {
             head: 'fa-head-side-brain',
             arm: 'fa-hand-paper',
             body: 'fa-user',
             leg: 'fa-shoe-prints',
         };
-        return icons[this.bodyPart] || 'fa-user';
+        return icons[this.bodyPart] ?? 'fa-user';
     }
 
     /**
@@ -157,10 +158,10 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Get full injury description (combines effect + notes).
      * @type {string}
      */
-    get fullDescription() {
-        let desc = this.currentEffect || '';
-        if (this.notes) {
-            desc += desc ? `\n\n<strong>Notes:</strong> ${this.notes}` : this.notes;
+    get fullDescription(): string {
+        let desc = this.currentEffect;
+        if (this.notes !== '') {
+            desc += desc !== '' ? `\n\n<strong>Notes:</strong> ${this.notes}` : this.notes;
         }
         return desc;
     }
@@ -186,6 +187,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             type: this.damageTypeLabel,

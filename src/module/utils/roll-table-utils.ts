@@ -1,4 +1,5 @@
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import type { WH40KGameSystem } from '../types/global.d.ts';
 
 type RollTableResult = Awaited<ReturnType<RollTable['roll']>>;
 type RollTableDialog = HTMLDialogElement & {
@@ -87,7 +88,7 @@ export class RollTableUtils {
      * @param {number} modifier - Modifier to the roll (e.g., from Psy Rating)
      * @returns {Promise<TableResult | null>}
      */
-    static async rollPsychicPhenomena(actor: WH40KBaseActor, modifier = 0) {
+    static async rollPsychicPhenomena(actor: WH40KBaseActor, modifier = 0): Promise<RollTableResult | null> {
         const roll = new Roll(`1d100 + ${modifier}`);
         await roll.evaluate();
 
@@ -109,7 +110,7 @@ export class RollTableUtils {
      * @param {WH40KBaseActor} actor - The actor rolling
      * @returns {Promise<TableResult | null>}
      */
-    static async rollPerilsOfTheWarp(actor: WH40KBaseActor) {
+    static async rollPerilsOfTheWarp(actor: WH40KBaseActor): Promise<RollTableResult | null> {
         return this.rollTable('Perils of the Warp', { displayChat: true });
     }
 
@@ -119,7 +120,7 @@ export class RollTableUtils {
      * @param {number} degreeOfFailure - Degrees of failure on the Fear test
      * @returns {Promise<TableResult>}
      */
-    static async rollFearEffects(fearRating = 1, degreeOfFailure = 1) {
+    static async rollFearEffects(fearRating = 1, degreeOfFailure = 1): Promise<RollTableResult | null> {
         const modifier = (fearRating - 1) * 10 + degreeOfFailure * 10;
         const roll = new Roll(`1d100 + ${modifier}`);
         await roll.evaluate();
@@ -134,7 +135,7 @@ export class RollTableUtils {
      * Roll on the Mutations table.
      * @returns {Promise<TableResult>}
      */
-    static async rollMutation() {
+    static async rollMutation(): Promise<RollTableResult | null> {
         return this.rollTable('Mutations', { displayChat: true });
     }
 
@@ -142,7 +143,7 @@ export class RollTableUtils {
      * Roll on the Malignancies table.
      * @returns {Promise<TableResult>}
      */
-    static async rollMalignancy() {
+    static async rollMalignancy(): Promise<RollTableResult | null> {
         return this.rollTable('Malignancies', { displayChat: true });
     }
 
@@ -150,7 +151,7 @@ export class RollTableUtils {
      * Roll on the Navigator Mutations table.
      * @returns {Promise<TableResult>}
      */
-    static async rollNavigatorMutation() {
+    static async rollNavigatorMutation(): Promise<RollTableResult | null> {
         return this.rollTable('Navigator Mutations', { displayChat: true });
     }
 
@@ -160,7 +161,7 @@ export class RollTableUtils {
      * @returns {Promise<TableResult>}
      */
     static async rollGiftOfTheGods(godName: string | null = null): Promise<RollTableResult | null> {
-        const tableName = godName ? `Gifts of ${godName}` : 'Gifts of the Gods';
+        const tableName = godName !== null && godName !== '' ? `Gifts of ${godName}` : 'Gifts of the Gods';
         return this.rollTable(tableName, { displayChat: true });
     }
 
@@ -186,7 +187,7 @@ export class RollTableUtils {
      * Create a quick roll dialog for common tables.
      * Opens a dialog allowing the user to select which table to roll on.
      */
-    static showRollTableDialog() {
+    static showRollTableDialog(): void {
         const tables = [
             { name: 'Psychic Phenomena', category: 'Psychic' },
             { name: 'Perils of the Warp', category: 'Psychic' },
@@ -241,6 +242,7 @@ export class RollTableUtils {
 
 // Register global access
 Hooks.once('ready', () => {
-    game.wh40k = game.wh40k || {};
+    // eslint-disable-next-line no-restricted-syntax -- boundary: progressive initialisation of game.wh40k namespace
+    game.wh40k ??= {} as WH40KGameSystem;
     game.wh40k.rollTable = RollTableUtils;
 });

@@ -1,5 +1,5 @@
-import SystemDataModel from '../abstract/system-data-model.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
+import SystemDataModel from '../abstract/system-data-model.ts';
 
 /**
  * Template for items with attack capabilities.

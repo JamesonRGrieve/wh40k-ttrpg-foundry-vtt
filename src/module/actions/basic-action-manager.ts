@@ -21,27 +21,51 @@ export class BasicActionManager {
             // root, so without this class the chat cards lose all Tailwind styling.
             html.classList.add('wh40k-rpg');
             html.querySelectorAll('.roll-control__hide-control').forEach((el) =>
-                el.addEventListener('click', async (ev: Event) => this._toggleExpandChatMessage(ev)),
+                el.addEventListener('click', (ev: Event) => {
+                    this._toggleExpandChatMessage(ev);
+                }),
             );
-            html.querySelectorAll('.roll-control__refund').forEach((el) => el.addEventListener('click', async (ev: Event) => this._refundResources(ev)));
-            html.querySelectorAll('.roll-control__fate-reroll').forEach((el) => el.addEventListener('click', async (ev: Event) => this._fateReroll(ev)));
-            html.querySelectorAll('.roll-control__assign-damage').forEach((el) => el.addEventListener('click', async (ev: Event) => this._assignDamage(ev)));
-            html.querySelectorAll('.roll-control__roll-damage').forEach((el) => el.addEventListener('click', async (ev: Event) => this._rollDamage(ev)));
-            html.querySelectorAll('.roll-control__apply-damage').forEach((el) => el.addEventListener('click', async (ev: Event) => this._applyDamage(ev)));
+            html.querySelectorAll('.roll-control__refund').forEach((el) =>
+                el.addEventListener('click', (ev: Event) => {
+                    void this._refundResources(ev);
+                }),
+            );
+            html.querySelectorAll('.roll-control__fate-reroll').forEach((el) =>
+                el.addEventListener('click', (ev: Event) => {
+                    void this._fateReroll(ev);
+                }),
+            );
+            html.querySelectorAll('.roll-control__assign-damage').forEach((el) =>
+                el.addEventListener('click', (ev: Event) => {
+                    void this._assignDamage(ev);
+                }),
+            );
+            html.querySelectorAll('.roll-control__roll-damage').forEach((el) =>
+                el.addEventListener('click', (ev: Event) => {
+                    void this._rollDamage(ev);
+                }),
+            );
+            html.querySelectorAll('.roll-control__apply-damage').forEach((el) =>
+                el.addEventListener('click', (ev: Event) => {
+                    void this._applyDamage(ev);
+                }),
+            );
         });
 
         // Initialize Scene Control Buttons
         // V14: controls is Record<string, SceneControl> keyed by control name, not an array
         Hooks.on('getSceneControlButtons', (controls: Record<string, foundry.applications.ui.SceneControls.Control>) => {
             const bar = controls.tokens;
-            if (!bar) return;
+            if (bar == null) return;
             const toolOrder = Object.keys(bar.tools).length;
             bar.tools['assignDamage'] = {
                 name: 'Assign Damage',
                 title: 'Assign Damage',
                 icon: 'fas fa-shield',
                 visible: true,
-                onChange: async () => this.assignDamageTool(),
+                onChange: () => {
+                    void this.assignDamageTool();
+                },
                 button: true,
                 order: toolOrder,
             };
@@ -53,12 +77,12 @@ export class BasicActionManager {
         event.preventDefault();
         const displayToggle = event.currentTarget as HTMLElement;
         const span = displayToggle.querySelector('span');
-        if (span) {
+        if (span != null) {
             span.classList.toggle('active');
         }
         const target = displayToggle.dataset.toggle;
         const targetEl = target != null && target !== '' ? document.getElementById(target) : null;
-        if (targetEl) {
+        if (targetEl != null) {
             targetEl.style.display = targetEl.style.display === 'none' ? '' : 'none';
         }
     }
@@ -68,7 +92,7 @@ export class BasicActionManager {
         const btn = event.currentTarget as HTMLButtonElement;
         const rollId = btn.dataset.rollId;
         const actionData = this.getActionData(rollId);
-        if (!actionData) {
+        if (actionData == null) {
             ui.notifications.warn('Roll data no longer available. Cannot roll damage.');
             return;
         }
@@ -76,18 +100,18 @@ export class BasicActionManager {
         // Disable button to prevent double-rolling
         btn.disabled = true;
         const statusSpan = btn.querySelector('span:last-child');
-        if (statusSpan) statusSpan.textContent = 'Rolled';
+        if (statusSpan != null) statusSpan.textContent = 'Rolled';
 
         // Calculate hits (deferred from attack roll)
         await actionData.calculateHits();
 
         // Build template data
-        const damageRolls = actionData.damageData?.hits.map((h: Hit) => h.damageRoll).filter((r: Roll | undefined) => r) as Roll[];
+        const damageRolls = actionData.damageData?.hits.map((h: Hit) => h.damageRoll).filter((r: Roll | undefined): r is Roll => r != null);
         const templateData = {
             weaponName: actionData.rollData.name,
             hits: actionData.damageData?.hits,
             targetActor: actionData.rollData.targetActor,
-            psychicEffect: (actionData as any).psychicEffect || null,
+            psychicEffect: (actionData as { psychicEffect?: unknown }).psychicEffect ?? null,
         };
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
@@ -138,7 +162,8 @@ export class BasicActionManager {
         }
 
         const sourceActor = actionData.rollData.sourceActor;
-        if ((sourceActor?.system as any)?.fate?.value <= 0) {
+        const sourceFate = (sourceActor?.system as { fate?: { value?: number } } | undefined)?.fate?.value ?? 0;
+        if (sourceFate <= 0) {
             ui.notifications.warn(`Actor does not have enough fate points!`);
             return;
         }
@@ -176,9 +201,11 @@ export class BasicActionManager {
 
         const hitData = new Hit();
         hitData.location = location ?? 'Body';
-        (hitData as any).totalDamage = totalDamage;
-        (hitData as any).totalPenetration = totalPenetration;
-        (hitData as any).totalFatigue = totalFatigue;
+        // dataset values are strings; the AssignDamageData consumer parses them.
+        const hitWritable = hitData as unknown as { totalDamage: unknown; totalPenetration: unknown; totalFatigue: unknown };
+        hitWritable.totalDamage = totalDamage;
+        hitWritable.totalPenetration = totalPenetration;
+        hitWritable.totalFatigue = totalFatigue;
         hitData.damageType = damageType ?? 'Impact';
 
         const targetUuid = div.dataset.targetUuid;
@@ -186,7 +213,7 @@ export class BasicActionManager {
         let targetActor: WH40KBaseActorDocument | undefined;
         if (targetUuid != null && targetUuid !== '') {
             const doc = await fromUuid(targetUuid);
-            const actor = doc instanceof Actor ? doc : (doc as any)?.actor;
+            const actor = doc instanceof Actor ? doc : (doc as { actor?: unknown } | null)?.actor;
             targetActor = actor instanceof Actor ? (actor as unknown as WH40KBaseActorDocument) : undefined;
         } else {
             const targetedObjects = game.user.targets;
@@ -195,7 +222,7 @@ export class BasicActionManager {
                 targetActor = token.actor as WH40KBaseActorDocument | undefined;
             }
         }
-        if (!targetActor) {
+        if (targetActor == null) {
             ui.notifications.warn(`Cannot determine target actor to assign hit.`);
             return;
         }
@@ -215,21 +242,23 @@ export class BasicActionManager {
         const penetration = div.dataset.penetration;
         const fatigue = div.dataset.fatigue;
 
-        if (!targetUuid) {
+        if (targetUuid == null || targetUuid === '') {
             ui.notifications.warn(`Cannot determine target UUID to assign hit.`);
             return;
         }
 
         const actor = await fromUuid(targetUuid);
         const targetActor =
-            actor instanceof Actor ? (actor as unknown as WH40KBaseActorDocument) : ((actor as any)?.actor as WH40KBaseActorDocument | undefined);
+            actor instanceof Actor
+                ? (actor as unknown as WH40KBaseActorDocument)
+                : ((actor as { actor?: unknown } | null)?.actor as WH40KBaseActorDocument | undefined);
 
-        if (!targetActor) {
+        if (targetActor == null) {
             ui.notifications.warn(`Cannot determine actor to assign hit.`);
             return;
         }
         for (const field of [damage, penetration, fatigue]) {
-            if (field != null && field !== '' && isNaN(parseInt(field))) {
+            if (field != null && field !== '' && Number.isNaN(parseInt(field, 10))) {
                 ui.notifications.warn(`Unable to determine damage/penetration/fatigue to assign.`);
                 return;
             }
@@ -237,9 +266,9 @@ export class BasicActionManager {
 
         const hit = new Hit();
         if (location != null && location !== '') hit.location = location;
-        if (damage != null && damage !== '') hit.totalDamage = Number.parseInt(damage);
-        if (penetration != null && penetration !== '') hit.totalPenetration = Number.parseInt(penetration);
-        if (fatigue != null && fatigue !== '') hit.totalFatigue = Number.parseInt(fatigue);
+        if (damage != null && damage !== '') hit.totalDamage = Number.parseInt(damage, 10);
+        if (penetration != null && penetration !== '') hit.totalPenetration = Number.parseInt(penetration, 10);
+        if (fatigue != null && fatigue !== '') hit.totalFatigue = Number.parseInt(fatigue, 10);
         if (damageType != null && damageType !== '') hit.damageType = damageType;
 
         const assignDamageData = new AssignDamageData(targetActor as unknown as ActorLike, hit);
@@ -255,7 +284,7 @@ export class BasicActionManager {
     async assignDamageTool(): Promise<void> {
         const sourceToken = DHTargetedActionManager.getSourceToken();
         const sourceActor = sourceToken?.actor as WH40KBaseActorDocument | undefined;
-        if (!sourceActor) return;
+        if (sourceActor == null) return;
 
         const hitData = new Hit();
         const assignData = new AssignDamageData(sourceActor as unknown as ActorLike, hitData);

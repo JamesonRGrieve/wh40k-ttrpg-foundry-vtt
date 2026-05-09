@@ -28,17 +28,18 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
     }
 
     resolveCareerKey(actor: WH40KBaseActor): string | null {
-        return (actor.system?.originPath?.career as string | undefined) ?? null;
+        const career = actor.system.originPath?.career;
+        return typeof career === 'string' ? career : null;
     }
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
-        const originPath = (actor.system?.originPath ?? {}) as Record<string, string | number>;
+        const get = (key: string): string | number => this.readOriginPathField(actor, key);
         return [
             this.makePlayerField(actor),
-            this.makeField('Home World', 'system.originPath.homeWorld', originPath.homeWorld ?? ''),
-            this.makeField('Career Path', 'system.originPath.career', originPath.career ?? '', 'Career Path'),
-            this.makeField('Rank', 'system.originPath.role', originPath.role ?? ''),
-            this.makeField('Divination', 'system.originPath.divination', originPath.divination ?? ''),
+            this.makeField('Home World', 'system.originPath.homeWorld', get('homeWorld')),
+            this.makeField('Career Path', 'system.originPath.career', get('career'), 'Career Path'),
+            this.makeField('Rank', 'system.originPath.role', get('role')),
+            this.makeField('Divination', 'system.originPath.divination', get('divination')),
         ];
     }
 }

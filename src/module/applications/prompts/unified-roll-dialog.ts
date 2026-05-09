@@ -11,6 +11,7 @@
  */
 
 import type { ActionData } from '../../rolls/action-data.ts';
+import type { RollData } from '../../rolls/roll-data.ts';
 import { getDegree, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import {
     getAvailableAttackModes,
@@ -23,11 +24,10 @@ import {
     isMeleeSpecialOption,
     AIM_OPTIONS,
 } from '../../rules/attack-options.ts';
-import { RANGE_BRACKETS, calculateTokenDistance } from '../../utils/range-calculator.ts';
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
-import { RollData } from '../../rolls/roll-data.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import { RANGE_BRACKETS, calculateTokenDistance } from '../../utils/range-calculator.ts';
+import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = (foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor } }).api;
 
@@ -1075,7 +1075,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (!targetToken) return;
 
         // Calculate distance
-        const distance = calculateTokenDistance(sourceToken as Token, targetToken as Token);
+        const distance = calculateTokenDistance(sourceToken as Token, targetToken);
         rd.distance = distance;
         rd.targetActor = targetToken.actor;
 

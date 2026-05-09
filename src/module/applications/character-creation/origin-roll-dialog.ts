@@ -11,8 +11,8 @@
  * - Result storage
  */
 
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { ApplicationV2Ctor } from '../api/application-types.ts';
 const { ApplicationV2, HandlebarsApplicationMixin } = (
     foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor; HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T } }
 ).api;
@@ -355,8 +355,8 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const tb = actor.system.characteristics?.toughness?.bonus || 0;
 
         // Check if this is a 1d5 formula
-        const is1d5 = /1d5/.test(formula);
-        const is1d10 = /1d10/.test(formula);
+        const is1d5 = formula.includes('1d5');
+        const is1d10 = formula.includes('1d10');
 
         const instructionText = is1d5
             ? 'Roll 1d10 and enter the result (it will be divided by 2, rounded up for 1d5):'
@@ -876,7 +876,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             speaker: ChatMessage.getSpeaker({ actor: this.context.actor as unknown as WH40KBaseActor }),
             ...(result.roll ? { rolls: [result.roll] } : {}),
             sound: (CONFIG as unknown as { sounds: { dice: string } }).sounds.dice,
-        } as Record<string, unknown>);
+        });
     }
 
     /* -------------------------------------------- */

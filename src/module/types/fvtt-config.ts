@@ -10,75 +10,73 @@
  * CONFIG.Actor.dataModels, CONFIG.Item.dataModels).
  */
 
-// Document classes
-import type { WH40KBaseActor } from '../documents/base-actor.ts';
-import type { WH40KActiveEffect } from '../documents/active-effect.ts';
-import type { ChatMessageWH40K } from '../documents/chat-message.ts';
-import type { TokenDocumentWH40K } from '../documents/token.ts';
-import type { WH40KItem } from '../documents/item.ts';
-
 // Actor data models (concrete per-system classes)
 import type {
-    DH2CharacterData,
-    DH2NPCData,
-    DH2VehicleData,
-    DH1CharacterData,
-    DH1NPCData,
-    DH1VehicleData,
-    RTCharacterData,
-    RTNPCData,
-    RTVehicleData,
-    RTStarshipData,
     BCCharacterData,
     BCNPCData,
     BCVehicleData,
-    OWCharacterData,
-    OWNPCData,
-    OWVehicleData,
+    DH1CharacterData,
+    DH1NPCData,
+    DH1VehicleData,
+    DH2CharacterData,
+    DH2NPCData,
+    DH2VehicleData,
     DWCharacterData,
     DWNPCData,
     DWVehicleData,
+    OWCharacterData,
+    OWNPCData,
+    OWVehicleData,
+    RTCharacterData,
+    RTNPCData,
+    RTStarshipData,
+    RTVehicleData,
 } from '../data/actor/_module.ts';
-
 // Item data models
 import type {
-    WeaponData,
-    ArmourData,
     AmmunitionData,
-    GearData,
+    AptitudeData,
+    ArmourData,
+    ArmourModificationData,
+    AttackSpecialData,
+    BackpackData,
+    ConditionData,
+    CriticalInjuryData,
     CyberneticData,
     ForceFieldData,
-    BackpackData,
+    GearData,
+    JournalEntryItemData,
+    MalignancyData,
+    MentalDisorderData,
+    MutationData,
+    NavigatorPowerData,
+    NPCTemplateData,
+    OrderData,
+    OriginPathData,
+    PeerEnemyData,
+    PsychicPowerData,
+    RitualData,
+    ShipComponentData,
+    ShipRoleData,
+    ShipUpgradeData,
+    ShipWeaponData,
+    SkillData,
+    SpecialAbilityData,
     StorageLocationData,
     TalentData,
     TraitData,
-    SkillData,
-    OriginPathData,
-    ConditionData,
-    AptitudeData,
-    PeerEnemyData,
-    PsychicPowerData,
-    NavigatorPowerData,
-    RitualData,
-    ShipComponentData,
-    ShipWeaponData,
-    ShipUpgradeData,
-    ShipRoleData,
-    OrderData,
     VehicleTraitData,
     VehicleUpgradeData,
+    WeaponData,
     WeaponModificationData,
-    ArmourModificationData,
     WeaponQualityData,
-    AttackSpecialData,
-    SpecialAbilityData,
-    CriticalInjuryData,
-    MutationData,
-    MalignancyData,
-    MentalDisorderData,
-    JournalEntryItemData,
-    NPCTemplateData,
 } from '../data/item/_module.ts';
+// Document classes
+import type { WH40KActiveEffect } from '../documents/active-effect.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import type { ChatMessageWH40K } from '../documents/chat-message.ts';
+import type { WH40KItem } from '../documents/item.ts';
+import type { TokenDocumentWH40K } from '../documents/token.ts';
 
 declare module 'fvtt-types/configuration' {
     interface SystemNameConfig {

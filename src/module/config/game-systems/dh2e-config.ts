@@ -71,13 +71,13 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     }
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
-        const originPath = (actor.system?.originPath ?? {}) as Record<string, string | number>;
+        const get = (key: string): string | number => this.readOriginPathField(actor, key);
         return [
             this.makePlayerField(actor),
-            this.makeField(game.i18n.localize('WH40K.OriginPath.HomeWorld'), 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Home World'),
-            this.makeField(game.i18n.localize('WH40K.OriginPath.Background'), 'system.originPath.background', originPath.background ?? '', 'Background'),
-            this.makeField(game.i18n.localize('WH40K.OriginPath.Role'), 'system.originPath.role', originPath.role ?? '', 'Role'),
-            this.makeField('Divination', 'system.originPath.divination', originPath.divination ?? '', 'Divination'),
+            this.makeField(game.i18n.localize('WH40K.OriginPath.HomeWorld'), 'system.originPath.homeWorld', get('homeWorld'), 'Home World'),
+            this.makeField(game.i18n.localize('WH40K.OriginPath.Background'), 'system.originPath.background', get('background'), 'Background'),
+            this.makeField(game.i18n.localize('WH40K.OriginPath.Role'), 'system.originPath.role', get('role'), 'Role'),
+            this.makeField('Divination', 'system.originPath.divination', get('divination'), 'Divination'),
         ];
     }
 

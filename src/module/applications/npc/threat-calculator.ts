@@ -887,7 +887,7 @@ export default class ThreatCalculator {
                 new: newThreat,
                 change: newThreat - currentThreat,
             },
-            characteristics: {} as Record<string, unknown>,
+            characteristics: {},
             wounds: {
                 current: currentData.wounds.max,
                 new: updates['wounds.max'] ?? currentData.wounds.max,

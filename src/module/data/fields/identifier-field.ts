@@ -10,10 +10,10 @@
 // the base is referenced through the typed namespace because StringField's #assignmentType
 // brand doesn't widen to `any`. Using an `any` base makes the subclass brand-free,
 // which satisfies DataField.Any at call sites. The runtime class is still StringField.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/naming-convention, no-restricted-syntax -- boundary: fvtt-types brand mismatch on StringField subclass */
 export default class IdentifierField extends (foundry.data as any).fields.StringField {
     /** @inheritdoc */
-    static get _defaults() {
+    static get _defaults(): Record<string, unknown> {
         return foundry.utils.mergeObject(super._defaults, {
             nullable: false,
             blank: true,
@@ -26,6 +26,7 @@ export default class IdentifierField extends (foundry.data as any).fields.String
     constructor(options?: Record<string, unknown>) {
         super(options);
     }
+    /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/naming-convention, no-restricted-syntax */
 
     /* -------------------------------------------- */
 

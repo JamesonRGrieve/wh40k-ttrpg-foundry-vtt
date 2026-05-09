@@ -34,8 +34,9 @@ interface BreakdownData {
  * @param {T} Base - The base class to extend
  * @returns {any} Extended class with stat breakdown support
  */
-export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T) {
+export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T): T {
     return class StatBreakdownApplication extends Base {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixin requirement
         constructor(...args: any[]) {
             super(...args);
         }
@@ -54,13 +55,16 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
          * @override
          */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 base class DEFAULT_OPTIONS not on shipped types
             ...((Base as unknown as { DEFAULT_OPTIONS?: Partial<ApplicationV2Config.DefaultOptions> }).DEFAULT_OPTIONS ?? {}),
+            /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
             actions: {
-                ...(((Base as unknown as { DEFAULT_OPTIONS?: { actions?: Record<string, unknown> } }).DEFAULT_OPTIONS?.actions as Record<string, unknown>) ??
-                    {}),
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 base class DEFAULT_OPTIONS.actions not on shipped types
+                ...((Base as unknown as { DEFAULT_OPTIONS?: { actions?: Record<string, unknown> } }).DEFAULT_OPTIONS?.actions ?? {}),
                 showStatBreakdown: StatBreakdownApplication.#showStatBreakdown,
                 viewBreakdownSource: StatBreakdownApplication.#viewBreakdownSource,
             },
+            /* eslint-enable @typescript-eslint/unbound-method */
         };
 
         /* -------------------------------------------- */
@@ -79,27 +83,27 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
             event.stopPropagation();
 
             const statKey = target.dataset.statKey;
-            if (statKey == null || statKey === '') {
+            if (statKey === undefined || statKey === '') {
                 console.warn('Stat breakdown element missing data-stat-key');
                 return;
             }
 
             // Close existing popover if any
-            if (this.#activePopover) {
+            if (this.#activePopover !== null) {
                 this.#closePopover();
             }
 
             // Get breakdown data from document
-            const doc = this.document;
+            const doc = this.document as { getStatBreakdown?: (key: string) => BreakdownData | undefined };
             let breakdown: BreakdownData | undefined;
-            if (typeof (doc as any).getStatBreakdown === 'function') {
-                breakdown = (doc as any).getStatBreakdown(statKey);
+            if (typeof doc.getStatBreakdown === 'function') {
+                breakdown = doc.getStatBreakdown(statKey);
             } else {
                 console.warn(`Document does not implement getStatBreakdown for ${statKey}`);
                 return;
             }
 
-            if (!breakdown) {
+            if (breakdown === undefined) {
                 console.warn(`No breakdown data available for ${statKey}`);
                 return;
             }
@@ -120,11 +124,13 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
             event.stopPropagation();
 
             const uuid = target.dataset.sourceUuid;
-            if (uuid == null || uuid === '') return;
+            if (uuid === undefined || uuid === '') return;
 
             const item = await fromUuid(uuid);
             if (item instanceof foundry.abstract.Document) {
-                (item as foundry.abstract.Document.Any & { sheet?: { render: (options?: Record<string, unknown> | boolean) => unknown } }).sheet?.render(true);
+                // eslint-disable-next-line no-restricted-syntax -- boundary: shipped types do not declare .sheet on abstract Document
+                const sheet = (item as foundry.abstract.Document.Any & { sheet?: { render: (options?: boolean) => unknown } }).sheet;
+                sheet?.render(true);
             }
         }
 
@@ -188,14 +194,14 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
                 html += '<div class="wh40k-stat-breakdown-modifiers">';
                 for (const modifier of modifiers) {
                     const valueClass = modifier.value > 0 ? 'wh40k-stat-breakdown-value--positive' : 'wh40k-stat-breakdown-value--negative';
-                    const hasUuid = modifier.uuid != null && modifier.uuid !== '';
+                    const hasUuid = modifier.uuid !== undefined && modifier.uuid !== '';
                     const clickable = hasUuid ? 'wh40k-stat-breakdown-row--clickable' : '';
 
                     html += `
                         <div class="wh40k-stat-breakdown-row ${clickable}"
                              ${hasUuid ? `data-action="viewBreakdownSource" data-source-uuid="${modifier.uuid}"` : ''}>
                             <span class="wh40k-stat-breakdown-source">
-                                ${modifier.icon != null && modifier.icon !== '' ? `<i class="${modifier.icon}"></i>` : ''}
+                                ${modifier.icon !== undefined && modifier.icon !== '' ? `<i class="${modifier.icon}"></i>` : ''}
                                 ${modifier.source}
                             </span>
                             <span class="wh40k-stat-breakdown-value ${valueClass}">
@@ -257,7 +263,7 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
             const sourceLinks = popover.querySelectorAll<HTMLElement>('[data-action="viewBreakdownSource"]');
             for (const link of sourceLinks) {
                 link.addEventListener('click', (event: MouseEvent) => {
-                    (this.constructor as any).#viewBreakdownSource.call(this, event, link);
+                    void StatBreakdownApplication.#viewBreakdownSource.call(this, event as PointerEvent, link);
                 });
             }
         }

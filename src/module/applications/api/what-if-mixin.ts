@@ -13,8 +13,8 @@
  * - Clear visual distinction from reality
  */
 
-import type { ApplicationV2Ctor, DialogV2Like } from './application-types.ts';
 import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KSkillEntry } from '../../types/global.d.ts';
+import type { ApplicationV2Ctor, DialogV2Like } from './application-types.ts';
 
 const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2Like } }).api.DialogV2;
 
@@ -63,7 +63,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
 
         /** @inheritDoc */
         async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
-            await super._onRender(context, options as never);
+            await super._onRender(context, options);
 
             if (this._whatIfActive) {
                 this._renderWhatIfOverlay();
@@ -226,7 +226,8 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
                 element.classList.add('what-if-preview');
                 if (!element.querySelector('.wh40k-what-if__pulse-border')) {
                     const pulseBorder = document.createElement('span');
-                    pulseBorder.className = 'wh40k-what-if__pulse-border tw-animate-preview-pulse tw-absolute tw-inset-[-2px] tw-border-2 tw-border-solid tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-pointer-events-none';
+                    pulseBorder.className =
+                        'wh40k-what-if__pulse-border tw-animate-preview-pulse tw-absolute tw-inset-[-2px] tw-border-2 tw-border-solid tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-pointer-events-none';
                     element.appendChild(pulseBorder);
                 }
 
@@ -294,7 +295,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
             this._whatIfPreview = new (CONFIG.Actor as unknown as { documentClass: typeof Actor.implementation }).documentClass(
                 previewData as unknown as ConstructorParameters<typeof Actor.implementation>[0],
                 { parent: null },
-            ) as unknown as WH40KBaseActorDocument;
+            );
             if (this._whatIfPreview) this._whatIfPreview.prepareData();
 
             this._calculateImpacts();

@@ -15,6 +15,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
         ...BaseItemSheet.DEFAULT_OPTIONS,
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             ...BaseItemSheet.DEFAULT_OPTIONS.actions,
             nestedItemCreate: ContainerItemSheet.#nestedItemCreate,
@@ -22,6 +23,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
             nestedItemDelete: ContainerItemSheet.#nestedItemDelete,
             nestedItemRoll: ContainerItemSheet.#nestedItemRoll,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -29,6 +31,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         const sys = this.item.system as { container?: boolean };
@@ -47,6 +50,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
     async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
@@ -66,17 +70,17 @@ export default class ContainerItemSheet extends BaseItemSheet {
     _setupContainerDragDrop(): void {
         const form = this.element.querySelector('form') ?? this.element;
 
-        form.addEventListener('dragover', this._onDragOver.bind(this));
+        form.addEventListener('dragover', (e) => this._onDragOver(e));
         form.addEventListener('drop', (e) => {
-            void this._onDrop(e as DragEvent);
+            void this._onDrop(e);
         });
-        form.addEventListener('dragend', this._onDragEnd.bind(this));
+        form.addEventListener('dragend', (e) => this._onDragEnd(e));
 
         // Set up draggable nested items
         this.element.querySelectorAll('[data-nested-item-id]').forEach((el) => {
             el.setAttribute('draggable', 'true');
             el.addEventListener('dragstart', (e) => {
-                this._onNestedItemDragStart(e as DragEvent);
+                void this._onNestedItemDragStart(e as DragEvent);
             });
         });
     }
@@ -127,18 +131,21 @@ export default class ContainerItemSheet extends BaseItemSheet {
                 return false;
             }
 
-            droppedItem = (await fromUuid(data.uuid ?? '')) as WH40KItem | null;
-            if (!droppedItem) return false;
+            const fetchedItem = await fromUuid(data.uuid ?? '');
+            if (!fetchedItem) return false;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns generic Document; narrowed to WH40KItem at consumer
+            droppedItem = fetchedItem as unknown as WH40KItem;
 
             const resolvedItem = droppedItem;
 
             // Get source actor if applicable
             if (data.uuid?.startsWith('Actor.') === true) {
-                sourceActor = (await fromUuid(data.uuid.split('.Item.')[0])) as Actor | null;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns generic Document; narrowed to Actor
+                sourceActor = (await fromUuid(data.uuid.split('.Item.')[0])) as unknown as Actor;
             }
 
             // Check if item already exists
-            if (this.item.items?.find((i) => i._id === resolvedItem._id)) {
+            if (this.item.items.find((i) => i._id === resolvedItem._id)) {
                 return false;
             }
         } catch {
@@ -152,12 +159,14 @@ export default class ContainerItemSheet extends BaseItemSheet {
 
         // Prevent dropping item onto itself or ancestors
         if (!this._validateDropTarget(droppedItem)) {
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Item.Container.DropSelfRejected localization key
             ui.notifications.info('Cannot drop item into itself');
             return false;
         }
 
         // Add the item to the container
-        await this.item.createNestedDocuments([droppedItem as unknown as Record<string, unknown>]);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: createNestedDocuments accepts source-data records; the runtime serialises the document
+        await this.item.createNestedDocuments([droppedItem.toObject()]);
 
         // Remove from source actor if applicable
         if (sourceActor !== null && ['acolyte', 'character'].includes(sourceActor.type)) {
@@ -176,13 +185,15 @@ export default class ContainerItemSheet extends BaseItemSheet {
      */
     _validateDropTarget(droppedItem: WH40KItem): boolean {
         let canAdd = this.item.id !== droppedItem._id;
-        let parent: { id: string | null; parent?: unknown } | null = this.item.parent;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: walking arbitrary parent chain across heterogeneous Foundry documents
+        let parent = this.item.parent as unknown as { id: string | null; parent?: unknown } | null;
         let count = 0;
 
-        while (parent && count < 10) {
+        while (parent !== null && count < 10) {
             count++;
             canAdd = canAdd && parent.id !== droppedItem._id;
-            parent = (parent.parent as typeof parent) ?? null;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: parent chain is heterogeneous
+            parent = (parent.parent ?? null) as typeof parent;
         }
 
         return canAdd;
@@ -211,9 +222,9 @@ export default class ContainerItemSheet extends BaseItemSheet {
 
         const element = event.currentTarget as HTMLElement;
         const itemId = element.dataset.nestedItemId;
-        if (!itemId) return;
+        if (itemId === undefined || itemId === '') return;
 
-        const nestedItem = this.item.items?.get(itemId);
+        const nestedItem = this.item.items.get(itemId);
         if (!nestedItem) return;
 
         // Create drag data
@@ -250,8 +261,8 @@ export default class ContainerItemSheet extends BaseItemSheet {
     static #nestedItemEdit(this: ContainerItemSheet, event: Event, target: HTMLElement): void {
         const itemId = target.closest<HTMLElement>('[data-nested-item-id]')?.dataset.nestedItemId;
         if (itemId === undefined) return;
-        const nestedItem = this.item.items?.get(itemId);
-        nestedItem?.sheet?.render(true);
+        const nestedItem = this.item.items.get(itemId);
+        void nestedItem?.sheet?.render(true);
     }
 
     /* -------------------------------------------- */
@@ -261,7 +272,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      */
     static async #nestedItemDelete(this: ContainerItemSheet, event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.closest<HTMLElement>('[data-nested-item-id]')?.dataset.nestedItemId;
-        if (!itemId) return;
+        if (itemId === undefined || itemId === '') return;
 
         const confirmed = await ConfirmationDialog.confirm({
             title: 'Confirm Delete',

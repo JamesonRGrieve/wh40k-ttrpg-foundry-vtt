@@ -13,9 +13,9 @@
  * - Gothic 40K themed
  */
 
+import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
-import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -138,7 +138,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = (await super._prepareContext(options)) as Record<string, unknown>;
+        const context = await super._prepareContext(options);
 
         if (!this.actor) return context;
 
@@ -280,7 +280,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         const actions = [];
 
         // Reload (if weapon needs it)
-        if (this.primaryWeapon && this.primaryWeapon.system.clip) {
+        if (this.primaryWeapon?.system.clip) {
             const current = this.primaryWeapon.system.clip.value || 0;
             const max = this.primaryWeapon.system.clip.max || 0;
 
@@ -623,7 +623,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
             speaker: ChatMessage.getSpeaker({ actor: this.actor ?? undefined }),
             content: `<p><strong>${this.actor?.name}</strong> takes aim (+10 to next attack)</p>`,
             flavor: 'Aim Action',
-        } as Record<string, unknown>);
+        });
 
         ui.notifications.info('Aim action taken (+10 next attack)');
     }
@@ -702,7 +702,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor ?? undefined }),
             content: `<p><strong>${this.actor?.name}</strong> uses ${item.name}</p>`,
-        } as Record<string, unknown>);
+        });
 
         ui.notifications.info(`Used ${item.name}`);
     }
@@ -749,11 +749,9 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @returns {CombatQuickPanel}  The panel instance
      * @static
      */
-    static show(actor: WH40KBaseActor): Promise<unknown> {
+    static async show(actor: WH40KBaseActor): Promise<unknown> {
         // Check if panel already exists
-        const existing = (Object.values(ui.windows) as unknown[]).find(
-            (app): app is CombatQuickPanel => app instanceof CombatQuickPanel && app.actor?.id === actor.id,
-        );
+        const existing = Object.values(ui.windows).find((app): app is CombatQuickPanel => app instanceof CombatQuickPanel && app.actor?.id === actor.id);
 
         if (existing) {
             void existing.render(true);
@@ -774,9 +772,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @static
      */
     static close(actor: WH40KBaseActor): void {
-        const panel = (Object.values(ui.windows) as unknown[]).find(
-            (app): app is CombatQuickPanel => app instanceof CombatQuickPanel && app.actor?.id === actor.id,
-        );
+        const panel = Object.values(ui.windows).find((app): app is CombatQuickPanel => app instanceof CombatQuickPanel && app.actor?.id === actor.id);
 
         if (panel) void panel.close();
     }
@@ -789,9 +785,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @static
      */
     static toggle(actor: WH40KBaseActor): void {
-        const panel = (Object.values(ui.windows) as unknown[]).find(
-            (app): app is CombatQuickPanel => app instanceof CombatQuickPanel && app.actor?.id === actor.id,
-        );
+        const panel = Object.values(ui.windows).find((app): app is CombatQuickPanel => app instanceof CombatQuickPanel && app.actor?.id === actor.id);
 
         if (panel) {
             void panel.close();

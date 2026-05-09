@@ -50,7 +50,7 @@ export default class NPCTemplateData extends ItemDataModel {
     declare baseArmour: number;
 
     // Unnaturals
-    declare unnaturals: Record<string, number>;
+    declare unnaturals: Record<string, number | undefined>;
 
     // Skills
     declare trainedSkills: Array<{
@@ -293,16 +293,16 @@ export default class NPCTemplateData extends ItemDataModel {
         super.prepareDerivedData();
 
         // Calculate skill count
-        this._skillCount = this.trainedSkills?.length || 0;
+        this._skillCount = this.trainedSkills.length;
 
         // Calculate trait count
-        this._traitCount = this.traits?.length || 0;
+        this._traitCount = this.traits.length;
 
         // Calculate talent count
-        this._talentCount = this.talents?.length || 0;
+        this._talentCount = this.talents.length;
 
         // Calculate variant count
-        this._variantCount = this.variants?.length || 0;
+        this._variantCount = this.variants.length;
     }
 
     /* -------------------------------------------- */
@@ -353,6 +353,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * @param {string} [options.variant] - Variant name to apply.
      * @returns {Object} NPC system data ready for Actor.create().
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.create() payload
     generateAtThreat(targetThreat: number, options: { isHorde?: boolean; variant?: string | null } = {}): Record<string, unknown> {
         const { isHorde = false, variant = null } = options;
 
@@ -362,12 +363,13 @@ export default class NPCTemplateData extends ItemDataModel {
         const clampedScale = Math.max(this.scaling.minMultiplier, Math.min(this.scaling.maxMultiplier, scaleFactor));
 
         // Apply variant if specified
-        let variantData = null;
-        if (variant) {
+        let variantData: { characteristicModifiers?: Record<string, number | undefined> } | undefined;
+        if (variant !== null && variant !== '') {
             variantData = this.variants.find((v) => v.name === variant);
         }
 
         // Generate characteristics
+        // eslint-disable-next-line no-restricted-syntax -- boundary: per-key dynamic stat block
         const characteristics: Record<string, unknown> = {};
         const charLabels: Record<string, { label: string; short: string }> = {
             weaponSkill: { label: 'Weapon Skill', short: 'WS' },
@@ -386,14 +388,15 @@ export default class NPCTemplateData extends ItemDataModel {
             let value = Math.round(base * clampedScale);
 
             // Apply variant modifier if present
-            if (variantData?.characteristicModifiers?.[key]) {
-                value += variantData.characteristicModifiers[key];
+            const variantMod = variantData?.characteristicModifiers?.[key];
+            if (variantMod !== undefined && variantMod !== 0) {
+                value += variantMod;
             }
 
             // Clamp to valid range
             value = Math.max(10, Math.min(99, value));
 
-            const unnatural = this.unnaturals[key] || 0;
+            const unnatural = this.unnaturals[key] ?? 0;
 
             characteristics[key] = {
                 label: charLabels[key].label,
@@ -417,6 +420,7 @@ export default class NPCTemplateData extends ItemDataModel {
         const armour = Math.max(0, Math.min(15, Math.round(this.baseArmour * clampedArmourScale)));
 
         // Generate skills
+        // eslint-disable-next-line no-restricted-syntax -- boundary: per-skill dynamic block
         const trainedSkills: Record<string, unknown> = {};
         for (const skill of this.trainedSkills) {
             trainedSkills[skill.key] = {
@@ -438,8 +442,10 @@ export default class NPCTemplateData extends ItemDataModel {
             };
         } else {
             // Use ThreatCalculator for preset weapons
-            const ThreatCalculator = game.wh40k?.ThreatCalculator;
-            if (ThreatCalculator) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: game.wh40k namespace populated at runtime
+            const wh40kNs = game.wh40k as { ThreatCalculator?: { generateWeapons: (preset: string, threat: number) => unknown } } | undefined;
+            const ThreatCalculator = wh40kNs?.ThreatCalculator;
+            if (ThreatCalculator !== undefined) {
                 weapons = ThreatCalculator.generateWeapons(this.equipmentPreset, targetThreat);
             } else {
                 weapons = { mode: 'simple', simple: [] };
@@ -509,7 +515,7 @@ export default class NPCTemplateData extends ItemDataModel {
                 movement: null,
             },
             pinnedAbilities: [],
-            template: this.parent?.uuid || '',
+            template: (this.parent as { uuid?: string } | undefined)?.uuid ?? '',
             quickNotes: '',
             tags: [],
             description: this.description,
@@ -524,13 +530,16 @@ export default class NPCTemplateData extends ItemDataModel {
      * @param {number} targetThreat - The target threat level.
      * @returns {Object} Preview data.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: preview payload mirrors generateAtThreat
     previewAtThreat(targetThreat: number): Record<string, unknown> {
         const data = this.generateAtThreat(targetThreat);
-        const chars = data.characteristics as Record<string, { short: string; base: number }>;
-        const wounds = data.wounds as { max: number };
-        const armour = data.armour as { total: number };
-        const weapons = data.weapons as { simple?: unknown[] };
-        const skills = data.trainedSkills as Record<string, unknown>;
+        /* eslint-disable no-restricted-syntax -- boundary: generateAtThreat returns dynamic shape, narrowed per-field here */
+        const chars = data['characteristics'] as Record<string, { short: string; base: number }>;
+        const wounds = data['wounds'] as { max: number };
+        const armour = data['armour'] as { total: number };
+        const weapons = data['weapons'] as { simple?: unknown[] };
+        const skills = data['trainedSkills'] as Record<string, unknown>;
+        /* eslint-enable no-restricted-syntax */
 
         return {
             threatLevel: targetThreat,

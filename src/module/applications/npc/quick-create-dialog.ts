@@ -66,7 +66,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * Current form state for preview.
      * @type {NPCState}
      */
-    #state: NPCState;
+    readonly #state: NPCState;
 
     /**
      * Promise resolver.

@@ -4,7 +4,6 @@
  * keys / non-numeric values.
  */
 import { describe, expect, it } from 'vitest';
-
 import { formatChangeValue, getChangeLabel, summarizeChange, summarizeChanges } from './effects';
 
 describe('getChangeLabel', () => {

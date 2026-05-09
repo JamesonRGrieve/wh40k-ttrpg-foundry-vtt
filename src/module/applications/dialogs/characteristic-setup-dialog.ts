@@ -32,6 +32,17 @@ interface DragData {
     characteristic: CharacteristicKey | null;
 }
 
+interface CharacterGenerationData {
+    rolls?: number[];
+    assignments?: Partial<Record<CharacteristicKey, number | null>>;
+    customBases?: Partial<Record<CharacteristicKey, number>> & { enabled?: boolean };
+}
+
+interface CharacteristicView {
+    label?: string;
+    short?: string;
+}
+
 export default class CharacteristicSetupDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     /* -------------------------------------------- */
     /*  Configuration                               */
@@ -53,11 +64,14 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
             width: 700,
             height: 'auto' as const,
         },
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             apply: CharacteristicSetupDialog.#onApply,
             reset: CharacteristicSetupDialog.#onReset,
             toggleAdvanced: CharacteristicSetupDialog.#onToggleAdvanced,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 DEFAULT_OPTIONS shape combines DefaultOptions + actions; cast at definition
     } as unknown as ApplicationV2Config.DefaultOptions;
 
     /* -------------------------------------------- */
@@ -87,6 +101,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     constructor(actor: WH40KBaseActor, options: ApplicationV2Config.DefaultOptions = {}) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 ctor accepts arbitrary options record
         super(options as Record<string, unknown>);
         this.#actor = actor;
         this.#initializeState();
@@ -102,9 +117,10 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     #initializeState(): void {
-        const genData = (this.#actor.system as Record<string, any>)?.characterGeneration || {};
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system.characterGeneration is a system-specific extension
+        const genData: CharacterGenerationData = (this.#actor.system as { characterGeneration?: CharacterGenerationData }).characterGeneration ?? {};
 
-        this.#rolls = Array.isArray(genData.rolls) && genData.rolls.length === 9 ? [...genData.rolls] : Array(9).fill(0);
+        this.#rolls = Array.isArray(genData.rolls) && genData.rolls.length === 9 ? [...genData.rolls] : (Array(9).fill(0) as number[]);
 
         this.#assignments = {};
         for (const key of GENERATION_CHARACTERISTICS) {
@@ -124,32 +140,36 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         if (!Array.isArray(this.#rolls) || this.#rolls.length !== 9) {
-            this.#rolls = Array(9).fill(0);
+            this.#rolls = Array(9).fill(0) as number[];
         }
 
         const rollsBank = this.#rolls.map((value, index) => ({
             index,
             displayIndex: index + 1,
-            value: value || 0,
-            isEmpty: !value || value === 0,
+            value: value,
+            isEmpty: value === 0,
             isAssigned: this.#isRollAssigned(index),
         }));
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system.characteristics shape varies by gameSystem
+        const allChars = (this.#actor.system as { characteristics?: Record<string, CharacteristicView> }).characteristics ?? {};
         const characteristics = GENERATION_CHARACTERISTICS.map((key) => {
-            const charData = (this.#actor.system.characteristics as Record<string, any>)?.[key] || {};
+            const charData: CharacteristicView = allChars[key] ?? {};
             const assignedIndex = this.#assignments[key] ?? null;
-            const rollValue = assignedIndex !== null && this.#rolls[assignedIndex] ? this.#rolls[assignedIndex] : null;
+            const assignedRoll = assignedIndex !== null ? this.#rolls[assignedIndex] : 0;
+            const rollValue = assignedRoll > 0 ? assignedRoll : null;
             const base = this.#advancedMode ? this.#customBases[key] ?? DEFAULT_BASE : DEFAULT_BASE;
             const total = rollValue !== null ? base + rollValue : null;
 
             return {
                 key,
-                label: charData.label || key,
-                short: charData.short || key.substring(0, 2).toUpperCase(),
+                label: charData.label !== undefined && charData.label !== '' ? charData.label : key,
+                short: charData.short !== undefined && charData.short !== '' ? charData.short : key.substring(0, 2).toUpperCase(),
                 base,
                 rollValue,
                 assignedIndex,
@@ -194,7 +214,9 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
     _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises -- ApplicationV2 _onRender base may return Promise<void> | void
         super._onRender(context, options);
         this.#activateListeners();
     }
@@ -205,31 +227,31 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         const html = this.element;
 
         html.querySelectorAll('.csd-roll-chip').forEach((chip) => {
-            chip.addEventListener('click', this.#onRollChipClick.bind(this));
-            chip.addEventListener('dragstart', this.#onDragStart.bind(this) as EventListener);
-            chip.addEventListener('dragend', this.#onDragEnd.bind(this) as EventListener);
+            chip.addEventListener('click', (e) => this.#onRollChipClick(e));
+            chip.addEventListener('dragstart', (e) => this.#onDragStart(e as DragEvent));
+            chip.addEventListener('dragend', (e) => this.#onDragEnd(e as DragEvent));
         });
 
         html.querySelectorAll('.csd-char-slot').forEach((slot) => {
-            slot.addEventListener('dragover', this.#onDragOver.bind(this) as EventListener);
-            slot.addEventListener('dragleave', this.#onDragLeave.bind(this) as EventListener);
-            slot.addEventListener('drop', this.#onDrop.bind(this) as EventListener);
+            slot.addEventListener('dragover', (e) => this.#onDragOver(e as DragEvent));
+            slot.addEventListener('dragleave', (e) => this.#onDragLeave(e as DragEvent));
+            slot.addEventListener('drop', (e) => this.#onDrop(e as DragEvent));
             const rollChip = slot.querySelector('.csd-assigned-roll');
             if (rollChip) {
-                rollChip.addEventListener('dragstart', this.#onDragStart.bind(this) as EventListener);
-                rollChip.addEventListener('dragend', this.#onDragEnd.bind(this) as EventListener);
+                rollChip.addEventListener('dragstart', (e) => this.#onDragStart(e as DragEvent));
+                rollChip.addEventListener('dragend', (e) => this.#onDragEnd(e as DragEvent));
             }
         });
 
         const rollsBank = html.querySelector('.csd-rolls-bank');
         if (rollsBank) {
-            rollsBank.addEventListener('dragover', this.#onBankDragOver.bind(this) as EventListener);
-            rollsBank.addEventListener('dragleave', this.#onDragLeave.bind(this) as EventListener);
-            rollsBank.addEventListener('drop', this.#onBankDrop.bind(this) as EventListener);
+            rollsBank.addEventListener('dragover', (e) => this.#onBankDragOver(e as DragEvent));
+            rollsBank.addEventListener('dragleave', (e) => this.#onDragLeave(e as DragEvent));
+            rollsBank.addEventListener('drop', (e) => this.#onBankDrop(e as DragEvent));
         }
 
         html.querySelectorAll('.csd-base-input').forEach((input) => {
-            input.addEventListener('change', this.#onBaseValueChange.bind(this));
+            input.addEventListener('change', (e) => this.#onBaseValueChange(e));
         });
     }
 
@@ -239,9 +261,9 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         const chip = event.currentTarget as HTMLElement;
         const index = parseInt(chip.dataset.rollIndex ?? '0', 10);
 
-        if (chip.querySelector('.csd-roll-input')) return;
+        if (chip.querySelector('.csd-roll-input') !== null) return;
 
-        const currentValue = this.#rolls[index] || '';
+        const currentValue = this.#rolls[index] !== 0 ? this.#rolls[index] : '';
         const input = document.createElement('input');
         input.type = 'number';
         input.className = 'csd-roll-input';
@@ -251,8 +273,8 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         input.placeholder = '2-40';
         input.dataset.rollIndex = index.toString();
 
-        input.addEventListener('blur', this.#onRollInputBlur.bind(this));
-        input.addEventListener('keydown', this.#onRollInputKeydown.bind(this) as EventListener);
+        input.addEventListener('blur', (e) => this.#onRollInputBlur(e));
+        input.addEventListener('keydown', (e) => this.#onRollInputKeydown(e));
 
         const valueEl = chip.querySelector<HTMLElement>('.csd-roll-value');
         if (valueEl) valueEl.style.display = 'none';
@@ -306,14 +328,15 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         }
 
         this.#dragData = {
-            type: fromCharacteristic ? 'assigned' : 'bank',
+            type: fromCharacteristic !== null ? 'assigned' : 'bank',
             index: rollIndex,
             characteristic: fromCharacteristic,
         };
 
         target.classList.add('dragging');
-        event.dataTransfer!.effectAllowed = 'move';
-        event.dataTransfer!.setData('text/plain', JSON.stringify(this.#dragData));
+        if (event.dataTransfer === null) return;
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', JSON.stringify(this.#dragData));
 
         this.element.classList.add('drag-active');
         this.element.querySelectorAll<HTMLElement>('.csd-char-slot:not(.has-roll)').forEach((slot) => {
@@ -338,9 +361,9 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     #onDragOver(event: DragEvent): void {
-        if (!this.#dragData) return;
+        if (this.#dragData === null) return;
         event.preventDefault();
-        event.dataTransfer!.dropEffect = 'move';
+        if (event.dataTransfer !== null) event.dataTransfer.dropEffect = 'move';
 
         const slot = event.currentTarget as HTMLElement;
         slot.classList.add('drop-valid', 'drop-hover');
@@ -356,16 +379,16 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     #onDrop(event: DragEvent): void {
         event.preventDefault();
-        if (!this.#dragData) return;
+        if (this.#dragData === null) return;
 
         const slot = event.currentTarget as HTMLElement;
         const targetChar = slot.dataset.characteristic as CharacteristicKey;
         const draggedIndex = this.#dragData.index;
         const sourceChar = this.#dragData.characteristic;
 
-        const currentTargetIndex = this.#assignments[targetChar];
+        const currentTargetIndex = this.#assignments[targetChar] ?? null;
 
-        if (sourceChar) {
+        if (sourceChar !== null) {
             this.#assignments[sourceChar] = currentTargetIndex;
         }
 
@@ -380,9 +403,9 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     #onBankDragOver(event: DragEvent): void {
-        if (!this.#dragData || this.#dragData.type !== 'assigned') return;
+        if (this.#dragData === null || this.#dragData.type !== 'assigned') return;
         event.preventDefault();
-        event.dataTransfer!.dropEffect = 'move';
+        if (event.dataTransfer !== null) event.dataTransfer.dropEffect = 'move';
         (event.currentTarget as HTMLElement).classList.add('drop-valid', 'drop-hover');
     }
 
@@ -390,7 +413,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     #onBankDrop(event: DragEvent): void {
         event.preventDefault();
-        if (!this.#dragData || !this.#dragData.characteristic) return;
+        if (this.#dragData === null || this.#dragData.characteristic === null) return;
 
         this.#assignments[this.#dragData.characteristic] = null;
         void this.render();
@@ -421,6 +444,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
             return;
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts arbitrary path-keyed payloads
         const updateData: Record<string, unknown> = {
             'system.characterGeneration.rolls': this.#rolls,
             'system.characterGeneration.assignments': this.#assignments,
@@ -449,6 +473,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         await this.close();
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await -- ApplicationV2 action handlers are awaited by the framework regardless of body
     static async #onReset(this: CharacteristicSetupDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         for (const key of GENERATION_CHARACTERISTICS) {
             this.#assignments[key] = null;
@@ -456,6 +481,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         void this.render();
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await -- ApplicationV2 action handlers are awaited by the framework regardless of body
     static async #onToggleAdvanced(this: CharacteristicSetupDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         this.#advancedMode = !this.#advancedMode;
         void this.render();
@@ -464,8 +490,9 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options record
     async close(options: Record<string, unknown> = {}): Promise<unknown> {
-        if (!this.#applied && this.#resolve) {
+        if (!this.#applied && this.#resolve !== null) {
             this.#resolve(false);
         }
         return super.close(options);
@@ -476,12 +503,14 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     async wait(): Promise<boolean> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
-            void this.render(true);
+            void this.render({ force: true });
         });
     }
 
     static async open(actor: WH40KBaseActor): Promise<boolean> {
-        if (!actor || ((actor.type as string) !== 'acolyte' && (actor.type as string) !== 'character')) {
+        const t = actor.type as string;
+        if (t !== 'acolyte' && t !== 'character') {
+            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.CharacteristicSetup.OnlyForCharacters localization key
             ui.notifications.error('Characteristic setup is only available for characters.');
             return false;
         }

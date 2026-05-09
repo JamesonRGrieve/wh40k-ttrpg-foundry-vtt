@@ -1,6 +1,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
-import BaseGrantData, { GrantApplicationResult, GrantSummary } from './base-grant.ts';
+import type { GrantApplicationResult, GrantSummary } from './base-grant.ts';
+import BaseGrantData from './base-grant.ts';
 
 /**
  * Interface for a single item grant configuration.
@@ -314,7 +315,7 @@ export default class ItemGrantData extends BaseGrantData {
         }
 
         // Set grant flags
-        itemData.flags = foundry.utils.mergeObject((itemData.flags ?? {}) as Record<string, unknown>, this._createGrantFlags(uuid));
+        itemData.flags = foundry.utils.mergeObject(itemData.flags ?? {}, this._createGrantFlags(uuid));
 
         // Generate new ID
         itemData._id = foundry.utils.randomID();

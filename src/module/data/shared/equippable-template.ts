@@ -41,17 +41,18 @@ export default class EquippableTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source data
     static _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         // Ensure boolean fields are proper booleans
-        if (source.equipped !== undefined && typeof source.equipped !== 'boolean') {
-            source.equipped = Boolean(source.equipped);
+        if (source['equipped'] !== undefined && typeof source['equipped'] !== 'boolean') {
+            source['equipped'] = Boolean(source['equipped']);
         }
-        if (source.inBackpack !== undefined && typeof source.inBackpack !== 'boolean') {
-            source.inBackpack = Boolean(source.inBackpack);
+        if (source['inBackpack'] !== undefined && typeof source['inBackpack'] !== 'boolean') {
+            source['inBackpack'] = Boolean(source['inBackpack']);
         }
-        if (source.inShipStorage !== undefined && typeof source.inShipStorage !== 'boolean') {
-            source.inShipStorage = Boolean(source.inShipStorage);
+        if (source['inShipStorage'] !== undefined && typeof source['inShipStorage'] !== 'boolean') {
+            source['inShipStorage'] = Boolean(source['inShipStorage']);
         }
     }
 
@@ -65,6 +66,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry _cleanData source data
     static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData(source, options);
     }
@@ -99,6 +101,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * updated with a ForcedReplacement operator." Routed through the parent
      * Actor's updateEmbeddedDocuments with diff:false so name/type stay intact.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
     private _applyForcedSystemUpdate(patch: Record<string, unknown>): Promise<object> | undefined {
         const item = this.parent as UpdatableItem | null;
         if (item === null) return undefined;
@@ -114,6 +117,7 @@ export default class EquippableTemplate extends SystemDataModel {
         if (patchEntries.length === 0) return undefined;
 
         // Build a flat dotted-path update for only the fields we care about.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document.update payload
         const dottedUpdate: Record<string, unknown> = {};
         for (const [k, v] of patchEntries) {
             dottedUpdate[`system.${k}`] = v;

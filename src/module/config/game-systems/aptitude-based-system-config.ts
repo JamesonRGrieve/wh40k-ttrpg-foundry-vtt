@@ -12,6 +12,10 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { BaseSystemConfig } from './base-system-config.ts';
 import type { SkillRankDef, CharacteristicTierDef, AdvanceCostResult, AdvanceOption } from './types.ts';
 
+interface TalentLike {
+    system?: { aptitudes?: string[]; tier?: number };
+}
+
 export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
     readonly usesAptitudes = true;
     readonly usesCareerTables = false;
@@ -105,7 +109,8 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
      * Reads from the actor's aptitudes array (populated from origin path items at runtime).
      */
     getCharacterAptitudes(actor: WH40KBaseActor): string[] {
-        const apts = actor.system?.aptitudes ?? [];
+        const apts = actor.system.aptitudes;
+        if (apts === undefined) return [];
         return Array.isArray(apts) ? apts : [...apts];
     }
 
@@ -144,7 +149,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         const matches = this.countMatchingAptitudes(charAptitudes, advAptitudes);
 
         const cost = this.getCharacteristicCostTable()[matches]?.[currentTier];
-        if (cost == null) return null;
+        if (cost === undefined) return null;
 
         return { cost, tier: tiers[currentTier] };
     }
@@ -153,7 +158,8 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         if (currentRank >= this.skillRankCount) return null;
 
         const charAptitudes = this.getCharacterAptitudes(actor);
-        const advAptitudes = (context?.advanceAptitudes as string[]) ?? this.getSkillAptitudes(skillKey);
+        const ctxApts = context?.advanceAptitudes;
+        const advAptitudes = Array.isArray(ctxApts) ? (ctxApts as string[]) : this.getSkillAptitudes(skillKey);
         const matches = this.countMatchingAptitudes(charAptitudes, advAptitudes);
 
         return this.getSkillCostTable()[matches]?.[currentRank] ?? null;
@@ -161,11 +167,12 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
 
     getTalentAdvanceCost(actor: WH40KBaseActor, talent: unknown, context?: Record<string, unknown>): number | null {
         const charAptitudes = this.getCharacterAptitudes(actor);
-        const talentRecord = talent as Record<string, Record<string, unknown>>;
-        const advAptitudes = (context?.advanceAptitudes as string[]) ?? (talentRecord.system?.aptitudes as string[] | undefined) ?? [];
+        const talentSystem = (talent as TalentLike | undefined)?.system;
+        const ctxApts = context?.advanceAptitudes;
+        const advAptitudes = Array.isArray(ctxApts) ? (ctxApts as string[]) : talentSystem?.aptitudes ?? [];
         const matches = this.countMatchingAptitudes(charAptitudes, advAptitudes);
 
-        const tier = (talentRecord.system?.tier as number | undefined) ?? 1;
+        const tier = talentSystem?.tier ?? 1;
         return this.getTalentCostTable()[tier]?.[matches] ?? null;
     }
 

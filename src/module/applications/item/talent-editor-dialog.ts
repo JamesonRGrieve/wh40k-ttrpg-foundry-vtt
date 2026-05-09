@@ -239,9 +239,11 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _prepareSituationalEditData(system: TalentData): Record<string, unknown> {
-        const situational =
-            (system as TalentData & Pick<ModifiersTemplate, 'modifiers'>).modifiers?.situational ||
-            ({ characteristics: [], skills: [], combat: [] } as ModifiersTemplate['modifiers']['situational']);
+        const situational = (system as TalentData & Pick<ModifiersTemplate, 'modifiers'>).modifiers?.situational || {
+            characteristics: [],
+            skills: [],
+            combat: [],
+        };
 
         return {
             characteristics: (situational.characteristics || []).map((mod: { key: string; value: number; condition: string }, index: number) => ({
@@ -277,7 +279,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _prepareGrantsEditData(system: TalentData): Record<string, unknown> {
-        const grants = system.grants || ({ skills: [], talents: [], traits: [], specialAbilities: [] } as TalentData['grants']);
+        const grants = system.grants || { skills: [], talents: [], traits: [], specialAbilities: [] };
 
         return {
             skills: (grants.skills || []).map((skill: { name: string; specialization: string; level: string }, index: number) => ({
@@ -575,7 +577,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
         // Process prerequisites
         if (data.prerequisites) {
-            updateData['system.prerequisites.text'] = (data.prerequisites.text as string) || '';
+            updateData['system.prerequisites.text'] = data.prerequisites.text || '';
 
             // Convert characteristics array back to object
             const charReqs: Record<string, unknown> = {};
@@ -640,10 +642,10 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             for (const entry of entries(data.modifiers.other)) {
                 if (entry.key) {
                     otherMods.push({
-                        key: entry.key as string,
-                        label: (entry.label as string) || (entry.key as string),
+                        key: entry.key,
+                        label: entry.label || entry.key,
                         value: parseInt(entry.value as string) || 0,
-                        mode: (entry.mode as string) || 'add',
+                        mode: entry.mode || 'add',
                     });
                 }
             }
@@ -657,9 +659,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             for (const entry of entries(data.situational.characteristics)) {
                 if (entry.key && entry.condition) {
                     sitCharMods.push({
-                        key: entry.key as string,
+                        key: entry.key,
                         value: parseInt(entry.value as string) || 0,
-                        condition: entry.condition as string,
+                        condition: entry.condition,
                     });
                 }
             }
@@ -670,9 +672,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             for (const entry of entries(data.situational.skills)) {
                 if (entry.key && entry.condition) {
                     sitSkillMods.push({
-                        key: entry.key as string,
+                        key: entry.key,
                         value: parseInt(entry.value as string) || 0,
-                        condition: entry.condition as string,
+                        condition: entry.condition,
                     });
                 }
             }
@@ -683,9 +685,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             for (const entry of entries(data.situational.combat)) {
                 if (entry.key && entry.condition) {
                     sitCombatMods.push({
-                        key: entry.key as string,
+                        key: entry.key,
                         value: parseInt(entry.value as string) || 0,
-                        condition: entry.condition as string,
+                        condition: entry.condition,
                     });
                 }
             }
@@ -699,9 +701,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             for (const entry of entries(data.grants.skills)) {
                 if (entry.name) {
                     grantedSkills.push({
-                        name: entry.name as string,
-                        specialization: (entry.specialization as string) || '',
-                        level: (entry.level as string) || 'trained',
+                        name: entry.name,
+                        specialization: entry.specialization || '',
+                        level: entry.level || 'trained',
                     });
                 }
             }
@@ -712,9 +714,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             for (const entry of entries(data.grants.talents)) {
                 if (entry.name) {
                     grantedTalents.push({
-                        name: entry.name as string,
-                        specialization: (entry.specialization as string) || '',
-                        uuid: (entry.uuid as string) || '',
+                        name: entry.name,
+                        specialization: entry.specialization || '',
+                        uuid: entry.uuid || '',
                     });
                 }
             }
@@ -725,9 +727,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             for (const entry of entries(data.grants.traits)) {
                 if (entry.name) {
                     grantedTraits.push({
-                        name: entry.name as string,
+                        name: entry.name,
                         level: entry.level ? parseInt(entry.level as string) : null,
-                        uuid: (entry.uuid as string) || '',
+                        uuid: entry.uuid || '',
                     });
                 }
             }
@@ -738,8 +740,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             for (const entry of entries(data.grants.specialAbilities)) {
                 if (entry.name) {
                     grantedAbilities.push({
-                        name: entry.name as string,
-                        description: (entry.description as string) || '',
+                        name: entry.name,
+                        description: entry.description || '',
                     });
                 }
             }

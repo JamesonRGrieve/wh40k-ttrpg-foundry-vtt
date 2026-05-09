@@ -27,6 +27,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Is this a beneficial or harmful condition?
@@ -85,13 +86,13 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * Get the nature icon class.
      * @type {string}
      */
-    get natureIcon() {
-        const icons: Record<string, string> = {
+    get natureIcon(): string {
+        const icons: Record<string, string | undefined> = {
             beneficial: 'fa-plus-circle',
             harmful: 'fa-exclamation-triangle',
             neutral: 'fa-info-circle',
         };
-        return icons[this.nature] || 'fa-question-circle';
+        return icons[this.nature] ?? 'fa-question-circle';
     }
 
     /**
@@ -115,22 +116,23 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * Get the appliesTo icon class.
      * @type {string}
      */
-    get appliesToIcon() {
-        const icons: Record<string, string> = {
+    get appliesToIcon(): string {
+        const icons: Record<string, string | undefined> = {
             self: 'fa-user',
             target: 'fa-crosshairs',
             both: 'fa-users',
             area: 'fa-circle-notch',
         };
-        return icons[this.appliesTo] || 'fa-question';
+        return icons[this.appliesTo] ?? 'fa-question';
     }
 
     /**
      * Get the full name with stacks.
      * @type {string}
      */
-    get fullName() {
-        let name = this.parent?.name ?? '';
+    get fullName(): string {
+        const parent = this.parent as { name?: string } | undefined;
+        let name: string = parent?.name ?? '';
         if (this.stackable && this.stacks > 1) {
             name += ` (×${this.stacks})`;
         }
@@ -155,7 +157,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * Is this condition temporary?
      * @type {boolean}
      */
-    get isTemporary() {
+    get isTemporary(): boolean {
         return this.duration.units !== 'permanent';
     }
 
@@ -187,6 +189,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             nature: this.natureLabel,

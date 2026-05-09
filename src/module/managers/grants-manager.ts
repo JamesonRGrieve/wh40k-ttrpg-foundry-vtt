@@ -147,7 +147,7 @@ export class GrantsManager {
             const applyData = autoValue !== false ? autoValue : grantData;
 
             const grantResult = await grant.apply(actor, applyData as never, {
-                dryRun: options.dryRun,
+                dryRun: Boolean(options.dryRun),
                 depth: depth,
             });
 
@@ -211,10 +211,7 @@ export class GrantsManager {
             const grant = createGrant(grantConfig);
             if (!grant) continue;
 
-            restoreData[grantConfig._id as string] = await (grant.reverse as (actor: WH40KBaseActor, state: Record<string, unknown>) => Promise<unknown>)(
-                actor,
-                state.applied as Record<string, unknown>,
-            );
+            restoreData[grantConfig._id as string] = await grant.reverse(actor, state.applied as Record<string, unknown>);
         }
 
         return restoreData;

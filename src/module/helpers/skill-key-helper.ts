@@ -254,7 +254,10 @@ export class SkillKeyHelper {
     };
 
     static #lookupKey(value: string): string {
-        return this.SKILL_NAME_TO_KEY[value as keyof typeof SkillKeyHelper.SKILL_NAME_TO_KEY] ?? value;
+        if (Object.prototype.hasOwnProperty.call(this.SKILL_NAME_TO_KEY, value)) {
+            return this.SKILL_NAME_TO_KEY[value as keyof typeof SkillKeyHelper.SKILL_NAME_TO_KEY];
+        }
+        return value;
     }
 
     /* -------------------------------------------- */
@@ -316,7 +319,6 @@ export class SkillKeyHelper {
      * SkillKeyHelper.validateKey("invalid", actor)    // → false
      */
     static validateKey(key: string, actor: WH40KBaseActorDocument): boolean {
-        if (!actor?.system?.skills) return false;
         return Object.prototype.hasOwnProperty.call(actor.system.skills, key);
     }
 
@@ -364,7 +366,10 @@ export class SkillKeyHelper {
      */
     static isAdvanced(keyOrName: string): boolean {
         const key = this.#lookupKey(keyOrName);
-        return this.SKILL_TYPES[key as keyof typeof SkillKeyHelper.SKILL_TYPES] ?? false;
+        if (Object.prototype.hasOwnProperty.call(this.SKILL_TYPES, key)) {
+            return this.SKILL_TYPES[key as keyof typeof SkillKeyHelper.SKILL_TYPES];
+        }
+        return false;
     }
 
     /* -------------------------------------------- */
@@ -375,7 +380,7 @@ export class SkillKeyHelper {
      * Get all skill display names (for autocomplete, validation).
      * @returns {string[]} Array of all skill display names
      */
-    static getAllSkillNames() {
+    static getAllSkillNames(): string[] {
         return Object.keys(this.SKILL_NAME_TO_KEY);
     }
 
@@ -383,7 +388,7 @@ export class SkillKeyHelper {
      * Get all skill internal keys.
      * @returns {string[]} Array of all skill keys
      */
-    static getAllSkillKeys() {
+    static getAllSkillKeys(): string[] {
         return Object.values(this.SKILL_NAME_TO_KEY);
     }
 
@@ -391,7 +396,7 @@ export class SkillKeyHelper {
      * Get all specialist skill keys.
      * @returns {string[]} Array of specialist skill keys
      */
-    static getAllSpecialistKeys() {
+    static getAllSpecialistKeys(): string[] {
         return Array.from(this.SPECIALIST_KEYS);
     }
 
@@ -399,7 +404,7 @@ export class SkillKeyHelper {
      * Get all specialist skill display names.
      * @returns {string[]} Array of specialist skill names
      */
-    static getAllSpecialistNames() {
+    static getAllSpecialistNames(): string[] {
         return this.getAllSpecialistKeys().map((key) => this.keyToName(key));
     }
 

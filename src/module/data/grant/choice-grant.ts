@@ -1,5 +1,6 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import BaseGrantData, { GrantApplicationResult, GrantRestoreData, GrantSummary } from './base-grant.ts';
+import type { GrantApplicationResult, GrantRestoreData, GrantSummary } from './base-grant.ts';
+import BaseGrantData from './base-grant.ts';
 import CharacteristicGrantData from './characteristic-grant.ts';
 import ItemGrantData from './item-grant.ts';
 import ResourceGrantData from './resource-grant.ts';
@@ -166,7 +167,7 @@ export default class ChoiceGrantData extends BaseGrantData {
             const index = parseInt(indexStr);
 
             const option = this.options.find((o) => o.label === optionLabel);
-            if (!option || !option.grants[index]) continue;
+            if (!option?.grants[index]) continue;
 
             const grantConfig = option.grants[index];
             const grantType = grantConfig.type as keyof typeof ctor.GRANT_TYPES;
@@ -175,9 +176,9 @@ export default class ChoiceGrantData extends BaseGrantData {
 
             const grantApplied = grantEntry?.applied as Record<string, unknown>;
 
-            const grant: BaseGrantData = new GrantClass(grantConfig as ConstructorParameters<typeof GrantClass>[0]);
+            const grant: BaseGrantData = new GrantClass(grantConfig);
             const reverseData = await grant.reverse(actor, grantApplied);
-            restoreData.grantResults[grantKey] = reverseData as Record<string, unknown>;
+            restoreData.grantResults[grantKey] = reverseData;
         }
 
         return restoreData;
@@ -211,7 +212,7 @@ export default class ChoiceGrantData extends BaseGrantData {
                 const grantType = grantConfig.type as keyof typeof ctor.GRANT_TYPES;
                 const GrantClass = ctor.GRANT_TYPES[grantType];
                 if (GrantClass) {
-                    const grant = new GrantClass(grantConfig as ConstructorParameters<typeof GrantClass>[0]);
+                    const grant = new GrantClass(grantConfig);
                     const grantSummary = await grant.getSummary();
                     optionSummary.grants.push(grantSummary);
                 }
@@ -293,11 +294,11 @@ export default class ChoiceGrantData extends BaseGrantData {
             ...grantConfig,
         };
 
-        const grant = new GrantClass(fullConfig as ConstructorParameters<typeof GrantClass>[0]);
+        const grant = new GrantClass(fullConfig);
 
         // Pass through any sub-grant specific data
         const subData = (data as Record<string, unknown>).subGrants as Record<string, GrantRestoreData> | undefined;
-        const subGrantData = subData?.[grantConfig._id as string] ?? ({} as GrantRestoreData);
+        const subGrantData = subData?.[grantConfig._id as string] ?? {};
 
         return grant.apply(actor, subGrantData, options);
     }

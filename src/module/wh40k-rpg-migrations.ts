@@ -8,10 +8,10 @@ import { WH40KSettings } from './wh40k-rpg-settings.ts';
 // migration past v1, bump WORLD_VERSION and branch on `currentVersion < N`.
 const WORLD_VERSION = 1;
 
-export async function checkAndMigrateWorld() {
-    const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion);
+export async function checkAndMigrateWorld(): Promise<void> {
+    const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion) as number;
     if (WORLD_VERSION !== currentVersion && game.user.isGM) {
-        void game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, WORLD_VERSION);
+        await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, WORLD_VERSION);
     }
 }
 

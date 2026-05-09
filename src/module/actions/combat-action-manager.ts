@@ -7,8 +7,12 @@ export class CombatActionManager {
 
     initializeHooks(): void {
         // Initialize Combat Hooks
-        this.combatTurnHook = Hooks.on('combatTurn', async (combat: Combat, data: Record<string, unknown>) => await this.updateCombat(combat, data));
-        this.combatRoundHook = Hooks.on('combatRound', async (combat: Combat, data: Record<string, unknown>) => await this.updateCombat(combat, data));
+        this.combatTurnHook = Hooks.on('combatTurn', (combat: Combat, data: Record<string, unknown>) => {
+            this.updateCombat(combat, data);
+        });
+        this.combatRoundHook = Hooks.on('combatRound', (combat: Combat, data: Record<string, unknown>) => {
+            this.updateCombat(combat, data);
+        });
     }
 
     disableHooks(): void {
@@ -37,7 +41,7 @@ export class CombatActionManager {
      */
     async resetFirstAttackFlags(combat: Combat): Promise<void> {
         for (const combatant of combat.combatants) {
-            if (combatant.actor) {
+            if (combatant.actor != null) {
                 await combatant.actor.unsetFlag('wh40k-rpg', 'hitThisRound');
             }
         }
@@ -45,18 +49,18 @@ export class CombatActionManager {
 
     async processCombatActiveEffects(combat: Combat, data: Record<string, unknown>): Promise<void> {
         const turn = typeof data.turn === 'number' ? data.turn : combat.turn;
-        if (turn === null || turn === undefined) return;
+        if (turn == null) return;
         const currentCombatant = combat.turns[turn];
         game.wh40k.log('processCombatActiveEffects', currentCombatant);
 
-        if (currentCombatant?.actor) {
+        if (currentCombatant?.actor != null) {
             // Handle Actor Effects
             for (const effect of currentCombatant.actor.effects) {
                 // On Fire!
                 if (effect.name === 'Burning') {
-                    await handleOnFire(currentCombatant.actor as WH40KBaseActorDocument);
+                    await handleOnFire(currentCombatant.actor);
                 } else if (effect.name === 'Bleeding') {
-                    await handleBleeding(currentCombatant.actor as WH40KBaseActorDocument);
+                    await handleBleeding(currentCombatant.actor);
                 }
             }
         }

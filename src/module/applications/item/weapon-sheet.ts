@@ -2,11 +2,11 @@
  * @file WeaponSheet - ApplicationV2 sheet for weapon items
  */
 
-import type { WH40KItem } from '../../documents/item.ts';
+import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
+import type { LabelConfig, LabelAbbreviationConfig, LabelModifierConfig } from '../../config.ts';
 import type { default as WeaponData } from '../../data/item/weapon.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import type { LabelConfig, LabelAbbreviationConfig, LabelModifierConfig } from '../../config.ts';
-import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
@@ -83,19 +83,19 @@ export default class WeaponSheet extends ContainerItemSheet {
      * Track collapsed sections state.
      * @type {Set<string>}
      */
-    #collapsedSections = new Set();
+    readonly #collapsedSections = new Set();
 
     /**
      * Track FAB expanded state.
      * @type {boolean}
      */
-    #fabExpanded = false;
+    readonly #fabExpanded = false;
 
     /**
      * Track body collapsed state (starts collapsed by default).
      * @type {boolean}
      */
-    #bodyCollapsed = true;
+    readonly #bodyCollapsed = true;
 
     /* -------------------------------------------- */
     /*  Properties                                  */
@@ -416,7 +416,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             return;
         }
 
-        await (actor as unknown as WH40KBaseActor).rollItem(this.item.id!);
+        await actor.rollItem(this.item.id!);
     }
 
     /* -------------------------------------------- */
@@ -460,7 +460,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
         const chatData: Record<string, unknown> = {
             user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor: actor as unknown as WH40KBaseActor }),
+            speaker: ChatMessage.getSpeaker({ actor: actor }),
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,
             rolls: [damageRoll],
@@ -615,7 +615,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
             // Send to chat if actor is present
             if (actor) {
-                await ReloadActionManager.sendReloadToChat(actor as unknown as WH40KBaseActor, this.item, result);
+                await ReloadActionManager.sendReloadToChat(actor, this.item, result);
             }
         } else {
             ui.notifications.warn(result.message);
@@ -654,7 +654,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         mods[index].active = !mods[index].active;
 
-        await this.item.update({ 'system.modifications': mods } as Record<string, unknown>);
+        await this.item.update({ 'system.modifications': mods });
 
         const mod = mods[index];
         ui.notifications.info(`${mod.name} ${mod.active ? 'activated' : 'deactivated'}.`);
@@ -748,7 +748,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         // Add to array
         const weaponSystemDrop = this.item.system as unknown as WeaponData;
         const mods = [...weaponSystemDrop.modifications, modEntry];
-        await this.item.update({ 'system.modifications': mods } as Record<string, unknown>);
+        await this.item.update({ 'system.modifications': mods });
 
         ui.notifications.info(`${modItem.name} installed.`);
         return true;
