@@ -73,7 +73,7 @@ function makeSystemVariant<TBase extends SystemVariantBase>(baseCls: TBase, clas
 
 const SYSTEMS: Array<[string, SystemSheetConfig]> = [
     ['DarkHeresy2', { cssClass: 'dark-heresy', headerFile: 'header-dh.hbs', gameSystemId: 'dh2e' }],
-    ['RogueTrader', { cssClass: 'rogue-trader', headerFile: 'header-dh.hbs', gameSystemId: 'rt' }],
+    ['RogueTrader', { cssClass: 'rogue-trader', headerFile: 'header-rt.hbs', gameSystemId: 'rt' }],
     ['BlackCrusade', { cssClass: 'black-crusade', headerFile: 'header-dh.hbs', gameSystemId: 'bc' }],
     ['OnlyWar', { cssClass: 'only-war', headerFile: 'header-dh.hbs', gameSystemId: 'ow' }],
     ['Deathwatch', { cssClass: 'deathwatch', headerFile: 'header-dh.hbs', gameSystemId: 'dw' }],

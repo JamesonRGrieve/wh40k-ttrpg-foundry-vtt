@@ -1,6 +1,7 @@
 import Handlebars from 'handlebars';
 import { describe, expect, it } from 'vitest';
 import headerSrc from '../src/templates/actor/player/header-dh.hbs?raw';
+import headerRtSrc from '../src/templates/actor/player/header-rt.hbs?raw';
 import npcTabSrc from '../src/templates/actor/npc/tab-npc.hbs?raw';
 import biographyTabSrc from '../src/templates/actor/player/tab-biography.hbs?raw';
 import skillsTabSrc from '../src/templates/actor/player/tab-skills.hbs?raw';
@@ -12,6 +13,7 @@ import type { SidebarHeaderField } from '../src/module/config/game-systems/types
 initializeStoryHandlebars();
 
 const headerTemplate = Handlebars.compile(headerSrc);
+const headerRtTemplate = Handlebars.compile(headerRtSrc);
 const tabsTemplate = Handlebars.compile(tabsSrc);
 const biographyTemplate = Handlebars.compile(biographyTabSrc);
 const skillsTemplate = Handlebars.compile(skillsTabSrc);
@@ -36,7 +38,7 @@ const LEGACY_DH2_HEADER_FIELDS: SidebarHeaderField[] = [
     { label: 'Rank', name: 'system.rank', type: 'number', value: 3, placeholder: 'Rank', inputClass: 'wh40k-rank-input' },
 ];
 
-function playerContext(systemId: 'dh2e' | 'im') {
+function playerContext(systemId: 'dh2e' | 'im' | 'rt') {
     return mockPlayerSheetContext({
         systemId,
         actorOverrides: {
@@ -55,10 +57,7 @@ function playerContext(systemId: 'dh2e' | 'im') {
             },
             items: [],
         },
-        contextOverrides:
-            systemId === 'dh2e'
-                ? { headerFields: LEGACY_DH2_HEADER_FIELDS }
-                : {},
+        contextOverrides: systemId === 'dh2e' ? { headerFields: LEGACY_DH2_HEADER_FIELDS } : {},
     });
 }
 
@@ -75,8 +74,16 @@ describe('character sheet template composition', () => {
         `);
 
         expect(element.querySelector('input[name="system.rank"]')).not.toBeNull();
+        expect(element.querySelector('[data-item-id^="origin"]')).toBeNull();
         expect(element.textContent).toContain('Character Journal');
         expect(element.textContent).toContain('Interrogation Log');
+    });
+
+    it('renders Rogue Trader origin-path stages only in the RT header variant', () => {
+        const context = playerContext('rt');
+        const element = wrap(headerRtTemplate(context));
+
+        expect(element.querySelector('[data-item-id^="origin"]')).not.toBeNull();
     });
 
     it('renders the IM sidebar header fields in the shared layout', () => {

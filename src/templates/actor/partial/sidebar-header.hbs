@@ -1,33 +1,17 @@
 {{!-- Shared sidebar character-sheet header content. Renders inside the
      wh40k-sidebar PARTS container; per-system header files wrap this in
-     a flex column and append their own bio rows after it.
+     a flex column and append any system-specific extras after it.
 
      Order: actor-identity (name input above portrait, with origin-builder
-     overlay) → divination display (italic, when set) → origin path
-     bubbles 2-col grid (when steps exist).
+     overlay) → divination display (italic, when set).
 
      Works for both PC and NPC actors via the universal `actor.name`,
-     `originPathSteps`, `originPathComplete`, and
-     `system.originPath.divination` context. --}}
+     `originPathComplete`, and `system.originPath.divination` context.
+     Game-specific origin-path stage UI belongs in the relevant child header
+     template, not in this shared parent partial. --}}
 
 {{> systems/wh40k-rpg/templates/actor/partial/actor-identity.hbs withOriginBuilder=true}}
 
 {{#if system.originPath.divination}}
 <p class="tw-italic tw-opacity-60 tw-m-0 tw-text-center tw-text-xs tw-leading-snug tw-text-[var(--wh40k-text-muted)]">{{system.originPath.divination}}</p>
-{{/if}}
-
-{{#if originPathSteps.length}}
-<div class="tw-flex tw-w-full tw-flex-wrap tw-justify-center tw-gap-1.5 tw-max-w-[160px]">
-    {{#each originPathSteps as |step|}}
-    <div class="tw-flex tw-h-12 tw-w-12 tw-items-center tw-justify-center tw-overflow-hidden tw-rounded-full tw-border tw-border-solid tw-bg-[rgba(0,0,0,0.2)] tw-transition-all {{#if step.item}}tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-cursor-pointer hover:tw-border-[#f0d060] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)]{{else}}tw-border-[var(--wh40k-border-color,#4a3728)] tw-opacity-40 tw-cursor-default{{/if}}"
-         {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
-         {{#if step.tooltipData}}data-wh40k-tooltip="generic" data-wh40k-tooltip-data="{{step.tooltipData}}"{{else}}data-tooltip="{{step.label}}"{{/if}}>
-        {{#if step.item}}
-            <img src="{{step.item.img}}" alt="{{step.item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
-        {{else}}
-            <i class="fas {{step.icon}} tw-text-base tw-text-[var(--wh40k-text-muted)]"></i>
-        {{/if}}
-    </div>
-    {{/each}}
-</div>
 {{/if}}
