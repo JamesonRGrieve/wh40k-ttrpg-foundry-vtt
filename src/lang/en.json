@@ -157,8 +157,14 @@
             "Bonus": "Bonus",
             "Total": "Total",
             "AddSpecialization": "Add",
+            "AddSpecialistSkillTitle": "Add Specialist Skill",
             "NoSpecializations": "Click \"Add\" to create a {0} specialization",
+            "NoSpecialistSkillsYet": "No specialist skills yet",
+            "AddFirstSpecializationHint": "Use the add button above to create your first specialization",
+            "AddToFavorites": "Add to favorites",
+            "RemoveFromFavorites": "Remove from favorites",
             "RollSkillTitle": "Roll {0}",
+            "RollSpecializationTitle": "Roll specialization",
             "AddSpecializationTitle": "Add {0} specialization"
         },
         "Tooltip": {
