@@ -184,9 +184,17 @@ const DIRECTION = {
     BACKWARD: 'backward', // Start at Career, end at Home World
 };
 
+function resolveBuilderGameSystem(actor: WH40KBaseActor, options: Record<string, unknown>): GameSystemId {
+    const requested = typeof options.gameSystem === 'string' && options.gameSystem !== '' ? options.gameSystem : actor.system?.gameSystem;
+    if (typeof requested === 'string' && requested !== '' && SystemConfigRegistry.has(requested as GameSystemId)) {
+        return requested as GameSystemId;
+    }
+    throw new Error('Unable to resolve a game system for OriginPathBuilder');
+}
+
 export default class OriginPathBuilder extends HandlebarsApplicationMixin(ApplicationV2) {
     declare actor: WH40KBaseActor;
-    declare gameSystem: string;
+    declare gameSystem: GameSystemId;
     declare registryConfig: BaseSystemConfig;
     declare systemConfig: OriginStepConfig;
     declare currentStepIndex: number;
@@ -283,9 +291,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     constructor(actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
         super(options);
         this.actor = actor;
-        this.gameSystem = (options.gameSystem as string) || 'rt';
+        this.gameSystem = resolveBuilderGameSystem(actor, options);
         // System config from registry — used for labels, ranks, and step config
-        this.registryConfig = SystemConfigRegistry.get(this.gameSystem as GameSystemId);
+        this.registryConfig = SystemConfigRegistry.get(this.gameSystem);
         this.systemConfig = this.registryConfig.getOriginStepConfig();
         this.currentStepIndex = 0;
         this.guidedMode = true;

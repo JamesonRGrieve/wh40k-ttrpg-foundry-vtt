@@ -6,7 +6,7 @@
 import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
-import type { SidebarHeaderField } from '../../config/game-systems/types.ts';
+import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KItemSystemData } from '../../types/global.d.ts';
@@ -125,7 +125,7 @@ export default class CharacterSheet extends BaseActorSheet {
     declare _traitsFilter: Record<string, unknown>;
     declare _throttleTimers: Map<string, number>;
     declare _originPathSummary?: OriginSummary;
-    private _gameSystemId?: string;
+    private _gameSystemId?: GameSystemId;
 
     /**
      * Whether the sheet is in edit mode (showing inline stat fields).
@@ -139,6 +139,21 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     get inEditMode(): boolean {
         return this.#editMode && this.isEditable;
+    }
+
+    /**
+     * Resolve the active rules line for this sheet instance.
+     * Shared parent logic must derive this from the concrete child/system state
+     * rather than hardcoding a game-specific fallback.
+     */
+    protected _resolveGameSystemId(): GameSystemId | null {
+        if (this._gameSystemId) return this._gameSystemId;
+
+        const actorGameSystem = this.actor.system?.gameSystem;
+        if (typeof actorGameSystem !== 'string' || actorGameSystem === '') return null;
+
+        const gameSystemId = actorGameSystem as GameSystemId;
+        return SystemConfigRegistry.has(gameSystemId) ? gameSystemId : null;
     }
 
     /** @override */
@@ -469,7 +484,7 @@ export default class CharacterSheet extends BaseActorSheet {
         context.inEditMode = this.inEditMode;
 
         // Ruleset state (DH2e only) — controls Throne Gelt visibility
-        const activeGameSystem = this._gameSystemId || this.actor.system?.gameSystem || 'rt';
+        const activeGameSystem = this._resolveGameSystemId();
         const isDH2 = activeGameSystem === 'dh2e';
         const ruleset = WH40KSettings.getRuleset();
         context.ruleset = ruleset;
@@ -651,8 +666,8 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     async _prepareHeaderContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         // Build dynamic origin path select options from compendium packs
-        const gameSystem = this._gameSystemId || (this.actor.system?.gameSystem as string | undefined) || 'rt';
-        const originOptions = await this._getOriginPathOptions(gameSystem);
+        const gameSystem = this._resolveGameSystemId();
+        const originOptions = gameSystem ? await this._getOriginPathOptions(gameSystem) : {};
         context.originOptions = originOptions;
         context.headerFields = this._getSidebarHeaderFields(gameSystem);
 
@@ -663,9 +678,9 @@ export default class CharacterSheet extends BaseActorSheet {
         return context;
     }
 
-    protected _getSidebarHeaderFields(gameSystem: string): SidebarHeaderField[] {
-        const config = SystemConfigRegistry.getOrNull(gameSystem) ?? SystemConfigRegistry.get('rt');
-        return config.getHeaderFields(this.actor);
+    protected _getSidebarHeaderFields(gameSystem: GameSystemId | null): SidebarHeaderField[] {
+        if (!gameSystem) return [];
+        return SystemConfigRegistry.get(gameSystem).getHeaderFields(this.actor);
     }
 
     /**
@@ -674,7 +689,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {Promise<Record<string, string[]>>}
      * @private
      */
-    async _getOriginPathOptions(gameSystem: string): Promise<Record<string, string[]>> {
+    async _getOriginPathOptions(gameSystem: GameSystemId): Promise<Record<string, string[]>> {
         // Use cached options if available (packs don't change at runtime)
         const cacheKey = `_originOptions_${gameSystem}`;
         if ((this as Record<string, unknown>)[cacheKey]) return (this as Record<string, unknown>)[cacheKey] as Record<string, string[]>;
@@ -811,30 +826,25 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     _prepareOriginPathSteps(): Record<string, unknown>[] {
-        // Use system-specific step config when available
-        const gameSystem = this._gameSystemId || (this.actor.system?.gameSystem as string | undefined) || 'rt';
-        let steps;
-        try {
-            const sysConfig = SystemConfigRegistry.get(gameSystem as import('../../config/game-systems/types.ts').GameSystemId);
-            const stepConfig = sysConfig.getOriginStepConfig();
-            const allSteps = [...(stepConfig.coreSteps || [])];
-            if (stepConfig.optionalStep) allSteps.push(stepConfig.optionalStep);
-            steps = allSteps.map((s) => ({
-                key: s.key || s.step,
-                label: s.key ? s.key.charAt(0).toUpperCase() + s.key.slice(1).replace(/([A-Z])/g, ' $1') : s.step,
-                shortLabel: (s.key || s.step).substring(0, 5),
-                icon: s.icon || 'fa-circle',
-            }));
-        } catch {
-            steps = [
-                { key: 'homeWorld', label: 'Home World', shortLabel: 'Home', icon: 'fa-globe' },
-                { key: 'birthright', label: 'Birthright', shortLabel: 'Birth', icon: 'fa-baby' },
-                { key: 'lureOfTheVoid', label: 'Lure of the Void', shortLabel: 'Lure', icon: 'fa-meteor' },
-                { key: 'trialsAndTravails', label: 'Trials and Travails', shortLabel: 'Trials', icon: 'fa-skull' },
-                { key: 'motivation', label: 'Motivation', shortLabel: 'Drive', icon: 'fa-fire' },
-                { key: 'career', label: 'Career', shortLabel: 'Career', icon: 'fa-user-tie' },
-            ];
-        }
+        const gameSystem = this._resolveGameSystemId();
+        if (!gameSystem) return [];
+
+        const sysConfig = SystemConfigRegistry.get(gameSystem);
+        const stepConfig = sysConfig.getOriginStepConfig();
+        const shortLabels = sysConfig.getStepShortLabels();
+        const allSteps = [...stepConfig.coreSteps];
+        if (stepConfig.optionalStep) allSteps.push(stepConfig.optionalStep);
+
+        const steps = allSteps.map((step) => {
+            const labelKey = `WH40K.OriginPath.${step.key.charAt(0).toUpperCase()}${step.key.slice(1)}`;
+            const label = game.i18n.localize(labelKey);
+            return {
+                key: step.key,
+                label: label !== labelKey ? label : step.step,
+                shortLabel: shortLabels[step.key] ?? step.key,
+                icon: step.icon,
+            };
+        });
 
         const originItems = this.actor.items.filter((item) => item.type === 'originPath');
 
@@ -2550,8 +2560,8 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #openOriginPathBuilder(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             if (game.wh40k?.openOriginPathBuilder) {
-                const gameSystem = this._gameSystemId || this.actor.system?.gameSystem || 'rt';
-                await game.wh40k.openOriginPathBuilder(this.actor, { gameSystem });
+                const gameSystem = this._resolveGameSystemId();
+                await game.wh40k.openOriginPathBuilder(this.actor, gameSystem ? { gameSystem } : {});
             } else {
                 this._notify('warning', 'Origin Path Builder not available', {
                     duration: 3000,
@@ -2681,8 +2691,8 @@ export default class CharacterSheet extends BaseActorSheet {
     async _openOriginPathBuilder(): Promise<void> {
         try {
             if (game.wh40k?.openOriginPathBuilder) {
-                const gameSystem = this._gameSystemId || this.actor.system?.gameSystem || 'rt';
-                await game.wh40k.openOriginPathBuilder(this.actor, { gameSystem });
+                const gameSystem = this._resolveGameSystemId();
+                await game.wh40k.openOriginPathBuilder(this.actor, gameSystem ? { gameSystem } : {});
             } else {
                 ui.notifications.warn(game.i18n.localize('WH40K.Utility.OriginPathNotAvailable'));
             }
