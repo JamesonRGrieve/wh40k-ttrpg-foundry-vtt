@@ -618,14 +618,14 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migrateCharacteristics(source: Record<string, unknown>): void {
-        if (source.characteristics !== null) {
-            for (const char of Object.values(source.characteristics as Record<string, Record<string, unknown>>)) {
-                if (char.base !== undefined) char.base = this._toInt(char.base);
-                if (char.advance !== undefined) char.advance = this._toInt(char.advance);
-                if (char.modifier !== undefined) char.modifier = this._toInt(char.modifier);
-                if (char.unnatural !== undefined) char.unnatural = this._toInt(char.unnatural);
-                if (char.cost !== undefined) char.cost = this._toInt(char.cost);
-            }
+        if (typeof source.characteristics !== 'object' || source.characteristics === null) return;
+
+        for (const char of Object.values(source.characteristics as Record<string, Record<string, unknown>>)) {
+            if (char.base !== undefined) char.base = this._toInt(char.base);
+            if (char.advance !== undefined) char.advance = this._toInt(char.advance);
+            if (char.modifier !== undefined) char.modifier = this._toInt(char.modifier);
+            if (char.unnatural !== undefined) char.unnatural = this._toInt(char.unnatural);
+            if (char.cost !== undefined) char.cost = this._toInt(char.cost);
         }
     }
 

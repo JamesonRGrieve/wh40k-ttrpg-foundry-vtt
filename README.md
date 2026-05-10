@@ -1,143 +1,178 @@
-# WH40K RPG — Foundry VTT System
+# WH40K RPG for Foundry VTT
 
-Unified Foundry VTT system for FFG/Cubicle 7 Warhammer 40,000 RPGs: Dark Heresy 1e, Dark Heresy 2e, Rogue Trader, Black Crusade, Only War, Deathwatch, and Imperium Maledictum.
+Foundry VTT system for Warhammer 40,000 roleplaying games. The repo currently carries support for the FFG d100 lines and Imperium Maledictum under a shared TypeScript codebase, with per-system variants where the rules or presentation diverge.
 
-Forked from [AndruQuiroga/RogueTraderVTT](https://github.com/AndruQuiroga/RogueTraderVTT), which was forked from [mrkeathley/dark-heresy-2nd-vtt](https://github.com/mrkeathley/dark-heresy-2nd-vtt).
+This project is in active migration:
+
+- TypeScript-first, with ratchets to reduce weak typing over time.
+- Tailwind-first for new UI work, while legacy CSS is still being retired.
+- Storybook and Vitest are part of the normal component workflow.
+- Per-system support is being homologated across DH1, DH2, RT, BC, OW, DW, and IM.
+
+Fork lineage: [AndruQuiroga/RogueTraderVTT](https://github.com/AndruQuiroga/RogueTraderVTT), itself forked from [mrkeathley/dark-heresy-2nd-vtt](https://github.com/mrkeathley/dark-heresy-2nd-vtt).
+
+## Current Repo State
+
+- Active runtime target: Foundry VTT 14.
+- Manifest compatibility: minimum 13, maximum 14, verified `14.349`.
+- Main source tree: `src/`
+- Automated tests: `tests/`
+- Storybook stories: `stories/`
+- Build / coverage / ratchet scripts: `scripts/`
+- Tailwind migration helpers: `tailwind/`
+- Foundry runtime mirror for local tooling: `.foundry-release/`
+- Cartography and campaign asset pipeline: `cartography/`
+
+The repo also contains local compendium content under `src/packs/` and backup/export material used for personal campaign work. Public releases strip copyrighted pack payloads from the release zip.
+
+## Supported Systems
+
+The codebase currently includes concrete actor/data model wiring for:
+
+- Dark Heresy 1e
+- Dark Heresy 2e
+- Rogue Trader
+- Black Crusade
+- Only War
+- Deathwatch
+- Imperium Maledictum
+
+The sheet architecture uses explicit per-system actor types such as `dh2-character`, `rt-starship`, and `im-npc` rather than relying on one generic sheet path.
 
 ## Requirements
 
-- Foundry VTT 13+ (verified on 14.359)
-- Node.js 18+
-- pnpm 10+ (`corepack enable` or install standalone)
-- `game-icons-net` module (recommended, provides item icons)
+- Node.js 20+ recommended
+- `pnpm` `10.32.1` via Corepack or standalone install
+- Foundry VTT 14 for active development testing
 
-## Development Setup
+## Setup
 
 ```bash
-pnpm install
+./build.sh deps
 ```
 
-## Build
+That script will:
+
+- verify Node is available
+- enable the pinned `pnpm` version
+- run `pnpm install --frozen-lockfile`
+
+If you already have the toolchain installed:
 
 ```bash
-pnpm build        # Full build: clean → SCSS → copy → packs → archive
-pnpm scss         # Compile SCSS only
-pnpm packs        # Compile compendium packs only
-pnpm exec gulp             # Build + watch for changes
+pnpm install --frozen-lockfile
 ```
 
-Build output goes to `dist/`.
+## Development Commands
 
-## Code Quality
-
-```bash
-pnpm lint         # ESLint check
-pnpm lint:fix     # ESLint auto-fix
-pnpm format       # Prettier check
-pnpm format:fix   # Prettier auto-fix
-pnpm validate:json # Validate lang/en.json
-pnpm check        # All of the above
-```
-
-## Deploy to Foundry VTT
-
-The system is deployed via SCP to the Foundry VTT container.
-
-- **System files only** (JS/CSS/templates): Foundry hot-reloads — just refresh the browser.
-- **Compendium packs updated**: Purge world pack copies and restart the service so Foundry reimports from the new system packs.
+### Build
 
 ```bash
-# 1. Build
 pnpm build
-
-# 2. Clear old deploy and copy new build
-ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/systems/wh40k-rpg; mkdir -p /opt/foundry-vtt/data/Data/systems/wh40k-rpg"
-scp -r dist/* root@192.168.5.40:/opt/foundry-vtt/data/Data/systems/wh40k-rpg/
-
-# 3. Fix ownership (Foundry runs as foundry-vtt user)
-ssh root@192.168.5.40 "chown -R foundry-vtt:foundry-vtt /opt/foundry-vtt/data/Data/systems/wh40k-rpg"
-
-# 4a. Refresh browser (system files only)
-# OR
-# 4b. Purge world packs + restart service (compendiums updated)
-ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/worlds/dark-heresy/packs && systemctl restart foundry-vtt.service"
+pnpm watch
+pnpm packs
+pnpm css
 ```
 
-### One-liners
+`pnpm build` uses the Gulp pipeline and writes the compiled system to `dist/`.
 
-System files only (browser refresh after):
+### Quality Gates
+
 ```bash
-pnpm build && ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/systems/wh40k-rpg; mkdir -p /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null && scp -r dist/* root@192.168.5.40:/opt/foundry-vtt/data/Data/systems/wh40k-rpg/ 2>/dev/null && ssh root@192.168.5.40 "chown -R foundry-vtt:foundry-vtt /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null
+pnpm lint
+pnpm stylelint
+pnpm format
+pnpm typecheck
+pnpm test
+pnpm check
 ```
 
-Full deploy with compendium reset:
+`pnpm check` runs the baseline validation pass used before commits:
+
+- lang JSON validation
+- ESLint
+- Prettier
+- Stylelint
+- TypeScript
+- Vitest
+
+### Storybook
+
 ```bash
-pnpm build && ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/systems/wh40k-rpg; mkdir -p /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null && scp -r dist/* root@192.168.5.40:/opt/foundry-vtt/data/Data/systems/wh40k-rpg/ 2>/dev/null && ssh root@192.168.5.40 "chown -R foundry-vtt:foundry-vtt /opt/foundry-vtt/data/Data/systems/wh40k-rpg && rm -rf /opt/foundry-vtt/data/Data/worlds/dark-heresy/packs && systemctl restart foundry-vtt.service" 2>/dev/null
+pnpm storybook
+pnpm build-storybook
+pnpm test:storybook:integration
 ```
 
-### Server Details
+Storybook is part of the expected workflow for sheets, dialogs, partials, and shared UI pieces. Use the existing mocks and helpers in `stories/` instead of hand-rolling large Foundry contexts.
 
-| Field | Value |
-|-------|-------|
-| Foundry URL | https://vtt.jamesonrgrieve.ca |
-| CT | 5040 on PVE (192.168.9.4), IP 192.168.5.40:30000 |
-| System path | `/opt/foundry-vtt/data/Data/systems/wh40k-rpg` |
-| Service | `foundry-vtt.service` (systemd) |
-| Runs as | `foundry-vtt:foundry-vtt` |
+### Coverage / Ratchets / Scaffolding
 
-## Architecture
-
-### Actor Types
-
-| Type | Sheet Classes | Description |
-|------|--------------|-------------|
-| `character` | DarkHeresySheet, RogueTraderSheet, CharacterSheetSidebar | Player characters |
-| `npc` | NPCSheetV2 | Non-player characters |
-| `vehicle` | VehicleSheet | Land vehicles |
-| `starship` | StarshipSheet | Void ships |
-
-### Sheet Inheritance
-
-```
-ActorSheetV2 (Foundry core)
-  └─ ApplicationV2Mixin
-      └─ PrimarySheetMixin (edit/play mode toggle)
-          └─ BaseActorSheet (shared mechanics)
-              └─ CharacterSheet (common PC sheet)
-                  ├─ DarkHeresySheet (DH2e header: Home World, Background, Role, Elite, Divination)
-                  └─ RogueTraderSheet (RT header: Home World, Career, Rank)
+```bash
+pnpm css:coverage
+pnpm animation:coverage
+pnpm theme:coverage
+pnpm important:coverage
+pnpm ts:coverage
+pnpm symmetry
+pnpm preload:drift
+pnpm i18n:gen
+pnpm i18n:check
+pnpm icons:gen
+pnpm icons:check
+pnpm scaffold:story <path-to-source.ts>
+pnpm scaffold:test <path-to-source.ts>
 ```
 
-### Key Directories
+These scripts exist to make the migration measurable. If you are touching an area that has a ratchet, the expectation is to leave that metric better than you found it.
 
-```
+## Repository Layout
+
+```text
 src/
-├── module/                    # JavaScript source
-│   ├── applications/actor/    # Sheet classes
-│   ├── data/actor/            # DataModel schemas
-│   ├── documents/             # Document classes
-│   ├── rules/                 # Game rules (config, combat, etc.)
-│   └── rolls/                 # Roll/damage system
-├── templates/                 # Handlebars templates
-│   ├── actor/acolyte/         # PC sheet parts (header-dh, header-rt, tabs, etc.)
-│   ├── actor/panel/           # Shared panels (skills, characteristics, combat, etc.)
-│   └── item/                  # Item sheet templates
-├── scss/                      # Stylesheets
-├── packs/                     # Compendium pack source (JSON)
-├── lang/en.json               # i18n translations (WH40K.* namespace)
-└── system.json                # System manifest
+  css/           Legacy CSS still being migrated away from
+  icons/         Generated / curated icon assets
+  images/        System images
+  lang/          Localization files
+  module/        TypeScript application, document, data model, rules, and hook code
+  packs/         Local compendium source
+  scripts/       Runtime scripts shipped with the system
+  templates/     Handlebars templates and partials
+stories/         Storybook stories, mocks, and rendering helpers
+tests/           Vitest coverage
+scripts/         Repo maintenance, ratchet, and scaffolding scripts
+tailwind/        Legacy Tailwind plugin/component bridge during migration
+.foundry-release/ Mirrored Foundry runtime assets for local compatibility work
+cartography/     Campaign map, token, overlay, and presentation pipeline
 ```
 
-## Content Policy
+## Release Notes
 
-This repo does not include copyrighted book text or art.
+`./build.sh release` stages a release bundle under `archive/release/`:
 
-## License
+- `system.json`
+- `wh40k-rpg.zip`
 
-[GNU General Public License v3.0](https://choosealicense.com/licenses/gpl-3.0/)
+As part of that flow, the script removes `packs/` from the release archive before publication. That is intentional and should not be bypassed.
 
-## Credits
+## Foundry Runtime Mirror
 
-- [Matt Keathley](https://github.com/mrkeathley) — Original DH2e system
-- [AndruQuiroga](https://github.com/AndruQuiroga) — ApplicationV2 rewrite, RT adaptation
-- [moo-man](https://github.com/moo-man) — Original DH2e Foundry system
+`pull-foundry.sh` mirrors the live Foundry installation into `.foundry-release/` for local tooling and UI compatibility work.
+
+```bash
+FOUNDRY_PASS=... ./pull-foundry.sh
+```
+
+It pulls:
+
+- `public/`
+- `dist/`
+- `templates/`
+- installed modules
+- installed systems other than `wh40k-rpg`
+
+## Content and Licensing
+
+This repo includes local campaign and pack material that is not suitable for public redistribution as-is. Treat `src/packs/` and related backup/export content as private working data unless the release tooling has explicitly stripped it.
+
+Project package metadata currently declares the code license as `MIT` in `package.json`.
