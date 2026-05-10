@@ -164,8 +164,8 @@
         "Tooltip": {
             "Skill": {
                 "BasicUntrained": "Basic (Untrained)",
-                "CharacteristicValue": "Value",
-                "UntrainedBase": "Base (÷2 untrained)",
+                "CharacteristicValue": "Characteristic Total",
+                "UntrainedBase": "Untrained Test Base (Characteristic ÷ 2)",
                 "Modifiers": "Modifiers",
                 "TrainingProgression": "Training Progression",
                 "ClickNameToRoll": "Click skill name to roll"
