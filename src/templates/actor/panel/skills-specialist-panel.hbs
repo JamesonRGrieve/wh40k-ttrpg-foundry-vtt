@@ -41,9 +41,9 @@
                             <div class="tw-flex tw-gap-[2px]">
                                 {{#each spec.trainingIndicators as |ind|}}
                                 {{#if @root.inEditMode}}
-                                <button type="button" class="tw-border tw-border-solid tw-rounded-[3px] tw-text-[0.65rem] tw-font-semibold tw-px-[4px] tw-py-[2px] tw-min-w-[24px] tw-text-center {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}} — Click to cycle (Shift+click to reverse)" data-action="cycleSpecialistTraining" data-skill="{{../spec.skillKey}}" data-index="{{../spec.entryIndex}}">{{ind.label}}</button>
+                                <button type="button" class="tw-border tw-border-solid tw-rounded-[3px] tw-text-[0.65rem] tw-font-semibold tw-px-[4px] tw-py-[2px] tw-min-w-[24px] tw-text-center {{#if ind.active}}active tw-bg-[rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.25)] tw-border-[rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.55)] tw-text-[color:var(--color-text-primary)] tw-opacity-100 tw-font-bold{{else}}tw-bg-[rgba(255,255,255,0.35)] tw-border-[rgba(120,46,34,0.35)] tw-text-[#3a2820] tw-opacity-50{{/if}}" title="{{ind.tooltip}} — Click to cycle (Shift+click to reverse)" data-action="cycleSpecialistTraining" data-skill="{{../spec.skillKey}}" data-index="{{../spec.entryIndex}}">{{ind.label}}</button>
                                 {{else}}
-                                <span class="tw-border tw-border-solid tw-rounded-[3px] tw-text-[0.65rem] tw-font-semibold tw-px-[4px] tw-py-[2px] tw-min-w-[24px] tw-text-center {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
+                                <span class="tw-border tw-border-solid tw-rounded-[3px] tw-text-[0.65rem] tw-font-semibold tw-px-[4px] tw-py-[2px] tw-min-w-[24px] tw-text-center {{#if ind.active}}active tw-bg-[rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.25)] tw-border-[rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.55)] tw-text-[color:var(--color-text-primary)] tw-opacity-100 tw-font-bold{{else}}tw-bg-[rgba(255,255,255,0.35)] tw-border-[rgba(120,46,34,0.35)] tw-text-[#3a2820] tw-opacity-50{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
                                 {{/if}}
                                 {{/each}}
                             </div>
