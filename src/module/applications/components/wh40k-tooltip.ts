@@ -378,21 +378,13 @@ export class TooltipsWH40K {
             `;
         }
 
-        if (trainingBonus > 0) {
-            html += `
-                <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">${localize('WH40K.Skills.Training')} (${training}):</span>
-                    <span class="wh40k-tooltip__value">+${trainingBonus}</span>
-                </div>
-            `;
-        } else if (level === 0) {
-            html += `
-                <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">${localize('WH40K.Skills.Training')}:</span>
-                    <span class="wh40k-tooltip__value">${training}</span>
-                </div>
-            `;
-        }
+        const trainingDisplay = trainingBonus > 0 ? `${training} (+${trainingBonus})` : training;
+        html += `
+            <div class="wh40k-tooltip__line">
+                <span class="wh40k-tooltip__label">${localize('WH40K.Skills.Training')}:</span>
+                <span class="wh40k-tooltip__value">${trainingDisplay}</span>
+            </div>
+        `;
 
         if (bonus !== 0) {
             html += `
