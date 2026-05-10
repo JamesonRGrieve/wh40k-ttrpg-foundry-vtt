@@ -150,7 +150,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (this._gameSystemId) return this._gameSystemId;
 
         const actorGameSystem = this.actor.system?.gameSystem;
-        if (typeof actorGameSystem !== 'string' || actorGameSystem === '') return null;
+        if (typeof actorGameSystem !== 'string') return null;
 
         const gameSystemId = actorGameSystem as GameSystemId;
         return SystemConfigRegistry.has(gameSystemId) ? gameSystemId : null;
@@ -1995,22 +1995,13 @@ export default class CharacterSheet extends BaseActorSheet {
             return;
         }
 
-        // Prepare chat data
-        const chatData = {
-            user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/combat-action-card.hbs', {
-                name: game.i18n.localize(actionConfig.label),
-                actor: this.actor.name,
-                actionType: actionConfig.type,
-                description: game.i18n.localize(actionConfig.description),
-                subtypes: actionConfig.subtypes?.join(', ') || '',
-                icon: actionConfig.icon,
-            }),
-        };
+        const actionName = game.i18n.localize(actionConfig.label);
+        const actionDescription = game.i18n.localize(actionConfig.description);
+        const actionSubtypes = actionConfig.subtypes?.length ? ` (${actionConfig.subtypes.join(', ')})` : '';
 
-        // Create chat message
-        await ChatMessage.create(chatData);
+        this._notify('info', `${actionName}${actionSubtypes}: ${actionDescription}`, {
+            duration: 6000,
+        });
     }
 
     /**
