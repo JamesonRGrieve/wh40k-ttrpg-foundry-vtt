@@ -161,6 +161,16 @@
             "RollSkillTitle": "Roll {0}",
             "AddSpecializationTitle": "Add {0} specialization"
         },
+        "Tooltip": {
+            "Skill": {
+                "BasicUntrained": "Basic (Untrained)",
+                "CharacteristicValue": "Value",
+                "UntrainedBase": "Base (÷2 untrained)",
+                "Modifiers": "Modifiers",
+                "TrainingProgression": "Training Progression",
+                "ClickNameToRoll": "Click skill name to roll"
+            }
+        },
         "SkillsGranted": "Skills Granted",
         "Talents": "Talents",
         "TalentsGranted": "Talents Granted",

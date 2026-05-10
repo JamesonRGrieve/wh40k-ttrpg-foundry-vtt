@@ -23,6 +23,10 @@ interface SkillRank {
     bonus: number;
 }
 
+function localize(key: string): string {
+    return game.i18n.localize(key);
+}
+
 /** Source modifier entry for tooltip breakdown. */
 interface TooltipModifierSource {
     name: string;
@@ -290,11 +294,13 @@ export class TooltipsWH40K {
         let trained = (data.trained as boolean | undefined) ?? false;
         let plus10 = (data.plus10 as boolean | undefined) ?? false;
         let plus20 = (data.plus20 as boolean | undefined) ?? false;
+        let plus30 = (data.plus30 as boolean | undefined) ?? false;
         let current = (data.current as number | undefined) ?? 0;
         let dataBonus = data.bonus as number | undefined;
+        let actor: WH40KBaseActor | null = null;
 
         if (actorUuid !== undefined && actorUuid !== '') {
-            const actor = (await fromUuid(actorUuid)) as WH40KBaseActor | null;
+            actor = (await fromUuid(actorUuid)) as WH40KBaseActor | null;
             if (actor !== null) {
                 const skill = actor.system.skills?.[name] as WH40KSkill | undefined;
                 const charKey = skill?.characteristic ?? characteristic;
@@ -304,6 +310,7 @@ export class TooltipsWH40K {
                     trained = skill.trained ?? false;
                     plus10 = skill.plus10 ?? false;
                     plus20 = skill.plus20 ?? false;
+                    plus30 = skill.plus30 ?? false;
                     current = skill.current ?? 0;
                     charValue = char.total ?? 0;
                     characteristic = char.label ?? characteristic;
@@ -312,20 +319,19 @@ export class TooltipsWH40K {
             }
         }
 
-        let gameSystem: string | null = null;
-        if (actorUuid !== undefined && actorUuid !== '') {
-            const actor = (await fromUuid(actorUuid)) as WH40KBaseActor | null;
-            gameSystem = (actor?.system as unknown as { gameSystem?: string })?.gameSystem ?? null;
-        }
+        const gameSystem = (actor?.system as { gameSystem?: string } | undefined)?.gameSystem ?? null;
         const systemConfig = gameSystem !== null ? SystemConfigRegistry.getOrNull(gameSystem) : null;
         const skillRanks: SkillRank[] = systemConfig?.getSkillRanks() ?? [
             { level: 1, key: 'trained', tooltip: 'Trained', bonus: 0 },
             { level: 2, key: 'plus10', tooltip: '+10', bonus: 10 },
             { level: 3, key: 'plus20', tooltip: '+20', bonus: 20 },
         ];
+        if (plus30 && !skillRanks.some((rank) => rank.level === 4)) {
+            skillRanks.push({ level: 4, key: 'plus30', tooltip: 'Veteran', bonus: 30 });
+        }
 
-        const level = plus20 ? 3 : plus10 ? 2 : trained ? 1 : 0;
-        let training = basic ? 'Basic (Untrained)' : 'Untrained';
+        const level = plus30 ? 4 : plus20 ? 3 : plus10 ? 2 : trained ? 1 : 0;
+        let training = basic ? localize('WH40K.Tooltip.Skill.BasicUntrained') : localize('WH40K.Skills.Untrained');
         let trainingBonus = dataTB ?? 0;
         if (level > 0 && level <= skillRanks.length) {
             const rank = skillRanks[level - 1];
@@ -358,7 +364,7 @@ export class TooltipsWH40K {
             <div class="wh40k-tooltip__divider"></div>
             <div class="wh40k-tooltip__breakdown">
                 <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">${characteristic} Value:</span>
+                    <span class="wh40k-tooltip__label">${characteristic} ${localize('WH40K.Tooltip.Skill.CharacteristicValue')}:</span>
                     <span class="wh40k-tooltip__value">${charValue}</span>
                 </div>
         `;
@@ -366,7 +372,7 @@ export class TooltipsWH40K {
         if (level === 0) {
             html += `
                 <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">Base (÷2 untrained):</span>
+                    <span class="wh40k-tooltip__label">${localize('WH40K.Tooltip.Skill.UntrainedBase')}:</span>
                     <span class="wh40k-tooltip__value">${calculatedBase}</span>
                 </div>
             `;
@@ -375,14 +381,14 @@ export class TooltipsWH40K {
         if (trainingBonus > 0) {
             html += `
                 <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">Training (${training}):</span>
+                    <span class="wh40k-tooltip__label">${localize('WH40K.Skills.Training')} (${training}):</span>
                     <span class="wh40k-tooltip__value">+${trainingBonus}</span>
                 </div>
             `;
         } else if (level === 0) {
             html += `
                 <div class="wh40k-tooltip__line">
-                    <span class="wh40k-tooltip__label">Training:</span>
+                    <span class="wh40k-tooltip__label">${localize('WH40K.Skills.Training')}:</span>
                     <span class="wh40k-tooltip__value">${training}</span>
                 </div>
             `;
@@ -391,7 +397,7 @@ export class TooltipsWH40K {
         if (bonus !== 0) {
             html += `
                 <div class="wh40k-tooltip__line wh40k-tooltip__line--modifier">
-                    <span class="wh40k-tooltip__label">Modifiers:</span>
+                    <span class="wh40k-tooltip__label">${localize('WH40K.Tooltip.Skill.Modifiers')}:</span>
                     <span class="wh40k-tooltip__value">${bonus >= 0 ? '+' : ''}${bonus}</span>
                 </div>
             `;
@@ -401,9 +407,9 @@ export class TooltipsWH40K {
             </div>
             <div class="wh40k-tooltip__divider"></div>
             <div class="wh40k-tooltip__training">
-                <div class="wh40k-tooltip__training-title">Training Progression:</div>
+                <div class="wh40k-tooltip__training-title">${localize('WH40K.Tooltip.Skill.TrainingProgression')}:</div>
                 <div class="wh40k-tooltip__training-track">
-                    <span class="${level === 0 ? 'active' : ''}">Untrained</span>
+                    <span class="${level === 0 ? 'active' : ''}">${localize('WH40K.Skills.Untrained')}</span>
                     ${skillRanks
                         .map((rank, i) => `<i class="fas fa-arrow-right"></i><span class="${level === i + 1 ? 'active' : ''}">${rank.tooltip}</span>`)
                         .join('')}
@@ -411,7 +417,7 @@ export class TooltipsWH40K {
             </div>
             <div class="wh40k-tooltip__hint">
                 <i class="fas fa-mouse-pointer"></i>
-                Click skill name to roll
+                ${localize('WH40K.Tooltip.Skill.ClickNameToRoll')}
             </div>
         `;
 
@@ -692,12 +698,7 @@ export function prepareCharacteristicTooltipData(
     return JSON.stringify(data);
 }
 
-export function prepareSkillTooltipData(
-    key: string,
-    skill: WH40KSkill,
-    characteristics: Record<string, WH40KCharacteristic> = {},
-    _actorUuid?: string,
-): string {
+export function prepareSkillTooltipData(key: string, skill: WH40KSkill, characteristics: Record<string, WH40KCharacteristic> = {}, actorUuid?: string): string {
     const charKey = skill.characteristic ?? (skill as unknown as { char?: string }).char ?? 'strength';
     const char = characteristics[charKey] ?? {};
     const charTotal = char.total ?? 0;
@@ -705,10 +706,11 @@ export function prepareSkillTooltipData(
     const trained = skill.trained ?? false;
     const plus10 = skill.plus10 ?? false;
     const plus20 = skill.plus20 ?? false;
+    const plus30 = skill.plus30 ?? false;
     const basic = skill.basic ?? false;
-    const level = plus20 ? 3 : plus10 ? 2 : trained ? 1 : 0;
+    const level = plus30 ? 4 : plus20 ? 3 : plus10 ? 2 : trained ? 1 : 0;
     const baseValue = level > 0 ? charTotal : Math.floor(charTotal / 2);
-    const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;
+    const trainingBonus = level >= 4 ? 30 : level >= 3 ? 20 : level >= 2 ? 10 : 0;
     const bonus = skill.bonus ?? 0;
     const data = {
         name: key,
@@ -719,10 +721,12 @@ export function prepareSkillTooltipData(
         trained,
         plus10,
         plus20,
+        plus30,
         current: skill.current ?? 0,
         basic,
         trainingBonus,
         bonus,
+        actorUuid,
     };
     return JSON.stringify(data);
 }
