@@ -5,12 +5,17 @@
 
 module.exports = {
     ".wh40k-rpg.sheet.actor.player": {
+        // !important is required: tailwind/legacy-components.js's
+        // actorSheetOverrides scope-rule
+        // `.wh40k-rpg.sheet.actor .window-content { display: flex !important }`
+        // would otherwise win the cascade despite our higher specificity.
+        // Matches the original `_npc-sheet.css` which carried !important here.
         ".window-content": {
-            "display": "grid",
-            "grid-template-columns": "minmax(180px, 220px) minmax(0, 1fr)",
-            "grid-template-rows": "minmax(0, 1fr)",
-            "overflow": "hidden",
-            "height": "100%",
+            "display": "grid !important",
+            "grid-template-columns": "minmax(180px, 220px) minmax(0, 1fr) !important",
+            "grid-template-rows": "minmax(0, 1fr) !important",
+            "overflow": "hidden !important",
+            "height": "100% !important",
             "background": "var(--color-bg-primary, #1a1a1a)",
         },
         ".wh40k-navigation .wh40k-nav-item": {

@@ -20,9 +20,13 @@
         valueWrapperClass — additional classes on the value display (text-xl, etc.)
         currentAnimateClass — animation utility to add to the current-value span (e.g. "tw-animate-pulse-scale")
 --}}
+{{!-- Button + value styling is inline; the wh40k-{prefix}-btn / -current / -minus / -plus
+     class names are kept as DOM hooks (animations mixin and vital-partials tests query
+     them) but no longer carry CSS — the typography & sizing live as tw-* utilities here.
+     Original sizes were 28px (fate) / 36px (wounds); 32px is a shared compromise. --}}
 <div class="{{wrapperClass}}">
     <button type="button"
-            class="{{cssPrefix}}-btn {{cssPrefix}}-minus"
+            class="{{cssPrefix}}-btn {{cssPrefix}}-minus tw-w-8 tw-h-8 tw-p-0 tw-flex tw-items-center tw-justify-center tw-rounded-md tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-btn-bg)] tw-text-[var(--wh40k-text-medium)] tw-cursor-pointer hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-border-color)] tw-transition-colors"
             data-action="decrement"
             data-field="{{field}}"
             data-min="{{#if minValue}}{{minValue}}{{else}}0{{/if}}"
@@ -30,11 +34,11 @@
         <i class="fas fa-minus"></i>
     </button>
 
-    <div class="{{cssPrefix}}-value tw-flex tw-items-center tw-gap-1 tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure {{valueWrapperClass}}">
+    <div class="{{cssPrefix}}-value tw-flex tw-items-baseline tw-gap-1 tw-font-alt tw-text-2xl tw-font-bold tw-leading-none tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure {{valueWrapperClass}}">
         <span class="{{cssPrefix}}-current {{currentAnimateClass}}">{{current}}</span>
         {{#if maxLabel}}
-        <span class="{{cssPrefix}}-sep">/</span>
-        <span class="{{cssPrefix}}-max">{{maxLabel}}</span>
+        <span class="{{cssPrefix}}-sep tw-text-base tw-opacity-60">/</span>
+        <span class="{{cssPrefix}}-max tw-text-base tw-opacity-80">{{maxLabel}}</span>
         {{/if}}
         {{#if showCalculator}}
         {{> systems/wh40k-rpg/templates/actor/partial/stat-breakdown-button.hbs
@@ -44,7 +48,7 @@
     </div>
 
     <button type="button"
-            class="{{cssPrefix}}-btn {{cssPrefix}}-plus"
+            class="{{cssPrefix}}-btn {{cssPrefix}}-plus tw-w-8 tw-h-8 tw-p-0 tw-flex tw-items-center tw-justify-center tw-rounded-md tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-btn-bg)] tw-text-[var(--wh40k-text-medium)] tw-cursor-pointer hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-border-color)] tw-transition-colors"
             data-action="increment"
             data-field="{{field}}"
             {{#if maxValue}}data-max="{{maxValue}}"{{/if}}

@@ -176,13 +176,25 @@ const semantic = {
     '--wh40k-danger-bg': 'rgba(220, 38, 38, 0.1)',
 };
 
+// Wrapped in `@layer wh40k-tokens` to bypass Tailwind v3's addBase rule-merging:
+// without the layer wrapper, addBase silently DROPS the `body.theme-dark` rule
+// because it shares property names with the earlier `:root, body.theme-light`
+// rule. The merge isn't aware that the selectors are disjoint and the values
+// differ — so dark-theme tokens (`--wh40k-panel-bg` etc.) never reach the
+// output and every panel renders with the light-theme parchment background.
+// Wrapping in any custom @layer (or @media) gives the rules a unique parent
+// and addBase emits them verbatim. The native `@layer` cascade ordering is
+// fine here because the only consumers of these vars are `var(--wh40k-*)`
+// references — no specificity contest with other layers.
 module.exports = {
-    ':root': {
-        ...palette,
-        ...typography,
-        ...layout,
+    '@layer wh40k-tokens': {
+        ':root': {
+            ...palette,
+            ...typography,
+            ...layout,
+        },
+        ':root, body.theme-light': lightTheme,
+        'body.theme-dark': darkTheme,
+        ':root, body.theme-light, body.theme-dark': semantic,
     },
-    ':root, body.theme-light': lightTheme,
-    'body.theme-dark': darkTheme,
-    ':root, body.theme-light, body.theme-dark': semantic,
 };

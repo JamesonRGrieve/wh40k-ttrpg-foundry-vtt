@@ -6,20 +6,30 @@
         percent        — numeric 0..100, or pre-resolved %
 
     Optional hash params:
-        containerClass — extra classes on bar container (e.g. "tw-relative tw-h-4 ...")
+        containerClass — extra classes on the outer bar container (positioning, gap, etc.)
+        barClass       — extra classes on the inner bar track (height, bg, rounded, etc.).
+                         REQUIRED for visible output — the legacy CSS rule was deleted in
+                         the panel port and not replaced with a default; passing nothing
+                         renders an unstyled 0-height div.
         cssVarName     — CSS variable for inline-style percent (e.g. "wounds-percent")
-        fillStyleWidth — boolean; when true, render `style="width: {{percent}}%"` on the fill instead of using CSS var
-        fillExtraClass — extra utility classes for the fill (gradients, height, etc.)
+        fillExtraClass — extra utility classes for the fill (gradients, height, etc.).
+                         Same REQUIRED note as barClass.
         thresholds     — array of { at, label, title } objects
         showPercentText— "right" | "below" | falsy. When truthy, render a percent span as a sibling (class: {cssPrefix}-percent).
         percentText    — override text (e.g. "{{value}} / {{max}}" for fatigue's progress text variant)
         percentTextClass — extra utilities on the percent text span
 --}}
 <div class="{{cssPrefix}}-bar-container {{containerClass}}">
-    <div class="{{cssPrefix}}-bar"
+    {{!-- Both `.wh40k-{prefix}-bar` and `.wh40k-{prefix}-bar-fill` are JS hooks
+         (enhanced-animations-mixin.ts queries them and sets `--{cssVar}`); the
+         legacy CSS that gave them visual styling was deleted in the panel port,
+         so consumers MUST pass `barClass` to shape the track and `fillExtraClass`
+         to shape the fill. The fill width is set inline so it works whether or
+         not the surrounding cascade resolves the CSS var. --}}
+    <div class="{{cssPrefix}}-bar {{barClass}}"
          data-percent="{{percent}}"
-         {{#unless fillStyleWidth}}style="--{{#if cssVarName}}{{cssVarName}}{{else}}{{cssPrefix}}-percent{{/if}}: {{percent}}%"{{/unless}}>
-        <div class="{{cssPrefix}}-bar-fill {{fillExtraClass}}"{{#if fillStyleWidth}} style="width: {{percent}}%"{{/if}}></div>
+         style="--{{#if cssVarName}}{{cssVarName}}{{else}}{{cssPrefix}}-percent{{/if}}: {{percent}}%">
+        <div class="{{cssPrefix}}-bar-fill {{fillExtraClass}}" style="width: {{percent}}%"></div>
 
         {{#each thresholds}}
         <div class="wh40k-threshold-marker tw-absolute tw-top-[-2px] tw-h-4 tw-flex tw-flex-col tw-items-center tw-pointer-events-none tw-z-[2]" style="left: {{this.at}}%;" title="{{this.title}}">
