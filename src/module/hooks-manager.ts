@@ -94,6 +94,7 @@ import type { WH40KGameSystem } from './types/global.d.ts';
 import { isConvertibleCharacterActorType } from './utils/actor-system-converter.ts';
 import { RollTableUtils } from './utils/roll-table-utils.ts';
 import { checkAndMigrateWorld } from './wh40k-rpg-migrations.ts';
+import { resyncWorldFromCompendiums } from './compendium-resync.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
 export { SYSTEM_ID };
@@ -735,6 +736,7 @@ export class HooksManager {
 
     static async ready(): Promise<void> {
         await checkAndMigrateWorld();
+        await resyncWorldFromCompendiums();
 
         // Initialize rich tooltip system
         game.wh40k.tooltips = new TooltipsWH40K();
