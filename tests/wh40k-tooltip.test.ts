@@ -20,7 +20,7 @@ beforeAll(() => {
                         'WH40K.Tooltip.Skill.UntrainedBase': 'Untrained Test Base (Characteristic ÷ 2)',
                         'WH40K.Tooltip.Skill.Modifiers': 'Modifiers',
                         'WH40K.Tooltip.Skill.TrainingProgression': 'Training Progression',
-                        'WH40K.Tooltip.Skill.ClickNameToRoll': 'Click skill name to roll',
+                        'WH40K.Tooltip.Skill.ClickNameToRoll': 'Use the die button to roll',
                     } as Record<string, string>
                 )[key] ?? key),
             format: (key: string) => key,
@@ -97,6 +97,7 @@ describe('skill tooltip regressions', () => {
         expect(html).toContain('<span class="">Known</span>');
         expect(html).toContain('<span class="">Experienced</span>');
         expect(html).toContain('<span class="active">Veteran</span>');
+        expect(html).toContain('Use the die button to roll');
     });
 
     it('renders the current rank label even when the rank has no bonus', async () => {
