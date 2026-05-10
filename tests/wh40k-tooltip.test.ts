@@ -16,8 +16,8 @@ beforeAll(() => {
                         'WH40K.Skills.Untrained': 'Untrained',
                         'WH40K.Skills.Training': 'Training',
                         'WH40K.Tooltip.Skill.BasicUntrained': 'Basic (Untrained)',
-                        'WH40K.Tooltip.Skill.CharacteristicValue': 'Value',
-                        'WH40K.Tooltip.Skill.UntrainedBase': 'Base (÷2 untrained)',
+                        'WH40K.Tooltip.Skill.CharacteristicValue': 'Characteristic Total',
+                        'WH40K.Tooltip.Skill.UntrainedBase': 'Untrained Test Base (Characteristic ÷ 2)',
                         'WH40K.Tooltip.Skill.Modifiers': 'Modifiers',
                         'WH40K.Tooltip.Skill.TrainingProgression': 'Training Progression',
                         'WH40K.Tooltip.Skill.ClickNameToRoll': 'Click skill name to roll',
@@ -92,10 +92,48 @@ describe('skill tooltip regressions', () => {
             label: 'Awareness',
         });
 
-        expect(html).toContain('Training (Veteran):');
-        expect(html).toContain('+30');
+        expect(html).toContain('Training:</span>');
+        expect(html).toContain('Veteran (+30)');
         expect(html).toContain('<span class="">Known</span>');
         expect(html).toContain('<span class="">Experienced</span>');
         expect(html).toContain('<span class="active">Veteran</span>');
+    });
+
+    it('renders the current rank label even when the rank has no bonus', async () => {
+        const actor = {
+            system: {
+                gameSystem: 'dh2e',
+                characteristics: {
+                    perception: {
+                        label: 'Perception',
+                        total: 37,
+                    },
+                },
+                skills: {
+                    awareness: {
+                        characteristic: 'perception',
+                        trained: true,
+                        plus10: false,
+                        plus20: false,
+                        plus30: false,
+                        current: 37,
+                        bonus: 0,
+                    },
+                },
+            },
+        } as WH40KBaseActor;
+
+        (globalThis as Record<string, unknown>).fromUuid = async () => actor;
+
+        const tooltip = new TooltipsWH40K();
+        const html = await tooltip._buildSkillTooltip({
+            actorUuid: 'Actor.mock',
+            name: 'awareness',
+            label: 'Awareness',
+        });
+
+        expect(html).toContain('Perception Characteristic Total:');
+        expect(html).toContain('Training:</span>');
+        expect(html).toContain('Known</span>');
     });
 });
