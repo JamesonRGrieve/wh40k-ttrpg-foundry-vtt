@@ -1,8 +1,8 @@
 {{!-- Specialist Skills Panel - Only shows skills that have entries --}}
 <div class="wh40k-panel tw-flex tw-flex-col tw-gap-2">
     <div class="wh40k-panel-header tw-flex tw-items-center tw-justify-between">
-        <span class="wh40k-panel-title tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-graduation-cap"></i> Specialist Skills</span>
-        <button type="button" class="tw-w-[26px] tw-h-[26px] tw-p-0 tw-bg-transparent tw-border tw-border-solid tw-border-[var(--wh40k-border-medium)] tw-rounded-md tw-cursor-pointer tw-flex tw-items-center tw-justify-center tw-ml-auto tw-text-[color:var(--color-text-secondary)] hover:tw-bg-[var(--wh40k-bg-subtle)] hover:tw-text-[color:var(--wh40k-accent-talents)] hover:tw-border-[var(--wh40k-accent-talents)]" data-action="openAddSpecialistDialog" title="Add Specialist Skill">
+        <span class="wh40k-panel-title tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"><i class="fas fa-graduation-cap"></i> {{localize "WH40K.Skills.SpecialistHeader"}}</span>
+        <button type="button" class="tw-w-[26px] tw-h-[26px] tw-p-0 tw-bg-transparent tw-border tw-border-solid tw-border-[var(--wh40k-border-medium)] tw-rounded-md tw-cursor-pointer tw-flex tw-items-center tw-justify-center tw-ml-auto tw-text-[color:var(--color-text-secondary)] hover:tw-bg-[var(--wh40k-bg-subtle)] hover:tw-text-[color:var(--wh40k-accent-talents)] hover:tw-border-[var(--wh40k-accent-talents)]" data-action="openAddSpecialistDialog" title="{{localize "WH40K.Skills.AddSpecialistSkillTitle"}}">
             <i class="fas fa-plus"></i>
         </button>
     </div>
@@ -27,22 +27,15 @@
                                         data-action="roll" data-roll-type="skill"
                                         data-roll-target="{{spec.skillKey}}"
                                         data-specialty="{{spec.entryIndex}}"
-                                        title="Roll {{spec.name}}">
+                                        title="{{localize "WH40K.Skills.RollSpecializationTitle"}} {{spec.name}}">
                                     <i class="fas fa-dice-d20"></i>
                                 </button>
                                 <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-[4px] tw-rounded-md tw-shrink-0 tw-text-[color:var(--wh40k-text-muted)] hover:tw-bg-[var(--wh40k-bg-subtle)] hover:tw-text-[#f5a623] {{#if spec.isFavorite}}active tw-text-[#f5a623]{{/if}}"
                                         data-action="toggleFavoriteSpecialistSkill"
                                         data-skill="{{spec.skillKey}}"
                                         data-index="{{spec.entryIndex}}"
-                                        title="{{#if spec.isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
+                                        title="{{#if spec.isFavorite}}{{localize "WH40K.Skills.RemoveFromFavorites"}}{{else}}{{localize "WH40K.Skills.AddToFavorites"}}{{/if}}">
                                     <i class="{{#if spec.isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
-                                </button>
-                                <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-[4px] tw-rounded-md tw-shrink-0 tw-text-[color:var(--wh40k-text-muted)] hover:tw-bg-[var(--wh40k-bg-subtle)] hover:tw-text-[color:var(--wh40k-accent-combat)]"
-                                        data-action="deleteSpecialization"
-                                        data-skill="{{spec.skillKey}}"
-                                        data-index="{{spec.entryIndex}}"
-                                        title="Delete">
-                                    <i class="fas fa-trash"></i>
                                 </button>
                             </div>
                             <div class="tw-flex tw-gap-[2px]">
@@ -66,8 +59,8 @@
         {{else}}
             <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-center tw-px-4 tw-py-8 tw-text-[color:var(--wh40k-text-muted)] tw-bg-[rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.03)] tw-border-2 tw-border-dashed tw-border-[rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.2)] tw-rounded-lg tw-m-2">
                 <i class="fas fa-graduation-cap tw-text-[2.5rem] tw-text-[rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.3)] tw-mb-2"></i>
-                <p class="tw-font-alt tw-text-[1.1rem] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary)] tw-m-0 tw-mb-1">No specialist skills yet</p>
-                <span class="tw-text-[0.85rem]">Click the <i class="fas fa-plus tw-text-[color:var(--wh40k-accent-talents)]"></i> button above to add your first specialization</span>
+                <p class="tw-font-alt tw-text-[1.1rem] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary)] tw-m-0 tw-mb-1">{{localize "WH40K.Skills.NoSpecialistSkillsYet"}}</p>
+                <span class="tw-text-[0.85rem]">{{localize "WH40K.Skills.AddFirstSpecializationHint"}}</span>
             </div>
         {{/if}}
     </div>
