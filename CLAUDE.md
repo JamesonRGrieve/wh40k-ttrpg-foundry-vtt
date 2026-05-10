@@ -55,10 +55,12 @@ Every direction in the previous section is backed by a coverage script and a rat
 | `tsc --noEmit` total errors | (hard gate — must be zero) | `pnpm typecheck` | — |
 | ESLint warnings | (built into ratchet) | `pnpm lint:ratchet` | `.eslint-warning-baseline` |
 | Sheet → story / data → test pairing | `pnpm symmetry` | `pnpm symmetry:ratchet` | `.symmetry-baseline` |
+| `!important` in `tailwind/*.js` | `pnpm important:coverage` | `pnpm important:ratchet` | `.important-baseline` |
 | Preload-list integrity (Handlebars partials) | `pnpm preload:drift` | hard gate (no ratchet) | — |
+| Dead `tailwind/*.js` rules (no live `wh40k-*` consumer) | `pnpm css:plugin-audit` | hard gate (no ratchet) | — |
 | i18n key codegen freshness | `pnpm i18n:check` | hard gate (auto-regen pre-commit) | — |
 
-The hard gates (preload-drift, i18n) cannot be ratcheted because regression is a real bug, not a velocity tradeoff. Fix the underlying issue.
+The hard gates (preload-drift, plugin-audit, i18n) cannot be ratcheted because regression is a real bug, not a velocity tradeoff. Fix the underlying issue. The plugin-audit gate specifically guards against the addBase dedup trap: a rule that's "dead by class" is invisible at the source level but a rule that's "dead by cascade" silently shadows live rules — extending the audit to walk nested selectors keeps the lights-on selector inventory honest.
 
 ### CSS architecture
 
@@ -228,14 +230,16 @@ Per-file logs land in `.auto-fix/file-logs/<sanitized-path>.attempt<N>.<runner>-
 3. `typecheck` — `tsc --noEmit` must pass with zero errors (hard gate).
 4. `lint:ratchet` — ESLint warning count cannot rise; errors are never allowed.
 5. `css:ratchet` — `tailwind-only` cannot fall, `css-only` cannot rise.
-6. `animation:ratchet` — count of `animation:` / `animation-name:` declarations across `src/css/**/*.css` cannot rise.
-7. `theme:ratchet` — count of templates using per-system `<system>:tw-*` variants cannot fall (adoption ratchet — opposite direction; rises as templates gain per-system theming).
-8. `ts:ratchet` — per-rule per-directory suppression counts cannot rise.
-9. `symmetry:ratchet` — missing-story / missing-test counts cannot rise.
-10. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
-11. Pack validation if `gulpfile.js` or `src/packs/` changed.
-12. `vitest run` — full Vitest suite must pass.
-13. Storybook Playwright integration tests.
+6. `important:ratchet` — count of `!important` declarations across `tailwind/*.js` cannot rise.
+7. `css:plugin-audit` — every `tailwind/*.js` rule must reference at least one `wh40k-*` class that appears in templates/modules/tests/stories (walks nested selectors). Hard gate.
+8. `animation:ratchet` — count of `animation:` / `animation-name:` declarations across `src/css/**/*.css` cannot rise.
+9. `theme:ratchet` — count of templates using per-system `<system>:tw-*` variants cannot fall (adoption ratchet — opposite direction; rises as templates gain per-system theming).
+10. `ts:ratchet` — per-rule per-directory suppression counts cannot rise.
+11. `symmetry:ratchet` — missing-story / missing-test counts cannot rise.
+12. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
+13. Pack validation if `gulpfile.js` or `src/packs/` changed.
+14. `vitest run` — full Vitest suite must pass.
+15. Storybook Playwright integration tests.
 
 Hooks run for 30–60s on large commits. Wait for them; do not interrupt or `--no-verify` past failures. If a hook fails, investigate and fix; do not silence.
 

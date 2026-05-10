@@ -30,6 +30,21 @@ pnpm -s lint:ratchet
 echo "[pre-commit] running css coverage ratchet…"
 pnpm -s css:ratchet
 
+# !important ratchet: blocks commits that increase the count of `!important`
+# declarations across tailwind/*.js. Each one is a cascade workaround that
+# should be retired by porting the consumer template to inline `tw-*`
+# utilities and removing the legacy rule. Update via: pnpm important:ratchet:update
+echo "[pre-commit] running !important ratchet…"
+pnpm -s important:ratchet
+
+# Plugin-audit hard gate: fails when any `tailwind/*.js` rule references a
+# `wh40k-*` class that no template/module/test/story uses. Walks nested rules
+# (descendant selectors), not just top-level. No ratchet — a dead rule is a
+# real bug class (silently shadows live rules via addBase dedup, see
+# tailwind/design-tokens.js comment).
+echo "[pre-commit] running tailwind plugin audit…"
+pnpm -s css:plugin-audit
+
 # Animation ratchet: blocks commits that increase the count of `animation:` /
 # `animation-name:` declarations across the legacy CSS files under src/css/**.
 # Each declaration is a rule that should migrate to `tw-animate-<name>` on the consuming template.

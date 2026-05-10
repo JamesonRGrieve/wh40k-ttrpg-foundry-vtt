@@ -12,6 +12,7 @@ export class WH40KSettings {
         movementAutomation: 'movement-automation',
         dh2Ruleset: 'dh2-ruleset',
         characteristicOffset: 'characteristic-offset',
+        resyncOnReady: 'resync-on-ready',
     };
 
     /** Integer offset added to the 20-point characteristic baseline during character generation. Defaults to 0. */
@@ -120,6 +121,14 @@ export class WH40KSettings {
                 display: 'WH40K.SETTINGS.MovementAutomation.Display',
                 none: 'WH40K.SETTINGS.MovementAutomation.None',
             },
+        });
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.resyncOnReady, {
+            name: 'Resync Embedded Items From Compendiums on World Boot',
+            hint: 'On every world load (GM only), reconcile every embedded item that originated from a compendium with its current source. Definition fields (description, mechanics, classification) are overwritten; per-actor state (skill advances, ammo counts, equipped flags, modifications, quantities) is preserved. Set flags.wh40k-rpg.frozenFromCompendium = true on a specific item to opt that one out.',
+            scope: 'world',
+            config: true,
+            default: true,
+            type: Boolean,
         });
     }
 }

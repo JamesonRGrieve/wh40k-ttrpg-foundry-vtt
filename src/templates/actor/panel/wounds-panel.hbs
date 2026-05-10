@@ -20,7 +20,9 @@
             cssPrefix="wh40k-wounds"
             cssVarName="wounds-percent"
             percent=(percent system.wounds.value system.wounds.max)
-            containerClass="tw-flex tw-items-center tw-gap-1"
+            containerClass="tw-flex tw-items-center tw-gap-2"
+            barClass="tw-relative tw-flex-1 tw-h-3 tw-rounded-full tw-bg-[var(--wh40k-border-accent)] tw-overflow-visible tw-shadow-[inset_0_1px_3px_var(--wh40k-shadow-soft)]"
+            fillExtraClass="tw-h-full tw-rounded-full tw-bg-gradient-to-r tw-from-crimson tw-to-crimson-light tw-shadow-[0_0_10px_rgba(182,58,43,0.3)] tw-transition-[width] tw-duration-[400ms]"
             showPercentText="right"
             thresholds=(array
                 (object at=25 label="25%" title="Severely Injured (25%)")
