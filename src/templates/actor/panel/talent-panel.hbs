@@ -11,7 +11,7 @@
         {{#if talentsCount}}
         <div class="tw-flex tw-flex-col tw-gap-[2px]" data-drop-zone="talents" data-accepts="talent">
             {{#each talents as |talent|}}
-            <div class="{{concat 'wh40k-tp_row'}} tw-relative tw-flex tw-items-center tw-rounded-md tw-min-h-[28px] tw-select-none tw-gap-[6px] tw-px-[6px] tw-py-[3px] tw-transition-colors" data-tooltip="{{talent.tooltipText}}">
+            <div class="{{concat 'wh40k-tp_row'}} tw-group tw-relative tw-flex tw-items-center tw-rounded-md tw-min-h-[28px] tw-select-none tw-gap-[6px] tw-px-[6px] tw-py-[3px] tw-transition-colors" data-tooltip="{{talent.tooltipText}}">
                 <img class="tw-shrink-0 tw-w-[22px] tw-h-[22px] tw-object-cover tw-rounded-[3px] tw-border tw-border-[var(--wh40k-border-color-light)]" src="{{talent.img}}" alt="{{talent.name}}" />
 
                 <button type="button" class="tw-flex-1 tw-min-w-0 tw-text-left tw-cursor-pointer tw-truncate tw-font-semibold tw-bg-transparent tw-border-none tw-p-0 tw-m-0 tw-text-[0.78rem]" data-action="itemEdit" data-item-id="{{talent.id}}">
@@ -27,7 +27,7 @@
                     {{#if talent.system.stackable}}<span class="tw-font-bold" style="color:var(--wh40k-accent-talents)">×{{talent.system.rank}}</span>{{/if}}
                 </div>
 
-                <div class="tw-absolute tw-flex tw-items-center tw-opacity-0 tw-pointer-events-none" style="right:6px;top:50%;transform:translateY(-50%);gap:1px;padding:2px 4px;background:linear-gradient(90deg,transparent 0%,var(--wh40k-panel-bg-solid) 20%);border-radius:3px;transition:opacity var(--wh40k-transition-fast)">
+                <div class="tw-absolute tw-flex tw-items-center tw-opacity-0 tw-pointer-events-none tw-group-hover:tw-opacity-100 tw-group-hover:tw-pointer-events-auto tw-focus-within:tw-opacity-100 tw-focus-within:tw-pointer-events-auto" style="right:6px;top:50%;transform:translateY(-50%);gap:1px;padding:2px 4px;background:linear-gradient(90deg,transparent 0%,var(--wh40k-panel-bg-solid) 20%);border-radius:3px;transition:opacity var(--wh40k-transition-fast)">
                     <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem] {{#if talent.isFavorite}}tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure{{/if}}"
                             data-action="toggleFavoriteTalent" data-item-id="{{talent.id}}"
                             title="{{#if talent.isFavorite}}Unfavorite{{else}}Favorite{{/if}}">
