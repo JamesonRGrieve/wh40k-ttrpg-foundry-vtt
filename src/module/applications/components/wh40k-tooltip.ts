@@ -369,7 +369,9 @@ export class TooltipsWH40K {
                 </div>
         `;
 
-        if (level === 0) {
+        // The half-characteristic untrained base is RT-specific (FFG Rogue Trader rule);
+        // DH2e and other aptitude/career systems apply a flat -20 penalty rather than halving.
+        if (level === 0 && gameSystem === 'rt') {
             html += `
                 <div class="wh40k-tooltip__line">
                     <span class="wh40k-tooltip__label">${localize('WH40K.Tooltip.Skill.UntrainedBase')}:</span>
