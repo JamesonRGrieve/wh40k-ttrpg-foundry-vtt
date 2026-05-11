@@ -18,12 +18,15 @@
         <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-mb-2 tw-py-1">
             {{#if (gt system.fate.max 0)}}
                 {{#each (range 1 system.fate.max) as |index|}}
+                    {{!-- Distinguish available (filled, themed colour, gentle glow) from spent
+                         (outlined, dimmed) so the current-fate count is readable at a glance.
+                         Issue #10: a single un-glowed state read as "no indicator at all". --}}
                     <button type="button"
-                            class="tw-size-[42px] tw-p-0 tw-bg-transparent tw-border-none tw-cursor-pointer tw-relative tw-flex tw-items-center tw-justify-center {{#if (lte index ../system.fate.value)}}tw-animate-gentle-glow{{/if}}"
+                            class="tw-size-[42px] tw-p-0 tw-bg-transparent tw-border-none tw-cursor-pointer tw-relative tw-flex tw-items-center tw-justify-center {{#if (lte index ../system.fate.value)}}tw-animate-gentle-glow{{else}}tw-opacity-40{{/if}}"
                             data-action="setFateStar"
                             data-fate-index="{{index}}"
                             title="Fate Point {{index}}{{#if (lte index ../system.fate.value)}} (Available — click to spend){{else}} (Spent — click to restore){{/if}}">
-                        <i class="{{concat 'fas' ' fa-skull'}} tw-text-[var(--wh40k-accent-gold)] bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
+                        <i class="fas fa-skull {{#if (lte index ../system.fate.value)}}tw-text-[var(--wh40k-accent-gold)] bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
                     </button>
                 {{/each}}
             {{else}}
