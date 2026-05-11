@@ -841,7 +841,11 @@
             "Quirks": "Quirks",
             "Superstition": "Superstition",
             "Mementos": "Mementos",
-            "Notes": "Notes"
+            "Notes": "Notes",
+            "Contacts": "Contacts",
+            "ContactsHint": "Friendly NPCs with a positive disposition modifier. Distinct from the Peer talent — purchase that separately for the mechanical bonus.",
+            "Adversaries": "Adversaries",
+            "AdversariesHint": "Hostile NPCs with a negative disposition modifier. Distinct from the Enemy / Hatred talents — purchase those separately."
         },
         "NavigatorPowers": {
             "Header": "Navigator Powers",
