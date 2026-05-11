@@ -262,7 +262,10 @@ export default class CharacterData extends CreatureTemplate {
             }),
 
             // ===== DH2e RESOURCES =====
-            influence: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            // Influence is a 0-100 characteristic per DH2 RAW (DH2e core p. 28). In Homebrew
+            // mode it presents as an economy resource, but the cap still applies — Influence
+            // never exceeds a percentile characteristic ceiling.
+            influence: new fields.NumberField({ required: true, initial: 0, min: 0, max: 100, integer: true }),
             requisition: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             throneGelt: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 

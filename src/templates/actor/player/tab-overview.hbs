@@ -391,21 +391,25 @@
             </div>
 
             {{#unless isNPC}}
-            {{!-- Resources (Influence / Requisition / Gelt) — PC-only --}}
+            {{!-- Resources (Influence / Requisition / Gelt) — PC-only.
+                 In DH2 RAW mode Influence is a Statistics characteristic, not an economy stat,
+                 so it (and Throne Gelt) drop out of this panel and the grid collapses. --}}
             {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Resources" icon="fa-coins" zoneClass="tw-border-l-[3px] tw-border-l-[var(--wh40k-color-gold)]" contentClass="tw-p-2 tw-flex-1 tw-w-full"}}
-                    <div class="tw-grid {{#if hideThroneGelt}}tw-grid-cols-2{{else}}tw-grid-cols-3{{/if}} tw-gap-2 tw-w-full">
+                    <div class="tw-grid {{#if isRaw}}tw-grid-cols-1{{else}}{{#if hideThroneGelt}}tw-grid-cols-2{{else}}tw-grid-cols-3{{/if}}{{/if}} tw-gap-2 tw-w-full">
+                        {{#unless isRaw}}
                         <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                             <span class="tw-text-xs tw-normal-case tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-tracking-normal" data-tooltip="Social and political pull — calling in favours, securing audiences, persuading officials. Not bought with coin.">Influence</span>
                             <div class="tw-flex tw-items-center tw-gap-1">
                                 <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="decrement" data-field="system.influence" data-min="0" title="-1">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-[50px] tw-max-w-[150px]" name="system.influence" value="{{system.influence}}" min="0" />
+                                <input type="number" class="tw-py-1 tw-px-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-font-numeric tw-text-center tw-h-9 tw-text-base tw-font-semibold tw-w-full tw-min-w-[50px] tw-max-w-[150px]" name="system.influence" value="{{system.influence}}" min="0" max="100" />
                                 <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="system.influence" data-max="100" title="+1">
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
                         </div>
+                        {{/unless}}
                         <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                             <span class="tw-text-xs tw-normal-case tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-tracking-normal" data-tooltip="Drawing on Inquisitorial resources — weapons from the armoury, specialist equipment, transport, and backup.">Requisition</span>
                             <div class="tw-flex tw-items-center tw-gap-1">
