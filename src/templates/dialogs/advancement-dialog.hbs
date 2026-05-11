@@ -1,8 +1,8 @@
 {{!-- Advancement Dialog Template --}}
 <div class="tw-flex tw-flex-col tw-h-full tw-gap-0 tw-font-[var(--wh40k-font-ui)]" data-wh40k-system="{{_gameSystemId}}">
 
-  {{!-- Header with XP Display --}}
-  <header>
+  {{!-- Header with XP Display (sticky so totals stay visible while content scrolls — #22) --}}
+  <header class="tw-sticky tw-top-0 tw-z-20 tw-bg-[var(--color-bg-secondary)] tw-shrink-0">
     <div>
       <div>
         <div style="width: {{xp.usedPercent}}%">
@@ -36,8 +36,8 @@
   </div>
   {{else}}
 
-  {{!-- Tab Navigation --}}
-  <nav>
+  {{!-- Tab Navigation (sticky alongside the header so the tab bar stays anchored) --}}
+  <nav class="tw-sticky tw-top-[var(--wh40k-adv-header-h,4rem)] tw-z-10 tw-bg-[var(--color-bg-secondary)] tw-shrink-0">
     {{#each tabs}}
     <button
       class="{{#if this.active}}active{{/if}}"
@@ -51,8 +51,10 @@
     {{/each}}
   </nav>
 
-  {{!-- Content Area --}}
-  <div>
+  {{!-- Content Area — scrollable so options below the window edge are reachable (#22). The
+       PARTS.scrollable selector targets .wh40k-adv__content; this class also lets the parent
+       flex container claim remaining height via tw-flex-1 tw-min-h-0. --}}
+  <div class="wh40k-adv__content tw-flex-1 tw-min-h-0 tw-overflow-y-auto">
 
     {{!-- Characteristics Tab --}}
     {{#if (eq activeTab "characteristics")}}
