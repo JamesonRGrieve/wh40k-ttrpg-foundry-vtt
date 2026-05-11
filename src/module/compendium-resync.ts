@@ -10,15 +10,15 @@ import { WH40KSettings } from './wh40k-rpg-settings.ts';
  * Add a key here if you discover that a per-actor field is being clobbered.
  */
 const RUNTIME_PRESERVE_PATHS: Record<string, ReadonlyArray<string>> = {
-    skill: ['advance', 'specializations', 'bonus'],
-    weapon: ['clip', 'equipped', 'stowed', 'jammed', 'modifications'],
-    armour: ['equipped', 'damageTaken', 'modifications'],
-    ammunition: ['quantity', 'equipped'],
-    gear: ['quantity', 'equipped', 'stowed', 'uses'],
-    consumable: ['quantity', 'uses'],
-    cybernetic: ['installed'],
-    talent: [],
-    trait: [],
+    'skill': ['advance', 'specializations', 'bonus'],
+    'weapon': ['clip', 'equipped', 'stowed', 'jammed', 'modifications'],
+    'armour': ['equipped', 'damageTaken', 'modifications'],
+    'ammunition': ['quantity', 'equipped'],
+    'gear': ['quantity', 'equipped', 'stowed', 'uses'],
+    'consumable': ['quantity', 'uses'],
+    'cybernetic': ['installed'],
+    'talent': [],
+    'trait': [],
     'psychic-power': [],
 };
 
@@ -67,17 +67,14 @@ type ActorLike = {
     name: string | null;
     system?: { gameSystem?: string };
     items: { contents: EmbeddedItemLike[] };
-    updateEmbeddedDocuments: (
-        type: 'Item',
-        updates: Array<Record<string, unknown>>,
-    ) => Promise<unknown>;
+    updateEmbeddedDocuments: (type: 'Item', updates: Array<Record<string, unknown>>) => Promise<unknown>;
 };
 
 type IndexEntry = { _id: string; type: string; name: string };
 
 type PackLike = {
     metadata: { id: string; name: string; type: string };
-    getIndex: (options?: { fields?: string[] }) => Promise<IndexEntry[]>;
+    getIndex: (options?: { fields?: string[] }) => Promise<Iterable<unknown>>;
 };
 
 declare const fromUuid: (uuid: string) => Promise<EmbeddedItemLike | null>;
@@ -90,6 +87,18 @@ function setProperty(obj: Record<string, unknown>, path: string, value: unknown)
     foundry.utils.setProperty(obj, path, value);
 }
 
+function isPackLike(value: unknown): value is PackLike {
+    if (!value || typeof value !== 'object') return false;
+    const pack = value as Partial<PackLike>;
+    return !!pack.metadata && typeof pack.getIndex === 'function';
+}
+
+function isIndexEntry(value: unknown): value is IndexEntry {
+    if (!value || typeof value !== 'object') return false;
+    const entry = value as Partial<IndexEntry>;
+    return typeof entry._id === 'string' && typeof entry.type === 'string' && typeof entry.name === 'string';
+}
+
 function buildLookupKey(type: string, name: string): string {
     return `${type}|${name.trim().toLowerCase()}`;
 }
@@ -98,22 +107,20 @@ function buildLookupKey(type: string, name: string): string {
  * Build a per-gameSystem `(type|name) → compendium UUID` map by enumerating
  * every Item pack whose name starts with `<gameSystem>-`. Cached across actors.
  */
-async function getNameIndexFor(
-    gameSystem: string,
-    cache: Map<string, Map<string, string>>,
-): Promise<Map<string, string>> {
+async function getNameIndexFor(gameSystem: string, cache: Map<string, Map<string, string>>): Promise<Map<string, string>> {
     const cached = cache.get(gameSystem);
     if (cached) return cached;
 
     const lookup = new Map<string, string>();
     const prefix = `${gameSystemPackPrefix(gameSystem)}-`;
-    const packs = (game.packs?.contents ?? []) as PackLike[];
+    const packs = Array.from(game.packs?.contents ?? []).filter(isPackLike);
 
     for (const pack of packs) {
         if (pack.metadata.type !== 'Item') continue;
         if (!pack.metadata.name.startsWith(prefix)) continue;
         const index = await pack.getIndex({ fields: ['type', 'name'] });
         for (const entry of index) {
+            if (!isIndexEntry(entry)) continue;
             const key = buildLookupKey(entry.type, entry.name);
             if (!lookup.has(key)) {
                 lookup.set(key, `Compendium.${pack.metadata.id}.Item.${entry._id}`);
@@ -130,10 +137,7 @@ async function getNameIndexFor(
  * runtime paths declared for this item type. Returns `null` if nothing would
  * change.
  */
-function buildResyncPatch(
-    embedded: EmbeddedItemLike,
-    source: EmbeddedItemLike,
-): Record<string, unknown> | null {
+function buildResyncPatch(embedded: EmbeddedItemLike, source: EmbeddedItemLike): Record<string, unknown> | null {
     const preserve = RUNTIME_PRESERVE_PATHS[embedded.type] ?? [];
     const newSystem = foundry.utils.deepClone(source.system) as Record<string, unknown>;
 
@@ -235,9 +239,7 @@ export async function resyncWorldFromCompendiums(): Promise<void> {
                 // instance, while the compendium has the base entry with an
                 // empty `specializations[]` — that picks gets preserved by
                 // RUNTIME_PRESERVE_PATHS.
-                const candidate =
-                    index.get(buildLookupKey(item.type, rawName)) ??
-                    index.get(buildLookupKey(item.type, stripSpecialization(rawName)));
+                const candidate = index.get(buildLookupKey(item.type, rawName)) ?? index.get(buildLookupKey(item.type, stripSpecialization(rawName)));
                 if (candidate) {
                     let cached = sourceByUuid.get(candidate);
                     if (cached === undefined) {
