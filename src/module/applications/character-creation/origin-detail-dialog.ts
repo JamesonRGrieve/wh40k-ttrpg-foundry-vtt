@@ -21,13 +21,6 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             minimizable: false,
             resizable: true,
         },
-        tabs: [
-            {
-                navSelector: '.origin-detail-tabs',
-                contentSelector: '.origin-detail-tab-content',
-                initial: 'grants',
-            },
-        ],
         position: {
             width: 700,
             height: 600,
@@ -36,8 +29,17 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             confirm: OriginDetailDialog.#confirm,
             cancel: OriginDetailDialog.#cancel,
             openItem: OriginDetailDialog.#openItem,
+            switchOriginTab: OriginDetailDialog.#switchOriginTab,
         },
     };
+
+    /**
+     * Active tab — switching between Grants / Description / Choices / Requirements.
+     * The V12-era `DEFAULT_OPTIONS.tabs` nav/content-selector config never wired clicks in
+     * V14 (issue #23: tabs flashed on click but never switched). Track state manually and
+     * re-apply `.active` classes in `_onRender`.
+     */
+    #activeTab = 'grants';
 
     /** @override */
     static PARTS = {
@@ -354,6 +356,34 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @param {HTMLElement} target
      * @private
      */
+    /**
+     * Switch the visible tab. The nav anchors carry data-tab="<id>"; the click handler
+     * updates `#activeTab` and toggles `.active` on the matching nav + content elements.
+     */
+    static #switchOriginTab(this: OriginDetailDialog, _event: PointerEvent, target: HTMLElement): void {
+        const tab = target.dataset.tab;
+        if (typeof tab !== 'string' || tab === '') return;
+        this.#activeTab = tab;
+        this.#applyActiveTab();
+    }
+
+    #applyActiveTab(): void {
+        const root = this.element as HTMLElement | null;
+        if (root === null) return;
+        root.querySelectorAll<HTMLElement>('.origin-detail-tabs [data-tab]').forEach((el) => {
+            el.classList.toggle('active', el.dataset.tab === this.#activeTab);
+        });
+        root.querySelectorAll<HTMLElement>('.origin-detail-tab-content > [data-tab]').forEach((el) => {
+            el.classList.toggle('active', el.dataset.tab === this.#activeTab);
+        });
+    }
+
+    /** @override */
+    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+        super._onRender(context, options);
+        this.#applyActiveTab();
+    }
+
     static async #openItem(this: OriginDetailDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
         if (uuid === undefined || uuid === '') return;
