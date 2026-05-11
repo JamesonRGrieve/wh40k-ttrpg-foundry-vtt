@@ -1586,20 +1586,18 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareFavoriteSkills(): Record<string, unknown>[] {
         const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[]) || [];
+        const specialistFavorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') as string[]) || [];
         const skills = this.actor.skills ?? {};
         const characteristics = this.actor.characteristics ?? {};
 
-        // Map favorite skill keys to full skill objects
-        return favorites
+        // Standard skill favourites
+        const standardFavourites = favorites
             .map((key) => {
                 const skill = skills[key];
                 if (!skill) return null;
-
-                // Get characteristic data - convert short name to key
                 const charShort = skill.characteristic || 'S';
                 const charKey = this._charShortToKey(charShort);
                 const char = characteristics[charKey];
-
                 return {
                     key,
                     label: skill.label || key,
@@ -1616,7 +1614,46 @@ export default class CharacterSheet extends BaseActorSheet {
                     }),
                 };
             })
-            .filter((skill) => skill !== null); // Remove any invalid skills
+            .filter((skill) => skill !== null);
+
+        // Specialist favourites are stored as "skillKey:entryIndex"; resolve each to the
+        // matching specialisation entry so they appear in the Overview favourites list
+        // alongside standard skills (issue #5).
+        const specialistFavouriteRows = specialistFavorites
+            .map((compositeKey) => {
+                const [skillKey, indexStr] = compositeKey.split(':');
+                const index = Number.parseInt(indexStr ?? '', 10);
+                if (!skillKey || Number.isNaN(index)) return null;
+                const parent = skills[skillKey];
+                const entries = (parent as { entries?: unknown[] } | undefined)?.entries;
+                if (!Array.isArray(entries)) return null;
+                const entry = entries[index] as Record<string, unknown> | undefined;
+                if (!entry) return null;
+                const charShort = (entry.characteristic as string | undefined) ?? (parent?.characteristic as string | undefined) ?? 'S';
+                const charKey = this._charShortToKey(charShort);
+                const char = characteristics[charKey];
+                const entryName = (entry.name as string | undefined) ?? (entry.label as string | undefined) ?? skillKey;
+                const parentLabel = (parent?.label as string | undefined) ?? skillKey;
+                const composedLabel = `${parentLabel} (${entryName})`;
+                return {
+                    key: compositeKey,
+                    label: composedLabel,
+                    current: (entry.current as number | undefined) ?? 0,
+                    characteristic: charKey,
+                    charShort: char?.short || charKey,
+                    breakdown: this._getSkillBreakdown(entry as unknown as SkillLike, char),
+                    tooltipData: JSON.stringify({
+                        name: composedLabel,
+                        value: (entry.current as number | undefined) ?? 0,
+                        characteristic: char?.label || charKey,
+                        charValue: char?.total ?? 0,
+                        breakdown: this._getSkillBreakdown(entry as unknown as SkillLike, char),
+                    }),
+                };
+            })
+            .filter((row) => row !== null);
+
+        return [...standardFavourites, ...specialistFavouriteRows] as Record<string, unknown>[];
     }
 
     /**
