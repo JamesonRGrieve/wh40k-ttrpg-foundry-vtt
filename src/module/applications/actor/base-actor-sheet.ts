@@ -743,18 +743,19 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             }
         }
 
-        // Split standard into trained/basic skills and untrained advanced skills
-        const trainedStandard = standard.filter(([_, data]) => !data.advanced || data.trainingLevel > 0);
-        const advancedUntrained = standard.filter(([_, data]) => data.advanced && data.trainingLevel === 0);
-
-        // Split trained skills into two columns (excludes untrained advanced)
-        const splitIndex = Math.ceil(trainedStandard.length / 2);
-        const standardColumns = [trainedStandard.slice(0, splitIndex), trainedStandard.slice(splitIndex)];
+        // DH2e (and the other d100 lines in this codebase) have no separate "Advanced Skills"
+        // tier — every skill rolls on its characteristic with the usual untrained penalty.
+        // Render all standard skills in the same alphabetised two-column grid; the previously
+        // separate `advancedUntrained` slice is retained as an empty array so consumers that
+        // still read it don't break. See issue #2.
+        const splitIndex = Math.ceil(standard.length / 2);
+        const standardColumns = [standard.slice(0, splitIndex), standard.slice(splitIndex)];
+        const advancedUntrained: typeof standard = [];
 
         // Check if any specialist skill has entries (for empty state display)
         const hasSpecialistEntries = specialist.some(([_, skillData]) => skillData.entries?.length > 0);
 
-        context.skillLists = { standard, trainedStandard, advancedUntrained, specialist, standardColumns, hasSpecialistEntries };
+        context.skillLists = { standard, trainedStandard: standard, advancedUntrained, specialist, standardColumns, hasSpecialistEntries };
     }
 
     /**
