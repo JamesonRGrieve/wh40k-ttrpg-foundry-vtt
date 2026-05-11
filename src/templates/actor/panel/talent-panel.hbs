@@ -30,7 +30,7 @@
                 <div class="tw-absolute tw-flex tw-items-center tw-opacity-0 tw-pointer-events-none tw-group-hover:tw-opacity-100 tw-group-hover:tw-pointer-events-auto tw-focus-within:tw-opacity-100 tw-focus-within:tw-pointer-events-auto" style="right:6px;top:50%;transform:translateY(-50%);gap:1px;padding:2px 4px;background:linear-gradient(90deg,transparent 0%,var(--wh40k-panel-bg-solid) 20%);border-radius:3px;transition:opacity var(--wh40k-transition-fast)">
                     <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem] {{#if talent.isFavorite}}tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure{{/if}}"
                             data-action="toggleFavoriteTalent" data-item-id="{{talent.id}}"
-                            title="{{#if talent.isFavorite}}Unfavorite{{else}}Favorite{{/if}}">
+                            title="{{#if talent.isFavorite}}{{localize "WH40K.Favourites.Unfavorite"}}{{else}}{{localize "WH40K.Favourites.Favorite"}}{{/if}}">
                         <i class="{{#if talent.isFavorite}}{{concat 'fas fa-star'}}{{else}}{{concat 'far fa-star'}}{{/if}}"></i>
                     </button>
                     <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[5px] tw-py-[2px] tw-rounded-[3px] tw-text-[0.7rem]" data-action="itemVocalize" data-item-id="{{talent.id}}" title="Chat">

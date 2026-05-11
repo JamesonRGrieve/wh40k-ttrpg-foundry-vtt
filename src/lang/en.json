@@ -177,6 +177,16 @@
                 "ClickNameToRoll": "Use the die button to roll"
             }
         },
+        "Favourites": {
+            "Skills": "Favourite Skills",
+            "Talents": "Favourite Talents",
+            "NoSkills": "No favourite skills selected",
+            "NoTalents": "No favourite talents selected",
+            "StarSkillsHint": "Star skills in the Statistics tab to add them here",
+            "StarTalentsHint": "Star talents in the Talents tab to add them here",
+            "Favorite": "Favorite",
+            "Unfavorite": "Unfavorite"
+        },
         "SkillsGranted": "Skills Granted",
         "Talents": "Talents",
         "TalentsGranted": "Talents Granted",
