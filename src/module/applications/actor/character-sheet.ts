@@ -1653,12 +1653,10 @@ export default class CharacterSheet extends BaseActorSheet {
             })
             .filter((row) => row !== null);
 
-        // Sort the combined list alphabetically by label. Issue #6 requested a custom
-        // drag-and-drop reorder; the minimal fix here is alphabetical order (matches the
-        // main Statistics list). Custom drag-handle ordering remains a follow-up.
-        const merged = [...standardFavourites, ...specialistFavouriteRows];
-        merged.sort((a, b) => String(a?.label).localeCompare(String(b?.label), game.i18n.lang));
-        return merged as Record<string, unknown>[];
+        // Preserve the flag array's order — that's the user's custom order set via the
+        // drag handles on each favourite row (#6). Specialist favourites append after
+        // standard ones; if the user wants them interleaved they can drag-reorder.
+        return [...standardFavourites, ...specialistFavouriteRows] as Record<string, unknown>[];
     }
 
     /**
@@ -1707,10 +1705,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteTalents') as string[]) || [];
         const talents = this.actor.items.filter((i) => (i.type as string) === 'talent');
 
-        // Map favorite talent IDs to full talent objects, sorted alphabetically. Issue #6
-        // requested a custom drag-and-drop reorder; the minimal fix here is alphabetical
-        // ordering (matches how the main Talents tab presents the list). Drag-handle
-        // custom ordering remains a follow-up.
+        // Preserve the flag array's order so drag-handle reorder (#6) persists.
         const rows = favorites
             .map((id: string) => {
                 const talent = talents.find((t) => t.id === id);
@@ -1734,7 +1729,6 @@ export default class CharacterSheet extends BaseActorSheet {
                 };
             })
             .filter((talent) => talent !== null);
-        rows.sort((a, b) => String(a.fullName).localeCompare(String(b.fullName), game.i18n.lang));
         return rows as Record<string, unknown>[];
     }
 
@@ -3686,6 +3680,60 @@ export default class CharacterSheet extends BaseActorSheet {
      * Override drop item to handle origin path updates.
      * @override
      */
+    /**
+     * After Foundry renders the sheet, wire HTML5 drag-and-drop reorder on the
+     * favourite-skills / favourite-talents lists. Each row carries a
+     * `data-favourite-key` and lives inside a parent `[data-favourite-list="skills|talents"]`
+     * container. On drop, splice the flag array and persist. See issue #6.
+     */
+    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+        await super._onRender(context, options);
+
+        const lists = this.element?.querySelectorAll('[data-favourite-list]');
+        if (!lists) return;
+        for (const list of Array.from(lists) as HTMLElement[]) {
+            const kind = list.dataset.favouriteList;
+            if (kind !== 'skills' && kind !== 'talents') continue;
+            const flagKey = kind === 'skills' ? 'favoriteSkills' : 'favoriteTalents';
+
+            let dragKey: string | null = null;
+            list.addEventListener('dragstart', (event) => {
+                const row = (event.target as HTMLElement | null)?.closest<HTMLElement>('[data-favourite-key]');
+                if (!row) return;
+                dragKey = row.dataset.favouriteKey ?? null;
+                if (event.dataTransfer) {
+                    event.dataTransfer.effectAllowed = 'move';
+                    event.dataTransfer.setData('text/plain', dragKey ?? '');
+                }
+                row.style.opacity = '0.4';
+            });
+            list.addEventListener('dragend', (event) => {
+                const row = (event.target as HTMLElement | null)?.closest<HTMLElement>('[data-favourite-key]');
+                if (row) row.style.opacity = '';
+                dragKey = null;
+            });
+            list.addEventListener('dragover', (event) => {
+                event.preventDefault();
+                if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+            });
+            list.addEventListener('drop', (event) => {
+                event.preventDefault();
+                const targetRow = (event.target as HTMLElement | null)?.closest<HTMLElement>('[data-favourite-key]');
+                const dropKey = targetRow?.dataset.favouriteKey ?? null;
+                if (!dragKey || !dropKey || dragKey === dropKey) return;
+                const flag = (this.actor.getFlag('wh40k-rpg', flagKey) as string[] | undefined) ?? [];
+                const next = flag.slice();
+                const from = next.indexOf(dragKey);
+                if (from === -1) return;
+                next.splice(from, 1);
+                let to = next.indexOf(dropKey);
+                if (to === -1) to = next.length;
+                next.splice(to, 0, dragKey);
+                void this.actor.setFlag('wh40k-rpg', flagKey, next);
+            });
+        }
+    }
+
     async _onDropItem(event: DragEvent, item: WH40KItem): Promise<unknown> {
         // Progression-eligible drops (talents) route through the AdvancementDialog rather
         // than landing on the actor directly — talents cost XP per RAW, so silently creating

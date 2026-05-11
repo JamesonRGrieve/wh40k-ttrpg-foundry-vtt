@@ -152,7 +152,11 @@ interface PreparedPsychicPanel {
         cantAfford: boolean;
         maxed: boolean;
     };
-    disciplines: Array<{ label: string; items: PreparedPsychicPower[] }>;
+    disciplines: Array<{
+        label: string;
+        items: PreparedPsychicPower[];
+        tiers: Array<{ prCost: number; label: string; accessible: boolean; items: PreparedPsychicPower[] }>;
+    }>;
     chips: Array<{ key: string; label: string; count: number; accessible: number; active: boolean }>;
     availableOnly: boolean;
     hasBlocked: boolean;
@@ -860,12 +864,29 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             })),
         ];
 
-        // Build the filtered discipline sections the template iterates over
+        // Build the filtered discipline sections the template iterates over.
+        // PROTOTYPE: also bucket items by `prCost` so the template can render a
+        // tier-grouped "tree" view rather than a flat list. Lower PR tiers represent
+        // foundational powers; higher tiers gate behind PR advancement.
         const visibleLabels = activeDiscipline === 'all' ? disciplineKeys : disciplineKeys.filter((l) => l === activeDiscipline);
         const disciplines = visibleLabels
             .map((label) => {
                 const items = grouped[label].filter((p) => !availableOnly || !p.blocked);
-                return { label, items };
+                const byTierMap = new Map<number, PreparedPsychicPower[]>();
+                for (const power of items) {
+                    const tier = power.prCost;
+                    if (!byTierMap.has(tier)) byTierMap.set(tier, []);
+                    byTierMap.get(tier)?.push(power);
+                }
+                const tiers = [...byTierMap.entries()]
+                    .sort(([a], [b]) => a - b)
+                    .map(([prCost, tierItems]) => ({
+                        prCost,
+                        label: `PR ${prCost}`,
+                        accessible: prCost <= currentRating,
+                        items: tierItems,
+                    }));
+                return { label, items, tiers };
             })
             .filter((d) => d.items.length > 0);
 
