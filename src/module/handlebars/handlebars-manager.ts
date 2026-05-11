@@ -60,6 +60,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs',
             'systems/wh40k-rpg/templates/actor/partial/movement-stat-row.hbs',
             'systems/wh40k-rpg/templates/actor/partial/wounds-pip-row.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/armour-silhouette.hbs',
             'systems/wh40k-rpg/templates/actor/partial/circular-icon-button.hbs',
             'systems/wh40k-rpg/templates/actor/partial/stat-breakdown-button.hbs',
             'systems/wh40k-rpg/templates/actor/partial/labeled-stat-chip.hbs',
