@@ -201,10 +201,14 @@
                                 </div>
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-[6px] tw-w-full">
-                                <div class="tw-flex tw-items-center tw-justify-center tw-gap-2.5 tw-py-1.5">
+                                {{!-- Fate pip strip wraps so high-max characters don't overflow into
+                                     hidden territory (issue #9). Each pip has a real clickable
+                                     button area (was just an unstyled <button> wrapping a tiny
+                                     icon, so clicks landed on dead space). --}}
+                                <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-1.5 tw-py-1.5">
                                     {{#each (range 1 system.fate.max) as |index|}}
-                                        <button type="button" class="{{#if (lte index ../system.fate.value)}}tw-animate-star-glow{{/if}}" data-action="setFateStar" data-fate-index="{{index}}" title="Fate Point {{index}}">
-                                            <i class="fas fa-star"></i>
+                                        <button type="button" class="tw-w-7 tw-h-7 tw-p-0 tw-bg-transparent tw-border-none tw-cursor-pointer tw-flex tw-items-center tw-justify-center {{#if (lte index ../system.fate.value)}}tw-animate-star-glow{{else}}tw-opacity-40{{/if}}" data-action="setFateStar" data-fate-index="{{index}}" title="Fate Point {{index}}{{#if (lte index ../system.fate.value)}} (Available — click to spend){{else}} (Spent — click to restore){{/if}}">
+                                            <i class="fas fa-star {{#if (lte index ../system.fate.value)}}tw-text-[var(--wh40k-accent-gold)]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
                                         </button>
                                     {{/each}}
                                 </div>
