@@ -1962,7 +1962,54 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #rollInitiative(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const agBonus = this.actor.system.characteristics?.agility?.bonus ?? 0;
-            const roll = await new Roll('1d10 + @ab', { ab: agBonus }).evaluate();
+
+            // Shift-click rolls immediately with no modifier — matches the convention used
+            // by characteristic rolls elsewhere in the sheet. Otherwise open a small prompt
+            // for situational modifiers (Low-Gravity, Constant Vigilance swap, Fate burn, etc).
+            // Issue #21.
+            let modifier = 0;
+            let formula = '1d10';
+            let formulaLabel = `1d10 + Agility Bonus (${agBonus})`;
+            const isShift = (event as MouseEvent).shiftKey === true;
+            if (!isShift) {
+                const DialogV2 = (foundry.applications.api as { DialogV2?: typeof foundry.applications.api.DialogV2 }).DialogV2;
+                if (DialogV2) {
+                    const result = await DialogV2.prompt({
+                        window: { title: 'WH40K.Combat.InitiativeDialogTitle' },
+                        content: `
+                            <p>${game.i18n.localize('WH40K.Combat.InitiativeDialogHelp')}</p>
+                            <div class="form-group">
+                                <label>${game.i18n.localize('WH40K.Combat.InitiativeModifier')}</label>
+                                <input type="number" name="modifier" value="0" />
+                            </div>
+                            <div class="form-group">
+                                <label><input type="checkbox" name="fateBurn" /> ${game.i18n.localize('WH40K.Combat.InitiativeFateBurn')}</label>
+                            </div>
+                        `,
+                        ok: {
+                            label: 'WH40K.Common.Roll',
+                            callback: (_evt: Event, button: HTMLButtonElement) => {
+                                const form = button.form ?? null;
+                                const mod = Number((form?.elements.namedItem('modifier') as HTMLInputElement | null)?.value ?? 0);
+                                const burn = (form?.elements.namedItem('fateBurn') as HTMLInputElement | null)?.checked === true;
+                                return { modifier: mod, fateBurn: burn };
+                            },
+                        },
+                        rejectClose: false,
+                    });
+                    if (result === null || result === undefined) return;
+                    modifier = (result as unknown as { modifier: number }).modifier;
+                    if ((result as unknown as { fateBurn: boolean }).fateBurn) {
+                        formula = '10';
+                        formulaLabel = `Fate burn (10) + Agility Bonus (${agBonus})`;
+                    }
+                }
+            }
+
+            const roll = await new Roll(`${formula} + @ab + @mod`, { ab: agBonus, mod: modifier }).evaluate();
+            if (modifier !== 0) {
+                formulaLabel += ` ${modifier >= 0 ? '+' : ''}${modifier}`;
+            }
 
             const content = `
                 <div class="wh40k-hit-location-result">
@@ -1971,7 +2018,7 @@ export default class CharacterSheet extends BaseActorSheet {
                         <span class="wh40k-roll-result">${roll.total}</span>
                     </div>
                     <div class="wh40k-hit-location">
-                        <span class="wh40k-location-armour">1d10 + Agility Bonus (${agBonus})</span>
+                        <span class="wh40k-location-armour">${formulaLabel}</span>
                     </div>
                 </div>
             `;
