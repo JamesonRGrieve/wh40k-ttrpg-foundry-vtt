@@ -1653,7 +1653,12 @@ export default class CharacterSheet extends BaseActorSheet {
             })
             .filter((row) => row !== null);
 
-        return [...standardFavourites, ...specialistFavouriteRows] as Record<string, unknown>[];
+        // Sort the combined list alphabetically by label. Issue #6 requested a custom
+        // drag-and-drop reorder; the minimal fix here is alphabetical order (matches the
+        // main Statistics list). Custom drag-handle ordering remains a follow-up.
+        const merged = [...standardFavourites, ...specialistFavouriteRows];
+        merged.sort((a, b) => String(a?.label).localeCompare(String(b?.label), game.i18n.lang));
+        return merged as Record<string, unknown>[];
     }
 
     /**
@@ -1702,8 +1707,11 @@ export default class CharacterSheet extends BaseActorSheet {
         const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteTalents') as string[]) || [];
         const talents = this.actor.items.filter((i) => (i.type as string) === 'talent');
 
-        // Map favorite talent IDs to full talent objects
-        return favorites
+        // Map favorite talent IDs to full talent objects, sorted alphabetically. Issue #6
+        // requested a custom drag-and-drop reorder; the minimal fix here is alphabetical
+        // ordering (matches how the main Talents tab presents the list). Drag-handle
+        // custom ordering remains a follow-up.
+        const rows = favorites
             .map((id: string) => {
                 const talent = talents.find((t) => t.id === id);
                 if (!talent) return null;
@@ -1725,7 +1733,9 @@ export default class CharacterSheet extends BaseActorSheet {
                     },
                 };
             })
-            .filter((talent) => talent !== null); // Remove any invalid talents
+            .filter((talent) => talent !== null);
+        rows.sort((a, b) => String(a.fullName).localeCompare(String(b.fullName), game.i18n.lang));
+        return rows as Record<string, unknown>[];
     }
 
     /* -------------------------------------------- */
@@ -3677,6 +3687,20 @@ export default class CharacterSheet extends BaseActorSheet {
      * @override
      */
     async _onDropItem(event: DragEvent, item: WH40KItem): Promise<unknown> {
+        // Progression-eligible drops (talents) route through the AdvancementDialog rather
+        // than landing on the actor directly — talents cost XP per RAW, so silently creating
+        // them on drop bypasses the advancement economy. Already-owned talents fall through
+        // to the normal sort path. See issue #17.
+        const isUnknownTalent = item?.type === 'talent' && !this.actor.items.get(item.id ?? '');
+        if (isUnknownTalent) {
+            const careerKey = (this.actor.system as { originPath?: { career?: string } }).originPath?.career ?? 'rogueTrader';
+            AdvancementDialog.open(this.actor, { careerKey });
+            this._notify('info', game.i18n.format('WH40K.Advancement.PurchaseTalentViaAdvancement', { name: item.name ?? '' }), {
+                duration: 5000,
+            });
+            return false;
+        }
+
         const result = await super._onDropItem(event, item);
 
         // If dropped item is an origin path (trait with origin flag), re-render biography part

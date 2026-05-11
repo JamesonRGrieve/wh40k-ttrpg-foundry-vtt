@@ -8,7 +8,7 @@
 
 import type { WH40KNPC } from '../../documents/npc.ts';
 import type { WH40KCharacteristic } from '../../types/global.d.ts';
-import type { SidebarHeaderField } from '../../config/game-systems/types.ts';
+import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
@@ -315,7 +315,7 @@ export default class NPCSheet extends CharacterSheet {
         return context;
     }
 
-    protected _getSidebarHeaderFields(_gameSystem: string): SidebarHeaderField[] {
+    protected _getSidebarHeaderFields(_gameSystem: GameSystemId | null): SidebarHeaderField[] {
         const npcActor = this.actor as unknown as WH40KNPC;
         const threatTier = (npcActor.system?.threatTier ?? {}) as { color?: string; label?: string };
         return [

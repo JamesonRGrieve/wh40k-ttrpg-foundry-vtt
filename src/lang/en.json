@@ -331,6 +331,7 @@
         "Advancement": {
             "Title": "Character Advancement",
             "TitleWithCareer": "{career} Advancement",
+            "PurchaseTalentViaAdvancement": "Open the Advancement window to purchase {name} with XP — talents can't be dragged directly onto an acolyte.",
             "XPAvailable": "XP Available",
             "XPUsed": "XP Used",
             "Tab": {
