@@ -2,7 +2,11 @@
 {{!-- At-a-glance view of all critical information --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
-    <div class="tw-grid tw-grid-cols-3 tw-grid-rows-[auto_auto] tw-items-start tw-gap-2 tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden tw-border-t-2 tw-border-t-gold bc:tw-border-t-crimson-light dh1e:tw-border-t-gold-raw-l5 dh2e:tw-border-t-gold-raw dw:tw-border-t-accent-combat ow:tw-border-t-brass-l20 rt:tw-border-t-gold im:tw-border-t-failure">
+    {{!-- Column sizing rationale (issue #15): Favourites + Progression panels (col 2) do not
+         benefit from extra width — their content is short rows. Resources (in col 3) cramps
+         badly under tw-grid-cols-3 because Influence/Requisition/Throne Gelt buttons overlap.
+         Cap col 1 (Vitals) and col 2 to 360px max; let col 3 absorb the remaining width. --}}
+    <div class="tw-grid tw-grid-cols-[minmax(280px,360px)_minmax(280px,360px)_1fr] tw-grid-rows-[auto_auto] tw-items-start tw-gap-2 tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden tw-border-t-2 tw-border-t-gold bc:tw-border-t-crimson-light dh1e:tw-border-t-gold-raw-l5 dh2e:tw-border-t-gold-raw dw:tw-border-t-accent-combat ow:tw-border-t-brass-l20 rt:tw-border-t-gold im:tw-border-t-failure">
 
         {{!-- COLUMN 1: Vitals → Active Effects --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
