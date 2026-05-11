@@ -302,13 +302,20 @@
                         </div>
                         {{#each actor.items as |item|}}
                         {{#if item.isWeapon}}
-                        <div class="tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer tw-border-b tw-border-b-[rgba(0,0,0,0.08)] tw-transition-[background] hover:tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.04)] item-drag item-edit {{#if item.system.equipped}}tw-bg-[rgb(from_var(--wh40k-color-success)_r_g_b_/_0.08)]{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
+                        <div class="tw-group tw-relative tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer tw-border-b tw-border-b-[rgba(0,0,0,0.08)] tw-transition-[background] hover:tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.04)] item-drag item-edit {{#if item.system.equipped}}tw-bg-[rgb(from_var(--wh40k-color-success)_r_g_b_/_0.08)]{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
                             <span class="tw-flex tw-items-center tw-gap-1 tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap tw-text-sm">
                                 {{#if item.system.equipped}}<i class="fas fa-check-circle tw-text-[color:var(--wh40k-color-success)] tw-mr-[var(--wh40k-space-xs)] tw-text-[0.8em]"></i>{{/if}}
                                 {{item.name}}
                             </span>
                             <span class="tw-text-sm tw-text-center tw-min-w-12">{{item.system.damageLabel}}</span>
                             <span class="tw-text-sm tw-text-center tw-min-w-12">{{item.system.rangeLabel}}</span>
+                            <button type="button"
+                                    class="tw-absolute tw-right-1 tw-top-1/2 -tw-translate-y-1/2 tw-w-5 tw-h-5 tw-p-0 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border tw-border-solid tw-border-[var(--wh40k-border-medium)] tw-rounded tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-muted)] tw-opacity-0 tw-pointer-events-none tw-cursor-pointer hover:tw-text-[color:var(--wh40k-accent-combat)] hover:tw-border-[color:var(--wh40k-accent-combat)] tw-group-hover:tw-opacity-100 tw-group-hover:tw-pointer-events-auto tw-focus:tw-opacity-100 tw-focus:tw-pointer-events-auto tw-transition-opacity"
+                                    data-action="itemDelete"
+                                    data-item-id="{{item.id}}"
+                                    title="{{localize "WH40K.Common.Delete"}}">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                         {{/if}}
                         {{/each}}
