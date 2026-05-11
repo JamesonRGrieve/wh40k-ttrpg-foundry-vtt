@@ -106,14 +106,14 @@ function getFlag<T>(actor: { getFlag(scope: string, key: string): unknown }, key
 
 const ApplicationV2Base = ApplicationV2Mixin(ActorSheetV2) as unknown as AnyApplicationV2Ctor;
 const PrimarySheetBase = PrimarySheetMixin(ApplicationV2Base) as unknown as AnyApplicationV2Ctor;
-const TooltipBase = TooltipMixin(PrimarySheetBase) as unknown as AnyApplicationV2Ctor;
+const TooltipBase = TooltipMixin(PrimarySheetBase);
 const VisualFeedbackBase = VisualFeedbackMixin(TooltipBase) as unknown as AnyApplicationV2Ctor;
 const AnimatedBase = EnhancedAnimationsMixin(VisualFeedbackBase) as unknown as AnyApplicationV2Ctor;
-const CollapsibleBase = CollapsiblePanelMixin(AnimatedBase) as unknown as AnyApplicationV2Ctor;
-const ContextMenuBase = ContextMenuMixin(CollapsibleBase) as unknown as AnyApplicationV2Ctor;
-const DragDropBase = EnhancedDragDropMixin(ContextMenuBase) as unknown as AnyApplicationV2Ctor;
+const CollapsibleBase = CollapsiblePanelMixin(AnimatedBase);
+const ContextMenuBase = ContextMenuMixin(CollapsibleBase);
+const DragDropBase = EnhancedDragDropMixin(ContextMenuBase);
 const WhatIfBase = WhatIfMixin(DragDropBase) as unknown as AnyApplicationV2Ctor;
-const StatBreakdownBase = StatBreakdownMixin(WhatIfBase) as unknown as AnyApplicationV2Ctor;
+const StatBreakdownBase = StatBreakdownMixin(WhatIfBase);
 const ItemPreviewBase = ItemPreviewMixin(
     StatBreakdownBase as unknown as new (...args: any[]) => foundry.appv1.sheets.ActorSheet,
 ) as unknown as AnyApplicationV2Ctor;
@@ -355,10 +355,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         context.skillTrainingConfig = this._getSkillTrainingConfig();
 
         // Prepare skills
-        await this._prepareSkills(context);
+        this._prepareSkills(context);
 
         // Prepare items by category
-        await this._prepareItems(context);
+        this._prepareItems(context);
 
         return context;
     }
@@ -523,9 +523,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     _applyRestoredState(): void {
         // Apply equipment filters
         if (this._equipmentFilter) {
-            const searchInput = this.element?.querySelector('.wh40k-equipment-search') as HTMLInputElement | null;
-            const typeFilter = this.element?.querySelector('.wh40k-equipment-type-filter') as HTMLSelectElement | null;
-            const statusFilter = this.element?.querySelector('.wh40k-equipment-status-filter') as HTMLSelectElement | null;
+            const searchInput = this.element?.querySelector<HTMLInputElement>('.wh40k-equipment-search');
+            const typeFilter = this.element?.querySelector<HTMLSelectElement>('.wh40k-equipment-type-filter');
+            const statusFilter = this.element?.querySelector<HTMLSelectElement>('.wh40k-equipment-status-filter');
 
             if (searchInput && this._equipmentFilter.search) {
                 searchInput.value = this._equipmentFilter.search;
@@ -545,9 +545,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Apply skills filters
         if (this._skillsFilter) {
-            const searchInput = this.element?.querySelector('.wh40k-skills-search') as HTMLInputElement | null;
-            const charFilter = this.element?.querySelector('.wh40k-skills-char-filter') as HTMLSelectElement | null;
-            const trainingFilter = this.element?.querySelector('.wh40k-skills-training-filter') as HTMLSelectElement | null;
+            const searchInput = this.element?.querySelector<HTMLInputElement>('.wh40k-skills-search');
+            const charFilter = this.element?.querySelector<HTMLSelectElement>('.wh40k-skills-char-filter');
+            const trainingFilter = this.element?.querySelector<HTMLSelectElement>('.wh40k-skills-training-filter');
 
             if (searchInput && this._skillsFilter.search) {
                 searchInput.value = this._skillsFilter.search;
@@ -674,7 +674,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const standard = [];
         const specialist = [];
 
-        for (const [key, data] of visibleSkills as [string, any][]) {
+        for (const [key, data] of visibleSkills) {
             // Augment with computed properties
             this._augmentSkillData(key, data, characteristics);
 
@@ -815,12 +815,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
 
         // Check if skill is favorite (auto-remove if untrained advanced)
-        const favorites = ((this.actor as WH40KBaseActorDocument).getFlag('wh40k-rpg', 'favoriteSkills') as string[]) || [];
+        const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[]) || [];
         const isUntrainedAdvanced = data.advanced && (data.trainingLevel || 0) === 0;
         if (isUntrainedAdvanced && favorites.includes(key)) {
             // Auto-unfavourite untrained advanced skills
             const updated = favorites.filter((f: string) => f !== key);
-            void (this.actor as WH40KBaseActorDocument).setFlag('wh40k-rpg', 'favoriteSkills', updated);
+            void this.actor.setFlag('wh40k-rpg', 'favoriteSkills', updated);
             data.isFavorite = false;
         } else {
             data.isFavorite = favorites.includes(key);
@@ -873,7 +873,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const level = this._getTrainingLevel(skill);
         const baseValue = level > 0 ? charTotal : Math.floor(charTotal / 2);
         const trainingBonus = level >= 4 ? 30 : level >= 3 ? 20 : level >= 2 ? 10 : 0;
-        const bonus = skill.bonus || 0;
+        const bonus = skill.bonus ?? 0;
 
         const parts = [];
         if (level > 0) {
@@ -984,7 +984,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      */
     _augmentTalentData(talent: TalentLike): TalentDisplay {
         // Check if this talent is favorited
-        const favorites = ((this.actor as WH40KBaseActorDocument).getFlag('wh40k-rpg', 'favoriteTalents') as string[]) || [];
+        const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteTalents') as string[]) || [];
         const isFavorite = talent.id ? favorites.includes(talent.id) : false;
 
         // Build tooltip text from description/benefit
@@ -1315,7 +1315,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Restore sheet state on first render
         if (!this._stateRestored) {
-            await this._restoreSheetState();
+            this._restoreSheetState();
         }
 
         // Add wh40k-sheet class to the form element for CSS styling
@@ -1376,13 +1376,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             const saveBtn = wrap.querySelector<HTMLButtonElement>('[data-inline-edit-save]');
             if (!input || !saveBtn) return;
 
-            const enterEdit = () => {
+            const enterEdit = (): void => {
                 input.removeAttribute('readonly');
                 wrap.classList.add('is-editing');
                 input.focus();
                 input.select();
             };
-            const exitEdit = () => {
+            const exitEdit = (): void => {
                 input.setAttribute('readonly', 'readonly');
                 wrap.classList.remove('is-editing');
             };
@@ -1445,23 +1445,25 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         this.element.querySelectorAll('.item-delete').forEach((el) => {
             el.addEventListener('click', (event) => {
                 const ct = event.currentTarget as HTMLElement;
-                const itemId = ct.dataset.itemId || ct.closest('[data-item-id]')?.getAttribute('data-item-id');
-                if (itemId) BaseActorSheet.#itemDelete.call(this, event, ct);
+                const itemId = ct.dataset.itemId ?? ct.closest('[data-item-id]')?.getAttribute('data-item-id');
+                if (itemId !== null && itemId !== undefined && itemId !== '') void BaseActorSheet.#itemDelete.call(this, event, ct);
             });
         });
 
         this.element.querySelectorAll('.item-vocalize').forEach((el) => {
             el.addEventListener('click', (event) => {
                 const ct = event.currentTarget as HTMLElement;
-                const itemId = ct.dataset.itemId || ct.closest('[data-item-id]')?.getAttribute('data-item-id');
-                if (itemId) BaseActorSheet.#itemVocalize.call(this, event, ct);
+                const itemId = ct.dataset.itemId ?? ct.closest('[data-item-id]')?.getAttribute('data-item-id');
+                if (itemId !== null && itemId !== undefined && itemId !== '') void BaseActorSheet.#itemVocalize.call(this, event, ct);
             });
         });
 
         // Panel toggle handlers
         // These use .sheet-control__hide-control class with data-toggle attribute
         this.element.querySelectorAll('.sheet-control__hide-control').forEach((el) => {
-            el.addEventListener('click', this._onPanelToggle.bind(this));
+            el.addEventListener('click', (event) => {
+                void this._onPanelToggle(event);
+            });
         });
 
         // Click-outside handler to close characteristic HUD dropdowns
@@ -1645,7 +1647,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const fp = new FilePickerCtor({
             current,
             type: 'image',
-            callback: (path: string) => this.document.update({ [attr]: path }),
+            callback: async (path: string): Promise<void> => {
+                await this.document.update({ [attr]: path });
+            },
             position: {
                 top: this.position.top + 40,
                 left: this.position.left + 10,
@@ -1748,10 +1752,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         switch (rollType) {
             case 'characteristic':
                 actor.rollCharacteristic?.(rollTarget);
-                return;
+                break;
             case 'skill':
                 actor.rollSkill?.(rollTarget, specialty);
-                return;
+                break;
+            default:
+                break;
         }
     }
 
@@ -1764,8 +1770,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemRoll(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
-        const actor = this.actor as BaseActorSheetActor & { rollItem?: (id: string) => Promise<void> };
+        const itemId = target.dataset.itemId || target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
+        const actor = this.actor;
         if (itemId) await actor.rollItem?.(itemId);
     }
 
@@ -1778,20 +1784,17 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #itemEdit(this: BaseActorSheet, event: Event, target: HTMLElement): void {
-        console.log('WH40K | itemEdit action triggered', { target, dataset: target.dataset });
-        const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
-        console.log('WH40K | itemEdit itemId:', itemId);
+        const itemId = target.dataset.itemId ?? target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
         if (!itemId) {
             console.warn('WH40K | itemEdit: No itemId found', target);
             return;
         }
         const item = this.actor.items.get(itemId);
-        console.log('WH40K | itemEdit item:', item);
         if (!item) {
             console.warn('WH40K | itemEdit: Item not found with ID', itemId);
             return;
         }
-        item.sheet?.render(true);
+        void item.sheet?.render(true);
     }
 
     /* -------------------------------------------- */
@@ -1803,16 +1806,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemDelete(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
-        console.log('WH40K | itemDelete action triggered', { target, dataset: target.dataset });
-        const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
-        console.log('WH40K | itemDelete itemId:', itemId);
+        const itemId = target.dataset.itemId ?? target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
         if (!itemId) {
             console.warn('WH40K | itemDelete: No itemId found', target);
             return;
         }
 
         const item = this.actor.items.get(itemId);
-        console.log('WH40K | itemDelete item:', item);
         if (!item) {
             console.warn('WH40K | itemDelete: Item not found with ID', itemId);
             return;
@@ -1825,11 +1825,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             cancelLabel: 'Cancel',
         });
 
-        console.log('WH40K | itemDelete confirmed:', confirmed);
         if (confirmed) {
             try {
                 await this.actor.deleteEmbeddedDocuments('Item', [itemId]);
-                console.log('WH40K | itemDelete: Successfully deleted item', itemId);
             } catch (err) {
                 console.error('WH40K | itemDelete: Error deleting item', err);
                 ui.notifications.error(`Failed to delete ${item.name}`);
@@ -1846,25 +1844,20 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemVocalize(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
-        console.log('WH40K | itemVocalize action triggered', { target, dataset: target.dataset });
-        const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
-        console.log('WH40K | itemVocalize itemId:', itemId);
+        const itemId = target.dataset.itemId ?? target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
         if (!itemId) {
             console.warn('WH40K | itemVocalize: No item ID found', target);
             return;
         }
 
         const item = this.actor.items.get(itemId);
-        console.log('WH40K | itemVocalize item:', item);
         if (!item) {
             console.warn(`WH40K | itemVocalize: Item ${itemId} not found on actor`);
             return;
         }
 
         try {
-            console.log('WH40K | itemVocalize: Calling item.sendToChat()');
             await item.sendToChat();
-            console.log('WH40K | itemVocalize: Successfully sent to chat');
         } catch (err) {
             console.error('WH40K | itemVocalize: Error sending item to chat', err);
             ui.notifications.error(`Failed to send ${item.name} to chat`);
@@ -1928,7 +1921,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #effectEdit(this: BaseActorSheet, event: Event, target: HTMLElement): void {
-        const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
+        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset.effectId;
         if (!effectId) return;
         const effect = this.actor.effects.get(effectId) as { sheet?: { render(force?: boolean): void } } | undefined;
         effect?.sheet?.render(true);
@@ -1943,7 +1936,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectDelete(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
-        const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
+        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset.effectId;
         if (!effectId) return;
         const effect = this.actor.effects.get(effectId) as { delete(): Promise<unknown> } | undefined;
         await effect?.delete();
@@ -1958,7 +1951,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectToggle(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
-        const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
+        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset.effectId;
         if (!effectId) return;
         const effect = this.actor.effects.get(effectId) as { disabled: boolean; update(data: Record<string, unknown>): Promise<unknown> } | undefined;
         if (!effect) return;
@@ -2026,11 +2019,11 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Pattern 2: Level-based training
         if (skillKey && level !== null) {
-            const basePath = specialty != null ? `system.skills.${skillKey}.entries.${specialty}` : `system.skills.${skillKey}`;
+            const basePath = specialty !== null && specialty !== undefined ? `system.skills.${skillKey}.entries.${specialty}` : `system.skills.${skillKey}`;
 
             // Get current training level
             const skills = this.actor.system.skills;
-            const skill = specialty != null ? skills?.[skillKey]?.entries?.[Number(specialty)] : skills?.[skillKey];
+            const skill = specialty !== null && specialty !== undefined ? skills?.[skillKey]?.entries?.[Number(specialty)] : skills?.[skillKey];
 
             const currentLevel = skill?.plus20 ? 3 : skill?.plus10 ? 2 : skill?.trained ? 1 : 0;
 
@@ -2043,7 +2036,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 [`${basePath}.plus20`]: newLevel >= 3,
             };
 
-            await this.actor.update(updateData as Record<string, unknown>);
+            await this.actor.update(updateData);
         }
     }
 
@@ -2080,7 +2073,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             (target as unknown as HTMLSelectElement).selectedIndex = 0;
         } else {
             const { prepareCreateSpecialistSkillPrompt } = await import('../prompts/specialist-skill-dialog.ts');
-            await prepareCreateSpecialistSkillPrompt({
+            prepareCreateSpecialistSkillPrompt({
                 actor: this.actor,
                 skillName: skillKey,
             });
@@ -2114,7 +2107,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         await this.actor.update({
             [`system.skills.${skillKey}.entries`]: entries,
-        } as Record<string, unknown>);
+        });
 
         ui.notifications.info(`Added ${skill.label} (${name}) specialization.`);
     }
@@ -2231,7 +2224,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         }
 
         // Create the item
-        return this.actor.createEmbeddedDocuments('Item', [item.toObject()] as unknown as Parameters<typeof this.actor.createEmbeddedDocuments<'Item'>>[1]);
+        return this.actor.createEmbeddedDocuments('Item', [item.toObject()]);
     }
 
     /* -------------------------------------------- */
@@ -2249,7 +2242,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const source = items.get(item.id);
 
         // Confirm the drop target
-        const dropTarget = (event.target as HTMLElement).closest('[data-item-id]') as HTMLElement | null;
+        const dropTarget = (event.target as HTMLElement).closest<HTMLElement>('[data-item-id]');
         if (!dropTarget) return undefined;
         const targetId = dropTarget.dataset.itemId;
         if (!source || !targetId) return undefined;
@@ -2296,7 +2289,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         }
 
         const cost = char.nextAdvanceCost;
-        const available = this.actor.system.experience?.available || 0;
+        const available = this.actor.system.experience?.available ?? 0;
 
         // Check if enough XP
         if (available < cost) {
@@ -2328,12 +2321,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Update actor
         const newAdvance = oldAdvance + 1;
-        const newSpent = (this.actor.system.experience?.spent || 0) + cost;
+        const newSpent = (this.actor.system.experience?.spent ?? 0) + cost;
 
         await this.actor.update({
             [`system.characteristics.${charKey}.advance`]: newAdvance,
             'system.experience.spent': newSpent,
-        } as Record<string, unknown>);
+        });
 
         // Calculate new values
         const newTotal = char.base + newAdvance * 5 + (char.modifier || 0);
@@ -2353,21 +2346,21 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         }
 
         // Animate circle for V1 HUD (bonus display)
-        const circleElement = this.element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-circle`) as HTMLElement | null;
+        const circleElement = this.element.querySelector<HTMLElement>(`[data-characteristic="${charKey}"] .wh40k-char-hud-circle`);
         if (circleElement) {
             circleElement.classList.add('value-changed');
             setTimeout(() => circleElement.classList.remove('value-changed'), 500);
         }
 
         // Add value-changed animation to mod display for V1 HUD
-        const modElement = this.element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-mod`) as HTMLElement | null;
+        const modElement = this.element.querySelector<HTMLElement>(`[data-characteristic="${charKey}"] .wh40k-char-hud-mod`);
         if (modElement) {
             modElement.classList.add('tw-animate-wh40k-value-flash');
             setTimeout(() => modElement.classList.remove('tw-animate-wh40k-value-flash'), 500);
         }
 
         // Update the border progress indicator
-        const charBox = this.element.querySelector(`[data-characteristic="${charKey}"]`) as HTMLElement | null;
+        const charBox = this.element.querySelector<HTMLElement>(`[data-characteristic="${charKey}"]`);
         if (charBox) {
             charBox.style.setProperty('--advance-progress', String(newAdvance / 5));
             charBox.dataset.advance = String(newAdvance);
@@ -2383,7 +2376,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @protected
      */
     static async #editCharacteristic(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
-        const charKey = (target.closest('[data-characteristic]') as HTMLElement | null)?.dataset.characteristic;
+        const charKey = target.closest<HTMLElement>('[data-characteristic]')?.dataset.characteristic;
         if (!charKey) return;
 
         const char = this.actor.system.characteristics[charKey];
@@ -2455,7 +2448,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 [`system.characteristics.${charKey}.advance`]: parseInt(result.advance) || 0,
                 [`system.characteristics.${charKey}.modifier`]: parseInt(result.modifier) || 0,
                 [`system.characteristics.${charKey}.unnatural`]: parseInt(result.unnatural) || 1,
-            } as Record<string, unknown>);
+            });
 
             ui.notifications.info(`${char.label} updated successfully!`);
         }

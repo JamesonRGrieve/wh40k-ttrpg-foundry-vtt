@@ -11,16 +11,69 @@ import type { WH40KItem } from '../documents/item.ts';
 import { SkillKeyHelper } from '../helpers/skill-key-helper.ts';
 import { evaluateWoundsFormula, evaluateFateFormula } from './formula-evaluator.ts';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- documentation: union of all grant DataModel types this processor handles
 type GrantDataModel = ItemGrantData | SkillGrantData | CharacteristicGrantData | ChoiceGrantData | ResourceGrantData;
+
+/** Choice-grant per-option payload. Fields are subclass-defined; narrowed at use. */
+interface GrantChoiceOptionGrants {
+    characteristics?: Record<string, number>;
+    skills?: Grant[];
+    talents?: Grant[];
+    traits?: Grant[];
+    equipment?: Grant[];
+    specialAbilities?: Grant[];
+    corruption?: string;
+    insanity?: string;
+}
 
 interface GrantChoiceOption {
     value: string;
-    grants?: Record<string, unknown>;
+    grants?: GrantChoiceOptionGrants;
 }
 
 interface GrantChoiceData {
     label: string;
     options: GrantChoiceOption[];
+}
+
+/** Shape of `item.system.grants` as read by this processor (legacy origin/talent grants). */
+interface ItemGrantsShape {
+    woundsFormula?: string;
+    fateFormula?: string;
+    skills?: Grant[];
+    talents?: Grant[];
+    traits?: Grant[];
+    equipment?: Grant[];
+    specialAbilities?: Grant[];
+    aptitudes?: string[];
+    corruption?: string;
+    insanity?: string;
+    choices?: GrantChoiceData[];
+}
+
+/** Shape of an originPath / talent / trait `item.system` block touched here. */
+interface OriginSystemShape {
+    grants?: ItemGrantsShape;
+    hasGrants?: boolean;
+    modifiers?: { characteristics?: Record<string, number> };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: per-choice selected values are user input (strings/arrays); shape varies per origin
+    selectedChoices?: Record<string, unknown[]>;
+    rollResults?: {
+        wounds?: { rolled?: number; breakdown?: string };
+        fate?: { rolled?: number; breakdown?: string };
+    };
+}
+
+/** Created/queued embedded item payload. */
+interface ItemsToCreateEntry {
+    _upgradeExisting?: boolean;
+    _existingId?: string;
+    type: string;
+    name: string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry createEmbeddedDocuments payload; system varies per item type
+    system?: Record<string, unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flags payload
+    flags?: Record<string, Record<string, unknown>>;
 }
 
 export interface Grant {
@@ -33,7 +86,8 @@ export interface Grant {
 
 export interface GrantResult {
     characteristics: Record<string, number>;
-    itemsToCreate: Array<Record<string, unknown>>;
+    itemsToCreate: ItemsToCreateEntry[];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.update payload
     skillUpdates: Record<string, unknown>;
     woundsBonus: number;
     fateBonus: number;
@@ -79,12 +133,12 @@ class GrantContext {
 
     constructor(actor: WH40KActor, options: ProcessingOptions = {}) {
         this.actor = actor;
-        this.mode = options.mode || GRANT_MODE.IMMEDIATE;
-        this.depth = options.depth || 0;
-        this.maxDepth = options.maxDepth || 3;
-        this.dryRun = options.dryRun || false;
+        this.mode = options.mode ?? GRANT_MODE.IMMEDIATE;
+        this.depth = options.depth ?? 0;
+        this.maxDepth = options.maxDepth ?? 3;
+        this.dryRun = options.dryRun ?? false;
         this.showNotification = options.showNotification ?? true;
-        this.sourceItem = options.sourceItem || null;
+        this.sourceItem = options.sourceItem ?? null;
 
         // Accumulated results
         this.result = {
@@ -110,11 +164,6 @@ export class GrantsProcessor {
      * Process grants from an item.
      */
     static async processGrants(item: WH40KItem, actor: WH40KActor, options: ProcessingOptions = {}): Promise<GrantResult> {
-        if (!item || !actor) {
-            console.warn('GrantsProcessor: Missing item or actor');
-            return {} as GrantResult;
-        }
-
         const context = new GrantContext(actor, options);
 
         // Check recursion depth
@@ -124,22 +173,24 @@ export class GrantsProcessor {
         }
 
         // Check if item has grants
-        const grants = (item.system as { grants?: unknown }).grants;
-        if (!grants) {
-            game.wh40k?.log(`GrantsProcessor: No grants found on item: ${item.name}`);
+        const sys = item.system as OriginSystemShape;
+        const grants = sys.grants;
+        if (grants === undefined) {
+            game.wh40k.log(`GrantsProcessor: No grants found on item: ${item.name}`);
             return context.result;
         }
 
         // Check if this is a talent with the hasGrants flag
-        if (item.type === 'talent' && !(item.system as { hasGrants?: boolean }).hasGrants) {
-            game.wh40k?.log(`GrantsProcessor: Talent ${item.name} has no hasGrants flag`);
+        if (item.type === 'talent' && sys.hasGrants !== true) {
+            game.wh40k.log(`GrantsProcessor: Talent ${item.name} has no hasGrants flag`);
             return context.result;
         }
 
-        game.wh40k?.log(`GrantsProcessor: Processing grants from ${item.type}: ${item.name} (mode: ${context.mode}, depth: ${context.depth})`);
+        game.wh40k.log(`GrantsProcessor: Processing grants from ${item.type}: ${item.name} (mode: ${context.mode}, depth: ${context.depth})`);
 
         // Process based on item type
-        if (item.type === 'originPath' || (item.flags?.rt as { kind?: string })?.kind === 'origin') {
+        const flagsRt = item.flags.rt as { kind?: string } | undefined;
+        if (item.type === 'originPath' || flagsRt?.kind === 'origin') {
             await this._processOriginGrants(item, context);
         } else if (item.type === 'talent' || item.type === 'trait') {
             await this._processItemGrants(item, context);
@@ -160,74 +211,77 @@ export class GrantsProcessor {
      * Apply accumulated grants to an actor (batch mode).
      * Used by origin path builder to commit all selected origins at once.
      */
+    // eslint-disable-next-line complexity -- orchestrator: 5 resource paths × (current + max) updates, plus skill upgrade fan-out
     static async applyGrants(actor: WH40KActor, result: GrantResult, options: ApplyOptions = {}): Promise<void> {
-        if (!actor || !result) return;
-
-        const updates: Record<string, any> = {};
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update payload
+        const updates: Record<string, unknown> = {};
 
         // Apply characteristic advances
-        if (result.characteristics && Object.keys(result.characteristics).length > 0) {
+        if (Object.keys(result.characteristics).length > 0) {
             for (const [char, value] of Object.entries(result.characteristics)) {
                 if (value !== 0) {
                     const actorSystem = actor.system as { characteristics: Record<string, { advance: number }> };
-                    const currentAdvance = actorSystem.characteristics[char]?.advance || 0;
+                    const currentAdvance = actorSystem.characteristics[char].advance;
                     updates[`system.characteristics.${char}.advance`] = currentAdvance + Number(value);
                 }
             }
         }
 
         // Apply wounds bonus
-        if (result.woundsBonus) {
+        if (result.woundsBonus !== 0) {
             const actorSystem = actor.system as { wounds?: { value: number; max: number } };
-            const current = actorSystem.wounds?.value || 0;
-            const max = actorSystem.wounds?.max || 0;
+            const current = actorSystem.wounds?.value ?? 0;
+            const max = actorSystem.wounds?.max ?? 0;
             updates['system.wounds.value'] = current + result.woundsBonus;
             updates['system.wounds.max'] = max + result.woundsBonus;
         }
 
         // Apply fate bonus
-        if (result.fateBonus) {
+        if (result.fateBonus !== 0) {
             const actorSystem = actor.system as { fate?: { value: number; max: number } };
-            const current = actorSystem.fate?.value || 0;
-            const max = actorSystem.fate?.max || 0;
+            const current = actorSystem.fate?.value ?? 0;
+            const max = actorSystem.fate?.max ?? 0;
             updates['system.fate.value'] = current + result.fateBonus;
             updates['system.fate.max'] = max + result.fateBonus;
         }
 
         // Apply corruption/insanity
-        if (result.corruptionBonus) {
+        if (result.corruptionBonus !== 0) {
             const actorSystem = actor.system as { corruption?: { value: number } };
-            const current = actorSystem.corruption?.value || 0;
+            const current = actorSystem.corruption?.value ?? 0;
             updates['system.corruption.value'] = current + result.corruptionBonus;
         }
-        if (result.insanityBonus) {
+        if (result.insanityBonus !== 0) {
             const actorSystem = actor.system as { insanity?: { value: number } };
-            const current = actorSystem.insanity?.value || 0;
+            const current = actorSystem.insanity?.value ?? 0;
             updates['system.insanity.value'] = current + result.insanityBonus;
         }
 
         // Apply actor updates
         if (Object.keys(updates).length > 0) {
-            await actor.update(updates as Record<string, unknown>);
+            await actor.update(updates);
         }
 
         // Create items
-        const itemsToAdd = result.itemsToCreate.filter((i) => !i._upgradeExisting);
+        const itemsToAdd = result.itemsToCreate.filter((i) => i._upgradeExisting !== true);
         if (itemsToAdd.length > 0) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry createEmbeddedDocuments expects a typed Item-source-data array; our ItemsToCreateEntry is structurally compatible
             await actor.createEmbeddedDocuments('Item', itemsToAdd as unknown as Parameters<typeof actor.createEmbeddedDocuments<'Item'>>[1]);
         }
 
         // Apply skill upgrades
-        const upgrades = result.itemsToCreate.filter((i) => i._upgradeExisting);
+        const upgrades = result.itemsToCreate.filter((i) => i._upgradeExisting === true);
         for (const upgrade of upgrades) {
-            const existingSkill = actor.items.get(upgrade._existingId as string);
+            if (upgrade._existingId === undefined) continue;
+            const existingSkill = actor.items.get(upgrade._existingId);
             if (existingSkill) {
-                const skillUpdates: Record<string, unknown> = {};
-                const upgradeSystem = upgrade.system as { trained?: boolean; plus10?: boolean; plus20?: boolean };
-                if (upgradeSystem.trained) skillUpdates['system.trained'] = true;
-                if (upgradeSystem.plus10) skillUpdates['system.plus10'] = true;
-                if (upgradeSystem.plus20) skillUpdates['system.plus20'] = true;
+                const skillUpdates: Record<string, boolean> = {};
+                const upgradeSystem = upgrade.system as { trained?: boolean; plus10?: boolean; plus20?: boolean } | undefined;
+                if (upgradeSystem?.trained === true) skillUpdates['system.trained'] = true;
+                if (upgradeSystem?.plus10 === true) skillUpdates['system.plus10'] = true;
+                if (upgradeSystem?.plus20 === true) skillUpdates['system.plus20'] = true;
                 if (Object.keys(skillUpdates).length > 0) {
+                    // eslint-disable-next-line no-await-in-loop -- skill upgrades must commit sequentially to preserve trained→plus10→plus20 ordering
                     await existingSkill.update(skillUpdates);
                 }
             }
@@ -246,7 +300,18 @@ export class GrantsProcessor {
      * @param {WH40KActor} actor - The actor that would receive grants
      * @returns {Promise<object>} Summary object
      */
-    static async getSummary(item: WH40KItem, actor: WH40KActor): Promise<Record<string, unknown>> {
+    static async getSummary(
+        item: WH40KItem,
+        actor: WH40KActor,
+    ): Promise<{
+        characteristics: Record<string, number>;
+        wounds: number;
+        fate: number;
+        corruption: number;
+        insanity: number;
+        itemCount: number;
+        items: Array<{ type: string; name: string; isUpgrade: boolean }>;
+    }> {
         const result = await this.processGrants(item, actor, { dryRun: true, mode: GRANT_MODE.BATCH });
 
         return {
@@ -259,7 +324,7 @@ export class GrantsProcessor {
             items: result.itemsToCreate.map((i) => ({
                 type: i.type,
                 name: i.name,
-                isUpgrade: i._upgradeExisting || false,
+                isUpgrade: i._upgradeExisting === true,
             })),
         };
     }
@@ -274,7 +339,7 @@ export class GrantsProcessor {
      */
     static async _processOriginGrants(originItem: WH40KItem, context: GrantContext): Promise<void> {
         // 1. Process characteristic modifiers (from modifiers template)
-        await this._processCharacteristicModifiers(originItem, context);
+        this._processCharacteristicModifiers(originItem, context);
 
         // 2. Process base grants
         await this._processBaseGrants(originItem, context);
@@ -288,12 +353,11 @@ export class GrantsProcessor {
      * @private
      */
     static _processCharacteristicModifiers(originItem: WH40KItem, context: GrantContext): void {
-        const sys = originItem.system as Record<string, unknown>;
-        const modifiers = sys?.modifiers as Record<string, unknown> | undefined;
-        const charMods = (modifiers?.characteristics as Record<string, number>) || {};
+        const sys = originItem.system as OriginSystemShape;
+        const charMods = sys.modifiers?.characteristics ?? {};
         for (const [char, value] of Object.entries(charMods)) {
             if (value !== 0) {
-                context.result.characteristics[char] = (context.result.characteristics[char] || 0) + Number(value);
+                context.result.characteristics[char] = (context.result.characteristics[char] ?? 0) + Number(value);
             }
         }
     }
@@ -303,7 +367,8 @@ export class GrantsProcessor {
      * @private
      */
     static async _processBaseGrants(originItem: WH40KItem, context: GrantContext): Promise<void> {
-        const grants = ((originItem.system as Record<string, unknown>)?.grants as Record<string, unknown>) || {};
+        // eslint-disable-next-line no-restricted-syntax -- legitimately optional: items without grants legitimately omit this field; cannot tighten OriginSystemShape since same processor handles talents/traits/origins
+        const grants: ItemGrantsShape = (originItem.system as OriginSystemShape).grants ?? {};
 
         // Wounds
         if (typeof grants.woundsFormula === 'string') {
@@ -318,14 +383,14 @@ export class GrantsProcessor {
         }
 
         // Process grant arrays
-        await this._processGrantArray(grants.skills as Grant[] | undefined, 'skill', context);
-        await this._processGrantArray(grants.talents as Grant[] | undefined, 'talent', context);
-        await this._processGrantArray(grants.traits as Grant[] | undefined, 'trait', context);
-        await this._processGrantArray(grants.equipment as Grant[] | undefined, 'equipment', context);
-        await this._processGrantArray(grants.specialAbilities as Grant[] | undefined, 'specialAbility', context);
+        await this._processGrantArray(grants.skills, 'skill', context);
+        await this._processGrantArray(grants.talents, 'talent', context);
+        await this._processGrantArray(grants.traits, 'trait', context);
+        await this._processGrantArray(grants.equipment, 'equipment', context);
+        await this._processGrantArray(grants.specialAbilities, 'specialAbility', context);
 
         // Aptitudes (tracked but not created as items)
-        if (grants.aptitudes && Array.isArray(grants.aptitudes)) {
+        if (Array.isArray(grants.aptitudes)) {
             context.result.aptitudes.push(...grants.aptitudes);
         }
 
@@ -345,18 +410,18 @@ export class GrantsProcessor {
      * @private
      */
     static async _processChoiceGrants(originItem: WH40KItem, context: GrantContext): Promise<void> {
-        const originSys = originItem.system as Record<string, unknown>;
-        const grants = (originSys?.grants as Record<string, unknown>) || {};
-        const choices = (grants.choices as GrantChoiceData[]) || [];
-        const selectedChoices = (originSys?.selectedChoices as Record<string, unknown[]>) || {};
+        const originSys = originItem.system as OriginSystemShape;
+        const grants: ItemGrantsShape = originSys.grants ?? {};
+        const choices: GrantChoiceData[] = grants.choices ?? [];
+        const selectedChoices = originSys.selectedChoices ?? {};
 
         for (const choice of choices) {
-            const selected = selectedChoices[choice.label] || [];
+            const selected = selectedChoices[choice.label] ?? [];
 
             for (const selectedValue of selected) {
                 const option = choice.options.find((opt) => opt.value === selectedValue);
                 if (!option?.grants) {
-                    console.warn(`Origin "${originItem.name}" choice "${choice.label}" has selection "${selectedValue}" but no grants found.`);
+                    console.warn(`Origin "${originItem.name}" choice "${choice.label}" has selection "${String(selectedValue)}" but no grants found.`);
                     continue;
                 }
 
@@ -364,30 +429,36 @@ export class GrantsProcessor {
 
                 // Characteristics from choice
                 if (optionGrants.characteristics) {
-                    for (const [char, value] of Object.entries(optionGrants.characteristics as Record<string, number>)) {
+                    for (const [char, value] of Object.entries(optionGrants.characteristics)) {
                         if (value !== 0) {
-                            context.result.characteristics[char] = (context.result.characteristics[char] || 0) + Number(value);
-                            game.wh40k?.log(`Origin choice "${choice.label}" grants ${Number(value) >= 0 ? '+' : ''}${value} ${char}`);
+                            context.result.characteristics[char] = (context.result.characteristics[char] ?? 0) + Number(value);
+                            game.wh40k.log(`Origin choice "${choice.label}" grants ${Number(value) >= 0 ? '+' : ''}${value} ${char}`);
                         }
                     }
                 }
 
                 // Process grant arrays from choice
-                await this._processGrantArray(optionGrants.skills as Grant[] | undefined, 'skill', context, choice.label);
-                await this._processGrantArray(optionGrants.talents as Grant[] | undefined, 'talent', context, choice.label);
-                await this._processGrantArray(optionGrants.traits as Grant[] | undefined, 'trait', context, choice.label);
-                await this._processGrantArray(optionGrants.equipment as Grant[] | undefined, 'equipment', context, choice.label);
+                // eslint-disable-next-line no-await-in-loop -- choice grants must apply sequentially to preserve evaluation order
+                await this._processGrantArray(optionGrants.skills, 'skill', context, choice.label);
+                // eslint-disable-next-line no-await-in-loop -- choice grants must apply sequentially to preserve evaluation order
+                await this._processGrantArray(optionGrants.talents, 'talent', context, choice.label);
+                // eslint-disable-next-line no-await-in-loop -- choice grants must apply sequentially to preserve evaluation order
+                await this._processGrantArray(optionGrants.traits, 'trait', context, choice.label);
+                // eslint-disable-next-line no-await-in-loop -- choice grants must apply sequentially to preserve evaluation order
+                await this._processGrantArray(optionGrants.equipment, 'equipment', context, choice.label);
 
                 // Corruption/Insanity from choice
                 if (typeof optionGrants.corruption === 'string') {
+                    // eslint-disable-next-line no-await-in-loop -- dice rolls must resolve before the next choice option in source order
                     const corruptionValue = await this._evaluateDiceFormula(optionGrants.corruption);
                     context.result.corruptionBonus += corruptionValue;
-                    game.wh40k?.log(`Origin choice "${choice.label}" grants ${corruptionValue} corruption`);
+                    game.wh40k.log(`Origin choice "${choice.label}" grants ${corruptionValue} corruption`);
                 }
                 if (typeof optionGrants.insanity === 'string') {
+                    // eslint-disable-next-line no-await-in-loop -- dice rolls must resolve before the next choice option in source order
                     const insanityValue = await this._evaluateDiceFormula(optionGrants.insanity);
                     context.result.insanityBonus += insanityValue;
-                    game.wh40k?.log(`Origin choice "${choice.label}" grants ${insanityValue} insanity`);
+                    game.wh40k.log(`Origin choice "${choice.label}" grants ${insanityValue} insanity`);
                 }
             }
         }
@@ -402,14 +473,14 @@ export class GrantsProcessor {
      * @private
      */
     static async _processItemGrants(item: WH40KItem, context: GrantContext): Promise<void> {
-        const grants = (item.system as Record<string, unknown>)?.grants as Record<string, unknown> | undefined;
-        if (!grants) return;
+        const grants = (item.system as OriginSystemShape).grants;
+        if (grants === undefined) return;
 
         // Process grant arrays
-        await this._processGrantArray(grants.talents as Grant[] | undefined, 'talent', context);
-        await this._processGrantArray(grants.skills as Grant[] | undefined, 'skill', context);
-        await this._processGrantArray(grants.traits as Grant[] | undefined, 'trait', context);
-        await this._processGrantArray(grants.equipment as Grant[] | undefined, 'equipment', context);
+        await this._processGrantArray(grants.talents, 'talent', context);
+        await this._processGrantArray(grants.skills, 'skill', context);
+        await this._processGrantArray(grants.traits, 'trait', context);
+        await this._processGrantArray(grants.equipment, 'equipment', context);
     }
 
     /**
@@ -417,29 +488,33 @@ export class GrantsProcessor {
      * @private
      */
     static async _processGrantArray(grantArray: Grant[] | undefined, type: string, context: GrantContext, choiceLabel: string | null = null): Promise<void> {
-        if (!grantArray || !Array.isArray(grantArray) || grantArray.length === 0) return;
+        if (!Array.isArray(grantArray) || grantArray.length === 0) return;
 
         for (const grant of grantArray) {
             switch (type) {
                 case 'skill':
-                    await this._processSkillGrant(grant, context);
+                    this._processSkillGrant(grant, context);
                     break;
                 case 'talent':
+                    // eslint-disable-next-line no-await-in-loop -- talent grants may chain into nested item grants; ordering matters
                     await this._processTalentGrant(grant, context);
                     break;
                 case 'trait':
+                    // eslint-disable-next-line no-await-in-loop -- trait grants may load from compendium; ordering matters
                     await this._processTraitGrant(grant, context);
                     break;
                 case 'equipment':
+                    // eslint-disable-next-line no-await-in-loop -- equipment grants may load from compendium; ordering matters
                     await this._processEquipmentGrant(grant, context);
                     break;
                 case 'specialAbility':
-                    await this._processSpecialAbilityGrant(grant, context);
+                    this._processSpecialAbilityGrant(grant, context);
                     break;
             }
 
-            if (choiceLabel && context.showNotification) {
-                context.result.notifications.push(`${choiceLabel}: ${grant.name || grant}`);
+            if (choiceLabel !== null && context.showNotification) {
+                const label = typeof grant === 'string' ? grant : grant.name;
+                context.result.notifications.push(`${choiceLabel}: ${label}`);
             }
         }
     }
@@ -455,7 +530,7 @@ export class GrantsProcessor {
      */
     static _processSkillGrant(skillGrant: Grant | string, context: GrantContext): void {
         // Normalize skill grant (might be string or object)
-        const normalized = typeof skillGrant === 'string' ? { name: skillGrant, level: 'trained' } : skillGrant;
+        const normalized: Grant = typeof skillGrant === 'string' ? { name: skillGrant, level: 'trained' } : skillGrant;
 
         // Validate skill name using SkillKeyHelper
         const skillKey = SkillKeyHelper.nameToKey(normalized.name);
@@ -466,12 +541,13 @@ export class GrantsProcessor {
             return;
         }
 
-        // Check if skill is specialist type
         const isSpecialist = metadata.isSpecialist;
         const displayName = metadata.name;
+        const specialization = normalized.specialization ?? '';
+        const hasSpec = specialization !== '';
 
         // For specialist skills, the grant must specify a specialization
-        if (isSpecialist && !normalized.specialization) {
+        if (isSpecialist && !hasSpec) {
             console.warn(`SkillGrant: Specialist skill "${displayName}" requires specialization, skipping`);
             return;
         }
@@ -481,8 +557,13 @@ export class GrantsProcessor {
             (i) =>
                 i.type === 'skill' &&
                 i.name.toLowerCase() === displayName.toLowerCase() &&
-                (!normalized.specialization || (i.system as Record<string, unknown>)?.specialization === normalized.specialization),
+                (!hasSpec || (i.system as { specialization?: string } | undefined)?.specialization === specialization),
         );
+
+        const isTrained = normalized.level === 'trained' || normalized.level === 'plus10' || normalized.level === 'plus20';
+        const isPlus10 = normalized.level === 'plus10' || normalized.level === 'plus20';
+        const isPlus20 = normalized.level === 'plus20';
+        const fullName = hasSpec ? `${displayName} (${specialization})` : displayName;
 
         if (existingSkill) {
             // Skill exists - mark for upgrade
@@ -493,16 +574,15 @@ export class GrantsProcessor {
                 name: displayName,
                 system: {
                     characteristic: metadata.characteristic,
-                    specialization: normalized.specialization || '',
-                    trained: normalized.level === 'trained' || normalized.level === 'plus10' || normalized.level === 'plus20',
-                    plus10: normalized.level === 'plus10' || normalized.level === 'plus20',
-                    plus20: normalized.level === 'plus20',
+                    specialization,
+                    trained: isTrained,
+                    plus10: isPlus10,
+                    plus20: isPlus20,
                 },
             });
 
             if (context.showNotification) {
-                const fullName = normalized.specialization ? `${displayName} (${normalized.specialization})` : displayName;
-                context.result.notifications.push(`Skill: ${fullName} (upgrade to ${normalized.level})`);
+                context.result.notifications.push(`Skill: ${fullName} (upgrade to ${normalized.level ?? 'trained'})`);
             }
         } else {
             // Create new skill item with proper metadata
@@ -513,16 +593,15 @@ export class GrantsProcessor {
                     characteristic: metadata.characteristic,
                     skillType: isSpecialist ? 'specialist' : metadata.isAdvanced ? 'advanced' : 'basic',
                     isBasic: !metadata.isAdvanced,
-                    specialization: normalized.specialization || '',
-                    trained: normalized.level === 'trained' || normalized.level === 'plus10' || normalized.level === 'plus20',
-                    plus10: normalized.level === 'plus10' || normalized.level === 'plus20',
-                    plus20: normalized.level === 'plus20',
+                    specialization,
+                    trained: isTrained,
+                    plus10: isPlus10,
+                    plus20: isPlus20,
                 },
             });
 
             if (context.showNotification) {
-                const fullName = normalized.specialization ? `${displayName} (${normalized.specialization})` : displayName;
-                context.result.notifications.push(`Skill: ${fullName} (${normalized.level})`);
+                context.result.notifications.push(`Skill: ${fullName} (${normalized.level ?? 'trained'})`);
             }
         }
     }
@@ -533,22 +612,24 @@ export class GrantsProcessor {
      * @private
      */
     static async _processTalentGrant(talentGrant: Grant, context: GrantContext): Promise<void> {
+        const grantSpec = talentGrant.specialization ?? '';
+        const hasGrantSpec = grantSpec !== '';
         // Check for duplicates
         const existing = context.actor.items.find(
             (i) =>
                 i.type === 'talent' &&
                 i.name === talentGrant.name &&
-                (!talentGrant.specialization || (i.system as Record<string, unknown>)?.specialization === talentGrant.specialization),
+                (!hasGrantSpec || (i.system as { specialization?: string } | undefined)?.specialization === grantSpec),
         );
 
         if (existing) {
-            game.wh40k?.log(`Talent ${talentGrant.name} already exists, skipping grant`);
+            game.wh40k.log(`Talent ${talentGrant.name} already exists, skipping grant`);
             return;
         }
 
         // Fetch talent from UUID or compendium
         let talentItem: WH40KItem | null = null;
-        if (talentGrant.uuid) {
+        if (talentGrant.uuid !== undefined && talentGrant.uuid !== '') {
             try {
                 talentItem = await fromUuid(talentGrant.uuid);
                 if (!talentItem) {
@@ -560,9 +641,8 @@ export class GrantsProcessor {
         }
 
         // Fallback: search all Item packs by name
-        if (!talentItem) {
-            talentItem = await this._findInAllPacks(talentGrant.name);
-        }
+        // eslint-disable-next-line no-restricted-syntax -- local fallback on UUID-first lookup; not a schema-default issue
+        talentItem ??= await this._findInAllPacks(talentGrant.name);
 
         if (!talentItem) {
             console.warn(`Could not find talent: ${talentGrant.name}`);
@@ -572,17 +652,21 @@ export class GrantsProcessor {
         }
 
         // Clone item data
-        const itemData = talentItem.toObject();
-        if (talentGrant.specialization) {
-            (itemData.system as Record<string, unknown>).specialization = talentGrant.specialization;
+        const itemData = talentItem.toObject() as ItemsToCreateEntry;
+        if (hasGrantSpec) {
+            // eslint-disable-next-line no-restricted-syntax -- assigning to cloned item-data object, not an actor's .system field
+            itemData.system ??= {};
+            itemData.system.specialization = grantSpec;
             // Strip any existing "(X)" suffix so we don't produce "Name (X) (X)"
             const bareName = itemData.name.replace(/\s*\([^)]+\)\s*$/, '').trim();
-            itemData.name = `${bareName} (${talentGrant.specialization})`;
+            itemData.name = `${bareName} (${grantSpec})`;
         }
 
         // Mark as granted
-        itemData.flags = itemData.flags || {};
-        itemData.flags['wh40k-rpg'] = itemData.flags['wh40k-rpg'] || {};
+        // eslint-disable-next-line no-restricted-syntax -- toObject() clones may omit empty flag bags; initializing here, not at the schema (we don't own the source's schema)
+        itemData.flags ??= {};
+        // eslint-disable-next-line no-restricted-syntax -- see above
+        itemData.flags['wh40k-rpg'] ??= {};
         if (context.sourceItem) {
             itemData.flags['wh40k-rpg'].grantedBy = context.sourceItem.name;
             itemData.flags['wh40k-rpg'].grantedById = context.sourceItem.id;
@@ -596,7 +680,7 @@ export class GrantsProcessor {
         }
 
         // Recursive processing for granted talent's grants (immediate mode only)
-        if (context.mode === GRANT_MODE.IMMEDIATE && (talentItem.system as Record<string, unknown>)?.hasGrants) {
+        if (context.mode === GRANT_MODE.IMMEDIATE && (talentItem.system as OriginSystemShape).hasGrants === true) {
             const nestedContext = new GrantContext(context.actor, {
                 mode: context.mode,
                 depth: context.depth + 1,
@@ -618,11 +702,11 @@ export class GrantsProcessor {
      * @private
      */
     static _createBasicTalent(talentGrant: Grant, context: GrantContext): void {
-        const itemData = {
+        const itemData: ItemsToCreateEntry = {
             type: 'talent',
             name: talentGrant.name,
             system: {
-                specialization: talentGrant.specialization || '',
+                specialization: talentGrant.specialization ?? '',
             },
         };
 
@@ -641,21 +725,22 @@ export class GrantsProcessor {
         // Check for duplicates (stackable traits can increase level)
         const existing = context.actor.items.find((i) => i.type === 'trait' && i.name === traitGrant.name);
 
-        const existingSys = existing ? (existing.system as Record<string, unknown>) : null;
-        if (existing && existingSys?.stackable && traitGrant.level != null) {
+        const existingSys = existing ? (existing.system as { stackable?: boolean; level?: number } | undefined) : undefined;
+        if (existing && existingSys?.stackable === true && traitGrant.level !== undefined) {
             // Increase stackable trait level
-            const newLevel = Number(existingSys.level || 1) + Number(traitGrant.level || 1);
+            const grantLevelNum = Number(traitGrant.level);
+            const newLevel = (existingSys.level ?? 1) + (Number.isFinite(grantLevelNum) && grantLevelNum !== 0 ? grantLevelNum : 1);
             context.result.skillUpdates[`items.${existing.id}.system.level`] = newLevel;
-            game.wh40k?.log(`Increased trait ${traitGrant.name} level to ${newLevel}`);
+            game.wh40k.log(`Increased trait ${traitGrant.name} level to ${newLevel}`);
             return;
         } else if (existing) {
-            game.wh40k?.log(`Trait ${traitGrant.name} already exists, skipping grant`);
+            game.wh40k.log(`Trait ${traitGrant.name} already exists, skipping grant`);
             return;
         }
 
         // Fetch trait from UUID or compendium
         let traitItem: WH40KItem | null = null;
-        if (traitGrant.uuid) {
+        if (traitGrant.uuid !== undefined && traitGrant.uuid !== '') {
             try {
                 traitItem = await fromUuid(traitGrant.uuid);
             } catch (err) {
@@ -663,9 +748,8 @@ export class GrantsProcessor {
             }
         }
 
-        if (!traitItem) {
-            traitItem = await this._findInAllPacks(traitGrant.name);
-        }
+        // eslint-disable-next-line no-restricted-syntax -- local fallback on UUID-first lookup; not a schema-default issue
+        traitItem ??= await this._findInAllPacks(traitGrant.name);
 
         if (!traitItem) {
             console.warn(`Could not find trait: ${traitGrant.name}`);
@@ -674,14 +758,18 @@ export class GrantsProcessor {
         }
 
         // Clone item data
-        const itemData = traitItem.toObject();
-        if (traitGrant.level != null) {
-            (itemData.system as Record<string, unknown>).level = traitGrant.level;
+        const itemData = traitItem.toObject() as ItemsToCreateEntry;
+        if (traitGrant.level !== undefined) {
+            // eslint-disable-next-line no-restricted-syntax -- assigning to cloned item-data object
+            itemData.system ??= {};
+            itemData.system.level = traitGrant.level;
         }
 
         // Mark as granted
-        itemData.flags = itemData.flags || {};
-        itemData.flags['wh40k-rpg'] = itemData.flags['wh40k-rpg'] || {};
+        // eslint-disable-next-line no-restricted-syntax -- toObject() clones may omit empty flag bags; we don't own the source's schema
+        itemData.flags ??= {};
+        // eslint-disable-next-line no-restricted-syntax -- see above
+        itemData.flags['wh40k-rpg'] ??= {};
         if (context.sourceItem) {
             itemData.flags['wh40k-rpg'].grantedBy = context.sourceItem.name;
             itemData.flags['wh40k-rpg'].grantedById = context.sourceItem.id;
@@ -700,11 +788,11 @@ export class GrantsProcessor {
      * @private
      */
     static _createBasicTrait(traitGrant: Grant, context: GrantContext): void {
-        const itemData = {
+        const itemData: ItemsToCreateEntry = {
             type: 'trait',
             name: traitGrant.name,
             system: {
-                level: traitGrant.level || null,
+                level: traitGrant.level ?? null,
             },
         };
 
@@ -723,7 +811,7 @@ export class GrantsProcessor {
         let doc: WH40KItem | null = null;
 
         // Try UUID first
-        if (equipGrant.uuid) {
+        if (equipGrant.uuid !== undefined && equipGrant.uuid !== '') {
             try {
                 doc = await fromUuid(equipGrant.uuid);
                 if (!doc) {
@@ -735,18 +823,20 @@ export class GrantsProcessor {
         }
 
         // Fallback: search all Item packs by name
-        if (!doc && equipGrant.name) {
+        if (!doc && equipGrant.name !== '') {
             doc = await this._findInAllPacks(equipGrant.name);
         }
 
         if (!doc) {
-            console.warn(`Could not find equipment: ${equipGrant.name || equipGrant.uuid}`);
+            console.warn(`Could not find equipment: ${equipGrant.name !== '' ? equipGrant.name : equipGrant.uuid ?? '(unknown)'}`);
             return;
         }
 
-        const itemData = doc.toObject();
-        if (equipGrant.quantity && equipGrant.quantity > 1) {
-            (itemData.system as Record<string, unknown>).quantity = equipGrant.quantity;
+        const itemData = doc.toObject() as ItemsToCreateEntry;
+        if (equipGrant.quantity !== undefined && equipGrant.quantity > 1) {
+            // eslint-disable-next-line no-restricted-syntax -- assigning to cloned item-data object
+            itemData.system ??= {};
+            itemData.system.quantity = equipGrant.quantity;
         }
         context.result.itemsToCreate.push(itemData);
 
@@ -763,7 +853,7 @@ export class GrantsProcessor {
         // Special abilities are descriptive text, not items
         // They could be stored as journal entries or just logged
         const abilityName = typeof abilityGrant === 'string' ? abilityGrant : abilityGrant.name;
-        game.wh40k?.log(`Special ability granted: ${abilityName}`);
+        game.wh40k.log(`Special ability granted: ${abilityName}`);
 
         if (context.showNotification) {
             context.result.notifications.push(`Special Ability: ${abilityName}`);
@@ -780,22 +870,25 @@ export class GrantsProcessor {
      */
     static async _applyGrantsImmediate(context: GrantContext): Promise<void> {
         // Create items
-        const itemsToAdd = context.result.itemsToCreate.filter((i) => !i._upgradeExisting);
+        const itemsToAdd = context.result.itemsToCreate.filter((i) => i._upgradeExisting !== true);
         if (itemsToAdd.length > 0) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry createEmbeddedDocuments typed-source-data
             await context.actor.createEmbeddedDocuments('Item', itemsToAdd as unknown as Parameters<typeof context.actor.createEmbeddedDocuments<'Item'>>[1]);
         }
 
         // Apply skill upgrades
-        const upgrades = context.result.itemsToCreate.filter((i) => i._upgradeExisting);
+        const upgrades = context.result.itemsToCreate.filter((i) => i._upgradeExisting === true);
         for (const upgrade of upgrades) {
-            const existingSkill = context.actor.items.get(upgrade._existingId as string);
+            if (upgrade._existingId === undefined) continue;
+            const existingSkill = context.actor.items.get(upgrade._existingId);
             if (existingSkill) {
                 const skillUpdates: Record<string, boolean> = {};
-                const upgradeSys = upgrade.system as Record<string, unknown>;
-                if (upgradeSys.trained) skillUpdates['system.trained'] = true;
-                if (upgradeSys.plus10) skillUpdates['system.plus10'] = true;
-                if (upgradeSys.plus20) skillUpdates['system.plus20'] = true;
+                const upgradeSys = upgrade.system as { trained?: boolean; plus10?: boolean; plus20?: boolean } | undefined;
+                if (upgradeSys?.trained === true) skillUpdates['system.trained'] = true;
+                if (upgradeSys?.plus10 === true) skillUpdates['system.plus10'] = true;
+                if (upgradeSys?.plus20 === true) skillUpdates['system.plus20'] = true;
                 if (Object.keys(skillUpdates).length > 0) {
+                    // eslint-disable-next-line no-await-in-loop -- skill upgrades must commit sequentially
                     await existingSkill.update(skillUpdates);
                 }
             }
@@ -808,7 +901,7 @@ export class GrantsProcessor {
 
         // Show notification (only at depth 0)
         if (context.depth === 0 && context.showNotification && context.result.notifications.length > 0) {
-            const sourceItemName = context.sourceItem?.name || 'Item';
+            const sourceItemName = context.sourceItem?.name ?? 'Item';
             const message = `<strong>${sourceItemName}</strong> granted:<br/>• ${context.result.notifications.join('<br/>• ')}`;
             ui.notifications.info(message, { permanent: false });
         }
@@ -822,38 +915,36 @@ export class GrantsProcessor {
      * Evaluate wounds formula with optional stored roll.
      * @private
      */
+    // eslint-disable-next-line @typescript-eslint/require-await -- returns Promise for symmetry with other evaluators; may be made async in future for db-backed rolls
     static async _evaluateWounds(formula: string, actor: WH40KActor, originItem: WH40KItem): Promise<number> {
-        const storedRoll = ((originItem.system as Record<string, unknown>)?.rollResults as Record<string, unknown>)?.wounds as
-            | { rolled?: number; breakdown?: string }
-            | undefined;
+        const storedRoll = (originItem.system as OriginSystemShape).rollResults?.wounds;
 
-        if (storedRoll?.rolled !== null && storedRoll?.rolled !== undefined) {
-            game.wh40k?.log(`Using stored wounds roll: ${storedRoll.rolled} (${storedRoll.breakdown})`);
-            return Promise.resolve(storedRoll.rolled);
+        if (storedRoll?.rolled !== undefined) {
+            game.wh40k.log(`Using stored wounds roll: ${storedRoll.rolled} (${storedRoll.breakdown ?? ''})`);
+            return storedRoll.rolled;
         }
 
         const evaluated = evaluateWoundsFormula(formula, actor);
-        game.wh40k?.log(`Evaluated wounds formula "${formula}": ${evaluated}`);
-        return Promise.resolve(evaluated);
+        game.wh40k.log(`Evaluated wounds formula "${formula}": ${evaluated}`);
+        return evaluated;
     }
 
     /**
      * Evaluate fate formula with optional stored roll.
      * @private
      */
+    // eslint-disable-next-line @typescript-eslint/require-await -- returns Promise for symmetry with other evaluators
     static async _evaluateFate(formula: string, originItem: WH40KItem): Promise<number> {
-        const storedRoll = ((originItem.system as Record<string, unknown>)?.rollResults as Record<string, unknown>)?.fate as
-            | { rolled?: number; breakdown?: string }
-            | undefined;
+        const storedRoll = (originItem.system as OriginSystemShape).rollResults?.fate;
 
-        if (storedRoll?.rolled !== null && storedRoll?.rolled !== undefined) {
-            game.wh40k?.log(`Using stored fate roll: ${storedRoll.rolled} (${storedRoll.breakdown})`);
-            return Promise.resolve(storedRoll.rolled);
+        if (storedRoll?.rolled !== undefined) {
+            game.wh40k.log(`Using stored fate roll: ${storedRoll.rolled} (${storedRoll.breakdown ?? ''})`);
+            return storedRoll.rolled;
         }
 
         const evaluated = evaluateFateFormula(formula);
-        game.wh40k?.log(`Evaluated fate formula "${formula}": ${evaluated}`);
-        return Promise.resolve(evaluated);
+        game.wh40k.log(`Evaluated fate formula "${formula}": ${evaluated}`);
+        return evaluated;
     }
 
     /**
@@ -880,7 +971,7 @@ export class GrantsProcessor {
      * Find an item in a compendium pack by name.
      * @private
      */
-    static async _findInCompendium(packId: string, itemName: string): Promise<any> {
+    static async _findInCompendium(packId: string, itemName: string): Promise<WH40KItem | null> {
         const pack = game.packs.get(packId);
         if (!pack) {
             console.error(`Compendium pack not found: ${packId}`);
@@ -888,9 +979,10 @@ export class GrantsProcessor {
         }
 
         const index = await pack.getIndex({ fields: ['name'] });
-        const entry = index.find((i: any) => i.name === itemName);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CompendiumIndex iterator yields untyped index entries
+        const entry = (index as unknown as Array<{ _id: string; name: string }>).find((i) => i.name === itemName);
         if (entry) {
-            return pack.getDocument(entry._id);
+            return (await pack.getDocument(entry._id)) as WH40KItem | null;
         }
 
         return null;
@@ -902,18 +994,22 @@ export class GrantsProcessor {
      * (dh2-core-stats-talents, rt-core-items-traits, etc.).
      * @private
      */
-    static async _findInAllPacks(itemName: string): Promise<any> {
-        if (!itemName) return null;
+    static async _findInAllPacks(itemName: string): Promise<WH40KItem | null> {
+        if (itemName === '') return null;
 
         const nameLower = itemName.toLowerCase();
 
         for (const pack of game.packs) {
             if (pack.documentName !== 'Item') continue;
 
+            // eslint-disable-next-line no-await-in-loop -- packs are searched sequentially; first hit wins
             const index = await pack.getIndex({ fields: ['name'] });
-            const entry = index.find((i: any) => i.name === itemName || (i.name as string).toLowerCase() === nameLower);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CompendiumIndex iterator yields untyped index entries
+            const entries = index as unknown as Array<{ _id: string; name: string }>;
+            const entry = entries.find((i) => i.name === itemName || i.name.toLowerCase() === nameLower);
             if (entry) {
-                return pack.getDocument(entry._id);
+                // eslint-disable-next-line no-await-in-loop -- early return on first match
+                return (await pack.getDocument(entry._id)) as WH40KItem | null;
             }
         }
 
@@ -927,7 +1023,7 @@ export class GrantsProcessor {
     static _mergeResults(parent: GrantResult, child: GrantResult): void {
         // Merge characteristics
         for (const [char, value] of Object.entries(child.characteristics)) {
-            parent.characteristics[char] = (parent.characteristics[char] || 0) + Number(value);
+            parent.characteristics[char] = (parent.characteristics[char] ?? 0) + Number(value);
         }
 
         // Merge items
@@ -959,12 +1055,14 @@ export class GrantsProcessor {
  * @returns {Promise<void>}
  */
 export async function handleGrantRemoval(item: WH40KItem, actor: WH40KActor): Promise<void> {
-    if (!item || !actor) return;
     if (item.type !== 'talent' && item.type !== 'trait') return;
-    if (item.type === 'talent' && !(item.system as any)?.hasGrants) return;
+    if (item.type === 'talent' && (item.system as OriginSystemShape).hasGrants !== true) return;
 
     // Find all items granted by this item
-    const grantedItems = actor.items.filter((i: any) => i.flags['wh40k-rpg']?.grantedById === item.id);
+    const grantedItems = actor.items.filter((i) => {
+        const flags = i.flags['wh40k-rpg'] as { grantedById?: string } | undefined;
+        return flags?.grantedById === item.id;
+    });
 
     if (grantedItems.length === 0) return;
 
@@ -976,7 +1074,9 @@ export async function handleGrantRemoval(item: WH40KItem, actor: WH40KActor): Pr
     <p>Do you want to remove these granted abilities as well?</p>
   `;
 
-    const remove = await (Dialog as any).confirm({
+    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-deprecated -- boundary: foundry.appv1.api.Dialog is the new namespace; the legacy global still ships and is what we target here
+    const DialogAny = Dialog as { confirm: (options: Record<string, unknown>) => Promise<boolean | null> };
+    const remove = await DialogAny.confirm({
         title: 'Remove Granted Abilities?',
         content: content,
         yes: () => true,
@@ -984,8 +1084,8 @@ export async function handleGrantRemoval(item: WH40KItem, actor: WH40KActor): Pr
         defaultYes: false,
     });
 
-    if (remove) {
-        const ids = grantedItems.map((i) => i.id).filter((id): id is string => id !== null);
+    if (remove === true) {
+        const ids = grantedItems.map((i) => i.id);
         await actor.deleteEmbeddedDocuments('Item', ids);
         ui.notifications.info(`Removed ${grantedItems.length} granted abilities from ${item.name}`);
     }

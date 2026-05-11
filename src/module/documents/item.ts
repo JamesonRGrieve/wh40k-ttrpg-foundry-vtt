@@ -4,13 +4,15 @@ import type { WH40KItemSystemData } from '../types/global.d.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 import { WH40KItemContainer } from './item-container.ts';
 
+/* eslint-disable no-restricted-syntax -- boundary: compendium pack index entry, opaque foreign system schema */
 type AttackSpecialIndexEntry = {
     _id: string;
     name: string;
     img?: string;
     type?: string;
-    system: Record<string, unknown> & { hasLevel?: boolean; level?: unknown; enabled?: unknown };
+    system: Record<string, unknown> & { hasLevel?: boolean; level?: number | string; enabled?: number | string | boolean };
 };
+/* eslint-enable no-restricted-syntax */
 
 type OriginActorLike = WH40KBaseActor & {
     system: WH40KBaseActor['system'] & {
@@ -21,18 +23,22 @@ type OriginActorLike = WH40KBaseActor & {
 };
 
 export class WH40KItem extends WH40KItemContainer {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 nested-container ref is opaque
     declare system: WH40KItemSystemData & { container: unknown };
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create return is opaque
     async toChat(): Promise<unknown> {
         return this.sendToChat();
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: receives unvalidated source data during cleanData
     static #pruneUndefined(value: unknown): unknown {
         if (Array.isArray(value)) {
             return value.map((entry) => this.#pruneUndefined(entry));
         }
 
-        if (value && typeof value === 'object' && !(value instanceof Set) && !(value instanceof Map)) {
+        if (value !== null && typeof value === 'object' && !(value instanceof Set) && !(value instanceof Map)) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: cleanData source bag
             const mutableValue = value as Record<string, unknown>;
             // ActorDelta.updateSyntheticActor hands us frozen delta objects during token
             // resynthesis; mutating them would throw and abort Item init, which in turn
@@ -43,7 +49,7 @@ export class WH40KItem extends WH40KItemContainer {
                 const entry = mutableValue[key];
                 if (entry === undefined) {
                     const desc = Object.getOwnPropertyDescriptor(mutableValue, key);
-                    if (desc?.configurable) delete mutableValue[key];
+                    if (desc?.configurable === true) delete mutableValue[key];
                     continue;
                 }
 
@@ -63,11 +69,13 @@ export class WH40KItem extends WH40KItemContainer {
      * @returns {object} The cleaned data
      * @override
      */
+    /* eslint-disable no-restricted-syntax -- boundary: Foundry V14 cleanData receives raw source bag */
     static cleanData(
         source: Record<string, unknown> = {},
         options: DataModelV14.CleaningOptions = {},
         _state: DataModelV14.UpdateState = {},
     ): Record<string, unknown> {
+        /* eslint-enable no-restricted-syntax */
         // Remove explicit undefined values before schema validation runs.
         // Foundry treats `undefined` differently from an omitted field during updates.
         this.#pruneUndefined(source);
@@ -75,12 +83,13 @@ export class WH40KItem extends WH40KItemContainer {
         // CRITICAL: Clean img field if present - V13 validation is very strict
         if ('img' in source) {
             const imgValue = source.img;
+            const typeStr = typeof source.type === 'string' && source.type.length > 0 ? source.type : 'unknown';
 
             // Handle empty, null, undefined, or non-string img values
-            if (!imgValue || imgValue === '' || typeof imgValue !== 'string' || imgValue.trim() === '') {
+            if (typeof imgValue !== 'string' || imgValue.trim() === '') {
                 // Set to type-specific default
-                source.img = this._getDefaultIcon((source.type as string) || 'unknown');
-                console.warn(`WH40K | cleanData: Invalid img value "${imgValue}" for type "${source.type}", using default: ${source.img}`);
+                source.img = this._getDefaultIcon(typeStr);
+                console.warn(`WH40K | cleanData: Invalid img value "${String(imgValue)}" for type "${typeStr}", using default: ${String(source.img)}`);
             } else {
                 // Check if has valid extension
                 const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif', '.webm'];
@@ -88,15 +97,15 @@ export class WH40KItem extends WH40KItemContainer {
 
                 // Also check for obviously invalid paths
                 if (imgStr === 'null' || imgStr === 'undefined' || imgStr.length < 5) {
-                    source.img = this._getDefaultIcon((source.type as string) || 'unknown');
-                    console.warn(`WH40K | cleanData: Invalid img path "${imgValue}" for type "${source.type}", using default: ${source.img}`);
+                    source.img = this._getDefaultIcon(typeStr);
+                    console.warn(`WH40K | cleanData: Invalid img path "${imgValue}" for type "${typeStr}", using default: ${String(source.img)}`);
                 } else {
                     const hasValidExtension = validExtensions.some((ext) => imgStr.endsWith(ext));
 
                     if (!hasValidExtension) {
                         // Invalid extension - use type-specific default
-                        source.img = this._getDefaultIcon((source.type as string) || 'unknown');
-                        console.warn(`WH40K | cleanData: No valid extension in "${imgValue}" for type "${source.type}", using default: ${source.img}`);
+                        source.img = this._getDefaultIcon(typeStr);
+                        console.warn(`WH40K | cleanData: No valid extension in "${imgValue}" for type "${typeStr}", using default: ${String(source.img)}`);
                     }
                 }
             }
@@ -104,7 +113,8 @@ export class WH40KItem extends WH40KItemContainer {
         // Note: If img is not in source, that's fine - it just won't be updated
         // No need to add a default since the existing document img will remain
 
-        return (super.cleanData as unknown as DataModelV14.CleanDataSignature)(source, options, _state);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- super.cleanData signature is too narrow at compile time; runtime accepts _state
+        return (super.cleanData as DataModelV14.CleanDataSignature)(source, options, _state);
     }
 
     /**
@@ -148,9 +158,11 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get totalWeight(): number {
-        let weight = this.system.weight ?? 0;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: system.weight optional in shared item schema
+        let weight: number = this.system.weight ?? 0;
         if (this.items.size > 0) {
             this.items.forEach((item) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: nested Item store typed as base Foundry Item
                 weight += (item as unknown as WH40KItem).totalWeight;
             });
         }
@@ -263,7 +275,20 @@ export class WH40KItem extends WH40KItemContainer {
         const rtFlags = this.flags['rt'];
         const flagStep = rtFlags?.['step'];
         if (typeof flagStep === 'string' && flagStep !== '') return flagStep;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: system.step optional in shared item schema
         return this.system.step ?? '';
+    }
+
+    /** Normalize a possibly-undefined weapon class to lower-case string. */
+    #weaponClass(): string {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: system.class optional in shared weapon schema
+        const cls: string = this.system.class ?? '';
+        return cls.toLowerCase();
+    }
+
+    /** Narrow `this.actor` to the WH40K-specific actor whose schema we depend on. */
+    #wh40kActor(): WH40KBaseActor | null {
+        return this.actor;
     }
 
     get isWeapon(): boolean {
@@ -271,11 +296,11 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isRanged(): boolean {
-        return this._type === 'weapon' && (this.system.class ?? '').toLowerCase() !== 'melee';
+        return this._type === 'weapon' && this.#weaponClass() !== 'melee';
     }
 
     get isThrown(): boolean {
-        return this._type === 'weapon' && (this.system.class ?? '').toLowerCase() === 'thrown';
+        return this._type === 'weapon' && this.#weaponClass() === 'thrown';
     }
 
     get usesAmmo(): boolean {
@@ -283,7 +308,7 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isMelee(): boolean {
-        return this._type === 'weapon' && (this.system.class ?? '').toLowerCase() === 'melee';
+        return this._type === 'weapon' && this.#weaponClass() === 'melee';
     }
 
     get isArmour(): boolean {
@@ -370,10 +395,9 @@ export class WH40KItem extends WH40KItemContainer {
             if (this.system.damage === undefined || this.system.damage === '') {
                 this.system.damage = '0';
             }
-            const pen = this.system.penetration as unknown;
-            if (pen === undefined || pen === '' || pen === null) {
-                this.system.penetration = 0;
-            }
+            /* eslint-disable no-restricted-syntax -- boundary: penetration default for psychic powers (legacy data shape) */
+            this.system.penetration ??= 0;
+            /* eslint-enable no-restricted-syntax */
         }
 
         // Fix Broken Selects
@@ -389,12 +413,14 @@ export class WH40KItem extends WH40KItemContainer {
      * This unlocks and loads nested items dynamically from the adjacent compendium.
      * I tried to find another way to do this but couldn't find anything online - I made my own hack.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns opaque Foundry Document.update result
     async _determineNestedItems(): Promise<unknown> {
         // Already has items just skip
         if (this.items.size > 0 || this.hasNested()) return;
 
         // Check for specials
         if (this.system.special !== undefined && this.system.special !== null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: legacy `system.special` is a free-form bag pre-migration
             const specialData = this.system.special as Record<string, unknown>;
             game.wh40k.log(`Performing first time nested item configuration for item: ${this.name} with specials: `, this.system.special);
             if (this.isWeapon) await this._updateSpecialsFromPack('wh40k-rpg.weapons', specialData);
@@ -406,6 +432,7 @@ export class WH40KItem extends WH40KItemContainer {
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: receives legacy `system.special` bag
     async _updateSpecialsFromPack(pack: string, data: Record<string, unknown>): Promise<unknown> {
         const compendium = game.packs.find((p: { collection?: string }) => p.collection === pack);
         if (!compendium) return;
@@ -417,6 +444,7 @@ export class WH40KItem extends WH40KItemContainer {
         await compendium.configure({ locked: true });
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: receives legacy `system.special` bag
     async _getAttackSpecials(specialData: Record<string, unknown>): Promise<AttackSpecialIndexEntry[]> {
         const attackSpecialPack = game.packs.find((p: { collection?: string }) => p.collection === 'wh40k-rpg.attack-specials');
         if (!attackSpecialPack) return [];
@@ -426,10 +454,11 @@ export class WH40KItem extends WH40KItemContainer {
             const specialName = capitalize(special);
             const attackSpecial = index.find((n: { name?: string }) => n.name === specialName) as AttackSpecialIndexEntry | undefined;
             if (attackSpecial) {
-                if (attackSpecial.system.hasLevel) {
-                    attackSpecial.system.level = specialData[special];
+                const value = specialData[special];
+                if (attackSpecial.system.hasLevel === true) {
+                    attackSpecial.system.level = value as AttackSpecialIndexEntry['system']['level'];
                 } else {
-                    attackSpecial.system.enabled = specialData[special];
+                    attackSpecial.system.enabled = value as AttackSpecialIndexEntry['system']['enabled'];
                 }
                 specials.push(attackSpecial);
             }
@@ -462,7 +491,7 @@ export class WH40KItem extends WH40KItemContainer {
             ammunition: 'Ammunition',
             forceField: 'Force Field',
         };
-        return typeLabels[this.type as string] || this.type;
+        return typeLabels[this.type] ?? this.type;
     }
 
     /**
@@ -470,7 +499,7 @@ export class WH40KItem extends WH40KItemContainer {
      * @returns {boolean}
      */
     get hasActions(): boolean {
-        return this.isWeapon || this.isPsychicPower || this.isNavigatorPower || (this.isTalent && this.system?.isRollable);
+        return this.isWeapon || this.isPsychicPower || this.isNavigatorPower || (this.isTalent && this.system.isRollable);
     }
 
     /**
@@ -478,13 +507,14 @@ export class WH40KItem extends WH40KItemContainer {
      * @returns {boolean}
      */
     get isRollable(): boolean {
-        return !!((this.isTalent && this.system?.isRollable) || (this.isSkill && this.system?.rollConfig));
+        return (this.isTalent && this.system.isRollable) || (this.isSkill && this.system.rollConfig !== undefined && this.system.rollConfig !== null);
     }
 
     /**
      * Send this item's details to chat as a card
      * @param {Object} options - Options for the chat card
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: chat options passed through to Foundry ChatMessage.create
     async sendToChat(options: Record<string, unknown> = {}): Promise<unknown> {
         const cardData = {
             item: this,
@@ -513,6 +543,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate(template, cardData);
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts a free-form data bag
         const chatData: Record<string, unknown> = {
             user: game.user.id,
             content: html,
@@ -547,19 +578,22 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Perform the default action for this item
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: dispatches to actor roll APIs returning opaque results
     async performAction(): Promise<unknown> {
         if (this.isWeapon) {
             // Weapon attack - handled by the actor sheet
             const weaponActor = this.actor;
-            return weaponActor?.rollWeaponAction?.(this) || this.sendToChat();
+            const result = weaponActor?.rollWeaponAction(this);
+            return result ?? this.sendToChat();
         } else if (this.isPsychicPower) {
             // Psychic power - handled by the actor sheet
             const psychicActor = this.actor;
-            return psychicActor?.rollPsychicPower?.(this) || this.sendToChat();
+            const result = psychicActor?.rollPsychicPower(this);
+            return result ?? this.sendToChat();
         } else if (this.isNavigatorPower) {
             // Navigator power - roll navigator power
             return this.rollNavigatorPower();
-        } else if (this.isTalent && this.system?.isRollable) {
+        } else if (this.isTalent && this.system.isRollable) {
             // Rollable talent
             return this.rollTalent();
         } else if (this.isOrder) {
@@ -577,31 +611,33 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Roll a talent that has a rollable action
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns opaque ChatMessage / roll result
     async rollTalent(): Promise<unknown> {
         if (!this.actor) {
             return this.sendToChat();
         }
 
-        const rollConfig = this.system?.rollConfig as
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollConfig shape lives in talent-specific subsystem
+        const rollConfig = this.system.rollConfig as
             | {
                   characteristic?: string;
                   modifier?: number;
                   description?: string;
               }
             | undefined;
-        if (!rollConfig?.characteristic) {
+        if (rollConfig?.characteristic === undefined || rollConfig.characteristic === '') {
             return this.sendToChat();
         }
 
         // Get the characteristic value
         const charKey = rollConfig.characteristic.toLowerCase();
-        const talentActor = this.actor as unknown as WH40KBaseActor | null;
-        const characteristic = talentActor?.characteristics?.[charKey];
-        if (!characteristic) {
+        const talentActor = this.#wh40kActor();
+        const characteristic = talentActor?.characteristics[charKey];
+        if (characteristic === undefined) {
             return this.sendToChat();
         }
 
-        const targetValue = characteristic.total + (rollConfig.modifier || 0);
+        const targetValue = characteristic.total + (rollConfig.modifier ?? 0);
 
         // Create the roll
         const roll = new Roll('1d100');
@@ -622,7 +658,7 @@ export class WH40KItem extends WH40KItemContainer {
             characteristic: characteristic,
             charKey: charKey,
             actor: this.actor.name,
-            rollDescription: rollConfig.description || '',
+            rollDescription: rollConfig.description ?? '',
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/talent-roll-chat.hbs', cardData);
@@ -638,22 +674,25 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Roll a navigator power
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns opaque ChatMessage / roll result
     async rollNavigatorPower(): Promise<unknown> {
         if (!this.actor) {
             return this.sendToChat();
         }
 
         // Navigator powers typically use Perception or Willpower
-        const navActor = this.actor as unknown as WH40KBaseActor | null;
-        const perception = navActor?.characteristics?.['perception'];
-        const willpower = navActor?.characteristics?.['willpower'];
+        const navActor = this.#wh40kActor();
+        if (navActor === null) return this.sendToChat();
+        const perception = navActor.characteristics['perception'];
+        const willpower = navActor.characteristics['willpower'];
 
         // Use the higher of the two as base, modified by Navigator Rank
-        const navigatorRank = (navActor?.system?.['navigatorRank'] as number | undefined) || 0;
-        const perceptionTotal: number = perception ? perception.total : 0;
-        const willpowerTotal: number = willpower ? willpower.total : 0;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: navigatorRank lives outside the shared system schema
+        const navigatorRank: number = ((navActor.system as Record<string, unknown> | undefined)?.['navigatorRank'] as number | undefined) ?? 0;
+        const perceptionTotal: number = perception.total;
+        const willpowerTotal: number = willpower.total;
         const baseChar = perceptionTotal > willpowerTotal ? perception : willpower;
-        const targetValue = (baseChar?.total || 30) + navigatorRank * 5;
+        const targetValue = baseChar.total + navigatorRank * 5;
 
         const roll = new Roll('1d100');
         await roll.evaluate();
@@ -686,15 +725,17 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Roll a ship order
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns opaque ChatMessage / roll result
     async rollOrder(): Promise<unknown> {
         if (!this.actor) {
             return this.sendToChat();
         }
 
         // Orders typically use Command or relevant skill
-        const orderActor = this.actor as unknown as WH40KBaseActor | null;
-        const command = orderActor?.system?.skills?.['command'] as { current?: number } | undefined;
-        const targetValue = command?.current || 50;
+        const orderActor = this.#wh40kActor();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: skill bag indexed by free-form key
+        const command = (orderActor?.system as { skills?: Record<string, { current?: number }> } | undefined)?.skills?.['command'];
+        const targetValue = command?.current ?? 50;
 
         const roll = new Roll('1d100');
         await roll.evaluate();
@@ -727,15 +768,16 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Roll a ritual
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns opaque ChatMessage / roll result
     async rollRitual(): Promise<unknown> {
         if (!this.actor) {
             return this.sendToChat();
         }
 
         // Rituals typically use Willpower
-        const ritualActor = this.actor as unknown as WH40KBaseActor | null;
-        const willpower = ritualActor?.characteristics?.['willpower'];
-        const targetValue = willpower?.total || 30;
+        const ritualActor = this.#wh40kActor();
+        const willpower = ritualActor?.characteristics['willpower'];
+        const targetValue = willpower?.total ?? 30;
 
         const roll = new Roll('1d100');
         await roll.evaluate();
@@ -771,13 +813,17 @@ export class WH40KItem extends WH40KItemContainer {
      */
     async applyOriginToActor(actor: OriginActorLike): Promise<void> {
         if (!this.isOriginPath) {
+            // eslint-disable-next-line no-restricted-syntax -- legacy notification string, pending langpack migration
             ui.notifications.warn('This item is not an origin path and cannot be auto-applied.');
             return;
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: build-up of partial update bag passed to actor.update()
         const updates: Record<string, unknown> = {};
+        // eslint-disable-next-line no-restricted-syntax -- boundary: items destined for createEmbeddedDocuments
         const itemsToAdd: Record<string, unknown>[] = [];
-        const modifiers = (this.system.modifiers || {}) as {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: origin-path modifiers are stored as an opaque bag in the shared item schema
+        const modifiers = (this.system.modifiers ?? {}) as {
             characteristics?: Record<string, number>;
             wounds?: number;
             fate?: number;
@@ -787,37 +833,38 @@ export class WH40KItem extends WH40KItemContainer {
         };
 
         // Apply characteristic modifiers
-        if (modifiers.characteristics) {
-            const characteristics: Record<string, unknown> = {};
+        if (modifiers.characteristics !== undefined) {
             for (const [key, value] of Object.entries(modifiers.characteristics)) {
                 if (value !== 0) {
-                    const currentBonus = actor.system.characteristics?.[key]?.advance || 0;
-                    characteristics[`system.characteristics.${key}.advance`] = currentBonus + Number(value);
+                    const currentBonus: number = actor.system.characteristics[key].advance;
+                    updates[`system.characteristics.${key}.advance`] = currentBonus + Number(value);
                 }
             }
-            Object.assign(updates, characteristics);
         }
 
         // Apply wounds modifier
-        if (modifiers.wounds && modifiers.wounds !== 0) {
-            const currentWounds = actor.system.wounds?.max || 0;
+        if (modifiers.wounds !== undefined && modifiers.wounds !== 0) {
+            const currentWounds: number = actor.system.wounds.max;
             updates['system.wounds.max'] = currentWounds + modifiers.wounds;
         }
 
         // Apply fate modifier
-        if (modifiers.fate && modifiers.fate !== 0) {
-            const currentFate = actor.system.fate?.total || 0;
+        if (modifiers.fate !== undefined && modifiers.fate !== 0) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: fate is optional on OriginActorLike legacy shape
+            const currentFate: number = actor.system.fate?.total ?? 0;
             updates['system.fate.total'] = currentFate + modifiers.fate;
         }
 
         // Collect skills to add
-        if (modifiers.skills && Array.isArray(modifiers.skills)) {
+        if (Array.isArray(modifiers.skills)) {
             for (const skillName of modifiers.skills) {
                 const skillPack = game.packs.get('wh40k-rpg.dh2-core-stats-skills');
                 if (skillPack) {
+                    // eslint-disable-next-line no-await-in-loop -- sequential compendium access by design
                     const index = await skillPack.getIndex({ fields: ['name'] });
                     const skillEntry = index.find((s) => typeof s.name === 'string' && s.name.toLowerCase() === skillName.toLowerCase());
                     if (skillEntry) {
+                        // eslint-disable-next-line no-await-in-loop -- sequential compendium access by design
                         const skill = await skillPack.getDocument(skillEntry._id);
                         if (skill) itemsToAdd.push(skill.toObject());
                     }
@@ -826,13 +873,15 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         // Collect talents to add
-        if (modifiers.talents && Array.isArray(modifiers.talents)) {
+        if (Array.isArray(modifiers.talents)) {
             for (const talentName of modifiers.talents) {
                 const talentPack = game.packs.get('wh40k-rpg.dh2-core-stats-talents');
                 if (talentPack) {
+                    // eslint-disable-next-line no-await-in-loop -- sequential compendium access by design
                     const index = await talentPack.getIndex({ fields: ['name'] });
                     const talentEntry = index.find((t) => typeof t.name === 'string' && t.name.toLowerCase() === talentName.toLowerCase());
                     if (talentEntry) {
+                        // eslint-disable-next-line no-await-in-loop -- sequential compendium access by design
                         const talent = await talentPack.getDocument(talentEntry._id);
                         if (talent) itemsToAdd.push(talent.toObject());
                     }
@@ -859,10 +908,12 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Get a preview of what this origin path will grant
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: preview structure is consumed by templates with no type contract
     getOriginPreview(): unknown {
         if (!this.isOriginPath) return null;
 
-        const modifiers = (this.system.modifiers || {}) as {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: origin-path modifiers are stored as an opaque bag in the shared item schema
+        const modifiers = (this.system.modifiers ?? {}) as {
             characteristics?: Record<string, number>;
             wounds?: number;
             fate?: number;
@@ -872,15 +923,15 @@ export class WH40KItem extends WH40KItemContainer {
         };
         const preview = {
             characteristics: [] as Array<{ name: string; value: string | number }>,
-            wounds: modifiers.wounds || 0,
-            fate: modifiers.fate || 0,
-            skills: modifiers.skills || [],
-            talents: modifiers.talents || [],
-            traits: modifiers.traits || [],
+            wounds: modifiers.wounds ?? 0,
+            fate: modifiers.fate ?? 0,
+            skills: modifiers.skills ?? [],
+            talents: modifiers.talents ?? [],
+            traits: modifiers.traits ?? [],
         };
 
         // Build characteristic preview
-        if (modifiers.characteristics) {
+        if (modifiers.characteristics !== undefined) {
             for (const [key, value] of Object.entries(modifiers.characteristics)) {
                 if (value !== 0) {
                     const charName = key.charAt(0).toUpperCase() + key.slice(1);

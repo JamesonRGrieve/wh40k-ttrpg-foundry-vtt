@@ -14,7 +14,7 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { getAvailableXP, spendXP, canAfford } from '../../utils/xp-transaction.ts';
-
+import type { WH40KItem } from '../../documents/item.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 const { ApplicationV2, HandlebarsApplicationMixin } = (
     foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor; HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T } }
@@ -215,6 +215,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             width: 700,
             height: 650,
         },
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             purchaseCharacteristic: AdvancementDialog.#purchaseCharacteristic,
             purchaseAdvance: AdvancementDialog.#purchaseAdvance,
@@ -224,6 +225,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             toggleAvailableOnly: AdvancementDialog.#toggleAvailableOnly,
             openCompendiumItem: AdvancementDialog.#openCompendiumItem,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -245,7 +247,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     #activeTab = 'characteristics';
     #activeDiscipline = 'all';
     #psyAvailableOnly = false;
-    #recentPurchases = new Set<string>();
+    readonly #recentPurchases = new Set<string>();
 
     /* -------------------------------------------- */
     /*  Construction                                */
@@ -258,7 +260,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     #getActorSystem(): AdvancementActorSystem {
-        return this.actor.system as unknown as AdvancementActorSystem;
+        return this.actor.system;
     }
 
     #getSystemConfig(): BaseSystemConfig | null {
@@ -287,7 +289,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     static open(actor: WH40KBaseActor, options: Record<string, unknown> = {}): AdvancementDialog {
         const dialog = new this(actor, options);
-        void dialog.render(true);
+        void dialog.render({ force: true });
         return dialog;
     }
 
@@ -487,13 +489,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
             if (hasEntries) {
                 // Specialist skill: each entry (e.g. Common Lore: Imperium) is its own progression track.
-                for (const entry of skillData.entries!) {
+                for (const entry of skillData.entries ?? []) {
                     const entryRank = entry.rank ?? entry.advance ?? 0;
                     const entryName = entry.name || entry.specialization || 'Unknown';
                     const entryLabel = `${label} (${entryName})`;
                     const isMaxed = entryRank >= ranks.length;
                     const cost = isMaxed ? null : systemConfig.getSkillAdvanceCost(this.actor, skillKey, entryRank);
-                    const canPurchase = !isMaxed && cost != null && available >= cost;
+                    const canPurchase = !isMaxed && cost !== null && available >= cost;
                     const currentLabel = entryRank > 0 ? ranks[entryRank - 1]?.tooltip ?? 'Untrained' : 'Untrained';
                     const nextLabel = !isMaxed && ranks[entryRank] ? ranks[entryRank].tooltip : null;
                     const nextDisplay = nextLabel ? `${entryLabel} — ${nextLabel}` : entryLabel;
@@ -511,7 +513,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         nextLabel,
                         owned: isMaxed,
                         canPurchase,
-                        cantAfford: !isMaxed && cost != null && available < cost,
+                        cantAfford: !isMaxed && cost !== null && available < cost,
                         blocked: false,
                         aptitudeMatch: match,
                     });
@@ -519,7 +521,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
                 // Also offer "Add new specialization" at Known rank
                 const addCost = systemConfig.getSkillAdvanceCost(this.actor, skillKey, 0);
-                if (addCost != null) {
+                if (addCost !== null) {
                     result.push({
                         id: `skill:${skillKey}:__new`,
                         name: `${label} — add specialization`,
@@ -545,7 +547,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const effectiveRank = skillData.rank ?? skillData.advance ?? 0;
             const isMaxed = effectiveRank >= ranks.length;
             const cost = isMaxed ? null : systemConfig.getSkillAdvanceCost(this.actor, skillKey, effectiveRank);
-            const canPurchase = !isMaxed && cost != null && available >= cost;
+            const canPurchase = !isMaxed && cost !== null && available >= cost;
 
             const currentLabel = effectiveRank > 0 ? ranks[effectiveRank - 1]?.tooltip ?? 'Untrained' : 'Untrained';
             const nextLabel = !isMaxed && ranks[effectiveRank] ? ranks[effectiveRank].tooltip : null;
@@ -563,7 +565,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 nextLabel,
                 owned: isMaxed,
                 canPurchase,
-                cantAfford: !isMaxed && cost != null && available < cost,
+                cantAfford: !isMaxed && cost !== null && available < cost,
                 blocked: false,
                 aptitudeMatch: match,
             });
@@ -645,7 +647,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 const baseKey = baseName.toLowerCase();
 
                 const cost = systemConfig.getTalentAdvanceCost(this.actor, { system });
-                if (cost == null) continue;
+                if (cost === null) continue;
 
                 const prereqs = system.prerequisites ?? { characteristics: {}, skills: [], talents: [] };
                 const prereqResult = this.#checkTalentPrereqs(prereqs);
@@ -755,7 +757,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         for (const skillReq of coerceList(prereqs?.skills)) {
             const m = skillReq.match(/^(.+?)\s*\+?(\d+)?$/);
             const name = (m ? m[1] : skillReq).toLowerCase().trim();
-            const bonus = m && m[2] ? parseInt(m[2], 10) : 0;
+            const bonus = m?.[2] ? parseInt(m[2], 10) : 0;
             const skillKey = Object.keys(skills).find((k) => (skills[k]?.label ?? '').toLowerCase() === name);
             const rank = skillKey ? skills[skillKey]?.rank ?? 0 : 0;
             const rankThreshold = bonus === 0 ? 1 : bonus === 10 ? 2 : bonus === 20 ? 3 : bonus === 30 ? 4 : 1;
@@ -783,8 +785,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             currentRating,
             nextRating,
             cost: ratingCost,
-            canPurchase: ratingCost != null && available >= ratingCost,
-            cantAfford: ratingCost != null && available < ratingCost,
+            canPurchase: ratingCost !== null && available >= ratingCost,
+            cantAfford: ratingCost !== null && available < ratingCost,
             maxed: nextRating > 10,
         };
 
@@ -1209,7 +1211,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     async #purchaseAptitudeSkillAt(advanceIndex: number, systemConfig: AptitudeBasedSystemConfig): Promise<void> {
         const prepared = this.#prepareAptitudeSkills(systemConfig);
         const entry = prepared[advanceIndex];
-        if (!entry || entry.owned || entry.cost == null) return;
+        if (!entry || entry.owned || entry.cost === null) return;
 
         const actorSkill = this.#getActorSystem().skills?.[entry.skillKey];
         if (!actorSkill) return;
@@ -1281,8 +1283,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 return;
             }
 
-            const currentAdvance = actorSkill.entries![entryIndex].advance ?? 0;
-            const currentCost = actorSkill.entries![entryIndex].cost ?? 0;
+            const currentAdvance = actorSkill.entries?.[entryIndex]?.advance ?? 0;
+            const currentCost = actorSkill.entries?.[entryIndex]?.cost ?? 0;
             await this.actor.update({
                 [`system.skills.${entry.skillKey}.entries.${entryIndex}.advance`]: currentAdvance + 1,
                 [`system.skills.${entry.skillKey}.entries.${entryIndex}.cost`]: currentCost + entry.cost,
@@ -1357,7 +1359,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     async #purchaseAptitudeTalentAt(advanceIndex: number, systemConfig: AptitudeBasedSystemConfig): Promise<void> {
         const prepared = await this.#prepareAptitudeTalents(systemConfig);
         const entry = prepared[advanceIndex];
-        if (!entry || entry.blocked || entry.cost == null) return;
+        if (!entry || entry.blocked || entry.cost === null) return;
 
         if (!canAfford(this.actor, entry.cost)) {
             ui.notifications.warn(game.i18n.localize('WH40K.Advancement.Error.CannotAfford'));
@@ -1365,7 +1367,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
 
         // Resolve compendium doc to get full data
-        const sourceDoc = (await fromUuid(entry.uuid)) as Item | null;
+        const sourceDoc = await fromUuid(entry.uuid);
         if (!sourceDoc) {
             ui.notifications.error(`Could not load talent from compendium: ${entry.name}`);
             return;
@@ -1400,7 +1402,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const existing = this.actor.items.find((i) => i.type === 'talent' && i.name.toLowerCase() === base);
             if (existing) {
                 const currentRank = (existing.system as { rank?: number }).rank ?? 1;
-                await existing.update({ 'system.rank': currentRank + 1 } as Record<string, unknown>);
+                await existing.update({ 'system.rank': currentRank + 1 });
             } else {
                 const data = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
                 data._id = foundry.utils.randomID();
@@ -1487,7 +1489,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        await this.actor.update({ 'system.psy.rating': nextRating } as Record<string, unknown>);
+        await this.actor.update({ 'system.psy.rating': nextRating });
         ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: `Psy Rating ${nextRating}`, cost: String(cost) }));
         this.render();
     }
@@ -1507,7 +1509,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const sourceDoc = (await fromUuid(entry.uuid)) as Item | null;
+        const sourceDoc = await fromUuid(entry.uuid);
         if (!sourceDoc) {
             ui.notifications.error(`Could not load power from compendium: ${entry.name}`);
             return;
@@ -1545,7 +1547,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const sourceDoc = (await fromUuid(entry.uuid)) as Item | null;
+        const sourceDoc = await fromUuid(entry.uuid);
         if (!sourceDoc) {
             ui.notifications.error(`Could not load elite advance: ${entry.name}`);
             return;
@@ -1572,7 +1574,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         try {
             const { default: GrantsManager } = await import('../../managers/grants-manager.ts');
-            await GrantsManager.applyItemGrants(created as unknown as import('../../documents/item.ts').WH40KItem, this.actor, { showNotification: false });
+            await GrantsManager.applyItemGrants(created as unknown as WH40KItem, this.actor, { showNotification: false });
         } catch (err) {
             console.warn('Elite grant application failed (item was still added):', err);
         }
@@ -1641,16 +1643,14 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }
         }
 
-        if (!talentData) {
-            talentData = {
-                name: talentName,
-                type: 'talent',
-                system: {
-                    cost: advance.cost,
-                    description: '',
-                },
-            };
-        }
+        talentData ??= {
+            name: talentName,
+            type: 'talent',
+            system: {
+                cost: advance.cost,
+                description: '',
+            },
+        };
 
         talentData.system.cost = advance.cost;
         await this.actor.createEmbeddedDocuments('Item', [talentData] as never[]);
