@@ -493,6 +493,13 @@ export default class CharacterSheet extends BaseActorSheet {
         context.isRaw = isDH2 && ruleset === 'raw';
         context.hideThroneGelt = context.isRaw;
 
+        // In DH2 RAW mode Influence is a percentile characteristic (testable for Requisition,
+        // social, and Investigation rolls). Surface it on the characteristics map so the
+        // Statistics panel iterates it alongside WS/BS/etc. without schema duplication.
+        if (context.isRaw) {
+            this._injectInfluenceAsCharacteristic(context);
+        }
+
         // Prepare characteristic HUD data
         this._prepareCharacteristicHUD(context);
 
@@ -787,6 +794,34 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {object} context  Context being prepared.
      * @protected
      */
+    /**
+     * Synthesize an `influence` entry on the characteristics map for DH2 RAW mode.
+     * Mirrors the CharacteristicField shape so the panel template and HUD prep treat
+     * it identically to WS/BS/etc. Influence has no `advance`/`unnatural`/`base`
+     * mechanics in the data model — it's a flat 0-100 value — so the derived fields
+     * are filled with zero/identity values that the template renders harmlessly.
+     */
+    _injectInfluenceAsCharacteristic(context: CharacterSheetContext): void {
+        const actor = context.actor;
+        if (!actor) return;
+        const value = Number(this.actor.system.influence);
+        const entry = {
+            label: 'Influence',
+            short: 'Inf',
+            base: value,
+            advance: 0,
+            modifier: 0,
+            unnatural: 0,
+            bonus: Math.floor(value / 10),
+            total: value,
+        };
+        const characteristics = actor.characteristics ?? {};
+        characteristics.influence = entry;
+        actor.characteristics = characteristics;
+    }
+
+    /* -------------------------------------------- */
+
     _prepareCharacteristicHUD(context: Record<string, unknown>): void {
         const sheetContext = context as CharacterSheetContext;
         const hudCharacteristics = sheetContext.actor?.characteristics ?? {};
