@@ -37,7 +37,6 @@
                             action="setCriticalPip"
                             dataAttr="crit-level"
                             pipClass="wh40k-crit-pip-mini"
-                            wrapperClass="wh40k-critical-pips-inline"
                             titlePrefix="Critical Level"}}
                     {{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}
                     {{/if}}
@@ -53,7 +52,6 @@
                             dataAttr="fatigue-index"
                             pipClass="wh40k-fatigue-pip"
                             filledClass=" tw-animate-bolt-glow"
-                            wrapperClass="wh40k-fatigue-bolts-inline"
                             iconClass="fa-bolt"
                             titlePrefix="Fatigue Level"}}
                         {{#if (gt system.fatigue.value 0)}}
@@ -84,7 +82,6 @@
                             action="setFateStar"
                             dataAttr="fate-index"
                             pipClass="wh40k-fate-pip"
-                            wrapperClass="wh40k-fate-stars-inline"
                             iconClass="fa-star"
                             titlePrefix="Fate Point"}}
                         <button type="button" class="tw-w-[18px] tw-h-[18px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-text-[0.7rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)]" data-action="restoreFate" title="Restore All">
@@ -165,13 +162,16 @@
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Favourite Skills --}}
             {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Favourite Skills" icon="fa-star" zoneClass="tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-green-bright)]"}}
-                    <div class="tw-flex tw-flex-col tw-gap-[3px]">
+                    <div class="tw-flex tw-flex-col tw-gap-[3px]" data-favourite-list="skills">
                         {{#if favoriteSkills}}
                             {{#each favoriteSkills as |skill|}}
                             <div class="tw-flex tw-items-center tw-gap-[6px] tw-px-1.5 tw-py-[3px] tw-bg-[var(--color-bg-option)] tw-rounded-[var(--wh40k-radius-md)]" data-tooltip
+                                 draggable="true"
+                                 data-favourite-key="{{skill.key}}"
                                  aria-label="{{skill.label}}: {{skill.current}}"
                                  data-wh40k-tooltip="skill"
                                  data-wh40k-tooltip-data="{{skill.tooltipData}}">
+                                <i class="fas fa-grip-vertical tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-cursor-grab active:tw-cursor-grabbing" title="Drag to reorder"></i>
                                 <span class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-flex-1">{{skill.label}}</span>
                                 <span class="tw-text-[0.85rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)] tw-min-w-[28px] tw-text-right">{{skill.current}}</span>
                                 <button type="button"
@@ -196,10 +196,14 @@
 
             {{!-- Favourite Talents --}}
             {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Favourite Talents" icon="fa-star-half-alt" zoneClass="tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-talents)]"}}
-                    <div class="tw-flex tw-flex-col tw-gap-[3px]">
+                    <div class="tw-flex tw-flex-col tw-gap-[3px]" data-favourite-list="talents">
                         {{#if favoriteTalents}}
                             {{#each favoriteTalents as |talent|}}
-                            <div class="tw-flex tw-items-center tw-gap-[6px] tw-px-1.5 tw-py-[3px] tw-bg-[var(--color-bg-option)] tw-rounded-[var(--wh40k-radius-md)]" data-tooltip title="{{talent.name}}{{#if talent.specialization}} ({{talent.specialization}}){{/if}}">
+                            <div class="tw-flex tw-items-center tw-gap-[6px] tw-px-1.5 tw-py-[3px] tw-bg-[var(--color-bg-option)] tw-rounded-[var(--wh40k-radius-md)]" data-tooltip
+                                 draggable="true"
+                                 data-favourite-key="{{talent.id}}"
+                                 title="{{talent.name}}{{#if talent.specialization}} ({{talent.specialization}}){{/if}}">
+                                <i class="fas fa-grip-vertical tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-cursor-grab active:tw-cursor-grabbing" title="Drag to reorder"></i>
                                 <img class="tw-w-[20px] tw-h-[20px] tw-rounded-[3px] tw-object-cover tw-shrink-0" src="{{talent.img}}" alt="{{talent.name}}" />
                                 <span class="tw-text-[0.75rem] tw-font-semibold tw-text-[color:var(--color-text-secondary)] tw-flex-1 tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)]">
                                     {{talent.fullName}}

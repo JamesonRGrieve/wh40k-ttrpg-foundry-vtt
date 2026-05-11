@@ -127,7 +127,7 @@
                                      hunting the icon glyph (issue #11). --}}
                                 <div class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-py-1.5 tw-flex-wrap">
                                     {{#each (range 1 system.fatigue.max) as |index|}}
-                                        <button type="button" class="tw-w-7 tw-h-7 tw-p-0 tw-bg-transparent tw-border-none tw-cursor-pointer tw-flex tw-items-center tw-justify-center {{#unless (lte index ../system.fatigue.value)}}tw-opacity-40{{/unless}}" data-action="setFatigueBolt" data-fatigue-index="{{index}}" title="Fatigue Level {{index}}{{#if (lte index ../system.fatigue.value)}} (active){{else}} (not yet reached){{/if}}">
+                                        <button type="button" class="tw-w-7 tw-h-7 tw-p-0 tw-bg-transparent tw-border-none tw-cursor-pointer tw-inline-flex tw-items-center tw-justify-center {{#unless (lte index ../system.fatigue.value)}}tw-opacity-40{{/unless}}" data-action="setFatigueBolt" data-fatigue-index="{{index}}" title="Fatigue Level {{index}}{{#if (lte index ../system.fatigue.value)}} (active){{else}} (not yet reached){{/if}}">
                                             <i class="fas fa-bolt {{#if (lte index ../system.fatigue.value)}}tw-animate-bolt-glow-combat tw-text-[color:var(--vital-color)]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
                                         </button>
                                     {{/each}}
@@ -212,7 +212,7 @@
                                      icon, so clicks landed on dead space). --}}
                                 <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-1.5 tw-py-1.5">
                                     {{#each (range 1 system.fate.max) as |index|}}
-                                        <button type="button" class="tw-w-7 tw-h-7 tw-p-0 tw-bg-transparent tw-border-none tw-cursor-pointer tw-flex tw-items-center tw-justify-center {{#if (lte index ../system.fate.value)}}tw-animate-star-glow{{else}}tw-opacity-40{{/if}}" data-action="setFateStar" data-fate-index="{{index}}" title="Fate Point {{index}}{{#if (lte index ../system.fate.value)}} (Available — click to spend){{else}} (Spent — click to restore){{/if}}">
+                                        <button type="button" class="tw-w-7 tw-h-7 tw-p-0 tw-bg-transparent tw-border-none tw-cursor-pointer tw-inline-flex tw-items-center tw-justify-center {{#if (lte index ../system.fate.value)}}tw-animate-star-glow{{else}}tw-opacity-40{{/if}}" data-action="setFateStar" data-fate-index="{{index}}" title="Fate Point {{index}}{{#if (lte index ../system.fate.value)}} (Available — click to spend){{else}} (Spent — click to restore){{/if}}">
                                             <i class="fas fa-star {{#if (lte index ../system.fate.value)}}tw-text-[var(--wh40k-accent-gold)]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
                                         </button>
                                     {{/each}}

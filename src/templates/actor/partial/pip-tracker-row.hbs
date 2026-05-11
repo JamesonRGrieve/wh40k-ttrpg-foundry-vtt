@@ -10,18 +10,27 @@
                        (e.g. "setFateStar", "setFatigueBolt", "setCriticalPip")
         dataAttr     — name of the data-* attribute that carries the pip index
                        (e.g. "fate-index", "fatigue-index", "crit-level")
-        pipClass     — base class for each pip button (e.g. "wh40k-fate-pip")
 
     Optional hash params:
-        filledClass  — class added when the pip is filled (default: `${pipClass}--filled`)
+        pipClass     — extra utility class string to append to each pip button.
+                       Defaults to a 20×20 square; callers can override to grow
+                       the hit target (`tw-w-7 tw-h-7`) or change shape.
+        filledClass  — class added when the pip is filled; defaults to
+                       themed text colour + glow. Pass empty string to suppress.
         wrapperClass — class on the outer flex container (default sane utility set)
         iconClass    — Font Awesome class to render inside each pip; if omitted no <i> is rendered
         titlePrefix  — string prepended to the pip's tooltip (default "Level")
+
+    Note: this partial previously emitted historical `wh40k-fate-pip` /
+    `wh40k-fatigue-bolts-inline` class names that no longer have CSS rules
+    backing them, which made callers without explicit utility overrides render
+    as unstyled block-level buttons (one pip per row). Defaults are now
+    inline-flex Tailwind utilities so the partial is self-sufficient.
 --}}
-<div class="{{#if wrapperClass}}{{wrapperClass}}{{else}}tw-flex tw-flex-wrap tw-justify-center tw-gap-1{{/if}}">
+<div class="{{#if wrapperClass}}{{wrapperClass}}{{else}}tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-1{{/if}}">
     {{#each (range 1 count) as |index|}}
         <button type="button"
-                class="{{../pipClass}}{{#if (lte index ../current)}} {{#if ../filledClass}}{{../filledClass}}{{else}}{{../pipClass}}--filled{{/if}}{{/if}} tw-border tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure"
+                class="tw-inline-flex tw-items-center tw-justify-center tw-w-5 tw-h-5 tw-p-0 tw-bg-transparent tw-border tw-border-solid tw-rounded-[3px] tw-cursor-pointer tw-text-[0.7rem] {{#if ../pipClass}}{{../pipClass}}{{/if}} {{#if (lte index ../current)}} {{#if ../filledClass}}{{../filledClass}}{{else}} tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure{{/if}}{{else}} tw-text-[color:var(--wh40k-text-muted)] tw-opacity-50{{/if}} tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure"
                 data-action="{{../action}}"
                 data-{{../dataAttr}}="{{index}}"
                 title="{{#if ../titlePrefix}}{{../titlePrefix}}{{else}}Level{{/if}} {{index}}">
