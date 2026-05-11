@@ -3,73 +3,29 @@
  * Phase 7: Template System
  */
 
+import type NPCTemplateData from '../../data/item/npc-template.ts';
+import type { WH40KItemDocument } from '../../types/global.d.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
-/** System shape for npcTemplate items. */
-interface NPCTemplateSystem {
-    category: string;
-    role: string;
-    type: string;
-    equipmentPreset: string;
-    baseCharacteristics: Record<string, number>;
-    unnaturals: Record<string, number>;
-    trainedSkills: TrainedSkill[];
-    customWeapons: CustomWeapon[];
-    traits: TraitRef[];
-    talents: TalentRef[];
-    variants: Variant[];
-    scaling: unknown;
-    previewAtThreat: (threat: number) => Record<string, unknown>;
-    generateAtThreat: (threat: number) => Record<string, unknown>;
-}
+/** NPCTemplate items expose NPCTemplateData on `system`. */
+type NPCTemplateItem = WH40KItemDocument & {
+    system: NPCTemplateData;
+};
 
-interface TrainedSkill {
-    key: string;
-    name: string;
-    characteristic: string;
-    level: string;
-}
-
-interface CustomWeapon {
-    name: string;
-    damage: string;
-    pen: number;
-    range: string;
-    rof: string;
-    clip: number;
-    reload: string;
-    special: string;
-    class: string;
-}
-
-interface TraitRef {
-    uuid: string;
-    name: string;
-    description: string;
-}
-
-interface TalentRef {
-    uuid: string;
-    name: string;
-    description: string;
-}
-
-interface Variant {
-    name: string;
-    description: string;
-    threatModifier: number;
-    characteristicModifiers: Record<string, number>;
-    additionalEquipment: unknown[];
-    additionalTraits: unknown[];
-    additionalTalents: unknown[];
-}
-
+/* eslint-disable no-restricted-syntax -- boundary: external Foundry document shapes resolved from UUID / Actor.create */
 interface ResolvedItem {
-    name: string | null;
+    name: string;
     type: string;
-    img: string | null;
-    system: unknown;
+    img: string;
+    system: Record<string, unknown>;
 }
+
+interface CreatedActor {
+    name: string | null;
+    sheet: { render: (force: boolean) => unknown } | null;
+    createEmbeddedDocuments: (type: string, items: Array<Record<string, unknown>>) => Promise<unknown>;
+}
+/* eslint-enable no-restricted-syntax */
 
 /**
  * Item sheet for npcTemplate type items.
@@ -78,11 +34,17 @@ interface ResolvedItem {
  * @extends {BaseItemSheet}
  */
 export default class NPCTemplateSheet extends BaseItemSheet {
+    /** Narrow the inherited item document to its npcTemplate DataModel shape. */
+    override get item(): NPCTemplateItem {
+        return super.item as NPCTemplateItem;
+    }
+
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
     /** @override */
+    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     // eslint-disable-next-line @typescript-eslint/naming-convention
     static override DEFAULT_OPTIONS = {
         ...BaseItemSheet.DEFAULT_OPTIONS,
@@ -113,6 +75,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
             createFromTemplate: NPCTemplateSheet.#createFromTemplate,
         },
     } satisfies typeof BaseItemSheet.DEFAULT_OPTIONS & Partial<ApplicationV2Config.DefaultOptions>;
+    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 
@@ -215,7 +178,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
     /** @override */
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const sys = this.item.system as unknown as NPCTemplateSystem;
+        const sys = this.item.system;
 
         // Prepare categories
         const categories = [
@@ -262,7 +225,8 @@ export default class NPCTemplateSheet extends BaseItemSheet {
         ].map((p) => ({ ...p, selected: p.key === sys.equipmentPreset }));
 
         // Prepare characteristics for display
-        const characteristics: Array<{ key: string; label: string; short: string; value: number; unnatural: number }> = [
+        const baseChars = sys.baseCharacteristics;
+        const characteristics = [
             { key: 'weaponSkill', label: 'Weapon Skill', short: 'WS' },
             { key: 'ballisticSkill', label: 'Ballistic Skill', short: 'BS' },
             { key: 'strength', label: 'Strength', short: 'S' },
@@ -275,7 +239,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
             { key: 'influence', label: 'Influence', short: 'Inf' },
         ].map((c) => ({
             ...c,
-            value: sys.baseCharacteristics[c.key] ?? 30,
+            value: baseChars[c.key as keyof typeof baseChars] ?? 30,
             unnatural: sys.unnaturals[c.key] ?? 0,
         }));
 
@@ -353,14 +317,11 @@ export default class NPCTemplateSheet extends BaseItemSheet {
 
     /**
      * Add a trained skill.
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
-    static async #addSkill(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #addSkill(this: NPCTemplateSheet, event: PointerEvent, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const sys = this.item.system as unknown as NPCTemplateSystem;
-        const skills = foundry.utils.deepClone(sys.trainedSkills);
+        const skills = foundry.utils.deepClone(this.item.system.trainedSkills);
         skills.push({
             key: 'awareness',
             name: 'Awareness',
@@ -368,36 +329,30 @@ export default class NPCTemplateSheet extends BaseItemSheet {
             level: 'trained',
         });
 
-        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.trainedSkills': skills });
+        await this.item.update({ 'system.trainedSkills': skills });
     }
 
     /**
      * Remove a trained skill.
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
     static async #removeSkill(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
-        const sys = this.item.system as unknown as NPCTemplateSystem;
-        const skills = foundry.utils.deepClone(sys.trainedSkills);
+        const skills = foundry.utils.deepClone(this.item.system.trainedSkills);
         skills.splice(index, 1);
 
-        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.trainedSkills': skills });
+        await this.item.update({ 'system.trainedSkills': skills });
     }
 
     /**
      * Add a custom weapon.
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
-    static async #addWeapon(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #addWeapon(this: NPCTemplateSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const sys = this.item.system as unknown as NPCTemplateSystem;
-        const weapons = foundry.utils.deepClone(sys.customWeapons);
+        const weapons = foundry.utils.deepClone(this.item.system.customWeapons);
         weapons.push({
             name: 'New Weapon',
             damage: '1d10',
@@ -410,108 +365,90 @@ export default class NPCTemplateSheet extends BaseItemSheet {
             class: 'melee',
         });
 
-        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.customWeapons': weapons });
+        await this.item.update({ 'system.customWeapons': weapons });
     }
 
     /**
      * Remove a custom weapon.
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
     static async #removeWeapon(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
-        const sys = this.item.system as unknown as NPCTemplateSystem;
-        const weapons = foundry.utils.deepClone(sys.customWeapons);
+        const weapons = foundry.utils.deepClone(this.item.system.customWeapons);
         weapons.splice(index, 1);
 
-        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.customWeapons': weapons });
+        await this.item.update({ 'system.customWeapons': weapons });
     }
 
     /**
      * Add a trait.
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
-    static async #addTrait(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #addTrait(this: NPCTemplateSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const sys = this.item.system as unknown as NPCTemplateSystem;
-        const traits = foundry.utils.deepClone(sys.traits);
+        const traits = foundry.utils.deepClone(this.item.system.traits);
         traits.push({
             uuid: '',
             name: 'New Trait',
             description: '',
         });
 
-        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.traits': traits });
+        await this.item.update({ 'system.traits': traits });
     }
 
     /**
      * Remove a trait.
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
     static async #removeTrait(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
-        const sys = this.item.system as unknown as NPCTemplateSystem;
-        const traits = foundry.utils.deepClone(sys.traits);
+        const traits = foundry.utils.deepClone(this.item.system.traits);
         traits.splice(index, 1);
 
-        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.traits': traits });
+        await this.item.update({ 'system.traits': traits });
     }
 
     /**
      * Add a talent.
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
-    static async #addTalent(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #addTalent(this: NPCTemplateSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const sys = this.item.system as unknown as NPCTemplateSystem;
-        const talents = foundry.utils.deepClone(sys.talents);
+        const talents = foundry.utils.deepClone(this.item.system.talents);
         talents.push({
             uuid: '',
             name: 'New Talent',
             description: '',
         });
 
-        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.talents': talents });
+        await this.item.update({ 'system.talents': talents });
     }
 
     /**
      * Remove a talent.
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
     static async #removeTalent(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
-        const sys = this.item.system as unknown as NPCTemplateSystem;
-        const talents = foundry.utils.deepClone(sys.talents);
+        const talents = foundry.utils.deepClone(this.item.system.talents);
         talents.splice(index, 1);
 
-        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.talents': talents });
+        await this.item.update({ 'system.talents': talents });
     }
 
     /**
      * Add a variant.
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
-    static async #addVariant(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #addVariant(this: NPCTemplateSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const sys = this.item.system as unknown as NPCTemplateSystem;
-        const variants = foundry.utils.deepClone(sys.variants);
+        const variants = foundry.utils.deepClone(this.item.system.variants);
         variants.push({
             name: 'New Variant',
             description: '',
@@ -522,45 +459,38 @@ export default class NPCTemplateSheet extends BaseItemSheet {
             additionalTalents: [],
         });
 
-        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.variants': variants });
+        await this.item.update({ 'system.variants': variants });
     }
 
     /**
      * Remove a variant.
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
     static async #removeVariant(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
-        const sys = this.item.system as unknown as NPCTemplateSystem;
-        const variants = foundry.utils.deepClone(sys.variants);
+        const variants = foundry.utils.deepClone(this.item.system.variants);
         variants.splice(index, 1);
 
-        await (this.item as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.variants': variants });
+        await this.item.update({ 'system.variants': variants });
     }
 
     /**
      * Update preview.
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
-    static #updatePreview(this: NPCTemplateSheet, event: Event, _target: HTMLElement): void {
+    static #updatePreview(this: NPCTemplateSheet, _event: Event, _target: HTMLElement): void {
         void this.render({ parts: ['preview'] });
     }
 
     /**
      * Create an NPC from this template.
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
-    static async #createFromTemplate(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #createFromTemplate(this: NPCTemplateSheet, event: PointerEvent, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         const threatLevel = this.#previewThreat;
-        const sys = this.item.system as unknown as NPCTemplateSystem;
+        const sys = this.item.system;
         const systemData = sys.generateAtThreat(threatLevel);
 
         const actorData = {
@@ -571,45 +501,24 @@ export default class NPCTemplateSheet extends BaseItemSheet {
         };
 
         try {
-            const actor = (await (Actor as unknown as { create: (data: Record<string, unknown>) => Promise<Record<string, unknown> | null> }).create(
-                actorData,
-            )) as {
-                name: string | null;
-                sheet: { render: (force: boolean) => void } | null;
-                createEmbeddedDocuments: (type: string, items: unknown[]) => Promise<unknown>;
-            } | null;
+            // boundary: Foundry's `Actor.create` lacks a typed payload for arbitrary system schemas.
+            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: typed signature for static Actor.create
+            const actor = (await (Actor.create as (data: Record<string, unknown>) => Promise<unknown>)(actorData)) as CreatedActor | null;
 
             if (actor !== null) {
-                // Create embedded traits and talents
-                const itemsToCreate: Record<string, unknown>[] = [];
-
-                for (const trait of sys.traits) {
-                    if (trait.uuid !== '') {
-                        const item = (await fromUuid(trait.uuid)) as ResolvedItem | null;
-                        if (item !== null) {
-                            itemsToCreate.push({
-                                name: item.name,
-                                type: item.type,
-                                img: item.img,
-                                system: foundry.utils.deepClone(item.system as Record<string, unknown>),
-                            });
-                        }
-                    }
-                }
-
-                for (const talent of sys.talents) {
-                    if (talent.uuid !== '') {
-                        const item = (await fromUuid(talent.uuid)) as ResolvedItem | null;
-                        if (item !== null) {
-                            itemsToCreate.push({
-                                name: item.name,
-                                type: item.type,
-                                img: item.img,
-                                system: foundry.utils.deepClone(item.system as Record<string, unknown>),
-                            });
-                        }
-                    }
-                }
+                // Resolve all trait/talent UUIDs in parallel
+                const uuids = [...sys.traits, ...sys.talents]
+                    .map((ref) => ref.uuid)
+                    .filter((uuid): uuid is string => uuid !== undefined && uuid !== '');
+                const resolved = await Promise.all(uuids.map(async (uuid) => (await fromUuid(uuid)) as ResolvedItem | null));
+                const itemsToCreate: Array<Record<string, unknown>> = resolved
+                    .filter((item): item is ResolvedItem => item !== null)
+                    .map((item) => ({
+                        name: item.name,
+                        type: item.type,
+                        img: item.img,
+                        system: foundry.utils.deepClone(item.system),
+                    }));
 
                 if (itemsToCreate.length > 0) {
                     await actor.createEmbeddedDocuments('Item', itemsToCreate);

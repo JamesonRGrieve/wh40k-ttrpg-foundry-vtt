@@ -11,10 +11,19 @@
 
 import type TalentData from '../../data/item/talent.ts';
 import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
+import type { WH40KItemDocument } from '../../types/global.d.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
 /** TalentData with mixin-inherited fields visible to the type system. */
-type TalentSystem = TalentData & Pick<ModifiersTemplate, 'modifiers'> & { source: { book?: string; page?: string } | string | undefined };
+type TalentSystem = TalentData &
+    Pick<ModifiersTemplate, 'modifiers'> & {
+        source: { book?: string; page?: string } | string;
+        description?: { value?: string };
+        toChat?: () => Promise<unknown> | unknown;
+    };
+
+/** Talent item document narrowed to its DataModel. */
+type TalentItem = WH40KItemDocument & { system: TalentSystem };
 
 /**
  * Redesigned sheet for talent items with modern ApplicationV2 patterns.
@@ -22,15 +31,20 @@ type TalentSystem = TalentData & Pick<ModifiersTemplate, 'modifiers'> & { source
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class TalentSheet extends BaseItemSheet {
+    override get item(): TalentItem {
+        return super.item as TalentItem;
+    }
+
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
     /** @override */
+    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'talent-sheet'],
         actions: {
-            ...super.DEFAULT_OPTIONS?.actions,
+            ...super.DEFAULT_OPTIONS.actions,
             rollTalent: TalentSheet.#rollTalent,
             postToChat: TalentSheet.#postToChat,
             viewGrantedItem: TalentSheet.#viewGrantedItem,
@@ -46,6 +60,7 @@ export default class TalentSheet extends BaseItemSheet {
             icon: 'fa-solid fa-star',
         },
     };
+    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 
@@ -81,7 +96,7 @@ export default class TalentSheet extends BaseItemSheet {
     /** @inheritDoc */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const system = this.item.system as unknown as TalentSystem;
+        const system = this.item.system;
 
         // Tab state
         context.tabs = this._getTabs();
@@ -121,33 +136,34 @@ export default class TalentSheet extends BaseItemSheet {
         // Get source reference properly (not the object)
         const rawSource = system.source;
         const sourceObj = typeof rawSource === 'object' && rawSource !== null ? rawSource : {};
-        const sourceBook = sourceObj.book || '';
-        const sourcePage = sourceObj.page || '';
+        const sourceBook = sourceObj.book ?? '';
+        const sourcePage = sourceObj.page ?? '';
+        const aptitudes = system.aptitudes;
 
         return {
-            identifier: system.identifier || '',
-            category: system.category || '',
-            categoryLabel: system.categoryLabel || 'General',
-            tier: system.tier || 0,
-            tierLabel: system.tierLabel || '—',
-            cost: system.cost || 0,
-            isPassive: system.isPassive ?? true,
-            isRollable: system.isRollable ?? false,
-            stackable: system.stackable ?? false,
-            rank: system.rank || 1,
-            hasSpecialization: system.hasSpecialization ?? false,
-            specialization: system.specialization || '',
-            notes: system.notes || '',
+            identifier: system.identifier,
+            category: system.category,
+            categoryLabel: system.categoryLabel,
+            tier: system.tier,
+            tierLabel: system.tierLabel,
+            cost: system.cost,
+            isPassive: system.isPassive,
+            isRollable: system.isRollable,
+            stackable: system.stackable,
+            rank: system.rank,
+            hasSpecialization: system.hasSpecialization,
+            specialization: system.specialization,
+            notes: system.notes,
             // Source fields
-            source: sourceBook ? `${sourceBook} p.${sourcePage}` : '',
+            source: sourceBook !== '' ? `${sourceBook} p.${sourcePage}` : '',
             sourceBook: sourceBook,
             sourcePage: sourcePage,
             // Benefit field
-            aptitudes: system.aptitudes || [],
-            hasAptitudes: (system.aptitudes?.length || 0) > 0,
-            benefit: system.benefit || '',
-            hasBenefit: !!(system.benefit && system.benefit.trim()),
-            fullName: system.fullName || this.item.name,
+            aptitudes,
+            hasAptitudes: aptitudes.length > 0,
+            benefit: system.benefit,
+            hasBenefit: system.benefit.trim() !== '',
+            fullName: system.fullName,
         };
     }
 
@@ -160,10 +176,10 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _preparePrerequisitesData(system: TalentSystem): Record<string, unknown> {
-        const prereqs = system.prerequisites || { text: '', characteristics: {}, skills: [], talents: [] };
-        const chars = prereqs.characteristics || {};
-        const skills = prereqs.skills || [];
-        const talents = prereqs.talents || [];
+        const prereqs = system.prerequisites;
+        const chars = prereqs.characteristics;
+        const skills = prereqs.skills;
+        const talents = prereqs.talents;
 
         // Format characteristics requirements
         const characteristicReqs = Object.entries(chars)
@@ -175,17 +191,20 @@ export default class TalentSheet extends BaseItemSheet {
                 value,
             }));
 
+        const filteredSkills = skills.filter((s) => s !== '');
+        const filteredTalents = talents.filter((t) => t !== '');
+
         return {
-            text: prereqs.text || '',
-            hasText: !!(prereqs.text && prereqs.text.trim()),
+            text: prereqs.text,
+            hasText: prereqs.text.trim() !== '',
             characteristics: characteristicReqs,
             hasCharacteristics: characteristicReqs.length > 0,
-            skills: skills.filter((s: string) => s),
-            hasSkills: skills.filter((s: string) => s).length > 0,
-            talents: talents.filter((t: string) => t),
-            hasTalents: talents.filter((t: string) => t).length > 0,
-            hasAny: system.hasPrerequisites ?? false,
-            label: system.prerequisitesLabel || '',
+            skills: filteredSkills,
+            hasSkills: filteredSkills.length > 0,
+            talents: filteredTalents,
+            hasTalents: filteredTalents.length > 0,
+            hasAny: system.hasPrerequisites,
+            label: system.prerequisitesLabel,
         };
     }
 
@@ -198,10 +217,10 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _prepareModifiersData(system: TalentSystem): Record<string, unknown> {
-        const mods = system.modifiers || ({} as TalentSystem['modifiers']);
+        const mods = system.modifiers;
 
         // Characteristic modifiers
-        const charMods = Object.entries(mods.characteristics || {})
+        const charMods = Object.entries(mods.characteristics)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
@@ -212,7 +231,7 @@ export default class TalentSheet extends BaseItemSheet {
             }));
 
         // Skill modifiers
-        const skillMods = Object.entries(mods.skills || {})
+        const skillMods = Object.entries(mods.skills)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
@@ -222,8 +241,7 @@ export default class TalentSheet extends BaseItemSheet {
             }));
 
         // Combat modifiers
-        const combat = mods.combat || ({} as TalentSystem['modifiers']['combat']);
-        const combatMods = Object.entries(combat)
+        const combatMods = Object.entries(mods.combat)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
@@ -233,8 +251,7 @@ export default class TalentSheet extends BaseItemSheet {
             }));
 
         // Resource modifiers
-        const resources = mods.resources || ({} as TalentSystem['modifiers']['resources']);
-        const resourceMods = Object.entries(resources)
+        const resourceMods = Object.entries(mods.resources)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
@@ -244,7 +261,7 @@ export default class TalentSheet extends BaseItemSheet {
             }));
 
         // Other modifiers
-        const otherMods = (mods.other || []).map((mod: { key: string; label: string; value: number; mode: string }) => ({
+        const otherMods = mods.other.map((mod) => ({
             ...mod,
             positive: mod.value > 0,
         }));
@@ -275,33 +292,33 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _prepareGrantsData(system: TalentSystem): Record<string, unknown> {
-        const grants = system.grants || { skills: [], talents: [], traits: [], specialAbilities: [] };
+        const grants = system.grants;
 
-        const skills = (grants.skills || []).map((skill: { name: string; specialization: string; level: string }) => ({
+        const skills = grants.skills.map((skill) => ({
             name: skill.name,
-            specialization: skill.specialization || null,
-            level: skill.level || 'trained',
+            specialization: skill.specialization !== '' ? skill.specialization : null,
+            level: skill.level !== '' ? skill.level : 'trained',
             levelLabel: this._getTrainingLabel(skill.level),
-            displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
+            displayName: skill.specialization !== '' ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
 
-        const talents = (grants.talents || []).map((talent: { name: string; specialization: string; uuid: string }) => ({
+        const talents = grants.talents.map((talent) => ({
             name: talent.name,
-            specialization: talent.specialization || null,
-            uuid: talent.uuid || null,
-            hasLink: !!talent.uuid,
+            specialization: talent.specialization !== '' ? talent.specialization : null,
+            uuid: talent.uuid !== '' ? talent.uuid : null,
+            hasLink: talent.uuid !== '',
         }));
 
-        const traits = (grants.traits || []).map((trait: { name: string; level: number; uuid: string }) => ({
+        const traits = grants.traits.map((trait) => ({
             name: trait.name,
-            level: trait.level || null,
-            uuid: trait.uuid || null,
-            hasLink: !!trait.uuid,
+            level: trait.level !== 0 ? trait.level : null,
+            uuid: trait.uuid !== '' ? trait.uuid : null,
+            hasLink: trait.uuid !== '',
         }));
 
-        const specialAbilities = (grants.specialAbilities || []).map((ability: { name: string; description: string }) => ({
+        const specialAbilities = grants.specialAbilities.map((ability) => ({
             name: ability.name,
-            description: ability.description || '',
+            description: ability.description,
         }));
 
         const hasAny = skills.length > 0 || talents.length > 0 || traits.length > 0 || specialAbilities.length > 0;
@@ -328,9 +345,9 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _prepareSituationalData(system: TalentSystem): Record<string, unknown> {
-        const situational = system.modifiers?.situational || { characteristics: [], skills: [], combat: [] };
+        const situational = system.modifiers.situational;
 
-        const characteristics = (situational.characteristics || []).map((mod: { key: string; value: number; condition: string }) => ({
+        const characteristics = situational.characteristics.map((mod) => ({
             key: mod.key,
             label: this._getCharacteristicLabel(mod.key),
             value: mod.value,
@@ -339,7 +356,7 @@ export default class TalentSheet extends BaseItemSheet {
             positive: mod.value > 0,
         }));
 
-        const skills = (situational.skills || []).map((mod: { key: string; value: number; condition: string }) => ({
+        const skills = situational.skills.map((mod) => ({
             key: mod.key,
             label: this._formatSkillLabel(mod.key),
             value: mod.value,
@@ -348,7 +365,7 @@ export default class TalentSheet extends BaseItemSheet {
             positive: mod.value > 0,
         }));
 
-        const combat = (situational.combat || []).map((mod: { key: string; value: number; condition: string }) => ({
+        const combat = situational.combat.map((mod) => ({
             key: mod.key,
             label: this._formatCombatLabel(mod.key),
             value: mod.value,
@@ -379,15 +396,15 @@ export default class TalentSheet extends BaseItemSheet {
      * @protected
      */
     _prepareRollConfigData(system: TalentSystem): Record<string, unknown> {
-        const config = system.rollConfig || { characteristic: '', skill: '', modifier: 0, description: '' };
+        const config = system.rollConfig;
         return {
-            characteristic: config.characteristic || '',
-            characteristicLabel: config.characteristic ? this._getCharacteristicLabel(config.characteristic) : '',
-            skill: config.skill || '',
-            skillLabel: config.skill ? this._formatSkillLabel(config.skill) : '',
-            modifier: config.modifier || 0,
-            description: config.description || '',
-            isConfigured: !!(config.characteristic || config.skill),
+            characteristic: config.characteristic,
+            characteristicLabel: config.characteristic !== '' ? this._getCharacteristicLabel(config.characteristic) : '',
+            skill: config.skill,
+            skillLabel: config.skill !== '' ? this._formatSkillLabel(config.skill) : '',
+            modifier: config.modifier,
+            description: config.description,
+            isConfigured: config.characteristic !== '' || config.skill !== '',
         };
     }
 
@@ -450,9 +467,9 @@ export default class TalentSheet extends BaseItemSheet {
      */
     _getEffectsSectionOrder(modifiersData: Record<string, unknown>, situationalData: Record<string, unknown>, grantsData: Record<string, unknown>): string[] {
         const sections = [
-            { id: 'modifiers', hasData: modifiersData.hasAny },
-            { id: 'situational', hasData: situationalData.hasAny },
-            { id: 'grants', hasData: grantsData.hasAny },
+            { id: 'modifiers', hasData: Boolean(modifiersData.hasAny) },
+            { id: 'situational', hasData: Boolean(situationalData.hasAny) },
+            { id: 'grants', hasData: Boolean(grantsData.hasAny) },
         ];
 
         // Sort: sections with data first, then empty sections
@@ -488,7 +505,7 @@ export default class TalentSheet extends BaseItemSheet {
             fellowship: 'Fellowship',
             influence: 'Influence',
         };
-        return labels[key] || key;
+        return labels[key] ?? key;
     }
 
     /**
@@ -510,7 +527,7 @@ export default class TalentSheet extends BaseItemSheet {
             fellowship: 'Fel',
             influence: 'Inf',
         };
-        return shorts[key] || key.substring(0, 3).toUpperCase();
+        return shorts[key] ?? key.substring(0, 3).toUpperCase();
     }
 
     /**
@@ -542,7 +559,7 @@ export default class TalentSheet extends BaseItemSheet {
             initiative: 'Initiative',
             speed: 'Movement Speed',
         };
-        return labels[key] || key.charAt(0).toUpperCase() + key.slice(1);
+        return labels[key] ?? key.charAt(0).toUpperCase() + key.slice(1);
     }
 
     /**
@@ -558,7 +575,7 @@ export default class TalentSheet extends BaseItemSheet {
             insanity: 'Insanity Threshold',
             corruption: 'Corruption Threshold',
         };
-        return labels[key] || key.charAt(0).toUpperCase() + key.slice(1);
+        return labels[key] ?? key.charAt(0).toUpperCase() + key.slice(1);
     }
 
     /**
@@ -573,7 +590,7 @@ export default class TalentSheet extends BaseItemSheet {
             plus10: '+10',
             plus20: '+20',
         };
-        return labels[level] || level;
+        return labels[level] ?? level;
     }
 
     /**
@@ -595,7 +612,7 @@ export default class TalentSheet extends BaseItemSheet {
             fellowship: 'fa-solid fa-people-group',
             influence: 'fa-solid fa-crown',
         };
-        return icons[key] || 'fa-solid fa-star';
+        return icons[key] ?? 'fa-solid fa-star';
     }
 
     /**
@@ -675,7 +692,7 @@ export default class TalentSheet extends BaseItemSheet {
             psyniscience: 'fa-solid fa-eye-evil',
             invocation: 'fa-solid fa-hand-sparkles',
         };
-        return icons[key] || 'fa-solid fa-graduation-cap';
+        return icons[key] ?? 'fa-solid fa-graduation-cap';
     }
 
     /**
@@ -693,7 +710,7 @@ export default class TalentSheet extends BaseItemSheet {
             initiative: 'fa-solid fa-gauge-high',
             speed: 'fa-solid fa-person-running',
         };
-        return icons[key] || 'fa-solid fa-swords';
+        return icons[key] ?? 'fa-solid fa-swords';
     }
 
     /* -------------------------------------------- */
@@ -716,8 +733,8 @@ export default class TalentSheet extends BaseItemSheet {
      */
     _setupTalentTabs(): void {
         const tabs = this.element.querySelectorAll('.wh40k-talent-tabs .wh40k-talent-tab');
-        const switchTab = (tabName: string | undefined) => {
-            if (!tabName) return;
+        const switchTab = (tabName: string | undefined): void => {
+            if (tabName === undefined || tabName === '') return;
 
             // Update active tab button
             tabs.forEach((t) => t.classList.toggle('active', (t as HTMLElement).dataset.tab === tabName));
@@ -760,23 +777,24 @@ export default class TalentSheet extends BaseItemSheet {
      * @param {PointerEvent} event - The triggering event
      * @param {HTMLElement} target - The action target
      */
-    static async #rollTalent(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollTalent(this: TalentSheet, _event: Event, _target: HTMLElement): Promise<void> {
         if (!this.item.system.isRollable) {
             ui.notifications.warn('This talent cannot be rolled.');
             return;
         }
 
         const actor = this.item.actor;
-        if (!actor) {
+        if (actor === null) {
             ui.notifications.warn('This talent must be on an actor to roll.');
             return;
         }
 
         const config = this.item.system.rollConfig;
-        if (config.characteristic) {
-            await actor.rollCharacteristic(config.characteristic, this.item.name);
-        } else if (config.skill) {
-            await actor.rollSkill(config.skill);
+        if (config.characteristic !== '') {
+            actor.rollCharacteristic(config.characteristic, this.item.name);
+        } else if (config.skill !== '') {
+            const rollSkill = (actor as unknown as { rollSkill?: (key: string) => Promise<void> }).rollSkill;
+            if (rollSkill !== undefined) await rollSkill.call(actor, config.skill);
         }
     }
 
@@ -788,9 +806,9 @@ export default class TalentSheet extends BaseItemSheet {
      * @param {PointerEvent} event - The triggering event
      * @param {HTMLElement} target - The action target
      */
-    static async #postToChat(event: Event, target: HTMLElement): Promise<void> {
-        const chatResult = await (this as any).item.system.toChat?.();
-        if (chatResult == null) (this as any)._postTalentToChat();
+    static async #postToChat(this: TalentSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        const chatResult = await this.item.system.toChat?.();
+        if (chatResult === null || chatResult === undefined) await this._postTalentToChat();
     }
 
     /* -------------------------------------------- */
@@ -801,13 +819,13 @@ export default class TalentSheet extends BaseItemSheet {
      * @param {PointerEvent} event - The triggering event
      * @param {HTMLElement} target - The action target
      */
-    static async #viewGrantedItem(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #viewGrantedItem(this: TalentSheet, _event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
-        if (!uuid) return;
+        if (uuid === undefined || uuid === '') return;
 
         try {
             const item = (await fromUuid(uuid)) as { sheet?: { render: (force: boolean) => void } } | null;
-            if (item?.sheet) {
+            if (item?.sheet !== undefined && item.sheet !== null) {
                 item.sheet.render(true);
             }
         } catch (err) {
@@ -823,13 +841,13 @@ export default class TalentSheet extends BaseItemSheet {
      * @param {PointerEvent} event - The triggering event
      * @param {HTMLElement} target - The action target
      */
-    static async #adjustRank(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #adjustRank(this: TalentSheet, event: Event, target: HTMLElement): Promise<void> {
         if (!this.item.system.stackable) return;
 
         const delta = parseInt(target.dataset.delta ?? '', 10);
         if (isNaN(delta)) return;
 
-        const currentRank = this.item.system.rank || 1;
+        const currentRank = this.item.system.rank;
         const newRank = Math.max(1, currentRank + delta);
 
         await this.item.update({ 'system.rank': newRank });
@@ -843,9 +861,9 @@ export default class TalentSheet extends BaseItemSheet {
      * @param {PointerEvent} event - The triggering event
      * @param {HTMLElement} target - The action target
      */
-    static async #openTalentEditor(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #openTalentEditor(this: TalentSheet, _event: Event, target: HTMLElement): Promise<void> {
         const section = target.dataset.section;
-        if (!section) return;
+        if (section === undefined || section === '') return;
 
         // Import and render the TalentEditorDialog
         const { TalentEditorDialog } = await import('./talent-editor-dialog.ts');
@@ -870,13 +888,13 @@ export default class TalentSheet extends BaseItemSheet {
                 ${this.item.system.tier ? `<p><strong>Tier:</strong> ${this.item.system.tier}</p>` : ''}
                 ${this.item.system.cost ? `<p><strong>Cost:</strong> ${this.item.system.cost} XP</p>` : ''}
                 <hr>
-                <div>${this.item.system.benefit || this.item.system.description?.value || ''}</div>
+                <div>${this.item.system.benefit !== '' ? this.item.system.benefit : (this.item.system.description?.value ?? '')}</div>
             </div>
         `;
 
         await ChatMessage.create({
             content,
-            speaker: ChatMessage.getSpeaker({ actor: this.item.actor ?? undefined }),
+            speaker: ChatMessage.getSpeaker({ actor: this.item.actor !== null ? this.item.actor : undefined }),
         });
     }
 }

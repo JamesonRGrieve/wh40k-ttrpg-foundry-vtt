@@ -14,6 +14,9 @@ import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const { ApplicationV2, HandlebarsApplicationMixin } = (foundry.applications as any).api;
 
+/** Talent system data with mixin-inherited modifiers visible to the type system. */
+type TalentSystem = TalentData & Pick<ModifiersTemplate, 'modifiers'>;
+
 /**
  * Dialog for editing complex talent data fields.
  * @extends ApplicationV2
@@ -66,7 +69,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * The item being edited.
      * @type {Item}
      */
-    item: { name: string; system: TalentData; update: (data: Record<string, unknown>) => Promise<unknown> };
+    item: { name: string; system: TalentSystem; update: (data: Record<string, unknown>) => Promise<unknown> };
 
     /**
      * Current active section.
@@ -81,7 +84,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     constructor(options: Record<string, unknown> = {}) {
         super(options);
         this.item = options.item as typeof this.item;
-        this.#activeSection = (options.initialSection as string) || 'prerequisites';
+        const initialSection = options.initialSection;
+        this.#activeSection = typeof initialSection === 'string' && initialSection !== '' ? initialSection : 'prerequisites';
     }
 
     /* -------------------------------------------- */
@@ -100,7 +104,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /** @override */
     // eslint-disable-next-line @typescript-eslint/require-await
     async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
-        const system: TalentData = this.item.system;
+        const system: TalentSystem = this.item.system;
 
         // Prepare characteristic options
         const characteristicOptions = this._getCharacteristicOptions();
@@ -145,11 +149,11 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object} Prepared prerequisites data
      * @protected
      */
-    _preparePrerequisitesData(system: TalentData): Record<string, unknown> {
-        const prereqs = system.prerequisites || { text: '', characteristics: {}, skills: [], talents: [] };
+    _preparePrerequisitesData(system: TalentSystem): Record<string, unknown> {
+        const prereqs = system.prerequisites;
 
         // Convert characteristics object to array for template iteration
-        const characteristicReqs = Object.entries(prereqs.characteristics || {})
+        const characteristicReqs = Object.entries(prereqs.characteristics)
             .filter(([_, value]) => (value as number) > 0)
             .map(([key, value]) => ({
                 key,
@@ -158,10 +162,10 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             }));
 
         return {
-            text: prereqs.text || '',
+            text: prereqs.text,
             characteristics: characteristicReqs,
-            skills: (prereqs.skills || []).map((s: string) => ({ name: s })),
-            talents: (prereqs.talents || []).map((t: string) => ({ name: t })),
+            skills: prereqs.skills.map((s) => ({ name: s })),
+            talents: prereqs.talents.map((t) => ({ name: t })),
         };
     }
 
@@ -173,11 +177,11 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object} Prepared modifiers data
      * @protected
      */
-    _prepareModifiersEditData(system: TalentData): Record<string, unknown> {
-        const mods = (system as TalentData & Pick<ModifiersTemplate, 'modifiers'>).modifiers || ({} as ModifiersTemplate['modifiers']);
+    _prepareModifiersEditData(system: TalentSystem): Record<string, unknown> {
+        const mods = system.modifiers;
 
         // Convert characteristics object to array
-        const characteristics = Object.entries(mods.characteristics || {})
+        const characteristics = Object.entries(mods.characteristics)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
@@ -186,7 +190,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             }));
 
         // Convert skills object to array
-        const skills = Object.entries(mods.skills || {})
+        const skills = Object.entries(mods.skills)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
@@ -195,7 +199,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             }));
 
         // Combat modifiers
-        const combat = Object.entries(mods.combat || {})
+        const combat = Object.entries(mods.combat)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
@@ -204,7 +208,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             }));
 
         // Resource modifiers
-        const resources = Object.entries(mods.resources || {})
+        const resources = Object.entries(mods.resources)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
@@ -213,12 +217,12 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             }));
 
         // Other modifiers
-        const other = (mods.other || []).map((mod: { key: string; label: string; value: number; mode: string }, index: number) => ({
+        const other = mods.other.map((mod, index) => ({
             index,
-            key: mod.key || '',
-            label: mod.label || '',
-            value: mod.value || 0,
-            mode: mod.mode || 'add',
+            key: mod.key,
+            label: mod.label,
+            value: mod.value,
+            mode: mod.mode,
         }));
 
         return {
@@ -238,34 +242,30 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object} Prepared situational data
      * @protected
      */
-    _prepareSituationalEditData(system: TalentData): Record<string, unknown> {
-        const situational = (system as TalentData & Pick<ModifiersTemplate, 'modifiers'>).modifiers?.situational || {
-            characteristics: [],
-            skills: [],
-            combat: [],
-        };
+    _prepareSituationalEditData(system: TalentSystem): Record<string, unknown> {
+        const situational = system.modifiers.situational;
 
         return {
-            characteristics: (situational.characteristics || []).map((mod: { key: string; value: number; condition: string }, index: number) => ({
+            characteristics: situational.characteristics.map((mod, index) => ({
                 index,
-                key: mod.key || '',
+                key: mod.key,
                 label: this._getCharacteristicLabel(mod.key),
-                value: mod.value || 0,
-                condition: mod.condition || '',
+                value: mod.value,
+                condition: mod.condition,
             })),
-            skills: (situational.skills || []).map((mod: { key: string; value: number; condition: string }, index: number) => ({
+            skills: situational.skills.map((mod, index) => ({
                 index,
-                key: mod.key || '',
+                key: mod.key,
                 label: this._formatSkillLabel(mod.key),
-                value: mod.value || 0,
-                condition: mod.condition || '',
+                value: mod.value,
+                condition: mod.condition,
             })),
-            combat: (situational.combat || []).map((mod: { key: string; value: number; condition: string }, index: number) => ({
+            combat: situational.combat.map((mod, index) => ({
                 index,
-                key: mod.key || '',
+                key: mod.key,
                 label: this._getCombatLabel(mod.key),
-                value: mod.value || 0,
-                condition: mod.condition || '',
+                value: mod.value,
+                condition: mod.condition,
             })),
         };
     }
@@ -278,32 +278,32 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object} Prepared grants data
      * @protected
      */
-    _prepareGrantsEditData(system: TalentData): Record<string, unknown> {
-        const grants = system.grants || { skills: [], talents: [], traits: [], specialAbilities: [] };
+    _prepareGrantsEditData(system: TalentSystem): Record<string, unknown> {
+        const grants = system.grants;
 
         return {
-            skills: (grants.skills || []).map((skill: { name: string; specialization: string; level: string }, index: number) => ({
+            skills: grants.skills.map((skill, index) => ({
                 index,
-                name: skill.name || '',
-                specialization: skill.specialization || '',
-                level: skill.level || 'trained',
+                name: skill.name,
+                specialization: skill.specialization,
+                level: skill.level !== '' ? skill.level : 'trained',
             })),
-            talents: (grants.talents || []).map((talent: { name: string; specialization: string; uuid: string }, index: number) => ({
+            talents: grants.talents.map((talent, index) => ({
                 index,
-                name: talent.name || '',
-                specialization: talent.specialization || '',
-                uuid: talent.uuid || '',
+                name: talent.name,
+                specialization: talent.specialization,
+                uuid: talent.uuid,
             })),
-            traits: (grants.traits || []).map((trait: { name: string; level: number; uuid: string }, index: number) => ({
+            traits: grants.traits.map((trait, index) => ({
                 index,
-                name: trait.name || '',
-                level: trait.level ?? null,
-                uuid: trait.uuid || '',
+                name: trait.name,
+                level: trait.level !== 0 ? trait.level : null,
+                uuid: trait.uuid,
             })),
-            specialAbilities: (grants.specialAbilities || []).map((ability: { name: string; description: string }, index: number) => ({
+            specialAbilities: grants.specialAbilities.map((ability, index) => ({
                 index,
-                name: ability.name || '',
-                description: ability.description || '',
+                name: ability.name,
+                description: ability.description,
             })),
         };
     }
@@ -452,7 +452,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _getCharacteristicLabel(key: string): string {
-        const labels = {
+        const labels: Record<string, string> = {
             weaponSkill: 'Weapon Skill',
             ballisticSkill: 'Ballistic Skill',
             strength: 'Strength',
@@ -464,7 +464,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             fellowship: 'Fellowship',
             influence: 'Influence',
         };
-        return (labels as any)[key] || key;
+        return labels[key] ?? key;
     }
 
     /**
@@ -474,7 +474,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _formatSkillLabel(key: string): string {
-        if (!key) return '';
+        if (key === '') return '';
         return key
             .replace(/([A-Z])/g, ' $1')
             .replace(/^./, (str) => str.toUpperCase())
@@ -488,7 +488,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _getCombatLabel(key: string): string {
-        const labels = {
+        const labels: Record<string, string> = {
             attack: 'Attack Bonus',
             damage: 'Damage Bonus',
             penetration: 'Penetration',
@@ -496,7 +496,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             initiative: 'Initiative',
             speed: 'Movement Speed',
         };
-        return (labels as any)[key] || key;
+        return labels[key] ?? key;
     }
 
     /**
@@ -506,13 +506,13 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _getResourceLabel(key: string): string {
-        const labels = {
+        const labels: Record<string, string> = {
             wounds: 'Wounds',
             fate: 'Fate Points',
             insanity: 'Insanity Threshold',
             corruption: 'Corruption Threshold',
         };
-        return (labels as any)[key] || key;
+        return labels[key] ?? key;
     }
 
     /* -------------------------------------------- */
@@ -538,7 +538,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             tab.addEventListener('click', (event: Event) => {
                 event.preventDefault();
                 const section = (tab as HTMLElement).dataset.section;
-                if (!section) return;
+                if (section === undefined || section === '') return;
 
                 // Update active tab
                 tabs.forEach((t: Element) => t.classList.remove('active'));
@@ -566,86 +566,100 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {HTMLFormElement} form - The form element
      * @param {FormDataExtended} formData - The form data
      */
-    static async #formHandler(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
-        const data = foundry.utils.expandObject(formData.object as Record<string, unknown>) as Record<string, Record<string, unknown>>;
+    static async #formHandler(this: TalentEditorDialog, _event: Event, _form: HTMLFormElement, formData: { object: Record<string, unknown> }): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry expandObject yields a free-form nested structure shaped by template field names
+        const data = foundry.utils.expandObject(formData.object) as Record<string, Record<string, unknown> | undefined>;
 
         // Process the form data into the proper structure
         const updateData: Record<string, unknown> = {};
 
         // Helper to extract entries from an indexed sub-object
-        const entries = (obj: unknown): Record<string, unknown>[] => (obj && typeof obj === 'object' ? (Object.values(obj) as Record<string, unknown>[]) : []);
+        const entries = (obj: unknown): Record<string, unknown>[] =>
+            obj !== null && obj !== undefined && typeof obj === 'object' ? (Object.values(obj) as Record<string, unknown>[]) : [];
+
+        // Helper to coerce a form field to a non-empty string, returning '' otherwise.
+        const str = (v: unknown): string => (typeof v === 'string' ? v : '');
+        // Helper to coerce to integer, defaulting to 0.
+        const int = (v: unknown): number => {
+            const n = parseInt(String(v), 10);
+            return isNaN(n) ? 0 : n;
+        };
 
         // Process prerequisites
-        if (data.prerequisites) {
-            updateData['system.prerequisites.text'] = data.prerequisites.text || '';
+        const prerequisites = data.prerequisites;
+        if (prerequisites !== undefined) {
+            updateData['system.prerequisites.text'] = str(prerequisites.text);
 
             // Convert characteristics array back to object
             const charReqs: Record<string, unknown> = {};
-            for (const entry of entries(data.prerequisites.characteristics)) {
-                if (entry.key && entry.value) {
-                    charReqs[entry.key as string] = parseInt(entry.value as string) || 0;
+            for (const entry of entries(prerequisites.characteristics)) {
+                const key = str(entry.key);
+                if (key !== '' && entry.value !== undefined && entry.value !== '') {
+                    charReqs[key] = int(entry.value);
                 }
             }
             updateData['system.prerequisites.characteristics'] = charReqs;
 
             // Process skills array
             const skillReqs: string[] = [];
-            for (const entry of entries(data.prerequisites.skills)) {
-                if (entry.name) skillReqs.push(entry.name as string);
+            for (const entry of entries(prerequisites.skills)) {
+                const name = str(entry.name);
+                if (name !== '') skillReqs.push(name);
             }
             updateData['system.prerequisites.skills'] = skillReqs;
 
             // Process talents array
             const talentReqs: string[] = [];
-            for (const entry of entries(data.prerequisites.talents)) {
-                if (entry.name) talentReqs.push(entry.name as string);
+            for (const entry of entries(prerequisites.talents)) {
+                const name = str(entry.name);
+                if (name !== '') talentReqs.push(name);
             }
             updateData['system.prerequisites.talents'] = talentReqs;
         }
 
         // Process modifiers
-        if (data.modifiers) {
+        const modifiers = data.modifiers;
+        if (modifiers !== undefined) {
             // Characteristics
             const charMods: Record<string, unknown> = {};
-            for (const entry of entries(data.modifiers.characteristics)) {
-                if (entry.key) {
-                    charMods[entry.key as string] = parseInt(entry.value as string) || 0;
-                }
+            for (const entry of entries(modifiers.characteristics)) {
+                const key = str(entry.key);
+                if (key !== '') charMods[key] = int(entry.value);
             }
             updateData['system.modifiers.characteristics'] = charMods;
 
             // Skills
             const skillMods: Record<string, unknown> = {};
-            for (const entry of entries(data.modifiers.skills)) {
-                if (entry.key) {
-                    skillMods[entry.key as string] = parseInt(entry.value as string) || 0;
-                }
+            for (const entry of entries(modifiers.skills)) {
+                const key = str(entry.key);
+                if (key !== '') skillMods[key] = int(entry.value);
             }
             updateData['system.modifiers.skills'] = skillMods;
 
             // Combat
-            for (const entry of entries(data.modifiers.combat)) {
-                if (entry.key) {
-                    updateData[`system.modifiers.combat.${entry.key as string}`] = parseInt(entry.value as string) || 0;
-                }
+            for (const entry of entries(modifiers.combat)) {
+                const key = str(entry.key);
+                if (key !== '') updateData[`system.modifiers.combat.${key}`] = int(entry.value);
             }
 
             // Resources
-            for (const entry of entries(data.modifiers.resources)) {
-                if (entry.key) {
-                    updateData[`system.modifiers.resources.${entry.key as string}`] = parseInt(entry.value as string) || 0;
-                }
+            for (const entry of entries(modifiers.resources)) {
+                const key = str(entry.key);
+                if (key !== '') updateData[`system.modifiers.resources.${key}`] = int(entry.value);
             }
 
             // Other modifiers
             const otherMods: Record<string, unknown>[] = [];
-            for (const entry of entries(data.modifiers.other)) {
-                if (entry.key) {
+            for (const entry of entries(modifiers.other)) {
+                const key = str(entry.key);
+                if (key !== '') {
+                    const label = str(entry.label);
+                    const mode = str(entry.mode);
                     otherMods.push({
-                        key: entry.key,
-                        label: entry.label || entry.key,
-                        value: parseInt(entry.value as string) || 0,
-                        mode: entry.mode || 'add',
+                        key,
+                        label: label !== '' ? label : key,
+                        value: int(entry.value),
+                        mode: mode !== '' ? mode : 'add',
                     });
                 }
             }
@@ -653,57 +667,37 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
         }
 
         // Process situational modifiers
-        if (data.situational) {
-            // Characteristics - icon is derived, don't save it
-            const sitCharMods: Record<string, unknown>[] = [];
-            for (const entry of entries(data.situational.characteristics)) {
-                if (entry.key && entry.condition) {
-                    sitCharMods.push({
-                        key: entry.key,
-                        value: parseInt(entry.value as string) || 0,
-                        condition: entry.condition,
-                    });
+        const situational = data.situational;
+        if (situational !== undefined) {
+            const collect = (entriesIn: unknown): Record<string, unknown>[] => {
+                const out: Record<string, unknown>[] = [];
+                for (const entry of entries(entriesIn)) {
+                    const key = str(entry.key);
+                    const condition = str(entry.condition);
+                    if (key !== '' && condition !== '') {
+                        out.push({ key, value: int(entry.value), condition });
+                    }
                 }
-            }
-            updateData['system.modifiers.situational.characteristics'] = sitCharMods;
-
-            // Skills - icon is derived, don't save it
-            const sitSkillMods: Record<string, unknown>[] = [];
-            for (const entry of entries(data.situational.skills)) {
-                if (entry.key && entry.condition) {
-                    sitSkillMods.push({
-                        key: entry.key,
-                        value: parseInt(entry.value as string) || 0,
-                        condition: entry.condition,
-                    });
-                }
-            }
-            updateData['system.modifiers.situational.skills'] = sitSkillMods;
-
-            // Combat - icon is derived, don't save it
-            const sitCombatMods: Record<string, unknown>[] = [];
-            for (const entry of entries(data.situational.combat)) {
-                if (entry.key && entry.condition) {
-                    sitCombatMods.push({
-                        key: entry.key,
-                        value: parseInt(entry.value as string) || 0,
-                        condition: entry.condition,
-                    });
-                }
-            }
-            updateData['system.modifiers.situational.combat'] = sitCombatMods;
+                return out;
+            };
+            updateData['system.modifiers.situational.characteristics'] = collect(situational.characteristics);
+            updateData['system.modifiers.situational.skills'] = collect(situational.skills);
+            updateData['system.modifiers.situational.combat'] = collect(situational.combat);
         }
 
         // Process grants
-        if (data.grants) {
+        const grants = data.grants;
+        if (grants !== undefined) {
             // Skills
             const grantedSkills: Record<string, unknown>[] = [];
-            for (const entry of entries(data.grants.skills)) {
-                if (entry.name) {
+            for (const entry of entries(grants.skills)) {
+                const name = str(entry.name);
+                if (name !== '') {
+                    const level = str(entry.level);
                     grantedSkills.push({
-                        name: entry.name,
-                        specialization: entry.specialization || '',
-                        level: entry.level || 'trained',
+                        name,
+                        specialization: str(entry.specialization),
+                        level: level !== '' ? level : 'trained',
                     });
                 }
             }
@@ -711,12 +705,13 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
             // Talents
             const grantedTalents: Record<string, unknown>[] = [];
-            for (const entry of entries(data.grants.talents)) {
-                if (entry.name) {
+            for (const entry of entries(grants.talents)) {
+                const name = str(entry.name);
+                if (name !== '') {
                     grantedTalents.push({
-                        name: entry.name,
-                        specialization: entry.specialization || '',
-                        uuid: entry.uuid || '',
+                        name,
+                        specialization: str(entry.specialization),
+                        uuid: str(entry.uuid),
                     });
                 }
             }
@@ -724,12 +719,14 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
             // Traits
             const grantedTraits: Record<string, unknown>[] = [];
-            for (const entry of entries(data.grants.traits)) {
-                if (entry.name) {
+            for (const entry of entries(grants.traits)) {
+                const name = str(entry.name);
+                if (name !== '') {
+                    const level = str(entry.level);
                     grantedTraits.push({
-                        name: entry.name,
-                        level: entry.level ? parseInt(entry.level as string) : null,
-                        uuid: entry.uuid || '',
+                        name,
+                        level: level !== '' ? parseInt(level, 10) : null,
+                        uuid: str(entry.uuid),
                     });
                 }
             }
@@ -737,11 +734,12 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
             // Special Abilities
             const grantedAbilities: Record<string, unknown>[] = [];
-            for (const entry of entries(data.grants.specialAbilities)) {
-                if (entry.name) {
+            for (const entry of entries(grants.specialAbilities)) {
+                const name = str(entry.name);
+                if (name !== '') {
                     grantedAbilities.push({
-                        name: entry.name,
-                        description: entry.description || '',
+                        name,
+                        description: str(entry.description),
                     });
                 }
             }
@@ -759,13 +757,13 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {Event} event - Click event
      * @param {HTMLElement} target - The clicked button
      */
-    static #addItem(this: any, event: Event, target: HTMLElement): void {
+    static #addItem(this: TalentEditorDialog, _event: Event, target: HTMLElement): void {
         const { category, type } = target.dataset;
-        if (!category || !type) return;
+        if (category === undefined || category === '' || type === undefined || type === '') return;
 
         // Find the container and add a new row
         const container = this.element.querySelector(`.ted-list[data-category="${category}"][data-type="${type}"]`);
-        if (!container) return;
+        if (container === null) return;
 
         // Get current count for indexing
         const existingRows = container.querySelectorAll('.ted-list-row');
@@ -773,7 +771,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
         // Create new row based on type
         const newRow = this._createNewRow(category, type, newIndex);
-        if (newRow) {
+        if (newRow !== null) {
             container.insertAdjacentHTML('beforeend', newRow);
         }
     }
@@ -978,9 +976,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {Event} event - Click event
      * @param {HTMLElement} target - The clicked button
      */
-    static #removeItem(this: any, event: Event, target: HTMLElement): void {
+    static #removeItem(this: TalentEditorDialog, _event: Event, target: HTMLElement): void {
         const row = target.closest('.ted-list-row');
-        if (row) {
+        if (row !== null) {
             row.remove();
         }
     }
@@ -991,9 +989,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {Event} event - Click event
      * @param {HTMLElement} target - The clicked button
      */
-    static async #switchSection(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #switchSection(this: TalentEditorDialog, _event: Event, target: HTMLElement): Promise<void> {
         const section = target.dataset.section;
-        if (!section) return;
+        if (section === undefined || section === '') return;
 
         this.#activeSection = section;
         await this.render({ force: true });
