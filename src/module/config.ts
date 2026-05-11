@@ -71,6 +71,12 @@ interface CombatActionConfig {
     description: string;
     icon: string;
     subtypes: string[];
+    /** Talent key the actor needs to take this action — used at render time to disable
+        and tooltip-explain entries the actor doesn't yet qualify for. */
+    requiresTalent?: string;
+    /** True if the action is only available to psykers (any actor with psy rating > 0
+        or any psychic power item). */
+    requiresPsyker?: boolean;
 }
 
 interface CraftsmanshipRuleEffect {
@@ -1481,6 +1487,33 @@ WH40K.combatActions = {
             icon: 'fa-hands',
             subtypes: ['Attack', 'Melee or Ranged'],
         },
+        {
+            key: 'swiftAttack',
+            label: 'WH40K.Combat.Action.SwiftAttack',
+            type: 'half',
+            description: 'WH40K.Combat.Action.SwiftAttackDesc',
+            icon: 'fa-arrows-rotate',
+            subtypes: ['Attack', 'Melee'],
+            requiresTalent: 'swiftAttack',
+        },
+        {
+            key: 'lightningAttack',
+            label: 'WH40K.Combat.Action.LightningAttack',
+            type: 'half',
+            description: 'WH40K.Combat.Action.LightningAttackDesc',
+            icon: 'fa-bolt-lightning',
+            subtypes: ['Attack', 'Melee'],
+            requiresTalent: 'lightningAttack',
+        },
+        {
+            key: 'focusPower',
+            label: 'WH40K.Combat.Action.FocusPower',
+            type: 'varies',
+            description: 'WH40K.Combat.Action.FocusPowerDesc',
+            icon: 'fa-eye-low-vision',
+            subtypes: ['Psychic'],
+            requiresPsyker: true,
+        },
     ],
 
     movement: [
@@ -1550,6 +1583,14 @@ WH40K.combatActions = {
             description: 'WH40K.Combat.Action.ParryDesc',
             icon: 'fa-shield-alt',
             subtypes: ['Defence', 'Melee'],
+        },
+        {
+            key: 'evasion',
+            label: 'WH40K.Combat.Action.Evasion',
+            type: 'reaction',
+            description: 'WH40K.Combat.Action.EvasionDesc',
+            icon: 'fa-person-running',
+            subtypes: ['Defence', 'Movement'],
         },
     ],
 
