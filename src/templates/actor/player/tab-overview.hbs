@@ -363,34 +363,11 @@
                         </div>
                 {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
 
-                {{!-- Armour --}}
+                {{!-- Armour — reuses the combat-tab silhouette (issue #7).
+                     `compact=true` drops the fitted-items strip + roll-range badge so the
+                     silhouette fits inside the dashboard-zone footprint. --}}
                 {{#> systems/wh40k-rpg/templates/actor/partial/dashboard-zone title="Armour" icon="fa-shield-alt" zoneClass="tw-border-l-[3px] tw-border-l-[#7f8c8d]"}}
-                        <div class="tw-grid tw-gap-[3px] tw-max-w-[180px] tw-mx-auto" style="grid-template-columns: 1fr 1fr 1fr; grid-template-areas: '. head .' 'rarm body larm' 'rleg . lleg';">
-                            <div class=" tw-flex tw-flex-col tw-items-center tw-justify-center tw-px-[2px] tw-py-[3px] tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-justify-self-center tw-min-w-[44px]" title="Head: 01-10">
-                                <span class="tw-text-[0.5rem] tw-font-bold tw-uppercase tw-text-[color:var(--color-text-tertiary)] tw-leading-none tw-mb-[1px]">Head</span>
-                                <span class="tw-text-[0.9rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.armour.head.total}}</span>
-                            </div>
-                            <div class=" tw-flex tw-flex-col tw-items-center tw-justify-center tw-px-[2px] tw-py-[3px] tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-self-center" title="R.Arm: 11-20">
-                                <span class="tw-text-[0.5rem] tw-font-bold tw-uppercase tw-text-[color:var(--color-text-tertiary)] tw-leading-none tw-mb-[1px]">R.Arm</span>
-                                <span class="tw-text-[0.9rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.armour.rightArm.total}}</span>
-                            </div>
-                            <div class=" tw-flex tw-flex-col tw-items-center tw-justify-center tw-px-[2px] tw-py-[3px] tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-min-h-[50px]" title="Body: 31-70">
-                                <span class="tw-text-[0.5rem] tw-font-bold tw-uppercase tw-text-[color:var(--color-text-tertiary)] tw-leading-none tw-mb-[1px]">Body</span>
-                                <span class="tw-text-[1.1rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.armour.body.total}}</span>
-                            </div>
-                            <div class=" tw-flex tw-flex-col tw-items-center tw-justify-center tw-px-[2px] tw-py-[3px] tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-self-center" title="L.Arm: 21-30">
-                                <span class="tw-text-[0.5rem] tw-font-bold tw-uppercase tw-text-[color:var(--color-text-tertiary)] tw-leading-none tw-mb-[1px]">L.Arm</span>
-                                <span class="tw-text-[0.9rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.armour.leftArm.total}}</span>
-                            </div>
-                            <div class=" tw-flex tw-flex-col tw-items-center tw-justify-center tw-px-[2px] tw-py-[3px] tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-justify-self-end" title="R.Leg: 71-85">
-                                <span class="tw-text-[0.5rem] tw-font-bold tw-uppercase tw-text-[color:var(--color-text-tertiary)] tw-leading-none tw-mb-[1px]">R.Leg</span>
-                                <span class="tw-text-[0.9rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.armour.rightLeg.total}}</span>
-                            </div>
-                            <div class=" tw-flex tw-flex-col tw-items-center tw-justify-center tw-px-[2px] tw-py-[3px] tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-justify-self-start" title="L.Leg: 86-00">
-                                <span class="tw-text-[0.5rem] tw-font-bold tw-uppercase tw-text-[color:var(--color-text-tertiary)] tw-leading-none tw-mb-[1px]">L.Leg</span>
-                                <span class="tw-text-[0.9rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-primary)] tw-leading-none">{{system.armour.leftLeg.total}}</span>
-                            </div>
-                        </div>
+                        {{> systems/wh40k-rpg/templates/actor/partial/armour-silhouette.hbs armourDisplay=armourDisplay compact=true}}
                 {{/systems/wh40k-rpg/templates/actor/partial/dashboard-zone}}
             </div>
 
