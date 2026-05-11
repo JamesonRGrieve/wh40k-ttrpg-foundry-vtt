@@ -12,7 +12,7 @@
         compact — when true, drop the extra fitted-items strip and roll-range
                   badge to fit dashboard-zone footprints (Overview tab).
 --}}
-<div class="tw-grid [grid-template-columns:80px_1fr_80px] [grid-template-rows:auto_auto_auto] [grid-template-areas:'._head_.'_'rarm_body_larm'_'rleg_body_lleg'] tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-xs,4px)] tw-w-full tw-max-w-[300px] tw-mx-auto">
+<div class="tw-grid {{#if compact}}[grid-template-columns:1fr_1fr_1fr] tw-max-w-full{{else}}[grid-template-columns:80px_1fr_80px] tw-max-w-[300px]{{/if}} [grid-template-rows:auto_auto_auto] [grid-template-areas:'._head_.'_'rarm_body_larm'_'rleg_body_lleg'] tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-xs,4px)] tw-w-full tw-mx-auto">
     {{! Head (centered at top) }}
     <div class="[grid-area:head] tw-justify-self-center tw-min-w-[72px] tw-min-h-[68px] tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[var(--wh40k-space-sm,8px)] tw-bg-[var(--wh40k-panel-bg,rgba(45,40,35,0.7))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,rgba(180,140,100,0.4))] tw-rounded-[var(--wh40k-radius-lg,8px)] tw-shadow-[0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),inset_0_1px_0_rgba(255,255,255,0.1)] tw-transition-all tw-duration-200 tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-gold hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),0_0_8px_rgba(212,175,55,0.2)]"
          data-location="head"
@@ -122,7 +122,7 @@
     </div>
 
     {{! Right Leg (left side of screen, character's right) }}
-    <div class="[grid-area:rleg] tw-justify-self-end tw-self-start tw-min-h-[120px] tw-min-w-[65px] tw-mr-[-40px] tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[var(--wh40k-space-sm,8px)] tw-bg-[var(--wh40k-panel-bg,rgba(45,40,35,0.7))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,rgba(180,140,100,0.4))] tw-rounded-[var(--wh40k-radius-lg,8px)] tw-shadow-[0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),inset_0_1px_0_rgba(255,255,255,0.1)] tw-transition-all tw-duration-200 tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-gold hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),0_0_8px_rgba(212,175,55,0.2)]"
+    <div class="[grid-area:rleg] tw-justify-self-end tw-self-start tw-min-h-[120px] tw-min-w-[65px] {{#unless compact}}tw-mr-[-40px]{{/unless}} tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[var(--wh40k-space-sm,8px)] tw-bg-[var(--wh40k-panel-bg,rgba(45,40,35,0.7))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,rgba(180,140,100,0.4))] tw-rounded-[var(--wh40k-radius-lg,8px)] tw-shadow-[0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),inset_0_1px_0_rgba(255,255,255,0.1)] tw-transition-all tw-duration-200 tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-gold hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),0_0_8px_rgba(212,175,55,0.2)]"
          data-location="rightLeg"
          data-roll-min="71"
          data-roll-max="85"
@@ -149,7 +149,7 @@
     </div>
 
     {{! Left Leg (right side of screen, character's left) }}
-    <div class="[grid-area:lleg] tw-justify-self-start tw-self-start tw-min-h-[120px] tw-min-w-[65px] tw-ml-[-40px] tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[var(--wh40k-space-sm,8px)] tw-bg-[var(--wh40k-panel-bg,rgba(45,40,35,0.7))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,rgba(180,140,100,0.4))] tw-rounded-[var(--wh40k-radius-lg,8px)] tw-shadow-[0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),inset_0_1px_0_rgba(255,255,255,0.1)] tw-transition-all tw-duration-200 tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-gold hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),0_0_8px_rgba(212,175,55,0.2)]"
+    <div class="[grid-area:lleg] tw-justify-self-start tw-self-start tw-min-h-[120px] tw-min-w-[65px] {{#unless compact}}tw-ml-[-40px]{{/unless}} tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[var(--wh40k-space-sm,8px)] tw-bg-[var(--wh40k-panel-bg,rgba(45,40,35,0.7))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,rgba(180,140,100,0.4))] tw-rounded-[var(--wh40k-radius-lg,8px)] tw-shadow-[0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),inset_0_1px_0_rgba(255,255,255,0.1)] tw-transition-all tw-duration-200 tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-gold hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),0_0_8px_rgba(212,175,55,0.2)]"
          data-location="leftLeg"
          data-roll-min="86"
          data-roll-max="100"
