@@ -32,7 +32,6 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
         const get = (key: string): string | number => this.readOriginPathField(actor, key);
         return [
-            this.makePlayerField(actor),
             this.makeField('Patron', 'system.originPath.homeWorld', get('homeWorld'), 'Patron'),
             this.makeField('Faction', 'system.originPath.background', get('background'), 'Faction'),
             this.makeField('Role', 'system.originPath.role', get('role')),

@@ -47,7 +47,6 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
         const get = (key: string): string | number => this.readOriginPathField(actor, key);
         return [
-            this.makePlayerField(actor),
             this.makeField('Home World', 'system.originPath.homeWorld', get('homeWorld')),
             this.makeField('Regiment', 'system.originPath.background', get('background')),
             this.makeField('Speciality', 'system.originPath.role', get('role'), 'Speciality'),
