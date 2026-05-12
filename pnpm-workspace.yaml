@@ -1,4 +1,14 @@
+blockExoticSubdeps: false
+
 onlyBuiltDependencies:
   - '@league-of-foundry-developers/foundry-vtt-types'
   - classic-level
+  - esbuild
   - unrs-resolver
+
+allowBuilds:
+  '@league-of-foundry-developers/foundry-vtt-types': true
+  classic-level: true
+  es5-ext: false
+  esbuild: true
+  unrs-resolver: true
