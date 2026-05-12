@@ -1,5 +1,12 @@
 pnpm exec lint-staged --hide-unstaged
 
+# Biome diagnostics ratchet: blocks commits that increase the total (errors +
+# warnings) count from biome. Mirrors the eslint ratchet. Update via:
+# pnpm biome:ratchet:update. The raw `lint:biome` invocation is still available
+# via `pnpm check`; this gate is the one that runs on every commit.
+echo "[pre-commit] running biome ratchet…"
+pnpm -s biome:ratchet
+
 # Regenerate i18n key types from src/lang/en.json. The codegen is idempotent;
 # if the langpack didn't change, the file is byte-for-byte identical and git
 # sees no change. New keys flow into src/module/types/i18n-keys.d.ts so the
