@@ -763,7 +763,7 @@ export default class CharacterSheet extends BaseActorSheet {
         await super._onFirstRender(context, options);
 
         // Ensure initial tab is active
-        const activeTab = this.tabGroups.primary ?? 'overview';
+        const activeTab = this.tabGroups.primary;
 
         // Add active class to the initial tab content
         const tabContent = this.element.querySelector(`section.tab[data-tab="${activeTab}"]`);
@@ -1165,7 +1165,7 @@ export default class CharacterSheet extends BaseActorSheet {
         loadoutContext.equippedCount = loadoutContext.equippedItems.length;
 
         // Encumbrance percentage for bar
-        const enc = this.actor.encumbrance ?? {};
+        const enc = this.actor.encumbrance;
         const encMax = enc.max || 1;
         loadoutContext.encumbrancePercent = Math.min(100, Math.round((enc.value / encMax) * 100));
 
@@ -1420,7 +1420,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     _prepareDynastyData(): Record<string, unknown> {
-        const pf = (this.actor.system?.rogueTrader?.profitFactor ?? {}) as {
+        const pf = (this.actor.system.rogueTrader?.profitFactor ?? {}) as {
             current?: number;
             starting?: number;
             modifier?: number;
@@ -1535,7 +1535,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareAptitudePills(): Array<{ aptitude: string; sources: string[] }> {
         const actor = this.actor;
-        const aptitudes = (actor.system.aptitudes ?? []) as string[];
+        const aptitudes = actor.system.aptitudes as string[];
         if (aptitudes.length === 0) return [];
 
         const sourcesOf: Map<string, string[]> = new Map();
@@ -1632,15 +1632,15 @@ export default class CharacterSheet extends BaseActorSheet {
             return {
                 key,
                 label,
-                current: skill.current ?? 0,
+                current: skill.current,
                 characteristic: charKey,
                 charShort: char.short !== '' ? char.short : charKey,
                 breakdown: this._getSkillBreakdown(skill as SkillLike, char),
                 tooltipData: JSON.stringify({
                     name: label,
-                    value: skill.current ?? 0,
+                    value: skill.current,
                     characteristic: char.label !== '' ? char.label : charKey,
-                    charValue: char.total ?? 0,
+                    charValue: char.total,
                     breakdown: this._getSkillBreakdown(skill as SkillLike, char),
                 }),
             };
@@ -1652,8 +1652,8 @@ export default class CharacterSheet extends BaseActorSheet {
         const specialistFavouriteRows = specialistFavorites
             .map((compositeKey) => {
                 const [skillKey, indexStr] = compositeKey.split(':');
-                const index = Number.parseInt(indexStr ?? '', 10);
-                if (skillKey === undefined || skillKey === '' || Number.isNaN(index)) return null;
+                const index = Number.parseInt(indexStr, 10);
+                if (skillKey === '' || Number.isNaN(index)) return null;
                 const parent = skills[skillKey] as { entries?: unknown[]; characteristic?: string; label?: string } | undefined;
                 const entries = parent?.entries;
                 if (!Array.isArray(entries)) return null;
@@ -1676,7 +1676,7 @@ export default class CharacterSheet extends BaseActorSheet {
                         name: composedLabel,
                         value: (entry.current as number | undefined) ?? 0,
                         characteristic: char.label !== '' ? char.label : charKey,
-                        charValue: char.total ?? 0,
+                        charValue: char.total,
                         breakdown: this._getSkillBreakdown(entry, char),
                     }),
                 };
@@ -1941,7 +1941,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #dodge(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
-            await this.actor.rollSkill?.('dodge');
+            await this.actor.rollSkill('dodge');
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error);
             this._notify('error', `Dodge roll failed: ${message}`, {
@@ -1959,7 +1959,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #parry(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
-            await this.actor.rollSkill?.('parry');
+            await this.actor.rollSkill('parry');
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error);
             this._notify('error', `Parry roll failed: ${message}`, {
@@ -1999,7 +1999,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #rollInitiative(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
-            const agBonus = this.actor.system.characteristics?.agility?.bonus ?? 0;
+            const agBonus = this.actor.system.characteristics.agility.bonus;
 
             // Shift-click rolls immediately with no modifier — matches the convention used
             // by characteristic rolls elsewhere in the sheet. Otherwise open a small prompt
@@ -2089,7 +2089,7 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #toggleFavoriteAction(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent parent action from triggering
         const actionKey = target.dataset.actionKey;
-        if (!actionKey) return;
+        if (actionKey === undefined || actionKey === '') return;
 
         const currentFavorites = (this.actor.system as Record<string, unknown> & { favoriteCombatActions?: string[] }).favoriteCombatActions ?? [];
         const newFavorites = currentFavorites.includes(actionKey) ? currentFavorites.filter((k: string) => k !== actionKey) : [...currentFavorites, actionKey];
@@ -2212,10 +2212,10 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #setMovementMode(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const movementType = target.dataset.movementType;
-        if (!movementType) return;
+        if (movementType === undefined || movementType === '') return;
 
         // Find the actor's active token on the canvas
-        const token = this.actor.getActiveTokens()?.[0]?.document;
+        const token = this.actor.getActiveTokens()[0]?.document;
         if (!token) {
             ui.notifications.info(`${game.i18n.localize('WH40K.MOVEMENT.Label')}: No active token on canvas.`);
             return;
@@ -2352,13 +2352,13 @@ export default class CharacterSheet extends BaseActorSheet {
         // Backpack → Ship
         backpackChecks.forEach((cb: Element) => {
             const itemId = (cb as HTMLElement).dataset.itemId;
-            if (!itemId) return;
+            if (itemId === undefined || itemId === '') return;
 
             const item = this.actor.items.get(itemId);
             if (!item) return;
 
             const equippable = item.system as Record<string, unknown>;
-            if (typeof (equippable as { stowInShipStorage?: unknown })?.stowInShipStorage === 'function') {
+            if (typeof (equippable as { stowInShipStorage?: unknown }).stowInShipStorage === 'function') {
                 transferOperations.push((equippable as { stowInShipStorage: () => Promise<unknown> }).stowInShipStorage());
                 return;
             }
@@ -2375,13 +2375,13 @@ export default class CharacterSheet extends BaseActorSheet {
         // Ship → Backpack/Carried
         shipChecks.forEach((cb: Element) => {
             const itemId = (cb as HTMLElement).dataset.itemId;
-            if (!itemId) return;
+            if (itemId === undefined || itemId === '') return;
 
             const item = this.actor.items.get(itemId);
             if (!item) return;
 
             const equippable = item.system as Record<string, unknown>;
-            if (typeof (equippable as { removeFromShipStorage?: unknown })?.removeFromShipStorage === 'function') {
+            if (typeof (equippable as { removeFromShipStorage?: unknown }).removeFromShipStorage === 'function') {
                 transferOperations.push((equippable as { removeFromShipStorage: () => Promise<unknown> }).removeFromShipStorage());
                 return;
             }
@@ -2418,7 +2418,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemIds: string[] = [];
         allChecks.forEach((cb: Element) => {
             const id = (cb as HTMLElement).dataset.itemId;
-            if (id) itemIds.push(id);
+            if (id !== undefined && id !== '') itemIds.push(id);
         });
         if (!itemIds.length) return;
 
@@ -2517,7 +2517,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 }
 
                 case 'unequip-all': {
-                    const equippedItems = items.filter((i: WH40KItem) => (i.system as { equipped?: boolean })?.equipped === true);
+                    const equippedItems = items.filter((i: WH40KItem) => (i.system as { equipped?: boolean }).equipped === true);
                     for (const item of equippedItems) {
                         await item.update({ 'system.equipped': false });
                         count++;
@@ -2570,7 +2570,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #addAcquisition(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const acquisitions = this.actor.system?.rogueTrader?.acquisitions;
+        const acquisitions = this.actor.system.rogueTrader?.acquisitions;
         const acquisitionList = Array.isArray(acquisitions) ? acquisitions : [];
         const updatedAcquisitions = structuredClone(acquisitionList);
         updatedAcquisitions.push({ name: '', availability: '', modifier: 0, notes: '', acquired: false });
@@ -2589,7 +2589,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const index = parseInt(target.dataset.index ?? '-1');
         if (isNaN(index) || index < 0) return;
 
-        const acquisitions = this.actor.system?.rogueTrader?.acquisitions;
+        const acquisitions = this.actor.system.rogueTrader?.acquisitions;
         if (!Array.isArray(acquisitions)) {
             await this.actor.update({ 'system.rogueTrader.acquisitions': [] });
             return;
@@ -2711,7 +2711,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #openOriginPathBuilder(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
-            if (game.wh40k?.openOriginPathBuilder) {
+            if (typeof game.wh40k.openOriginPathBuilder === 'function') {
                 const gameSystem = this._resolveGameSystemId();
                 await game.wh40k.openOriginPathBuilder(this.actor, gameSystem ? { gameSystem } : {});
             } else {
@@ -3455,7 +3455,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 // Fallback: create a simple chat message
                 await ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                    content: `<div class="wh40k-power-chat"><h3>${item.name}</h3><p>${item.system.description?.value ?? ''}</p></div>`,
+                    content: `<div class="wh40k-power-chat"><h3>${item.name}</h3><p>${item.system.description.value}</p></div>`,
                 });
             }
         } catch (error) {
@@ -3527,7 +3527,7 @@ export default class CharacterSheet extends BaseActorSheet {
             } else {
                 await ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                    content: `<div class="wh40k-ritual-chat"><h3>${item.name}</h3><p>${item.system.description?.value ?? ''}</p></div>`,
+                    content: `<div class="wh40k-ritual-chat"><h3>${item.name}</h3><p>${item.system.description.value}</p></div>`,
                 });
             }
         } catch (error) {
@@ -3575,7 +3575,7 @@ export default class CharacterSheet extends BaseActorSheet {
             } else {
                 await ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                    content: `<div class="wh40k-order-chat"><h3>${item.name}</h3><p>${item.system.description?.value ?? ''}</p></div>`,
+                    content: `<div class="wh40k-order-chat"><h3>${item.name}</h3><p>${item.system.description.value}</p></div>`,
                 });
             }
         } catch (error) {
@@ -3782,7 +3782,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (isUnknownTalent) {
             const careerKey = (this.actor.system as { originPath?: { career?: string } }).originPath?.career ?? 'rogueTrader';
             AdvancementDialog.open(this.actor, { careerKey });
-            this._notify('info', game.i18n.format('WH40K.Advancement.PurchaseTalentViaAdvancement', { name: item.name ?? '' }), {
+            this._notify('info', game.i18n.format('WH40K.Advancement.PurchaseTalentViaAdvancement', { name: item.name }), {
                 duration: 5000,
             });
             return false;
