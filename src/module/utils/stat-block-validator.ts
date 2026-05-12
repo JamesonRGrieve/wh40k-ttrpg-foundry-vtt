@@ -103,7 +103,7 @@ export default class StatBlockValidator {
         }
 
         // Validate threat level
-        if (data.system?.threatLevel) {
+        if (data.system?.threatLevel !== undefined) {
             this._validateThreatLevel(data.system.threatLevel, result);
         }
 
@@ -129,11 +129,11 @@ export default class StatBlockValidator {
      * @private
      */
     static _validateStructure(data: StatBlockData, result: ValidationResult): void {
-        if (!data.name || data.name === 'Imported NPC') {
+        if (data.name === undefined || data.name === '' || data.name === 'Imported NPC') {
             result.warnings.push("No name extracted. Using default 'Imported NPC'.");
         }
 
-        if (!data.type) {
+        if (data.type === undefined || data.type === '') {
             result.errors.push("Missing actor type. Expected 'npcV2'.");
         } else if (data.type !== 'npcV2') {
             result.warnings.push(`Actor type is '${data.type}', expected 'npcV2'.`);
@@ -175,7 +175,7 @@ export default class StatBlockValidator {
             }
 
             // Check unnatural characteristics
-            if (char.unnatural && char.unnatural > 1) {
+            if (char.unnatural !== undefined && char.unnatural > 1) {
                 result.info.push(`${key} has Unnatural (x${char.unnatural})`);
             }
         }
@@ -213,7 +213,7 @@ export default class StatBlockValidator {
 
         for (const rate of rates) {
             const value = movement[rate];
-            if (value !== undefined && value !== null) {
+            if (value !== undefined) {
                 hasAny = true;
                 if (value < this.statRanges.movement.min || value > this.statRanges.movement.max) {
                     result.warnings.push(
@@ -294,10 +294,10 @@ export default class StatBlockValidator {
 
         // Validate each skill entry
         for (const [key, skill] of Object.entries(trainedSkills)) {
-            if (!skill.name) {
+            if (skill.name === undefined || skill.name === '') {
                 result.warnings.push(`Skill ${key} missing name`);
             }
-            if (!skill.characteristic) {
+            if (skill.characteristic === undefined || skill.characteristic === '') {
                 result.warnings.push(`Skill ${key} missing characteristic`);
             }
         }
@@ -308,11 +308,6 @@ export default class StatBlockValidator {
      * @private
      */
     static _validateItems(items: NonNullable<StatBlockData['items']>, result: ValidationResult): void {
-        if (!Array.isArray(items)) {
-            result.errors.push('Items is not an array');
-            return;
-        }
-
         const talents = items.filter((i) => i.type === 'talent');
         const traits = items.filter((i) => i.type === 'trait');
         const weapons = items.filter((i) => i.type === 'weapon');
@@ -329,11 +324,11 @@ export default class StatBlockValidator {
 
         // Validate item structure
         for (const item of items) {
-            if (!item.name) {
-                result.warnings.push(`Item of type ${item.type} missing name`);
+            if (item.name === undefined || item.name === '') {
+                result.warnings.push(`Item of type ${item.type ?? 'unknown'} missing name`);
             }
-            if (!item.type) {
-                result.warnings.push(`Item '${item.name}' missing type`);
+            if (item.type === undefined || item.type === '') {
+                result.warnings.push(`Item '${item.name ?? 'unnamed'}' missing type`);
             }
         }
     }
@@ -344,11 +339,11 @@ export default class StatBlockValidator {
      */
     static _checkCompleteness(data: StatBlockData, result: ValidationResult): void {
         const components = {
-            name: data.name && data.name !== 'Imported NPC',
-            characteristics: data.system?.characteristics && Object.keys(data.system.characteristics).length > 0,
-            wounds: data.system?.wounds?.max,
-            skills: data.system?.trainedSkills && Object.keys(data.system.trainedSkills).length > 0,
-            items: data.items && data.items.length > 0,
+            name: data.name !== undefined && data.name !== '' && data.name !== 'Imported NPC',
+            characteristics: data.system?.characteristics !== undefined && Object.keys(data.system.characteristics).length > 0,
+            wounds: data.system?.wounds?.max !== undefined && data.system.wounds.max !== null,
+            skills: data.system?.trainedSkills !== undefined && Object.keys(data.system.trainedSkills).length > 0,
+            items: data.items !== undefined && data.items.length > 0,
         };
 
         const complete = Object.values(components).filter(Boolean).length;

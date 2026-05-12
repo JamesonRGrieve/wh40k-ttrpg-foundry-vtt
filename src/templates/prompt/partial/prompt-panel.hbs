@@ -1,0 +1,23 @@
+{{!-- Framed panel used by roll-prompt dialogs.
+
+     Block-partial usage: provide body via the partial-block slot.
+
+     Hash params:
+       - title           optional section heading text (h3, uppercase tracker)
+       - titleKey        i18n key alternative to `title`
+       - icon            FA icon class shown before the title
+       - bodyClass       extra utilities on the body container
+       - panelClass      override the outer panel utilities
+       - marginClass     wrapper margin utilities (default "tw-mb-4")
+--}}
+<div class="{{#if marginClass}}{{marginClass}}{{else}}tw-mb-4{{/if}} tw-relative tw-p-4 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[#14141c] tw-to-[#0d0d12] tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]{{#if panelClass}} {{panelClass}}{{/if}}">
+    {{#if (or title titleKey)}}
+    <h3 class="tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(255,255,255,0.08)]">
+        {{#if icon}}<i class="fas {{icon}}"></i>{{/if}}
+        <span>{{#if title}}{{title}}{{else if titleKey}}{{localize titleKey}}{{/if}}</span>
+    </h3>
+    {{/if}}
+    <div{{#if bodyClass}} class="{{bodyClass}}"{{/if}}>
+        {{> @partial-block}}
+    </div>
+</div>

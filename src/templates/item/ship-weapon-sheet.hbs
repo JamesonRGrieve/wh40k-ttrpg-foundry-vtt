@@ -7,14 +7,9 @@
             typeIcon="fa-crosshairs"}}
 
         <!-- Tab Navigation -->
-        <nav class="wh40k-tabs tw-flex tw-flex-shrink-0 tw-border-b tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure" data-group="primary">
-            <a class="wh40k-tab active tw-cursor-pointer tw-uppercase" data-tab="details" data-group="primary">
-                <i class="fas fa-info-circle"></i> {{localize "WH40K.Item.Tabs.Details"}}
-            </a>
-            <a class="wh40k-tab tw-cursor-pointer tw-uppercase" data-tab="effects" data-group="primary">
-                <i class="fas fa-magic"></i> {{localize "WH40K.Item.Tabs.Effects"}}
-            </a>
-        </nav>
+        {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+            (object tab="details" label=(localize "WH40K.Item.Tabs.Details") icon="fa-info-circle" active=true)
+            (object tab="effects" label=(localize "WH40K.Item.Tabs.Effects") icon="fa-magic"))}}
 
         <!-- Tab Content -->
         <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-min-h-0">

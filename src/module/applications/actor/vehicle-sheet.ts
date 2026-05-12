@@ -4,9 +4,124 @@
  * Phase 6 implementation for npcV2 actors with primaryUse="vehicle" or "ship"
  */
 
-import type { WH40KVehicle } from '../../documents/vehicle.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KNPC } from '../../documents/npc.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
+
+/**
+ * Vehicle/ship NPC characteristic shape (mirrors NPC characteristic schema).
+ */
+interface VehicleCharacteristicData {
+    label?: string;
+    short?: string;
+    base?: number;
+    modifier?: number;
+    unnatural?: number;
+    total?: number;
+    bonus?: number;
+}
+
+/**
+ * Vehicle/ship-only system extras. These fields are NOT in the NPCData
+ * schema yet — the sheet reads them defensively pending schema growth.
+ * Fields that already exist on `NPCData` (wounds, size, characteristics)
+ * are inherited from `WH40KNPC['system']` and not redeclared here.
+ */
+interface VehicleSystemExtras {
+    speed?: {
+        cruising?: number;
+        tactical?: number;
+        notes?: string;
+    };
+    handling?: number;
+    hull?: number;
+}
+
+/** Vehicle/ship-only crew extras read defensively (not on the NPC schema). */
+interface VehicleCrewExtras {
+    rating?: number;
+    morale?: number;
+}
+
+/**
+ * Prepared vehicle stats object exposed on the render context.
+ */
+interface PreparedVehicleStats {
+    size: number;
+    speed: { cruising: number; tactical: number; notes: string };
+    handling: number;
+    structure: { value: number; max: number; percent: number };
+    hull: number;
+    manoeuvrability: number;
+}
+
+interface PreparedCrewStats {
+    required: number;
+    rating: number;
+    morale: number;
+    notes: string;
+}
+
+interface PreparedCharacteristic {
+    key: string;
+    label: string | undefined;
+    short: string | undefined;
+    base: number | undefined;
+    modifier: number | undefined;
+    unnatural: number | undefined;
+    total: number | undefined;
+    bonus: number | undefined;
+    hasUnnatural: boolean;
+}
+
+/**
+ * Sheet render context shape — additive on top of the parent's
+ * `Record<string, unknown>` return so we can add typed fields without
+ * losing what the base class already populates.
+ */
+type VehicleActorSystem = WH40KNPC['system'] & VehicleSystemExtras;
+
+interface PreparedTab {
+    id: string;
+    tab: string;
+    group: string;
+    label: string;
+    active: boolean;
+    cssClass: string;
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: matches ApplicationV2._prepareContext return contract
+interface VehicleSheetContext extends Record<string, unknown> {
+    system?: VehicleActorSystem;
+    items?: WH40KItem[];
+    isVehicle?: boolean;
+    isShip?: boolean;
+    vehicleStats?: PreparedVehicleStats;
+    crewStats?: PreparedCrewStats;
+    characteristicsArray?: PreparedCharacteristic[];
+    weapons?: WH40KItem[];
+    vehicleTraits?: WH40KItem[];
+    vehicleUpgrades?: WH40KItem[];
+    components?: WH40KItem[];
+    otherItems?: WH40KItem[];
+    tabs?: PreparedTab[];
+}
+
+/**
+ * NPC document with vehicle-typed `system`. The runtime document is a
+ * standard `WH40KNPC` whose `system.primaryUse === 'vehicle' | 'ship'`; the
+ * vehicle-only extras (hull, handling, crew.rating, crew.morale, …) are
+ * read defensively pending schema growth.
+ */
+type VehicleActor = WH40KNPC & {
+    system: VehicleActorSystem;
+    rollCharacteristic: (characteristicKey: string, flavor?: string) => Promise<void>;
+    rollSkill: (skillName: string, flavor?: string) => Promise<void>;
+    rollInitiative: (options: { createCombatants?: boolean }) => Promise<void>;
+};
+
+/** Item with a roll() method (weapons). */
+type RollableItem = WH40KItem & { roll: () => Promise<void> };
 
 /**
  * Actor sheet for npcV2 actors used as vehicles/ships.
@@ -15,7 +130,7 @@ import BaseActorSheet from './base-actor-sheet.ts';
  * @extends {BaseActorSheet}
  */
 export default class VehicleSheet extends BaseActorSheet {
-    declare actor: WH40KVehicle;
+    declare actor: VehicleActor;
 
     /* -------------------------------------------- */
     /*  Static Configuration                        */
@@ -30,6 +145,7 @@ export default class VehicleSheet extends BaseActorSheet {
             height: 800,
         },
         tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             ...BaseActorSheet.DEFAULT_OPTIONS.actions,
             rollCharacteristic: VehicleSheet.#rollCharacteristic,
@@ -43,13 +159,14 @@ export default class VehicleSheet extends BaseActorSheet {
             toggleComponentActive: VehicleSheet.#toggleComponentActive,
             damageComponent: VehicleSheet.#damageComponent,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
 
     /** @override */
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
-        ...((BaseActorSheet as typeof BaseActorSheet & { PARTS?: Record<string, ApplicationV2Config.PartConfiguration> }).PARTS ?? {}),
+        ...(BaseActorSheet as typeof BaseActorSheet & { PARTS?: Record<string, ApplicationV2Config.PartConfiguration> }).PARTS,
         header: {
             template: 'systems/wh40k-rpg/templates/actor/vehicle/header.hbs',
         },
@@ -101,11 +218,12 @@ export default class VehicleSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext return contract
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-        const context: Record<string, unknown> = {
+        const context: VehicleSheetContext = {
             ...(await super._prepareContext(options)),
             isVehicle: true,
-            isShip: (this.actor.system as Record<string, unknown>).primaryUse === 'ship',
+            isShip: this.actor.system.primaryUse === 'ship',
         };
 
         // Vehicle-specific context
@@ -114,7 +232,7 @@ export default class VehicleSheet extends BaseActorSheet {
         context.characteristicsArray = this._prepareCharacteristics(context);
 
         // Categorize items
-        await this._prepareItems(context);
+        this._prepareItems(context);
 
         // Prepare tabs
         context.tabs = this._prepareVehicleTabs();
@@ -130,27 +248,26 @@ export default class VehicleSheet extends BaseActorSheet {
      * @returns {object} Vehicle stats object.
      * @protected
      */
-    _prepareVehicleStats(context: Record<string, unknown>): Record<string, unknown> {
-        const sys = (context.system as Record<string, unknown>) ?? {};
+    _prepareVehicleStats(_context: VehicleSheetContext): PreparedVehicleStats {
+        const sys = this.actor.system;
+        const speed = sys.speed ?? {};
+        const woundsValue = sys.wounds.value;
+        const woundsMax = sys.wounds.max;
 
         return {
-            size: sys.size || 4,
+            size: sys.size,
             speed: {
-                cruising: (sys.speed as Record<string, unknown>)?.cruising || 0,
-                tactical: (sys.speed as Record<string, unknown>)?.tactical || 0,
-                notes: (sys.speed as Record<string, unknown>)?.notes || '',
+                cruising: speed.cruising ?? 0,
+                tactical: speed.tactical ?? 0,
+                notes: speed.notes ?? '',
             },
-            handling: sys.handling || 0,
+            handling: sys.handling ?? 0,
             structure: {
-                value: (sys.wounds as Record<string, unknown>)?.value || 0,
-                max: (sys.wounds as Record<string, unknown>)?.max || 0,
-                percent: Math.round(
-                    ((((sys.wounds as Record<string, unknown>)?.value || 0) as number) /
-                        Math.max(1, ((sys.wounds as Record<string, unknown>)?.max || 1) as number)) *
-                        100,
-                ),
+                value: woundsValue,
+                max: woundsMax,
+                percent: Math.round((woundsValue / Math.max(1, woundsMax)) * 100),
             },
-            hull: sys.hull || 0,
+            hull: sys.hull ?? 0,
             manoeuvrability: this._calculateManoeuvrability(sys),
         };
     }
@@ -163,14 +280,14 @@ export default class VehicleSheet extends BaseActorSheet {
      * @returns {object} Crew stats object.
      * @protected
      */
-    _prepareCrewStats(context: Record<string, unknown>): Record<string, unknown> {
-        const sys = (context.system as Record<string, unknown>) ?? {};
+    _prepareCrewStats(_context: VehicleSheetContext): PreparedCrewStats {
+        const crew = this.actor.system.crew as { required?: number; notes?: string; rating?: number; morale?: number } | undefined;
 
         return {
-            required: (sys.crew as Record<string, unknown>)?.required || 1,
-            rating: (sys.crew as Record<string, unknown>)?.rating || 30,
-            morale: (sys.crew as Record<string, unknown>)?.morale || 50,
-            notes: (sys.crew as Record<string, unknown>)?.notes || '',
+            required: crew?.required ?? 1,
+            rating: crew?.rating ?? 30,
+            morale: crew?.morale ?? 50,
+            notes: crew?.notes ?? '',
         };
     }
 
@@ -182,10 +299,10 @@ export default class VehicleSheet extends BaseActorSheet {
      * @returns {number} Calculated manoeuvrability.
      * @protected
      */
-    _calculateManoeuvrability(system: Record<string, unknown>): number {
+    _calculateManoeuvrability(system: VehicleActorSystem): number {
         // Example: Handling - (Size modifier)
-        const handling = (system.handling as number) || 0;
-        const sizeMod = Math.floor(((system.size as number) || 4) / 2);
+        const handling = system.handling ?? 0;
+        const sizeMod = Math.floor(system.size / 2);
         return handling - sizeMod;
     }
 
@@ -197,11 +314,11 @@ export default class VehicleSheet extends BaseActorSheet {
      * @returns {Array} Characteristics array.
      * @protected
      */
-    _prepareCharacteristics(context: Record<string, unknown>): Record<string, unknown>[] {
-        const chars = ((context.system as Record<string, unknown>).characteristics as Record<string, Record<string, unknown>>) || {};
-        const charArray = [];
+    _prepareCharacteristics(context: VehicleSheetContext): PreparedCharacteristic[] {
+        const chars: Record<string, VehicleCharacteristicData> = context.system?.characteristics ?? {};
+        const charArray: PreparedCharacteristic[] = [];
 
-        for (const [key, char] of Object.entries(chars) as [string, Record<string, unknown>][]) {
+        for (const [key, char] of Object.entries(chars)) {
             charArray.push({
                 key,
                 label: char.label,
@@ -211,7 +328,7 @@ export default class VehicleSheet extends BaseActorSheet {
                 unnatural: char.unnatural,
                 total: char.total,
                 bonus: char.bonus,
-                hasUnnatural: ((char.unnatural as number) || 0) >= 2,
+                hasUnnatural: (char.unnatural ?? 0) >= 2,
             });
         }
 
@@ -225,15 +342,16 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    async _prepareItems(context: Record<string, unknown>): Promise<void> {
-        const weapons: any[] = [];
-        const vehicleTraits: any[] = [];
-        const vehicleUpgrades: any[] = [];
-        const components: any[] = [];
-        const other: any[] = [];
+    _prepareItems(context: VehicleSheetContext): void {
+        const weapons: WH40KItem[] = [];
+        const vehicleTraits: WH40KItem[] = [];
+        const vehicleUpgrades: WH40KItem[] = [];
+        const components: WH40KItem[] = [];
+        const other: WH40KItem[] = [];
 
-        for (const item of (context.items as WH40KItem[]) ?? []) {
-            switch (item.type) {
+        for (const item of context.items ?? []) {
+            const itemType: string = item.type;
+            switch (itemType) {
                 case 'weapon':
                 case 'shipWeapon':
                     weapons.push(item);
@@ -266,34 +384,36 @@ export default class VehicleSheet extends BaseActorSheet {
      * @returns {Array} Tabs configuration array.
      * @protected
      */
-    _prepareVehicleTabs(): Record<string, unknown>[] {
-        return (this.constructor as unknown as { TABS: HandlebarsApplicationV14.TabDescriptor[] }).TABS.map((tab: HandlebarsApplicationV14.TabDescriptor) => ({
+    _prepareVehicleTabs(): PreparedTab[] {
+        const TabsCtor = this.constructor as typeof VehicleSheet;
+        return TabsCtor.TABS.map((tab) => ({
             id: tab.tab,
             tab: tab.tab,
-            group: tab.group,
+            group: tab.group ?? 'primary',
             label: game.i18n.localize(tab.label),
             active: this.tabGroups[tab.group ?? 'primary'] === tab.tab,
-            cssClass: tab.cssClass,
+            cssClass: tab.cssClass ?? '',
         }));
     }
 
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _preparePartContext(partId: string, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-        const partContext = await super._preparePartContext(partId, context, options as unknown as Record<string, unknown>);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._preparePartContext signature contract
+    async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        const partContext = await super._preparePartContext(partId, context, options);
 
         // Add tab metadata for all tab parts
         const tabParts = ['overview', 'combat', 'crew', 'components', 'notes'];
         if (tabParts.includes(partId)) {
-            const tabConfig = (this.constructor as unknown as { TABS: HandlebarsApplicationV14.TabDescriptor[] }).TABS.find(
-                (t: HandlebarsApplicationV14.TabDescriptor) => t.tab === partId,
-            );
+            const TabsCtor = this.constructor as typeof VehicleSheet;
+            const tabConfig = TabsCtor.TABS.find((t) => t.tab === partId);
+            const group = tabConfig?.group ?? 'primary';
             partContext.tab = {
                 id: partId,
-                group: tabConfig?.group || 'primary',
-                active: this.tabGroups[tabConfig?.group || 'primary'] === partId,
-                cssClass: tabConfig?.cssClass || '',
+                group,
+                active: this.tabGroups[group] === partId,
+                cssClass: tabConfig?.cssClass ?? '',
             };
         }
 
@@ -310,9 +430,9 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollCharacteristic(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #rollCharacteristic(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const char = target.dataset.characteristic;
-        if (!char) return;
+        if (char === undefined || char === '') return;
 
         await this.actor.rollCharacteristic(char);
     }
@@ -325,12 +445,12 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollSkill(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #rollSkill(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const skill = target.dataset.skill;
         const spec = target.dataset.specialization;
-        if (!skill) return;
+        if (skill === undefined || skill === '') return;
 
-        await (this.actor as unknown as { rollSkill(skill: string, spec: string | undefined): Promise<void> }).rollSkill(skill, spec);
+        await this.actor.rollSkill(skill, spec);
     }
 
     /* -------------------------------------------- */
@@ -341,14 +461,14 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollWeapon(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #rollWeapon(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
-        if (!itemId) return;
+        if (itemId === undefined || itemId === '') return;
 
-        const item = this.actor.items.get(itemId);
+        const item = this.actor.items.get(itemId) as RollableItem | undefined;
         if (!item) return;
 
-        await (item as unknown as { roll(): Promise<void> }).roll();
+        await item.roll();
     }
 
     /* -------------------------------------------- */
@@ -359,8 +479,8 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollInitiative(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
-        await (this.actor as unknown as { rollInitiative(options: Record<string, unknown>): Promise<void> }).rollInitiative({ createCombatants: true });
+    static async #rollInitiative(this: VehicleSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+        await this.actor.rollInitiative({ createCombatants: true });
     }
 
     /* -------------------------------------------- */
@@ -371,13 +491,12 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #adjustStructure(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #adjustStructure(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const delta = parseInt(target.dataset.delta ?? '0', 10) || 0;
-        const current = this.actor.system.wounds.value;
-        const max = this.actor.system.wounds.max;
+        const { value: current, max } = this.actor.system.wounds;
 
         const newValue = Math.max(0, Math.min(max, current + delta));
-        await this.actor.update({ 'system.wounds.value': newValue } as Record<string, unknown>);
+        await this.actor.update({ 'system.wounds.value': newValue });
     }
 
     /* -------------------------------------------- */
@@ -388,15 +507,14 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #repairDamage(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #repairDamage(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const amount = parseInt(target.dataset.amount ?? '1', 10) || 1;
-        const current = this.actor.system.wounds.value;
-        const max = this.actor.system.wounds.max;
+        const { value: current, max } = this.actor.system.wounds;
 
         const newValue = Math.min(max, current + amount);
-        await this.actor.update({ 'system.wounds.value': newValue } as Record<string, unknown>);
+        await this.actor.update({ 'system.wounds.value': newValue });
 
-        ui.notifications.info(`Repaired ${amount} structure points.`);
+        ui.notifications.info(`Repaired ${String(amount)} structure points.`);
     }
 
     /* -------------------------------------------- */
@@ -407,12 +525,13 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #modifyCrew(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #modifyCrew(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const delta = parseInt(target.dataset.delta ?? '0', 10) || 0;
-        const current = (this.actor.system.crew as Record<string, number> | undefined)?.rating ?? 30;
+        const crew = this.actor.system.crew as typeof this.actor.system.crew & VehicleCrewExtras;
+        const current = crew.rating ?? 30;
 
         const newValue = Math.max(1, Math.min(100, current + delta));
-        await this.actor.update({ 'system.crew.rating': newValue } as Record<string, unknown>);
+        await this.actor.update({ 'system.crew.rating': newValue });
     }
 
     /* -------------------------------------------- */
@@ -423,12 +542,13 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #adjustCrewMorale(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #adjustCrewMorale(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const delta = parseInt(target.dataset.delta ?? '0', 10) || 0;
-        const current = (this.actor.system.crew as Record<string, number> | undefined)?.morale ?? 50;
+        const crew = this.actor.system.crew as typeof this.actor.system.crew & VehicleCrewExtras;
+        const current = crew.morale ?? 50;
 
         const newValue = Math.max(0, Math.min(100, current + delta));
-        await this.actor.update({ 'system.crew.morale': newValue } as Record<string, unknown>);
+        await this.actor.update({ 'system.crew.morale': newValue });
     }
 
     /* -------------------------------------------- */
@@ -439,14 +559,15 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleComponentActive(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #toggleComponentActive(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
-        if (!itemId) return;
+        if (itemId === undefined || itemId === '') return;
 
         const item = this.actor.items.get(itemId);
         if (!item) return;
 
-        await item.update({ 'system.active': !(item.system as Record<string, unknown>).active } as Record<string, unknown>);
+        const componentSystem = item.system as { active?: boolean };
+        await item.update({ 'system.active': componentSystem.active !== true });
     }
 
     /* -------------------------------------------- */
@@ -457,16 +578,17 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #damageComponent(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #damageComponent(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
-        if (!itemId) return;
+        if (itemId === undefined || itemId === '') return;
 
         const item = this.actor.items.get(itemId);
         if (!item) return;
 
         // Toggle damaged state or apply specific damage
-        const damaged = (item.system as Record<string, unknown>).damaged || false;
-        await item.update({ 'system.damaged': !damaged } as Record<string, unknown>);
+        const componentSystem = item.system as { damaged?: boolean };
+        const damaged = componentSystem.damaged === true;
+        await item.update({ 'system.damaged': !damaged });
 
         ui.notifications.info(`${item.name} ${damaged ? 'repaired' : 'damaged'}.`);
     }

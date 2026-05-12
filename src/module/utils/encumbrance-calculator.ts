@@ -49,7 +49,7 @@ export function computeEncumbrance(actor: WH40KBaseActorDocument): {
 
     if (backpack?.hasBackpack === true) {
         for (const item of carriedItems) {
-            if (item.system?.inBackpack === true) {
+            if (item.system.inBackpack === true) {
                 backpackWeight += item.totalWeight;
             } else {
                 currentWeight += item.totalWeight;

@@ -1,4 +1,4 @@
-{{! Rogue Trader Assign Damage Prompt - Modern Design }}
+{{! Assign Damage Prompt }}
 <div class="dialog-content">
     <form autocomplete="off">
         {{! Character Info }}
@@ -28,50 +28,39 @@
         </div>
 
         {{! Damage Details }}
-        <div class="tw-relative tw-p-4 tw-border tw-border-solid tw-border-gold/30 tw-rounded-md tw-bg-gradient-to-br tw-from-black/20 tw-to-black/10 tw-shadow-md">
-            <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-font-display tw-text-sm tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-solid tw-border-white/10">
-                Incoming Damage
-            </h3>
-
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-border-b tw-border-solid tw-border-white/5 tw-min-h-[40px]">
-                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Hit Location</span>
+        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title="Incoming Damage" marginClass=""}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Hit Location"}}
                 <select class="tw-min-w-[140px] tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm" name="hit.location" id="location">
                     {{selectOptions locations selected=this.hit.location}}
                 </select>
-            </div>
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-border-b tw-border-solid tw-border-white/5 tw-min-h-[40px]">
-                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Damage Type</span>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Damage Type"}}
                 <select class="tw-min-w-[140px] tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm" name="hit.damageType" id="damageType">
                     {{selectOptions damageType selected=this.hit.damageType}}
                 </select>
-            </div>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
 
             <div class="tw-my-3 tw-border-t tw-border-solid tw-border-white/10"></div>
 
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-border-b tw-border-solid tw-border-white/5 tw-min-h-[40px]">
-                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Total Damage</span>
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Total Damage"}}
                 <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="hit.totalDamage" value="{{this.hit.totalDamage}}" />
-            </div>
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-border-b tw-border-solid tw-border-white/5 tw-min-h-[40px]">
-                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Penetration</span>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Penetration"}}
                 <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="hit.totalPenetration" value="{{this.hit.totalPenetration}}" />
-            </div>
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-border-b tw-border-solid tw-border-white/5 tw-min-h-[40px]">
-                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Fatigue</span>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Fatigue"}}
                 <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="hit.totalFatigue" value="{{this.hit.totalFatigue}}" />
-            </div>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
 
             <div class="tw-my-3 tw-border-t tw-border-solid tw-border-white/10"></div>
 
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-border-b tw-border-solid tw-border-white/5 tw-min-h-[40px]">
-                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Location Armour</span>
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Location Armour"}}
                 <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="armour" value="{{this.armour}}" />
-            </div>
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
-                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Toughness Bonus</span>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Toughness Bonus" last=true}}
                 <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="tb" value="{{this.tb}}" />
-            </div>
-        </div>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+        {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
     </form>
 </div>
 

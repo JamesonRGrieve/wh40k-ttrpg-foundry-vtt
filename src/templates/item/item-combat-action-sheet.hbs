@@ -9,12 +9,7 @@
          HEADER: Combat action identity
     ═══════════════════════════════════════════════════════════════════ --}}
     <header class="tw-grid tw-grid-cols-[80px_minmax(0,1fr)] tw-gap-4 tw-border-b-2 tw-border-[var(--wh40k-gold-dark)] tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-px-4 tw-py-3 tw-shrink-0">
-      <div class="wh40k-item-header__image tw-group tw-relative tw-h-20 tw-w-20 tw-cursor-pointer tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105 hover:tw-shadow-[var(--wh40k-shadow-lg),0_0_20px_rgba(212,175,55,0.5)]" data-action="editImage" data-edit="img">
-        <img class="tw-h-full tw-w-full tw-object-cover" src="{{item.img}}" alt="{{item.name}}" />
-        <div class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/45 tw-text-[var(--wh40k-gold)] tw-opacity-0 tw-transition-opacity group-hover:tw-opacity-100">
-          <i class="fas fa-edit tw-text-lg"></i>
-        </div>
-      </div>
+      {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name extraClass="wh40k-item-header__image"}}
 
       <div class="tw-flex tw-min-w-0 tw-flex-col tw-justify-center tw-gap-1">
         <input type="text" class="wh40k-item-header__name tw-w-full tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-shadow-[0_1px_2px_var(--wh40k-text-shadow)] placeholder:tw-text-[var(--wh40k-text-muted)] focus:tw-rounded-sm focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-outline-none" name="name" value="{{item.name}}" placeholder="Action Name" />

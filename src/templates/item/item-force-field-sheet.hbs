@@ -9,12 +9,7 @@
          HEADER: Compact force field identity with status
     ═══════════════════════════════════════════════════════════════════ --}}
     <header class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0">
-      <div class="tw-relative tw-w-16 tw-h-16 tw-shrink-0 tw-rounded-md tw-overflow-hidden tw-cursor-pointer" data-action="editImage" data-edit="img">
-        <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
-        <div class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/60 tw-opacity-0 hover:tw-opacity-100 tw-transition-opacity">
-          <i class="fas fa-edit"></i>
-        </div>
-      </div>
+      {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name sizeClass="tw-w-16 tw-h-16" frameClass="" overlayBgClass="tw-bg-black/60" overlayTextClass="" overlayIconClass="" extraClass="tw-shrink-0"}}
 
       <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
         <input type="text" class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" value="{{item.name}}" placeholder="Force Field Name" />
@@ -87,20 +82,10 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs tw-flex tw-shrink-0" data-group="primary">
-      <button type="button" class="wh40k-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="stats" data-group="primary">
-        <i class="fas fa-chart-bar"></i>
-        <span>Stats</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="description" data-group="primary">
-        <i class="fas fa-scroll"></i>
-        <span>Info</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="effects" data-group="primary">
-        <i class="fas fa-magic"></i>
-        <span>Effects</span>
-      </button>
-    </nav>
+    {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+        (object tab="stats"       label="Stats"   icon="fa-chart-bar" active=true)
+        (object tab="description" label="Info"    icon="fa-scroll")
+        (object tab="effects"     label="Effects" icon="fa-magic"))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT

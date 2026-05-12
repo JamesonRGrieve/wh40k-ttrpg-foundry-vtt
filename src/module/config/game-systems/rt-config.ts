@@ -79,7 +79,6 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
         const get = (key: string): string | number => this.readOriginPathField(actor, key);
         const rank = actor.system.rank ?? 1;
         return [
-            this.makePlayerField(actor),
             this.makeField(game.i18n.localize('WH40K.OriginPath.HomeWorld'), 'system.originPath.homeWorld', get('homeWorld'), 'Home World'),
             this.makeField(game.i18n.localize('WH40K.OriginPath.Career'), 'system.originPath.career', get('career'), 'Career'),
             this.makeField(game.i18n.localize('WH40K.Character.Rank'), 'system.rank', rank, 'Rank', 'number'),

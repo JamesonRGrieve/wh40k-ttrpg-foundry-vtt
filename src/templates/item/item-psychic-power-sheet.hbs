@@ -2,9 +2,7 @@
     <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
         <!-- Item Header -->
         <header class="tw-grid tw-gap-3 tw-px-4 tw-py-3 tw-shrink-0 tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-border-b-2 tw-border-gold-dark" style="grid-template-columns: 80px 1fr;">
-            <div class="tw-w-20 tw-h-20 tw-rounded-md tw-overflow-hidden tw-cursor-pointer tw-shrink-0 tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105 hover:tw-shadow-[var(--wh40k-shadow-lg),0_0_20px_rgba(212,175,55,0.5)]" data-edit="img">
-                <img src="{{item.img}}" alt="{{item.name}}" title="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
-            </div>
+            {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name title=item.name action=false overlay=false extraClass="tw-shrink-0"}}
 
             <div class="tw-flex tw-flex-col tw-justify-center tw-gap-1 tw-min-w-0">
                 <input type="text" class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-px-1 tw-py-0.5" name="name" value="{{item.name}}" placeholder="Psychic Power Name" />
@@ -71,20 +69,11 @@
         </div>
 
         <!-- Tab Navigation -->
-        <nav class="wh40k-tabs tw-flex tw-shrink-0" data-group="primary">
-            <a class="wh40k-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="power" data-group="primary">
-                <i class="fas fa-hand-sparkles"></i> Power
-            </a>
-            <a class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="damage" data-group="primary">
-                <i class="fas fa-burst"></i> Damage
-            </a>
-            <a class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="description" data-group="primary">
-                <i class="fas fa-scroll"></i> Description
-            </a>
-            <a class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="effects" data-group="primary">
-                <i class="fas fa-magic"></i> Effects
-            </a>
-        </nav>
+        {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+            (object tab="power"       label="Power"       icon="fa-hand-sparkles" active=true)
+            (object tab="damage"      label="Damage"      icon="fa-burst")
+            (object tab="description" label="Description" icon="fa-scroll")
+            (object tab="effects"     label="Effects"     icon="fa-magic"))}}
 
         <!-- Tab Content -->
         <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3">

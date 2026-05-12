@@ -224,13 +224,9 @@
             Benefit
             {{#if canEdit}}
             {{#unless inEditMode}}
-            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="toggleEditMode" title="Edit Benefit">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
+            {{> systems/wh40k-rpg/templates/shared/sheet-action-button.hbs action="toggleEditMode" icon="fa-pen-to-square" title="Edit Benefit"}}
             {{else}}
-            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="toggleEditMode" title="Done Editing">
-              <i class="fa-solid fa-check"></i>
-            </button>
+            {{> systems/wh40k-rpg/templates/shared/sheet-action-button.hbs action="toggleEditMode" icon="fa-check" title="Done Editing"}}
             {{/unless}}
             {{/if}}
           </h3>
@@ -921,13 +917,9 @@
             Benefit
             {{#if canEdit}}
             {{#unless inEditMode}}
-            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="toggleEditMode" title="Edit Benefit">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
+            {{> systems/wh40k-rpg/templates/shared/sheet-action-button.hbs action="toggleEditMode" icon="fa-pen-to-square" title="Edit Benefit"}}
             {{else}}
-            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="toggleEditMode" title="Done Editing">
-              <i class="fa-solid fa-check"></i>
-            </button>
+            {{> systems/wh40k-rpg/templates/shared/sheet-action-button.hbs action="toggleEditMode" icon="fa-check" title="Done Editing"}}
             {{/unless}}
             {{/if}}
           </h3>

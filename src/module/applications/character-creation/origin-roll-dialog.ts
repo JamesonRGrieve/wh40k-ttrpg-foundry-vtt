@@ -13,9 +13,24 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
-const { ApplicationV2, HandlebarsApplicationMixin } = (
-    foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor; HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T } }
-).api;
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `foundry.applications` has no shipped type for the v2 api namespace
+const foundryApi = foundry.applications as unknown as {
+    api: {
+        ApplicationV2: ApplicationV2Ctor;
+        HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T;
+    };
+};
+const { ApplicationV2, HandlebarsApplicationMixin } = foundryApi.api;
+const LegacyDialog = foundry.appv1.api.Dialog;
+
+/** Extract numeric value from a Foundry v1 Dialog callback `html` argument. */
+function readDialogNumber(html: JQuery<HTMLElement>): number {
+    const root = html[0];
+    const form = root.querySelector('form');
+    const input = form?.querySelector<HTMLInputElement>('[name="value"]') ?? null;
+    return parseInt(input?.value ?? '');
+}
 
 /** Minimal shape of a roll result object produced by this dialog. */
 interface OriginRollResult {
@@ -30,22 +45,40 @@ interface OriginRollResult {
     expandedFormula?: string;
 }
 
+interface OriginRollActor {
+    name: string;
+    img: string;
+    system: {
+        characteristics?: Record<string, { bonus?: number } | undefined>;
+    };
+}
+
+interface OriginRollOriginItem {
+    name: string;
+    img: string;
+}
+
 /** Context passed into the dialog (actor + origin item). */
 interface OriginRollContext {
-    actor: {
-        name: string;
-        img: string;
-        system: {
-            characteristics?: Record<string, { bonus?: number } | undefined>;
-        };
-        [key: string]: unknown;
-    };
-    originItem: {
-        name: string;
-        img: string;
-        [key: string]: unknown;
-    };
-    [key: string]: unknown;
+    actor: OriginRollActor;
+    originItem: OriginRollOriginItem;
+}
+
+/** Render context additions produced by `_prepareContext` for the dialog template. */
+interface OriginRollRenderContextAdditions {
+    rollType: string;
+    rollTypeLabel: string;
+    formula: string;
+    description: string;
+    originName: string;
+    originImg: string;
+    actorName: string;
+    rollResult: OriginRollResult | null;
+    hasRolled: boolean;
+    rollHistory: { timestamp: number; result: number; breakdown: string }[];
+    showHistory: boolean;
+    actorTB?: number;
+    expandedFormula?: string;
 }
 
 export default class OriginRollDialog extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -73,7 +106,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         classes: ['wh40k-rpg', 'origin-roll-dialog'],
         tag: 'form',
         window: {
-            title: 'Roll Starting Stat',
+            title: 'WH40K.OriginPath.StartingStats',
             icon: 'fa-solid fa-dice',
             minimizable: false,
             resizable: false,
@@ -82,6 +115,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             width: 600,
             height: 'auto' as const,
         },
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             roll: OriginRollDialog.#roll,
             accept: OriginRollDialog.#accept,
@@ -94,6 +128,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             submitOnChange: false,
             closeOnSubmit: false,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /** @override */
@@ -113,7 +148,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {Item} context.originItem - The origin item being rolled for
      * @param {object} [options={}] - Additional options
      */
-    constructor(rollType: string, formula: string, context: OriginRollContext, options: Record<string, unknown> = {}) {
+    constructor(rollType: string, formula: string, context: OriginRollContext, options: Partial<foundry.applications.api.ApplicationV2.Configuration> = {}) {
         super(options);
 
         /**
@@ -157,9 +192,10 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
-        const typeLabel = this.rollType === 'wounds' ? 'Wounds' : this.rollType === 'thrones' ? 'Throne Gelt' : 'Fate Points';
-        return `Roll Starting ${typeLabel}`;
+    get title(): string {
+        if (this.rollType === 'wounds') return game.i18n.localize('WH40K.OriginPath.RollStartingWounds');
+        if (this.rollType === 'thrones') return game.i18n.localize('WH40K.OriginPath.RollStartingThrones');
+        return game.i18n.localize('WH40K.OriginPath.RollStartingFate');
     }
 
     /**
@@ -177,31 +213,33 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `_prepareContext` returns Record<string, unknown> per its v2 ApplicationV2 type
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-        const context = (await super._prepareContext(options as unknown as never)) as Record<string, unknown>;
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: super._prepareContext is typed by Foundry as Record<string, unknown>
+        const superCall = super._prepareContext as (o: ApplicationV2Config.RenderOptions) => Promise<Record<string, unknown>>;
+        const superCtx = await superCall.call(this, options);
 
-        context.rollType = this.rollType;
-        context.rollTypeLabel = this._getRollTypeLabel();
-        context.formula = this.formula;
-        context.description = this._getDescription();
-        context.originName = this.context.originItem.name;
-        context.originImg = this.context.originItem.img;
-        context.actorName = this.context.actor.name;
+        const additions: OriginRollRenderContextAdditions = {
+            rollType: this.rollType,
+            rollTypeLabel: this._getRollTypeLabel(),
+            formula: this.formula,
+            description: this._getDescription(),
+            originName: this.context.originItem.name,
+            originImg: this.context.originItem.img,
+            actorName: this.context.actor.name,
+            rollResult: this.rollResult,
+            hasRolled: this.rollResult !== null,
+            rollHistory: this.rollHistory,
+            showHistory: this.rollHistory.length > 1,
+        };
 
-        // Roll result data
-        context.rollResult = this.rollResult;
-        context.hasRolled = !!this.rollResult;
-        context.rollHistory = this.rollHistory;
-        context.showHistory = this.rollHistory.length > 1;
-
-        // Actor context for formula display
         if (this.rollType === 'wounds') {
-            const tb = this.context.actor.system.characteristics?.toughness?.bonus || 0;
-            context.actorTB = tb;
-            context.expandedFormula = this._expandWoundsFormula(this.formula, tb);
+            const tb = this.context.actor.system.characteristics?.toughness?.bonus ?? 0;
+            additions.actorTB = tb;
+            additions.expandedFormula = this._expandWoundsFormula(this.formula, tb);
         }
 
-        return context;
+        return { ...superCtx, ...additions };
     }
 
     /**
@@ -245,7 +283,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #roll(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #roll(this: OriginRollDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         try {
@@ -257,11 +295,9 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             } else if (this.rollType === 'thrones') {
                 this.rollResult = await this._rollThrones();
             } else {
-                ui.notifications.error(`Unsupported roll type: ${this.rollType}`);
+                ui.notifications.error(game.i18n.format('WH40K.OriginPath.RollErrorUnsupportedType', { type: this.rollType }));
                 return;
             }
-
-            if (!this.rollResult) return;
 
             // Add to history
             this.rollHistory.push({
@@ -277,7 +313,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             await this.render();
         } catch (error) {
             console.error('Error rolling:', error);
-            ui.notifications.error('Error rolling dice. Check console for details.');
+            ui.notifications.error(game.i18n.localize('WH40K.OriginPath.RollErrorGeneric'));
         }
     }
 
@@ -287,11 +323,11 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static #accept(this: any, event: Event, target: HTMLElement): void {
+    static #accept(this: OriginRollDialog, event: Event, _target: HTMLElement): void {
         event.preventDefault();
 
         if (!this.rollResult) {
-            ui.notifications.warn('Please roll or input a value first!');
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.RollPromptFirst'));
             return;
         }
 
@@ -299,7 +335,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             this._resolvePromise(this.rollResult);
         }
 
-        this.close();
+        void this.close();
     }
 
     /**
@@ -312,7 +348,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #reroll(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #reroll(this: OriginRollDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         // Clear current result to return to initial state
@@ -329,7 +365,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #manual(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #manual(this: OriginRollDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         const rollType = this.rollType;
@@ -352,7 +388,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     async _handleManualWounds(): Promise<void> {
         const formula = this.formula;
         const actor = this.context.actor;
-        const tb = actor.system.characteristics?.toughness?.bonus || 0;
+        const tb = actor.system.characteristics?.toughness?.bonus ?? 0;
 
         // Check if this is a 1d5 formula
         const is1d5 = formula.includes('1d5');
@@ -375,8 +411,8 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         }
 
         // Prompt for dice roll only
-        const diceValue = await Dialog.prompt({
-            title: 'Manual Wounds Roll',
+        const diceValue = await LegacyDialog.prompt({
+            title: game.i18n.localize('WH40K.OriginPath.ManualWoundsTitle'),
             content: `
                 <form>
                     <div class="form-group">
@@ -386,18 +422,15 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
                     </div>
                 </form>
             `,
-            callback: (html: JQuery<HTMLElement>) => {
-                const form = html[0]?.querySelector?.('form') || (html as unknown as Element).querySelector?.('form');
-                return parseInt((form?.querySelector('[name="value"]') as HTMLInputElement | null)?.value ?? '');
-            },
+            callback: (html: JQuery<HTMLElement>) => readDialogNumber(html),
             rejectClose: false,
         });
 
-        if (!diceValue || isNaN(diceValue)) return;
+        if (diceValue === null || isNaN(diceValue) || diceValue === 0) return;
 
         // Calculate the final value using the full formula
         // Parse formula: e.g., "2xTB+1d5+2"
-        let diceResult = diceValue;
+        let diceResult: number = diceValue;
         if (is1d5) {
             diceResult = Math.ceil(diceValue / 2);
         }
@@ -495,8 +528,8 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             .join('<br>');
 
         // Prompt for the d10 roll
-        const diceValue = await Dialog.prompt({
-            title: 'Manual Fate Roll',
+        const diceValue = await LegacyDialog.prompt({
+            title: game.i18n.localize('WH40K.OriginPath.ManualFateTitle'),
             content: `
                 <form>
                     <div class="form-group">
@@ -506,14 +539,11 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
                     </div>
                 </form>
             `,
-            callback: (html: JQuery<HTMLElement>) => {
-                const form = html[0]?.querySelector?.('form') || (html as unknown as Element).querySelector?.('form');
-                return parseInt((form?.querySelector('[name="value"]') as HTMLInputElement | null)?.value ?? '');
-            },
+            callback: (html: JQuery<HTMLElement>) => readDialogNumber(html),
             rejectClose: false,
         });
 
-        if (!diceValue || isNaN(diceValue)) return;
+        if (diceValue === null || isNaN(diceValue) || diceValue === 0) return;
 
         // Find matching condition
         let result = 0;
@@ -562,14 +592,14 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static #cancel(this: any, event: Event, target: HTMLElement): void {
+    static #cancel(this: OriginRollDialog, event: Event, _target: HTMLElement): void {
         event.preventDefault();
 
         if (this._resolvePromise) {
             this._resolvePromise(null);
         }
 
-        this.close();
+        void this.close();
     }
 
     /**
@@ -579,9 +609,10 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {FormDataExtended} formData - The form data
      * @private
      */
-    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): void {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry FormDataExtended payload
+    static #onSubmit(this: OriginRollDialog, event: Event, form: HTMLFormElement, _formData: Record<string, unknown>): void {
         // Same as accept
-        return this.#accept.call(this, event, form);
+        OriginRollDialog.#accept.call(this, event, form);
     }
 
     /* -------------------------------------------- */
@@ -593,16 +624,16 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @returns {Promise<object>}
      * @private
      */
-    async _rollWounds(): Promise<unknown> {
+    async _rollWounds(): Promise<OriginRollResult> {
         const actor = this.context.actor;
         const formula = this.formula;
 
         // Get toughness bonus
-        const tb = actor.system.characteristics?.toughness?.bonus || 0;
+        const tb = actor.system.characteristics?.toughness?.bonus ?? 0;
 
         // Parse formula: e.g., "2xTB+1d5+2"
         // Replace TB with actual value
-        const diceFormula = formula.replace(/(\d+)xTB/gi, (match, multiplier) => {
+        const diceFormula = formula.replace(/(\d+)xTB/gi, (_match: string, multiplier: string) => {
             const value = parseInt(multiplier) * tb;
             return value.toString();
         });
@@ -619,7 +650,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             type: 'wounds',
             formula: formula,
             expandedFormula: diceFormula,
-            total: roll.total,
+            total: roll.total ?? 0,
             breakdown: breakdown,
             roll: roll,
             timestamp: Date.now(),
@@ -631,7 +662,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @returns {Promise<object>}
      * @private
      */
-    async _rollFate(): Promise<unknown> {
+    async _rollFate(): Promise<OriginRollResult> {
         const formula = this.formula;
 
         // Plain number formula (e.g. "3") — no roll needed, fixed value
@@ -693,7 +724,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @returns {Promise<object>}
      * @private
      */
-    async _rollThrones(): Promise<unknown> {
+    async _rollThrones(): Promise<OriginRollResult> {
         const formula = this.formula;
 
         // Plain number formula — fixed value
@@ -730,8 +761,8 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         return {
             type: 'thrones',
             formula: formula,
-            rolled: roll.total,
-            total: roll.total,
+            rolled: roll.total ?? 0,
+            total: roll.total ?? 0,
             breakdown: breakdown,
             roll: roll,
             timestamp: Date.now(),
@@ -747,24 +778,24 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         // Plain number formula — no dice
         if (/^\d+$/.test(formula.trim())) {
-            const total = parseInt(formula.trim());
+            const fixedTotal = parseInt(formula.trim());
             this.rollResult = {
                 type: 'thrones',
                 formula: formula,
-                rolled: total,
-                total: total,
-                breakdown: `${total}₮ (fixed)`,
+                rolled: fixedTotal,
+                total: fixedTotal,
+                breakdown: `${fixedTotal}₮ (fixed)`,
                 manual: true,
                 timestamp: Date.now(),
             };
-            this.rollHistory.push({ timestamp: Date.now(), result: total, breakdown: `${total}₮ (fixed)` });
+            this.rollHistory.push({ timestamp: Date.now(), result: fixedTotal, breakdown: `${fixedTotal}₮ (fixed)` });
             await this.render();
             return;
         }
 
         // Prompt for the dice result
-        const diceValue = await Dialog.prompt({
-            title: 'Manual Throne Gelt Roll',
+        const diceValue = await LegacyDialog.prompt({
+            title: game.i18n.localize('WH40K.OriginPath.ManualThronesTitle'),
             content: `
                 <form>
                     <div class="form-group">
@@ -774,15 +805,11 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
                     </div>
                 </form>
             `,
-            callback: (html: JQuery<HTMLElement>) => {
-                const form = html[0]?.querySelector?.('form') || (html as unknown as Element).querySelector?.('form');
-                return parseInt((form?.querySelector('[name="value"]') as HTMLInputElement | null)?.value ?? '');
-            },
+            callback: (html: JQuery<HTMLElement>) => readDialogNumber(html),
             rejectClose: false,
         });
 
-        if (!diceValue && diceValue !== 0) return;
-        if (isNaN(diceValue)) return;
+        if (diceValue === null || isNaN(diceValue)) return;
 
         // Sum static bonuses from formula (strip dice terms)
         const withoutDice = formula.replace(/\d+d\d+/gi, '0');
@@ -852,10 +879,10 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @returns {Promise<ChatMessage>}
      * @private
      */
-    async _postRollToChat(): Promise<unknown> {
+    async _postRollToChat(): Promise<ChatMessage | undefined> {
         // _postRollToChat is only called after rollResult is set; guard here for type safety.
         const result = this.rollResult;
-        if (!result) return;
+        if (!result) return undefined;
         const templateData = {
             actor: this.context.actor.name,
             actorImg: this.context.actor.img,
@@ -871,11 +898,14 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/origin-roll-card.hbs', templateData);
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker expects WH40KBaseActor; OriginRollContext stores a structural subset.
+        const speakerActor = this.context.actor as unknown as WH40KBaseActor;
+        const configSounds = (CONFIG as { sounds?: { dice?: string } }).sounds;
         return ChatMessage.create({
             content: html,
-            speaker: ChatMessage.getSpeaker({ actor: this.context.actor as unknown as WH40KBaseActor }),
+            speaker: ChatMessage.getSpeaker({ actor: speakerActor }),
             ...(result.roll ? { rolls: [result.roll] } : {}),
-            sound: (CONFIG as unknown as { sounds: { dice: string } }).sounds.dice,
+            sound: configSounds?.dice ?? '',
         });
     }
 
@@ -899,7 +929,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         });
 
         // Render the dialog (don't auto-roll, let user choose)
-        await dialog.render(true);
+        await dialog.render({ force: true });
 
         return result;
     }

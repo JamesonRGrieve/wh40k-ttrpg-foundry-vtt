@@ -1,45 +1,33 @@
-{{! Rogue Trader Bleeding Card - Modern Design }}
-<div class="tw-font-ui">
-    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-2 tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
-        {{! Header }}
-        <div class="tw-relative tw-px-4 tw-py-3 tw-bg-gradient-to-r tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color)]">
-            <div class="tw-text-xs tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-widest tw-mb-1">{{actor.name}}</div>
-            <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-[0.05em] tw-m-0 tw-text-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">Bleeding!</h2>
-            <div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)] tw-mt-0.5 tw-opacity-90">Critical Condition</div>
-        </div>
-
-        {{! Body }}
-        <div class="tw-px-4 tw-py-3">
-            <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
-                <span class="tw-text-[color:var(--wh40k-text-muted)] tw-font-medium">Fatigue</span>
-                <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-dark)]">{{system.fatigue.value}} / {{system.fatigue.max}}</span>
-            </div>
-
-            <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-gold tw-rounded-r-[4px] tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto">
-                <p class="tw-m-0 tw-mb-2 last:tw-mb-0">Once per round as a Free Action, the character (or another who can reach them) can attempt a
-                    <strong>Difficult (–10) Medicae</strong>
-                    test to remove this condition.</p>
-            </div>
-
-            <div class="tw-p-3 tw-my-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md">
-                <div class="tw-flex tw-justify-between tw-items-center tw-mb-2 tw-pb-2 tw-border-b tw-border-[var(--wh40k-wounds-border)]">
-                    <span class="tw-font-display tw-text-[0.9rem] tw-text-[color:var(--wh40k-wounds-secondary)] tw-uppercase tw-tracking-[0.1em]">Fatigue</span>
-                </div>
-                <div class="tw-text-center tw-text-[2rem] tw-font-bold tw-text-[color:var(--wh40k-wounds-secondary)] tw-[text-shadow:0_0_10px_rgba(139,0,0,0.5)]">+1</div>
-                <div class="tw-text-center tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted)] tw-mt-1">Blood Loss</div>
-            </div>
-
-            <div class="tw-flex tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
-                <button
-                    class="roll-control__apply-damage tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[color:var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all tw-duration-[var(--wh40k-transition-base)] tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)]"
-                    data-uuid="{{actor.uuid}}"
-                    data-damage="0"
-                    data-fatigue="1"
-                >
-                    <span class="material-icons tw-text-[16px]">api</span>
-                    <span>Apply Fatigue</span>
-                </button>
-            </div>
-        </div>
+{{!-- Rogue Trader Bleeding Card --}}
+{{#> systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs actorName=actor.name title="Bleeding!" subtitle="Critical Condition" gameSystem=gameSystem}}
+    <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
+        <span class="tw-text-[color:var(--wh40k-text-muted)] tw-font-medium">Fatigue</span>
+        <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-dark)]">{{system.fatigue.value}} / {{system.fatigue.max}}</span>
     </div>
-</div>
+
+    <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-gold tw-rounded-r-[4px] tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto">
+        <p class="tw-m-0 tw-mb-2 last:tw-mb-0">Once per round as a Free Action, the character (or another who can reach them) can attempt a
+            <strong>Difficult (–10) Medicae</strong>
+            test to remove this condition.</p>
+    </div>
+
+    <div class="tw-p-3 tw-my-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md">
+        <div class="tw-flex tw-justify-between tw-items-center tw-mb-2 tw-pb-2 tw-border-b tw-border-[var(--wh40k-wounds-border)]">
+            <span class="tw-font-display tw-text-[0.9rem] tw-text-[color:var(--wh40k-wounds-secondary)] tw-uppercase tw-tracking-[0.1em]">Fatigue</span>
+        </div>
+        <div class="tw-text-center tw-text-[2rem] tw-font-bold tw-text-[color:var(--wh40k-wounds-secondary)] tw-[text-shadow:0_0_10px_rgba(139,0,0,0.5)]">+1</div>
+        <div class="tw-text-center tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-text-muted)] tw-mt-1">Blood Loss</div>
+    </div>
+
+    <div class="tw-flex tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 -tw-mx-4 -tw-mb-3 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
+        <button
+            class="roll-control__apply-damage tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[color:var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all tw-duration-[var(--wh40k-transition-base)] tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)]"
+            data-uuid="{{actor.uuid}}"
+            data-damage="0"
+            data-fatigue="1"
+        >
+            <span class="material-icons tw-text-[16px]">api</span>
+            <span>Apply Fatigue</span>
+        </button>
+    </div>
+{{/systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs}}

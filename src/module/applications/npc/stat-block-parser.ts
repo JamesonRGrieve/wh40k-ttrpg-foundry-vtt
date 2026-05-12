@@ -17,7 +17,6 @@ import ThreatCalculator, {
     type NPCArmourData,
     type NPCArmourLocations,
     type NPCMovement,
-    type NPCSkillEntry,
     type NPCSkills,
     type NPCSystemData,
     type NPCWeapon,
@@ -34,6 +33,7 @@ interface NPCCharacteristicEntry {
 /** Typed view of the NPCSystemData characteristics map for safe property access. */
 type NPCCharacteristicsMap = Record<string, NPCCharacteristicEntry>;
 
+/* eslint-disable no-restricted-syntax -- boundary: Foundry Actor.update / createEmbeddedDocuments signatures use opaque bags */
 /** Minimal interface for the target actor that can be updated by the import dialog. */
 interface ImportTargetActor {
     update: (data: Record<string, unknown>) => Promise<unknown>;
@@ -50,6 +50,7 @@ interface ParsedActorData {
     system: NPCSystemData;
     items: Array<{ name: string; type: string; system: Record<string, unknown> }>;
 }
+/* eslint-enable no-restricted-syntax */
 
 /** Result returned by parseJSON / parseText / parse. */
 interface ParseResult {
@@ -84,6 +85,7 @@ interface TraitEntry {
 
 /** Result returned by _parseTraits. */
 interface TraitsParseResult {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: trait item data is destined for createEmbeddedDocuments
     items: Array<{ name: string; type: string; system: Record<string, unknown> }>;
     parsedTraits: TraitEntry[];
 }
@@ -119,6 +121,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         classes: ['wh40k-rpg', 'stat-block-parser'],
         tag: 'form',
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- already a WH40K.* langpack key; rule false-positives on static title
             title: 'WH40K.NPC.Import.Title',
             icon: 'fa-solid fa-file-import',
             minimizable: false,
@@ -130,15 +133,18 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             height: 700,
         },
         form: {
+            /* eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: Foundry V14 FormConfiguration handler signature is too narrow; bound via `this:` parameter declaration */
             handler: StatBlockParser._onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: true,
         },
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 invokes action handlers with the instance as `this`; each handler declares `this: StatBlockParser` */
         actions: {
             parse: StatBlockParser._onParse,
             cancel: StatBlockParser._onCancel,
             clearInput: StatBlockParser._onClearInput,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -261,30 +267,31 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * Parsed data preview.
      * @type {Object|null}
      */
-    readonly #parsedData: ParsedActorData | null = null;
+    #parsedData: ParsedActorData | null = null;
 
     /**
      * Parse errors.
      * @type {Array<string>}
      */
-    readonly #errors: string[] = [];
+    #errors: string[] = [];
 
     /**
      * Parse warnings.
      * @type {Array<string>}
      */
-    readonly #warnings: string[] = [];
+    #warnings: string[] = [];
 
     /**
      * Parse info messages.
      * @type {Array<string>}
      */
-    readonly #info: string[] = [];
+    #info: string[] = [];
 
     /**
      * Promise resolver.
      * @type {Function|null}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: resolves the dialog with whatever Actor.create returns
     #resolve: ((value: unknown) => void) | null = null;
 
     /**
@@ -298,13 +305,15 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /* -------------------------------------------- */
 
     /** @override */
+    /* eslint-disable no-restricted-syntax -- boundary: ApplicationV2 hook signatures use free-form bags */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context: Record<string, unknown> = await super._prepareContext(options);
+        /* eslint-enable no-restricted-syntax */
         const parsedData = this.#parsedData;
-        const previewSkills = parsedData?.system?.trainedSkills ? Object.values(parsedData.system.trainedSkills) : [];
-        const previewTalents = parsedData?.items?.filter((item) => item.type === 'talent') ?? [];
-        const previewTraits = parsedData?.items?.filter((item) => item.type === 'trait') ?? [];
-        const previewWeapons = parsedData?.system?.weapons?.simple ?? [];
+        const previewSkills = parsedData?.system.trainedSkills !== undefined ? Object.values(parsedData.system.trainedSkills) : [];
+        const previewTalents = parsedData !== null ? parsedData.items.filter((item) => item.type === 'talent') : [];
+        const previewTraits = parsedData !== null ? parsedData.items.filter((item) => item.type === 'trait') : [];
+        const previewWeapons = parsedData?.system.weapons.simple ?? [];
 
         return {
             ...context,
@@ -348,6 +357,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 hook signature
     _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
@@ -393,12 +403,13 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         // Run validation on parsed data if we have any
         if (parseResult.data) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: validator accepts a structurally-compatible foreign shape
             const validation = StatBlockValidator.validate(parseResult.data as unknown as StatBlockData);
 
             // Merge validation results with parse results
             parseResult.errors = [...parseResult.errors, ...validation.errors];
             parseResult.warnings = [...parseResult.warnings, ...validation.warnings];
-            parseResult.info = validation.info || [];
+            parseResult.info = validation.info;
         }
 
         return parseResult;
@@ -409,6 +420,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} input - JSON string.
      * @returns {Object} Parsed data with validation.
      */
+    /* eslint-disable no-restricted-syntax, @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-nullish-coalescing -- boundary: parseJSON ingests user-pasted free-form JSON */
     static parseJSON(input: string): ParseResult {
         const result: ParseResult = {
             data: null,
@@ -458,12 +470,14 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         return result;
     }
+    /* eslint-enable no-restricted-syntax, @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-nullish-coalescing */
 
     /**
      * Parse structured text format.
      * @param {string} input - Text input.
      * @returns {Object} Parsed data with validation.
      */
+    /* eslint-disable @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-nullish-coalescing -- boundary: parseText branches on optional regex capture results; defensive truthiness checks are intentional */
     static parseText(input: string): ParseResult {
         const result: ParseResult = {
             data: null,
@@ -573,6 +587,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         return result;
     }
+    /* eslint-enable @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-nullish-coalescing */
 
     static _normalizeInput(input: string): string {
         return TextPatternExtractor.normalizeInput(input);
@@ -594,6 +609,8 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         }
         return firstLine;
     }
+
+    /* eslint-disable @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-base-to-string -- boundary: parser methods branch on optional regex capture results and freeform input; defensive truthiness checks are intentional */
 
     static _looksLikeCharacteristicHeader(line: string): boolean {
         const required = ['WS', 'BS', 'S', 'T', 'Ag', 'Int', 'Per', 'WP', 'Fel'];
@@ -652,6 +669,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     static _applyCharacteristics(systemData: NPCSystemData, characteristicResult: CharacteristicParseResult): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics map keyed by free-form string
         const chars = systemData.characteristics as unknown as NPCCharacteristicsMap;
         for (const [key, value] of Object.entries(characteristicResult.values)) {
             if (!chars[key]) continue;
@@ -701,6 +719,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         if (namedMatches.length > 0) {
             const movement: Partial<NPCMovement> = {};
             for (const match of namedMatches) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: regex-extracted movement key is a free-form string
                 (movement as Record<string, number>)[match[1].toLowerCase()] = parseInt(match[2], 10);
             }
             if (movement.half !== undefined && movement.full !== undefined && movement.charge !== undefined && movement.run !== undefined) {
@@ -812,9 +831,11 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return { trainedSkills, hasEntries: Object.keys(trainedSkills).length > 0 };
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: talent item data is destined for createEmbeddedDocuments
     static _parseTalents(text: string | null): Array<{ name: string; type: string; system: Record<string, unknown> }> {
         if (!text) return [];
         const entries = this._splitList(text);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: talent item data is destined for createEmbeddedDocuments
         const items: Array<{ name: string; type: string; system: Record<string, unknown> }> = [];
 
         for (const entry of entries) {
@@ -876,6 +897,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             colossal: 9,
             gargantuan: 10,
         };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics map keyed by free-form string
         const chars = systemData.characteristics as unknown as NPCCharacteristicsMap;
 
         for (const trait of traits) {
@@ -1101,6 +1123,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return TextPatternExtractor.splitList(text);
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: parse-time entries arrive as untyped tokens from regex extraction
     static _cleanEntry(entry: unknown): string {
         return TextPatternExtractor.cleanEntry(String(entry ?? ''));
     }
@@ -1155,6 +1178,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         if (lowered.includes('intelligence')) return 'intelligence';
         return null;
     }
+    /* eslint-enable @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-base-to-string */
 
     /* -------------------------------------------- */
     /*  Event Handlers                              */
@@ -1165,15 +1189,15 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static _onParse(this: any, event: Event, target: HTMLElement): void {
+    static _onParse(this: StatBlockParser, _event: Event, _target: HTMLElement): void {
         const result = StatBlockParser.parse(this.#rawInput);
 
         this.#parsedData = result.data;
         this.#errors = result.errors;
         this.#warnings = result.warnings;
-        this.#info = result.info || [];
+        this.#info = result.info;
 
-        this.render({ parts: ['form'] });
+        void this.render({ parts: ['form'] });
     }
 
     /**
@@ -1182,14 +1206,16 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static async _onSubmit(this: StatBlockParser, event: Event | SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
+    static async _onSubmit(this: StatBlockParser, _event: Event | SubmitEvent, _form: HTMLFormElement, _formData: FormDataExtended): Promise<void> {
         if (!this.#parsedData) {
+            // eslint-disable-next-line no-restricted-syntax -- legacy notification string, pending langpack migration
             ui.notifications.error('No valid data to import. Parse input first.');
             return;
         }
 
         try {
             if (this.#targetActor) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update payload bag
                 const updateData: Record<string, unknown> = {
                     system: this.#parsedData.system,
                 };
@@ -1199,7 +1225,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
                 await this.#targetActor.update(updateData);
 
-                if (this.#parsedData.items?.length > 0) {
+                if (this.#parsedData.items.length > 0) {
                     await this.#targetActor.createEmbeddedDocuments('Item', this.#parsedData.items);
                 }
 
@@ -1218,19 +1244,23 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                 system: this.#parsedData.system,
             };
 
-            const actorResult = await Actor.create(actorData as any);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.create accepts free-form actor data
+            const actorResult = await Actor.create(actorData as Parameters<typeof Actor.create>[0]);
             const actor = Array.isArray(actorResult) ? actorResult[0] : actorResult;
             if (!actor) throw new Error('Actor.create() returned nothing');
 
             // Create embedded items if any
-            if (this.#parsedData.items?.length > 0) {
+            if (this.#parsedData.items.length > 0) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor type doesn't expose createEmbeddedDocuments in its public d.ts
                 await (actor as unknown as { createEmbeddedDocuments: (type: string, data: unknown[]) => Promise<unknown> }).createEmbeddedDocuments(
                     'Item',
                     this.#parsedData.items,
                 );
             }
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor type doesn't expose .name in this scope
             ui.notifications.info(game.i18n.format('WH40K.NPC.Import.Success', { name: (actor as unknown as { name?: string }).name ?? '' }));
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor type doesn't expose .sheet in this scope
             (actor as unknown as { sheet?: { render: (force: boolean) => void } }).sheet?.render(true);
 
             this.#submitted = true;
@@ -1247,7 +1277,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async _onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async _onCancel(this: StatBlockParser, _event: Event, _target: HTMLElement): Promise<void> {
         this.#submitted = false;
         if (this.#resolve) this.#resolve(null);
         await this.close();
@@ -1258,13 +1288,13 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static _onClearInput(this: any, event: Event, target: HTMLElement): void {
+    static _onClearInput(this: StatBlockParser, _event: Event, _target: HTMLElement): void {
         this.#rawInput = '';
         this.#parsedData = null;
         this.#errors = [];
         this.#warnings = [];
         this.#info = [];
-        this.render({ parts: ['form'] });
+        void this.render({ parts: ['form'] });
     }
 
     /* -------------------------------------------- */
@@ -1272,6 +1302,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close hook signature
     async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (!this.#submitted && this.#resolve) {
             this.#resolve(null);
@@ -1287,6 +1318,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * Wait for import completion.
      * @returns {Promise<Actor|null>} Created actor or null.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: resolves with the Actor.create result
     async wait(): Promise<unknown> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
@@ -1299,6 +1331,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} [initialInput=""] - Optional initial input.
      * @returns {Promise<Actor|null>} Created actor or null.
      */
+    /* eslint-disable no-restricted-syntax -- boundary: open() accepts either a raw input string or an options bag from various call sites */
     static async open(initialInput: unknown = ''): Promise<unknown> {
         let input: string;
         let options: Record<string, unknown> = {};
@@ -1316,6 +1349,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         parser.#targetActor = actor !== undefined ? (actor as unknown as ImportTargetActor) : null;
         return parser.wait();
     }
+    /* eslint-enable no-restricted-syntax */
 
     /**
      * Quick parse without dialog (returns data only, doesn't create actor).

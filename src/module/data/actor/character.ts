@@ -262,7 +262,10 @@ export default class CharacterData extends CreatureTemplate {
             }),
 
             // ===== DH2e RESOURCES =====
-            influence: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            // Influence is a 0-100 characteristic per DH2 RAW (DH2e core p. 28). In Homebrew
+            // mode it presents as an economy resource, but the cap still applies — Influence
+            // never exceeds a percentile characteristic ceiling.
+            influence: new fields.NumberField({ required: true, initial: 0, min: 0, max: 100, integer: true }),
             requisition: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             throneGelt: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
@@ -758,8 +761,11 @@ export default class CharacterData extends CreatureTemplate {
             }
         }
 
-        // Only override wounds.max if we found origin path wound formulas
-        if (hasWoundFormula) {
+        // Only override wounds.max when origin path formulas yielded a usable total. If
+        // computedMax is 0 (every contributing item had a missing rollResult or a degenerate
+        // formula), fall back to the source value the user/sheet stored — otherwise a partial
+        // origin-path migration would silently zero out a manually-entered max. See issue #8.
+        if (hasWoundFormula && computedMax > 0) {
             // Add item/modifier bonuses
             const modifierBonus = this.totalWoundsModifier;
             this.wounds.max = computedMax + modifierBonus;

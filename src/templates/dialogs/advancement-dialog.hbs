@@ -1,8 +1,8 @@
 {{!-- Advancement Dialog Template --}}
 <div class="tw-flex tw-flex-col tw-h-full tw-gap-0 tw-font-[var(--wh40k-font-ui)]" data-wh40k-system="{{_gameSystemId}}">
 
-  {{!-- Header with XP Display --}}
-  <header>
+  {{!-- Header with XP Display (sticky so totals stay visible while content scrolls — #22) --}}
+  <header class="tw-sticky tw-top-0 tw-z-20 tw-bg-[var(--color-bg-secondary)] tw-shrink-0">
     <div>
       <div>
         <div style="width: {{xp.usedPercent}}%">
@@ -36,8 +36,8 @@
   </div>
   {{else}}
 
-  {{!-- Tab Navigation --}}
-  <nav>
+  {{!-- Tab Navigation (sticky alongside the header so the tab bar stays anchored) --}}
+  <nav class="tw-sticky tw-top-[var(--wh40k-adv-header-h,4rem)] tw-z-10 tw-bg-[var(--color-bg-secondary)] tw-shrink-0">
     {{#each tabs}}
     <button
       class="{{#if this.active}}active{{/if}}"
@@ -51,8 +51,10 @@
     {{/each}}
   </nav>
 
-  {{!-- Content Area --}}
-  <div>
+  {{!-- Content Area — scrollable so options below the window edge are reachable (#22). The
+       PARTS.scrollable selector targets .wh40k-adv__content; this class also lets the parent
+       flex container claim remaining height via tw-flex-1 tw-min-h-0. --}}
+  <div class="wh40k-adv__content tw-flex-1 tw-min-h-0 tw-overflow-y-auto">
 
     {{!-- Characteristics Tab --}}
     {{#if (eq activeTab "characteristics")}}
@@ -303,55 +305,62 @@
       </div>
       {{/if}}
 
+      {{!-- PROTOTYPE: tier-grouped power tree. Each discipline lists its powers grouped by
+           Psy Rating tier (PR 1 → PR N). Tiers above the actor's current PR show as
+           "blocked" rows; lower tiers as accessible. The flat `discipline.items` array is
+           still available for callers that prefer the old layout. --}}
       {{#each psychic.disciplines as |discipline|}}
-      <h4>{{discipline.label}}</h4>
-      <div>
-        {{#each discipline.items}}
-        <div>
-          <div>
-            <span title="Psy Rating {{this.prCost}}">PR{{this.prCost}}</span>
-            <span>{{this.displayName}}</span>
-            <a
-               data-action="openCompendiumItem"
-               data-name="{{this.name}}"
-               data-type="psychicPower"
-               title="View in Compendium">
-              <i class="fas fa-external-link-alt"></i>
-            </a>
-            {{#if this.owned}}
-            <span class="tw-text-[0.7rem] tw-py-[0.15rem] tw-px-[0.4rem] tw-rounded-[3px] tw-inline-flex tw-items-center tw-gap-1 tw-w-fit tw-bg-[rgba(45,80,22,0.3)] tw-text-[#7cb342]">
-              <i class="fas fa-check"></i> Owned
-            </span>
-            {{/if}}
-            {{#if this.blocked}}
-            <span title="{{#each this.prereqDisplay}}{{this}}{{/each}}">
-              <i class="fas fa-exclamation-triangle"></i>
-              Requires PR {{this.prCost}}
-            </span>
-            {{/if}}
+      <h4 class="tw-mt-3 tw-mb-1 tw-text-[color:var(--wh40k-color-gold)] tw-font-display tw-uppercase tw-tracking-[0.1em] tw-border-b tw-border-[var(--wh40k-border-color)]">{{discipline.label}}</h4>
+      <div class="tw-flex tw-flex-col tw-gap-2">
+        {{#each discipline.tiers as |tier|}}
+        <section class="tw-pl-3 tw-border-l-2 {{#if tier.accessible}}tw-border-[var(--wh40k-color-gold)]{{else}}tw-border-[var(--wh40k-color-warning)] tw-opacity-70{{/if}}">
+          <header class="tw-flex tw-items-center tw-gap-2 tw-text-[0.7rem] tw-uppercase tw-font-bold tw-tracking-[0.08em] tw-text-[color:var(--color-text-secondary)] tw-mb-1">
+            <i class="fas {{#if tier.accessible}}fa-circle-check tw-text-[color:var(--wh40k-color-gold-light)]{{else}}fa-lock tw-text-[color:var(--wh40k-color-warning)]{{/if}}"></i>
+            <span>{{tier.label}}</span>
+            <span class="tw-ml-auto tw-text-[0.65rem]">{{tier.items.length}} power{{#unless (eq tier.items.length 1)}}s{{/unless}}</span>
+          </header>
+          <div class="tw-flex tw-flex-col tw-gap-1">
+            {{#each tier.items}}
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-py-1 tw-px-2 tw-rounded-md {{#if this.owned}}tw-bg-[rgba(45,80,22,0.18)] tw-border tw-border-[rgba(124,179,66,0.4)]{{else if this.blocked}}tw-bg-[rgba(0,0,0,0.08)] tw-opacity-70{{else}}tw-bg-[var(--color-bg-option,rgba(0,0,0,0.03))] tw-border tw-border-[var(--wh40k-border-color-light)]{{/if}}">
+              <div class="tw-flex tw-items-center tw-gap-2 tw-min-w-0 tw-flex-1">
+                <span class="tw-text-[0.65rem] tw-font-mono tw-text-[color:var(--color-text-tertiary)]" title="Psy Rating {{this.prCost}}">PR{{this.prCost}}</span>
+                <span class="tw-font-semibold tw-truncate">{{this.displayName}}</span>
+                <a class="tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-color-gold)]"
+                   data-action="openCompendiumItem"
+                   data-name="{{this.name}}"
+                   data-type="psychicPower"
+                   title="View in Compendium">
+                  <i class="fas fa-external-link-alt tw-text-[0.7rem]"></i>
+                </a>
+                {{#if this.owned}}
+                <span class="tw-text-[0.65rem] tw-py-[0.1rem] tw-px-[0.4rem] tw-rounded-[3px] tw-inline-flex tw-items-center tw-gap-1 tw-bg-[rgba(45,80,22,0.3)] tw-text-[#7cb342]"><i class="fas fa-check"></i> Owned</span>
+                {{/if}}
+              </div>
+              {{#if this.blocked}}
+              <div class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-color-warning)] tw-text-[0.7rem] tw-cursor-help" title="Requires PR {{this.prCost}}">
+                <i class="fas fa-lock"></i>
+                <span>{{this.cost}} XP</span>
+              </div>
+              {{else if this.owned}}
+              <i class="fas fa-check-circle tw-text-[#7cb342]"></i>
+              {{else if this.canPurchase}}
+              <button class="tw-py-[0.3rem] tw-px-[0.6rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.75rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]"
+                data-action="purchaseAdvance"
+                data-index="{{this.index}}"
+                data-type="psychic-power"
+                type="button">
+                <span>{{this.cost}} XP</span>
+              </button>
+              {{else if this.cantAfford}}
+              <div class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--color-text-tertiary)] tw-text-[0.7rem]">
+                <i class="fas fa-coins"></i>
+                <span>{{this.cost}} XP</span>
+              </div>
+              {{/if}}
+            </div>
+            {{/each}}
           </div>
-          {{#if this.blocked}}
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-[color:var(--color-text-secondary)] tw-cursor-help [&_i]:tw-text-[color:var(--wh40k-color-warning)]">
-            <i class="fas fa-lock"></i>
-            <span>{{this.cost}} XP</span>
-          </div>
-          {{else if this.owned}}
-          <div><i class="fas fa-check-circle"></i></div>
-          {{else if this.canPurchase}}
-          <button class="tw-py-[0.4rem] tw-px-[0.8rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]"
-            data-action="purchaseAdvance"
-            data-index="{{this.index}}"
-            data-type="psychic-power"
-            type="button">
-            <span>{{this.cost}} XP</span>
-          </button>
-          {{else if this.cantAfford}}
-          <div>
-            <i class="fas fa-coins"></i>
-            <span>{{this.cost}} XP</span>
-          </div>
-          {{/if}}
-        </div>
+        </section>
         {{/each}}
       </div>
       {{/each}}

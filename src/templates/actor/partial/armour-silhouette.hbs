@@ -1,0 +1,177 @@
+{{!--
+    Armour silhouette body — character-shape grid of armour locations with totals,
+    fitted item icons, and roll-range badges. Used by:
+      * Combat tab via armour-display-panel.hbs (wrapped in panel.hbs)
+      * Overview tab via tab-overview.hbs (wrapped in dashboard-zone)
+
+    Required context:
+        armourDisplay — { head | rightArm | leftArm | body | rightLeg | leftLeg }
+                        each with `.total`, `.items[]`, `.tooltipData`.
+
+    Optional context:
+        compact — when true, drop the extra fitted-items strip and roll-range
+                  badge to fit dashboard-zone footprints (Overview tab).
+--}}
+<div class="tw-grid {{#if compact}}[grid-template-columns:1fr_1fr_1fr] tw-max-w-full{{else}}[grid-template-columns:80px_1fr_80px] tw-max-w-[300px]{{/if}} [grid-template-rows:auto_auto_auto] [grid-template-areas:'._head_.'_'rarm_body_larm'_'rleg_body_lleg'] tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-xs,4px)] tw-w-full tw-mx-auto">
+    {{! Head (centered at top) }}
+    <div class="[grid-area:head] tw-justify-self-center tw-min-w-[72px] tw-min-h-[68px] tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[var(--wh40k-space-sm,8px)] tw-bg-[var(--wh40k-panel-bg,rgba(45,40,35,0.7))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,rgba(180,140,100,0.4))] tw-rounded-[var(--wh40k-radius-lg,8px)] tw-shadow-[0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),inset_0_1px_0_rgba(255,255,255,0.1)] tw-transition-all tw-duration-200 tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-gold hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),0_0_8px_rgba(212,175,55,0.2)]"
+         data-location="head"
+         data-roll-min="1"
+         data-roll-max="10"
+         data-wh40k-tooltip="armor"
+         data-wh40k-tooltip-data="{{armourDisplay.head.tooltipData}}"
+         title="Head - Roll: 01-10">
+        <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-leading-none tw-mb-[var(--wh40k-space-xs,4px)] tw-whitespace-nowrap">Head</span>
+        <span class="tw-w-[38px] tw-h-[38px] tw-flex tw-items-center tw-justify-center tw-font-alt tw-text-2xl tw-font-bold tw-text-[color:var(--wh40k-text-dark,#e8dcc8)] tw-leading-none tw-bg-[var(--wh40k-panel-bg-solid,rgba(45,40,35,0.9))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,rgba(212,175,55,0.5))] tw-rounded-full tw-shadow-[inset_0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-all tw-duration-200 group-hover:tw-border-gold group-hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.4)] group-hover:tw-scale-[1.08]">{{armourDisplay.head.total}}</span>
+        {{#unless compact}}
+        <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-min-h-6 tw-mt-1 tw-w-full tw-max-w-full">
+            {{#each armourDisplay.head.items as |item|}}
+            <button type="button"
+                    class="tw-flex-none tw-h-6 tw-w-6 tw-overflow-hidden tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-bg-black/20 tw-shadow-[0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-transform hover:tw-translate-y-[-1px] hover:tw-border-gold"
+                    data-wh40k-tooltip="generic"
+                    data-wh40k-tooltip-data="{{item.tooltipData}}"
+                    data-item-id="{{item.id}}"
+                    title="{{item.name}}">
+                <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+            </button>
+            {{/each}}
+        </div>
+        <span class="tw-text-[0.55rem] tw-font-bold tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-bg-[var(--wh40k-accent-overlay,rgba(212,175,55,0.1))] tw-py-[3px] tw-px-[6px] tw-rounded-[var(--wh40k-radius-sm,4px)] tw-tracking-[0.03em] tw-leading-none tw-font-mono tw-transition-all tw-duration-200 tw-whitespace-nowrap tw-mt-[var(--wh40k-space-xs,4px)] group-hover:tw-bg-gold group-hover:tw-text-white">01-10</span>
+        {{/unless}}
+    </div>
+
+    {{! Right Arm (left side of screen, character's right) }}
+    <div class="[grid-area:rarm] tw-justify-self-end tw-self-center tw-min-h-[80px] tw-min-w-[60px] tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[var(--wh40k-space-sm,8px)] tw-bg-[var(--wh40k-panel-bg,rgba(45,40,35,0.7))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,rgba(180,140,100,0.4))] tw-rounded-[var(--wh40k-radius-lg,8px)] tw-shadow-[0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),inset_0_1px_0_rgba(255,255,255,0.1)] tw-transition-all tw-duration-200 tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-gold hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),0_0_8px_rgba(212,175,55,0.2)]"
+         data-location="rightArm"
+         data-roll-min="11"
+         data-roll-max="20"
+         data-wh40k-tooltip="armor"
+         data-wh40k-tooltip-data="{{armourDisplay.rightArm.tooltipData}}"
+         title="Right Arm - Roll: 11-20">
+        <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-leading-none tw-mb-[var(--wh40k-space-xs,4px)] tw-whitespace-nowrap">R.Arm</span>
+        <span class="tw-w-[38px] tw-h-[38px] tw-flex tw-items-center tw-justify-center tw-font-alt tw-text-2xl tw-font-bold tw-text-[color:var(--wh40k-text-dark,#e8dcc8)] tw-leading-none tw-bg-[var(--wh40k-panel-bg-solid,rgba(45,40,35,0.9))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,rgba(212,175,55,0.5))] tw-rounded-full tw-shadow-[inset_0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-all tw-duration-200 group-hover:tw-border-gold group-hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.4)] group-hover:tw-scale-[1.08]">{{armourDisplay.rightArm.total}}</span>
+        {{#unless compact}}
+        <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-min-h-6 tw-mt-1 tw-w-full tw-max-w-full">
+            {{#each armourDisplay.rightArm.items as |item|}}
+            <button type="button"
+                    class="tw-flex-none tw-h-6 tw-w-6 tw-overflow-hidden tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-bg-black/20 tw-shadow-[0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-transform hover:tw-translate-y-[-1px] hover:tw-border-gold"
+                    data-wh40k-tooltip="generic"
+                    data-wh40k-tooltip-data="{{item.tooltipData}}"
+                    data-item-id="{{item.id}}"
+                    title="{{item.name}}">
+                <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+            </button>
+            {{/each}}
+        </div>
+        <span class="tw-text-[0.55rem] tw-font-bold tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-bg-[var(--wh40k-accent-overlay,rgba(212,175,55,0.1))] tw-py-[3px] tw-px-[6px] tw-rounded-[var(--wh40k-radius-sm,4px)] tw-tracking-[0.03em] tw-leading-none tw-font-mono tw-transition-all tw-duration-200 tw-whitespace-nowrap tw-mt-[var(--wh40k-space-xs,4px)] group-hover:tw-bg-gold group-hover:tw-text-white">11-20</span>
+        {{/unless}}
+    </div>
+
+    {{! Left Arm (right side of screen, character's left) }}
+    <div class="[grid-area:larm] tw-justify-self-start tw-self-center tw-min-h-[80px] tw-min-w-[60px] tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[var(--wh40k-space-sm,8px)] tw-bg-[var(--wh40k-panel-bg,rgba(45,40,35,0.7))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,rgba(180,140,100,0.4))] tw-rounded-[var(--wh40k-radius-lg,8px)] tw-shadow-[0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),inset_0_1px_0_rgba(255,255,255,0.1)] tw-transition-all tw-duration-200 tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-gold hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),0_0_8px_rgba(212,175,55,0.2)]"
+         data-location="leftArm"
+         data-roll-min="21"
+         data-roll-max="30"
+         data-wh40k-tooltip="armor"
+         data-wh40k-tooltip-data="{{armourDisplay.leftArm.tooltipData}}"
+         title="Left Arm - Roll: 21-30">
+        <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-leading-none tw-mb-[var(--wh40k-space-xs,4px)] tw-whitespace-nowrap">L.Arm</span>
+        <span class="tw-w-[38px] tw-h-[38px] tw-flex tw-items-center tw-justify-center tw-font-alt tw-text-2xl tw-font-bold tw-text-[color:var(--wh40k-text-dark,#e8dcc8)] tw-leading-none tw-bg-[var(--wh40k-panel-bg-solid,rgba(45,40,35,0.9))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,rgba(212,175,55,0.5))] tw-rounded-full tw-shadow-[inset_0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-all tw-duration-200 group-hover:tw-border-gold group-hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.4)] group-hover:tw-scale-[1.08]">{{armourDisplay.leftArm.total}}</span>
+        {{#unless compact}}
+        <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-min-h-6 tw-mt-1 tw-w-full tw-max-w-full">
+            {{#each armourDisplay.leftArm.items as |item|}}
+            <button type="button"
+                    class="tw-flex-none tw-h-6 tw-w-6 tw-overflow-hidden tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-bg-black/20 tw-shadow-[0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-transform hover:tw-translate-y-[-1px] hover:tw-border-gold"
+                    data-wh40k-tooltip="generic"
+                    data-wh40k-tooltip-data="{{item.tooltipData}}"
+                    data-item-id="{{item.id}}"
+                    title="{{item.name}}">
+                <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+            </button>
+            {{/each}}
+        </div>
+        <span class="tw-text-[0.55rem] tw-font-bold tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-bg-[var(--wh40k-accent-overlay,rgba(212,175,55,0.1))] tw-py-[3px] tw-px-[6px] tw-rounded-[var(--wh40k-radius-sm,4px)] tw-tracking-[0.03em] tw-leading-none tw-font-mono tw-transition-all tw-duration-200 tw-whitespace-nowrap tw-mt-[var(--wh40k-space-xs,4px)] group-hover:tw-bg-gold group-hover:tw-text-white">21-30</span>
+        {{/unless}}
+    </div>
+
+    {{! Body (center, largest box) }}
+    <div class="[grid-area:body] tw-min-h-[140px] tw-self-stretch tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[var(--wh40k-space-sm,8px)] tw-bg-[var(--wh40k-panel-bg,rgba(45,40,35,0.7))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,rgba(180,140,100,0.4))] tw-rounded-[var(--wh40k-radius-lg,8px)] tw-shadow-[0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),inset_0_1px_0_rgba(255,255,255,0.1)] tw-transition-all tw-duration-200 tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-gold hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),0_0_8px_rgba(212,175,55,0.2)]"
+         data-location="body"
+         data-roll-min="31"
+         data-roll-max="70"
+         data-wh40k-tooltip="armor"
+         data-wh40k-tooltip-data="{{armourDisplay.body.tooltipData}}"
+         title="Body - Roll: 31-70">
+        <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-leading-none tw-mb-[var(--wh40k-space-xs,4px)] tw-whitespace-nowrap">Body</span>
+        <span class="tw-w-[48px] tw-h-[48px] tw-flex tw-items-center tw-justify-center tw-font-alt tw-text-[1.8rem] tw-font-bold tw-text-[color:var(--wh40k-text-dark,#e8dcc8)] tw-leading-none tw-bg-[var(--wh40k-panel-bg-solid,rgba(45,40,35,0.9))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,rgba(212,175,55,0.5))] tw-rounded-full tw-shadow-[inset_0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-all tw-duration-200 group-hover:tw-border-gold group-hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.4)] group-hover:tw-scale-[1.08]">{{armourDisplay.body.total}}</span>
+        {{#unless compact}}
+        <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-min-h-6 tw-mt-1 tw-w-full tw-max-w-full">
+            {{#each armourDisplay.body.items as |item|}}
+            <button type="button"
+                    class="tw-flex-none tw-h-6 tw-w-6 tw-overflow-hidden tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-bg-black/20 tw-shadow-[0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-transform hover:tw-translate-y-[-1px] hover:tw-border-gold"
+                    data-wh40k-tooltip="generic"
+                    data-wh40k-tooltip-data="{{item.tooltipData}}"
+                    data-item-id="{{item.id}}"
+                    title="{{item.name}}">
+                <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+            </button>
+            {{/each}}
+        </div>
+        <span class="tw-text-[0.55rem] tw-font-bold tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-bg-[var(--wh40k-accent-overlay,rgba(212,175,55,0.1))] tw-py-[3px] tw-px-[6px] tw-rounded-[var(--wh40k-radius-sm,4px)] tw-tracking-[0.03em] tw-leading-none tw-font-mono tw-transition-all tw-duration-200 tw-whitespace-nowrap tw-mt-[var(--wh40k-space-xs,4px)] group-hover:tw-bg-gold group-hover:tw-text-white">31-70</span>
+        {{/unless}}
+    </div>
+
+    {{! Right Leg (left side of screen, character's right) }}
+    <div class="[grid-area:rleg] tw-justify-self-end tw-self-start tw-min-h-[120px] tw-min-w-[65px] {{#unless compact}}tw-mr-[-40px]{{/unless}} tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[var(--wh40k-space-sm,8px)] tw-bg-[var(--wh40k-panel-bg,rgba(45,40,35,0.7))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,rgba(180,140,100,0.4))] tw-rounded-[var(--wh40k-radius-lg,8px)] tw-shadow-[0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),inset_0_1px_0_rgba(255,255,255,0.1)] tw-transition-all tw-duration-200 tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-gold hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),0_0_8px_rgba(212,175,55,0.2)]"
+         data-location="rightLeg"
+         data-roll-min="71"
+         data-roll-max="85"
+         data-wh40k-tooltip="armor"
+         data-wh40k-tooltip-data="{{armourDisplay.rightLeg.tooltipData}}"
+         title="Right Leg - Roll: 71-85">
+        <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-leading-none tw-mb-[var(--wh40k-space-xs,4px)] tw-whitespace-nowrap">R.Leg</span>
+        <span class="tw-w-[38px] tw-h-[38px] tw-flex tw-items-center tw-justify-center tw-font-alt tw-text-2xl tw-font-bold tw-text-[color:var(--wh40k-text-dark,#e8dcc8)] tw-leading-none tw-bg-[var(--wh40k-panel-bg-solid,rgba(45,40,35,0.9))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,rgba(212,175,55,0.5))] tw-rounded-full tw-shadow-[inset_0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-all tw-duration-200 group-hover:tw-border-gold group-hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.4)] group-hover:tw-scale-[1.08]">{{armourDisplay.rightLeg.total}}</span>
+        {{#unless compact}}
+        <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-min-h-6 tw-mt-1 tw-w-full tw-max-w-full">
+            {{#each armourDisplay.rightLeg.items as |item|}}
+            <button type="button"
+                    class="tw-flex-none tw-h-6 tw-w-6 tw-overflow-hidden tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-bg-black/20 tw-shadow-[0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-transform hover:tw-translate-y-[-1px] hover:tw-border-gold"
+                    data-wh40k-tooltip="generic"
+                    data-wh40k-tooltip-data="{{item.tooltipData}}"
+                    data-item-id="{{item.id}}"
+                    title="{{item.name}}">
+                <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+            </button>
+            {{/each}}
+        </div>
+        <span class="tw-text-[0.55rem] tw-font-bold tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-bg-[var(--wh40k-accent-overlay,rgba(212,175,55,0.1))] tw-py-[3px] tw-px-[6px] tw-rounded-[var(--wh40k-radius-sm,4px)] tw-tracking-[0.03em] tw-leading-none tw-font-mono tw-transition-all tw-duration-200 tw-whitespace-nowrap tw-mt-[var(--wh40k-space-xs,4px)] group-hover:tw-bg-gold group-hover:tw-text-white">71-85</span>
+        {{/unless}}
+    </div>
+
+    {{! Left Leg (right side of screen, character's left) }}
+    <div class="[grid-area:lleg] tw-justify-self-start tw-self-start tw-min-h-[120px] tw-min-w-[65px] {{#unless compact}}tw-ml-[-40px]{{/unless}} tw-group tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[var(--wh40k-space-sm,8px)] tw-bg-[var(--wh40k-panel-bg,rgba(45,40,35,0.7))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,rgba(180,140,100,0.4))] tw-rounded-[var(--wh40k-radius-lg,8px)] tw-shadow-[0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),inset_0_1px_0_rgba(255,255,255,0.1)] tw-transition-all tw-duration-200 tw-cursor-pointer hover:tw-bg-[var(--wh40k-panel-bg-solid)] hover:tw-border-gold hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),0_0_8px_rgba(212,175,55,0.2)]"
+         data-location="leftLeg"
+         data-roll-min="86"
+         data-roll-max="100"
+         data-wh40k-tooltip="armor"
+         data-wh40k-tooltip-data="{{armourDisplay.leftLeg.tooltipData}}"
+         title="Left Leg - Roll: 86-00">
+        <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-leading-none tw-mb-[var(--wh40k-space-xs,4px)] tw-whitespace-nowrap">L.Leg</span>
+        <span class="tw-w-[38px] tw-h-[38px] tw-flex tw-items-center tw-justify-center tw-font-alt tw-text-2xl tw-font-bold tw-text-[color:var(--wh40k-text-dark,#e8dcc8)] tw-leading-none tw-bg-[var(--wh40k-panel-bg-solid,rgba(45,40,35,0.9))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,rgba(212,175,55,0.5))] tw-rounded-full tw-shadow-[inset_0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-all tw-duration-200 group-hover:tw-border-gold group-hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.4)] group-hover:tw-scale-[1.08]">{{armourDisplay.leftLeg.total}}</span>
+        {{#unless compact}}
+        <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-min-h-6 tw-mt-1 tw-w-full tw-max-w-full">
+            {{#each armourDisplay.leftLeg.items as |item|}}
+            <button type="button"
+                    class="tw-flex-none tw-h-6 tw-w-6 tw-overflow-hidden tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-bg-black/20 tw-shadow-[0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-transform hover:tw-translate-y-[-1px] hover:tw-border-gold"
+                    data-wh40k-tooltip="generic"
+                    data-wh40k-tooltip-data="{{item.tooltipData}}"
+                    data-item-id="{{item.id}}"
+                    title="{{item.name}}">
+                <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+            </button>
+            {{/each}}
+        </div>
+        <span class="tw-text-[0.55rem] tw-font-bold tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-bg-[var(--wh40k-accent-overlay,rgba(212,175,55,0.1))] tw-py-[3px] tw-px-[6px] tw-rounded-[var(--wh40k-radius-sm,4px)] tw-tracking-[0.03em] tw-leading-none tw-font-mono tw-transition-all tw-duration-200 tw-whitespace-nowrap tw-mt-[var(--wh40k-space-xs,4px)] group-hover:tw-bg-gold group-hover:tw-text-white">86-00</span>
+        {{/unless}}
+    </div>
+</div>

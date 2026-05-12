@@ -137,4 +137,71 @@ describe('skill tooltip regressions', () => {
         expect(html).toContain('Training:</span>');
         expect(html).toContain('Known</span>');
     });
+
+    it('hides the half-characteristic untrained base line for non-RT systems', async () => {
+        const actor = {
+            system: {
+                gameSystem: 'dh2e',
+                characteristics: {
+                    perception: { label: 'Perception', total: 37 },
+                },
+                skills: {
+                    awareness: {
+                        characteristic: 'perception',
+                        trained: false,
+                        plus10: false,
+                        plus20: false,
+                        plus30: false,
+                        current: 17,
+                        bonus: 0,
+                    },
+                },
+            },
+        } as WH40KBaseActor;
+
+        (globalThis as Record<string, unknown>).fromUuid = async () => actor;
+
+        const tooltip = new TooltipsWH40K();
+        const html = await tooltip._buildSkillTooltip({
+            actorUuid: 'Actor.mock',
+            name: 'awareness',
+            label: 'Awareness',
+        });
+
+        expect(html).not.toContain('Untrained Test Base');
+    });
+
+    it('shows the half-characteristic untrained base line for Rogue Trader', async () => {
+        const actor = {
+            system: {
+                gameSystem: 'rt',
+                characteristics: {
+                    perception: { label: 'Perception', total: 37 },
+                },
+                skills: {
+                    awareness: {
+                        characteristic: 'perception',
+                        trained: false,
+                        plus10: false,
+                        plus20: false,
+                        plus30: false,
+                        current: 18,
+                        bonus: 0,
+                    },
+                },
+            },
+        } as WH40KBaseActor;
+
+        (globalThis as Record<string, unknown>).fromUuid = async () => actor;
+
+        const tooltip = new TooltipsWH40K();
+        const html = await tooltip._buildSkillTooltip({
+            actorUuid: 'Actor.mock',
+            name: 'awareness',
+            label: 'Awareness',
+        });
+
+        expect(html).toContain('Untrained Test Base');
+        expect(html).toContain('>18<');
+    });
 });
