@@ -16,8 +16,122 @@
 import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { t } from '../../i18n/t.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
+
+/** ApplicationV2 action handler bound to a `CombatQuickPanel` instance. */
+type ActionHandler = (this: CombatQuickPanel, event: Event, target: HTMLElement) => Promise<void> | void;
+
+/* -------------------------------------------- */
+/*  Local adapter types                         */
+/* -------------------------------------------- */
+
+/** Persisted panel position (subset of the V2 position struct). */
+interface PanelPosition {
+    top?: number;
+    left?: number;
+    width?: number;
+    height?: number | 'auto';
+}
+
+/** Minimal Combatant view the panel needs. */
+interface CombatantView {
+    id: string | null;
+    actorId?: string;
+    initiative: number | null;
+}
+
+/**
+ * Locate the combatant entry for a given actor id within the current combat.
+ * Foundry's `Combatant` exposes `actorId` and `initiative` at runtime but the
+ * upstream types under `fvtt-types` don't surface them at the top level; this
+ * helper concentrates the boundary cast in a single place.
+ */
+function findCombatantForActor(actorId: string): CombatantView | null {
+    const combatants = game.combat?.combatants;
+    if (!combatants) return null;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Combatant exposes actorId/initiative at runtime; fvtt-types omits them.
+    const found = combatants.find((c) => (c as unknown as CombatantView).actorId === actorId) as unknown as CombatantView | undefined;
+    return found ?? null;
+}
+
+/** Flag-bearing user (game.user) — narrows just the two flag methods we touch. */
+interface FlaggableUser {
+    getFlag(scope: string, key: string): PanelPosition | undefined;
+    setFlag(scope: string, key: string, value: PanelPosition): Promise<void>;
+}
+
+/**
+ * Read the typed flag accessor view of `game.user`. Foundry's User document
+ * exposes `getFlag` / `setFlag` at runtime but the upstream type doesn't
+ * thread the per-flag value type through; the boundary is contained here.
+ */
+function flaggableUser(): FlaggableUser {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry User#getFlag/setFlag exist at runtime; upstream type does not surface them generically.
+    return game.user as unknown as FlaggableUser;
+}
+
+/** Rate-of-fire descriptor used by the panel. */
+interface PanelRateOfFire {
+    single?: number | boolean | string;
+    semiAuto?: boolean;
+    fullAuto?: boolean;
+}
+
+/** Weapon system fields read by the panel that aren't on the canonical schema. */
+interface PanelWeaponSystem {
+    equipped?: boolean;
+    damage?: string;
+    penetration?: number;
+    range?: string | number;
+    clip?: { value?: number; max?: number };
+    effectiveClipMax?: number;
+    ammoPercentage?: number;
+    rateOfFire?: PanelRateOfFire;
+}
+
+/** Gear/consumable system fields. */
+interface PanelGearSystem {
+    equipped?: boolean;
+    consumable?: boolean;
+}
+
+/** Roll-action options bag accepted by the PC/NPC subclasses. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: rollWeaponAttack/rollSkill option bag is opaque cross-cutting config consumed by per-system roll dialogs.
+type RollOptions = Record<string, unknown>;
+
+/** Subset of WH40KBaseActor that this panel calls into for rolls. The two methods
+ *  are defined on the PC/NPC subclasses (acolyte / npc) and may be absent on a
+ *  bare base actor; we keep them optional and let the runtime guard at the call
+ *  site (`this.actor?.rollWeaponAttack(...)`) preserve original behavior. */
+interface CombatPanelActor extends WH40KBaseActor {
+    rollWeaponAttack?: (weaponId: string, options: RollOptions) => Promise<void>;
+    rollSkill?: (skill: string, options: RollOptions) => Promise<void>;
+}
+
+/** Prepared weapon view returned to the template. */
+interface PreparedWeaponData {
+    none?: boolean;
+    id?: string | null;
+    name?: string | null;
+    img?: string | null;
+    damage?: string;
+    penetration?: number;
+    range?: string | number;
+    clip?: { value?: number; max?: number };
+    ammo?: { current: number; max: number; percentage: number; low: boolean };
+    rateOfFire?: PanelRateOfFire;
+}
+
+/** Prepared quick action entry. */
+interface QuickAction {
+    action: string;
+    icon: string;
+    label: string;
+    disabled?: boolean;
+    tooltip: string;
+}
 
 export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
@@ -30,6 +144,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         classes: ['wh40k-rpg', 'combat-hud', 'floating-panel'],
         tag: 'aside',
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: value IS a WH40K.* i18n key, but the ESLint selector flags any literal here.
             title: 'WH40K.CombatPanel.Title',
             icon: 'fa-solid fa-crosshairs',
             minimizable: true,
@@ -38,21 +153,36 @@ export default class CombatQuickPanel extends ApplicationV2 {
         },
         position: {
             width: 340,
+            // V2 accepts 'auto' for height but the upstream type is `number`; the
+            // string is the documented sentinel for content-driven sizing.
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V2 accepts the literal 'auto' though the upstream type narrows to number.
             height: 'auto' as unknown as number,
         },
         actions: {
-            rollInitiative: CombatQuickPanel.#rollInitiative,
-            standardAttack: CombatQuickPanel.#standardAttack,
-            semiAutoAttack: CombatQuickPanel.#semiAutoAttack,
-            fullAutoAttack: CombatQuickPanel.#fullAutoAttack,
-            dodge: CombatQuickPanel.#dodge,
-            parry: CombatQuickPanel.#parry,
-            reload: CombatQuickPanel.#reload,
-            aim: CombatQuickPanel.#aim,
-            drawWeapon: CombatQuickPanel.#drawWeapon,
-            switchWeapon: CombatQuickPanel.#switchWeapon,
-            useConsumable: CombatQuickPanel.#useConsumable,
-            toggleOpacity: CombatQuickPanel.#toggleOpacity,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            rollInitiative: CombatQuickPanel.#rollInitiative as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            standardAttack: CombatQuickPanel.#standardAttack as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            semiAutoAttack: CombatQuickPanel.#semiAutoAttack as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            fullAutoAttack: CombatQuickPanel.#fullAutoAttack as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            dodge: CombatQuickPanel.#dodge as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            parry: CombatQuickPanel.#parry as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            reload: CombatQuickPanel.#reload as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            aim: CombatQuickPanel.#aim as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            drawWeapon: CombatQuickPanel.#drawWeapon as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            switchWeapon: CombatQuickPanel.#switchWeapon as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            useConsumable: CombatQuickPanel.#useConsumable as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            toggleOpacity: CombatQuickPanel.#toggleOpacity as ActionHandler,
         },
     };
 
@@ -69,44 +199,25 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    /**
-     * The actor this panel is displaying
-     * @type {WH40KBaseActor | null}
-     */
-    actor: WH40KBaseActor | null = null;
+    actor: CombatPanelActor | null = null;
 
-    /**
-     * The primary weapon being displayed
-     * @type {WH40KItem | null}
-     */
     primaryWeapon: WH40KItem | null = null;
 
-    declare setPosition: (pos: Partial<{ top: number; left: number; width: number; height: number | 'auto' }>) => void;
+    declare setPosition: (pos: PanelPosition) => void;
 
-    /**
-     * Track if reactions have been used this round
-     * @type {Object}
-     */
     reactionsUsed = {
         dodge: false,
         parry: false,
     };
 
-    /**
-     * Current opacity level (0-3)
-     * @type {number}
-     */
+    /** Current opacity level (0-3) */
     opacityLevel = 0;
 
     /* -------------------------------------------- */
     /*  Construction                                */
     /* -------------------------------------------- */
 
-    /**
-     * Create a new combat quick panel
-     * @param {WH40KBaseActor} actor  The actor to display
-     * @param {object} options  Additional options
-     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 ctor options bag is framework-defined.
     constructor(actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
         super(options);
         this.actor = actor;
@@ -115,21 +226,25 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Update the primary weapon reference
-     * @private
-     */
     _updatePrimaryWeapon(): void {
-        // Find equipped weapon
         if (!this.actor) return;
-        this.primaryWeapon = this.actor.items.find((i) => i.type === 'weapon' && (i.system as { equipped?: boolean }).equipped === true) ?? null;
+        const equipped = this.actor.items.find((i) => {
+            if (i.type !== 'weapon') return false;
+            const sys = i.system as PanelWeaponSystem;
+            return sys.equipped === true;
+        });
+        this.primaryWeapon = equipped ?? null;
     }
 
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
-        return `Combat: ${this.actor?.name ?? 'Unknown'}`;
+    get title(): string {
+        const name = this.actor?.name;
+        if (name === undefined || name === '') {
+            return t('WH40K.CombatPanel.TitleWithActor', { name: t('WH40K.CombatPanel.UnknownActor') });
+        }
+        return t('WH40K.CombatPanel.TitleWithActor', { name });
     }
 
     /* -------------------------------------------- */
@@ -137,17 +252,16 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext signature is framework-defined.
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         if (!this.actor) return context;
 
-        // Actor data
         context.actor = this.actor;
         context.system = this.actor.system;
 
-        // Vitals
-        const wounds = (this.actor.system as any).wounds;
+        const wounds = this.actor.system.wounds;
         context.wounds = {
             value: wounds.value,
             max: wounds.max,
@@ -156,20 +270,24 @@ export default class CombatQuickPanel extends ApplicationV2 {
             low: wounds.value <= wounds.max * 0.25,
         };
 
-        const fatigue = (this.actor.system as any).fatigue;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fatigue is declared optional on the shared WH40KActorSystemData (some actor types — vehicles, starships — never carry it); tightening would cascade across 7 systems.
+        const fatigue = this.actor.system.fatigue ?? { value: 0, max: 0 };
         context.fatigue = {
             value: fatigue.value,
             max: fatigue.max,
-            percentage: Math.round((fatigue.value / fatigue.max) * 100),
+            percentage: fatigue.max > 0 ? Math.round((fatigue.value / fatigue.max) * 100) : 0,
             exhausted: fatigue.value >= fatigue.max,
         };
 
         // Initiative
-        const combatant = game.combat?.combatants.find((c) => (c as { actorId?: string }).actorId === this.actor?.id);
+        const actorId = this.actor.id;
+        const combatant = actorId !== null ? findCombatantForActor(actorId) : null;
+        const initiativeBonus = this.actor.system.initiative.bonus;
+        const combatantInit = combatant?.initiative ?? null;
         context.initiative = {
-            rolled: (combatant?.initiative ?? null) !== null,
-            value: (combatant?.initiative as number) || 0,
-            bonus: (this.actor.system as any).initiative.bonus || 0,
+            rolled: combatantInit !== null,
+            value: combatantInit ?? 0,
+            bonus: initiativeBonus,
         };
 
         // Primary weapon
@@ -186,7 +304,13 @@ export default class CombatQuickPanel extends ApplicationV2 {
         context.actions = this._prepareQuickActions();
 
         // Consumables
-        context.consumables = this.actor.items.filter((i) => i.type === 'gear' && (i.system as any).consumable && (i.system as any).equipped).slice(0, 3);
+        context.consumables = this.actor.items
+            .filter((i) => {
+                if (i.type !== 'gear') return false;
+                const sys = i.system as PanelGearSystem;
+                return sys.consumable === true && sys.equipped === true;
+            })
+            .slice(0, 3);
 
         // Panel state
         context.opacityLevel = this.opacityLevel;
@@ -197,43 +321,32 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Prepare weapon data for display
-     * @param {Item|null} weapon  The weapon item
-     * @returns {object}  Prepared weapon data
-     * @private
-     */
-    _prepareWeaponData(weapon: WH40KItem | null): Record<string, unknown> {
+    _prepareWeaponData(weapon: WH40KItem | null): PreparedWeaponData {
         if (!weapon) {
             return {
                 none: true,
-                name: 'No Weapon Equipped',
+                name: t('WH40K.CombatPanel.NoWeaponEquipped'),
             };
         }
 
-        const rof = (weapon.system as { rateOfFire?: Record<string, unknown> }).rateOfFire || {};
+        const sys = weapon.system as PanelWeaponSystem;
+        const rof = sys.rateOfFire ?? {};
+        const clipValue = sys.clip?.value ?? 0;
+        const clipMaxResolved = sys.effectiveClipMax ?? sys.clip?.max ?? 0;
 
         return {
             id: weapon.id,
             name: weapon.name,
             img: weapon.img,
-            damage: (weapon.system as { damage?: string }).damage,
-            penetration: (weapon.system as { penetration?: number }).penetration || 0,
-            range: (weapon.system as { range?: string }).range,
-            clip: (weapon.system as { clip?: Record<string, unknown> }).clip,
+            damage: sys.damage,
+            penetration: sys.penetration ?? 0,
+            range: sys.range,
+            clip: sys.clip,
             ammo: {
-                current: (weapon.system as { clip?: { value: number } }).clip?.value || 0,
-                max:
-                    (weapon.system as { effectiveClipMax?: number; clip?: { max: number } }).effectiveClipMax ||
-                    (weapon.system as { clip?: { max: number } }).clip?.max ||
-                    0,
-                percentage: (weapon.system as { ammoPercentage?: number }).ammoPercentage ?? 100,
-                low:
-                    ((weapon.system as { clip?: { value: number } }).clip?.value ?? 0) <=
-                    ((weapon.system as { effectiveClipMax?: number; clip?: { max: number } }).effectiveClipMax ||
-                        (weapon.system as { clip?: { max: number } }).clip?.max ||
-                        0) *
-                        0.25,
+                current: clipValue,
+                max: clipMaxResolved,
+                percentage: sys.ammoPercentage ?? 100,
+                low: clipValue <= clipMaxResolved * 0.25,
             },
             rateOfFire: {
                 single: rof.single,
@@ -245,25 +358,22 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Prepare reaction data
-     * @returns {object}  Reaction data
-     * @private
-     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returned to the Handlebars template context (Record-shaped by template convention).
     _prepareReactions(): Record<string, unknown> {
-        const dodge = this.actor?.system.skills?.dodge;
-        const parry = this.actor?.system.skills?.parry;
+        const skills = this.actor?.system.skills;
+        const dodge = skills?.dodge;
+        const parry = skills?.parry;
 
         return {
             dodge: {
                 available: !this.reactionsUsed.dodge,
-                target: dodge?.current || 0,
-                label: dodge ? `Dodge (${dodge.current})` : 'Dodge',
+                target: dodge?.current ?? 0,
+                label: dodge !== undefined ? t('WH40K.CombatPanel.DodgeWithRank', { rank: dodge.current }) : t('WH40K.CombatPanel.Dodge'),
             },
             parry: {
                 available: !this.reactionsUsed.parry,
-                target: parry?.current || 0,
-                label: parry ? `Parry (${parry.current})` : 'Parry',
+                target: parry?.current ?? 0,
+                label: parry !== undefined ? t('WH40K.CombatPanel.ParryWithRank', { rank: parry.current }) : t('WH40K.CombatPanel.Parry'),
             },
             remaining: (this.reactionsUsed.dodge ? 0 : 1) + (this.reactionsUsed.parry ? 0 : 1),
         };
@@ -271,25 +381,21 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Prepare quick action data
-     * @returns {Array}  Quick actions
-     * @private
-     */
-    _prepareQuickActions(): unknown[] {
-        const actions = [];
+    _prepareQuickActions(): QuickAction[] {
+        const actions: QuickAction[] = [];
 
         // Reload (if weapon needs it)
-        if (this.primaryWeapon?.system.clip) {
-            const current = this.primaryWeapon.system.clip.value || 0;
-            const max = this.primaryWeapon.system.clip.max || 0;
+        const weaponSys = this.primaryWeapon?.system as PanelWeaponSystem | undefined;
+        if (weaponSys?.clip !== undefined) {
+            const current = weaponSys.clip.value ?? 0;
+            const max = weaponSys.clip.max ?? 0;
 
             actions.push({
                 action: 'reload',
                 icon: 'fa-solid fa-rotate',
-                label: 'Reload',
+                label: t('WH40K.CombatPanel.Reload'),
                 disabled: current >= max,
-                tooltip: current >= max ? 'Fully loaded' : `Reload (${current}/${max})`,
+                tooltip: current >= max ? t('WH40K.CombatPanel.FullyLoaded') : t('WH40K.CombatPanel.ReloadTooltip', { current, max }),
             });
         }
 
@@ -297,19 +403,25 @@ export default class CombatQuickPanel extends ApplicationV2 {
         actions.push({
             action: 'aim',
             icon: 'fa-solid fa-bullseye',
-            label: 'Aim',
-            tooltip: 'Take aim action (+10 next attack)',
+            label: t('WH40K.CombatPanel.Aim'),
+            tooltip: t('WH40K.CombatPanel.AimTooltip'),
         });
 
         // Draw weapon
-        const unequippedWeapons = (this.actor?.items.filter((i) => i.type === 'weapon' && !i.system.equipped) ?? []).length;
+        const unequippedItems =
+            this.actor?.items.filter((i) => {
+                if (i.type !== 'weapon') return false;
+                const itemSys = i.system as PanelWeaponSystem;
+                return itemSys.equipped !== true;
+            }) ?? [];
+        const unequippedWeapons = unequippedItems.length;
 
         actions.push({
             action: 'drawWeapon',
             icon: 'fa-solid fa-hand-fist',
-            label: 'Draw',
+            label: t('WH40K.CombatPanel.Draw'),
             disabled: unequippedWeapons === 0,
-            tooltip: unequippedWeapons > 0 ? 'Draw weapon' : 'No weapons to draw',
+            tooltip: unequippedWeapons > 0 ? t('WH40K.CombatPanel.DrawTooltip') : t('WH40K.CombatPanel.NoDrawTooltip'),
         });
 
         return actions;
@@ -317,51 +429,35 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Get opacity class based on level
-     * @returns {string}  CSS class
-     * @private
-     */
     _getOpacityKey(): string {
         const keys = ['full', 'high', 'medium', 'low'];
-        return keys[this.opacityLevel] || keys[0];
+        return keys[this.opacityLevel] ?? keys[0];
     }
 
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender signature is framework-defined.
     _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
-        // Apply saved position
         this._restorePosition();
-
-        // Subscribe to actor updates
         this._subscribeToActor();
-
-        // Subscribe to combat updates
         this._subscribeToCombat();
     }
 
     /* -------------------------------------------- */
 
-    /**
-     * Restore saved panel position
-     * @private
-     */
     _restorePosition(): void {
-        const savedPos = (game.user as any).getFlag('wh40k-rpg', `combatPanel.${this.actor?.id}.position`);
-        if (savedPos) {
+        const actorId = this.actor?.id ?? '';
+        const savedPos = flaggableUser().getFlag('wh40k-rpg', `combatPanel.${actorId}.position`);
+        if (savedPos !== undefined) {
             this.setPosition(savedPos);
         }
     }
 
     /* -------------------------------------------- */
 
-    /**
-     * Subscribe to actor updates to refresh panel
-     * @private
-     */
     _subscribeToActor(): void {
         Hooks.on('updateActor', this._onActorUpdate.bind(this));
         Hooks.on('updateItem', this._onItemUpdate.bind(this));
@@ -369,10 +465,6 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Subscribe to combat updates to track rounds
-     * @private
-     */
     _subscribeToCombat(): void {
         Hooks.on('combatRound', this._onCombatRound.bind(this));
         Hooks.on('deleteCombat', this._onCombatEnd.bind(this));
@@ -381,19 +473,21 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onClose signature is framework-defined.
     _onClose(options: Record<string, unknown>): void {
-        // Save position
         const position = this.position;
-        (game.user as any).setFlag('wh40k-rpg', `combatPanel.${this.actor?.id}.position`, {
+        const actorId = this.actor?.id ?? '';
+        void flaggableUser().setFlag('wh40k-rpg', `combatPanel.${actorId}.position`, {
             left: position.left,
             top: position.top,
         });
 
-        // Unsubscribe from hooks
+        /* eslint-disable @typescript-eslint/unbound-method -- Hooks.off accepts unbound method refs; this mirrors the original wiring (note: bind() created new refs at registration so removal is best-effort). */
         Hooks.off('updateActor', this._onActorUpdate);
         Hooks.off('updateItem', this._onItemUpdate);
         Hooks.off('combatRound', this._onCombatRound);
         Hooks.off('deleteCombat', this._onCombatEnd);
+        /* eslint-enable @typescript-eslint/unbound-method */
 
         super._onClose(options);
     }
@@ -402,11 +496,6 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /*  Event Handlers                              */
     /* -------------------------------------------- */
 
-    /**
-     * Handle actor updates
-     * @param {Actor} actor  Updated actor
-     * @private
-     */
     _onActorUpdate(actor: WH40KBaseActor): void {
         if (actor.id === this.actor?.id) {
             void this.render(false);
@@ -415,11 +504,6 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Handle item updates
-     * @param {Item} item  Updated item
-     * @private
-     */
     _onItemUpdate(item: WH40KItem): void {
         if (item.actor?.id === this.actor?.id) {
             void this.render(false);
@@ -428,10 +512,6 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Handle new combat round - reset reactions
-     * @private
-     */
     _onCombatRound(): void {
         this.reactionsUsed = {
             dodge: false,
@@ -442,10 +522,6 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Handle combat end - close panel
-     * @private
-     */
     _onCombatEnd(): void {
         void this.close();
     }
@@ -454,40 +530,31 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /*  Action Handlers                             */
     /* -------------------------------------------- */
 
-    /**
-     * Roll initiative
-     * @this {CombatQuickPanel}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #rollInitiative(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const combatant = game.combat?.combatants.find((c) => (c as { actorId?: string }).actorId === this.actor?.id);
-        if (!combatant) {
-            ui.notifications.warn('Character not in combat');
+    static async #rollInitiative(this: CombatQuickPanel, _event: Event, _target: HTMLElement): Promise<void> {
+        const actorId = this.actor?.id;
+        if (actorId === undefined || actorId === null) return;
+        const combatant = findCombatantForActor(actorId);
+        if (combatant === null) {
+            ui.notifications.warn(t('WH40K.CombatPanel.NotInCombat'));
             return;
         }
 
-        if (!game.combat) return;
+        if (!game.combat || combatant.id === null) return;
         await game.combat.rollInitiative([combatant.id]);
-        ui.notifications.info(`Rolled initiative for ${this.actor?.name}`);
+        const actorName = this.actor?.name ?? t('WH40K.CombatPanel.UnknownActor');
+        ui.notifications.info(t('WH40K.CombatPanel.RolledInitiative', { name: actorName }));
     }
 
     /* -------------------------------------------- */
 
-    /**
-     * Standard attack with primary weapon
-     * @this {CombatQuickPanel}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #standardAttack(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #standardAttack(this: CombatQuickPanel, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
-            ui.notifications.warn('No weapon equipped');
+            ui.notifications.warn(t('WH40K.CombatPanel.NoWeapon'));
             return;
         }
+        if (this.primaryWeapon.id === null) return;
 
-        // Quick attack - no dialog
-        await this.actor?.rollWeaponAttack(this.primaryWeapon.id, {
+        await this.actor?.rollWeaponAttack?.(this.primaryWeapon.id, {
             skipDialog: true,
             rateOfFire: 'single',
         });
@@ -495,19 +562,16 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Semi-auto attack
-     * @this {CombatQuickPanel}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #semiAutoAttack(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
-        if (!(this.primaryWeapon?.system as { rateOfFire?: { semiAuto?: boolean } })?.rateOfFire?.semiAuto) {
-            ui.notifications.warn('Weapon does not support semi-auto');
+    static async #semiAutoAttack(this: CombatQuickPanel, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+        const rof = (this.primaryWeapon?.system as PanelWeaponSystem | undefined)?.rateOfFire;
+        if (rof?.semiAuto !== true) {
+            ui.notifications.warn(t('WH40K.CombatPanel.NoSemiAuto'));
             return;
         }
+        const weaponId = this.primaryWeapon?.id;
+        if (weaponId === null || weaponId === undefined) return;
 
-        await this.actor?.rollWeaponAttack(this.primaryWeapon.id, {
+        await this.actor?.rollWeaponAttack?.(weaponId, {
             skipDialog: true,
             rateOfFire: 'semiAuto',
         });
@@ -515,19 +579,16 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Full-auto attack
-     * @this {CombatQuickPanel}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #fullAutoAttack(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
-        if (!(this.primaryWeapon?.system as { rateOfFire?: { fullAuto?: boolean } })?.rateOfFire?.fullAuto) {
-            ui.notifications.warn('Weapon does not support full-auto');
+    static async #fullAutoAttack(this: CombatQuickPanel, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+        const rof = (this.primaryWeapon?.system as PanelWeaponSystem | undefined)?.rateOfFire;
+        if (rof?.fullAuto !== true) {
+            ui.notifications.warn(t('WH40K.CombatPanel.NoFullAuto'));
             return;
         }
+        const weaponId = this.primaryWeapon?.id;
+        if (weaponId === null || weaponId === undefined) return;
 
-        await this.actor?.rollWeaponAttack(this.primaryWeapon.id, {
+        await this.actor?.rollWeaponAttack?.(weaponId, {
             skipDialog: true,
             rateOfFire: 'fullAuto',
         });
@@ -535,65 +596,47 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Dodge reaction
-     * @this {CombatQuickPanel}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #dodge(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #dodge(this: CombatQuickPanel, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.dodge) {
-            ui.notifications.warn('Already used dodge this round');
+            ui.notifications.warn(t('WH40K.CombatPanel.AlreadyDodged'));
             return;
         }
 
-        const skill = this.actor?.system.skills?.dodge;
+        const skill = this.actor?.system.skills.dodge;
         if (!skill) {
-            ui.notifications.warn('No dodge skill');
+            ui.notifications.warn(t('WH40K.CombatPanel.NoDodge'));
             return;
         }
 
-        await this.actor?.rollSkill('dodge', { skipDialog: true });
+        await this.actor?.rollSkill?.('dodge', { skipDialog: true });
         this.reactionsUsed.dodge = true;
-        this.render(false);
+        void this.render(false);
     }
 
     /* -------------------------------------------- */
 
-    /**
-     * Parry reaction
-     * @this {CombatQuickPanel}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #parry(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #parry(this: CombatQuickPanel, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.parry) {
-            ui.notifications.warn('Already used parry this round');
+            ui.notifications.warn(t('WH40K.CombatPanel.AlreadyParried'));
             return;
         }
 
-        const skill = this.actor?.system.skills?.parry;
+        const skill = this.actor?.system.skills.parry;
         if (!skill) {
-            ui.notifications.warn('No parry skill');
+            ui.notifications.warn(t('WH40K.CombatPanel.NoParry'));
             return;
         }
 
-        await this.actor?.rollSkill('parry', { skipDialog: true });
+        await this.actor?.rollSkill?.('parry', { skipDialog: true });
         this.reactionsUsed.parry = true;
-        this.render(false);
+        void this.render(false);
     }
 
     /* -------------------------------------------- */
 
-    /**
-     * Reload weapon
-     * @this {CombatQuickPanel}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #reload(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #reload(this: CombatQuickPanel, event: PointerEvent, _target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
-            ui.notifications.warn('No weapon equipped');
+            ui.notifications.warn(t('WH40K.CombatPanel.NoWeapon'));
             return;
         }
 
@@ -611,62 +654,49 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Aim action
-     * @this {CombatQuickPanel}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #aim(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
-        // Apply aim effect (+10 to next attack)
+    static async #aim(this: CombatQuickPanel, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.actor is nullable when the panel outlives its actor (post-deletion); fallback is a localized placeholder, not a schema default.
+        const actorName = this.actor?.name ?? t('WH40K.CombatPanel.UnknownActor');
         await ChatMessage.create({
+            // eslint-disable-next-line no-restricted-syntax -- boundary: getSpeaker accepts Actor | undefined; this.actor is null at the boundary, so coerce nullability away.
             speaker: ChatMessage.getSpeaker({ actor: this.actor ?? undefined }),
-            content: `<p><strong>${this.actor?.name}</strong> takes aim (+10 to next attack)</p>`,
-            flavor: 'Aim Action',
+            content: t('WH40K.CombatPanel.AimContent', { name: actorName }),
+            flavor: t('WH40K.CombatPanel.AimFlavor'),
         });
 
-        ui.notifications.info('Aim action taken (+10 next attack)');
+        ui.notifications.info(t('WH40K.CombatPanel.AimTaken'));
     }
 
     /* -------------------------------------------- */
 
-    /**
-     * Draw weapon
-     * @this {CombatQuickPanel}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #drawWeapon(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const weapons = this.actor?.items.filter((i: WH40KItem) => i.type === 'weapon' && !(i.system as { equipped?: boolean }).equipped);
+    static async #drawWeapon(this: CombatQuickPanel, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+        const weapons = this.actor?.items.filter((i: WH40KItem) => {
+            if (i.type !== 'weapon') return false;
+            const sys = i.system as PanelWeaponSystem;
+            return sys.equipped !== true;
+        });
 
         if (!weapons || weapons.length === 0) {
-            ui.notifications.warn('No weapons to draw');
+            ui.notifications.warn(t('WH40K.CombatPanel.NoWeaponsToDraw'));
             return;
         }
 
-        // Show weapon selection if multiple
         if (weapons.length > 1) {
             // TODO: Show weapon selection dialog
-            ui.notifications.info('Multiple weapons available - use character sheet to select');
+            ui.notifications.info(t('WH40K.CombatPanel.MultipleWeapons'));
             return;
         }
 
-        // Equip the weapon
-        await weapons[0].update({ 'system.equipped': true });
-        ui.notifications.info(`Drew ${weapons[0].name}`);
+        const chosen = weapons[0];
+        await chosen.update({ 'system.equipped': true });
+        ui.notifications.info(t('WH40K.CombatPanel.DrewWeapon', { name: chosen.name }));
     }
 
     /* -------------------------------------------- */
 
-    /**
-     * Switch to different weapon
-     * @this {CombatQuickPanel}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #switchWeapon(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #switchWeapon(this: CombatQuickPanel, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const weaponId = target.dataset.weaponId;
-        if (!weaponId) return;
+        if (weaponId === undefined || weaponId === '') return;
         const weapon = this.actor?.items.get(weaponId);
 
         if (!weapon) return;
@@ -679,45 +709,36 @@ export default class CombatQuickPanel extends ApplicationV2 {
         // Equip new
         await weapon.update({ 'system.equipped': true });
 
-        ui.notifications.info(`Switched to ${weapon.name}`);
-        this.render(false);
+        ui.notifications.info(t('WH40K.CombatPanel.SwitchedWeapon', { name: weapon.name }));
+        void this.render(false);
     }
 
     /* -------------------------------------------- */
 
-    /**
-     * Use consumable item
-     * @this {CombatQuickPanel}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static async #useConsumable(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #useConsumable(this: CombatQuickPanel, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
-        if (!itemId) return;
+        if (itemId === undefined || itemId === '') return;
         const item = this.actor?.items.get(itemId);
 
         if (!item) return;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.actor is nullable when the panel outlives its actor (post-deletion); fallback is a localized placeholder, not a schema default.
+        const actorName = this.actor?.name ?? t('WH40K.CombatPanel.UnknownActor');
+        const itemName = item.name;
         // TODO: Implement consumable use logic
         await ChatMessage.create({
+            // eslint-disable-next-line no-restricted-syntax -- boundary: getSpeaker accepts Actor | undefined; this.actor is null at the boundary, so coerce nullability away.
             speaker: ChatMessage.getSpeaker({ actor: this.actor ?? undefined }),
-            content: `<p><strong>${this.actor?.name}</strong> uses ${item.name}</p>`,
+            content: t('WH40K.CombatPanel.ConsumableContent', { name: actorName, item: itemName }),
         });
 
-        ui.notifications.info(`Used ${item.name}`);
+        ui.notifications.info(t('WH40K.CombatPanel.UsedItem', { name: itemName }));
     }
 
     /* -------------------------------------------- */
 
-    /**
-     * Toggle panel opacity
-     * @this {CombatQuickPanel}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
-     */
-    static #toggleOpacity(this: any, event: PointerEvent, target: HTMLElement): void {
+    static #toggleOpacity(this: CombatQuickPanel, _event: PointerEvent, _target: HTMLElement): void {
         this.opacityLevel = (this.opacityLevel + 1) % 4;
-
         this.element.dataset.opacity = this._getOpacityKey();
     }
 
@@ -725,10 +746,6 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /*  Animation Helpers                           */
     /* -------------------------------------------- */
 
-    /**
-     * Animate reload action
-     * @private
-     */
     _animateReload(): void {
         const ammoBar = this.element.querySelector('.ammo-bar');
         if (!ammoBar) return;
@@ -743,34 +760,21 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /*  Static Helpers                              */
     /* -------------------------------------------- */
 
-    /**
-     * Show combat panel for actor
-     * @param {Actor} actor  The actor
-     * @returns {CombatQuickPanel}  The panel instance
-     * @static
-     */
-    static async show(actor: WH40KBaseActor): Promise<unknown> {
-        // Check if panel already exists
+    static show(actor: WH40KBaseActor): CombatQuickPanel {
         const existing = Object.values(ui.windows).find((app): app is CombatQuickPanel => app instanceof CombatQuickPanel && app.actor?.id === actor.id);
 
         if (existing) {
             void existing.render(true);
-            return Promise.resolve(existing);
+            return existing;
         }
 
-        // Create new panel
         const panel = new CombatQuickPanel(actor);
         void panel.render(true);
-        return Promise.resolve(panel);
+        return panel;
     }
 
     /* -------------------------------------------- */
 
-    /**
-     * Close combat panel for actor
-     * @param {Actor} actor  The actor
-     * @static
-     */
     static close(actor: WH40KBaseActor): void {
         const panel = Object.values(ui.windows).find((app): app is CombatQuickPanel => app instanceof CombatQuickPanel && app.actor?.id === actor.id);
 
@@ -779,11 +783,6 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /* -------------------------------------------- */
 
-    /**
-     * Toggle combat panel for actor
-     * @param {Actor} actor  The actor
-     * @static
-     */
     static toggle(actor: WH40KBaseActor): void {
         const panel = Object.values(ui.windows).find((app): app is CombatQuickPanel => app instanceof CombatQuickPanel && app.actor?.id === actor.id);
 
