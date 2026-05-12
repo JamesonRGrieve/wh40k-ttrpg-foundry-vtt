@@ -132,13 +132,13 @@ export class WH40KBaseActor extends Actor {
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
-            'token.name': createData.name,
+            'token.name': createData['name'],
         };
-        if (createData.type === 'vehicle') {
+        if (createData['type'] === 'vehicle') {
             initData['token.bar1'] = { attribute: 'integrity' };
             initData['token.bar2'] = undefined;
         }
-        if (createData.type === 'acolyte' || createData.type === 'character') {
+        if (createData['type'] === 'acolyte' || createData['type'] === 'character') {
             initData['token.vision'] = true;
             initData['token.actorLink'] = true;
 
@@ -170,7 +170,7 @@ export class WH40KBaseActor extends Actor {
         return this.system.movement;
     }
 
-    prepareData(): void {
+    override prepareData(): void {
         super.prepareData();
 
         // Skip legacy calculations if a DataModel is handling data preparation
@@ -192,6 +192,7 @@ export class WH40KBaseActor extends Actor {
 
     rollCharacteristic(characteristicName: string, override?: string): void {
         const characteristic = this.characteristics[characteristicName];
+        if (characteristic === undefined) return;
 
         const simpleSkillData = new SimpleSkillData();
         const rollData = simpleSkillData.rollData as unknown as RollDataLike;
@@ -417,6 +418,7 @@ export class WH40KBaseActor extends Actor {
         // Armour locations
         if (statKey.startsWith('armour.')) {
             const location = statKey.split('.')[1];
+            if (location === undefined) return null;
             return this.#getArmourBreakdown(location);
         }
 
