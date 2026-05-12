@@ -11,7 +11,7 @@ import type { WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KArmourLo
 
 /** Minimal typed interface for the Foundry tooltip manager. */
 interface TooltipManager {
-    element: HTMLElement & { dataset: DOMStringMap };
+    element: (HTMLElement & { dataset: DOMStringMap }) | null;
     _setAnchor?: (direction: string) => void;
 }
 
@@ -43,19 +43,155 @@ interface QualityDefinition {
     source?: string | null;
 }
 
+/* -------------------------------------------- */
+/*  Tooltip Payload Types                       */
+/* -------------------------------------------- */
+
+/** Shared cached skill info shape pulled from the compendium index. */
+interface CachedSkillInfo {
+    name: string | undefined;
+    descriptor: string;
+    uses: string;
+    useTime: string;
+    isBasic: boolean;
+    aptitudes: string[];
+}
+
+/** Discriminated payloads serialised through `data-wh40k-tooltip-data`. */
+interface CharacteristicTooltipPayload {
+    name?: string;
+    label?: string;
+    base?: number;
+    advance?: number;
+    modifier?: number;
+    unnatural?: number;
+    total?: number;
+    bonus?: number;
+    sources?: TooltipModifierSource[];
+}
+
+interface SkillTooltipPayload {
+    name?: string;
+    label?: string;
+    baseValue?: number;
+    basic?: boolean;
+    trainingBonus?: number;
+    actorUuid?: string;
+    characteristic?: string;
+    charValue?: number;
+    trained?: boolean;
+    plus10?: boolean;
+    plus20?: boolean;
+    plus30?: boolean;
+    current?: number;
+    bonus?: number;
+}
+
+interface ArmorTooltipPayload {
+    location?: string;
+    total?: number;
+    toughnessBonus?: number;
+    traitBonus?: number;
+    armorValue?: number;
+    equipped?: Array<{ img: string; name: string; ap?: number }>;
+}
+
+interface WeaponTooltipPayload {
+    name?: string;
+    damage?: string;
+    penetration?: number;
+    range?: string;
+    rof?: string;
+    qualities?: string[];
+}
+
+interface ModifierTooltipPayload {
+    title?: string;
+    sources?: TooltipModifierSource[];
+}
+
+interface QualityTooltipPayload {
+    label?: string;
+    description?: string;
+    level?: number | null;
+    hasLevel?: boolean;
+    category?: string;
+    mechanicalEffect?: boolean;
+    source?: string | null;
+}
+
+interface GenericTooltipPayload {
+    title?: string;
+    content?: string;
+}
+
+/** Union of all known tooltip payloads. */
+type TooltipPayload =
+    | CharacteristicTooltipPayload
+    | SkillTooltipPayload
+    | ArmorTooltipPayload
+    | WeaponTooltipPayload
+    | ModifierTooltipPayload
+    | QualityTooltipPayload
+    | GenericTooltipPayload;
+
+/** Result returned by a doc's `richTooltip()` (when present). */
+interface RichTooltipResult {
+    content?: string;
+    classes?: string[];
+}
+
+/** Optional surface for documents that publish their own rich tooltip body. */
+interface RichTooltipProducer {
+    richTooltip?: () => Promise<RichTooltipResult>;
+}
+
+/** game.wh40k.tooltips shape — just the lookup we use here. */
+interface SkillDescriptionLookup {
+    getSkillDescription?: (key: string) => CachedSkillInfo | null;
+}
+
+/** Foundry CONFIG bag — Rogue Trader extension used by the quality builder. */
+interface RogueTraderConfigBag {
+    ROGUE_TRADER?: {
+        getQualityDefinition?: (id: string) => QualityDefinition | null;
+    };
+}
+
+function getTooltipManager(): TooltipManager {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `game.tooltip` runtime singleton is not surfaced on the v13 type for `game`.
+    return (game as unknown as { tooltip: TooltipManager }).tooltip;
+}
+
+function getRogueTraderConfig(): RogueTraderConfigBag['ROGUE_TRADER'] {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG is Foundry's untyped runtime bag; per-system extensions are opaque to fvtt-types.
+    return (CONFIG as unknown as RogueTraderConfigBag).ROGUE_TRADER;
+}
+
+function getSkillDescriptionLookup(): SkillDescriptionLookup | undefined {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: game.wh40k is the system's own namespace, attached after init; types are erased at the boundary.
+    return game.wh40k.tooltips as unknown as SkillDescriptionLookup | undefined;
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: accepts heterogeneous doc / DataModel surfaces to extract an optional richTooltip(); type-erasing the parameter is the safest reading.
+function getRichTooltipProducer(value: unknown): RichTooltipProducer {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: same boundary as the parameter type — duck-typed lookup of richTooltip across two unrelated parent types.
+    return value as RichTooltipProducer;
+}
+
 /**
  * A class responsible for orchestrating rich tooltips in the WH40K RPG system.
  */
 export class TooltipsWH40K {
     #observer: MutationObserver | undefined;
     #tooltip: HTMLElement | null = null;
-    #skillDescriptions = new Map<string, Record<string, unknown>>();
+    readonly #skillDescriptions = new Map<string, CachedSkillInfo>();
 
     get tooltip(): HTMLElement | null {
         return this.#tooltip;
     }
 
-    get skillDescriptions(): Map<string, Record<string, unknown>> {
+    get skillDescriptions(): Map<string, CachedSkillInfo> {
         return this.#skillDescriptions;
     }
 
@@ -72,7 +208,7 @@ export class TooltipsWH40K {
     async _loadSkillDescriptions(): Promise<void> {
         try {
             const skillPackNames = ['wh40k-rpg.dh2-core-stats-skills', 'wh40k-rpg.rt-core-items-skills', 'wh40k-rpg.dw-core-items-skills'];
-            const pack = skillPackNames.map((n) => game.packs.get(n)).find((p) => p != null) ?? null;
+            const pack = skillPackNames.map((n) => game.packs.get(n)).find((p) => p !== undefined) ?? null;
             if (pack === null) {
                 console.warn('WH40K Tooltips | Could not find skills compendium');
                 return;
@@ -83,7 +219,7 @@ export class TooltipsWH40K {
                 // eslint-disable-next-line no-await-in-loop
                 const item = (await pack.getDocument(entry._id)) as WH40KItem | null;
                 if (item !== null) {
-                    const entryName = (entry.name as string | undefined) ?? '';
+                    const entryName = entry.name ?? '';
                     const key = entryName.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
                     const system = item.system as {
                         descriptor?: string;
@@ -108,7 +244,7 @@ export class TooltipsWH40K {
         }
     }
 
-    getSkillDescription(skillKey: string): Record<string, unknown> | null {
+    getSkillDescription(skillKey: string): CachedSkillInfo | null {
         const normalizedKey = skillKey.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
         return this.#skillDescriptions.get(normalizedKey) ?? null;
     }
@@ -141,16 +277,17 @@ export class TooltipsWH40K {
     }
 
     async _onTooltipActivate(): Promise<void> {
-        const tooltipManager = (game as unknown as { tooltip: TooltipManager }).tooltip;
+        const tooltipManager = getTooltipManager();
         const element = tooltipManager.element;
-        if (element == null) return;
+        if (element === null) return;
 
         const tooltipType = element.dataset.wh40kTooltip;
         const tooltipDataAttr = element.dataset.wh40kTooltipData;
 
         if (tooltipType !== undefined && tooltipType !== '' && tooltipDataAttr !== undefined && tooltipDataAttr !== '') {
             try {
-                const data = JSON.parse(tooltipDataAttr) as Record<string, unknown>;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse of a serialised tooltip payload; the discriminated TooltipPayload union narrows it inside each builder.
+                const data = JSON.parse(tooltipDataAttr) as TooltipPayload;
                 const content = await this._buildTooltipContent(data, tooltipType);
                 if (content !== '' && this.#tooltip !== null) {
                     this.#tooltip.innerHTML = content;
@@ -172,9 +309,8 @@ export class TooltipsWH40K {
     }
 
     async _onHoverContentLink(doc: WH40KItem): Promise<void> {
-        type RichTooltipResult = { content?: string; classes?: string[] };
-        const docWithTooltip = doc as unknown as { richTooltip?: () => Promise<RichTooltipResult> };
-        const sysWithTooltip = doc.system as unknown as { richTooltip?: () => Promise<RichTooltipResult> };
+        const docWithTooltip = getRichTooltipProducer(doc);
+        const sysWithTooltip = getRichTooltipProducer(doc.system);
         const result: RichTooltipResult = await (docWithTooltip.richTooltip?.() ?? sysWithTooltip.richTooltip?.() ?? {});
         const { content, classes } = result;
 
@@ -189,36 +325,35 @@ export class TooltipsWH40K {
         requestAnimationFrame(() => this._repositionTooltip());
     }
 
-    async _buildTooltipContent(data: Record<string, unknown>, type: string): Promise<string> {
+    async _buildTooltipContent(data: TooltipPayload, type: string): Promise<string> {
         switch (type) {
             case 'characteristic':
-                return this._buildCharacteristicTooltip(data);
+                return this._buildCharacteristicTooltip(data as CharacteristicTooltipPayload);
             case 'skill':
-                return await this._buildSkillTooltip(data);
+                return this._buildSkillTooltip(data as SkillTooltipPayload);
             case 'armor':
             case 'armour':
-                return this._buildArmorTooltip(data);
+                return this._buildArmorTooltip(data as ArmorTooltipPayload);
             case 'weapon':
-                return this._buildWeaponTooltip(data);
+                return this._buildWeaponTooltip(data as WeaponTooltipPayload);
             case 'modifier':
-                return this._buildModifierTooltip(data);
+                return this._buildModifierTooltip(data as ModifierTooltipPayload);
             case 'quality':
-                return this._buildQualityTooltip(data);
+                return this._buildQualityTooltip(data as QualityTooltipPayload);
             default:
-                return this._buildGenericTooltip(data);
+                return this._buildGenericTooltip(data as GenericTooltipPayload);
         }
     }
 
-    _buildCharacteristicTooltip(data: Record<string, unknown>): string {
-        const name = data.name as string | undefined;
-        const label = data.label as string | undefined;
-        const base = (data.base as number | undefined) ?? 0;
-        const advance = (data.advance as number | undefined) ?? 0;
-        const modifier = (data.modifier as number | undefined) ?? 0;
-        const unnatural = (data.unnatural as number | undefined) ?? 1;
-        const total = (data.total as number | undefined) ?? 0;
-        const bonus = (data.bonus as number | undefined) ?? 0;
-        const sources = (data.sources as TooltipModifierSource[] | undefined) ?? [];
+    _buildCharacteristicTooltip(data: CharacteristicTooltipPayload): string {
+        const { name, label } = data;
+        const base = data.base ?? 0;
+        const advance = data.advance ?? 0;
+        const modifier = data.modifier ?? 0;
+        const unnatural = data.unnatural ?? 1;
+        const total = data.total ?? 0;
+        const bonus = data.bonus ?? 0;
+        const sources = data.sources ?? [];
 
         let html = `
             <div class="wh40k-tooltip__header">
@@ -281,45 +416,53 @@ export class TooltipsWH40K {
         return html;
     }
 
-    async _buildSkillTooltip(data: Record<string, unknown>): Promise<string> {
-        const name = (data.name as string | undefined) ?? '';
-        const label = data.label as string | undefined;
-        const baseValue = data.baseValue as number | undefined;
-        const basic = (data.basic as boolean | undefined) ?? false;
-        const dataTB = data.trainingBonus as number | undefined;
-        const actorUuid = data.actorUuid as string | undefined;
+    // eslint-disable-next-line complexity -- single-function builder mixes config lookups, actor-derived overrides, and template-rank fallbacks; splitting them would obscure flow.
+    async _buildSkillTooltip(data: SkillTooltipPayload): Promise<string> {
+        const name = data.name ?? '';
+        const { label } = data;
+        const { baseValue } = data;
+        const basic = data.basic ?? false;
+        const dataTB = data.trainingBonus;
+        const actorUuid = data.actorUuid;
 
-        let characteristic = (data.characteristic as string | undefined) ?? '';
-        let charValue = (data.charValue as number | undefined) ?? 0;
-        let trained = (data.trained as boolean | undefined) ?? false;
-        let plus10 = (data.plus10 as boolean | undefined) ?? false;
-        let plus20 = (data.plus20 as boolean | undefined) ?? false;
-        let plus30 = (data.plus30 as boolean | undefined) ?? false;
-        let current = (data.current as number | undefined) ?? 0;
-        let dataBonus = data.bonus as number | undefined;
+        let characteristic = data.characteristic ?? '';
+        let charValue = data.charValue ?? 0;
+        let trained = data.trained ?? false;
+        let plus10 = data.plus10 ?? false;
+        let plus20 = data.plus20 ?? false;
+        let plus30 = data.plus30 ?? false;
+        let current = data.current ?? 0;
+        let dataBonus = data.bonus;
         let actor: WH40KBaseActor | null = null;
 
         if (actorUuid !== undefined && actorUuid !== '') {
-            actor = (await fromUuid(actorUuid)) as WH40KBaseActor | null;
+            actor = await fromUuid(actorUuid);
             if (actor !== null) {
-                const skill = actor.system.skills?.[name] as WH40KSkill | undefined;
+                // The `Record<string, WH40KSkill>` index access returns WH40KSkill per the
+                // declared type, but the named key may not be present at runtime (compendium-
+                // sourced actors can lack non-core skills); preserve the original undefined
+                // guard at the boundary even though TS regards both lookups as defined.
+                const skill: WH40KSkill | undefined = actor.system.skills[name];
+                /* eslint-disable @typescript-eslint/no-unnecessary-condition -- boundary: index-access on Record<string, ...> can produce undefined at runtime; the declared type omits that. */
                 const charKey = skill?.characteristic ?? characteristic;
-                const char = actor.system.characteristics?.[charKey] as WH40KCharacteristic | undefined;
+                const char: WH40KCharacteristic | undefined = actor.system.characteristics[charKey];
 
                 if (skill !== undefined && char !== undefined) {
-                    trained = skill.trained ?? false;
-                    plus10 = skill.plus10 ?? false;
-                    plus20 = skill.plus20 ?? false;
+                    trained = skill.trained;
+                    plus10 = skill.plus10;
+                    plus20 = skill.plus20;
                     plus30 = skill.plus30 ?? false;
-                    current = skill.current ?? 0;
-                    charValue = char.total ?? 0;
-                    characteristic = char.label ?? characteristic;
-                    dataBonus = skill.bonus ?? 0;
+                    current = skill.current;
+                    charValue = char.total;
+                    characteristic = char.label;
+                    dataBonus = skill.bonus;
                 }
+                /* eslint-enable @typescript-eslint/no-unnecessary-condition */
             }
         }
 
-        const gameSystem = (actor?.system as { gameSystem?: string } | undefined)?.gameSystem ?? null;
+        const actorGameSystem = (actor?.system as { gameSystem?: string } | undefined)?.gameSystem;
+        const gameSystem = actorGameSystem ?? null;
         const systemConfig = gameSystem !== null ? SystemConfigRegistry.getOrNull(gameSystem) : null;
         const skillRanks: SkillRank[] = systemConfig?.getSkillRanks() ?? [
             { level: 1, key: 'trained', tooltip: 'Trained', bonus: 0 },
@@ -341,7 +484,7 @@ export class TooltipsWH40K {
 
         const calculatedBase = baseValue ?? (level > 0 ? charValue : Math.floor(charValue / 2));
         const bonus = dataBonus ?? 0;
-        const tooltipSystem = game.wh40k?.tooltips as unknown as { getSkillDescription?: (key: string) => Record<string, unknown> | null } | undefined;
+        const tooltipSystem = getSkillDescriptionLookup();
         const skillInfo = tooltipSystem?.getSkillDescription?.(name) ?? null;
         const descriptor = typeof skillInfo?.descriptor === 'string' ? skillInfo.descriptor : '';
 
@@ -369,7 +512,9 @@ export class TooltipsWH40K {
                 </div>
         `;
 
-        if (level === 0) {
+        // The half-characteristic untrained base is RT-specific (FFG Rogue Trader rule);
+        // DH2e and other aptitude/career systems apply a flat -20 penalty rather than halving.
+        if (level === 0 && gameSystem === 'rt') {
             html += `
                 <div class="wh40k-tooltip__line">
                     <span class="wh40k-tooltip__label">${localize('WH40K.Tooltip.Skill.UntrainedBase')}:</span>
@@ -416,13 +561,13 @@ export class TooltipsWH40K {
         return html;
     }
 
-    _buildArmorTooltip(data: Record<string, unknown>): string {
-        const location = data.location as string | undefined;
-        const total = (data.total as number | undefined) ?? 0;
-        const toughnessBonus = (data.toughnessBonus as number | undefined) ?? 0;
-        const traitBonus = (data.traitBonus as number | undefined) ?? 0;
-        const armorValue = (data.armorValue as number | undefined) ?? 0;
-        const equipped = (data.equipped as Array<{ img: string; name: string; ap?: number }> | undefined) ?? [];
+    _buildArmorTooltip(data: ArmorTooltipPayload): string {
+        const { location } = data;
+        const total = data.total ?? 0;
+        const toughnessBonus = data.toughnessBonus ?? 0;
+        const traitBonus = data.traitBonus ?? 0;
+        const armorValue = data.armorValue ?? 0;
+        const equipped = data.equipped ?? [];
 
         let html = `
             <div class="wh40k-tooltip__header">
@@ -478,13 +623,13 @@ export class TooltipsWH40K {
         return html;
     }
 
-    _buildWeaponTooltip(data: Record<string, unknown>): string {
-        const name = (data.name as string | undefined) ?? '';
-        const damage = (data.damage as string | undefined) ?? '—';
-        const penetration = (data.penetration as number | undefined) ?? 0;
-        const range = (data.range as string | undefined) ?? '—';
-        const rof = (data.rof as string | undefined) ?? '—';
-        const qualities = (data.qualities as string[] | undefined) ?? [];
+    _buildWeaponTooltip(data: WeaponTooltipPayload): string {
+        const name = data.name ?? '';
+        const damage = data.damage ?? '—';
+        const penetration = data.penetration ?? 0;
+        const range = data.range ?? '—';
+        const rof = data.rof ?? '—';
+        const qualities = data.qualities ?? [];
 
         let html = `
             <div class="wh40k-tooltip__header">
@@ -533,9 +678,9 @@ export class TooltipsWH40K {
         return html;
     }
 
-    _buildModifierTooltip(data: Record<string, unknown>): string {
-        const title = data.title as string | undefined;
-        const sources = (data.sources as TooltipModifierSource[] | undefined) ?? [];
+    _buildModifierTooltip(data: ModifierTooltipPayload): string {
+        const { title } = data;
+        const sources = data.sources ?? [];
 
         let html = `
             <div class="wh40k-tooltip__header">
@@ -558,19 +703,18 @@ export class TooltipsWH40K {
         return html;
     }
 
-    _buildQualityTooltip(data: Record<string, unknown>): string {
-        const label = (data.label as string | undefined) ?? '';
-        const description = data.description as string | undefined;
-        const level = data.level as number | null | undefined;
-        const hasLevel = (data.hasLevel as boolean | undefined) ?? false;
-        const category = (data.category as string | undefined) ?? 'other';
-        const mechanicalEffect = (data.mechanicalEffect as boolean | undefined) ?? false;
-        const source = data.source as string | null | undefined;
+    _buildQualityTooltip(data: QualityTooltipPayload): string {
+        const label = data.label ?? '';
+        const { description, level } = data;
+        const hasLevel = data.hasLevel ?? false;
+        const category = data.category ?? 'other';
+        const mechanicalEffect = data.mechanicalEffect ?? false;
+        const { source } = data;
 
         let html = `
             <div class="wh40k-tooltip__header">
                 <h4 class="wh40k-tooltip__title">
-                    ${label}${hasLevel && level != null ? ` (${level})` : ''}
+                    ${label}${hasLevel && level !== null && level !== undefined ? ` (${level})` : ''}
                 </h4>
         `;
 
@@ -609,7 +753,7 @@ export class TooltipsWH40K {
             `;
         }
 
-        if (source != null && source !== '') {
+        if (source !== null && source !== undefined && source !== '') {
             html += `
             <div class="wh40k-tooltip__source-ref">
                 <i class="fas fa-book"></i>
@@ -621,9 +765,8 @@ export class TooltipsWH40K {
         return html;
     }
 
-    _buildGenericTooltip(data: Record<string, unknown>): string {
-        const title = data.title as string | undefined;
-        const content = data.content as string | undefined;
+    _buildGenericTooltip(data: GenericTooltipPayload): string {
+        const { title, content } = data;
         return `
             <div class="wh40k-tooltip__header">
                 <h4 class="wh40k-tooltip__title">${title ?? 'Information'}</h4>
@@ -636,8 +779,8 @@ export class TooltipsWH40K {
 
     _repositionTooltip(): void {
         const tooltip = this.#tooltip;
-        const tooltipManager = (game as unknown as { tooltip: TooltipManager | null }).tooltip;
-        if (tooltip === null || tooltipManager === null) return;
+        const tooltipManager = getTooltipManager();
+        if (tooltip === null) return;
 
         const pos = tooltip.getBoundingClientRect();
         const { innerHeight, innerWidth } = window;
@@ -673,40 +816,50 @@ export function prepareCharacteristicTooltipData(
     modifierSources: Record<string, WH40KModifierEntry[]> = {},
 ): string {
     const sources = modifierSources[key] ?? [];
-    const data = {
+    const data: CharacteristicTooltipPayload = {
         name: key,
-        label: characteristic.label ?? key,
-        base: characteristic.base ?? 0,
-        advance: characteristic.advance ?? 0,
-        modifier: characteristic.modifier ?? 0,
-        unnatural: characteristic.unnatural ?? 1,
-        total: characteristic.total ?? 0,
-        bonus: characteristic.bonus ?? 0,
+        label: characteristic.label,
+        base: characteristic.base,
+        advance: characteristic.advance,
+        modifier: characteristic.modifier,
+        unnatural: characteristic.unnatural,
+        total: characteristic.total,
+        bonus: characteristic.bonus,
         sources: sources.map((s) => ({
-            name: s.source ?? 'Unknown',
-            value: s.value ?? 0,
+            name: s.source,
+            value: s.value,
         })),
     };
     return JSON.stringify(data);
 }
 
+/** Legacy specialist-entry skill shape sometimes seen in older data. */
+interface LegacySkillFields {
+    char?: string;
+    name?: string;
+}
+
 export function prepareSkillTooltipData(key: string, skill: WH40KSkill, characteristics: Record<string, WH40KCharacteristic> = {}, actorUuid?: string): string {
-    const charKey = skill.characteristic ?? (skill as unknown as { char?: string }).char ?? 'strength';
-    const char = characteristics[charKey] ?? {};
-    const charTotal = char.total ?? 0;
-    const charLabel = char.label ?? charKey;
-    const trained = skill.trained ?? false;
-    const plus10 = skill.plus10 ?? false;
-    const plus20 = skill.plus20 ?? false;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KSkill may carry the legacy `char`/`name` fields from pre-DH2e data; surface them without widening the canonical type.
+    const legacy = skill as unknown as LegacySkillFields;
+    const charKey = skill.characteristic !== '' ? skill.characteristic : legacy.char ?? 'strength';
+    /* eslint-disable @typescript-eslint/no-unnecessary-condition -- boundary: Record<string, WH40KCharacteristic> index access can produce undefined at runtime when a legacy actor lacks the key; the declared type omits that. */
+    const char: WH40KCharacteristic | undefined = characteristics[charKey];
+    const charTotal = char?.total ?? 0;
+    const charLabel = char?.label ?? charKey;
+    /* eslint-enable @typescript-eslint/no-unnecessary-condition */
+    const trained = skill.trained;
+    const plus10 = skill.plus10;
+    const plus20 = skill.plus20;
     const plus30 = skill.plus30 ?? false;
     const basic = skill.basic ?? false;
     const level = plus30 ? 4 : plus20 ? 3 : plus10 ? 2 : trained ? 1 : 0;
     const baseValue = level > 0 ? charTotal : Math.floor(charTotal / 2);
     const trainingBonus = level >= 4 ? 30 : level >= 3 ? 20 : level >= 2 ? 10 : 0;
-    const bonus = skill.bonus ?? 0;
-    const data = {
+    const bonus = skill.bonus;
+    const data: SkillTooltipPayload = {
         name: key,
-        label: skill.label ?? (skill as unknown as { name?: string }).name ?? key,
+        label: skill.label ?? legacy.name ?? key,
         characteristic: charLabel,
         charValue: charTotal,
         baseValue,
@@ -714,13 +867,18 @@ export function prepareSkillTooltipData(key: string, skill: WH40KSkill, characte
         plus10,
         plus20,
         plus30,
-        current: skill.current ?? 0,
+        current: skill.current,
         basic,
         trainingBonus,
         bonus,
         actorUuid,
     };
     return JSON.stringify(data);
+}
+
+/** System bag for armour items — `system.armour` is a per-location map. */
+interface ArmourItemSystem {
+    armour?: Record<string, number>;
 }
 
 export function prepareArmorTooltipData(location: string, armorData: WH40KArmourLocation, equipped: WH40KItem[] = []): string {
@@ -732,17 +890,20 @@ export function prepareArmorTooltipData(location: string, armorData: WH40KArmour
         rightLeg: 'Right Leg',
         leftLeg: 'Left Leg',
     };
-    const data = {
+    const data: ArmorTooltipPayload = {
         location: locationLabels[location] ?? location,
-        total: armorData.total ?? 0,
-        toughnessBonus: armorData.toughnessBonus ?? 0,
-        traitBonus: armorData.traitBonus ?? 0,
-        armorValue: armorData.value ?? 0,
-        equipped: equipped.map((item) => ({
-            name: item.name,
-            img: item.img,
-            ap: ((item.system as Record<string, unknown>).armour as Record<string, number> | undefined)?.[location] ?? 0,
-        })),
+        total: armorData.total,
+        toughnessBonus: armorData.toughnessBonus,
+        traitBonus: armorData.traitBonus,
+        armorValue: armorData.value,
+        equipped: equipped.map((item) => {
+            const sys = item.system as ArmourItemSystem;
+            return {
+                name: item.name,
+                img: item.img ?? '',
+                ap: sys.armour?.[location] ?? 0,
+            };
+        }),
     };
     return JSON.stringify(data);
 }
@@ -785,8 +946,8 @@ export function prepareModifierTooltipData(title: string, sources: ModifierToolt
 }
 
 export function prepareQualityTooltipData(identifier: string, level: number | null = null): string {
-    const config = (CONFIG as unknown as { ROGUE_TRADER?: { getQualityDefinition?: (id: string) => QualityDefinition | null } }).ROGUE_TRADER;
-    if (config == null) return '{}';
+    const config = getRogueTraderConfig();
+    if (config === undefined) return '{}';
     const def = config.getQualityDefinition?.(identifier) ?? null;
     if (def === null) return '{}';
     let resolvedLevel = level;

@@ -2,8 +2,8 @@
  * @file SimpleRollDialog - V2 dialog for simple skill/characteristic rolls
  */
 
-import { sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import type { ActionData } from '../../rolls/action-data.ts';
+import { sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import BaseRollDialog from './base-roll-dialog.ts';
 
 /**
@@ -51,8 +51,8 @@ export default class SimpleRollDialog extends BaseRollDialog {
         const form = this.element.querySelector('form') ?? this.element;
         const rollData = this.simpleSkillData.rollData;
 
-        const difficultySelect = form.querySelector('#difficulty') as HTMLSelectElement | null;
-        const modifierInput = form.querySelector('#modifier') as HTMLInputElement | null;
+        const difficultySelect = form.querySelector<HTMLSelectElement>('#difficulty');
+        const modifierInput = form.querySelector<HTMLInputElement>('#modifier');
 
         rollData.modifiers['difficulty'] = parseInt(difficultySelect?.value ?? '0');
         rollData.modifiers['modifier'] = parseInt(modifierInput?.value ?? '0');

@@ -17,6 +17,15 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
         border: 'gold-raw-d15',
     } as const;
 
+    /**
+     * Dark Heresy characters receive 1000 XP at character generation in addition to the
+     * starting package. The base config defaults to 0, which left DH1 characters at zero
+     * XP after origin path commit while DH2 characters got the canonical 1000. See #14.
+     */
+    override get startingXP(): number {
+        return 1000;
+    }
+
     getOriginStepConfig(): OriginStepConfig {
         // DH1e origin path not yet defined — placeholder
         return { coreSteps: [], optionalStep: null, packs: [] };
@@ -35,7 +44,6 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
         const get = (key: string): string | number => this.readOriginPathField(actor, key);
         return [
-            this.makePlayerField(actor),
             this.makeField('Home World', 'system.originPath.homeWorld', get('homeWorld')),
             this.makeField('Career Path', 'system.originPath.career', get('career'), 'Career Path'),
             this.makeField('Rank', 'system.originPath.role', get('role')),

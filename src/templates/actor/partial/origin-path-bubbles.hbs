@@ -1,0 +1,25 @@
+{{!-- Origin path stage bubbles. Renders the per-step circular badge row
+     beneath the sidebar header. Each step is a 12×12 circle; filled steps
+     show the originPath item's image, empty steps show the step icon at
+     reduced opacity. Used by every per-system sheet header.
+
+     Context: `originPathSteps` array, each entry:
+       { item?: ItemLike, label, shortLabel, icon, tooltipData? }
+     Filled steps act as `data-action="itemEdit"` triggers and carry
+     wh40k-tooltip data when available. --}}
+
+{{#if originPathSteps.length}}
+<div class="tw-flex tw-w-full tw-flex-wrap tw-justify-center tw-gap-1.5 tw-max-w-[160px]">
+    {{#each originPathSteps as |step|}}
+    <div class="tw-flex tw-h-12 tw-w-12 tw-items-center tw-justify-center tw-overflow-hidden tw-rounded-full tw-border tw-border-solid tw-bg-[rgba(0,0,0,0.2)] tw-transition-all {{#if step.item}}tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-cursor-pointer hover:tw-border-[#f0d060] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)]{{else}}tw-border-[var(--wh40k-border-color,#4a3728)] tw-opacity-40 tw-cursor-default{{/if}}"
+         {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
+         {{#if step.tooltipData}}data-wh40k-tooltip="generic" data-wh40k-tooltip-data="{{step.tooltipData}}"{{else}}data-tooltip="{{step.label}}"{{/if}}>
+        {{#if step.item}}
+            <img src="{{step.item.img}}" alt="{{step.item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+        {{else}}
+            <i class="fas {{step.icon}} tw-text-base tw-text-[var(--wh40k-text-muted)]"></i>
+        {{/if}}
+    </div>
+    {{/each}}
+</div>
+{{/if}}

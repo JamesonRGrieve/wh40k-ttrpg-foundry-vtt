@@ -8,12 +8,7 @@
          HEADER: Compact cybernetic identity with inline badges
     ═══════════════════════════════════════════════════════════════════ --}}
     <header class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0 tw-border-b tw-border-[var(--wh40k-border-color)]">
-      <div class="tw-relative tw-w-14 tw-h-14 tw-shrink-0 tw-cursor-pointer" data-action="editImage" data-edit="img">
-        <img class="tw-w-full tw-h-full tw-object-cover tw-rounded-md" src="{{item.img}}" alt="{{item.name}}" />
-        <div class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/45 tw-opacity-0 hover:tw-opacity-100 tw-transition-opacity tw-rounded-md">
-          <i class="fas fa-edit"></i>
-        </div>
-      </div>
+      {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name sizeClass="tw-w-14 tw-h-14" frameClass="" overlayTextClass="" overlayIconClass="" extraClass="tw-shrink-0"}}
       
       <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
         <input type="text" class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure" name="name" value="{{item.name}}" placeholder="Cybernetic Name" />
@@ -96,28 +91,12 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs tw-flex tw-flex-shrink-0 tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]" data-group="primary">
-      <button type="button" class="wh40k-tab active tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-gold)] tw-bg-transparent tw-border-b-2 tw-border-b-[var(--wh40k-gold)] tw--mb-0.5 tw-cursor-pointer" data-tab="properties" data-group="primary">
-        <i class="fas fa-cog tw-mr-1"></i>
-        <span>Properties</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="effects" data-group="primary">
-        <i class="fas fa-bolt tw-mr-1"></i>
-        <span>Effects</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="armour" data-group="primary">
-        <i class="fas fa-shield-halved tw-mr-1"></i>
-        <span>Armour</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="installation" data-group="primary">
-        <i class="fas fa-syringe tw-mr-1"></i>
-        <span>Installation</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="description" data-group="primary">
-        <i class="fas fa-book tw-mr-1"></i>
-        <span>Description</span>
-      </button>
-    </nav>
+    {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+        (object tab="properties"   label="Properties"   icon="fa-cog"          active=true)
+        (object tab="effects"      label="Effects"      icon="fa-bolt")
+        (object tab="armour"       label="Armour"       icon="fa-shield-halved")
+        (object tab="installation" label="Installation" icon="fa-syringe")
+        (object tab="description"  label="Description"  icon="fa-book"))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT

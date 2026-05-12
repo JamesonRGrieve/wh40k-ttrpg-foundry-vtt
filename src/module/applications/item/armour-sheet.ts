@@ -2,9 +2,9 @@
  * @file ArmourSheet - ApplicationV2 sheet for armour items
  */
 
-import ContainerItemSheet from './container-item-sheet.ts';
-import type { WH40KItem } from '../../documents/item.ts';
 import type { default as ArmourDataModel } from '../../data/item/armour.ts';
+import type { WH40KItem } from '../../documents/item.ts';
+import ContainerItemSheet from './container-item-sheet.ts';
 
 /**
  * Sheet for armour items with support for armour modifications.
@@ -159,7 +159,7 @@ export default class ArmourSheet extends ContainerItemSheet {
             coverage.add('body');
         }
 
-        await this.item.update({ 'system.coverage': Array.from(coverage) } as Record<string, unknown>);
+        await this.item.update({ 'system.coverage': Array.from(coverage) });
     }
 
     /**
@@ -169,7 +169,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {HTMLElement} target
      */
     static async #addProperty(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const select = this.element.querySelector("[name='new-property']") as HTMLSelectElement | null;
+        const select = this.element.querySelector<HTMLSelectElement>("[name='new-property']");
         const property = select?.value;
         if (!property) return;
 
@@ -177,7 +177,7 @@ export default class ArmourSheet extends ContainerItemSheet {
         const properties = new Set(sys.properties || []);
         properties.add(property);
 
-        await this.item.update({ 'system.properties': Array.from(properties) } as Record<string, unknown>);
+        await this.item.update({ 'system.properties': Array.from(properties) });
 
         // Reset select
         if (select) select.value = '';
@@ -195,7 +195,7 @@ export default class ArmourSheet extends ContainerItemSheet {
         const properties = new Set(sys.properties || []);
         if (property) properties.delete(property);
 
-        await this.item.update({ 'system.properties': Array.from(properties) } as Record<string, unknown>);
+        await this.item.update({ 'system.properties': Array.from(properties) });
     }
 
     /**
@@ -230,7 +230,7 @@ export default class ArmourSheet extends ContainerItemSheet {
 
         try {
             const item = (await fromUuid(mod.uuid)) as any;
-            if (item && item.sheet) item.sheet.render(true);
+            if (item?.sheet) item.sheet.render(true);
         } catch (err) {
             console.error('Failed to open modification:', err);
         }
@@ -248,6 +248,6 @@ export default class ArmourSheet extends ContainerItemSheet {
         const modifications = [...sys.modifications];
         modifications.splice(index, 1);
 
-        await this.item.update({ 'system.modifications': modifications } as Record<string, unknown>);
+        await this.item.update({ 'system.modifications': modifications });
     }
 }

@@ -258,24 +258,22 @@ export function calculateTokenDistance(
     token1: foundry.canvas.placeables.Token | null | undefined,
     token2: foundry.canvas.placeables.Token | null | undefined,
 ): number {
-    if (!token1 || !token2) return 0;
+    if (token1 === null || token1 === undefined || token2 === null || token2 === undefined) return 0;
     const grid = canvas.grid;
-    if (!grid) return 0;
+    if (grid === null) return 0;
 
     // Measure path distance using Foundry's grid system
     const pathDistance = grid.measurePath([token1, token2], {});
-    let distance = typeof pathDistance === 'number' ? pathDistance : pathDistance.distance || 0;
+    let distance = typeof pathDistance === 'number' ? pathDistance : pathDistance.distance;
 
     // Account for elevation difference (3D distance)
-    if (token1.document && token2.document) {
-        const elevation1 = token1.document.elevation || 0;
-        const elevation2 = token2.document.elevation || 0;
+    const elevation1 = token1.document.elevation;
+    const elevation2 = token2.document.elevation;
 
-        if (elevation1 !== elevation2) {
-            const elevationDiff = Math.abs(elevation2 - elevation1);
-            // Pythagorean theorem: sqrt(horizontal^2 + vertical^2)
-            distance = Math.sqrt(Math.pow(distance, 2) + Math.pow(elevationDiff, 2));
-        }
+    if (elevation1 !== elevation2) {
+        const elevationDiff = Math.abs(elevation2 - elevation1);
+        // Pythagorean theorem: sqrt(horizontal^2 + vertical^2)
+        distance = Math.sqrt(Math.pow(distance, 2) + Math.pow(elevationDiff, 2));
     }
 
     return Math.floor(distance);
@@ -308,11 +306,11 @@ export function formatRangeDisplay(rangeInfo: RangeCalculationResult & { descrip
 
     // Build tooltip
     let tooltip = description;
-    if (modifiedBy) {
+    if (modifiedBy !== null) {
         const qualityNames: Record<string, string> = {
             'gyro-stabilised': 'Gyro-Stabilised',
         };
-        tooltip += ` (Modified by ${qualityNames[modifiedBy] || modifiedBy})`;
+        tooltip += ` (Modified by ${qualityNames[modifiedBy] ?? modifiedBy})`;
     }
     if (isMeltaRange) {
         tooltip += ' | Melta: Double Penetration';

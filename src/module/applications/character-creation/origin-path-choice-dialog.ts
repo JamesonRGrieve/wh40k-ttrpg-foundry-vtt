@@ -665,11 +665,11 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {Actor} actor - The character actor
      * @returns {Promise<object|null>} The selected choices or null if cancelled
      */
-    static async show(item: WH40KItem, actor: WH40KBaseActor): Promise<unknown> {
+    static async show(item: WH40KItem, actor: WH40KBaseActor): Promise<Record<string, string[]> | null> {
         const dialog = new OriginPathChoiceDialog(item, actor);
 
         // Create promise that will be resolved when user confirms/cancels
-        const result = new Promise((resolve) => {
+        const result = new Promise<Record<string, string[]> | null>((resolve) => {
             dialog._resolvePromise = resolve;
         });
 

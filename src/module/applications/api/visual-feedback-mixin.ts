@@ -4,7 +4,6 @@
  */
 
 import type { ApplicationV2Ctor } from './application-types.ts';
-import type { VisualFeedbackMixinAPI } from './sheet-mixin-types.js';
 
 /**
  * Mixin to add visual feedback capabilities to ApplicationV2 sheets.
@@ -15,7 +14,9 @@ import type { VisualFeedbackMixinAPI } from './sheet-mixin-types.js';
  */
 export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class VisualFeedbackApplication extends Base {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- standard mixin constructor pattern requires any[]
         constructor(...args: any[]) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- forwarding mixin args to base
             super(...args);
         }
 
@@ -32,15 +33,16 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
 
         /* -------------------------------------------- */
 
-        declare document: { toObject(): Record<string, unknown> } | null;
+        declare document: { toObject(): Record<string, number | string | boolean | null> } | null;
 
         /* -------------------------------------------- */
         /*  Form Submission Override                    */
         /* -------------------------------------------- */
 
         /** @override */
+        // eslint-disable-next-line no-restricted-syntax -- Foundry API boundary: context shape is defined by the framework
         async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
-            await super._onRender(context, options as never);
+            await super._onRender(context, options);
             this._captureCurrentValues();
         }
 
@@ -174,7 +176,7 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
          * @protected
          */
         _animateDerivedStat(selector: string): void {
-            const element = this.element.querySelector(selector) as HTMLElement | null;
+            const element = this.element.querySelector<HTMLElement>(selector);
             if (!element) return;
 
             element.classList.remove('tw-animate-pulse-glow');
@@ -288,6 +290,7 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
             this._applyAnimation(element, animationClass);
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- Foundry API boundary: flattenObject input is untyped
         visualizeChanges(changes: Record<string, unknown>): void {
             const flattened = foundry.utils.flattenObject(changes);
 

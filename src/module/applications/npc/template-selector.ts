@@ -216,9 +216,9 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         void super._onRender(context, options);
 
         // Filter inputs
-        const categorySelect = this.element.querySelector('[name="filterCategory"]') as HTMLSelectElement | null;
-        const factionSelect = this.element.querySelector('[name="filterFaction"]') as HTMLSelectElement | null;
-        const searchInput = this.element.querySelector('[name="filterSearch"]') as HTMLInputElement | null;
+        const categorySelect = this.element.querySelector<HTMLSelectElement>('[name="filterCategory"]');
+        const factionSelect = this.element.querySelector<HTMLSelectElement>('[name="filterFaction"]');
+        const searchInput = this.element.querySelector<HTMLInputElement>('[name="filterSearch"]');
 
         if (categorySelect) {
             categorySelect.addEventListener('change', () => {
@@ -242,7 +242,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         }
 
         // Threat level slider
-        const threatSlider = this.element.querySelector('[name="threatLevel"]') as HTMLInputElement | null;
+        const threatSlider = this.element.querySelector<HTMLInputElement>('[name="threatLevel"]');
         const threatValue = this.element.querySelector('.threat-value');
         if (threatSlider) {
             threatSlider.addEventListener('input', () => {
@@ -253,7 +253,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         }
 
         // Horde checkbox
-        const hordeCheckbox = this.element.querySelector('[name="isHorde"]') as HTMLInputElement | null;
+        const hordeCheckbox = this.element.querySelector<HTMLInputElement>('[name="isHorde"]');
         if (hordeCheckbox) {
             hordeCheckbox.addEventListener('change', () => {
                 this.#isHorde = hordeCheckbox.checked;

@@ -1,14 +1,10 @@
-{{!-- Rogue Trader Psychic Power Roll Prompt - Modern Design --}}
+{{!-- Psychic Power Roll Prompt --}}
 <div class="dialog-content">
     <form class="tw-relative tw-font-ui tw-text-[color:var(--wh40k-text-primary)] tw-p-5" autocomplete="off"
           style="--wh40k-bg-primary:#0d0d12;--wh40k-bg-secondary:#14141c;--wh40k-accent-gold:#d4af37;--wh40k-accent-gold-dim:rgba(201,162,39,0.6);--wh40k-text-primary:#e8e4d9;--wh40k-text-secondary:#9a9a8a;--wh40k-border-subtle:rgba(255,255,255,0.08);--wh40k-border-accent:rgba(201,162,39,0.3);--wh40k-glow-gold:rgba(201,162,39,0.2);">
         {{!-- Power Select or Info --}}
         {{#if powerSelect}}
-            {{!-- Panel: power selection list --}}
-            <div class="tw-relative tw-p-[16px_18px] tw-mb-4 tw-bg-[linear-gradient(135deg,var(--wh40k-bg-secondary)_0%,var(--wh40k-bg-primary)_100%)] tw-border tw-border-[color:var(--wh40k-border-accent)] tw-rounded-md tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
-                {{!-- accent line --}}
-                <span class="tw-pointer-events-none tw-absolute tw-left-0 tw-top-3 tw-bottom-3 tw-w-[3px] tw-bg-[linear-gradient(180deg,var(--wh40k-accent-gold)_0%,var(--wh40k-accent-gold-dim)_100%)] tw-rounded-[0_2px_2px_0]"></span>
-                <h3 class="tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[color:var(--wh40k-border-subtle)]">Select Power</h3>
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title="Select Power"}}
                 <div class="tw-flex tw-flex-col tw-gap-2">
                     {{#each psychicPowers as |power|}}
                         <label class="tw-flex tw-items-center tw-gap-3 tw-cursor-pointer tw-rounded tw-p-3 {{#if power.isSelected}}tw-bg-[rgba(201,162,39,0.08)] tw-border tw-border-[rgba(201,162,39,0.3)]{{else}}tw-border tw-border-transparent hover:tw-bg-[rgba(255,255,255,0.03)]{{/if}}">
@@ -29,11 +25,10 @@
                         </label>
                     {{/each}}
                 </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
         {{else}}
             {{!-- Power Header Panel --}}
-            <div class="tw-relative tw-p-[16px_18px] tw-mb-4 tw-bg-[linear-gradient(135deg,var(--wh40k-bg-secondary)_0%,var(--wh40k-bg-primary)_100%)] tw-border tw-border-[color:var(--wh40k-border-accent)] tw-rounded-md tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
-                <span class="tw-pointer-events-none tw-absolute tw-left-0 tw-top-3 tw-bottom-3 tw-w-[3px] tw-bg-[linear-gradient(180deg,var(--wh40k-accent-gold)_0%,var(--wh40k-accent-gold-dim)_100%)] tw-rounded-[0_2px_2px_0]"></span>
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
                 <div class="tw-flex tw-items-center tw-gap-[14px] tw-mb-4 tw-pb-[14px] tw-border-b tw-border-[color:var(--wh40k-border-subtle)]">
                     <img class="tw-w-12 tw-h-12 tw-flex-shrink-0 tw-rounded tw-object-cover tw-border-2 tw-border-[color:var(--wh40k-accent-gold)] tw-shadow-[0_4px_12px_rgba(0,0,0,0.4),0_0_20px_var(--wh40k-glow-gold)]" alt="{{power.name}}" src="{{power.img}}" />
                     <div class="tw-flex-1 tw-min-w-0">
@@ -51,62 +46,47 @@
 
                 {{#each power.items as |item|}}
                     {{#if item.isAttackSpecial}}
-                        <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
-                            <span class="tw-text-[0.85rem] tw-font-medium tw-text-[color:var(--wh40k-text-primary)]">Special</span>
-                            <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-[font-variant-numeric:tabular-nums]">{{item.name}}</span>
-                        </div>
+                        {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Special" value=item.name last=true}}
                     {{/if}}
                 {{/each}}
-            </div>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
 
             {{!-- Focus Power Panel --}}
-            <div class="tw-relative tw-p-[16px_18px] tw-mb-4 tw-bg-[linear-gradient(135deg,var(--wh40k-bg-secondary)_0%,var(--wh40k-bg-primary)_100%)] tw-border tw-border-[color:var(--wh40k-border-accent)] tw-rounded-md tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
-                <span class="tw-pointer-events-none tw-absolute tw-left-0 tw-top-3 tw-bottom-3 tw-w-[3px] tw-bg-[linear-gradient(180deg,var(--wh40k-accent-gold)_0%,var(--wh40k-accent-gold-dim)_100%)] tw-rounded-[0_2px_2px_0]"></span>
-                <h3 class="tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[color:var(--wh40k-border-subtle)]">Focus Power</h3>
-                <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[color:var(--wh40k-border-subtle)]">
-                    <span class="tw-text-[0.85rem] tw-font-medium tw-text-[color:var(--wh40k-text-primary)]">Psychic Rating</span>
-                    <input class="tw-py-[10px] tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[color:var(--wh40k-border-subtle)] tw-rounded-md tw-text-[color:var(--wh40k-text-primary)] tw-text-[0.9rem] tw-font-medium tw-w-20 tw-text-center tw-[appearance:textfield] [&::-webkit-outer-spin-button]:tw-[appearance:none] [&::-webkit-inner-spin-button]:tw-[appearance:none] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_var(--wh40k-glow-gold)] focus:tw-bg-[rgba(0,0,0,0.4)]" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
-                </div>
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title="Focus Power"}}
+                {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Psychic Rating"}}
+                    <input class="tw-py-[10px] tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[color:var(--wh40k-border-subtle)] tw-rounded-md tw-text-[color:var(--wh40k-text-primary)] tw-text-[0.9rem] tw-font-medium tw-w-20 tw-text-center" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
+                {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
                 {{#if this.modifiers.bonus}}
-                    <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[color:var(--wh40k-border-subtle)]">
-                        <span class="tw-text-[0.85rem] tw-font-medium tw-text-[color:var(--wh40k-text-primary)]">Rating Bonus</span>
-                        <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-[font-variant-numeric:tabular-nums]">+{{modifiers.bonus}}</span>
-                    </div>
+                    {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Rating Bonus" value=(concat "+" modifiers.bonus)}}
                 {{/if}}
-                <div class="tw-flex tw-items-center tw-justify-between tw-py-2 tw-min-h-[40px]">
-                    <span class="tw-text-[0.85rem] tw-font-medium tw-text-[color:var(--wh40k-text-primary)]">Has Psy Focus</span>
+                {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Has Psy Focus" last=true}}
                     <input class="tw-w-5 tw-h-5 tw-cursor-pointer tw-accent-[var(--wh40k-accent-gold)] tw-m-0" type="checkbox" data-dtype="Boolean" {{checked hasFocus}} name="hasFocus" />
-                </div>
-            </div>
+                {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
 
             {{!-- Modifiers Panel --}}
-            <div class="tw-relative tw-p-[16px_18px] tw-mb-0 tw-bg-[linear-gradient(135deg,var(--wh40k-bg-secondary)_0%,var(--wh40k-bg-primary)_100%)] tw-border tw-border-[color:var(--wh40k-border-accent)] tw-rounded-md tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
-                <span class="tw-pointer-events-none tw-absolute tw-left-0 tw-top-3 tw-bottom-3 tw-w-[3px] tw-bg-[linear-gradient(180deg,var(--wh40k-accent-gold)_0%,var(--wh40k-accent-gold-dim)_100%)] tw-rounded-[0_2px_2px_0]"></span>
-                <h3 class="tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[color:var(--wh40k-border-subtle)]">Modifiers</h3>
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title="Modifiers" marginClass=""}}
                 {{#with this.modifiers}}
-                    <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[color:var(--wh40k-border-subtle)]">
-                        <span class="tw-text-[0.85rem] tw-font-medium tw-text-[color:var(--wh40k-text-primary)]">Difficulty</span>
-                        <select class="tw-min-h-10 tw-py-[10px] tw-px-[14px] tw-pr-8 tw-bg-[rgba(0,0,0,0.3)] tw-bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2712%27%20height%3D%2712%27%20viewBox%3D%270%200%2012%2012%27%3E%3Cpath%20fill%3D%27%23c9a227%27%20d%3D%27M6%208L1%203h10z%27/%3E%3C/svg%3E')] tw-bg-no-repeat tw-bg-[right_12px_center] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px] tw-leading-[1.2] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)]" name="modifiers.difficulty">
+                    {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Difficulty"}}
+                        <select class="tw-min-h-10 tw-py-[10px] tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px]" name="modifiers.difficulty">
                             {{selectOptions @root.difficulties selected=difficulty}}
                         </select>
-                    </div>
-                    <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[color:var(--wh40k-border-subtle)]">
-                        <span class="tw-text-[0.85rem] tw-font-medium tw-text-[color:var(--wh40k-text-primary)]">Additional Modifier</span>
-                        <input class="tw-py-[10px] tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[color:var(--wh40k-border-subtle)] tw-rounded-md tw-text-[color:var(--wh40k-text-primary)] tw-text-[0.9rem] tw-font-medium tw-w-20 tw-text-right tw-[appearance:textfield] [&::-webkit-outer-spin-button]:tw-[appearance:none] [&::-webkit-inner-spin-button]:tw-[appearance:none] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_var(--wh40k-glow-gold)] focus:tw-bg-[rgba(0,0,0,0.4)]" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
-                    </div>
+                    {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+                    {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Additional Modifier"}}
+                        <input class="tw-py-[10px] tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[color:var(--wh40k-border-subtle)] tw-rounded-md tw-text-[color:var(--wh40k-text-primary)] tw-text-[0.9rem] tw-font-medium tw-w-20 tw-text-right" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
+                    {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
                 {{/with}}
 
                 <div class="tw-my-3 tw-h-px tw-bg-[linear-gradient(90deg,transparent_0%,var(--wh40k-border-accent)_50%,transparent_100%)]"></div>
 
-                <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[color:var(--wh40k-border-subtle)]">
-                    <span class="tw-text-[0.85rem] tw-font-medium tw-text-[color:var(--wh40k-text-primary)]">Distance (m)</span>
-                    <input class="tw-py-[10px] tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[color:var(--wh40k-border-subtle)] tw-rounded-md tw-text-[color:var(--wh40k-text-primary)] tw-text-[0.9rem] tw-font-medium tw-w-20 tw-text-right tw-[appearance:textfield] [&::-webkit-outer-spin-button]:tw-[appearance:none] [&::-webkit-inner-spin-button]:tw-[appearance:none] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_var(--wh40k-glow-gold)] focus:tw-bg-[rgba(0,0,0,0.4)]" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
-                </div>
+                {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Distance (m)"}}
+                    <input class="tw-py-[10px] tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[color:var(--wh40k-border-subtle)] tw-rounded-md tw-text-[color:var(--wh40k-text-primary)] tw-text-[0.9rem] tw-font-medium tw-w-20 tw-text-right" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
+                {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
                 <div class="tw-flex tw-justify-between tw-items-center tw-pt-1">
                     <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-secondary)]">{{rangeName}}</span>
                     <span class="tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">Max: {{maxRange}}m</span>
                 </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
         {{/if}}
     </form>
 </div>

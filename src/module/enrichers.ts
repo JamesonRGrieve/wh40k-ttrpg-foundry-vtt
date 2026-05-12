@@ -3,7 +3,21 @@
  * Provides inline content enrichment for characteristics, skills, modifiers, etc.
  */
 
-import type { WH40KActorSystemData, WH40KSkill, WH40KSkillEntry } from './types/global.d.ts';
+import type { WH40KActorSystemData, WH40KCharacteristic, WH40KSkill, WH40KSkillEntry } from './types/global.d.ts';
+
+type EnrichmentOptions = foundry.applications.ux.TextEditor.EnrichmentOptions;
+
+/** Typed accessor for regex match groups (`match.groups['key']` returns `string` per TS,
+ *  but in practice named groups can be undefined when the alternation didn't match). */
+function getGroup(groups: { [key: string]: string }, key: string): string | undefined {
+    return Object.prototype.hasOwnProperty.call(groups, key) ? groups[key] : undefined;
+}
+
+interface EnricherActorLike {
+    documentName?: string;
+    uuid?: string;
+    system: WH40KActorSystemData;
+}
 
 /**
  * Register custom text enrichers for WH40K RPG system.
@@ -63,9 +77,9 @@ export function registerCustomEnrichers(): void {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-async function enrichCharacteristic(match: RegExpMatchArray, options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups == null) return createErrorElement(match[0], 'No match groups');
-    const label = match.groups['label'];
+async function enrichCharacteristic(match: RegExpMatchArray, options?: EnrichmentOptions): Promise<HTMLElement> {
+    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
+    const label = getGroup(match.groups, 'label');
     const config = match.groups['config'].trim().toLowerCase();
 
     // Map short codes to full names
@@ -84,14 +98,14 @@ async function enrichCharacteristic(match: RegExpMatchArray, options?: TextEdito
     const charKey = charMap[config] ?? config;
 
     // Get actor from relativeTo
-    const actor = options?.relativeTo;
+    const actor = options?.relativeTo as EnricherActorLike | undefined;
     if (actor?.documentName !== 'Actor') {
         return createErrorElement(match[0], 'No actor context');
     }
 
-    const actorSystem = actor.system as WH40KActorSystemData;
-    const charData = actorSystem.characteristics?.[charKey];
-    if (charData == null) {
+    const actorSystem = actor.system;
+    const charData: WH40KCharacteristic | undefined = charKey in actorSystem.characteristics ? actorSystem.characteristics[charKey] : undefined;
+    if (charData === undefined) {
         return createErrorElement(match[0], `Unknown characteristic: ${config}`);
     }
 
@@ -100,7 +114,7 @@ async function enrichCharacteristic(match: RegExpMatchArray, options?: TextEdito
     span.className = 'wh40k-enricher wh40k-enricher-characteristic';
     span.dataset.enricherType = 'characteristic';
     span.dataset.enricherConfig = charKey;
-    span.dataset.actorUuid = actor.uuid ?? undefined;
+    span.dataset.actorUuid = actor.uuid;
 
     // Build tooltip data
     const tooltipData = {
@@ -132,31 +146,31 @@ async function enrichCharacteristic(match: RegExpMatchArray, options?: TextEdito
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-async function enrichSkill(match: RegExpMatchArray, options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups == null) return createErrorElement(match[0], 'No match groups');
-    const label = match.groups['label'];
+async function enrichSkill(match: RegExpMatchArray, options?: EnrichmentOptions): Promise<HTMLElement> {
+    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
+    const label = getGroup(match.groups, 'label');
     const config = match.groups['config'].trim().toLowerCase();
 
     // Parse skill and specialization
-    const [skillKey, specialization] = config.split(':').map((s: string) => s.trim());
+    const [skillKey, specialization] = config.split(':').map((s: string) => s.trim()) as [string, string | undefined];
 
     // Get actor from relativeTo
-    const actor = options?.relativeTo;
+    const actor = options?.relativeTo as EnricherActorLike | undefined;
     if (actor?.documentName !== 'Actor') {
         return createErrorElement(match[0], 'No actor context');
     }
 
-    const actorSystem = actor.system as WH40KActorSystemData;
-    const skillData = actorSystem.skills?.[skillKey];
-    if (skillData == null) {
+    const actorSystem = actor.system;
+    const skillData: WH40KSkill | undefined = skillKey in actorSystem.skills ? actorSystem.skills[skillKey] : undefined;
+    if (skillData === undefined) {
         return createErrorElement(match[0], `Unknown skill: ${skillKey}`);
     }
 
     // Handle specialist skills
     let targetData: WH40KSkill | WH40KSkillEntry = skillData;
-    if (specialization != null && specialization.length > 0 && skillData.entries != null) {
+    if (specialization !== undefined && specialization.length > 0 && skillData.entries !== undefined) {
         const entry = skillData.entries.find((e: { name?: string }) => e.name?.toLowerCase() === specialization);
-        if (entry == null) {
+        if (entry === undefined) {
             return createErrorElement(match[0], `Unknown specialization: ${specialization}`);
         }
         targetData = entry;
@@ -166,12 +180,12 @@ async function enrichSkill(match: RegExpMatchArray, options?: TextEditor.Enrichm
     const span = document.createElement('span');
     span.className = 'wh40k-enricher wh40k-enricher-skill';
     span.dataset.enricherType = 'skill';
-    span.dataset.enricherConfig = specialization != null && specialization.length > 0 ? `${skillKey}:${specialization}` : skillKey;
-    span.dataset.actorUuid = actor.uuid ?? undefined;
+    span.dataset.enricherConfig = specialization !== undefined && specialization.length > 0 ? `${skillKey}:${specialization}` : skillKey;
+    span.dataset.actorUuid = actor.uuid;
 
     // Build tooltip data
     const tooltipData = {
-        label: specialization != null && specialization.length > 0 ? `${skillData.label} (${(targetData as WH40KSkillEntry).name})` : skillData.label,
+        label: specialization !== undefined && specialization.length > 0 ? `${skillData.label} (${(targetData as WH40KSkillEntry).name})` : skillData.label,
         current: targetData.current,
         characteristic: skillData.characteristic,
         trained: targetData.trained,
@@ -199,10 +213,10 @@ async function enrichSkill(match: RegExpMatchArray, options?: TextEditor.Enrichm
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-async function enrichModifier(match: RegExpMatchArray, _options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups == null) return createErrorElement(match[0], 'No match groups');
+async function enrichModifier(match: RegExpMatchArray, _options?: EnrichmentOptions): Promise<HTMLElement> {
+    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
     const config = match.groups['config'];
-    const label = match.groups['label'];
+    const label = getGroup(match.groups, 'label');
     const parts = config.trim().split(/\s+/);
 
     if (parts.length < 2) {
@@ -238,20 +252,20 @@ async function enrichModifier(match: RegExpMatchArray, _options?: TextEditor.Enr
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-async function enrichArmor(match: RegExpMatchArray, options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups == null) return createErrorElement(match[0], 'No match groups');
-    const label = match.groups['label'];
+async function enrichArmor(match: RegExpMatchArray, options?: EnrichmentOptions): Promise<HTMLElement> {
+    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
+    const label = getGroup(match.groups, 'label');
     const config = match.groups['config'].trim().toLowerCase();
 
     // Get actor from relativeTo
-    const actor = options?.relativeTo;
+    const actor = options?.relativeTo as EnricherActorLike | undefined;
     if (actor?.documentName !== 'Actor') {
         return createErrorElement(match[0], 'No actor context');
     }
 
-    const actorSystem = actor.system as WH40KActorSystemData;
+    const actorSystem = actor.system;
     const armorData = actorSystem.armour;
-    if (armorData == null) {
+    if (armorData === undefined) {
         return createErrorElement(match[0], 'No armor data');
     }
 
@@ -260,30 +274,33 @@ async function enrichArmor(match: RegExpMatchArray, options?: TextEditor.Enrichm
     span.className = 'wh40k-enricher wh40k-enricher-armor';
     span.dataset.enricherType = 'armor';
     span.dataset.enricherConfig = config;
-    span.dataset.actorUuid = actor.uuid ?? undefined;
+    span.dataset.actorUuid = actor.uuid;
 
     let displayValue: string;
+    // Tooltip is a heterogeneous bag of per-location or single-location summaries serialised to JSON for display.
+    // eslint-disable-next-line no-restricted-syntax -- boundary: tooltip JSON payload has no fixed schema
     let tooltipData: Record<string, unknown>;
 
     if (config === 'all') {
         // Show all armor locations
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
-        const values = locations.map((loc) => armorData[loc]?.total ?? 0);
+        const values = locations.map((loc) => armorData[loc].total);
         displayValue = `${Math.min(...values)}-${Math.max(...values)} AP`;
 
         tooltipData = {};
         locations.forEach((loc) => {
             const locData = armorData[loc];
             tooltipData[loc] = {
-                total: locData?.total ?? 0,
-                toughnessBonus: locData?.toughnessBonus ?? 0,
-                value: locData?.value ?? 0,
+                total: locData.total,
+                toughnessBonus: locData.toughnessBonus,
+                value: locData.value,
             };
         });
     } else {
         // Single location
         const locData = armorData[config];
-        if (locData == null) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime: arbitrary user config may not match any indexed location key
+        if (locData === undefined) {
             return createErrorElement(match[0], `Unknown armor location: ${config}`);
         }
 
@@ -327,9 +344,32 @@ function createErrorElement(original: string, error: string): HTMLElement {
  * Handle clicks on enriched elements.
  * @param {MouseEvent} event  The click event.
  */
+interface RollCapableActor {
+    rollCharacteristic?: (c: string) => Promise<void>;
+    rollSkill?: (s: string, sp: string) => Promise<void>;
+}
+interface ItemLike {
+    toMessage?: () => void;
+    sheet?: { render: (force: boolean) => void };
+}
+
+async function handleItemEnricherClick(itemUuid: string | undefined, event: MouseEvent): Promise<void> {
+    if (itemUuid === undefined || itemUuid.length === 0) return;
+    const item = (await fromUuid(itemUuid)) as ItemLike | null;
+    if (item === null) return;
+    if (event.shiftKey) {
+        item.toMessage?.();
+    } else if (event.ctrlKey || event.metaKey) {
+        item.sheet?.render(true);
+    } else {
+        // TODO: Integrate with ItemPreviewCard when available
+        item.sheet?.render(true);
+    }
+}
+
 async function handleEnricherClick(event: MouseEvent): Promise<void> {
     const enricher = (event.target as HTMLElement).closest<HTMLElement>('.wh40k-enricher');
-    if (enricher == null) return;
+    if (enricher === null) return;
 
     const type = enricher.dataset['enricherType'];
     const config = enricher.dataset['enricherConfig'];
@@ -341,20 +381,20 @@ async function handleEnricherClick(event: MouseEvent): Promise<void> {
 
     switch (type) {
         case 'characteristic':
-            if (actorUuid != null && actorUuid.length > 0) {
-                const actor = (await fromUuid(actorUuid)) as Record<string, unknown> | null;
-                if (actor != null && typeof actor['rollCharacteristic'] === 'function') {
-                    await (actor['rollCharacteristic'] as (c: string) => Promise<void>)(config as string);
+            if (actorUuid !== undefined && actorUuid.length > 0 && config !== undefined) {
+                const actor = (await fromUuid(actorUuid)) as RollCapableActor | null;
+                if (actor !== null && typeof actor.rollCharacteristic === 'function') {
+                    await actor.rollCharacteristic(config);
                 }
             }
             break;
 
         case 'skill':
-            if (actorUuid != null && actorUuid.length > 0) {
-                const actor = (await fromUuid(actorUuid)) as Record<string, unknown> | null;
-                if (actor && typeof actor['rollSkill'] === 'function') {
-                    const [skillKey, specialization] = (config as string).split(':');
-                    await (actor['rollSkill'] as (s: string, sp: string) => Promise<void>)(skillKey, specialization);
+            if (actorUuid !== undefined && actorUuid.length > 0 && config !== undefined) {
+                const actor = (await fromUuid(actorUuid)) as RollCapableActor | null;
+                if (actor !== null && typeof actor.rollSkill === 'function') {
+                    const [skillKey, specialization] = config.split(':');
+                    await actor.rollSkill(skillKey, specialization);
                 }
             }
             break;
@@ -362,30 +402,13 @@ async function handleEnricherClick(event: MouseEvent): Promise<void> {
         case 'quality':
         case 'property':
         case 'condition':
-            // Show expandable info panel
-            if (itemUuid != null && itemUuid.length > 0) {
-                const item = (await fromUuid(itemUuid)) as Record<string, unknown> | null;
-                if (item != null) {
-                    // Check for Shift+Click to post to chat
-                    if (event.shiftKey) {
-                        (item['toMessage'] as () => void)();
-                    }
-                    // Check for Ctrl+Click to open sheet
-                    else if (event.ctrlKey || event.metaKey) {
-                        (item['sheet'] as { render: (force: boolean) => void })?.render(true);
-                    }
-                    // Default: show inline preview
-                    else {
-                        // TODO: Integrate with ItemPreviewCard when available
-                        (item['sheet'] as { render: (force: boolean) => void })?.render(true);
-                    }
-                }
-            }
+            await handleItemEnricherClick(itemUuid, event);
             break;
 
         // Modifiers and armor are display-only (no click action)
         case 'modifier':
         case 'armor':
+        case undefined:
         default:
             break;
     }
@@ -399,21 +422,21 @@ async function handleEnricherClick(event: MouseEvent): Promise<void> {
  * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
-async function enrichQuality(match: RegExpMatchArray, _options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups == null) return createErrorElement(match[0], 'No match groups');
-    const label = match.groups['label'];
+async function enrichQuality(match: RegExpMatchArray, _options?: EnrichmentOptions): Promise<HTMLElement> {
+    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
+    const label = getGroup(match.groups, 'label');
     const config = match.groups['config'].trim().toLowerCase();
 
     // Try to find the quality in compendiums
     const qualityPack = game.packs.get('wh40k-rpg.wh40k-items-weapon-qualities');
     let quality: { name: string; uuid: string } | null = null;
 
-    if (qualityPack != null) {
+    if (qualityPack !== undefined) {
         const index = await qualityPack.getIndex();
         const entry = index.find(
             (e: { name?: string; _id: string }) => (e.name ?? '').toLowerCase() === config || (e.name ?? '').toLowerCase().includes(config),
         );
-        if (entry != null) {
+        if (entry !== undefined) {
             quality = (await qualityPack.getDocument(entry._id)) as { name: string; uuid: string } | null;
         }
     }
@@ -424,14 +447,14 @@ async function enrichQuality(match: RegExpMatchArray, _options?: TextEditor.Enri
     span.dataset.enricherType = 'quality';
     span.dataset.enricherConfig = config;
 
-    if (quality != null) {
+    if (quality !== null) {
         span.dataset.itemUuid = quality.uuid;
         span.title = `${quality.name}\nClick to open | Shift+Click to chat | Ctrl+Click for sheet`;
     } else {
         span.title = config;
     }
 
-    const displayLabel = label ?? quality?.name ?? config;
+    const displayLabel = label !== undefined && label.length > 0 ? label : quality?.name ?? config;
     span.innerHTML = `<i class="fa-solid fa-star"></i> ${displayLabel}`;
 
     return span;
@@ -443,21 +466,21 @@ async function enrichQuality(match: RegExpMatchArray, _options?: TextEditor.Enri
  * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
-async function enrichProperty(match: RegExpMatchArray, _options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups == null) return createErrorElement(match[0], 'No match groups');
-    const label = match.groups['label'];
+async function enrichProperty(match: RegExpMatchArray, _options?: EnrichmentOptions): Promise<HTMLElement> {
+    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
+    const label = getGroup(match.groups, 'label');
     const config = match.groups['config'].trim().toLowerCase();
 
     // Try to find the property in compendiums
     const propertyPack = game.packs.get('wh40k-rpg.rt-items-armour-properties');
     let property: { name: string; uuid: string } | null = null;
 
-    if (propertyPack != null) {
+    if (propertyPack !== undefined) {
         const index = await propertyPack.getIndex();
         const entry = index.find(
             (e: { name?: string; _id: string }) => (e.name ?? '').toLowerCase() === config || (e.name ?? '').toLowerCase().includes(config),
         );
-        if (entry != null) {
+        if (entry !== undefined) {
             property = (await propertyPack.getDocument(entry._id)) as { name: string; uuid: string } | null;
         }
     }
@@ -468,14 +491,14 @@ async function enrichProperty(match: RegExpMatchArray, _options?: TextEditor.Enr
     span.dataset.enricherType = 'property';
     span.dataset.enricherConfig = config;
 
-    if (property != null) {
+    if (property !== null) {
         span.dataset.itemUuid = property.uuid;
         span.title = `${property.name}\nClick to open | Shift+Click to chat | Ctrl+Click for sheet`;
     } else {
         span.title = config;
     }
 
-    const displayLabel = label ?? property?.name ?? config;
+    const displayLabel = label !== undefined && label.length > 0 ? label : property?.name ?? config;
     span.innerHTML = `<i class="fa-solid fa-shield"></i> ${displayLabel}`;
 
     return span;
@@ -487,21 +510,21 @@ async function enrichProperty(match: RegExpMatchArray, _options?: TextEditor.Enr
  * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
-async function enrichCondition(match: RegExpMatchArray, _options?: TextEditor.EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups == null) return createErrorElement(match[0], 'No match groups');
-    const label = match.groups['label'];
+async function enrichCondition(match: RegExpMatchArray, _options?: EnrichmentOptions): Promise<HTMLElement> {
+    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
+    const label = getGroup(match.groups, 'label');
     const config = match.groups['config'].trim().toLowerCase();
 
     // Try to find the condition in compendiums
     const conditionPack = game.packs.get('wh40k-rpg.dh2-core-stats-conditions');
     let condition: { name: string; uuid: string } | null = null;
 
-    if (conditionPack != null) {
+    if (conditionPack !== undefined) {
         const index = await conditionPack.getIndex();
         const entry = index.find(
             (e: { name?: string; _id: string }) => (e.name ?? '').toLowerCase() === config || (e.name ?? '').toLowerCase().includes(config),
         );
-        if (entry != null) {
+        if (entry !== undefined) {
             condition = (await conditionPack.getDocument(entry._id)) as { name: string; uuid: string } | null;
         }
     }
@@ -512,14 +535,14 @@ async function enrichCondition(match: RegExpMatchArray, _options?: TextEditor.En
     span.dataset.enricherType = 'condition';
     span.dataset.enricherConfig = config;
 
-    if (condition != null) {
+    if (condition !== null) {
         span.dataset.itemUuid = condition.uuid;
         span.title = `${condition.name}\nClick to open | Shift+Click to chat | Ctrl+Click for sheet`;
     } else {
         span.title = config;
     }
 
-    const displayLabel = label ?? condition?.name ?? config;
+    const displayLabel = label !== undefined && label.length > 0 ? label : condition?.name ?? config;
     span.innerHTML = `<i class="fa-solid fa-exclamation-triangle"></i> ${displayLabel}`;
 
     return span;

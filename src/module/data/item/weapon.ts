@@ -1,3 +1,5 @@
+import type { ReloadResult } from '../../actions/reload-action-manager.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 import { capitalize } from '../../handlebars/handlebars-helpers.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
@@ -7,6 +9,65 @@ import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
+
+// Loose dictionary used as a structural shape for both pre-migration source data
+// and the data dictionaries passed to Foundry's update/create APIs.
+type DataDict = { [key: string]: SerializableValue };
+type SerializableValue = string | number | boolean | null | undefined | SerializableValue[] | DataDict | Set<string>;
+
+/** Minimal shape of an ammunition Item passed to loadAmmo(). */
+interface AmmoItemLike {
+    type: string;
+    name: string;
+    uuid: string;
+    update: (data: DataDict) => Promise<unknown>;
+    system: {
+        clipModifier?: number;
+        quantity?: number;
+        modifiers?: { damage?: number; penetration?: number; range?: number };
+        addedQualities?: Set<string>;
+        removedQualities?: Set<string>;
+    };
+}
+
+/** Minimal shape of an inventory ammunition item used by _returnRoundsToInventory(). */
+interface InventoryAmmoItem {
+    uuid: string;
+    type: string;
+    name: string;
+    system: { quantity: number };
+    update: (d: DataDict) => Promise<unknown>;
+}
+
+/**
+ * The schema field `reload` collides with the `reload()` method on this class. At runtime
+ * the instance property (schema field) shadows the prototype method, but TS sees the method
+ * type. These helpers route field access through `Reflect.get` / `Reflect.set` with a typed
+ * narrow result so no `as unknown` cast is required at the call site.
+ */
+interface ReloadFieldHost {
+    reload?: string;
+}
+function getReloadField(weapon: object): string {
+    const value = (weapon as ReloadFieldHost).reload;
+    return typeof value === 'string' ? value : '-';
+}
+function setReloadField(weapon: object, value: string): void {
+    (weapon as ReloadFieldHost).reload = value;
+}
+
+/** Result of `fromUuid()` narrowed for ammo restock fallback. */
+interface SourceItemLike {
+    toObject: () => { system: { quantity: number } } & DataDict;
+}
+
+/** Minimal shape of the owning actor used by ammo helpers. */
+interface AmmoActorLike {
+    items: {
+        find: (pred: (i: InventoryAmmoItem) => boolean) => InventoryAmmoItem | undefined;
+    };
+    createEmbeddedDocuments: (type: string, data: DataDict[]) => Promise<unknown>;
+}
 
 /**
  * Data model for Weapon items.
@@ -18,6 +79,8 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes DamageTemplate
  */
 export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate, AttackTemplate, DamageTemplate) {
+    // Narrow the foundry-typed `parent` to our concrete document for downstream access.
+    declare parent: WH40KItem;
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare class: string;
@@ -202,8 +265,12 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      */
     static #migrateSpecial(source: Record<string, unknown>): void {
-        if (!Array.isArray(source.special)) {
-            source.special = source.special ? Array.from(source.special as Iterable<unknown>) : [];
+        const special = source.special;
+        if (Array.isArray(special)) return;
+        if (special !== null && special !== undefined && typeof special === 'object' && Symbol.iterator in special) {
+            source.special = Array.from(special as Iterable<string>);
+        } else {
+            source.special = [];
         }
     }
 
@@ -213,8 +280,9 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     static #migrateClass(source: Record<string, unknown>): void {
         const techTypeValues = ['chain', 'power', 'shock', 'force'];
-        if (source.class && techTypeValues.includes(source.class as string)) {
-            source.type = source.class;
+        const cls = source.class;
+        if (typeof cls === 'string' && techTypeValues.includes(cls)) {
+            source.type = cls;
             source.class = 'melee';
         }
     }
@@ -256,21 +324,16 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     prepareBaseData(): void {
         super.prepareBaseData();
 
-        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
-        this.class = resolveLineVariant(this.class, lineKey) ?? 'melee';
-        this.type = resolveLineVariant(this.type, lineKey) ?? 'primitive';
+        const sourceSystem = (this.parent?._source.system ?? {}) as { gameSystems?: string[] };
+        const lineKey = inferActiveGameLine(sourceSystem, this.parent);
+        this.class = resolveLineVariant(this.class, lineKey);
+        this.type = resolveLineVariant(this.type, lineKey);
         this.twoHanded = Boolean(resolveLineVariant(this.twoHanded, lineKey));
         this.melee = Boolean(resolveLineVariant(this.melee, lineKey));
-        this.clip = foundry.utils.mergeObject(
-            { max: 0, value: 0, type: '' },
-            (resolveLineVariant(this.clip, lineKey) as Record<string, unknown> | undefined) ?? {},
-            {
-                inplace: false,
-            },
-        ) as typeof this.clip;
-        (this as Record<string, unknown>)['reload'] = resolveLineVariant((this as Record<string, unknown>)['reload'], lineKey) ?? '-';
-        this.requiredTraining = (resolveLineVariant(this.requiredTraining as unknown, lineKey) as string | undefined) ?? '';
-        this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string | undefined) ?? '';
+        this.clip = foundry.utils.mergeObject({ max: 0, value: 0, type: '' }, resolveLineVariant(this.clip, lineKey), { inplace: false });
+        setReloadField(this, resolveLineVariant(getReloadField(this), lineKey));
+        this.requiredTraining = resolveLineVariant(this.requiredTraining, lineKey);
+        this.notes = resolveLineVariant(this.notes, lineKey);
     }
 
     /**
@@ -299,7 +362,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         }
 
         // Add loaded ammunition modifiers
-        if (this.loadedAmmo?.uuid) {
+        if (this.loadedAmmo.uuid) {
             this._modificationModifiers.damage += this.loadedAmmo.modifiers.damage;
             this._modificationModifiers.penetration += this.loadedAmmo.modifiers.penetration;
             this._modificationModifiers.range += this.loadedAmmo.modifiers.range;
@@ -425,7 +488,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         }
 
         // Apply loaded ammunition quality modifications
-        if (this.loadedAmmo?.uuid) {
+        if (this.loadedAmmo.uuid) {
             // Add qualities from ammo
             for (const quality of this.loadedAmmo.addedQualities) {
                 qualities.add(quality);
@@ -561,9 +624,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * For ranged weapons only.
      * @type {object}
      */
-    get effectiveRange(): Record<string, unknown> | null {
-        if (!this.attack.range) return null;
-
+    get effectiveRange(): { value: number; units: string; special: string } {
         const baseRange = this.attack.range.value || 0;
         const rangeModifier = this._modificationModifiers.range;
 
@@ -589,7 +650,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {Actor} actor - The actor to check
      * @returns {boolean} - True if actor has required training (or no training required)
      */
-    hasRequiredTraining(_actor: unknown): boolean {
+    hasRequiredTraining(_actor: object | null): boolean {
         // If no training requirement, always return true
         if (!this.requiredTraining) return true;
 
@@ -688,9 +749,9 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             '2-full': game.i18n.localize('WH40K.Reload.2Full'),
             '3-full': game.i18n.localize('WH40K.Reload.3Full'),
         };
-        // Access schema field via index — at runtime, the instance property (schema field)
-        // shadows the prototype method, but TS sees the method. Cast through unknown.
-        const reloadTime = (this as Record<string, unknown>)['reload'] as string;
+        // Access schema field via the typed helper — at runtime the instance property
+        // (schema field) shadows the prototype method, but TS sees the method.
+        const reloadTime = getReloadField(this);
         return labels[reloadTime] ?? reloadTime;
     }
 
@@ -700,8 +761,8 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get effectiveReloadTime(): string {
-        // Access schema field via index — see reloadLabel comment
-        const baseReload = (this as Record<string, unknown>)['reload'] as string;
+        // Access schema field via the typed helper — see reloadLabel comment
+        const baseReload = getReloadField(this);
 
         // Check for Customised quality
         if (!this.effectiveSpecial.has('customised')) {
@@ -799,7 +860,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
+    get headerLabels(): { class: string; type: string; damage: string; pen: number; range: string; rof: string } {
         return {
             class: this.classLabel,
             type: this.typeLabel,
@@ -861,7 +922,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get effectiveClipMax(): number {
         const base = this.clip.max;
-        const ammoMod = this.loadedAmmo?.clipModifier ?? 0;
+        const ammoMod = this.loadedAmmo.clipModifier;
         return Math.max(1, base + ammoMod);
     }
 
@@ -937,7 +998,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get qualitiesArray(): Array<{ id: string; baseId: string; label: string; description: string; level: number | null; hasLevel: boolean }> {
         const qualities = [];
-        const config = CONFIG.WH40K?.weaponQualities ?? {};
+        const config = CONFIG.WH40K.weaponQualities;
 
         for (const qualityId of this.effectiveSpecial) {
             // Parse level from quality ID (e.g., "blast-3" -> "blast", 3)
@@ -945,15 +1006,21 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             const baseId = match ? match[1] : qualityId;
             const level = match ? parseInt(match[2]) : null;
 
-            const definition = config[baseId] || config[qualityId];
+            // `config` is typed Record<string, WeaponQualityConfig>, so index access never
+            // returns undefined at the type level. Read via Object.hasOwn to check presence
+            // at runtime; missing entries fall back to the title-cased quality id.
+            const hasBase = Object.hasOwn(config, baseId);
+            const hasFull = Object.hasOwn(config, qualityId);
+            const definition = hasBase ? config[baseId] : hasFull ? config[qualityId] : null;
 
+            const fallbackLabel = qualityId.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
             qualities.push({
                 id: qualityId,
                 baseId: baseId,
-                label: definition?.label ? game.i18n.localize(definition.label) : qualityId.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
-                description: definition?.description ? game.i18n.localize(definition.description) : '',
+                label: definition !== null && definition.label !== '' ? game.i18n.localize(definition.label) : fallbackLabel,
+                description: definition !== null && definition.description !== '' ? game.i18n.localize(definition.description) : '',
                 level: level,
-                hasLevel: definition?.hasLevel ?? false,
+                hasLevel: definition !== null ? definition.hasLevel : false,
             });
         }
 
@@ -981,7 +1048,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {boolean}
      */
     get hasLoadedAmmo(): boolean {
-        return !!this.loadedAmmo?.uuid;
+        return this.loadedAmmo.uuid !== '';
     }
 
     /**
@@ -1002,7 +1069,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {number} [shots=1]   Number of shots to fire.
      * @returns {Promise<Item>}
      */
-    fire(shots = 1): unknown {
+    fire(shots = 1): WH40KItem | null | Promise<WH40KItem | undefined> {
         if (!this.usesAmmo) return this.parent;
         const newValue = Math.max(0, this.clip.value - shots);
         return this.parent?.update({ 'system.clip.value': newValue });
@@ -1016,9 +1083,12 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {boolean} options.force - Force reload even if already full
      * @returns {Promise<{success: boolean, message: string, actionsSpent: object}>}
      */
-    async reload(options = {}): Promise<unknown> {
+    async reload(options: { skipValidation?: boolean; force?: boolean } = {}): Promise<ReloadResult> {
         // Dynamic import to avoid circular dependency
         const { ReloadActionManager } = await import('../../actions/reload-action-manager.ts');
+        if (this.parent === null) {
+            return { success: false, message: '', actionsSpent: { half: 0, full: 0, label: '' } };
+        }
         return ReloadActionManager.reloadWeapon(this.parent, options);
     }
 
@@ -1027,52 +1097,44 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {Item} ammoItem - The ammunition item to load
      * @returns {Promise<Item>} - The updated weapon
      */
-    async loadAmmo(ammoItem: {
-        type: string;
-        name: string;
-        uuid: string;
-        update: (data: Record<string, unknown>) => Promise<unknown>;
-        system: {
-            clipModifier?: number;
-            quantity?: number;
-            modifiers?: { damage?: number; penetration?: number; range?: number };
-            addedQualities?: Set<string>;
-            removedQualities?: Set<string>;
-        };
-    }): Promise<unknown> {
+    async loadAmmo(ammoItem: AmmoItemLike): Promise<WH40KItem | null> {
         if (ammoItem.type !== 'ammunition') {
             ui.notifications.warn('Invalid ammunition item');
             return this.parent;
         }
 
-        const actorRaw: unknown = this.parent?.actor;
-        const actor = actorRaw !== null ? (actorRaw as Parameters<typeof this._returnRoundsToInventory>[0]) : null;
+        const actor: AmmoActorLike | null = (this.parent?.actor as AmmoActorLike | null | undefined) ?? null;
 
         // Eject current ammo first (return remaining rounds to inventory)
         if (this.clip.value > 0 && this.hasLoadedAmmo && actor !== null) {
             await this._returnRoundsToInventory(actor, this.clip.value);
         }
 
-        // Cache ammunition modifiers
-        const clipMod = ammoItem.system.clipModifier ?? 0;
+        // Cache ammunition modifiers — destructure with defaults so the schema-optional
+        // fields are surfaced as concrete values without `??` paper-overs at each call site.
+        const {
+            clipModifier: clipMod = 0,
+            modifiers = {},
+            addedQualities = new Set<string>(),
+            removedQualities = new Set<string>(),
+            quantity,
+        } = ammoItem.system;
+        const { damage: ammoDamageMod = 0, penetration: ammoPenMod = 0, range: ammoRangeMod = 0 } = modifiers;
         const effectiveMax = Math.max(1, this.clip.max + clipMod);
         const loadedAmmoData = {
             uuid: ammoItem.uuid,
             name: ammoItem.name,
-            modifiers: {
-                damage: ammoItem.system.modifiers?.damage ?? 0,
-                penetration: ammoItem.system.modifiers?.penetration ?? 0,
-                range: ammoItem.system.modifiers?.range ?? 0,
-            },
+            modifiers: { damage: ammoDamageMod, penetration: ammoPenMod, range: ammoRangeMod },
             clipModifier: clipMod,
-            addedQualities: ammoItem.system.addedQualities ?? new Set(),
-            removedQualities: ammoItem.system.removedQualities ?? new Set(),
+            addedQualities,
+            removedQualities,
         };
 
         // Deduct rounds from inventory
-        const roundsToLoad = actor !== null ? Math.min(effectiveMax, ammoItem.system.quantity ?? effectiveMax) : effectiveMax;
-        if (actor !== null && ammoItem.system.quantity !== undefined) {
-            await ammoItem.update({ 'system.quantity': ammoItem.system.quantity - roundsToLoad });
+        const availableQuantity = quantity ?? effectiveMax;
+        const roundsToLoad = actor !== null ? Math.min(effectiveMax, availableQuantity) : effectiveMax;
+        if (actor !== null && quantity !== undefined) {
+            await ammoItem.update({ 'system.quantity': quantity - roundsToLoad });
         }
 
         await this.parent?.update({
@@ -1080,7 +1142,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             'system.clip.value': roundsToLoad,
         });
 
-        ui.notifications.info(`${ammoItem.name} loaded into ${this.parent.name} (${roundsToLoad} rounds)`);
+        ui.notifications.info(`${ammoItem.name} loaded into ${this.parent?.name ?? ''} (${roundsToLoad} rounds)`);
         return this.parent;
     }
 
@@ -1088,15 +1150,14 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Eject loaded ammunition from the weapon.
      * @returns {Promise<Item>} - The updated weapon
      */
-    async ejectAmmo(): Promise<unknown> {
+    async ejectAmmo(): Promise<WH40KItem | null> {
         if (!this.hasLoadedAmmo) {
             ui.notifications.warn('No ammunition loaded');
             return this.parent;
         }
 
         // Return remaining rounds to inventory
-        const actorRaw: unknown = this.parent?.actor;
-        const actor = actorRaw !== null ? (actorRaw as Parameters<typeof this._returnRoundsToInventory>[0]) : null;
+        const actor: AmmoActorLike | null = (this.parent?.actor as AmmoActorLike | null | undefined) ?? null;
         if (this.clip.value > 0 && actor !== null) {
             await this._returnRoundsToInventory(actor, this.clip.value);
         }
@@ -1113,7 +1174,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             'system.clip.value': 0,
         });
 
-        ui.notifications.info(`Ammunition ejected from ${this.parent.name}`);
+        ui.notifications.info(`Ammunition ejected from ${this.parent?.name ?? ''}`);
         return this.parent;
     }
 
@@ -1125,47 +1186,25 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @returns {Promise<void>}
      * @private
      */
-    async _returnRoundsToInventory(
-        actor: {
-            items: {
-                find: (
-                    pred: (i: {
-                        uuid: string;
-                        type: string;
-                        name: string;
-                        system: { quantity: number };
-                        update: (d: Record<string, unknown>) => Promise<unknown>;
-                    }) => boolean,
-                ) =>
-                    | { uuid: string; type: string; name: string; system: { quantity: number }; update: (d: Record<string, unknown>) => Promise<unknown> }
-                    | undefined;
-            };
-            createEmbeddedDocuments: (type: string, data: unknown[]) => Promise<unknown>;
-        },
-        rounds: number,
-    ): Promise<void> {
+    async _returnRoundsToInventory(actor: AmmoActorLike, rounds: number): Promise<void> {
         if (rounds <= 0 || !this.loadedAmmo.uuid) return;
 
-        // Try to find the ammo item by UUID first
-        let ammoItem = actor.items.find((i) => i.uuid === this.loadedAmmo.uuid);
-
-        // Fallback: find by name and type
-        if (!ammoItem) {
-            ammoItem = actor.items.find((i) => i.type === 'ammunition' && i.name === this.loadedAmmo.name);
-        }
+        // Try to find the ammo item by UUID first, then fall back to name+type.
+        const ammoItem =
+            actor.items.find((i) => i.uuid === this.loadedAmmo.uuid) ?? actor.items.find((i) => i.type === 'ammunition' && i.name === this.loadedAmmo.name);
 
         if (ammoItem) {
             await ammoItem.update({ 'system.quantity': ammoItem.system.quantity + rounds });
         } else {
             // Last resort: create a new ammo item with the returned rounds
             try {
-                const sourceItem = (await fromUuid(this.loadedAmmo.uuid)) as { toObject: () => { system: { quantity: number } } } | null;
+                const sourceItem = (await fromUuid(this.loadedAmmo.uuid)) as SourceItemLike | null;
                 if (sourceItem) {
                     const itemData = sourceItem.toObject();
                     itemData.system.quantity = rounds;
                     await actor.createEmbeddedDocuments('Item', [itemData]);
                 }
-            } catch (_e) {
+            } catch {
                 console.warn(`wh40k-rpg | Could not return ${rounds} rounds of ${this.loadedAmmo.name} to inventory`);
             }
         }

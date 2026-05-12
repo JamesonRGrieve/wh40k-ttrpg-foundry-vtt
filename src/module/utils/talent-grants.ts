@@ -18,11 +18,10 @@ import { GrantsProcessor, GRANT_MODE } from './grants-processor.ts';
  * @returns {Promise<void>}
  */
 export async function processTalentGrants(talent: WH40KItemDocument, actor: WH40KBaseActorDocument, depth = 0): Promise<void> {
-    if (talent?.type !== 'talent') return;
-    if (!actor) return;
+    if (talent.type !== 'talent') return;
 
     // Check if this talent grants anything
-    if (!talent.system?.hasGrants) return;
+    if (talent.system.hasGrants !== true) return;
 
     // Use unified processor in immediate mode
     await GrantsProcessor.processGrants(talent, actor, {

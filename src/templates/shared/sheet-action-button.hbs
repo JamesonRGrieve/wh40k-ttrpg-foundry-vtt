@@ -1,0 +1,23 @@
+{{!-- Icon-only sheet action button.
+
+     The canonical 22×22 gold-accent button used for sheet header actions
+     (toggleEditMode, postToChat, rollAttack, rollDamage, rollTalent, etc.).
+
+     Hash params:
+       - action       data-action value                       (required)
+       - icon         Font-Awesome icon class (e.g. "fa-pen-to-square")
+                      (required; pair with `activeIcon` if you want the
+                      icon to swap based on `isActive`)
+       - activeIcon   icon shown when `isActive` is truthy
+       - isActive     boolean — drives icon swap + active class
+       - title        raw tooltip / title attribute
+       - titleKey     i18n key (used only when `title` is absent)
+       - sizeClass    width/height utilities                  (default "tw-w-[22px] tw-h-[22px]")
+       - toneClass    bg + border + text colour utilities     (default: gold tone)
+       - extraClass   extra utilities tacked onto the button
+       - iconClass    extra utilities on the <i>
+       - type         button type attribute                   (default "button")
+--}}
+<button type="{{#if type}}{{type}}{{else}}button{{/if}}" class="{{#if isActive}}active {{/if}}tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-border tw-border-solid hover:tw-scale-110 active:tw-scale-95 {{#if sizeClass}}{{sizeClass}}{{else}}tw-w-[22px] tw-h-[22px]{{/if}} {{#if toneClass}}{{toneClass}}{{else}}tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)]{{/if}}{{#if extraClass}} {{extraClass}}{{/if}}" data-action="{{action}}"{{#if title}} title="{{title}}"{{else if titleKey}} title="{{localize titleKey}}"{{/if}}>
+    <i class="fas {{#if (and isActive activeIcon)}}{{activeIcon}}{{else}}{{icon}}{{/if}}{{#if iconClass}} {{iconClass}}{{/if}}"></i>
+</button>

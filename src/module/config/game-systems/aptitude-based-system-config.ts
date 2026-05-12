@@ -16,6 +16,15 @@ interface TalentLike {
     system?: { aptitudes?: string[]; tier?: number };
 }
 
+/** Extracts typed advanceAptitudes from a context bag, if present. */
+function extractContextAptitudes(
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context is an open bag from callers; advanceAptitudes is validated by Array.isArray below
+    context: Record<string, unknown> | undefined,
+): string[] | undefined {
+    const apts = context?.advanceAptitudes;
+    return Array.isArray(apts) ? (apts as string[]) : undefined;
+}
+
 export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
     readonly usesAptitudes = true;
     readonly usesCareerTables = false;
@@ -148,32 +157,32 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         const advAptitudes = this.getCharacteristicAptitudes(charKey);
         const matches = this.countMatchingAptitudes(charAptitudes, advAptitudes);
 
-        const cost = this.getCharacteristicCostTable()[matches]?.[currentTier];
-        if (cost === undefined) return null;
+        const costRow = this.getCharacteristicCostTable()[matches];
+        const cost = costRow[currentTier];
 
         return { cost, tier: tiers[currentTier] };
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context matches abstract base signature; advanceAptitudes extracted and typed by extractContextAptitudes
     getSkillAdvanceCost(actor: WH40KBaseActor, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
         if (currentRank >= this.skillRankCount) return null;
 
         const charAptitudes = this.getCharacterAptitudes(actor);
-        const ctxApts = context?.advanceAptitudes;
-        const advAptitudes = Array.isArray(ctxApts) ? (ctxApts as string[]) : this.getSkillAptitudes(skillKey);
+        const advAptitudes = extractContextAptitudes(context) ?? this.getSkillAptitudes(skillKey);
         const matches = this.countMatchingAptitudes(charAptitudes, advAptitudes);
 
-        return this.getSkillCostTable()[matches]?.[currentRank] ?? null;
+        return this.getSkillCostTable()[matches][currentRank];
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: talent and context match abstract base signature; talent cast to TalentLike below; context validated by extractContextAptitudes
     getTalentAdvanceCost(actor: WH40KBaseActor, talent: unknown, context?: Record<string, unknown>): number | null {
         const charAptitudes = this.getCharacterAptitudes(actor);
         const talentSystem = (talent as TalentLike | undefined)?.system;
-        const ctxApts = context?.advanceAptitudes;
-        const advAptitudes = Array.isArray(ctxApts) ? (ctxApts as string[]) : talentSystem?.aptitudes ?? [];
+        const advAptitudes = extractContextAptitudes(context) ?? talentSystem?.aptitudes ?? [];
         const matches = this.countMatchingAptitudes(charAptitudes, advAptitudes);
 
-        const tier = talentSystem?.tier ?? 1;
-        return this.getTalentCostTable()[tier]?.[matches] ?? null;
+        const tier = typeof talentSystem?.tier === 'number' ? talentSystem.tier : 1;
+        return this.getTalentCostTable()[tier][matches];
     }
 
     getAvailableAdvances(_actor: WH40KBaseActor): AdvanceOption[] {

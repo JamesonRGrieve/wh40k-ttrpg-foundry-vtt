@@ -24,9 +24,6 @@ type SinglePrerequisiteResult = {
 };
 
 type CharacteristicAbbreviation = keyof typeof CHAR_ABBREVIATIONS;
-type ConfigCharacteristicLabel = {
-    abbreviation?: string;
-};
 
 type SkillLike = WH40KSkill | WH40KSkillEntry;
 
@@ -79,7 +76,7 @@ function normalizeCharacteristicKey(key: string): string {
  * @returns {ValidationResult} Validation result
  */
 export function checkPrerequisites(actor: WH40KBaseActorDocument, prerequisites: Prerequisite[]): ValidationResult {
-    if (!prerequisites || prerequisites.length === 0) {
+    if (prerequisites.length === 0) {
         return { valid: true, unmet: [] };
     }
 
@@ -87,7 +84,7 @@ export function checkPrerequisites(actor: WH40KBaseActorDocument, prerequisites:
 
     for (const prereq of prerequisites) {
         const result = checkSinglePrerequisite(actor, prereq);
-        if (!result.valid && result.reason) {
+        if (!result.valid && result.reason !== undefined) {
             unmet.push(result.reason);
         }
     }
@@ -113,7 +110,7 @@ function checkSinglePrerequisite(actor: WH40KBaseActorDocument, prereq: Prerequi
         case 'talent':
             return checkTalentPrereq(actor, prereq);
         default:
-            console.warn(`Unknown prerequisite type: ${prereq.type}`);
+            console.warn('Unknown prerequisite type:', prereq.type);
             return { valid: true }; // Unknown types pass by default
     }
 }
@@ -126,25 +123,26 @@ function checkSinglePrerequisite(actor: WH40KBaseActorDocument, prereq: Prerequi
  */
 function checkCharacteristicPrereq(actor: WH40KBaseActorDocument, prereq: Prerequisite): SinglePrerequisiteResult {
     const charKey = normalizeCharacteristicKey(prereq.key);
-    const characteristic = actor.system?.characteristics?.[charKey];
+    const characteristic = actor.system.characteristics[charKey];
 
-    if (!characteristic) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime safety: key may be absent despite schema
+    if (characteristic === undefined) {
         return {
             valid: false,
             reason: `Unknown characteristic: ${prereq.key}`,
         };
     }
 
-    const currentValue = characteristic.total ?? 0;
+    const currentValue = characteristic.total;
     const requiredValue = prereq.value ?? 0;
 
     if (currentValue >= requiredValue) {
         return { valid: true };
     }
 
-    // Get display name for the characteristic
-    const charConfig = CONFIG.wh40k?.characteristics?.[charKey] as ConfigCharacteristicLabel | undefined;
-    const charLabel = charConfig?.abbreviation ?? prereq.key;
+    // Get display name for the characteristic — key may be absent at runtime despite schema typing
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const charLabel = CONFIG.wh40k.characteristics[charKey]?.abbreviation ?? prereq.key;
 
     return {
         valid: false,
@@ -222,29 +220,30 @@ function checkTalentPrereq(actor: WH40KBaseActorDocument, prereq: Prerequisite):
  * @returns {Object|null} The skill object or null
  */
 function findSkill(actor: WH40KBaseActorDocument, skillName: string): SkillLike | null {
-    const skills = actor.system?.skills;
-    if (!skills) return null;
+    const skills = actor.system.skills;
 
     // Parse skill name and optional specialization
     const match = skillName.match(/^(.+?)\s*(?:\((.+)\))?$/);
     if (!match) return null;
 
     const baseName = match[1].trim().toLowerCase();
-    const specialization = match[2]?.trim().toLowerCase();
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess not set; match[2] is undefined when group 2 didn't participate
+    const specialization: string | undefined = match[2] !== undefined ? match[2].trim().toLowerCase() : undefined;
 
     // Map common skill names to system keys
     const skillKey = getSkillKey(baseName);
     const skill = skills[skillKey];
 
-    if (!skill) return null;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime safety: key may be absent despite schema
+    if (skill === undefined) return null;
 
     // If no specialization needed, return the base skill
-    if (!specialization) {
+    if (specialization === undefined) {
         return skill;
     }
 
     // For specialist skills, find the entry
-    if (skill.entries) {
+    if (skill.entries !== undefined) {
         return (
             skill.entries.find((entry: WH40KSkillEntry) => entry.name.toLowerCase() === specialization || entry.slug.toLowerCase() === specialization) ?? null
         );
@@ -308,7 +307,7 @@ function checkSkillLevel(skill: SkillLike, requiredLevel: 'trained' | 'plus10' |
  * @returns {Prerequisite|null}
  */
 export function parsePrerequisiteString(prereqString: string): Prerequisite | null {
-    if (!prereqString || prereqString.trim() === '') {
+    if (prereqString.trim() === '') {
         return null;
     }
 

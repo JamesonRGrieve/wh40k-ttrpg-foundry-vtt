@@ -1,27 +1,21 @@
-{{! Rogue Trader Damage Roll Prompt - Modern Design }}
+{{! Damage Roll Prompt }}
 <form class="tw-relative tw-font-ui tw-text-[#e8e4d9] tw-p-5" autocomplete="off">
-    <div class="tw-relative tw-p-4 tw-mb-4 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[#14141c] tw-to-[#0d0d12] tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
-        <h3 class="tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-[#d4af37] bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-[0.12em] tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(255,255,255,0.08)]">{{name}} Damage</h3>
-
+    {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title=(concat name " Damage")}}
         {{#if psychicPower}}
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-3 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Psychic Rating</span>
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Psychic Rating"}}
                 <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[80px] tw-text-center tw-w-20" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
-            </div>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
         {{/if}}
-        <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-3 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-            <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Damage Formula</span>
+        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Damage Formula"}}
             <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[120px]" type="text" id="damage" name="damage" value="{{damage}}" />
-        </div>
-        <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-3 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-            <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Damage Type</span>
+        {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Damage Type"}}
             <select class="tw-w-full tw-min-h-[40px] tw-px-3 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px]" id="damageType" name="damageType">
                 {{selectOptions (arrayToObject dh.combat.damage_types) selected=damageType}}
             </select>
-        </div>
-        <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-3 tw-items-center tw-py-2 tw-min-h-[40px]">
-            <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Penetration</span>
+        {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Penetration" last=true}}
             <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[120px]" type="text" id="penetration" name="penetration" value="{{penetration}}" />
-        </div>
-    </div>
+        {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+    {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
 </form>

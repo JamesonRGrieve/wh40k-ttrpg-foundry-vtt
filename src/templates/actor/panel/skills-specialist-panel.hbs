@@ -7,7 +7,7 @@
         </button>
     </div>
     <div class="wh40k-panel-body">
-        {{#if skillLists.hasSpecialistEntries}}
+        {{#if skillLists.specialist.length}}
             {{#each skillLists.specialist as |entry|}}
                 {{#if entry.[1].entries.length}}
                 <div class="{{#if entry.[1].advanced}}tw-border-l-2 tw-border-l-[rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.5)]{{/if}} tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-lg tw-overflow-hidden tw-mb-[var(--wh40k-space-xs)]" data-skill="{{entry.[0]}}">
@@ -52,6 +52,19 @@
                             </div>
                         </div>
                         {{/each}}
+                    </div>
+                </div>
+                {{else}}
+                {{!-- Parent specialist with no entries yet — render a greyed "untrained" row so
+                     the player knows the skill exists (issue #3). They can attempt it at the
+                     usual –20 untrained penalty even before adding a specialisation. --}}
+                <div class="tw-bg-[var(--wh40k-bg-paper)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-lg tw-overflow-hidden tw-mb-[var(--wh40k-space-xs)] tw-opacity-70" data-skill="{{entry.[0]}}">
+                    <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-1 tw-bg-gradient-to-b tw-from-[rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.06)] tw-to-transparent tw-border-b tw-border-b-[var(--wh40k-border-light)]" title="{{localize "WH40K.Skills.AddFirstSpecializationHint"}}">
+                        <span class="tw-flex-1 tw-font-semibold tw-font-alt tw-italic">{{entry.[1].label}}</span>
+                        <span class="tw-text-[0.7rem] tw-uppercase tw-px-[6px] tw-py-[2px] tw-rounded-md tw-border tw-border-solid tw-bg-[var(--wh40k-bg-input)] tw-border-[var(--wh40k-border-light)]">{{entry.[1].charShort}}</span>
+                        <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-[4px] tw-rounded-md tw-text-[color:var(--wh40k-text-muted)] hover:tw-bg-[var(--wh40k-bg-subtle)] hover:tw-text-[color:var(--wh40k-accent-talents)]" data-action="openAddSpecialistDialog" data-skill="{{entry.[0]}}" title="{{localize "WH40K.Skills.AddSpecializationTitle"}}">
+                            <i class="fas fa-plus"></i>
+                        </button>
                     </div>
                 </div>
                 {{/if}}

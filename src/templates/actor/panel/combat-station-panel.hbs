@@ -120,10 +120,15 @@
                                 </div>
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-[6px] tw-w-full">
-                                <div class="tw-flex tw-items-center tw-justify-center tw-gap-2.5 tw-py-1.5 tw-flex-wrap">
+                                {{!-- Fatigue pip strip. Reached (active) pips glow + take the warn
+                                     colour so the current fatigue level reads at a glance; pips
+                                     above current go muted/40% opacity. Pips have a real 28×28
+                                     click area so users can actually adjust fatigue without
+                                     hunting the icon glyph (issue #11). --}}
+                                <div class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-py-1.5 tw-flex-wrap">
                                     {{#each (range 1 system.fatigue.max) as |index|}}
-                                        <button type="button" class="" data-action="setFatigueBolt" data-fatigue-index="{{index}}" title="Fatigue Level {{index}}">
-                                            <i class="fas fa-bolt {{#if (lte index ../system.fatigue.value)}}tw-animate-bolt-glow-combat{{/if}}"></i>
+                                        <button type="button" class="tw-w-7 tw-h-7 tw-p-0 tw-bg-transparent tw-border-none tw-cursor-pointer tw-inline-flex tw-items-center tw-justify-center {{#unless (lte index ../system.fatigue.value)}}tw-opacity-40{{/unless}}" data-action="setFatigueBolt" data-fatigue-index="{{index}}" title="Fatigue Level {{index}}{{#if (lte index ../system.fatigue.value)}} (active){{else}} (not yet reached){{/if}}">
+                                            <i class="fas fa-bolt {{#if (lte index ../system.fatigue.value)}}tw-animate-bolt-glow-combat tw-text-[color:var(--vital-color)]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
                                         </button>
                                     {{/each}}
                                 </div>
@@ -201,10 +206,14 @@
                                 </div>
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-[6px] tw-w-full">
-                                <div class="tw-flex tw-items-center tw-justify-center tw-gap-2.5 tw-py-1.5">
+                                {{!-- Fate pip strip wraps so high-max characters don't overflow into
+                                     hidden territory (issue #9). Each pip has a real clickable
+                                     button area (was just an unstyled <button> wrapping a tiny
+                                     icon, so clicks landed on dead space). --}}
+                                <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-1.5 tw-py-1.5">
                                     {{#each (range 1 system.fate.max) as |index|}}
-                                        <button type="button" class="{{#if (lte index ../system.fate.value)}}tw-animate-star-glow{{/if}}" data-action="setFateStar" data-fate-index="{{index}}" title="Fate Point {{index}}">
-                                            <i class="fas fa-star"></i>
+                                        <button type="button" class="tw-w-7 tw-h-7 tw-p-0 tw-bg-transparent tw-border-none tw-cursor-pointer tw-inline-flex tw-items-center tw-justify-center {{#if (lte index ../system.fate.value)}}tw-animate-star-glow{{else}}tw-opacity-40{{/if}}" data-action="setFateStar" data-fate-index="{{index}}" title="Fate Point {{index}}{{#if (lte index ../system.fate.value)}} (Available — click to spend){{else}} (Spent — click to restore){{/if}}">
+                                            <i class="fas fa-star {{#if (lte index ../system.fate.value)}}tw-text-[var(--wh40k-accent-gold)]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
                                         </button>
                                     {{/each}}
                                 </div>
@@ -302,13 +311,20 @@
                         </div>
                         {{#each actor.items as |item|}}
                         {{#if item.isWeapon}}
-                        <div class="tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer tw-border-b tw-border-b-[rgba(0,0,0,0.08)] tw-transition-[background] hover:tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.04)] item-drag item-edit {{#if item.system.equipped}}tw-bg-[rgb(from_var(--wh40k-color-success)_r_g_b_/_0.08)]{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
+                        <div class="tw-group tw-relative tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer tw-border-b tw-border-b-[rgba(0,0,0,0.08)] tw-transition-[background] hover:tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.04)] item-drag item-edit {{#if item.system.equipped}}tw-bg-[rgb(from_var(--wh40k-color-success)_r_g_b_/_0.08)]{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
                             <span class="tw-flex tw-items-center tw-gap-1 tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap tw-text-sm">
                                 {{#if item.system.equipped}}<i class="fas fa-check-circle tw-text-[color:var(--wh40k-color-success)] tw-mr-[var(--wh40k-space-xs)] tw-text-[0.8em]"></i>{{/if}}
                                 {{item.name}}
                             </span>
                             <span class="tw-text-sm tw-text-center tw-min-w-12">{{item.system.damageLabel}}</span>
                             <span class="tw-text-sm tw-text-center tw-min-w-12">{{item.system.rangeLabel}}</span>
+                            <button type="button"
+                                    class="tw-absolute tw-right-1 tw-top-1/2 -tw-translate-y-1/2 tw-w-5 tw-h-5 tw-p-0 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border tw-border-solid tw-border-[var(--wh40k-border-medium)] tw-rounded tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-muted)] tw-opacity-0 tw-pointer-events-none tw-cursor-pointer hover:tw-text-[color:var(--wh40k-accent-combat)] hover:tw-border-[color:var(--wh40k-accent-combat)] tw-group-hover:tw-opacity-100 tw-group-hover:tw-pointer-events-auto tw-focus:tw-opacity-100 tw-focus:tw-pointer-events-auto tw-transition-opacity"
+                                    data-action="itemDelete"
+                                    data-item-id="{{item.id}}"
+                                    title="{{localize "WH40K.Common.Delete"}}">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                         {{/if}}
                         {{/each}}
