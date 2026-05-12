@@ -264,7 +264,6 @@ export type WH40KActorSystemData = ActorDataModel & {
     toggleHordeMode?: () => Promise<void>;
     applyMagnitudeDamage?: (amount: number, source?: string) => Promise<void>;
     restoreMagnitude?: (amount: number) => Promise<void>;
-    [key: string]: unknown;
 };
 
 export type WH40KItemSystemData = ItemDataModel & {
@@ -300,7 +299,6 @@ export type WH40KItemSystemData = ItemDataModel & {
     isMeleeWeapon?: boolean;
     isRangedWeapon?: boolean;
     melee?: boolean;
-    [key: string]: unknown;
 };
 
 // =========================================================================

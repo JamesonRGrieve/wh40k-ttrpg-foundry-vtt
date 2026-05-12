@@ -13,7 +13,7 @@ import { summarizeChanges, type EffectChangeRaw } from '../../helpers/effects.ts
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
-import type { WH40KItemSystemData, WH40KSkillEntry } from '../../types/global.d.ts';
+import type { WH40KActorSystemData, WH40KItemSystemData, WH40KSkillEntry } from '../../types/global.d.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { DialogV2Like, TextEditorImplementationLike } from '../api/application-types.ts';
 import * as StatActions from '../api/stat-adjustment-actions.ts';
@@ -1231,7 +1231,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 return sys.equipped || sys.activated;
             }) ?? forceFields[0];
         sheetContext.hasForceField = sheetContext.forceField !== undefined;
-        sheetContext.armourDisplayLocations = this.#prepareArmourDisplayLocations(system, categorized.armour);
+        sheetContext.armourDisplayLocations = this.#prepareArmourDisplayLocations(this.actor.system, categorized.armour);
         sheetContext.armourDisplay = Object.fromEntries(
             (sheetContext.armourDisplayLocations as Array<Record<string, unknown>>).map((entry) => [entry.key, entry]),
         );
@@ -1323,7 +1323,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
-    #prepareArmourDisplayLocations(system: Record<string, unknown>, armourItems: WH40KItem[]): Array<Record<string, unknown>> {
+    #prepareArmourDisplayLocations(system: WH40KActorSystemData, armourItems: WH40KItem[]): Array<Record<string, unknown>> {
         const equippedArmour = armourItems.filter((item) => (item.system as { equipped?: boolean }).equipped);
 
         return ARMOUR_DISPLAY_LOCATIONS.map((locationConfig) => {
