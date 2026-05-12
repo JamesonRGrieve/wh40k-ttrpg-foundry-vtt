@@ -72,6 +72,8 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs',
             'systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs',
             'systems/wh40k-rpg/templates/shared/field-row.hbs',
+            'systems/wh40k-rpg/templates/shared/editable-portrait.hbs',
+            'systems/wh40k-rpg/templates/shared/sheet-action-button.hbs',
 
             // Acolyte sheet templates
             'systems/wh40k-rpg/templates/actor/player/header-dh.hbs',

@@ -338,6 +338,8 @@
             "Title": "Character Advancement",
             "TitleWithCareer": "{career} Advancement",
             "PurchaseTalentViaAdvancement": "Open the Advancement window to purchase {name} with XP — talents can't be dragged directly onto an acolyte.",
+            "SpecializationAlreadyOwned": "That specialization is already owned.",
+            "PsyRatingMaximum": "Psy Rating is already at maximum (10).",
             "XPAvailable": "XP Available",
             "XPUsed": "XP Used",
             "Tab": {
@@ -2104,6 +2106,32 @@
             "Max": "Max Enc.",
             "BackpackCurrent": "Backpack Current Enc.",
             "BackpackMax": "Backpack Max Enc."
+        },
+        "WeaponSheet": {
+            "OnlyOneOfItem": "Weapon can only hold one {name}",
+            "OnlyOneAmmoType": "Only one type of ammunition can be loaded.",
+            "MustBeOnActor": "This weapon must be on an actor to roll.",
+            "DoesNotUseAmmo": "This weapon does not use ammunition.",
+            "OutOfAmmo": "{name} is out of ammunition!",
+            "NowEmpty": "{name} is now empty!",
+            "QualitiesCompendiumMissing": "Weapon qualities compendium not found.",
+            "QualityNotFound": "Quality \"{identifier}\" not found.",
+            "QualityInfo": "{label}: {description}",
+            "ConfirmDeleteTitle": "Delete {name}?",
+            "ConfirmDeleteContent": "<p>Are you sure you want to remove <strong>{name}</strong> from this weapon?</p>",
+            "ConfirmRemoveModificationTitle": "Remove Modification",
+            "ConfirmRemoveModificationContent": "<p>Remove <strong>{name}</strong> from this weapon?</p>",
+            "DragModificationHint": "Drag a weapon modification from a compendium to add it.",
+            "ModificationActivated": "{name} activated.",
+            "ModificationDeactivated": "{name} deactivated.",
+            "ModificationNotFound": "Modification \"{name}\" not found. It may have been deleted.",
+            "ModificationRemoved": "{name} removed.",
+            "ModificationInstalled": "{name} installed.",
+            "ModificationAlreadyInstalled": "{name} is already installed.",
+            "ModificationClassIncompatible": "{name} cannot be installed on {classLabel} weapons.",
+            "ModificationTypeIncompatible": "{name} is not compatible with {typeLabel} weapons.",
+            "AmmoNotFound": "Ammunition item not found",
+            "AmmoIncompatible": "{name} is not compatible with {typeLabel} weapons"
         }
     }
 }

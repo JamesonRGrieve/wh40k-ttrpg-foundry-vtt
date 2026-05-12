@@ -1,0 +1,39 @@
+{{!-- Editable portrait — image (with optional hover overlay) wired to the
+     Foundry `editImage` action. Replaces the ~20 inline copies across the
+     item / actor templates.
+
+     Hash params (all optional):
+
+       - src              image URL                            (required)
+       - alt, title       passed through to <img>
+       - sizeClass        size utilities                       (default "tw-h-20 tw-w-20")
+       - roundedClass     corner radius                        (default "tw-rounded-md")
+       - frameClass       border + shadow + hover utilities    (default: gold frame with glow,
+                                                                hover scale + brighter glow)
+                          Pass "" to suppress entirely.
+       - extraClass       extra utilities tacked onto the wrapper
+       - action           `data-action` value                  (default "editImage";
+                                                                pass false to omit)
+       - editAttr         boolean — emit `data-edit="img"`     (default true)
+       - overlay          boolean — render hover overlay div   (default true)
+       - overlayIcon      FA icon class                        (default "fa-edit")
+       - overlayIconClass extra utilities on overlay icon      (default "tw-text-lg")
+       - overlayBgClass   overlay backdrop                     (default "tw-bg-black/45")
+       - overlayTextClass overlay icon colour                  (default "tw-text-[var(--wh40k-gold)]")
+       - imgClass         extra utilities on <img>
+       - imgOnly          boolean — render just <img> (no wrapper / overlay).
+                          Used by minimal headers that place `data-action` /
+                          `data-edit` directly on the image.
+--}}
+{{#if imgOnly}}
+<img class="tw-object-cover{{#if roundedClass}} {{roundedClass}}{{else}} tw-rounded-md{{/if}}{{#if sizeClass}} {{sizeClass}}{{else}} tw-h-20 tw-w-20{{/if}} tw-cursor-pointer{{#if imgClass}} {{imgClass}}{{/if}}" src="{{src}}"{{#if alt}} alt="{{alt}}"{{/if}}{{#if title}} title="{{title}}"{{/if}}{{#unless (eq action false)}} data-action="{{#if action}}{{action}}{{else}}editImage{{/if}}"{{/unless}}{{#unless (eq editAttr false)}} data-edit="img"{{/unless}} />
+{{else}}
+<div class="wh40k-editable-portrait tw-group tw-relative tw-cursor-pointer tw-overflow-hidden tw-transition-all {{#if sizeClass}}{{sizeClass}}{{else}}tw-h-20 tw-w-20{{/if}} {{#if roundedClass}}{{roundedClass}}{{else}}tw-rounded-md{{/if}}{{#unless (eq frameClass "")}} {{#if frameClass}}{{frameClass}}{{else}}tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] hover:tw-scale-105 hover:tw-shadow-[var(--wh40k-shadow-lg),0_0_20px_rgba(212,175,55,0.5)]{{/if}}{{/unless}}{{#if extraClass}} {{extraClass}}{{/if}}"{{#unless (eq action false)}} data-action="{{#if action}}{{action}}{{else}}editImage{{/if}}"{{/unless}}{{#unless (eq editAttr false)}} data-edit="img"{{/unless}}{{#if title}} title="{{title}}"{{/if}}>
+    <img class="tw-h-full tw-w-full tw-object-cover{{#if imgClass}} {{imgClass}}{{/if}}" src="{{src}}"{{#if alt}} alt="{{alt}}"{{/if}} />
+    {{#unless (eq overlay false)}}
+    <div class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center {{#if overlayBgClass}}{{overlayBgClass}}{{else}}tw-bg-black/45{{/if}} {{#if overlayTextClass}}{{overlayTextClass}}{{else}}tw-text-[var(--wh40k-gold)]{{/if}} tw-opacity-0 tw-transition-opacity group-hover:tw-opacity-100">
+        <i class="fas {{#if overlayIcon}}{{overlayIcon}}{{else}}fa-edit{{/if}}{{#if overlayIconClass}} {{overlayIconClass}}{{else}} tw-text-lg{{/if}}"></i>
+    </div>
+    {{/unless}}
+</div>
+{{/if}}

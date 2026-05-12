@@ -9,12 +9,7 @@
          HEADER: Compact trait identity with inline badges
     ═══════════════════════════════════════════════════════════════════ --}}
     <header class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-bg-gradient-to-br tw-from-[rgb(from_var(--wh40k-traits-primary,#6a2090)_r_g_b_/_0.15)] tw-to-transparent tw-border-b-2 tw-border-b-[rgb(from_var(--wh40k-traits-primary,#6a2090)_r_g_b_/_0.3)] tw-shrink-0">
-      <div class="tw-relative tw-w-16 tw-h-16 tw-shrink-0 tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[6px] tw-overflow-hidden tw-cursor-pointer tw-transition-[transform,box-shadow] tw-duration-200" data-action="editImage" data-edit="img">
-        <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
-        <div class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/60 tw-opacity-0 tw-transition-opacity hover:tw-opacity-100">
-          <i class="fas fa-edit tw-text-white tw-text-xl"></i>
-        </div>
-      </div>
+      {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name sizeClass="tw-w-16 tw-h-16" roundedClass="tw-rounded-[6px]" frameClass="tw-border-2 tw-border-[var(--wh40k-bronze)] tw-transition-[transform,box-shadow] tw-duration-200" overlayBgClass="tw-bg-black/60" overlayTextClass="tw-text-white" overlayIconClass="tw-text-xl" extraClass="tw-shrink-0"}}
 
       <div class="tw-flex-1 tw-min-w-0">
         <input type="text" class="tw-w-full tw-px-2 tw-py-1 tw-m-0 tw-bg-transparent tw-border-none tw-border-b tw-border-b-transparent tw-font-display tw-text-xl tw-font-semibold tw-text-[color:var(--wh40k-text-dark)] tw-transition-colors focus:tw-outline-none focus:tw-border-b-[color:var(--wh40k-gold)] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure" name="name" value="{{item.name}}" placeholder="Trait Name" />
