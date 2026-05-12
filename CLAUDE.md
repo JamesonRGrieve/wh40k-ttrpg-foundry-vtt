@@ -51,16 +51,90 @@ Every direction in the previous section is backed by a coverage script and a rat
 | Tailwind migration | `pnpm css:coverage` | `pnpm css:ratchet` | `.css-coverage-baseline` |
 | Animation migration (`animation:` rule → `tw-animate-<name>`) | `pnpm animation:coverage` | `pnpm animation:ratchet` | `.animation-baseline` |
 | Per-system theme adoption (`<system>:tw-*` variants) — count must NOT FALL | `pnpm theme:coverage` | `pnpm theme:ratchet` | `.theme-baseline` |
-| Strong TS (per-rule, per-dir) | `pnpm ts:coverage` | `pnpm ts:ratchet` | `.ts-coverage-baseline` |
-| `tsc --noEmit` total errors | (hard gate — must be zero) | `pnpm typecheck` | — |
+| Strong TS suppression markers (per-rule, per-dir, **auto-flips to strict at 0**) | `pnpm ts:coverage` | `pnpm ts:ratchet` | `.ts-coverage-baseline` |
+| `tsc --noEmit` total errors against main tsconfig | (hard gate — must be zero) | `pnpm typecheck` | — |
+| `tsc --noEmit` against `tsconfig.strict.json` (noImplicitOverride, noUncheckedIndexedAccess, noPropertyAccessFromIndexSignature, exactOptionalPropertyTypes, etc.) — **per-TS-code, auto-flips to strict at 0** | `pnpm strict:coverage` | `pnpm strict:ratchet` | `.strict-coverage-baseline` |
+| `tsc --noEmit` against `tsconfig.test.json` (tests + stories, excluded from the main typecheck) — **per-TS-code, auto-flips to strict at 0** | `pnpm test:typecheck:coverage` | `pnpm test:typecheck:ratchet` | `.test-typecheck-baseline` |
+| Inferred type-coverage % (`type-coverage --strict`; covered count cannot fall, **auto-flips to strict at 100%**) | `pnpm type-coverage` | `pnpm type-coverage:ratchet` | `.type-coverage-baseline` |
+| `knip` per-category unused detection (files, exports, types, deps, binaries, …) — **per-category, auto-flips to strict at 0** | `pnpm knip` | `pnpm knip:ratchet` | `.knip-baseline` |
+| Dependency-cruiser 3-layer + correctness rules (sheets ↛ data, docs ↛ apps, no-circular, no-test-into-prod, no-orphans, …) — **per-rule, auto-flips to strict at 0** | `pnpm deps:check` | `pnpm deps:ratchet` | `.depcruise-baseline` |
 | ESLint warnings | (built into ratchet) | `pnpm lint:ratchet` | `.eslint-warning-baseline` |
+| Biome diagnostics (errors + warnings) | (built into ratchet) | `pnpm biome:ratchet` | `.biome-warning-baseline` |
 | Sheet → story / data → test pairing | `pnpm symmetry` | `pnpm symmetry:ratchet` | `.symmetry-baseline` |
 | `!important` in `tailwind/*.js` | `pnpm important:coverage` | `pnpm important:ratchet` | `.important-baseline` |
 | Preload-list integrity (Handlebars partials) | `pnpm preload:drift` | hard gate (no ratchet) | — |
 | Dead `tailwind/*.js` rules (no live `wh40k-*` consumer) | `pnpm css:plugin-audit` | hard gate (no ratchet) | — |
 | i18n key codegen freshness | `pnpm i18n:check` | hard gate (auto-regen pre-commit) | — |
+| `pnpm-lock.yaml` resolution host allow-list | `pnpm lockfile:validate` | hard gate (no ratchet) | — |
 
-The hard gates (preload-drift, plugin-audit, i18n) cannot be ratcheted because regression is a real bug, not a velocity tradeoff. Fix the underlying issue. The plugin-audit gate specifically guards against the addBase dedup trap: a rule that's "dead by class" is invisible at the source level but a rule that's "dead by cascade" silently shadows live rules — extending the audit to walk nested selectors keeps the lights-on selector inventory honest.
+The hard gates (preload-drift, plugin-audit, i18n, lockfile-validate) cannot be ratcheted because regression is a real bug, not a velocity tradeoff. Fix the underlying issue. The plugin-audit gate specifically guards against the addBase dedup trap: a rule that's "dead by class" is invisible at the source level but a rule that's "dead by cascade" silently shadows live rules — extending the audit to walk nested selectors keeps the lights-on selector inventory honest.
+
+#### Auto-flip semantics ("graduates to strict")
+
+Several ratchets (`ts:ratchet`, `strict:ratchet`, `test:typecheck:ratchet`, `knip:ratchet`, `deps:ratchet`, `type-coverage:ratchet`) implement the same auto-flip pattern: when a per-rule / per-code / per-category count reaches 0, the baseline file records it in `"strict": [...]` and any future occurrence is a **hard fail** with no `--update` escape hatch. The ratchet continues to function normally for everything still above 0.
+
+This is the explicit shape of "ratchet → hard gate" promotion: a metric earns its way into hard-gate status by being driven to 0, and once there the invariant is enforced like any other hard gate. The promotion is automatic the next time the ratchet runs — no separate config change needed. To un-strict a metric you must manually edit the baseline file and explain why in the commit; it's an explicit demotion, not a quiet revert.
+
+State at the time of writing:
+  - `tsIgnore` (under `ts:ratchet`) has already graduated. `@ts-ignore` is forbidden — use `@ts-expect-error` with an inline reason.
+  - `knip:ratchet` has graduated `binaries`, `classMembers`, `enumMembers`, `namespaceMembers`, `optionalPeerDependencies`, `unlisted`, `unresolved`.
+  - `strict:ratchet`, `test:typecheck:ratchet`, `deps:ratchet`, `type-coverage:ratchet` have no graduations yet — they ratchet down from initial baselines.
+
+#### Strict-flag tsconfig (`tsconfig.strict.json`)
+
+The main `tsconfig.json` is kept at zero tsc errors (hard gate). The "next-tier" strictness flags that would surface real errors today live in a separate `tsconfig.strict.json` extending the main config:
+
+```json
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "exactOptionalPropertyTypes": true
+  }
+}
+```
+
+`pnpm strict:ratchet` runs tsc against this config, counts errors per TS error code, and ratchets each code down independently. When a code reaches 0 it graduates to strict (count must remain 0 thereafter) — at which point its underlying flag is effectively enforced even though it still lives in `tsconfig.strict.json` rather than the main config. Once **every** TS code under tsconfig.strict.json has graduated, the flags can be moved into `tsconfig.json` proper and `tsconfig.strict.json` deleted — the migration is complete.
+
+Approximate flag → TS code mapping:
+  - `noImplicitOverride` → TS4114
+  - `noFallthroughCasesInSwitch` → TS7029
+  - `forceConsistentCasingInFileNames` → TS1149
+  - `noImplicitReturns` → TS7030
+  - `noUncheckedIndexedAccess` → TS18048, TS2532, TS2538, TS2722
+  - `noPropertyAccessFromIndexSignature` → TS4111
+  - `exactOptionalPropertyTypes` → TS2375, TS2379, TS2412
+
+Some codes (TS2322, TS2345) cross-bleed across flags; the ratchet's per-code accounting tolerates this without needing a mapping table — every code's count must monotonically drop.
+
+#### Test/story typecheck (`tsconfig.test.json`)
+
+Tests and stories are outside the main tsconfig's `include` (they import `vitest/globals`, hand-author mock objects, etc.). `tsconfig.test.json` adds them to the include set so they participate in a typecheck. `pnpm test:typecheck:ratchet` ratchets the result down per TS code with the same auto-flip semantics.
+
+#### `@total-typescript/ts-reset`
+
+`src/module/types/ts-reset.d.ts` pulls in `@total-typescript/ts-reset`, which tightens built-in lib types:
+  - `JSON.parse()` and `Response.json()` return `unknown` (not `any`).
+  - `Array.isArray` narrows to `readonly unknown[]` (no silent `any[]` widening).
+  - `.filter(Boolean)` narrows to the truthy variant.
+  - `Set.has` / `Array.includes` accept wider types (no false-negative narrowing).
+
+Combined with the boundary `unknown` rule in `.eslintrc.json` (no `unknown` past a Zod parse / type-guard), this pushes external input through explicit validation instead of letting it leak as `any` through framework gaps.
+
+#### Architecture rules (`dependency-cruiser`)
+
+`.dependency-cruiser.cjs` declares the 3-layer architecture as machine-checkable rules:
+  - `sheets-must-not-import-data-models-directly` — applications/ may not reach into data/ except for `import type`.
+  - `data-must-not-depend-on-applications` — DataModels are pure logic, no UI imports.
+  - `documents-must-not-depend-on-applications` — Documents expose API, no UI imports.
+  - Plus baseline correctness: `no-circular`, `no-orphans`, `no-test-into-prod`, `no-non-package-json`, `no-deprecated-core`.
+
+All rules currently emit at `warn` level because the codebase has pre-existing violations (mostly Documents reaching into prompt dialogs from the roll API). The ratchet (`pnpm deps:ratchet`) gates regression and auto-flips each rule to strict at 0 — at which point the rule's severity in `.dependency-cruiser.cjs` can be promoted to `error` and the ratchet's enforcement is redundant.
 
 ### CSS architecture
 
@@ -225,21 +299,29 @@ Per-file logs land in `.auto-fix/file-logs/<sanitized-path>.attempt<N>.<runner>-
 
 ### Pre-commit pipeline (in order)
 
-1. `lint-staged` — eslint --fix and prettier on staged files.
-2. `i18n:gen` — regenerate `i18n-keys.d.ts` from the langpack.
-3. `typecheck` — `tsc --noEmit` must pass with zero errors (hard gate).
-4. `lint:ratchet` — ESLint warning count cannot rise; errors are never allowed.
-5. `css:ratchet` — `tailwind-only` cannot fall, `css-only` cannot rise.
-6. `important:ratchet` — count of `!important` declarations across `tailwind/*.js` cannot rise.
-7. `css:plugin-audit` — every `tailwind/*.js` rule must reference at least one `wh40k-*` class that appears in templates/modules/tests/stories (walks nested selectors). Hard gate.
-8. `animation:ratchet` — count of `animation:` / `animation-name:` declarations across `src/css/**/*.css` cannot rise.
-9. `theme:ratchet` — count of templates using per-system `<system>:tw-*` variants cannot fall (adoption ratchet — opposite direction; rises as templates gain per-system theming).
-10. `ts:ratchet` — per-rule per-directory suppression counts cannot rise.
-11. `symmetry:ratchet` — missing-story / missing-test counts cannot rise.
-12. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
-13. Pack validation if `gulpfile.js` or `src/packs/` changed.
-14. `vitest run` — full Vitest suite must pass.
-15. Storybook Playwright integration tests.
+1. `lint-staged` — eslint --fix, biome --fix, and prettier on staged files.
+2. `biome:ratchet` — Biome diagnostics (errors + warnings) cannot rise.
+3. `i18n:gen` — regenerate `i18n-keys.d.ts` from the langpack.
+4. `icons:gen` — regenerate the icon registry and typed key union.
+5. `typecheck` — `tsc --noEmit` against the main tsconfig must pass with zero errors (hard gate).
+6. `lint:ratchet` — ESLint warning count cannot rise; errors are never allowed.
+7. `css:ratchet` — `tailwind-only` cannot fall, `css-only` cannot rise.
+8. `important:ratchet` — count of `!important` declarations across `tailwind/*.js` cannot rise.
+9. `css:plugin-audit` — every `tailwind/*.js` rule must reference at least one `wh40k-*` class that appears in templates/modules/tests/stories (walks nested selectors). Hard gate.
+10. `animation:ratchet` — count of `animation:` / `animation-name:` declarations across `src/css/**/*.css` cannot rise.
+11. `theme:ratchet` — count of templates using per-system `<system>:tw-*` variants cannot fall (adoption ratchet — opposite direction; rises as templates gain per-system theming).
+12. `ts:ratchet` — per-rule per-directory suppression counts cannot rise; auto-flips to strict at 0.
+13. `strict:ratchet` — `tsc --noEmit -p tsconfig.strict.json` per-TS-code counts cannot rise; auto-flips to strict at 0. Enforces the next-tier strictness flags.
+14. `test:typecheck:ratchet` — `tsc --noEmit -p tsconfig.test.json` per-TS-code counts cannot rise; auto-flips to strict at 0. Brings tests + stories into the typecheck surface.
+15. `type-coverage:ratchet` — inferred type-coverage `covered` count cannot fall; auto-flips to strict at 100%.
+16. `knip:ratchet` — per-category unused-detection counts (files, exports, types, deps, …) cannot rise; auto-flips per category at 0.
+17. `deps:ratchet` — dependency-cruiser per-rule violation counts cannot rise; auto-flips per rule at 0. Enforces the 3-layer architecture + correctness rules.
+18. `lockfile:validate` — every resolution URL in `pnpm-lock.yaml` must point at an allow-listed host (hard gate).
+19. `symmetry:ratchet` — missing-story / missing-test counts cannot rise.
+20. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
+21. Pack validation if `gulpfile.js` or `src/packs/` changed.
+22. `vitest run` — full Vitest suite must pass.
+23. Storybook Playwright integration tests.
 
 Hooks run for 30–60s on large commits. Wait for them; do not interrupt or `--no-verify` past failures. If a hook fails, investigate and fix; do not silence.
 
@@ -333,14 +415,26 @@ pnpm check                            # Aggregate: lint + format + stylelint + t
 # Coverage scripts (read-only, write JSON reports)
 pnpm css:coverage                     # template tailwind/mixed/css-only classification
 pnpm ts:coverage                      # per-rule, per-directory TS suppression counts
+pnpm strict:coverage                  # per-TS-code count under tsconfig.strict.json
+pnpm test:typecheck:coverage          # per-TS-code count under tsconfig.test.json
+pnpm type-coverage                    # inferred type-coverage % under --strict
+pnpm knip                             # unused files/exports/types/deps
+pnpm deps:check                       # dependency-cruiser architectural rules
 pnpm symmetry                         # sheets without stories, data/documents without tests
 pnpm preload:drift                    # Handlebars partial references vs preload list
+pnpm lockfile:validate                # pnpm-lock.yaml resolution-host allow-list
 
 # Ratchet baselines (run after a metric drops, in the same commit)
 pnpm css:ratchet:update
 pnpm ts:ratchet:update
+pnpm strict:ratchet:update
+pnpm test:typecheck:ratchet:update
+pnpm type-coverage:ratchet:update
+pnpm knip:ratchet:update
+pnpm deps:ratchet:update
 pnpm symmetry:ratchet:update
 pnpm lint:ratchet:update
+pnpm biome:ratchet:update
 
 # Codegen and scaffolds
 pnpm i18n:gen                         # rebuild i18n-keys.d.ts from en.json

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig.json",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "types": ["fvtt-types", "vitest/globals"]
+  },
+  "include": [
+    "src/module/**/*.ts",
+    "src/module/**/*.test.ts",
+    "src/module/**/*.stories.ts",
+    "src/templates/**/*.stories.ts",
+    "tests/**/*.ts",
+    "stories/**/*.ts",
+    "foundry-v14-overrides.d.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}
