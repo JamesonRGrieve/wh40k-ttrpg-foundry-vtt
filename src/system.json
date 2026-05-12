@@ -932,9 +932,21 @@
             "flags": {}
         },
         {
-            "name": "dh2-beyond-items-gear",
-            "label": "Enemies Beyond Gear",
-            "path": "packs/dark-heresy-2/dh2-beyond-items-gear",
+            "name": "dh2-beyond-items-tools",
+            "label": "Enemies Beyond Tools",
+            "path": "packs/dark-heresy-2/dh2-beyond-items-tools",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-beyond-items-daemonic-remnants",
+            "label": "Enemies Beyond Daemonic Remnants",
+            "path": "packs/dark-heresy-2/dh2-beyond-items-daemonic-remnants",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1064,9 +1076,33 @@
             "flags": {}
         },
         {
-            "name": "dh2-core-items-gear",
-            "label": "Core Rulebook Gear",
-            "path": "packs/dark-heresy-2/dh2-core-items-gear",
+            "name": "dh2-core-items-wearables",
+            "label": "Core Rulebook Wearables",
+            "path": "packs/dark-heresy-2/dh2-core-items-wearables",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-core-items-tools",
+            "label": "Core Rulebook Tools",
+            "path": "packs/dark-heresy-2/dh2-core-items-tools",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-core-items-consumables",
+            "label": "Core Rulebook Consumables",
+            "path": "packs/dark-heresy-2/dh2-core-items-consumables",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1256,9 +1292,33 @@
             "flags": {}
         },
         {
-            "name": "dh2-within-items-gear",
-            "label": "Enemies Within Gear",
-            "path": "packs/dark-heresy-2/dh2-within-items-gear",
+            "name": "dh2-within-items-relics",
+            "label": "Enemies Within Relics",
+            "path": "packs/dark-heresy-2/dh2-within-items-relics",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-within-items-services",
+            "label": "Enemies Within Services",
+            "path": "packs/dark-heresy-2/dh2-within-items-services",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-within-items-weapon-mods",
+            "label": "Enemies Within Weapon Mods",
+            "path": "packs/dark-heresy-2/dh2-within-items-weapon-mods",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -1364,9 +1424,69 @@
             "flags": {}
         },
         {
-            "name": "dh2-without-items-gear",
-            "label": "Enemies Without Gear",
-            "path": "packs/dark-heresy-2/dh2-without-items-gear",
+            "name": "dh2-without-items-armor-mods",
+            "label": "Enemies Without Armor Mods",
+            "path": "packs/dark-heresy-2/dh2-without-items-armor-mods",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-without-items-consumables",
+            "label": "Enemies Without Consumables",
+            "path": "packs/dark-heresy-2/dh2-without-items-consumables",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-without-items-relics",
+            "label": "Enemies Without Relics",
+            "path": "packs/dark-heresy-2/dh2-without-items-relics",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-without-items-services",
+            "label": "Enemies Without Services",
+            "path": "packs/dark-heresy-2/dh2-without-items-services",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-without-items-tools",
+            "label": "Enemies Without Tools",
+            "path": "packs/dark-heresy-2/dh2-without-items-tools",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-without-items-weapon-mods",
+            "label": "Enemies Without Weapon Mods",
+            "path": "packs/dark-heresy-2/dh2-without-items-weapon-mods",
             "system": "wh40k-rpg",
             "type": "Item",
             "ownership": {
@@ -3524,6 +3644,114 @@
             "flags": {}
         },
         {
+            "name": "dh2-beyond-journals",
+            "label": "Enemies Beyond Rules",
+            "path": "packs/dark-heresy-2/dh2-beyond-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-within-actors-bestiary",
+            "label": "Enemies Within Bestiary",
+            "path": "packs/dark-heresy-2/dh2-within-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-within-actors-reinforcements",
+            "label": "Enemies Within Reinforcement Characters",
+            "path": "packs/dark-heresy-2/dh2-within-actors-reinforcements",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-within-journals",
+            "label": "Enemies Within Rules",
+            "path": "packs/dark-heresy-2/dh2-within-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-within-stats-homeworlds",
+            "label": "Enemies Within Home Worlds",
+            "path": "packs/dark-heresy-2/dh2-within-stats-homeworlds",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-without-actors-bestiary",
+            "label": "Enemies Without Bestiary",
+            "path": "packs/dark-heresy-2/dh2-without-actors-bestiary",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-without-journals",
+            "label": "Enemies Without Rules",
+            "path": "packs/dark-heresy-2/dh2-without-journals",
+            "system": "wh40k-rpg",
+            "type": "JournalEntry",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-dh2-stats-talents",
+            "label": "Homebrew DH2 Talents",
+            "path": "packs/homebrew/hb-dh2-stats-talents",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "hb-items-actors",
+            "label": "Homebrew Actors",
+            "path": "packs/homebrew/hb-items-actors",
+            "system": "wh40k-rpg",
+            "type": "Actor",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
             "name": "dh2-beyond-actors-reinforcements",
             "label": "Enemies Beyond Reinforcement Characters",
             "path": "packs/dark-heresy-2/dh2-beyond-actors-reinforcements",
@@ -3883,7 +4111,9 @@
                         "dh2-core-stats-conditions",
                         "dh2-core-stats-critical-injuries",
                         "dh2-core-items-cybernetics",
-                        "dh2-core-items-gear",
+                        "dh2-core-items-wearables",
+                        "dh2-core-items-tools",
+                        "dh2-core-items-consumables",
                         "dh2-core-stats-psychic-powers",
                         "dh2-core-stats-skills",
                         "dh2-core-stats-talents",
@@ -3903,12 +4133,14 @@
                         "dh2-beyond-items-armour",
                         "dh2-beyond-items-armor-mods",
                         "dh2-beyond-stats-backgrounds",
-                        "dh2-beyond-items-gear",
+                        "dh2-beyond-items-tools",
+                        "dh2-beyond-items-daemonic-remnants",
                         "dh2-beyond-stats-psychic-powers",
                         "dh2-beyond-stats-talents",
                         "dh2-beyond-items-weapons",
                         "dh2-beyond-items-weapon-mods",
-                        "dh2-beyond-actors-reinforcements"
+                        "dh2-beyond-actors-reinforcements",
+                        "dh2-beyond-journals"
                     ]
                 },
                 {
@@ -3917,13 +4149,19 @@
                         "dh2-within-items-ammo",
                         "dh2-within-items-armour",
                         "dh2-within-items-armor-mods",
+                        "dh2-within-stats-homeworlds",
                         "dh2-within-stats-backgrounds",
-                        "dh2-within-items-gear",
+                        "dh2-within-items-relics",
+                        "dh2-within-items-services",
+                        "dh2-within-items-weapon-mods",
                         "dh2-within-stats-psychic-powers",
                         "dh2-within-stats-talents",
                         "dh2-within-items-weapons",
                         "dh2-within-locations",
-                        "dh2-within-actors-vehicles"
+                        "dh2-within-actors-bestiary",
+                        "dh2-within-actors-reinforcements",
+                        "dh2-within-actors-vehicles",
+                        "dh2-within-journals"
                     ]
                 },
                 {
@@ -3932,11 +4170,18 @@
                         "dh2-without-items-ammo",
                         "dh2-without-items-armour",
                         "dh2-without-stats-backgrounds",
-                        "dh2-without-items-gear",
+                        "dh2-without-items-armor-mods",
+                        "dh2-without-items-consumables",
+                        "dh2-without-items-relics",
+                        "dh2-without-items-services",
+                        "dh2-without-items-tools",
+                        "dh2-without-items-weapon-mods",
                         "dh2-without-stats-talents",
                         "dh2-without-items-weapons",
+                        "dh2-without-actors-bestiary",
                         "dh2-without-actors-reinforcements",
-                        "dh2-without-actors-vehicles"
+                        "dh2-without-actors-vehicles",
+                        "dh2-without-journals"
                     ]
                 },
                 {
@@ -4007,7 +4252,15 @@
             "folders": [
                 {
                     "name": "Homebrew",
-                    "packs": ["hb-items-backgrounds", "hb-items-armour", "hb-items-gear", "hb-psychic-powers", "hb-items-weapons"]
+                    "packs": [
+                        "hb-items-backgrounds",
+                        "hb-items-armour",
+                        "hb-items-gear",
+                        "hb-psychic-powers",
+                        "hb-items-weapons",
+                        "hb-items-actors",
+                        "hb-dh2-stats-talents"
+                    ]
                 }
             ]
         },
