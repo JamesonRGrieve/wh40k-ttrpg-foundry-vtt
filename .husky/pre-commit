@@ -69,9 +69,49 @@ pnpm -s theme:ratchet
 
 # Per-rule TS-strictness ratchet: blocks commits that introduce new bare
 # `: any`, ` as any`, or `@ts-expect-error` in any per-directory bucket.
+# Metrics auto-flip to strict-mode (count must remain 0) once they reach 0.
 # Update via: pnpm ts:ratchet:update
 echo "[pre-commit] running ts coverage ratchet…"
 pnpm -s ts:ratchet
+
+# Strict-flag tsc ratchet: runs tsc against tsconfig.strict.json (which enables
+# noImplicitOverride, noUncheckedIndexedAccess, noPropertyAccessFromIndexSignature,
+# exactOptionalPropertyTypes, etc.) and counts the resulting errors per TS code.
+# Each TS code auto-flips to strict-mode (count must remain 0) once it hits 0.
+# Update via: pnpm strict:ratchet:update
+echo "[pre-commit] running strict-flag tsc ratchet…"
+pnpm -s strict:ratchet
+
+# Test/story typecheck ratchet: runs tsc against tsconfig.test.json so the
+# .test.ts / .stories.ts surface (excluded from the main typecheck) still
+# ratchets toward zero. Same auto-flip semantics as strict:ratchet.
+# Update via: pnpm test:typecheck:ratchet:update
+echo "[pre-commit] running test-typecheck ratchet…"
+pnpm -s test:typecheck:ratchet
+
+# type-coverage ratchet: counts source positions whose inferred type is `any`
+# under --strict. Catches `any` leaking through JSON.parse / hook payloads /
+# Foundry types that regex scans miss. Auto-flips when coverage reaches 100%.
+# Update via: pnpm type-coverage:ratchet:update
+echo "[pre-commit] running type-coverage ratchet…"
+pnpm -s type-coverage:ratchet
+
+# knip ratchet: unused files, exports, types, dependencies. Each category
+# auto-flips to strict at 0. Update via: pnpm knip:ratchet:update
+echo "[pre-commit] running knip ratchet…"
+pnpm -s knip:ratchet
+
+# dependency-cruiser ratchet: 3-layer architecture (DataModel → Document →
+# Sheet) + correctness rules (no circular deps, no test→prod imports, no
+# orphans). Per-rule violation counts cannot rise; each rule auto-flips to
+# strict at 0. Update via: pnpm deps:ratchet:update
+echo "[pre-commit] running dep-cruiser ratchet…"
+pnpm -s deps:ratchet
+
+# lockfile validator: every resolution URL in pnpm-lock.yaml must point at an
+# allow-listed host. Hard gate — supply-chain hygiene.
+echo "[pre-commit] running lockfile-validate…"
+pnpm -s lockfile:validate
 
 # Symmetry ratchet: blocks commits that increase the count of sheets/dialogs
 # without a sibling .stories.ts, or data/documents files without a sibling

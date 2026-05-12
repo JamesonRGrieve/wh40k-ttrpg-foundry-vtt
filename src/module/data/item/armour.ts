@@ -233,12 +233,16 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         ) as typeof this.armourPoints;
 
         const resolvedCoverage = resolveLineVariant(this.coverage as unknown, lineKey);
-        this.coverage = new Set(Array.isArray(resolvedCoverage) ? resolvedCoverage : Array.from((resolvedCoverage as Set<string>) ?? new Set(['body'])));
+        this.coverage = new Set(
+            Array.isArray(resolvedCoverage) ? (resolvedCoverage as string[]) : Array.from((resolvedCoverage as Set<string>) ?? new Set(['body'])),
+        );
 
         this.maxAgility = (resolveLineVariant(this.maxAgility as unknown, lineKey) as number | null) ?? null;
 
         const resolvedProperties = resolveLineVariant(this.properties as unknown, lineKey);
-        this.properties = new Set(Array.isArray(resolvedProperties) ? resolvedProperties : Array.from((resolvedProperties as Set<string>) ?? new Set()));
+        this.properties = new Set(
+            Array.isArray(resolvedProperties) ? (resolvedProperties as string[]) : Array.from((resolvedProperties as Set<string>) ?? new Set()),
+        );
 
         this.primitive = Boolean(resolveLineVariant(this.primitive as unknown, lineKey));
         this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';

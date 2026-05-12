@@ -19,6 +19,7 @@ const config: StorybookConfig = {
     // so direct asset URLs in templates (e.g. <img src="/icons/svg/...">) work in stories.
     // Run pull-foundry.sh first to populate this tree.
     staticDirs: [{ from: '../.foundry-release/public', to: '/' }],
+    addons: ['@storybook/addon-a11y'],
     framework: {
         name: '@storybook/html-vite',
         options: {},

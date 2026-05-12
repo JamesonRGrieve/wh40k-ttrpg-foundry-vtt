@@ -170,7 +170,8 @@ function getRogueTraderConfig(): RogueTraderConfigBag['ROGUE_TRADER'] {
 
 function getSkillDescriptionLookup(): SkillDescriptionLookup | undefined {
     // eslint-disable-next-line no-restricted-syntax -- boundary: game.wh40k is the system's own namespace, attached after init; types are erased at the boundary.
-    return game.wh40k.tooltips as unknown as SkillDescriptionLookup | undefined;
+    const wh40k = (game as { wh40k?: { tooltips?: unknown } }).wh40k;
+    return wh40k?.tooltips as unknown as SkillDescriptionLookup | undefined;
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: accepts heterogeneous doc / DataModel surfaces to extract an optional richTooltip(); type-erasing the parameter is the safest reading.
