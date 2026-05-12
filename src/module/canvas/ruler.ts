@@ -14,7 +14,7 @@ type WH40KConfig = {
  */
 export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.TokenRuler {
     /** @inheritDoc */
-    _getWaypointStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint): foundry.canvas.interaction.Ruler.WaypointStyle {
+    override _getWaypointStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint): foundry.canvas.interaction.Ruler.WaypointStyle {
         const style = super._getWaypointStyle(waypoint);
         return this.#getSpeedBasedStyle(waypoint, style);
     }
@@ -22,7 +22,7 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
     /* -------------------------------------------- */
 
     /** @override */
-    _getSegmentStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint): foundry.canvas.interaction.Ruler.SegmentStyle {
+    override _getSegmentStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint): foundry.canvas.interaction.Ruler.SegmentStyle {
         const style = super._getSegmentStyle(waypoint);
         return this.#getSpeedBasedStyle(waypoint, style);
     }
@@ -30,7 +30,7 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
     /* -------------------------------------------- */
 
     /** @override */
-    _getGridHighlightStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint, offset: foundry.grid.BaseGrid.Offset3D): StyleWithColor {
+    override _getGridHighlightStyle(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint, offset: foundry.grid.BaseGrid.Offset3D): StyleWithColor {
         const style = super._getGridHighlightStyle(waypoint, offset) as StyleWithColor;
         return this.#getSpeedBasedStyle(waypoint, style);
     }
