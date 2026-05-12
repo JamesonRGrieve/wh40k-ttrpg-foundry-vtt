@@ -1,51 +1,21 @@
-<div class="tw-flex tw-flex-col tw-h-full tw-overflow-hidden tw-bg-[var(--wh40k-sheet-bg)] tw-text-[var(--wh40k-text-dark)]">
+{{!-- Generic item-sheet fallback.
+     Used by any item type that does not register its own template.
+     Composed from the shared item partials so the chrome matches the
+     dedicated sheets without copy-paste. --}}
+<div class="wh40k-item-sheet wh40k-{{item.type}}-sheet tw-flex tw-flex-col tw-h-full tw-overflow-hidden tw-bg-[var(--wh40k-sheet-bg)] tw-text-[var(--wh40k-text-dark)]">
     <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
-        <!-- Item Header -->
-        <header class="tw-grid tw-gap-3 tw-px-4 tw-py-3 tw-shrink-0 tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-border-b-2 tw-border-gold-dark" style="grid-template-columns: 80px 1fr;">
-            <div class="tw-w-20 tw-h-20 tw-rounded-md tw-overflow-hidden tw-cursor-pointer tw-shrink-0 tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105 hover:tw-shadow-[var(--wh40k-shadow-lg),0_0_20px_rgba(212,175,55,0.5)]" data-edit="img">
-                <img src="{{item.img}}" alt="{{item.name}}" title="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
-            </div>
 
-            <div class="tw-flex tw-flex-col tw-justify-center tw-gap-1 tw-min-w-0">
-                <input type="text" class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-px-1 tw-py-0.5" name="name" value="{{item.name}}" placeholder="Item Name" />
-                <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-opacity-70 tw-uppercase tw-tracking-wide">
-                    <i class="fas fa-cube tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure"></i>
-                    <span>{{item.type}}</span>
-                </div>
-            </div>
-        </header>
+        {{> systems/wh40k-rpg/templates/item/panel/item-header.hbs}}
 
-        <!-- Tab Navigation -->
-        <nav class="wh40k-tabs tw-flex tw-shrink-0" data-group="primary">
-            <a class="wh40k-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="description" data-group="primary">
-                <i class="fas fa-scroll"></i> Description
-            </a>
-            <a class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="effects" data-group="primary">
-                <i class="fas fa-magic"></i> Effects
-            </a>
-        </nav>
+        {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+            (object tab="description" label=(localize "WH40K.Description") icon="fa-scroll" active=true)
+            (object tab="effects"     label=(localize "WH40K.Effects.Label") icon="fa-magic"))}}
 
-        <!-- Tab Content -->
-        <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3">
-            <!-- Description Tab -->
+        <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-[var(--wh40k-space-md)]">
             <div class="tab active" data-tab="description" data-group="primary">
-                <div class="wh40k-panel tw-rounded-lg tw-mb-3 tw-overflow-hidden">
-                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
-                        <h3 class="tw-m-0 tw-font-display tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-wide tw-text-sm"><i class="fas fa-scroll tw-mr-2 tw-opacity-80"></i> Description</h3>
-                    </div>
-            <div class="tw-p-3">
-                <div class="tw-rounded-md tw-p-3 tw-min-h-[80px]">
-                    {{#if inEditMode}}
-                        {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
-                    {{else}}
-                        <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.description.value}}}</div>
-                    {{/if}}
-                </div>
-            </div>
-                </div>
+                {{> systems/wh40k-rpg/templates/item/panel/description-panel.hbs}}
             </div>
 
-            <!-- Effects Tab -->
             <div class="tab" data-tab="effects" data-group="primary">
                 {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
             </div>

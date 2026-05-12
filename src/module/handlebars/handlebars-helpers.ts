@@ -1,5 +1,4 @@
-import type { GameSystemId, SystemThemeRole } from '../config/game-systems/index.ts';
-import { SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
+import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
 import WH40K from '../config.ts';
 
 /**
@@ -10,6 +9,56 @@ import WH40K from '../config.ts';
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: shared alias for Handlebars helper arguments; every call site narrows on the next line(s)
 type TplValue = unknown;
+
+/**
+ * Template-supplied object record. Mirrors `Record<string, TplValue>` but expressed as an
+ * interface so the boundary cast doesn't trip the `as Record<...>` rule. Use this when a
+ * helper has confirmed an `unknown` is an object and needs keyed access.
+ */
+interface TplRecord {
+    [key: string]: TplValue;
+}
+
+/** Weapon quality definition from CONFIG.wh40k.weaponQualities. */
+interface WeaponQualityDef {
+    label: string;
+    description: string;
+    hasLevel?: boolean;
+}
+
+/** Rich quality object returned by qualityLookup / specialQualities / craftsmanshipQualities. */
+interface WeaponQuality {
+    identifier: string;
+    baseIdentifier?: string;
+    label: string;
+    description: string;
+    hasLevel?: boolean;
+    level: number | null;
+}
+
+/** Weapon system shape used by craftsmanship helpers. */
+interface WeaponSystemForCraft {
+    craftsmanship?: string;
+    melee?: boolean;
+}
+
+/** Subset of CONFIG.wh40k surfacing the data these helpers need. */
+interface WH40KConfig {
+    weaponQualities?: Record<string, WeaponQualityDef>;
+    ui?: { expanded?: string[] };
+    bio?: Record<string, TplValue>;
+    getSkillIcon?: (key: string) => string;
+}
+
+function getRtConfig(): WH40KConfig | undefined {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG is untyped Foundry global; narrowed to WH40KConfig immediately
+    const rt = (CONFIG as { rt?: WH40KConfig }).rt;
+    return rt;
+}
+
+function isTplObject(v: TplValue): v is TplRecord {
+    return v !== null && v !== undefined && typeof v === 'object';
+}
 
 export function capitalize(text: string): string {
     if (text === '') return '';
@@ -29,25 +78,20 @@ export function toCamelCase(str: string): string {
 
 const ARMOUR_LOCATIONS = ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg'];
 
-function getArmourPointsObject(armour: TplValue): Record<string, unknown> | null {
-    if (armour === null || armour === undefined || typeof armour !== 'object') return null;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: template-supplied armour object; shape varies by actor system
-    const raw = (armour as Record<string, unknown>).armourPoints;
-    if (raw === null || raw === undefined || typeof raw !== 'object') return null;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: see above
-    const nested = (raw as Record<string, unknown>).armourPoints;
-    if (nested !== null && nested !== undefined && typeof nested === 'object') {
-        return nested as Record<string, unknown>;
-    }
-    return raw as Record<string, unknown>;
+function getArmourPointsObject(armour: TplValue): TplRecord | null {
+    if (!isTplObject(armour)) return null;
+    const raw = armour.armourPoints;
+    if (!isTplObject(raw)) return null;
+    const nested = raw.armourPoints;
+    if (isTplObject(nested)) return nested;
+    return raw;
 }
 
 function getArmourAPForLocation(armour: TplValue, location: string): number {
-    if (armour === null || armour === undefined || typeof armour !== 'object') return 0;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: template-supplied armour object
-    const armourObj = armour as Record<string, unknown>;
-    if (typeof armourObj.getAPForLocation === 'function') {
-        return (armourObj.getAPForLocation as (loc: string) => number)(location);
+    if (!isTplObject(armour)) return 0;
+    const fn = armour.getAPForLocation;
+    if (typeof fn === 'function') {
+        return (fn as (loc: string) => number).call(armour, location);
     }
     const armourPoints = getArmourPointsObject(armour);
     if (armourPoints) {
@@ -67,11 +111,11 @@ export function registerHandlebarsHelpers() {
      * @example  {{themeClassFor 'border'}}            // uses @root system
      * @example  {{themeClassFor 'accent' 'dh2e'}}     // explicit override
      */
-    Handlebars.registerHelper('themeClassFor', function themeClassForHelper(this: TplValue, role: SystemThemeRole, ...rest: unknown[]): string {
+    Handlebars.registerHelper('themeClassFor', function themeClassForHelper(this: TplValue, role: SystemThemeRole, ...rest: TplValue[]): string {
         // Last arg is Handlebars options object; preceding args are user-supplied.
-        const userArgs = rest.slice(0, -1) as string[];
+        const userArgs = rest.slice(0, -1);
         const opts = rest[rest.length - 1] as { data?: { root?: { _gameSystemId?: string; gameSystemId?: string } } };
-        const explicit = userArgs[0];
+        const explicit = typeof userArgs[0] === 'string' ? userArgs[0] : undefined;
         const fromRoot = opts.data?.root?._gameSystemId ?? opts.data?.root?.gameSystemId;
         const candidate = explicit ?? fromRoot ?? 'rt';
         const systemId: GameSystemId = SystemConfigRegistry.has(candidate) ? (candidate as GameSystemId) : 'rt';
@@ -79,10 +123,11 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('isPsychicAttack', (power: TplValue): boolean => {
-        const sys = (power as { system?: { subtype?: unknown } } | null | undefined)?.system;
-        if (sys?.subtype !== undefined && sys.subtype !== null && typeof (sys.subtype as { includes?: unknown }).includes === 'function') {
-            return (sys.subtype as string[]).includes('Attack');
-        }
+        if (!isTplObject(power)) return false;
+        const sys = power.system;
+        if (!isTplObject(sys)) return false;
+        const subtype = sys.subtype;
+        if (Array.isArray(subtype)) return subtype.includes('Attack');
         return false;
     });
 
@@ -92,10 +137,12 @@ export function registerHandlebarsHelpers() {
         }
     });
 
-    Handlebars.registerHelper('concat', (...args: unknown[]) => {
+    Handlebars.registerHelper('concat', (...args: TplValue[]): string => {
         let outStr = '';
         for (const arg of args) {
-            if (typeof arg !== 'object') {
+            // Skip Handlebars options object (last arg) and any object/array values.
+            if (arg === null || arg === undefined) continue;
+            if (typeof arg === 'string' || typeof arg === 'number' || typeof arg === 'boolean') {
                 outStr += String(arg);
             }
         }
@@ -126,23 +173,31 @@ export function registerHandlebarsHelpers() {
      */
     Handlebars.registerHelper('isExpanded', (field: string, actor: TplValue): boolean => {
         // Try to get from actor flags first (new system)
-        const actorFlags = (actor as { flags?: { 'wh40k-rpg'?: { ui?: { expanded?: string[] } } } } | null | undefined)?.flags;
+        interface ActorWithFlags {
+            flags?: { 'wh40k-rpg'?: { ui?: { expanded?: string[] } } };
+        }
+        const actorFlags = (actor as ActorWithFlags | null | undefined)?.flags;
         const expanded = actorFlags?.['wh40k-rpg']?.ui?.expanded;
         if (Array.isArray(expanded)) {
             return expanded.includes(field);
         }
         // Fallback to global CONFIG for compatibility (old system)
-        const wh40kConfig = CONFIG.wh40k as unknown as { ui?: { expanded?: string[] } };
-        return wh40kConfig.ui?.expanded ? wh40kConfig.ui.expanded.includes(field) : false;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is untyped Foundry global
+        const wh40kConfig = CONFIG.wh40k as { ui?: { expanded?: string[] } };
+        const expandedList = wh40kConfig.ui?.expanded;
+        return Array.isArray(expandedList) && expandedList.includes(field);
     });
 
     Handlebars.registerHelper('toLowerCase', (str: string) => {
         return str.toLowerCase();
     });
 
-    Handlebars.registerHelper('removeMarkup', (text: TplValue) => {
+    Handlebars.registerHelper('removeMarkup', (text: TplValue): string => {
         if (text === null || text === undefined) return '';
-        const textStr = typeof text !== 'string' ? String(text) : text;
+        let textStr: string;
+        if (typeof text === 'string') textStr = text;
+        else if (typeof text === 'number' || typeof text === 'boolean') textStr = String(text);
+        else return '';
         const markup = /<(.*?)>/gi;
         return textStr.replace(markup, '');
     });
@@ -155,13 +210,14 @@ export function registerHandlebarsHelpers() {
         return capitalize(text);
     });
 
-    Handlebars.registerHelper('getBioOptions', (field: string) => {
-        const bioConfig = CONFIG.wh40k as unknown as { bio?: Record<string, unknown> };
+    Handlebars.registerHelper('getBioOptions', (field: string): TplValue => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is untyped Foundry global
+        const bioConfig = CONFIG.wh40k as { bio?: Record<string, TplValue> };
         return bioConfig.bio?.[field];
     });
 
     // Truthy `and` for Handlebars callers — must preserve template truthiness semantics.
-    Handlebars.registerHelper('and', (obj1: TplValue, obj2: TplValue): unknown => {
+    Handlebars.registerHelper('and', (obj1: TplValue, obj2: TplValue): TplValue => {
         return isTruthy(obj1) ? obj2 : obj1;
     });
 
@@ -170,7 +226,7 @@ export function registerHandlebarsHelpers() {
      * Usage: {{or value1 value2 "default"}}
      * Commonly used with editor helper: {{editor content=(or system.field "") ...}}
      */
-    Handlebars.registerHelper('or', (...args: unknown[]): unknown => {
+    Handlebars.registerHelper('or', (...args: TplValue[]): TplValue => {
         // Handlebars appends an options object as the last argument
         const lastArg = args[args.length - 1];
         const isOptions = lastArg !== null && lastArg !== undefined && typeof lastArg === 'object' && 'hash' in lastArg;
@@ -198,10 +254,10 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('any', (list: TplValue, prop: string): boolean => {
-        if (!Array.isArray(list) || prop === '' || prop === undefined) return false;
+        if (!Array.isArray(list) || prop === '') return false;
         return list.some((item: TplValue) => {
-            if (item === null || item === undefined || typeof item !== 'object') return false;
-            return isTruthy((item as Record<string, unknown>)[prop]);
+            if (!isTplObject(item)) return false;
+            return isTruthy(item[prop]);
         });
     });
 
@@ -210,10 +266,10 @@ export function registerHandlebarsHelpers() {
      * Usage: {{countType actor.items "isMalignancy"}}
      */
     Handlebars.registerHelper('countType', (list: TplValue, prop: string): number => {
-        if (!Array.isArray(list) || prop === '' || prop === undefined) return 0;
+        if (!Array.isArray(list) || prop === '') return 0;
         return list.filter((item: TplValue) => {
-            if (item === null || item === undefined || typeof item !== 'object') return false;
-            return isTruthy((item as Record<string, unknown>)[prop]);
+            if (!isTplObject(item)) return false;
+            return isTruthy(item[prop]);
         }).length;
     });
 
@@ -221,38 +277,46 @@ export function registerHandlebarsHelpers() {
      * Convert array or CONFIG object to simple key-value object for selectOptions
      * Handles both arrays ["value1", "value2"] and CONFIG objects {key: {label: "..."}}
      */
-    Handlebars.registerHelper('arrayToObject', (array: TplValue): Record<string, unknown> => {
-        const obj: Record<string, unknown> = {};
+    Handlebars.registerHelper('arrayToObject', (array: TplValue): Record<string, string> => {
+        const obj: Record<string, string> = {};
         if (array === null || array === undefined) return obj;
 
-        // Handle CONFIG-style objects (already objects with label/data properties)
-        if (typeof array === 'object' && !Array.isArray(array) && typeof (array as { [Symbol.iterator]?: unknown })[Symbol.iterator] !== 'function') {
-            // CONFIG object - extract keys for selectOptions
+        if (Array.isArray(array)) {
+            for (const a of array) {
+                const key = String(a);
+                obj[key] = key;
+            }
+            return obj;
+        }
+
+        if (typeof array === 'object') {
+            // CONFIG-style object - extract keys for selectOptions
             for (const key of Object.keys(array)) {
                 obj[key] = key;
             }
             return obj;
         }
 
-        // Handle arrays and iterables
-        if (typeof (array as { [Symbol.iterator]?: unknown })[Symbol.iterator] === 'function') {
-            for (const a of array as Iterable<string>) {
-                obj[a] = a;
-            }
-        }
-
         return obj;
     });
+
+    const stringifyTpl = (v: TplValue): string => {
+        if (v === null || v === undefined) return '';
+        if (typeof v === 'string') return v;
+        if (typeof v === 'number' || typeof v === 'boolean') return String(v);
+        return '';
+    };
 
     Handlebars.registerHelper('option', (option: TplValue, current: TplValue, name: TplValue) => {
         const selected = current === option ? 'selected="selected"' : '';
         let optionValue: string | number;
-        if (Number.isInteger(option)) {
-            optionValue = option as number;
+        if (typeof option === 'number' && Number.isInteger(option)) {
+            optionValue = option;
         } else {
-            optionValue = `"${String(option)}"`;
+            optionValue = `"${stringifyTpl(option)}"`;
         }
-        const label = name !== undefined && name !== null && name !== '' ? String(name) : String(option);
+        const nameStr = stringifyTpl(name);
+        const label = nameStr !== '' ? nameStr : stringifyTpl(option);
         return new Handlebars.SafeString(`<option value=${optionValue} ${selected}>${label}</option>`);
     });
 
@@ -281,7 +345,7 @@ export function registerHandlebarsHelpers() {
      * Create an array of numbers for iteration
      * Usage: {{#each (array 1 2 3 4 5)}}
      */
-    Handlebars.registerHelper('array', (...args) => {
+    Handlebars.registerHelper('array', (...args: TplValue[]): TplValue[] => {
         // Remove the options object that Handlebars adds
         return args.slice(0, -1);
     });
@@ -290,12 +354,12 @@ export function registerHandlebarsHelpers() {
      * Extract a slice of an array
      * Usage: {{#each (slice array 0 3)}}
      */
-    Handlebars.registerHelper('slice', (array: TplValue, start: TplValue, end: TplValue) => {
+    Handlebars.registerHelper('slice', (array: TplValue, start: TplValue, end: TplValue): TplValue[] => {
         if (!Array.isArray(array)) return [];
         const s = Number(start);
         const sValid = Number.isFinite(s) ? s : 0;
         const e = end !== undefined ? Number(end) : array.length;
-        return array.slice(sValid, e);
+        return (array as TplValue[]).slice(sValid, e);
     });
 
     /**
@@ -422,7 +486,7 @@ export function registerHandlebarsHelpers() {
     Handlebars.registerHelper('eq', (a: TplValue, b: TplValue): boolean => a === b);
     Handlebars.registerHelper('neq', (a: TplValue, b: TplValue): boolean => a !== b);
 
-    Handlebars.registerHelper('defaultVal', (value: TplValue, defaultVal: TplValue): unknown => isTruthy(value) ? value : defaultVal);
+    Handlebars.registerHelper('defaultVal', (value: TplValue, defaultVal: TplValue): TplValue => (isTruthy(value) ? value : defaultVal));
 
     /**
      * Inline ternary helper. `if` is taken as a block helper, so we expose `iff`
@@ -430,7 +494,7 @@ export function registerHandlebarsHelpers() {
      * optional and defaults to "" — useful when the caller wants a class string
      * that's empty when the condition fails.
      */
-    Handlebars.registerHelper('iff', (cond: TplValue, ifTrue: TplValue, ifFalse: TplValue): unknown => {
+    Handlebars.registerHelper('iff', (cond: TplValue, ifTrue: TplValue, ifFalse: TplValue): TplValue => {
         return isTruthy(cond) ? ifTrue : ifFalse ?? '';
     });
 
@@ -443,25 +507,27 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('rateOfFireDisplay', (rateOfFire: TplValue): string => {
-        if (rateOfFire === null || rateOfFire === undefined || typeof rateOfFire !== 'object') return '';
-        const rof = rateOfFire as { single?: TplValue; semi?: TplValue; full?: TplValue };
-        const single = rof.single ?? '-';
-        const semi = rof.semi ?? '-';
-        const full = rof.full ?? '-';
-        return `${String(single)}/${String(semi)}/${String(full)}`;
+        if (!isTplObject(rateOfFire)) return '';
+        const single = stringifyTpl(rateOfFire.single) || '-';
+        const semi = stringifyTpl(rateOfFire.semi) || '-';
+        const full = stringifyTpl(rateOfFire.full) || '-';
+        return `${single}/${semi}/${full}`;
     });
 
     Handlebars.registerHelper('specialDisplay', (special: TplValue): string => {
         if (special === null || special === undefined || special === '') return '';
         if (Array.isArray(special)) {
-            return special.filter((v) => isTruthy(v)).map((v) => String(v)).join(', ');
-        }
-        if (typeof special === 'object') {
-            return Object.entries(special as Record<string, TplValue>)
-                .map(([key, value]) => (isTruthy(value) ? `${key} ${String(value)}`.trim() : key))
+            return special
+                .filter((v) => isTruthy(v))
+                .map((v) => stringifyTpl(v))
                 .join(', ');
         }
-        return String(special);
+        if (isTplObject(special)) {
+            return Object.entries(special)
+                .map(([key, value]) => (isTruthy(value) ? `${key} ${stringifyTpl(value)}`.trim() : key))
+                .join(', ');
+        }
+        return stringifyTpl(special);
     });
 
     Handlebars.registerHelper('json', (value: TplValue): string => {
@@ -514,9 +580,10 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('skillIcon', (skillKey: string): string => {
-        const configAny = CONFIG as unknown as Record<string, TplValue>;
-        const rtConfig = configAny.rt as { getSkillIcon?: (k: string) => string } | undefined;
-        const config = rtConfig?.getSkillIcon !== undefined ? CONFIG.wh40k : WH40K;
+        const rtConfig = getRtConfig();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is untyped Foundry global
+        const wh40kConfig = CONFIG.wh40k as WH40KConfig;
+        const config: WH40KConfig | typeof WH40K = rtConfig?.getSkillIcon !== undefined ? wh40kConfig : WH40K;
         const icon = config.getSkillIcon?.(skillKey) ?? 'modules/game-icons-net-font/svg/skills.svg';
         return foundry.utils.getRoute(icon);
     });
@@ -645,9 +712,12 @@ export function registerHandlebarsHelpers() {
      */
     Handlebars.registerHelper('join', (array: TplValue, separator: TplValue): string => {
         if (array === null || array === undefined) return '';
-        if (!Array.isArray(array)) return String(array);
+        if (!Array.isArray(array)) return stringifyTpl(array);
         const sep = typeof separator === 'string' && separator !== '' ? separator : ', ';
-        return array.filter((v) => isTruthy(v)).map((v) => String(v)).join(sep);
+        return array
+            .filter((v) => isTruthy(v))
+            .map((v) => stringifyTpl(v))
+            .join(sep);
     });
 
     /**
@@ -764,35 +834,41 @@ export function registerHandlebarsHelpers() {
      * @param {Set<string>} specialSet    Set of quality identifiers
      * @returns {object[]}                Array of quality definition objects
      */
-    Handlebars.registerHelper('specialQualities', (specialSet) => {
-        if (!specialSet) return [];
+    Handlebars.registerHelper('specialQualities', (specialSet: TplValue): WeaponQuality[] => {
+        if (specialSet === null || specialSet === undefined) return [];
 
-        // Convert to array if it's a Set
-        const qualityIds = Array.isArray(specialSet) ? specialSet : Array.from(specialSet);
-        if (!qualityIds.length) return [];
+        // Convert to array if it's a Set; otherwise expect an array of identifier strings.
+        let qualityIds: string[];
+        if (Array.isArray(specialSet)) {
+            qualityIds = (specialSet as TplValue[]).filter((v): v is string => typeof v === 'string');
+        } else if (specialSet instanceof Set) {
+            qualityIds = Array.from(specialSet).filter((v): v is string => typeof v === 'string');
+        } else {
+            return [];
+        }
+        if (qualityIds.length === 0) return [];
 
-        const rtConfig = (CONFIG as unknown as Record<string, unknown>)?.rt as
-            | { weaponQualities?: Record<string, { label: string; description: string; hasLevel?: boolean }> }
-            | undefined;
+        const rtConfig = getRtConfig();
         if (!rtConfig?.weaponQualities) {
             console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return [];
         }
+        const weaponQualities = rtConfig.weaponQualities;
 
-        const qualities = [];
+        const qualities: WeaponQuality[] = [];
 
         for (const identifier of qualityIds) {
             // Parse identifier (e.g., "blast-3" → base="blast", level=3)
             const levelMatch = identifier.match(/^(.+?)-(\d+|x)$/i);
             const baseId = levelMatch ? levelMatch[1] : identifier;
-            const level = levelMatch ? (levelMatch[2].toLowerCase() === 'x' ? null : parseInt(levelMatch[2])) : null;
+            const level: number | null = levelMatch ? (levelMatch[2].toLowerCase() === 'x' ? null : parseInt(levelMatch[2], 10)) : null;
 
-            // Look up definition
-            const def = rtConfig.weaponQualities[baseId];
-            if (!def) {
+            // Look up definition. Use hasOwn to detect missing entries because index access on
+            // Record<string, V> returns V (not V | undefined) under our tsconfig.
+            if (!Object.prototype.hasOwnProperty.call(weaponQualities, baseId)) {
                 // Unknown quality, show raw identifier
                 qualities.push({
-                    identifier: identifier,
+                    identifier,
                     baseIdentifier: baseId,
                     label: identifier,
                     description: 'Unknown quality',
@@ -801,22 +877,23 @@ export function registerHandlebarsHelpers() {
                 });
                 continue;
             }
+            const def = weaponQualities[baseId];
 
             // Build rich quality object
             let label = game.i18n.localize(def.label);
-            if (def.hasLevel && level !== null) {
+            if (def.hasLevel === true && level !== null) {
                 label += ` (${level})`;
-            } else if (def.hasLevel) {
+            } else if (def.hasLevel === true) {
                 label += ` (X)`;
             }
 
             qualities.push({
-                identifier: identifier,
+                identifier,
                 baseIdentifier: baseId,
-                label: label,
+                label,
                 description: game.i18n.localize(def.description),
                 hasLevel: def.hasLevel,
-                level: level,
+                level,
             });
         }
 
@@ -828,70 +905,40 @@ export function registerHandlebarsHelpers() {
      * @param {object} weaponSystem    Weapon system data
      * @returns {object[]}             Array of quality objects
      */
-    Handlebars.registerHelper('craftsmanshipQualities', (weaponSystem) => {
-        const rtConfig = (CONFIG as unknown as Record<string, unknown>)?.rt as
-            | { weaponQualities?: Record<string, { label: string; description: string; hasLevel?: boolean }> }
-            | undefined;
+    Handlebars.registerHelper('craftsmanshipQualities', (weaponSystem: WeaponSystemForCraft): WeaponQuality[] => {
+        const rtConfig = getRtConfig();
         if (!rtConfig?.weaponQualities) {
             console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return [];
         }
+        const weaponQualities = rtConfig.weaponQualities;
 
-        const qualities = [];
+        const qualities: WeaponQuality[] = [];
         const craft = weaponSystem.craftsmanship;
-        const isMelee = weaponSystem.melee;
+        const isMelee = weaponSystem.melee === true;
 
         if (isMelee) {
             // Melee weapons don't get quality changes, only stat mods
             return [];
         }
 
+        const pushDef = (key: string, identifier: string): void => {
+            if (!Object.prototype.hasOwnProperty.call(weaponQualities, key)) return;
+            const def = weaponQualities[key];
+            qualities.push({
+                identifier,
+                label: game.i18n.localize(def.label),
+                description: game.i18n.localize(def.description),
+                hasLevel: false,
+                level: null,
+            });
+        };
+
         // Ranged weapons get reliability qualities
-        if (craft === 'poor') {
-            const def = rtConfig.weaponQualities['unreliable-2'];
-            if (def) {
-                qualities.push({
-                    identifier: 'unreliable-2',
-                    label: game.i18n.localize(def.label),
-                    description: game.i18n.localize(def.description),
-                    hasLevel: false,
-                    level: null,
-                });
-            }
-        } else if (craft === 'cheap') {
-            const def = rtConfig.weaponQualities['unreliable'];
-            if (def) {
-                qualities.push({
-                    identifier: 'unreliable',
-                    label: game.i18n.localize(def.label),
-                    description: game.i18n.localize(def.description),
-                    hasLevel: false,
-                    level: null,
-                });
-            }
-        } else if (craft === 'good') {
-            const def = rtConfig.weaponQualities['reliable'];
-            if (def) {
-                qualities.push({
-                    identifier: 'reliable',
-                    label: game.i18n.localize(def.label),
-                    description: game.i18n.localize(def.description),
-                    hasLevel: false,
-                    level: null,
-                });
-            }
-        } else if (['best', 'master-crafted'].includes(craft)) {
-            const def = rtConfig.weaponQualities['never-jam'];
-            if (def) {
-                qualities.push({
-                    identifier: 'never-jam',
-                    label: game.i18n.localize(def.label),
-                    description: game.i18n.localize(def.description),
-                    hasLevel: false,
-                    level: null,
-                });
-            }
-        }
+        if (craft === 'poor') pushDef('unreliable-2', 'unreliable-2');
+        else if (craft === 'cheap') pushDef('unreliable', 'unreliable');
+        else if (craft === 'good') pushDef('reliable', 'reliable');
+        else if (craft === 'best' || craft === 'master-crafted') pushDef('never-jam', 'never-jam');
 
         return qualities;
     });
@@ -901,12 +948,12 @@ export function registerHandlebarsHelpers() {
      * @param {object} weaponSystem    Weapon system data
      * @returns {boolean}
      */
-    Handlebars.registerHelper('hasCraftsmanshipQualities', (weaponSystem) => {
+    Handlebars.registerHelper('hasCraftsmanshipQualities', (weaponSystem: WeaponSystemForCraft): boolean => {
         const craft = weaponSystem.craftsmanship;
-        const isMelee = weaponSystem.melee;
+        const isMelee = weaponSystem.melee === true;
 
         if (isMelee) return false; // Melee only gets stat mods
-
+        if (craft === undefined) return false;
         return ['poor', 'cheap', 'good', 'best', 'master-crafted'].includes(craft);
     });
 
@@ -915,8 +962,8 @@ export function registerHandlebarsHelpers() {
      * @param {object[]} items    Array of embedded items
      * @returns {boolean}
      */
-    Handlebars.registerHelper('hasEmbeddedQualities', (items: Array<{ type?: string }>) => {
-        if (!items || !items.length) return false;
+    Handlebars.registerHelper('hasEmbeddedQualities', (items: Array<{ type?: string }> | null | undefined): boolean => {
+        if (items === null || items === undefined || items.length === 0) return false;
         return items.some((item) => item.type === 'attackSpecial');
     });
 
@@ -927,11 +974,11 @@ export function registerHandlebarsHelpers() {
      * @param {*} value                        Value to look for
      * @returns {boolean}
      */
-    Handlebars.registerHelper('has', (collection, value) => {
+    Handlebars.registerHelper('has', (collection: TplValue, value: TplValue): boolean => {
         if (collection instanceof Set) return collection.has(value);
         if (Array.isArray(collection)) return collection.includes(value);
-        if (typeof collection === 'object' && collection !== null) {
-            return Object.prototype.hasOwnProperty.call(collection, value);
+        if (isTplObject(collection)) {
+            return Object.prototype.hasOwnProperty.call(collection, String(value));
         }
         return false;
     });
@@ -941,36 +988,37 @@ export function registerHandlebarsHelpers() {
      * @param {string} identifier    Quality identifier
      * @returns {object}
      */
-    Handlebars.registerHelper('qualityLookup', (identifier) => {
-        const rtConfig = (CONFIG as unknown as Record<string, unknown>)?.rt as
-            | { weaponQualities?: Record<string, { label: string; description: string; hasLevel?: boolean }> }
-            | undefined;
+    Handlebars.registerHelper('qualityLookup', (identifier: string): WeaponQuality => {
+        const rtConfig = getRtConfig();
         if (!rtConfig?.weaponQualities) {
             console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return {
                 identifier,
                 label: identifier,
                 description: 'Unknown quality',
+                level: null,
             };
         }
+        const weaponQualities = rtConfig.weaponQualities;
 
         const levelMatch = identifier.match(/^(.+?)-(\d+|x)$/i);
         const baseId = levelMatch ? levelMatch[1] : identifier;
-        const level = levelMatch ? (levelMatch[2].toLowerCase() === 'x' ? null : parseInt(levelMatch[2])) : null;
+        const level: number | null = levelMatch ? (levelMatch[2].toLowerCase() === 'x' ? null : parseInt(levelMatch[2], 10)) : null;
 
-        const def = rtConfig.weaponQualities[baseId];
-        if (!def) {
+        if (!Object.prototype.hasOwnProperty.call(weaponQualities, baseId)) {
             return {
                 identifier,
                 label: identifier,
                 description: 'Unknown quality',
+                level: null,
             };
         }
+        const def = weaponQualities[baseId];
 
         let label = game.i18n.localize(def.label);
-        if (def.hasLevel && level !== null) {
+        if (def.hasLevel === true && level !== null) {
             label += ` (${level})`;
-        } else if (def.hasLevel) {
+        } else if (def.hasLevel === true) {
             label += ` (X)`;
         }
 

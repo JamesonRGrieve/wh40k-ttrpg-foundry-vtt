@@ -4,6 +4,18 @@
  * Augments Foundry VTT types with system-specific extensions.
  */
 
+import type * as characterCreation from '../applications/character-creation/_module.ts';
+import type { RTCompendiumBrowser } from '../applications/compendium-browser.ts';
+import type * as npcApplications from '../applications/npc/_module.ts';
+import type ActorDataModel from '../data/abstract/actor-data-model.ts';
+import type ItemDataModel from '../data/abstract/item-data-model.ts';
+import type * as dice from '../dice/_module.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import type { WH40KItem } from '../documents/item.ts';
+import type { TransactionManager } from '../transactions/transaction-manager.ts';
+import type { RollTableUtils } from '../utils/roll-table-utils.ts';
+import type { WH40KSystemConfig } from '../config.ts';
+
 // =========================================================================
 // WH40K System Types
 // =========================================================================
@@ -192,7 +204,7 @@ export interface WH40KBackpack {
     [key: string]: unknown;
 }
 
-export type WH40KActorSystemData = import('../data/abstract/actor-data-model.ts').default & {
+export type WH40KActorSystemData = ActorDataModel & {
     characteristics: Record<string, WH40KCharacteristic>;
     skills: Record<string, WH40KSkill>;
     trainedSkills?: Record<string, WH40KSkill>;
@@ -248,7 +260,7 @@ export type WH40KActorSystemData = import('../data/abstract/actor-data-model.ts'
     [key: string]: unknown;
 };
 
-export type WH40KItemSystemData = import('../data/abstract/item-data-model.ts').default & {
+export type WH40KItemSystemData = ItemDataModel & {
     equipped?: boolean;
     quantity?: number;
     reload?: string;
@@ -283,15 +295,6 @@ export type WH40KItemSystemData = import('../data/abstract/item-data-model.ts').
     melee?: boolean;
     [key: string]: unknown;
 };
-
-import type * as characterCreation from '../applications/character-creation/_module.ts';
-import type { RTCompendiumBrowser } from '../applications/compendium-browser.ts';
-import type * as npcApplications from '../applications/npc/_module.ts';
-import type * as dice from '../dice/_module.ts';
-import type { WH40KBaseActor } from '../documents/base-actor.ts';
-import type { WH40KItem } from '../documents/item.ts';
-import type { TransactionManager } from '../transactions/transaction-manager.ts';
-import type { RollTableUtils } from '../utils/roll-table-utils.ts';
 
 // =========================================================================
 // WH40K System Namespace on Game
@@ -451,9 +454,9 @@ declare global {
         metadata: { id: string; label: string; package: string; type: string; system?: string; [key: string]: unknown };
         index: foundry.utils.Collection<CompendiumIndexEntry>;
         getIndex(options?: { fields?: string[] }): Promise<foundry.utils.Collection<CompendiumIndexEntry>>;
-        getDocument(id: string): Promise<FoundryDocumentBase | undefined>;
-        getDocuments(query?: Record<string, unknown>): Promise<FoundryDocumentBase[]>;
-        importDocument(document: FoundryDocumentBase, options?: Record<string, unknown>): Promise<FoundryDocumentBase>;
+        getDocument(id: string): Promise<foundry.abstract.Document.Any | undefined>;
+        getDocuments(query?: Record<string, unknown>): Promise<foundry.abstract.Document.Any[]>;
+        importDocument(document: foundry.abstract.Document.Any, options?: Record<string, unknown>): Promise<foundry.abstract.Document.Any>;
     }
 
     // Augment ReadyGame to include wh40k
@@ -461,8 +464,8 @@ declare global {
         wh40k: WH40KGameSystem;
     }
     interface CONFIG {
-        wh40k: import('../config.ts').WH40KSystemConfig;
-        WH40K: import('../config.ts').WH40KSystemConfig;
+        wh40k: WH40KSystemConfig;
+        WH40K: WH40KSystemConfig;
     }
 }
 

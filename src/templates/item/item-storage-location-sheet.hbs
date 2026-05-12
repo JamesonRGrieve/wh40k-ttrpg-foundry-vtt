@@ -3,7 +3,7 @@
     {{! Header }}
     <header class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0">
         <div class="tw-flex tw-items-center tw-justify-center tw-w-14 tw-h-14 tw-shrink-0 tw-rounded-md tw-overflow-hidden">
-            <img class="tw-w-full tw-h-full tw-object-cover" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
+            {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs imgOnly=true src=item.img alt=item.name title=item.name sizeClass="tw-w-full tw-h-full" roundedClass="" action=false}}
         </div>
         <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
             <input class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" type="text" value="{{item.name}}" placeholder="Storage Location Name" />

@@ -10,20 +10,174 @@
  */
 
 import type TalentData from '../../data/item/talent.ts';
+import type DescriptionTemplate from '../../data/shared/description-template.ts';
 import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
 /** TalentData with mixin-inherited fields visible to the type system. */
-type TalentSystem = TalentData &
-    Pick<ModifiersTemplate, 'modifiers'> & {
-        source: { book?: string; page?: string } | string;
-        description?: { value?: string };
-        toChat?: () => Promise<unknown> | unknown;
-    };
+type TalentSystem = TalentData & Pick<ModifiersTemplate, 'modifiers'> & Pick<DescriptionTemplate, 'description' | 'source'>;
 
 /** Talent item document narrowed to its DataModel. */
 type TalentItem = WH40KItemDocument & { system: TalentSystem };
+
+/* -------------------------------------------- */
+/*  Prepared context shapes                     */
+/* -------------------------------------------- */
+
+interface TalentDisplayData {
+    identifier: string;
+    category: string;
+    categoryLabel: string;
+    tier: number;
+    tierLabel: string;
+    cost: number;
+    isPassive: boolean;
+    isRollable: boolean;
+    stackable: boolean;
+    rank: number;
+    hasSpecialization: boolean;
+    specialization: string;
+    notes: string;
+    source: string;
+    sourceBook: string;
+    sourcePage: string;
+    aptitudes: string[];
+    hasAptitudes: boolean;
+    benefit: string;
+    hasBenefit: boolean;
+    fullName: string;
+}
+
+interface PrerequisiteCharRow {
+    key: string;
+    label: string;
+    short: string;
+    value: number;
+}
+
+interface PrerequisitesDisplayData {
+    text: string;
+    hasText: boolean;
+    characteristics: PrerequisiteCharRow[];
+    hasCharacteristics: boolean;
+    skills: string[];
+    hasSkills: boolean;
+    talents: string[];
+    hasTalents: boolean;
+    hasAny: boolean;
+    label: string;
+}
+
+interface ModifierRow {
+    key: string;
+    label: string;
+    short?: string;
+    value: number;
+    positive: boolean;
+}
+
+interface OtherModifierRow {
+    key: string;
+    label: string;
+    value: number;
+    mode: string;
+    positive: boolean;
+}
+
+interface ModifiersDisplayData {
+    characteristics: ModifierRow[];
+    hasCharacteristics: boolean;
+    skills: ModifierRow[];
+    hasSkills: boolean;
+    combat: ModifierRow[];
+    hasCombat: boolean;
+    resources: ModifierRow[];
+    hasResources: boolean;
+    other: OtherModifierRow[];
+    hasOther: boolean;
+    hasAny: boolean;
+}
+
+interface GrantsSkillRow {
+    name: string;
+    specialization: string | null;
+    level: string;
+    levelLabel: string;
+    displayName: string;
+}
+
+interface GrantsTalentRow {
+    name: string;
+    specialization: string | null;
+    uuid: string | null;
+    hasLink: boolean;
+}
+
+interface GrantsTraitRow {
+    name: string;
+    level: number | null;
+    uuid: string | null;
+    hasLink: boolean;
+}
+
+interface GrantsSpecialAbilityRow {
+    name: string;
+    description: string;
+}
+
+interface GrantsDisplayData {
+    skills: GrantsSkillRow[];
+    hasSkills: boolean;
+    talents: GrantsTalentRow[];
+    hasTalents: boolean;
+    traits: GrantsTraitRow[];
+    hasTraits: boolean;
+    specialAbilities: GrantsSpecialAbilityRow[];
+    hasSpecialAbilities: boolean;
+    hasAny: boolean;
+}
+
+interface SituationalRow {
+    key: string;
+    label: string;
+    value: number;
+    condition: string;
+    icon: string;
+    positive: boolean;
+}
+
+interface SituationalDisplayData {
+    characteristics: SituationalRow[];
+    hasCharacteristics: boolean;
+    skills: SituationalRow[];
+    hasSkills: boolean;
+    combat: SituationalRow[];
+    hasCombat: boolean;
+    hasAny: boolean;
+}
+
+interface RollConfigDisplayData {
+    characteristic: string;
+    characteristicLabel: string;
+    skill: string;
+    skillLabel: string;
+    modifier: number;
+    description: string;
+    isConfigured: boolean;
+}
+
+interface SelectOption {
+    value: string | number;
+    label: string;
+    selected: boolean;
+}
+
+interface FromUuidResult {
+    sheet?: { render: (force: boolean) => void } | null;
+}
+
+type RollSkillFn = (key: string) => Promise<void>;
 
 /**
  * Redesigned sheet for talent items with modern ApplicationV2 patterns.
@@ -94,7 +248,7 @@ export default class TalentSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         const system = this.item.system;
 
@@ -103,11 +257,15 @@ export default class TalentSheet extends BaseItemSheet {
         context.activeTab = this.tabGroups.primary;
 
         // Prepare structured data for template
+        const modifiersData = this._prepareModifiersData(system);
+        const situationalData = this._prepareSituationalData(system);
+        const grantsData = this._prepareGrantsData(system);
+
         context.talentData = this._prepareTalentData(system);
         context.prerequisitesData = this._preparePrerequisitesData(system);
-        context.modifiersData = this._prepareModifiersData(system);
-        context.grantsData = this._prepareGrantsData(system);
-        context.situationalData = this._prepareSituationalData(system);
+        context.modifiersData = modifiersData;
+        context.grantsData = grantsData;
+        context.situationalData = situationalData;
         context.rollConfigData = this._prepareRollConfigData(system);
 
         // Category options for select
@@ -115,11 +273,7 @@ export default class TalentSheet extends BaseItemSheet {
         context.tierOptions = this._getTierOptions(system.tier);
 
         // Determine effects tab section order (sections with data first)
-        context.effectsSectionOrder = this._getEffectsSectionOrder(
-            context.modifiersData as Record<string, unknown>,
-            context.situationalData as Record<string, unknown>,
-            context.grantsData as Record<string, unknown>,
-        );
+        context.effectsSectionOrder = this._getEffectsSectionOrder(modifiersData, situationalData, grantsData);
 
         return context;
     }
@@ -132,12 +286,9 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared talent data
      * @protected
      */
-    _prepareTalentData(system: TalentSystem): Record<string, unknown> {
-        // Get source reference properly (not the object)
-        const rawSource = system.source;
-        const sourceObj = typeof rawSource === 'object' && rawSource !== null ? rawSource : {};
-        const sourceBook = sourceObj.book ?? '';
-        const sourcePage = sourceObj.page ?? '';
+    _prepareTalentData(system: TalentSystem): TalentDisplayData {
+        const sourceBook = system.source.book;
+        const sourcePage = system.source.page;
         const aptitudes = system.aptitudes;
 
         return {
@@ -175,15 +326,15 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared prerequisites data
      * @protected
      */
-    _preparePrerequisitesData(system: TalentSystem): Record<string, unknown> {
+    _preparePrerequisitesData(system: TalentSystem): PrerequisitesDisplayData {
         const prereqs = system.prerequisites;
         const chars = prereqs.characteristics;
         const skills = prereqs.skills;
         const talents = prereqs.talents;
 
         // Format characteristics requirements
-        const characteristicReqs = Object.entries(chars)
-            .filter(([_, value]) => (value as number) > 0)
+        const characteristicReqs: PrerequisiteCharRow[] = Object.entries(chars)
+            .filter((entry): entry is [string, number] => typeof entry[1] === 'number' && entry[1] > 0)
             .map(([key, value]) => ({
                 key,
                 label: this._getCharacteristicLabel(key),
@@ -216,32 +367,32 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared modifiers data
      * @protected
      */
-    _prepareModifiersData(system: TalentSystem): Record<string, unknown> {
+    _prepareModifiersData(system: TalentSystem): ModifiersDisplayData {
         const mods = system.modifiers;
 
-        // Characteristic modifiers
-        const charMods = Object.entries(mods.characteristics)
-            .filter(([_, value]) => value !== 0)
+        // Characteristic modifiers (free-form Record<string, unknown>)
+        const charMods: ModifierRow[] = Object.entries(mods.characteristics)
+            .filter((entry): entry is [string, number] => typeof entry[1] === 'number' && entry[1] !== 0)
             .map(([key, value]) => ({
                 key,
                 label: this._getCharacteristicLabel(key),
                 short: this._getCharacteristicShort(key),
                 value,
-                positive: (value as number) > 0,
+                positive: value > 0,
             }));
 
-        // Skill modifiers
-        const skillMods = Object.entries(mods.skills)
-            .filter(([_, value]) => value !== 0)
+        // Skill modifiers (free-form Record<string, unknown>)
+        const skillMods: ModifierRow[] = Object.entries(mods.skills)
+            .filter((entry): entry is [string, number] => typeof entry[1] === 'number' && entry[1] !== 0)
             .map(([key, value]) => ({
                 key,
                 label: this._formatSkillLabel(key),
                 value,
-                positive: (value as number) > 0,
+                positive: value > 0,
             }));
 
         // Combat modifiers
-        const combatMods = Object.entries(mods.combat)
+        const combatMods: ModifierRow[] = Object.entries(mods.combat)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
@@ -251,7 +402,7 @@ export default class TalentSheet extends BaseItemSheet {
             }));
 
         // Resource modifiers
-        const resourceMods = Object.entries(mods.resources)
+        const resourceMods: ModifierRow[] = Object.entries(mods.resources)
             .filter(([_, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
@@ -261,7 +412,7 @@ export default class TalentSheet extends BaseItemSheet {
             }));
 
         // Other modifiers
-        const otherMods = mods.other.map((mod) => ({
+        const otherMods: OtherModifierRow[] = mods.other.map((mod) => ({
             ...mod,
             positive: mod.value > 0,
         }));
@@ -291,7 +442,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared grants data
      * @protected
      */
-    _prepareGrantsData(system: TalentSystem): Record<string, unknown> {
+    _prepareGrantsData(system: TalentSystem): GrantsDisplayData {
         const grants = system.grants;
 
         const skills = grants.skills.map((skill) => ({
@@ -344,7 +495,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared situational data
      * @protected
      */
-    _prepareSituationalData(system: TalentSystem): Record<string, unknown> {
+    _prepareSituationalData(system: TalentSystem): SituationalDisplayData {
         const situational = system.modifiers.situational;
 
         const characteristics = situational.characteristics.map((mod) => ({
@@ -395,7 +546,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object} Prepared roll config data
      * @protected
      */
-    _prepareRollConfigData(system: TalentSystem): Record<string, unknown> {
+    _prepareRollConfigData(system: TalentSystem): RollConfigDisplayData {
         const config = system.rollConfig;
         return {
             characteristic: config.characteristic,
@@ -416,7 +567,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object[]} Category options for select
      * @protected
      */
-    _getCategoryOptions(currentCategory: string | undefined): Record<string, unknown>[] {
+    _getCategoryOptions(currentCategory: string | undefined): SelectOption[] {
         const categories = [
             { value: '', label: 'General' },
             { value: 'general', label: 'General' },
@@ -445,7 +596,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {object[]} Tier options for select
      * @protected
      */
-    _getTierOptions(currentTier: number | undefined): Record<string, unknown>[] {
+    _getTierOptions(currentTier: number | undefined): SelectOption[] {
         return [
             { value: 0, label: '—', selected: currentTier === 0 },
             { value: 1, label: 'Tier 1', selected: currentTier === 1 },
@@ -465,11 +616,11 @@ export default class TalentSheet extends BaseItemSheet {
      * @returns {string[]} Ordered array of section IDs
      * @protected
      */
-    _getEffectsSectionOrder(modifiersData: Record<string, unknown>, situationalData: Record<string, unknown>, grantsData: Record<string, unknown>): string[] {
+    _getEffectsSectionOrder(modifiersData: ModifiersDisplayData, situationalData: SituationalDisplayData, grantsData: GrantsDisplayData): string[] {
         const sections = [
-            { id: 'modifiers', hasData: Boolean(modifiersData.hasAny) },
-            { id: 'situational', hasData: Boolean(situationalData.hasAny) },
-            { id: 'grants', hasData: Boolean(grantsData.hasAny) },
+            { id: 'modifiers', hasData: modifiersData.hasAny },
+            { id: 'situational', hasData: situationalData.hasAny },
+            { id: 'grants', hasData: grantsData.hasAny },
         ];
 
         // Sort: sections with data first, then empty sections
@@ -718,7 +869,7 @@ export default class TalentSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Set up custom tab handling
@@ -793,7 +944,7 @@ export default class TalentSheet extends BaseItemSheet {
         if (config.characteristic !== '') {
             actor.rollCharacteristic(config.characteristic, this.item.name);
         } else if (config.skill !== '') {
-            const rollSkill = (actor as unknown as { rollSkill?: (key: string) => Promise<void> }).rollSkill;
+            const rollSkill = Reflect.get(actor, 'rollSkill') as RollSkillFn | undefined;
             if (rollSkill !== undefined) await rollSkill.call(actor, config.skill);
         }
     }
@@ -807,8 +958,8 @@ export default class TalentSheet extends BaseItemSheet {
      * @param {HTMLElement} target - The action target
      */
     static async #postToChat(this: TalentSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        const chatResult = await this.item.system.toChat?.();
-        if (chatResult === null || chatResult === undefined) await this._postTalentToChat();
+        await this.item.system.toChat();
+        await this._postTalentToChat();
     }
 
     /* -------------------------------------------- */
@@ -824,7 +975,7 @@ export default class TalentSheet extends BaseItemSheet {
         if (uuid === undefined || uuid === '') return;
 
         try {
-            const item = (await fromUuid(uuid)) as { sheet?: { render: (force: boolean) => void } } | null;
+            const item = (await fromUuid(uuid)) as FromUuidResult | null;
             if (item?.sheet !== undefined && item.sheet !== null) {
                 item.sheet.render(true);
             }
@@ -870,8 +1021,8 @@ export default class TalentSheet extends BaseItemSheet {
         const dialog = new TalentEditorDialog({
             item: this.item,
             initialSection: section,
-        }) as unknown as { render: (force: boolean) => Promise<void> };
-        await dialog.render(true);
+        });
+        await dialog.render({ force: true });
     }
 
     /* -------------------------------------------- */
@@ -888,13 +1039,13 @@ export default class TalentSheet extends BaseItemSheet {
                 ${this.item.system.tier ? `<p><strong>Tier:</strong> ${this.item.system.tier}</p>` : ''}
                 ${this.item.system.cost ? `<p><strong>Cost:</strong> ${this.item.system.cost} XP</p>` : ''}
                 <hr>
-                <div>${this.item.system.benefit !== '' ? this.item.system.benefit : (this.item.system.description?.value ?? '')}</div>
+                <div>${this.item.system.benefit !== '' ? this.item.system.benefit : this.item.system.description.value}</div>
             </div>
         `;
 
         await ChatMessage.create({
             content,
-            speaker: ChatMessage.getSpeaker({ actor: this.item.actor !== null ? this.item.actor : undefined }),
+            speaker: ChatMessage.getSpeaker({ actor: this.item.actor ?? undefined }),
         });
     }
 }

@@ -27,6 +27,13 @@ interface CreatedActor {
 }
 /* eslint-enable no-restricted-syntax */
 
+/** Tab label localization keys, hoisted so the static TABS entries reference identifiers. */
+const TAB_LABEL_BASICS = 'WH40K.NPC.Template.Tabs.Basics';
+const TAB_LABEL_CHARACTERISTICS = 'WH40K.NPC.Template.Tabs.Characteristics';
+const TAB_LABEL_EQUIPMENT = 'WH40K.NPC.Template.Tabs.Equipment';
+const TAB_LABEL_ABILITIES = 'WH40K.NPC.Template.Tabs.Abilities';
+const TAB_LABEL_PREVIEW = 'WH40K.NPC.Template.Tabs.Preview';
+
 /**
  * Item sheet for npcTemplate type items.
  * Provides a template editor UI for creating reusable NPC configurations.
@@ -120,11 +127,11 @@ export default class NPCTemplateSheet extends BaseItemSheet {
     /** @override */
     // eslint-disable-next-line @typescript-eslint/naming-convention
     static TABS = [
-        { tab: 'basics', group: 'primary', icon: 'fa-solid fa-user', label: 'WH40K.NPC.Template.Tabs.Basics' },
-        { tab: 'characteristics', group: 'primary', icon: 'fa-solid fa-chart-bar', label: 'WH40K.NPC.Template.Tabs.Characteristics' },
-        { tab: 'equipment', group: 'primary', icon: 'fa-solid fa-swords', label: 'WH40K.NPC.Template.Tabs.Equipment' },
-        { tab: 'abilities', group: 'primary', icon: 'fa-solid fa-sparkles', label: 'WH40K.NPC.Template.Tabs.Abilities' },
-        { tab: 'preview', group: 'primary', icon: 'fa-solid fa-eye', label: 'WH40K.NPC.Template.Tabs.Preview' },
+        { tab: 'basics', group: 'primary', icon: 'fa-solid fa-user', label: TAB_LABEL_BASICS },
+        { tab: 'characteristics', group: 'primary', icon: 'fa-solid fa-chart-bar', label: TAB_LABEL_CHARACTERISTICS },
+        { tab: 'equipment', group: 'primary', icon: 'fa-solid fa-swords', label: TAB_LABEL_EQUIPMENT },
+        { tab: 'abilities', group: 'primary', icon: 'fa-solid fa-sparkles', label: TAB_LABEL_ABILITIES },
+        { tab: 'preview', group: 'primary', icon: 'fa-solid fa-eye', label: TAB_LABEL_PREVIEW },
     ];
 
     /* -------------------------------------------- */
@@ -239,7 +246,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
             { key: 'influence', label: 'Influence', short: 'Inf' },
         ].map((c) => ({
             ...c,
-            value: baseChars[c.key as keyof typeof baseChars] ?? 30,
+            value: baseChars[c.key as keyof typeof baseChars],
             unnatural: sys.unnaturals[c.key] ?? 0,
         }));
 
@@ -507,9 +514,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
 
             if (actor !== null) {
                 // Resolve all trait/talent UUIDs in parallel
-                const uuids = [...sys.traits, ...sys.talents]
-                    .map((ref) => ref.uuid)
-                    .filter((uuid): uuid is string => uuid !== undefined && uuid !== '');
+                const uuids = [...sys.traits, ...sys.talents].map((ref) => ref.uuid).filter((uuid): uuid is string => uuid !== undefined && uuid !== '');
                 const resolved = await Promise.all(uuids.map(async (uuid) => (await fromUuid(uuid)) as ResolvedItem | null));
                 const itemsToCreate: Array<Record<string, unknown>> = resolved
                     .filter((item): item is ResolvedItem => item !== null)
