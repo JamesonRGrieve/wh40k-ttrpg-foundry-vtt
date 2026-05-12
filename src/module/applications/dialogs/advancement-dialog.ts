@@ -504,27 +504,27 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     const entryRank = entry.rank ?? entry.advance ?? 0;
                     const entryName = entry.name || entry.specialization || 'Unknown';
                     const entryLabel = `${label} (${entryName})`;
-                    const isMaxed = entryRank >= ranks.length;
-                    const cost = isMaxed ? null : systemConfig.getSkillAdvanceCost(this.actor, skillKey, entryRank);
-                    const canPurchase = !isMaxed && cost !== null && available >= cost;
-                    const currentLabel = entryRank > 0 ? ranks[entryRank - 1]?.tooltip ?? 'Untrained' : 'Untrained';
-                    const nextLabel = !isMaxed && ranks[entryRank] ? ranks[entryRank].tooltip : null;
-                    const nextDisplay = nextLabel ? `${entryLabel} — ${nextLabel}` : entryLabel;
+                    const entryIsMaxed = entryRank >= ranks.length;
+                    const entryCost = entryIsMaxed ? null : systemConfig.getSkillAdvanceCost(this.actor, skillKey, entryRank);
+                    const entryCanPurchase = !entryIsMaxed && entryCost !== null && available >= entryCost;
+                    const entryCurrentLabel = entryRank > 0 ? ranks[entryRank - 1]?.tooltip ?? 'Untrained' : 'Untrained';
+                    const entryNextLabel = !entryIsMaxed && ranks[entryRank] ? ranks[entryRank].tooltip : null;
+                    const entryNextDisplay = entryNextLabel ? `${entryLabel} — ${entryNextLabel}` : entryLabel;
 
                     result.push({
                         id: `skill:${skillKey}:${entryName}`,
                         name: entryLabel,
-                        displayName: nextDisplay,
+                        displayName: entryNextDisplay,
                         type: 'skill',
                         skillKey,
                         specialization: entryName,
-                        cost,
+                        cost: entryCost,
                         currentRank: entryRank,
-                        currentLabel,
-                        nextLabel,
-                        owned: isMaxed,
-                        canPurchase,
-                        cantAfford: !isMaxed && cost !== null && available < cost,
+                        currentLabel: entryCurrentLabel,
+                        nextLabel: entryNextLabel,
+                        owned: entryIsMaxed,
+                        canPurchase: entryCanPurchase,
+                        cantAfford: !entryIsMaxed && entryCost !== null && available < entryCost,
                         blocked: false,
                         aptitudeMatch: match,
                     });
@@ -1251,16 +1251,16 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 return;
             }
 
-            const displayName = `${entry.name.replace(' — add specialization', '')} (${specName}) — ${entry.nextLabel}`;
-            const confirmed = await Dialog.confirm({
+            const addDisplayName = `${entry.name.replace(' — add specialization', '')} (${specName}) — ${entry.nextLabel}`;
+            const addConfirmed = await Dialog.confirm({
                 title: game.i18n.localize('WH40K.Advancement.Title'),
-                content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: displayName }),
+                content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: addDisplayName }),
             });
-            if (!confirmed) return;
+            if (!addConfirmed) return;
 
-            const result = await spendXP(this.actor, entry.cost, displayName);
-            if (!result.success) {
-                ui.notifications.error(result.error ?? '');
+            const addResult = await spendXP(this.actor, entry.cost, addDisplayName);
+            if (!addResult.success) {
+                ui.notifications.error(addResult.error ?? '');
                 return;
             }
 
@@ -1277,7 +1277,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             });
 
             this.#recentPurchases.add(entry.id);
-            ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: displayName, cost: String(entry.cost) }));
+            ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: addDisplayName, cost: String(entry.cost) }));
             void this.render();
             setTimeout(() => this.#recentPurchases.delete(entry.id), 2000);
             return;
@@ -1288,28 +1288,28 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const entryIndex = (actorSkill.entries ?? []).findIndex((e) => (e.name ?? '').toLowerCase() === entry.specialization?.toLowerCase());
             if (entryIndex < 0) return;
 
-            const displayName = entry.nextLabel ? `${entry.name} — ${entry.nextLabel}` : entry.name;
-            const confirmed = await Dialog.confirm({
+            const bumpDisplayName = entry.nextLabel ? `${entry.name} — ${entry.nextLabel}` : entry.name;
+            const bumpConfirmed = await Dialog.confirm({
                 title: game.i18n.localize('WH40K.Advancement.Title'),
-                content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: displayName }),
+                content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: bumpDisplayName }),
             });
-            if (!confirmed) return;
+            if (!bumpConfirmed) return;
 
-            const result = await spendXP(this.actor, entry.cost, displayName);
-            if (!result.success) {
-                ui.notifications.error(result.error ?? '');
+            const bumpResult = await spendXP(this.actor, entry.cost, bumpDisplayName);
+            if (!bumpResult.success) {
+                ui.notifications.error(bumpResult.error ?? '');
                 return;
             }
 
-            const currentAdvance = actorSkill.entries?.[entryIndex]?.advance ?? 0;
-            const currentCost = actorSkill.entries?.[entryIndex]?.cost ?? 0;
+            const bumpCurrentAdvance = actorSkill.entries?.[entryIndex]?.advance ?? 0;
+            const bumpCurrentCost = actorSkill.entries?.[entryIndex]?.cost ?? 0;
             await this.actor.update({
-                [`system.skills.${entry.skillKey}.entries.${entryIndex}.advance`]: currentAdvance + 1,
-                [`system.skills.${entry.skillKey}.entries.${entryIndex}.cost`]: currentCost + entry.cost,
+                [`system.skills.${entry.skillKey}.entries.${entryIndex}.advance`]: bumpCurrentAdvance + 1,
+                [`system.skills.${entry.skillKey}.entries.${entryIndex}.cost`]: bumpCurrentCost + entry.cost,
             });
 
             this.#recentPurchases.add(entry.id);
-            ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: displayName, cost: String(entry.cost) }));
+            ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: bumpDisplayName, cost: String(entry.cost) }));
             void this.render();
             setTimeout(() => this.#recentPurchases.delete(entry.id), 2000);
             return;
@@ -1669,16 +1669,14 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }
         }
 
-        if (talentData === null) {
-            talentData = {
-                name: talentName,
-                type: 'talent',
-                system: {
-                    cost: advance.cost,
-                    description: '',
-                },
-            };
-        }
+        talentData ??= {
+            name: talentName,
+            type: 'talent',
+            system: {
+                cost: advance.cost,
+                description: '',
+            },
+        };
 
         talentData.system.cost = advance.cost;
         await this.actor.createEmbeddedDocuments('Item', [talentData] as never[]);

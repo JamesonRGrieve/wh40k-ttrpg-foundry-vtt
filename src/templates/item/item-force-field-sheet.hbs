@@ -82,20 +82,10 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs tw-flex tw-shrink-0" data-group="primary">
-      <button type="button" class="wh40k-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="stats" data-group="primary">
-        <i class="fas fa-chart-bar"></i>
-        <span>Stats</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="description" data-group="primary">
-        <i class="fas fa-scroll"></i>
-        <span>Info</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="effects" data-group="primary">
-        <i class="fas fa-magic"></i>
-        <span>Effects</span>
-      </button>
-    </nav>
+    {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+        (object tab="stats"       label="Stats"   icon="fa-chart-bar" active=true)
+        (object tab="description" label="Info"    icon="fa-scroll")
+        (object tab="effects"     label="Effects" icon="fa-magic"))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT

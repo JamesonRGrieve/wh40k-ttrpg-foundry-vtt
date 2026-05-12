@@ -2080,7 +2080,10 @@
             "WoundsCurrentLabel": "Current Wounds",
             "ExperienceTotalLabel": "Total XP Earned",
             "ExperienceSpentLabel": "XP Spent",
-            "AddXP": "Add XP"
+            "AddXP": "Add XP",
+            "AdjustTotalXPTitle": "Adjust Total XP",
+            "XPAdjustedAdded": "{amount} XP added. Total: {total}",
+            "XPAdjustedRemoved": "{amount} XP removed. Total: {total}"
         },
         "Common": {
             "Name": "Name",
@@ -2132,6 +2135,10 @@
             "ModificationTypeIncompatible": "{name} is not compatible with {typeLabel} weapons.",
             "AmmoNotFound": "Ammunition item not found",
             "AmmoIncompatible": "{name} is not compatible with {typeLabel} weapons"
+        },
+        "AmmoPicker": {
+            "Title": "Select Ammunition",
+            "LoadTitle": "Load Ammunition — {weaponName}"
         }
     }
 }

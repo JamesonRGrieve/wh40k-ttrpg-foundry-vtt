@@ -1072,7 +1072,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     fire(shots = 1): WH40KItem | null | Promise<WH40KItem | undefined> {
         if (!this.usesAmmo) return this.parent;
         const newValue = Math.max(0, this.clip.value - shots);
-        return this.parent?.update({ 'system.clip.value': newValue }) as Promise<WH40KItem | undefined>;
+        return this.parent?.update({ 'system.clip.value': newValue });
     }
 
     /**

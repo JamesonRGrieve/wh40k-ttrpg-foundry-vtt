@@ -107,7 +107,7 @@ export class EventTracker {
             EventTracker._dataVersion = data.version ?? 1;
             EventTracker._characters = data.characters ?? null;
             const charCount = EventTracker._characters ? Object.keys(EventTracker._characters).length : 0;
-            console.log(
+            console.warn(
                 `EventTracker: loaded ${Object.keys(data.events).length} events${
                     charCount > 0 ? `, ${charCount} characters with disposition/relationship data` : ''
                 } (schema v${EventTracker._dataVersion})`,
@@ -136,12 +136,12 @@ export class EventTracker {
     /** Check if an event's prerequisites are all met. */
     static isAvailable(eventId: string): boolean {
         const event = EventTracker._graph?.[eventId];
-        if (event == null) return false;
+        if (event === null || event === undefined) return false;
         const resolved = EventTracker.getResolved();
 
-        const reqsMet = !(event.requires !== undefined && event.requires.length > 0) || event.requires.every((id: string) => id in resolved);
+        const reqsMet = event.requires === undefined || event.requires.length === 0 || event.requires.every((id: string) => id in resolved);
 
-        const reqsAnyMet = !(event.requires_any !== undefined && event.requires_any.length > 0) || event.requires_any.some((id: string) => id in resolved);
+        const reqsAnyMet = event.requires_any === undefined || event.requires_any.length === 0 || event.requires_any.some((id: string) => id in resolved);
 
         return reqsMet && reqsAnyMet;
     }
@@ -149,7 +149,7 @@ export class EventTracker {
     /** Get the unmet prerequisites for a locked event. */
     static getBlockingReasons(eventId: string): string[] {
         const event = EventTracker._graph?.[eventId];
-        if (event == null) return [];
+        if (event === null || event === undefined) return [];
         const resolved = EventTracker.getResolved();
         const reasons: string[] = [];
 
@@ -218,13 +218,17 @@ export class EventTracker {
             } = { dispositions: {}, relationships: [] };
 
             // Dispositions: pick per target, prefer triggered → default → first
-            const byTarget: Record<string, DispositionEntry[]> = {};
+            const byTarget = new Map<string, DispositionEntry[]>();
             for (const d of data.dispositions ?? []) {
                 const t = d.target !== '' ? d.target : 'party';
-                if (byTarget[t] === undefined) byTarget[t] = [];
-                byTarget[t].push(d);
+                const existing = byTarget.get(t);
+                if (existing !== undefined) {
+                    existing.push(d);
+                } else {
+                    byTarget.set(t, [d]);
+                }
             }
-            for (const [target, entries] of Object.entries(byTarget)) {
+            for (const [target, entries] of byTarget.entries()) {
                 const triggered = entries.find((e) => e.trigger !== undefined && e.trigger !== '' && e.trigger in resolved);
                 const fallback = entries.find((e) => e.default === true) ?? entries[0];
                 entry.dispositions[target] = triggered ?? fallback;
@@ -282,7 +286,7 @@ export class EventTracker {
         const resolved = EventTracker.getResolved();
 
         // Group events by source
-        const groups: Record<string, (EventDef & { id: string })[]> = {};
+        const groups = new Map<string, (EventDef & { id: string })[]>();
         for (const [id, event] of Object.entries(graph)) {
             const src =
                 event.source_name !== undefined && event.source_name !== ''
@@ -290,9 +294,13 @@ export class EventTracker {
                     : event.source_file !== undefined && event.source_file !== ''
                     ? event.source_file
                     : 'Unknown';
-            if (groups[src] === undefined) groups[src] = [];
             const { id: _id, ...rest } = event;
-            groups[src].push({ id, ...rest });
+            const existing = groups.get(src);
+            if (existing !== undefined) {
+                existing.push({ id, ...rest });
+            } else {
+                groups.set(src, [{ id, ...rest }]);
+            }
         }
 
         // Count stats
@@ -318,7 +326,7 @@ export class EventTracker {
 
         html += `<div class="evt-stats">${resolvedCount}/${total} resolved &bull; ${availableCount} available now</div>`;
 
-        for (const [groupName, events] of Object.entries(groups)) {
+        for (const [groupName, events] of groups.entries()) {
             html += `<div class="evt-group"><h3>${groupName}</h3>`;
             for (const evt of events) {
                 const isResolved = evt.id in resolved;
@@ -418,7 +426,7 @@ export class EventTracker {
     static _buildContent(activeTab: 'events' | 'npcs' = 'events'): string {
         const eventsClass = activeTab === 'events' ? 'active' : '';
         const npcsClass = activeTab === 'npcs' ? 'active' : '';
-        const hasCharacters = !!EventTracker._characters && Object.keys(EventTracker._characters).length > 0;
+        const hasCharacters = EventTracker._characters !== null && Object.keys(EventTracker._characters).length > 0;
 
         let html = `<style>
             .evt-tracker { font-family: var(--font-primary); font-size: 13px; max-height: 70vh; overflow-y: auto; }
@@ -463,11 +471,13 @@ export class EventTracker {
     /** Open the tracker dialog. GM only. */
     static open(): void {
         if (!game.user.isGM) {
+            // eslint-disable-next-line no-restricted-syntax -- GM-only dev tool; i18n migration tracked separately
             ui.notifications.warn('Event Tracker is GM-only.');
             return;
         }
 
         if (!EventTracker._graph) {
+            // eslint-disable-next-line no-restricted-syntax -- GM-only dev tool; i18n migration tracked separately
             ui.notifications.warn('Event graph not loaded. Ensure events.json is in the system folder.');
             return;
         }
@@ -476,6 +486,7 @@ export class EventTracker {
         // doesn't throw the GM back to the Events pane.
         let activeTab: 'events' | 'npcs' = 'events';
 
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Dialog V1 used intentionally; DialogV2 migration tracked separately
         const d = new Dialog({
             title: 'Solenne Campaign — Event Tracker',
             content: EventTracker._buildContent(activeTab),
@@ -489,14 +500,15 @@ export class EventTracker {
                     $html
                         .find('input[type="checkbox"]')
                         .off('change')
-                        .on('change', async (ev: JQuery.ChangeEvent) => {
+                        .on('change', (ev: JQuery.ChangeEvent) => {
                             const target = ev.currentTarget as HTMLInputElement;
                             const id = target.dataset.eventId;
-                            if (!id) return;
+                            if (id === undefined || id === '') return;
                             const isChecked = target.checked;
-                            await EventTracker.setResolved(id, isChecked);
-                            $html.closest('.dialog').find('.dialog-content').html(EventTracker._buildContent(activeTab));
-                            rebind();
+                            void EventTracker.setResolved(id, isChecked).then(() => {
+                                $html.closest('.dialog').find('.dialog-content').html(EventTracker._buildContent(activeTab));
+                                rebind();
+                            });
                         });
                     // Tab buttons
                     $html
@@ -504,8 +516,10 @@ export class EventTracker {
                         .off('click')
                         .on('click', (ev: JQuery.ClickEvent) => {
                             const target = ev.currentTarget as HTMLElement;
-                            const tab = target.dataset.tab as 'events' | 'npcs';
-                            if (!tab || tab === activeTab) return;
+                            const rawTab = target.dataset.tab;
+                            if (rawTab === undefined || rawTab === '') return;
+                            const tab = rawTab as 'events' | 'npcs';
+                            if (tab === activeTab) return;
                             activeTab = tab;
                             $html.closest('.dialog').find('.dialog-content').html(EventTracker._buildContent(activeTab));
                             rebind();

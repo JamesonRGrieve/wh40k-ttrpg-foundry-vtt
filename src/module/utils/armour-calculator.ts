@@ -119,25 +119,26 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
         (acc: Record<string, number>, location: string) => Object.assign(acc, { [location]: 0 }),
         {},
     );
-    let hasGoodArmour: boolean = false;
+    let hasGoodArmour = false;
 
-    actor.items
+    const equippedArmour = actor.items
         .filter((item: WH40KItem) => item.type === 'armour')
-        .filter((item: WH40KItem) => (item.system as { equipped?: boolean }).equipped === true)
-        .forEach((armourItem: WH40KItem) => {
-            // Check for Good craftsmanship armour
-            const system = armourItem.system as { craftsmanship?: string };
-            if (system.craftsmanship === 'good') {
-                hasGoodArmour = true;
-            }
+        .filter((item: WH40KItem) => (item.system as { equipped?: boolean }).equipped === true);
 
-            BODY_LOCATIONS.forEach((location: string) => {
-                const armourVal = getArmourAPForLocation(armourItem.system as ArmourSystemLike, location);
-                if (armourVal > maxArmour[location]) {
-                    maxArmour[location] = armourVal;
-                }
-            });
-        });
+    for (const armourItem of equippedArmour) {
+        // Check for Good craftsmanship armour
+        const system = armourItem.system as { craftsmanship?: string };
+        if (system.craftsmanship === 'good') {
+            hasGoodArmour = true;
+        }
+
+        for (const location of BODY_LOCATIONS) {
+            const armourVal = getArmourAPForLocation(armourItem.system as ArmourSystemLike, location);
+            if (armourVal > maxArmour[location]) {
+                maxArmour[location] = armourVal;
+            }
+        }
+    }
 
     // Apply Good armour bonus (+1 AP on first attack per round)
     const isFirstAttack = actor.getFlag('wh40k-rpg', 'hitThisRound') !== true;

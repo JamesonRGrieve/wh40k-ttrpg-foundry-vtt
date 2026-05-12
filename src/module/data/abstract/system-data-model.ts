@@ -130,7 +130,8 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /** @inheritDoc */
     static cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions, _state?: DataModelV14.UpdateState): Record<string, unknown> {
         this._cleanData(source, options);
-        return (super.cleanData as DataModelV14.CleanDataSignature)(source, options, _state);
+        const superClean = super.cleanData as DataModelV14.CleanDataSignature;
+        return superClean.call(this, source, options, _state);
     }
 
     /* -------------------------------------------- */
@@ -274,7 +275,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
             }
         }
 
-        return Base as typeof SystemDataModel;
+        return Base;
     }
 
     /* -------------------------------------------- */

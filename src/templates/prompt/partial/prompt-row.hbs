@@ -1,0 +1,24 @@
+{{!-- Label / value row used inside `prompt-panel`. Replaces the recurring
+     `tw-grid tw-grid-cols-[1fr_auto] tw-items-center tw-py-2 …` row markup.
+
+     Hash params:
+       - label           label text (left column)
+       - labelKey        i18n key alternative to `label`
+       - value           display value (right column); plain text rendering
+       - icon            FA icon shown before the label
+       - borderBottom    boolean — render the bottom border         (default true)
+       - rowClass        extra utilities on the grid row
+       - valueClass      extra utilities on the value cell
+       - last            boolean alias — suppress the bottom border
+
+     When `value` is omitted the right cell falls through to the partial-block
+     slot so callers can drop an <input>/<select>/anything in there.
+--}}
+<div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]{{#unless (or (eq borderBottom false) last)}} tw-border-b tw-border-[rgba(255,255,255,0.08)]{{/unless}}{{#if rowClass}} {{rowClass}}{{/if}}">
+    <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">{{#if icon}}<i class="fas {{icon}} tw-mr-1"></i>{{/if}}{{#if label}}{{label}}{{else if labelKey}}{{localize labelKey}}{{/if}}</span>
+    {{#if value}}
+    <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-tabular-nums{{#if valueClass}} {{valueClass}}{{/if}}">{{value}}</span>
+    {{else}}
+    {{> @partial-block}}
+    {{/if}}
+</div>

@@ -38,6 +38,7 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
     return class StatBreakdownApplication extends Base {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixin requirement
         constructor(...args: any[]) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TypeScript mixin requirement: forwarding variadic args to unknown base
             super(...args);
         }
 
@@ -263,7 +264,7 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
             const sourceLinks = popover.querySelectorAll<HTMLElement>('[data-action="viewBreakdownSource"]');
             for (const link of sourceLinks) {
                 link.addEventListener('click', (event: MouseEvent) => {
-                    void StatBreakdownApplication.#viewBreakdownSource.call(this, event as PointerEvent, link);
+                    void StatBreakdownApplication.#viewBreakdownSource(event as PointerEvent, link);
                 });
             }
         }

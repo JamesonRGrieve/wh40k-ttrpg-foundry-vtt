@@ -68,12 +68,14 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs',
             'systems/wh40k-rpg/templates/dialogs/partial/dialog-footer.hbs',
             'systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs',
+            'systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs',
             'systems/wh40k-rpg/templates/chat/partial/item-detail-row.hbs',
             'systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs',
             'systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs',
             'systems/wh40k-rpg/templates/shared/field-row.hbs',
             'systems/wh40k-rpg/templates/shared/editable-portrait.hbs',
             'systems/wh40k-rpg/templates/shared/sheet-action-button.hbs',
+            'systems/wh40k-rpg/templates/shared/accent-heading.hbs',
 
             // Acolyte sheet templates
             'systems/wh40k-rpg/templates/actor/player/header-dh.hbs',
@@ -199,6 +201,8 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/prompt/damage-roll-prompt.hbs',
             'systems/wh40k-rpg/templates/prompt/psychic-power-roll-prompt.hbs',
             'systems/wh40k-rpg/templates/prompt/force-field-prompt.hbs',
+            'systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs',
+            'systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs',
             'systems/wh40k-rpg/templates/prompt/assign-damage-prompt.hbs',
 
             // Item sheet templates

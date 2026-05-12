@@ -49,7 +49,7 @@ interface QualityDefinition {
 export class TooltipsWH40K {
     #observer: MutationObserver | undefined;
     #tooltip: HTMLElement | null = null;
-    #skillDescriptions = new Map<string, Record<string, unknown>>();
+    readonly #skillDescriptions = new Map<string, Record<string, unknown>>();
 
     get tooltip(): HTMLElement | null {
         return this.#tooltip;
@@ -83,7 +83,7 @@ export class TooltipsWH40K {
                 // eslint-disable-next-line no-await-in-loop
                 const item = (await pack.getDocument(entry._id)) as WH40KItem | null;
                 if (item !== null) {
-                    const entryName = (entry.name as string | undefined) ?? '';
+                    const entryName = entry.name ?? '';
                     const key = entryName.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
                     const system = item.system as {
                         descriptor?: string;
@@ -194,7 +194,7 @@ export class TooltipsWH40K {
             case 'characteristic':
                 return this._buildCharacteristicTooltip(data);
             case 'skill':
-                return await this._buildSkillTooltip(data);
+                return this._buildSkillTooltip(data);
             case 'armor':
             case 'armour':
                 return this._buildArmorTooltip(data);
@@ -300,7 +300,7 @@ export class TooltipsWH40K {
         let actor: WH40KBaseActor | null = null;
 
         if (actorUuid !== undefined && actorUuid !== '') {
-            actor = (await fromUuid(actorUuid)) as WH40KBaseActor | null;
+            actor = await fromUuid(actorUuid);
             if (actor !== null) {
                 const skill = actor.system.skills?.[name] as WH40KSkill | undefined;
                 const charKey = skill?.characteristic ?? characteristic;

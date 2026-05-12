@@ -22,6 +22,7 @@ interface AmmoPickerConfig {
     clipMax: number;
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 context must extend Record<string, unknown>
 interface AmmoPickerContext extends Record<string, unknown> {
     weaponName: string;
     clipMax: number;
@@ -46,7 +47,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
         classes: ['wh40k-rpg', 'ammo-picker-dialog'],
         tag: 'div',
         window: {
-            title: 'Select Ammunition',
+            title: game.i18n.localize('WH40K.AmmoPicker.Title'),
             icon: 'fa-solid fa-crosshairs',
             minimizable: false,
             resizable: false,
@@ -54,10 +55,13 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
         },
         position: {
             width: 420,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry accepts 'auto' at runtime but types declare number
             height: 'auto' as unknown as number,
         },
         actions: {
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             selectAmmo: AmmoPickerDialog.#onSelect,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: AmmoPickerDialog.#onCancel,
         },
     };
@@ -87,20 +91,21 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
         config: { ammoItems: WH40KItem[]; currentAmmoUuid?: string; weaponName: string; clipMax: number },
         options: ApplicationV2Config.DefaultOptions = {},
     ) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 constructor accepts opaque options
         super(options as Record<string, unknown>);
         this.#config = {
-            ammoItems: config.ammoItems || [],
-            currentAmmoUuid: config.currentAmmoUuid || '',
-            weaponName: config.weaponName || 'Weapon',
-            clipMax: config.clipMax || 0,
+            ammoItems: config.ammoItems,
+            currentAmmoUuid: config.currentAmmoUuid ?? '',
+            weaponName: config.weaponName,
+            clipMax: config.clipMax,
         };
     }
 
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
-        return `Load Ammunition — ${this.#config.weaponName}`;
+    get title(): string {
+        return game.i18n.format('WH40K.AmmoPicker.LoadTitle', { weaponName: this.#config.weaponName });
     }
 
     /* -------------------------------------------- */
@@ -112,19 +117,19 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
         const context = await super._prepareContext(options);
 
         const ammoItems = this.#config.ammoItems.map((item) => {
-            const mods = item.system.modifiers as { damage?: number; penetration?: number; range?: number };
+            const mods = item.system.modifiers as { damage?: number; penetration?: number; range?: number } | undefined;
             const modParts: string[] = [];
-            if (mods?.damage) modParts.push(`${mods.damage > 0 ? '+' : ''}${mods.damage} Dmg`);
-            if (mods?.penetration) modParts.push(`${mods.penetration > 0 ? '+' : ''}${mods.penetration} Pen`);
-            if (mods?.range) modParts.push(`${mods.range > 0 ? '+' : ''}${mods.range}% Rng`);
+            if (mods?.damage !== undefined && mods.damage !== 0) modParts.push(`${mods.damage > 0 ? '+' : ''}${mods.damage} Dmg`);
+            if (mods?.penetration !== undefined && mods.penetration !== 0) modParts.push(`${mods.penetration > 0 ? '+' : ''}${mods.penetration} Pen`);
+            if (mods?.range !== undefined && mods.range !== 0) modParts.push(`${mods.range > 0 ? '+' : ''}${mods.range}% Rng`);
 
             return {
                 uuid: item.uuid,
-                name: item.name ?? 'Unknown',
+                name: item.name,
                 img: item.img ?? '',
                 quantity: item.system.quantity as number,
                 isCurrentlyLoaded: item.uuid === this.#config.currentAmmoUuid,
-                modifierSummary: modParts.length ? modParts.join(', ') : '',
+                modifierSummary: modParts.length !== 0 ? modParts.join(', ') : '',
             };
         });
 
@@ -149,7 +154,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
         const selectedItem = this.#config.ammoItems.find((item) => item.uuid === selectedUuid);
 
         this.#resolved = true;
-        this.#resolve?.(selectedItem || null);
+        this.#resolve?.(selectedItem ?? null);
         await this.close();
     }
 
@@ -166,6 +171,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2.close signature uses Record<string, unknown>
     async close(options?: Record<string, unknown>): Promise<unknown> {
         if (!this.#resolved && this.#resolve) {
             this.#resolve(null);

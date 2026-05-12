@@ -3,31 +3,23 @@
   "tiers": {
     "1": [
       {
-        "file": "src/module/actions/reload-action-manager.ts",
-        "lines": 435,
+        "file": "src/module/documents/active-effect.ts",
+        "lines": 316,
         "items": {
-          "eqeqeq": 5
+          "eqeqeq": 6
         },
-        "total": 5,
-        "strategy": "eqeqeq \u2014 Replace `==` with `===` and `!=` with `!==`. The only"
-      },
-      {
-        "file": "src/module/documents/chat-message.ts",
-        "lines": 365,
-        "items": {
-          "eqeqeq": 15
-        },
-        "total": 15,
+        "total": 6,
         "strategy": "eqeqeq \u2014 Replace `==` with `===` and `!=` with `!==`. The only"
       },
       {
         "file": "src/module/rolls/action-data.ts",
-        "lines": 457,
+        "lines": 458,
         "items": {
-          "eqeqeq": 15
+          "@typescript-eslint/no-unnecessary-condition": 1,
+          "eqeqeq": 5
         },
-        "total": 15,
-        "strategy": "eqeqeq \u2014 Replace `==` with `===` and `!=` with `!==`. The only"
+        "total": 6,
+        "strategy": "eqeqeq \u2014 Replace `==` with `===` and `!=` with `!==`. The only; no-unnecessary-condition \u2014"
       },
       {
         "file": "src/module/rolls/roll-data.ts",
@@ -42,16 +34,22 @@
     "2": [
       {
         "file": "src/module/actions/combat-action-manager.ts",
-        "lines": 77,
+        "lines": 85,
         "items": {
-          "@typescript-eslint/no-unused-vars": 1,
-          "no-restricted-syntax": 5,
-          "eqeqeq": 3,
-          "no-await-in-loop": 3,
+          "@typescript-eslint/no-unnecessary-condition": 1,
+          "@typescript-eslint/promise-function-async": 1
+        },
+        "total": 2,
+        "strategy": "no-unnecessary-condition \u2014; promise-function-async \u2014"
+      },
+      {
+        "file": "src/module/actions/reload-action-manager.ts",
+        "lines": 435,
+        "items": {
           "@typescript-eslint/no-unnecessary-condition": 1
         },
-        "total": 13,
-        "strategy": "no-restricted-syntax; eqeqeq \u2014 Replace `==` with `===` and `!=` with `!==`. The only; no-await-in-loop \u2014 Awaiting in each iteration"
+        "total": 1,
+        "strategy": "no-unnecessary-condition \u2014"
       },
       {
         "file": "src/module/applications/api/primary-sheet-mixin.ts",
@@ -73,41 +71,13 @@
         "strategy": "no-restricted-syntax; no-explicit-any \u2014 Replace `any`; no-unsafe-member-access \u2014"
       },
       {
-        "file": "src/module/applications/api/stat-breakdown-mixin.ts",
-        "lines": 309,
-        "items": {
-          "@typescript-eslint/no-unsafe-argument": 1
-        },
-        "total": 1,
-        "strategy": "no-unsafe-argument \u2014 Passing"
-      },
-      {
         "file": "src/module/applications/api/visual-feedback-mixin.ts",
-        "lines": 304,
+        "lines": 307,
         "items": {
-          "@typescript-eslint/no-unused-vars": 1,
-          "@typescript-eslint/explicit-function-return-type": 2,
-          "@typescript-eslint/no-explicit-any": 1,
-          "@typescript-eslint/no-unsafe-argument": 1,
-          "no-restricted-syntax": 3,
-          "@typescript-eslint/no-unnecessary-type-assertion": 2
+          "@typescript-eslint/explicit-function-return-type": 2
         },
-        "total": 10,
-        "strategy": "no-restricted-syntax; explicit-function-return-type \u2014; no-unnecessary-type-assertion \u2014"
-      },
-      {
-        "file": "src/module/applications/dialogs/ammo-picker-dialog.ts",
-        "lines": 194,
-        "items": {
-          "no-restricted-syntax": 8,
-          "@typescript-eslint/unbound-method": 2,
-          "@typescript-eslint/no-unnecessary-condition": 5,
-          "@typescript-eslint/strict-boolean-expressions": 5,
-          "@typescript-eslint/explicit-function-return-type": 1,
-          "@typescript-eslint/prefer-nullish-coalescing": 1
-        },
-        "total": 22,
-        "strategy": "no-restricted-syntax; no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
+        "total": 2,
+        "strategy": "explicit-function-return-type \u2014"
       },
       {
         "file": "src/module/applications/hud/combat-quick-panel.ts",
@@ -130,85 +100,46 @@
         "strategy": "no-unsafe-member-access \u2014; no-restricted-syntax; strict-boolean-expressions \u2014"
       },
       {
-        "file": "src/module/applications/item/armour-sheet.ts",
-        "lines": 253,
+        "file": "src/module/applications/item/ammo-sheet.ts",
+        "lines": 122,
         "items": {
-          "import/order": 2,
-          "@typescript-eslint/no-unused-vars": 1,
-          "@typescript-eslint/no-unnecessary-condition": 13,
-          "@typescript-eslint/unbound-method": 6,
-          "no-restricted-syntax": 29,
-          "@typescript-eslint/strict-boolean-expressions": 14,
-          "@typescript-eslint/no-unnecessary-type-assertion": 5,
-          "@typescript-eslint/no-unsafe-assignment": 1,
-          "@typescript-eslint/no-explicit-any": 1,
-          "@typescript-eslint/prefer-optional-chain": 1,
-          "@typescript-eslint/no-unsafe-member-access": 2,
-          "@typescript-eslint/no-unsafe-call": 1
+          "@typescript-eslint/no-unnecessary-condition": 7,
+          "@typescript-eslint/unbound-method": 3,
+          "no-restricted-syntax": 11,
+          "@typescript-eslint/strict-boolean-expressions": 8,
+          "@typescript-eslint/prefer-optional-chain": 1
         },
-        "total": 76,
+        "total": 30,
         "strategy": "no-restricted-syntax; strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
       },
       {
-        "file": "src/module/applications/prompts/add-xp-dialog.ts",
-        "lines": 158,
+        "file": "src/module/applications/item/armour-sheet.ts",
+        "lines": 253,
         "items": {
-          "import/order": 1,
-          "no-restricted-syntax": 8,
-          "@typescript-eslint/unbound-method": 3,
-          "@typescript-eslint/no-unsafe-function-type": 2,
-          "@typescript-eslint/no-unsafe-assignment": 3,
-          "@typescript-eslint/no-explicit-any": 2,
+          "@typescript-eslint/no-unused-vars": 1,
+          "@typescript-eslint/no-unnecessary-condition": 13,
+          "@typescript-eslint/unbound-method": 6,
+          "no-restricted-syntax": 21,
+          "@typescript-eslint/strict-boolean-expressions": 13,
+          "@typescript-eslint/no-unsafe-assignment": 1,
+          "@typescript-eslint/no-explicit-any": 1,
           "@typescript-eslint/no-unsafe-member-access": 2,
-          "@typescript-eslint/no-unsafe-argument": 2,
-          "@typescript-eslint/no-unnecessary-type-assertion": 2,
-          "@typescript-eslint/no-deprecated": 1
+          "@typescript-eslint/no-unsafe-call": 1
         },
-        "total": 26,
-        "strategy": "no-restricted-syntax; unbound-method \u2014 A class method is; no-unsafe-assignment \u2014 The"
-      },
-      {
-        "file": "src/module/applications/prompts/specialist-skill-dialog.ts",
-        "lines": 257,
-        "items": {
-          "import/order": 1,
-          "no-restricted-syntax": 17,
-          "@typescript-eslint/unbound-method": 2,
-          "@typescript-eslint/no-unsafe-function-type": 2,
-          "no-await-in-loop": 2,
-          "@typescript-eslint/strict-boolean-expressions": 7,
-          "@typescript-eslint/no-unnecessary-condition": 5,
-          "@typescript-eslint/no-unnecessary-type-assertion": 6,
-          "@typescript-eslint/explicit-function-return-type": 1,
-          "@typescript-eslint/no-floating-promises": 1,
-          "@typescript-eslint/no-deprecated": 1
-        },
-        "total": 45,
-        "strategy": "no-restricted-syntax; strict-boolean-expressions \u2014; no-unnecessary-type-assertion \u2014"
-      },
-      {
-        "file": "src/module/config/game-systems/aptitude-based-system-config.ts",
-        "lines": 222,
-        "items": {
-          "@typescript-eslint/no-unnecessary-condition": 6,
-          "no-restricted-syntax": 3
-        },
-        "total": 9,
-        "strategy": "no-unnecessary-condition \u2014; no-restricted-syntax"
+        "total": 59,
+        "strategy": "no-restricted-syntax; no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
       },
       {
         "file": "src/module/data/actor/mixins/horde-template.ts",
-        "lines": 234,
+        "lines": 239,
         "items": {
-          "@typescript-eslint/no-explicit-any": 4,
-          "no-restricted-syntax": 3,
           "@typescript-eslint/explicit-function-return-type": 1,
-          "@typescript-eslint/no-unsafe-member-access": 1,
-          "@typescript-eslint/no-unnecessary-condition": 3,
-          "@typescript-eslint/strict-boolean-expressions": 1
+          "@typescript-eslint/prefer-nullish-coalescing": 1,
+          "@typescript-eslint/no-unnecessary-condition": 1,
+          "no-restricted-syntax": 2
         },
-        "total": 13,
-        "strategy": "no-explicit-any \u2014 Replace `any`; no-restricted-syntax; no-unnecessary-condition \u2014"
+        "total": 5,
+        "strategy": "no-restricted-syntax; explicit-function-return-type \u2014; prefer-nullish-coalescing \u2014"
       },
       {
         "file": "src/module/data/item/armour.ts",
@@ -228,16 +159,14 @@
         "strategy": "no-restricted-syntax; no-unnecessary-condition \u2014; explicit-function-return-type \u2014"
       },
       {
-        "file": "src/module/documents/active-effect.ts",
-        "lines": 313,
+        "file": "src/module/documents/chat-message.ts",
+        "lines": 365,
         "items": {
-          "eqeqeq": 7,
-          "@typescript-eslint/strict-boolean-expressions": 3,
-          "no-restricted-syntax": 7,
-          "@typescript-eslint/no-unnecessary-condition": 7
+          "eqeqeq": 1,
+          "@typescript-eslint/no-unnecessary-condition": 1
         },
-        "total": 24,
-        "strategy": "eqeqeq \u2014 Replace `==` with `===` and `!=` with `!==`. The only; no-restricted-syntax; no-unnecessary-condition \u2014"
+        "total": 2,
+        "strategy": "eqeqeq \u2014 Replace `==` with `===` and `!=` with `!==`. The only; no-unnecessary-condition \u2014"
       },
       {
         "file": "src/module/enrichers.ts",
@@ -253,114 +182,23 @@
         "strategy": "eqeqeq \u2014 Replace `==` with `===` and `!=` with `!==`. The only; no-unnecessary-condition \u2014; @typescript-eslint/no-deprecated"
       },
       {
-        "file": "src/module/helpers/skill-uuid-helper.ts",
-        "lines": 221,
-        "items": {
-          "@typescript-eslint/no-unsafe-return": 1,
-          "no-console": 1,
-          "array-callback-return": 1,
-          "@typescript-eslint/await-thenable": 1
-        },
-        "total": 4,
-        "strategy": "no-unsafe-return \u2014 Returning a; no-console; array-callback-return"
-      },
-      {
         "file": "src/module/managers/event-tracker.ts",
-        "lines": 523,
+        "lines": 537,
         "items": {
-          "no-console": 1,
-          "eqeqeq": 2,
-          "@typescript-eslint/prefer-nullish-coalescing": 2,
-          "@typescript-eslint/no-unnecessary-condition": 3,
-          "no-restricted-syntax": 2,
-          "@typescript-eslint/no-deprecated": 1,
-          "@typescript-eslint/explicit-function-return-type": 1,
-          "@typescript-eslint/no-misused-promises": 1,
-          "@typescript-eslint/strict-boolean-expressions": 1
+          "@typescript-eslint/no-unnecessary-condition": 2,
+          "@typescript-eslint/explicit-function-return-type": 1
         },
-        "total": 14,
-        "strategy": "no-unnecessary-condition \u2014; eqeqeq \u2014 Replace `==` with `===` and `!=` with `!==`. The only; prefer-nullish-coalescing \u2014"
-      },
-      {
-        "file": "src/module/utils/armour-calculator.ts",
-        "lines": 158,
-        "items": {
-          "@typescript-eslint/no-unnecessary-condition": 1
-        },
-        "total": 1,
-        "strategy": "no-unnecessary-condition \u2014"
-      },
-      {
-        "file": "src/module/utils/encumbrance-calculator.ts",
-        "lines": 98,
-        "items": {
-          "@typescript-eslint/no-unnecessary-condition": 1
-        },
-        "total": 1,
-        "strategy": "no-unnecessary-condition \u2014"
-      },
-      {
-        "file": "src/module/utils/origin-chart-layout.ts",
-        "lines": 391,
-        "items": {
-          "@typescript-eslint/no-unnecessary-condition": 3,
-          "@typescript-eslint/strict-boolean-expressions": 12
-        },
-        "total": 15,
-        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
-      },
-      {
-        "file": "src/module/utils/prerequisite-validator.ts",
-        "lines": 333,
-        "items": {
-          "@typescript-eslint/no-unnecessary-condition": 11,
-          "@typescript-eslint/strict-boolean-expressions": 5,
-          "@typescript-eslint/restrict-template-expressions": 1
-        },
-        "total": 17,
-        "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014; restrict-template-expressions \u2014"
-      },
-      {
-        "file": "src/module/utils/range-calculator.ts",
-        "lines": 343,
-        "items": {
-          "@typescript-eslint/strict-boolean-expressions": 3,
-          "@typescript-eslint/no-unnecessary-condition": 2
-        },
-        "total": 5,
-        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
-      },
-      {
-        "file": "src/module/utils/roll-table-utils.ts",
-        "lines": 248,
-        "items": {
-          "@typescript-eslint/prefer-nullish-coalescing": 1,
-          "no-await-in-loop": 2,
-          "no-restricted-syntax": 2,
-          "@typescript-eslint/no-unnecessary-type-assertion": 2,
-          "@typescript-eslint/no-unnecessary-condition": 1
-        },
-        "total": 8,
-        "strategy": "no-await-in-loop \u2014 Awaiting in each iteration; no-restricted-syntax; no-unnecessary-type-assertion \u2014"
+        "total": 3,
+        "strategy": "no-unnecessary-condition \u2014; explicit-function-return-type \u2014"
       },
       {
         "file": "src/module/utils/stat-block-validator.ts",
-        "lines": 395,
+        "lines": 390,
         "items": {
-          "@typescript-eslint/strict-boolean-expressions": 10,
-          "@typescript-eslint/no-unnecessary-condition": 2
+          "@typescript-eslint/no-unnecessary-condition": 1,
+          "@typescript-eslint/strict-boolean-expressions": 1
         },
-        "total": 12,
-        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
-      },
-      {
-        "file": "src/module/utils/talent-grants.ts",
-        "lines": 49,
-        "items": {
-          "@typescript-eslint/no-unnecessary-condition": 3,
-          "@typescript-eslint/strict-boolean-expressions": 2
-        },
-        "total": 5,
+        "total": 2,
         "strategy": "no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
       }
     ],
@@ -398,47 +236,39 @@
       },
       {
         "file": "src/module/applications/actor/base-actor-sheet.ts",
-        "lines": 2528,
+        "lines": 2526,
         "items": {
-          "no-restricted-syntax": 120,
-          "@typescript-eslint/unbound-method": 17,
+          "no-restricted-syntax": 124,
           "@typescript-eslint/no-unnecessary-condition": 9,
-          "@typescript-eslint/no-unsafe-assignment": 3,
-          "@typescript-eslint/prefer-nullish-coalescing": 2,
           "@typescript-eslint/no-deprecated": 2
         },
-        "total": 153,
-        "strategy": "no-restricted-syntax; unbound-method \u2014 A class method is; no-unnecessary-condition \u2014"
+        "total": 135,
+        "strategy": "no-restricted-syntax; no-unnecessary-condition \u2014; @typescript-eslint/no-deprecated"
       },
       {
         "file": "src/module/applications/actor/character-sheet.ts",
-        "lines": 3785,
+        "lines": 3804,
         "items": {
-          "no-restricted-syntax": 201,
-          "@typescript-eslint/no-unnecessary-condition": 103,
-          "@typescript-eslint/strict-boolean-expressions": 113,
+          "no-restricted-syntax": 198,
           "no-await-in-loop": 4,
-          "complexity": 2,
-          "@typescript-eslint/restrict-template-expressions": 7,
-          "@typescript-eslint/no-base-to-string": 5,
+          "@typescript-eslint/no-unnecessary-condition": 34,
+          "complexity": 1,
           "max-depth": 5,
-          "@typescript-eslint/prefer-nullish-coalescing": 1,
-          "prettier/prettier": 3,
-          "@typescript-eslint/explicit-function-return-type": 2,
+          "@typescript-eslint/strict-boolean-expressions": 14,
           "@typescript-eslint/require-await": 1
         },
-        "total": 447,
-        "strategy": "no-restricted-syntax; strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
+        "total": 257,
+        "strategy": "no-restricted-syntax; no-unnecessary-condition \u2014; strict-boolean-expressions \u2014"
       },
       {
         "file": "src/module/applications/actor/npc-sheet.ts",
-        "lines": 1970,
+        "lines": 1969,
         "items": {
-          "no-restricted-syntax": 37,
+          "no-restricted-syntax": 38,
           "@typescript-eslint/no-unnecessary-condition": 16,
           "@typescript-eslint/no-deprecated": 1
         },
-        "total": 54,
+        "total": 55,
         "strategy": "no-restricted-syntax; no-unnecessary-condition \u2014; @typescript-eslint/no-deprecated"
       },
       {
@@ -470,14 +300,12 @@
           "@typescript-eslint/explicit-function-return-type": 1,
           "@typescript-eslint/no-explicit-any": 1,
           "@typescript-eslint/no-unsafe-argument": 1,
-          "@typescript-eslint/prefer-readonly": 1,
           "@typescript-eslint/no-unnecessary-condition": 2,
           "@typescript-eslint/strict-boolean-expressions": 7,
           "@typescript-eslint/prefer-nullish-coalescing": 1,
-          "@typescript-eslint/no-non-null-assertion": 1,
-          "@typescript-eslint/no-unnecessary-type-assertion": 2
+          "@typescript-eslint/no-non-null-assertion": 1
         },
-        "total": 44,
+        "total": 41,
         "strategy": "no-restricted-syntax; strict-boolean-expressions \u2014; unbound-method \u2014 A class method is"
       },
       {
@@ -596,41 +424,31 @@
       },
       {
         "file": "src/module/applications/character-creation/origin-path-builder.ts",
-        "lines": 3939,
+        "lines": 3936,
         "items": {
-          "no-restricted-syntax": 236,
-          "@typescript-eslint/no-unsafe-assignment": 3,
-          "@typescript-eslint/explicit-function-return-type": 3,
-          "no-await-in-loop": 20,
-          "@typescript-eslint/no-shadow": 1,
-          "prettier/prettier": 2,
-          "@typescript-eslint/prefer-optional-chain": 1,
-          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "no-restricted-syntax": 225,
+          "no-await-in-loop": 16,
           "complexity": 3,
-          "@typescript-eslint/no-unnecessary-condition": 11,
-          "@typescript-eslint/await-thenable": 5,
           "max-depth": 13,
-          "@typescript-eslint/no-unsafe-member-access": 2,
-          "@typescript-eslint/no-unsafe-argument": 1,
-          "@typescript-eslint/prefer-nullish-coalescing": 2,
-          "@typescript-eslint/strict-boolean-expressions": 6,
-          "@typescript-eslint/require-await": 1
+          "@typescript-eslint/no-unnecessary-condition": 4,
+          "@typescript-eslint/prefer-nullish-coalescing": 1,
+          "@typescript-eslint/strict-boolean-expressions": 1
         },
-        "total": 311,
+        "total": 263,
         "strategy": "no-restricted-syntax; no-await-in-loop \u2014 Awaiting in each iteration; max-depth"
       },
       {
         "file": "src/module/applications/character-creation/origin-path-choice-dialog.ts",
         "lines": 680,
         "items": {
-          "no-restricted-syntax": 19,
+          "no-restricted-syntax": 18,
           "@typescript-eslint/unbound-method": 6,
           "complexity": 2,
           "@typescript-eslint/no-unnecessary-condition": 4,
           "no-await-in-loop": 1,
           "@typescript-eslint/no-deprecated": 1
         },
-        "total": 33,
+        "total": 32,
         "strategy": "no-restricted-syntax; unbound-method \u2014 A class method is; no-unnecessary-condition \u2014"
       },
       {
@@ -680,15 +498,12 @@
         "file": "src/module/applications/components/wh40k-tooltip.ts",
         "lines": 813,
         "items": {
-          "@typescript-eslint/prefer-readonly": 1,
           "no-restricted-syntax": 32,
           "eqeqeq": 5,
-          "@typescript-eslint/no-unnecessary-type-assertion": 2,
           "@typescript-eslint/no-unnecessary-condition": 34,
-          "@typescript-eslint/return-await": 1,
           "complexity": 1
         },
-        "total": 76,
+        "total": 72,
         "strategy": "no-unnecessary-condition \u2014; no-restricted-syntax; eqeqeq \u2014 Replace `==` with `===` and `!=` with `!==`. The only"
       },
       {
@@ -702,20 +517,17 @@
       },
       {
         "file": "src/module/applications/dialogs/advancement-dialog.ts",
-        "lines": 1723,
+        "lines": 1721,
         "items": {
-          "prettier/prettier": 3,
-          "no-restricted-syntax": 1,
+          "no-restricted-syntax": 2,
           "@typescript-eslint/no-unnecessary-condition": 53,
           "@typescript-eslint/strict-boolean-expressions": 62,
           "complexity": 3,
-          "@typescript-eslint/no-shadow": 14,
           "no-await-in-loop": 9,
-          "@typescript-eslint/no-deprecated": 13,
-          "@typescript-eslint/prefer-nullish-coalescing": 1
+          "@typescript-eslint/no-deprecated": 13
         },
-        "total": 159,
-        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; no-shadow \u2014 A binding shadows an outer"
+        "total": 142,
+        "strategy": "strict-boolean-expressions \u2014; no-unnecessary-condition \u2014; @typescript-eslint/no-deprecated"
       },
       {
         "file": "src/module/applications/dialogs/characteristic-setup-dialog.ts",
@@ -753,11 +565,10 @@
         "items": {
           "no-restricted-syntax": 7,
           "@typescript-eslint/strict-boolean-expressions": 1,
-          "@typescript-eslint/explicit-function-return-type": 1,
-          "@typescript-eslint/no-unnecessary-type-assertion": 2
+          "@typescript-eslint/explicit-function-return-type": 1
         },
-        "total": 11,
-        "strategy": "no-restricted-syntax; no-unnecessary-type-assertion \u2014; strict-boolean-expressions \u2014"
+        "total": 9,
+        "strategy": "no-restricted-syntax; strict-boolean-expressions \u2014; explicit-function-return-type \u2014"
       },
       {
         "file": "src/module/applications/dialogs/transaction-request-dialog.ts",
@@ -767,21 +578,6 @@
         },
         "total": 1,
         "strategy": "no-restricted-syntax"
-      },
-      {
-        "file": "src/module/applications/item/ammo-sheet.ts",
-        "lines": 122,
-        "items": {
-          "import/order": 1,
-          "@typescript-eslint/no-unnecessary-condition": 7,
-          "@typescript-eslint/unbound-method": 3,
-          "no-restricted-syntax": 21,
-          "@typescript-eslint/strict-boolean-expressions": 8,
-          "@typescript-eslint/prefer-optional-chain": 1,
-          "@typescript-eslint/no-unnecessary-type-assertion": 6
-        },
-        "total": 47,
-        "strategy": "no-restricted-syntax; strict-boolean-expressions \u2014; no-unnecessary-condition \u2014"
       },
       {
         "file": "src/module/applications/item/base-item-sheet.ts",
@@ -968,15 +764,14 @@
           "no-restricted-syntax": 37,
           "@typescript-eslint/unbound-method": 4,
           "@typescript-eslint/strict-boolean-expressions": 8,
-          "@typescript-eslint/no-unnecessary-type-assertion": 5,
           "@typescript-eslint/no-explicit-any": 2,
           "@typescript-eslint/no-unsafe-member-access": 2,
           "no-await-in-loop": 4,
           "@typescript-eslint/no-floating-promises": 3,
           "@typescript-eslint/no-deprecated": 1
         },
-        "total": 66,
-        "strategy": "no-restricted-syntax; strict-boolean-expressions \u2014; no-unnecessary-type-assertion \u2014"
+        "total": 61,
+        "strategy": "no-restricted-syntax; strict-boolean-expressions \u2014; unbound-method \u2014 A class method is"
       },
       {
         "file": "src/module/applications/npc/threat-calculator.ts",
@@ -1027,13 +822,12 @@
         "lines": 84,
         "items": {
           "no-restricted-syntax": 8,
-          "@typescript-eslint/no-unnecessary-type-assertion": 4,
           "@typescript-eslint/explicit-function-return-type": 1,
           "@typescript-eslint/no-floating-promises": 1,
           "@typescript-eslint/no-deprecated": 1
         },
-        "total": 15,
-        "strategy": "no-restricted-syntax; no-unnecessary-type-assertion \u2014; explicit-function-return-type \u2014"
+        "total": 11,
+        "strategy": "no-restricted-syntax; explicit-function-return-type \u2014; no-floating-promises \u2014 A"
       },
       {
         "file": "src/module/applications/prompts/effect-creation-dialog.ts",
@@ -1101,21 +895,18 @@
         "file": "src/module/applications/prompts/simple-roll-dialog.ts",
         "lines": 79,
         "items": {
-          "import/order": 1,
           "no-restricted-syntax": 8,
-          "@typescript-eslint/no-unnecessary-type-assertion": 2,
           "@typescript-eslint/explicit-function-return-type": 1,
           "@typescript-eslint/no-floating-promises": 1,
           "@typescript-eslint/no-deprecated": 1
         },
-        "total": 14,
-        "strategy": "no-restricted-syntax; no-unnecessary-type-assertion \u2014; import/order \u2014 Reorder imports per groups:"
+        "total": 11,
+        "strategy": "no-restricted-syntax; explicit-function-return-type \u2014; no-floating-promises \u2014 A"
       },
       {
         "file": "src/module/applications/prompts/unified-roll-dialog.ts",
-        "lines": 1245,
+        "lines": 1244,
         "items": {
-          "prettier/prettier": 1,
           "@typescript-eslint/naming-convention": 4,
           "@typescript-eslint/strict-boolean-expressions": 38,
           "no-restricted-syntax": 27,
@@ -1123,7 +914,7 @@
           "complexity": 1,
           "@typescript-eslint/explicit-function-return-type": 1
         },
-        "total": 90,
+        "total": 89,
         "strategy": "strict-boolean-expressions \u2014; no-restricted-syntax; no-unnecessary-condition \u2014"
       },
       {
@@ -1149,19 +940,17 @@
       },
       {
         "file": "src/module/compendium-resync.ts",
-        "lines": 296,
+        "lines": 295,
         "items": {
-          "no-restricted-syntax": 16,
+          "no-restricted-syntax": 14,
           "@typescript-eslint/no-shadow": 3,
           "@typescript-eslint/strict-boolean-expressions": 7,
           "@typescript-eslint/no-unnecessary-condition": 4,
           "no-await-in-loop": 5,
-          "@typescript-eslint/no-unnecessary-type-assertion": 2,
           "complexity": 1,
-          "@typescript-eslint/no-unsafe-assignment": 1,
-          "prefer-template": 1
+          "@typescript-eslint/no-unsafe-assignment": 1
         },
-        "total": 40,
+        "total": 35,
         "strategy": "no-restricted-syntax; strict-boolean-expressions \u2014; no-await-in-loop \u2014 Awaiting in each iteration"
       },
       {
@@ -1272,14 +1061,15 @@
       },
       {
         "file": "src/module/data/abstract/system-data-model.ts",
-        "lines": 295,
+        "lines": 296,
         "items": {
           "@typescript-eslint/no-explicit-any": 2,
           "@typescript-eslint/naming-convention": 1,
           "no-restricted-syntax": 16,
           "@typescript-eslint/no-unnecessary-condition": 4,
           "@typescript-eslint/strict-boolean-expressions": 1,
-          "@typescript-eslint/no-unnecessary-type-assertion": 2,
+          "@typescript-eslint/no-unnecessary-type-assertion": 1,
+          "@typescript-eslint/unbound-method": 1,
           "@typescript-eslint/no-unsafe-call": 1,
           "@typescript-eslint/no-unsafe-member-access": 1,
           "@typescript-eslint/no-unsafe-assignment": 1
@@ -1785,11 +1575,10 @@
         "lines": 1212,
         "items": {
           "no-restricted-syntax": 11,
-          "@typescript-eslint/no-unnecessary-condition": 11,
-          "@typescript-eslint/no-unnecessary-type-assertion": 1
+          "@typescript-eslint/no-unnecessary-condition": 11
         },
-        "total": 23,
-        "strategy": "no-restricted-syntax; no-unnecessary-condition \u2014; no-unnecessary-type-assertion \u2014"
+        "total": 22,
+        "strategy": "no-restricted-syntax; no-unnecessary-condition \u2014"
       },
       {
         "file": "src/module/data/shared/attack-template.ts",
@@ -1967,12 +1756,11 @@
         "file": "src/module/hooks-manager.ts",
         "lines": 819,
         "items": {
-          "import/order": 1,
           "@typescript-eslint/no-deprecated": 9,
           "no-restricted-syntax": 51
         },
-        "total": 61,
-        "strategy": "no-restricted-syntax; @typescript-eslint/no-deprecated; import/order \u2014 Reorder imports per groups:"
+        "total": 60,
+        "strategy": "no-restricted-syntax; @typescript-eslint/no-deprecated"
       },
       {
         "file": "src/module/icons/helper.ts",
@@ -2003,13 +1791,13 @@
       },
       {
         "file": "src/module/macros/macro-manager.ts",
-        "lines": 160,
+        "lines": 163,
         "items": {
           "@typescript-eslint/no-unnecessary-condition": 8,
-          "no-restricted-syntax": 50,
+          "no-restricted-syntax": 38,
           "@typescript-eslint/no-unnecessary-type-assertion": 3
         },
-        "total": 61,
+        "total": 49,
         "strategy": "no-restricted-syntax; no-unnecessary-condition \u2014; no-unnecessary-type-assertion \u2014"
       },
       {
@@ -2076,15 +1864,14 @@
         "file": "src/module/rules/attack-specials.ts",
         "lines": 284,
         "items": {
-          "import/order": 2,
           "no-restricted-syntax": 12,
           "@typescript-eslint/no-unnecessary-type-assertion": 1,
           "@typescript-eslint/strict-boolean-expressions": 2,
           "@typescript-eslint/await-thenable": 2,
           "@typescript-eslint/explicit-function-return-type": 1
         },
-        "total": 20,
-        "strategy": "no-restricted-syntax; import/order \u2014 Reorder imports per groups:; strict-boolean-expressions \u2014"
+        "total": 18,
+        "strategy": "no-restricted-syntax; strict-boolean-expressions \u2014; await-thenable \u2014 `await` on a"
       },
       {
         "file": "src/module/rules/combat-actions.ts",
@@ -2178,15 +1965,13 @@
       },
       {
         "file": "src/module/types/global.d.ts",
-        "lines": 484,
+        "lines": 481,
         "items": {
-          "import/order": 1,
           "no-restricted-syntax": 78,
-          "@typescript-eslint/no-deprecated": 1,
-          "prettier/prettier": 1
+          "@typescript-eslint/no-deprecated": 1
         },
-        "total": 81,
-        "strategy": "no-restricted-syntax; import/order \u2014 Reorder imports per groups:; @typescript-eslint/no-deprecated"
+        "total": 79,
+        "strategy": "no-restricted-syntax; @typescript-eslint/no-deprecated"
       },
       {
         "file": "src/module/utils/actor-system-converter.ts",
@@ -2225,11 +2010,11 @@
     ]
   },
   "summary": {
-    "tier1_files": 4,
-    "tier1_items": 36,
-    "tier2_files": 24,
-    "tier2_items": 740,
-    "tier3_files": 163,
-    "tier3_items": 3967
+    "tier1_files": 3,
+    "tier1_items": 13,
+    "tier2_files": 13,
+    "tier2_items": 525,
+    "tier3_files": 162,
+    "tier3_items": 3602
   }
 }

@@ -102,7 +102,7 @@ export class ChatMessageWH40K extends ChatMessage {
         }
 
         const item = (await fromUuid(itemUuid)) as RollableItem | null;
-        if (item == null) {
+        if (item === null) {
             // eslint-disable-next-line no-restricted-syntax -- string is a localization key passed via { localize: true }
             ui.notifications.warn('WH40K.Chat.ItemNotFound', { localize: true });
             return;
@@ -141,7 +141,7 @@ export class ChatMessageWH40K extends ChatMessage {
 
         for (const token of targets) {
             const actor = token.actor as ActorWithCombatActions | null;
-            if (actor == null) continue;
+            if (actor === null) continue;
 
             if (typeof actor.applyDamage === 'function') {
                 // eslint-disable-next-line no-await-in-loop -- damage application is sequenced per target by design
@@ -169,7 +169,7 @@ export class ChatMessageWH40K extends ChatMessage {
         }
 
         const item = (await fromUuid(itemUuid)) as RollableItem | null;
-        if (item == null) {
+        if (item === null) {
             // eslint-disable-next-line no-restricted-syntax -- string is a localization key passed via { localize: true }
             ui.notifications.warn('WH40K.Chat.ItemNotFound', { localize: true });
             return;
@@ -201,12 +201,12 @@ export class ChatMessageWH40K extends ChatMessage {
 
         // Get the message from the card
         const card = button.closest<HTMLElement>('.chat-message');
-        if (card == null) return;
+        if (card === null) return;
 
         const messageId = card.dataset.messageId ?? '';
         const message = game.messages.get(messageId);
 
-        if (message == null) {
+        if (message === null) {
             console.warn('WH40K | ChatMessage not found for action:', action);
             return;
         }
@@ -239,7 +239,7 @@ export class ChatMessageWH40K extends ChatMessage {
                 if (itemUuid !== null && itemUuid !== '') {
                     const item = (await fromUuid(itemUuid)) as RollableItem | null;
                     const actor = item?.actor;
-                    if (item != null && actor != null) {
+                    if (item !== null && actor !== null) {
                         // Import and use targeted action manager
                         const { DHTargetedActionManager } = await import('../actions/targeted-action-manager.ts');
                         await DHTargetedActionManager.performWeaponAttack(actor as never, null, item as never);
@@ -252,7 +252,7 @@ export class ChatMessageWH40K extends ChatMessage {
                 const itemUuid = button.dataset.itemUuid ?? (message as ChatMessageWH40K).itemUuid;
                 if (itemUuid !== null && itemUuid !== '') {
                     const item = (await fromUuid(itemUuid)) as RollableItem | null;
-                    if (item != null && typeof item.roll === 'function') {
+                    if (item !== null && typeof item.roll === 'function') {
                         await item.roll();
                     }
                 }
@@ -274,16 +274,16 @@ export class ChatMessageWH40K extends ChatMessage {
      */
     static enrichDegreeBadge(html: HTMLElement, message: ChatMessageWH40K): void {
         const result = message.calculateDegrees();
-        if (result == null) return;
+        if (result === null) return;
 
         const { success, degrees } = result;
 
         // Find the dice total element
         const diceTotal = html.querySelector('.dice-total');
-        if (diceTotal == null) return;
+        if (diceTotal === null) return;
 
         // Check if badge already exists
-        if (diceTotal.querySelector('.wh40k-degree-badge') != null) return;
+        if (diceTotal.querySelector('.wh40k-degree-badge') !== null) return;
 
         // Create degree badge
         const badge = document.createElement('span');
@@ -305,13 +305,13 @@ export class ChatMessageWH40K extends ChatMessage {
      */
     static enrichSpeakerPortrait(html: HTMLElement, message: ChatMessageWH40K): void {
         const actor = message.speakerActor;
-        if (actor == null) return;
+        if (actor === null) return;
 
         const sender = html.querySelector('.message-sender');
-        if (sender == null) return;
+        if (sender === null) return;
 
         // Check if portrait already exists
-        if (sender.querySelector('.wh40k-message-portrait') != null) return;
+        if (sender.querySelector('.wh40k-message-portrait') !== null) return;
 
         const portrait = document.createElement('img');
         portrait.className =

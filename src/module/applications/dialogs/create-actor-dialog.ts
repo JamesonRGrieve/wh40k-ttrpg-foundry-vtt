@@ -114,8 +114,8 @@ export class WH40KCreateActorDialog {
 
             const afterRender = () => {
                 const root = (dialog as unknown as { element: HTMLElement }).element;
-                const sysSel = root.querySelector('[name="system"]') as HTMLSelectElement | null;
-                const kindSel = root.querySelector('[name="kind"]') as HTMLSelectElement | null;
+                const sysSel = root.querySelector<HTMLSelectElement>('[name="system"]');
+                const kindSel = root.querySelector<HTMLSelectElement>('[name="kind"]');
                 if (!sysSel || !kindSel) return;
                 sysSel.addEventListener('change', () => {
                     const sys = sysSel.value;

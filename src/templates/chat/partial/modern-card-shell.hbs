@@ -1,0 +1,62 @@
+{{!-- Modern chat card shell — the "tw-border-2 + per-system theme frame +
+     gradient header" layout used by the DoT (burning / bleeding) and
+     damage / combat-action cards. Distinct from `chat-card-shell.hbs`,
+     which is the simpler legacy `wh40k-chat-card` family.
+
+     Block-partial usage: provide body via the partial-block slot.
+
+     Hash params:
+       - actorName       small uppercase eyebrow line above the title
+       - title           main h2 title (raw text)
+       - titleKey        i18n key alternative to `title`
+       - subtitle        optional descriptive line beneath the title
+       - actionType      optional pill rendered on the right of the header
+                         (e.g. "Reaction" / action-type label)
+       - actionTypeIcon  FA icon class accompanying actionType
+                         (default "fa-clock")
+       - image           image src; renders portrait beside the title block
+       - imageIcon       FA fallback icon class shown when no image is set
+                         (e.g. "fa-fist-raised")
+       - outerExtraClass extra utilities on the outer card div
+       - borderClass     border utilities (default: per-system gold/crimson…)
+       - bgClass         background utilities (default: panel solid)
+       - headerExtraClass extra utilities on the header element
+       - gameSystem      active system id; surfaces `data-wh40k-system`
+       - footerLabel     simple footer text (source-ref style)
+       - footerIcon      FA icon class for the footer (default "fa-book")
+--}}
+<div class="tw-font-ui">
+    <div class="tw-relative tw-overflow-hidden tw-rounded-md {{#if borderClass}}{{borderClass}}{{else}}tw-border-2 tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure{{/if}} {{#if bgClass}}{{bgClass}}{{else}}tw-bg-[var(--wh40k-panel-bg-solid)] tw-text-[var(--wh40k-text-dark)]{{/if}} tw-shadow-[0_4px_12px_var(--wh40k-shadow-medium),inset_0_1px_0_var(--wh40k-accent-overlay)]{{#if outerExtraClass}} {{outerExtraClass}}{{/if}}"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
+        <div class="tw-relative {{#if image}}tw-flex tw-items-center tw-gap-3 tw-p-3 tw-bg-gradient-to-br{{else}}tw-px-4 tw-py-3 tw-bg-gradient-to-r{{/if}} tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color)]{{#if headerExtraClass}} {{headerExtraClass}}{{/if}}">
+            {{#if image}}
+                <img class="tw-w-12 tw-h-12 tw-rounded-md tw-object-cover tw-flex-shrink-0 tw-border-2 tw-border-[var(--wh40k-bronze)] tw-shadow-[0_2px_6px_var(--wh40k-shadow-medium)]" src="{{image}}" alt="{{#if title}}{{title}}{{else if titleKey}}{{localize titleKey}}{{/if}}" />
+            {{else if imageIcon}}
+                <div class="tw-w-12 tw-h-12 tw-rounded-md tw-flex tw-items-center tw-justify-center tw-flex-shrink-0 tw-border-2 tw-border-[var(--wh40k-bronze)] tw-bg-gradient-to-br tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent">
+                    <i class="fas {{imageIcon}} tw-text-2xl tw-text-[var(--wh40k-bronze)] tw-opacity-60"></i>
+                </div>
+            {{/if}}
+            <div class="{{#if image}}tw-flex-1 tw-min-w-0{{/if}}">
+                {{#if actorName}}<div class="tw-text-xs tw-text-[color:var(--wh40k-text-muted)] tw-uppercase tw-tracking-widest tw-mb-1">{{actorName}}</div>{{/if}}
+                <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-[0.05em] tw-m-0 tw-[text-shadow:0_2px_4px_var(--wh40k-shadow-medium)]">{{#if title}}{{title}}{{else if titleKey}}{{localize titleKey}}{{/if}}</h2>
+                {{#if subtitle}}<div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)] tw-mt-0.5 tw-opacity-90">{{subtitle}}</div>{{/if}}
+            </div>
+            {{#if actionType}}
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-text-xs tw-text-[var(--wh40k-text-muted)]">
+                <i class="fas {{#if actionTypeIcon}}{{actionTypeIcon}}{{else}}fa-clock{{/if}} tw-text-[10px] tw-opacity-70"></i>
+                {{actionType}}
+            </span>
+            {{/if}}
+        </div>
+
+        <div class="tw-px-4 tw-py-3">
+            {{> @partial-block}}
+        </div>
+
+        {{#if footerLabel}}
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-justify-end tw-px-3 tw-py-2 tw-border-t tw-border-[var(--wh40k-border-color-light)]">
+            <i class="fas {{#if footerIcon}}{{footerIcon}}{{else}}fa-book{{/if}} tw-text-[0.7rem] tw-text-[var(--wh40k-text-muted)]"></i>
+            <span class="tw-text-xs tw-italic tw-text-[var(--wh40k-text-muted)]">{{footerLabel}}</span>
+        </div>
+        {{/if}}
+    </div>
+</div>
