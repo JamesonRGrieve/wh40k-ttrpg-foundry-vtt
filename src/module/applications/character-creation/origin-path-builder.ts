@@ -26,10 +26,25 @@ import { normalizeOrigin, type NormalizedOrigin, type NormalizedChoice, type Nor
 import OriginDetailDialog from './origin-detail-dialog.ts';
 import OriginPathChoiceDialog from './origin-path-choice-dialog.ts';
 import OriginRollDialog from './origin-roll-dialog.ts';
+import type {
+    ActiveModifier,
+    BuilderFlagState,
+    CharacterGenerationSlice,
+    CoreFlags,
+    EquipmentEntry,
+    ItemDataLike,
+    PreviewGrantEntry,
+    PreviewSummary,
+} from './types.ts';
 
-const { ApplicationV2, HandlebarsApplicationMixin } = (
-    foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor; HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T } }
-).api;
+interface FoundryApplicationsApi {
+    api: {
+        ApplicationV2: ApplicationV2Ctor;
+        HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T;
+    };
+}
+// eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is Foundry's untyped namespace; FoundryApplicationsApi describes the shape this file uses
+const { ApplicationV2, HandlebarsApplicationMixin } = (foundry.applications as unknown as FoundryApplicationsApi).api;
 
 /**
  * Union view covering all shapes this builder reads from system data:
@@ -44,6 +59,9 @@ const { ApplicationV2, HandlebarsApplicationMixin } = (
  * (ItemDataModel vs ActorDataModel) are otherwise structurally incompatible.
  */
 interface OriginPathSystemData {
+    // Index signature kept loose for cross-DataModel structural compatibility.
+    // The named fields below carry the actual typings the builder relies on.
+    // eslint-disable-next-line no-restricted-syntax -- boundary: union view over heterogeneous DataModels (item vs actor vs compendium index)
     [key: string]: unknown;
     // Origin-path item fields
     step?: string;
@@ -53,18 +71,18 @@ interface OriginPathSystemData {
     weaponTypes?: string[];
     description?: { value?: string; chat?: string; summary?: string };
     requirements?: { text?: string };
-    activeModifiers?: Array<Record<string, unknown>>;
+    activeModifiers?: ActiveModifier[];
     homebrew?: { throneGelt?: string; thrones?: string };
     modifiers?: WH40KItemModifiers;
     selectedChoices?: Record<string, string[]>;
     rollResults?: Record<string, { rolled?: number; breakdown?: string } | undefined>;
     grants?: {
         characteristics?: Record<string, number>;
-        skills?: Array<Record<string, unknown>>;
-        talents?: Array<Record<string, unknown>>;
-        traits?: Array<Record<string, unknown>>;
-        choices?: Array<Record<string, unknown>>;
-        equipment?: Array<Record<string, unknown>>;
+        skills?: GrantItemRaw[];
+        talents?: GrantItemRaw[];
+        traits?: GrantItemRaw[];
+        choices?: GrantChoiceRaw[];
+        equipment?: GrantItemRaw[];
         woundsFormula?: string;
         fateFormula?: string;
     };
@@ -73,9 +91,30 @@ interface OriginPathSystemData {
     throneGelt?: number;
     influence?: number;
     characteristics?: Record<string, WH40KCharacteristic>;
-    skills?: Record<string, { entries?: unknown[] } & Record<string, unknown>>;
+    skills?: Record<string, SkillSlice>;
+    characterGeneration?: CharacterGenerationSlice;
     // Compendium index-entry shape (also read via `entry.system as OriginPathSystemData`)
     cost?: { dh2?: { homebrew?: { requisition?: number; throneGelt?: number } } };
+}
+
+/**
+ * Per-skill slice on actor.system.skills.* — the builder reads `entries` for
+ * the specialist-skill flatten and resets `advance` to zero on commit.
+ */
+interface SkillSlice {
+    advance?: number;
+    entries?: SkillEntry[];
+}
+
+/**
+ * One specialist-skill entry. Beyond `advance` the builder treats the entry
+ * as a passthrough, so unknown extra fields are tolerated via a loose value
+ * type rather than `unknown`.
+ */
+interface SkillEntry {
+    advance?: number;
+    specialization?: string;
+    [extra: string]: string | number | boolean | null | undefined | string[];
 }
 
 /**
@@ -136,12 +175,36 @@ interface GrantChoiceRaw {
 }
 
 /**
+ * Resolved talent entry ready for display in the selected-origin preview.
+ */
+interface PreparedTalent {
+    name?: string;
+    specialization: string | null;
+    uuid: string | null;
+    tooltip?: string;
+    tooltipData: string;
+    hasItem: boolean;
+}
+
+/**
+ * Resolved trait entry ready for display in the selected-origin preview.
+ */
+interface PreparedTrait {
+    name?: string;
+    level: string | null;
+    uuid: string | null;
+    tooltip?: string;
+    tooltipData: string;
+    hasItem: boolean;
+}
+
+/**
  * Shape of an equipment item entry stored in equipmentItems and equipmentSelections.
  * These entries are constructed in _loadEquipmentItems and _toggleEquipmentByUuid and
  * keyed off compendium index data; all fields are nullable because they come from optional
  * system sub-documents.
  */
-interface EquipmentItemEntry extends Record<string, unknown> {
+interface EquipmentItemEntry {
     uuid: string;
     id: string;
     name: string | undefined;
@@ -165,14 +228,29 @@ interface EquipmentItemEntry extends Record<string, unknown> {
 type OriginLikeParam = Parameters<typeof OriginChartLayout.computeFullChart>[0][number];
 
 /**
+ * Cast helpers from `NormalizedOrigin` to the structurally-compatible
+ * `OriginLikeParam` accepted by OriginChartLayout. The cast cannot be expressed
+ * without `unknown` because the two types live in separate files and the
+ * compiler cannot see the structural overlap.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: NormalizedOrigin is structurally compatible with OriginLikeParam; OriginChartLayout owns the parameter type
+const asOriginLike = (origin: NormalizedOrigin): OriginLikeParam => origin as unknown as OriginLikeParam;
+// eslint-disable-next-line no-restricted-syntax -- boundary: same as asOriginLike, nullable variant
+const asOriginLikeOrNull = (origin: NormalizedOrigin | null): OriginLikeParam | null => origin as unknown as OriginLikeParam | null;
+// eslint-disable-next-line no-restricted-syntax -- boundary: NormalizedOrigin[] is structurally compatible with OriginLikeParam[]
+const asOriginLikeArray = (origins: NormalizedOrigin[]): OriginLikeParam[] => origins as unknown as OriginLikeParam[];
+// eslint-disable-next-line no-restricted-syntax -- boundary: Map<string, NormalizedOrigin> is structurally compatible with Map<string, OriginLikeParam>
+const asOriginLikeMap = (selections: Map<string, NormalizedOrigin>): Map<string, OriginLikeParam> => selections as unknown as Map<string, OriginLikeParam>;
+
+/**
  * Minimal shape of a document resolved via fromUuid().
  * Only the fields actually accessed in this file are declared.
  */
 interface ResolvedDocument {
     system?: {
         description?: { value?: string };
-        grants?: { skills?: Array<Record<string, unknown>> };
-        modifiers?: { characteristics?: Record<string, unknown> };
+        grants?: { skills?: GrantItemRaw[]; talents?: GrantItemRaw[] };
+        modifiers?: { characteristics?: Record<string, number | string | undefined> };
     };
     sheet?: { render: (force?: boolean) => void };
 }
@@ -209,8 +287,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     declare lineageSelection: NormalizedOriginWithMeta | null;
     declare allOrigins: NormalizedOrigin[];
     declare lineageOrigins: NormalizedOrigin[];
-    declare equipmentItems: Array<Record<string, unknown>>;
-    declare equipmentSelections: Map<string, Record<string, unknown>>;
+    declare equipmentItems: EquipmentEntry[];
+    declare equipmentSelections: Map<string, EquipmentEntry>;
     declare _equipmentLoaded: boolean;
     declare _equipmentFilter: { search: string; type: string };
     declare _charRolls: number[];
@@ -321,7 +399,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._charAdvancedMode = false;
         this._charGenMode = 'roll-pool-hb';
         this._charDragData = null;
-        const actorSys = this.actor.system as unknown as OriginPathSystemData;
+        const actorSys = this._actorSys();
         this._divination = actorSys.originPath?.divination ?? '';
         const isDH2Homebrew = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
         this._thronesRolled = isDH2Homebrew ? 0 : actorSys.throneGelt ?? 0;
@@ -347,18 +425,28 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         'fellowship',
     ];
 
+    /**
+     * Narrow `this.actor.system` to the union view this builder reads.
+     * Lives on the class so each call site reads as `this._actorSys()` instead
+     * of repeating the cross-system cast inline.
+     * @private
+     */
+    _actorSys(): OriginPathSystemData {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system is a per-system DataModel; OriginPathSystemData is the union view used by this builder
+        return this.actor.system as unknown as OriginPathSystemData;
+    }
+
     _initCharacteristicState(): void {
-        const actorSystem = this.actor.system as unknown as Record<string, unknown>;
-        const genData = (actorSystem.characterGeneration ?? {}) as Record<string, unknown>;
+        const genData: CharacterGenerationSlice = this._actorSys().characterGeneration ?? {};
         const ctor = this.constructor as typeof OriginPathBuilder;
         const CHARS = ctor.GENERATION_CHARACTERISTICS;
 
-        this._charRolls = Array.isArray(genData.rolls) && genData.rolls.length === 9 ? [...(genData.rolls as number[])] : Array<number>(9).fill(0);
+        this._charRolls = Array.isArray(genData.rolls) && genData.rolls.length === 9 ? [...genData.rolls] : Array<number>(9).fill(0);
         this._charAssignments = {};
         this._charCustomBases = {};
 
-        const assignments = (genData.assignments ?? {}) as Record<string, number>;
-        const customBases = (genData.customBases ?? {}) as Record<string, number>;
+        const assignments = genData.assignments ?? {};
+        const customBases = genData.customBases ?? {};
         const defaultBase = WH40KSettings.getCharacteristicBase();
 
         for (const key of CHARS) {
@@ -480,20 +568,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _restoreBuilderFlagState(): void {
-        const state = this.actor.getFlag(OriginPathBuilder.FLAG_SCOPE, OriginPathBuilder.BUILDER_STATE_FLAG) as Record<string, unknown> | undefined;
+        const state = this.actor.getFlag(OriginPathBuilder.FLAG_SCOPE, OriginPathBuilder.BUILDER_STATE_FLAG) as BuilderFlagState | undefined;
         if (!state) return;
 
-        const equipment = (state.equipmentSelections as Record<string, unknown> | undefined) ?? {};
+        const equipment = state.equipmentSelections ?? {};
         for (const [uuid, entry] of Object.entries(equipment)) {
-            this.equipmentSelections.set(uuid, entry as Record<string, unknown>);
+            this.equipmentSelections.set(uuid, entry);
         }
 
-        if (Array.isArray(state.charRolls)) this._charRolls = state.charRolls as number[];
-        if (state.charAssignments !== undefined && state.charAssignments !== null)
-            this._charAssignments = { ...(state.charAssignments as Record<string, number | null>) };
-        if (state.charAdvancedMode !== undefined) this._charAdvancedMode = state.charAdvancedMode === true;
-        if (state.charCustomBases !== undefined && state.charCustomBases !== null)
-            this._charCustomBases = { ...(state.charCustomBases as Record<string, number>) };
+        if (Array.isArray(state.charRolls)) this._charRolls = state.charRolls;
+        if (state.charAssignments !== undefined && state.charAssignments !== null) this._charAssignments = { ...state.charAssignments };
+        if (state.charAdvancedMode !== undefined && state.charAdvancedMode !== null) this._charAdvancedMode = state.charAdvancedMode;
+        if (state.charCustomBases !== undefined && state.charCustomBases !== null) this._charCustomBases = { ...state.charCustomBases };
         if (state.charGenMode === 'point-buy' || state.charGenMode === 'roll' || state.charGenMode === 'roll-pool-hb') {
             this._charGenMode = state.charGenMode;
         }
@@ -507,11 +593,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _persistBuilderFlagState(): Promise<void> {
-        const equipmentSelections: Record<string, unknown> = {};
+        const equipmentSelections: Record<string, EquipmentEntry> = {};
         for (const [uuid, entry] of this.equipmentSelections) {
             equipmentSelections[uuid] = entry;
         }
-        const payload = {
+        const payload: BuilderFlagState = {
             equipmentSelections,
             charRolls: this._charRolls,
             charAssignments: this._charAssignments,
@@ -554,10 +640,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const selection = this.selections.get(step.step);
             if (!selection) continue;
 
-            selection.system.pathPositions = OriginChartLayout.resolvePathPositions(
-                selection as unknown as OriginLikeParam,
-                lastSelection as unknown as OriginLikeParam | null,
-            );
+            selection.system.pathPositions = OriginChartLayout.resolvePathPositions(asOriginLike(selection), asOriginLikeOrNull(lastSelection));
             lastSelection = selection;
         }
     }
@@ -570,15 +653,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _itemToSelectionData(item: WH40KItem): NormalizedOriginWithMeta {
         const rawData = item.toObject();
-        const data = rawData as Record<string, unknown>;
+        const data = rawData as ItemDataLike & { uuid?: string };
         // Store original uuid for reference to compendium item
-        const flagsCore = (item.flags as Record<string, Record<string, unknown> | undefined>).core;
+        const flagsCore = (item.flags as { core?: CoreFlags }).core;
         const flagSourceId = typeof flagsCore?.sourceId === 'string' ? flagsCore.sourceId : undefined;
         data._sourceUuid = item.parent === this.actor ? flagSourceId ?? data._sourceUuid ?? item.uuid : item.uuid ?? data._sourceUuid;
         // Store actor item id if this is an existing actor item
         data._actorItemId = item.parent === this.actor ? item.id : null;
 
-        const normalized = normalizeOrigin(data);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw compendium document shape
+        const normalized = normalizeOrigin(data as unknown as Record<string, unknown>);
         // Ensure choice and roll fields are available for builder state
         normalized.system.selectedChoices ??= {};
         normalized.system.rollResults ??= {};
@@ -591,11 +675,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object} - The system data
      * @private
      */
-    _getSelectionSystem(selection: NormalizedOrigin): Record<string, unknown> {
+    _getSelectionSystem(selection: NormalizedOrigin): OriginPathSystemData {
         const selectionSystem = foundry.utils.deepClone(selection.system);
         const sourceOrigin = this._getSourceOriginForSelection(selection);
         const sourceSystem = foundry.utils.deepClone(sourceOrigin?.system ?? {});
-        return foundry.utils.mergeObject(sourceSystem, selectionSystem, { inplace: false, overwrite: true, insertKeys: true, recursive: true });
+        return foundry.utils.mergeObject(sourceSystem, selectionSystem, {
+            inplace: false,
+            overwrite: true,
+            insertKeys: true,
+            recursive: true,
+        });
     }
 
     /**
@@ -645,11 +734,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 console.warn(`Origin path compendium '${packName}' not found`);
                 continue;
             }
+            // eslint-disable-next-line no-await-in-loop -- sequential: walks packs in priority order
             const documents = await pack.getDocuments();
             // Filter and normalize
             allOriginPaths.push(
                 ...documents
-                    .filter((d) => (d as unknown as { type?: string }).type === 'originPath')
+                    .filter((d): d is typeof d & { type: string } => (d as { type?: string }).type === 'originPath')
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw compendium document shape and validates structurally
                     .map((d) => normalizeOrigin(d as unknown as Record<string, unknown>)),
             );
         }
@@ -693,8 +784,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Use chart layout for core steps - pass direction and step keys for system support
             const stepKeys = this.systemConfig.coreSteps.map((s) => s.key);
             const chartLayout = OriginChartLayout.computeFullChart(
-                this.allOrigins as unknown as OriginLikeParam[],
-                this.selections as unknown as Map<string, OriginLikeParam>,
+                asOriginLikeArray(this.allOrigins),
+                asOriginLikeMap(this.selections),
                 this.guidedMode,
                 this.direction,
                 stepKeys,
@@ -702,7 +793,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             // Find the step layout matching current step
             const stepIndex = this.systemConfig.coreSteps.findIndex((s) => s.key === currentStep.key);
-            const stepLayout = (chartLayout as unknown as { steps: StepLayout[] }).steps[stepIndex];
+            // eslint-disable-next-line no-restricted-syntax -- boundary: OriginChartLayout's ChartLayout type is structurally compatible with our StepLayout view
+            const chartLayoutTyped = chartLayout as unknown as { steps: StepLayout[] };
+            const stepLayout = chartLayoutTyped.steps[stepIndex];
             currentOrigins = this._prepareOriginsForStep(stepLayout);
             // Use previewed origin if available, otherwise use confirmed selection
             selectedItem = this.previewedOrigin ?? this.selections.get(currentStep.step) ?? null;
@@ -831,7 +924,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }));
 
         const characteristics = CHARS.map((key) => {
-            const charData = ((this.actor.system as unknown as OriginPathSystemData).characteristics?.[key] ?? {}) as Partial<WH40KCharacteristic>;
+            const charData = (this._actorSys().characteristics?.[key] ?? {}) as Partial<WH40KCharacteristic>;
             const assignedIndex = this._charAssignments[key] ?? null;
             const rollValue = assignedIndex !== null ? this._charRolls[assignedIndex] : null;
             const base = this._charAdvancedMode ? this._charCustomBases[key] ?? DEFAULT_BASE : DEFAULT_BASE;
@@ -908,7 +1001,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _getInfluenceMod(): number {
         let mod = 0;
         for (const [, selection] of this.selections) {
-            const sys = this._getSelectionSystem(selection) as OriginPathSystemData;
+            const sys = this._getSelectionSystem(selection);
             const others = (sys.modifiers?.other ?? []) as Array<{ name?: string; key?: string; value?: number }>;
             for (const m of others) {
                 if (m.name === 'Influence') mod += m.value ?? 0;
@@ -1029,7 +1122,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const processSelection = (selection: NormalizedOrigin): void => {
             const system = this._getSelectionSystem(selection);
-            const sys = system as OriginPathSystemData;
+            const sys = system;
             const identifierStr = typeof sys.identifier === 'string' ? sys.identifier : '';
             const innerSys = sys.system as OriginPathSystemData | undefined;
             const innerStep = typeof innerSys?.step === 'string' ? innerSys.step : '';
@@ -1125,7 +1218,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _getSelectionThronesFormula(selection: NormalizedOrigin): string {
         const sys = this._getSelectionSystem(selection);
-        const homebrew = sys.homebrew as { throneGelt?: string; thrones?: string } | undefined;
+        const homebrew = sys.homebrew;
         return homebrew?.throneGelt ?? homebrew?.thrones ?? '';
     }
 
@@ -1149,7 +1242,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _getContextualInfluenceMod(): number {
         let mod = 0;
         for (const selection of this._getSelectionsForDerivedCalculations()) {
-            const sys = this._getSelectionSystem(selection) as OriginPathSystemData;
+            const sys = this._getSelectionSystem(selection);
             const others = (sys.modifiers?.other ?? []) as Array<{ name?: string; key?: string; value?: number }>;
             for (const entry of others) {
                 if (entry.name === 'Influence') mod += entry.value ?? 0;
@@ -1511,7 +1604,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Homebrew grants 3 starting Armoury acquisitions regardless of Influence; RAW uses the DH2e core pg 80 rule (floor(Influence/10)).
         if (this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew()) return 3;
         const rolled = this._influenceRolled;
-        const stored = Number((this.actor.system as unknown as OriginPathSystemData).influence ?? 0);
+        const stored = Number(this._actorSys().influence ?? 0);
         const influence = rolled > 0 ? rolled : stored;
         return Math.floor(influence / 10);
     }
@@ -1529,58 +1622,61 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const availabilityConfig =
-            ((CONFIG as unknown as Record<string, unknown>).wh40k as { availabilities?: Record<string, { label: string; modifier: number }> } | undefined)
-                ?.availabilities ?? WH40K.availabilities;
+        const configWh40k = (CONFIG as { wh40k?: { availabilities?: Record<string, { label: string; modifier: number }> } }).wh40k;
+        const availabilityConfig = configWh40k?.availabilities ?? WH40K.availabilities;
         const scarceModifier = availabilityConfig.scarce.modifier;
-        const loaded: Array<Record<string, unknown>> = [];
+        const packLoadResults = await Promise.all(
+            packNames.map(async (packName): Promise<EquipmentEntry[]> => {
+                const pack =
+                    game.packs.get(`wh40k-rpg.${packName}`) ??
+                    game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
+                if (!pack) return [];
 
-        for (const packName of packNames) {
-            const pack =
-                game.packs.get(`wh40k-rpg.${packName}`) ?? game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
-            if (!pack) continue;
-
-            const index = await pack.getIndex({
-                fields: [
-                    'system.availability',
-                    'system.identifier',
-                    'system.clip.max',
-                    'system.weaponTypes',
-                    'system.cost.dh2.homebrew.requisition',
-                    'system.cost.dh2.homebrew.throneGelt',
-                    'type',
-                ],
-            });
-            for (const rawEntry of index) {
-                const entry = rawEntry as unknown as { _id: string; name?: string; uuid?: string; img?: string; type?: string; system?: OriginPathSystemData };
-                // Cybernetics enter play via grants, not equipment selection.
-                if (entry.type === 'cybernetic') continue;
-                const entrySys = entry.system;
-                const availability = entrySys?.availability;
-                if (availability === undefined || availability === '') continue;
-                const availabilityEntry = availabilityConfig[availability] as { label: string; modifier: number } | undefined;
-                if (availabilityEntry === undefined) continue;
-                const modifier = availabilityEntry.modifier;
-                if (modifier < scarceModifier) continue;
-                if (entry.name?.startsWith('! Default') === true) continue;
-                const homebrewCost = entrySys?.cost?.dh2?.homebrew;
-                loaded.push({
-                    uuid: `Compendium.${pack.metadata.id}.${entry._id}`,
-                    id: entry._id,
-                    name: entry.name,
-                    img: entry.img,
-                    type: entry.type,
-                    identifier: entrySys?.identifier ?? null,
-                    clipMax: entrySys?.clip?.max ?? null,
-                    weaponTypes: entrySys?.weaponTypes ?? [],
-                    availability,
-                    availabilityLabel: game.i18n.localize(availabilityEntry.label),
-                    availabilityOrder: modifier,
-                    requisition: homebrewCost?.requisition ?? null,
-                    throneGelt: homebrewCost?.throneGelt ?? null,
+                const index = await pack.getIndex({
+                    fields: [
+                        'system.availability',
+                        'system.identifier',
+                        'system.clip.max',
+                        'system.weaponTypes',
+                        'system.cost.dh2.homebrew.requisition',
+                        'system.cost.dh2.homebrew.throneGelt',
+                        'type',
+                    ],
                 });
-            }
-        }
+                const fromPack: EquipmentEntry[] = [];
+                for (const rawEntry of index) {
+                    const entry = rawEntry as { _id: string; name?: string; uuid?: string; img?: string; type?: string; system?: OriginPathSystemData };
+                    // Cybernetics enter play via grants, not equipment selection.
+                    if (entry.type === 'cybernetic') continue;
+                    const entrySys = entry.system;
+                    const availability = entrySys?.availability;
+                    if (availability === undefined || availability === '') continue;
+                    const availabilityEntry = availabilityConfig[availability] as { label: string; modifier: number } | undefined;
+                    if (availabilityEntry === undefined) continue;
+                    const modifier = availabilityEntry.modifier;
+                    if (modifier < scarceModifier) continue;
+                    if (entry.name?.startsWith('! Default') === true) continue;
+                    const homebrewCost = entrySys?.cost?.dh2?.homebrew;
+                    fromPack.push({
+                        uuid: `Compendium.${pack.metadata.id}.${entry._id}`,
+                        id: entry._id,
+                        name: entry.name,
+                        img: entry.img,
+                        type: entry.type,
+                        identifier: entrySys?.identifier ?? null,
+                        clipMax: entrySys?.clip?.max ?? null,
+                        weaponTypes: entrySys?.weaponTypes ?? [],
+                        availability,
+                        availabilityLabel: game.i18n.localize(availabilityEntry.label),
+                        availabilityOrder: modifier,
+                        requisition: homebrewCost?.requisition ?? null,
+                        throneGelt: homebrewCost?.throneGelt ?? null,
+                    });
+                }
+                return fromPack;
+            }),
+        );
+        const loaded: EquipmentEntry[] = packLoadResults.flat();
 
         loaded.sort((a, b) => {
             const typeCmp = String(a.type).localeCompare(String(b.type));
@@ -1606,7 +1702,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const grantedNames = new Set<string>();
         for (const [, selection] of this.selections) {
             const system = this._getSelectionSystem(selection);
-            const grants = (system as OriginPathSystemData).grants ?? {};
+            const grants = system.grants ?? {};
             for (const entry of grants.equipment ?? []) {
                 const name = (entry as { name?: unknown }).name;
                 if (typeof name === 'string' && name !== '') grantedNames.add(name);
@@ -1794,7 +1890,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _prepareSelectedOrigin(item: NormalizedOrigin): Promise<Record<string, unknown>> {
-        const system = this._getSelectionSystem(item) as OriginPathSystemData;
+        const system = this._getSelectionSystem(item);
         const grants = system.grants ?? {};
         const modifiers = system.modifiers?.characteristics ?? {};
 
@@ -1816,7 +1912,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const choices = [];
         const selectedChoices = system.selectedChoices ?? {};
         const choiceLabelCounts: Record<string, number> = {};
-        const grantChoices = (grants.choices ?? []) as GrantChoiceRaw[];
+        const grantChoices = grants.choices ?? [];
 
         for (const choice of grantChoices) {
             const baseLabel = choice.label ?? choice.name ?? '';
@@ -1880,25 +1976,26 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             };
         }
 
-        const skills = [];
-        for (const skill of (grants.skills ?? []) as GrantItemRaw[]) {
-            const skillName = skill.name ?? '';
-            const displayName = skill.specialization !== undefined && skill.specialization !== '' ? `${skillName} (${skill.specialization})` : skillName;
-            const uuid = this._findSkillUuid(skill.name, skill.specialization);
-            skills.push({
-                name: skill.name,
-                specialization: skill.specialization ?? null,
-                displayName: displayName,
-                level: skill.level ?? 'trained',
-                levelLabel: this._getTrainingLabel(skill.level ?? ''),
-                uuid,
-                tooltipData: await this._prepareGrantTooltipData(
-                    displayName,
+        const skills = await Promise.all(
+            (grants.skills ?? []).map(async (skill) => {
+                const skillName = skill.name ?? '';
+                const displayName = skill.specialization !== undefined && skill.specialization !== '' ? `${skillName} (${skill.specialization})` : skillName;
+                const uuid = this._findSkillUuid(skill.name, skill.specialization);
+                return {
+                    name: skill.name,
+                    specialization: skill.specialization ?? null,
+                    displayName: displayName,
+                    level: skill.level ?? 'trained',
+                    levelLabel: this._getTrainingLabel(skill.level ?? ''),
                     uuid,
-                    skill.level !== undefined && skill.level !== '' ? `Level: ${this._getTrainingLabel(skill.level)}` : '',
-                ),
-            });
-        }
+                    tooltipData: await this._prepareGrantTooltipData(
+                        displayName,
+                        uuid,
+                        skill.level !== undefined && skill.level !== '' ? `Level: ${this._getTrainingLabel(skill.level)}` : '',
+                    ),
+                };
+            }),
+        );
 
         const talents = await this._prepareTalentsWithTooltips(grants.talents ?? []);
         const traits = await this._prepareTraitsWithTooltips(grants.traits ?? []);
@@ -1956,38 +2053,38 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTalentsWithTooltips(talents: GrantItemRaw[]): Promise<unknown[]> {
-        const prepared = [];
-        for (const talent of talents) {
-            let tooltipText = talent.name;
-            let hasItem = false;
+    async _prepareTalentsWithTooltips(talents: GrantItemRaw[]): Promise<PreparedTalent[]> {
+        return Promise.all(
+            talents.map(async (talent) => {
+                let tooltipText = talent.name;
+                let hasItem = false;
 
-            if (talent.uuid !== undefined && talent.uuid !== '') {
-                try {
-                    const item = (await fromUuid(talent.uuid)) as ResolvedDocument | null;
-                    if (item) {
-                        hasItem = true;
-                        const desc = item.system?.description?.value;
-                        if (desc !== undefined && desc !== '') {
-                            tooltipText = this._stripHtml(desc).substring(0, 200);
-                            if (tooltipText.length >= 200) tooltipText += '...';
+                if (talent.uuid !== undefined && talent.uuid !== '') {
+                    try {
+                        const item = (await fromUuid(talent.uuid)) as ResolvedDocument | null;
+                        if (item) {
+                            hasItem = true;
+                            const desc = item.system?.description?.value;
+                            if (desc !== undefined && desc !== '') {
+                                tooltipText = this._stripHtml(desc).substring(0, 200);
+                                if (tooltipText.length >= 200) tooltipText += '...';
+                            }
                         }
+                    } catch {
+                        // Item not found, use name
                     }
-                } catch {
-                    // Item not found, use name
                 }
-            }
 
-            prepared.push({
-                name: talent.name,
-                specialization: talent.specialization ?? null,
-                uuid: talent.uuid ?? null,
-                tooltip: tooltipText,
-                tooltipData: await this._prepareGrantTooltipData(talent.name ?? null, talent.uuid ?? null, tooltipText === talent.name ? '' : tooltipText),
-                hasItem: hasItem,
-            });
-        }
-        return prepared;
+                return {
+                    name: talent.name,
+                    specialization: talent.specialization ?? null,
+                    uuid: talent.uuid ?? null,
+                    tooltip: tooltipText,
+                    tooltipData: await this._prepareGrantTooltipData(talent.name ?? null, talent.uuid ?? null, tooltipText === talent.name ? '' : tooltipText),
+                    hasItem: hasItem,
+                };
+            }),
+        );
     }
 
     /**
@@ -1996,42 +2093,42 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTraitsWithTooltips(traits: GrantItemRaw[]): Promise<unknown[]> {
-        const prepared = [];
-        for (const trait of traits) {
-            let tooltipText = trait.name;
-            let hasItem = false;
+    async _prepareTraitsWithTooltips(traits: GrantItemRaw[]): Promise<PreparedTrait[]> {
+        return Promise.all(
+            traits.map(async (trait) => {
+                let tooltipText = trait.name;
+                let hasItem = false;
 
-            if (trait.uuid !== undefined && trait.uuid !== '') {
-                try {
-                    const item = (await fromUuid(trait.uuid)) as ResolvedDocument | null;
-                    if (item) {
-                        hasItem = true;
-                        const desc = item.system?.description?.value;
-                        if (desc !== undefined && desc !== '') {
-                            tooltipText = this._stripHtml(desc).substring(0, 200);
-                            if (tooltipText.length >= 200) tooltipText += '...';
+                if (trait.uuid !== undefined && trait.uuid !== '') {
+                    try {
+                        const item = (await fromUuid(trait.uuid)) as ResolvedDocument | null;
+                        if (item) {
+                            hasItem = true;
+                            const desc = item.system?.description?.value;
+                            if (desc !== undefined && desc !== '') {
+                                tooltipText = this._stripHtml(desc).substring(0, 200);
+                                if (tooltipText.length >= 200) tooltipText += '...';
+                            }
                         }
+                    } catch {
+                        // Item not found
                     }
-                } catch {
-                    // Item not found
                 }
-            }
 
-            prepared.push({
-                name: trait.name,
-                level: trait.level ?? null,
-                uuid: trait.uuid ?? null,
-                tooltip: tooltipText,
-                tooltipData: await this._prepareGrantTooltipData(
-                    trait.level !== undefined && trait.level !== '' ? `${trait.name ?? ''} (${trait.level})` : trait.name ?? null,
-                    trait.uuid ?? null,
-                    tooltipText === trait.name ? '' : tooltipText,
-                ),
-                hasItem: hasItem,
-            });
-        }
-        return prepared;
+                return {
+                    name: trait.name,
+                    level: trait.level ?? null,
+                    uuid: trait.uuid ?? null,
+                    tooltip: tooltipText,
+                    tooltipData: await this._prepareGrantTooltipData(
+                        trait.level !== undefined && trait.level !== '' ? `${trait.name ?? ''} (${trait.level})` : trait.name ?? null,
+                        trait.uuid ?? null,
+                        tooltipText === trait.name ? '' : tooltipText,
+                    ),
+                    hasItem: hasItem,
+                };
+            }),
+        );
     }
 
     async _prepareGrantTooltipData(title: string | null, uuid: string | null, fallbackDescription = ''): Promise<string> {
@@ -2078,17 +2175,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object}
      * @private
      */
-    async _calculatePreview(): Promise<unknown> {
-        const preview: {
-            characteristics: Array<{ key: string; short: string; value: number }>;
-            skills: Array<Record<string, unknown>>;
-            talents: Array<Record<string, unknown>>;
-            traits: Array<Record<string, unknown>>;
-            aptitudes: string[];
-            equipment: Array<{ name: unknown }>;
-            wounds: number | null;
-            fate: number | null;
-        } = {
+    async _calculatePreview(): Promise<PreviewSummary> {
+        const preview: PreviewSummary = {
             characteristics: [],
             skills: [],
             talents: [],
@@ -2100,14 +2188,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         };
 
         const charTotals: Record<string, number> = {};
-        const skillMap = new Map<string, Record<string, unknown>>(); // name -> {name, uuid}
-        const talentMap = new Map<string, Record<string, unknown>>(); // name -> {name, uuid}
-        const traitMap = new Map<string, Record<string, unknown>>(); // name -> {name, uuid}
+        const skillMap = new Map<string, PreviewGrantEntry>(); // name -> {name, uuid}
+        const talentMap = new Map<string, PreviewGrantEntry>(); // name -> {name, uuid}
+        const traitMap = new Map<string, PreviewGrantEntry>(); // name -> {name, uuid}
         const aptitudeSet = new Set<string>();
-        const equipmentList: unknown[] = [];
+        const equipmentList: string[] = [];
 
         for (const [, selection] of this.selections) {
-            const system = this._getSelectionSystem(selection) as OriginPathSystemData;
+            const system = this._getSelectionSystem(selection);
             const grants: NonNullable<OriginPathSystemData['grants']> = system.grants ?? {};
             const modifiers: Record<string, number> = system.modifiers?.characteristics ?? {};
             const selectedChoices: Record<string, string[]> = system.selectedChoices ?? {};
@@ -2121,7 +2209,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             // Collect base skills with UUIDs
             if (grants.skills) {
-                for (const skill of grants.skills as GrantItemRaw[]) {
+                for (const skill of grants.skills) {
                     const skillName =
                         skill.specialization !== undefined && skill.specialization !== '' ? `${skill.name ?? ''} (${skill.specialization})` : skill.name ?? '';
                     if (!skillMap.has(skillName)) {
@@ -2135,7 +2223,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             // Collect base talents with UUIDs
             if (grants.talents) {
-                for (const talent of grants.talents as GrantItemRaw[]) {
+                const talentUuidsToResolve: string[] = [];
+                for (const talent of grants.talents) {
                     const baseName = talent.name ?? '';
                     const talentName =
                         talent.specialization !== undefined && talent.specialization !== '' ? `${baseName} (${talent.specialization})` : baseName;
@@ -2145,17 +2234,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                             uuid: talent.uuid ?? null,
                         });
                     }
-
-                    // Look up talent modifiers from UUID if available
-                    if (talent.uuid !== undefined && talent.uuid !== '') {
-                        await this._addTalentModifiers(talent.uuid, charTotals, skillMap);
-                    }
+                    if (talent.uuid !== undefined && talent.uuid !== '') talentUuidsToResolve.push(talent.uuid);
                 }
+                // eslint-disable-next-line no-await-in-loop -- sequential: each selection's talent uuids resolve before the next selection accumulates onto the same maps
+                await Promise.all(talentUuidsToResolve.map(async (uuid) => this._addTalentModifiers(uuid, charTotals, skillMap)));
             }
 
             // Collect base traits with UUIDs
             if (grants.traits) {
-                for (const trait of grants.traits as GrantItemRaw[]) {
+                for (const trait of grants.traits) {
                     const traitName = trait.name ?? '';
                     if (!traitMap.has(traitName)) {
                         traitMap.set(traitName, {
@@ -2168,7 +2255,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             // Collect base equipment
             if (grants.equipment) {
-                for (const item of grants.equipment as GrantItemRaw[]) {
+                for (const item of grants.equipment) {
                     equipmentList.push(item.name ?? '');
                 }
             }
@@ -2183,7 +2270,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Process choice grants (deduplicate labels to match dialog keys)
             const previewLabelCounts: Record<string, number> = {};
             if (grants.choices && grants.choices.length > 0) {
-                for (const choice of grants.choices as GrantChoiceRaw[]) {
+                for (const choice of grants.choices) {
                     const base = choice.label ?? choice.name ?? '';
                     previewLabelCounts[base] = (previewLabelCounts[base] ?? 0) + 1;
                     const suffix = previewLabelCounts[base] > 1 ? ` (${previewLabelCounts[base]})` : '';
@@ -2192,92 +2279,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     for (const selectedValue of selectedValues) {
                         const option = choice.options?.find((o) => o.value === selectedValue);
                         if (!option?.grants) continue;
-
-                        const choiceGrants = option.grants as WH40KItemModifiers & {
-                            characteristics?: Record<string, number>;
-                            skills?: GrantItemRaw[];
-                            talents?: GrantItemRaw[];
-                            traits?: GrantItemRaw[];
-                            equipment?: GrantItemRaw[];
-                        };
-
-                        // Choice characteristic bonuses
-                        if (choiceGrants.characteristics) {
-                            for (const [key, value] of Object.entries(choiceGrants.characteristics)) {
-                                if (value !== 0) {
-                                    charTotals[key] = (charTotals[key] ?? 0) + Number(value);
-                                }
-                            }
-                        }
-
-                        // Choice skills with UUIDs
-                        if (choiceGrants.skills) {
-                            for (const skill of choiceGrants.skills) {
-                                const skillName =
-                                    skill.specialization !== undefined && skill.specialization !== ''
-                                        ? `${skill.name ?? ''} (${skill.specialization})`
-                                        : skill.name ?? '';
-                                if (!skillMap.has(skillName)) {
-                                    skillMap.set(skillName, {
-                                        name: skillName,
-                                        uuid: this._findSkillUuid(skill.name, skill.specialization),
-                                        fromChoice: true,
-                                    });
-                                }
-                            }
-                        }
-
-                        // Choice talents with UUIDs
-                        if (choiceGrants.talents) {
-                            for (const talent of choiceGrants.talents) {
-                                const baseName = talent.name ?? '';
-                                const talentName =
-                                    talent.specialization !== undefined && talent.specialization !== '' ? `${baseName} (${talent.specialization})` : baseName;
-                                if (!talentMap.has(talentName)) {
-                                    talentMap.set(talentName, {
-                                        name: talentName,
-                                        uuid: talent.uuid ?? null,
-                                        fromChoice: true,
-                                    });
-                                }
-
-                                // Look up talent modifiers from UUID if available
-                                if (talent.uuid !== undefined && talent.uuid !== '') {
-                                    await this._addTalentModifiers(talent.uuid, charTotals, skillMap);
-                                }
-                            }
-                        }
-
-                        // Choice traits with UUIDs
-                        if (choiceGrants.traits) {
-                            for (const trait of choiceGrants.traits) {
-                                const traitName = trait.name ?? '';
-                                if (!traitMap.has(traitName)) {
-                                    traitMap.set(traitName, {
-                                        name: traitName,
-                                        uuid: trait.uuid ?? null,
-                                        fromChoice: true,
-                                    });
-                                }
-                            }
-                        }
-
-                        // Choice equipment
-                        if (choiceGrants.equipment) {
-                            for (const item of choiceGrants.equipment) {
-                                equipmentList.push(item.name ?? '');
-                            }
-                        }
+                        // eslint-disable-next-line no-await-in-loop -- sequential: each option may add talent UUIDs whose modifiers feed the next iteration's charTotals
+                        await this._applyChoiceGrantsToPreview(option.grants, { charTotals, skillMap, talentMap, traitMap, equipmentList });
                     }
 
                     // Aptitude-typed choices: selected values ARE the aptitude names
-                    if (choice.type === 'aptitude') {
-                        for (const selectedValue of selectedValues) {
-                            const option = choice.options?.find((o) => o.value === selectedValue || o.name === selectedValue);
-                            const aptName = (option?.value !== undefined && option.value !== '' ? option.value : option?.name) ?? selectedValue;
-                            if (aptName !== '') aptitudeSet.add(aptName);
-                        }
-                    }
+                    if (choice.type === 'aptitude') this._collectAptitudeChoices(choice, selectedValues, aptitudeSet);
                 }
             }
 
@@ -2351,6 +2358,107 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Add aptitude names from a resolved aptitude-typed choice into the running
+     * aptitude set. Extracted from _calculatePreview to flatten its loop depth.
+     * @private
+     */
+    _collectAptitudeChoices(choice: GrantChoiceRaw, selectedValues: string[], aptitudeSet: Set<string>): void {
+        for (const selectedValue of selectedValues) {
+            const option = choice.options?.find((o) => o.value === selectedValue || o.name === selectedValue);
+            const aptName = (option?.value !== undefined && option.value !== '' ? option.value : option?.name) ?? selectedValue;
+            if (aptName !== '') aptitudeSet.add(aptName);
+        }
+    }
+
+    /**
+     * Fold one option.grants block into the preview accumulators. Extracted
+     * from _calculatePreview so the nested choice loop stays under the
+     * max-depth cap.
+     * @private
+     */
+    async _applyChoiceGrantsToPreview(
+        grants: WH40KItemModifiers,
+        acc: {
+            charTotals: Record<string, number>;
+            skillMap: Map<string, PreviewGrantEntry>;
+            talentMap: Map<string, PreviewGrantEntry>;
+            traitMap: Map<string, PreviewGrantEntry>;
+            equipmentList: string[];
+        },
+    ): Promise<void> {
+        const choiceGrants = grants as WH40KItemModifiers & {
+            characteristics?: Record<string, number>;
+            skills?: GrantItemRaw[];
+            talents?: GrantItemRaw[];
+            traits?: GrantItemRaw[];
+            equipment?: GrantItemRaw[];
+        };
+
+        // Choice characteristic bonuses
+        if (choiceGrants.characteristics) {
+            for (const [key, value] of Object.entries(choiceGrants.characteristics)) {
+                if (value !== 0) {
+                    acc.charTotals[key] = (acc.charTotals[key] ?? 0) + Number(value);
+                }
+            }
+        }
+
+        // Choice skills with UUIDs
+        if (choiceGrants.skills) {
+            for (const skill of choiceGrants.skills) {
+                const skillName =
+                    skill.specialization !== undefined && skill.specialization !== '' ? `${skill.name ?? ''} (${skill.specialization})` : skill.name ?? '';
+                if (!acc.skillMap.has(skillName)) {
+                    acc.skillMap.set(skillName, {
+                        name: skillName,
+                        uuid: this._findSkillUuid(skill.name, skill.specialization),
+                        fromChoice: true,
+                    });
+                }
+            }
+        }
+
+        // Choice talents with UUIDs
+        if (choiceGrants.talents) {
+            const talentUuidsToResolve: string[] = [];
+            for (const talent of choiceGrants.talents) {
+                const baseName = talent.name ?? '';
+                const talentName = talent.specialization !== undefined && talent.specialization !== '' ? `${baseName} (${talent.specialization})` : baseName;
+                if (!acc.talentMap.has(talentName)) {
+                    acc.talentMap.set(talentName, {
+                        name: talentName,
+                        uuid: talent.uuid ?? null,
+                        fromChoice: true,
+                    });
+                }
+                if (talent.uuid !== undefined && talent.uuid !== '') talentUuidsToResolve.push(talent.uuid);
+            }
+            await Promise.all(talentUuidsToResolve.map(async (uuid) => this._addTalentModifiers(uuid, acc.charTotals, acc.skillMap)));
+        }
+
+        // Choice traits with UUIDs
+        if (choiceGrants.traits) {
+            for (const trait of choiceGrants.traits) {
+                const traitName = trait.name ?? '';
+                if (!acc.traitMap.has(traitName)) {
+                    acc.traitMap.set(traitName, {
+                        name: traitName,
+                        uuid: trait.uuid ?? null,
+                        fromChoice: true,
+                    });
+                }
+            }
+        }
+
+        // Choice equipment
+        if (choiceGrants.equipment) {
+            for (const item of choiceGrants.equipment) {
+                acc.equipmentList.push(item.name ?? '');
+            }
+        }
+    }
+
+    /**
      * Look up a talent by UUID and add its modifiers to the totals
      * @param {string} uuid - Compendium UUID for the talent
      * @param {object} charTotals - Characteristic totals accumulator
@@ -2358,7 +2466,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<void>}
      * @private
      */
-    async _addTalentModifiers(uuid: string, charTotals: Record<string, number>, skillMap: Map<string, Record<string, unknown>>): Promise<void> {
+    async _addTalentModifiers(uuid: string, charTotals: Record<string, number>, skillMap: Map<string, PreviewGrantEntry>): Promise<void> {
         try {
             const talent = (await fromUuid(uuid)) as ResolvedDocument | null;
             if (!talent) return;
@@ -2384,20 +2492,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     if (!skillMap.has(skillName)) {
                         skillMap.set(skillName, {
                             name: skillName,
-                            uuid: this._findSkillUuid(skill.name as string | undefined, skill.specialization as string | undefined),
+                            uuid: this._findSkillUuid(skill.name, skill.specialization),
                         });
                     }
                 }
             }
 
             // Recursively process nested talents (e.g., Enemy grants from Hunted talent)
-            const nestedTalents = (talentGrants as { talents?: Array<Record<string, unknown>> }).talents;
+            const nestedTalents = (talentGrants as { talents?: GrantItemRaw[] }).talents;
             if (nestedTalents) {
-                for (const nestedTalent of nestedTalents) {
-                    if (typeof nestedTalent.uuid === 'string' && nestedTalent.uuid !== '') {
-                        await this._addTalentModifiers(nestedTalent.uuid, charTotals, skillMap);
-                    }
-                }
+                const nestedUuids = nestedTalents
+                    .map((nestedTalent) => nestedTalent.uuid)
+                    .filter((nestedUuid): nestedUuid is string => typeof nestedUuid === 'string' && nestedUuid !== '');
+                await Promise.all(nestedUuids.map(async (nestedUuid) => this._addTalentModifiers(nestedUuid, charTotals, skillMap)));
             }
         } catch (error) {
             console.warn(`OriginPathBuilder | Failed to resolve talent UUID ${uuid}:`, error);
@@ -2417,7 +2524,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         let pendingRolls = 0;
 
         for (const [, selection] of this.selections) {
-            const system = this._getSelectionSystem(selection) as OriginPathSystemData;
+            const system = this._getSelectionSystem(selection);
             const grants: NonNullable<OriginPathSystemData['grants']> = system.grants ?? {};
             const selectedChoices: Record<string, string[]> = system.selectedChoices ?? {};
             const rollResults: Record<string, { rolled?: number; breakdown?: string } | undefined> = system.rollResults ?? {};
@@ -2476,13 +2583,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this.selections.clear();
 
         const coreStepKeys = this.systemConfig.coreSteps.map((s) => s.key);
-        const chartLayout = OriginChartLayout.computeFullChart(
-            this.allOrigins as unknown as OriginLikeParam[],
-            this.selections as unknown as Map<string, OriginLikeParam>,
+        const rawChartLayout = OriginChartLayout.computeFullChart(
+            asOriginLikeArray(this.allOrigins),
+            asOriginLikeMap(this.selections),
             false,
             'forward',
             coreStepKeys,
-        ) as unknown as { steps: StepLayout[] };
+        );
+        // eslint-disable-next-line no-restricted-syntax -- boundary: OriginChartLayout's ChartLayout/OriginCard types are structurally compatible with our StepLayout view
+        const chartLayout = rawChartLayout as unknown as { steps: StepLayout[] };
 
         const coreSteps = this.systemConfig.coreSteps;
         for (let i = 0; i < coreSteps.length; i++) {
@@ -2494,6 +2603,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const selected = validOrigins[randomIndex];
 
                 // Store as plain data object (not Item instance)
+                // eslint-disable-next-line no-restricted-syntax -- boundary: _itemToSelectionData accepts the structurally-compatible NormalizedOrigin shape
                 const originData = this._itemToSelectionData(selected.origin as unknown as WH40KItem);
                 this.selections.set(coreSteps[i].step, originData);
             }
@@ -2583,7 +2693,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
                 try {
                     const text = await file.text();
-                    const data = JSON.parse(text) as { version?: number; selections?: Record<string, unknown> };
+                    interface ImportSelectionEntry {
+                        uuid?: string;
+                        selectedChoices?: Record<string, string[]>;
+                        rollResults?: Record<string, { rolled?: number; breakdown?: string } | undefined>;
+                    }
+                    interface ImportPayload {
+                        version?: number;
+                        selections?: Record<string, ImportSelectionEntry>;
+                    }
+                    const data = JSON.parse(text) as ImportPayload;
 
                     if (data.version !== 1) {
                         throw new Error('Unsupported version');
@@ -2592,12 +2711,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     this.selections.clear();
 
                     for (const [step, selData] of Object.entries(data.selections ?? {})) {
-                        const origin = await fromUuid((selData as Record<string, unknown>).uuid as string);
+                        if (selData.uuid === undefined) continue;
+                        // eslint-disable-next-line no-await-in-loop -- sequential: each selection resolves a different compendium uuid
+                        const origin = await fromUuid(selData.uuid);
                         if (origin) {
                             // Store as plain data object (not Item instance)
-                            const originData = this._itemToSelectionData(origin as unknown as WH40KItem);
-                            originData.system.selectedChoices = (selData as Record<string, unknown>).selectedChoices;
-                            originData.system.rollResults = (selData as Record<string, unknown>).rollResults;
+                            const originData = this._itemToSelectionData(origin as WH40KItem);
+                            if (selData.selectedChoices) originData.system.selectedChoices = selData.selectedChoices;
+                            if (selData.rollResults) originData.system.rollResults = selData.rollResults;
                             this.selections.set(step, originData);
                         }
                     }
@@ -2750,6 +2871,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // selection data so previously made choices and rolls stay populated when the user
         // re-clicks the card. Otherwise the preview would load fresh compendium data.
         const confirmed = this._findConfirmedSelectionMatching(origin);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _itemToSelectionData accepts the structurally-compatible NormalizedOrigin shape
         this.previewedOrigin = confirmed ?? this._itemToSelectionData(origin as unknown as WH40KItem);
 
         // Re-render to show in selection panel
@@ -2874,6 +2996,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         // Show detail dialog for PREVIEW ONLY (no selection)
+        // eslint-disable-next-line no-restricted-syntax -- boundary: OriginDetailDialog accepts the structurally-compatible NormalizedOrigin shape
         await OriginDetailDialog.show(origin as unknown as WH40KItem, {
             allowSelection: false, // Changed to false - preview only
             isSelected: isSelected,
@@ -2909,11 +3032,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 }
             }
 
-            const lastSelection = this._getLastConfirmedSelection(currentIndex);
-            originData.system.pathPositions = OriginChartLayout.resolvePathPositions(
-                originData as unknown as OriginLikeParam,
-                lastSelection as OriginLikeParam | null,
-            );
+            const lastSelection = this._getLastConfirmedSelection(currentIndex) as NormalizedOrigin | null;
+            originData.system.pathPositions = OriginChartLayout.resolvePathPositions(asOriginLike(originData), asOriginLikeOrNull(lastSelection));
 
             // Store selection as plain data object
             this.selections.set(currentStep.step, originData);
@@ -3004,8 +3124,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         if (selection === null || selection === undefined || choiceLabel === undefined || choiceLabel === '') return;
 
-        const system = this._getSelectionSystem(selection) as OriginPathSystemData;
-        const choices: GrantChoiceRaw[] = (system.grants?.choices as GrantChoiceRaw[] | undefined) ?? [];
+        const system = this._getSelectionSystem(selection);
+        const choices: GrantChoiceRaw[] = system.grants?.choices ?? [];
         const choice = choices.find((c) => (c.label ?? c.name) === choiceLabel);
         if (!choice) return;
 
@@ -3017,7 +3137,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             uuid: selection.uuid ?? (selection as NormalizedOriginWithMeta)._sourceUuid,
         };
 
-        const result = await OriginPathChoiceDialog.show(itemLike as unknown as WH40KItem, this.actor);
+        const result = await OriginPathChoiceDialog.show(itemLike as WH40KItem, this.actor);
 
         if (result !== null) {
             // Always directly mutate the plain data object
@@ -3047,7 +3167,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         if (selection === null || selection === undefined || statType === undefined || statType === '') return;
 
-        const system = this._getSelectionSystem(selection) as OriginPathSystemData;
+        const system = this._getSelectionSystem(selection);
         const grants: NonNullable<OriginPathSystemData['grants']> = system.grants ?? {};
         let formula: string | undefined;
         if (statType === 'wounds') formula = grants.woundsFormula ?? undefined;
@@ -3064,12 +3184,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             uuid: selection.uuid ?? (selection as NormalizedOriginWithMeta)._sourceUuid,
         };
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: OriginRollDialog accepts a structurally narrowed actor view, not the full WH40KBaseActor
+        const actorLike = this.actor as unknown as {
+            name: string;
+            img: string;
+            system: { characteristics?: Record<string, { bonus?: number } | undefined> };
+        };
         const result = await OriginRollDialog.show(statType, formula, {
-            actor: this.actor as unknown as {
-                name: string;
-                img: string;
-                system: { characteristics?: Record<string, { bonus?: number } | undefined> };
-            },
+            actor: actorLike,
             originItem: itemLike,
         });
 
@@ -3106,7 +3228,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         if (selection === null || selection === undefined || statType === undefined || statType === '') return;
 
-        const system = this._getSelectionSystem(selection) as OriginPathSystemData;
+        const system = this._getSelectionSystem(selection);
         const grants: NonNullable<OriginPathSystemData['grants']> = system.grants ?? {};
         let formula: string | undefined;
         if (statType === 'wounds') formula = grants.woundsFormula ?? undefined;
@@ -3137,6 +3259,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         });
 
         if (result !== null && result !== undefined) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: confirmation-dialog returns unknown until the call sites narrow; here the result is a number
             const rolledValue = result as unknown as number;
             const rollData = {
                 formula: formula,
@@ -3263,12 +3386,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Roll the full characteristic bank using 2d10 per slot.
      */
     static async #rollCharacteristicsBank(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
-        const rolls: number[] = [];
-        for (let i = 0; i < OriginPathBuilder.GENERATION_CHARACTERISTICS.length; i++) {
-            const roll = new Roll('2d10');
-            await roll.evaluate();
-            rolls.push(roll.total ?? 0);
-        }
+        const rollInstances = Array.from({ length: OriginPathBuilder.GENERATION_CHARACTERISTICS.length }, () => new Roll('2d10'));
+        await Promise.all(rollInstances.map(async (roll) => roll.evaluate()));
+        const rolls: number[] = rollInstances.map((roll) => roll.total ?? 0);
 
         this._charRolls = rolls;
         void this.render();
@@ -3408,7 +3528,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             void this.render();
             return;
         }
-        const felBonus = (this.actor.system as unknown as OriginPathSystemData).characteristics?.fellowship.bonus ?? 0;
+        const felBonus = this._actorSys().characteristics?.fellowship.bonus ?? 0;
         const mod = this._getContextualInfluenceMod();
         const roll = new Roll('1d5');
         await roll.evaluate();
@@ -3510,10 +3630,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const originItems = [];
             for (const [, selection] of this.selections) {
                 // Create an item-like object with proper system data
-                const itemData =
-                    'toObject' in selection && typeof (selection as unknown as WH40KItem).toObject === 'function'
-                        ? (selection as unknown as WH40KItem).toObject()
-                        : foundry.utils.deepClone(selection);
+                const maybeDoc = selection as { toObject?: () => Partial<NormalizedOrigin> };
+                const itemData: Partial<NormalizedOrigin> = typeof maybeDoc.toObject === 'function' ? maybeDoc.toObject() : foundry.utils.deepClone(selection);
                 // Ensure system data is present
                 if (itemData.system === undefined || itemData.system === null) itemData.system = selection.system;
                 // selectedChoices and rollResults are already on selection.system
@@ -3547,33 +3665,30 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Use GrantsManager to apply all grants in batch
             // This handles characteristics, skills, talents, traits, wounds, fate, etc.
             // reverseExisting ensures old grants are reversed before applying new ones
-            const result = await GrantsManager.applyBatchGrants(
-                originItems.map((data) => ({
-                    name: (data as NormalizedOrigin).name,
-                    type: 'originPath',
-                    system: (data as NormalizedOrigin).system,
-                    toObject: () => data,
-                })) as unknown as WH40KItem[],
-                this.actor,
-                {
-                    selections: this._buildGrantSelections(),
-                    rolledValues: this._buildRolledValues(),
-                    showNotification: false,
-                    reverseExisting: true, // Reverse any previously applied grants first
-                },
-            );
+            const itemLikeRecords = originItems.map((data) => ({
+                name: data.name,
+                type: 'originPath',
+                system: data.system,
+                toObject: () => data,
+            }));
+            // eslint-disable-next-line no-restricted-syntax -- boundary: GrantsManager.applyBatchGrants accepts a structurally-compatible item-like shape, not full WH40KItem instances
+            const itemLikes = itemLikeRecords as unknown as WH40KItem[];
+            const result = await GrantsManager.applyBatchGrants(itemLikes, this.actor, {
+                selections: this._buildGrantSelections(),
+                rolledValues: this._buildRolledValues(),
+                showNotification: false,
+                reverseExisting: true, // Reverse any previously applied grants first
+            });
 
             if (!result.success && result.errors.length > 0) {
                 console.warn('Grant application had errors:', result.errors);
             }
 
             // Create origin path items on actor (for reference/display)
-            const cleanOriginItems = [];
+            const cleanOriginItems: ItemDataLike[] = [];
             for (const [, selection] of this.selections) {
-                const selWithToObject = selection as unknown as { toObject?: () => Record<string, unknown> };
-                const itemData = selWithToObject.toObject
-                    ? selWithToObject.toObject()
-                    : (foundry.utils.deepClone(selection) as unknown as Record<string, unknown>);
+                const selWithToObject = selection as { toObject?: () => ItemDataLike };
+                const itemData: ItemDataLike = selWithToObject.toObject ? selWithToObject.toObject() : (foundry.utils.deepClone(selection) as ItemDataLike);
                 const sourceUuid = itemData.uuid ?? itemData._sourceUuid;
                 // Remove internal tracking properties
                 delete itemData._sourceUuid;
@@ -3581,16 +3696,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 // Ensure it's marked as an origin path item
                 itemData.type = 'originPath';
                 if (sourceUuid !== undefined && sourceUuid !== null && sourceUuid !== '') {
-                    const flagsRaw = itemData.flags as Record<string, Record<string, unknown> | undefined> | undefined;
-                    const flags: Record<string, Record<string, unknown> | undefined> = flagsRaw ?? {};
-                    const core: Record<string, unknown> = flags.core ?? {};
+                    const flags: { core?: CoreFlags } & Record<string, CoreFlags | undefined> = itemData.flags ?? {};
+                    const core: CoreFlags = flags.core ?? {};
                     core.sourceId = sourceUuid;
                     flags.core = core;
                     itemData.flags = flags;
                 }
                 cleanOriginItems.push(itemData);
             }
-            await this.actor.createEmbeddedDocuments('Item', cleanOriginItems as unknown as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
+            await this.actor.createEmbeddedDocuments('Item', cleanOriginItems as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
 
             // Apply characteristic rolls if any are assigned
             const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
@@ -3658,19 +3772,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object}
      * @private
      */
-    _buildGrantSelections(): Record<string, unknown> {
-        const selections: Record<string, unknown> = {};
+    _buildGrantSelections(): Record<string, { selected: string[] }> {
+        const selections: Record<string, { selected: string[] }> = {};
         for (const [, selection] of this.selections) {
             const selSys = selection.system as OriginPathSystemData;
             const choices = selSys.grants?.choices ?? [];
-            const selectedChoices: Record<string, unknown> = (selSys.selectedChoices as Record<string, unknown> | undefined) ?? {};
+            const selectedChoices = selSys.selectedChoices ?? {};
             // Deduplicate labels the same way the choice dialog does,
             // so we look up the right key in selectedChoices.
             const labelCounts: Record<string, number> = {};
             for (let i = 0; i < choices.length; i++) {
                 const choiceRaw = choices[i];
-                const rawLabel = (choiceRaw as { label?: unknown; name?: unknown }).label;
-                const rawName = (choiceRaw as { label?: unknown; name?: unknown }).name;
+                const rawLabel = choiceRaw.label;
+                const rawName = choiceRaw.name;
                 const baseLabel =
                     typeof rawLabel === 'string' && rawLabel !== '' ? rawLabel : typeof rawName === 'string' && rawName !== '' ? rawName : 'choice';
                 labelCounts[baseLabel] = (labelCounts[baseLabel] ?? 0) + 1;
@@ -3693,7 +3807,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object}
      * @private
      */
-    _buildRolledValues(): Record<string, unknown> {
+    _buildRolledValues(): { wounds?: number; fate?: number } {
         const values: { wounds?: number; fate?: number } = {};
         for (const [, selection] of this.selections) {
             const rollResults = (selection.system as OriginPathSystemData).rollResults ?? {};
@@ -3723,7 +3837,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _collectOriginCharacteristicBonuses(): Record<string, number> {
         const sums: Record<string, number> = {};
-        const addToSum = (key: string, value: unknown): void => {
+        const addToSum = (key: string, value: number | string | undefined | null): void => {
             const n = Number(value);
             if (!Number.isFinite(n) || n === 0) return;
             sums[key] = (sums[key] ?? 0) + n;
@@ -3732,8 +3846,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const collectFromSelection = (selection: NormalizedOrigin | null): void => {
             if (selection === null) return;
             const system = this._getSelectionSystem(selection);
-            const sys = system as OriginPathSystemData;
-            const charMods = sys.modifiers?.characteristics as Record<string, unknown> | undefined;
+            const sys = system;
+            const charMods = sys.modifiers?.characteristics as Record<string, number | undefined> | undefined;
             if (charMods) {
                 for (const [key, value] of Object.entries(charMods)) addToSum(key, value);
             }
@@ -3822,12 +3936,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         for (const key of CHARS) {
             update[`system.characteristics.${key}.advance`] = 0;
         }
-        const skills = (this.actor.system as unknown as OriginPathSystemData).skills ?? {};
+        const skills = this._actorSys().skills ?? {};
         for (const skillKey of Object.keys(skills)) {
             update[`system.skills.${skillKey}.advance`] = 0;
             const entries = skills[skillKey].entries;
             if (Array.isArray(entries)) {
-                const resetEntries = entries.map((entry) => ({ ...(entry as Record<string, unknown>), advance: 0 }));
+                const resetEntries = entries.map((entry) => ({ ...entry, advance: 0 }));
                 update[`system.skills.${skillKey}.entries`] = resetEntries;
             }
         }
@@ -3855,35 +3969,40 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     async _applyEquipmentSelections(): Promise<void> {
         const availableWeapons = this._getAvailableWeaponsForAmmo();
-        const creations: Record<string, unknown>[] = [];
+        const creations: ItemDataLike[] = [];
         for (const entry of this.equipmentSelections.values()) {
-            const uuid = entry.uuid as string;
+            const equipEntry = entry;
+            const uuid = equipEntry.uuid;
+            // eslint-disable-next-line no-await-in-loop -- sequential: each item needs its own compendium lookup and clone
             const source = await fromUuid(uuid);
             if (!source) continue;
-            const sourceDoc = source as unknown as { toObject?: () => Record<string, unknown> };
-            const itemData = sourceDoc.toObject ? sourceDoc.toObject() : (foundry.utils.deepClone(source) as unknown as Record<string, unknown>);
+            const sourceDoc = source as { toObject?: () => ItemDataLike };
+            const itemData: ItemDataLike = sourceDoc.toObject ? sourceDoc.toObject() : (foundry.utils.deepClone(source) as ItemDataLike);
             delete itemData._id;
-            const flags = (itemData.flags ??= {}) as Record<string, Record<string, unknown>>;
-            const core = (flags.core ??= {});
+            const flags: { core?: CoreFlags } & Record<string, CoreFlags | undefined> = itemData.flags ?? {};
+            const core: CoreFlags = flags.core ?? {};
             core.sourceId = uuid;
+            flags.core = core;
+            itemData.flags = flags;
 
-            if (entry.type === 'ammunition') {
+            if (equipEntry.type === 'ammunition') {
                 // Size user-picked ammo to one clip of the primary ranged weapon that supports it.
                 // Prefer origin-granted weapons over weapons the player also picked.
-                const types = Array.isArray((entry as EquipmentItemEntry).weaponTypes) ? (entry as EquipmentItemEntry).weaponTypes : [];
+                const types = Array.isArray(equipEntry.weaponTypes) ? equipEntry.weaponTypes : [];
                 const compatible =
                     availableWeapons.find((w) => types.includes(w.identifier) && w.source === 'granted') ??
                     availableWeapons.find((w) => types.includes(w.identifier));
                 if (compatible && compatible.clipMax > 0) {
-                    itemData.system = itemData.system || {};
-                    (itemData.system as Record<string, unknown>).quantity = compatible.clipMax;
+                    if (itemData.system === undefined) itemData.system = {};
+                    itemData.system.quantity = compatible.clipMax;
                 }
             }
 
             creations.push(itemData);
 
-            if (entry.type === 'weapon') {
-                const ammoData = await this._resolveStandardAmmoItem(source as unknown as WH40KItem);
+            if (equipEntry.type === 'weapon') {
+                // eslint-disable-next-line no-await-in-loop -- sequential: ammo lookup depends on the same weapon's identifier
+                const ammoData = await this._resolveStandardAmmoItem(source as WH40KItem);
                 if (ammoData) {
                     const cloneA = foundry.utils.deepClone(ammoData);
                     const cloneB = foundry.utils.deepClone(ammoData);
@@ -3895,7 +4014,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         if (creations.length > 0) {
-            await this.actor.createEmbeddedDocuments('Item', creations as unknown as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
+            await this.actor.createEmbeddedDocuments('Item', creations as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
         }
     }
 
@@ -3903,7 +4022,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Resolve a standard ammunition item for a given weapon, matching by weaponTypes.
      * @private
      */
-    async _resolveStandardAmmoItem(weapon: WH40KItem): Promise<Record<string, unknown> | null> {
+    async _resolveStandardAmmoItem(weapon: WH40KItem): Promise<ItemDataLike | null> {
         const packNames = this.systemConfig.equipmentPacks ?? [];
         const weaponIdentifier = (weapon.system as OriginPathSystemData).identifier;
         if (weaponIdentifier === undefined || weaponIdentifier === '') return null;
@@ -3914,21 +4033,25 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 game.packs.get(`wh40k-rpg.${packName}`) ?? game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
             if (!pack) continue;
 
+            // eslint-disable-next-line no-await-in-loop -- sequential: search packs in priority order, stop at first match
             const index = await pack.getIndex({ fields: ['system.weaponTypes', 'system.identifier', 'name', 'type'] });
             const match = index.find((rawEntry) => {
-                const entry = rawEntry as unknown as { type?: string; system?: OriginPathSystemData };
+                const entry = rawEntry as { type?: string; system?: OriginPathSystemData };
                 if (entry.type !== 'ammunition') return false;
                 const types = entry.system?.weaponTypes ?? [];
                 return Array.isArray(types) && types.includes(weaponIdentifier);
             });
             if (!match) continue;
+            // eslint-disable-next-line no-await-in-loop -- sequential: doc lookup only runs once after a match is found
             const doc = await pack.getDocument(match._id);
             if (!doc) continue;
-            const docWithToObject = doc as { toObject?: () => Record<string, unknown> };
-            const data = docWithToObject.toObject ? docWithToObject.toObject() : (foundry.utils.deepClone(doc) as unknown as Record<string, unknown>);
-            const flags = (data.flags ??= {}) as Record<string, Record<string, unknown>>;
-            const core = (flags.core ??= {});
+            const docWithToObject = doc as { toObject?: () => ItemDataLike };
+            const data: ItemDataLike = docWithToObject.toObject ? docWithToObject.toObject() : (foundry.utils.deepClone(doc) as ItemDataLike);
+            const flags: { core?: CoreFlags } & Record<string, CoreFlags | undefined> = data.flags ?? {};
+            const core: CoreFlags = flags.core ?? {};
             core.sourceId = `Compendium.${pack.metadata.id}.${match._id}`;
+            flags.core = core;
+            data.flags = flags;
             return data;
         }
         return null;
