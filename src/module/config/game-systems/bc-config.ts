@@ -56,7 +56,6 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
         const originPath = (actor.system?.originPath ?? {}) as Record<string, string | number>;
         return [
-            this.makePlayerField(actor),
             this.makeField('Home World', 'system.originPath.homeWorld', originPath.homeWorld ?? ''),
             this.makeField('Archetype', 'system.originPath.role', originPath.role ?? '', 'Archetype'),
             this.makeField('Pride', 'system.originPath.background', originPath.background ?? ''),

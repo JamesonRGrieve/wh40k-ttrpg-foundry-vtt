@@ -73,7 +73,6 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
         const get = (key: string): string | number => this.readOriginPathField(actor, key);
         return [
-            this.makePlayerField(actor),
             this.makeField(game.i18n.localize('WH40K.OriginPath.HomeWorld'), 'system.originPath.homeWorld', get('homeWorld'), 'Home World'),
             this.makeField(game.i18n.localize('WH40K.OriginPath.Background'), 'system.originPath.background', get('background'), 'Background'),
             this.makeField(game.i18n.localize('WH40K.OriginPath.Role'), 'system.originPath.role', get('role'), 'Role'),

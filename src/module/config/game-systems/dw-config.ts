@@ -41,7 +41,6 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
         const get = (key: string): string | number => this.readOriginPathField(actor, key);
         return [
-            this.makePlayerField(actor),
             this.makeField('Chapter', 'system.originPath.homeWorld', get('homeWorld'), 'Chapter'),
             this.makeField('Speciality', 'system.originPath.role', get('role'), 'Speciality'),
             this.makeField('Rank', 'system.originPath.career', get('career')),
