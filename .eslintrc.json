@@ -25,6 +25,7 @@
     "no-var": "warn",
     "prefer-const": "warn",
     "no-unused-vars": ["warn", { "args": "none", "ignoreRestSiblings": true }],
+    "no-unused-private-class-members": "warn",
     "no-duplicate-imports": "warn",
     "no-self-assign": "warn",
     "no-self-compare": "warn",
