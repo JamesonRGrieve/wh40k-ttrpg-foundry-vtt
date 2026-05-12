@@ -17,10 +17,7 @@
     {{! Prerequisites Section }}
     {{#if talent.hasPrerequisites}}
         <div class="tw-mb-3">
-            <h4 class="tw-flex tw-items-center tw-gap-1.5 tw-mb-3 tw-py-2 tw-px-3 tw-m-0 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.1)_0%,transparent_100%)] tw-border-l-[3px] tw-border-accent-talents tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-text-dark)]">
-                <i class="fas fa-tasks tw-text-accent-talents tw-text-[0.9rem]"></i>
-                Prerequisites
-            </h4>
+            {{> systems/wh40k-rpg/templates/shared/accent-heading.hbs title="Prerequisites" icon="fa-tasks" role="talents"}}
             <div class="tw-text-sm tw-leading-relaxed tw-text-[var(--color-text-primary)]">
                 {{talent.prerequisitesLabel}}
             </div>
@@ -29,10 +26,7 @@
 
     {{! Benefit Section }}
     <div class="tw-mb-3">
-        <h4 class="tw-flex tw-items-center tw-gap-1.5 tw-mb-3 tw-py-2 tw-px-3 tw-m-0 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.1)_0%,transparent_100%)] tw-border-l-[3px] tw-border-accent-talents tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-text-dark)]">
-            <i class="fas fa-star tw-text-accent-talents tw-text-[0.9rem]"></i>
-            Benefit
-        </h4>
+        {{> systems/wh40k-rpg/templates/shared/accent-heading.hbs title="Benefit" icon="fa-star" role="talents"}}
         <div class="tw-text-[0.9rem] tw-leading-[1.65] tw-text-[var(--color-text-primary)]">
             {{{talent.benefit}}}
         </div>
@@ -41,10 +35,7 @@
     {{! Specialization (if present) }}
     {{#if talent.specialization}}
         <div class="tw-mb-3">
-            <h4 class="tw-flex tw-items-center tw-gap-1.5 tw-mb-3 tw-py-2 tw-px-3 tw-m-0 tw-bg-[linear-gradient(90deg,rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.1)_0%,transparent_100%)] tw-border-l-[3px] tw-border-accent-talents tw-font-display tw-text-sm tw-font-semibold tw-text-[var(--wh40k-text-dark)]">
-                <i class="fas fa-tag tw-text-accent-talents tw-text-[0.9rem]"></i>
-                Specialization
-            </h4>
+            {{> systems/wh40k-rpg/templates/shared/accent-heading.hbs title="Specialization" icon="fa-tag" role="talents"}}
             <div class="tw-text-sm tw-leading-relaxed tw-text-[var(--color-text-primary)]">
                 {{talent.specialization}}
                 {{#if talent.stackable}}

@@ -11,7 +11,7 @@
  * Cache for skill UUID lookups to avoid repeated compendium searches
  * @type {Map<string, string|null>}
  */
-const _skillUuidCache = new Map();
+const _skillUuidCache = new Map<string, string | null>();
 
 /**
  * Clear the skill UUID cache
@@ -127,6 +127,7 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
         }
 
         // No match found
+        // eslint-disable-next-line no-console -- diagnostic: skill lookup miss is useful for compendium debugging
         console.debug(`Skill not found in compendium: ${cacheKey}`);
         _skillUuidCache.set(cacheKey, null);
         return null;
@@ -142,7 +143,7 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
  * More efficient than calling findSkillUuid individually
  *
  * @param {Array<{name: string, specialization?: string}>} skills - Array of skill objects
- * @returns {Promise<Map<string, string|null>>} - Map of cache keys to UUIDs
+ * @returns {Map<string, string|null>} - Map of cache keys to UUIDs
  *
  * @example
  * const skills = [
@@ -153,17 +154,15 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
  * const results = await batchFindSkillUuids(skills);
  * // Returns: Map { "Awareness" => "Compendium...", "Common Lore::Imperium" => "Compendium...", ... }
  */
-export async function batchFindSkillUuids(skills: Array<{ name: string; specialization?: string }>): Promise<Map<string, string | null | undefined>> {
+export function batchFindSkillUuids(skills: Array<{ name: string; specialization?: string }>): Map<string, string | null | undefined> {
     const results = new Map<string, string | null | undefined>();
 
-    // Process all skills in parallel
-    const promises = skills.map((skill: { name: string; specialization?: string }) => {
-        const uuid = findSkillUuid(skill.name, skill.specialization);
+    for (const skill of skills) {
+        const uuid = findSkillUuid(skill.name, skill.specialization ?? null);
         const cacheKey = skill.specialization !== undefined && skill.specialization !== '' ? `${skill.name}::${skill.specialization}` : skill.name;
         results.set(cacheKey, uuid);
-    });
+    }
 
-    await Promise.all(promises);
     return results;
 }
 

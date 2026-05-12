@@ -261,6 +261,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
     /** @override */
     static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+        /* eslint-disable @typescript-eslint/unbound-method -- Foundry's action dispatcher binds `this` to the sheet instance at invocation time. */
         actions: {
             editImage: BaseActorSheet.#onEditImage,
             roll: BaseActorSheet.#roll,
@@ -283,6 +284,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             spendXPAdvance: BaseActorSheet.#spendXPAdvance,
             editCharacteristic: BaseActorSheet.#editCharacteristic,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         classes: ['wh40k-rpg', 'sheet', 'actor'],
         tag: 'form',
         form: {
@@ -325,7 +327,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * Scroll positions for scrollable containers.
      * @type {Map<string, number>}
      */
-    _scrollPositions = new Map();
+    _scrollPositions = new Map<string, number>();
 
     /**
      * Whether state has been restored for this sheet instance.
@@ -748,12 +750,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                     if (normalized.characteristic === undefined || normalized.characteristic === '') {
                         normalized.characteristic = data.characteristic;
                     }
-                    if (normalized.advanced === undefined) {
-                        normalized.advanced = data.advanced;
-                    }
-                    if (normalized.basic === undefined) {
-                        normalized.basic = data.advanced !== true;
-                    }
+                    normalized.advanced ??= data.advanced;
+                    normalized.basic ??= data.advanced !== true;
                     // Store skill key and index for template access
                     normalized.skillKey = key;
                     normalized.entryIndex = entryIndex;

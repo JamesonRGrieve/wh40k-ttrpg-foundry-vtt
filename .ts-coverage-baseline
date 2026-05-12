@@ -1,14 +1,14 @@
 {
   "totals": {
-    "any": 9,
-    "asAny": 137,
+    "any": 6,
+    "asAny": 35,
     "tsExpectError": 10,
     "tsIgnore": 0
   },
   "byDir": {
     "actions": {
       "any": 0,
-      "asAny": 7,
+      "asAny": 0,
       "tsExpectError": 0,
       "tsIgnore": 0
     },
@@ -20,17 +20,11 @@
     },
     "applications": {
       "any": 3,
-      "asAny": 100,
+      "asAny": 25,
       "tsExpectError": 9,
       "tsIgnore": 0
     },
     "canvas": {
-      "any": 0,
-      "asAny": 4,
-      "tsExpectError": 0,
-      "tsIgnore": 0
-    },
-    "config": {
       "any": 0,
       "asAny": 0,
       "tsExpectError": 0,
@@ -42,9 +36,15 @@
       "tsExpectError": 0,
       "tsIgnore": 0
     },
+    "config": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
     "data": {
-      "any": 3,
-      "asAny": 20,
+      "any": 2,
+      "asAny": 8,
       "tsExpectError": 0,
       "tsIgnore": 0
     },
@@ -97,14 +97,14 @@
       "tsIgnore": 0
     },
     "rolls": {
-      "any": 1,
+      "any": 0,
       "asAny": 0,
       "tsExpectError": 0,
       "tsIgnore": 0
     },
     "rules": {
       "any": 0,
-      "asAny": 1,
+      "asAny": 0,
       "tsExpectError": 0,
       "tsIgnore": 0
     },
@@ -127,8 +127,8 @@
       "tsIgnore": 0
     },
     "utils": {
-      "any": 2,
-      "asAny": 3,
+      "any": 1,
+      "asAny": 0,
       "tsExpectError": 0,
       "tsIgnore": 0
     }

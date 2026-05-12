@@ -91,28 +91,12 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs tw-flex tw-flex-shrink-0 tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]" data-group="primary">
-      <button type="button" class="wh40k-tab active tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-gold)] tw-bg-transparent tw-border-b-2 tw-border-b-[var(--wh40k-gold)] tw--mb-0.5 tw-cursor-pointer" data-tab="properties" data-group="primary">
-        <i class="fas fa-cog tw-mr-1"></i>
-        <span>Properties</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="effects" data-group="primary">
-        <i class="fas fa-bolt tw-mr-1"></i>
-        <span>Effects</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="armour" data-group="primary">
-        <i class="fas fa-shield-halved tw-mr-1"></i>
-        <span>Armour</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="installation" data-group="primary">
-        <i class="fas fa-syringe tw-mr-1"></i>
-        <span>Installation</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="description" data-group="primary">
-        <i class="fas fa-book tw-mr-1"></i>
-        <span>Description</span>
-      </button>
-    </nav>
+    {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+        (object tab="properties"   label="Properties"   icon="fa-cog"          active=true)
+        (object tab="effects"      label="Effects"      icon="fa-bolt")
+        (object tab="armour"       label="Armour"       icon="fa-shield-halved")
+        (object tab="installation" label="Installation" icon="fa-syringe")
+        (object tab="description"  label="Description"  icon="fa-book"))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT

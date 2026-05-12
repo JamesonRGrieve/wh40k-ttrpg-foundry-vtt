@@ -94,26 +94,18 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs tw-flex tw-flex-shrink-0 tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]" data-group="primary">
-      <button type="button" class="wh40k-tab active tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-gold)] tw-bg-transparent tw-border-b-2 tw-border-b-[var(--wh40k-gold)] tw--mb-0.5 tw-cursor-pointer" data-tab="overview" data-group="primary">
-        <i class="fas fa-info-circle tw-mr-1"></i>
-        <span>Overview</span>
-      </button>
-      {{#if hasLimitedUses}}
-      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="usage" data-group="primary">
-        <i class="fas fa-hourglass-half tw-mr-1"></i>
-        <span>Usage</span>
-      </button>
-      {{/if}}
-      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="description" data-group="primary">
-        <i class="fas fa-book tw-mr-1"></i>
-        <span>Description</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="effects" data-group="primary">
-        <i class="fas fa-sparkles tw-mr-1"></i>
-        <span>Effects</span>
-      </button>
-    </nav>
+    {{#if hasLimitedUses}}
+    {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+        (object tab="overview"    label="Overview"    icon="fa-info-circle"   active=true)
+        (object tab="usage"       label="Usage"       icon="fa-hourglass-half")
+        (object tab="description" label="Description" icon="fa-book")
+        (object tab="effects"     label="Effects"     icon="fa-sparkles"))}}
+    {{else}}
+    {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+        (object tab="overview"    label="Overview"    icon="fa-info-circle"   active=true)
+        (object tab="description" label="Description" icon="fa-book")
+        (object tab="effects"     label="Effects"     icon="fa-sparkles"))}}
+    {{/if}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT

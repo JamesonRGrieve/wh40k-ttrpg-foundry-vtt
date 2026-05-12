@@ -47,7 +47,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
          * Expanded states for collapsible sections to persist between renders.
          * @type {Map<string, boolean>}
          */
-        #expandedSections: Map<string, boolean> = new Map();
+        readonly #expandedSections: Map<string, boolean> = new Map();
 
         get expandedSections(): Map<string, boolean> {
             return this.#expandedSections;
@@ -179,7 +179,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
             };
             prototype._updateFrame?.call(this, options);
             if (options.window?.subtitle) {
-                const subtitle = (this as unknown as { element: HTMLElement }).element.querySelector('.window-header > .window-subtitle') as HTMLElement | null;
+                const subtitle = (this as unknown as { element: HTMLElement }).element.querySelector<HTMLElement>('.window-header > .window-subtitle');
                 if (subtitle) subtitle.innerText = options.window.subtitle;
             }
         }
@@ -234,7 +234,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
             const collapsible = target.closest('.collapsible');
             if (!collapsible || (event.target as HTMLElement).closest('.collapsible-content')) return;
             collapsible.classList.toggle('collapsed');
-            const expandId = (target.closest('[data-expand-id]') as HTMLElement | null)?.dataset.expandId;
+            const expandId = target.closest<HTMLElement>('[data-expand-id]')?.dataset.expandId;
             if (expandId) {
                 this.#expandedSections.set(expandId, !collapsible.classList.contains('collapsed'));
             }

@@ -1,5 +1,5 @@
 import type { AnyMutableObject } from 'fvtt-types/utils';
-import { formatChangeValue, getChangeLabel } from '../helpers/effects.ts';
+import { formatChangeValue, getChangeLabel, type EffectChangeRaw } from '../helpers/effects.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 
 /** Shape of an ActiveEffect change entry used throughout this class. */
@@ -26,7 +26,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      */
     get isTemporary(): boolean {
         const duration = this.duration.seconds ?? this.duration.rounds ?? this.duration.turns;
-        return duration != null && duration > 0;
+        return duration !== undefined && duration !== null && duration > 0;
     }
 
     /**
@@ -34,7 +34,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @type {Actor|Item|null}
      */
     get source(): Actor | Item | null {
-        if (!this.origin) return null;
+        if (this.origin === null || this.origin === '') return null;
         return fromUuidSync(this.origin) as Actor | Item | null;
     }
 
@@ -53,8 +53,8 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @type {string}
      */
     get nature(): string {
-        // Check explicit flag — getFlag returns unknown, narrow to string
-        const flagNature = (this as unknown as { getFlag(scope: string, key: string): unknown }).getFlag('wh40k-rpg', 'nature');
+        // eslint-disable-next-line no-restricted-syntax -- boundary: getFlag returns unknown; narrowed by type guard on next line
+        const flagNature: unknown = (this as unknown as { getFlag(scope: string, key: string): unknown }).getFlag('wh40k-rpg', 'nature');
         if (typeof flagNature === 'string' && flagNature.length > 0) return flagNature;
 
         // Analyze changes to determine nature
@@ -103,6 +103,7 @@ export class WH40KActiveEffect extends ActiveEffect {
             key: change.key,
             value: change.value,
             mode: change.mode,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's ActiveEffect.ChangeData lacks priority in types
             priority: (change as unknown as { priority?: number }).priority,
         };
 
@@ -141,7 +142,8 @@ export class WH40KActiveEffect extends ActiveEffect {
         const path = change.key;
         const charKey = path.split('.')[2]; // e.g., "strength" from "system.characteristics.strength.modifier"
 
-        if (!actor.system.characteristics?.[charKey]) return null;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime safety: key may be absent despite schema
+        if (actor.system.characteristics[charKey] === undefined) return null;
 
         const current = Number(foundry.utils.getProperty(actor, path) ?? 0);
         return this._applyChangeValue(current, change);
@@ -158,7 +160,8 @@ export class WH40KActiveEffect extends ActiveEffect {
         const path = change.key;
         const skillKey = path.split('.')[2]; // e.g., "acrobatics"
 
-        if (!actor.system.skills?.[skillKey]) return null;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime safety: key may be absent despite schema
+        if (actor.system.skills[skillKey] === undefined) return null;
 
         const current = Number(foundry.utils.getProperty(actor, path) ?? 0);
         return this._applyChangeValue(current, change);
@@ -231,7 +234,7 @@ export class WH40KActiveEffect extends ActiveEffect {
             return {
                 key,
                 label: getChangeLabel(change.key),
-                value: formatChangeValue(change as unknown as { key: string; value: string | number; mode: number }),
+                value: formatChangeValue(change as EffectChangeRaw),
                 mode: game.i18n.localize(`WH40K.ActiveEffect.Mode.${change.mode}`),
             };
         });
@@ -279,7 +282,7 @@ export class WH40KActiveEffect extends ActiveEffect {
 
         if (d.rounds != null && d.rounds > 0 && combat) {
             const startRound = d.startRound ?? 0;
-            const currentRound = combat.round ?? 0;
+            const currentRound = combat.round;
             return Math.max(0, startRound + d.rounds - currentRound);
         }
 
@@ -287,7 +290,7 @@ export class WH40KActiveEffect extends ActiveEffect {
             const startTurn = d.startTurn ?? 0;
             const currentTurn = combat.turn ?? 0;
             const startRound = d.startRound ?? 0;
-            const currentRound = combat.round ?? 0;
+            const currentRound = combat.round;
             const totalStart = startRound * combat.turns.length + startTurn;
             const totalCurrent = currentRound * combat.turns.length + currentTurn;
             return Math.max(0, totalStart + d.turns - totalCurrent);
@@ -295,7 +298,7 @@ export class WH40KActiveEffect extends ActiveEffect {
 
         if (d.seconds != null && d.seconds > 0) {
             const startTime = d.startTime ?? 0;
-            const currentTime = game.time.worldTime ?? 0;
+            const currentTime = game.time.worldTime;
             return Math.max(0, startTime + d.seconds - currentTime);
         }
 

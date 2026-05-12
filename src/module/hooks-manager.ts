@@ -70,6 +70,7 @@ import {
 } from './applications/item/_module.ts';
 import * as npcApplications from './applications/npc/_module.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
+import { resyncWorldFromCompendiums } from './compendium-resync.ts';
 import type { WH40KSystemConfig } from './config.ts';
 import { SYSTEM_ID } from './constants.ts';
 import * as dataModels from './data/_module.ts';
@@ -94,7 +95,6 @@ import type { WH40KGameSystem } from './types/global.d.ts';
 import { isConvertibleCharacterActorType } from './utils/actor-system-converter.ts';
 import { RollTableUtils } from './utils/roll-table-utils.ts';
 import { checkAndMigrateWorld } from './wh40k-rpg-migrations.ts';
-import { resyncWorldFromCompendiums } from './compendium-resync.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
 export { SYSTEM_ID };

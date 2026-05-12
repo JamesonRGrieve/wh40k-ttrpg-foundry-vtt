@@ -60,7 +60,8 @@ export async function createItemMacro(data: Record<string, unknown>, slot: numbe
         type: 'script',
         img: macroData.img as string,
         command: command,
-        flags: { dh: { itemMacro: true } } as unknown as Record<string, unknown>,
+        // eslint-disable-next-line no-restricted-syntax -- boundary: 'dh' is not declared in fvtt-types CoreFlags
+        flags: { dh: { itemMacro: true } } as Record<string, unknown>,
     })) as unknown as Macro<'script' | 'chat'> | null;
     if (macro !== null && macro !== undefined) await game.user.assignHotbarMacro(macro, slot);
 }
@@ -100,7 +101,8 @@ export async function createSkillMacro(data: Record<string, unknown>, slot: numb
         img: 'systems/wh40k-rpg/icons/talents/red/r_36.png',
         type: 'script',
         command: command,
-        flags: { dh: { skillMacro: true } } as unknown as Record<string, unknown>,
+        // eslint-disable-next-line no-restricted-syntax -- boundary: 'dh' is not declared in fvtt-types CoreFlags
+        flags: { dh: { skillMacro: true } } as Record<string, unknown>,
     })) as unknown as Macro<'script' | 'chat'> | null;
     if (macro !== null && macro !== undefined) await game.user.assignHotbarMacro(macro, slot);
 }
@@ -140,7 +142,8 @@ export async function createCharacteristicMacro(data: Record<string, unknown>, s
         img: 'systems/wh40k-rpg/icons/talents/violet/p_05.png',
         type: 'script',
         command: command,
-        flags: { dh: { characteristicMacro: true } } as unknown as Record<string, unknown>,
+        // eslint-disable-next-line no-restricted-syntax -- boundary: 'dh' is not declared in fvtt-types CoreFlags
+        flags: { dh: { characteristicMacro: true } } as Record<string, unknown>,
     })) as unknown as Macro<'script' | 'chat'> | null;
     if (macro !== null && macro !== undefined) await game.user.assignHotbarMacro(macro, slot);
 }

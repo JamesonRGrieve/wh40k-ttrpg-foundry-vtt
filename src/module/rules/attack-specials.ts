@@ -1,8 +1,8 @@
+import type { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.ts';
+import type { WH40KItemDocument } from '../types/global.d.ts';
 import { calculateAmmoAttackSpecials } from './ammo.ts';
 import { calculateWeaponModifiersAttackSpecials } from './weapon-modifiers.ts';
 import { applyQualityModifiersToRollData } from './weapon-quality-effects.ts';
-import type { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.ts';
-import type { WH40KItemDocument } from '../types/global.d.ts';
 
 type AttackSpecialLike = {
     name: string;

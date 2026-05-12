@@ -26,12 +26,18 @@ export interface HordeData {
     sizeModifier: number;
 }
 
+/** Raw source data passed to DataModel migration hooks — opaque Foundry framework boundary. */
+interface MigrationSource {
+    [key: string]: string | number | boolean | null | MigrationSource | MigrationSource[];
+}
+
 /**
  * Constructor type for mixin base classes, including expected static methods.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- standard mixin constructor pattern requires any[]
 type Constructor<T = object> = (new (...args: any[]) => T) & {
     defineSchema(): Record<string, foundry.data.fields.DataField.Any>;
-    _migrateData?(source: Record<string, unknown>): void;
+    _migrateData?(source: MigrationSource): void;
 };
 
 /**
@@ -41,16 +47,19 @@ type Constructor<T = object> = (new (...args: any[]) => T) & {
  * @param {typeof foundry.abstract.TypeDataModel} Base - The base class to extend.
  * @returns {typeof HordeTemplateMixin} The extended class with horde capabilities.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeDataModel generic args are framework internals with no exported constraint
 export default function HordeTemplate<T extends Constructor<foundry.abstract.TypeDataModel<any, any>>>(Base: T) {
     return class HordeTemplateMixin extends Base {
         declare horde: HordeData;
+
+        declare parent: WH40KBaseActor;
 
         /**
          * Access the parent actor document with proper typing.
          * @returns {WH40KBaseActor}
          */
         get parentActor(): WH40KBaseActor {
-            return (this as any).parent as WH40KBaseActor;
+            return this.parent;
         }
 
         /* -------------------------------------------- */
@@ -96,27 +105,23 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        static _migrateData(source: Record<string, unknown>): void {
+        static _migrateData(source: MigrationSource): void {
             super._migrateData?.(source);
             // Ensure horde object exists
-            source.horde ??= {
-                enabled: false,
-                magnitude: { max: 30, current: 30 },
-                magnitudeLog: [],
-                traits: [],
-                damageMultiplier: 1.0,
-                sizeModifier: 0,
-            };
-            // Migrate magnitude values to integers
-            const horde = source.horde as HordeData;
-            if (horde.magnitude) {
-                if (horde.magnitude.max !== undefined) {
-                    horde.magnitude.max = parseInt(String(horde.magnitude.max), 10) || 30;
-                }
-                if (horde.magnitude.current !== undefined) {
-                    horde.magnitude.current = parseInt(String(horde.magnitude.current), 10) || 30;
-                }
+            if (source.horde === undefined || source.horde === null) {
+                source.horde = {
+                    enabled: false,
+                    magnitude: { max: 30, current: 30 },
+                    magnitudeLog: [],
+                    traits: [],
+                    damageMultiplier: 1.0,
+                    sizeModifier: 0,
+                };
             }
+            // Migrate magnitude values to integers
+            const horde = source.horde as unknown as HordeData;
+            horde.magnitude.max = parseInt(String(horde.magnitude.max), 10) || 30;
+            horde.magnitude.current = parseInt(String(horde.magnitude.current), 10) || 30;
         }
 
         /* -------------------------------------------- */
