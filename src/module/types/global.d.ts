@@ -264,6 +264,11 @@ export type WH40KActorSystemData = ActorDataModel & {
     toggleHordeMode?: () => Promise<void>;
     applyMagnitudeDamage?: (amount: number, source?: string) => Promise<void>;
     restoreMagnitude?: (amount: number) => Promise<void>;
+    // Restored stop-gap: 63efd474 removed this claiming "typecheck remains clean";
+    // it did not — 55 downstream errors surface without it. Proper fix is to
+    // narrow per-call-site or add specific fields to the typed DataModels,
+    // not to keep this signature long-term.
+    [key: string]: unknown;
 };
 
 export type WH40KItemSystemData = ItemDataModel & {
@@ -299,6 +304,8 @@ export type WH40KItemSystemData = ItemDataModel & {
     isMeleeWeapon?: boolean;
     isRangedWeapon?: boolean;
     melee?: boolean;
+    // See WH40KActorSystemData above — same stop-gap, same follow-up.
+    [key: string]: unknown;
 };
 
 // =========================================================================
@@ -482,5 +489,3 @@ export type WH40KItemDocument = WH40KItem;
 export interface WH40KRenderContext extends Record<string, unknown> {
     tabs?: Record<string, unknown>;
 }
-
-export {};
