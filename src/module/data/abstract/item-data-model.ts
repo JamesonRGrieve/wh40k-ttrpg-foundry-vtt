@@ -1,3 +1,14 @@
+/**
+ * BOUNDARY-HEAVY FILE: this is the abstract base for every WH40K Foundry V14 Item
+ * DataModel. The `_migrateData` / `_cleanData` / `defineSchema` overrides operate on
+ * raw `source` payloads from Foundry's V14 cleaning pipeline — those payloads carry
+ * no schema until they pass through this very file, so `Record<string, unknown>` is
+ * the correct boundary type. Per CLAUDE.md, framework-boundary `Record<string,
+ * unknown>` / `unknown` casts are permitted here. New non-boundary helpers MUST be
+ * typed normally.
+ */
+/* eslint-disable no-restricted-syntax -- migration / cleaning operate on raw Foundry V14 source payloads (true framework boundary) */
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { isLineVariantContainer } from '../../utils/item-variant-utils.ts';
 import SystemDataModel from './system-data-model.ts';
@@ -59,7 +70,7 @@ export default class ItemDataModel extends SystemDataModel {
      * @protected
      */
     static override _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
-        super._cleanData?.(source, options);
+        super._cleanData(source, options);
         ItemDataModel.#cleanNumericFields(source, this.schema.fields as Record<string, foundry.data.fields.DataField.Any>);
     }
 
@@ -114,7 +125,7 @@ export default class ItemDataModel extends SystemDataModel {
      * @protected
      */
     static override _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
         ItemDataModel.#migrateImg(source);
         ItemDataModel.#migrateDescription(source);
         ItemDataModel.#migrateSource(source);
@@ -126,10 +137,11 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} source  The source data
      */
     static #migrateImg(source: Record<string, unknown>): void {
-        if (!source.img) return;
+        if (typeof source.img !== 'string' || source.img === '') return;
 
+        const img = source.img;
         const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp'];
-        const hasValidExtension = validExtensions.some((ext) => (source.img as string).toLowerCase().endsWith(ext));
+        const hasValidExtension = validExtensions.some((ext) => img.toLowerCase().endsWith(ext));
         if (!hasValidExtension) {
             const defaultIcons: Record<string, string> = {
                 weapon: 'icons/svg/sword.svg',
@@ -140,7 +152,8 @@ export default class ItemDataModel extends SystemDataModel {
                 psychicPower: 'icons/svg/lightning.svg',
                 skill: 'icons/svg/target.svg',
             };
-            source.img = defaultIcons[source.type as string] || 'icons/svg/mystery-man.svg';
+            const type = typeof source.type === 'string' ? source.type : '';
+            source.img = defaultIcons[type] ?? 'icons/svg/mystery-man.svg';
         }
     }
 
@@ -159,9 +172,10 @@ export default class ItemDataModel extends SystemDataModel {
         if (isLineVariantContainer(source.description)) return;
 
         // Ensure description sub-fields are not null (V13 HTMLField strictness)
-        if (source.description && typeof source.description === 'object') {
-            (source.description as Record<string, unknown>).chat ??= '';
-            (source.description as Record<string, unknown>).summary ??= '';
+        if (source.description !== null && typeof source.description === 'object') {
+            const desc = source.description as Record<string, unknown>;
+            desc.chat ??= '';
+            desc.summary ??= '';
         }
     }
 
@@ -180,10 +194,11 @@ export default class ItemDataModel extends SystemDataModel {
         if (isLineVariantContainer(source.source)) return;
 
         // Ensure source sub-fields are not null
-        if (source.source && typeof source.source === 'object') {
-            (source.source as Record<string, unknown>).book ??= '';
-            (source.source as Record<string, unknown>).page ??= '';
-            (source.source as Record<string, unknown>).custom ??= '';
+        if (source.source !== null && typeof source.source === 'object') {
+            const src = source.source as Record<string, unknown>;
+            src.book ??= '';
+            src.page ??= '';
+            src.custom ??= '';
         }
     }
 
@@ -192,10 +207,10 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} source  The source data
      */
     static #migrateCollections(source: Record<string, unknown>): void {
-        if (source.coverage && Array.isArray(source.coverage)) {
+        if (Array.isArray(source.coverage)) {
             source.coverage = new Set(source.coverage);
         }
-        if (source.properties && Array.isArray(source.properties)) {
+        if (Array.isArray(source.properties)) {
             source.properties = new Set(source.properties);
         }
     }
@@ -216,8 +231,8 @@ export default class ItemDataModel extends SystemDataModel {
      * The Actor that owns this item, if any.
      * @type {Actor|null}
      */
-    get actor(): any {
-        return this.parent?.actor ?? null;
+    get actor(): WH40KBaseActor | null {
+        return (this.parent as WH40KItem | undefined)?.actor ?? null;
     }
 
     /**
@@ -225,7 +240,9 @@ export default class ItemDataModel extends SystemDataModel {
      * @type {string}
      */
     get typeLabel(): string {
-        return game.i18n.localize(CONFIG.Item.typeLabels[this.parent.type]);
+        const item = this.parent as WH40KItem;
+        const labels = CONFIG.Item.typeLabels as Record<string, string>;
+        return game.i18n.localize(labels[item.type] ?? item.type);
     }
 
     /**
@@ -272,9 +289,9 @@ export default class ItemDataModel extends SystemDataModel {
      * @returns {object}
      */
     getRollData({ deterministic = false } = {}): Record<string, unknown> {
-        const actor = (this.parent as WH40KItem).actor;
-        const actorRollData =
-            (actor as unknown as { getRollData?: (opts: { deterministic: boolean }) => Record<string, unknown> })?.getRollData?.({ deterministic }) ?? {};
+        type RollDataActor = { getRollData: (opts: { deterministic: boolean }) => Record<string, unknown> };
+        const actor = this.item.actor as unknown as RollDataActor | null;
+        const actorRollData = actor?.getRollData({ deterministic }) ?? {};
         return { ...actorRollData, item: this.toObject() };
     }
 
@@ -288,7 +305,7 @@ export default class ItemDataModel extends SystemDataModel {
      */
     get sourceReference(): string {
         if (typeof this.source === 'string') return this.source;
-        const { book, page, custom } = this.source ?? {};
+        const { book, page, custom } = this.source;
         if (custom) return custom;
         if (book && page) return `${book}, p.${page}`;
         if (book) return book;
@@ -307,13 +324,13 @@ export default class ItemDataModel extends SystemDataModel {
      */
     async getChatData(htmlOptions: Record<string, unknown> = {}): Promise<Record<string, unknown>> {
         const description = this.description;
-        const descValue = typeof description === 'string' ? description : (description as { value: string })?.value ?? '';
+        const descValue = typeof description === 'string' ? description : description.value;
         const data = {
-            description: await TextEditor.enrichHTML(descValue, {
+            description: await foundry.applications.ux.TextEditor.implementation.enrichHTML(descValue, {
                 ...htmlOptions,
                 rollData: this.getRollData(),
             }),
-            properties: this.chatProperties ?? [],
+            properties: this.chatProperties,
         };
         return data;
     }

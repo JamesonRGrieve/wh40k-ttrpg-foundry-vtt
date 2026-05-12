@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars -- ambient type declarations for consumer use */
+/* eslint-disable no-restricted-syntax -- file is a Foundry V14 framework-boundary type surface; see header */
 /**
  * Global type declarations for the WH40K RPG Foundry VTT System.
  * Augments Foundry VTT types with system-specific extensions.
+ *
+ * BOUNDARY FILE: this file augments Foundry V14's untyped global namespace and shapes
+ * the WH40K-specific extensions to it. Per CLAUDE.md, framework boundaries (Foundry
+ * hook payloads, untyped V14 APIs, third-party data with no shipped types) are
+ * permitted to use `Record<string, unknown>` and `unknown`. We disable the relevant
+ * lint rules at the file level here. New non-boundary code MUST NOT live in this file.
  */
 
 import type * as characterCreation from '../applications/character-creation/_module.ts';
@@ -361,7 +368,7 @@ declare global {
         setup: true;
     }
 
-    interface Notifications {
+    interface WH40KNotifications {
         info: (message: string, options?: Record<string, unknown>) => void;
         warn: (message: string, options?: Record<string, unknown>) => void;
         error: (message: string, options?: Record<string, unknown>) => void;
@@ -422,7 +429,7 @@ declare global {
     }
 
     interface UI {
-        notifications: Notifications;
+        notifications: WH40KNotifications;
         sidebar: FoundrySidebar;
         chat: { scrollBottom(options?: Record<string, unknown>): void; postOne?(...args: unknown[]): void };
         combat: { render(force?: boolean): void };

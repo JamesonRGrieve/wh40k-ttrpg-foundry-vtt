@@ -5,7 +5,15 @@
  * mixin uses `new (...args: any[]) => any` as its base constraint. These interfaces
  * capture the public/protected API added by each mixin so that BaseActorSheet and its
  * subclasses can declare typed properties instead of `any`.
+ *
+ * BOUNDARY FILE: this file describes Foundry V14's untyped ApplicationV2 / mixin API
+ * surface. Per CLAUDE.md, framework boundaries (Foundry hook payloads, untyped V14
+ * APIs with no shipped types) are permitted to use `Record<string, unknown>` and
+ * `unknown` parameter types. We disable `no-restricted-syntax` at the file level here
+ * — every member is, by definition, the boundary point itself. New non-boundary code
+ * MUST NOT live in this file.
  */
+/* eslint-disable no-restricted-syntax -- file is a Foundry V14 framework-boundary type surface; see header */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
@@ -138,7 +146,7 @@ export interface EnhancedAnimationsMixinAPI {
     _animateProgressBar(barElement: HTMLElement): void;
     _flashElement(element: HTMLElement, animClass: string, duration?: number): void;
     _shouldSkipAnimation(): boolean;
-    close(options: Record<string, unknown>): any;
+    close(options: Record<string, unknown>): Promise<unknown>;
 }
 
 /* -------------------------------------------- */
@@ -329,7 +337,7 @@ export interface BaseActorSheetMixins
     options: Record<string, unknown>;
 
     /** Render the application. */
-    render(options?: Record<string, unknown> | boolean): any;
+    render(options?: Record<string, unknown> | boolean): Promise<unknown>;
     /** Submit the application's form. */
     submit(): Promise<void>;
     /** Set the rendered position. */
