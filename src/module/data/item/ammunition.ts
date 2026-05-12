@@ -84,7 +84,9 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
 
         const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
         const resolvedWeaponTypes = resolveLineVariant(this.weaponTypes as unknown, lineKey);
-        this.weaponTypes = new Set(Array.isArray(resolvedWeaponTypes) ? resolvedWeaponTypes : Array.from((resolvedWeaponTypes as Set<string>) ?? new Set()));
+        this.weaponTypes = new Set(
+            Array.isArray(resolvedWeaponTypes) ? (resolvedWeaponTypes as string[]) : Array.from((resolvedWeaponTypes as Set<string>) ?? new Set()),
+        );
 
         this.modifiers = foundry.utils.mergeObject(
             {
@@ -98,10 +100,12 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         ) as typeof this.modifiers;
 
         const resolvedAdded = resolveLineVariant(this.addedQualities as unknown, lineKey);
-        this.addedQualities = new Set(Array.isArray(resolvedAdded) ? resolvedAdded : Array.from((resolvedAdded as Set<string>) ?? new Set()));
+        this.addedQualities = new Set(Array.isArray(resolvedAdded) ? (resolvedAdded as string[]) : Array.from((resolvedAdded as Set<string>) ?? new Set()));
 
         const resolvedRemoved = resolveLineVariant(this.removedQualities as unknown, lineKey);
-        this.removedQualities = new Set(Array.isArray(resolvedRemoved) ? resolvedRemoved : Array.from((resolvedRemoved as Set<string>) ?? new Set()));
+        this.removedQualities = new Set(
+            Array.isArray(resolvedRemoved) ? (resolvedRemoved as string[]) : Array.from((resolvedRemoved as Set<string>) ?? new Set()),
+        );
 
         this.clipModifier = Number(resolveLineVariant(this.clipModifier as unknown, lineKey) ?? 0);
         this.effect = (resolveLineVariant(this.effect as unknown, lineKey) as string) ?? '';

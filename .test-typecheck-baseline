@@ -1,0 +1,18 @@
+{
+  "strict": [],
+  "config": "tsconfig.test.json",
+  "totals": {
+    "totalErrors": 17
+  },
+  "byCode": {
+    "TS18046": 1,
+    "TS2339": 1,
+    "TS2345": 6,
+    "TS2352": 1,
+    "TS2353": 3,
+    "TS2417": 1,
+    "TS2510": 1,
+    "TS2545": 1,
+    "TS2749": 2
+  }
+}

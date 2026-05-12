@@ -8,12 +8,7 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import {
-    mockNpcSheetContext,
-    mockPlayerSheetContext,
-    mockStarshipSheetContext,
-    mockVehicleSheetContext,
-} from '../stories/mocks/sheet-contexts';
+import { mockNpcSheetContext, mockPlayerSheetContext, mockStarshipSheetContext, mockVehicleSheetContext } from '../stories/mocks/sheet-contexts';
 import type { GameSystemId } from '../src/module/config/game-systems/types';
 
 const ORIGINAL_GAME = (globalThis as Record<string, unknown>).game;
@@ -52,25 +47,13 @@ describe('mockPlayerSheetContext', () => {
     it('uses SystemConfigRegistry.getHeaderFields for header rows — DH2e shape', () => {
         const ctx = mockPlayerSheetContext({ systemId: 'dh2e' });
         const names = ctx.headerFields.map((f) => f.name);
-        expect(names).toEqual([
-            'system.bio.playerName',
-            'system.originPath.homeWorld',
-            'system.originPath.background',
-            'system.originPath.role',
-            'system.originPath.divination',
-        ]);
+        expect(names).toEqual(['system.originPath.homeWorld', 'system.originPath.background', 'system.originPath.role', 'system.originPath.divination']);
     });
 
     it('uses SystemConfigRegistry.getHeaderFields for header rows — IM shape', () => {
         const ctx = mockPlayerSheetContext({ systemId: 'im' });
         const names = ctx.headerFields.map((f) => f.name);
-        expect(names).toEqual([
-            'system.bio.playerName',
-            'system.originPath.homeWorld',
-            'system.originPath.background',
-            'system.originPath.role',
-            'system.originPath.motivation',
-        ]);
+        expect(names).toEqual(['system.originPath.homeWorld', 'system.originPath.background', 'system.originPath.role', 'system.originPath.motivation']);
         // IM field labels confirm the per-system mapping
         const labels = ctx.headerFields.map((f) => f.label);
         expect(labels).toContain('Patron');
@@ -123,7 +106,11 @@ describe('mockPlayerSheetContext — per-system parity', () => {
             const ctx = mockPlayerSheetContext({ systemId: id });
             expect(ctx.actor, `system ${id}`).toBeTruthy();
             expect(ctx.headerFields.length, `system ${id}`).toBeGreaterThan(0);
-            expect(ctx.headerFields[0].name, `system ${id}`).toBe('system.bio.playerName');
+            // Player name is rendered on the identity row, not in headerFields.
+            expect(
+                ctx.headerFields.every((f) => f.name !== 'system.bio.playerName'),
+                `system ${id}`,
+            ).toBe(true);
         }
     });
 

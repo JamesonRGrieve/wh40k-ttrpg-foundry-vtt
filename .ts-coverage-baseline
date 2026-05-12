@@ -1,11 +1,20 @@
 {
+  "strict": [
+    "tsIgnore"
+  ],
   "totals": {
-    "any": 6,
-    "asAny": 35,
+    "any": 2,
+    "asAny": 22,
     "tsExpectError": 10,
     "tsIgnore": 0
   },
   "byDir": {
+    "_root": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
     "actions": {
       "any": 0,
       "asAny": 0,
@@ -19,18 +28,12 @@
       "tsIgnore": 0
     },
     "applications": {
-      "any": 3,
-      "asAny": 25,
+      "any": 0,
+      "asAny": 12,
       "tsExpectError": 9,
       "tsIgnore": 0
     },
     "canvas": {
-      "any": 0,
-      "asAny": 0,
-      "tsExpectError": 0,
-      "tsIgnore": 0
-    },
-    "_root": {
       "any": 0,
       "asAny": 0,
       "tsExpectError": 0,
@@ -43,7 +46,7 @@
       "tsIgnore": 0
     },
     "data": {
-      "any": 2,
+      "any": 1,
       "asAny": 8,
       "tsExpectError": 0,
       "tsIgnore": 0

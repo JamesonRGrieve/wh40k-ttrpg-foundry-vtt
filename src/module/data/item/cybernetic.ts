@@ -81,7 +81,9 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
         this.type = (resolveLineVariant(this.type as unknown, lineKey) as string) ?? 'replacement';
 
         const resolvedLocations = resolveLineVariant(this.locations as unknown, lineKey);
-        this.locations = new Set(Array.isArray(resolvedLocations) ? resolvedLocations : Array.from((resolvedLocations as Set<string>) ?? new Set()));
+        this.locations = new Set(
+            Array.isArray(resolvedLocations) ? (resolvedLocations as string[]) : Array.from((resolvedLocations as Set<string>) ?? new Set()),
+        );
 
         this.hasArmourPoints = Boolean(resolveLineVariant(this.hasArmourPoints as unknown, lineKey));
         this.armourPoints = foundry.utils.mergeObject(
