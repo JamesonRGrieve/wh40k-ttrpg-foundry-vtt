@@ -22,7 +22,7 @@ export class WH40KItemContainer extends Item {
     declare system: ItemDataModel & ContainerSystemData;
     declare items: foundry.utils.Collection<Item>;
 
-    get actor(): Actor.Implementation | null {
+    override get actor(): Actor.Implementation | null {
         if (this.parent instanceof Item) return null;
         return this.parent instanceof Actor ? this.parent : null;
     }
@@ -79,7 +79,7 @@ export class WH40KItemContainer extends Item {
         game.wh40k.log(`Item ${this.name} items:`, this.items);
     }
 
-    static async _onCreateOperation(
+    static override async _onCreateOperation(
         items: InstanceType<typeof foundry.abstract.Document>[],
         context: Record<string, unknown>,
         user: Record<string, unknown>,
@@ -94,7 +94,7 @@ export class WH40KItemContainer extends Item {
             uuid: string;
         }>;
         // Parent is not an item -- ignore
-        if (!(context.parent instanceof Item)) return callSuper();
+        if (!(context['parent'] instanceof Item)) return callSuper();
         // None of the items being created are containers -- ignore
         if (typedItems.filter((item) => item.system.container !== undefined && item.system.container !== null).length === 0) return callSuper();
 
@@ -174,7 +174,7 @@ export class WH40KItemContainer extends Item {
         game.wh40k.log(`ItemContainer: ${this.name} updateNestedDocuments`, dataArray);
         const updated: NestedItemData[] = [];
         const newContained = contained.map((existing) => {
-            const theUpdate = dataArray.find((update) => update._id === existing._id);
+            const theUpdate = dataArray.find((update) => update['_id'] === existing._id);
             if (theUpdate !== undefined) {
                 game.wh40k.log('Found Update object', theUpdate);
                 const newData = foundry.utils.mergeObject(theUpdate, existing, {
@@ -196,7 +196,7 @@ export class WH40KItemContainer extends Item {
         return updated;
     }
 
-    prepareEmbeddedDocuments(): void {
+    override prepareEmbeddedDocuments(): void {
         // Equivalent to `super.prepareEmbeddedDocuments()`, but routed through Item.prototype
         // to dodge the ItemBase typing gap (the method exists on ClientDocument at runtime).
         // Walking via `Object.getPrototypeOf(Object.getPrototypeOf(this))` is unsafe: when a

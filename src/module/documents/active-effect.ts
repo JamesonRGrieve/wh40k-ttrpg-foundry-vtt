@@ -24,7 +24,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * Is this a temporary effect that expires?
      * @type {boolean}
      */
-    get isTemporary(): boolean {
+    override get isTemporary(): boolean {
         const duration = this.duration.seconds ?? this.duration.rounds ?? this.duration.turns;
         return duration !== undefined && duration !== null && duration > 0;
     }
@@ -42,7 +42,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * Get the source name for display.
      * @type {string}
      */
-    get sourceName(): string {
+    override get sourceName(): string {
         const source = this.source;
         return source?.name ?? game.i18n.localize('WH40K.ActiveEffect.UnknownSource');
     }
@@ -99,12 +99,13 @@ export class WH40KActiveEffect extends ActiveEffect {
         const actor = target;
         // Handle WH40K RPG-specific change keys
         const key = change.key;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's ActiveEffect.ChangeData lacks priority in types
+        const priorityValue = (change as unknown as { priority?: number }).priority;
         const internalChange: EffectChange = {
             key: change.key,
             value: change.value,
             mode: change.mode,
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's ActiveEffect.ChangeData lacks priority in types
-            priority: (change as unknown as { priority?: number }).priority,
+            ...(priorityValue !== undefined && { priority: priorityValue }),
         };
 
         // Handle characteristic modifications (e.g., "characteristics.strength")
@@ -141,6 +142,7 @@ export class WH40KActiveEffect extends ActiveEffect {
     _applyCharacteristicChange(actor: WH40KBaseActor, change: EffectChange): number | null {
         const path = change.key;
         const charKey = path.split('.')[2]; // e.g., "strength" from "system.characteristics.strength.modifier"
+        if (charKey === undefined) return null;
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime safety: key may be absent despite schema
         if (actor.system.characteristics[charKey] === undefined) return null;
@@ -159,6 +161,7 @@ export class WH40KActiveEffect extends ActiveEffect {
     _applySkillChange(actor: WH40KBaseActor, change: EffectChange): number | null {
         const path = change.key;
         const skillKey = path.split('.')[2]; // e.g., "acrobatics"
+        if (skillKey === undefined) return null;
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime safety: key may be absent despite schema
         if (actor.system.skills[skillKey] === undefined) return null;
