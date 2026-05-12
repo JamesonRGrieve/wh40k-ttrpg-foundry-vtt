@@ -7,6 +7,7 @@
 import type * as characterCreation from '../applications/character-creation/_module.ts';
 import type { RTCompendiumBrowser } from '../applications/compendium-browser.ts';
 import type * as npcApplications from '../applications/npc/_module.ts';
+import type { WH40KSystemConfig } from '../config.ts';
 import type ActorDataModel from '../data/abstract/actor-data-model.ts';
 import type ItemDataModel from '../data/abstract/item-data-model.ts';
 import type * as dice from '../dice/_module.ts';
@@ -14,7 +15,6 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import type { TransactionManager } from '../transactions/transaction-manager.ts';
 import type { RollTableUtils } from '../utils/roll-table-utils.ts';
-import type { WH40KSystemConfig } from '../config.ts';
 
 // =========================================================================
 // WH40K System Types

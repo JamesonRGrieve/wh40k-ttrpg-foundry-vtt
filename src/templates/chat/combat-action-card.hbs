@@ -1,83 +1,50 @@
-{{!-- Rogue Trader Combat Action Card - For vocalizing actions to chat --}}
-<div class="tw-font-ui">
-    <div class="tw-relative tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure tw-bg-[var(--wh40k-panel-bg-solid)] tw-text-[var(--wh40k-text-dark)] tw-shadow-[0_4px_16px_rgba(0,0,0,0.2)]"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
-        {{!-- Header with Image --}}
-        <div class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-bg-gradient-to-br tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color)]">
-            {{#if img}}
-            <img class="tw-w-12 tw-h-12 tw-rounded-md tw-object-cover tw-flex-shrink-0 tw-border-2 tw-border-[var(--wh40k-bronze)] tw-shadow-[0_2px_6px_var(--wh40k-shadow-medium)]" src="{{img}}" alt="{{name}}" />
-            {{else}}
-            <div class="tw-w-12 tw-h-12 tw-rounded-md tw-flex tw-items-center tw-justify-center tw-flex-shrink-0 tw-border-2 tw-border-[var(--wh40k-bronze)] tw-bg-gradient-to-br tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent">
-                <i class="fas fa-fist-raised tw-text-2xl tw-text-[var(--wh40k-bronze)] tw-opacity-60"></i>
-            </div>
-            {{/if}}
-            <div class="tw-flex-1 tw-min-w-0">
-                <h2 class="tw-font-display tw-text-lg tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-m-0 tw-leading-tight tw-shadow-[0_1px_0_var(--wh40k-text-shadow)]">{{name}}</h2>
-                <div class="tw-flex tw-items-center tw-gap-1.5 tw-mt-1">
-                    {{#if actor}}
-                    <span class="tw-text-[0.7rem] tw-text-[var(--wh40k-text-muted)] tw-font-semibold">{{actor}}</span>
-                    <span class="tw-text-[0.7rem] tw-text-[var(--wh40k-border-color)]">•</span>
-                    {{/if}}
-                    <span class="tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-uppercase tw-tracking-widest">Combat Action</span>
-                </div>
-            </div>
-            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-text-xs tw-text-[var(--wh40k-text-muted)]">
-                <i class="fas fa-clock tw-text-[10px] tw-opacity-70"></i>
-                {{actionType}}
-            </span>
-        </div>
-
-        {{!-- Body --}}
-        <div class="tw-p-3">
-            {{!-- Quick Stats Row --}}
-            {{#if (or attackModifier subtypes)}}
-            <div class="tw-flex tw-gap-3 tw-flex-wrap tw-mb-2">
-                {{#if attackModifier}}
-                <div class="tw-flex tw-flex-col tw-gap-0.5 tw-px-2.5 tw-py-1.5 tw-bg-[var(--wh40k-accent-overlay)] tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color-light)] {{#if (gt attackModifier 0)}}tw-border-[var(--wh40k-success-primary)]{{else}}tw-border-[var(--wh40k-danger-primary)]{{/if}}">
-                    <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-text-muted)]">Attack</span>
-                    <span class="tw-text-sm tw-font-bold tw-text-[var(--wh40k-bronze)] tw-font-alt">{{attackModifier}}</span>
-                </div>
-                {{/if}}
-                {{#if subtypes}}
-                <div class="tw-flex tw-flex-col tw-gap-0.5 tw-px-2.5 tw-py-1.5 tw-bg-[var(--wh40k-accent-overlay)] tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color-light)]">
-                    <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-text-muted)]">Type</span>
-                    <span class="tw-text-sm tw-font-bold tw-text-[var(--wh40k-bronze)] tw-font-alt">{{subtypes}}</span>
-                </div>
-                {{/if}}
-            </div>
-            <div class="tw-h-px tw-bg-gradient-to-r tw-from-transparent tw-via-[var(--wh40k-border-color)] tw-to-transparent tw-my-2.5"></div>
-            {{/if}}
-
-            {{!-- Description --}}
-            {{#if description}}
-            <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                <div class="tw-text-sm tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{{description}}}</div>
-            </div>
-            {{/if}}
-
-            {{!-- Summary (if different from description) --}}
-            {{#if summary}}
-            <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                <div class="tw-text-sm tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{{summary}}}</div>
-            </div>
-            {{/if}}
-        </div>
-
-        {{!-- Footer --}}
-        {{#if source}}
-        <div class="tw-flex tw-items-center tw-gap-1.5 tw-justify-end tw-px-3 tw-py-2 tw-border-t tw-border-[var(--wh40k-border-color-light)]">
-            <i class="fas fa-book tw-text-[0.7rem] tw-text-[var(--wh40k-text-muted)]"></i>
-            <span class="tw-text-xs tw-italic tw-text-[var(--wh40k-text-muted)]">{{source}}</span>
+{{!-- Rogue Trader Combat Action Card — vocalized to chat --}}
+{{#> systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs
+        title=name
+        actorName=actor
+        subtitle="Combat Action"
+        image=img
+        imageIcon="fa-fist-raised"
+        actionType=actionType
+        footerLabel=source
+        footerIcon="fa-book"
+        gameSystem=gameSystem}}
+    {{#if (or attackModifier subtypes)}}
+    <div class="tw-flex tw-gap-3 tw-flex-wrap tw-mb-2">
+        {{#if attackModifier}}
+        <div class="tw-flex tw-flex-col tw-gap-0.5 tw-px-2.5 tw-py-1.5 tw-bg-[var(--wh40k-accent-overlay)] tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color-light)] {{#if (gt attackModifier 0)}}tw-border-[var(--wh40k-success-primary)]{{else}}tw-border-[var(--wh40k-danger-primary)]{{/if}}">
+            <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-text-muted)]">Attack</span>
+            <span class="tw-text-sm tw-font-bold tw-text-[var(--wh40k-bronze)] tw-font-alt">{{attackModifier}}</span>
         </div>
         {{/if}}
-
-        {{!-- Action Button (Open Sheet) --}}
-        {{#if itemUuid}}
-        <div class="tw-flex tw-gap-1 tw-p-2.5 tw-justify-center tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color-light)]">
-            <button type="button" class="tw-flex tw-flex-1 tw-items-center tw-justify-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-gradient-to-br tw-from-[var(--wh40k-bronze)] tw-to-[var(--wh40k-bronze-dark)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-md tw-text-white tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer tw-transition-all hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_rgba(0,0,0,0.3)]" data-uuid="{{itemUuid}}" data-action="openItemSheet">
-                <i class="fas fa-scroll-old tw-text-[12px]"></i>
-                View Details
-            </button>
+        {{#if subtypes}}
+        <div class="tw-flex tw-flex-col tw-gap-0.5 tw-px-2.5 tw-py-1.5 tw-bg-[var(--wh40k-accent-overlay)] tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color-light)]">
+            <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-text-muted)]">Type</span>
+            <span class="tw-text-sm tw-font-bold tw-text-[var(--wh40k-bronze)] tw-font-alt">{{subtypes}}</span>
         </div>
         {{/if}}
     </div>
-</div>
+    <div class="tw-h-px tw-bg-gradient-to-r tw-from-transparent tw-via-[var(--wh40k-border-color)] tw-to-transparent tw-my-2.5"></div>
+    {{/if}}
+
+    {{#if description}}
+    <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+        <div class="tw-text-sm tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{{description}}}</div>
+    </div>
+    {{/if}}
+
+    {{#if summary}}
+    <div class="tw-my-2.5 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
+        <div class="tw-text-sm tw-leading-relaxed tw-text-[var(--wh40k-text-dark)]">{{{summary}}}</div>
+    </div>
+    {{/if}}
+
+    {{#if itemUuid}}
+    <div class="tw-flex tw-gap-1 tw-p-2.5 tw-mt-2 -tw-mx-4 -tw-mb-3 tw-justify-center tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color-light)]">
+        <button type="button" class="tw-flex tw-flex-1 tw-items-center tw-justify-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-gradient-to-br tw-from-[var(--wh40k-bronze)] tw-to-[var(--wh40k-bronze-dark)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-md tw-text-white tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer tw-transition-all hover:tw-translate-y-[-2px] hover:tw-shadow-[0_4px_12px_rgba(0,0,0,0.3)]" data-uuid="{{itemUuid}}" data-action="openItemSheet">
+            <i class="fas fa-scroll-old tw-text-[12px]"></i>
+            View Details
+        </button>
+    </div>
+    {{/if}}
+{{/systems/wh40k-rpg/templates/chat/partial/modern-card-shell.hbs}}

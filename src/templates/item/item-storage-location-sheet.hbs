@@ -15,16 +15,9 @@
     </header>
 
     {{! Tab Navigation }}
-    <nav class="wh40k-tabs tw-flex tw-shrink-0" data-group="primary">
-        <a class="wh40k-tab item tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="items" data-group="primary">
-            <span class="material-icons tw-text-base">category</span>
-            Contents
-        </a>
-        <a class="wh40k-tab item tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="description" data-group="primary">
-            <span class="material-icons tw-text-base">description</span>
-            Description
-        </a>
-    </nav>
+    {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+        (object tab="items"       label="Contents"    icon="fa-boxes"   active=true)
+        (object tab="description" label="Description" icon="fa-book"))}}
 
     {{! Items Tab }}
     <section class="wh40k-tab-content tab tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3" data-group="primary" data-tab="items">

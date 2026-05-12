@@ -111,7 +111,7 @@ export class OriginChartLayout {
 
         // Compute layout for each step (always in forward order for consistent indexing)
         for (const [stepIndex, stepKey] of stepOrder.entries()) {
-            const origins = stepGroups[stepKey] || [];
+            const origins = stepGroups[stepKey] ?? [];
             const stepLayout = this._computeStepLayout(origins, stepIndex, stepKey, currentSelections, guidedMode, direction, stepOrder);
 
             layout.steps.push(stepLayout);
@@ -132,15 +132,15 @@ export class OriginChartLayout {
 
         for (const origin of origins) {
             const step = origin.system?.step;
-            if (!step) continue;
+            if (step === undefined || step === '') continue;
 
-            if (!groups[step]) groups[step] = [];
+            if (!Object.hasOwn(groups, step)) groups[step] = [];
             groups[step].push(origin);
         }
 
         // Sort each group by primary position
-        for (const step in groups) {
-            groups[step]?.sort((a: OriginLike, b: OriginLike) => {
+        for (const stepOrigins of Object.values(groups)) {
+            stepOrigins.sort((a: OriginLike, b: OriginLike) => {
                 const posA = a.system?.primaryPosition ?? 4;
                 const posB = b.system?.primaryPosition ?? 4;
                 return posA - posB;
@@ -220,7 +220,7 @@ export class OriginChartLayout {
         const seenOrigins = new Set();
 
         for (const origin of origins) {
-            const originId = origin.id || origin._id || origin.uuid || origin.name;
+            const originId = origin.id ?? origin._id ?? origin.uuid ?? origin.name;
             if (seenOrigins.has(originId)) continue;
             seenOrigins.add(originId);
 
@@ -230,13 +230,13 @@ export class OriginChartLayout {
 
             const selectedIds = new Set(
                 [selectedOrigin?.id, selectedOrigin?._id, selectedOrigin?.uuid, selectedOrigin?._sourceUuid, selectedOrigin?.system?.identifier].filter(
-                    Boolean,
+                    (v): v is string => v !== undefined,
                 ),
             );
             const isSelected =
                 selectedIds.has(originId) ||
-                (origin.uuid ? selectedIds.has(origin.uuid) : false) ||
-                (origin.system?.identifier ? selectedIds.has(origin.system.identifier) : false);
+                (origin.uuid !== undefined && selectedIds.has(origin.uuid)) ||
+                (origin.system?.identifier !== undefined && selectedIds.has(origin.system.identifier));
             const isSelectable = this._isSelectable(origin, lastSelection, allowedPositions, guidedMode);
             const isValidNext = this._isPositionAllowed(origin, allowedPositions);
 
@@ -314,14 +314,14 @@ export class OriginChartLayout {
         const requirements = origin.system?.requirements;
         const lastId = lastSelection.system?.identifier;
 
-        if (lastId && (requirements?.previousSteps?.length ?? 0) > 0) {
-            if (!requirements?.previousSteps?.includes(lastId)) {
+        if (lastId !== undefined && (requirements?.previousSteps?.length ?? 0) > 0) {
+            if (requirements?.previousSteps?.includes(lastId) !== true) {
                 return false;
             }
         }
 
-        if (lastId && (requirements?.excludedSteps?.length ?? 0) > 0) {
-            if (requirements?.excludedSteps?.includes(lastId)) {
+        if (lastId !== undefined && (requirements?.excludedSteps?.length ?? 0) > 0) {
+            if (requirements?.excludedSteps?.includes(lastId) === true) {
                 return false;
             }
         }

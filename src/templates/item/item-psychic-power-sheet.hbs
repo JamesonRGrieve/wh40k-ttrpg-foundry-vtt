@@ -69,20 +69,11 @@
         </div>
 
         <!-- Tab Navigation -->
-        <nav class="wh40k-tabs tw-flex tw-shrink-0" data-group="primary">
-            <a class="wh40k-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="power" data-group="primary">
-                <i class="fas fa-hand-sparkles"></i> Power
-            </a>
-            <a class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="damage" data-group="primary">
-                <i class="fas fa-burst"></i> Damage
-            </a>
-            <a class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="description" data-group="primary">
-                <i class="fas fa-scroll"></i> Description
-            </a>
-            <a class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-no-underline" data-tab="effects" data-group="primary">
-                <i class="fas fa-magic"></i> Effects
-            </a>
-        </nav>
+        {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+            (object tab="power"       label="Power"       icon="fa-hand-sparkles" active=true)
+            (object tab="damage"      label="Damage"      icon="fa-burst")
+            (object tab="description" label="Description" icon="fa-scroll")
+            (object tab="effects"     label="Effects"     icon="fa-magic"))}}
 
         <!-- Tab Content -->
         <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3">

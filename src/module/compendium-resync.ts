@@ -139,7 +139,7 @@ async function getNameIndexFor(gameSystem: string, cache: Map<string, Map<string
  */
 function buildResyncPatch(embedded: EmbeddedItemLike, source: EmbeddedItemLike): Record<string, unknown> | null {
     const preserve = RUNTIME_PRESERVE_PATHS[embedded.type] ?? [];
-    const newSystem = foundry.utils.deepClone(source.system) as Record<string, unknown>;
+    const newSystem = foundry.utils.deepClone(source.system);
 
     for (const path of preserve) {
         const current = getProperty(embedded.system, path);
@@ -173,7 +173,7 @@ function isFrozen(item: EmbeddedItemLike): boolean {
 }
 
 function compendiumSourceUuid(item: EmbeddedItemLike): string | null {
-    const stats = item._stats as CompendiumStats | undefined;
+    const stats = item._stats;
     return stats?.compendiumSource ?? null;
 }
 
@@ -288,9 +288,8 @@ export async function resyncWorldFromCompendiums(): Promise<void> {
 
     // eslint-disable-next-line no-console
     console.log(
-        `[wh40k-rpg] compendium resync: ${itemsTouched} updated across ${actorsTouched} actor(s)` +
-            (itemsBackfilled > 0 ? `, ${itemsBackfilled} backfilled` : '') +
-            (itemsSkippedFrozen > 0 ? `, ${itemsSkippedFrozen} frozen` : '') +
-            (itemsUnresolved > 0 ? `, ${itemsUnresolved} unresolved (see warnings)` : ''),
+        `[wh40k-rpg] compendium resync: ${itemsTouched} updated across ${actorsTouched} actor(s)${
+            itemsBackfilled > 0 ? `, ${itemsBackfilled} backfilled` : ''
+        }${itemsSkippedFrozen > 0 ? `, ${itemsSkippedFrozen} frozen` : ''}${itemsUnresolved > 0 ? `, ${itemsUnresolved} unresolved (see warnings)` : ''}`,
     );
 }

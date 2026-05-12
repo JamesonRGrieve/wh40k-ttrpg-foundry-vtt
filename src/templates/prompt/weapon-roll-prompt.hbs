@@ -1,10 +1,9 @@
-{{!-- Rogue Trader Weapon Roll Prompt - Modern Design --}}
+{{!-- Weapon Roll Prompt --}}
 <div class="dialog-content">
     <form class="tw-relative tw-font-ui tw-text-[color:var(--wh40k-text-primary)] tw-p-5" autocomplete="off">
         {{!-- Weapon Select or Info --}}
         {{#if weaponSelect}}
-            <div class="tw-relative tw-p-4 tw-mb-4 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[#14141c] tw-to-[#0d0d12] tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
-                <h3 class="tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(255,255,255,0.08)]">Select Weapons</h3>
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title="Select Weapons"}}
                 <div class="tw-flex tw-flex-col tw-gap-2">
                     {{#each weapons as |weapon|}}
                         <label class="tw-flex tw-items-center tw-gap-3 tw-cursor-pointer tw-rounded tw-p-3 tw-border tw-border-[rgba(255,255,255,0.08)] tw-bg-[rgba(0,0,0,0.25)] {{#if weapon.isSelected}}tw-border-gold tw-bg-[rgba(201,162,39,0.08)] tw-shadow-[0_0_20px_rgba(201,162,39,0.2)]{{/if}}">
@@ -25,10 +24,10 @@
                         </label>
                     {{/each}}
                 </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
         {{else}}
             {{!-- Weapon Header Panel --}}
-            <div class="tw-relative tw-p-4 tw-mb-4 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[#14141c] tw-to-[#0d0d12] tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
                 <div class="tw-flex tw-items-center tw-gap-[14px] tw-mb-4 tw-pb-[14px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
                     <img class="tw-w-12 tw-h-12 tw-flex-shrink-0 tw-rounded tw-object-cover" alt="{{weapon.name}}" src="{{weapon.img}}" />
                     <div class="tw-flex-1 tw-min-w-0">
@@ -45,83 +44,68 @@
                 </div>
 
                 {{#if weapon.usesAmmo}}
-                    <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-                        <span class="tw-text-[0.85rem] tw-font-medium">Ammunition</span>
-                        <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-tabular-nums">{{ammoText}}</span>
-                    </div>
+                    {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Ammunition" value=ammoText}}
                 {{/if}}
                 {{#each weapon.items as |item|}}
                     {{#if item.isAttackSpecial}}
-                        <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-                            <span class="tw-text-[0.85rem] tw-font-medium">Special</span>
-                            <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-tabular-nums">{{item.name}}</span>
-                        </div>
+                        {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Special" value=item.name}}
                     {{/if}}
                 {{/each}}
-            </div>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
 
             {{!-- Attack Options Panel --}}
-            <div class="tw-relative tw-p-4 tw-mb-4 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[#14141c] tw-to-[#0d0d12] tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
-                <h3 class="tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(255,255,255,0.08)]">Attack Options</h3>
-                <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title="Attack Options"}}
+                {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
                     <span class="tw-text-[0.85rem] tw-font-medium">Attack Type{{#if weapon.usesAmmo}} <small>(max {{fireRate}} hits)</small>{{/if}}</span>
                     <select class="tw-w-full tw-min-h-[40px] tw-px-3 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px]" name="action" id="action">
                         {{selectOptions actions selected=this.action}}
                     </select>
-                </div>
+                {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
                 {{#if this.isCalledShot}}
-                    <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-                        <span class="tw-text-[0.85rem] tw-font-medium">Called Shot Location</span>
+                    {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Called Shot Location"}}
                         <select class="tw-w-full tw-min-h-[40px] tw-px-3 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px]" name="calledShotLocation" id="calledShotLocation">
                             {{selectOptions locations selected=this.calledShotLocation}}
                         </select>
-                    </div>
+                    {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
                 {{/if}}
                 {{#if this.isLasWeapon}}
-                    <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-                        <span class="tw-text-[0.85rem] tw-font-medium">Las Firing Mode</span>
+                    {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Las Firing Mode"}}
                         <select class="tw-w-full tw-min-h-[40px] tw-px-3 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px]" name="lasMode" id="lasMode">
                             {{selectOptions (arrayToObject lasModes) selected=this.lasMode}}
                         </select>
-                    </div>
+                    {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
                 {{/if}}
                 {{#if this.hasEyeOfVengeanceAvailable}}
-                    <div class="tw-flex tw-items-center tw-justify-between tw-py-2 tw-min-h-[40px]">
-                        <span class="tw-text-[0.85rem] tw-font-medium">Use Eye of Vengeance</span>
+                    {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Use Eye of Vengeance" last=true}}
                         <input class="tw-cursor-pointer" data-dtype="Boolean" type="checkbox" name="eyeOfVengeance" {{checked this.eyeOfVengeance}} />
-                    </div>
+                    {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
                 {{/if}}
-            </div>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
 
             {{!-- Modifiers Panel --}}
-            <div class="tw-relative tw-p-4 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[#14141c] tw-to-[#0d0d12] tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
-                <h3 class="tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(255,255,255,0.08)]">Modifiers</h3>
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title="Modifiers" marginClass=""}}
                 {{#with this.modifiers}}
-                    <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-                        <span class="tw-text-[0.85rem] tw-font-medium">Difficulty</span>
+                    {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Difficulty"}}
                         <select class="tw-w-full tw-min-h-[40px] tw-px-3 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px]" data-dtype="Number" name="modifiers.difficulty">
                             {{selectOptions @root.difficulties selected=difficulty}}
                         </select>
-                    </div>
+                    {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
                     {{#if @root.canAim}}
-                        <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-                            <span class="tw-text-[0.85rem] tw-font-medium">Aim</span>
+                        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Aim"}}
                             <select class="tw-w-full tw-min-h-[40px] tw-px-3 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px]" data-dtype="Number" name="modifiers.aim">
                                 {{selectOptions @root.aims selected=aim}}
                             </select>
-                        </div>
+                        {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
                     {{/if}}
-                    <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
-                        <span class="tw-text-[0.85rem] tw-font-medium">Additional Modifier</span>
+                    {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Additional Modifier" last=true}}
                         <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[80px] tw-text-right tw-w-20" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
-                    </div>
+                    {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
                 {{/with}}
                 {{#if this.weapon.isRanged}}
                     <div class="tw-h-px tw-bg-gradient-to-r tw-from-transparent tw-via-[rgba(201,162,39,0.3)] tw-to-transparent tw-my-3"></div>
-                    <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-                        <span class="tw-text-[0.85rem] tw-font-medium">Distance (m)</span>
+                    {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Distance (m)"}}
                         <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[80px] tw-text-right tw-w-20" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
-                    </div>
+                    {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
                     <div class="tw-flex tw-justify-between tw-items-center tw-pt-1">
                         <span class="tw-text-[0.85rem]">{{rangeName}}</span>
                         <span class="tw-text-[0.85rem] tw-font-semibold {{#if (gt rangeBonus 0)}}tw-text-[#4ade80]{{else if (lt rangeBonus 0)}}tw-text-[#f87171]{{else}}tw-text-[color:var(--wh40k-text-secondary)]{{/if}}">{{#if (gt rangeBonus 0)}}+{{/if}}{{rangeBonus}}</span>
@@ -140,12 +124,11 @@
                     {{/if}}
                 {{/if}}
                 {{#if this.modifiers.attack}}
-                    <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-t tw-border-[rgba(255,255,255,0.08)]">
-                        <span class="tw-text-[0.85rem] tw-font-medium">Weapon Attack Mod</span>
-                        <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-tabular-nums">{{modifiers.attack}}</span>
+                    <div class="tw-border-t tw-border-[rgba(255,255,255,0.08)]">
+                        {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Weapon Attack Mod" value=modifiers.attack last=true}}
                     </div>
                 {{/if}}
-            </div>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
         {{/if}}
     </form>
 </div>

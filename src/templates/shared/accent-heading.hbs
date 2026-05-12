@@ -1,0 +1,28 @@
+{{!-- Section heading with left accent bar + gradient backdrop.
+
+     Replaces the repeated h3/h4 pattern across chat cards and item sheets:
+         <h4 class="tw-flex tw-items-center tw-gap-1.5 tw-mb-3 tw-py-2 tw-px-3
+                     tw-bg-[linear-gradient(90deg,…accent…)]
+                     tw-border-l-[3px] tw-border-accent-<role>
+                     tw-font-display tw-text-sm tw-font-semibold …">
+             <i class="fas fa-…"></i> Heading text
+         </h4>
+
+     Hash params:
+       - level         "h3" or "h4"                            (default "h4")
+       - title         raw heading text
+       - titleKey      i18n key (used when `title` is absent)
+       - icon          FA icon class (e.g. "fa-tasks")
+       - role          accent CSS-variable suffix              (default "gold")
+                       Resolves to var(--wh40k-accent-<role>).
+                       Examples: "talents", "skills", "psychic",
+                                 "combat", "red", "green-bright".
+       - sizeClass     text-size + spacing utilities           (default "tw-text-sm tw-font-semibold")
+       - paddingClass  padding utilities                       (default "tw-py-2 tw-px-3")
+       - marginClass   margin utilities                        (default "tw-mb-3 tw-m-0")
+       - class         extra utilities tacked onto the heading
+--}}
+{{#if (eq level "h3")}}<h3{{else}}<h4{{/if}} class="tw-flex tw-items-center tw-gap-1.5 {{#if marginClass}}{{marginClass}}{{else}}tw-mb-3 tw-m-0{{/if}} {{#if paddingClass}}{{paddingClass}}{{else}}tw-py-2 tw-px-3{{/if}} tw-bg-[linear-gradient(90deg,var(--wh40k-accent-tint)_0%,transparent_100%)] tw-border-l-[3px] tw-font-display {{#if sizeClass}}{{sizeClass}}{{else}}tw-text-sm tw-font-semibold{{/if}} tw-text-[var(--wh40k-text-dark)]{{#if class}} {{class}}{{/if}}" style="--wh40k-accent-tint: rgb(from var(--wh40k-accent-{{#if role}}{{role}}{{else}}gold{{/if}}) r g b / 0.1); border-left-color: var(--wh40k-accent-{{#if role}}{{role}}{{else}}gold{{/if}});">
+    {{#if icon}}<i class="fas {{icon}}"></i>{{/if}}
+    <span>{{#if title}}{{title}}{{else if titleKey}}{{localize titleKey}}{{/if}}</span>
+{{#if (eq level "h3")}}</h3>{{else}}</h4>{{/if}}

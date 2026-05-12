@@ -51,10 +51,10 @@ export default class DamageRollDialog extends BaseRollDialog {
         const actionData = new ActionData();
         actionData.template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
 
-        this.rollData.damage = (form.querySelector('#damage') as HTMLInputElement | null)?.value ?? this.rollData.damage;
-        this.rollData.penetration = (form.querySelector('#penetration') as HTMLInputElement | null)?.value ?? this.rollData.penetration;
-        this.rollData.damageType = (form.querySelector('[name=damageType]') as HTMLInputElement | null)?.value ?? this.rollData.damageType;
-        this.rollData.pr = (form.querySelector('#pr') as HTMLInputElement | null)?.value;
+        this.rollData.damage = form.querySelector<HTMLInputElement>('#damage')?.value ?? this.rollData.damage;
+        this.rollData.penetration = form.querySelector<HTMLInputElement>('#penetration')?.value ?? this.rollData.penetration;
+        this.rollData.damageType = form.querySelector<HTMLInputElement>('[name=damageType]')?.value ?? this.rollData.damageType;
+        this.rollData.pr = form.querySelector<HTMLInputElement>('#pr')?.value;
         this.rollData.template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
 
         const typedRollData = this.rollData as unknown as RollData;

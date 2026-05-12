@@ -74,16 +74,9 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs tw-flex tw-shrink-0" data-group="primary">
-      <button type="button" class="wh40k-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="details" data-group="primary">
-        <i class="fas fa-info-circle"></i>
-        <span>Details</span>
-      </button>
-      <button type="button" class="wh40k-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="description" data-group="primary">
-        <i class="fas fa-book"></i>
-        <span>Description</span>
-      </button>
-    </nav>
+    {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+        (object tab="details"     label="Details"     icon="fa-info-circle" active=true)
+        (object tab="description" label="Description" icon="fa-book"))}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT

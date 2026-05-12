@@ -56,24 +56,11 @@
         </div>
     </div>
 
-    <nav class="wh40k-tabs tw-flex tw-shrink-0 tw-border-b-2 tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]" data-group="primary">
-        <button type="button" class="wh40k-tab active tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-[var(--wh40k-gold)] tw--mb-0.5 tw-cursor-pointer tw-text-[var(--wh40k-gold)]" data-tab="modifiers" data-group="primary">
-            <i class="fas fa-sliders-h tw-mr-1"></i>
-            <span>Modifiers</span>
-        </button>
-        <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="compatibility" data-group="primary">
-            <i class="fas fa-link tw-mr-1"></i>
-            <span>Compatibility</span>
-        </button>
-        <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="qualities" data-group="primary">
-            <i class="fas fa-star tw-mr-1"></i>
-            <span>Qualities</span>
-        </button>
-        <button type="button" class="wh40k-tab tw-px-4 tw-py-2 tw-font-display tw-text-xs tw-uppercase tw-tracking-widest tw-text-[var(--wh40k-text-muted)] tw-bg-transparent tw-border-b-2 tw-border-b-transparent tw--mb-0.5 tw-cursor-pointer hover:tw-text-[var(--wh40k-gold)] hover:tw-bg-[rgba(212,175,55,0.08)]" data-tab="details" data-group="primary">
-            <i class="fas fa-info-circle tw-mr-1"></i>
-            <span>Details</span>
-        </button>
-    </nav>
+    {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+        (object tab="modifiers"     label="Modifiers"     icon="fa-sliders-h"   active=true)
+        (object tab="compatibility" label="Compatibility" icon="fa-link")
+        (object tab="qualities"     label="Qualities"     icon="fa-star")
+        (object tab="details"       label="Details"       icon="fa-info-circle"))}}
 
     <div class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3" data-group="primary">
 

@@ -1,8 +1,7 @@
-{{! Rogue Trader Force Field Prompt - Modern Design }}
+{{! Rogue Trader Force Field Prompt }}
 <div class="dialog-content">
     <form class="tw-relative tw-font-ui tw-text-[#e8e4d9] tw-p-5" autocomplete="off">
-        {{! Character & Field Info }}
-        <div class="tw-relative tw-p-4 tw-mb-4 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[#14141c] tw-to-[#0d0d12] tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
+        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
             <div class="tw-flex tw-items-center tw-gap-[14px] tw-mb-4 tw-pb-[14px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
                 <img class="tw-w-12 tw-h-12 tw-flex-shrink-0 tw-rounded tw-object-cover tw-border tw-border-[rgba(201,162,39,0.3)]" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
                 <div class="tw-flex-1 tw-min-w-0">
@@ -11,36 +10,20 @@
                 </div>
             </div>
 
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Character</span>
-                <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-tabular-nums">{{this.actor.name}}</span>
-            </div>
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Quality</span>
-                <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-tabular-nums">{{this.forceField.system.protectionRating}}</span>
-            </div>
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Activated</span>
-                <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-tabular-nums">{{this.forceField.system.activated}}</span>
-            </div>
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
-                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Overloaded</span>
-                <span class="tw-text-[0.95rem] tw-font-bold tw-text-gold tw-text-right tw-tabular-nums">{{this.forceField.system.overloaded}}</span>
-            </div>
-        </div>
+            {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Character"  value=this.actor.name}}
+            {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Quality"    value=this.forceField.system.protectionRating}}
+            {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Activated"  value=this.forceField.system.activated}}
+            {{> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Overloaded" value=this.forceField.system.overloaded last=true}}
+        {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
 
-        {{! Protection Settings }}
-        <div class="tw-relative tw-p-4 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[#14141c] tw-to-[#0d0d12] tw-shadow-[0_4px_20px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.03)]">
-            <h3 class="tw-flex tw-items-center tw-gap-1 tw-font-display tw-text-[0.8rem] tw-font-semibold tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-[rgba(255,255,255,0.08)]">Protection</h3>
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px] tw-border-b tw-border-[rgba(255,255,255,0.08)]">
-                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Rating</span>
+        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title="Protection" marginClass=""}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Rating"}}
                 <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[80px] tw-text-right tw-w-20" type="number" data-dtype="Number" name="protectionRating" value="{{this.protectionRating}}" />
-            </div>
-            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
-                <span class="tw-text-[0.85rem] tw-font-medium tw-text-[#e8e4d9] tw-whitespace-nowrap">Overload</span>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Overload" last=true}}
                 <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[80px] tw-text-right tw-w-20" type="number" data-dtype="Number" name="overloadRating" value="{{this.overloadRating}}" />
-            </div>
-        </div>
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+        {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
     </form>
 </div>
 

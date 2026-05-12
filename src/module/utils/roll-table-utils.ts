@@ -2,9 +2,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KGameSystem } from '../types/global.d.ts';
 
 type RollTableResult = Awaited<ReturnType<RollTable['roll']>>;
-type RollTableDialog = HTMLDialogElement & {
-    querySelector(selectors: string): HTMLInputElement | HTMLSelectElement | null;
-};
+type RollTableDialog = HTMLDialogElement;
 type RollTableRollOptions = {
     displayChat?: boolean;
     roll?: Roll | null;
@@ -37,12 +35,10 @@ export class RollTableUtils {
         // Find the table in world tables first, then compendiums
         let table: RollTable | null = game.tables.getName(tableName) as RollTable | null;
 
-        if (!table) {
-            // Search in compendium packs
-            table = await this.findTableInCompendiums(tableName);
-        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ??= is the idiomatic null-fill pattern; table is initialised from getName() above, not from schema
+        table ??= await this.findTableInCompendiums(tableName);
 
-        if (!table) {
+        if (table === null) {
             ui.notifications.warn(`Roll table "${tableName}" not found.`);
             return null;
         }
@@ -71,11 +67,14 @@ export class RollTableUtils {
         for (const pack of game.packs) {
             if (pack.documentName !== 'RollTable') continue;
 
+            // eslint-disable-next-line no-await-in-loop -- sequential pack search; early-exit on first match requires ordered iteration
             const index = await pack.getIndex();
             const entry = index.find((e) => e.name === tableName);
 
             if (entry) {
+                // eslint-disable-next-line no-await-in-loop -- sequential pack search; early-exit on first match requires ordered iteration
                 const document = await pack.getDocument(entry._id);
+                // eslint-disable-next-line no-restricted-syntax -- boundary: pack.getDocument returns abstract Document; no shipped type for RollTable subclass
                 return document as unknown as RollTable;
             }
         }
@@ -221,8 +220,8 @@ export class RollTableUtils {
                 label: 'Roll',
                 callback: async (_event: Event, _button: HTMLButtonElement, dialog: Element) => {
                     const dialogElement = dialog as RollTableDialog;
-                    const tableField = dialogElement.querySelector('[name="tableName"]') as HTMLSelectElement | null;
-                    const modifierField = dialogElement.querySelector('[name="modifier"]') as HTMLInputElement | null;
+                    const tableField = dialogElement.querySelector<HTMLSelectElement>('[name="tableName"]');
+                    const modifierField = dialogElement.querySelector<HTMLInputElement>('[name="modifier"]');
                     const tableName = tableField?.value ?? '';
                     const modifier = parseInt(modifierField?.value ?? '0', 10) || 0;
 
@@ -242,7 +241,7 @@ export class RollTableUtils {
 
 // Register global access
 Hooks.once('ready', () => {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: progressive initialisation of game.wh40k namespace
+    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: progressive initialisation of game.wh40k namespace; ??= is defensive for partial initialisation order
     game.wh40k ??= {} as WH40KGameSystem;
     game.wh40k.rollTable = RollTableUtils;
 });
