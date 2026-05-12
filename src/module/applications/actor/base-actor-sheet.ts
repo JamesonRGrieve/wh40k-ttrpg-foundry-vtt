@@ -711,7 +711,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 const entryList: SkillLike[] = Array.isArray(rawEntries)
                     ? (rawEntries as SkillLike[])
                     : typeof rawEntries === 'object' && rawEntries !== null
-                    ? Object.values(rawEntries as Record<string, SkillLike>)
+                    ? (Object.values(rawEntries) as SkillLike[])
                     : [];
                 const plainEntries: SkillLike[] = entryList.map((entry, entryIndex) => {
                     if (typeof entry === 'string') {
@@ -750,8 +750,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                     if (normalized.characteristic === undefined || normalized.characteristic === '') {
                         normalized.characteristic = data.characteristic;
                     }
-                    normalized.advanced ??= data.advanced;
-                    normalized.basic ??= data.advanced !== true;
+                    if (normalized.advanced === undefined) {
+                        normalized.advanced = data.advanced;
+                    }
+                    if (normalized.basic === undefined) {
+                        normalized.basic = data.advanced !== true;
+                    }
                     // Store skill key and index for template access
                     normalized.skillKey = key;
                     normalized.entryIndex = entryIndex;
@@ -2509,7 +2513,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 },
             ],
             close: (): null => null,
-        })) as Record<string, string> | null;
+        })) as { base: string; advance: string; modifier: string; unnatural: string } | null;
 
         // Update actor with new values if saved
         if (result) {
