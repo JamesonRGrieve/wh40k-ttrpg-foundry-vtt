@@ -74,7 +74,8 @@ describe('character sheet template composition', () => {
         `);
 
         expect(element.querySelector('input[name="system.rank"]')).not.toBeNull();
-        expect(element.querySelector('[data-item-id^="origin"]')).toBeNull();
+        // After commit 6b6f164 origin-path bubbles render in the shared DH header too;
+        // assert the biography tab content rather than the absence of stage items.
         expect(element.textContent).toContain('Character Journal');
         expect(element.textContent).toContain('Interrogation Log');
     });

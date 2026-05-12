@@ -1,0 +1,50 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "src/module/wh40k-rpg.ts",
+    "gulpfile.js",
+    "scripts/*.mjs",
+    "stories/**/*.stories.ts",
+    "src/module/**/*.stories.ts",
+    "src/templates/**/*.stories.ts",
+    "tests/**/*.test.ts",
+    "src/module/**/*.test.ts",
+    "tests/storybook/**/*.ts",
+    ".storybook/main.ts",
+    "playwright.storybook.config.ts",
+    "vitest.config.ts"
+  ],
+  "project": [
+    "src/module/**/*.ts",
+    "stories/**/*.ts",
+    "tests/**/*.ts"
+  ],
+  "ignore": [
+    "src/module/icons/registry.generated.ts",
+    "src/module/types/i18n-keys.d.ts",
+    "src/module/types/icon-keys.d.ts",
+    "foundry-v14-overrides.d.ts",
+    "dist/**"
+  ],
+  "ignoreBinaries": [
+    "biome",
+    "depcruise",
+    "dot",
+    "knip",
+    "size-limit",
+    "type-coverage",
+    "storybook"
+  ],
+  "ignoreDependencies": [
+    "@total-typescript/ts-reset",
+    "@storybook/addon-a11y",
+    "@size-limit/preset-app",
+    "eslint-plugin-storybook",
+    "@vitest/eslint-plugin",
+    "expect-type",
+    "fast-check"
+  ],
+  "vitest": {
+    "config": "vitest.config.ts"
+  }
+}
