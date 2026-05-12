@@ -345,7 +345,7 @@ export default class NPCSheet extends CharacterSheet {
                 label: 'Threat',
                 name: 'system.threatLevel',
                 type: 'number' as const,
-                value: npcActor.system.threatLevel ?? 1,
+                value: npcActor.system.threatLevel,
                 min: 1,
                 max: 30,
                 icon: 'fa-solid fa-skull',
@@ -360,7 +360,7 @@ export default class NPCSheet extends CharacterSheet {
                 label: 'Type',
                 name: 'system.type',
                 type: 'select' as const,
-                value: npcActor.system.type ?? 'troop',
+                value: npcActor.system.type,
                 options: {
                     troop: 'Troop',
                     elite: 'Elite',
@@ -376,7 +376,7 @@ export default class NPCSheet extends CharacterSheet {
                 label: 'Role',
                 name: 'system.role',
                 type: 'select' as const,
-                value: npcActor.system.role ?? 'bruiser',
+                value: npcActor.system.role,
                 options: {
                     bruiser: 'Bruiser',
                     sniper: 'Sniper',
@@ -390,7 +390,7 @@ export default class NPCSheet extends CharacterSheet {
                 label: 'Faction',
                 name: 'system.faction',
                 type: 'text' as const,
-                value: npcActor.system.faction ?? '',
+                value: npcActor.system.faction,
                 placeholder: 'Faction',
             },
         ];
@@ -493,7 +493,7 @@ export default class NPCSheet extends CharacterSheet {
             type TabConfig = { tab: string; label: string; group: string; cssClass: string };
             const tabConfig = (ctor.TABS as TabConfig[]).find((t) => t.tab === 'npc');
             if (tabConfig) {
-                const groups = this.tabGroups as Record<string, string>;
+                const groups: Record<string, string> = this.tabGroups;
                 partContext.tab = {
                     id: tabConfig.tab,
                     group: tabConfig.group,
@@ -1186,7 +1186,7 @@ export default class NPCSheet extends CharacterSheet {
                 break;
             case 'plus10':
                 // Toggle +10: if already at +10 (and not +20), drop to trained; otherwise set to +10
-                if (currentState?.plus10 === true && currentState.plus20 !== true) {
+                if (currentState.plus10 === true && currentState.plus20 !== true) {
                     currentSkills[skillKey] = {
                         name: skillKey,
                         characteristic: currentState.characteristic !== '' ? currentState.characteristic : skillCharMap[skillKey] ?? 'perception',
@@ -1199,19 +1199,19 @@ export default class NPCSheet extends CharacterSheet {
                     currentSkills[skillKey] = {
                         name: skillKey,
                         characteristic:
-                            currentState?.characteristic !== undefined && currentState.characteristic !== ''
+                            currentState.characteristic !== undefined && currentState.characteristic !== ''
                                 ? currentState.characteristic
                                 : skillCharMap[skillKey] ?? 'perception',
                         trained: true,
                         plus10: true,
                         plus20: false,
-                        bonus: currentState?.bonus ?? 0,
+                        bonus: currentState.bonus ?? 0,
                     };
                 }
                 break;
             case 'plus20':
                 // Toggle +20: if already at +20, drop to +10; otherwise set to +20
-                if (currentState?.plus20 === true) {
+                if (currentState.plus20 === true) {
                     currentSkills[skillKey] = {
                         name: skillKey,
                         characteristic: currentState.characteristic !== '' ? currentState.characteristic : skillCharMap[skillKey] ?? 'perception',
@@ -1224,13 +1224,13 @@ export default class NPCSheet extends CharacterSheet {
                     currentSkills[skillKey] = {
                         name: skillKey,
                         characteristic:
-                            currentState?.characteristic !== undefined && currentState.characteristic !== ''
+                            currentState.characteristic !== undefined && currentState.characteristic !== ''
                                 ? currentState.characteristic
                                 : skillCharMap[skillKey] ?? 'perception',
                         trained: true,
                         plus10: true,
                         plus20: true,
-                        bonus: currentState?.bonus ?? 0,
+                        bonus: currentState.bonus ?? 0,
                     };
                 }
                 break;
@@ -1379,8 +1379,10 @@ export default class NPCSheet extends CharacterSheet {
             9: 4, // Gargantuan
             10: 4, // Colossal
         };
-        updates.width = sizeMap[npc.system.size] ?? 1;
-        updates.height = sizeMap[npc.system.size] ?? 1;
+        const npcSize = npc.system.size;
+        const tokenSize = sizeMap[npcSize] ?? 1;
+        updates.width = tokenSize;
+        updates.height = tokenSize;
 
         // Type-based vision/detection
         if (npc.system.type === 'daemon' || npc.system.type === 'xenos') {
@@ -1601,7 +1603,7 @@ export default class NPCSheet extends CharacterSheet {
         event.preventDefault();
         const tag = target.dataset.tag;
         if (tag === undefined || tag === '') return;
-        const tags = (this.actor.system.tags ?? []).filter((t) => t !== tag);
+        const tags = this.npcActor.system.tags.filter((t) => t !== tag);
         await this.actor.update({ 'system.tags': tags });
     }
 
