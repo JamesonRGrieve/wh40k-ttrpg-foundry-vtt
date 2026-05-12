@@ -1,7 +1,15 @@
 /**
  * @file PrimarySheetMixin - Adds V2 sheet functionality shared between primary document sheets
  * Based on dnd5e's PrimarySheetMixin pattern
+ *
+ * BOUNDARY FILE: this mixin wraps the Foundry V14 ApplicationV2 lifecycle, whose
+ * options / context payloads are untyped. Per CLAUDE.md, framework-boundary points
+ * (super._prepareContext options, render-context / mode hooks, slide-toggle DOM
+ * shape) are permitted to use `Record<string, unknown>` and `any`. The
+ * `mixin-constructor-args` and `slide-toggle` boundaries are localised below; the
+ * rest of the file is typed normally.
  */
+/* eslint-disable no-restricted-syntax -- mixin chain is a Foundry V14 framework boundary; super-prototype payloads are untyped */
 
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor } from './application-types.ts';
@@ -23,18 +31,23 @@ interface SheetTab {
  * @returns {any}
  * @mixin
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- factory returns an anonymous mixin class; explicit return type defeats the mixin's inferred shape
 export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class PrimarySheetWH40K extends DragDropMixin(Base) implements PrimarySheetMixinAPI {
+        /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument -- mixin idiom: constructor receives whatever the base class accepts; cannot be narrowed without breaking the mixin chain */
         constructor(...args: any[]) {
             super(...args);
         }
+        /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument */
 
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             actions: {
+                /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action handlers are dispatched with the sheet as `this` by Foundry's action system */
                 editDocument: PrimarySheetWH40K.#showDocument,
                 deleteDocument: PrimarySheetWH40K.#deleteDocument,
                 showDocument: PrimarySheetWH40K.#showDocument,
+                /* eslint-enable @typescript-eslint/unbound-method */
             },
         };
 
@@ -89,8 +102,9 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
             };
             prototype._configureRenderOptions?.call(this, options);
 
-            const renderContext = (options as any).renderContext;
-            let mode = (options as any).mode;
+            const v14Options = options as ApplicationV2Config.RenderOptions & { renderContext?: string; mode?: number };
+            const renderContext = v14Options.renderContext;
+            let mode = v14Options.mode;
             if (mode === undefined && renderContext === 'createItem') mode = PrimarySheetWH40K.MODES.EDIT;
             this._mode = mode ?? this._mode ?? PrimarySheetWH40K.MODES.PLAY;
         }
@@ -136,8 +150,8 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
             const toggle = header?.querySelector<HTMLInputElement>('.mode-slider');
 
             if (this.isEditable && !toggle) {
-                const newToggle = document.createElement('slide-toggle');
-                (newToggle as any).checked = this._mode === PrimarySheetWH40K.MODES.EDIT;
+                const newToggle = document.createElement('slide-toggle') as HTMLElement & { checked: boolean };
+                newToggle.checked = this._mode === PrimarySheetWH40K.MODES.EDIT;
                 newToggle.classList.add('mode-slider');
                 newToggle.dataset.tooltip = 'WH40K.SheetModeEdit';
                 newToggle.setAttribute('aria-label', game.i18n.localize('WH40K.SheetModeEdit'));
@@ -241,11 +255,12 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                 document?: { system?: { gameSystem?: string } };
             };
             const systemId = sheetWithSystem._gameSystemId ?? sheetWithSystem.document?.system?.gameSystem;
-            if (systemId) this.element.dataset.wh40kSystem = systemId;
+            if (systemId !== undefined && systemId !== '') this.element.dataset.wh40kSystem = systemId;
 
             this._renderModeToggle();
-            this.element.classList.toggle('editable', this.isEditable && this._mode === (this.constructor as any).MODES.EDIT);
-            this.element.classList.toggle('interactable', this.isEditable && this._mode === (this.constructor as any).MODES.PLAY);
+            const ctor = this.constructor as typeof PrimarySheetWH40K;
+            this.element.classList.toggle('editable', this.isEditable && this._mode === ctor.MODES.EDIT);
+            this.element.classList.toggle('interactable', this.isEditable && this._mode === ctor.MODES.PLAY);
             this.element.classList.toggle('locked', !this.isEditable);
 
             if (this.isEditable) {
@@ -271,25 +286,31 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
          * @protected
          */
         _activateTabs(): void {
-            const tabsConfig = (this.options as any).tabs ?? [];
+            interface TabsConfigEntry {
+                navSelector: string;
+                contentSelector: string;
+                initial?: string;
+            }
+            const optionsWithTabs = this.options as ApplicationV2Config.DefaultOptions & { tabs?: TabsConfigEntry[] };
+            const tabsConfig: TabsConfigEntry[] = optionsWithTabs.tabs ?? [];
             for (const config of tabsConfig) {
                 const { navSelector, contentSelector, initial } = config;
                 const nav = this.element.querySelector<HTMLElement>(navSelector);
                 const content = this.element.querySelector<HTMLElement>(contentSelector);
                 if (!nav || !content) continue;
 
-                const group = nav.dataset.group || 'primary';
-                const activeTab = this.tabGroups?.[group] ?? initial;
+                const group = nav.dataset.group ?? 'primary';
+                const activeTab = this.tabGroups[group] ?? initial;
 
                 for (const tabLink of nav.querySelectorAll<HTMLElement>('[data-tab]')) {
                     tabLink.addEventListener('click', (event) => {
                         event.preventDefault();
                         const tab = tabLink.dataset.tab;
-                        if (tab) this._activateTab(tab, group, nav, content);
+                        if (tab !== undefined && tab !== '') this._activateTab(tab, group, nav, content);
                     });
                 }
 
-                if (activeTab) {
+                if (activeTab !== '') {
                     this._activateTab(activeTab, group, nav, content);
                 }
             }
@@ -304,7 +325,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
          * @protected
          */
         _activateTab(tab: string, group: string, nav: HTMLElement, content: HTMLElement): void {
-            if (this.tabGroups) this.tabGroups[group] = tab;
+            this.tabGroups[group] = tab;
 
             for (const link of nav.querySelectorAll<HTMLElement>('[data-tab]')) {
                 const isActive = link.dataset.tab === tab;
@@ -327,7 +348,6 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
          * Animate a stat element to show a value change.
          */
         animateStatChange(element: HTMLElement, type: string = 'changed'): void {
-            if (!element) return;
             const animClass = `wh40k-stat-${type}`;
             element.classList.remove('wh40k-stat-increase', 'wh40k-stat-decrease', 'wh40k-stat-changed', 'wh40k-stat-critical', 'wh40k-stat-success');
             void element.offsetWidth;
@@ -340,7 +360,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
         /* -------------------------------------------- */
 
         animateValueChange(element: HTMLElement, oldValue: number, newValue: number): void {
-            if (!element || oldValue === newValue) return;
+            if (oldValue === newValue) return;
             const type = newValue > oldValue ? 'increase' : 'decrease';
             this.animateStatChange(element, type);
         }
@@ -390,6 +410,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
 
         /* -------------------------------------------- */
 
+        // eslint-disable-next-line @typescript-eslint/require-await -- subclasses override with awaited bodies; the base returns a sentinel
         async _deleteDocument(event: Event, target: HTMLElement): Promise<unknown> {
             return true;
         }
@@ -404,7 +425,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
             toggle.setAttribute('aria-label', label);
             this._mode = toggle.checked ? MODES.EDIT : MODES.PLAY;
             await this.submit();
-            this.render();
+            void this.render();
         }
 
         /* -------------------------------------------- */
@@ -441,6 +462,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
 
         /* -------------------------------------------- */
 
+        // eslint-disable-next-line @typescript-eslint/require-await -- subclasses override with awaited bodies; the base returns a sentinel
         async _showDocument(event: Event, target: HTMLElement): Promise<unknown> {
             return true;
         }
@@ -453,8 +475,8 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
 
         /* -------------------------------------------- */
 
-        _sortItems(items: any[], mode: string): any[] {
-            return items.sort((a: { sort: number }, b: { sort: number }) => a.sort - b.sort);
+        _sortItems<TItem extends { sort: number }>(items: TItem[], mode: string): TItem[] {
+            return items.sort((a, b) => a.sort - b.sort);
         }
     };
 }
