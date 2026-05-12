@@ -143,6 +143,12 @@ const BaseActorSheetBase = ActiveModifiersMixin(
  */
 export default class BaseActorSheet extends BaseActorSheetBase {
     // ---- Typed declarations from mixin chain (see sheet-mixin-types.ts) ----
+    // The mixin chain casts to AnyApplicationV2Ctor at each step (any-erased),
+    // so subclasses must re-`declare` every mixin-provided member to surface
+    // its typed contract. This block is functionally a boundary surface — every
+    // `unknown` / `Record<string, unknown>` mirrors a member of the boundary-
+    // disabled BaseActorSheetMixins interface in sheet-mixin-types.ts.
+    /* eslint-disable no-restricted-syntax -- mirrors the boundary-disabled BaseActorSheetMixins contract; see header */
     // Foundry base properties
     declare actor: BaseActorSheetActor;
     declare document: WH40KBaseActorDocument & { system: BaseActorSheetSystem };
@@ -225,6 +231,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     declare render: (options?: Record<string, unknown> | boolean) => Promise<this>;
     declare submit: () => Promise<void>;
     declare setPosition: (pos: Partial<{ top: number; left: number; width: number; height: number }>) => void;
+    /* eslint-enable no-restricted-syntax */
     // These are declared as methods (not properties) so subclasses can override them
     // and call super. The actual implementation lives in Foundry's ApplicationV2 base,
     // which is erased by the mixin chain cast. These stubs restore type visibility by
