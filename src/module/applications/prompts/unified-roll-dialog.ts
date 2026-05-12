@@ -168,7 +168,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             height: 'auto' as unknown as number,
         },
         window: {
-            title: 'WH40K.Roll.Title',
+            // eslint-disable-next-line no-restricted-syntax -- localization key resolved by Foundry V14 ApplicationV2 at render
+            title: 'WH40K.Roll.Title' as const,
         },
     };
 
