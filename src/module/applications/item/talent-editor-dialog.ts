@@ -10,12 +10,132 @@
 
 import type TalentData from '../../data/item/talent.ts';
 import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
+import type { ApplicationV2Ctor, FoundryApplicationApiLike } from '../api/application-types.ts';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const { ApplicationV2, HandlebarsApplicationMixin } = (foundry.applications as any).api;
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's applications namespace is not natively typed; narrow to the API surface we need
+const applicationAPI = (foundry.applications as unknown as { api: FoundryApplicationApiLike & { ApplicationV2: ApplicationV2Ctor } }).api;
+const { ApplicationV2, HandlebarsApplicationMixin } = applicationAPI;
 
 /** Talent system data with mixin-inherited modifiers visible to the type system. */
 type TalentSystem = TalentData & Pick<ModifiersTemplate, 'modifiers'>;
+
+/** Item shape consumed by this dialog. */
+interface TalentEditorItem {
+    name: string;
+    system: TalentSystem;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update accepts a free-form nested update payload
+    update: (data: Record<string, unknown>) => Promise<unknown>;
+}
+
+/** Select option pair. */
+interface SelectOption {
+    value: string;
+    label: string;
+}
+
+/** Prepared prerequisites payload for the Handlebars context. */
+interface PreparedPrerequisites {
+    text: string;
+    characteristics: Array<{ key: string; label: string; value: number }>;
+    skills: Array<{ name: string }>;
+    talents: Array<{ name: string }>;
+}
+
+/** Single labelled, indexed entry used in many prepared sections. */
+interface LabelledEntry {
+    key: string;
+    label: string;
+    value: number;
+}
+
+interface ModOtherEntry {
+    index: number;
+    key: string;
+    label: string;
+    value: number;
+    mode: string;
+}
+
+interface PreparedModifiers {
+    characteristics: LabelledEntry[];
+    skills: LabelledEntry[];
+    combat: LabelledEntry[];
+    resources: LabelledEntry[];
+    other: ModOtherEntry[];
+}
+
+interface SitEntry {
+    index: number;
+    key: string;
+    label: string;
+    value: number;
+    condition: string;
+}
+
+interface PreparedSituational {
+    characteristics: SitEntry[];
+    skills: SitEntry[];
+    combat: SitEntry[];
+}
+
+interface PreparedGrants {
+    skills: Array<{ index: number; name: string; specialization: string; level: string }>;
+    talents: Array<{ index: number; name: string; specialization: string; uuid: string }>;
+    traits: Array<{ index: number; name: string; level: number | null; uuid: string }>;
+    specialAbilities: Array<{ index: number; name: string; description: string }>;
+}
+
+interface FormOtherMod {
+    key: string;
+    label: string;
+    value: number;
+    mode: string;
+}
+
+interface FormSituationalMod {
+    key: string;
+    value: number;
+    condition: string;
+}
+
+interface FormGrantedSkill {
+    name: string;
+    specialization: string;
+    level: string;
+}
+
+interface FormGrantedTalent {
+    name: string;
+    specialization: string;
+    uuid: string;
+}
+
+interface FormGrantedTrait {
+    name: string;
+    level: number | null;
+    uuid: string;
+}
+
+interface FormGrantedAbility {
+    name: string;
+    description: string;
+}
+
+interface PreparedContext {
+    item: TalentEditorItem;
+    system: TalentSystem;
+    activeSection: string;
+    prerequisites: PreparedPrerequisites;
+    modifiers: PreparedModifiers;
+    situational: PreparedSituational;
+    grants: PreparedGrants;
+    characteristicOptions: SelectOption[];
+    skillOptions: SelectOption[];
+    combatOptions: SelectOption[];
+    resourceOptions: SelectOption[];
+    trainingLevelOptions: SelectOption[];
+    sections: { prerequisites: boolean; modifiers: boolean; situational: boolean; grants: boolean };
+}
 
 /**
  * Dialog for editing complex talent data fields.
@@ -69,7 +189,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * The item being edited.
      * @type {Item}
      */
-    item: { name: string; system: TalentSystem; update: (data: Record<string, unknown>) => Promise<unknown> };
+    item: TalentEditorItem;
 
     /**
      * Current active section.
@@ -81,9 +201,10 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /*  Constructor                                 */
     /* -------------------------------------------- */
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 constructor options are a free-form payload passed through to super
     constructor(options: Record<string, unknown> = {}) {
         super(options);
-        this.item = options.item as typeof this.item;
+        this.item = options.item as TalentEditorItem;
         const initialSection = options.initialSection;
         this.#activeSection = typeof initialSection === 'string' && initialSection !== '' ? initialSection : 'prerequisites';
     }
@@ -93,7 +214,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
+    get title(): string {
         return `Edit: ${this.item.name}`;
     }
 
@@ -102,8 +223,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line @typescript-eslint/require-await
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+    // eslint-disable-next-line @typescript-eslint/require-await, no-restricted-syntax, @typescript-eslint/no-unused-vars -- boundary: ApplicationV2 _prepareContext options is a framework-defined free-form payload
+    async _prepareContext(_options: Record<string, unknown>): Promise<PreparedContext> {
         const system: TalentSystem = this.item.system;
 
         // Prepare characteristic options
@@ -149,17 +270,13 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object} Prepared prerequisites data
      * @protected
      */
-    _preparePrerequisitesData(system: TalentSystem): Record<string, unknown> {
+    _preparePrerequisitesData(system: TalentSystem): PreparedPrerequisites {
         const prereqs = system.prerequisites;
 
         // Convert characteristics object to array for template iteration
-        const characteristicReqs = Object.entries(prereqs.characteristics)
-            .filter(([_, value]) => (value as number) > 0)
-            .map(([key, value]) => ({
-                key,
-                label: this._getCharacteristicLabel(key),
-                value,
-            }));
+        const characteristicReqs: PreparedPrerequisites['characteristics'] = Object.entries(prereqs.characteristics).flatMap(([key, value]) =>
+            typeof value === 'number' && value > 0 ? [{ key, label: this._getCharacteristicLabel(key), value }] : [],
+        );
 
         return {
             text: prereqs.text,
@@ -177,30 +294,22 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object} Prepared modifiers data
      * @protected
      */
-    _prepareModifiersEditData(system: TalentSystem): Record<string, unknown> {
+    _prepareModifiersEditData(system: TalentSystem): PreparedModifiers {
         const mods = system.modifiers;
 
         // Convert characteristics object to array
-        const characteristics = Object.entries(mods.characteristics)
-            .filter(([_, value]) => value !== 0)
-            .map(([key, value]) => ({
-                key,
-                label: this._getCharacteristicLabel(key),
-                value,
-            }));
+        const characteristics: LabelledEntry[] = Object.entries(mods.characteristics).flatMap(([key, value]) =>
+            typeof value === 'number' && value !== 0 ? [{ key, label: this._getCharacteristicLabel(key), value }] : [],
+        );
 
         // Convert skills object to array
-        const skills = Object.entries(mods.skills)
-            .filter(([_, value]) => value !== 0)
-            .map(([key, value]) => ({
-                key,
-                label: this._formatSkillLabel(key),
-                value,
-            }));
+        const skills: LabelledEntry[] = Object.entries(mods.skills).flatMap(([key, value]) =>
+            typeof value === 'number' && value !== 0 ? [{ key, label: this._formatSkillLabel(key), value }] : [],
+        );
 
         // Combat modifiers
-        const combat = Object.entries(mods.combat)
-            .filter(([_, value]) => value !== 0)
+        const combat: LabelledEntry[] = Object.entries(mods.combat)
+            .filter(([, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
                 label: this._getCombatLabel(key),
@@ -208,8 +317,8 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             }));
 
         // Resource modifiers
-        const resources = Object.entries(mods.resources)
-            .filter(([_, value]) => value !== 0)
+        const resources: LabelledEntry[] = Object.entries(mods.resources)
+            .filter(([, value]) => value !== 0)
             .map(([key, value]) => ({
                 key,
                 label: this._getResourceLabel(key),
@@ -242,7 +351,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object} Prepared situational data
      * @protected
      */
-    _prepareSituationalEditData(system: TalentSystem): Record<string, unknown> {
+    _prepareSituationalEditData(system: TalentSystem): PreparedSituational {
         const situational = system.modifiers.situational;
 
         return {
@@ -278,7 +387,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object} Prepared grants data
      * @protected
      */
-    _prepareGrantsEditData(system: TalentSystem): Record<string, unknown> {
+    _prepareGrantsEditData(system: TalentSystem): PreparedGrants {
         const grants = system.grants;
 
         return {
@@ -520,6 +629,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender context/options are framework-defined free-form payloads
     async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
@@ -532,7 +642,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @protected
      */
     _setupSectionTabs(): void {
-        const el = this.element as HTMLElement;
+        const el = this.element;
         const tabs = el.querySelectorAll('.ted-section-tab');
         tabs.forEach((tab: Element) => {
             tab.addEventListener('click', (event: Event) => {
@@ -566,20 +676,27 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {HTMLFormElement} form - The form element
      * @param {FormDataExtended} formData - The form data
      */
+    // eslint-disable-next-line complexity, no-restricted-syntax -- boundary: form data is a free-form nested payload; coercion happens row-by-row below
     static async #formHandler(this: TalentEditorDialog, _event: Event, _form: HTMLFormElement, formData: { object: Record<string, unknown> }): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry expandObject yields a free-form nested structure shaped by template field names
         const data = foundry.utils.expandObject(formData.object) as Record<string, Record<string, unknown> | undefined>;
 
         // Process the form data into the proper structure
+        // eslint-disable-next-line no-restricted-syntax -- boundary: updateData is fed directly to Foundry Document.update which accepts a free-form payload
         const updateData: Record<string, unknown> = {};
 
         // Helper to extract entries from an indexed sub-object
+        /* eslint-disable-next-line no-restricted-syntax --
+           boundary: type-guard helper that narrows a free-form expandObject sub-object into row records */
         const entries = (obj: unknown): Record<string, unknown>[] =>
+            // eslint-disable-next-line no-restricted-syntax -- boundary: see helper signature above
             obj !== null && obj !== undefined && typeof obj === 'object' ? (Object.values(obj) as Record<string, unknown>[]) : [];
 
         // Helper to coerce a form field to a non-empty string, returning '' otherwise.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: type-guard helper called immediately on free-form form data
         const str = (v: unknown): string => (typeof v === 'string' ? v : '');
         // Helper to coerce to integer, defaulting to 0.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: type-guard helper called immediately on free-form form data
         const int = (v: unknown): number => {
             const n = parseInt(String(v), 10);
             return isNaN(n) ? 0 : n;
@@ -591,7 +708,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             updateData['system.prerequisites.text'] = str(prerequisites.text);
 
             // Convert characteristics array back to object
-            const charReqs: Record<string, unknown> = {};
+            const charReqs: Record<string, number> = {};
             for (const entry of entries(prerequisites.characteristics)) {
                 const key = str(entry.key);
                 if (key !== '' && entry.value !== undefined && entry.value !== '') {
@@ -621,7 +738,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
         const modifiers = data.modifiers;
         if (modifiers !== undefined) {
             // Characteristics
-            const charMods: Record<string, unknown> = {};
+            const charMods: Record<string, number> = {};
             for (const entry of entries(modifiers.characteristics)) {
                 const key = str(entry.key);
                 if (key !== '') charMods[key] = int(entry.value);
@@ -629,7 +746,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             updateData['system.modifiers.characteristics'] = charMods;
 
             // Skills
-            const skillMods: Record<string, unknown> = {};
+            const skillMods: Record<string, number> = {};
             for (const entry of entries(modifiers.skills)) {
                 const key = str(entry.key);
                 if (key !== '') skillMods[key] = int(entry.value);
@@ -649,7 +766,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             }
 
             // Other modifiers
-            const otherMods: Record<string, unknown>[] = [];
+            const otherMods: FormOtherMod[] = [];
             for (const entry of entries(modifiers.other)) {
                 const key = str(entry.key);
                 if (key !== '') {
@@ -669,8 +786,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
         // Process situational modifiers
         const situational = data.situational;
         if (situational !== undefined) {
-            const collect = (entriesIn: unknown): Record<string, unknown>[] => {
-                const out: Record<string, unknown>[] = [];
+            // eslint-disable-next-line no-restricted-syntax -- boundary: type-guard helper called immediately on free-form form data
+            const collect = (entriesIn: unknown): FormSituationalMod[] => {
+                const out: FormSituationalMod[] = [];
                 for (const entry of entries(entriesIn)) {
                     const key = str(entry.key);
                     const condition = str(entry.condition);
@@ -689,7 +807,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
         const grants = data.grants;
         if (grants !== undefined) {
             // Skills
-            const grantedSkills: Record<string, unknown>[] = [];
+            const grantedSkills: FormGrantedSkill[] = [];
             for (const entry of entries(grants.skills)) {
                 const name = str(entry.name);
                 if (name !== '') {
@@ -704,7 +822,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             updateData['system.grants.skills'] = grantedSkills;
 
             // Talents
-            const grantedTalents: Record<string, unknown>[] = [];
+            const grantedTalents: FormGrantedTalent[] = [];
             for (const entry of entries(grants.talents)) {
                 const name = str(entry.name);
                 if (name !== '') {
@@ -718,7 +836,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             updateData['system.grants.talents'] = grantedTalents;
 
             // Traits
-            const grantedTraits: Record<string, unknown>[] = [];
+            const grantedTraits: FormGrantedTrait[] = [];
             for (const entry of entries(grants.traits)) {
                 const name = str(entry.name);
                 if (name !== '') {
@@ -733,7 +851,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             updateData['system.grants.traits'] = grantedTraits;
 
             // Special Abilities
-            const grantedAbilities: Record<string, unknown>[] = [];
+            const grantedAbilities: FormGrantedAbility[] = [];
             for (const entry of entries(grants.specialAbilities)) {
                 const name = str(entry.name);
                 if (name !== '') {

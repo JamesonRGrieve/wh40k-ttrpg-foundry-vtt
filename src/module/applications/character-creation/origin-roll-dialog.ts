@@ -14,6 +14,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `foundry.applications` has no shipped type for the v2 api namespace
 const foundryApi = foundry.applications as unknown as {
     api: {
         ApplicationV2: ApplicationV2Ctor;
@@ -25,8 +26,8 @@ const LegacyDialog = foundry.appv1.api.Dialog;
 
 /** Extract numeric value from a Foundry v1 Dialog callback `html` argument. */
 function readDialogNumber(html: JQuery<HTMLElement>): number {
-    const root: Element | null = html[0] ?? null;
-    const form = root?.querySelector('form') ?? null;
+    const root = html[0];
+    const form = root.querySelector('form');
     const input = form?.querySelector<HTMLInputElement>('[name="value"]') ?? null;
     return parseInt(input?.value ?? '');
 }
@@ -61,6 +62,23 @@ interface OriginRollOriginItem {
 interface OriginRollContext {
     actor: OriginRollActor;
     originItem: OriginRollOriginItem;
+}
+
+/** Render context additions produced by `_prepareContext` for the dialog template. */
+interface OriginRollRenderContextAdditions {
+    rollType: string;
+    rollTypeLabel: string;
+    formula: string;
+    description: string;
+    originName: string;
+    originImg: string;
+    actorName: string;
+    rollResult: OriginRollResult | null;
+    hasRolled: boolean;
+    rollHistory: { timestamp: number; result: number; breakdown: string }[];
+    showHistory: boolean;
+    actorTB?: number;
+    expandedFormula?: string;
 }
 
 export default class OriginRollDialog extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -195,33 +213,33 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `_prepareContext` returns Record<string, unknown> per its v2 ApplicationV2 type
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: super._prepareContext is typed by Foundry as Record<string, unknown>
         const superCall = super._prepareContext as (o: ApplicationV2Config.RenderOptions) => Promise<Record<string, unknown>>;
         const superCtx = await superCall.call(this, options);
-        const context: Record<string, unknown> = { ...superCtx };
 
-        context.rollType = this.rollType;
-        context.rollTypeLabel = this._getRollTypeLabel();
-        context.formula = this.formula;
-        context.description = this._getDescription();
-        context.originName = this.context.originItem.name;
-        context.originImg = this.context.originItem.img;
-        context.actorName = this.context.actor.name;
+        const additions: OriginRollRenderContextAdditions = {
+            rollType: this.rollType,
+            rollTypeLabel: this._getRollTypeLabel(),
+            formula: this.formula,
+            description: this._getDescription(),
+            originName: this.context.originItem.name,
+            originImg: this.context.originItem.img,
+            actorName: this.context.actor.name,
+            rollResult: this.rollResult,
+            hasRolled: this.rollResult !== null,
+            rollHistory: this.rollHistory,
+            showHistory: this.rollHistory.length > 1,
+        };
 
-        // Roll result data
-        context.rollResult = this.rollResult;
-        context.hasRolled = !!this.rollResult;
-        context.rollHistory = this.rollHistory;
-        context.showHistory = this.rollHistory.length > 1;
-
-        // Actor context for formula display
         if (this.rollType === 'wounds') {
             const tb = this.context.actor.system.characteristics?.toughness?.bonus ?? 0;
-            context.actorTB = tb;
-            context.expandedFormula = this._expandWoundsFormula(this.formula, tb);
+            additions.actorTB = tb;
+            additions.expandedFormula = this._expandWoundsFormula(this.formula, tb);
         }
 
-        return context;
+        return { ...superCtx, ...additions };
     }
 
     /**
@@ -408,11 +426,11 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             rejectClose: false,
         });
 
-        if (diceValue === null || diceValue === undefined || isNaN(diceValue) || diceValue === 0) return;
+        if (diceValue === null || isNaN(diceValue) || diceValue === 0) return;
 
         // Calculate the final value using the full formula
         // Parse formula: e.g., "2xTB+1d5+2"
-        let diceResult = diceValue;
+        let diceResult: number = diceValue;
         if (is1d5) {
             diceResult = Math.ceil(diceValue / 2);
         }
@@ -525,7 +543,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             rejectClose: false,
         });
 
-        if (diceValue === null || diceValue === undefined || isNaN(diceValue) || diceValue === 0) return;
+        if (diceValue === null || isNaN(diceValue) || diceValue === 0) return;
 
         // Find matching condition
         let result = 0;
@@ -591,6 +609,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {FormDataExtended} formData - The form data
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry FormDataExtended payload
     static #onSubmit(this: OriginRollDialog, event: Event, form: HTMLFormElement, _formData: Record<string, unknown>): void {
         // Same as accept
         OriginRollDialog.#accept.call(this, event, form);
@@ -790,7 +809,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             rejectClose: false,
         });
 
-        if (diceValue === null || diceValue === undefined || isNaN(diceValue)) return;
+        if (diceValue === null || isNaN(diceValue)) return;
 
         // Sum static bonuses from formula (strip dice terms)
         const withoutDice = formula.replace(/\d+d\d+/gi, '0');

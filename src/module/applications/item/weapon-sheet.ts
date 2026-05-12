@@ -11,8 +11,16 @@ import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
 
+// eslint-disable-next-line @typescript-eslint/no-deprecated -- foundry.appv1.api.Dialog is the new namespace; the legacy global still ships and is what we target here
+const LegacyDialog = foundry.appv1.api.Dialog;
+
 /** Weapon item document narrowed to its DataModel. */
 type WeaponItem = WH40KItemDocument & { system: WeaponData };
+
+/** Speculative drag-preview payload available from the dragenter event (browser security limits us to types only). */
+interface DragPreview {
+    type: string;
+}
 
 /** Shape we read from a weaponModification item when wiring up drag-and-drop. */
 interface WeaponModificationItem {
@@ -30,6 +38,7 @@ interface AmmunitionItem {
     type: string;
     name: string;
     uuid: string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update accepts an open data payload
     update: (data: Record<string, unknown>) => Promise<unknown>;
     system: {
         clipModifier?: number;
@@ -41,6 +50,7 @@ interface AmmunitionItem {
     };
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 context map is heterogeneous and consumed by Handlebars
 interface WeaponSheetContext extends Record<string, unknown> {
     system: WeaponData;
     CONFIG: typeof CONFIG;
@@ -152,7 +162,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<WeaponSheetContext> {
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<WeaponSheetContext> {
         const context = (await super._prepareContext(options)) as WeaponSheetContext;
         const system = this.item.system;
         context.system = system;
@@ -255,7 +265,8 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts the untyped context record
+    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Set up drag-and-drop visual feedback
@@ -333,7 +344,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @returns {object|null} - The drag data or null
      * @private
      */
-    _getDragData(event: Event): Record<string, unknown> | null {
+    _getDragData(event: Event): DragPreview | null {
         try {
             // Check if dataTransfer has the data
             const types = (event as DragEvent).dataTransfer?.types ?? [];
@@ -355,7 +366,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @returns {Promise<boolean>}
      * @private
      */
-    _isValidModificationDrop(_dragData: Record<string, unknown>): boolean {
+    _isValidModificationDrop(_dragData: DragPreview): boolean {
         // Since we can't access the full data in dragenter due to browser security,
         // we'll optimistically assume it's valid and do full validation on drop
         // This is a UX limitation we have to accept
@@ -376,7 +387,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Only one ammo type can be loaded
         if (item.type === 'ammunition' && this.item.items.some((i) => i.type === 'ammunition')) {
-            ui.notifications.info('Only one type of ammunition can be loaded.');
+            ui.notifications.info(game.i18n.localize('WH40K.WeaponSheet.OnlyOneAmmoType'));
             return false;
         }
 
@@ -448,7 +459,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     static async #rollAttack(this: WeaponSheet, _event: PointerEvent, _target: HTMLButtonElement): Promise<void> {
         const actor = this.item.actor;
         if (actor === null) {
-            ui.notifications.warn('This weapon must be on an actor to roll.');
+            ui.notifications.warn(game.i18n.localize('WH40K.WeaponSheet.MustBeOnActor'));
             return;
         }
 
@@ -467,7 +478,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     static async #rollDamage(this: WeaponSheet, _event: PointerEvent, _target: HTMLButtonElement): Promise<void> {
         const actor = this.item.actor;
         if (actor === null) {
-            ui.notifications.warn('This weapon must be on an actor to roll.');
+            ui.notifications.warn(game.i18n.localize('WH40K.WeaponSheet.MustBeOnActor'));
             return;
         }
 
@@ -495,6 +506,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
         const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an open data payload; applyRollModeWhispers mutates the same record
         const chatData: Record<string, unknown> = {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor: actor }),
@@ -519,7 +531,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Check if weapon uses ammo
         if (!system.usesAmmo) {
-            ui.notifications.warn('This weapon does not use ammunition.');
+            ui.notifications.warn(game.i18n.localize('WH40K.WeaponSheet.DoesNotUseAmmo'));
             return;
         }
 
@@ -554,7 +566,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         // Try to find the quality in the weapon qualities compendium
         const pack = game.packs.get('wh40k-rpg.wh40k-items-weapon-qualities');
         if (pack === undefined) {
-            ui.notifications.warn('Weapon qualities compendium not found.');
+            ui.notifications.warn(game.i18n.localize('WH40K.WeaponSheet.QualitiesCompendiumMissing'));
             return;
         }
 
@@ -565,6 +577,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         if (qualityEntry !== undefined) {
             // Open the quality sheet
+            // eslint-disable-next-line no-restricted-syntax -- boundary: CompendiumCollection.getDocument returns a broad Document union; we only need the sheet handle
             const quality = (await pack.getDocument(qualityEntry._id)) as { sheet?: { render: (force: boolean) => unknown } | null } | null;
             if (quality?.sheet !== undefined && quality.sheet !== null) {
                 void quality.sheet.render(true);
@@ -616,9 +629,9 @@ export default class WeaponSheet extends ContainerItemSheet {
         const nestedItem = this.item.items.get(itemId);
         if (nestedItem === undefined) return;
 
-        const confirmed = await Dialog.confirm({
-            title: `Delete ${nestedItem.name}?`,
-            content: `<p>Are you sure you want to remove <strong>${nestedItem.name}</strong> from this weapon?</p>`,
+        const confirmed = await LegacyDialog.confirm({
+            title: game.i18n.format('WH40K.WeaponSheet.ConfirmDeleteTitle', { name: nestedItem.name }),
+            content: game.i18n.format('WH40K.WeaponSheet.ConfirmDeleteContent', { name: nestedItem.name }),
             yes: () => true,
             no: () => false,
         });
@@ -670,7 +683,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     static #onAddModification(this: WeaponSheet, _event: Event, _target: HTMLElement): void {
         // Open a dialog or compendium browser to add modifications
         // For now, show a notification
-        ui.notifications.info('Drag a weapon modification from a compendium to add it.');
+        ui.notifications.info(game.i18n.localize('WH40K.WeaponSheet.DragModificationHint'));
     }
 
     /* -------------------------------------------- */
@@ -712,7 +725,8 @@ export default class WeaponSheet extends ContainerItemSheet {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime guard: index might exceed array
         if (mod === undefined) return;
 
-        const modItem = (await fromUuid(mod.uuid)) as WH40KItem | null;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns the broad Foundry document union; we only need the sheet handle
+        const modItem = (await fromUuid(mod.uuid)) as { sheet?: { render: (force: boolean) => unknown } | null } | null;
         if (modItem === null) {
             ui.notifications.error(`Modification "${mod.name}" not found. It may have been deleted.`);
             return;
@@ -738,9 +752,9 @@ export default class WeaponSheet extends ContainerItemSheet {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime guard: index might exceed array
         if (mod === undefined) return;
 
-        const confirmed = await Dialog.confirm({
-            title: 'Remove Modification',
-            content: `<p>Remove <strong>${mod.name}</strong> from this weapon?</p>`,
+        const confirmed = await LegacyDialog.confirm({
+            title: game.i18n.localize('WH40K.WeaponSheet.ConfirmRemoveModificationTitle'),
+            content: game.i18n.format('WH40K.WeaponSheet.ConfirmRemoveModificationContent', { name: mod.name }),
             yes: () => true,
             no: () => false,
         });
@@ -841,7 +855,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns the broad Foundry document union; weapon.system.loadAmmo expects the ammo shape, which the WeaponData method validates internally
         const ammoItem = (await fromUuid(ammoUuid)) as Parameters<WeaponData['loadAmmo']>[0] | null;
         if (ammoItem === null) {
-            ui.notifications.error('Ammunition item not found');
+            ui.notifications.error(game.i18n.localize('WH40K.WeaponSheet.AmmoNotFound'));
             return;
         }
 
@@ -982,7 +996,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Must use ammo
         if (!weapon.usesAmmo) {
-            ui.notifications.warn('This weapon does not use ammunition');
+            ui.notifications.warn(game.i18n.localize('WH40K.WeaponSheet.DoesNotUseAmmo'));
             return false;
         }
 
@@ -1017,11 +1031,13 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Handle weaponModification drops
         if ((droppedItem as { type?: string }).type === 'weaponModification') {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns a broad Foundry document union; _onDropModification narrows via its WeaponModificationItem shape
             return this._onDropModification(droppedItem as unknown as WeaponModificationItem);
         }
 
         // Handle ammunition drops
         if ((droppedItem as { type?: string }).type === 'ammunition') {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns a broad Foundry document union; _onDropAmmunition narrows via its AmmunitionItem shape
             return this._onDropAmmunition(droppedItem as unknown as AmmunitionItem);
         }
 

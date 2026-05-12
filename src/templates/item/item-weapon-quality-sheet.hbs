@@ -9,13 +9,7 @@
          HEADER: Simple quality identity
     ═══════════════════════════════════════════════════════════════════ }}
         <header class="tw-flex tw-items-center tw-gap-2 tw-p-3 tw-bg-gradient-to-br tw-from-orange-500/15 tw-to-transparent tw-border-b-2 tw-border-solid tw-border-gold bc:tw-border-crimson-light dh1e:tw-border-gold-raw-l5 dh2e:tw-border-gold-raw dw:tw-border-accent-combat ow:tw-border-brass-l20 rt:tw-border-gold im:tw-border-failure">
-            <div class="tw-relative tw-w-14 tw-h-14 tw-flex-shrink-0 tw-border-2 tw-border-solid tw-border-bronze tw-rounded-md tw-overflow-hidden tw-cursor-pointer tw-transition-transform hover:tw-scale-105"
-                 data-action="editImage" data-edit="img">
-                <img class="tw-w-full tw-h-full tw-object-cover" src="{{item.img}}" alt="{{item.name}}" />
-                <div class="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-orange-500/70 tw-opacity-0 hover:tw-opacity-100 tw-transition-opacity">
-                    <i class="fas fa-star tw-text-white tw-text-xl"></i>
-                </div>
-            </div>
+            {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name sizeClass="tw-w-14 tw-h-14" frameClass="tw-border-2 tw-border-solid tw-border-bronze tw-transition-transform hover:tw-scale-105" overlayIcon="fa-star" overlayBgClass="tw-bg-orange-500/70" overlayTextClass="tw-text-white" overlayIconClass="tw-text-xl" extraClass="tw-flex-shrink-0"}}
 
             <div class="tw-flex-1 tw-min-w-0">
                 <input type="text" class="tw-w-full tw-px-2 tw-py-1 tw-bg-transparent tw-border-0 tw-border-b tw-border-solid tw-border-transparent tw-font-display tw-text-xl tw-font-semibold hover:tw-border-orange-500/60 focus:tw-border-orange-500/60 focus:tw-outline-none tw-transition-colors"

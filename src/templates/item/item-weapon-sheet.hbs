@@ -11,9 +11,7 @@
 
       {{!-- HEADER WITH EDIT TOGGLE --}}
       <header class="tw-grid tw-grid-cols-[48px_1fr_auto] tw-items-center tw-gap-[10px] tw-px-3 tw-py-[10px]">
-        <div class="tw-w-[50px] tw-h-[50px] tw-rounded-md tw-overflow-hidden tw-cursor-pointer tw-shrink-0 tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105" data-action="editImage">
-          <img src="{{item.img}}" alt="{{item.name}}" />
-        </div>
+        {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name sizeClass="tw-w-[50px] tw-h-[50px]" frameClass="tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105" overlay=false editAttr=false extraClass="tw-shrink-0"}}
 
         <div class="tw-flex tw-flex-col tw-justify-center tw-gap-1 tw-min-w-0">
           <input type="text" class="tw-font-heading tw-text-[1.1rem] tw-font-semibold tw-text-[rgba(240,232,220,0.95)] wh40k-input--readonly {{#unless inEditMode}}wh40k-input--readonly{{/unless}}"

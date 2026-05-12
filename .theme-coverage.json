@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-11T19:25:02.912Z",
-  "total": 246,
+  "generatedAt": "2026-05-12T04:17:01.499Z",
+  "total": 249,
   "adopted": 242,
   "perSystemHits": {
-    "bc": 429,
-    "dh1e": 429,
-    "dh2e": 433,
-    "dw": 429,
-    "ow": 429,
-    "rt": 433,
-    "im": 433
+    "bc": 426,
+    "dh1e": 426,
+    "dh2e": 430,
+    "dw": 426,
+    "ow": 426,
+    "rt": 430,
+    "im": 430
   },
   "adoptedTemplates": [
     "src/templates/actor/npc/tab-npc.hbs",
@@ -76,6 +76,7 @@
     "src/templates/actor/partial/labeled-rich-text-section.hbs",
     "src/templates/actor/partial/labeled-stat-chip.hbs",
     "src/templates/actor/partial/movement-stat-row.hbs",
+    "src/templates/actor/partial/origin-path-bubbles.hbs",
     "src/templates/actor/partial/panel.hbs",
     "src/templates/actor/partial/pip-tracker-row.hbs",
     "src/templates/actor/partial/section-card.hbs",
@@ -202,7 +203,6 @@
     "src/templates/item/item-origin-path-sheet.hbs",
     "src/templates/item/item-peer-enemy-sheet.hbs",
     "src/templates/item/item-psychic-power-sheet.hbs",
-    "src/templates/item/item-sheet.hbs",
     "src/templates/item/item-skill-sheet.hbs",
     "src/templates/item/item-storage-location-sheet.hbs",
     "src/templates/item/item-trait-sheet.hbs",

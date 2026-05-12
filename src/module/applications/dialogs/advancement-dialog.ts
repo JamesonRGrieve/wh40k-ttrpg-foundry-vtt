@@ -11,14 +11,15 @@ import type { BaseSystemConfig } from '../../config/game-systems/base-system-con
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { Prerequisite } from '../../config/game-systems/types.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { getAvailableXP, spendXP, canAfford } from '../../utils/xp-transaction.ts';
-import type { WH40KItem } from '../../documents/item.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
-const { ApplicationV2, HandlebarsApplicationMixin } = (
-    foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor; HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T } }
-).api;
+const { ApplicationV2, HandlebarsApplicationMixin } =
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `foundry.applications` has no shipped type for the v2 api namespace
+    (foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor; HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T } })
+        .api;
 
 interface AdvancementAdvance {
     name: string;
@@ -179,6 +180,7 @@ interface PreparedTraitPanel {
     elites: PreparedEliteAdvance[];
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry render context returned by _prepareContext is typed loosely
 interface AdvancementContext extends Record<string, unknown> {
     systemConfig: BaseSystemConfig | null;
     _gameSystemId: string;
@@ -189,8 +191,11 @@ interface AdvancementContext extends Record<string, unknown> {
     xp: { total: number; used: number; available: number; usedPercent: number };
     activeTab: string;
     tabs: Array<{ id: string; label: string; icon: string; active: boolean }>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous prepared rows passed straight to Handlebars
     characteristics: unknown[];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous prepared rows passed straight to Handlebars
     skills: unknown[];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous prepared rows passed straight to Handlebars
     talents: unknown[];
     recentPurchases: string[];
 }
@@ -287,6 +292,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     /*  Static Factory                              */
     /* -------------------------------------------- */
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 constructor options bag
     static open(actor: WH40KBaseActor, options: Record<string, unknown> = {}): AdvancementDialog {
         const dialog = new this(actor, options);
         void dialog.render({ force: true });
@@ -299,15 +305,18 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AdvancementContext> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: super._prepareContext has a loose Foundry signature
         const context = (await super._prepareContext(options as unknown as never)) as AdvancementContext;
         const system = this.#getActorSystem();
 
         const systemConfig = this.#getSystemConfig();
         context.systemConfig = systemConfig;
+        // eslint-disable-next-line no-restricted-syntax -- legacy actors may lack `gameSystem`; default to 'rt' for display only
         context._gameSystemId = this.#getActorSystem().gameSystem ?? 'rt';
         context.usesAptitudes = systemConfig?.usesAptitudes ?? false;
         context.usesCareerTables = systemConfig?.usesCareerTables ?? true;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites coming from career module are heterogeneous before validation
         let career: { RANK_1_ADVANCES?: Array<{ name: string; cost: number; type: string; specialization?: string; prerequisites?: unknown[] }> } | null = null;
 
         if (systemConfig?.usesCareerTables || !systemConfig) {
@@ -388,8 +397,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     #prepareCharacteristics(
+        // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites coming from career module are heterogeneous before validation
         _career: { RANK_1_ADVANCES?: Array<{ name: string; cost: number; type: string; specialization?: string; prerequisites?: unknown[] }> } | null,
         systemConfig: BaseSystemConfig | null,
+        // eslint-disable-next-line no-restricted-syntax -- boundary: prepared characteristics rows are heterogeneous and passed straight to Handlebars
     ): Record<string, unknown>[] {
         const characteristics = this.#getActorSystem().characteristics ?? {};
         const available = getAvailableXP(this.actor);
@@ -611,6 +622,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 .replace(/\s*\([^)]+\)\s*$/, '')
                 .trim()
                 .toLowerCase();
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Item vs document type mismatch in Item collection iteration
             ownedByKey.set(`${base}|${spec}`, item as unknown as Item);
         }
 
@@ -632,11 +644,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             for (const rawEntry of index) {
                 const entry = rawEntry as CompendiumIndexEntry;
                 if (entry.type !== 'talent') continue;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: compendium index entry `system` is loosely typed at the Foundry layer
                 const system = (entry.system ?? {}) as {
                     tier?: number;
                     aptitudes?: string[];
                     stackable?: boolean;
                     hasSpecialization?: boolean;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites payload from compendium has loose skills/talents shape
                     prerequisites?: { characteristics?: Record<string, number>; skills?: unknown; talents?: unknown };
                 };
                 const tier = system.tier ?? 1;
@@ -733,12 +747,14 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     /** Check talent prereqs (characteristics / skills / talents) against this actor. */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites payload originates from compendium and may be Record or Array
     #checkTalentPrereqs(prereqs: { characteristics?: Record<string, number>; skills?: unknown; talents?: unknown }): { valid: boolean; unmet: string[] } {
         const unmet: string[] = [];
         const sys = this.#getActorSystem();
         const chars = sys?.characteristics ?? {};
 
         // Some compendium entries store these as {} (Record) rather than [] (Array) — coerce defensively.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: value is the parameter to this type guard
         const coerceList = (value: unknown): string[] => {
             if (Array.isArray(value)) return value.filter((v): v is string => typeof v === 'string');
             if (value && typeof value === 'object') return Object.values(value).filter((v): v is string => typeof v === 'string');
@@ -908,8 +924,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // Collapse duplicates by name + specialization (pre-fix grant runs may have left some behind)
         const traitMap = new Map<string, Item>();
         for (const t of ownedTraits) {
+            // eslint-disable-next-line no-restricted-syntax -- legacy trait items may lack `specialization`; default to '' for grouping only
             const spec = ((t.system as { specialization?: string }).specialization ?? '').toLowerCase().trim();
             const key = `${t.name.toLowerCase()}|${spec}`;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Item document vs collection-item type mismatch
             if (!traitMap.has(key)) traitMap.set(key, t as unknown as Item);
         }
 
@@ -1042,7 +1060,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const tab = target.dataset.tab;
         if (tab) {
             this.#activeTab = tab;
-            this.render();
+            void this.render();
         }
     }
 
@@ -1050,13 +1068,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const discipline = target.dataset.discipline;
         if (discipline) {
             this.#activeDiscipline = discipline;
-            this.render();
+            void this.render();
         }
     }
 
     static #toggleAvailableOnly(this: AdvancementDialog, _event: Event, _target: HTMLElement): void {
         this.#psyAvailableOnly = !this.#psyAvailableOnly;
-        this.render();
+        void this.render();
     }
 
     static async #purchaseCharacteristic(this: AdvancementDialog, event: Event, target: HTMLElement): Promise<void> {
@@ -1116,7 +1134,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }),
         );
 
-        this.render();
+        void this.render();
 
         setTimeout(() => {
             this.#recentPurchases.delete(`char:${charKey}`);
@@ -1201,7 +1219,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }),
         );
 
-        this.render();
+        void this.render();
 
         setTimeout(() => {
             this.#recentPurchases.delete(id);
@@ -1260,7 +1278,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
             this.#recentPurchases.add(entry.id);
             ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: displayName, cost: String(entry.cost) }));
-            this.render();
+            void this.render();
             setTimeout(() => this.#recentPurchases.delete(entry.id), 2000);
             return;
         }
@@ -1292,7 +1310,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
             this.#recentPurchases.add(entry.id);
             ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: displayName, cost: String(entry.cost) }));
-            this.render();
+            void this.render();
             setTimeout(() => this.#recentPurchases.delete(entry.id), 2000);
             return;
         }
@@ -1320,7 +1338,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         this.#recentPurchases.add(entry.id);
         ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: displayName, cost: String(entry.cost) }));
-        this.render();
+        void this.render();
         setTimeout(() => this.#recentPurchases.delete(entry.id), 2000);
     }
 
@@ -1401,15 +1419,18 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const base = entry.name.toLowerCase();
             const existing = this.actor.items.find((i) => i.type === 'talent' && i.name.toLowerCase() === base);
             if (existing) {
+                // eslint-disable-next-line no-restricted-syntax -- stackable talents default to rank 1 when not previously incremented
                 const currentRank = (existing.system as { rank?: number }).rank ?? 1;
                 await existing.update({ 'system.rank': currentRank + 1 });
             } else {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
                 const data = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
                 data._id = foundry.utils.randomID();
                 data.system.rank = 1;
                 await this.actor.createEmbeddedDocuments('Item', [data] as never[]);
             }
         } else {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
             const data = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
             data._id = foundry.utils.randomID();
             if (specialization) {
@@ -1422,7 +1443,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         this.#recentPurchases.add(entry.id);
         ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: displayName, cost: String(entry.cost) }));
-        this.render();
+        void this.render();
         setTimeout(() => this.#recentPurchases.delete(entry.id), 2000);
     }
 
@@ -1445,7 +1466,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         callback: (html: JQuery) => {
                             const value = (html.find('input[name="specialization"]').val() as string | undefined)?.trim() || '';
                             if (value && ownedSpecs.some((s) => s.toLowerCase() === value.toLowerCase())) {
-                                ui.notifications.warn('That specialization is already owned.');
+                                ui.notifications.warn(game.i18n.localize('WH40K.Advancement.SpecializationAlreadyOwned'));
                                 resolve(null);
                                 return;
                             }
@@ -1468,7 +1489,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const currentRating = sys?.psy?.rating ?? 0;
         const nextRating = currentRating + 1;
         if (nextRating > 10) {
-            ui.notifications.warn('Psy Rating is already at maximum (10).');
+            ui.notifications.warn(game.i18n.localize('WH40K.Advancement.PsyRatingMaximum'));
             return;
         }
         const cost = nextRating * 200;
@@ -1491,7 +1512,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         await this.actor.update({ 'system.psy.rating': nextRating });
         ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: `Psy Rating ${nextRating}`, cost: String(cost) }));
-        this.render();
+        void this.render();
     }
 
     async #purchasePsychicPowerAt(advanceIndex: number): Promise<void> {
@@ -1527,13 +1548,14 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const data = sourceDoc.toObject();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
+        const data = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
         data._id = foundry.utils.randomID();
-        await this.actor.createEmbeddedDocuments('Item', [data]);
+        await this.actor.createEmbeddedDocuments('Item', [data] as never[]);
 
         this.#recentPurchases.add(entry.id);
         ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: entry.name, cost: String(entry.cost) }));
-        this.render();
+        void this.render();
         setTimeout(() => this.#recentPurchases.delete(entry.id), 2000);
     }
 
@@ -1566,21 +1588,23 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        // Apply the elite origin-path item via GrantsManager so grants (traits, talents, aptitudes, etc.) are applied
-        const itemData = sourceDoc.toObject();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
+        const itemData = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
         itemData._id = foundry.utils.randomID();
         itemData.type = 'originPath';
-        const [created] = (await this.actor.createEmbeddedDocuments('Item', [itemData])) as unknown as Item[];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry createEmbeddedDocuments returns plain Document refs
+        const [created] = (await this.actor.createEmbeddedDocuments('Item', [itemData] as never[])) as unknown as Item[];
 
         try {
             const { default: GrantsManager } = await import('../../managers/grants-manager.ts');
+            // eslint-disable-next-line no-restricted-syntax -- boundary: cross-cast between Foundry Item and project WH40KItem
             await GrantsManager.applyItemGrants(created as unknown as WH40KItem, this.actor, { showNotification: false });
         } catch (err) {
             console.warn('Elite grant application failed (item was still added):', err);
         }
 
         ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: entry.name, cost: String(entry.cost) }));
-        this.render();
+        void this.render();
     }
 
     async #applySkillAdvance(advance: AdvancementAdvance): Promise<void> {
@@ -1625,6 +1649,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     async #applyTalentAdvance(advance: AdvancementAdvance): Promise<void> {
         const talentName = advance.specialization ? `${advance.name} (${advance.specialization})` : advance.name;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload
         let talentData: (Record<string, unknown> & { system: Record<string, unknown> }) | null = null;
 
         for (const pack of game.packs.filter((p) => p.documentName === 'Item')) {
@@ -1637,20 +1662,23 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             if (match) {
                 const doc = await pack.getDocument(match._id);
                 if (doc) {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload
                     talentData = doc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
                 }
                 break;
             }
         }
 
-        talentData ??= {
-            name: talentName,
-            type: 'talent',
-            system: {
-                cost: advance.cost,
-                description: '',
-            },
-        };
+        if (talentData === null) {
+            talentData = {
+                name: talentName,
+                type: 'talent',
+                system: {
+                    cost: advance.cost,
+                    description: '',
+                },
+            };
+        }
 
         talentData.system.cost = advance.cost;
         await this.actor.createEmbeddedDocuments('Item', [talentData] as never[]);

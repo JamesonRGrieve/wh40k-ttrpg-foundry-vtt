@@ -123,7 +123,7 @@ export default class CharacterSheet extends BaseActorSheet {
     declare _equipmentFilter: { search: string; type: string; status: string };
     declare _skillsFilter: { search: string; characteristic: string; training: string; [key: string]: string };
     declare _traitsFilter: Record<string, unknown>;
-    declare _throttleTimers: Map<string, number>;
+    declare _throttleTimers?: Map<string, number>;
     declare _originPathSummary?: OriginSummary;
     private readonly _gameSystemId?: GameSystemId;
 
@@ -149,7 +149,7 @@ export default class CharacterSheet extends BaseActorSheet {
     protected _resolveGameSystemId(): GameSystemId | null {
         if (this._gameSystemId) return this._gameSystemId;
 
-        const actorGameSystem = this.actor.system?.gameSystem;
+        const actorGameSystem = this.actor.system.gameSystem;
         if (typeof actorGameSystem !== 'string') return null;
 
         const gameSystemId = actorGameSystem;
@@ -277,7 +277,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * subclasses spread this class's DEFAULT_OPTIONS.
      * @override
      */
-    _getHeaderControls() {
+    _getHeaderControls(): foundry.applications.api.ApplicationV2.HeaderControlsEntry[] {
         const controls = super._getHeaderControls();
         if (!controls.some((c: { action?: string }) => c.action === 'resetWindowSize')) {
             controls.push({
@@ -418,7 +418,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     async _throttle(key: string, wait: number, func: (...args: unknown[]) => unknown, context: Record<string, unknown>, args: unknown[]): Promise<unknown> {
         // Initialize throttle tracking map if it doesn't exist
-        if (!this._throttleTimers) this._throttleTimers = new Map();
+        this._throttleTimers ??= new Map();
 
         const now = Date.now();
         const lastRun = this._throttleTimers.get(key) ?? 0;
@@ -492,13 +492,14 @@ export default class CharacterSheet extends BaseActorSheet {
         context.ruleset = ruleset;
         context.isDH2 = isDH2;
         context.isHomebrew = isDH2 && ruleset === 'homebrew';
-        context.isRaw = isDH2 && ruleset === 'raw';
-        context.hideThroneGelt = context.isRaw;
+        const isRaw = isDH2 && ruleset === 'raw';
+        context.isRaw = isRaw;
+        context.hideThroneGelt = isRaw;
 
         // In DH2 RAW mode Influence is a percentile characteristic (testable for Requisition,
         // social, and Investigation rolls). Surface it on the characteristics map so the
         // Statistics panel iterates it alongside WS/BS/etc. without schema duplication.
-        if (context.isRaw) {
+        if (isRaw) {
             this._injectInfluenceAsCharacteristic(context);
         }
 
@@ -597,14 +598,15 @@ export default class CharacterSheet extends BaseActorSheet {
     async _prepareTabPartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const sheetContext = context as CharacterSheetContext;
         // Find the tab configuration
-        const tabConfig = ((this.constructor as unknown as { TABS: SheetTabConfig[] }).TABS || []).find((t: SheetTabConfig) => t.tab === partId);
+        const tabConfig = ((this.constructor as unknown as { TABS: SheetTabConfig[] }).TABS ?? []).find((t: SheetTabConfig) => t.tab === partId);
         if (tabConfig) {
+            const group = tabConfig.group;
             sheetContext.tab = {
                 id: tabConfig.tab,
-                group: tabConfig.group ?? 'primary',
+                group,
                 cssClass: tabConfig.cssClass ?? '',
                 label: game.i18n.localize(tabConfig.label),
-                active: this.tabGroups[(tabConfig.group ?? 'primary') as keyof typeof this.tabGroups] === tabConfig.tab,
+                active: this.tabGroups[group as keyof typeof this.tabGroups] === tabConfig.tab,
             };
         }
 
@@ -646,7 +648,7 @@ export default class CharacterSheet extends BaseActorSheet {
         await this._prepareTabPartContext('biography', ctx, options);
 
         // Prepare biography data with enriched HTML for ProseMirror
-        const rawNotes = this.actor.system.bio?.notes ?? '';
+        const rawNotes = this.actor.system.bio.notes ?? '';
 
         const enrichedNotes = await TextEditor.enrichHTML(rawNotes, {
             relativeTo: this.actor,
@@ -682,8 +684,8 @@ export default class CharacterSheet extends BaseActorSheet {
         context.headerFields = this._getSidebarHeaderFields(gameSystem);
 
         // Check if origin path is complete (has at least homeWorld + background + role)
-        const op = this.actor.system?.originPath || {};
-        context.originPathComplete = !!(op.homeWorld && op.background && op.role);
+        const op = this.actor.system.originPath ?? {};
+        context.originPathComplete = Boolean(op.homeWorld) && Boolean(op.background) && Boolean(op.role);
 
         return context;
     }
@@ -719,7 +721,7 @@ export default class CharacterSheet extends BaseActorSheet {
             for (const entry of index) {
                 if (entry.type !== 'originPath') continue;
                 const step = entry.system?.step;
-                if (!step) continue;
+                if (step === undefined || step === '') continue;
                 if (!stepNames[step]) stepNames[step] = new Set();
                 stepNames[step].add(entry.name);
             }
@@ -746,9 +748,9 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareTabsContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
         // Tabs use the static TABS configuration
-        context.tabs = ((this.constructor as unknown as { TABS: SheetTabConfig[] }).TABS || []).map((tab: SheetTabConfig) => ({
+        context.tabs = ((this.constructor as unknown as { TABS: SheetTabConfig[] }).TABS ?? []).map((tab: SheetTabConfig) => ({
             ...tab,
-            active: this.tabGroups[(tab.group ?? 'primary') as keyof typeof this.tabGroups] === tab.tab,
+            active: this.tabGroups[tab.group as keyof typeof this.tabGroups] === tab.tab,
             label: game.i18n.localize(tab.label),
         }));
         return context;
@@ -761,7 +763,7 @@ export default class CharacterSheet extends BaseActorSheet {
         await super._onFirstRender(context, options);
 
         // Ensure initial tab is active
-        const activeTab = this.tabGroups.primary || 'overview';
+        const activeTab = this.tabGroups.primary ?? 'overview';
 
         // Add active class to the initial tab content
         const tabContent = this.element.querySelector(`section.tab[data-tab="${activeTab}"]`);
@@ -835,8 +837,8 @@ export default class CharacterSheet extends BaseActorSheet {
         const circumference = 2 * Math.PI * radius; // ~326.7
 
         Object.entries(hudCharacteristics).forEach(([key, char]) => {
-            const total = Number(char?.total ?? 0);
-            const advance = Number(char?.advance ?? 0);
+            const total = Number(char.total ?? 0);
+            const advance = Number(char.advance ?? 0);
 
             // Use the calculated bonus (accounts for unnatural), fallback to tens digit
             char.hudMod = char.bonus ?? Math.floor(total / 10);
@@ -896,16 +898,16 @@ export default class CharacterSheet extends BaseActorSheet {
         const preparedSteps = steps.map((step) => {
             const item = originItems.find((i) => {
                 const sys = i.system as WH40KItemSystemData & { step?: string };
-                const itemStep = sys?.step || '';
+                const itemStep = sys.step ?? '';
                 return itemStep === step.key || itemStep === step.label;
             });
 
             if (item) {
                 completedSteps++;
                 const system = item.system as Record<string, unknown>;
-                const grants = (system?.grants ?? {}) as Record<string, unknown>;
-                const modifiers = ((system?.modifiers as Record<string, unknown> | undefined)?.characteristics ?? {}) as Record<string, unknown>;
-                const selectedChoices = (system?.selectedChoices ?? {}) as Record<string, unknown[]>;
+                const grants = (system.grants ?? {}) as Record<string, unknown>;
+                const modifiers = ((system.modifiers as Record<string, unknown> | undefined)?.characteristics ?? {}) as Record<string, unknown>;
+                const selectedChoices = (system.selectedChoices ?? {}) as Record<string, unknown[]>;
 
                 // Accumulate base characteristics
                 for (const [key, value] of Object.entries(modifiers)) {
@@ -1088,7 +1090,7 @@ export default class CharacterSheet extends BaseActorSheet {
         for (const item of this.actor.items) {
             const itemType = item.type as string;
             const sys = item.system as Record<string, unknown>;
-            const inShip = sys?.inShipStorage === true;
+            const inShip = sys.inShipStorage === true;
 
             // Add all equipment to "all" for display
             if (equipmentTypes.includes(itemType)) {
@@ -1112,7 +1114,7 @@ export default class CharacterSheet extends BaseActorSheet {
             else if (itemType === 'criticalInjury' || (item as WH40KItem).isCriticalInjury) categories.criticalInjury.push(item);
 
             // Track equipped items (only non-ship items can be equipped)
-            if (sys?.equipped === true && !inShip) categories.equipped.push(item);
+            if (sys.equipped === true && !inShip) categories.equipped.push(item);
         }
 
         return categories;
@@ -1128,11 +1130,11 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareLoadoutData(context: Record<string, unknown>, categorized: CategorizedItems): void {
         const loadoutContext = context as CharacterSheetContext & {
-            armourItems?: WH40KItem[];
-            forceFieldItems?: WH40KItem[];
-            cyberneticItems?: WH40KItem[];
-            gearItems?: WH40KItem[];
-            equippedItems?: WH40KItem[];
+            armourItems: WH40KItem[];
+            forceFieldItems: WH40KItem[];
+            cyberneticItems: WH40KItem[];
+            gearItems: WH40KItem[];
+            equippedItems: WH40KItem[];
         };
         // Add all items to context for the Backpack panel
         loadoutContext.allItems = categorized.all;
@@ -1150,11 +1152,11 @@ export default class CharacterSheet extends BaseActorSheet {
         loadoutContext.equippedItems = categorized.equipped;
 
         // Counts for section headers
-        loadoutContext.armourCount = loadoutContext.armourItems?.length ?? 0;
-        loadoutContext.forceFieldCount = loadoutContext.forceFieldItems?.length ?? 0;
-        loadoutContext.cyberneticCount = loadoutContext.cyberneticItems?.length ?? 0;
-        loadoutContext.gearCount = loadoutContext.gearItems?.length ?? 0;
-        loadoutContext.equippedCount = loadoutContext.equippedItems?.length ?? 0;
+        loadoutContext.armourCount = loadoutContext.armourItems.length;
+        loadoutContext.forceFieldCount = loadoutContext.forceFieldItems.length;
+        loadoutContext.cyberneticCount = loadoutContext.cyberneticItems.length;
+        loadoutContext.gearCount = loadoutContext.gearItems.length;
+        loadoutContext.equippedCount = loadoutContext.equippedItems.length;
 
         // Encumbrance percentage for bar
         const enc = this.actor.encumbrance ?? {};
@@ -1177,21 +1179,25 @@ export default class CharacterSheet extends BaseActorSheet {
     _prepareCombatData(context: Record<string, unknown>, categorized: CategorizedItems): void {
         const sheetContext = context as CharacterSheetContext;
         const weapons = categorized.weapons as WeaponLike[];
-        const system = sheetContext.system ?? this.actor.system ?? {};
+        const system = sheetContext.system ?? this.actor.system;
 
         // Calculate vitals percentages
-        const woundsMax = system.wounds?.max || 1;
-        sheetContext.woundsPercent = Math.min(100, Math.round(((system.wounds?.value ?? 0) / woundsMax) * 100));
+        const woundsValue = system.wounds?.value;
+        const woundsMaxRaw = system.wounds?.max;
+        const woundsMax = typeof woundsMaxRaw === 'number' && woundsMaxRaw > 0 ? woundsMaxRaw : 1;
+        sheetContext.woundsPercent = Math.min(100, Math.round(((woundsValue ?? 0) / woundsMax) * 100));
 
-        const fatigueMax = system.fatigue?.max || 1;
-        sheetContext.fatiguePercent = Math.min(100, Math.round(((system.fatigue?.value ?? 0) / fatigueMax) * 100));
+        const fatigueValue = system.fatigue?.value;
+        const fatigueMaxRaw = system.fatigue?.max;
+        const fatigueMax = typeof fatigueMaxRaw === 'number' && fatigueMaxRaw > 0 ? fatigueMaxRaw : 1;
+        sheetContext.fatiguePercent = Math.min(100, Math.round(((fatigueValue ?? 0) / fatigueMax) * 100));
 
         // Calculate reaction targets
-        const skills = this.actor.skills ?? {};
-        const chars = this.actor.characteristics ?? {};
+        const skills = this.actor.skills;
+        const chars = this.actor.characteristics;
 
         // Dodge target: Ag + Dodge training
-        const dodgeSkill = skills.dodge ?? ({} as Record<string, unknown>);
+        const dodgeSkill = (skills.dodge as unknown as Record<string, unknown> | undefined) ?? {};
         let dodgeBase = chars.agility?.total ?? 30;
         if (dodgeSkill.plus20) dodgeBase += 20;
         else if (dodgeSkill.plus10) dodgeBase += 10;
@@ -1304,19 +1310,21 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     #prepareArmourDisplayLocations(system: Record<string, unknown>, armourItems: WH40KItem[]): Array<Record<string, unknown>> {
-        const equippedArmour = armourItems.filter((item) => item.system?.equipped);
+        const equippedArmour = armourItems.filter((item) => (item.system as { equipped?: boolean }).equipped);
 
         return ARMOUR_DISPLAY_LOCATIONS.map((locationConfig) => {
             const armourData = (system.armour as Record<string, Record<string, unknown>> | undefined)?.[locationConfig.key] ?? {};
             const coveringItems = equippedArmour
                 .map((item) => {
                     const itemSystem = item.system as Record<string, unknown>;
+                    const getEff = itemSystem.getEffectiveAPForLocation;
+                    const getAp = itemSystem.getAPForLocation;
                     const ap =
-                        typeof itemSystem?.getEffectiveAPForLocation === 'function'
-                            ? Number(itemSystem.getEffectiveAPForLocation(locationConfig.key) ?? 0)
-                            : typeof itemSystem?.getAPForLocation === 'function'
-                            ? Number(itemSystem.getAPForLocation(locationConfig.key) ?? 0)
-                            : Number((itemSystem?.armourPoints as Record<string, unknown> | undefined)?.[locationConfig.key] ?? 0);
+                        typeof getEff === 'function'
+                            ? Number((getEff as (k: string) => unknown)(locationConfig.key) ?? 0)
+                            : typeof getAp === 'function'
+                            ? Number((getAp as (k: string) => unknown)(locationConfig.key) ?? 0)
+                            : Number((itemSystem.armourPoints as Record<string, unknown> | undefined)?.[locationConfig.key] ?? 0);
                     if (ap <= 0) return null;
 
                     return {
@@ -1377,14 +1385,14 @@ export default class CharacterSheet extends BaseActorSheet {
         prepared.acquisitions = acquisitions;
 
         prepared.wounds = {
-            total: this.actor.wounds?.max ?? 0,
-            current: this.actor.wounds?.value ?? 0,
-            critical: this.actor.wounds?.critical ?? 0,
-            fatigue: this.actor.fatigue?.value ?? 0,
+            total: this.actor.wounds.max,
+            current: this.actor.wounds.value,
+            critical: this.actor.wounds.critical,
+            fatigue: this.actor.fatigue.value,
         };
         prepared.fate = {
-            total: this.actor.fate?.max ?? 0,
-            current: this.actor.fate?.value ?? 0,
+            total: this.actor.fate.max,
+            current: this.actor.fate.value,
         };
 
         return prepared;
@@ -1513,8 +1521,8 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareAptitudePills(): Array<{ aptitude: string; sources: string[] }> {
         const actor = this.actor;
-        const aptitudes: string[] = actor?.system?.aptitudes ?? [];
-        if (!Array.isArray(aptitudes) || aptitudes.length === 0) return [];
+        const aptitudes = (actor.system.aptitudes ?? []) as string[];
+        if (aptitudes.length === 0) return [];
 
         const sourcesOf: Record<string, string[]> = {};
         const addSource = (apt: string, src: string) => {
@@ -1590,10 +1598,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     _prepareFavoriteSkills(): Record<string, unknown>[] {
-        const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[]) || [];
-        const specialistFavorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') as string[]) || [];
-        const skills = this.actor.skills ?? {};
-        const characteristics = this.actor.characteristics ?? {};
+        const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
+        const specialistFavorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') as string[] | undefined) ?? [];
+        const skills = this.actor.skills;
+        const characteristics = this.actor.characteristics;
 
         // Standard skill favourites
         const standardFavourites = favorites
@@ -2224,7 +2232,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #toggleEquip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({ 'system.equipped': !(item.system as Record<string, unknown>).equipped });
@@ -2239,7 +2247,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #stowItem(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({
@@ -2258,7 +2266,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #unstowItem(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({ 'system.inBackpack': false });
@@ -2273,7 +2281,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #stowToShip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({
@@ -2292,7 +2300,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #unstowFromShip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({ 'system.inShipStorage': false });
@@ -2454,7 +2462,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #toggleActivate(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({ 'system.activated': !(item.system as Record<string, unknown>).activated });
@@ -2844,9 +2852,9 @@ export default class CharacterSheet extends BaseActorSheet {
         if (!equipmentPanel) return;
 
         // Get filter values
-        const searchInput = this.element.querySelector('.wh40k-equipment-search') as HTMLInputElement | null;
-        const typeFilter = this.element.querySelector('.wh40k-equipment-type-filter') as HTMLInputElement | null;
-        const statusFilter = this.element.querySelector('.wh40k-equipment-status-filter') as HTMLInputElement | null;
+        const searchInput = this.element.querySelector<HTMLInputElement>('.wh40k-equipment-search');
+        const typeFilter = this.element.querySelector<HTMLInputElement>('.wh40k-equipment-type-filter');
+        const statusFilter = this.element.querySelector<HTMLInputElement>('.wh40k-equipment-status-filter');
 
         const searchTerm = searchInput?.value.toLowerCase() || '';
         const typeValue = typeFilter?.value || '';
@@ -2885,7 +2893,7 @@ export default class CharacterSheet extends BaseActorSheet {
         });
 
         // Toggle clear button visibility
-        const clearBtn = this.element.querySelector('.wh40k-search-clear') as HTMLElement | null;
+        const clearBtn = this.element.querySelector<HTMLElement>('.wh40k-search-clear');
         if (clearBtn) {
             clearBtn.style.display = searchTerm ? 'flex' : 'none';
         }
@@ -2925,7 +2933,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #clearEquipmentSearch(this: CharacterSheet, event: Event, target: HTMLElement): void {
-        const searchInput = this.element.querySelector('.wh40k-equipment-search') as HTMLInputElement | null;
+        const searchInput = this.element.querySelector<HTMLInputElement>('.wh40k-equipment-search');
         if (searchInput) {
             searchInput.value = '';
             // Clear stored filter state
@@ -3012,7 +3020,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #cycleSkillTraining(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const row = target.closest('[data-skill]') as HTMLElement | null;
+        const row = target.closest<HTMLElement>('[data-skill]');
         const skillKey = row?.dataset.skill;
         if (!skillKey) return;
 
@@ -3058,7 +3066,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #cycleSpecialistTraining(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const row = target.closest('[data-skill]') as HTMLElement | null;
+        const row = target.closest<HTMLElement>('[data-skill]');
         const skillKey = row?.dataset.skill;
         const entryIndex = parseInt(row?.dataset.index ?? '', 10);
         if (!skillKey || isNaN(entryIndex)) return;
@@ -3198,9 +3206,9 @@ export default class CharacterSheet extends BaseActorSheet {
         const form = target.closest('.wh40k-traits-filters');
         if (!form) return;
 
-        const search = (form.querySelector('[name=traits-search]') as HTMLInputElement | null)?.value ?? '';
-        const category = (form.querySelector('[name=traits-category]') as HTMLSelectElement | null)?.value ?? '';
-        const hasLevel = (form.querySelector('[name=traits-has-level]') as HTMLInputElement | null)?.checked ?? false;
+        const search = form.querySelector<HTMLInputElement>('[name=traits-search]')?.value ?? '';
+        const category = form.querySelector<HTMLSelectElement>('[name=traits-category]')?.value ?? '';
+        const hasLevel = form.querySelector<HTMLInputElement>('[name=traits-has-level]')?.checked ?? false;
 
         this._traitsFilter = { search, category, hasLevel };
         await this.render({ parts: ['skills'] }); // Trait panel is in skills tab
@@ -3572,11 +3580,13 @@ export default class CharacterSheet extends BaseActorSheet {
                 await game.wh40k.rollPsychicPhenomena(this.actor);
             } else {
                 // Fallback: roll on phenomena table
-                const table = (game.tables.getName('Psychic Phenomena') ||
+                const table = (game.tables.getName('Psychic Phenomena') ??
                     (await game.packs
                         .get('wh40k-rpg.wh40k-rolltables-psychic')
                         ?.getDocuments()
-                        .then((docs: unknown[]) => docs.find((d: any) => d.name.includes('Phenomena'))))) as { draw(): Promise<unknown> } | undefined;
+                        .then((docs: unknown[]) => docs.find((d: unknown) => (d as { name: string }).name.includes('Phenomena'))))) as
+                    | { draw(): Promise<unknown> }
+                    | undefined;
 
                 if (table) {
                     await table.draw();
@@ -3611,11 +3621,13 @@ export default class CharacterSheet extends BaseActorSheet {
                 await game.wh40k.rollPerilsOfTheWarp(this.actor);
             } else {
                 // Fallback: roll on perils table
-                const table = (game.tables.getName('Perils of the Warp') ||
+                const table = (game.tables.getName('Perils of the Warp') ??
                     (await game.packs
                         .get('wh40k-rpg.wh40k-rolltables-psychic')
                         ?.getDocuments()
-                        .then((docs: unknown[]) => docs.find((d: any) => d.name.includes('Perils'))))) as { draw(): Promise<unknown> } | undefined;
+                        .then((docs: unknown[]) => docs.find((d: unknown) => (d as { name: string }).name.includes('Perils'))))) as
+                    | { draw(): Promise<unknown> }
+                    | undefined;
 
                 if (table) {
                     await table.draw();
