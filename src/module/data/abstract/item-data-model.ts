@@ -137,9 +137,9 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} source  The source data
      */
     static #migrateImg(source: Record<string, unknown>): void {
-        if (typeof source.img !== 'string' || source.img === '') return;
+        if (typeof source['img'] !== 'string' || source['img'] === '') return;
 
-        const img = source.img;
+        const img = source['img'];
         const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp'];
         const hasValidExtension = validExtensions.some((ext) => img.toLowerCase().endsWith(ext));
         if (!hasValidExtension) {
@@ -152,8 +152,8 @@ export default class ItemDataModel extends SystemDataModel {
                 psychicPower: 'icons/svg/lightning.svg',
                 skill: 'icons/svg/target.svg',
             };
-            const type = typeof source.type === 'string' ? source.type : '';
-            source.img = defaultIcons[type] ?? 'icons/svg/mystery-man.svg';
+            const type = typeof source['type'] === 'string' ? source['type'] : '';
+            source['img'] = defaultIcons[type] ?? 'icons/svg/mystery-man.svg';
         }
     }
 
@@ -162,20 +162,20 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} source  The source data
      */
     static #migrateDescription(source: Record<string, unknown>): void {
-        if (typeof source.description === 'string') {
-            source.description = {
-                value: source.description,
+        if (typeof source['description'] === 'string') {
+            source['description'] = {
+                value: source['description'],
                 chat: '',
                 summary: '',
             };
         }
-        if (isLineVariantContainer(source.description)) return;
+        if (isLineVariantContainer(source['description'])) return;
 
         // Ensure description sub-fields are not null (V13 HTMLField strictness)
-        if (source.description !== null && typeof source.description === 'object') {
-            const desc = source.description as Record<string, unknown>;
-            desc.chat ??= '';
-            desc.summary ??= '';
+        if (source['description'] !== null && typeof source['description'] === 'object') {
+            const desc = source['description'] as Record<string, unknown>;
+            desc['chat'] ??= '';
+            desc['summary'] ??= '';
         }
     }
 
@@ -184,21 +184,21 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} source  The source data
      */
     static #migrateSource(source: Record<string, unknown>): void {
-        if (typeof source.source === 'string') {
-            source.source = {
+        if (typeof source['source'] === 'string') {
+            source['source'] = {
                 book: '',
                 page: '',
-                custom: source.source,
+                custom: source['source'],
             };
         }
-        if (isLineVariantContainer(source.source)) return;
+        if (isLineVariantContainer(source['source'])) return;
 
         // Ensure source sub-fields are not null
-        if (source.source !== null && typeof source.source === 'object') {
-            const src = source.source as Record<string, unknown>;
-            src.book ??= '';
-            src.page ??= '';
-            src.custom ??= '';
+        if (source['source'] !== null && typeof source['source'] === 'object') {
+            const src = source['source'] as Record<string, unknown>;
+            src['book'] ??= '';
+            src['page'] ??= '';
+            src['custom'] ??= '';
         }
     }
 
@@ -207,11 +207,11 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} source  The source data
      */
     static #migrateCollections(source: Record<string, unknown>): void {
-        if (Array.isArray(source.coverage)) {
-            source.coverage = new Set(source.coverage);
+        if (Array.isArray(source['coverage'])) {
+            source['coverage'] = new Set(source['coverage'] as unknown[]);
         }
-        if (Array.isArray(source.properties)) {
-            source.properties = new Set(source.properties);
+        if (Array.isArray(source['properties'])) {
+            source['properties'] = new Set(source['properties'] as unknown[]);
         }
     }
 
