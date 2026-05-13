@@ -495,7 +495,7 @@ export class EventTracker {
             },
             render: (html: JQuery<HTMLElement>) => {
                 const $html = html instanceof HTMLElement ? $(html) : html;
-                const rebind = () => {
+                const rebind = (): void => {
                     // Event checkboxes
                     $html
                         .find('input[type="checkbox"]')

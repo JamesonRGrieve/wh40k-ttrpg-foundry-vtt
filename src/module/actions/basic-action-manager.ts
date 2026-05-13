@@ -281,7 +281,7 @@ export class BasicActionManager {
         await assignDamageData.performActionAndSendToChat();
     }
 
-    async assignDamageTool(): Promise<void> {
+    assignDamageTool(): void {
         const sourceToken = DHTargetedActionManager.getSourceToken();
         const sourceActor = sourceToken?.actor as WH40KBaseActorDocument | undefined;
         if (sourceActor == null) return;

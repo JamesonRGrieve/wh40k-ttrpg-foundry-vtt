@@ -190,7 +190,7 @@ export class WH40KNPC extends WH40KBaseActor {
             case 'weapon': {
                 if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
                     const charKey = item.system.isMeleeWeapon ? 'weaponSkill' : 'ballisticSkill';
-                    await this.rollCharacteristic(charKey, item.name ?? undefined);
+                    this.rollCharacteristic(charKey, item.name ?? undefined);
                 } else {
                     await DHTargetedActionManager.performWeaponAttack(this, null, item);
                 }
@@ -198,7 +198,7 @@ export class WH40KNPC extends WH40KBaseActor {
             }
             case 'psychicPower': {
                 if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
-                    await this.rollCharacteristic('willpower', item.name ?? undefined);
+                    this.rollCharacteristic('willpower', item.name ?? undefined);
                 } else {
                     await DHTargetedActionManager.performPsychicAttack(this, null, item);
                 }
