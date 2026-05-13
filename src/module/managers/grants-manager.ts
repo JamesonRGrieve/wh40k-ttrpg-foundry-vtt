@@ -544,6 +544,7 @@ export class GrantsManager {
 
         for (const grantId of grantIds) {
             const grantState = grantsMap[grantId];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; grantsMap[grantId] may be undefined
             if (grantState === undefined) continue;
 
             try {
