@@ -151,8 +151,13 @@ export default class ArmourModSheet extends ContainerItemSheet {
     }
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _preparePartContext context/return are framework-defined free-form payloads
-    override async _preparePartContext(partId: string, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    /* eslint-disable no-restricted-syntax -- boundary: ApplicationV2 _preparePartContext context/return are framework-defined free-form payloads */
+    override async _preparePartContext(
+        partId: string,
+        context: Record<string, unknown>,
+        options: ApplicationV2Config.RenderOptions,
+    ): Promise<Record<string, unknown>> {
+        /* eslint-enable no-restricted-syntax */
         // Get shared context from _prepareContext
         const sharedContext = await this._prepareContext(options);
         const partContext = { ...sharedContext, ...context };

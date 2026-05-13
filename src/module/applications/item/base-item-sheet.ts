@@ -14,6 +14,10 @@ import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 
+/** Tab label localization keys, hoisted so the static TABS entries reference identifiers. */
+const TAB_LABEL_DESCRIPTION = 'WH40K.Tabs.Description';
+const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
+
 /**
  * Base item sheet built on ApplicationV2.
  * All item sheets should extend this class.
@@ -82,12 +86,10 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /* -------------------------------------------- */
 
     /** @override */
-    /* eslint-disable no-restricted-syntax -- TODO: BaseItemSheet TAB labels need WH40K.* localization keys */
     static override TABS = [
-        { tab: 'description', group: 'primary', label: 'Description' },
-        { tab: 'effects', group: 'primary', label: 'Effects' },
+        { tab: 'description', group: 'primary', label: TAB_LABEL_DESCRIPTION },
+        { tab: 'effects', group: 'primary', label: TAB_LABEL_EFFECTS },
     ];
-    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 
