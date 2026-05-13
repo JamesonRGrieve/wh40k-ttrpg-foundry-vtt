@@ -244,8 +244,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /** Get the current difficulty preset */
     get _currentDifficulty(): (typeof UnifiedRollDialog.DIFFICULTIES)[number] {
         const ctor = this.constructor as typeof UnifiedRollDialog;
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- _selectedDifficultyIndex is always a valid DIFFICULTIES index
-        return ctor.DIFFICULTIES[this._selectedDifficultyIndex]!;
+        const difficulty = ctor.DIFFICULTIES[this._selectedDifficultyIndex] ?? ctor.DIFFICULTIES[0];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- DIFFICULTIES is a non-empty readonly tuple; index 0 always exists
+        return difficulty!;
     }
 
     /** Get the applicable modifier list for the current roll type */
@@ -325,7 +326,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const targetBreakdownTooltip = tooltipParts.join('\n');
 
         // Dynamic color class based on success chance (tw-* arbitrary values for color + text-shadow)
-        let targetColorClass;
+        let targetColorClass: string;
         if (finalTarget <= 15) targetColorClass = 'tw-text-[#dc2626] tw-[text-shadow:0_0_20px_rgba(220,38,38,0.5),0_2px_8px_rgba(0,0,0,0.6)]';
         else if (finalTarget <= 30) targetColorClass = 'tw-text-[#f87171] tw-[text-shadow:0_0_20px_rgba(248,113,113,0.4),0_2px_8px_rgba(0,0,0,0.6)]';
         else if (finalTarget <= 45) targetColorClass = 'tw-text-[#fbbf24] tw-[text-shadow:0_0_25px_rgba(251,191,36,0.4),0_2px_8px_rgba(0,0,0,0.6)]';
@@ -453,7 +454,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const unitsInput = this._el.querySelector<HTMLInputElement>('#manual-units');
         if (tensInput) {
             tensInput.addEventListener('input', (e) => {
-                const val = parseInt((e.target as HTMLInputElement).value);
+                const val = parseInt((e.target as HTMLInputElement).value, 10);
                 this._manualRollTens = val >= 0 && val <= 9 ? val : null;
                 if (this._manualRollTens !== null && unitsInput) {
                     unitsInput.focus();
@@ -464,7 +465,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         }
         if (unitsInput) {
             unitsInput.addEventListener('input', (e) => {
-                const val = parseInt((e.target as HTMLInputElement).value);
+                const val = parseInt((e.target as HTMLInputElement).value, 10);
                 this._manualRollUnits = val >= 0 && val <= 9 ? val : null;
                 void this.render(false, { parts: ['diceInput', 'footer'] });
             });
@@ -474,7 +475,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const singleInput = this._el.querySelector<HTMLInputElement>('#manual-single');
         if (singleInput) {
             singleInput.addEventListener('input', (e) => {
-                const val = parseInt((e.target as HTMLInputElement).value);
+                const val = parseInt((e.target as HTMLInputElement).value, 10);
                 this._singleRollValue = val >= 1 && val <= 100 ? val : null;
                 void this.render(false, { parts: ['diceInput', 'footer'] });
             });
@@ -484,7 +485,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const customInput = this._el.querySelector<HTMLInputElement>('#unified-custom-modifier');
         if (customInput) {
             customInput.addEventListener('change', (e) => {
-                this._customModifier = parseInt((e.target as HTMLInputElement).value) || 0;
+                this._customModifier = parseInt((e.target as HTMLInputElement).value, 10) || 0;
                 void this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
             });
         }
@@ -492,7 +493,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // Animate target number if changed
         const targetEl = this._el.querySelector<HTMLElement>('.urd-target__number');
         if (targetEl && this._previousTarget !== null) {
-            const newTarget = parseInt(targetEl.dataset['value'] ?? '') || 0;
+            const newTarget = parseInt(targetEl.dataset['value'] ?? '', 10) || 0;
             if (this._previousTarget !== newTarget) {
                 this._animateTargetNumber(targetEl, this._previousTarget, newTarget);
                 this._playTickSound();
@@ -619,7 +620,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const sizes = CONFIG.wh40k?.sizes || {};
         const currentSizeMod = this._sizeModifierKey ?? this._getDefaultSizeKey(rd);
         const sizeOptions = Object.entries(sizes).map(([key, label]) => {
-            const modifier = (parseInt(key) - 4) * 10;
+            const modifier = (parseInt(key, 10) - 4) * 10;
             return {
                 key,
                 label,
@@ -789,7 +790,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const step = (now: number) => {
             const elapsed = now - start;
             const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+            const eased = 1 - (1 - progress) ** 3; // ease-out cubic
             const current = Math.round(from + diff * eased);
             el.textContent = String(current);
             if (progress < 1) requestAnimationFrame(step);
@@ -837,7 +838,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     static async #onSelectDifficulty(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset['difficultyIndex'] ?? '');
+        const index = parseInt(target.dataset['difficultyIndex'] ?? '', 10);
         const ctor = this.constructor as typeof UnifiedRollDialog;
         if (Number.isInteger(index) && index >= 0 && index < ctor.DIFFICULTIES.length) {
             this._selectedDifficultyIndex = index;
@@ -978,7 +979,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const key = target.dataset['sizeKey'];
         if (!key) return;
         this._sizeModifierKey = key;
-        this.rollData.modifiers['target-size'] = (parseInt(key) - 4) * 10;
+        this.rollData.modifiers['target-size'] = (parseInt(key, 10) - 4) * 10;
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
