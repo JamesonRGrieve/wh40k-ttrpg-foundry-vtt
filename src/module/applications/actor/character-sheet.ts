@@ -114,6 +114,7 @@ type CharacterSheetContext = Record<string, unknown> & {
     equippedCount?: number;
     encumbrancePercent?: number;
     backpackPercent?: number;
+    transactionSourceCount?: number;
 };
 
 type OriginSummary = {
@@ -179,7 +180,7 @@ export default class CharacterSheet extends BaseActorSheet {
     declare actor: WH40KAcolyte;
     declare document: WH40KAcolyte & BaseActorSheet['document'];
     declare isEditable: boolean;
-    declare _powersFilter: Record<string, unknown>;
+    declare _powersFilter: { discipline?: unknown; orderCategory?: unknown; [key: string]: unknown };
     declare _equipmentFilter: { search: string; type: string; status: string };
     declare _skillsFilter: { search: string; characteristic: string; training: string; [key: string]: string };
     declare _traitsFilter: Record<string, unknown>;
@@ -1733,28 +1734,32 @@ export default class CharacterSheet extends BaseActorSheet {
         const characteristics = this.actor.characteristics;
 
         // Standard skill favourites
-        const standardFavourites = favorites.map((key) => {
-            const skill = skills[key];
-            const charShort = skill.characteristic !== '' ? skill.characteristic : 'S';
-            const charKey = this._charShortToKey(charShort);
-            const char = characteristics[charKey];
-            const label = skill.label !== '' ? skill.label : key;
-            return {
-                key,
-                label,
-                current: skill.current,
-                characteristic: charKey,
-                charShort: char.short !== '' ? char.short : charKey,
-                breakdown: this._getSkillBreakdown(skill as SkillLike, char),
-                tooltipData: JSON.stringify({
-                    name: label,
-                    value: skill.current,
-                    characteristic: char.label !== '' ? char.label : charKey,
-                    charValue: char.total,
+        const standardFavourites = favorites
+            .map((key) => {
+                const skill = skills[key];
+                if (skill === undefined) return null;
+                const charShort = skill.characteristic !== '' ? skill.characteristic : 'S';
+                const charKey = this._charShortToKey(charShort);
+                const char = characteristics[charKey];
+                if (char === undefined) return null;
+                const label = skill.label !== '' ? skill.label : key;
+                return {
+                    key,
+                    label,
+                    current: skill.current,
+                    characteristic: charKey,
+                    charShort: char.short !== '' ? char.short : charKey,
                     breakdown: this._getSkillBreakdown(skill as SkillLike, char),
-                }),
-            };
-        });
+                    tooltipData: JSON.stringify({
+                        name: label,
+                        value: skill.current,
+                        characteristic: char.label !== '' ? char.label : charKey,
+                        charValue: char.total,
+                        breakdown: this._getSkillBreakdown(skill as SkillLike, char),
+                    }),
+                };
+            })
+            .filter((row): row is NonNullable<typeof row> => row !== null);
 
         // Specialist favourites are stored as "skillKey:entryIndex"; resolve each to the
         // matching specialisation entry so they appear in the Overview favourites list
@@ -1762,29 +1767,31 @@ export default class CharacterSheet extends BaseActorSheet {
         const specialistFavouriteRows = specialistFavorites
             .map((compositeKey) => {
                 const [skillKey, indexStr] = compositeKey.split(':');
+                if (skillKey === undefined || skillKey === '' || indexStr === undefined) return null;
                 const index = Number.parseInt(indexStr, 10);
-                if (skillKey === '' || Number.isNaN(index)) return null;
+                if (Number.isNaN(index)) return null;
                 const parent = skills[skillKey] as { entries?: unknown[]; characteristic?: string; label?: string } | undefined;
                 const entries = parent?.entries;
                 if (!Array.isArray(entries)) return null;
                 const entry = entries[index] as Record<string, unknown> | undefined;
                 if (entry === undefined) return null;
-                const charShort = (entry.characteristic as string | undefined) ?? parent?.characteristic ?? 'S';
+                const charShort = (entry['characteristic'] as string | undefined) ?? parent?.characteristic ?? 'S';
                 const charKey = this._charShortToKey(charShort);
                 const char = characteristics[charKey];
-                const entryName = (entry.name as string | undefined) ?? (entry.label as string | undefined) ?? skillKey;
+                if (char === undefined) return null;
+                const entryName = (entry['name'] as string | undefined) ?? (entry['label'] as string | undefined) ?? skillKey;
                 const parentLabel = parent?.label ?? skillKey;
                 const composedLabel = `${parentLabel} (${entryName})`;
                 return {
                     key: compositeKey,
                     label: composedLabel,
-                    current: (entry.current as number | undefined) ?? 0,
+                    current: (entry['current'] as number | undefined) ?? 0,
                     characteristic: charKey,
                     charShort: char.short !== '' ? char.short : charKey,
                     breakdown: this._getSkillBreakdown(entry, char),
                     tooltipData: JSON.stringify({
                         name: composedLabel,
-                        value: (entry.current as number | undefined) ?? 0,
+                        value: (entry['current'] as number | undefined) ?? 0,
                         characteristic: char.label !== '' ? char.label : charKey,
                         charValue: char.total,
                         breakdown: this._getSkillBreakdown(entry, char),
@@ -1896,8 +1903,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     _prepareEquipmentContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
+        const ctx = context as CharacterSheetContext;
         // Equipment data already prepared in _prepareLoadoutData
-        context.transactionSourceCount = TransactionManager.listSourcesForBuyer(this.actor).length;
+        ctx.transactionSourceCount = TransactionManager.listSourcesForBuyer(this.actor).length;
         return context;
     }
 
@@ -2334,7 +2342,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // Store movement action on token flags
         await token.update({ 'flags.wh40k-rpg.movementAction': movementType } as Record<string, unknown>);
 
-        const config = ((CONFIG as unknown as Record<string, unknown>).wh40k as Record<string, unknown> | undefined)?.movementTypes as
+        const config = ((CONFIG as unknown as Record<string, unknown>)['wh40k'] as Record<string, unknown> | undefined)?.['movementTypes'] as
             | Record<string, { label?: string }>
             | undefined;
         const movementConfig = config?.[movementType];
@@ -2362,7 +2370,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
-        await item.update({ 'system.equipped': !(item.system as Record<string, unknown>).equipped });
+        await item.update({ 'system.equipped': !(item.system as Record<string, unknown>)['equipped'] });
     }
 
     /* -------------------------------------------- */
@@ -2563,7 +2571,10 @@ export default class CharacterSheet extends BaseActorSheet {
             .map((id: string) => sourceActor.items.get(id))
             .filter(Boolean)
             .map((item) => {
-                const data = (item as WH40KItem).toObject() as Record<string, unknown> & { system?: Record<string, unknown>; _id?: string };
+                const data = (item as WH40KItem).toObject() as Record<string, unknown> & {
+                    system?: Record<string, unknown> & { equipped?: unknown; inBackpack?: unknown; inShipStorage?: unknown };
+                    _id?: string;
+                };
                 if (data.system) {
                     data.system.equipped = false;
                     data.system.inBackpack = true;
@@ -2592,7 +2603,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
-        await item.update({ 'system.activated': !(item.system as Record<string, unknown>).activated });
+        await item.update({ 'system.activated': !(item.system as Record<string, unknown>)['activated'] });
     }
 
     /* -------------------------------------------- */
@@ -2771,7 +2782,7 @@ export default class CharacterSheet extends BaseActorSheet {
         event.preventDefault();
         // Default to rogueTrader career for now
         // TODO: Get career from actor.system.originPath.career or rogueTrader.careerPath
-        const careerKey = this.actor.originPath.career;
+        const careerKey = this.actor.originPath['career'];
         AdvancementDialog.open(this.actor, { careerKey });
     }
 
@@ -2917,7 +2928,10 @@ export default class CharacterSheet extends BaseActorSheet {
     static #resetWindowSize(this: CharacterSheet, event: Event, _target: HTMLElement): void {
         event.preventDefault();
         const defaults = (this.constructor as typeof CharacterSheet).DEFAULT_OPTIONS.position as { width?: number; height?: number };
-        this.setPosition({ width: defaults.width, height: defaults.height });
+        const pos: { width?: number; height?: number } = {};
+        if (defaults.width !== undefined) pos.width = defaults.width;
+        if (defaults.height !== undefined) pos.height = defaults.height;
+        this.setPosition(pos);
     }
 
     /* -------------------------------------------- */
@@ -3369,7 +3383,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const item = this.actor.items.get(itemId);
         if (item === undefined) return;
 
-        const levelNum = Number(item.system.level);
+        const levelNum = Number((item.system as Record<string, unknown>)['level']);
         const newLevel = Math.max(0, (Number.isNaN(levelNum) ? 0 : levelNum) + delta);
         await item.update({ 'system.level': newLevel });
 
