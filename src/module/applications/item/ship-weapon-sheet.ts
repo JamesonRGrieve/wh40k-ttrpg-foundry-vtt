@@ -51,7 +51,8 @@ export default class ShipWeaponSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext returns free-form template context; Record<string, unknown> is the required base shape
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Add weapon-specific choices
