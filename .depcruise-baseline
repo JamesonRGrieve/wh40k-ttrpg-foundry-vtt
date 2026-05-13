@@ -1,11 +1,11 @@
 {
   "strict": [],
   "totals": {
-    "totalViolations": 191
+    "totalViolations": 189
   },
   "byRule": {
     "documents-must-not-depend-on-applications": 4,
-    "no-circular": 182,
+    "no-circular": 180,
     "no-orphans": 5
   }
 }
