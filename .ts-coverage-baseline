@@ -3,8 +3,8 @@
     "tsIgnore"
   ],
   "totals": {
-    "any": 2,
-    "asAny": 11,
+    "any": 1,
+    "asAny": 9,
     "tsExpectError": 10,
     "tsIgnore": 0
   },
@@ -119,7 +119,7 @@
     },
     "transactions": {
       "any": 0,
-      "asAny": 2,
+      "asAny": 0,
       "tsExpectError": 0,
       "tsIgnore": 0
     },
@@ -130,7 +130,7 @@
       "tsIgnore": 0
     },
     "utils": {
-      "any": 1,
+      "any": 0,
       "asAny": 0,
       "tsExpectError": 0,
       "tsIgnore": 0
