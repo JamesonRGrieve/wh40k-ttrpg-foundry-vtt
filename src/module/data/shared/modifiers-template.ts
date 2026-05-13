@@ -179,7 +179,7 @@ export default class ModifiersTemplate extends SystemDataModel {
     };
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             modifiers: new fields.SchemaField({
@@ -254,7 +254,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         ModifiersTemplate.#normalizeModifiers(source);
     }
@@ -264,15 +264,15 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {object} source  The source data
      */
     static #normalizeModifiers(source: Record<string, unknown>): void {
-        if (!source.modifiers) return;
+        if (!source['modifiers']) return;
 
-        const mods = source.modifiers as Record<string, unknown>;
-        mods.characteristics ??= {};
-        mods.skills ??= {};
-        mods.combat ??= {};
-        mods.resources ??= {};
-        mods.other ??= [];
-        mods.situational ??= { characteristics: [], skills: [], combat: [] };
+        const mods = source['modifiers'] as Record<string, unknown>;
+        mods['characteristics'] ??= {};
+        mods['skills'] ??= {};
+        mods['combat'] ??= {};
+        mods['resources'] ??= {};
+        mods['other'] ??= [];
+        mods['situational'] ??= { characteristics: [], skills: [], combat: [] };
     }
 
     /* -------------------------------------------- */
@@ -285,7 +285,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options?: DataModelV14.CleaningOptions): void {
+    static override _cleanData(source: Record<string, unknown> | undefined, options?: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
     }
 

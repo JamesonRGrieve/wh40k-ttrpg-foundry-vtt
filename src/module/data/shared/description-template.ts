@@ -11,7 +11,7 @@ export default class DescriptionTemplate extends SystemDataModel {
     declare source: { book: string; page: string; custom: string };
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             description: new fields.SchemaField({
@@ -36,7 +36,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         DescriptionTemplate.#migrateDescription(source);
         DescriptionTemplate.#migrateSource(source);
@@ -47,19 +47,19 @@ export default class DescriptionTemplate extends SystemDataModel {
      * @param {object} source  The source data
      */
     static #migrateDescription(source: Record<string, unknown>): void {
-        if (typeof source.description === 'string') {
-            source.description = {
-                value: source.description,
+        if (typeof source['description'] === 'string') {
+            source['description'] = {
+                value: source['description'],
                 chat: '',
                 summary: '',
             };
         }
-        if (isLineVariantContainer(source.description)) return;
+        if (isLineVariantContainer(source['description'])) return;
         // Ensure sub-fields are not null (V13 HTMLField strictness)
-        if (source.description && typeof source.description === 'object') {
-            const desc = source.description as Record<string, unknown>;
-            desc.chat ??= '';
-            desc.summary ??= '';
+        if (source['description'] && typeof source['description'] === 'object') {
+            const desc = source['description'] as Record<string, unknown>;
+            desc['chat'] ??= '';
+            desc['summary'] ??= '';
         }
     }
 
@@ -68,19 +68,19 @@ export default class DescriptionTemplate extends SystemDataModel {
      * @param {object} source  The source data
      */
     static #migrateSource(source: Record<string, unknown>): void {
-        if (typeof source.source === 'string') {
-            source.source = {
+        if (typeof source['source'] === 'string') {
+            source['source'] = {
                 book: '',
                 page: '',
-                custom: source.source,
+                custom: source['source'],
             };
         }
-        if (isLineVariantContainer(source.source)) return;
-        if (source.source && typeof source.source === 'object') {
-            const src = source.source as Record<string, unknown>;
-            src.book ??= '';
-            src.page ??= '';
-            src.custom ??= '';
+        if (isLineVariantContainer(source['source'])) return;
+        if (source['source'] && typeof source['source'] === 'object') {
+            const src = source['source'] as Record<string, unknown>;
+            src['book'] ??= '';
+            src['page'] ??= '';
+            src['custom'] ??= '';
         }
     }
 
@@ -110,12 +110,12 @@ export default class DescriptionTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options?: DataModelV14.CleaningOptions): void {
+    static override _cleanData(source: Record<string, unknown> | undefined, options?: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
     }
 
     /** @inheritdoc */
-    prepareBaseData(): void {
+    override prepareBaseData(): void {
         super.prepareBaseData();
 
         const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
