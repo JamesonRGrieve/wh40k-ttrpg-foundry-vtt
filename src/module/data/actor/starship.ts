@@ -234,8 +234,9 @@ export default class StarshipData extends ActorDataModel {
                 // Modifiers
                 if (sys.modifiers !== undefined) {
                     for (const [key, value] of Object.entries(sys.modifiers)) {
-                        if (Object.prototype.hasOwnProperty.call(componentModifiers, key)) {
-                            componentModifiers[key] += Number(value);
+                        const existing = componentModifiers[key];
+                        if (existing !== undefined) {
+                            componentModifiers[key] = existing + Number(value);
                         }
                     }
                 }

@@ -810,14 +810,15 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {object|null}
      */
     getCharacteristic(key: string): CharacteristicData | null {
-        if (key in this.characteristics) {
-            return this.characteristics[key];
+        const direct = this.characteristics[key];
+        if (direct !== undefined) {
+            return direct;
         }
         const fullKey = CreatureTemplate.CHARACTERISTIC_MAP[key];
-        if (fullKey in this.characteristics) {
-            return this.characteristics[fullKey];
+        if (fullKey === undefined) {
+            return null;
         }
-        return null;
+        return this.characteristics[fullKey] ?? null;
     }
 
     /* -------------------------------------------- */
@@ -917,7 +918,9 @@ export default class CreatureTemplate extends CommonTemplate {
 
         // Update initiative bonus from characteristic
         const initChar = this.characteristics[this.initiative.characteristic];
-        this.initiative.bonus = initChar.bonus;
+        if (initChar !== undefined) {
+            this.initiative.bonus = initChar.bonus;
+        }
     }
 
     /**
@@ -1079,8 +1082,9 @@ export default class CreatureTemplate extends CommonTemplate {
             const combatSources = this.modifierSources.combat;
             for (const [combatKey, value] of Object.entries(mods.combat)) {
                 if (typeof value !== 'number') continue;
-                if (!Object.hasOwn(combatSources, combatKey)) continue;
-                combatSources[combatKey].push({ ...source, value });
+                const list = combatSources[combatKey];
+                if (list === undefined) continue;
+                list.push({ ...source, value });
             }
         }
 
@@ -1136,7 +1140,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
         // Update initiative bonus from characteristic (recalculate from base)
         const initChar = this.characteristics[this.initiative.characteristic];
-        const baseInitBonus = initChar.bonus;
+        const baseInitBonus = initChar?.bonus ?? 0;
 
         // Apply combat modifiers from items
         const initMod = this._getTotalCombatModifier('initiative');
