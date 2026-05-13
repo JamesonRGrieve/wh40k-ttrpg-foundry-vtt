@@ -178,7 +178,7 @@ export class ReloadActionManager {
                     const prevAmmoItem =
                         actor.items.find((i: WH40KItem) => i.uuid === system.loadedAmmo.uuid) ??
                         actor.items.find((i: WH40KItem) => i.type === 'ammunition' && i.name === system.loadedAmmo.name);
-                    if (prevAmmoItem !== null && prevAmmoItem !== undefined) {
+                    if (prevAmmoItem !== undefined) {
                         const prevAmmoSystem = this.getAmmoSystem(prevAmmoItem);
                         await prevAmmoItem.update({ 'system.quantity': (prevAmmoSystem.quantity ?? 0) - previousValue });
                     }
