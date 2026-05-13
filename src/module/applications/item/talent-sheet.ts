@@ -15,6 +15,12 @@ import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
+/** Tab label localization keys, hoisted so the static TABS entries reference identifiers. */
+const TAB_LABEL_OVERVIEW = 'WH40K.Tabs.Overview';
+const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
+const TAB_LABEL_PROPERTIES = 'WH40K.Tabs.Properties';
+const TAB_LABEL_DESCRIPTION = 'WH40K.Tabs.Description';
+
 /** TalentData with mixin-inherited fields visible to the type system. */
 type TalentSystem = TalentData & Pick<ModifiersTemplate, 'modifiers'> & Pick<DescriptionTemplate, 'description' | 'source'>;
 
@@ -230,10 +236,10 @@ export default class TalentSheet extends BaseItemSheet {
 
     /** @override */
     static override TABS = [
-        { tab: 'overview', group: 'primary', label: 'WH40K.Tabs.Overview' },
-        { tab: 'effects', group: 'primary', label: 'WH40K.Tabs.Effects' },
-        { tab: 'properties', group: 'primary', label: 'WH40K.Tabs.Properties' },
-        { tab: 'description', group: 'primary', label: 'WH40K.Tabs.Description' },
+        { tab: 'overview', group: 'primary', label: TAB_LABEL_OVERVIEW },
+        { tab: 'effects', group: 'primary', label: TAB_LABEL_EFFECTS },
+        { tab: 'properties', group: 'primary', label: TAB_LABEL_PROPERTIES },
+        { tab: 'description', group: 'primary', label: TAB_LABEL_DESCRIPTION },
     ];
 
     /* -------------------------------------------- */
@@ -930,13 +936,13 @@ export default class TalentSheet extends BaseItemSheet {
      */
     static async #rollTalent(this: TalentSheet, _event: Event, _target: HTMLElement): Promise<void> {
         if (!this.item.system.isRollable) {
-            ui.notifications.warn('This talent cannot be rolled.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Talent.NotRollable'));
             return;
         }
 
         const actor = this.item.actor;
         if (actor === null) {
-            ui.notifications.warn('This talent must be on an actor to roll.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Talent.MustBeOnActor'));
             return;
         }
 
