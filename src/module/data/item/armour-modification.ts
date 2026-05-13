@@ -25,7 +25,8 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         return {
             ...super.defineSchema(),
 
-            identifier: new (IdentifierField as any)({ required: true, blank: true }) as foundry.data.fields.StringField,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // What armour types this can be applied to
             restrictions: new fields.SchemaField({

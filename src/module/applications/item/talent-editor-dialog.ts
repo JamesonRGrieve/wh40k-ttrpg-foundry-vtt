@@ -657,7 +657,9 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
                 if (section === undefined || section === '') return;
 
                 // Update active tab
-                tabs.forEach((t: Element) => t.classList.remove('active'));
+                tabs.forEach((t: Element) => {
+                    t.classList.remove('active');
+                });
                 tab.classList.add('active');
 
                 // Show/hide panels

@@ -896,7 +896,9 @@ export default class TalentSheet extends BaseItemSheet {
             if (tabName === undefined || tabName === '') return;
 
             // Update active tab button
-            tabs.forEach((t) => t.classList.toggle('active', (t as HTMLElement).dataset['tab'] === tabName));
+            tabs.forEach((t) => {
+                t.classList.toggle('active', (t as HTMLElement).dataset['tab'] === tabName);
+            });
 
             // Show/hide panels
             const panels = this.element.querySelectorAll('.wh40k-talent-panel');

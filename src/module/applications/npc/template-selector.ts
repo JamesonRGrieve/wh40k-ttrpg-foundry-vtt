@@ -46,7 +46,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         id: 'template-selector-{id}',
         classes: ['wh40k-rpg', 'template-selector'],
         tag: 'div',
@@ -139,7 +139,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Load templates if not cached
@@ -212,7 +212,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+    override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
         // Filter inputs
@@ -349,7 +349,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target
      */
     static #selectTemplate(this: TemplateSelector, event: PointerEvent, target: HTMLElement): void {
-        const uuid = target.dataset.uuid;
+        const uuid = target.dataset['uuid'];
         if (!uuid) return;
 
         this.#selectedUuid = uuid;
@@ -471,7 +471,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<unknown> {
+    override async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
         if (!this.#submitted && this.#resolve) {

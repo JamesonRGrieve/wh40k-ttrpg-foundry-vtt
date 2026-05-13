@@ -146,7 +146,9 @@ export default class ArmourSheet extends ContainerItemSheet {
             if (coverage.has('all')) {
                 coverage.clear();
                 // Add individual locations instead
-                ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'].forEach((loc) => coverage.add(loc));
+                for (const loc of ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg']) {
+                    coverage.add(loc);
+                }
             } else {
                 coverage.clear();
                 coverage.add('all');

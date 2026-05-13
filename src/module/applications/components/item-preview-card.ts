@@ -47,7 +47,7 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
          */
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin-internal action handler runs against host sheet whose concrete type is unknown to the mixin
         static toggleItemPreview(this: any, event: Event, target: HTMLElement): void {
-            const itemId = target.dataset.itemId;
+            const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId.length === 0) return;
 
             /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions -- this is `any`-typed for mixin compat; actor/element/private fields are documented host sheet members reached through `any` */
@@ -119,7 +119,7 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
                 'tw-rounded-[var(--wh40k-radius-md)]',
                 'tw-shadow-[inset_0_1px_3px_rgba(0,0,0,0.2)]',
             );
-            preview.dataset.previewId = item.id ?? undefined;
+            preview.dataset['previewId'] = item.id ?? undefined;
             preview.innerHTML = previewHTML;
 
             // Insert after item row
@@ -146,7 +146,9 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
          * Close an item preview card
          */
         #closePreview(itemId: string): void {
-            const preview = this.element[0].querySelector(`[data-preview-id="${itemId}"]`);
+            const root = this.element[0];
+            if (root == null) return;
+            const preview = root.querySelector(`[data-preview-id="${itemId}"]`);
             if (!preview) return;
 
             preview.classList.remove('wh40k-item-preview--open');
@@ -223,8 +225,8 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
         #generateWeaponPreview(item: WH40KItem): string {
             const sys = item.system as unknown as WeaponDataModel;
             const sysRec = sys as unknown as Record<string, unknown>;
-            const damage = sysRec.damage as { formula?: string };
-            const stats = sysRec.stats as { penetration?: number; range?: string; rof?: string };
+            const damage = sysRec['damage'] as { formula?: string };
+            const stats = sysRec['stats'] as { penetration?: number; range?: string; rof?: string };
 
             return `
                 <div class="wh40k-weapon-preview-stats tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-sm)] tw-mb-2">
@@ -252,15 +254,15 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
                         <i class="fa-solid fa-box tw-text-[var(--wh40k-stat-neutral)]"></i>
                         <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">Clip</span>
                         <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${
-                            (sysRec.clip as Record<string, unknown> | undefined)?.current || 0
-                        }/${(sysRec.clip as Record<string, unknown> | undefined)?.max || 0}</span>
+                            (sysRec['clip'] as Record<string, unknown> | undefined)?.['current'] || 0
+                        }/${(sysRec['clip'] as Record<string, unknown> | undefined)?.['max'] || 0}</span>
                     </div>
                 </div>
-                ${this.#generateQualitiesHTML(sysRec.qualities)}
+                ${this.#generateQualitiesHTML(sysRec['qualities'])}
                 ${
-                    sysRec.description
+                    sysRec['description']
                         ? `<div class="wh40k-item-preview-description tw-mt-2 tw-p-2 tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-leading-[1.5] [&_p:first-child]:tw-mt-0 [&_p:last-child]:tw-mb-0">${String(
-                              sysRec.description,
+                              sysRec['description'],
                           )}</div>`
                         : ''
                 }
@@ -273,46 +275,46 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
         #generateArmourPreview(item: WH40KItem): string {
             const sys = item.system as unknown as ArmourDataModel;
             const sysRec = sys as unknown as Record<string, unknown>;
-            const locations = (sysRec.locations as Record<string, number | undefined>) ?? {};
+            const locations = (sysRec['locations'] as Record<string, number | undefined>) ?? {};
 
             return `
                 <div class="wh40k-armour-preview-locations tw-grid tw-grid-cols-[repeat(auto-fit,minmax(120px,1fr))] tw-gap-[6px] tw-mb-2">
                     ${
-                        locations.head
-                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">Head:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations.head}</strong></div>`
+                        locations['head']
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">Head:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['head']}</strong></div>`
                             : ''
                     }
                     ${
-                        locations.leftArm
-                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">L Arm:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations.leftArm}</strong></div>`
+                        locations['leftArm']
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">L Arm:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['leftArm']}</strong></div>`
                             : ''
                     }
                     ${
-                        locations.rightArm
-                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">R Arm:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations.rightArm}</strong></div>`
+                        locations['rightArm']
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">R Arm:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['rightArm']}</strong></div>`
                             : ''
                     }
                     ${
-                        locations.body
-                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">Body:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations.body}</strong></div>`
+                        locations['body']
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">Body:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['body']}</strong></div>`
                             : ''
                     }
                     ${
-                        locations.leftLeg
-                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">L Leg:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations.leftLeg}</strong></div>`
+                        locations['leftLeg']
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">L Leg:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['leftLeg']}</strong></div>`
                             : ''
                     }
                     ${
-                        locations.rightLeg
-                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">R Leg:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations.rightLeg}</strong></div>`
+                        locations['rightLeg']
+                            ? `<div class="wh40k-armour-location tw-p-[6px_8px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em]"><span class="wh40k-location-label tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.7))] tw-mr-1">R Leg:</span> <strong class="tw-text-[color:var(--wh40k-stat-positive,#4ade80)]">${locations['rightLeg']}</strong></div>`
                             : ''
                     }
                 </div>
-                ${this.#generateQualitiesHTML(Array.from((sysRec.properties as Iterable<unknown>) ?? []))}
+                ${this.#generateQualitiesHTML(Array.from((sysRec['properties'] as Iterable<unknown>) ?? []))}
                 ${
-                    sysRec.description
+                    sysRec['description']
                         ? `<div class="wh40k-item-preview-description tw-mt-2 tw-p-2 tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-leading-[1.5] [&_p:first-child]:tw-mt-0 [&_p:last-child]:tw-mb-0">${String(
-                              sysRec.description,
+                              sysRec['description'],
                           )}</div>`
                         : ''
                 }
@@ -471,8 +473,8 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
         #generateGenericPreview(item: WH40KItem): string {
             const sys = item.system as Record<string, unknown>;
 
-            if (sys.description) {
-                return `<div class="wh40k-item-preview-description">${String(sys.description)}</div>`;
+            if (sys['description']) {
+                return `<div class="wh40k-item-preview-description">${String(sys['description'])}</div>`;
             }
 
             return '<div class="wh40k-item-preview-empty">No additional details available.</div>';
@@ -497,7 +499,7 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
 
             const tagsHTML = qualitiesArray
                 .map((q) => {
-                    const name = typeof q === 'string' ? q : (q as Record<string, unknown>)?.name ?? q;
+                    const name = typeof q === 'string' ? q : (q as Record<string, unknown>)?.['name'] ?? q;
                     return `<span class="wh40k-badge">${String(name)}</span>`;
                 })
                 .join('');

@@ -35,7 +35,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         id: 'difficulty-calculator-{id}',
         classes: ['wh40k-rpg', 'difficulty-calculator-dialog'],
         tag: 'div',
@@ -98,7 +98,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         type PartyUser = {
@@ -143,23 +143,23 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         const threatRatio = partyThreat > 0 ? totalThreat / partyThreat : 0;
         const difficulty = this._getDifficultyRating(threatRatio);
 
-        context.npc = {
+        context['npc'] = {
             name: npc.name,
             img: npc.img,
             threatLevel: npcThreat,
             type: npcSystem.type,
             isHorde: npcSystem.horde?.enabled ?? false,
         };
-        context.partySize = partySize;
-        context.partyLevel = partyLevel;
-        context.partyThreat = partyThreat;
-        context.quantity = quantity;
-        context.totalThreat = totalThreat;
-        context.threatRatio = threatRatio.toFixed(2);
-        context.difficulty = difficulty;
+        context['partySize'] = partySize;
+        context['partyLevel'] = partyLevel;
+        context['partyThreat'] = partyThreat;
+        context['quantity'] = quantity;
+        context['totalThreat'] = totalThreat;
+        context['threatRatio'] = threatRatio.toFixed(2);
+        context['difficulty'] = difficulty;
 
         // Add party members list
-        context.partyMembers = party.map((u) => ({
+        context['partyMembers'] = party.map((u) => ({
             name: u.character?.name ?? u.name,
             rank: u.character?.system?.rank ?? 1,
             img: u.character?.img ?? u.avatar,

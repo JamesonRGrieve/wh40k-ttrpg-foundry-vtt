@@ -35,7 +35,7 @@ interface NPCActorData {
     type: string;
     img: string;
     system: NPCSystemDataView;
-    folder?: string;
+    folder?: string | undefined;
 }
 
 /**
@@ -49,7 +49,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 form/action handlers accept method references and bind `this` itself */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         id: 'batch-create-dialog-{id}',
         classes: ['wh40k-rpg', 'batch-create-dialog'],
         tag: 'form',
@@ -146,7 +146,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Get options
@@ -198,7 +198,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+    override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
         const form = this.element;
@@ -403,7 +403,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/require-await -- boundary: ApplicationV2 close accepts arbitrary options record; method must remain async to satisfy super signature
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    override async close(options: Record<string, unknown> = {}): Promise<void> {
         if (this._renderTimeout !== null) clearTimeout(this._renderTimeout);
 
         if (!this.#submitted && this.#resolve !== null) {

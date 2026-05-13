@@ -43,12 +43,12 @@ export class WH40KTour extends foundry.nue.Tour {
         });
     }
 
-    async _preStep(): Promise<void> {
+    override async _preStep(): Promise<void> {
         await super._preStep();
         await this.waitForElement(this.currentWh40KStep.selector);
     }
 
-    async _postStep(): Promise<void> {
+    override async _postStep(): Promise<void> {
         await super._postStep();
         const stepIndex = this.stepIndex ?? -1;
         if (stepIndex < 0 || !this.hasNext) return;
@@ -76,7 +76,7 @@ export class WH40KTour extends foundry.nue.Tour {
     /**
      * Detect when a reset is triggered and stop the actions in _postStep
      */
-    async reset(): Promise<void> {
+    override async reset(): Promise<void> {
         if ((this.status as TourStatus) !== 'completed') this.triggerReset = true;
         await super.reset();
     }

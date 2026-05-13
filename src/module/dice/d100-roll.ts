@@ -16,13 +16,13 @@ export default class D100Roll extends BasicRollWH40K {
      * Default flavor for d100 rolls
      * @type {string}
      */
-    static defaultFlavor = 'Skill Test';
+    static override defaultFlavor = 'Skill Test';
 
     /**
      * Chat template for d100 rolls
      * @type {string}
      */
-    static chatTemplate = 'systems/wh40k-rpg/templates/chat/simple-roll-chat.hbs';
+    static override chatTemplate = 'systems/wh40k-rpg/templates/chat/simple-roll-chat.hbs';
 
     /**
      * The configuration dialog class to use
@@ -47,7 +47,7 @@ export default class D100Roll extends BasicRollWH40K {
      * @type {number}
      */
     get target(): number {
-        return (this.configuration.target as number) ?? 0;
+        return (this.configuration['target'] as number) ?? 0;
     }
 
     /**
@@ -195,7 +195,7 @@ export default class D100Roll extends BasicRollWH40K {
 
         // Calculate modifiers for display
         const activeModifiers: Record<string, unknown> = {};
-        const modifiersCfg = config.modifiers as Record<string, unknown> | undefined;
+        const modifiersCfg = config['modifiers'] as Record<string, unknown> | undefined;
         if (modifiersCfg !== undefined) {
             for (const [key, value] of Object.entries(modifiersCfg)) {
                 if (value !== 0) {
@@ -208,10 +208,10 @@ export default class D100Roll extends BasicRollWH40K {
         return {
             ...baseData,
             rollData: {
-                ...(baseData.rollData as Record<string, unknown>),
-                name: config.name ?? config.flavor ?? this.defaultFlavor,
-                baseTarget: config.baseTarget ?? config.target,
-                modifiedTarget: config.target,
+                ...(baseData['rollData'] as Record<string, unknown>),
+                name: config['name'] ?? config['flavor'] ?? this.defaultFlavor,
+                baseTarget: config['baseTarget'] ?? config['target'],
+                modifiedTarget: config['target'],
                 activeModifiers: activeModifiers,
                 success: d100Roll.isSuccess,
                 dos: d100Roll.degreesOfSuccess,
@@ -220,7 +220,7 @@ export default class D100Roll extends BasicRollWH40K {
                 isCriticalFailure: d100Roll.isCriticalFailure,
                 isDoubles: d100Roll.isDoubles,
                 triggersRighteousFury: d100Roll.triggersRighteousFury,
-                sheetName: (config.actor as { name?: string })?.name ?? (config.speaker as { alias?: string })?.alias ?? '',
+                sheetName: (config['actor'] as { name?: string })?.name ?? (config['speaker'] as { alias?: string })?.alias ?? '',
             },
         };
     }
@@ -237,12 +237,12 @@ export default class D100Roll extends BasicRollWH40K {
         const d100Roll = roll as D100Roll;
 
         // Add d100-specific flags
-        const flags = chatData.flags as Record<string, unknown>;
+        const flags = chatData['flags'] as Record<string, unknown>;
         const existingFlags = (flags['wh40k-rpg'] as Record<string, unknown>) ?? {};
         flags['wh40k-rpg'] = {
             ...existingFlags,
-            target: config.target,
-            baseTarget: config.baseTarget ?? config.target,
+            target: config['target'],
+            baseTarget: config['baseTarget'] ?? config['target'],
             success: d100Roll.isSuccess,
             degrees: d100Roll.degrees,
             degreesOfSuccess: d100Roll.degreesOfSuccess,

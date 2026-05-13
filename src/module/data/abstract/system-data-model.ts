@@ -32,7 +32,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
      * @private
      */
     static get _schemaTemplateFields(): Set<string> {
-        const fieldNames = Object.freeze(new Set(this._schemaTemplates.map((t) => Array.from(t.schema.keys())).flat()));
+        const fieldNames = Object.freeze(new Set(this._schemaTemplates.flatMap((t) => Array.from(t.schema.keys()))));
         Object.defineProperty(this, '_schemaTemplateFields', {
             value: fieldNames,
             writable: false,
@@ -180,7 +180,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /** @inheritDoc */
     static override validateJoint(data: Record<string, unknown>): void {
         this._validateJoint(data);
-        return super.validateJoint(data as never);
+        super.validateJoint(data as never);
     }
 
     /* -------------------------------------------- */
