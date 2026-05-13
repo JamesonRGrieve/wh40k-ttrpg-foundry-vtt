@@ -1680,12 +1680,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (firstChar === '=') {
             // Set absolute value
             const absolute = parseFloat(value.slice(1));
-            if (!isNaN(absolute)) input.value = String(absolute);
+            if (!Number.isNaN(absolute)) input.value = String(absolute);
         } else if (['+', '-'].includes(firstChar)) {
             // Add or subtract delta
             const current = foundry.utils.getProperty(this.actor, input.name) ?? 0;
             const delta = parseFloat(value);
-            if (!isNaN(delta)) input.value = String((current as number) + delta);
+            if (!Number.isNaN(delta)) input.value = String((current as number) + delta);
         }
     }
 
@@ -1713,7 +1713,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {PointerEvent} event  The triggering event.
      * @param {HTMLElement} target  The action target.
      */
-    static async #onEditImage(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #onEditImage(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
         const attr = target.dataset.edit ?? 'img';
         const docSource = this.document.toObject(true);
         const current = foundry.utils.getProperty(docSource, attr);
@@ -1804,7 +1804,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #roll(this: BaseActorSheet, event: Event, target: HTMLElement): void {
+    static #roll(this: BaseActorSheet, _event: Event, target: HTMLElement): void {
         const rollType = target.dataset.rollType;
         const rollTarget = target.dataset.rollTarget;
         const specialty = target.dataset.specialty;
@@ -1948,7 +1948,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #itemCreate(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #itemCreate(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemType = target.dataset.type ?? 'gear';
         const data: Record<string, unknown> = {
             name: `New ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`,
@@ -2125,7 +2125,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #addSpecialistSkill(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #addSpecialistSkill(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
         const skillKey = target.dataset.skill;
         if (skillKey === undefined || skillKey === '') return;
         const skill = this.actor.system.skills[skillKey];
@@ -2197,7 +2197,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #deleteSpecialization(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #deleteSpecialization(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
         const skillName = target.dataset.skill;
         const index = parseInt(target.dataset.index ?? '');
         if (skillName === undefined || skillName === '') return;
@@ -2360,7 +2360,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  The button element clicked
      * @protected
      */
-    static async #spendXPAdvance(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #spendXPAdvance(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
         const charKey = target.dataset.characteristic;
         if (charKey === undefined || charKey === '') return;
         const char = this.actor.system.characteristics[charKey] as (WH40KCharacteristic & { nextAdvanceCost: number; advance: number }) | undefined;
