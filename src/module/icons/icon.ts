@@ -55,7 +55,7 @@ function formatSize(size: string | number): string {
  * defensive runtime checks in code paths where the key is computed.
  */
 export function hasIcon(key: string): key is IconKey {
-    return Object.prototype.hasOwnProperty.call(ICON_REGISTRY, key);
+    return Object.hasOwn(ICON_REGISTRY, key);
 }
 
 /**

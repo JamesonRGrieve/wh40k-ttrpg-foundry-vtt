@@ -62,6 +62,7 @@ type BaseWithOptions = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructor signature must use any[] per TS mixin rule
+// biome-ignore lint/suspicious/noExplicitAny: boundary - mixin constructor signature must use any[] per TS mixin rule
 type ActorSheetCtor = new (...args: any[]) => foundry.appv1.sheets.ActorSheet;
 
 /**
@@ -71,12 +72,6 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
     // eslint-disable-next-line no-restricted-syntax -- boundary: mixin host class lacks DEFAULT_OPTIONS in its declared type
     const baseWithOptions = Base as unknown as BaseWithOptions;
     return class ActiveModifiersApplication extends Base {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructor signature must use any[] per TS mixin rule
-        constructor(...args: any[]) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- mixin constructor forwards untyped args
-            super(...args);
-        }
-
         /** @override */
         static DEFAULT_OPTIONS = {
             ...(baseWithOptions.DEFAULT_OPTIONS ?? {}),
@@ -99,7 +94,8 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
          * Toggle a modifier on/off (for optional modifiers)
          */
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin-internal action handler runs against host sheet whose concrete type is unknown to the mixin
-        static async toggleModifier(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+        // biome-ignore lint/suspicious/noExplicitAny: boundary - mixin action handler; host sheet type is unknown to the mixin
+        static async toggleModifier(this: any, _event: PointerEvent, target: HTMLElement): Promise<void> {
             const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId.length === 0) return;
 
@@ -119,7 +115,8 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
          * View the source item of a modifier
          */
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin-internal action handler runs against host sheet whose concrete type is unknown to the mixin
-        static viewModifierSource(this: any, event: PointerEvent, target: HTMLElement): void {
+        // biome-ignore lint/suspicious/noExplicitAny: boundary - mixin action handler; host sheet type is unknown to the mixin
+        static viewModifierSource(this: any, _event: PointerEvent, target: HTMLElement): void {
             const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId.length === 0) return;
 
@@ -136,7 +133,8 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
          * Toggle modifiers panel collapsed state
          */
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin-internal action handler runs against host sheet whose concrete type is unknown to the mixin
-        static toggleModifiersPanel(this: any, event: PointerEvent, target: HTMLElement): void {
+        // biome-ignore lint/suspicious/noExplicitAny: boundary - mixin action handler; host sheet type is unknown to the mixin
+        static toggleModifiersPanel(this: any, _event: PointerEvent, _target: HTMLElement): void {
             const instance = this as { '#modifiersPanelCollapsed': boolean; 'render': () => void };
             instance['#modifiersPanelCollapsed'] = !instance['#modifiersPanelCollapsed'];
             instance.render();

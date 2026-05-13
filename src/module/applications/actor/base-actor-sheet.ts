@@ -1430,9 +1430,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Handle delta inputs for numeric fields
         if (this.isEditable) {
-            this.element
-                .querySelectorAll('input[type="text"][data-dtype="Number"]')
-                .forEach((i) => { i.addEventListener('change', this._onChangeInputDelta.bind(this)); });
+            this.element.querySelectorAll('input[type="text"][data-dtype="Number"]').forEach((i) => {
+                i.addEventListener('change', this._onChangeInputDelta.bind(this));
+            });
         }
 
         // Auto-select number input values on focus for easy editing
@@ -1859,7 +1859,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #itemEdit(this: BaseActorSheet, event: Event, target: HTMLElement): void {
+    static #itemEdit(this: BaseActorSheet, _event: Event, target: HTMLElement): void {
         const itemId = target.dataset['itemId'] ?? target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         if (itemId === undefined || itemId === '') {
             console.warn('WH40K | itemEdit: No itemId found', target);
@@ -1881,7 +1881,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #itemDelete(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #itemDelete(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset['itemId'] ?? target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         if (itemId === undefined || itemId === '') {
             console.warn('WH40K | itemDelete: No itemId found', target);
@@ -1919,7 +1919,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #itemVocalize(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #itemVocalize(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset['itemId'] ?? target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         if (itemId === undefined || itemId === '') {
             console.warn('WH40K | itemVocalize: No item ID found', target);
@@ -1996,7 +1996,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #effectEdit(this: BaseActorSheet, event: Event, target: HTMLElement): void {
+    static #effectEdit(this: BaseActorSheet, _event: Event, target: HTMLElement): void {
         const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         if (effectId === undefined || effectId === '') return;
         const effect = this.actor.effects.get(effectId) as { sheet?: { render(force?: boolean): void } } | undefined;
@@ -2011,7 +2011,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #effectDelete(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #effectDelete(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
         const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         if (effectId === undefined || effectId === '') return;
         const effect = this.actor.effects.get(effectId) as { delete(): Promise<unknown> } | undefined;
@@ -2026,7 +2026,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #effectToggle(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #effectToggle(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
         const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         if (effectId === undefined || effectId === '') return;
         const effect = this.actor.effects.get(effectId) as { disabled: boolean; update(data: Record<string, unknown>): Promise<unknown> } | undefined;
@@ -2456,7 +2456,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button clicked
      * @protected
      */
-    static async #editCharacteristic(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #editCharacteristic(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
         const charKey = target.closest<HTMLElement>('[data-characteristic]')?.dataset['characteristic'];
         if (charKey === undefined || charKey === '') return;
 

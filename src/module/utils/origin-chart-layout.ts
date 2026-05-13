@@ -82,6 +82,7 @@ type ChartLayout = {
     maxColumns: number;
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with callers in the character-creation module
 export class OriginChartLayout {
     /**
      * Compute layout data for all origins grouped by step.

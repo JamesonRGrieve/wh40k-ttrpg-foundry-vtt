@@ -376,7 +376,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addNPC(this: EncounterBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #addNPC(this: EncounterBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         // Show a simple actor picker
         const actors = game.actors.filter((a) => (a as { type: string }).type === 'npc' || (a as { type: string }).type === 'npcV2');
 
@@ -454,9 +454,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #removeNPC(this: EncounterBuilder, event: Event, target: HTMLElement): void {
+    static #removeNPC(this: EncounterBuilder, _event: Event, target: HTMLElement): void {
         const index = parseInt(target.dataset['index'] ?? '', 10);
-        if (isNaN(index) || index < 0 || index >= this.#npcs.length) return;
+        if (Number.isNaN(index) || index < 0 || index >= this.#npcs.length) return;
 
         this.#npcs.splice(index, 1);
         void this.render({ parts: ['content'] });
@@ -467,11 +467,11 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #adjustCount(this: EncounterBuilder, event: Event, target: HTMLElement): void {
+    static #adjustCount(this: EncounterBuilder, _event: Event, target: HTMLElement): void {
         const index = parseInt(target.dataset['index'] ?? '', 10);
         const delta = parseInt(target.dataset['delta'] ?? '', 10);
 
-        if (isNaN(index) || isNaN(delta)) return;
+        if (Number.isNaN(index) || Number.isNaN(delta)) return;
 
         // index is bounds-checked above
         const npc = this.#npcs[index];
@@ -486,7 +486,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #clearAll(this: EncounterBuilder, event: Event, target: HTMLElement): void {
+    static #clearAll(this: EncounterBuilder, _event: Event, _target: HTMLElement): void {
         this.#npcs = [];
         void this.render({ parts: ['content'] });
     }
@@ -496,7 +496,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #saveTemplate(this: EncounterBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #saveTemplate(this: EncounterBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
             ui.notifications.warn('No NPCs to save.');
             return;
@@ -528,9 +528,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #loadTemplate(this: EncounterBuilder, event: Event, target: HTMLElement): void {
+    static #loadTemplate(this: EncounterBuilder, _event: Event, target: HTMLElement): void {
         const index = parseInt(target.dataset['index'] ?? '', 10);
-        if (isNaN(index) || index < 0 || index >= this.#templates.length) return;
+        if (Number.isNaN(index) || index < 0 || index >= this.#templates.length) return;
 
         const template = this.#templates[index];
         if (template === undefined) return;
@@ -546,7 +546,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #deployToCombat(this: EncounterBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #deployToCombat(this: EncounterBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
             ui.notifications.warn('No NPCs to deploy.');
             return;
@@ -601,7 +601,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #openNPC(this: EncounterBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #openNPC(this: EncounterBuilder, _event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset['uuid'];
         if (uuid === undefined || uuid === '') return;
 

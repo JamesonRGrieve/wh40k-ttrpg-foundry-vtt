@@ -20,6 +20,7 @@ type RollTableRollOptions = {
  * - Gifts of the Gods
  */
 
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with many callers across the codebase
 export class RollTableUtils {
     /**
      * Roll on a roll table by name and send results to chat.
@@ -109,7 +110,7 @@ export class RollTableUtils {
      * @param {WH40KBaseActor} actor - The actor rolling
      * @returns {Promise<TableResult | null>}
      */
-    static async rollPerilsOfTheWarp(actor: WH40KBaseActor): Promise<RollTableResult | null> {
+    static async rollPerilsOfTheWarp(_actor: WH40KBaseActor): Promise<RollTableResult | null> {
         return this.rollTable('Perils of the Warp', { displayChat: true });
     }
 

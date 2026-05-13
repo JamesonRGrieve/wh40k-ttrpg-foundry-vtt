@@ -1379,7 +1379,7 @@ WH40K.getQualityDescription = function (identifier) {
  * @param {object} weapon    Weapon item
  * @returns {number|null}    Jam threshold (90-100) or null if cannot jam
  */
-WH40K.getJamThreshold = function (weapon) {
+WH40K.getJamThreshold = (weapon) => {
     const w = weapon as { system?: { craftsmanship?: string; effectiveSpecial?: Set<string>; special?: Set<string> } };
     const craftsmanship = w.system?.craftsmanship;
     const qualities = w.system?.effectiveSpecial || w.system?.special;

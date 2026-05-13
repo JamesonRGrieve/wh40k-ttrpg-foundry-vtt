@@ -9,6 +9,7 @@ import { GrantsProcessor, GRANT_MODE, type GrantResult } from './grants-processo
 
 export type OriginGrantResult = GrantResult;
 
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface used by the origin path builder
 export class OriginGrantsProcessor {
     /**
      * Process all grants from an origin path item.

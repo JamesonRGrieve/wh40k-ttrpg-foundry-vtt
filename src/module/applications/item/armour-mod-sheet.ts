@@ -202,7 +202,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
      * @param {PointerEvent} event  The triggering event
      * @param {HTMLElement} target  The target element
      */
-    static async #onToggleArmourType(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onToggleArmourType(this: ArmourModSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const type = target.dataset['type'];
         if (type === undefined || type.length === 0) return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel exposes armourTypes as Set but persisted form is array
@@ -229,7 +229,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
      * @param {PointerEvent} event  The triggering event
      * @param {HTMLElement} target  The target element
      */
-    static async #onAdjustModifier(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onAdjustModifier(this: ArmourModSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const field = target.dataset['field'];
         if (field === undefined || field.length === 0) return;
         const delta = parseInt(target.dataset['delta'] ?? '0', 10);
@@ -246,7 +246,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
      * @param {PointerEvent} event  The triggering event
      * @param {HTMLElement} target  The target element
      */
-    static async #onAddProperty(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onAddProperty(this: ArmourModSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const property = target.dataset['property'];
         const list = target.dataset['list']; // "added" or "removed"
         if (property === undefined || property.length === 0 || list === undefined || list.length === 0) return;
@@ -267,7 +267,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
      * @param {PointerEvent} event  The triggering event
      * @param {HTMLElement} target  The target element
      */
-    static async #onRemoveProperty(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onRemoveProperty(this: ArmourModSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const property = target.dataset['property'];
         const list = target.dataset['list']; // "added" or "removed"
         if (property === undefined || property.length === 0 || list === undefined || list.length === 0) return;

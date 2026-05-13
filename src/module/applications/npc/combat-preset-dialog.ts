@@ -367,7 +367,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #loadSelected(this: CombatPresetDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #loadSelected(this: CombatPresetDialog, event: PointerEvent, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         if (this.#state.selectedPreset === null) {
@@ -444,7 +444,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static #importPreset(this: CombatPresetDialog, event: PointerEvent, target: HTMLElement): void {
+    static #importPreset(this: CombatPresetDialog, event: PointerEvent, _target: HTMLElement): void {
         event.preventDefault();
 
         const input = document.createElement('input');

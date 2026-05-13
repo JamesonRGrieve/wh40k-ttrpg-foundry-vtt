@@ -129,6 +129,7 @@ export function generateDeterministicId(seed: string): string {
     return result.substring(0, 16);
 }
 
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with static state and many callers
 export class GrantsManager {
     /* -------------------------------------------- */
     /*  Static Properties                           */

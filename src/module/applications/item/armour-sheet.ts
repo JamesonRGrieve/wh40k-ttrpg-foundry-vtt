@@ -137,7 +137,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #toggleCoverage(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #toggleCoverage(this: ArmourSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const location = target.dataset['location'];
         const coverage = new Set(this.item.system.coverage);
 
@@ -186,7 +186,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #addProperty(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #addProperty(this: ArmourSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         const select = this.element.querySelector<HTMLSelectElement>("[name='new-property']");
         const property = select?.value ?? '';
         if (property === '') return;
@@ -206,7 +206,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #removeProperty(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #removeProperty(this: ArmourSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const property = target.dataset['property'];
         const properties = new Set(this.item.system.properties);
         if (property !== undefined) properties.delete(property);
@@ -220,7 +220,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static #addModification(this: ArmourSheet, event: Event, target: HTMLElement): void {
+    static #addModification(this: ArmourSheet, _event: Event, _target: HTMLElement): void {
         // Check if slots available
         if (this.item.system.availableModSlots <= 0) {
             ui.notifications.warn(game.i18n.localize('WH40K.Armour.NoSlotsAvailable'));
@@ -237,7 +237,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #editMod(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #editMod(this: ArmourSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset['modIndex'] ?? '', 10);
         const mod = this.item.system.modifications[index];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess makes this possibly undefined in strict mode
@@ -259,7 +259,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #removeMod(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #removeMod(this: ArmourSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset['modIndex'] ?? '', 10);
         const modifications = [...this.item.system.modifications];
         modifications.splice(index, 1);

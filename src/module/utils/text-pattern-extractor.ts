@@ -11,6 +11,7 @@
 /**
  * Utility for extracting structured data from text.
  */
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface used by stat-block-parser
 export default class TextPatternExtractor {
     /**
      * Extract a section from lines by header.

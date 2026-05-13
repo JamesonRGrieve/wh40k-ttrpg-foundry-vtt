@@ -696,7 +696,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      */
     static async #toggleModificationActive(this: WeaponSheet, _event: PointerEvent, target: HTMLButtonElement): Promise<void> {
         const index = parseInt(target.dataset['modIndex'] ?? '', 10);
-        if (isNaN(index)) return;
+        if (Number.isNaN(index)) return;
 
         const mods = foundry.utils.deepClone(this.item.system.modifications);
         if (index < 0 || index >= mods.length) return;
@@ -721,7 +721,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      */
     static async #viewModification(this: WeaponSheet, _event: PointerEvent, target: HTMLButtonElement): Promise<void> {
         const index = parseInt(target.dataset['modIndex'] ?? '', 10);
-        if (isNaN(index)) return;
+        if (Number.isNaN(index)) return;
 
         const mod = this.item.system.modifications[index];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime guard: index might exceed array
@@ -748,7 +748,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      */
     static async #removeModification(this: WeaponSheet, _event: Event, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset['modIndex'] ?? '', 10);
-        if (isNaN(index)) return;
+        if (Number.isNaN(index)) return;
 
         const mod = this.item.system.modifications[index];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime guard: index might exceed array

@@ -13,11 +13,12 @@ interface QuickAction {
     variant: 'primary' | 'secondary' | 'danger';
 }
 
+// biome-ignore lint/complexity/noStaticOnlyClass: exported as default for module re-export compatibility; callers use QuickActionsBar.method() syntax and _module.ts re-exports the default
 export default class QuickActionsBar {
     /**
      * Get action definitions for an item
      */
-    static getActionsForItem(item: WH40KItem, { compact = false, inSheet = false }: { compact?: boolean; inSheet?: boolean } = {}): QuickAction[] {
+    static getActionsForItem(item: WH40KItem, { compact: _compact = false, inSheet = false }: { compact?: boolean; inSheet?: boolean } = {}): QuickAction[] {
         const actions: QuickAction[] = [];
         const type = item.type;
         const system = item.system as Record<string, unknown>;

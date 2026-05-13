@@ -373,7 +373,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCopyToClipboard(this: StatBlockExporter, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onCopyToClipboard(this: StatBlockExporter, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         if (this.#actor === null) return;
         const content = this.#format === 'json' ? StatBlockExporter.toJSON(this.#actor) : StatBlockExporter.toText(this.#actor);
 
@@ -392,7 +392,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #onExportJson(this: StatBlockExporter, event: PointerEvent, target: HTMLElement): void {
+    static #onExportJson(this: StatBlockExporter, _event: PointerEvent, _target: HTMLElement): void {
         if (this.#actor === null) return;
         const content = StatBlockExporter.toJSON(this.#actor);
         const filename = `${this.#actor.name.slugify()}.json`;
@@ -407,7 +407,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #onExportText(this: StatBlockExporter, event: PointerEvent, target: HTMLElement): void {
+    static #onExportText(this: StatBlockExporter, _event: PointerEvent, _target: HTMLElement): void {
         if (this.#actor === null) return;
         const content = StatBlockExporter.toText(this.#actor);
         const filename = `${this.#actor.name.slugify()}.txt`;
@@ -422,7 +422,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onClose(this: StatBlockExporter, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onClose(this: StatBlockExporter, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         await this.close();
     }
 

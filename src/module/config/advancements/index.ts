@@ -69,7 +69,7 @@ export const TIER_ORDER = ['simple', 'intermediate', 'trained', 'expert'];
  * @returns {Object|null} Career advancement configuration or null if not found
  */
 export function getCareerAdvancements(careerKey: string): CareerModule | null {
-    if (!Object.prototype.hasOwnProperty.call(CAREER_REGISTRY, careerKey)) {
+    if (!Object.hasOwn(CAREER_REGISTRY, careerKey)) {
         console.warn(`Career '${careerKey}' not found in advancement registry`);
         return null;
     }
@@ -172,7 +172,7 @@ export function getCareerKeyFromName(careerName: string): string | null {
     }
 
     // Fallback: check if it matches a key directly
-    if (Object.prototype.hasOwnProperty.call(CAREER_REGISTRY, careerName)) {
+    if (Object.hasOwn(CAREER_REGISTRY, careerName)) {
         return careerName;
     }
 

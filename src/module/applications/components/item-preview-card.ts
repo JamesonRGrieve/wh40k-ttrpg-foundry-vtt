@@ -17,6 +17,7 @@ import type { WH40KItemModifiers } from '../../types/global.d.ts';
 import QuickActionsBar from './quick-actions-bar.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructor signature must use any[] per TS mixin rule
+// biome-ignore lint/suspicious/noExplicitAny: boundary - mixin constructor signature must use any[] per TS mixin rule
 type ActorSheetCtor = new (...args: any[]) => foundry.appv1.sheets.ActorSheet;
 
 /**
@@ -46,7 +47,8 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
          * Toggle an item preview card
          */
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin-internal action handler runs against host sheet whose concrete type is unknown to the mixin
-        static toggleItemPreview(this: any, event: Event, target: HTMLElement): void {
+        // biome-ignore lint/suspicious/noExplicitAny: boundary - mixin action handler; host sheet type is unknown to the mixin
+        static toggleItemPreview(this: any, _event: Event, target: HTMLElement): void {
             const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId.length === 0) return;
 
@@ -95,7 +97,7 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
          */
         #openPreview(item: WH40KItem, itemRow: HTMLElement): void {
             // Close any existing preview for this item
-            this.#closePreview(item.id!);
+            this.#closePreview(item.id ?? '');
 
             // Generate preview content
             const previewHTML = this.#generatePreviewHTML(item);
@@ -126,12 +128,12 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
             itemRow.insertAdjacentElement('afterend', preview);
 
             // Track as open
-            this.#openPreviews.add(item.id!);
+            this.#openPreviews.add(item.id ?? '');
 
             // Add close button handler
             const closeBtn = preview.querySelector('[data-action="closeItemPreview"]');
             if (closeBtn) {
-                closeBtn.addEventListener('click', () => this.#closePreview(item.id!));
+                closeBtn.addEventListener('click', () => this.#closePreview(item.id ?? ''));
             }
 
             // Animate in

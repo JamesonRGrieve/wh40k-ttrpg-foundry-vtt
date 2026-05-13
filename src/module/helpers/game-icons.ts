@@ -140,7 +140,7 @@ export const ICON_CATEGORIES = {
  * @param {string} color - SVG color (default: white for dark backgrounds)
  * @returns {string} Full CDN URL
  */
-export function getIconUrl(iconPath: string, color = 'ffffff'): string {
+export function getIconUrl(iconPath: string, _color = 'ffffff'): string {
     // If already a full path, use as-is
     if (iconPath.startsWith('svg/') || iconPath.startsWith('http')) {
         return iconPath.startsWith('http') ? iconPath : `${GAME_ICONS_CDN}/${iconPath}`;

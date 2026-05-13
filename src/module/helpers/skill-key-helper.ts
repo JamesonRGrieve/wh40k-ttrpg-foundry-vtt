@@ -9,6 +9,7 @@
 
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with many callers across the codebase
 export class SkillKeyHelper {
     /**
      * Complete mapping of all skill display names to internal keys.
@@ -254,7 +255,7 @@ export class SkillKeyHelper {
     };
 
     static #lookupKey(value: string): string {
-        if (Object.prototype.hasOwnProperty.call(this.SKILL_NAME_TO_KEY, value)) {
+        if (Object.hasOwn(this.SKILL_NAME_TO_KEY, value)) {
             return this.SKILL_NAME_TO_KEY[value as keyof typeof SkillKeyHelper.SKILL_NAME_TO_KEY];
         }
         return value;
@@ -319,7 +320,7 @@ export class SkillKeyHelper {
      * SkillKeyHelper.validateKey("invalid", actor)    // → false
      */
     static validateKey(key: string, actor: WH40KBaseActorDocument): boolean {
-        return Object.prototype.hasOwnProperty.call(actor.system.skills, key);
+        return Object.hasOwn(actor.system.skills, key);
     }
 
     /**
@@ -366,7 +367,7 @@ export class SkillKeyHelper {
      */
     static isAdvanced(keyOrName: string): boolean {
         const key = this.#lookupKey(keyOrName);
-        if (Object.prototype.hasOwnProperty.call(this.SKILL_TYPES, key)) {
+        if (Object.hasOwn(this.SKILL_TYPES, key)) {
             return this.SKILL_TYPES[key as keyof typeof SkillKeyHelper.SKILL_TYPES];
         }
         return false;

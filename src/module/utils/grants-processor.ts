@@ -12,7 +12,7 @@ import { SkillKeyHelper } from '../helpers/skill-key-helper.ts';
 import { evaluateWoundsFormula, evaluateFateFormula } from './formula-evaluator.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- documentation: union of all grant DataModel types this processor handles
-type GrantDataModel = ItemGrantData | SkillGrantData | CharacteristicGrantData | ChoiceGrantData | ResourceGrantData;
+type _GrantDataModel = ItemGrantData | SkillGrantData | CharacteristicGrantData | ChoiceGrantData | ResourceGrantData;
 
 /** Choice-grant per-option payload. Fields are subclass-defined; narrowed at use. */
 interface GrantChoiceOptionGrants {
@@ -155,6 +155,7 @@ class GrantContext {
     }
 }
 
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with many callers across the codebase
 export class GrantsProcessor {
     /* -------------------------------------------- */
     /*  Main Entry Points                           */
@@ -959,7 +960,7 @@ export class GrantsProcessor {
         } catch (err) {
             console.error(`Error evaluating dice formula "${formula}":`, err);
             const parsed = parseInt(formula);
-            return isNaN(parsed) ? 0 : parsed;
+            return Number.isNaN(parsed) ? 0 : parsed;
         }
     }
 
