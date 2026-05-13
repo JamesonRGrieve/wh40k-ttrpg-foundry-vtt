@@ -833,12 +833,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /*  Action Handlers                              */
     /* -------------------------------------------- */
 
-    static async #onToggleDifficultyPicker(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleDifficultyPicker(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         this._difficultyPickerOpen = !this._difficultyPickerOpen;
         await this.render(false, { parts: ['targetDisplay'] });
     }
 
-    static async #onSelectDifficulty(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectDifficulty(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset['difficultyIndex'] ?? '', 10);
         const ctor = this.constructor as typeof UnifiedRollDialog;
         if (Number.isInteger(index) && index >= 0 && index < ctor.DIFFICULTIES.length) {
@@ -848,38 +848,38 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         }
     }
 
-    static async #onToggleSituational(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleSituational(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['toggleKey'];
         if (!key) return;
         this._situationalModifiers[key] = !this._situationalModifiers[key];
         await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
-    static async #onCustomModUp(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCustomModUp(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         this._customModifier += 5;
         await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
-    static async #onCustomModDown(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCustomModDown(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         this._customModifier -= 5;
         await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
-    static async #onToggleCustomModifier(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleCustomModifier(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         this._showCustomModifier = !this._showCustomModifier;
         if (!this._showCustomModifier) this._customModifier = 0;
         await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
-    static async #onSubmitToChat(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSubmitToChat(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         await this._submitToChat();
     }
 
-    static async #onSystemRoll(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSystemRoll(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         await this._systemRoll();
     }
 
-    static async #onClearManualRoll(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onClearManualRoll(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         this._manualRollTens = null;
         this._manualRollUnits = null;
         this._singleRollValue = null;
@@ -887,7 +887,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.render(false, { parts: ['diceInput', 'footer'] });
     }
 
-    static async #onToggleDiceMode(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleDiceMode(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         this._diceInputMode = this._diceInputMode === 'two-dice' ? 'single' : 'two-dice';
         this._manualRollTens = null;
         this._manualRollUnits = null;
@@ -896,12 +896,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.render(false, { parts: ['diceInput', 'footer'] });
     }
 
-    static async #onToggleContextSection(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleContextSection(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         this._contextExpanded = !this._contextExpanded;
         await this.render(false, { parts: ['contextPanel'] });
     }
 
-    static async #onSelectWeapon(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectWeapon(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const weaponId = target.dataset['weaponId'] || (target as HTMLInputElement).name;
         const rd = this.rollData;
         if (typeof rd['selectWeapon'] === 'function') {
@@ -911,7 +911,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         }
     }
 
-    static async #onSelectPower(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectPower(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const powerId = target.dataset['powerId'] || (target as HTMLInputElement).name;
         const rd = this.rollData;
         if (typeof rd['selectPower'] === 'function') {
@@ -921,13 +921,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         }
     }
 
-    static async #onCancel(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         await this.close();
     }
 
     /* ---- Card-based Weapon Panel Handlers ---- */
 
-    static async #onSelectAttackMode(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectAttackMode(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['modeKey'];
         if (!key) return;
         this._attackModeKey = key;
@@ -955,7 +955,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
-    static async #onSelectAimMode(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectAimMode(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['aimKey'];
         if (!key) return;
         this._aimModeKey = key;
@@ -965,7 +965,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
-    static async #onToggleCombatSituational(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleCombatSituational(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['situationalKey'];
         if (!key) return;
         if (this._activeCombatSituationals.has(key)) {
@@ -976,7 +976,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
-    static async #onSelectSizeModifier(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectSizeModifier(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['sizeKey'];
         if (!key) return;
         this._sizeModifierKey = key;
@@ -984,27 +984,27 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
-    static async #onToggleSpecialOptions(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleSpecialOptions(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         this._specialOptionsExpanded = !this._specialOptionsExpanded;
         await this.render(false, { parts: ['contextPanel'] });
     }
 
-    static async #onToggleSizeSection(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleSizeSection(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         this._sizeExpanded = !this._sizeExpanded;
         await this.render(false, { parts: ['contextPanel'] });
     }
 
-    static async #onToggleRangeSection(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleRangeSection(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         this._rangeExpanded = !this._rangeExpanded;
         await this.render(false, { parts: ['contextPanel'] });
     }
 
-    static async #onToggleSituationalSection(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleSituationalSection(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         this._situationalExpanded = !this._situationalExpanded;
         await this.render(false, { parts: ['contextPanel'] });
     }
 
-    static async #onSelectRangeBracket(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectRangeBracket(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const bracket = target.dataset['bracket'];
         if (!bracket) return;
         this._selectedRangeBracket = bracket;
@@ -1018,7 +1018,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
-    static async #onSelectTarget(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectTarget(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         // Get source token
         const rd = this.rollData;
         const actor = rd.sourceActor;
