@@ -22,7 +22,7 @@ interface SkillRecord {
 
 /** Subset of `actor.system` fields read by the skill grant. */
 interface SkillActorSystem {
-    skills: Record<string, SkillRecord>;
+    skills: Partial<Record<string, SkillRecord>>;
 }
 
 const skillSystem = (actor: WH40KBaseActor): SkillActorSystem => actor.system;
@@ -143,7 +143,7 @@ export default class SkillGrantData extends BaseGrantData {
                 continue;
             }
 
-            const currentSkill: SkillRecord | undefined = skillSystem(actor).skills[schemaKey];
+            const currentSkill = skillSystem(actor).skills[schemaKey];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime safety: actor data may lack key
             if (currentSkill === undefined) {
                 result.errors.push(`Skill not found on actor: ${schemaKey}`);
@@ -178,6 +178,7 @@ export default class SkillGrantData extends BaseGrantData {
     ): SkillAppliedState | null {
         const ctor = this.constructor as typeof SkillGrantData;
         const currentSkill = skillSystem(actor).skills[schemaKey];
+        if (currentSkill === undefined) return null;
         const currentLevel = this._getSchemaSkillLevel(currentSkill);
         const currentOrder = ctor.TRAINING_LEVELS[currentLevel]?.order ?? 0;
         const targetOrder = ctor.TRAINING_LEVELS[targetLevel]?.order ?? 0;
@@ -219,6 +220,7 @@ export default class SkillGrantData extends BaseGrantData {
     ): SkillAppliedState | null {
         const ctor = this.constructor as typeof SkillGrantData;
         const currentSkill = skillSystem(actor).skills[schemaKey];
+        if (currentSkill === undefined) return null;
         const entries: SkillEntry[] = currentSkill.entries ?? [];
 
         // Find existing entry with this specialization
@@ -387,7 +389,7 @@ export default class SkillGrantData extends BaseGrantData {
             if (state.created === true && state.specialization !== undefined) {
                 // Remove created specialist entry
                 const currentSkill = system.skills[state.schemaKey];
-                if (currentSkill.entries !== undefined && state.entryIndex !== undefined) {
+                if (currentSkill?.entries !== undefined && state.entryIndex !== undefined) {
                     const newEntries: SkillEntry[] = [...currentSkill.entries];
                     newEntries.splice(state.entryIndex, 1);
                     updates[`system.skills.${state.schemaKey}.entries`] = newEntries;

@@ -82,8 +82,8 @@ interface ModifierSource {
     type: string;
     id: string | null;
     value: number;
-    label?: string;
-    specialization?: string;
+    label?: string | undefined;
+    specialization?: string | undefined;
 }
 
 /** Shape of an item's modifiers block (accessed via item.system.modifiers). */

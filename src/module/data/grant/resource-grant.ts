@@ -60,7 +60,7 @@ export default class ResourceGrantData extends BaseGrantData {
      * Valid resource types and their paths.
      * @type {object}
      */
-    static RESOURCES: Record<string, ResourceDefinition> = {
+    static RESOURCES: Partial<Record<string, ResourceDefinition>> = {
         wounds: {
             label: 'WH40K.Resource.Wounds',
             valuePath: 'system.wounds.value',
@@ -143,11 +143,11 @@ export default class ResourceGrantData extends BaseGrantData {
         for (const resourceConfig of this.resources) {
             const { type, formula, optional: resOptional, additive } = resourceConfig;
 
-            if (!(type in ctor.RESOURCES)) {
+            const resourceDef = ctor.RESOURCES[type];
+            if (resourceDef === undefined) {
                 result.errors.push(`Invalid resource type: ${type}`);
                 continue;
             }
-            const resourceDef = ctor.RESOURCES[type];
 
             if (!selectedResources.includes(type)) {
                 if (!resOptional && !this.optional) result.errors.push(`Required resource ${type} not selected`);
@@ -199,8 +199,8 @@ export default class ResourceGrantData extends BaseGrantData {
         const updates: Record<string, unknown> = {};
 
         for (const [type, state] of Object.entries(appliedState)) {
-            if (!(type in ctor.RESOURCES)) continue;
             const resourceDef = ctor.RESOURCES[type];
+            if (resourceDef === undefined) continue;
 
             if (!state.additive) {
                 // Replace grants restore the captured previousValue/previousMax exactly.
@@ -236,8 +236,8 @@ export default class ResourceGrantData extends BaseGrantData {
         const updates: Record<string, unknown> = {};
 
         for (const [type, state] of Object.entries(restoreData.resources)) {
-            if (!(type in ctor.RESOURCES)) continue;
             const resourceDef = ctor.RESOURCES[type];
+            if (resourceDef === undefined) continue;
 
             const currentValue = Number(foundry.utils.getProperty(actor, resourceDef.valuePath)) || 0;
             updates[resourceDef.valuePath] = currentValue + state.rolledValue;
@@ -277,8 +277,8 @@ export default class ResourceGrantData extends BaseGrantData {
         summary.icon = ctor.ICON;
 
         for (const resourceConfig of this.resources) {
-            const hasDef = resourceConfig.type in ctor.RESOURCES;
-            const label = hasDef ? game.i18n.localize(ctor.RESOURCES[resourceConfig.type].label) : resourceConfig.type;
+            const def = ctor.RESOURCES[resourceConfig.type];
+            const label = def !== undefined ? game.i18n.localize(def.label) : resourceConfig.type;
 
             summary.details.push({
                 label: label,
@@ -370,10 +370,11 @@ export default class ResourceGrantData extends BaseGrantData {
         let match;
 
         while ((match = entryPattern.exec(formula)) !== null) {
+            const [, minStr = '0', maxStr = '0', valStr = '0'] = match;
             entries.push({
-                min: parseInt(match[1]),
-                max: parseInt(match[2]),
-                value: parseInt(match[3]),
+                min: parseInt(minStr),
+                max: parseInt(maxStr),
+                value: parseInt(valStr),
             });
         }
 
