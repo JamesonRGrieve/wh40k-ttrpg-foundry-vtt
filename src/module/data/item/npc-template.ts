@@ -398,9 +398,11 @@ export default class NPCTemplateData extends ItemDataModel {
 
             const unnatural = this.unnaturals[key] ?? 0;
 
+            const labels = charLabels[key];
+            if (labels === undefined) continue;
             characteristics[key] = {
-                label: charLabels[key].label,
-                short: charLabels[key].short,
+                label: labels.label,
+                short: labels.short,
                 base: value,
                 modifier: 0,
                 unnatural,

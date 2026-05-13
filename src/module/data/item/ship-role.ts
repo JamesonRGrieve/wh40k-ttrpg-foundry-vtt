@@ -136,8 +136,8 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * @type {string}
      */
     get primaryAbility(): string {
-        if (this.abilities && this.abilities.length > 0) {
-            const ability = this.abilities[0];
+        const ability = this.abilities?.[0];
+        if (ability !== undefined) {
             return ability.description || ability.name;
         }
         return this.effect || '';

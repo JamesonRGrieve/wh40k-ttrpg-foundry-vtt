@@ -546,14 +546,15 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {object|null}
      */
     getCharacteristic(key: string): NPCCharacteristicData | null {
-        if (key in this.characteristics) {
-            return this.characteristics[key];
+        const direct = this.characteristics[key];
+        if (direct !== undefined) {
+            return direct;
         }
         const fullKey = NPCData.CHARACTERISTIC_MAP[key];
-        if (fullKey !== null && fullKey in this.characteristics) {
-            return this.characteristics[fullKey];
+        if (fullKey === undefined) {
+            return null;
         }
-        return null;
+        return this.characteristics[fullKey] ?? null;
     }
 
     /* -------------------------------------------- */
@@ -949,7 +950,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     _prepareInitiative(): void {
         const initChar = this.characteristics[this.initiative.characteristic];
-        this.initiative.bonus = initChar.bonus;
+        this.initiative.bonus = initChar?.bonus ?? 0;
     }
 
     /* -------------------------------------------- */
