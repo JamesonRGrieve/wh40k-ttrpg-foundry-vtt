@@ -1,5 +1,6 @@
-type StyleWithColor = { color?: PIXI.ColorSource };
+type StyleWithColor = { color?: PIXI.ColorSource | undefined };
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry internal _plannedMovement has no shipped type; only used in null checks
 type RulerToken = { _plannedMovement?: unknown };
 type WH40KConfig = {
     Token: { movement: { actions: Record<string, { teleport?: boolean } | undefined> } };
@@ -44,7 +45,9 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
      */
     #getSpeedBasedStyle<T extends StyleWithColor>(waypoint: foundry.canvas.placeables.tokens.TokenRuler.Waypoint, style: T): T {
         // Only apply to the local user's movement
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Token class internals not in shipped types
         const token = this.token as unknown as RulerToken;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG is untyped in Foundry; Record<string,any> is documented exception
         const config = CONFIG as unknown as WH40KConfig;
         const action = waypoint.action;
         if (
