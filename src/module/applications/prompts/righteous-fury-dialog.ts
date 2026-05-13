@@ -163,7 +163,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
      * @param {Event} event - Triggering click event
      * @param {HTMLElement} target - Button that was clicked
      */
-    static async #onRoll(this: RighteousFuryDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onRoll(this: RighteousFuryDialog, _event: Event, _target: HTMLElement): Promise<void> {
         // Create confirmation roll (d100)
         this.confirmationRoll = new Roll('1d100', {});
         await this.confirmationRoll.evaluate();
@@ -190,7 +190,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
      * @param {Event} event - Triggering click event
      * @param {HTMLElement} target - Button that was clicked
      */
-    static async #onCancel(this: RighteousFuryDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: RighteousFuryDialog, _event: Event, _target: HTMLElement): Promise<void> {
         if (this.confirmationRoll && this.success && this.onConfirm) {
             await this.onConfirm();
         } else if (this.confirmationRoll && !this.success && this.onFail) {

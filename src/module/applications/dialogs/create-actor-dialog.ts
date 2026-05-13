@@ -43,6 +43,7 @@ export interface CreateActorOptions {
     initialSystem?: string;
 }
 
+// biome-ignore lint/complexity/noStaticOnlyClass: intentional namespace-class pattern; consumed as Class.open() at call sites; converting to a module function would break the exported class name used by hooks-manager
 export class WH40KCreateActorDialog {
     /**
      * Open the dialog. Resolves when the actor is created (or the user cancels).

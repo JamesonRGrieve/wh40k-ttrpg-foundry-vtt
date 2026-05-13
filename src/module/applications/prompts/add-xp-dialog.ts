@@ -120,7 +120,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unk
     /*  Action Handlers                             */
     /* -------------------------------------------- */
 
-    static async #onFormChange(this: AddXPDialog, event: Event, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
+    static async #onFormChange(this: AddXPDialog, _event: Event, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         const rawXp = formData.object['xpAmount'];
         const xpAmount = typeof rawXp === 'string' || typeof rawXp === 'number' ? parseInt(String(rawXp), 10) || 0 : 0;
         if (this.xpAmount !== xpAmount) {
@@ -131,7 +131,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unk
 
     /* -------------------------------------------- */
 
-    static async #onApply(this: AddXPDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onApply(this: AddXPDialog, event: PointerEvent, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         if (this.xpAmount === 0) {
@@ -153,7 +153,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unk
 
     /* -------------------------------------------- */
 
-    static async #onCancel(this: AddXPDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: AddXPDialog, event: PointerEvent, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         await this.close();
     }

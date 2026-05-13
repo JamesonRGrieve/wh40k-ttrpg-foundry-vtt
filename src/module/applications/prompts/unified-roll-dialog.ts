@@ -246,6 +246,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const ctor = this.constructor as typeof UnifiedRollDialog;
         const difficulty = ctor.DIFFICULTIES[this._selectedDifficultyIndex] ?? ctor.DIFFICULTIES[0];
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- DIFFICULTIES is a non-empty readonly tuple; index 0 always exists
+        // biome-ignore lint/style/noNonNullAssertion: DIFFICULTIES is a non-empty readonly tuple; index 0 always exists
         return difficulty!;
     }
 

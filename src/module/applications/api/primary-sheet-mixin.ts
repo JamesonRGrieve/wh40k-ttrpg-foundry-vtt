@@ -265,7 +265,9 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
             this.element.classList.toggle('locked', !this.isEditable);
 
             if (this.isEditable) {
-                this.element.querySelectorAll('input').forEach((e) => e.addEventListener('focus', () => e.select()));
+                this.element.querySelectorAll('input').forEach((e) => {
+                    e.addEventListener('focus', () => e.select());
+                });
             }
 
             this.element.querySelectorAll('.draggable input').forEach((el) => {
