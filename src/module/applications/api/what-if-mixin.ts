@@ -193,8 +193,16 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
         /* -------------------------------------------- */
 
         _compareDerivedStats(current: WH40KBaseActorDocument, preview: WH40KBaseActorDocument): void {
-            const system = current.system as unknown as { wounds: { max: number }; initiative: { bonus: number }; movement: { half: number; full: number; charge: number; run: number } };
-            const previewSystem = preview.system as unknown as { wounds: { max: number }; initiative: { bonus: number }; movement: { half: number; full: number; charge: number; run: number } };
+            const system = current.system as unknown as {
+                wounds: { max: number };
+                initiative: { bonus: number };
+                movement: { half: number; full: number; charge: number; run: number };
+            };
+            const previewSystem = preview.system as unknown as {
+                wounds: { max: number };
+                initiative: { bonus: number };
+                movement: { half: number; full: number; charge: number; run: number };
+            };
             const comparisons: { path: string; selector: string; type: string }[] = [
                 { path: 'wounds.max', selector: "[data-stat='wounds-max']", type: 'wounds' },
                 { path: 'initiative.bonus', selector: "[data-stat='initiative']", type: 'initiative' },
