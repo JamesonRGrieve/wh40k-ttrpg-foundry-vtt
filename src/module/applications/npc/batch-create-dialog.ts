@@ -269,7 +269,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {HTMLFormElement} form
      * @param {foundry.applications.api.FormDataExtended} formData
      */
-    static async #onSubmit(this: BatchCreateDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
+    static async #onSubmit(this: BatchCreateDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         const data = foundry.utils.expandObject(formData.object) as Partial<BatchState>;
 
         // Update state from form
@@ -382,7 +382,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCancel(this: BatchCreateDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: BatchCreateDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         this.#submitted = false;
         if (this.#resolve) this.#resolve([]);
         await this.close();
@@ -393,7 +393,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #onUpdatePreview(this: BatchCreateDialog, event: PointerEvent, target: HTMLElement): void {
+    static #onUpdatePreview(this: BatchCreateDialog, _event: PointerEvent, _target: HTMLElement): void {
         void this.render({ parts: ['form'] });
     }
 

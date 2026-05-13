@@ -11,6 +11,7 @@
 // brand doesn't widen to `any`. Using an `any` base makes the subclass brand-free,
 // which satisfies DataField.Any at call sites. The runtime class is still StringField.
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/naming-convention, no-restricted-syntax -- boundary: fvtt-types brand mismatch on StringField subclass */
+// biome-ignore lint/suspicious/noExplicitAny: boundary — fvtt-types StringField brand mismatch requires any cast to satisfy DataField.Any
 export default class IdentifierField extends (foundry.data as any).fields.StringField {
     /** @inheritdoc */
     static get _defaults(): Record<string, unknown> {

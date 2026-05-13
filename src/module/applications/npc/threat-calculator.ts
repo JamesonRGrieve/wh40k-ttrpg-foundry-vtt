@@ -161,6 +161,7 @@ interface ScaleUpdates {
  * Threat Calculator utility class.
  * All methods are static - no instantiation needed.
  */
+// biome-ignore lint/complexity/noStaticOnlyClass: used as a default-export namespace across 4 callers; converting to module functions would require a multi-file refactor
 export default class ThreatCalculator {
     /* -------------------------------------------- */
     /*  Static Configuration                        */

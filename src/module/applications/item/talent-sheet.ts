@@ -1002,11 +1002,11 @@ export default class TalentSheet extends BaseItemSheet {
      * @param {PointerEvent} event - The triggering event
      * @param {HTMLElement} target - The action target
      */
-    static async #adjustRank(this: TalentSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #adjustRank(this: TalentSheet, _event: Event, target: HTMLElement): Promise<void> {
         if (!this.item.system.stackable) return;
 
         const delta = parseInt(target.dataset['delta'] ?? '', 10);
-        if (isNaN(delta)) return;
+        if (Number.isNaN(delta)) return;
 
         const currentRank = this.item.system.rank;
         const newRank = Math.max(1, currentRank + delta);

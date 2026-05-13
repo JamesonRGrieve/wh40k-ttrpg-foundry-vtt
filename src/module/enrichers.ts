@@ -10,7 +10,7 @@ type EnrichmentOptions = foundry.applications.ux.TextEditor.EnrichmentOptions;
 /** Typed accessor for regex match groups (`match.groups['key']` returns `string` per TS,
  *  but in practice named groups can be undefined when the alternation didn't match). */
 function getGroup(groups: { [key: string]: string }, key: string): string | undefined {
-    return Object.prototype.hasOwnProperty.call(groups, key) ? groups[key] : undefined;
+    return Object.hasOwn(groups, key) ? groups[key] : undefined;
 }
 
 interface EnricherActorLike {

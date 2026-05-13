@@ -1078,7 +1078,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     static _parseTraitEntry(entry: string): TraitEntry {
         const match = entry.match(/^(.+?)(?:\s*\(([^)]+)\))?$/);
         const name = match?.[1] ? match[1].trim() : entry.trim();
-        const value = match && match[2] ? match[2].trim() : null;
+        const value = match?.[2] ? match[2].trim() : null;
         let numericValue = null;
         let level = null;
         let notes = '';
@@ -1096,7 +1096,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             }
         }
 
-        if (value && value.toLowerCase().startsWith('x')) {
+        if (value?.toLowerCase().startsWith('x')) {
             const multiplier = parseInt(value.slice(1), 10);
             if (!Number.isNaN(multiplier)) {
                 numericValue = multiplier;

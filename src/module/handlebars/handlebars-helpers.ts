@@ -869,7 +869,7 @@ export function registerHandlebarsHelpers(): void {
 
             // Look up definition. Use hasOwn to detect missing entries because index access on
             // Record<string, V> returns V (not V | undefined) under our tsconfig.
-            if (!Object.prototype.hasOwnProperty.call(weaponQualities, baseId)) {
+            if (!Object.hasOwn(weaponQualities, baseId)) {
                 // Unknown quality, show raw identifier
                 qualities.push({
                     identifier,
@@ -928,7 +928,7 @@ export function registerHandlebarsHelpers(): void {
         }
 
         const pushDef = (key: string, identifier: string): void => {
-            if (!Object.prototype.hasOwnProperty.call(weaponQualities, key)) return;
+            if (!Object.hasOwn(weaponQualities, key)) return;
             const def = weaponQualities[key];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; weaponQualities[key] may be undefined
             if (def === undefined) return;
@@ -985,7 +985,7 @@ export function registerHandlebarsHelpers(): void {
         if (collection instanceof Set) return collection.has(value);
         if (Array.isArray(collection)) return collection.includes(value);
         if (isTplObject(collection)) {
-            return Object.prototype.hasOwnProperty.call(collection, String(value));
+            return Object.hasOwn(collection, String(value));
         }
         return false;
     });
@@ -1014,7 +1014,7 @@ export function registerHandlebarsHelpers(): void {
         const baseId = matchGroup1 ?? identifier;
         const level: number | null = matchGroup2 !== undefined ? (matchGroup2.toLowerCase() === 'x' ? null : parseInt(matchGroup2, 10)) : null;
 
-        if (!Object.prototype.hasOwnProperty.call(weaponQualities, baseId)) {
+        if (!Object.hasOwn(weaponQualities, baseId)) {
             return {
                 identifier,
                 label: identifier,

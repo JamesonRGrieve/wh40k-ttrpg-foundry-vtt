@@ -65,7 +65,7 @@ export default class ActorDataModel extends SystemDataModel {
      *                                           that could be either a die term or a flat term.
      * @returns {object}
      */
-    getRollData({ deterministic = false } = {}): Record<string, unknown> {
+    getRollData({ deterministic: _deterministic = false } = {}): Record<string, unknown> {
         const data: Record<string, unknown> = { ...(this as unknown as Record<string, unknown>) };
         return data;
     }

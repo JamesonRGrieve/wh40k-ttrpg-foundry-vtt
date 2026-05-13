@@ -36,6 +36,7 @@ export interface ValidationResult {
 /**
  * Validator for stat block data.
  */
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface used by stat-block-parser
 export default class StatBlockValidator {
     /**
      * Characteristic value ranges (min/max)

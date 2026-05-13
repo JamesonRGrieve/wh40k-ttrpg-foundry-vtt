@@ -8,7 +8,7 @@ import BaseGrantData, { type GrantApplicationResult, type GrantSummary } from '.
 interface ItemGrantConfig {
     uuid: string;
     optional: boolean;
-    overrides?: Record<string, any>;
+    overrides?: Record<string, unknown>;
 }
 
 /**
@@ -144,7 +144,7 @@ export default class ItemGrantData extends BaseGrantData {
             // Track what was applied
             for (const [index, item] of created.entries()) {
                 const sourceUuid = itemsToCreate[index]?.uuid ?? '';
-                result.applied[sourceUuid] = item.id!;
+                result.applied[sourceUuid] = item.id ?? '';
                 result.notifications.push(`Granted: ${item.name}`);
             }
         } else if (options['dryRun']) {
@@ -200,7 +200,7 @@ export default class ItemGrantData extends BaseGrantData {
         );
 
         for (const [index, item] of created.entries()) {
-            result.applied[items[index]?.uuid ?? ''] = item.id!;
+            result.applied[items[index]?.uuid ?? ''] = item.id ?? '';
             result.notifications.push(`Restored: ${item.name}`);
         }
 

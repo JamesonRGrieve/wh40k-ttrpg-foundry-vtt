@@ -150,8 +150,8 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
             if (source[field] === '-' || source[field] === null || source[field] === undefined) {
                 source[field] = 0;
             } else if (typeof source[field] === 'string') {
-                const parsed = parseInt(source[field]);
-                source[field] = isNaN(parsed) ? 0 : parsed;
+                const parsed = parseInt(source[field] as string, 10);
+                source[field] = Number.isNaN(parsed) ? 0 : parsed;
             }
         }
     }

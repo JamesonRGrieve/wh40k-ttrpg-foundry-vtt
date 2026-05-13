@@ -71,6 +71,7 @@ interface EventDataFile {
 
 const SETTING_KEY = 'event-tracker-state';
 
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with static state and many callers
 export class EventTracker {
     static _graph: EventGraph | null = null;
     static _characters: Record<string, CharacterState> | null = null;

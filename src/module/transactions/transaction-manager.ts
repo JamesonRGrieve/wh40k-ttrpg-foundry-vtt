@@ -78,6 +78,7 @@ function normalizeInt(value: unknown, fallback = 0): number {
     return Number.isNaN(parsed) ? fallback : parsed;
 }
 
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with private static state and socket integration
 export class TransactionManager {
     static #initialized = false;
     static DEFAULT_PROFILE: TransactionProfile = {

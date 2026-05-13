@@ -194,7 +194,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * @param {HTMLElement} html - The message HTML element
      */
     // eslint-disable-next-line complexity -- linear router over a fixed set of chat-card action verbs
-    static async onChatCardAction(event: Event, html: HTMLElement): Promise<void> {
+    static async onChatCardAction(event: Event, _html: HTMLElement): Promise<void> {
         event.preventDefault();
         const button = event.currentTarget as HTMLElement;
         const action = button.dataset['action'];

@@ -49,6 +49,7 @@ type ConfigWithCraftsmanshipRules = {
     };
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with many callers across the codebase
 export default class CraftsmanshipHelper {
     /**
      * Get craftsmanship modifiers for any item type.

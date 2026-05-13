@@ -95,7 +95,7 @@ export default class GearSheet extends BaseItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #onResetUses(this: GearSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #onResetUses(this: GearSheet, _event: Event, _target: HTMLElement): Promise<void> {
         await this.item.system.resetUses();
     }
 
@@ -104,7 +104,7 @@ export default class GearSheet extends BaseItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #onConsumeUse(this: GearSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #onConsumeUse(this: GearSheet, _event: Event, _target: HTMLElement): Promise<void> {
         await this.item.system.consume();
     }
 }

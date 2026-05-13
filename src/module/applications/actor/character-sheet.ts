@@ -664,7 +664,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     // eslint-disable-next-line @typescript-eslint/require-await -- override of async base method; concrete impl is synchronous
-    async _prepareTabPartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareTabPartContext(partId: string, context: Record<string, unknown>, _options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const sheetContext = context as CharacterSheetContext;
         // Find the tab configuration
         const tabConfig = (this.constructor as unknown as { TABS: SheetTabConfig[] }).TABS.find((t: SheetTabConfig) => t.tab === partId);
@@ -2265,7 +2265,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     // eslint-disable-next-line @typescript-eslint/require-await -- ApplicationV2 action handlers expect Promise<void>
-    static async #vocalizeCombatAction(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #vocalizeCombatAction(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const actionKey = target.dataset['actionKey'];
         if (actionKey === undefined || actionKey === '') return;
 
@@ -2298,7 +2298,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #vocalizeMovement(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #vocalizeMovement(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const movementType = target.dataset['movementType'] as 'half' | 'full' | 'charge' | 'run' | undefined;
         if (movementType === undefined) return;
 
@@ -2376,7 +2376,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #toggleEquip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleEquip(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
@@ -2391,7 +2391,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #stowItem(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #stowItem(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
@@ -2410,7 +2410,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #unstowItem(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #unstowItem(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
@@ -2425,7 +2425,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #stowToShip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #stowToShip(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
@@ -2444,7 +2444,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #unstowFromShip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #unstowFromShip(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
@@ -2609,7 +2609,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #toggleActivate(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleActivate(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
@@ -2700,7 +2700,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #addAcquisition(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #addAcquisition(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         const acquisitions = this.actor.system.rogueTrader?.acquisitions;
         const acquisitionList = Array.isArray(acquisitions) ? acquisitions : [];
         const updatedAcquisitions = structuredClone(acquisitionList);
@@ -3083,7 +3083,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #clearEquipmentSearch(this: CharacterSheet, event: Event, target: HTMLElement): void {
+    static #clearEquipmentSearch(this: CharacterSheet, event: Event, _target: HTMLElement): void {
         const searchInput = this.element.querySelector<HTMLInputElement>('.wh40k-equipment-search');
         if (searchInput) {
             searchInput.value = '';
@@ -3220,7 +3220,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const row = target.closest<HTMLElement>('[data-skill]');
         const skillKey = row?.dataset['skill'];
         const entryIndex = parseInt(row?.dataset['index'] ?? '', 10);
-        if (skillKey === undefined || skillKey === '' || isNaN(entryIndex)) return;
+        if (skillKey === undefined || skillKey === '' || Number.isNaN(entryIndex)) return;
 
         const skill = this.actor.system.skills[skillKey] as { entries?: WH40KSkillEntry[] } | undefined;
         if (skill === undefined) return;
@@ -3271,7 +3271,7 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #toggleFavoriteSpecialistSkill(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const skillKey = target.dataset['skill'];
         const entryIndex = parseInt(target.dataset['index'] ?? '');
-        if (skillKey === undefined || skillKey === '' || isNaN(entryIndex)) return;
+        if (skillKey === undefined || skillKey === '' || Number.isNaN(entryIndex)) return;
 
         // Create a unique key for this specialist skill entry
         const favoriteKey = `${skillKey}:${entryIndex}`;
@@ -3808,7 +3808,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #filterPowers(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #filterPowers(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const discipline = target.dataset['discipline'] ?? '';
 
         this._powersFilter.discipline = discipline;
@@ -3831,7 +3831,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #filterOrders(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #filterOrders(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const category = target.dataset['category'] ?? '';
 
         this._powersFilter.orderCategory = category;
