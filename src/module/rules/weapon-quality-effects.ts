@@ -55,15 +55,15 @@ type QualityActor = WH40KBaseActorDocument & {
 };
 
 type PenetrationContext = {
-    weapon?: QualityItem | null;
-    rangeName?: string;
-    basePenetration?: number;
+    weapon?: QualityItem | null | undefined;
+    rangeName?: string | undefined;
+    basePenetration?: number | undefined;
 };
 
 type ExoticDamageContext = {
-    weapon?: QualityItem | null;
-    actor?: QualityActor | null;
-    target?: QualityActor | null;
+    weapon?: QualityItem | null | undefined;
+    actor?: QualityActor | null | undefined;
+    target?: QualityActor | null | undefined;
 };
 
 type QualityModifierMap = Record<string, number>;
