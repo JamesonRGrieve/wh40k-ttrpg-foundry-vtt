@@ -142,11 +142,11 @@ export default class ItemGrantData extends BaseGrantData {
             );
 
             // Track what was applied
-            created.forEach((item, index) => {
-                const sourceUuid = itemsToCreate[index]!.uuid;
+            for (const [index, item] of created.entries()) {
+                const sourceUuid = itemsToCreate[index]?.uuid ?? '';
                 result.applied[sourceUuid] = item.id!;
                 result.notifications.push(`Granted: ${item.name}`);
-            });
+            }
         } else if (options['dryRun']) {
             // Preview mode
             itemsToCreate.forEach(({ data: itemData }) => {
@@ -199,10 +199,10 @@ export default class ItemGrantData extends BaseGrantData {
             items.map((i) => i.data),
         );
 
-        created.forEach((item, index) => {
-            result.applied[items[index]!.uuid] = item.id!;
+        for (const [index, item] of created.entries()) {
+            result.applied[items[index]?.uuid ?? ''] = item.id!;
             result.notifications.push(`Restored: ${item.name}`);
-        });
+        }
 
         return result;
     }

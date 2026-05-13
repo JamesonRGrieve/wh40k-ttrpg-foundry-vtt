@@ -243,7 +243,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         const patterns = [/\+(\d+)\s*AP/i, /gain\s*\+(\d+)\s*AP/i, /adds?\s*\+(\d+)\s*AP/i];
         for (const pattern of patterns) {
             const match = effect.match(pattern);
-            if (match) return parseInt(match[1] ?? '');
+            if (match) return parseInt(match[1] ?? '', 10);
         }
         return 0;
     }
@@ -258,7 +258,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         const patterns = [/([+-]\d+)\s*max\s*ag/i, /([+-]\d+)\s*max\s*agility/i, /([+-]\d+)\s*to.*agility/i];
         for (const pattern of patterns) {
             const match = effect.match(pattern);
-            if (match) return parseInt(match[1] ?? '');
+            if (match) return parseInt(match[1] ?? '', 10);
         }
         return 0;
     }
