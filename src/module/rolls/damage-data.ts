@@ -2,7 +2,7 @@ import { calculateAmmoDamageBonuses, calculateAmmoPenetrationBonuses, calculateA
 import { getCriticalDamage } from '../rules/critical-damage.ts';
 import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
-import { calculateQualityPenetrationModifiers, calculateExoticQualityDamageModifiers, getRighteousFuryThreshold } from '../rules/weapon-quality-effects.ts';
+import { calculateExoticQualityDamageModifiers, calculateQualityPenetrationModifiers, getRighteousFuryThreshold } from '../rules/weapon-quality-effects.ts';
 
 /**
  * Minimal interface for the attackData parameter passed to Hit calculation methods.

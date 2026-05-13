@@ -1,8 +1,8 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
-import type { WH40KActorSystemData, WH40KCharacteristic, WH40KStatBreakdown, WH40KModifierEntry, WH40KSkill } from '../types/global.d.ts';
-import { processTalentGrants, handleTalentRemoval } from '../utils/talent-grants.ts';
+import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
+import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
 import type { WH40KItem } from './item.ts';
 
 type RollDataLike = Record<string, unknown> & {
@@ -163,7 +163,7 @@ export class WH40KBaseActor extends Actor {
     }
 
     get size(): number {
-        return Number.parseInt(String(this.system.size));
+        return Number.parseInt(String(this.system.size), 10);
     }
 
     get movement(): { half: number; full: number; charge: number; run: number } {
