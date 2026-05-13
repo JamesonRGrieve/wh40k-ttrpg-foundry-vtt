@@ -491,7 +491,7 @@ export class Hit {
         }
     }
 
-    addEffect(name: string, effect: string) {
+    addEffect(name: string, effect: string): void {
         this.effects.push({
             name: name,
             effect: effect,
@@ -513,7 +513,7 @@ export class PsychicDamageData extends DamageData {
     }
 }
 
-export function scatterDirection() {
+export function scatterDirection(): string {
     let direction = '';
     const directionInt = Math.floor(Math.random() * 10) + 1;
     if (directionInt === 1) direction = 'north west';
