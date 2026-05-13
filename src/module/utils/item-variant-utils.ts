@@ -33,8 +33,10 @@ export function normalizeGameLineKey(raw: unknown): SupportedLineKey | null {
     return LINE_KEY_MAP[raw] ?? null;
 }
 
-export function inferActiveGameLine(source: Record<string, unknown>, parent?: { actor?: any } | null): SupportedLineKey {
-    const actorLine = normalizeGameLineKey(parent?.actor?.system?.gameSystem);
+export function inferActiveGameLine(source: Record<string, unknown>, parent?: { actor?: unknown } | null): SupportedLineKey {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: parent.actor is typed unknown (Foundry DataModel parent context); narrowed via typeof guard above
+    const actorSystem = parent?.actor !== null && typeof parent?.actor === 'object' ? (parent.actor as { system?: Record<string, unknown> }).system : undefined;
+    const actorLine = normalizeGameLineKey(actorSystem?.['gameSystem']);
     if (actorLine) return actorLine;
 
     const sourceSystems = Array.isArray(source.gameSystems) ? source.gameSystems : [];
