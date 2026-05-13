@@ -41,7 +41,7 @@ class FakeActor {
         },
     },
     utils: {
-        Collection: class FakeCollection extends Map {},
+        Collection: class FakeCollection extends Map<unknown, unknown> {},
     },
 };
 (globalThis as Record<string, unknown>).Actor = FakeActor;

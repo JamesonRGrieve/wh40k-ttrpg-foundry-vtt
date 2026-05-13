@@ -3,8 +3,8 @@
     "tsIgnore"
   ],
   "totals": {
-    "any": 6,
-    "asAny": 47,
+    "any": 2,
+    "asAny": 15,
     "tsExpectError": 10,
     "tsIgnore": 0
   },
@@ -28,8 +28,8 @@
       "tsIgnore": 0
     },
     "applications": {
-      "any": 3,
-      "asAny": 34,
+      "any": 0,
+      "asAny": 5,
       "tsExpectError": 9,
       "tsIgnore": 0
     },
@@ -46,8 +46,8 @@
       "tsIgnore": 0
     },
     "data": {
-      "any": 2,
-      "asAny": 9,
+      "any": 1,
+      "asAny": 8,
       "tsExpectError": 0,
       "tsIgnore": 0
     },
@@ -131,7 +131,7 @@
     },
     "utils": {
       "any": 1,
-      "asAny": 2,
+      "asAny": 0,
       "tsExpectError": 0,
       "tsIgnore": 0
     }
