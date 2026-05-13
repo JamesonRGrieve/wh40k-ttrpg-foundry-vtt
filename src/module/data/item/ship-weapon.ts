@@ -25,7 +25,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
     declare notes: string;
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -83,7 +83,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         ShipWeaponData.#migratePowerUsage(source);
         ShipWeaponData.#migrateSpaceUsage(source);
@@ -96,36 +96,36 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
     }
 
     static #migratePowerUsage(source: Record<string, unknown>): void {
-        if ('powerUsage' in source && source.power === undefined) {
-            source.power = source.powerUsage;
-            delete source.powerUsage;
+        if ('powerUsage' in source && source['power'] === undefined) {
+            source['power'] = source['powerUsage'];
+            delete source['powerUsage'];
         }
     }
 
     static #migrateSpaceUsage(source: Record<string, unknown>): void {
-        if ('spaceUsage' in source && source.space === undefined) {
-            source.space = source.spaceUsage;
-            delete source.spaceUsage;
+        if ('spaceUsage' in source && source['space'] === undefined) {
+            source['space'] = source['spaceUsage'];
+            delete source['spaceUsage'];
         }
     }
 
     static #migrateSpCost(source: Record<string, unknown>): void {
-        if ('spCost' in source && source.shipPoints === undefined) {
-            source.shipPoints = source.spCost;
-            delete source.spCost;
+        if ('spCost' in source && source['shipPoints'] === undefined) {
+            source['shipPoints'] = source['spCost'];
+            delete source['spCost'];
         }
     }
 
     static #migrateCritRating(source: Record<string, unknown>): void {
-        if ('critRating' in source && source.crit === undefined) {
-            source.crit = source.critRating;
-            delete source.critRating;
+        if ('critRating' in source && source['crit'] === undefined) {
+            source['crit'] = source['critRating'];
+            delete source['critRating'];
         }
     }
 
     static #migrateType(source: Record<string, unknown>): void {
         if ('type' in source) {
-            if (!source.weaponType) {
+            if (!source['weaponType']) {
                 const typeMap: Record<string, string> = {
                     'macrocannon': 'macrobattery',
                     'macrobattery': 'macrobattery',
@@ -137,10 +137,10 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
                     'landing bay': 'landing-bay',
                     'attack craft': 'attack-craft',
                 };
-                const normalized = (source.type as string).toLowerCase();
-                source.weaponType = typeMap[normalized] || 'macrobattery';
+                const normalized = (source['type'] as string).toLowerCase();
+                source['weaponType'] = typeMap[normalized] ?? 'macrobattery';
             }
-            delete source.type;
+            delete source['type'];
         }
     }
 
@@ -150,27 +150,27 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
             if (source[field] === '-' || source[field] === null || source[field] === undefined) {
                 source[field] = 0;
             } else if (typeof source[field] === 'string') {
-                const parsed = parseInt(source[field]);
+                const parsed = parseInt(source[field] as string);
                 source[field] = isNaN(parsed) ? 0 : parsed;
             }
         }
     }
 
     static #migrateHullType(source: Record<string, unknown>): void {
-        if (typeof source.hullType === 'string') {
-            const types = source.hullType
+        if (typeof source['hullType'] === 'string') {
+            const types = (source['hullType'] as string)
                 .toLowerCase()
                 .replace(/all ships?/i, 'all')
                 .split(/[,\s]+/)
                 .map((s) => s.trim().replace(/\s+/g, '-'))
                 .filter(Boolean);
-            source.hullType = types.length ? types : ['all'];
+            source['hullType'] = types.length ? types : ['all'];
         }
     }
 
     static #initializeSpecial(source: Record<string, unknown>): void {
-        if (!source.special) {
-            source.special = [];
+        if (!source['special']) {
+            source['special'] = [];
         }
     }
 
@@ -184,22 +184,22 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
+    static override _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData?.(source, options);
         // Ensure hullType is array
-        if (source?.hullType && !Array.isArray(source.hullType)) {
-            if (typeof source.hullType === 'string') {
-                source.hullType = [source.hullType];
-            } else if (source.hullType instanceof Set) {
-                source.hullType = Array.from(source.hullType);
+        if (source?.['hullType'] && !Array.isArray(source['hullType'])) {
+            if (typeof source['hullType'] === 'string') {
+                source['hullType'] = [source['hullType']];
+            } else if (source['hullType'] instanceof Set) {
+                source['hullType'] = Array.from(source['hullType'] as Set<unknown>);
             }
         }
         // Ensure special is array
-        if (source?.special && !Array.isArray(source.special)) {
-            if (typeof source.special === 'string') {
-                source.special = source.special.split(',').map((s) => s.trim());
-            } else if (source.special instanceof Set) {
-                source.special = Array.from(source.special);
+        if (source?.['special'] && !Array.isArray(source['special'])) {
+            if (typeof source['special'] === 'string') {
+                source['special'] = (source['special'] as string).split(',').map((s) => s.trim());
+            } else if (source['special'] instanceof Set) {
+                source['special'] = Array.from(source['special'] as Set<unknown>);
             }
         }
     }
