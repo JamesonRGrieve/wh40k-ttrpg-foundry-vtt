@@ -211,8 +211,8 @@ export class HooksManager {
 
     static getActorFromDirectoryEntry(element: HTMLElement): WH40KBaseActor | null {
         const actorId =
-            element.dataset.documentId ??
-            element.dataset.entryId ??
+            element.dataset['documentId'] ??
+            element.dataset['entryId'] ??
             element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-document-id') ??
             element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-entry-id');
         if (actorId === null || actorId === undefined) return null;
@@ -288,7 +288,7 @@ export class HooksManager {
         CONFIG.Actor.documentClass = WH40KActorProxy;
         // Per (system, kind) document class registrations. The generic proxy
         // dispatches to the right concrete class based on the actor's `type`.
-        (CONFIG.Actor as Record<string, unknown>).documentClasses = {
+        (CONFIG.Actor as Record<string, unknown>)['documentClasses'] = {
             'dh2-character': documents.WH40KDH2Character,
             'dh2-npc': documents.WH40KDH2NPC,
             'dh2-vehicle': documents.WH40KDH2Vehicle,
@@ -422,7 +422,7 @@ export class HooksManager {
         // Unregister both core actor sheet generations so "Default Sheet"
         // never appears alongside the system's type-bound sheets.
         DocumentSheetConfig.unregisterSheet(Actor, 'core', foundry.appv1.sheets.ActorSheet);
-        const actorSheetV2 = (foundry.applications.sheets as Record<string, unknown>).ActorSheetV2;
+        const actorSheetV2 = (foundry.applications.sheets as Record<string, unknown>)['ActorSheetV2'];
         if (actorSheetV2 !== undefined) {
             DocumentSheetConfig.unregisterSheet(Actor, 'core', actorSheetV2 as Parameters<typeof DocumentSheetConfig.unregisterSheet>[2]);
         }
@@ -752,7 +752,7 @@ export class HooksManager {
 
     static hotbarDrop(_bar: unknown, data: Record<string, unknown>, slot: number): boolean | void {
         game.wh40k.log('Hotbar Drop:', data);
-        switch (data.type) {
+        switch (data['type']) {
             case 'characteristic':
                 void createCharacteristicMacro(data, slot);
                 return false;
@@ -802,7 +802,7 @@ export class HooksManager {
         if ((actor.type as string) !== 'npcV2') return null;
 
         // Check primaryUse field
-        const primaryUse = (actor.system as Record<string, unknown>).primaryUse;
+        const primaryUse = (actor.system as Record<string, unknown>)['primaryUse'];
 
         // Auto-select vehicle sheet for vehicle/ship NPCs
         if (primaryUse === 'vehicle' || primaryUse === 'ship') {

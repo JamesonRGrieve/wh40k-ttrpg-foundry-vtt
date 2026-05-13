@@ -44,7 +44,7 @@ export class RollTableUtils {
         }
 
         // Roll on the table
-        const rollResult = await table.roll({ roll: roll as Roll | undefined });
+        const rollResult = await table.roll(roll != null ? { roll } : {});
 
         if (displayChat) {
             await table.toMessage(rollResult.results, {
