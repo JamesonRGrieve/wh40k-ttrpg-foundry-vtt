@@ -652,7 +652,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      */
     static #onSubmit(this: OriginPathChoiceDialog, event: Event, _form: HTMLFormElement, _formData: Record<string, unknown>): void {
         // Same as confirm - call directly on instance
-        return OriginPathChoiceDialog.#confirm.call(this, event, document.createElement('div'));
+        OriginPathChoiceDialog.#confirm.call(this, event, document.createElement('div'));
     }
 
     /* -------------------------------------------- */

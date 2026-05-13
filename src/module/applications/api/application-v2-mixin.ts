@@ -131,6 +131,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         _renderContainers(_context: Record<string, unknown>, _options: ApplicationV2Config.RenderOptions): void {
             const root = (this as unknown as { element: HTMLElement }).element;
             const containerElements = Array.from(root.querySelectorAll<HTMLElement>('[data-container-id]'));
+            // biome-ignore lint/style/noNonNullAssertion: containerElements are selected by [data-container-id] so dataset.containerId is always present
             const containers: Record<string, HTMLElement> = Object.fromEntries(containerElements.map((el) => [el.dataset['containerId']!, el]));
             for (const [part, config] of Object.entries((this.constructor as typeof BaseApplicationWH40K).PARTS)) {
                 if (!config.container?.id) continue;

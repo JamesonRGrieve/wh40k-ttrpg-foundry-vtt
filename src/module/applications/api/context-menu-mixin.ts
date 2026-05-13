@@ -33,7 +33,7 @@ export class WH40KContextMenu extends applicationUX.ContextMenu {
     override _setPosition(html: HTMLElement, target: HTMLElement, options: Record<string, unknown> = {}): void {
         html.classList.add('wh40k-context-menu');
         // eslint-disable-next-line no-restricted-syntax -- boundary: _setFixedPosition is V13 internal, not on shipped types
-        return (this as unknown as { _setFixedPosition: (h: HTMLElement, t: HTMLElement, o: Record<string, unknown>) => void })._setFixedPosition(
+        (this as unknown as { _setFixedPosition: (h: HTMLElement, t: HTMLElement, o: Record<string, unknown>) => void })._setFixedPosition(
             html,
             target,
             options,

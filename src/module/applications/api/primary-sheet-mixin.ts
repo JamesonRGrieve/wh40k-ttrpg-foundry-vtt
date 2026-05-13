@@ -412,7 +412,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
         /* -------------------------------------------- */
 
         // eslint-disable-next-line @typescript-eslint/require-await -- subclasses override with awaited bodies; the base returns a sentinel
-        async _deleteDocument(event: Event, target: HTMLElement): Promise<unknown> {
+        async _deleteDocument(_event: Event, _target: HTMLElement): Promise<unknown> {
             return true;
         }
 
@@ -464,19 +464,19 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
         /* -------------------------------------------- */
 
         // eslint-disable-next-line @typescript-eslint/require-await -- subclasses override with awaited bodies; the base returns a sentinel
-        async _showDocument(event: Event, target: HTMLElement): Promise<unknown> {
+        async _showDocument(_event: Event, _target: HTMLElement): Promise<unknown> {
             return true;
         }
 
         /* -------------------------------------------- */
 
-        _sortChildren(collection: string, mode: string): unknown[] {
+        _sortChildren(_collection: string, _mode: string): unknown[] {
             return [];
         }
 
         /* -------------------------------------------- */
 
-        _sortItems<TItem extends { sort: number }>(items: TItem[], mode: string): TItem[] {
+        _sortItems<TItem extends { sort: number }>(items: TItem[], _mode: string): TItem[] {
             return items.sort((a, b) => a.sort - b.sort);
         }
     };

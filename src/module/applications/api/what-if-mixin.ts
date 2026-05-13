@@ -383,11 +383,15 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
             const toolbar = this.element.querySelector('.what-if-toolbar');
             if (toolbar) toolbar.remove();
 
-            this.element.querySelectorAll('.what-if-badge').forEach((badge) => badge.remove());
-            this.element.querySelectorAll('.what-if-preview').forEach((el) => {
+            for (const badge of this.element.querySelectorAll('.what-if-badge')) {
+                badge.remove();
+            }
+            for (const el of this.element.querySelectorAll('.what-if-preview')) {
                 el.classList.remove('what-if-preview');
-                el.querySelectorAll('.wh40k-what-if__pulse-border').forEach((s) => s.remove());
-            });
+                for (const s of el.querySelectorAll('.wh40k-what-if__pulse-border')) {
+                    s.remove();
+                }
+            }
 
             await this.render(false);
         }
