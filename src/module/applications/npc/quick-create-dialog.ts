@@ -23,7 +23,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         id: 'npc-quick-create-{id}',
         classes: ['wh40k-rpg', 'npc-quick-create-dialog'],
         tag: 'form',
@@ -112,7 +112,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Get available options
@@ -215,7 +215,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+    override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
         // Add live update listeners
@@ -378,7 +378,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    override async close(options: Record<string, unknown> = {}): Promise<void> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 

@@ -367,15 +367,16 @@ export default class ResourceGrantData extends BaseGrantData {
         // Parse entries: "(1-4|=2),(5-7|=3),(8-10|=4)"
         const entries: Array<{ min: number; max: number; value: number }> = [];
         const entryPattern = /\((\d+)-(\d+)\|=(\d+)\)/g;
-        let match;
+        let match: RegExpExecArray | null = entryPattern.exec(formula);
 
-        while ((match = entryPattern.exec(formula)) !== null) {
+        while (match !== null) {
             const [, minStr = '0', maxStr = '0', valStr = '0'] = match;
             entries.push({
                 min: parseInt(minStr),
                 max: parseInt(maxStr),
                 value: parseInt(valStr),
             });
+            match = entryPattern.exec(formula);
         }
 
         if (entries.length === 0) {

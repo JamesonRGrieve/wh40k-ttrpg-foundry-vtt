@@ -53,7 +53,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         id: 'combat-preset-dialog-{id}',
         classes: ['wh40k-rpg', 'combat-preset-dialog'],
         tag: 'div',
@@ -183,8 +183,9 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
     static async updatePreset(id: string, updates: Partial<Preset>): Promise<void> {
         const presets = this.getPresets();
         const index = presets.findIndex((p: Preset) => p.id === id);
-        if (index >= 0) {
-            presets[index] = { ...presets[index], ...updates };
+        const existing = index >= 0 ? presets[index] : undefined;
+        if (existing !== undefined) {
+            presets[index] = { ...existing, ...updates };
             await game.settings.set('wh40k-rpg', this.SETTING_KEY, presets);
         }
     }
@@ -296,12 +297,12 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
-        context.mode = this.#state.mode;
+        context['mode'] = this.#state.mode;
         const npc = this.#state.npc;
-        context.npc = npc
+        context['npc'] = npc
             ? {
                   name: npc.name,
                   img: npc.img,
@@ -313,14 +314,14 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
         // Get presets
         const presets = CombatPresetDialog.getPresets();
-        context.presets = presets.map((p: Preset) => ({
+        context['presets'] = presets.map((p: Preset) => ({
             ...p,
             selected: this.#state.selectedPreset === p.id,
             createdDate: new Date(p.createdAt).toLocaleDateString(),
         }));
-        context.hasPresets = presets.length > 0;
+        context['hasPresets'] = presets.length > 0;
 
-        context.selectedPreset = this.#state.selectedPreset !== null ? CombatPresetDialog.getPreset(this.#state.selectedPreset) : null;
+        context['selectedPreset'] = this.#state.selectedPreset !== null ? CombatPresetDialog.getPreset(this.#state.selectedPreset) : null;
 
         return context;
     }
@@ -400,7 +401,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
     static async #deletePreset(this: CombatPresetDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const presetId = target.dataset.presetId;
+        const presetId = target.dataset['presetId'];
         if (presetId === undefined || presetId === '') return;
 
         const preset = CombatPresetDialog.getPreset(presetId);
@@ -428,7 +429,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
     static #exportPreset(this: CombatPresetDialog, event: PointerEvent, target: HTMLElement): void {
         event.preventDefault();
 
-        const presetId = target.dataset.presetId;
+        const presetId = target.dataset['presetId'];
         if (presetId === undefined || presetId === '') return;
 
         const preset = CombatPresetDialog.getPreset(presetId);
@@ -488,7 +489,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      */
     static #selectPreset(this: CombatPresetDialog, event: PointerEvent, target: HTMLElement): void {
         event.preventDefault();
-        const presetId = target.dataset.presetId;
+        const presetId = target.dataset['presetId'];
         if (presetId !== undefined && presetId !== '') {
             this.#state.selectedPreset = presetId;
             void this.render();

@@ -436,7 +436,7 @@ export default class NPCTemplateData extends ItemDataModel {
         }
 
         // Generate weapons
-        let weapons;
+        let weapons: unknown;
         if (this.equipmentPreset === 'custom' && this.customWeapons.length > 0) {
             weapons = {
                 mode: 'simple',

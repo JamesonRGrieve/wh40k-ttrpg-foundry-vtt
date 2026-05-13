@@ -44,7 +44,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
 
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 form/action handlers accept method references and bind `this` itself */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         id: 'npc-threat-scaler-{id}',
         classes: ['wh40k-rpg', 'npc-threat-scaler-dialog'],
         tag: 'form',
@@ -160,7 +160,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         if (!this.#actor) return context;
@@ -247,7 +247,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+    override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
         const form = this.element;
@@ -281,7 +281,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
 
         tabs.forEach((tab) => {
             tab.addEventListener('click', () => {
-                const targetTab = (tab as HTMLElement).dataset.tab;
+                const targetTab = (tab as HTMLElement).dataset['tab'];
 
                 // Update active tab
                 tabs.forEach((t) => {
@@ -292,7 +292,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
                 // Update active section
                 sections.forEach((s) => {
                     const sectionElement = s as HTMLElement;
-                    if (sectionElement.dataset.section === targetTab) {
+                    if (sectionElement.dataset['section'] === targetTab) {
                         sectionElement.classList.add('active');
                     } else {
                         sectionElement.classList.remove('active');
@@ -324,7 +324,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {HTMLElement} target
      */
     static #onAdjustThreat(this: NPCThreatScalerDialog, event: PointerEvent, target: HTMLElement): void {
-        const amount = parseInt(target.dataset.amount ?? '0', 10);
+        const amount = parseInt(target.dataset['amount'] ?? '0', 10);
         if (amount === 0 || Number.isNaN(amount)) return;
 
         const newValue = Math.max(1, Math.min(30, this.#state.newThreatLevel + amount));
@@ -457,7 +457,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options record
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    override async close(options: Record<string, unknown> = {}): Promise<void> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 

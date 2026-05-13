@@ -354,7 +354,19 @@ export default class ThreatCalculator {
             }
         }
         // Default to boss for anything above 30
-        return this.THREAT_TIERS.boss;
+        return (
+            this.THREAT_TIERS['boss'] ?? {
+                name: 'Boss',
+                minThreat: 21,
+                maxThreat: 30,
+                charMin: 60,
+                charMax: 75,
+                woundsBase: 35,
+                woundsMult: 3,
+                armourBase: 10,
+                skillBonus: 40,
+            }
+        );
     }
 
     /**
@@ -398,7 +410,15 @@ export default class ThreatCalculator {
      */
     static generateCharacteristics(threatLevel: number, role: string = 'specialist'): NPCCharacteristics {
         const tier = this.getTier(threatLevel);
-        const profile = this.ROLE_PROFILES[role] ?? this.ROLE_PROFILES.specialist;
+        const specialistFallback: RoleProfile = {
+            name: 'Specialist',
+            description: 'Balanced generalist',
+            primaryStats: ['agility', 'perception', 'intelligence'],
+            secondaryStats: ['ballisticSkill', 'willpower'],
+            skills: ['awareness', 'dodge', 'stealth'],
+            weaponPreset: 'mixed',
+        };
+        const profile = this.ROLE_PROFILES[role] ?? this.ROLE_PROFILES['specialist'] ?? specialistFallback;
 
         // Calculate position within tier (0.0 to 1.0)
         const tierRange = tier.maxThreat - tier.minThreat;
@@ -525,7 +545,15 @@ export default class ThreatCalculator {
      * @returns {Object} Trained skills object for NPC system data.
      */
     static generateSkills(role: string, threatLevel: number): NPCSkills {
-        const profile = this.ROLE_PROFILES[role] ?? this.ROLE_PROFILES.specialist;
+        const specialistFallback: RoleProfile = {
+            name: 'Specialist',
+            description: 'Balanced generalist',
+            primaryStats: ['agility', 'perception', 'intelligence'],
+            secondaryStats: ['ballisticSkill', 'willpower'],
+            skills: ['awareness', 'dodge', 'stealth'],
+            weaponPreset: 'mixed',
+        };
+        const profile = this.ROLE_PROFILES[role] ?? this.ROLE_PROFILES['specialist'] ?? specialistFallback;
         const tier = this.getTier(threatLevel);
 
         const skills: NPCSkills = {};
@@ -580,8 +608,8 @@ export default class ThreatCalculator {
         }
 
         // Add dodge for all NPCs
-        if (!skills.dodge) {
-            skills.dodge = {
+        if (!skills['dodge']) {
+            skills['dodge'] = {
                 name: 'dodge',
                 characteristic: 'agility',
                 trained: threatLevel >= 6,
@@ -592,8 +620,8 @@ export default class ThreatCalculator {
         }
 
         // Add awareness for all NPCs
-        if (!skills.awareness) {
-            skills.awareness = {
+        if (!skills['awareness']) {
+            skills['awareness'] = {
                 name: 'awareness',
                 characteristic: 'perception',
                 trained: true,
@@ -613,7 +641,13 @@ export default class ThreatCalculator {
      * @returns {Object} Weapons object for NPC system data.
      */
     static generateWeapons(preset: string, threatLevel: number): NPCWeaponsData {
-        const equipment = this.EQUIPMENT_PRESETS[preset] ?? this.EQUIPMENT_PRESETS.mixed;
+        const mixedFallback: EquipmentPreset = {
+            name: 'Mixed',
+            description: 'Balanced loadout with medium armor',
+            weapons: [{ name: 'Autopistol', damage: '1d10+2', pen: 0, range: '30m', rof: 'S/-/6', clip: 18, reload: 'Full', special: '', class: 'pistol' }],
+            armour: 3,
+        };
+        const equipment = this.EQUIPMENT_PRESETS[preset] ?? this.EQUIPMENT_PRESETS['mixed'] ?? mixedFallback;
 
         // Scale weapon damage based on threat
         const damageBonus = Math.floor(threatLevel / 5);
@@ -638,7 +672,8 @@ export default class ThreatCalculator {
      * @returns {Object} Armour object for NPC system data.
      */
     static generateArmour(preset: string, threatLevel: number): NPCArmourData {
-        const equipment = this.EQUIPMENT_PRESETS[preset] ?? this.EQUIPMENT_PRESETS.mixed;
+        const mixedFallback: EquipmentPreset = { name: 'Mixed', description: 'Balanced loadout with medium armor', weapons: [], armour: 3 };
+        const equipment = this.EQUIPMENT_PRESETS[preset] ?? this.EQUIPMENT_PRESETS['mixed'] ?? mixedFallback;
 
         // Scale armour based on threat
         const armourBonus = Math.floor(threatLevel / 5);
@@ -901,7 +936,7 @@ export default class ThreatCalculator {
         // Add characteristic previews
         for (const [key, char] of Object.entries(currentData.characteristics)) {
             const newBase = (updates[`characteristics.${key}.base`] as number | undefined) ?? char.base;
-            (preview.characteristics as Record<string, unknown>)[key] = {
+            (preview['characteristics'] as Record<string, unknown>)[key] = {
                 label: char.label,
                 short: char.short,
                 current: char.base,
@@ -931,8 +966,8 @@ export default class ThreatCalculator {
         const match = damage.match(/^(\d+d\d+)([+-]\d+)?$/);
         if (!match) return damage;
 
-        const dice = match[1];
-        const existingBonus = parseInt(match[2] || '0', 10);
+        const dice = match[1] ?? '';
+        const existingBonus = parseInt(match[2] ?? '0', 10);
         const newBonus = existingBonus + bonus;
 
         if (newBonus === 0) return dice;

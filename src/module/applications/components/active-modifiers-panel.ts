@@ -43,14 +43,14 @@ interface EquippableSystem {
 interface ModifierEntry {
     id: string;
     name: string;
-    img?: string;
+    img?: string | undefined;
     description: string;
     duration: string;
     active: boolean;
     canToggle: boolean;
-    stacks?: number;
-    nature?: string;
-    isEffect?: boolean;
+    stacks?: number | undefined;
+    nature?: string | undefined;
+    isEffect?: boolean | undefined;
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: actions table is a free-form record indexed by Foundry's action dispatcher
@@ -100,7 +100,7 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
          */
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin-internal action handler runs against host sheet whose concrete type is unknown to the mixin
         static async toggleModifier(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
-            const itemId = target.dataset.itemId;
+            const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId.length === 0) return;
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- this is `any`-typed for mixin compat; actor is the host sheet's documented field
@@ -120,7 +120,7 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
          */
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin-internal action handler runs against host sheet whose concrete type is unknown to the mixin
         static viewModifierSource(this: any, event: PointerEvent, target: HTMLElement): void {
-            const itemId = target.dataset.itemId;
+            const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId.length === 0) return;
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- this is `any`-typed for mixin compat; actor is the host sheet's documented field

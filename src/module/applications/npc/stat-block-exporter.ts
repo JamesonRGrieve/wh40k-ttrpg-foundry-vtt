@@ -34,7 +34,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         id: 'stat-block-exporter-{id}',
         classes: ['wh40k-rpg', 'stat-block-exporter'],
         tag: 'div',
@@ -320,7 +320,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         if (!this.#actor) return context;
@@ -350,14 +350,14 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+    override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
         // Handle format toggle
         const formatTabs = this.element.querySelectorAll('[data-format]');
         for (const tab of formatTabs) {
             tab.addEventListener('click', (e) => {
-                this.#format = (e.currentTarget as HTMLElement).dataset.format as 'text' | 'json';
+                this.#format = (e.currentTarget as HTMLElement).dataset['format'] as 'text' | 'json';
                 void this.render({ parts: ['content'] });
             });
         }
