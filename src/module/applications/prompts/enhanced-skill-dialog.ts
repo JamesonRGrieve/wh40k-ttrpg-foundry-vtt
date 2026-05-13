@@ -283,7 +283,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /**
      * Handle difficulty button click.
      */
-    static async #onSelectDifficulty(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectDifficulty(this: EnhancedSkillDialog, _event: Event, target: HTMLElement): Promise<void> {
         const modifier = parseInt(target.dataset['modifier'] ?? '0', 10);
         this._selectedDifficulty = modifier;
 
@@ -301,7 +301,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /**
      * Handle common modifier checkbox toggle.
      */
-    static async #onToggleModifier(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleModifier(this: EnhancedSkillDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['modifierKey'];
         if (key !== undefined && key !== '') {
             this._commonModifiers[key] = (target as HTMLInputElement).checked;
@@ -314,7 +314,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /**
      * Handle custom modifier input change.
      */
-    static async #onUpdateCustom(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onUpdateCustom(this: EnhancedSkillDialog, _event: Event, target: HTMLElement): Promise<void> {
         this._customModifier = parseInt((target as HTMLInputElement).value, 10) || 0;
         await this.render({ parts: ['form'] });
     }
@@ -324,7 +324,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /**
      * Handle roll button click.
      */
-    static async #onRoll(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onRoll(this: EnhancedSkillDialog, _event: Event, _target: HTMLElement): Promise<void> {
         await this._performRoll();
     }
 
@@ -333,7 +333,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /**
      * Handle repeat last roll button click.
      */
-    static async #onRollRepeat(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onRollRepeat(this: EnhancedSkillDialog, _event: Event, target: HTMLElement): Promise<void> {
         const modifier = parseInt(target.dataset['modifier'] ?? '0', 10);
 
         // Apply the modifier directly
@@ -347,7 +347,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /**
      * Handle cancel button click.
      */
-    static async #onCancel(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: EnhancedSkillDialog, _event: Event, _target: HTMLElement): Promise<void> {
         await this.close();
     }
 
