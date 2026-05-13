@@ -325,7 +325,7 @@ export default class CreatureTemplate extends CommonTemplate {
         };
 
         if (hasEntries) {
-            schema.entries = new ArrayField(
+            schema['entries'] = new ArrayField(
                 new SchemaField({
                     name: new StringField({ required: true }),
                     slug: new StringField({ required: false }),
@@ -364,7 +364,7 @@ export default class CreatureTemplate extends CommonTemplate {
         });
 
     /** @inheritDoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return {
             ...super.defineSchema(),
 
@@ -541,7 +541,7 @@ export default class CreatureTemplate extends CommonTemplate {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static _migrateData(source: RawSource): void {
+    static override _migrateData(source: RawSource): void {
         super._migrateData(source);
         CreatureTemplate.#migrateSize(source);
         CreatureTemplate.#migrateWounds(source);
@@ -559,33 +559,33 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migrateSkillsToAdvance(source: RawSource): void {
-        const skills = asRawSource(source.skills);
+        const skills = asRawSource(source['skills']);
         if (!skills) return;
         for (const value of Object.values(skills)) {
             const skill = asRawSource(value);
             if (!skill) continue;
             // If advance field already exists, skip this skill
-            if (skill.advance !== undefined) continue;
+            if (skill['advance'] !== undefined) continue;
 
             // Initialize advance to 0 — training will be recomputed from origin path items
-            skill.advance = 0;
+            skill['advance'] = 0;
             // Reset boolean flags — these are now derived in _prepareSkills()
-            skill.trained = false;
-            skill.plus10 = false;
-            skill.plus20 = false;
-            skill.plus30 = false;
+            skill['trained'] = false;
+            skill['plus10'] = false;
+            skill['plus20'] = false;
+            skill['plus30'] = false;
 
             // Also migrate specialist entries
-            if (Array.isArray(skill.entries)) {
-                for (const entryValue of skill.entries) {
+            if (Array.isArray(skill['entries'])) {
+                for (const entryValue of skill['entries']) {
                     const entry = asRawSource(entryValue);
                     if (!entry) continue;
-                    if (entry.advance !== undefined) continue;
-                    entry.advance = 0;
-                    entry.trained = false;
-                    entry.plus10 = false;
-                    entry.plus20 = false;
-                    entry.plus30 = false;
+                    if (entry['advance'] !== undefined) continue;
+                    entry['advance'] = 0;
+                    entry['trained'] = false;
+                    entry['plus10'] = false;
+                    entry['plus20'] = false;
+                    entry['plus30'] = false;
                 }
             }
         }
@@ -596,7 +596,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migrateSize(source: RawSource): void {
-        if (source.size !== undefined && typeof source.size === 'string') {
+        if (source['size'] !== undefined && typeof source['size'] === 'string') {
             const sizeMap: Record<string, number> = {
                 miniscule: 1,
                 puny: 2,
@@ -607,11 +607,11 @@ export default class CreatureTemplate extends CommonTemplate {
                 massive: 7,
                 immense: 8,
             };
-            source.size = sizeMap[source.size.toLowerCase()] ?? 4;
+            source['size'] = sizeMap[source['size'].toLowerCase()] ?? 4;
         }
-        if (source.size !== undefined) {
-            const sizeInt = this._toInt(source.size);
-            source.size = sizeInt < 1 ? 1 : sizeInt > 10 ? 10 : sizeInt;
+        if (source['size'] !== undefined) {
+            const sizeInt = this._toInt(source['size']);
+            source['size'] = sizeInt < 1 ? 1 : sizeInt > 10 ? 10 : sizeInt;
         }
     }
 
@@ -620,11 +620,11 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migrateWounds(source: RawSource): void {
-        const wounds = asRawSource(source.wounds);
+        const wounds = asRawSource(source['wounds']);
         if (!wounds) return;
-        if (wounds.max !== undefined) wounds.max = this._toInt(wounds.max);
-        if (wounds.value !== undefined) wounds.value = this._toInt(wounds.value);
-        if (wounds.critical !== undefined) wounds.critical = this._toInt(wounds.critical);
+        if (wounds['max'] !== undefined) wounds['max'] = this._toInt(wounds['max']);
+        if (wounds['value'] !== undefined) wounds['value'] = this._toInt(wounds['value']);
+        if (wounds['critical'] !== undefined) wounds['critical'] = this._toInt(wounds['critical']);
     }
 
     /**
@@ -632,10 +632,10 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migrateFatigue(source: RawSource): void {
-        const fatigue = asRawSource(source.fatigue);
+        const fatigue = asRawSource(source['fatigue']);
         if (!fatigue) return;
-        if (fatigue.max !== undefined) fatigue.max = this._toInt(fatigue.max);
-        if (fatigue.value !== undefined) fatigue.value = this._toInt(fatigue.value);
+        if (fatigue['max'] !== undefined) fatigue['max'] = this._toInt(fatigue['max']);
+        if (fatigue['value'] !== undefined) fatigue['value'] = this._toInt(fatigue['value']);
     }
 
     /**
@@ -643,17 +643,17 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migrateCharacteristics(source: RawSource): void {
-        const characteristics = asRawSource(source.characteristics);
+        const characteristics = asRawSource(source['characteristics']);
         if (!characteristics) return;
 
         for (const value of Object.values(characteristics)) {
             const char = asRawSource(value);
             if (!char) continue;
-            if (char.base !== undefined) char.base = this._toInt(char.base);
-            if (char.advance !== undefined) char.advance = this._toInt(char.advance);
-            if (char.modifier !== undefined) char.modifier = this._toInt(char.modifier);
-            if (char.unnatural !== undefined) char.unnatural = this._toInt(char.unnatural);
-            if (char.cost !== undefined) char.cost = this._toInt(char.cost);
+            if (char['base'] !== undefined) char['base'] = this._toInt(char['base']);
+            if (char['advance'] !== undefined) char['advance'] = this._toInt(char['advance']);
+            if (char['modifier'] !== undefined) char['modifier'] = this._toInt(char['modifier']);
+            if (char['unnatural'] !== undefined) char['unnatural'] = this._toInt(char['unnatural']);
+            if (char['cost'] !== undefined) char['cost'] = this._toInt(char['cost']);
         }
     }
 
@@ -662,10 +662,10 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migrateFate(source: RawSource): void {
-        const fate = asRawSource(source.fate);
+        const fate = asRawSource(source['fate']);
         if (!fate) return;
-        if (fate.max !== undefined) fate.max = this._toInt(fate.max);
-        if (fate.value !== undefined) fate.value = this._toInt(fate.value);
+        if (fate['max'] !== undefined) fate['max'] = this._toInt(fate['max']);
+        if (fate['value'] !== undefined) fate['value'] = this._toInt(fate['value']);
     }
 
     /**
@@ -673,11 +673,11 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #migratePsy(source: RawSource): void {
-        const psy = asRawSource(source.psy);
+        const psy = asRawSource(source['psy']);
         if (!psy) return;
-        if (psy.rating !== undefined) psy.rating = this._toInt(psy.rating);
-        if (psy.sustained !== undefined) psy.sustained = this._toInt(psy.sustained);
-        if (psy.defaultPR !== undefined) psy.defaultPR = this._toInt(psy.defaultPR);
+        if (psy['rating'] !== undefined) psy['rating'] = this._toInt(psy['rating']);
+        if (psy['sustained'] !== undefined) psy['sustained'] = this._toInt(psy['sustained']);
+        if (psy['defaultPR'] !== undefined) psy['defaultPR'] = this._toInt(psy['defaultPR']);
     }
 
     /* -------------------------------------------- */
@@ -685,7 +685,7 @@ export default class CreatureTemplate extends CommonTemplate {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static _cleanData(source: RawSource | undefined, options: RawSource = {}): void {
+    static override _cleanData(source: RawSource | undefined, options: RawSource = {}): void {
         super._cleanData(source, options);
         if (!source) return;
         CreatureTemplate.#cleanSize(source);
@@ -700,10 +700,10 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #cleanSize(source: RawSource | undefined): void {
-        if (source?.size !== undefined) {
-            if (source.size === '' || source.size === null) {
-                delete source.size; // Use schema default
-            } else if (typeof source.size === 'string') {
+        if (source?.['size'] !== undefined) {
+            if (source['size'] === '' || source['size'] === null) {
+                delete source['size']; // Use schema default
+            } else if (typeof source['size'] === 'string') {
                 const sizeMap: Record<string, number> = {
                     miniscule: 1,
                     puny: 2,
@@ -714,10 +714,10 @@ export default class CreatureTemplate extends CommonTemplate {
                     massive: 7,
                     immense: 8,
                 };
-                source.size = sizeMap[source.size.toLowerCase()] ?? 4;
+                source['size'] = sizeMap[source['size'].toLowerCase()] ?? 4;
             } else {
-                const sizeInt = this._toInt(source.size);
-                source.size = sizeInt < 1 ? 1 : sizeInt > 10 ? 10 : sizeInt;
+                const sizeInt = this._toInt(source['size']);
+                source['size'] = sizeInt < 1 ? 1 : sizeInt > 10 ? 10 : sizeInt;
             }
         }
     }
@@ -727,16 +727,16 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #cleanWounds(source: RawSource): void {
-        const wounds = asRawSource(source.wounds);
+        const wounds = asRawSource(source['wounds']);
         if (!wounds) return;
-        if (wounds.max !== undefined) {
-            wounds.max = this._toInt(wounds.max, 0);
+        if (wounds['max'] !== undefined) {
+            wounds['max'] = this._toInt(wounds['max'], 0);
         }
-        if (wounds.value !== undefined) {
-            wounds.value = this._toInt(wounds.value, 0);
+        if (wounds['value'] !== undefined) {
+            wounds['value'] = this._toInt(wounds['value'], 0);
         }
-        if (wounds.critical !== undefined) {
-            wounds.critical = this._toInt(wounds.critical, 0);
+        if (wounds['critical'] !== undefined) {
+            wounds['critical'] = this._toInt(wounds['critical'], 0);
         }
     }
 
@@ -745,13 +745,13 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #cleanFatigue(source: RawSource): void {
-        const fatigue = asRawSource(source.fatigue);
+        const fatigue = asRawSource(source['fatigue']);
         if (!fatigue) return;
-        if (fatigue.max !== undefined) {
-            fatigue.max = this._toInt(fatigue.max, 0);
+        if (fatigue['max'] !== undefined) {
+            fatigue['max'] = this._toInt(fatigue['max'], 0);
         }
-        if (fatigue.value !== undefined) {
-            fatigue.value = this._toInt(fatigue.value, 0);
+        if (fatigue['value'] !== undefined) {
+            fatigue['value'] = this._toInt(fatigue['value'], 0);
         }
     }
 
@@ -760,13 +760,13 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #cleanFate(source: RawSource): void {
-        const fate = asRawSource(source.fate);
+        const fate = asRawSource(source['fate']);
         if (!fate) return;
-        if (fate.max !== undefined) {
-            fate.max = this._toInt(fate.max, 0);
+        if (fate['max'] !== undefined) {
+            fate['max'] = this._toInt(fate['max'], 0);
         }
-        if (fate.value !== undefined) {
-            fate.value = this._toInt(fate.value, 0);
+        if (fate['value'] !== undefined) {
+            fate['value'] = this._toInt(fate['value'], 0);
         }
     }
 
@@ -775,16 +775,16 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {object} source - The source data
      */
     static #cleanPsy(source: RawSource): void {
-        const psy = asRawSource(source.psy);
+        const psy = asRawSource(source['psy']);
         if (!psy) return;
-        if (psy.rating !== undefined) {
-            psy.rating = this._toInt(psy.rating, 0);
+        if (psy['rating'] !== undefined) {
+            psy['rating'] = this._toInt(psy['rating'], 0);
         }
-        if (psy.sustained !== undefined) {
-            psy.sustained = this._toInt(psy.sustained, 0);
+        if (psy['sustained'] !== undefined) {
+            psy['sustained'] = this._toInt(psy['sustained'], 0);
         }
-        if (psy.defaultPR !== undefined) {
-            psy.defaultPR = this._toInt(psy.defaultPR, 0);
+        if (psy['defaultPR'] !== undefined) {
+            psy['defaultPR'] = this._toInt(psy['defaultPR'], 0);
         }
     }
 
@@ -825,13 +825,13 @@ export default class CreatureTemplate extends CommonTemplate {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    prepareBaseData(): void {
+    override prepareBaseData(): void {
         super.prepareBaseData();
         this._initializeModifierTracking();
     }
 
     /** @inheritDoc */
-    prepareDerivedData(): void {
+    override prepareDerivedData(): void {
         super.prepareDerivedData();
         // IMPORTANT: Characteristics must be prepared BEFORE skills
         // because skills need char.total for their calculations
@@ -846,7 +846,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * Second pass of derived data that requires items.
      * Called by the Document class after items are ready.
      */
-    prepareEmbeddedData(): void {
+    override prepareEmbeddedData(): void {
         this._computeItemModifiers();
         this._applyModifiersToCharacteristics();
         this._registerOriginPathSkillSources();
@@ -1310,7 +1310,7 @@ export default class CreatureTemplate extends CommonTemplate {
             }
 
             // Choice-based modifiers from activeModifiers
-            const activeMods = item.system.activeModifiers as ActiveModEntry[] | null | undefined;
+            const activeMods = item.system['activeModifiers'] as ActiveModEntry[] | null | undefined;
             if (Array.isArray(activeMods)) {
                 for (const mod of activeMods) {
                     if (mod.type === 'characteristic' && typeof mod.key === 'string' && typeof mod.value === 'number') {
@@ -1368,7 +1368,7 @@ export default class CreatureTemplate extends CommonTemplate {
             }
 
             // Check choice-based skill grants from activeModifiers
-            const activeMods = item.system.activeModifiers as ActiveModEntry[] | null | undefined;
+            const activeMods = item.system['activeModifiers'] as ActiveModEntry[] | null | undefined;
             if (Array.isArray(activeMods)) {
                 for (const mod of activeMods) {
                     if (mod.type !== 'skill') continue;
@@ -1478,7 +1478,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry roll data is consumed as a free-form bag
-    getRollData(): Record<string, unknown> {
+    override getRollData(): Record<string, unknown> {
         const data = super.getRollData();
 
         // Add characteristic values and bonuses for formulas
@@ -1490,7 +1490,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
         // Add skill values
 
-        data.pr = this.psy.rating;
+        data['pr'] = this.psy.rating;
 
         return data;
     }

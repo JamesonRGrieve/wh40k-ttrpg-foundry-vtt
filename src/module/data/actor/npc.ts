@@ -163,7 +163,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     }
 
     /** @inheritDoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return {
             ...super.defineSchema(),
 
@@ -703,16 +703,16 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     addSimpleWeapon(data: Record<string, unknown> = {}): unknown {
         const weapons = foundry.utils.deepClone(this.weapons.simple);
-        const weaponClass = (data.class as NPCV2SimpleWeapon['class']) || 'melee';
+        const weaponClass = (data['class'] as NPCV2SimpleWeapon['class']) || 'melee';
         weapons.push({
-            name: (data.name as string) || 'New Weapon',
-            damage: (data.damage as string) || '1d10',
-            pen: (data.pen as number) || 0,
-            range: (data.range as string) || 'Melee',
-            rof: (data.rof as string) || 'S/-/-',
-            clip: (data.clip as number) || 0,
-            reload: (data.reload as string) || '-',
-            special: (data.special as string) || '',
+            name: (data['name'] as string) || 'New Weapon',
+            damage: (data['damage'] as string) || '1d10',
+            pen: (data['pen'] as number) || 0,
+            range: (data['range'] as string) || 'Melee',
+            rof: (data['rof'] as string) || 'S/-/-',
+            clip: (data['clip'] as number) || 0,
+            reload: (data['reload'] as string) || '-',
+            special: (data['special'] as string) || '',
             class: weaponClass,
         });
         return this.parent.update({ 'system.weapons.simple': weapons });
@@ -891,12 +891,12 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    prepareBaseData(): void {
+    override prepareBaseData(): void {
         super.prepareBaseData();
     }
 
     /** @inheritDoc */
-    prepareDerivedData(): void {
+    override prepareDerivedData(): void {
         super.prepareDerivedData();
         this._prepareCharacteristics();
         this._prepareMovement();
@@ -957,7 +957,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     /* -------------------------------------------- */
 
     /** @override */
-    getRollData(): Record<string, unknown> {
+    override getRollData(): Record<string, unknown> {
         const data = super.getRollData();
 
         // Add characteristic values and bonuses for formulas
@@ -968,15 +968,15 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         }
 
         // Add common roll data
-        data.threatLevel = this.threatLevel;
-        data.size = this.size;
+        data['threatLevel'] = this.threatLevel;
+        data['size'] = this.size;
 
         // Add horde data if enabled
         if (this.horde.enabled) {
-            data.magnitude = this.horde.magnitude.current;
-            data.magnitudeMax = this.horde.magnitude.max;
-            data.magnitudePercent = this.magnitudePercent;
-            data.hordeDamageMultiplier = this.hordeDamageMultiplier;
+            data['magnitude'] = this.horde.magnitude.current;
+            data['magnitudeMax'] = this.horde.magnitude.max;
+            data['magnitudePercent'] = this.magnitudePercent;
+            data['hordeDamageMultiplier'] = this.hordeDamageMultiplier;
         }
 
         return data;
@@ -1001,7 +1001,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     }
 
     /** @inheritDoc */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         NPCData.#migrateSize(source);
         NPCData.#migrateWounds(source);
@@ -1013,9 +1013,9 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {object} source - The source data
      */
     static #migrateSize(source: Record<string, unknown>): void {
-        if (source.size !== undefined) {
-            const sizeInt = this._toInt(source.size, 4);
-            source.size = sizeInt < 1 ? 1 : sizeInt > 10 ? 10 : sizeInt;
+        if (source['size'] !== undefined) {
+            const sizeInt = this._toInt(source['size'], 4);
+            source['size'] = sizeInt < 1 ? 1 : sizeInt > 10 ? 10 : sizeInt;
         }
     }
 
@@ -1024,16 +1024,16 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {object} source - The source data
      */
     static #migrateWounds(source: Record<string, unknown>): void {
-        if (source.wounds && typeof source.wounds === 'object') {
-            const wounds = source.wounds as Record<string, unknown>;
-            if (wounds.max !== undefined) {
-                wounds.max = this._toInt(wounds.max, 10);
+        if (source['wounds'] && typeof source['wounds'] === 'object') {
+            const wounds = source['wounds'] as Record<string, unknown>;
+            if (wounds['max'] !== undefined) {
+                wounds['max'] = this._toInt(wounds['max'], 10);
             }
-            if (wounds.value !== undefined) {
-                wounds.value = this._toInt(wounds.value, 10);
+            if (wounds['value'] !== undefined) {
+                wounds['value'] = this._toInt(wounds['value'], 10);
             }
-            if (wounds.critical !== undefined) {
-                wounds.critical = this._toInt(wounds.critical, 0);
+            if (wounds['critical'] !== undefined) {
+                wounds['critical'] = this._toInt(wounds['critical'], 0);
             }
         }
     }
@@ -1043,8 +1043,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {object} source - The source data
      */
     static #migrateThreatLevel(source: Record<string, unknown>): void {
-        if (source.threatLevel !== undefined) {
-            source.threatLevel = this._toInt(source.threatLevel, 5);
+        if (source['threatLevel'] !== undefined) {
+            source['threatLevel'] = this._toInt(source['threatLevel'], 5);
         }
     }
 }

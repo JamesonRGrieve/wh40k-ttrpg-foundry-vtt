@@ -347,8 +347,8 @@ export default class CharacterData extends CreatureTemplate {
      * @param {Record<string, unknown>} source - The source data
      */
     static #cleanExperience(source: Record<string, unknown> | undefined): void {
-        if (typeof source?.experience !== 'object' || source.experience === null) return;
-        const experience = source.experience as Record<string, unknown>;
+        if (typeof source?.['experience'] !== 'object' || source['experience'] === null) return;
+        const experience = source['experience'] as Record<string, unknown>;
 
         const fields = ['used', 'total', 'available', 'spentCharacteristics', 'spentSkills', 'spentTalents', 'spentPsychicPowers', 'calculatedTotal'];
         for (const field of fields) {
@@ -377,26 +377,26 @@ export default class CharacterData extends CreatureTemplate {
      * @param {Record<string, unknown>} source - The source data
      */
     static #cleanRogueTrader(source: Record<string, unknown> | undefined): void {
-        const rt = source?.rogueTrader as Record<string, unknown> | undefined;
+        const rt = source?.['rogueTrader'] as Record<string, unknown> | undefined;
         if (!rt) return;
 
-        const pf = rt.profitFactor as Record<string, unknown> | undefined;
+        const pf = rt['profitFactor'] as Record<string, unknown> | undefined;
         if (pf) {
             for (const field of ['current', 'starting', 'modifier']) {
                 if (typeof pf[field] === 'string') pf[field] = Number(pf[field]);
             }
         }
 
-        const endeavour = rt.endeavour as Record<string, unknown> | undefined;
+        const endeavour = rt['endeavour'] as Record<string, unknown> | undefined;
         if (endeavour) {
             for (const field of ['achievementCurrent', 'achievementRequired', 'reward']) {
                 if (typeof endeavour[field] === 'string') endeavour[field] = Number(endeavour[field]);
             }
         }
 
-        if (Array.isArray(rt.acquisitions)) {
-            for (const acquisition of rt.acquisitions as Array<Record<string, unknown>>) {
-                if (typeof acquisition.modifier === 'string') acquisition.modifier = Number(acquisition.modifier);
+        if (Array.isArray(rt['acquisitions'])) {
+            for (const acquisition of rt['acquisitions'] as Array<Record<string, unknown>>) {
+                if (typeof acquisition['modifier'] === 'string') acquisition['modifier'] = Number(acquisition['modifier']);
             }
         }
     }
@@ -503,26 +503,26 @@ export default class CharacterData extends CreatureTemplate {
 
         // Update the originPath system data with the names (only if origin builder items exist)
         // RT steps
-        if (stepMap.homeWorld !== null) this.originPath.homeWorld = stepMap.homeWorld.name;
-        if (stepMap.birthright !== null) this.originPath.birthright = stepMap.birthright.name;
-        if (stepMap.lureOfTheVoid !== null) this.originPath.lureOfTheVoid = stepMap.lureOfTheVoid.name;
-        if (stepMap.trialsAndTravails !== null) this.originPath.trialsAndTravails = stepMap.trialsAndTravails.name;
-        if (stepMap.motivation !== null) this.originPath.motivation = stepMap.motivation.name;
-        if (stepMap.career !== null) this.originPath.career = stepMap.career.name;
+        if (stepMap['homeWorld'] !== null) this.originPath.homeWorld = stepMap['homeWorld'].name;
+        if (stepMap['birthright'] !== null) this.originPath.birthright = stepMap['birthright'].name;
+        if (stepMap['lureOfTheVoid'] !== null) this.originPath.lureOfTheVoid = stepMap['lureOfTheVoid'].name;
+        if (stepMap['trialsAndTravails'] !== null) this.originPath.trialsAndTravails = stepMap['trialsAndTravails'].name;
+        if (stepMap['motivation'] !== null) this.originPath.motivation = stepMap['motivation'].name;
+        if (stepMap['career'] !== null) this.originPath.career = stepMap['career'].name;
         // DH2e steps
-        if (stepMap.background !== null) this.originPath.background = stepMap.background.name;
-        if (stepMap.role !== null) this.originPath.role = stepMap.role.name;
-        if (stepMap.elite !== null) this.originPath.elite = stepMap.elite.name;
-        if (stepMap.divination !== null) this.originPath.divination = stepMap.divination.name;
+        if (stepMap['background'] !== null) this.originPath.background = stepMap['background'].name;
+        if (stepMap['role'] !== null) this.originPath.role = stepMap['role'].name;
+        if (stepMap['elite'] !== null) this.originPath.elite = stepMap['elite'].name;
+        if (stepMap['divination'] !== null) this.originPath.divination = stepMap['divination'].name;
         // BC steps
-        if (stepMap.race !== null) this.originPath.race = stepMap.race.name;
-        if (stepMap.archetype !== null) this.originPath.archetype = stepMap.archetype.name;
-        if (stepMap.pride !== null) this.originPath.pride = stepMap.pride.name;
-        if (stepMap.disgrace !== null) this.originPath.disgrace = stepMap.disgrace.name;
+        if (stepMap['race'] !== null) this.originPath.race = stepMap['race'].name;
+        if (stepMap['archetype'] !== null) this.originPath.archetype = stepMap['archetype'].name;
+        if (stepMap['pride'] !== null) this.originPath.pride = stepMap['pride'].name;
+        if (stepMap['disgrace'] !== null) this.originPath.disgrace = stepMap['disgrace'].name;
         // OW / DW steps
-        if (stepMap.regiment !== null) this.originPath.regiment = stepMap.regiment.name;
-        if (stepMap.speciality !== null) this.originPath.speciality = stepMap.speciality.name;
-        if (stepMap.chapter !== null) this.originPath.chapter = stepMap.chapter.name;
+        if (stepMap['regiment'] !== null) this.originPath.regiment = stepMap['regiment'].name;
+        if (stepMap['speciality'] !== null) this.originPath.speciality = stepMap['speciality'].name;
+        if (stepMap['chapter'] !== null) this.originPath.chapter = stepMap['chapter'].name;
 
         // Collect aptitudes from origin path (DH2e/BC/OW use aptitudes for XP costs).
         // Sources: fixed grants.aptitudes + resolved grants.choices[type=aptitude].
@@ -544,7 +544,7 @@ export default class CharacterData extends CreatureTemplate {
 
             // Resolved aptitude choices — mirrors the key logic in origin-path-builder._prepareChoices
             const choices: GrantChoice[] = Array.isArray(grants.choices) ? grants.choices : [];
-            const selectedChoices = (item.system.selectedChoices ?? {}) as Record<string, string[]>;
+            const selectedChoices = (item.system['selectedChoices'] ?? {}) as Record<string, string[]>;
             const labelCounts: Partial<Record<string, number>> = {};
             for (const choice of choices) {
                 const baseLabel = choice.label ?? choice.name ?? '';
@@ -565,7 +565,7 @@ export default class CharacterData extends CreatureTemplate {
 
         // Derive gameSystem from origin path items if not already set
         if (originItems.length > 0 && this.gameSystem === 'rt') {
-            const firstSystem = originItems[0]?.system?.gameSystem;
+            const firstSystem = originItems[0]?.system?.['gameSystem'];
             if (typeof firstSystem === 'string' && firstSystem !== this.gameSystem) {
                 this.gameSystem = firstSystem as CharacterData['gameSystem'];
             }

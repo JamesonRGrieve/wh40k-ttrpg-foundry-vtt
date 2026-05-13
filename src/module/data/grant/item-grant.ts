@@ -93,7 +93,7 @@ export default class ItemGrantData extends BaseGrantData {
         }
 
         const itemsToCreate: Array<{ uuid: string; data: Record<string, unknown> }> = [];
-        const selectedUuids = (data.selected as string[]) ?? items.map((i) => i.uuid);
+        const selectedUuids = (data['selected'] as string[]) ?? items.map((i) => i.uuid);
 
         for (const itemConfig of items) {
             const { uuid, optional, overrides } = itemConfig;
@@ -133,7 +133,7 @@ export default class ItemGrantData extends BaseGrantData {
         }
 
         // Apply if not dry run
-        if (!options.dryRun && itemsToCreate.length > 0) {
+        if (!options['dryRun'] && itemsToCreate.length > 0) {
             const created = await (
                 actor as unknown as { createEmbeddedDocuments: (name: string, data: Record<string, unknown>[]) => Promise<WH40KItem[]> }
             ).createEmbeddedDocuments(
@@ -147,10 +147,10 @@ export default class ItemGrantData extends BaseGrantData {
                 result.applied[sourceUuid] = item.id!;
                 result.notifications.push(`Granted: ${item.name}`);
             });
-        } else if (options.dryRun) {
+        } else if (options['dryRun']) {
             // Preview mode
             itemsToCreate.forEach(({ data: itemData }) => {
-                result.notifications.push(`Would grant: ${itemData.name}`);
+                result.notifications.push(`Would grant: ${itemData['name']}`);
             });
         }
     }
