@@ -29,7 +29,7 @@ interface Args {
 
 const meta: Meta<Args> = {
     title: 'Character Creation/OriginRollDialog',
-    render: (args) => renderSheet(templateSrc, args),
+    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
     args: {
         originImg: 'icons/svg/d20.svg',
         originName: 'Hive World',

@@ -499,6 +499,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
         // currentStepIndex is always kept in bounds by the navigation logic
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- currentStepIndex is always in bounds
+        // biome-ignore lint/style/noNonNullAssertion: currentStepIndex is always in bounds (maintained by navigation logic)
         return this.orderedSteps[this.currentStepIndex]!;
     }
 
@@ -762,7 +763,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(_options: Record<string, unknown>): Promise<Record<string, unknown>> {
         await this._loadOrigins();
 
         const currentStep = this.currentStep;
@@ -928,7 +929,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const characteristics = CHARS.map((key) => {
             const charData = (this._actorSys().characteristics?.[key] ?? {}) as Partial<WH40KCharacteristic>;
             const assignedIndex = this._charAssignments[key] ?? null;
-            const rollValue = assignedIndex !== null ? (this._charRolls[assignedIndex] ?? null) : null;
+            const rollValue = assignedIndex !== null ? this._charRolls[assignedIndex] ?? null : null;
             const base = this._charAdvancedMode ? this._charCustomBases[key] ?? DEFAULT_BASE : DEFAULT_BASE;
             const originBonus = originBonuses.totals[key] ?? 0;
             const total = rollValue !== null ? base + rollValue + originBonus : null;
@@ -1493,7 +1494,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
     _onCharDragEnd(event: Event): void {
         (event.currentTarget as HTMLElement).classList.remove('dragging');
-        this.element.querySelectorAll('.drop-valid, .drop-hover').forEach((el) => el.classList.remove('drop-valid', 'drop-hover'));
+        for (const el of this.element.querySelectorAll('.drop-valid, .drop-hover')) {
+            el.classList.remove('drop-valid', 'drop-hover');
+        }
         this._charDragData = null;
     }
 
@@ -2583,7 +2586,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Randomize all selections
      */
-    static async #randomize(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #randomize(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.localize('WH40K.OriginPath.Randomize'),
             content: game.i18n.localize('WH40K.OriginPath.RandomizeConfirm'),
@@ -2633,7 +2636,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Reset all selections
      */
-    static async #reset(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #reset(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const confirmed = await ConfirmationDialog.confirm({
             title: game.i18n.localize('WH40K.OriginPath.Reset'),
             content: game.i18n.localize('WH40K.OriginPath.ConfirmReset'),
@@ -2663,7 +2666,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Export path configuration
      */
-    static #export(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #export(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
         const data: { version: number; selections: Record<string, unknown> } = {
             version: 1,
             selections: {},
@@ -2696,7 +2699,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Import path configuration
      */
-    static #import(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #import(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = '.json';
@@ -2756,7 +2759,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Set guided/free mode
      */
-    static #setMode(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #setMode(this: OriginPathBuilder, _event: Event, target: HTMLElement): void {
         const value = (target as HTMLInputElement).value || target.closest('[data-action]')?.querySelector('input')?.value;
         this.guidedMode = value === 'guided';
         void this.render();
@@ -2765,7 +2768,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Set direction (forward/backward)
      */
-    static async #setDirection(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #setDirection(this: OriginPathBuilder, _event: Event, target: HTMLElement): Promise<void> {
         const value = (target as HTMLInputElement).value || target.dataset['direction'];
         if (value === 'forward' || value === 'backward') {
             const oldDirection = this.direction;
@@ -2799,7 +2802,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Navigate to a step
      */
-    static #goToStep(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #goToStep(this: OriginPathBuilder, _event: Event, target: HTMLElement): void {
         const stepKey = target.dataset['stepKey'];
         const stepIndex = parseInt(target.dataset['stepIndex'] ?? '', 10);
         if ((stepKey === undefined || stepKey === '') && Number.isNaN(stepIndex)) return;
@@ -2865,7 +2868,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Preview origin card (NEW behavior - single click shows in panel, doesn't select)
      * This is the new primary preview method - clicking a card just shows it in the panel
      */
-    static #previewOriginCard(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #previewOriginCard(this: OriginPathBuilder, _event: Event, target: HTMLElement): void {
         const originId = target.dataset['originId'];
         const originUuid = target.dataset['originUuid'];
 
@@ -2932,7 +2935,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Confirm the currently previewed selection and advance to next step
      */
-    static async #confirmSelection(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #confirmSelection(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const currentStep = this.currentStep;
 
         // Use previewed origin, or fall back to already-confirmed selection for this step
@@ -3065,7 +3068,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * View origin sheet (for selected origin in detail panel)
      */
-    static async #viewOrigin(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #viewOrigin(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const currentStep = this.currentStep;
         let selection = null;
 
@@ -3102,7 +3105,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Clear current origin selection
      */
-    static #clearOrigin(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #clearOrigin(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
         if (this.showLineage) {
             this.lineageSelection = null;
         } else {
@@ -3125,7 +3128,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Edit a choice - properly invoke OriginPathChoiceDialog
      */
-    static async #editChoice(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #editChoice(this: OriginPathBuilder, _event: Event, target: HTMLElement): Promise<void> {
         const choiceLabel = target.dataset['choiceLabel'];
         let selection = null;
 
@@ -3169,7 +3172,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Roll a stat using the roll dialog
      */
-    static async #rollStat(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollStat(this: OriginPathBuilder, _event: Event, target: HTMLElement): Promise<void> {
         const statType = target.dataset['statType'];
         let selection = null;
 
@@ -3230,7 +3233,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Manually set a stat value (alternative to rolling)
      */
-    static async #manualStat(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #manualStat(this: OriginPathBuilder, _event: Event, target: HTMLElement): Promise<void> {
         const statType = target.dataset['statType'];
         let selection = null;
 
@@ -3267,7 +3270,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             ok: {
                 callback: (_event: Event, button: HTMLButtonElement) => {
                     const input = button.form?.elements.namedItem('value') as HTMLInputElement | null;
-                    return parseInt(input?.value ?? '') || null;
+                    return parseInt(input?.value ?? '', 10) || null;
                 },
             },
             rejectClose: false,
@@ -3295,7 +3298,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Go to lineage selection
      */
-    static #goToLineage(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #goToLineage(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
         this.showLineage = true;
         this.showCharacteristics = false;
         this.showEquipment = false;
@@ -3306,7 +3309,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Skip lineage selection
      */
-    static #skipLineage(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #skipLineage(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
         this.lineageSelection = null;
         this.showLineage = false;
         this.showCharacteristics = true;
@@ -3318,7 +3321,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Navigate to the characteristics step.
      */
-    static #goToCharacteristics(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #goToCharacteristics(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
         this.showLineage = false;
         this.showCharacteristics = true;
         this.showEquipment = false;
@@ -3329,7 +3332,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Navigate to the Equip Acolyte step.
      */
-    static #goToEquipment(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #goToEquipment(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
         if (this.guidedMode && !this._hasAssignedCharacteristics()) {
             ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.EquipmentNeedsCharacteristics'));
             return;
@@ -3344,7 +3347,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Toggle selection of an Armoury item for the Equip Acolyte step.
      */
-    static #toggleEquipmentItem(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #toggleEquipmentItem(this: OriginPathBuilder, _event: Event, target: HTMLElement): void {
         const uuid = target.dataset['uuid'];
         if (uuid === undefined || uuid === '') return;
         this._toggleEquipmentByUuid(uuid);
@@ -3393,7 +3396,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Clear all Equip Acolyte selections.
      */
-    static #clearEquipment(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #clearEquipment(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
         this.equipmentSelections.clear();
         void this.render();
     }
@@ -3401,7 +3404,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Roll the full characteristic bank using 2d10 per slot.
      */
-    static async #rollCharacteristicsBank(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollCharacteristicsBank(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const rollInstances = Array.from({ length: OriginPathBuilder.GENERATION_CHARACTERISTICS.length }, () => new Roll('2d10'));
         await Promise.all(rollInstances.map(async (roll) => roll.evaluate()));
         const rolls: number[] = rollInstances.map((roll) => roll.total ?? 0);
@@ -3413,7 +3416,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Reset all characteristic assignments.
      */
-    static #charReset(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #charReset(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
         const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
         for (const key of CHARS) {
             this._charAssignments[key] = null;
@@ -3424,7 +3427,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Toggle advanced mode for characteristics.
      */
-    static #charToggleAdvanced(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #charToggleAdvanced(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
         this._charAdvancedMode = !this._charAdvancedMode;
         void this.render();
     }
@@ -3433,7 +3436,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Switch the character-generation mode. Only `roll-pool-hb` has a working
      * implementation today; `point-buy` and `roll` are stub placeholders.
      */
-    static #setCharGenMode(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+    static #setCharGenMode(this: OriginPathBuilder, _event: Event, target: HTMLElement): void {
         const mode = target.dataset['mode'];
         if (mode === 'point-buy' || mode === 'roll' || mode === 'roll-pool-hb') {
             this._charGenMode = mode;
@@ -3447,7 +3450,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * the pack isn't installed, fall back to a bare 1d100 so the player at
      * least records a roll result and can fill in the maxim by hand.
      */
-    static async #rollDivination(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollDivination(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const table = await OriginPathBuilder.#getDivinationTable();
         if (table !== null) {
             const rollTable = table as { draw: (options: { displayChat: boolean }) => Promise<{ results?: Array<{ text?: string }> }> };
@@ -3479,7 +3482,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Manually enter a divination.
      */
-    static async #manualDivination(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #manualDivination(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const text = await foundry.applications.api.DialogV2.prompt({
             window: { title: 'Enter Divination' },
             content: '<div class="form-group"><label>Divination:</label><input type="text" name="divination" autofocus /></div>',
@@ -3501,7 +3504,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Roll starting throne gelt from combined homeworld + background formulas.
      */
-    static async #rollThrones(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollThrones(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const formula = this._getContextualThronesFormula();
         if (formula === '') {
             ui.notifications.warn('No thrones formula available yet — select an origin with a throne gelt formula.');
@@ -3514,19 +3517,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         void this.render();
     }
 
-    static async #manualThrones(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #manualThrones(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const val = await foundry.applications.api.DialogV2.prompt({
             window: { title: 'Enter Starting Throne Gelt' },
             content: '<div class="form-group"><label>Thrones:</label><input type="number" name="value" min="0" autofocus /></div>',
             ok: {
                 callback: (_event: Event, button: HTMLButtonElement) => {
                     const input = button.form?.elements.namedItem('value') as HTMLInputElement | null;
-                    return parseInt(input?.value ?? '');
+                    return parseInt(input?.value ?? '', 10);
                 },
             },
             rejectClose: false,
         });
-        if (typeof val === 'number' && !isNaN(val)) {
+        if (typeof val === 'number' && !Number.isNaN(val)) {
             this._thronesRolled = val;
             this._saveScrollPosition();
             void this.render();
@@ -3536,7 +3539,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Roll starting influence (1d5 + Fellowship Bonus + homeworld modifier).
      */
-    static async #rollInfluence(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollInfluence(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         if (this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew()) {
             ui.notifications.info(game.i18n.localize('WH40K.OriginPath.HomebrewInfluenceNoRoll'));
             this._influenceRolled = 0;
@@ -3553,19 +3556,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         void this.render();
     }
 
-    static async #manualInfluence(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #manualInfluence(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const val = await foundry.applications.api.DialogV2.prompt({
             window: { title: 'Enter Starting Influence' },
             content: '<div class="form-group"><label>Influence:</label><input type="number" name="value" min="0" autofocus /></div>',
             ok: {
                 callback: (_event: Event, button: HTMLButtonElement) => {
                     const input = button.form?.elements.namedItem('value') as HTMLInputElement | null;
-                    return parseInt(input?.value ?? '');
+                    return parseInt(input?.value ?? '', 10);
                 },
             },
             rejectClose: false,
         });
-        if (typeof val === 'number' && !isNaN(val)) {
+        if (typeof val === 'number' && !Number.isNaN(val)) {
             this._influenceRolled = val;
             this._saveScrollPosition();
             void this.render();
@@ -3575,7 +3578,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Open an item sheet (for talents, skills, etc.)
      */
-    static async #openItem(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #openItem(this: OriginPathBuilder, _event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset['uuid'];
         if (uuid === undefined || uuid === '') return;
 
@@ -3592,7 +3595,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Commit path to character
      */
-    static async #commit(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+    static async #commit(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const status = this._calculateStatus();
 
         if (status['canCommit'] !== true) {
@@ -3748,7 +3751,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     charUpdate[`system.characterGeneration.customBases.${key}`] = this._charCustomBases[key];
                     const baseDefault = this._charAdvancedMode ? this._charCustomBases[key] ?? settingDefaultBase : settingDefaultBase;
                     const rollIndex = charAssignments[key] ?? null;
-                    const rolled = rollIndex !== null && (charRolls[rollIndex] ?? 0) > 0 ? (charRolls[rollIndex] ?? 0) : 0;
+                    const rolled = rollIndex !== null && (charRolls[rollIndex] ?? 0) > 0 ? charRolls[rollIndex] ?? 0 : 0;
                     const originBonus = originModSums[key] ?? 0;
                     charUpdate[`system.characteristics.${key}.base`] = baseDefault + rolled + originBonus;
                 }

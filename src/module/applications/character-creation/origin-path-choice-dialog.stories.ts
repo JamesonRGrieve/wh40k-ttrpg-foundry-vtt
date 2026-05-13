@@ -33,7 +33,7 @@ interface Args {
 
 const meta: Meta<Args> = {
     title: 'Character Creation/OriginPathChoiceDialog',
-    render: (args) => renderSheet(templateSrc, args),
+    render: (args) => renderSheet(templateSrc, args as unknown as Record<string, unknown>),
     args: {
         itemImg: 'icons/svg/d20.svg',
         itemName: 'Schola Progenium',
