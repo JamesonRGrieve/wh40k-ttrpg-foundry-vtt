@@ -24,6 +24,7 @@ import type { ApplicationV2Ctor } from './application-types.ts';
 export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class ExpandableTooltipApplication extends Base {
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
+        // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
             super(...args);
         }
