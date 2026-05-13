@@ -535,7 +535,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
             }
         } catch (err) {
             console.error('Failed to create NPC from template:', err);
-            ui.notifications.error('Failed to create NPC from template');
+            ui.notifications.error(game.i18n.localize('WH40K.NPC.Template.CreateError'));
         }
     }
 }

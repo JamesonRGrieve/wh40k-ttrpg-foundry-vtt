@@ -4,6 +4,12 @@
 
 import BaseItemSheet from './base-item-sheet.ts';
 
+/** Tab label localization keys, hoisted so the static TABS entries reference identifiers. */
+const TAB_LABEL_OVERVIEW = 'WH40K.Tabs.Overview';
+const TAB_LABEL_USAGE = 'WH40K.Tabs.Usage';
+const TAB_LABEL_DESCRIPTION = 'WH40K.Tabs.Description';
+const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
+
 /**
  * Sheet for gear items (consumables, drugs, tools, etc.).
  */
@@ -36,10 +42,10 @@ export default class GearSheet extends BaseItemSheet {
 
     /** @override */
     static override TABS = [
-        { tab: 'overview', group: 'primary', label: 'Overview' },
-        { tab: 'usage', group: 'primary', label: 'Usage' },
-        { tab: 'description', group: 'primary', label: 'Description' },
-        { tab: 'effects', group: 'primary', label: 'Effects' },
+        { tab: 'overview', group: 'primary', label: TAB_LABEL_OVERVIEW },
+        { tab: 'usage', group: 'primary', label: TAB_LABEL_USAGE },
+        { tab: 'description', group: 'primary', label: TAB_LABEL_DESCRIPTION },
+        { tab: 'effects', group: 'primary', label: TAB_LABEL_EFFECTS },
     ];
 
     /* -------------------------------------------- */

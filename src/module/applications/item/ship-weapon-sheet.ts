@@ -4,6 +4,10 @@
 
 import BaseItemSheet from './base-item-sheet.ts';
 
+/** Tab label localization keys, hoisted so the static TABS entries reference identifiers. */
+const TAB_LABEL_DETAILS = 'WH40K.Tabs.Details';
+const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
+
 /**
  * Sheet for ship weapon items.
  * Handles macrobatteries, lances, torpedoes, and other ship-scale weapons.
@@ -33,8 +37,8 @@ export default class ShipWeaponSheet extends BaseItemSheet {
 
     /** @override */
     static override TABS = [
-        { tab: 'details', group: 'primary', label: 'WH40K.Item.Tabs.Details' },
-        { tab: 'effects', group: 'primary', label: 'WH40K.Item.Tabs.Effects' },
+        { tab: 'details', group: 'primary', label: TAB_LABEL_DETAILS },
+        { tab: 'effects', group: 'primary', label: TAB_LABEL_EFFECTS },
     ];
 
     /* -------------------------------------------- */

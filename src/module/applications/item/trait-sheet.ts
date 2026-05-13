@@ -4,6 +4,11 @@
 
 import BaseItemSheet from './base-item-sheet.ts';
 
+/** Tab label localization keys, hoisted so the static TABS entries reference identifiers. */
+const TAB_LABEL_PROPERTIES = 'WH40K.Tabs.Properties';
+const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
+const TAB_LABEL_DESCRIPTION = 'WH40K.Tabs.Description';
+
 /**
  * Sheet for trait items.
  */
@@ -32,9 +37,9 @@ export default class TraitSheet extends BaseItemSheet {
 
     /** @override */
     static override TABS = [
-        { tab: 'properties', group: 'primary', label: 'Properties' },
-        { tab: 'effects', group: 'primary', label: 'Effects' },
-        { tab: 'description', group: 'primary', label: 'Description' },
+        { tab: 'properties', group: 'primary', label: TAB_LABEL_PROPERTIES },
+        { tab: 'effects', group: 'primary', label: TAB_LABEL_EFFECTS },
+        { tab: 'description', group: 'primary', label: TAB_LABEL_DESCRIPTION },
     ];
 
     /* -------------------------------------------- */

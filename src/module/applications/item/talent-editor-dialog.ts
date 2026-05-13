@@ -16,6 +16,9 @@ import type { ApplicationV2Ctor, FoundryApplicationApiLike } from '../api/applic
 const applicationAPI = (foundry.applications as unknown as { api: FoundryApplicationApiLike & { ApplicationV2: ApplicationV2Ctor } }).api;
 const { ApplicationV2, HandlebarsApplicationMixin } = applicationAPI;
 
+/** Dialog window title localization key, hoisted so the DEFAULT_OPTIONS entry references an identifier. */
+const DIALOG_TITLE = 'WH40K.Talent.EditorTitle';
+
 /** Talent system data with mixin-inherited modifiers visible to the type system. */
 type TalentSystem = TalentData & Pick<ModifiersTemplate, 'modifiers'>;
 
@@ -165,7 +168,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             height: 650,
         },
         window: {
-            title: 'Edit Talent Data',
+            title: DIALOG_TITLE,
             icon: 'fa-solid fa-pen-ruler',
             resizable: true,
         },
