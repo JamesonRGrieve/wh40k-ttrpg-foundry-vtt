@@ -160,7 +160,7 @@ export const RowSimple: Story = {
 export const RowExpanded: Story = {
     name: 'Row / With description toggle',
     render: () => {
-        const tpl = Handlebars.compile(itemTableRowSrc, { partials: true });
+        const tpl = Handlebars.compile(itemTableRowSrc);
         // Compose by hand to slot block content into the description.
         const wrapper = document.createElement('div');
         wrapper.classList.add('wh40k-rpg', 'sheet');

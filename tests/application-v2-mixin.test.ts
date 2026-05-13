@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
+import type { ApplicationV2Ctor } from '../src/module/applications/api/application-types.ts';
 
-type Constructor<T = object> = new (...args: never[]) => T;
+type Constructor<T = object> = new (...args: any[]) => T;
 
 interface FakeApplicationApi {
     HandlebarsApplicationMixin<T extends Constructor>(base: T): T;
@@ -51,8 +52,8 @@ class BaseTestApplication {
     hasFrame = false;
     options = {};
 
-    constructor(element: HTMLElement) {
-        this.element = element;
+    constructor(...args: any[]) {
+        this.element = args[0] as HTMLElement;
     }
 }
 
@@ -63,11 +64,11 @@ describe('ApplicationV2Mixin', () => {
 
         const { default: ApplicationV2Mixin } = await import('../src/module/applications/api/application-v2-mixin.ts');
 
-        class TestApplication extends ApplicationV2Mixin(BaseTestApplication) {
+        class TestApplication extends ApplicationV2Mixin(BaseTestApplication as unknown as ApplicationV2Ctor) {
             static PARTS = {
-                header: { container: { id: 'sidebar', classes: ['wh40k-sidebar'] } },
-                tabs: { container: { id: 'sidebar', classes: ['wh40k-sidebar'] } },
-                equipment: { container: { id: 'tab-body', classes: ['wh40k-body'] } },
+                header: { template: '', container: { id: 'sidebar', classes: ['wh40k-sidebar'] } },
+                tabs: { template: '', container: { id: 'sidebar', classes: ['wh40k-sidebar'] } },
+                equipment: { template: '', container: { id: 'tab-body', classes: ['wh40k-body'] } },
             };
         }
 

@@ -1,21 +1,20 @@
 {
   "strict": [
-    "TS4113",
-    "TS4117"
+    "TS18046",
+    "TS2339",
+    "TS2345",
+    "TS2353",
+    "TS2417",
+    "TS2510",
+    "TS2545",
+    "TS2749"
   ],
   "config": "tsconfig.test.json",
   "totals": {
-    "totalErrors": 17
+    "totalErrors": 2
   },
   "byCode": {
-    "TS18046": 1,
-    "TS2339": 1,
-    "TS2345": 6,
     "TS2352": 1,
-    "TS2353": 3,
-    "TS2417": 1,
-    "TS2510": 1,
-    "TS2545": 1,
-    "TS2749": 2
+    "TS2416": 1
   }
 }
