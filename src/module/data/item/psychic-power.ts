@@ -129,7 +129,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
      * Get the focus test description.
      * @type {string}
      */
-    get focusTestLabel() {
+    get focusTestLabel(): string {
         let label = this.focusCharacteristicLabel;
         if (this.focusPower.modifier !== 0) {
             label += ` ${this.focusPower.modifier >= 0 ? '+' : ''}${this.focusPower.modifier}`;

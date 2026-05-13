@@ -106,7 +106,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      * Get the characteristic abbreviation.
      * @type {string}
      */
-    get characteristicAbbr() {
+    get characteristicAbbr(): string {
         const abbrs: Record<string, string> = {
             weaponSkill: 'WS',
             ballisticSkill: 'BS',

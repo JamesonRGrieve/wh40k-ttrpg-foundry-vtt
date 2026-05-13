@@ -43,7 +43,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
      * Get the full name including level.
      * @type {string}
      */
-    get fullName() {
+    get fullName(): string {
         let name = this.parent?.name ?? '';
         if (this.hasLevel && this.level !== null) {
             name += ` (${this.level})`;

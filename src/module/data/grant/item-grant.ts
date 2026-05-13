@@ -1,7 +1,6 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
-import type { GrantApplicationResult, GrantSummary } from './base-grant.ts';
-import BaseGrantData from './base-grant.ts';
+import BaseGrantData, { type GrantApplicationResult, type GrantSummary } from './base-grant.ts';
 
 /**
  * Interface for a single item grant configuration.
@@ -10,14 +9,6 @@ interface ItemGrantConfig {
     uuid: string;
     optional: boolean;
     overrides?: Record<string, any>;
-}
-
-/**
- * Interface for the state of an applied item grant.
- */
-interface ItemAppliedState {
-    uuid: string;
-    itemId: string;
 }
 
 /**
