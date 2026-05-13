@@ -39,7 +39,7 @@ export class ForceFieldData {
         }
     }
 
-    async finalize() {
+    async finalize(): Promise<void> {
         this.roll = await roll1d100();
 
         if ((this.roll.total ?? 0) <= this.protectionRating) {
@@ -51,7 +51,7 @@ export class ForceFieldData {
         }
     }
 
-    async performActionAndSendToChat() {
+    async performActionAndSendToChat(): Promise<void> {
         game.wh40k.log('performActionAndSendToChat', this);
 
         // Update to overloaded if necessary

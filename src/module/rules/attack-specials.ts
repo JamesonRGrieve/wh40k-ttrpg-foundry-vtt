@@ -279,6 +279,6 @@ export function attackSpecials(): Array<{ name: string; hasLevel: boolean }> {
     ];
 }
 
-export function attackSpecialsNames() {
+export function attackSpecialsNames(): string[] {
     return attackSpecials().map((a) => a.name);
 }

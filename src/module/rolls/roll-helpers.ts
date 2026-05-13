@@ -3,7 +3,7 @@ import type { ActionData } from './action-data.ts';
 type DotNotationTarget = Record<string, unknown>;
 type DotNotationKey = string | string[];
 
-export function uuid() {
+export function uuid(): string {
     const chars = '0123456789abcdef'.split('');
 
     const uuidStr = [],
@@ -41,7 +41,7 @@ export function getOpposedDegrees(dos: number, dof: number, opposedDos: number, 
     }
 }
 
-export async function roll1d100() {
+export async function roll1d100(): Promise<Roll> {
     const formula = '1d100';
     const roll = new Roll(formula, {});
     await roll.evaluate();

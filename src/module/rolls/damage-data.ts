@@ -58,7 +58,7 @@ export class DamageData {
     additionalHits = 0;
     hits: Hit[] = [];
 
-    reset() {
+    reset(): void {
         this.hits = [];
         this.additionalHits = 0;
     }
@@ -93,7 +93,7 @@ export class Hit {
      * @param hitNumber
      * @returns {Promise<Hit>}
      */
-    static async createHit(attackData: AttackDataLike, hitNumber: number) {
+    static async createHit(attackData: AttackDataLike, hitNumber: number): Promise<Hit> {
         const hit = new Hit();
         await hit._calculateDamage(attackData);
         hit._totalDamage();
@@ -119,11 +119,11 @@ export class Hit {
         return hit;
     }
 
-    _totalDamage() {
+    _totalDamage(): void {
         this.totalDamage = this.damage + Object.values(this.modifiers).reduce((a, b) => a + b, 0);
     }
 
-    _totalPenetration() {
+    _totalPenetration(): void {
         this.totalPenetration = this.penetration + Object.values(this.penetrationModifiers).reduce((a, b) => a + b, 0);
     }
 
@@ -131,7 +131,7 @@ export class Hit {
      * @param attackData {AttackData}
      * @returns {Promise<void>}
      */
-    async _calculateDamage(attackData: AttackDataLike) {
+    async _calculateDamage(attackData: AttackDataLike): Promise<void> {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
@@ -311,7 +311,7 @@ export class Hit {
         }
     }
 
-    async _calculatePenetration(attackData: AttackDataLike) {
+    async _calculatePenetration(attackData: AttackDataLike): Promise<void> {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
@@ -390,7 +390,7 @@ export class Hit {
         calculateWeaponModifiersPenetrationBonuses(attackData as unknown as Parameters<typeof calculateWeaponModifiersPenetrationBonuses>[0], this);
     }
 
-    async _calculateSpecials(attackData: AttackDataLike) {
+    async _calculateSpecials(attackData: AttackDataLike): Promise<void> {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
