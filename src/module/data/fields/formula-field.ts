@@ -5,7 +5,7 @@
 export default class FormulaField extends foundry.data.fields.StringField {
     /** @inheritdoc */
     /* eslint-disable-next-line @typescript-eslint/naming-convention, no-restricted-syntax -- boundary: Foundry DataField static `_defaults` shape */
-    static get _defaults(): Record<string, unknown> {
+    static override get _defaults(): Record<string, unknown> {
         return foundry.utils.mergeObject(super._defaults, {
             deterministic: false,
         });
@@ -22,7 +22,7 @@ export default class FormulaField extends foundry.data.fields.StringField {
     /* -------------------------------------------- */
 
     /** @inheritdoc */
-    _validateType(value: string): void {
+    override _validateType(value: string): void {
         if (value === '') return;
 
         // Attempt to validate as a roll formula

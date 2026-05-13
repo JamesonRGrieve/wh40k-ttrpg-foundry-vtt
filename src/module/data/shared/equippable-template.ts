@@ -22,7 +22,7 @@ export default class EquippableTemplate extends SystemDataModel {
     declare container: string;
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             equipped: new fields.BooleanField({ required: true, initial: false }),
@@ -42,7 +42,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @protected
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source data
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         // Ensure boolean fields are proper booleans
         if (source['equipped'] !== undefined && typeof source['equipped'] !== 'boolean') {
@@ -67,7 +67,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @protected
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry _cleanData source data
-    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
+    static override _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData(source, options);
     }
 

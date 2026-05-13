@@ -14,7 +14,7 @@ export default class ActorDataModel extends SystemDataModel {
      * Actor-specific metadata.
      * @type {ActorDataModelMetadata}
      */
-    static metadata: Record<string, unknown> = Object.freeze(
+    static override metadata: Record<string, unknown> = Object.freeze(
         foundry.utils.mergeObject(
             super.metadata,
             {
@@ -29,7 +29,7 @@ export default class ActorDataModel extends SystemDataModel {
     /* -------------------------------------------- */
 
     /** @override */
-    get embeddedDescriptionKeyPath(): string {
+    override get embeddedDescriptionKeyPath(): string {
         return 'bio.notes';
     }
 
@@ -38,7 +38,7 @@ export default class ActorDataModel extends SystemDataModel {
     /* -------------------------------------------- */
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return this.mergeSchema(super.defineSchema(), {});
     }
 

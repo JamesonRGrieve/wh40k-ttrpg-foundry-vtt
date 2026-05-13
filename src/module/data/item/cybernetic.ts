@@ -28,7 +28,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
     declare notes: string;
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -74,7 +74,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
     }
 
     /** @inheritdoc */
-    prepareBaseData(): void {
+    override prepareBaseData(): void {
         super.prepareBaseData();
 
         const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);

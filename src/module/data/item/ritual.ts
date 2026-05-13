@@ -24,7 +24,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
     declare activationLabel: string;
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
