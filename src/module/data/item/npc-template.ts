@@ -120,7 +120,7 @@ export default class NPCTemplateData extends ItemDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return {
             ...super.defineSchema(),
 
@@ -289,7 +289,7 @@ export default class NPCTemplateData extends ItemDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    prepareDerivedData(): void {
+    override prepareDerivedData(): void {
         super.prepareDerivedData();
 
         // Calculate skill count
@@ -329,7 +329,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * Get the type label.
      * @type {string}
      */
-    get typeLabel(): string {
+    override get typeLabel(): string {
         return game.i18n.localize(`WH40K.NPCType.${this.type.titleCase()}`);
     }
 

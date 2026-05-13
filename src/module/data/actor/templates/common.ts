@@ -57,7 +57,7 @@ export default class CommonTemplate extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    prepareBaseData(): void {
+    override prepareBaseData(): void {
         super.prepareBaseData();
         // Add shared base data prep that applies to ALL actor types
     }
@@ -65,7 +65,7 @@ export default class CommonTemplate extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    prepareDerivedData(): void {
+    override prepareDerivedData(): void {
         super.prepareDerivedData();
         // Add shared derived data prep that applies to ALL actor types
     }

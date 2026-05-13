@@ -26,7 +26,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     declare rollConfig: { defaultModifier: number; canBeUsedUntrained: boolean; untrainedPenalty: number };
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),

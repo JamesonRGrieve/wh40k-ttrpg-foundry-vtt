@@ -30,7 +30,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
     declare notes: string;
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
