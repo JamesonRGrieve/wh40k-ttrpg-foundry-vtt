@@ -20,7 +20,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     declare notes: string;
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -64,7 +64,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         ArmourModificationData.#migrateArmourTypes(source);
         ArmourModificationData.#migrateArmourModifier(source);
@@ -77,73 +77,73 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     }
 
     static #migrateArmourTypes(source: Record<string, unknown>): void {
-        if (typeof source.armourTypes === 'string') {
-            source.restrictions ??= {};
-            (source.restrictions as Record<string, unknown>).armourTypes = ArmourModificationData.#parseArmourTypes(source.armourTypes);
-            delete source.armourTypes;
+        if (typeof source['armourTypes'] === 'string') {
+            source['restrictions'] ??= {};
+            (source['restrictions'] as Record<string, unknown>)['armourTypes'] = ArmourModificationData.#parseArmourTypes(source['armourTypes']);
+            delete source['armourTypes'];
         }
     }
 
     static #migrateArmourModifier(source: Record<string, unknown>): void {
-        if (typeof source.armourModifier === 'number') {
-            source.modifiers ??= {};
-            (source.modifiers as Record<string, unknown>).armourPoints = source.armourModifier;
-            delete source.armourModifier;
+        if (typeof source['armourModifier'] === 'number') {
+            source['modifiers'] ??= {};
+            (source['modifiers'] as Record<string, unknown>)['armourPoints'] = source['armourModifier'];
+            delete source['armourModifier'];
         }
     }
 
     static #extractAPFromEffect(source: Record<string, unknown>): void {
-        const mods = source.modifiers as Record<string, unknown> | undefined;
-        if ((!mods?.armourPoints || mods.armourPoints === 0) && source.effect) {
-            const extracted = ArmourModificationData.#extractAPModifier(source.effect as string);
+        const mods = source['modifiers'] as Record<string, unknown> | undefined;
+        if ((!mods?.['armourPoints'] || mods['armourPoints'] === 0) && source['effect']) {
+            const extracted = ArmourModificationData.#extractAPModifier(source['effect'] as string);
             if (extracted > 0) {
-                source.modifiers ??= {};
-                (source.modifiers as Record<string, unknown>).armourPoints = extracted;
+                source['modifiers'] ??= {};
+                (source['modifiers'] as Record<string, unknown>)['armourPoints'] = extracted;
             }
         }
     }
 
     static #migrateMaxDexBonus(source: Record<string, unknown>): void {
-        if (typeof source.maxDexBonus === 'number') {
-            source.modifiers ??= {};
-            (source.modifiers as Record<string, unknown>).maxAgility = source.maxDexBonus;
-            delete source.maxDexBonus;
+        if (typeof source['maxDexBonus'] === 'number') {
+            source['modifiers'] ??= {};
+            (source['modifiers'] as Record<string, unknown>)['maxAgility'] = source['maxDexBonus'];
+            delete source['maxDexBonus'];
         }
     }
 
     static #extractAgilityFromEffect(source: Record<string, unknown>): void {
-        const mods = source.modifiers as Record<string, unknown> | undefined;
-        if ((!mods?.maxAgility || mods.maxAgility === 0) && source.effect) {
-            const extracted = ArmourModificationData.#extractAgilityModifier(source.effect as string);
+        const mods = source['modifiers'] as Record<string, unknown> | undefined;
+        if ((!mods?.['maxAgility'] || mods['maxAgility'] === 0) && source['effect']) {
+            const extracted = ArmourModificationData.#extractAgilityModifier(source['effect'] as string);
             if (extracted !== 0) {
-                source.modifiers ??= {};
-                (source.modifiers as Record<string, unknown>).maxAgility = extracted;
+                source['modifiers'] ??= {};
+                (source['modifiers'] as Record<string, unknown>)['maxAgility'] = extracted;
             }
         }
     }
 
     static #migrateWeight(source: Record<string, unknown>): void {
-        if (typeof source.weight === 'string') {
-            source.modifiers ??= {};
-            (source.modifiers as Record<string, unknown>).weight = ArmourModificationData.#parseWeight(source.weight);
-            delete source.weight;
+        if (typeof source['weight'] === 'string') {
+            source['modifiers'] ??= {};
+            (source['modifiers'] as Record<string, unknown>)['weight'] = ArmourModificationData.#parseWeight(source['weight']);
+            delete source['weight'];
         }
     }
 
     static #cleanupModifiers(source: Record<string, unknown>): void {
-        const mods = source.modifiers as Record<string, unknown> | undefined;
-        if (mods?.characteristics) {
-            delete mods.characteristics;
+        const mods = source['modifiers'] as Record<string, unknown> | undefined;
+        if (mods?.['characteristics']) {
+            delete mods['characteristics'];
         }
-        if (mods?.skills) {
-            delete mods.skills;
+        if (mods?.['skills']) {
+            delete mods['skills'];
         }
     }
 
     static #initializeDefaults(source: Record<string, unknown>): void {
-        source.addedProperties ??= [];
-        source.removedProperties ??= [];
-        source.restrictions ??= { armourTypes: ['any'] };
+        source['addedProperties'] ??= [];
+        source['removedProperties'] ??= [];
+        source['restrictions'] ??= { armourTypes: ['any'] };
     }
 
     /* -------------------------------------------- */
@@ -156,18 +156,19 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * @param {DataModelV14.CleaningOptions} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
+    static override _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
         if (!source) return;
         // Convert SetFields to Arrays for storage
-        if (source.restrictions instanceof Object && (source.restrictions as any).armourTypes instanceof Set) {
-            (source.restrictions as any).armourTypes = Array.from((source.restrictions as any).armourTypes);
+        const restrictions = source['restrictions'];
+        if (restrictions instanceof Object && (restrictions as Record<string, unknown>)['armourTypes'] instanceof Set) {
+            (restrictions as Record<string, unknown>)['armourTypes'] = Array.from((restrictions as Record<string, unknown>)['armourTypes'] as Set<unknown>);
         }
-        if (source.addedProperties instanceof Set) {
-            source.addedProperties = Array.from(source.addedProperties);
+        if (source['addedProperties'] instanceof Set) {
+            source['addedProperties'] = Array.from(source['addedProperties'] as Set<unknown>);
         }
-        if (source.removedProperties instanceof Set) {
-            source.removedProperties = Array.from(source.removedProperties);
+        if (source['removedProperties'] instanceof Set) {
+            source['removedProperties'] = Array.from(source['removedProperties'] as Set<unknown>);
         }
     }
 
