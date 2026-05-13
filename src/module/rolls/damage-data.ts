@@ -99,7 +99,7 @@ export class Hit {
         hit._totalDamage();
         await hit._calculatePenetration(attackData);
         hit._totalPenetration();
-        await hit._calculateSpecials(attackData);
+        hit._calculateSpecials(attackData);
 
         if (attackData.rollData.isCalledShot) {
             hit.location = attackData.rollData.calledShotLocation ?? 'Body';
@@ -390,7 +390,7 @@ export class Hit {
         calculateWeaponModifiersPenetrationBonuses(attackData as unknown as Parameters<typeof calculateWeaponModifiersPenetrationBonuses>[0], this);
     }
 
-    async _calculateSpecials(attackData: AttackDataLike): Promise<void> {
+    _calculateSpecials(attackData: AttackDataLike): void {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
