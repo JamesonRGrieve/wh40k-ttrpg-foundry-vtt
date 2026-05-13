@@ -71,20 +71,20 @@ interface CharacteristicTooltipPayload {
 }
 
 interface SkillTooltipPayload {
-    name?: string;
-    label?: string;
-    baseValue?: number;
-    basic?: boolean;
-    trainingBonus?: number;
-    actorUuid?: string;
-    characteristic?: string;
-    charValue?: number;
-    trained?: boolean;
-    plus10?: boolean;
-    plus20?: boolean;
-    plus30?: boolean;
-    current?: number;
-    bonus?: number;
+    name?: string | undefined;
+    label?: string | undefined;
+    baseValue?: number | undefined;
+    basic?: boolean | undefined;
+    trainingBonus?: number | undefined;
+    actorUuid?: string | undefined;
+    characteristic?: string | undefined;
+    charValue?: number | undefined;
+    trained?: boolean | undefined;
+    plus10?: boolean | undefined;
+    plus20?: boolean | undefined;
+    plus30?: boolean | undefined;
+    current?: number | undefined;
+    bonus?: number | undefined;
 }
 
 interface ArmorTooltipPayload {
@@ -282,8 +282,8 @@ export class TooltipsWH40K {
         const element = tooltipManager.element;
         if (element === null) return;
 
-        const tooltipType = element.dataset.wh40kTooltip;
-        const tooltipDataAttr = element.dataset.wh40kTooltipData;
+        const tooltipType = element.dataset['wh40kTooltip'];
+        const tooltipDataAttr = element.dataset['wh40kTooltipData'];
 
         if (tooltipType !== undefined && tooltipType !== '' && tooltipDataAttr !== undefined && tooltipDataAttr !== '') {
             try {
@@ -301,8 +301,8 @@ export class TooltipsWH40K {
             return;
         }
 
-        if (element.classList.contains('content-link') && element.dataset.uuid !== undefined) {
-            const doc = await fromUuid(element.dataset.uuid);
+        if (element.classList.contains('content-link') && element.dataset['uuid'] !== undefined) {
+            const doc = await fromUuid(element.dataset['uuid']);
             if (doc !== null) {
                 await this._onHoverContentLink(doc as WH40KItem);
             }
@@ -479,6 +479,7 @@ export class TooltipsWH40K {
         let trainingBonus = dataTB ?? 0;
         if (level > 0 && level <= skillRanks.length) {
             const rank = skillRanks[level - 1];
+            if (rank == null) throw new Error(`skillRanks[${level - 1}] is undefined; this should be unreachable.`);
             training = rank.tooltip;
             trainingBonus = dataTB ?? rank.bonus;
         }
@@ -786,7 +787,7 @@ export class TooltipsWH40K {
         const pos = tooltip.getBoundingClientRect();
         const { innerHeight, innerWidth } = window;
 
-        let direction = tooltipManager.element?.dataset.tooltipDirection;
+        let direction = tooltipManager.element?.dataset['tooltipDirection'];
 
         if (direction === undefined || direction === '') {
             direction = 'LEFT';
@@ -954,7 +955,8 @@ export function prepareQualityTooltipData(identifier: string, level: number | nu
     let resolvedLevel = level;
     if (resolvedLevel === null) {
         const match = identifier.match(/-(\d+)$/);
-        if (match !== null) resolvedLevel = parseInt(match[1]);
+        const matchGroup = match?.[1];
+        if (matchGroup !== undefined) resolvedLevel = parseInt(matchGroup);
     }
     const label = game.i18n.localize(def.label);
     const description = game.i18n.localize(def.description);

@@ -74,9 +74,9 @@ function flaggableUser(): FlaggableUser {
 
 /** Rate-of-fire descriptor used by the panel. */
 interface PanelRateOfFire {
-    single?: number | boolean | string;
-    semiAuto?: boolean;
-    fullAuto?: boolean;
+    single?: number | boolean | string | undefined;
+    semiAuto?: boolean | undefined;
+    fullAuto?: boolean | undefined;
 }
 
 /** Weapon system fields read by the panel that aren't on the canonical schema. */
@@ -112,16 +112,16 @@ interface CombatPanelActor extends WH40KBaseActor {
 
 /** Prepared weapon view returned to the template. */
 interface PreparedWeaponData {
-    none?: boolean;
-    id?: string | null;
-    name?: string | null;
-    img?: string | null;
-    damage?: string;
-    penetration?: number;
-    range?: string | number;
-    clip?: { value?: number; max?: number };
-    ammo?: { current: number; max: number; percentage: number; low: boolean };
-    rateOfFire?: PanelRateOfFire;
+    none?: boolean | undefined;
+    id?: string | null | undefined;
+    name?: string | null | undefined;
+    img?: string | null | undefined;
+    damage?: string | undefined;
+    penetration?: number | undefined;
+    range?: string | number | undefined;
+    clip?: { value?: number | undefined; max?: number | undefined } | undefined;
+    ammo?: { current: number; max: number; percentage: number; low: boolean } | undefined;
+    rateOfFire?: PanelRateOfFire | undefined;
 }
 
 /** Prepared quick action entry. */
@@ -139,7 +139,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         id: 'combat-quick-panel-{id}',
         classes: ['wh40k-rpg', 'combat-hud', 'floating-panel'],
         tag: 'aside',
@@ -253,16 +253,16 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext signature is framework-defined.
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         if (!this.actor) return context;
 
-        context.actor = this.actor;
-        context.system = this.actor.system;
+        context['actor'] = this.actor;
+        context['system'] = this.actor.system;
 
         const wounds = this.actor.system.wounds;
-        context.wounds = {
+        context['wounds'] = {
             value: wounds.value,
             max: wounds.max,
             percentage: Math.round((wounds.value / wounds.max) * 100),
@@ -272,7 +272,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: fatigue is declared optional on the shared WH40KActorSystemData (some actor types — vehicles, starships — never carry it); tightening would cascade across 7 systems.
         const fatigue = this.actor.system.fatigue ?? { value: 0, max: 0 };
-        context.fatigue = {
+        context['fatigue'] = {
             value: fatigue.value,
             max: fatigue.max,
             percentage: fatigue.max > 0 ? Math.round((fatigue.value / fatigue.max) * 100) : 0,
@@ -284,7 +284,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         const combatant = actorId !== null ? findCombatantForActor(actorId) : null;
         const initiativeBonus = this.actor.system.initiative.bonus;
         const combatantInit = combatant?.initiative ?? null;
-        context.initiative = {
+        context['initiative'] = {
             rolled: combatantInit !== null,
             value: combatantInit ?? 0,
             bonus: initiativeBonus,
@@ -292,19 +292,19 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
         // Primary weapon
         this._updatePrimaryWeapon();
-        context.weapon = this._prepareWeaponData(this.primaryWeapon);
+        context['weapon'] = this._prepareWeaponData(this.primaryWeapon);
 
         // Alternate weapons (for quick switch)
-        context.alternateWeapons = this.actor.items.filter((i) => i.type === 'weapon' && i.id !== this.primaryWeapon?.id).slice(0, 3);
+        context['alternateWeapons'] = this.actor.items.filter((i) => i.type === 'weapon' && i.id !== this.primaryWeapon?.id).slice(0, 3);
 
         // Reactions
-        context.reactions = this._prepareReactions();
+        context['reactions'] = this._prepareReactions();
 
         // Quick actions
-        context.actions = this._prepareQuickActions();
+        context['actions'] = this._prepareQuickActions();
 
         // Consumables
-        context.consumables = this.actor.items
+        context['consumables'] = this.actor.items
             .filter((i) => {
                 if (i.type !== 'gear') return false;
                 const sys = i.system as PanelGearSystem;
@@ -313,8 +313,8 @@ export default class CombatQuickPanel extends ApplicationV2 {
             .slice(0, 3);
 
         // Panel state
-        context.opacityLevel = this.opacityLevel;
-        context.opacityKey = this._getOpacityKey();
+        context['opacityLevel'] = this.opacityLevel;
+        context['opacityKey'] = this._getOpacityKey();
 
         return context;
     }
@@ -430,15 +430,15 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     _getOpacityKey(): string {
-        const keys = ['full', 'high', 'medium', 'low'];
-        return keys[this.opacityLevel] ?? keys[0];
+        const keys: string[] = ['full', 'high', 'medium', 'low'];
+        return keys[this.opacityLevel] ?? 'full';
     }
 
     /* -------------------------------------------- */
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender signature is framework-defined.
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    override _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
         this._restorePosition();
@@ -474,7 +474,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onClose signature is framework-defined.
-    _onClose(options: Record<string, unknown>): void {
+    override _onClose(options: Record<string, unknown>): void {
         const position = this.position;
         const actorId = this.actor?.id ?? '';
         void flaggableUser().setFlag('wh40k-rpg', `combatPanel.${actorId}.position`, {
@@ -688,6 +688,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         }
 
         const chosen = weapons[0];
+        if (chosen == null) return;
         await chosen.update({ 'system.equipped': true });
         ui.notifications.info(t('WH40K.CombatPanel.DrewWeapon', { name: chosen.name }));
     }
@@ -695,7 +696,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     static async #switchWeapon(this: CombatQuickPanel, _event: PointerEvent, target: HTMLElement): Promise<void> {
-        const weaponId = target.dataset.weaponId;
+        const weaponId = target.dataset['weaponId'];
         if (weaponId === undefined || weaponId === '') return;
         const weapon = this.actor?.items.get(weaponId);
 
@@ -716,7 +717,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     static async #useConsumable(this: CombatQuickPanel, _event: PointerEvent, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset.itemId;
+        const itemId = target.dataset['itemId'];
         if (itemId === undefined || itemId === '') return;
         const item = this.actor?.items.get(itemId);
 
@@ -739,7 +740,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     static #toggleOpacity(this: CombatQuickPanel, _event: PointerEvent, _target: HTMLElement): void {
         this.opacityLevel = (this.opacityLevel + 1) % 4;
-        this.element.dataset.opacity = this._getOpacityKey();
+        this.element.dataset['opacity'] = this._getOpacityKey();
     }
 
     /* -------------------------------------------- */

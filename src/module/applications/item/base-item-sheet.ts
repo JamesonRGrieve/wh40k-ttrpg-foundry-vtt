@@ -29,6 +29,7 @@ const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
  * - ExpandableTooltipMixin (click-to-expand tooltips)
  * - StatBreakdownMixin (stat calculation breakdowns)
  */
+// biome-ignore lint/suspicious/noExplicitAny: boundary - Foundry V14 ItemSheetV2 mixin chain requires `any` to compose; full typing pending
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: Foundry V14 ItemSheetV2 mixin chain requires `any` to compose; full typing pending
 export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2 as any)))) {
     declare document: WH40KItemDocument;
@@ -295,9 +296,9 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
         // Handle delta inputs for numeric fields
         if (this.isEditable) {
-            this.element
-                .querySelectorAll('input[type="text"][data-dtype="Number"]')
-                .forEach((i) => i.addEventListener('change', (e) => this._onChangeInputDelta(e)));
+            this.element.querySelectorAll('input[type="text"][data-dtype="Number"]').forEach((i) => {
+                i.addEventListener('change', (e) => this._onChangeInputDelta(e));
+            });
         }
 
         // Auto-select number input values on focus for easy editing

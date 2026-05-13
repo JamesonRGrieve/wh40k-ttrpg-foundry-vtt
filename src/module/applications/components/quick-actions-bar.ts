@@ -34,7 +34,7 @@ export default class QuickActionsBar {
                 break;
 
             case 'armour': {
-                const isEquipped = system.equipped as boolean;
+                const isEquipped = system['equipped'] as boolean;
                 actions.push(
                     this.#createAction(
                         'equip',
@@ -48,20 +48,20 @@ export default class QuickActionsBar {
             }
 
             case 'talent':
-                if (system.isRollable) {
+                if (system['isRollable']) {
                     actions.push(this.#createAction('roll', 'fa-solid fa-dice-d20', 'Roll', 'itemRoll', { itemId }));
                 }
                 actions.push(this.#createAction('favorite', 'fa-solid fa-star', 'Favorite', 'toggleFavorite', { itemId }));
                 break;
 
             case 'trait':
-                if (system.rollable) {
+                if (system['rollable']) {
                     actions.push(this.#createAction('roll', 'fa-solid fa-dice-d20', 'Roll', 'itemRoll', { itemId }));
                 }
                 break;
 
             case 'gear':
-                if (system.consumable) {
+                if (system['consumable']) {
                     actions.push(
                         this.#createAction('use', 'fa-solid fa-flask', 'Use', 'useItem', { itemId }),
                         this.#createAction('adjust', 'fa-solid fa-sliders', 'Adjust', 'adjustQuantity', { itemId }),

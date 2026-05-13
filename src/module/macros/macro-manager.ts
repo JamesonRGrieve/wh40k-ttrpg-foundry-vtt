@@ -48,17 +48,17 @@ function checkExistingMacro(name: string, command: string): boolean {
 export async function createItemMacro(data: Record<string, unknown>, slot: number): Promise<void> {
     if (!checkMacroCanCreate()) return;
 
-    const macroData = data.data as Record<string, unknown>;
-    const macroName = `${data.actorName as string}: ${macroData.name as string}`;
+    const macroData = data['data'] as Record<string, unknown>;
+    const macroName = `${data['actorName'] as string}: ${macroData['name'] as string}`;
     // Create the macro command
-    const command = `game.wh40k.rollItemMacro("${data.actorId as string}", "${macroData._id as string}");`;
+    const command = `game.wh40k.rollItemMacro("${data['actorId'] as string}", "${macroData['_id'] as string}");`;
     if (checkExistingMacro(macroName, command)) return;
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: system-scoped flag namespace 'dh' is not declared in fvtt-types CoreFlags
     const macro = (await Macro.create({
         name: macroName,
         type: 'script',
-        img: macroData.img as string,
+        img: macroData['img'] as string,
         command: command,
         // eslint-disable-next-line no-restricted-syntax -- boundary: 'dh' is not declared in fvtt-types CoreFlags
         flags: { dh: { itemMacro: true } } as Record<string, unknown>,
@@ -83,15 +83,15 @@ export function rollItemMacro(actorId: string, itemId: string): unknown {
 export async function createSkillMacro(data: Record<string, unknown>, slot: number): Promise<void> {
     if (!checkMacroCanCreate()) return;
 
-    const macroData = data.data as Record<string, unknown>;
+    const macroData = data['data'] as Record<string, unknown>;
     const { skill, speciality, name } = macroData as { skill: string; speciality?: string; name: string };
-    const macroName = `${data.actorName as string}: ${name}`;
+    const macroName = `${data['actorName'] as string}: ${name}`;
     (game as unknown as { wh40k: { log: (s: string) => void } }).wh40k.log(`Creating macro with name: ${macroName}`);
 
     // Setup macro data.
-    let command = `game.wh40k.rollSkillMacro("${data.actorId as string}", "${skill}");`;
+    let command = `game.wh40k.rollSkillMacro("${data['actorId'] as string}", "${skill}");`;
     if (speciality !== undefined && speciality !== '') {
-        command = `game.wh40k.rollSkillMacro("${data.actorId as string}", "${skill}", "${speciality}");`;
+        command = `game.wh40k.rollSkillMacro("${data['actorId'] as string}", "${skill}", "${speciality}");`;
     }
     if (checkExistingMacro(macroName, command)) return;
 
@@ -128,12 +128,12 @@ export async function rollSkillMacro(actorId: string, skillName: string, special
 export async function createCharacteristicMacro(data: Record<string, unknown>, slot: number): Promise<void> {
     if (!checkMacroCanCreate()) return;
 
-    const macroData = data.data as Record<string, unknown>;
+    const macroData = data['data'] as Record<string, unknown>;
     const { characteristic, name } = macroData as { characteristic: string; name: string };
-    const macroName = `${data.actorName as string}: ${name}`;
+    const macroName = `${data['actorName'] as string}: ${name}`;
 
     // Create the macro command
-    const command = `game.wh40k.rollCharacteristicMacro("${data.actorId as string}","${characteristic}");`;
+    const command = `game.wh40k.rollCharacteristicMacro("${data['actorId'] as string}","${characteristic}");`;
     if (checkExistingMacro(macroName, command)) return;
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: system-scoped flag namespace 'dh' is not declared in fvtt-types CoreFlags

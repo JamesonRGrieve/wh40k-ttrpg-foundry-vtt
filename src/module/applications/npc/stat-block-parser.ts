@@ -116,7 +116,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         id: 'stat-block-parser-{id}',
         classes: ['wh40k-rpg', 'stat-block-parser'],
         tag: 'form',
@@ -134,7 +134,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         },
         form: {
             /* eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: Foundry V14 FormConfiguration handler signature is too narrow; bound via `this:` parameter declaration */
-            handler: StatBlockParser._onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
+            handler: StatBlockParser._onSubmit as unknown as NonNullable<ApplicationV2Config.FormConfiguration['handler']>,
             submitOnChange: false,
             closeOnSubmit: true,
         },
@@ -306,7 +306,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     /** @override */
     /* eslint-disable no-restricted-syntax -- boundary: ApplicationV2 hook signatures use free-form bags */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context: Record<string, unknown> = await super._prepareContext(options);
         /* eslint-enable no-restricted-syntax */
         const parsedData = this.#parsedData;
@@ -358,7 +358,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 hook signature
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    override _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
         // Track input changes
@@ -433,19 +433,19 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             const parsed = JSON.parse(input) as Record<string, unknown>;
 
             // Check if it's a full actor export
-            if (parsed.system && parsed.type) {
+            if (parsed['system'] && parsed['type']) {
                 result.data = {
-                    name: (parsed.name as string) || 'Imported NPC',
-                    img: (parsed.img as string) || 'icons/svg/mystery-man.svg',
+                    name: (parsed['name'] as string) || 'Imported NPC',
+                    img: (parsed['img'] as string) || 'icons/svg/mystery-man.svg',
                     type: 'npcV2',
-                    system: parsed.system as NPCSystemData,
-                    items: (parsed.items as Array<{ name: string; type: string; system: Record<string, unknown> }>) || [],
+                    system: parsed['system'] as NPCSystemData,
+                    items: (parsed['items'] as Array<{ name: string; type: string; system: Record<string, unknown> }>) || [],
                 };
             }
             // Check if it's just system data
-            else if (parsed.characteristics || parsed.threatLevel) {
+            else if (parsed['characteristics'] || parsed['threatLevel']) {
                 result.data = {
-                    name: (parsed.name as string) || 'Imported NPC',
+                    name: (parsed['name'] as string) || 'Imported NPC',
                     img: 'icons/svg/mystery-man.svg',
                     type: 'npcV2',
                     system: parsed as unknown as NPCSystemData,
@@ -541,7 +541,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         // Extract NPC type
         const typeMatch = sanitized.match(this.PATTERNS.npcType);
-        if (typeMatch) {
+        if (typeMatch?.[1]) {
             systemData.type = typeMatch[1].toLowerCase();
         }
 
@@ -598,11 +598,11 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     static _extractName(lines: string[], input: string): string {
-        if (lines.length === 0) return 'Imported NPC';
         const firstLine = lines[0];
+        if (firstLine === undefined) return 'Imported NPC';
         if (this._looksLikeCharacteristicHeader(firstLine)) {
             const nameMatch = input.match(this.PATTERNS.name);
-            return nameMatch ? nameMatch[1].trim() : 'Imported NPC';
+            return nameMatch?.[1] ? nameMatch[1].trim() : 'Imported NPC';
         }
         if (this._isSectionHeader(firstLine)) {
             return 'Imported NPC';
@@ -625,8 +625,9 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         };
 
         const headerIndex = lines.findIndex((line) => this._looksLikeCharacteristicHeader(line));
-        if (headerIndex >= 0) {
-            const headers = lines[headerIndex].split(/\s+/).map((token) => token.trim());
+        const headerLine = headerIndex >= 0 ? lines[headerIndex] : undefined;
+        if (headerLine !== undefined) {
+            const headers = headerLine.split(/\s+/).map((token) => token.trim());
             const potentialUnnatural = lines[headerIndex + 1] || '';
             const hasUnnaturalRow = /\(\d+\)/.test(potentialUnnatural);
             const valueLine = hasUnnaturalRow ? lines[headerIndex + 2] || '' : lines[headerIndex + 1] || '';
@@ -655,10 +656,13 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         const longMatches = [...input.matchAll(this.PATTERNS.characteristicLong)];
         const allMatches = [...shortMatches, ...longMatches];
         for (const match of allMatches) {
-            const key = this.CHAR_MAP[match[1]];
+            const matchKey = match[1];
+            const matchVal = match[2];
+            if (matchKey === undefined || matchVal === undefined) continue;
+            const key = this.CHAR_MAP[matchKey];
             if (!key) continue;
             if (result.values[key] !== undefined) continue;
-            const value = parseInt(match[2], 10);
+            const value = parseInt(matchVal, 10);
             if (!Number.isNaN(value)) {
                 result.values[key] = value;
                 result.hasValues = true;
@@ -672,23 +676,26 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics map keyed by free-form string
         const chars = systemData.characteristics as unknown as NPCCharacteristicsMap;
         for (const [key, value] of Object.entries(characteristicResult.values)) {
-            if (!chars[key]) continue;
-            chars[key].base = value;
-            chars[key].total = value;
-            chars[key].bonus = Math.floor(value / 10);
+            const entry = chars[key];
+            if (!entry) continue;
+            entry.base = value;
+            entry.total = value;
+            entry.bonus = Math.floor(value / 10);
         }
 
         for (const [key, bonusValue] of Object.entries(characteristicResult.unnaturalValues)) {
-            const base = chars[key]?.base ?? 0;
+            const entry = chars[key];
+            if (!entry) continue;
+            const base = entry.base;
             const baseBonus = Math.floor(base / 10) || 1;
             const multiplier = Math.max(2, Math.round(bonusValue / baseBonus));
-            chars[key].unnatural = multiplier;
+            entry.unnatural = multiplier;
         }
     }
 
     static _parseWounds(input: string): number | null {
         const match = input.match(this.PATTERNS.wounds);
-        if (!match) return null;
+        if (!match?.[1]) return null;
         const value = parseInt(match[1], 10);
         return Number.isNaN(value) ? null : value;
     }
@@ -696,21 +703,25 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     static _parseMovement(input: string): NPCMovement | null {
         const match = input.match(this.PATTERNS.movement);
         if (match) {
-            const values = [match[1], match[2], match[3], match[4]].filter((value) => value).map((value) => parseInt(value, 10));
-            if (values.length === 1) {
+            const values = [match[1], match[2], match[3], match[4]].filter((value): value is string => Boolean(value)).map((value) => parseInt(value, 10));
+            const v0 = values[0];
+            if (values.length === 1 && v0 !== undefined) {
                 return {
-                    half: values[0],
-                    full: values[0] * 2,
-                    charge: values[0] * 3,
-                    run: values[0] * 6,
+                    half: v0,
+                    full: v0 * 2,
+                    charge: v0 * 3,
+                    run: v0 * 6,
                 };
             }
-            if (values.length >= 4) {
+            const v1 = values[1];
+            const v2 = values[2];
+            const v3 = values[3];
+            if (values.length >= 4 && v0 !== undefined && v1 !== undefined && v2 !== undefined && v3 !== undefined) {
                 return {
-                    half: values[0],
-                    full: values[1],
-                    charge: values[2],
-                    run: values[3],
+                    half: v0,
+                    full: v1,
+                    charge: v2,
+                    run: v3,
                 };
             }
         }
@@ -719,8 +730,11 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         if (namedMatches.length > 0) {
             const movement: Partial<NPCMovement> = {};
             for (const match of namedMatches) {
+                const mKey = match[1];
+                const mVal = match[2];
+                if (mKey === undefined || mVal === undefined) continue;
                 // eslint-disable-next-line no-restricted-syntax -- boundary: regex-extracted movement key is a free-form string
-                (movement as Record<string, number>)[match[1].toLowerCase()] = parseInt(match[2], 10);
+                (movement as Record<string, number>)[mKey.toLowerCase()] = parseInt(mVal, 10);
             }
             if (movement.half !== undefined && movement.full !== undefined && movement.charge !== undefined && movement.run !== undefined) {
                 return movement as NPCMovement;
@@ -739,13 +753,13 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         }
 
         const allMatch = normalized.match(/\bAll\s*(\d+)/i) || normalized.match(/\b(\d+)\s*All\b/i);
-        if (allMatch) {
+        if (allMatch?.[1]) {
             const total = parseInt(allMatch[1], 10);
             return Number.isNaN(total) ? null : { mode: 'simple', total, locations: emptyLocations };
         }
 
         const armourMatch = normalized.match(this.PATTERNS.armour);
-        if (armourMatch) {
+        if (armourMatch?.[1]) {
             const total = parseInt(armourMatch[1], 10);
             return Number.isNaN(total) ? null : { mode: 'simple', total, locations: emptyLocations };
         }
@@ -766,8 +780,11 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         };
 
         for (const match of matches) {
-            const location = match[1].toLowerCase();
-            const value = parseInt(match[2], 10);
+            const rawLoc = match[1];
+            const rawVal = match[2];
+            if (rawLoc === undefined || rawVal === undefined) continue;
+            const location = rawLoc.toLowerCase();
+            const value = parseInt(rawVal, 10);
             if (Number.isNaN(value)) continue;
             if (location === 'head') locations.head = value;
             if (location === 'body') locations.body = value;
@@ -786,13 +803,13 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     static _parseThreatLevel(input: string): number | null {
         const match = input.match(this.PATTERNS.threat);
-        if (match) {
+        if (match?.[1]) {
             const value = parseInt(match[1], 10);
             if (!Number.isNaN(value)) return value;
         }
 
         const labelMatch = input.match(this.PATTERNS.threatLabel);
-        if (labelMatch) {
+        if (labelMatch?.[1]) {
             const label = labelMatch[1].toLowerCase();
             if (label.includes('minoris')) return 5;
             if (label.includes('medius')) return 10;
@@ -935,7 +952,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     static _parseWeaponEntry(entry: string): NPCWeapon | null {
         const match = entry.match(/^([^()]+)\s*(?:\((.+)\))?$/);
-        if (!match) return null;
+        if (!match?.[1]) return null;
         const name = match[1].trim();
         const details = (match[2] || '').trim();
         if (!name) return null;
@@ -956,32 +973,32 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         for (const segment of segments) {
             const rangeMatch = segment.match(/(\d+)\s*m/i);
-            if (rangeMatch) {
+            if (rangeMatch?.[1]) {
                 range = `${rangeMatch[1]}m`;
                 continue;
             }
             const rofMatch = segment.match(/([SBF])\s*\/\s*([0-9-]+)\s*\/\s*([0-9-]+)/i);
-            if (rofMatch) {
+            if (rofMatch?.[1] && rofMatch[2] !== undefined && rofMatch[3] !== undefined) {
                 rof = `${rofMatch[1].toUpperCase()}/${rofMatch[2]}/${rofMatch[3]}`;
                 continue;
             }
             const damageMatch = segment.match(/(\d+d\d+(?:[+-]\d+)?)\s*([IRXET])?/i);
-            if (damageMatch) {
+            if (damageMatch?.[1]) {
                 damage = damageMatch[1];
                 continue;
             }
             const penMatch = segment.match(/Pen\s*(\d+)/i);
-            if (penMatch) {
+            if (penMatch?.[1]) {
                 pen = parseInt(penMatch[1], 10);
                 continue;
             }
             const clipMatch = segment.match(/Clip\s*(\d+)/i);
-            if (clipMatch) {
+            if (clipMatch?.[1]) {
                 clip = parseInt(clipMatch[1], 10);
                 continue;
             }
             const reloadMatch = segment.match(/Reload\s*(.+)/i);
-            if (reloadMatch) {
+            if (reloadMatch?.[1]) {
                 reload = reloadMatch[1].trim();
                 continue;
             }
@@ -989,11 +1006,11 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         }
 
         const damagePenMatch = details.match(/(\d+d\d+(?:[+-]\d+)?)\s*([IRXET])?/i);
-        if (damagePenMatch) {
+        if (damagePenMatch?.[1]) {
             damage = damagePenMatch[1];
         }
         const penFallbackMatch = details.match(/Pen\s*(\d+)/i);
-        if (penFallbackMatch) {
+        if (penFallbackMatch?.[1]) {
             pen = parseInt(penFallbackMatch[1], 10);
         }
 
@@ -1024,17 +1041,17 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     static _parseSkillEntry(entry: string): SkillEntryParseResult {
         const bonusMatch = entry.match(/\+\s*(\d+)/);
-        const bonusValue = bonusMatch ? parseInt(bonusMatch[1], 10) : 0;
+        const bonusValue = bonusMatch?.[1] ? parseInt(bonusMatch[1], 10) : 0;
         let level = 'trained';
         if (bonusValue >= 20) level = 'plus20';
         else if (bonusValue >= 10) level = 'plus10';
 
-        const groups = [...entry.matchAll(/\(([^)]+)\)/g)].map((match) => match[1].trim());
+        const groups = [...entry.matchAll(/\(([^)]+)\)/g)].map((match) => match[1]?.trim()).filter((g): g is string => g !== undefined);
         let characteristic: string | null = null;
         let specialization: string | null = null;
         if (groups.length > 0) {
             const lastGroup = groups[groups.length - 1];
-            if (this.CHAR_MAP[lastGroup] || this.CHAR_MAP[this._normalizeShortCharacteristic(lastGroup)]) {
+            if (lastGroup !== undefined && (this.CHAR_MAP[lastGroup] || this.CHAR_MAP[this._normalizeShortCharacteristic(lastGroup)])) {
                 characteristic = lastGroup;
                 if (groups.length > 1) {
                     specialization = groups.slice(0, -1).join(' ');
@@ -1060,7 +1077,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     static _parseTraitEntry(entry: string): TraitEntry {
         const match = entry.match(/^(.+?)(?:\s*\(([^)]+)\))?$/);
-        const name = match ? match[1].trim() : entry.trim();
+        const name = match?.[1] ? match[1].trim() : entry.trim();
         const value = match && match[2] ? match[2].trim() : null;
         let numericValue = null;
         let level = null;
@@ -1099,7 +1116,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     static _parseNameWithSpecializations(name: string): ParsedNameResult {
         const match = name.match(/^(.+?)\s*\(([^)]+)\)$/);
-        if (!match) {
+        if (!match || match[1] === undefined || match[2] === undefined) {
             return { baseName: name, specializations: [] };
         }
         const baseName = match[1].trim();
@@ -1146,12 +1163,12 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     static _extractSkillSectionFallback(input: string): string {
         const match = input.match(this.PATTERNS.skillList);
-        return match ? match[1].trim() : '';
+        return match?.[1] ? match[1].trim() : '';
     }
 
     static _extractWeaponSectionFallback(input: string): string {
         const match = input.match(this.PATTERNS.weaponList);
-        return match ? match[1].trim() : '';
+        return match?.[1] ? match[1].trim() : '';
     }
 
     static _characteristicKeyFromShort(short: string): string | null {
@@ -1220,7 +1237,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                     system: this.#parsedData.system,
                 };
                 if (this.#parsedData.name && this.#parsedData.name !== 'Imported NPC') {
-                    updateData.name = this.#parsedData.name;
+                    updateData['name'] = this.#parsedData.name;
                 }
 
                 await this.#targetActor.update(updateData);
@@ -1303,7 +1320,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close hook signature
-    async close(options: Record<string, unknown> = {}): Promise<unknown> {
+    override async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (!this.#submitted && this.#resolve) {
             this.#resolve(null);
         }
@@ -1337,7 +1354,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         let options: Record<string, unknown> = {};
         if (typeof initialInput === 'object' && initialInput !== null) {
             options = initialInput as Record<string, unknown>;
-            const raw = (initialInput as Record<string, unknown>).initialInput;
+            const raw = (initialInput as Record<string, unknown>)['initialInput'];
             input = typeof raw === 'string' ? raw : '';
         } else {
             input = typeof initialInput === 'string' ? initialInput : '';

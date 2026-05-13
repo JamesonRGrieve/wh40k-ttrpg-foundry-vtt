@@ -148,7 +148,8 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         return {
             ...super.defineSchema(),
 
-            identifier: new (IdentifierField as any)({ required: true, blank: true }) as foundry.data.fields.StringField,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
+            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Armour classification
             type: new fields.StringField({
