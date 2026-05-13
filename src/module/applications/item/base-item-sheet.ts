@@ -408,6 +408,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     static #effectEdit(this: BaseItemSheet, event: Event, target: HTMLElement): void {
         const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- V14 backward compat: sheet.render(boolean) still works; V2 render(options) is preferred but not typed on the sheet union
         void effect?.sheet?.render(true);
     }
 
