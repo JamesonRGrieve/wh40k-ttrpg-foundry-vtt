@@ -143,7 +143,7 @@ export abstract class BaseSystemConfig {
             type,
             value,
             placeholder,
-            inputClass: name === 'system.rank' ? 'wh40k-rank-input' : undefined,
+            ...(name === 'system.rank' ? { inputClass: 'wh40k-rank-input' } : {}),
         };
     }
 

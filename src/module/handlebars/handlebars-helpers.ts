@@ -741,7 +741,7 @@ export function registerHandlebarsHelpers(): void {
             unique: 'fa-star',
             general: 'fa-circle',
         };
-        if (Object.hasOwn(icons, category)) return icons[category];
+        if (Object.hasOwn(icons, category)) return icons[category]!;
         return icons['general'] ?? 'fa-circle';
     });
 
@@ -759,8 +759,8 @@ export function registerHandlebarsHelpers(): void {
             0: 'tier-none',
         };
         const tierKey = Number(tier);
-        if (Object.hasOwn(colors, tierKey)) return colors[tierKey];
-        if (Object.hasOwn(colors, 0)) return colors[0];
+        if (Object.hasOwn(colors, tierKey)) return colors[tierKey]!;
+        if (Object.hasOwn(colors, 0)) return colors[0]!;
         return 'tier-none';
     });
 
@@ -900,7 +900,7 @@ export function registerHandlebarsHelpers(): void {
                 baseIdentifier: baseId,
                 label,
                 description: game.i18n.localize(def.description),
-                hasLevel: def.hasLevel,
+                ...(def.hasLevel !== undefined ? { hasLevel: def.hasLevel } : {}),
                 level,
             });
         }
@@ -933,6 +933,7 @@ export function registerHandlebarsHelpers(): void {
         const pushDef = (key: string, identifier: string): void => {
             if (!Object.prototype.hasOwnProperty.call(weaponQualities, key)) return;
             const def = weaponQualities[key];
+            if (def === undefined) return;
             qualities.push({
                 identifier,
                 label: game.i18n.localize(def.label),
@@ -1040,7 +1041,7 @@ export function registerHandlebarsHelpers(): void {
             baseIdentifier: baseId,
             label,
             description: game.i18n.localize(def.description),
-            hasLevel: def.hasLevel,
+            ...(def.hasLevel !== undefined ? { hasLevel: def.hasLevel } : {}),
             level,
         };
     });
