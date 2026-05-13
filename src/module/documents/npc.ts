@@ -89,11 +89,11 @@ export class WH40KNPC extends WH40KBaseActor {
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
             'token.disposition': CONST.TOKEN_DISPOSITIONS.HOSTILE,
-            'token.name': createData.name,
+            'token.name': createData['name'],
         };
 
         // If horde type, show magnitude instead of wounds
-        const systemData = createData.system as Record<string, unknown> | undefined;
+        const systemData = createData['system'] as Record<string, unknown> | undefined;
         if (systemData !== undefined && (systemData['type'] === 'horde' || systemData['type'] === 'swarm')) {
             initData['token.bar1'] = { attribute: 'horde.magnitude' };
         }
@@ -206,7 +206,7 @@ export class WH40KNPC extends WH40KBaseActor {
             }
             default: {
                 const { DHBasicActionManager } = await import('../actions/basic-action-manager.ts');
-                const rawBenefit = item.system.benefit;
+                const rawBenefit = item.system['benefit'];
                 const rawDescription = item.system.description;
                 const htmlContent = typeof rawBenefit === 'string' ? rawBenefit : typeof rawDescription === 'string' ? rawDescription : '';
                 await DHBasicActionManager.sendItemVocalizeChat({
@@ -324,7 +324,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {number} factor - The scaling factor (e.g., 1.2 for +20%, 0.8 for -20%).
      * @returns {Promise<Actor>}
      */
-    adjustStatsByPercent(factor: number): void {
+    async adjustStatsByPercent(factor: number): Promise<void> {
         const updates: Record<string, unknown> = {};
 
         // Scale characteristics
@@ -360,7 +360,7 @@ export class WH40KNPC extends WH40KBaseActor {
             updates['system.horde.magnitude.current'] = Math.max(1, newMag);
         }
 
-        return this.update(updates) as unknown as void;
+        await this.update(updates);
     }
 
     /**
@@ -392,14 +392,14 @@ export class WH40KNPC extends WH40KBaseActor {
         const data = this.toObject() as Record<string, unknown>;
 
         // Modify name
-        if (typeof options.name === 'string' && options.name !== '') {
-            data['name'] = options.name;
+        if (typeof options['name'] === 'string' && options['name'] !== '') {
+            data['name'] = options['name'];
         } else {
             data['name'] = `${this.name ?? ''} (Copy)`;
         }
 
         // Randomize stats slightly if requested
-        if (options.randomize === true) {
+        if (options['randomize'] === true) {
             const systemData = data['system'] as Record<string, unknown> | undefined;
             const characteristics = systemData?.['characteristics'] as Record<string, Record<string, number>> | undefined;
             if (characteristics !== undefined) {

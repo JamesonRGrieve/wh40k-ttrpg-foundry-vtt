@@ -159,7 +159,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * This method triggers item-based calculations via prepareEmbeddedData().
      * @override
      */
-    prepareData(): void {
+    override prepareData(): void {
         // Initialize defaults before DataModel runs (cast through unknown for legacy migration paths)
         // eslint-disable-next-line no-restricted-syntax -- boundary: legacy migration path writes through to system data
         const sys = this.system as Record<string, unknown>;
@@ -330,7 +330,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @returns {Promise<ChatMessage|null>}
      */
     // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/require-await, @typescript-eslint/no-misused-promises -- override returns Promise; consumers may await it. Base impl is sync.
-    async rollCharacteristic(charKey: string, flavorOverride?: string, options: Record<string, unknown> = {}): Promise<void> {
+    override async rollCharacteristic(charKey: string, flavorOverride?: string, _options: Record<string, unknown> = {}): Promise<void> {
         const char = this.system.characteristics[charKey] as (typeof this.system.characteristics)[string] | undefined;
         if (char === undefined) {
             // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.CharacteristicNotFound localization key not yet in en.json
@@ -357,7 +357,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @returns {Promise<ChatMessage|null>}
      */
     // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/require-await -- boundary: roll options accept ad-hoc consumer-supplied fields; signature returns Promise for caller compat
-    async rollSkill(skillName: string, specialityName?: string | number, options: Record<string, unknown> = {}): Promise<void> {
+    async rollSkill(skillName: string, specialityName?: string | number, _options: Record<string, unknown> = {}): Promise<void> {
         const resolvedSkillName = this._resolveSkillName(skillName);
         const skill = this.skills[resolvedSkillName] as WH40KSkill | undefined;
         if (skill === undefined) {
@@ -403,7 +403,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // Calculate damage with Strength Bonus for melee/thrown weapons
         const isMelee = weapon.system.melee === true || weapon.system.isMeleeWeapon === true;
         const isThrown = weapon.system.class === 'thrown';
-        const special = weapon.system.special as string | string[] | undefined;
+        const special = weapon.system['special'] as string | string[] | undefined;
         const isGrenade = Array.isArray(special) ? special.includes('grenade') : typeof special === 'string' && special.includes('grenade');
 
         // Add SB for melee weapons and thrown weapons (except grenades)
@@ -423,7 +423,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         prepareDamageRoll({
             name: weapon.name,
             damage: damageData,
-            damageType: weapon.system.damageType,
+            damageType: weapon.system['damageType'],
             penetration: weapon.system.penetration,
             targetActor: () => {
                 const targetedObjects = game.user.targets;
@@ -447,7 +447,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             pr: this.psy.rating,
             name: power.name,
             damage: power.system.damage,
-            damageType: power.system.damageType,
+            damageType: power.system['damageType'],
             penetration: power.system.penetration,
         });
     }
@@ -456,7 +456,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * Roll/use an item
      * @param {string} itemId - The item ID
      */
-    async rollItem(itemId: string): Promise<void> {
+    override async rollItem(itemId: string): Promise<void> {
         game.wh40k.log('RollItem', itemId);
         const item = this.items.get(itemId);
         if (!item) return;
@@ -487,7 +487,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 }
                 return;
             case 'forceField':
-                if (item.system.equipped !== true || item.system.activated !== true) {
+                if (item.system.equipped !== true || item.system['activated'] !== true) {
                     // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.ForceFieldNotReady localization key not yet in en.json
                     ui.notifications.warn('Actor must have force field equipped and activated!');
                     return;
@@ -554,7 +554,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {string} characteristic - The characteristic key
      * @returns {Promise<D100RollResult|null>} The evaluated roll
      */
-    async rollCharacteristicCheck(characteristic: string): Promise<D100RollResult | null> {
+    override async rollCharacteristicCheck(characteristic: string): Promise<D100RollResult | null> {
         const char = this.getCharacteristicFuzzy(characteristic);
         if (!char) {
             game.wh40k.error('Unable to perform characteristic test. Could not find provided characteristic.', characteristic);
@@ -699,7 +699,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /*  Fate Actions                                */
     /* -------------------------------------------- */
 
-    async spendFate(): Promise<void> {
+    override async spendFate(): Promise<void> {
         await this.update({
             system: { fate: { value: this.system.fate.value - 1 } },
         });

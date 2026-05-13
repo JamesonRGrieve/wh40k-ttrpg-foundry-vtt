@@ -59,7 +59,8 @@ export class TokenDocumentWH40K extends TokenDocument {
      * Called during system init after CONFIG.wh40k is set.
      */
     static registerMovementActions(this: typeof TokenDocumentWH40K): void {
-        const tokenConfig = CONFIG.Token as TokenConfigLike;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's CONFIG.Token type doesn't expose movement.actions; cast through unknown
+        const tokenConfig = CONFIG.Token as unknown as TokenConfigLike;
         const wh40kConfig = CONFIG.wh40k as Wh40kTokenConfig;
         for (const [type, config] of Object.entries(wh40kConfig.movementTypes)) {
             // Create the action entry if it doesn't already exist (WH40K-specific actions)
@@ -101,7 +102,7 @@ export class TokenDocumentWH40K extends TokenDocument {
      * @param {object} [options] - Additional options
      * @returns {Function} Cost function (cost, from, to, distance, segment) => number
      */
-    static #getMovementCostFunction(type: string, token: TokenDocument, options?: Record<string, unknown>): MovementCostFunction {
+    static #getMovementCostFunction(type: string, token: TokenDocument, _options?: Record<string, unknown>): MovementCostFunction {
         const noAutomation = game.settings.get(SYSTEM_ID, 'movementAutomation') === 'none';
         const { actor } = token;
         const movement = actor?.system.movement as Record<string, number> | undefined;
@@ -140,7 +141,15 @@ export class TokenDocumentWH40K extends TokenDocument {
         const movementTypes = (CONFIG.wh40k as Wh40kTokenConfig).movementTypes;
         if (token === undefined) return;
         const activeType = (token as TokenWithFlags).getFlag(SYSTEM_ID, 'movementAction');
-        const $html = html instanceof HTMLElement ? html : html[0];
+        let $html: HTMLElement;
+        if (html instanceof HTMLElement) {
+            $html = html;
+        } else {
+            const first = html[0];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess makes first possibly undefined under strict TS, but eslint's plain rule disagrees
+            if (first === undefined) return;
+            $html = first;
+        }
 
         // Build movement buttons container
         const container = document.createElement('div');
@@ -164,7 +173,7 @@ export class TokenDocumentWH40K extends TokenDocument {
             const btn = document.createElement('button');
             btn.classList.add('wh40k-token-movement__btn');
             if (type === activeType) btn.classList.add('active');
-            btn.dataset.movementType = type;
+            btn.dataset['movementType'] = type;
             btn.title = `${game.i18n.localize(config.label)}: ${speed}m`;
             btn.innerHTML = `<i class="${config.icon}"></i><span class="wh40k-token-movement__value" style="font-weight:700;font-family:var(--wh40k-font-alt,serif)">${speed}m</span>`;
             Object.assign(btn.style, {
