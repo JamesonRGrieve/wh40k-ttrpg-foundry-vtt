@@ -244,7 +244,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @returns {HTMLElement}    The ghost element
          * @private
          */
-        _createDragGhost(item: WH40KItem, event: DragEvent): HTMLElement {
+        _createDragGhost(item: WH40KItem, _event: DragEvent): HTMLElement {
             const ghost = document.createElement('div');
             ghost.className = 'wh40k-drag-ghost';
 
@@ -319,7 +319,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                 ok: {
                     icon: 'fas fa-split',
                     label: 'Split',
-                    callback: (event: SubmitEvent, button: HTMLButtonElement, dialogEl: HTMLElement) => {
+                    callback: (_event: SubmitEvent, _button: HTMLButtonElement, dialogEl: HTMLElement) => {
                         const input = dialogEl.querySelector<HTMLInputElement>('[name="quantity"]');
                         const qty = input ? parseInt(input.value, 10) : 0;
                         if (qty > 0 && qty <= quantity) {
@@ -430,7 +430,9 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const midpoint = rect.top + rect.height / 2;
             const insertBefore = event.clientY < midpoint;
 
-            this.element.querySelectorAll('.drop-indicator').forEach((el) => el.remove());
+            for (const el of this.element.querySelectorAll('.drop-indicator')) {
+                el.remove();
+            }
 
             const indicator = document.createElement('div');
             indicator.className = 'drop-indicator tw-animate-indicator-glow';
@@ -643,7 +645,9 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             event.preventDefault();
             event.stopPropagation();
 
-            this.element.querySelectorAll('.drop-indicator').forEach((el) => el.remove());
+            for (const el of this.element.querySelectorAll('.drop-indicator')) {
+                el.remove();
+            }
 
             if (!this._draggedItem) return;
 
@@ -668,7 +672,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @param {number} clientY  Y position for before/after
          * @private
          */
-        async _reorderItems(sourceId: string, targetId: string, clientY: number): Promise<void> {
+        async _reorderItems(sourceId: string, targetId: string, _clientY: number): Promise<void> {
             const items = Array.from(this.#actorDocument().items);
             const sourceIndex = items.findIndex((i) => i.id === sourceId);
             const targetIndex = items.findIndex((i) => i.id === targetId);
@@ -754,7 +758,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @param {DragEvent} event  The drag end event
          * @private
          */
-        _onEnhancedDragEnd(event: DragEvent): void {
+        _onEnhancedDragEnd(_event: DragEvent): void {
             this._resetDrag();
         }
 
@@ -771,12 +775,16 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             this.element.classList.remove('drag-active');
 
-            this.element.querySelectorAll('[data-drop-zone]').forEach((zone) => {
+            for (const zone of this.element.querySelectorAll('[data-drop-zone]')) {
                 zone.classList.remove('drop-valid', 'drop-invalid', 'drop-hover');
-                zone.querySelectorAll('.wh40k-drop-zone__pulse-bg').forEach((el) => el.remove());
-            });
+                for (const el of zone.querySelectorAll('.wh40k-drop-zone__pulse-bg')) {
+                    el.remove();
+                }
+            }
 
-            this.element.querySelectorAll('.drop-indicator').forEach((el) => el.remove());
+            for (const el of this.element.querySelectorAll('.drop-indicator')) {
+                el.remove();
+            }
 
             this._draggedItem = null;
             this._dragStartPos = null;
