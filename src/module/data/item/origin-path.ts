@@ -62,7 +62,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     };
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -426,7 +426,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    prepareDerivedData(): void {
+    override prepareDerivedData(): void {
         super.prepareDerivedData();
         this._calculateActiveModifiers();
     }
@@ -444,7 +444,9 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             traits?: Array<{ name: string; level?: number; uuid?: string }>;
             equipment?: Array<{ name: string; quantity?: number; uuid?: string }>;
         }
-        interface ChoiceOption extends Record<string, unknown> {
+        interface ChoiceOption {
+            value?: string;
+            name?: string;
             grants?: OptionGrants;
         }
 
@@ -548,7 +550,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
     }
 
@@ -562,7 +564,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
+    static override _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
         super._cleanData(source, options);
     }
 

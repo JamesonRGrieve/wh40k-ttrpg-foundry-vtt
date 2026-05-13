@@ -36,7 +36,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
     };
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             weight: new fields.NumberField({
@@ -114,7 +114,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         PhysicalItemTemplate.#migrateCost(source);
     }
@@ -132,8 +132,8 @@ export default class PhysicalItemTemplate extends SystemDataModel {
             return numericValue;
         };
 
-        if (!source.cost || typeof source.cost !== 'object') {
-            source.cost = emptyCost;
+        if (!source['cost'] || typeof source['cost'] !== 'object') {
+            source['cost'] = emptyCost;
             return;
         }
 
@@ -145,9 +145,9 @@ export default class PhysicalItemTemplate extends SystemDataModel {
             bc?: { infamy?: unknown };
             ow?: { logistics?: unknown };
         }
-        const cost = source.cost as CostShape;
+        const cost = source['cost'] as CostShape;
 
-        source.cost = {
+        source['cost'] = {
             dh1: {
                 throneGelt: normalizeNullableNumber(cost.dh1?.throneGelt),
             },
@@ -210,7 +210,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options?: DataModelV14.CleaningOptions): void {
+    static override _cleanData(source: Record<string, unknown> | undefined, options?: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
     }
 
