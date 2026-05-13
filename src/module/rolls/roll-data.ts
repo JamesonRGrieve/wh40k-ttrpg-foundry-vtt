@@ -19,7 +19,7 @@ export class RollData {
     difficulties: Record<string, string> = rollDifficulties();
     aims: Record<string, string> = aimModifiers();
     locations: Record<string, string> = hitDropdown();
-    lasModes: string[] = (WH40K.combat as { las_fire_modes?: string[] }).las_fire_modes ?? [];
+    lasModes: string[] = (WH40K['combat'] as { las_fire_modes?: string[] }).las_fire_modes ?? [];
 
     // Chat Controls
     ignoreModifiers: boolean = false;
@@ -141,7 +141,7 @@ export class RollData {
         for (const m of Object.keys(this.modifiers)) {
             try {
                 const value = this.modifiers[m];
-                if (value !== 0) {
+                if (value !== undefined && value !== 0) {
                     modifiers[m.toUpperCase()] = value;
                 }
             } catch (err) {
@@ -163,13 +163,14 @@ export class RollData {
         let formula = '0 ';
         const rollParams: Record<string, number> = {};
         for (const modifier of Object.keys(this.modifiers)) {
-            if (this.modifiers[modifier] !== 0) {
-                if (this.modifiers[modifier] >= 0) {
+            const value = this.modifiers[modifier];
+            if (value !== undefined && value !== 0) {
+                if (value >= 0) {
                     formula += ` + @${modifier}`;
                 } else {
                     formula += ` - @${modifier}`;
                 }
-                rollParams[modifier] = Math.abs(this.modifiers[modifier]);
+                rollParams[modifier] = Math.abs(value);
             }
         }
         return {
@@ -218,12 +219,12 @@ export class WeaponRollData extends RollData {
     isKnockDown: boolean = false;
     isFeint: boolean = false;
     isStun: boolean = false;
-    isThrown: boolean = false;
+    override isThrown: boolean = false;
     isSpray: boolean = false;
     isLasWeapon: boolean = false;
     lasMode: string = 'Standard';
 
-    template: string;
+    override template: string;
 
     constructor() {
         super();
@@ -271,10 +272,10 @@ export class WeaponRollData extends RollData {
         if (this.isOpposed && this.targetActor) {
             const targetActor = this.targetActor;
             if (this.isFeint) {
-                this.opposedTarget = targetActor.characteristics.weaponSkill.total;
+                this.opposedTarget = targetActor.characteristics['weaponSkill']?.total ?? 0;
                 this.opposedChar = 'WS';
             } else if (this.isKnockDown) {
-                this.opposedTarget = targetActor.characteristics.strength.total;
+                this.opposedTarget = targetActor.characteristics['strength']?.total ?? 0;
                 this.opposedChar = 'S';
             }
         }
@@ -321,7 +322,9 @@ export class WeaponRollData extends RollData {
         }
 
         this.weaponSelect = this.weapons.length > 1;
-        this.weapon = this.weapons[0];
+        const firstWeapon = this.weapons[0];
+        if (firstWeapon === undefined) return;
+        this.weapon = firstWeapon;
         (this.weapon as { isSelected?: boolean }).isSelected = true;
     }
 
@@ -341,15 +344,15 @@ export class WeaponRollData extends RollData {
 
         const weaponSystem = this.weapon.system as { isRanged?: boolean };
         if (weaponSystem.isRanged === true) {
-            this.baseTarget = sourceActor.characteristics.ballisticSkill.total;
+            this.baseTarget = sourceActor.characteristics['ballisticSkill']?.total ?? 0;
             this.baseChar = 'BS';
         } else {
-            this.baseTarget = sourceActor.characteristics.weaponSkill.total;
+            this.baseTarget = sourceActor.characteristics['weaponSkill']?.total ?? 0;
             this.baseChar = 'WS';
         }
 
         if (this.action === 'Knock Down') {
-            this.baseTarget = sourceActor.characteristics.strength.total;
+            this.baseTarget = sourceActor.characteristics['strength']?.total ?? 0;
             this.baseChar = 'S';
         }
     }
@@ -393,7 +396,7 @@ export class PsychicRollData extends RollData {
     maxPr: number = 0;
     pr: number = 0;
 
-    template: string;
+    override template: string;
 
     constructor() {
         super();
@@ -409,10 +412,12 @@ export class PsychicRollData extends RollData {
         this.modifiers['modifier'] = 0;
         type ActorWithPsy = WH40KBaseActorDocument & { psy?: WH40KPsy };
         this.pr = (this.sourceActor as ActorWithPsy).psy?.rating ?? 0;
-        this.hasFocus = (this.sourceActor as ActorWithPsy).psy?.hasFocus === true;
+        this.hasFocus = (this.sourceActor as ActorWithPsy).psy?.['hasFocus'] === true;
 
         this.powerSelect = this.psychicPowers.length > 1;
-        this.power = this.psychicPowers[0];
+        const firstPower = this.psychicPowers[0];
+        if (firstPower === undefined) return;
+        this.power = firstPower;
         (this.power as { isSelected?: boolean }).isSelected = true;
         this.hasDamage = (this.power.system as { subtype?: string }).subtype?.includes('Attack') ?? false;
     }

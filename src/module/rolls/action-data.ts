@@ -324,7 +324,7 @@ export class ActionData {
                     this.addEffect('Auto Failure', `The roll resulted in an automatic failure!`);
                     break;
                 case 'blademaster':
-                    this.addEffect('Blademaster', `Original roll of ${this.rollData.previousRolls[0].total} rerolled.`);
+                    this.addEffect('Blademaster', `Original roll of ${this.rollData.previousRolls[0]?.total ?? 0} rerolled.`);
                     break;
                 case 'overheat':
                     this.addEffect('Overheats', `The weapon overheats forcing it to be dropped on the ground!`);
@@ -373,7 +373,7 @@ export class ActionData {
             this.checkForPerils();
 
             if (this.rollData.success) {
-                (this.rollData as { hitLocation?: string }).hitLocation = getHitLocationForRoll(this.rollData.roll?.total ?? 0);
+                (this.rollData as { hitLocation?: string }).hitLocation = getHitLocationForRoll(this.rollData.roll?.total ?? 0) ?? '';
             }
 
             this.createEffectData();
@@ -420,7 +420,7 @@ export class PsychicActionData extends ActionData {
         this.damageData = new PsychicDamageData();
     }
 
-    async performActionAndSendToChat(): Promise<void> {
+    override async performActionAndSendToChat(): Promise<void> {
         if (!this.rollData.hasDamage) {
             this.rollData.template = 'systems/wh40k-rpg/templates/chat/psychic-action-chat.hbs';
             this.template = 'systems/wh40k-rpg/templates/chat/psychic-action-chat.hbs';
@@ -428,7 +428,7 @@ export class PsychicActionData extends ActionData {
         await super.performActionAndSendToChat();
     }
 
-    async descriptionText(): Promise<void> {
+    override async descriptionText(): Promise<void> {
         const powerSystem = this.rollData.power.system as { description?: string };
         this.psychicEffect = await foundry.applications.ux.TextEditor.implementation.enrichHTML(powerSystem.description ?? '', {
             // eslint-disable-next-line no-restricted-syntax -- boundary: TextEditor.enrichHTML expects a record-shaped rollData payload

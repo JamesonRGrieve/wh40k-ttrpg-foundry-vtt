@@ -222,8 +222,8 @@ export class WH40KBaseActor extends Actor {
         type: 'characteristic' | 'skill' | 'simpleWeapon';
         label: string;
         target: number;
-        situationalKey?: string;
-        nameOverride?: string;
+        situationalKey?: string | undefined;
+        nameOverride?: string | undefined;
     }): SimpleSkillData {
         const TYPE_LITERAL: Record<typeof opts.type, string> = {
             characteristic: 'Characteristic',
