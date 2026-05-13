@@ -83,7 +83,7 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
             event.preventDefault();
             event.stopPropagation();
 
-            const statKey = target.dataset.statKey;
+            const statKey = target.dataset['statKey'];
             if (statKey === undefined || statKey === '') {
                 console.warn('Stat breakdown element missing data-stat-key');
                 return;
@@ -124,7 +124,7 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
             event.preventDefault();
             event.stopPropagation();
 
-            const uuid = target.dataset.sourceUuid;
+            const uuid = target.dataset['sourceUuid'];
             if (uuid === undefined || uuid === '') return;
 
             const item = await fromUuid(uuid);

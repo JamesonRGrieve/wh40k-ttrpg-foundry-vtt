@@ -68,7 +68,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+    static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         id: 'acquisition-dialog-{id}',
         classes: ['wh40k-rpg', 'acquisition-dialog'],
         tag: 'form',
@@ -147,7 +147,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AcquisitionContext> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AcquisitionContext> {
         const context = (await super._prepareContext(options)) as AcquisitionContext;
 
         // Profit Factor
@@ -268,7 +268,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * Toggle a common modifier
      */
     static async #toggleModifier(this: AcquisitionDialog, event: Event, target: HTMLElement): Promise<void> {
-        const key = target.dataset.modifier;
+        const key = target.dataset['modifier'];
         if (key === undefined || key === '') return;
 
         if (this.selectedModifiers.has(key)) {
@@ -286,7 +286,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * Handle form submission
      */
     static #onSubmit(this: AcquisitionDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): void {
-        this.customModifier = parseInt(formData.object.customModifier as string) || 0;
+        this.customModifier = parseInt(formData.object['customModifier'] as string) || 0;
     }
 
     /* -------------------------------------------- */
@@ -300,7 +300,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         // Get form data
         const form = this.element as HTMLFormElement;
         const formData = new FormDataExtended(form);
-        this.customModifier = parseInt(formData.object.customModifier as string) || 0;
+        this.customModifier = parseInt(formData.object['customModifier'] as string) || 0;
 
         // Calculate final target
         const context = await this._prepareContext({ force: true });
@@ -437,8 +437,8 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options record
-    async close(options: Record<string, unknown> = {}): Promise<unknown> {
-        if (this.#resolve !== null && options._skipResolve !== true) {
+    override async close(options: Record<string, unknown> = {}): Promise<unknown> {
+        if (this.#resolve !== null && options['_skipResolve'] !== true) {
             this.#resolve(null);
         }
         return super.close(options);

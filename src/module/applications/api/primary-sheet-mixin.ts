@@ -96,7 +96,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        _configureRenderOptions(options: ApplicationV2Config.RenderOptions): void {
+        override _configureRenderOptions(options: ApplicationV2Config.RenderOptions): void {
             const prototype = Object.getPrototypeOf(PrimarySheetWH40K.prototype) as {
                 _configureRenderOptions?: (this: PrimarySheetWH40K, options: ApplicationV2Config.RenderOptions) => void;
             };
@@ -130,7 +130,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        async _renderFrame(options: ApplicationV2Config.RenderOptions): Promise<HTMLElement> {
+        override async _renderFrame(options: ApplicationV2Config.RenderOptions): Promise<HTMLElement> {
             const prototype = Object.getPrototypeOf(PrimarySheetWH40K.prototype) as {
                 _renderFrame?: (this: PrimarySheetWH40K, options: ApplicationV2Config.RenderOptions) => Promise<HTMLElement>;
             };
@@ -153,7 +153,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                 const newToggle = document.createElement('slide-toggle') as HTMLElement & { checked: boolean };
                 newToggle.checked = this._mode === PrimarySheetWH40K.MODES.EDIT;
                 newToggle.classList.add('mode-slider');
-                newToggle.dataset.tooltip = 'WH40K.SheetModeEdit';
+                newToggle.dataset['tooltip'] = 'WH40K.SheetModeEdit';
                 newToggle.setAttribute('aria-label', game.i18n.localize('WH40K.SheetModeEdit'));
                 newToggle.addEventListener('change', this._onChangeSheetMode.bind(this) as EventListener);
                 newToggle.addEventListener('dblclick', (event: MouseEvent) => event.stopPropagation());
@@ -169,13 +169,13 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
             const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
             const doc = this.document;
-            context.owner = doc.isOwner;
-            context.locked = !this.isEditable;
-            context.editable = this.isEditable && this._mode === PrimarySheetWH40K.MODES.EDIT;
-            context.tabs = this._getTabs();
+            context['owner'] = doc.isOwner;
+            context['locked'] = !this.isEditable;
+            context['editable'] = this.isEditable && this._mode === PrimarySheetWH40K.MODES.EDIT;
+            context['tabs'] = this._getTabs();
             return context;
         }
 
@@ -196,7 +196,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                 ) => Promise<Record<string, unknown>>;
             };
             const partContext = (await prototype._preparePartContext?.call(this, partId, context, options)) ?? {};
-            partContext.tab = (context.tabs as Record<string, unknown>)[partId];
+            partContext['tab'] = (context['tabs'] as Record<string, unknown>)[partId];
             return partContext;
         }
 
@@ -215,8 +215,8 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                             ...config,
                             id: tab,
                             group: 'primary',
-                            active: this.tabGroups.primary === tab,
-                            cssClass: this.tabGroups.primary === tab ? 'active' : '',
+                            active: this.tabGroups['primary'] === tab,
+                            cssClass: this.tabGroups['primary'] === tab ? 'active' : '',
                         };
                     return tabs;
                 },
@@ -229,18 +229,18 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        async _onFirstRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onFirstRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             const prototype = Object.getPrototypeOf(PrimarySheetWH40K.prototype) as {
                 _onFirstRender?: (this: PrimarySheetWH40K, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions) => Promise<void>;
             };
             await prototype._onFirstRender?.call(this, context, options);
-            if (this.tabGroups.primary) this.element.classList.add(`tab-${this.tabGroups.primary}`);
+            if (this.tabGroups['primary']) this.element.classList.add(`tab-${this.tabGroups['primary']}`);
         }
 
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
             // Surface the active game-system id on the sheet root so per-system
@@ -255,7 +255,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                 document?: { system?: { gameSystem?: string } };
             };
             const systemId = sheetWithSystem._gameSystemId ?? sheetWithSystem.document?.system?.gameSystem;
-            if (systemId !== undefined && systemId !== '') this.element.dataset.wh40kSystem = systemId;
+            if (systemId !== undefined && systemId !== '') this.element.dataset['wh40kSystem'] = systemId;
 
             this._renderModeToggle();
             const ctor = this.constructor as typeof PrimarySheetWH40K;
@@ -291,7 +291,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                 contentSelector: string;
                 initial?: string;
             }
-            const optionsWithTabs = this.options as ApplicationV2Config.DefaultOptions & { tabs?: TabsConfigEntry[] };
+            const optionsWithTabs = this.options as unknown as ApplicationV2Config.DefaultOptions & { tabs?: TabsConfigEntry[] };
             const tabsConfig: TabsConfigEntry[] = optionsWithTabs.tabs ?? [];
             for (const config of tabsConfig) {
                 const { navSelector, contentSelector, initial } = config;
@@ -299,18 +299,18 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                 const content = this.element.querySelector<HTMLElement>(contentSelector);
                 if (!nav || !content) continue;
 
-                const group = nav.dataset.group ?? 'primary';
+                const group = nav.dataset['group'] ?? 'primary';
                 const activeTab = this.tabGroups[group] ?? initial;
 
                 for (const tabLink of nav.querySelectorAll<HTMLElement>('[data-tab]')) {
                     tabLink.addEventListener('click', (event) => {
                         event.preventDefault();
-                        const tab = tabLink.dataset.tab;
+                        const tab = tabLink.dataset['tab'];
                         if (tab !== undefined && tab !== '') this._activateTab(tab, group, nav, content);
                     });
                 }
 
-                if (activeTab !== '') {
+                if (activeTab !== undefined && activeTab !== '') {
                     this._activateTab(activeTab, group, nav, content);
                 }
             }
@@ -328,13 +328,13 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
             this.tabGroups[group] = tab;
 
             for (const link of nav.querySelectorAll<HTMLElement>('[data-tab]')) {
-                const isActive = link.dataset.tab === tab;
+                const isActive = link.dataset['tab'] === tab;
                 link.classList.toggle('active', isActive);
                 link.closest('.wh40k-navigation__item, .wh40k-nav-item')?.classList.toggle('active', isActive);
             }
 
             for (const tabContent of content.querySelectorAll<HTMLElement>(':scope > [data-tab]')) {
-                const isActive = tabContent.dataset.tab === tab;
+                const isActive = tabContent.dataset['tab'] === tab;
                 tabContent.classList.toggle('active', isActive);
             }
 
@@ -372,7 +372,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        changeTab(tab: string, group: string, options: Record<string, unknown>): void {
+        override changeTab(tab: string, group: string, options: Record<string, unknown>): void {
             const prototype = Object.getPrototypeOf(PrimarySheetWH40K.prototype) as {
                 changeTab?: (this: PrimarySheetWH40K, tab: string, group: string, options: Record<string, unknown>) => void;
             };
@@ -401,7 +401,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
          */
         static async #deleteDocument(this: PrimarySheetWH40K, event: Event, target: HTMLElement): Promise<void> {
             if ((await this._deleteDocument(event, target)) === false) return;
-            const uuid = target.closest<HTMLElement>('[data-uuid]')?.dataset.uuid;
+            const uuid = target.closest<HTMLElement>('[data-uuid]')?.dataset['uuid'];
             const doc = await fromUuid(uuid ?? '');
             if (doc instanceof foundry.abstract.Document) {
                 await (doc as foundry.abstract.Document.Any & { deleteDialog?: () => Promise<unknown> }).deleteDialog?.();
@@ -421,7 +421,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
             const { MODES } = PrimarySheetWH40K;
             const toggle = event.currentTarget as HTMLInputElement;
             const label = game.i18n.localize(`WH40K.SheetMode${toggle.checked ? 'Play' : 'Edit'}`);
-            toggle.dataset.tooltip = label;
+            toggle.dataset['tooltip'] = label;
             toggle.setAttribute('aria-label', label);
             this._mode = toggle.checked ? MODES.EDIT : MODES.PLAY;
             await this.submit();
@@ -430,8 +430,8 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
 
         /* -------------------------------------------- */
 
-        _onClickAction(event: Event, target: HTMLElement): void {
-            if (target.dataset.action === 'addDocument') this._addDocument(event, target);
+        override _onClickAction(event: Event, target: HTMLElement): void {
+            if (target.dataset['action'] === 'addDocument') this._addDocument(event, target);
             else {
                 const prototype = Object.getPrototypeOf(PrimarySheetWH40K.prototype) as {
                     _onClickAction?: (this: PrimarySheetWH40K, event: PointerEvent, target: HTMLElement) => void;
@@ -451,7 +451,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
         static async #showDocument(this: PrimarySheetWH40K, event: Event, target: HTMLElement): Promise<void> {
             if ((await this._showDocument(event, target)) === false) return;
             if ([HTMLInputElement, HTMLSelectElement].some((el) => event.target instanceof el)) return;
-            const uuid = target.closest<HTMLElement>('[data-uuid]')?.dataset.uuid;
+            const uuid = target.closest<HTMLElement>('[data-uuid]')?.dataset['uuid'];
             const doc = await fromUuid(uuid ?? '');
             if (doc instanceof foundry.abstract.Document) {
                 (doc as foundry.abstract.Document.Any & { sheet?: { render: (options?: Record<string, unknown> | boolean) => unknown } }).sheet?.render({

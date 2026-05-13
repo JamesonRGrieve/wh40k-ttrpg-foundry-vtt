@@ -69,7 +69,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        _configureRenderOptions(options: ApplicationV2Config.RenderOptions): void {
+        override _configureRenderOptions(options: ApplicationV2Config.RenderOptions): void {
             const prototype = Object.getPrototypeOf(BaseApplicationWH40K.prototype) as {
                 _configureRenderOptions?: (this: BaseApplicationWH40K, options: ApplicationV2Config.RenderOptions) => void;
             };
@@ -83,7 +83,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        async _onFirstRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onFirstRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             const prototype = Object.getPrototypeOf(BaseApplicationWH40K.prototype) as {
                 _onFirstRender?: (this: BaseApplicationWH40K, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions) => Promise<void>;
             };
@@ -94,9 +94,9 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
             const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
-            context.CONFIG = CONFIG.wh40k;
+            context['CONFIG'] = CONFIG.wh40k;
             return context;
         }
 
@@ -130,7 +130,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         _renderContainers(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
             const root = (this as unknown as { element: HTMLElement }).element;
             const containerElements = Array.from(root.querySelectorAll<HTMLElement>('[data-container-id]'));
-            const containers: Record<string, HTMLElement> = Object.fromEntries(containerElements.map((el) => [el.dataset.containerId!, el]));
+            const containers: Record<string, HTMLElement> = Object.fromEntries(containerElements.map((el) => [el.dataset['containerId']!, el]));
             for (const [part, config] of Object.entries((this.constructor as typeof BaseApplicationWH40K).PARTS)) {
                 if (!config.container?.id) continue;
                 const element = root.querySelector<HTMLElement>(`[data-application-part="${part}"]`);
@@ -138,7 +138,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
                 let container = containers[config.container.id];
                 if (!container) {
                     const div = document.createElement('div');
-                    div.dataset.containerId = config.container.id;
+                    div.dataset['containerId'] = config.container.id;
                     if (config.container.classes) div.classList.add(...config.container.classes);
                     container = containers[config.container.id] = div;
                     element.replaceWith(div);
@@ -150,10 +150,10 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        _replaceHTML(result: Record<string, HTMLElement>, content: HTMLElement, options: ApplicationV2Config.RenderOptions): void {
+        override _replaceHTML(result: Record<string, HTMLElement>, content: HTMLElement, options: ApplicationV2Config.RenderOptions): void {
             for (const part of Object.values(result)) {
                 for (const element of part.querySelectorAll<HTMLElement>('[data-expand-id]')) {
-                    const expandId = element.dataset.expandId;
+                    const expandId = element.dataset['expandId'];
                     if (expandId) {
                         element.querySelector('.collapsible')?.classList.toggle('collapsed', !this.#expandedSections.get(expandId));
                     }
@@ -173,7 +173,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        _updateFrame(options: ApplicationV2Config.RenderOptions): void {
+        override _updateFrame(options: ApplicationV2Config.RenderOptions): void {
             const prototype = Object.getPrototypeOf(BaseApplicationWH40K.prototype) as {
                 _updateFrame?: (this: BaseApplicationWH40K, options: ApplicationV2Config.RenderOptions) => void;
             };
@@ -187,7 +187,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
             // Shared PARTS containers (for example the player-sheet sidebar)
@@ -234,7 +234,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
             const collapsible = target.closest('.collapsible');
             if (!collapsible || (event.target as HTMLElement).closest('.collapsible-content')) return;
             collapsible.classList.toggle('collapsed');
-            const expandId = target.closest<HTMLElement>('[data-expand-id]')?.dataset.expandId;
+            const expandId = target.closest<HTMLElement>('[data-expand-id]')?.dataset['expandId'];
             if (expandId) {
                 this.#expandedSections.set(expandId, !collapsible.classList.contains('collapsed'));
             }

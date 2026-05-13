@@ -47,10 +47,10 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
             const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
 
-            context.whatIf = {
+            context['whatIf'] = {
                 active: this._whatIfActive,
                 changeCount: Object.keys(this._whatIfChanges).length,
                 impacts: this._whatIfImpacts,
@@ -62,7 +62,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
             if (this._whatIfActive) {
@@ -192,8 +192,8 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
         /* -------------------------------------------- */
 
         _compareDerivedStats(current: WH40KBaseActorDocument, preview: WH40KBaseActorDocument): void {
-            const system = current.system as any;
-            const previewSystem = preview.system as any;
+            const system = current.system as unknown as { wounds: { max: number }; initiative: { bonus: number }; movement: { half: number; full: number; charge: number; run: number } };
+            const previewSystem = preview.system as unknown as { wounds: { max: number }; initiative: { bonus: number }; movement: { half: number; full: number; charge: number; run: number } };
             const comparisons: { path: string; selector: string; type: string }[] = [
                 { path: 'wounds.max', selector: "[data-stat='wounds-max']", type: 'wounds' },
                 { path: 'initiative.bonus', selector: "[data-stat='initiative']", type: 'initiative' },
@@ -243,9 +243,9 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
 
                 badge.className = `what-if-badge tw-animate-badge-appear ${difference > 0 ? 'positive' : 'negative'}`;
                 badge.textContent = `${data.current} → ${data.preview} (${sign}${difference})`;
-                badge.dataset.current = data.current.toString();
-                badge.dataset.preview = data.preview.toString();
-                badge.dataset.difference = difference.toString();
+                badge.dataset['current'] = data.current.toString();
+                badge.dataset['preview'] = data.preview.toString();
+                badge.dataset['difference'] = difference.toString();
             });
         }
 
@@ -313,6 +313,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
 
             for (const [key, previewChar] of Object.entries(previewChars)) {
                 const currentChar = currentChars[key];
+                if (!currentChar) continue;
                 if (currentChar.bonus !== previewChar.bonus) {
                     impacts.push({
                         type: 'characteristic',
@@ -321,8 +322,9 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
                 }
             }
 
-            const sys = current.system as any;
-            const preSys = preview.system as any;
+            type WhatIfSystem = { initiative: { bonus: number }; wounds: { max: number }; movement: { half: number } };
+            const sys = current.system as unknown as WhatIfSystem;
+            const preSys = preview.system as unknown as WhatIfSystem;
 
             if (sys.initiative.bonus !== preSys.initiative.bonus) {
                 impacts.push({

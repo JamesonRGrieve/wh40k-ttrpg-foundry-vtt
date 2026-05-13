@@ -12,7 +12,7 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginDetailDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'origin-detail-dialog'],
         tag: 'div',
         window: {
@@ -86,8 +86,8 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         super(options);
 
         this.origin = origin;
-        this.allowSelection = options.allowSelection !== false;
-        this.isSelected = options.isSelected === true;
+        this.allowSelection = options['allowSelection'] !== false;
+        this.isSelected = options['isSelected'] === true;
     }
 
     /* -------------------------------------------- */
@@ -102,32 +102,32 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         const system = this.origin.system as Record<string, unknown>;
-        const grants = (system.grants as Record<string, unknown> | undefined) ?? {};
-        const modifiers = ((system.modifiers as Record<string, unknown> | undefined)?.characteristics as Record<string, number> | undefined) ?? {};
+        const grants = (system['grants'] as Record<string, unknown> | undefined) ?? {};
+        const modifiers = ((system['modifiers'] as Record<string, unknown> | undefined)?.['characteristics'] as Record<string, number> | undefined) ?? {};
 
-        context.origin = this.origin;
-        context.allowSelection = this.allowSelection;
-        context.isSelected = this.isSelected;
+        context['origin'] = this.origin;
+        context['allowSelection'] = this.allowSelection;
+        context['isSelected'] = this.isSelected;
 
         // Basic info
-        context.name = this.origin.name;
-        context.img = this.origin.img;
-        context.step = system.step;
-        context.stepLabel = this._getStepLabel((system.step as string | undefined) ?? '');
-        context.xpCost = system.xpCost ?? 0;
-        context.isAdvanced = system.isAdvancedOrigin ?? false;
+        context['name'] = this.origin.name;
+        context['img'] = this.origin.img;
+        context['step'] = system['step'];
+        context['stepLabel'] = this._getStepLabel((system['step'] as string | undefined) ?? '');
+        context['xpCost'] = system['xpCost'] ?? 0;
+        context['isAdvanced'] = system['isAdvancedOrigin'] ?? false;
 
         // Description - parse HTML properly
-        context.description = (system.description as Record<string, unknown> | undefined)?.value ?? '';
-        context.hasDescription = (context.description as string) !== '';
+        context['description'] = (system['description'] as Record<string, unknown> | undefined)?.['value'] ?? '';
+        context['hasDescription'] = (context['description'] as string) !== '';
 
         // Source info
-        context.source = system.source ?? {};
-        const source = context.source as Record<string, unknown>;
-        context.hasSource = source.book !== undefined || source.page !== undefined;
+        context['source'] = system['source'] ?? {};
+        const source = context['source'] as Record<string, unknown>;
+        context['hasSource'] = source['book'] !== undefined || source['page'] !== undefined;
 
         // Characteristic modifiers
         const contextData = context as Record<string, unknown> & {
@@ -151,12 +151,12 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
                 });
             }
         }
-        context.hasCharacteristics = contextData.characteristics.length > 0;
+        context['hasCharacteristics'] = contextData.characteristics.length > 0;
 
         // Wounds/Fate formulas
-        context.woundsFormula = grants.woundsFormula ?? null;
-        context.fateFormula = grants.fateFormula ?? null;
-        context.hasFormulas = context.woundsFormula !== null || context.fateFormula !== null;
+        context['woundsFormula'] = grants['woundsFormula'] ?? null;
+        context['fateFormula'] = grants['fateFormula'] ?? null;
+        context['hasFormulas'] = context['woundsFormula'] !== null || context['fateFormula'] !== null;
 
         // Skills
         interface GrantSkill {
@@ -164,14 +164,14 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             specialization?: string;
             level?: string;
         }
-        contextData.skills = (Array.isArray(grants.skills) ? (grants.skills as GrantSkill[]) : []).map((skill) => ({
+        contextData.skills = (Array.isArray(grants['skills']) ? (grants['skills'] as GrantSkill[]) : []).map((skill) => ({
             name: skill.name,
             specialization: skill.specialization ?? null,
             level: skill.level ?? 'trained',
             levelLabel: getTrainingLabel(skill.level ?? ''),
             displayName: skill.specialization !== undefined ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
-        context.hasSkills = contextData.skills.length > 0;
+        context['hasSkills'] = contextData.skills.length > 0;
 
         // Talents
         interface GrantTalent {
@@ -179,8 +179,8 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             specialization?: string;
             uuid?: string;
         }
-        contextData.talents = await this._prepareTalents(Array.isArray(grants.talents) ? (grants.talents as GrantTalent[]) : []);
-        context.hasTalents = contextData.talents.length > 0;
+        contextData.talents = await this._prepareTalents(Array.isArray(grants['talents']) ? (grants['talents'] as GrantTalent[]) : []);
+        context['hasTalents'] = contextData.talents.length > 0;
 
         // Traits
         interface GrantTrait {
@@ -188,8 +188,8 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             level?: string;
             uuid?: string;
         }
-        contextData.traits = await this._prepareTraits(Array.isArray(grants.traits) ? (grants.traits as GrantTrait[]) : []);
-        context.hasTraits = contextData.traits.length > 0;
+        contextData.traits = await this._prepareTraits(Array.isArray(grants['traits']) ? (grants['traits'] as GrantTrait[]) : []);
+        context['hasTraits'] = contextData.traits.length > 0;
 
         // Equipment
         interface GrantEquipment {
@@ -197,16 +197,16 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             quantity?: number;
             uuid?: string;
         }
-        contextData.equipment = (Array.isArray(grants.equipment) ? (grants.equipment as GrantEquipment[]) : []).map((item) => ({
+        contextData.equipment = (Array.isArray(grants['equipment']) ? (grants['equipment'] as GrantEquipment[]) : []).map((item) => ({
             name: item.name ?? '',
             quantity: item.quantity ?? 1,
             uuid: item.uuid ?? null,
         }));
-        context.hasEquipment = contextData.equipment.length > 0;
+        context['hasEquipment'] = contextData.equipment.length > 0;
 
         // Special Abilities
-        contextData.specialAbilities = Array.isArray(grants.specialAbilities) ? grants.specialAbilities : [];
-        context.hasSpecialAbilities = contextData.specialAbilities.length > 0;
+        contextData.specialAbilities = Array.isArray(grants['specialAbilities']) ? grants['specialAbilities'] : [];
+        context['hasSpecialAbilities'] = contextData.specialAbilities.length > 0;
 
         // Choices
         interface GrantChoiceOption {
@@ -220,7 +220,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             count?: number;
             options: GrantChoiceOption[];
         }
-        contextData.choices = (Array.isArray(grants.choices) ? (grants.choices as GrantChoice[]) : []).map((choice) => ({
+        contextData.choices = (Array.isArray(grants['choices']) ? (grants['choices'] as GrantChoice[]) : []).map((choice) => ({
             type: choice.type,
             typeLabel: getChoiceTypeLabel(choice.type),
             label: choice.label,
@@ -231,14 +231,14 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
                 description: opt.description ?? '',
             })),
         }));
-        context.hasChoices = contextData.choices.length > 0;
+        context['hasChoices'] = contextData.choices.length > 0;
 
         // Requirements
-        context.requirements = system.requirements ?? {};
-        const requirements = context.requirements as Record<string, unknown>;
-        const prevStepsLen = (requirements.previousSteps as unknown[] | undefined)?.length ?? 0;
-        const exclStepsLen = (requirements.excludedSteps as unknown[] | undefined)?.length ?? 0;
-        context.hasRequirements = requirements.text !== undefined || prevStepsLen > 0 || exclStepsLen > 0;
+        context['requirements'] = system['requirements'] ?? {};
+        const requirements = context['requirements'] as Record<string, unknown>;
+        const prevStepsLen = (requirements['previousSteps'] as unknown[] | undefined)?.length ?? 0;
+        const exclStepsLen = (requirements['excludedSteps'] as unknown[] | undefined)?.length ?? 0;
+        context['hasRequirements'] = requirements['text'] !== undefined || prevStepsLen > 0 || exclStepsLen > 0;
 
         return context;
     }
@@ -256,7 +256,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             let item: { system?: { description?: { value?: string } } } | null = null;
             if (talent.uuid !== undefined) {
                 try {
-                    item = await fromUuid(talent.uuid);
+                    item = (await fromUuid(talent.uuid)) as unknown as { system?: { description?: { value?: string } } } | null;
                 } catch {
                     // Item not found
                 }
@@ -285,7 +285,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             let item: { system?: { description?: { value?: string } } } | null = null;
             if (trait.uuid !== undefined) {
                 try {
-                    item = await fromUuid(trait.uuid);
+                    item = (await fromUuid(trait.uuid)) as unknown as { system?: { description?: { value?: string } } } | null;
                 } catch {
                     // Item not found
                 }
@@ -361,7 +361,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * updates `#activeTab` and toggles `.active` on the matching nav + content elements.
      */
     static #switchOriginTab(this: OriginDetailDialog, _event: PointerEvent, target: HTMLElement): void {
-        const tab = target.dataset.tab;
+        const tab = target.dataset['tab'];
         if (typeof tab !== 'string' || tab === '') return;
         this.#activeTab = tab;
         this.#applyActiveTab();
@@ -371,21 +371,21 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         const root = this.element as HTMLElement | null;
         if (root === null) return;
         root.querySelectorAll<HTMLElement>('.origin-detail-tabs [data-tab]').forEach((el) => {
-            el.classList.toggle('active', el.dataset.tab === this.#activeTab);
+            el.classList.toggle('active', el.dataset['tab'] === this.#activeTab);
         });
         root.querySelectorAll<HTMLElement>('.origin-detail-tab-content > [data-tab]').forEach((el) => {
-            el.classList.toggle('active', el.dataset.tab === this.#activeTab);
+            el.classList.toggle('active', el.dataset['tab'] === this.#activeTab);
         });
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+    override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         super._onRender(context, options);
         this.#applyActiveTab();
     }
 
     static async #openItem(this: OriginDetailDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const uuid = target.dataset.uuid;
+        const uuid = target.dataset['uuid'];
         if (uuid === undefined || uuid === '') return;
 
         try {
@@ -421,7 +421,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     }
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    override async close(options: Record<string, unknown> = {}): Promise<void> {
         // Resolve with cancelled if not already resolved
         if (this._resolvePromise !== null) {
             this._resolvePromise({ selected: false, origin: null });
