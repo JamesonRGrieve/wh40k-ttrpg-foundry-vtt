@@ -728,7 +728,7 @@ export function registerHandlebarsHelpers(): void {
      * @returns {string} Font Awesome icon class
      */
     Handlebars.registerHelper('talentIcon', (category: string): string => {
-        const icons: Record<string, string> = {
+        const icons: Partial<Record<string, string>> = {
             combat: 'fa-sword',
             social: 'fa-users',
             knowledge: 'fa-book',
@@ -741,8 +741,7 @@ export function registerHandlebarsHelpers(): void {
             unique: 'fa-star',
             general: 'fa-circle',
         };
-        if (Object.hasOwn(icons, category)) return icons[category];
-        return icons['general'] ?? 'fa-circle';
+        return icons[category] ?? icons['general'] ?? 'fa-circle';
     });
 
     /**
@@ -752,16 +751,14 @@ export function registerHandlebarsHelpers(): void {
      * @returns {string} CSS class name
      */
     Handlebars.registerHelper('tierColor', (tier: TplValue): string => {
-        const colors: Record<number, string> = {
+        const colors: Partial<Record<number, string>> = {
             1: 'tier-bronze',
             2: 'tier-silver',
             3: 'tier-gold',
             0: 'tier-none',
         };
         const tierKey = Number(tier);
-        if (Object.hasOwn(colors, tierKey)) return colors[tierKey];
-        if (Object.hasOwn(colors, 0)) return colors[0];
-        return 'tier-none';
+        return colors[tierKey] ?? colors[0] ?? 'tier-none';
     });
 
     /**
