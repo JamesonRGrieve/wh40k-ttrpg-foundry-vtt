@@ -118,7 +118,7 @@ export async function decrement(this: Host, event: Event, target: HTMLElement): 
 
 async function setCriticalPipImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
     const level = parseInt(target.dataset['critLevel'] || '0', 10);
-    const currentCrit = this.actor.system.wounds?.critical || 0;
+    const currentCrit = this.actor.system.wounds?.critical ?? 0;
     const newValue = level === currentCrit ? level - 1 : level;
     const clampedValue = Math.min(Math.max(newValue, 0), 10);
     await this._updateSystemField('system.wounds.critical', clampedValue);
@@ -132,9 +132,9 @@ export async function setCriticalPip(this: Host, event: Event, target: HTMLEleme
 
 async function setFateStarImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
     const index = parseInt(target.dataset['fateIndex'] || '0', 10);
-    const currentFate = this.actor.system.fate?.value || 0;
+    const currentFate = this.actor.system.fate?.value ?? 0;
     const newValue = index === currentFate ? index - 1 : index;
-    const maxFate = this.actor.system.fate?.max || 0;
+    const maxFate = this.actor.system.fate?.max ?? 0;
     const clampedValue = Math.min(Math.max(newValue, 0), maxFate);
     await this._updateSystemField('system.fate.value', clampedValue);
 }
@@ -147,9 +147,9 @@ export async function setFateStar(this: Host, event: Event, target: HTMLElement)
 
 async function setFatigueBoltImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
     const index = parseInt(target.dataset['fatigueIndex'] || '0', 10);
-    const currentFatigue = this.actor.system.fatigue?.value || 0;
+    const currentFatigue = this.actor.system.fatigue?.value ?? 0;
     const newValue = index === currentFatigue ? index - 1 : index;
-    const maxFatigue = this.actor.system.fatigue?.max || 0;
+    const maxFatigue = this.actor.system.fatigue?.max ?? 0;
     const clampedValue = Math.min(Math.max(newValue, 0), maxFatigue);
     await this._updateSystemField('system.fatigue.value', clampedValue);
 }
@@ -199,7 +199,7 @@ export async function setInsanity(this: Host, event: Event, target: HTMLElement)
 /* -------------------------------------------- */
 
 async function restoreFateImpl(this: Host, _event: Event, _target: HTMLElement): Promise<void> {
-    const maxFate = this.actor.system.fate?.max || 0;
+    const maxFate = this.actor.system.fate?.max ?? 0;
     await this._updateSystemField('system.fate.value', maxFate);
     this._notify('info', `Restored all fate points to ${maxFate}`, { duration: 3000 });
 }
@@ -212,7 +212,7 @@ export async function restoreFate(this: Host, event: Event, target: HTMLElement)
 
 async function spendFateImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
     const action = target.dataset['fateAction'];
-    const currentFate = this.actor.system.fate?.value || 0;
+    const currentFate = this.actor.system.fate?.value ?? 0;
 
     if (currentFate <= 0) {
         this._notify('warning', 'No fate points available to spend!', { duration: 3000 });
@@ -246,7 +246,7 @@ async function spendFateImpl(this: Host, _event: Event, target: HTMLElement): Pr
             if (!confirmBurn) return;
             message = `<strong>${this.actor.name}</strong> <strong style="color: #b63a2b;">BURNS</strong> a Fate Point!`;
             await this.actor.update({
-                'system.fate.max': Math.max(0, (this.actor.system.fate?.max || 0) - 1),
+                'system.fate.max': Math.max(0, (this.actor.system.fate?.max ?? 0) - 1),
             });
             break;
         }
