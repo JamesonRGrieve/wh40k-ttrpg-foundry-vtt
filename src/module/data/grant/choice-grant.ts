@@ -138,7 +138,7 @@ export default class ChoiceGrantData extends BaseGrantData {
 
             const grants = option.grants ?? [];
             for (let i = 0; i < grants.length; i++) {
-                const grantConfig = grants[i];
+                const grantConfig = grants[i]!;
 
                 const grantResult = await this._applySubGrant(actor, grantConfig, data, options);
                 appliedResult.grantResults[`${optionLabel}:${i}`] = {
@@ -163,7 +163,7 @@ export default class ChoiceGrantData extends BaseGrantData {
         const grantResults = (appliedState['grantResults'] ?? {}) as Record<string, Record<string, unknown>>;
         for (const [grantKey, grantEntry] of Object.entries(grantResults)) {
             const [optionLabel, indexStr] = grantKey.split(':');
-            const index = parseInt(indexStr);
+            const index = parseInt(indexStr ?? '');
 
             const option = this.options.find((o) => o.label === optionLabel);
             if (!option?.grants[index]) continue;

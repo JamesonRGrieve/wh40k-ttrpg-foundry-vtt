@@ -143,7 +143,7 @@ export default class ItemGrantData extends BaseGrantData {
 
             // Track what was applied
             created.forEach((item, index) => {
-                const sourceUuid = itemsToCreate[index].uuid;
+                const sourceUuid = itemsToCreate[index]!.uuid;
                 result.applied[sourceUuid] = item.id!;
                 result.notifications.push(`Granted: ${item.name}`);
             });
@@ -200,7 +200,7 @@ export default class ItemGrantData extends BaseGrantData {
         );
 
         created.forEach((item, index) => {
-            result.applied[items[index].uuid] = item.id!;
+            result.applied[items[index]!.uuid] = item.id!;
             result.notifications.push(`Restored: ${item.name}`);
         });
 
