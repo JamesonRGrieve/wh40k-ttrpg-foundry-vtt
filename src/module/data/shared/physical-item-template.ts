@@ -220,7 +220,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * Get the total weight considering quantity.
      * @type {number}
      */
-    get totalWeight() {
+    get totalWeight(): number {
         return this.weight * (this.quantity || 1);
     }
 

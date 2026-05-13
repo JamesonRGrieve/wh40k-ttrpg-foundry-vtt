@@ -224,7 +224,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Has any non-zero modifiers?
      * @type {boolean}
      */
-    get hasModifiers() {
+    get hasModifiers(): boolean {
         return Object.values(this.modifiers).some((v) => v !== 0);
     }
 
@@ -232,8 +232,8 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Get modifiers as a formatted list.
      * @type {object[]}
      */
-    get modifiersList() {
-        const list = [];
+    get modifiersList(): Array<{ key: string; label: string; value: number }> {
+        const list: Array<{ key: string; label: string; value: number }> = [];
         for (const [key, value] of Object.entries(this.modifiers)) {
             if (value !== 0) {
                 list.push({

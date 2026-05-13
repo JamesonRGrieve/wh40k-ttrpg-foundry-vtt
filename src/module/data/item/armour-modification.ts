@@ -298,7 +298,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * Has any non-zero modifiers?
      * @type {boolean}
      */
-    get hasModifiers() {
+    get hasModifiers(): boolean {
         const mods = this.modifiers;
         return mods.armourPoints !== 0 || mods.maxAgility !== 0 || mods.weight !== 0;
     }
@@ -307,7 +307,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * Get modifier summary for display.
      * @type {string}
      */
-    get modifierSummary() {
+    get modifierSummary(): string {
         const parts = [];
         const mods = this.modifiers;
 
@@ -328,7 +328,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * Get properties summary.
      * @type {string}
      */
-    get propertiesSummary() {
+    get propertiesSummary(): string {
         const added = Array.from(this.addedProperties);
         const removed = Array.from(this.removedProperties);
         const parts = [];
