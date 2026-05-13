@@ -81,6 +81,7 @@ async function enrichCharacteristic(match: RegExpMatchArray, options?: Enrichmen
     if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
     const label = getGroup(match.groups, 'label');
     const configRaw = match.groups['config'];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
     if (configRaw === undefined) return createErrorElement(match[0], 'Missing config group');
     const config = configRaw.trim().toLowerCase();
 
@@ -114,9 +115,9 @@ async function enrichCharacteristic(match: RegExpMatchArray, options?: Enrichmen
     // Create enriched element
     const span = document.createElement('span');
     span.className = 'wh40k-enricher wh40k-enricher-characteristic';
-    span.dataset['enricherType'] ='characteristic';
-    span.dataset['enricherConfig'] =charKey;
-    span.dataset['actorUuid'] =actor.uuid;
+    span.dataset['enricherType'] = 'characteristic';
+    span.dataset['enricherConfig'] = charKey;
+    span.dataset['actorUuid'] = actor.uuid;
 
     // Build tooltip data
     const tooltipData = {
@@ -128,7 +129,7 @@ async function enrichCharacteristic(match: RegExpMatchArray, options?: Enrichmen
         modifier: charData.modifier,
         unnatural: charData.unnatural,
     };
-    span.dataset['tooltip'] =JSON.stringify(tooltipData);
+    span.dataset['tooltip'] = JSON.stringify(tooltipData);
 
     // Create label
     const displayLabel = label ?? `${charData.label} (${charData.total})`;
@@ -152,6 +153,7 @@ async function enrichSkill(match: RegExpMatchArray, options?: EnrichmentOptions)
     if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
     const label = getGroup(match.groups, 'label');
     const configRawSkill = match.groups['config'];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
     if (configRawSkill === undefined) return createErrorElement(match[0], 'Missing config group');
     const config = configRawSkill.trim().toLowerCase();
 
@@ -183,9 +185,9 @@ async function enrichSkill(match: RegExpMatchArray, options?: EnrichmentOptions)
     // Create enriched element
     const span = document.createElement('span');
     span.className = 'wh40k-enricher wh40k-enricher-skill';
-    span.dataset['enricherType'] ='skill';
-    span.dataset['enricherConfig'] =specialization !== undefined && specialization.length > 0 ? `${skillKey}:${specialization}` : skillKey;
-    span.dataset['actorUuid'] =actor.uuid;
+    span.dataset['enricherType'] = 'skill';
+    span.dataset['enricherConfig'] = specialization !== undefined && specialization.length > 0 ? `${skillKey}:${specialization}` : skillKey;
+    span.dataset['actorUuid'] = actor.uuid;
 
     // Build tooltip data
     const tooltipData = {
@@ -197,7 +199,7 @@ async function enrichSkill(match: RegExpMatchArray, options?: EnrichmentOptions)
         plus20: targetData.plus20,
         bonus: targetData.bonus,
     };
-    span.dataset['tooltip'] =JSON.stringify(tooltipData);
+    span.dataset['tooltip'] = JSON.stringify(tooltipData);
 
     // Create label
     const displayLabel = label ?? `${tooltipData.label} (${targetData.current}%)`;
@@ -220,6 +222,7 @@ async function enrichSkill(match: RegExpMatchArray, options?: EnrichmentOptions)
 async function enrichModifier(match: RegExpMatchArray, _options?: EnrichmentOptions): Promise<HTMLElement> {
     if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
     const config = match.groups['config'];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
     if (config === undefined) return createErrorElement(match[0], 'Missing config group');
     const label = getGroup(match.groups, 'label');
     const parts = config.trim().split(/\s+/);
@@ -238,8 +241,8 @@ async function enrichModifier(match: RegExpMatchArray, _options?: EnrichmentOpti
     // Create enriched element
     const span = document.createElement('span');
     span.className = `wh40k-enricher wh40k-enricher-modifier ${numValue >= 0 ? 'positive' : 'negative'}`;
-    span.dataset['enricherType'] ='modifier';
-    span.dataset['enricherConfig'] =config;
+    span.dataset['enricherType'] = 'modifier';
+    span.dataset['enricherConfig'] = config;
 
     const displayLabel = label ?? `${stat} ${numValue >= 0 ? '+' : ''}${numValue}`;
     const icon = numValue >= 0 ? 'arrow-up' : 'arrow-down';
@@ -261,6 +264,7 @@ async function enrichArmor(match: RegExpMatchArray, options?: EnrichmentOptions)
     if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
     const label = getGroup(match.groups, 'label');
     const configRawArmor = match.groups['config'];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
     if (configRawArmor === undefined) return createErrorElement(match[0], 'Missing config group');
     const config = configRawArmor.trim().toLowerCase();
 
@@ -279,9 +283,9 @@ async function enrichArmor(match: RegExpMatchArray, options?: EnrichmentOptions)
     // Create enriched element
     const span = document.createElement('span');
     span.className = 'wh40k-enricher wh40k-enricher-armor';
-    span.dataset['enricherType'] ='armor';
-    span.dataset['enricherConfig'] =config;
-    span.dataset['actorUuid'] =actor.uuid;
+    span.dataset['enricherType'] = 'armor';
+    span.dataset['enricherConfig'] = config;
+    span.dataset['actorUuid'] = actor.uuid;
 
     let displayValue: string;
     // Tooltip is a heterogeneous bag of per-location or single-location summaries serialised to JSON for display.
@@ -291,12 +295,14 @@ async function enrichArmor(match: RegExpMatchArray, options?: EnrichmentOptions)
     if (config === 'all') {
         // Show all armor locations
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; armorData[loc] may be undefined
         const values = locations.map((loc) => armorData[loc]?.total ?? 0);
         displayValue = `${Math.min(...values)}-${Math.max(...values)} AP`;
 
         tooltipData = {};
         locations.forEach((loc) => {
             const locData = armorData[loc];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; armorData[loc] may be undefined
             if (locData === undefined) return;
             tooltipData[loc] = {
                 total: locData.total,
@@ -322,7 +328,7 @@ async function enrichArmor(match: RegExpMatchArray, options?: EnrichmentOptions)
         };
     }
 
-    span.dataset['tooltip'] =JSON.stringify(tooltipData);
+    span.dataset['tooltip'] = JSON.stringify(tooltipData);
 
     const displayLabel = label ?? displayValue;
     span.innerHTML = `<i class="fas fa-shield-alt"></i> ${displayLabel}`;
@@ -434,6 +440,7 @@ async function enrichQuality(match: RegExpMatchArray, _options?: EnrichmentOptio
     if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
     const label = getGroup(match.groups, 'label');
     const configRawQuality = match.groups['config'];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
     if (configRawQuality === undefined) return createErrorElement(match[0], 'Missing config group');
     const config = configRawQuality.trim().toLowerCase();
 
@@ -454,11 +461,11 @@ async function enrichQuality(match: RegExpMatchArray, _options?: EnrichmentOptio
     // Create enriched element
     const span = document.createElement('span');
     span.className = 'wh40k-enricher wh40k-enricher-quality';
-    span.dataset['enricherType'] ='quality';
-    span.dataset['enricherConfig'] =config;
+    span.dataset['enricherType'] = 'quality';
+    span.dataset['enricherConfig'] = config;
 
     if (quality !== null) {
-        span.dataset['itemUuid'] =quality.uuid;
+        span.dataset['itemUuid'] = quality.uuid;
         span.title = `${quality.name}\nClick to open | Shift+Click to chat | Ctrl+Click for sheet`;
     } else {
         span.title = config;
@@ -480,6 +487,7 @@ async function enrichProperty(match: RegExpMatchArray, _options?: EnrichmentOpti
     if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
     const label = getGroup(match.groups, 'label');
     const configRawProperty = match.groups['config'];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
     if (configRawProperty === undefined) return createErrorElement(match[0], 'Missing config group');
     const config = configRawProperty.trim().toLowerCase();
 
@@ -500,11 +508,11 @@ async function enrichProperty(match: RegExpMatchArray, _options?: EnrichmentOpti
     // Create enriched element
     const span = document.createElement('span');
     span.className = 'wh40k-enricher wh40k-enricher-property';
-    span.dataset['enricherType'] ='property';
-    span.dataset['enricherConfig'] =config;
+    span.dataset['enricherType'] = 'property';
+    span.dataset['enricherConfig'] = config;
 
     if (property !== null) {
-        span.dataset['itemUuid'] =property.uuid;
+        span.dataset['itemUuid'] = property.uuid;
         span.title = `${property.name}\nClick to open | Shift+Click to chat | Ctrl+Click for sheet`;
     } else {
         span.title = config;
@@ -526,6 +534,7 @@ async function enrichCondition(match: RegExpMatchArray, _options?: EnrichmentOpt
     if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
     const label = getGroup(match.groups, 'label');
     const configRawCondition = match.groups['config'];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
     if (configRawCondition === undefined) return createErrorElement(match[0], 'Missing config group');
     const config = configRawCondition.trim().toLowerCase();
 
@@ -546,11 +555,11 @@ async function enrichCondition(match: RegExpMatchArray, _options?: EnrichmentOpt
     // Create enriched element
     const span = document.createElement('span');
     span.className = 'wh40k-enricher wh40k-enricher-condition';
-    span.dataset['enricherType'] ='condition';
-    span.dataset['enricherConfig'] =config;
+    span.dataset['enricherType'] = 'condition';
+    span.dataset['enricherConfig'] = config;
 
     if (condition !== null) {
-        span.dataset['itemUuid'] =condition.uuid;
+        span.dataset['itemUuid'] = condition.uuid;
         span.title = `${condition.name}\nClick to open | Shift+Click to chat | Ctrl+Click for sheet`;
     } else {
         span.title = config;

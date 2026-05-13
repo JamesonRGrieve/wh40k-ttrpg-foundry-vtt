@@ -155,6 +155,7 @@ export default class StatBlockValidator {
 
         for (const key of required) {
             const char = characteristics[key];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess guard for strict tsconfig; char may be undefined
             if (!char) {
                 result.warnings.push(`Missing characteristic: ${key}`);
                 continue;

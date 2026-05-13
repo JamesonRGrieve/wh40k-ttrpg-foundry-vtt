@@ -1,8 +1,7 @@
 import { ConfirmationDialog } from '../applications/dialogs/_module.ts';
 import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.ts';
 import type { ActionData } from '../rolls/action-data.ts';
-import type { ActorLike } from '../rolls/assign-damage-data.ts';
-import { AssignDamageData } from '../rolls/assign-damage-data.ts';
+import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts';
 import { Hit } from '../rolls/damage-data.ts';
 import { uuid, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
