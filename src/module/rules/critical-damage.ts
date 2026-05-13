@@ -47,8 +47,10 @@ async function buildCriticalDamageTable(): Promise<CriticalDamageTable> {
         const dt = normalizeKey(doc.system?.damageType);
         const bp = normalizeKey(doc.system?.bodyPart);
         if (dt === null || bp === null) continue;
-        const dtRow = table[dt] ?? (table[dt] = {});
-        const bpRow = dtRow[bp] ?? (dtRow[bp] = {});
+        table[dt] ??= {};
+        const dtRow = table[dt];
+        dtRow[bp] ??= {};
+        const bpRow = dtRow[bp];
         const effects = doc.system?.effects ?? {};
         for (const [severityStr, effect] of Object.entries(effects)) {
             const severity = Number.parseInt(severityStr, 10);
