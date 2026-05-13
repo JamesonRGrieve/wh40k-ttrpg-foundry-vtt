@@ -27,12 +27,12 @@ type EffectOptions = Record<string, unknown> & {
 
 type EffectDataInput = {
     name: string;
-    icon?: string;
-    changes?: EffectChange[];
-    disabled?: boolean;
-    origin?: string;
-    duration?: Record<string, unknown>;
-    flags?: Record<string, unknown>;
+    icon?: string | undefined;
+    changes?: EffectChange[] | undefined;
+    disabled?: boolean | undefined;
+    origin?: string | undefined;
+    duration?: Record<string, unknown> | undefined;
+    flags?: Record<string, unknown> | undefined;
 };
 
 type ConditionDefinition = {
@@ -55,11 +55,12 @@ export async function handleBleeding(actor: WH40KBaseActorDocument): Promise<voi
 }
 
 export async function handleOnFire(actor: WH40KBaseActorDocument): Promise<void> {
+    const willpower = actor.characteristics['willpower'];
     const context: ActiveEffectChatContext = {
         template: 'systems/wh40k-rpg/templates/chat/burning-chat.hbs',
         actor: actor,
         roll: await roll1d100(),
-        target: actor.characteristics.willpower.total,
+        target: willpower?.total ?? 0,
     };
     const rollTotal = context.roll?.total ?? 0;
     const target = context.target ?? 0;
@@ -67,7 +68,7 @@ export async function handleOnFire(actor: WH40KBaseActorDocument): Promise<void>
 
     const damageRoll = new Roll('1d10', {});
     await damageRoll.evaluate();
-    context.damage = damageRoll.total;
+    context.damage = damageRoll.total ?? 0;
     await sendActiveEffectMessage(context);
 }
 
