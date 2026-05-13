@@ -96,7 +96,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField> {
         const schema: Record<string, foundry.data.fields.DataField> = {};
         for (const template of this._schemaTemplates) {
             if (!template.defineSchema) {
@@ -128,7 +128,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions, _state?: DataModelV14.UpdateState): Record<string, unknown> {
+    static override cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions, _state?: DataModelV14.UpdateState): Record<string, unknown> {
         this._cleanData(source, options);
         const superClean = super.cleanData as DataModelV14.CleanDataSignature;
         return superClean.call(this, source, options, _state);
@@ -153,7 +153,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static *_initializationOrder(): Generator<[string, foundry.data.fields.DataField], void, unknown> {
+    static override *_initializationOrder(): Generator<[string, foundry.data.fields.DataField], void, unknown> {
         for (const template of this._schemaTemplates) {
             for (const entry of template._initializationOrder()) {
                 const field = this.schema.get(entry[0]);
@@ -174,7 +174,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static validateJoint(data: Record<string, unknown>): void {
+    static override validateJoint(data: Record<string, unknown>): void {
         this._validateJoint(data);
         return super.validateJoint(data as never);
     }
@@ -198,7 +198,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static migrateData(source: Record<string, unknown>): Record<string, unknown> {
+    static override migrateData(source: Record<string, unknown>): Record<string, unknown> {
         this._migrateData(source);
         return super.migrateData(source);
     }
@@ -219,7 +219,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static shimData(data: Record<string, unknown>, options?: Record<string, unknown>): Record<string, unknown> {
+    static override shimData(data: Record<string, unknown>, options?: Record<string, unknown>): Record<string, unknown> {
         this._shimData(data, options);
         return super.shimData(data, options);
     }
@@ -285,12 +285,12 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /**
      * Perform preliminary operations before data preparation.
      */
-    prepareBaseData(): void {}
+    override prepareBaseData(): void {}
 
     /* -------------------------------------------- */
 
     /**
      * Perform preparatory operations after data preparation.
      */
-    prepareDerivedData(): void {}
+    override prepareDerivedData(): void {}
 }
