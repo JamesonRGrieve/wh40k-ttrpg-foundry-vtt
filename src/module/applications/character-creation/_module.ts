@@ -14,11 +14,11 @@ export { default as OriginRollDialog } from './origin-roll-dialog.ts';
 // Per-system builder variants — stamp the gameSystem id so callers can
 // dispatch to the right builder based on an actor's concrete type.
 export {
-    DH2OriginPathBuilder,
-    DH1OriginPathBuilder,
-    RTOriginPathBuilder,
     BCOriginPathBuilder,
-    OWOriginPathBuilder,
+    DH1OriginPathBuilder,
+    DH2OriginPathBuilder,
     DWOriginPathBuilder,
+    OWOriginPathBuilder,
+    RTOriginPathBuilder,
     getBuilderForActorType,
 } from './system-origin-builders.ts';

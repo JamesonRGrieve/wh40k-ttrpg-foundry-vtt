@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { clickAction, renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../../src/templates/dialogs/ammo-picker.hbs?raw';
+import { clickAction, renderSheet } from '../../../../stories/test-helpers';
 
 interface AmmoEntry {
     uuid: string;

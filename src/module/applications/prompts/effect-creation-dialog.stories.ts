@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 import templateSrc from '../../../../src/templates/dialogs/effect-creation-dialog.hbs?raw';
+import { clickAction, renderSheet } from '../../../../stories/test-helpers';
 
 interface Args {
     selectedCategory: 'condition' | 'characteristic' | 'skill' | 'combat' | 'custom';

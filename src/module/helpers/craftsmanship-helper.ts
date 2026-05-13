@@ -129,7 +129,8 @@ export default class CraftsmanshipHelper {
         const isMelee = weapon.melee === true || weapon.isMeleeWeapon === true;
         if (isMelee) return new Set();
 
-        const rangedRules = rules.ranged[craftsmanship];
+        const rangedRules = rules.ranged[craftsmanship] as CraftsmanshipModifierSet | undefined;
+        if (rangedRules === undefined) return new Set();
         return new Set(rangedRules.qualities ?? []);
     }
 
@@ -154,7 +155,8 @@ export default class CraftsmanshipHelper {
         const isMelee = weapon.melee === true || weapon.isMeleeWeapon === true;
         if (isMelee) return new Set();
 
-        const rangedRules = rules.ranged[craftsmanship];
+        const rangedRules = rules.ranged[craftsmanship] as CraftsmanshipModifierSet | undefined;
+        if (rangedRules === undefined) return new Set();
         return new Set(rangedRules.removeQualities ?? []);
     }
 
@@ -232,7 +234,8 @@ export default class CraftsmanshipHelper {
 
         if (!rules) return [1, 10]; // Default to common
 
-        const tierRules = rules[craftsmanship];
+        const tierRules = rules[craftsmanship] as CraftsmanshipModifierSet | undefined;
+        if (tierRules === undefined) return [1, 10];
         return tierRules.overloadRange ?? [1, 10];
     }
 
@@ -259,6 +262,7 @@ export default class CraftsmanshipHelper {
      * CraftsmanshipHelper.getEffectSummary(bestMeleeWeapon)
      * // Returns: ['+10 to attack', '+1 damage']
      */
+    // eslint-disable-next-line complexity -- effect summary covers all item types; refactoring deferred
     static getEffectSummary(item: CraftsmanshipItem): string[] {
         const modifiers = this.getModifiers(item);
         const effects = [];

@@ -53,13 +53,13 @@ export function checkWeaponTraining(actor: WH40KBaseActorDocument, weapon: Weapo
         if (name.includes('weapon training')) {
             // Extract specialization from talent name
             const specializationMatch = name.match(/weapon training\s*\(([^)]+)\)/i);
-            if (specializationMatch) {
+            if (specializationMatch && specializationMatch[1] !== undefined) {
                 const talentSpec = specializationMatch[1].trim().toLowerCase();
                 // Check if required training matches the specialization
                 if (required.includes(talentSpec)) return true;
                 // Or if required training is in "Weapon Training (X)" format
                 const requiredMatch = required.match(/weapon training\s*\(([^)]+)\)/i);
-                if (requiredMatch) {
+                if (requiredMatch && requiredMatch[1] !== undefined) {
                     const requiredSpec = requiredMatch[1].trim().toLowerCase();
                     if (talentSpec === requiredSpec) return true;
                 }

@@ -1,9 +1,9 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import {
     CONVERTIBLE_CHARACTER_SYSTEMS,
+    type ConvertibleCharacterSystem,
     convertCharacterActorSystem,
     getCharacterSystemId,
-    type ConvertibleCharacterSystem,
 } from '../../utils/actor-system-converter.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 DialogV2 ctor not in shipped types

@@ -14,18 +14,18 @@ import type { ActionData } from '../../rolls/action-data.ts';
 import type { RollData } from '../../rolls/roll-data.ts';
 import { getDegree, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import {
+    AIM_OPTIONS,
+    getActionNameForMode,
+    getAimKeyForModifier,
+    getAimModifier,
+    getAttackModeKeyForAction,
     getAvailableAttackModes,
     getMeleeSpecialOptions,
     getSituationalModifiers,
-    getActionNameForMode,
-    getAimModifier,
-    getAttackModeKeyForAction,
-    getAimKeyForModifier,
     isMeleeSpecialOption,
-    AIM_OPTIONS,
 } from '../../rules/attack-options.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
-import { RANGE_BRACKETS, calculateTokenDistance } from '../../utils/range-calculator.ts';
+import { calculateTokenDistance, RANGE_BRACKETS } from '../../utils/range-calculator.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 

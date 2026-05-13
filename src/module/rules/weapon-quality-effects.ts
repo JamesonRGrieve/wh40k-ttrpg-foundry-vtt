@@ -222,7 +222,7 @@ export function calculateQualityAttackModifiers(rollData: WeaponRollData): Quali
 
     // Accurate: +10 BS when using Aim action
     if (weaponHasQuality(weapon, 'accurate')) {
-        if (rollData.modifiers.aim > 0) {
+        if ((rollData.modifiers['aim'] ?? 0) > 0) {
             modifiers['Accurate'] = WEAPON_QUALITY_EFFECTS.accurate.aimBonus;
         }
     }

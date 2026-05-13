@@ -98,13 +98,13 @@ export function calculateAttackSpecialAttackBonuses(rollData: RollData): void {
                 rollData.specialModifiers['Defensive'] = -10;
                 break;
             case 'Accurate':
-                if (rollData.modifiers['aim'] > 0) {
+                if ((rollData.modifiers['aim'] ?? 0) > 0) {
                     rollData.specialModifiers['Accurate'] = 10;
                 }
                 break;
             case 'Inaccurate':
-                if (rollData.modifiers['aim'] > 0) {
-                    rollData.specialModifiers['Inaccurate'] = -1 * rollData.modifiers['aim'];
+                if ((rollData.modifiers['aim'] ?? 0) > 0) {
+                    rollData.specialModifiers['Inaccurate'] = -1 * (rollData.modifiers['aim'] ?? 0);
                 }
                 break;
         }

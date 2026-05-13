@@ -40,7 +40,7 @@ export function calculateCombatActionModifier(rollData: WeaponRollData): void {
  * @param rollData {WeaponRollData}
  */
 export function updateAvailableCombatActions(rollData: WeaponRollData): void {
-    const weaponAttack = rollData.weapon.system.attack as { rateOfFire?: { semi?: number; full?: number } } | undefined;
+    const weaponAttack = rollData.weapon.system['attack'] as { rateOfFire?: { semi?: number; full?: number } } | undefined;
     const actions = allCombatActions()
         .filter((action) => action.subtype.includes('Attack'))
         .filter((action) => {
@@ -76,9 +76,12 @@ export function updateAvailableCombatActions(rollData: WeaponRollData): void {
 
     // If action no longer exists -- set to first available
     if (!Object.keys(actionsByName).find((a) => a === rollData.action)) {
-        const firstAction = actionsByName[Object.keys(actionsByName)[0] ?? ''];
-        if (firstAction) {
-            rollData.action = firstAction;
+        const firstKey = Object.keys(actionsByName)[0];
+        if (firstKey !== undefined) {
+            const firstAction = actionsByName[firstKey];
+            if (firstAction) {
+                rollData.action = firstAction;
+            }
         }
     }
 }

@@ -283,9 +283,10 @@ export class GrantsManager {
 
         // Reverse in reverse order
         for (const grantConfig of grants.reverse()) {
-            const grantId = typeof grantConfig._id === 'string' ? grantConfig._id : '';
+            const grantId = typeof grantConfig['_id'] === 'string' ? grantConfig['_id'] : '';
             if (grantId === '' || !(grantId in appliedState)) continue;
-            const state = appliedState[grantId];
+            const state = appliedState[grantId] as (typeof appliedState)[string] | undefined;
+            if (state === undefined) continue;
 
             const grant = createGrant(grantConfig);
             if (!grant) continue;
@@ -463,7 +464,7 @@ export class GrantsManager {
 
         if (sourceKey !== null) {
             const safeKey = this._sanitizeKey(sourceKey);
-            return safeKey in allGrants ? allGrants[safeKey] : null;
+            return allGrants[safeKey] ?? null;
         }
 
         return allGrants;
@@ -782,10 +783,10 @@ export class GrantsManager {
         switch (level) {
             case 'plus20':
                 updates['system.plus20'] = true;
-            // Fall through
+            // falls through
             case 'plus10':
                 updates['system.plus10'] = true;
-            // Fall through
+            // falls through
             case 'trained':
                 updates['system.trained'] = true;
                 break;

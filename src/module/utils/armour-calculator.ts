@@ -69,7 +69,8 @@ function getArmourAPForLocation(armourSystem: ArmourSystemLike, location: string
  * @returns {object} Armour object with totals for each location
  */
 export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocationData> {
-    const toughness = actor.characteristics.toughness;
+    const toughness = actor.characteristics['toughness'] as (typeof actor.characteristics)[string] | undefined;
+    const toughnessBonus = toughness?.bonus ?? 0;
     let traitBonus = 0;
 
     // Compute highest trait bonus from Machine or Natural Armor traits
@@ -92,9 +93,9 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
         (acc: Record<string, ArmourLocationData>, location: string) =>
             Object.assign(acc, {
                 [location]: {
-                    total: toughness.bonus + traitBonus,
-                    toughnessBonus: toughness.bonus,
-                    traitBonus: traitBonus,
+                    total: toughnessBonus + traitBonus,
+                    toughnessBonus,
+                    traitBonus,
                     value: 0,
                 },
             }),
@@ -110,7 +111,8 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
             const armourPoints = getArmourPointsObject(cybernetic.system as ArmourSystemLike);
             BODY_LOCATIONS.forEach((location: string) => {
                 const armourVal = armourPoints?.[location] ?? 0;
-                armour[location].total += Number(armourVal);
+                const loc = armour[location] as ArmourLocationData | undefined;
+                if (loc !== undefined) loc.total += Number(armourVal);
             });
         });
 
@@ -134,7 +136,8 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
 
         for (const location of BODY_LOCATIONS) {
             const armourVal = getArmourAPForLocation(armourItem.system as ArmourSystemLike, location);
-            if (armourVal > maxArmour[location]) {
+            const currentMax = maxArmour[location] ?? 0;
+            if (armourVal > currentMax) {
                 maxArmour[location] = armourVal;
             }
         }
@@ -146,10 +149,13 @@ export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocat
 
     // Apply max armour values and update totals
     BODY_LOCATIONS.forEach((location: string) => {
-        armour[location].value = maxArmour[location];
-        armour[location].total += maxArmour[location] + goodArmourBonus;
+        const loc = armour[location] as ArmourLocationData | undefined;
+        const locMax = (maxArmour[location] as number | undefined) ?? 0;
+        if (loc === undefined) return;
+        loc.value = locMax;
+        loc.total += locMax + goodArmourBonus;
         if (goodArmourBonus > 0) {
-            armour[location].goodArmourBonus = goodArmourBonus;
+            loc.goodArmourBonus = goodArmourBonus;
         }
     });
 

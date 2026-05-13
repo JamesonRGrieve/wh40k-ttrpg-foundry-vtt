@@ -21,7 +21,7 @@ export const WH40K: Wh40KRulesConfig = {} as Wh40KRulesConfig;
 Object.assign(WH40K, WH40K_BASE);
 
 // Origin Path steps for WH40K RPG character creation
-WH40K.originPath = {
+WH40K['originPath'] = {
     steps: [
         { key: 'homeWorld', label: 'Home World', choiceGroup: 'origin.home-world' },
         { key: 'birthright', label: 'Birthright', choiceGroup: 'origin.birthright' },
@@ -33,7 +33,7 @@ WH40K.originPath = {
     compendium: 'wh40k-rpg.rt-items-origin-path',
 };
 
-WH40K.bio = {
+WH40K['bio'] = {
     primary: [],
     size: {
         4: 'Average (4)',
@@ -50,7 +50,7 @@ WH40K.bio = {
 };
 
 // Sizes object for selectOptions helper (matches bio.size structure)
-WH40K.sizes = {
+WH40K['sizes'] = {
     1: 'Minuscule (1)',
     2: 'Puny (2)',
     3: 'Scrawny (3)',
@@ -63,13 +63,13 @@ WH40K.sizes = {
     10: 'Titanic (10)',
 };
 
-WH40K.items = {
+WH40K['items'] = {
     availability: ['Ubiquitous', 'Abundant', 'Plentiful', 'Common', 'Average', 'Scarce', 'Rare', 'Very Rare', 'Extremely Rare', 'Near Unique', 'Unique'],
     craftsmanship: ['Poor', 'Common', 'Good', 'Best'],
     vehicle_types: ['Walker', 'Wheeled', 'Tracked', 'Skimmer', 'Aircraft', 'Spacecraft'],
 };
 
-WH40K.combat = {
+WH40K['combat'] = {
     las_fire_modes: ['Standard', 'Overcharge', 'Overload'],
     psychic_attacks: ['Psychic Bolt', 'Psychic Blast', 'Psychic Barrage', 'Psychic Storm'],
     damage_types: ['Energy', 'Impact', 'Rending', 'Explosive'],
@@ -109,7 +109,7 @@ WH40K.combat = {
 };
 
 // Ship-related configuration
-WH40K.ship = {
+WH40K['ship'] = {
     hullTypes: ['Transport', 'Raider', 'Frigate', 'Light Cruiser', 'Cruiser', 'Grand Cruiser', 'Battleship'],
     componentTypes: ['Essential', 'Supplemental', 'Weapon', 'Hull'],
 };
