@@ -313,7 +313,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         const values = locations.map((loc) => ap[loc] || 0);
         const allSame = values.every((v) => v === values[0]);
 
-        let apSummary;
+        let apSummary: string;
         if (allSame && (coverage.includes('all') || coverage.length === 6)) {
             apSummary = `All: ${values[0]}`;
         } else {
@@ -334,7 +334,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         }
 
         // Calculate coverage icons
-        let coverageIcons;
+        let coverageIcons: string;
         if (coverage.includes('all')) {
             coverageIcons = '●●●●●●';
         } else {
@@ -542,7 +542,6 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
                 return entry.type !== undefined && entry.type !== '' ? entry.type : 'Unknown Type';
             case 'category':
                 return entry.categoryLabel !== '' ? entry.categoryLabel : 'Uncategorized';
-            case 'source':
             default:
                 return entry.sourceLabel !== '' ? entry.sourceLabel : 'Unknown Source';
         }
@@ -575,7 +574,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         return '';
     }
 
-    _passesFilters(entry: CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> }, pack: CompendiumPack): boolean {
+    _passesFilters(entry: CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> }, _pack: CompendiumPack): boolean {
         // Search filter
         if (this._filters.search !== '') {
             const searchLower = this._filters.search.toLowerCase();
@@ -679,7 +678,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     }
 
     _onFilterMinAP(event: Event): void {
-        this._filters.minAP = parseInt((event.target as HTMLInputElement).value) || 0;
+        this._filters.minAP = parseInt((event.target as HTMLInputElement).value, 10) || 0;
         void this.render();
     }
 
@@ -733,7 +732,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #clearFilters(this: RTCompendiumBrowser, event: Event, target: HTMLElement): void {
+    static #clearFilters(this: RTCompendiumBrowser, _event: Event, _target: HTMLElement): void {
         this._filters = { type: 'all', search: '', source: 'all', category: 'all', groupBy: 'source' };
         void this.render();
     }
@@ -744,7 +743,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #openItem(event: Event, target: HTMLElement): Promise<void> {
+    static async #openItem(_event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset['uuid'];
         if (uuid === undefined) return;
         const doc = await fromUuid(uuid);
