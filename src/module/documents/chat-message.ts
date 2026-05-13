@@ -114,7 +114,7 @@ export class ChatMessageWH40K extends ChatMessage {
         } else if (item.type === 'weapon') {
             // Fallback for weapons without rollDamage method
             const actor = item.actor;
-            if (actor != null && typeof actor.rollWeaponDamage === 'function') {
+            if (actor !== null && actor !== undefined && typeof actor.rollWeaponDamage === 'function') {
                 await actor.rollWeaponDamage(item);
             }
         }
@@ -206,7 +206,7 @@ export class ChatMessageWH40K extends ChatMessage {
         const messageId = card.dataset.messageId ?? '';
         const message = game.messages.get(messageId);
 
-        if (message === null) {
+        if (message === undefined) {
             console.warn('WH40K | ChatMessage not found for action:', action);
             return;
         }
