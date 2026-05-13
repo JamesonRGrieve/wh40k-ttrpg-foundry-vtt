@@ -2493,7 +2493,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #bulkEquip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #bulkEquip(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
             const action: string | undefined = target.dataset.bulkAction;
             const items = this.actor.items;
@@ -2585,7 +2585,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #removeAcquisition(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #removeAcquisition(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.index ?? '-1', 10);
         if (Number.isNaN(index) || index < 0) return;
 
@@ -2608,7 +2608,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #openAcquisitionDialog(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #openAcquisitionDialog(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         await AcquisitionDialog.show(this.actor);
     }
@@ -2619,7 +2619,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #openTransactionDialog(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #openTransactionDialog(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         const sourceCount = TransactionManager.listSourcesForBuyer(this.actor).length;
@@ -2643,7 +2643,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #customXP(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #customXP(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const { openAddXPDialog } = await import('../prompts/add-xp-dialog.ts');
         openAddXPDialog(this.actor);
@@ -2657,7 +2657,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #openAdvancement(this: CharacterSheet, event: Event, target: HTMLElement): void {
+    static #openAdvancement(this: CharacterSheet, event: Event, _target: HTMLElement): void {
         event.preventDefault();
         // Default to rogueTrader career for now
         // TODO: Get career from actor.system.originPath.career or rogueTrader.careerPath
@@ -2673,7 +2673,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #bonusVocalize(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #bonusVocalize(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
             const bonusName = target.dataset.bonusName;
             const bonus = (this.actor.backgroundEffects as Array<{ name?: string; source?: string; benefit?: string }> | undefined)?.find(
@@ -2709,7 +2709,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #openOriginPathBuilder(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #openOriginPathBuilder(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
             if (typeof game.wh40k.openOriginPathBuilder === 'function') {
                 const gameSystem = this._resolveGameSystemId();
@@ -2736,7 +2736,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {PointerEvent} event  The triggering event.
      * @param {HTMLElement} target  The action target.
      */
-    static #toggleEditMode(this: CharacterSheet, event: Event, target: HTMLElement): void {
+    static #toggleEditMode(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
         if (!this.isEditable) return;
         this.#editMode = !this.#editMode;
         void this.render();
@@ -2748,7 +2748,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static async #openCharacteristicSetup(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #openCharacteristicSetup(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         await CharacteristicSetupDialog.open(this.actor);
     }
 
@@ -2804,7 +2804,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /**
      * Header control — reset the window to its default width and height.
      */
-    static #resetWindowSize(this: CharacterSheet, event: Event, target: HTMLElement): void {
+    static #resetWindowSize(this: CharacterSheet, event: Event, _target: HTMLElement): void {
         event.preventDefault();
         const defaults = (this.constructor as typeof CharacterSheet).DEFAULT_OPTIONS.position as { width?: number; height?: number };
         this.setPosition({ width: defaults.width, height: defaults.height });
@@ -2864,7 +2864,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static #filterEquipment(this: CharacterSheet, event: Event, target: HTMLElement): void {
+    static #filterEquipment(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
         const equipmentPanel = this.element.querySelector('.wh40k-all-items-grid');
         if (!equipmentPanel) return;
 
@@ -2970,7 +2970,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static async #filterSkills(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #filterSkills(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
         const input = event.currentTarget as HTMLInputElement;
         const name = input.name || 'search';
         const value = input.value || '';
@@ -2990,7 +2990,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static async #clearSkillsSearch(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #clearSkillsSearch(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         // Reset all filters
         this._skillsFilter = { search: '', characteristic: '', training: '' };
 
@@ -3004,7 +3004,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static async #toggleFavoriteSkill(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleFavoriteSkill(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const skillKey = target.dataset.skill;
         if (skillKey === undefined || skillKey === '') return;
 
@@ -3134,7 +3134,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      * @this {CharacterSheet}
      */
-    static async #toggleFavoriteSpecialistSkill(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleFavoriteSpecialistSkill(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const skillKey = target.dataset.skill;
         const entryIndex = parseInt(target.dataset.index ?? '');
         if (skillKey === undefined || skillKey === '' || isNaN(entryIndex)) return;
@@ -3169,7 +3169,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      * @this {CharacterSheet}
      */
-    static async #openAddSpecialistDialog(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #openAddSpecialistDialog(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         const { prepareCreateSpecialistSkillPrompt } = await import('../prompts/specialist-skill-dialog.ts');
         prepareCreateSpecialistSkillPrompt({
             actor: this.actor,
@@ -3186,7 +3186,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static async #toggleFavoriteTalent(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleFavoriteTalent(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         if (itemId === undefined || itemId === '') return;
 
@@ -3219,7 +3219,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @this {CharacterSheet}
      * @private
      */
-    static async #filterTraits(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #filterTraits(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const form = target.closest('.wh40k-traits-filters');
         if (!form) return;
 
@@ -3238,7 +3238,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @this {CharacterSheet}
      * @private
      */
-    static async #clearTraitsFilter(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #clearTraitsFilter(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         this._traitsFilter = { search: '', category: '', hasLevel: false };
         await this.render({ parts: ['skills'] }); // Trait panel is in skills tab
     }
@@ -3250,7 +3250,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @this {CharacterSheet}
      * @private
      */
-    static async #adjustTraitLevel(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #adjustTraitLevel(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         const parsedDelta = parseInt(target.dataset.delta ?? '');
         const delta = Number.isNaN(parsedDelta) ? 0 : parsedDelta;
@@ -3277,7 +3277,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #createEffect(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #createEffect(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
             await this.actor.createEmbeddedDocuments('ActiveEffect', [
                 {
@@ -3308,7 +3308,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #toggleEffect(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleEffect(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
             const effectId = target.dataset.effectId;
             if (effectId === undefined || effectId === '') return;
@@ -3342,7 +3342,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #deleteEffect(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #deleteEffect(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
             const effectId = target.dataset.effectId;
             if (effectId === undefined || effectId === '') return;
@@ -3386,7 +3386,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollPower(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollPower(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
             if (itemId === undefined || itemId === '') return;
@@ -3412,7 +3412,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollPowerDamage(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollPowerDamage(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
             if (itemId === undefined || itemId === '') return;
@@ -3438,7 +3438,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #vocalizePower(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #vocalizePower(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
             if (itemId === undefined || itemId === '') return;
@@ -3472,7 +3472,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #togglePowerDetails(this: CharacterSheet, event: Event, target: HTMLElement): void {
+    static #togglePowerDetails(this: CharacterSheet, _event: Event, target: HTMLElement): void {
         const itemId = target.dataset.itemId;
         const detailsEl = this.element.querySelector(`.wh40k-power-details[data-power-id="${itemId}"]`);
 
@@ -3496,7 +3496,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollRitual(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollRitual(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
             if (itemId === undefined || itemId === '') return;
@@ -3515,7 +3515,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #vocalizeRitual(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #vocalizeRitual(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
             if (itemId === undefined || itemId === '') return;
@@ -3544,7 +3544,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollOrder(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollOrder(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
             if (itemId === undefined || itemId === '') return;
@@ -3563,7 +3563,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #vocalizeOrder(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #vocalizeOrder(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
             if (itemId === undefined || itemId === '') return;
@@ -3592,7 +3592,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollPhenomena(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollPhenomena(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
             // Use the game.wh40k roll helper if available
             if (typeof game.wh40k.rollPsychicPhenomena === 'function') {
@@ -3633,7 +3633,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollPerils(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollPerils(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
             // Use the game.wh40k roll helper if available
             if (typeof game.wh40k.rollPerilsOfTheWarp === 'function') {
