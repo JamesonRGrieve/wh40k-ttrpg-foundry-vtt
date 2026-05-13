@@ -29,7 +29,7 @@ export class WH40KContextMenu extends applicationUX.ContextMenu {
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ContextMenu options record varies between V13/V14 typings
-    _setPosition(html: HTMLElement, target: HTMLElement, options: Record<string, unknown> = {}): void {
+    override _setPosition(html: HTMLElement, target: HTMLElement, options: Record<string, unknown> = {}): void {
         html.classList.add('wh40k-context-menu');
         // eslint-disable-next-line no-restricted-syntax -- boundary: _setFixedPosition is V13 internal, not on shipped types
         return (this as unknown as { _setFixedPosition: (h: HTMLElement, t: HTMLElement, o: Record<string, unknown>) => void })._setFixedPosition(
@@ -85,7 +85,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
 
         /** @override */
         // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-        async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
             // Setup context menus on first render
@@ -151,7 +151,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
          * @protected
          */
         _getCharacteristicContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
-            const charKey = target.dataset.characteristic;
+            const charKey = target.dataset['characteristic'];
             if (charKey === undefined || charKey === '') return [];
             // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies by gameSystem
             const characteristics = (this.actor.system as { characteristics?: Record<string, WH40KCharacteristic> }).characteristics;
@@ -202,7 +202,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
          * @protected
          */
         _getSkillContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
-            const skillKey = target.dataset.skill;
+            const skillKey = target.dataset['skill'];
             if (skillKey === undefined || skillKey === '') return [];
             // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies by gameSystem
             const skills = (this.actor.system as { skills?: Record<string, WH40KSkill> }).skills;
@@ -265,7 +265,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
          * @protected
          */
         _getItemContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
-            const itemId = target.dataset.itemId;
+            const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId === '') return [];
             const item = this.actor.items.get(itemId);
             if (!item) return [];
@@ -422,7 +422,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
 
         async _onEditCharacteristic(charKey: string): Promise<void> {
             const fakeTarget = document.createElement('div');
-            fakeTarget.dataset.characteristic = charKey;
+            fakeTarget.dataset['characteristic'] = charKey;
             // eslint-disable-next-line no-restricted-syntax -- boundary: subclass action map shape varies; static action ref accessed via constructor
             const ctor = this.constructor as unknown as {
                 actions: { editCharacteristic: (this: ContextMenuApplication, e: Event | null, t: HTMLElement) => Promise<void> };

@@ -4,7 +4,7 @@
   ],
   "totals": {
     "any": 2,
-    "asAny": 22,
+    "asAny": 15,
     "tsExpectError": 10,
     "tsIgnore": 0
   },
@@ -29,7 +29,7 @@
     },
     "applications": {
       "any": 0,
-      "asAny": 12,
+      "asAny": 5,
       "tsExpectError": 9,
       "tsIgnore": 0
     },

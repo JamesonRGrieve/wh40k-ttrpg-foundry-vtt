@@ -41,7 +41,7 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
 
         /** @override */
         // eslint-disable-next-line no-restricted-syntax -- Foundry API boundary: context shape is defined by the framework
-        async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
             this._captureCurrentValues();
         }

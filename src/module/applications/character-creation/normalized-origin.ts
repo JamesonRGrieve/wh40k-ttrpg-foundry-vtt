@@ -126,23 +126,23 @@ function stripHtml(html: string): string {
  * Normalize a single choice entry.
  */
 export function normalizeChoice(raw: Record<string, unknown>): NormalizedChoice {
-    const rawOptions = Array.isArray(raw.options) ? raw.options : [];
+    const rawOptions = Array.isArray(raw['options']) ? raw['options'] : [];
     return {
-        label: firstString(raw.label, raw.name),
-        type: asString(raw.type),
-        count: asNumber(raw.count, 1),
+        label: firstString(raw['label'], raw['name']),
+        type: asString(raw['type']),
+        count: asNumber(raw['count'], 1),
         options: rawOptions.map((opt: unknown): NormalizedChoiceOption => {
             if (typeof opt === 'string') {
                 return { value: opt, label: opt, description: null, uuid: null, grants: null, specializations: null };
             }
             const o = asRecord(opt);
-            const grants = isRecord(o.grants) ? o.grants : null;
-            const specializations = Array.isArray(o.specializations) ? o.specializations.filter((s): s is string => typeof s === 'string') : null;
+            const grants = isRecord(o['grants']) ? o['grants'] : null;
+            const specializations = Array.isArray(o['specializations']) ? o['specializations'].filter((s): s is string => typeof s === 'string') : null;
             return {
-                value: firstString(o.value, o.name),
-                label: firstString(o.label, o.name),
-                description: typeof o.description === 'string' ? o.description : null,
-                uuid: typeof o.uuid === 'string' ? o.uuid : null,
+                value: firstString(o['value'], o['name']),
+                label: firstString(o['label'], o['name']),
+                description: typeof o['description'] === 'string' ? o['description'] : null,
+                uuid: typeof o['uuid'] === 'string' ? o['uuid'] : null,
                 grants,
                 specializations,
             };
@@ -156,15 +156,15 @@ export function normalizeChoice(raw: Record<string, unknown>): NormalizedChoice 
 function normalizeGrants(raw: unknown): NormalizedGrants {
     const grants = asRecord(raw);
     return {
-        skills: Array.isArray(grants.skills) ? grants.skills : [],
-        talents: Array.isArray(grants.talents) ? grants.talents : [],
-        traits: Array.isArray(grants.traits) ? grants.traits : [],
-        equipment: Array.isArray(grants.equipment) ? grants.equipment : [],
-        aptitudes: Array.isArray(grants.aptitudes) ? grants.aptitudes.filter((a): a is string => typeof a === 'string') : [],
-        specialAbilities: Array.isArray(grants.specialAbilities) ? grants.specialAbilities : [],
-        choices: Array.isArray(grants.choices) ? grants.choices.map((c) => normalizeChoice(asRecord(c))) : [],
-        woundsFormula: typeof grants.woundsFormula === 'string' ? grants.woundsFormula : null,
-        fateFormula: typeof grants.fateFormula === 'string' ? grants.fateFormula : null,
+        skills: Array.isArray(grants['skills']) ? grants['skills'] : [],
+        talents: Array.isArray(grants['talents']) ? grants['talents'] : [],
+        traits: Array.isArray(grants['traits']) ? grants['traits'] : [],
+        equipment: Array.isArray(grants['equipment']) ? grants['equipment'] : [],
+        aptitudes: Array.isArray(grants['aptitudes']) ? grants['aptitudes'].filter((a): a is string => typeof a === 'string') : [],
+        specialAbilities: Array.isArray(grants['specialAbilities']) ? grants['specialAbilities'] : [],
+        choices: Array.isArray(grants['choices']) ? grants['choices'].map((c) => normalizeChoice(asRecord(c))) : [],
+        woundsFormula: typeof grants['woundsFormula'] === 'string' ? grants['woundsFormula'] : null,
+        fateFormula: typeof grants['fateFormula'] === 'string' ? grants['fateFormula'] : null,
     };
 }
 
@@ -174,12 +174,12 @@ function normalizeGrants(raw: unknown): NormalizedGrants {
  * Priority: uuid (always unique for compendium items) > _id > id > synthetic
  */
 function resolveId(doc: Record<string, unknown>): string {
-    if (typeof doc.uuid === 'string' && doc.uuid) return doc.uuid;
-    if (typeof doc._id === 'string' && doc._id) return doc._id;
-    if (typeof doc.id === 'string' && doc.id) return doc.id;
+    if (typeof doc['uuid'] === 'string' && doc['uuid']) return doc['uuid'];
+    if (typeof doc['_id'] === 'string' && doc['_id']) return doc['_id'];
+    if (typeof doc['id'] === 'string' && doc['id']) return doc['id'];
     // Synthetic fallback for edge cases (manually constructed objects)
-    const name = asString(doc.name) || 'unknown';
-    const step = asString(asRecord(doc.system).step) || 'unknown';
+    const name = asString(doc['name']) || 'unknown';
+    const step = asString(asRecord(doc['system'])['step']) || 'unknown';
     return `synthetic:${name}:${step}`;
 }
 
@@ -187,7 +187,7 @@ function resolveId(doc: Record<string, unknown>): string {
  * Resolve positions array from raw origin data.
  */
 function resolvePositions(system: Record<string, unknown>): number[] {
-    const raw = system.positions;
+    const raw = system['positions'];
     if (Array.isArray(raw) && raw.length > 0) {
         const nums = raw.filter((v): v is number => typeof v === 'number');
         if (nums.length > 0) return [...nums].sort((a, b) => a - b);
@@ -200,53 +200,53 @@ function resolvePositions(system: Record<string, unknown>): number[] {
  * Call once per document during _loadOrigins().
  */
 export function normalizeOrigin(doc: Record<string, unknown>): NormalizedOrigin {
-    const system = asRecord(doc.system);
-    const grants = normalizeGrants(system.grants);
+    const system = asRecord(doc['system']);
+    const grants = normalizeGrants(system['grants']);
     const positions = resolvePositions(system);
-    const descriptionRecord = asRecord(system.description);
-    const description = asString(descriptionRecord.value);
-    const name = asString(doc.name);
+    const descriptionRecord = asRecord(system['description']);
+    const description = asString(descriptionRecord['value']);
+    const name = asString(doc['name']);
     // Strip HTML and remove leading heading that duplicates the name
     let stripped = stripHtml(description);
     if (name && stripped.startsWith(name)) {
         stripped = stripped.substring(name.length).trim();
     }
 
-    const requirements = asRecord(system.requirements);
-    const modifiers = asRecord(system.modifiers);
-    const characteristicsRaw = asRecord(modifiers.characteristics);
+    const requirements = asRecord(system['requirements']);
+    const modifiers = asRecord(system['modifiers']);
+    const characteristicsRaw = asRecord(modifiers['characteristics']);
     // Narrow characteristics to Record<string, number>
     const characteristics: Record<string, number> = {};
     for (const [k, v] of Object.entries(characteristicsRaw)) {
         if (typeof v === 'number') characteristics[k] = v;
     }
 
-    const previousSteps = Array.isArray(requirements.previousSteps) ? requirements.previousSteps.filter((s): s is string => typeof s === 'string') : [];
-    const excludedSteps = Array.isArray(requirements.excludedSteps) ? requirements.excludedSteps.filter((s): s is string => typeof s === 'string') : [];
+    const previousSteps = Array.isArray(requirements['previousSteps']) ? requirements['previousSteps'].filter((s): s is string => typeof s === 'string') : [];
+    const excludedSteps = Array.isArray(requirements['excludedSteps']) ? requirements['excludedSteps'].filter((s): s is string => typeof s === 'string') : [];
 
     return {
         id: resolveId(doc),
-        uuid: typeof doc.uuid === 'string' ? doc.uuid : null,
-        name: asString(doc.name),
-        img: asString(doc.img),
-        step: asString(system.step),
-        stepIndex: asNumber(system.stepIndex),
-        identifier: asString(system.identifier),
+        uuid: typeof doc['uuid'] === 'string' ? doc['uuid'] : null,
+        name: asString(doc['name']),
+        img: asString(doc['img']),
+        step: asString(system['step']),
+        stepIndex: asNumber(system['stepIndex']),
+        identifier: asString(system['identifier']),
         positions: positions,
-        primaryPosition: asNumber(system.primaryPosition, positions[Math.floor(positions.length / 2)] ?? 4),
+        primaryPosition: asNumber(system['primaryPosition'], positions[Math.floor(positions.length / 2)] ?? 4),
         description: description,
         shortDescription: stripped.length > 150 ? `${stripped.substring(0, 150)}...` : stripped,
         requirements: {
-            text: asString(requirements.text),
+            text: asString(requirements['text']),
             previousSteps,
             excludedSteps,
         },
         grants: grants,
         modifiers: { characteristics },
-        isAdvanced: system.isAdvancedOrigin === true,
-        xpCost: asNumber(system.xpCost),
+        isAdvanced: system['isAdvancedOrigin'] === true,
+        xpCost: asNumber(system['xpCost']),
         hasChoices: grants.choices.length > 0,
-        gameSystem: asString(system.gameSystem),
+        gameSystem: asString(system['gameSystem']),
         system: system,
     };
 }

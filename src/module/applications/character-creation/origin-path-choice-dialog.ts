@@ -195,7 +195,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         this.specializationSelections = new Map();
 
         // Initialize selections from existing selectedChoices
-        const existing = (item.system.selectedChoices as Record<string, string | string[]> | undefined) ?? {};
+        const existing = (item.system['selectedChoices'] as Record<string, string | string[]> | undefined) ?? {};
         for (const [key, selected] of Object.entries(existing)) {
             const selectedValues = Array.isArray(selected) ? selected : selected !== '' ? [selected] : [];
             this.selections.set(key, new Set(selectedValues));
@@ -203,8 +203,8 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             for (const sel of selectedValues) {
                 const match = sel.match(/^(.+?)\s*\((.+)\)$/);
                 if (match !== null) {
-                    const baseValue = match[1].trim();
-                    const spec = match[2].trim();
+                    const baseValue = (match[1] ?? '').trim();
+                    const spec = (match[2] ?? '').trim();
                     const choice = this.pendingChoices.find((c) => c._key === key);
                     const option = choice?.options.find((o) => o.value === baseValue || o.label === baseValue);
                     if (Array.isArray(option?.specializations) && option.specializations.length > 0) {
@@ -225,15 +225,15 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = (await super._prepareContext(options as unknown as never)) as Record<string, unknown>;
 
-        context.item = this.item;
-        context.itemName = this.item.name;
-        context.itemImg = this.item.img;
+        context['item'] = this.item;
+        context['itemName'] = this.item.name;
+        context['itemImg'] = this.item.img;
 
         // Prepare choices with selection state
-        context.choices = await Promise.all(
+        context['choices'] = await Promise.all(
             this.pendingChoices.map(async (choice) => {
                 const choiceKey = choice._key;
                 const selections = this.selections.get(choiceKey) ?? new Set<string>();
@@ -327,7 +327,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         );
 
         // Check if all choices are complete
-        context.allChoicesComplete = (context.choices as Array<{ remaining: number }>).every((c) => c.remaining === 0);
+        context['allChoicesComplete'] = (context['choices'] as Array<{ remaining: number }>).every((c) => c.remaining === 0);
 
         return context;
     }
@@ -382,10 +382,10 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         type DmgData = { formula?: string; bonus?: number; type?: string; penetration?: number };
 
         if (item.type === 'weapon') {
-            const atk = (rawSys.attack ?? {}) as AtkData;
-            const dmg = (rawSys.damage ?? {}) as DmgData;
+            const atk = (rawSys['attack'] ?? {}) as AtkData;
+            const dmg = (rawSys['damage'] ?? {}) as DmgData;
             if (typeof atk.type === 'string' && atk.type !== '') parts.push(atk.type === 'melee' ? 'Melee' : 'Ranged');
-            if (typeof rawSys.class === 'string' && rawSys.class !== '') parts.push(rawSys.class);
+            if (typeof rawSys['class'] === 'string' && rawSys['class'] !== '') parts.push(rawSys['class'] as string);
             if (typeof atk.range?.value === 'number' && atk.range.value !== 0) parts.push(`Range ${atk.range.value}m`);
             const rof = atk.rateOfFire;
             if (rof !== undefined) {
@@ -398,20 +398,20 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             if (typeof dmg.formula === 'string' && dmg.formula !== '') {
                 let dmgStr = dmg.formula;
                 if (dmg.bonus !== undefined && dmg.bonus !== 0) dmgStr += `+${dmg.bonus}`;
-                if (typeof dmg.type === 'string' && dmg.type !== '') dmgStr += ` ${dmg.type[0].toUpperCase()}`;
+                if (typeof dmg.type === 'string' && dmg.type !== '') dmgStr += ` ${(dmg.type[0] ?? '').toUpperCase()}`;
                 parts.push(`Dmg ${dmgStr}`);
             }
             if (typeof dmg.penetration === 'number' && dmg.penetration !== 0) parts.push(`Pen ${dmg.penetration}`);
-            const clip = rawSys.clip as { max?: number } | undefined;
+            const clip = rawSys['clip'] as { max?: number } | undefined;
             if (typeof clip?.max === 'number' && clip.max !== 0) parts.push(`Clip ${clip.max}`);
-            if (typeof rawSys.reload === 'string' && rawSys.reload !== '') parts.push(`Rld ${rawSys.reload}`);
+            if (typeof rawSys['reload'] === 'string' && rawSys['reload'] !== '') parts.push(`Rld ${rawSys['reload'] as string}`);
         } else if (item.type === 'armour') {
-            if (typeof rawSys.armourPoints === 'number') parts.push(`AP ${rawSys.armourPoints}`);
-            if (typeof rawSys.maxAgility === 'number') parts.push(`Max Ag ${rawSys.maxAgility}`);
-            if (typeof rawSys.coverage === 'string' && rawSys.coverage !== '') parts.push(rawSys.coverage);
+            if (typeof rawSys['armourPoints'] === 'number') parts.push(`AP ${rawSys['armourPoints']}`);
+            if (typeof rawSys['maxAgility'] === 'number') parts.push(`Max Ag ${rawSys['maxAgility']}`);
+            if (typeof rawSys['coverage'] === 'string' && rawSys['coverage'] !== '') parts.push(rawSys['coverage'] as string);
         }
 
-        if (typeof rawSys.weight === 'number' && rawSys.weight !== 0) parts.push(`${rawSys.weight} kg`);
+        if (typeof rawSys['weight'] === 'number' && rawSys['weight'] !== 0) parts.push(`${rawSys['weight']} kg`);
         return parts.length > 0 ? parts.join(' · ') : null;
     }
 
@@ -435,7 +435,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     }
 
     /** @override */
-    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Restore scroll position after re-render
@@ -465,8 +465,8 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @private
      */
     static async #toggleOption(this: OriginPathChoiceDialog, event: Event, target: HTMLElement): Promise<void> {
-        const choiceKey = target.dataset.choice;
-        const optionValue = target.dataset.option;
+        const choiceKey = target.dataset['choice'];
+        const optionValue = target.dataset['option'];
 
         if (choiceKey === undefined || optionValue === undefined) return;
 
@@ -538,8 +538,8 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         const select = target.tagName === 'SELECT' ? (target as HTMLSelectElement) : target.querySelector<HTMLSelectElement>('select');
         if (select === null) return;
 
-        const choiceKey = select.dataset.choice;
-        const optionValue = select.dataset.option;
+        const choiceKey = select.dataset['choice'];
+        const optionValue = select.dataset['option'];
         const specValue = select.value;
 
         if (choiceKey === undefined || optionValue === undefined || specValue === '') return;
@@ -629,7 +629,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         event.stopPropagation(); // Don't trigger parent card click
         event.preventDefault(); // Prevent default button behavior
 
-        const uuid = target.dataset.uuid;
+        const uuid = target.dataset['uuid'];
         if (uuid === undefined) return;
 
         try {

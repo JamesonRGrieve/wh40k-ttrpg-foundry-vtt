@@ -47,7 +47,7 @@ export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T): Dra
          */
         // eslint-disable-next-line no-restricted-syntax -- boundary: drop-event payload is framework-supplied untyped data
         _allowedDropBehaviors(event: DragEvent, data: Record<string, unknown>): Set<string> {
-            if (data.uuid === undefined || data.uuid === null || data.uuid === '') return new Set(['copy', 'link']);
+            if (data['uuid'] === undefined || data['uuid'] === null || data['uuid'] === '') return new Set(['copy', 'link']);
             return new Set(['copy', 'move', 'link']);
         }
 
@@ -62,8 +62,8 @@ export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T): Dra
          */
         // eslint-disable-next-line no-restricted-syntax -- boundary: drop-event payload is framework-supplied untyped data
         _defaultDropBehavior(event: DragEvent, data: Record<string, unknown>): string {
-            if (typeof data.uuid !== 'string') return 'copy';
-            const d = foundry.utils.parseUuid(data.uuid);
+            if (typeof data['uuid'] !== 'string') return 'copy';
+            const d = foundry.utils.parseUuid(data['uuid']);
             // eslint-disable-next-line no-restricted-syntax -- boundary: mixin sees `this` typed as ApplicationV2 but document is bound by sheet subclass
             const doc = (this as unknown as { document: { uuid: string } }).document;
             const t = foundry.utils.parseUuid(doc.uuid);

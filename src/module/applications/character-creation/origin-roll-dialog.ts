@@ -27,6 +27,7 @@ const LegacyDialog = foundry.appv1.api.Dialog;
 /** Extract numeric value from a Foundry v1 Dialog callback `html` argument. */
 function readDialogNumber(html: JQuery<HTMLElement>): number {
     const root = html[0];
+    if (root === undefined) return NaN;
     const form = root.querySelector('form');
     const input = form?.querySelector<HTMLInputElement>('[name="value"]') ?? null;
     return parseInt(input?.value ?? '');
@@ -192,7 +193,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    get title(): string {
+    override get title(): string {
         if (this.rollType === 'wounds') return game.i18n.localize('WH40K.OriginPath.RollStartingWounds');
         if (this.rollType === 'thrones') return game.i18n.localize('WH40K.OriginPath.RollStartingThrones');
         return game.i18n.localize('WH40K.OriginPath.RollStartingFate');
@@ -214,7 +215,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `_prepareContext` returns Record<string, unknown> per its v2 ApplicationV2 type
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: super._prepareContext is typed by Foundry as Record<string, unknown>
         const superCall = super._prepareContext as (o: ApplicationV2Config.RenderOptions) => Promise<Record<string, unknown>>;
         const superCtx = await superCall.call(this, options);
@@ -234,7 +235,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         };
 
         if (this.rollType === 'wounds') {
-            const tb = this.context.actor.system.characteristics?.toughness?.bonus ?? 0;
+            const tb = this.context.actor.system.characteristics?.['toughness']?.bonus ?? 0;
             additions.actorTB = tb;
             additions.expandedFormula = this._expandWoundsFormula(this.formula, tb);
         }
@@ -388,7 +389,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     async _handleManualWounds(): Promise<void> {
         const formula = this.formula;
         const actor = this.context.actor;
-        const tb = actor.system.characteristics?.toughness?.bonus ?? 0;
+        const tb = actor.system.characteristics?.['toughness']?.bonus ?? 0;
 
         // Check if this is a 1d5 formula
         const is1d5 = formula.includes('1d5');
@@ -448,7 +449,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         // Handle TB multiplier
         const tbMatch = withoutDice.match(/(\d+)xTB/i);
         if (tbMatch) {
-            const multiplier = parseInt(tbMatch[1]);
+            const multiplier = parseInt(tbMatch[1] ?? '');
             staticTotal += multiplier * tb;
             breakdownParts.push(`${multiplier}×${tb}`);
         }
@@ -551,9 +552,9 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         for (const match of conditions) {
             const [, min, max, outcome] = match;
-            const minVal = parseInt(min);
-            const maxVal = parseInt(max);
-            const outcomeVal = parseInt(outcome);
+            const minVal = parseInt(min ?? '');
+            const maxVal = parseInt(max ?? '');
+            const outcomeVal = parseInt(outcome ?? '');
 
             if (diceValue >= minVal && diceValue <= maxVal) {
                 result = outcomeVal;
@@ -629,7 +630,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const formula = this.formula;
 
         // Get toughness bonus
-        const tb = actor.system.characteristics?.toughness?.bonus ?? 0;
+        const tb = actor.system.characteristics?.['toughness']?.bonus ?? 0;
 
         // Parse formula: e.g., "2xTB+1d5+2"
         // Replace TB with actual value
@@ -695,9 +696,9 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         for (const match of conditions) {
             const [, min, max, outcome] = match;
-            const minVal = parseInt(min);
-            const maxVal = parseInt(max);
-            const outcomeVal = parseInt(outcome);
+            const minVal = parseInt(min ?? '');
+            const maxVal = parseInt(max ?? '');
+            const outcomeVal = parseInt(outcome ?? '');
 
             if (rolledValue >= minVal && rolledValue <= maxVal) {
                 result = outcomeVal;

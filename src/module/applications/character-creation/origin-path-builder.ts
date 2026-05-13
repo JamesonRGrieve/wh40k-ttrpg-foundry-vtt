@@ -264,7 +264,7 @@ const DIRECTION = {
 };
 
 function resolveBuilderGameSystem(actor: WH40KBaseActor, options: Record<string, unknown>): GameSystemId {
-    const requested = typeof options.gameSystem === 'string' && options.gameSystem !== '' ? options.gameSystem : actor.system.gameSystem;
+    const requested = typeof options['gameSystem'] === 'string' && options['gameSystem'] !== '' ? options['gameSystem'] : actor.system.gameSystem;
     if (typeof requested === 'string' && requested !== '' && SystemConfigRegistry.has(requested)) {
         return requested as GameSystemId;
     }
@@ -462,7 +462,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    get title(): string {
+    override get title(): string {
         return game.i18n.format('WH40K.OriginPath.BuilderTitle', { name: this.actor.name });
     }
 
@@ -498,7 +498,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (optional) return optional;
         }
         // currentStepIndex is always kept in bounds by the navigation logic
-        return this.orderedSteps[this.currentStepIndex];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- currentStepIndex is always in bounds
+        return this.orderedSteps[this.currentStepIndex]!;
     }
 
     /* -------------------------------------------- */
@@ -549,7 +550,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Set current step to first incomplete based on direction
         const steps = this.orderedSteps;
         for (let i = 0; i < steps.length; i++) {
-            if (!this.selections.has(steps[i].step)) {
+            const stepDef = steps[i];
+            if (stepDef !== undefined && !this.selections.has(stepDef.step)) {
                 this.currentStepIndex = i;
                 break;
             }
@@ -621,7 +623,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         for (let i = stepIndex - 1; i >= 0; i--) {
             const step = orderedSteps[i];
-            if (this.selections.has(step.step)) {
+            if (step !== undefined && this.selections.has(step.step)) {
                 return this.selections.get(step.step);
             }
         }
@@ -640,7 +642,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const selection = this.selections.get(step.step);
             if (!selection) continue;
 
-            selection.system.pathPositions = OriginChartLayout.resolvePathPositions(asOriginLike(selection), asOriginLikeOrNull(lastSelection));
+            selection.system['pathPositions'] = OriginChartLayout.resolvePathPositions(asOriginLike(selection), asOriginLikeOrNull(lastSelection));
             lastSelection = selection;
         }
     }
@@ -657,15 +659,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Store original uuid for reference to compendium item
         const flagsCore = (item.flags as { core?: CoreFlags }).core;
         const flagSourceId = typeof flagsCore?.sourceId === 'string' ? flagsCore.sourceId : undefined;
-        data._sourceUuid = item.parent === this.actor ? flagSourceId ?? data._sourceUuid ?? item.uuid : item.uuid ?? data._sourceUuid;
+        data._sourceUuid = (item.parent === this.actor ? flagSourceId ?? data._sourceUuid ?? item.uuid : item.uuid ?? data._sourceUuid) ?? null;
         // Store actor item id if this is an existing actor item
         data._actorItemId = item.parent === this.actor ? item.id : null;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw compendium document shape
         const normalized = normalizeOrigin(data as unknown as Record<string, unknown>);
         // Ensure choice and roll fields are available for builder state
-        normalized.system.selectedChoices ??= {};
-        normalized.system.rollResults ??= {};
+        normalized.system['selectedChoices'] ??= {};
+        normalized.system['rollResults'] ??= {};
         return normalized;
     }
 
@@ -695,8 +697,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const pool = [...this.allOrigins, ...this.lineageOrigins];
         if (pool.length === 0) return null;
 
-        const identifier = selection.system.identifier;
-        const step = selection.system.step;
+        const identifier = selection.system['identifier'];
+        const step = selection.system['step'];
         const name = selection.name;
         const uuid = (selection as NormalizedOriginWithMeta)._sourceUuid ?? selection.uuid;
 
@@ -706,9 +708,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const hasName = name !== '';
         return (
             pool.find((origin) => hasUuid && (origin.uuid === uuid || origin.id === uuid)) ??
-            pool.find((origin) => hasIdentifier && hasStep && origin.system.identifier === identifier && origin.system.step === step) ??
-            pool.find((origin) => hasIdentifier && origin.system.identifier === identifier) ??
-            pool.find((origin) => hasStep && hasName && origin.system.step === step && origin.name === name) ??
+            pool.find((origin) => hasIdentifier && hasStep && origin.system['identifier'] === identifier && origin.system['step'] === step) ??
+            pool.find((origin) => hasIdentifier && origin.system['identifier'] === identifier) ??
+            pool.find((origin) => hasStep && hasName && origin.system['step'] === step && origin.name === name) ??
             null
         );
     }
@@ -760,7 +762,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         await this._loadOrigins();
 
         const currentStep = this.currentStep;
@@ -926,7 +928,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const characteristics = CHARS.map((key) => {
             const charData = (this._actorSys().characteristics?.[key] ?? {}) as Partial<WH40KCharacteristic>;
             const assignedIndex = this._charAssignments[key] ?? null;
-            const rollValue = assignedIndex !== null ? this._charRolls[assignedIndex] : null;
+            const rollValue = assignedIndex !== null ? (this._charRolls[assignedIndex] ?? null) : null;
             const base = this._charAdvancedMode ? this._charCustomBases[key] ?? DEFAULT_BASE : DEFAULT_BASE;
             const originBonus = originBonuses.totals[key] ?? 0;
             const total = rollValue !== null ? base + rollValue + originBonus : null;
@@ -1124,7 +1126,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const system = this._getSelectionSystem(selection);
             const sys = system;
             const identifierStr = typeof sys.identifier === 'string' ? sys.identifier : '';
-            const innerSys = sys.system as OriginPathSystemData | undefined;
+            const innerSys = sys['system'] as OriginPathSystemData | undefined;
             const innerStep = typeof innerSys?.step === 'string' ? innerSys.step : '';
             const sourceName = selection.name !== '' ? selection.name : identifierStr !== '' ? identifierStr : this._getLocalizedStepLabel(innerStep);
             const modifiers = sys.modifiers?.characteristics ?? {};
@@ -1229,7 +1231,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _getTotalThronesRolled(): number {
         let total = 0;
         for (const [, selection] of this.selections) {
-            const rolled = (selection.system as OriginPathSystemData).rollResults?.thrones?.rolled;
+            const rolled = (selection.system as OriginPathSystemData).rollResults?.['thrones']?.rolled;
             if (typeof rolled === 'number') total += rolled;
         }
         return total;
@@ -1259,9 +1261,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _hasAssignedCharacteristics(): boolean {
         if (this._charGenMode !== 'roll-pool-hb') return false;
-        return OriginPathBuilder.GENERATION_CHARACTERISTICS.every(
-            (key) => this._charAssignments[key] !== null && this._charRolls[this._charAssignments[key]] > 0,
-        );
+        return OriginPathBuilder.GENERATION_CHARACTERISTICS.every((key) => {
+            const assignedIdx = this._charAssignments[key];
+            return assignedIdx !== null && assignedIdx !== undefined && (this._charRolls[assignedIdx] ?? 0) > 0;
+        });
     }
 
     /**
@@ -1276,12 +1279,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 this.previewedOrigin?._id,
                 this.previewedOrigin?.uuid,
                 this.previewedOrigin?._sourceUuid,
-                this.previewedOrigin?.system.identifier,
+                this.previewedOrigin?.system['identifier'],
                 this.lineageSelection?.id,
                 this.lineageSelection?._id,
                 this.lineageSelection?.uuid,
                 this.lineageSelection?._sourceUuid,
-                this.lineageSelection?.system.identifier,
+                this.lineageSelection?.system['identifier'],
             ].filter((v): v is string => typeof v === 'string' && v !== ''),
         );
         return this._dedupeOriginsByIdentity(this.lineageOrigins).map((origin) => {
@@ -1295,7 +1298,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 isSelected:
                     activeLineageIds.has(origin.id) ||
                     (origin.uuid !== null && activeLineageIds.has(origin.uuid)) ||
-                    activeLineageIds.has(typeof origin.system.identifier === 'string' ? origin.system.identifier : ''),
+                    activeLineageIds.has(typeof origin.system['identifier'] === 'string' ? origin.system['identifier'] : ''),
                 isDisabled: false,
                 isValidNext: true,
                 hasChoices: origin.hasChoices,
@@ -1324,7 +1327,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     /** @override */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
         this._restoreScrollPosition();
 
@@ -1352,7 +1355,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // input need to be intercepted before the browser's default toggle stomps our state.
             equipRoot.querySelectorAll('.equip-row').forEach((row) => {
                 const rowEl = row as HTMLElement;
-                const uuid = rowEl.dataset.uuid;
+                const uuid = rowEl.dataset['uuid'];
                 const checkbox = rowEl.querySelector('.equip-check');
                 if (!checkbox || uuid === undefined || uuid === '') return;
                 checkbox.addEventListener('click', (e) => {
@@ -1410,7 +1413,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         html.querySelectorAll('.csd-base-input').forEach((input) => {
             input.addEventListener('change', (e) => {
                 const el = e.currentTarget as HTMLInputElement;
-                const key = el.dataset.characteristic;
+                const key = el.dataset['characteristic'];
                 if (key === undefined || key === '') return;
                 let value = parseInt(el.value);
                 if (isNaN(value) || value < 0) value = 0;
@@ -1432,7 +1435,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
     _onCharRollChipClick(event: Event): void {
         const chip = event.currentTarget as HTMLElement;
-        const index = parseInt(chip.dataset.rollIndex ?? '');
+        const index = parseInt(chip.dataset['rollIndex'] ?? '');
         if (isNaN(index) || chip.querySelector('.csd-roll-input') !== null) return;
 
         const currentValue = this._charRolls[index] !== 0 ? this._charRolls[index] : '';
@@ -1443,7 +1446,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         input.max = '40';
         input.value = String(currentValue);
         input.placeholder = '2-40';
-        input.dataset.rollIndex = String(index);
+        input.dataset['rollIndex'] = String(index);
 
         input.addEventListener('blur', () => {
             let value = parseInt(input.value);
@@ -1472,8 +1475,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _onCharDragStart(event: Event): void {
         this._saveScrollPosition();
         const target = event.currentTarget as HTMLElement;
-        const rollIndex = parseInt(target.dataset.rollIndex ?? '');
-        const fromCharRaw = target.dataset.characteristic;
+        const rollIndex = parseInt(target.dataset['rollIndex'] ?? '');
+        const fromCharRaw = target.dataset['characteristic'];
         const fromChar = fromCharRaw !== undefined && fromCharRaw !== '' ? fromCharRaw : null;
         if (isNaN(rollIndex) || this._charRolls[rollIndex] === 0) {
             event.preventDefault();
@@ -1499,11 +1502,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (this._charDragData === null) return;
         this._saveScrollPosition();
         const slot = event.currentTarget as HTMLElement;
-        const targetChar = slot.dataset.characteristic;
+        const targetChar = slot.dataset['characteristic'];
         if (targetChar === undefined || targetChar === '') return;
         const draggedIndex = this._charDragData.index;
         const sourceChar = this._charDragData.characteristic;
-        const currentTargetIndex = this._charAssignments[targetChar];
+        const currentTargetIndex = this._charAssignments[targetChar] ?? null;
         if (sourceChar !== null) {
             this._charAssignments[sourceChar] = currentTargetIndex;
         }
@@ -1624,7 +1627,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const configWh40k = (CONFIG as { wh40k?: { availabilities?: Record<string, { label: string; modifier: number }> } }).wh40k;
         const availabilityConfig = configWh40k?.availabilities ?? WH40K.availabilities;
-        const scarceModifier = availabilityConfig.scarce.modifier;
+        const scarceModifier = availabilityConfig['scarce']?.modifier ?? 0;
         const packLoadResults = await Promise.all(
             packNames.map(async (packName): Promise<EquipmentEntry[]> => {
                 const pack =
@@ -1657,12 +1660,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     if (modifier < scarceModifier) continue;
                     if (entry.name?.startsWith('! Default') === true) continue;
                     const homebrewCost = entrySys?.cost?.dh2?.homebrew;
-                    fromPack.push({
+                    const equipEntry: EquipmentEntry = {
                         uuid: `Compendium.${pack.metadata.id}.${entry._id}`,
                         id: entry._id,
-                        name: entry.name,
-                        img: entry.img,
-                        type: entry.type,
                         identifier: entrySys?.identifier ?? null,
                         clipMax: entrySys?.clip?.max ?? null,
                         weaponTypes: entrySys?.weaponTypes ?? [],
@@ -1671,7 +1671,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                         availabilityOrder: modifier,
                         requisition: homebrewCost?.requisition ?? null,
                         throneGelt: homebrewCost?.throneGelt ?? null,
-                    });
+                    };
+                    if (entry.name !== undefined) equipEntry.name = entry.name;
+                    if (entry.img !== undefined) equipEntry.img = entry.img;
+                    if (entry.type !== undefined) equipEntry.type = entry.type;
+                    fromPack.push(equipEntry);
                 }
                 return fromPack;
             }),
@@ -1817,6 +1821,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const orderedSteps = this.orderedSteps;
         const prevStep = orderedSteps[stepIndex - 1];
+        if (prevStep === undefined) return false;
         return this.selections.has(prevStep.step);
     }
 
@@ -1844,7 +1849,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             .map((origin) => {
                 const card = stepLayout.cards.find((entry) => {
                     const candidate = entry.origin;
-                    return candidate.id === origin.id || candidate.uuid === origin.uuid || candidate.system.identifier === origin.system.identifier;
+                    return candidate.id === origin.id || candidate.uuid === origin.uuid || candidate.system['identifier'] === origin.system['identifier'];
                 });
                 if (!card) return null;
 
@@ -1871,8 +1876,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const seen = new Set<string>();
         return origins.filter((origin) => {
             const meta = origin as NormalizedOriginWithMeta;
-            const sysStep = origin.system.step;
-            const sysIdent = origin.system.identifier;
+            const sysStep = origin.system['step'];
+            const sysIdent = origin.system['identifier'];
             const compound = typeof sysStep === 'string' && typeof sysIdent === 'string' ? `${sysStep}:${sysIdent}` : null;
             const candidates: Array<string | null> = [origin.uuid, meta._sourceUuid ?? null, origin.id, compound];
             const key = candidates.find((v): v is string => typeof v === 'string' && v !== '');
@@ -1942,37 +1947,40 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const rollResults = system.rollResults ?? {};
 
         if (grants.woundsFormula !== undefined && grants.woundsFormula !== '') {
-            const hasRolled = rollResults.wounds?.rolled !== undefined;
-            rolls.wounds = {
+            const woundsResult = rollResults['wounds'];
+            const hasRolled = woundsResult?.rolled !== undefined;
+            rolls['wounds'] = {
                 formula: grants.woundsFormula,
                 hasValue: hasRolled,
-                value: rollResults.wounds?.rolled,
-                breakdown: rollResults.wounds?.breakdown ?? '',
+                value: woundsResult?.rolled,
+                breakdown: woundsResult?.breakdown ?? '',
             };
         }
 
         if (grants.fateFormula !== undefined && grants.fateFormula !== '') {
-            const hasRolled = rollResults.fate?.rolled !== undefined;
-            rolls.fate = {
+            const fateResult = rollResults['fate'];
+            const hasRolled = fateResult?.rolled !== undefined;
+            rolls['fate'] = {
                 formula: grants.fateFormula,
                 hasValue: hasRolled,
-                value: rollResults.fate?.rolled,
-                breakdown: rollResults.fate?.breakdown ?? '',
+                value: fateResult?.rolled,
+                breakdown: fateResult?.breakdown ?? '',
             };
         }
 
         // Per-origin throne gelt roll (homebrew only, homeworld and background steps each roll their own formula).
         const thronesFormulaForItem = this._getSelectionThronesFormula(item);
         const itemSys = item.system as OriginPathSystemData;
-        const thronesEligibleStep = itemSys.step === 'homeWorld' || itemSys.step === 'background';
+        const thronesEligibleStep = itemSys['step'] === 'homeWorld' || itemSys['step'] === 'background';
         const thronesAllowedByRuleset = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
         if (thronesFormulaForItem !== '' && thronesEligibleStep && thronesAllowedByRuleset) {
-            const hasRolled = rollResults.thrones?.rolled !== undefined;
-            rolls.thrones = {
+            const thronesResult = rollResults['thrones'];
+            const hasRolled = thronesResult?.rolled !== undefined;
+            rolls['thrones'] = {
                 formula: thronesFormulaForItem,
                 hasValue: hasRolled,
-                value: rollResults.thrones?.rolled,
-                breakdown: rollResults.thrones?.breakdown ?? '',
+                value: thronesResult?.rolled,
+                breakdown: thronesResult?.breakdown ?? '',
             };
         }
 
@@ -2075,14 +2083,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     }
                 }
 
-                return {
-                    name: talent.name,
+                const preparedTalent: PreparedTalent = {
                     specialization: talent.specialization ?? null,
                     uuid: talent.uuid ?? null,
-                    tooltip: tooltipText,
                     tooltipData: await this._prepareGrantTooltipData(talent.name ?? null, talent.uuid ?? null, tooltipText === talent.name ? '' : tooltipText),
                     hasItem: hasItem,
                 };
+                if (talent.name !== undefined) preparedTalent.name = talent.name;
+                if (tooltipText !== undefined) preparedTalent.tooltip = tooltipText;
+                return preparedTalent;
             }),
         );
     }
@@ -2115,11 +2124,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     }
                 }
 
-                return {
-                    name: trait.name,
+                const preparedTrait: PreparedTrait = {
                     level: trait.level ?? null,
                     uuid: trait.uuid ?? null,
-                    tooltip: tooltipText,
                     tooltipData: await this._prepareGrantTooltipData(
                         trait.level !== undefined && trait.level !== '' ? `${trait.name ?? ''} (${trait.level})` : trait.name ?? null,
                         trait.uuid ?? null,
@@ -2127,6 +2134,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     ),
                     hasItem: hasItem,
                 };
+                if (trait.name !== undefined) preparedTrait.name = trait.name;
+                if (tooltipText !== undefined) preparedTrait.tooltip = tooltipText;
+                return preparedTrait;
             }),
         );
     }
@@ -2290,11 +2300,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             // Get wounds/fate from roll results
             const rollResults: Record<string, { rolled?: number; breakdown?: string } | undefined> = system.rollResults ?? {};
-            if (rollResults.wounds?.rolled !== undefined) {
-                preview.wounds = (preview.wounds ?? 0) + rollResults.wounds.rolled;
+            const woundsResult = rollResults['wounds'];
+            if (woundsResult?.rolled !== undefined) {
+                preview.wounds = (preview.wounds ?? 0) + woundsResult.rolled;
             }
-            if (rollResults.fate?.rolled !== undefined) {
-                preview.fate = (preview.fate ?? 0) + rollResults.fate.rolled;
+            const fateResult = rollResults['fate'];
+            if (fateResult?.rolled !== undefined) {
+                preview.fate = (preview.fate ?? 0) + fateResult.rolled;
             }
         }
 
@@ -2545,10 +2557,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
 
             // Count pending rolls
-            if (grants.woundsFormula !== undefined && grants.woundsFormula !== '' && rollResults.wounds?.rolled === undefined) {
+            if (grants.woundsFormula !== undefined && grants.woundsFormula !== '' && rollResults['wounds']?.rolled === undefined) {
                 pendingRolls++;
             }
-            if (grants.fateFormula !== undefined && grants.fateFormula !== '' && rollResults.fate?.rolled === undefined) {
+            if (grants.fateFormula !== undefined && grants.fateFormula !== '' && rollResults['fate']?.rolled === undefined) {
                 pendingRolls++;
             }
         }
@@ -2596,16 +2608,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const coreSteps = this.systemConfig.coreSteps;
         for (let i = 0; i < coreSteps.length; i++) {
             const stepLayout = chartLayout.steps[i];
+            if (stepLayout === undefined) continue;
             const validOrigins = stepLayout.cards.filter((c) => (c as StepLayoutCard & { isSelectable?: boolean }).isSelectable === true);
 
             if (validOrigins.length > 0) {
                 const randomIndex = Math.floor(Math.random() * validOrigins.length);
                 const selected = validOrigins[randomIndex];
+                const coreStep = coreSteps[i];
+                if (selected === undefined || coreStep === undefined) continue;
 
                 // Store as plain data object (not Item instance)
                 // eslint-disable-next-line no-restricted-syntax -- boundary: _itemToSelectionData accepts the structurally-compatible NormalizedOrigin shape
                 const originData = this._itemToSelectionData(selected.origin as unknown as WH40KItem);
-                this.selections.set(coreSteps[i].step, originData);
+                this.selections.set(coreStep.step, originData);
             }
         }
 
@@ -2717,8 +2732,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                         if (origin) {
                             // Store as plain data object (not Item instance)
                             const originData = this._itemToSelectionData(origin as WH40KItem);
-                            if (selData.selectedChoices) originData.system.selectedChoices = selData.selectedChoices;
-                            if (selData.rollResults) originData.system.rollResults = selData.rollResults;
+                            if (selData.selectedChoices) originData.system['selectedChoices'] = selData.selectedChoices;
+                            if (selData.rollResults) originData.system['rollResults'] = selData.rollResults;
                             this.selections.set(step, originData);
                         }
                     }
@@ -2751,7 +2766,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Set direction (forward/backward)
      */
     static async #setDirection(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
-        const value = (target as HTMLInputElement).value || target.dataset.direction;
+        const value = (target as HTMLInputElement).value || target.dataset['direction'];
         if (value === 'forward' || value === 'backward') {
             const oldDirection = this.direction;
             this.direction = value;
@@ -2785,8 +2800,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Navigate to a step
      */
     static #goToStep(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
-        const stepKey = target.dataset.stepKey;
-        const stepIndex = parseInt(target.dataset.stepIndex ?? '');
+        const stepKey = target.dataset['stepKey'];
+        const stepIndex = parseInt(target.dataset['stepIndex'] ?? '');
         if ((stepKey === undefined || stepKey === '') && isNaN(stepIndex)) return;
 
         if (stepKey === 'characteristics') {
@@ -2851,8 +2866,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * This is the new primary preview method - clicking a card just shows it in the panel
      */
     static #previewOriginCard(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
-        const originId = target.dataset.originId;
-        const originUuid = target.dataset.originUuid;
+        const originId = target.dataset['originId'];
+        const originUuid = target.dataset['originUuid'];
 
         if ((originId === undefined || originId === '') && (originUuid === undefined || originUuid === '')) return;
 
@@ -2975,8 +2990,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Stop propagation so parent card click doesn't fire
         event.stopPropagation();
 
-        const originId = target.dataset.originId;
-        const originUuid = target.dataset.originUuid;
+        const originId = target.dataset['originId'];
+        const originUuid = target.dataset['originUuid'];
 
         if ((originId === undefined || originId === '') && (originUuid === undefined || originUuid === '')) return;
 
@@ -3033,7 +3048,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
 
             const lastSelection = this._getLastConfirmedSelection(currentIndex) as NormalizedOrigin | null;
-            originData.system.pathPositions = OriginChartLayout.resolvePathPositions(asOriginLike(originData), asOriginLikeOrNull(lastSelection));
+            originData.system['pathPositions'] = OriginChartLayout.resolvePathPositions(asOriginLike(originData), asOriginLikeOrNull(lastSelection));
 
             // Store selection as plain data object
             this.selections.set(currentStep.step, originData);
@@ -3111,7 +3126,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Edit a choice - properly invoke OriginPathChoiceDialog
      */
     static async #editChoice(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
-        const choiceLabel = target.dataset.choiceLabel;
+        const choiceLabel = target.dataset['choiceLabel'];
         let selection = null;
 
         if (this.showLineage) {
@@ -3155,7 +3170,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Roll a stat using the roll dialog
      */
     static async #rollStat(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
-        const statType = target.dataset.statType;
+        const statType = target.dataset['statType'];
         let selection = null;
 
         if (this.showLineage) {
@@ -3216,7 +3231,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Manually set a stat value (alternative to rolling)
      */
     static async #manualStat(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
-        const statType = target.dataset.statType;
+        const statType = target.dataset['statType'];
         let selection = null;
 
         if (this.showLineage) {
@@ -3330,7 +3345,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Toggle selection of an Armoury item for the Equip Acolyte step.
      */
     static #toggleEquipmentItem(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
-        const uuid = target.dataset.uuid;
+        const uuid = target.dataset['uuid'];
         if (uuid === undefined || uuid === '') return;
         this._toggleEquipmentByUuid(uuid);
     }
@@ -3358,11 +3373,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const item = this.equipmentItems.find((entry) => entry.uuid === uuid) as EquipmentItemEntry | undefined;
         if (!item) return;
-        this.equipmentSelections.set(uuid, {
+        const selectionEntry: EquipmentEntry = {
             uuid: item.uuid,
-            name: item.name,
-            img: item.img,
-            type: item.type,
             availability: item.availability,
             availabilityLabel: item.availabilityLabel,
             requisition: item.requisition ?? null,
@@ -3370,7 +3382,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             identifier: item.identifier ?? null,
             clipMax: item.clipMax ?? null,
             weaponTypes: Array.isArray(item.weaponTypes) ? [...item.weaponTypes] : [],
-        });
+        };
+        if (item.name !== undefined) selectionEntry.name = item.name;
+        if (item.img !== undefined) selectionEntry.img = item.img;
+        if (item.type !== undefined) selectionEntry.type = item.type;
+        this.equipmentSelections.set(uuid, selectionEntry);
         void this.render();
     }
 
@@ -3418,7 +3434,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * implementation today; `point-buy` and `roll` are stub placeholders.
      */
     static #setCharGenMode(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
-        const mode = target.dataset.mode;
+        const mode = target.dataset['mode'];
         if (mode === 'point-buy' || mode === 'roll' || mode === 'roll-pool-hb') {
             this._charGenMode = mode;
             void this.render();
@@ -3528,7 +3544,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             void this.render();
             return;
         }
-        const felBonus = this._actorSys().characteristics?.fellowship.bonus ?? 0;
+        const felBonus = this._actorSys().characteristics?.['fellowship']?.bonus ?? 0;
         const mod = this._getContextualInfluenceMod();
         const roll = new Roll('1d5');
         await roll.evaluate();
@@ -3560,7 +3576,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Open an item sheet (for talents, skills, etc.)
      */
     static async #openItem(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
-        const uuid = target.dataset.uuid;
+        const uuid = target.dataset['uuid'];
         if (uuid === undefined || uuid === '') return;
 
         try {
@@ -3579,10 +3595,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static async #commit(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
         const status = this._calculateStatus();
 
-        if (status.canCommit !== true) {
-            if (status.stepsComplete !== true) {
+        if (status['canCommit'] !== true) {
+            if (status['stepsComplete'] !== true) {
                 ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
-            } else if (status.choicesComplete !== true) {
+            } else if (status['choicesComplete'] !== true) {
                 ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllChoices'));
             }
             return;
@@ -3731,8 +3747,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 for (const key of CHARS) {
                     charUpdate[`system.characterGeneration.customBases.${key}`] = this._charCustomBases[key];
                     const baseDefault = this._charAdvancedMode ? this._charCustomBases[key] ?? settingDefaultBase : settingDefaultBase;
-                    const rollIndex = charAssignments[key];
-                    const rolled = rollIndex !== null && charRolls[rollIndex] > 0 ? charRolls[rollIndex] : 0;
+                    const rollIndex = charAssignments[key] ?? null;
+                    const rolled = rollIndex !== null && (charRolls[rollIndex] ?? 0) > 0 ? (charRolls[rollIndex] ?? 0) : 0;
                     const originBonus = originModSums[key] ?? 0;
                     charUpdate[`system.characteristics.${key}.base`] = baseDefault + rolled + originBonus;
                 }
@@ -3783,6 +3799,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const labelCounts: Record<string, number> = {};
             for (let i = 0; i < choices.length; i++) {
                 const choiceRaw = choices[i];
+                if (choiceRaw === undefined) continue;
                 const rawLabel = choiceRaw.label;
                 const rawName = choiceRaw.name;
                 const baseLabel =
@@ -3811,8 +3828,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const values: { wounds?: number; fate?: number } = {};
         for (const [, selection] of this.selections) {
             const rollResults = (selection.system as OriginPathSystemData).rollResults ?? {};
-            const woundsResult = rollResults.wounds;
-            const fateResult = rollResults.fate;
+            const woundsResult = rollResults['wounds'];
+            const fateResult = rollResults['fate'];
             if (woundsResult?.rolled !== undefined) {
                 values.wounds = (values.wounds ?? 0) + woundsResult.rolled;
             }
@@ -3939,7 +3956,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const skills = this._actorSys().skills ?? {};
         for (const skillKey of Object.keys(skills)) {
             update[`system.skills.${skillKey}.advance`] = 0;
-            const entries = skills[skillKey].entries;
+            const entries = skills[skillKey]?.entries;
             if (Array.isArray(entries)) {
                 const resetEntries = entries.map((entry) => ({ ...entry, advance: 0 }));
                 update[`system.skills.${skillKey}.entries`] = resetEntries;

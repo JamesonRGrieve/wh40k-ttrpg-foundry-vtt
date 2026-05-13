@@ -1,0 +1,4 @@
+{
+  "agent": "A4",
+  "allowlist": "applications/{api,base,dialogs,popouts,prompts,character-creation} + top-level"
+}
