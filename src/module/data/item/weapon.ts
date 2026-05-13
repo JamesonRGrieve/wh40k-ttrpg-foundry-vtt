@@ -139,7 +139,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     declare rateOfFireLabel: string;
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -253,7 +253,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         WeaponData.#migrateSpecial(source);
         WeaponData.#migrateClass(source);
@@ -265,12 +265,12 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      */
     static #migrateSpecial(source: Record<string, unknown>): void {
-        const special = source.special;
+        const special = source['special'];
         if (Array.isArray(special)) return;
         if (special !== null && special !== undefined && typeof special === 'object' && Symbol.iterator in special) {
-            source.special = Array.from(special as Iterable<string>);
+            source['special'] = Array.from(special as Iterable<string>);
         } else {
-            source.special = [];
+            source['special'] = [];
         }
     }
 
@@ -280,10 +280,10 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     static #migrateClass(source: Record<string, unknown>): void {
         const techTypeValues = ['chain', 'power', 'shock', 'force'];
-        const cls = source.class;
+        const cls = source['class'];
         if (typeof cls === 'string' && techTypeValues.includes(cls)) {
-            source.type = cls;
-            source.class = 'melee';
+            source['type'] = cls;
+            source['class'] = 'melee';
         }
     }
 
@@ -292,9 +292,9 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      */
     static #migrateProficiency(source: Record<string, unknown>): void {
-        if (source.proficiency !== undefined) {
-            source.requiredTraining = source.proficiency;
-            delete source.proficiency;
+        if (source['proficiency'] !== undefined) {
+            source['requiredTraining'] = source['proficiency'];
+            delete source['proficiency'];
         }
     }
 
@@ -303,7 +303,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @inheritdoc */
-    prepareDerivedData(): void {
+    override prepareDerivedData(): void {
         super.prepareDerivedData();
 
         // Weapons are always equipped unless stowed in ship storage
@@ -321,7 +321,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /** @inheritdoc */
-    prepareBaseData(): void {
+    override prepareBaseData(): void {
         super.prepareBaseData();
 
         const sourceSystem = (this.parent?._source.system ?? {}) as { gameSystems?: string[] };
