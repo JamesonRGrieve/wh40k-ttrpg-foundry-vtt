@@ -34,7 +34,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+    static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         ...BaseRollDialog.DEFAULT_OPTIONS,
         classes: ['psychic-power'],
         actions: {
@@ -50,7 +50,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
+    static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/psychic-power-roll-prompt.hbs',
             classes: [],
@@ -64,7 +64,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
 
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Set up power selection listeners
@@ -133,7 +133,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    async _performRoll(): Promise<void> {
+    override async _performRoll(): Promise<void> {
         await this.psychicAttackData.rollData.finalize?.();
         await this.psychicAttackData.performActionAndSendToChat?.();
         await this.close();

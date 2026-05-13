@@ -21,18 +21,19 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+    static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'roll-dialog', 'standard-form'],
         actions: {
             roll: BaseRollDialog.#onRoll as Function,
             cancel: BaseRollDialog.#onCancel as Function,
         },
+        // eslint-disable-next-line no-restricted-syntax -- boundary: exactOptionalPropertyTypes: FormConfiguration optional booleans require explicit cast when mixed with handler type cast
         form: {
             handler: BaseRollDialog.#onFormSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: true,
             closeOnSubmit: false,
-        },
+        } as ApplicationV2Config.FormConfiguration,
         position: {
             width: 500,
         },
@@ -44,7 +45,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
+    static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/base-roll-prompt.hbs',
             classes: [],
@@ -73,7 +74,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // Initialize roll data on first render
         if (!this.initialized && typeof this.rollData['initialize'] === 'function') {
             (this.rollData['initialize'] as () => void)();
@@ -98,7 +99,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
         setupNumberInputAutoSelect(this.element);
     }

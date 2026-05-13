@@ -42,7 +42,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+    static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'add-xp-dialog', 'standard-form'],
         actions: {
@@ -70,7 +70,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
+    static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/add-xp-prompt.hbs',
             classes: [],
@@ -83,7 +83,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AddXPContext> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AddXPContext> {
         const context = (await super._prepareContext(options)) as AddXPContext;
         const currentTotal = this.actor.experience.total;
         const newTotal = Math.max(0, currentTotal + this.xpAmount);
@@ -102,7 +102,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: AddXPContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: AddXPContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         const input = this.element.querySelector<HTMLInputElement>('input[name="xpAmount"]');

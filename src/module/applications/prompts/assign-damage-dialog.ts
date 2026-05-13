@@ -21,7 +21,7 @@ export default class AssignDamageDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         classes: ['assign-damage'],
         window: {
             title: 'Assign Damage',
@@ -31,7 +31,7 @@ export default class AssignDamageDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static override PARTS = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/assign-damage-prompt.hbs',
             scrollable: [''],
@@ -43,7 +43,7 @@ export default class AssignDamageDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
         // Set up button listeners
@@ -80,7 +80,7 @@ export default class AssignDamageDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    async _performRoll(): Promise<void> {
+    override async _performRoll(): Promise<void> {
         await (this.rollData['finalize'] as () => Promise<void>)();
         await (this.rollData['performActionAndSendToChat'] as () => Promise<void>)();
         await this.close();

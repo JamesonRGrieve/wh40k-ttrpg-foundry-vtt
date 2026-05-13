@@ -42,7 +42,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         id: 'ammo-picker-{id}',
         classes: ['wh40k-rpg', 'ammo-picker-dialog'],
         tag: 'div',
@@ -113,7 +113,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AmmoPickerContext> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AmmoPickerContext> {
         const context = await super._prepareContext(options);
 
         const ammoItems = this.#config.ammoItems.map((item) => {
@@ -172,7 +172,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2.close signature uses Record<string, unknown>
-    async close(options?: Record<string, unknown>): Promise<unknown> {
+    override async close(options?: Record<string, unknown>): Promise<unknown> {
         if (!this.#resolved && this.#resolve) {
             this.#resolve(null);
         }
@@ -192,7 +192,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
 
     static async pick(config: { ammoItems: WH40KItem[]; currentAmmoUuid?: string; weaponName: string; clipMax: number }): Promise<WH40KItem | null> {
         if (config.ammoItems.length === 1) {
-            return config.ammoItems[0];
+            return config.ammoItems[0] ?? null;
         }
         const dialog = new this(config);
         return dialog.wait();
