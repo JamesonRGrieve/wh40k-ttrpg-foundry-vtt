@@ -6,6 +6,8 @@
    weapon sheet, compendium browser, foundry chrome, etc.) emitted via
    addBase plugins so wh40k-* class selectors are not prefixed with `tw-`.
    Components and utilities follow with the `tw-` prefix. */
+/* biome-ignore-start lint/suspicious/noUnknownAtRules: tailwind directives processed by PostCSS */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* biome-ignore-end lint/suspicious/noUnknownAtRules: tailwind directives processed by PostCSS */

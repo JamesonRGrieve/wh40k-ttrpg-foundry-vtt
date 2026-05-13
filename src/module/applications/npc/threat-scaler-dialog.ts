@@ -284,7 +284,9 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
                 const targetTab = (tab as HTMLElement).dataset.tab;
 
                 // Update active tab
-                tabs.forEach((t) => t.classList.remove('active'));
+                tabs.forEach((t) => {
+                    t.classList.remove('active');
+                });
                 tab.classList.add('active');
 
                 // Update active section
