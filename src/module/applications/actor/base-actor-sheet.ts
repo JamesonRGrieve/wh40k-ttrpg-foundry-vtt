@@ -236,13 +236,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     // and call super. The actual implementation lives in Foundry's ApplicationV2 base,
     // which is erased by the mixin chain cast. These stubs restore type visibility by
     // delegating through the erased prototype chain via the AnyApplicationV2Ctor base.
-    _getHeaderControls(): foundry.applications.api.ApplicationV2.HeaderControlsEntry[] {
+    override _getHeaderControls(): foundry.applications.api.ApplicationV2.HeaderControlsEntry[] {
         const proto = Object.getPrototypeOf(BaseActorSheet.prototype) as {
             _getHeaderControls?: (this: BaseActorSheet) => foundry.applications.api.ApplicationV2.HeaderControlsEntry[];
         };
         return proto._getHeaderControls?.call(this) ?? [];
     }
-    async _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         const proto = Object.getPrototypeOf(BaseActorSheet.prototype) as {
             _onFirstRender?: (this: BaseActorSheet, context: Record<string, unknown>, options: Record<string, unknown>) => Promise<void>;
         };
@@ -348,7 +348,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context: Record<string, unknown> & {
             actor: BaseActorSheetActor;
             system: BaseActorSheetSystem;
@@ -399,8 +399,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * so in its own `_prepareContext` after the super call returns.
      */
     protected _prepareCommonContext(context: Record<string, unknown>): void {
-        context.isGM = game.user.isGM;
-        context.dh = CONFIG.wh40k ?? WH40K;
+        context['isGM'] = game.user.isGM;
+        context['dh'] = CONFIG.wh40k ?? WH40K;
     }
 
     /* -------------------------------------------- */
@@ -428,7 +428,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             // Simple: 100, Intermediate: 250, Trained: 500, Proficient: 750, Expert: 1000
             const advanceCosts = [100, 250, 500, 750, 1000];
             const nextAdvance = char.advance;
-            char.nextAdvanceCost = nextAdvance < 5 ? advanceCosts[nextAdvance] : 0;
+            char.nextAdvanceCost = (nextAdvance < 5 ? advanceCosts[nextAdvance] : 0) ?? 0;
 
             // Prepare tooltip data if not already present
             if (typeof char.tooltipData !== 'string' || char.tooltipData === '') {
@@ -456,7 +456,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /* -------------------------------------------- */
 
     /** @override */
-    _onClose(options: Record<string, unknown>): void {
+    override _onClose(options: Record<string, unknown>): void {
         // Save state before closing
         this._saveSheetState();
 
@@ -725,8 +725,6 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                         const stringEntry: SkillLike = {
                             name: entry,
                             slug: toCamelCase(entry),
-                            characteristic: data.characteristic,
-                            advanced: data.advanced,
                             basic: data.advanced !== true,
                             trained: false,
                             plus10: false,
@@ -738,34 +736,36 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                             skillKey: key, // Store skill key for template access
                             entryIndex: entryIndex, // Store index for template access
                         };
+                        if (data.characteristic !== undefined) stringEntry.characteristic = data.characteristic;
+                        if (data.advanced !== undefined) stringEntry.advanced = data.advanced;
                         return stringEntry;
                     }
 
                     const normalized: SkillLike = { ...entry };
                     const candidateName =
-                        typeof normalized.name === 'string' && normalized.name !== ''
-                            ? normalized.name
+                        typeof normalized['name'] === 'string' && normalized['name'] !== ''
+                            ? normalized['name']
                             : typeof normalized.label === 'string' && normalized.label !== ''
                             ? normalized.label
-                            : typeof normalized.slug === 'string'
-                            ? normalized.slug
+                            : typeof normalized['slug'] === 'string'
+                            ? normalized['slug']
                             : '';
-                    normalized.name = candidateName;
-                    if ((typeof normalized.slug !== 'string' || normalized.slug === '') && candidateName !== '') {
-                        normalized.slug = toCamelCase(candidateName);
+                    normalized['name'] = candidateName;
+                    if ((typeof normalized['slug'] !== 'string' || normalized['slug'] === '') && candidateName !== '') {
+                        normalized['slug'] = toCamelCase(candidateName);
                     }
                     if (normalized.characteristic === undefined || normalized.characteristic === '') {
-                        normalized.characteristic = data.characteristic;
+                        if (data.characteristic !== undefined) normalized.characteristic = data.characteristic;
                     }
                     if (normalized.advanced === undefined) {
-                        normalized.advanced = data.advanced;
+                        if (data.advanced !== undefined) normalized.advanced = data.advanced;
                     }
                     if (normalized.basic === undefined) {
                         normalized.basic = data.advanced !== true;
                     }
                     // Store skill key and index for template access
-                    normalized.skillKey = key;
-                    normalized.entryIndex = entryIndex;
+                    normalized['skillKey'] = key;
+                    normalized['entryIndex'] = entryIndex;
                     return normalized;
                 });
 
@@ -775,7 +775,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 plainEntries.forEach((entry) => {
                     this._augmentSkillData(key, entry, characteristics, data);
                     // Check if this specialist entry is a favorite
-                    const favoriteKey = `${String(entry.skillKey)}:${String(entry.entryIndex)}`;
+                    const favoriteKey = `${String(entry['skillKey'])}:${String(entry['entryIndex'])}`;
                     entry.isFavorite = specialistFavorites.includes(favoriteKey);
                 });
 
@@ -805,7 +805,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             return Array.isArray(entries) && entries.length > 0;
         });
 
-        context.skillLists = { standard, trainedStandard: standard, advancedUntrained, specialist, standardColumns, hasSpecialistEntries };
+        context['skillLists'] = { standard, trainedStandard: standard, advancedUntrained, specialist, standardColumns, hasSpecialistEntries };
     }
 
     /**
@@ -849,17 +849,17 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Training indicators for template iteration
         const config = this._getSkillTrainingConfig();
-        data.trainingIndicators = config.map((rank) => ({
+        data['trainingIndicators'] = config.map((rank) => ({
             label: rank.label,
             tooltip: rank.tooltip,
             active: (data.trainingLevel ?? 0) >= rank.level,
         }));
 
         // Characteristic short name
-        data.charShort = char.short !== '' ? char.short : charKey;
+        data.charShort = char !== undefined && char.short !== '' ? char.short : charKey;
 
         // Breakdown string for tooltip/title
-        data.breakdown = this._getSkillBreakdown(data, char);
+        data.breakdown = char !== undefined ? this._getSkillBreakdown(data, char) : '';
 
         // Tooltip data (JSON string)
         data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
@@ -1178,7 +1178,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @protected
      */
     _prepareTraitsContext(context: Record<string, unknown>): Record<string, unknown> {
-        const traits = (context.items as TraitLike[]).filter((i) => i.type === 'trait');
+        const traits = (context['items'] as TraitLike[]).filter((i) => i.type === 'trait');
 
         // Apply filters if present
         let filteredTraits = traits;
@@ -1350,17 +1350,17 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             items?.sort((a, b) => a.name.localeCompare(b.name, game.i18n.lang));
         }
 
-        context.itemsByType = itemsByType;
+        context['itemsByType'] = itemsByType;
 
         // Create common item categories
-        context.weapons = itemsByType.weapon ?? [];
-        context.armourItems = itemsByType.armour ?? [];
-        context.talents = itemsByType.talent ?? [];
-        context.traits = itemsByType.trait ?? [];
-        context.gearItems = itemsByType.gear ?? [];
-        context.psychicPowers = itemsByType.psychicPower ?? [];
-        context.cybernetics = itemsByType.cybernetic ?? [];
-        context.conditions = itemsByType.condition ?? [];
+        context['weapons'] = itemsByType['weapon'] ?? [];
+        context['armourItems'] = itemsByType['armour'] ?? [];
+        context['talents'] = itemsByType['talent'] ?? [];
+        context['traits'] = itemsByType['trait'] ?? [];
+        context['gearItems'] = itemsByType['gear'] ?? [];
+        context['psychicPowers'] = itemsByType['psychicPower'] ?? [];
+        context['cybernetics'] = itemsByType['cybernetic'] ?? [];
+        context['conditions'] = itemsByType['condition'] ?? [];
     }
 
     /* -------------------------------------------- */
@@ -1383,7 +1383,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
         // Restore sheet state on first render
@@ -1495,7 +1495,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Set up drag handlers for items
         // Note: Talent panel rows (wh40k-tp_row) are excluded by EnhancedDragDropMixin
         this.element.querySelectorAll('[data-item-id]').forEach((el: Element) => {
-            const datasetItemId = (el as HTMLElement).dataset.itemId;
+            const datasetItemId = (el as HTMLElement).dataset['itemId'];
             if (datasetItemId !== undefined && datasetItemId !== '') {
                 // Skip if this element or any ancestor is a talent row
                 if (el.closest('.wh40k-tp_row') !== null || el.closest('.wh40k-talent-row') !== null) return;
@@ -1511,7 +1511,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         this.element.querySelectorAll('.item-edit').forEach((el) => {
             el.addEventListener('click', (event) => {
                 const ct = event.currentTarget as HTMLElement;
-                const itemId = ct.dataset.itemId ?? ct.closest('[data-item-id]')?.getAttribute('data-item-id');
+                const itemId = ct.dataset['itemId'] ?? ct.closest('[data-item-id]')?.getAttribute('data-item-id');
                 if (itemId !== null && itemId !== undefined && itemId !== '') BaseActorSheet.#itemEdit.call(this, event, ct);
             });
         });
@@ -1519,7 +1519,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         this.element.querySelectorAll('.item-delete').forEach((el) => {
             el.addEventListener('click', (event) => {
                 const ct = event.currentTarget as HTMLElement;
-                const itemId = ct.dataset.itemId ?? ct.closest('[data-item-id]')?.getAttribute('data-item-id');
+                const itemId = ct.dataset['itemId'] ?? ct.closest('[data-item-id]')?.getAttribute('data-item-id');
                 if (itemId !== null && itemId !== undefined && itemId !== '') void BaseActorSheet.#itemDelete.call(this, event, ct);
             });
         });
@@ -1527,7 +1527,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         this.element.querySelectorAll('.item-vocalize').forEach((el) => {
             el.addEventListener('click', (event) => {
                 const ct = event.currentTarget as HTMLElement;
-                const itemId = ct.dataset.itemId ?? ct.closest('[data-item-id]')?.getAttribute('data-item-id');
+                const itemId = ct.dataset['itemId'] ?? ct.closest('[data-item-id]')?.getAttribute('data-item-id');
                 if (itemId !== null && itemId !== undefined && itemId !== '') void BaseActorSheet.#itemVocalize.call(this, event, ct);
             });
         });
@@ -1649,7 +1649,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      */
     async _onPanelToggle(event: Event): Promise<void> {
         event.preventDefault();
-        const target = (event.currentTarget as HTMLElement).dataset.toggle;
+        const target = (event.currentTarget as HTMLElement).dataset['toggle'];
         if (target === undefined || target === '') return;
 
         // Get current expanded state from actor flags
@@ -1681,7 +1681,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             // Set absolute value
             const absolute = parseFloat(value.slice(1));
             if (!Number.isNaN(absolute)) input.value = String(absolute);
-        } else if (['+', '-'].includes(firstChar)) {
+        } else if (firstChar !== undefined && ['+', '-'].includes(firstChar)) {
             // Add or subtract delta
             const current = foundry.utils.getProperty(this.actor, input.name) ?? 0;
             const delta = parseFloat(value);
@@ -1697,7 +1697,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @protected
      */
     _onDragItem(event: DragEvent): void {
-        const itemId = (event.currentTarget as HTMLElement).dataset.itemId;
+        const itemId = (event.currentTarget as HTMLElement).dataset['itemId'];
         if (itemId === undefined || itemId === '') return;
         const item = this.actor.items.get(itemId);
         if (item !== undefined) {
@@ -1714,7 +1714,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  The action target.
      */
     static async #onEditImage(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const attr = target.dataset.edit ?? 'img';
+        const attr = target.dataset['edit'] ?? 'img';
         const docSource = this.document.toObject(true);
         const current = foundry.utils.getProperty(docSource, attr);
         const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse(): Promise<void> };
@@ -1768,7 +1768,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         let value: boolean | number | string;
         if (input.type === 'checkbox') value = (input as HTMLInputElement).checked;
-        else if (input.type === 'number' || input.dataset.dtype === 'Number') value = Number(input.value) || 0;
+        else if (input.type === 'number' || input.dataset['dtype'] === 'Number') value = Number(input.value) || 0;
         else value = input.value;
 
         const path = input.name;
@@ -1805,9 +1805,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #roll(this: BaseActorSheet, _event: Event, target: HTMLElement): void {
-        const rollType = target.dataset.rollType;
-        const rollTarget = target.dataset.rollTarget;
-        const specialty = target.dataset.specialty;
+        const rollType = target.dataset['rollType'];
+        const rollTarget = target.dataset['rollTarget'];
+        const specialty = target.dataset['specialty'];
 
         // Add rolling animation for characteristic rolls
         if (rollType === 'characteristic') {
@@ -1847,7 +1847,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemRoll(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset.itemId ?? target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
+        const itemId = target.dataset['itemId'] ?? target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         if (itemId !== undefined && itemId !== '') await this.actor.rollItem(itemId);
     }
 
@@ -1860,7 +1860,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #itemEdit(this: BaseActorSheet, event: Event, target: HTMLElement): void {
-        const itemId = target.dataset.itemId ?? target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
+        const itemId = target.dataset['itemId'] ?? target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         if (itemId === undefined || itemId === '') {
             console.warn('WH40K | itemEdit: No itemId found', target);
             return;
@@ -1882,7 +1882,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemDelete(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset.itemId ?? target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
+        const itemId = target.dataset['itemId'] ?? target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         if (itemId === undefined || itemId === '') {
             console.warn('WH40K | itemDelete: No itemId found', target);
             return;
@@ -1920,7 +1920,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemVocalize(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset.itemId ?? target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
+        const itemId = target.dataset['itemId'] ?? target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         if (itemId === undefined || itemId === '') {
             console.warn('WH40K | itemVocalize: No item ID found', target);
             return;
@@ -1949,7 +1949,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemCreate(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const itemType = target.dataset.type ?? 'gear';
+        const itemType = target.dataset['type'] ?? 'gear';
         const data: Record<string, unknown> = {
             name: `New ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`,
             type: itemType,
@@ -1957,12 +1957,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Add type-specific defaults for array/Set fields to prevent validation errors
         if (itemType === 'armour') {
-            data.system = {
+            data['system'] = {
                 coverage: ['body'], // Default array for SetField
                 properties: [], // Default empty array for SetField
             };
         } else if (itemType === 'cybernetic') {
-            data.system = {
+            data['system'] = {
                 locations: ['internal'], // Default for cybernetics
             };
         }
@@ -1997,7 +1997,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #effectEdit(this: BaseActorSheet, event: Event, target: HTMLElement): void {
-        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset.effectId;
+        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         if (effectId === undefined || effectId === '') return;
         const effect = this.actor.effects.get(effectId) as { sheet?: { render(force?: boolean): void } } | undefined;
         effect?.sheet?.render(true);
@@ -2012,7 +2012,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectDelete(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset.effectId;
+        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         if (effectId === undefined || effectId === '') return;
         const effect = this.actor.effects.get(effectId) as { delete(): Promise<unknown> } | undefined;
         await effect?.delete();
@@ -2027,7 +2027,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectToggle(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset.effectId;
+        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         if (effectId === undefined || effectId === '') return;
         const effect = this.actor.effects.get(effectId) as { disabled: boolean; update(data: Record<string, unknown>): Promise<unknown> } | undefined;
         if (effect === undefined) return;
@@ -2045,7 +2045,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      */
     static #toggleSection(this: BaseActorSheet, event: Event, target: HTMLElement): void {
         event.stopPropagation();
-        const sectionName = target.dataset.toggle;
+        const sectionName = target.dataset['toggle'];
         if (sectionName === undefined || sectionName === '') return;
 
         // Find the dropdown panel element
@@ -2081,15 +2081,15 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #toggleTraining(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const field = target.dataset.field;
-        const skillKey = target.dataset.skill;
-        const levelRaw = target.dataset.level;
+        const field = target.dataset['field'];
+        const skillKey = target.dataset['skill'];
+        const levelRaw = target.dataset['level'];
         const level = levelRaw !== undefined && levelRaw !== '' ? parseInt(levelRaw) : null;
-        const specialty = target.dataset.specialty ?? target.dataset.index;
+        const specialty = target.dataset['specialty'] ?? target.dataset['index'];
 
         // Pattern 1: Simple field toggle
         if (field !== undefined && field !== '') {
-            const currentValue = target.dataset.value === 'true';
+            const currentValue = target.dataset['value'] === 'true';
             await this.actor.update({ [field]: !currentValue });
             return;
         }
@@ -2126,7 +2126,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #addSpecialistSkill(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const skillKey = target.dataset.skill;
+        const skillKey = target.dataset['skill'];
         if (skillKey === undefined || skillKey === '') return;
         const skill = this.actor.system.skills[skillKey];
         if (skill === undefined) {
@@ -2198,8 +2198,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #deleteSpecialization(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const skillName = target.dataset.skill;
-        const index = parseInt(target.dataset.index ?? '');
+        const skillName = target.dataset['skill'];
+        const index = parseInt(target.dataset['index'] ?? '');
         if (skillName === undefined || skillName === '') return;
 
         const skill = this.actor.system.skills[skillName];
@@ -2233,8 +2233,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         event.preventDefault();
         event.stopPropagation();
 
-        const skillKey = target.dataset.skill ?? target.dataset.rollTarget;
-        // const specialty = target.dataset.specialty;
+        const skillKey = target.dataset['skill'] ?? target.dataset['rollTarget'];
+        // const specialty = target.dataset['specialty'];
 
         if (skillKey === undefined || skillKey === '') {
             console.warn('WH40K | viewSkillInfo: No skill key found');
@@ -2288,8 +2288,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (ctor.unsupportedItemTypes.has(item.type)) {
             ui.notifications.warn(
                 game.i18n.format('WH40K.Warning.InvalidItem', {
-                    itemType: game.i18n.localize(CONFIG.Item.typeLabels[item.type]),
-                    actorType: game.i18n.localize(CONFIG.Actor.typeLabels[this.actor.type]),
+                    itemType: game.i18n.localize(CONFIG.Item.typeLabels[item.type] ?? item.type),
+                    actorType: game.i18n.localize(CONFIG.Actor.typeLabels[this.actor.type] ?? this.actor.type),
                 }),
             );
             return false;
@@ -2322,7 +2322,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Confirm the drop target
         const dropTarget = (event.target as HTMLElement).closest<HTMLElement>('[data-item-id]');
         if (dropTarget === null) return undefined;
-        const targetId = dropTarget.dataset.itemId;
+        const targetId = dropTarget.dataset['itemId'];
         if (source === undefined || targetId === undefined || targetId === '') return undefined;
         const target = items.get(targetId);
         if (target === undefined || source.id === target.id) return undefined;
@@ -2332,7 +2332,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const parentChildren = dropTarget.parentElement?.children;
         if (parentChildren !== undefined) {
             for (const element of parentChildren) {
-                const siblingId = (element as HTMLElement).dataset.itemId;
+                const siblingId = (element as HTMLElement).dataset['itemId'];
                 if (siblingId !== undefined && siblingId !== '' && siblingId !== source.id) {
                     const sibling = items.get(siblingId);
                     if (sibling !== undefined) siblings.push(sibling);
@@ -2345,7 +2345,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         type SortUpdate = { update: Record<string, unknown>; target: { _id: string } };
         const updateData = (sortUpdates as SortUpdate[]).map((u) => {
             const update = u.update;
-            update._id = u.target._id;
+            update['_id'] = u.target._id;
             return update;
         });
 
@@ -2361,7 +2361,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @protected
      */
     static async #spendXPAdvance(this: BaseActorSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const charKey = target.dataset.characteristic;
+        const charKey = target.dataset['characteristic'];
         if (charKey === undefined || charKey === '') return;
         const char = this.actor.system.characteristics[charKey] as (WH40KCharacteristic & { nextAdvanceCost: number; advance: number }) | undefined;
 
@@ -2444,7 +2444,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const charBox = this.element.querySelector<HTMLElement>(`[data-characteristic="${charKey}"]`);
         if (charBox) {
             charBox.style.setProperty('--advance-progress', String(newAdvance / 5));
-            charBox.dataset.advance = String(newAdvance);
+            charBox.dataset['advance'] = String(newAdvance);
         }
     }
 
@@ -2457,7 +2457,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @protected
      */
     static async #editCharacteristic(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
-        const charKey = target.closest<HTMLElement>('[data-characteristic]')?.dataset.characteristic;
+        const charKey = target.closest<HTMLElement>('[data-characteristic]')?.dataset['characteristic'];
         if (charKey === undefined || charKey === '') return;
 
         const char = this.actor.system.characteristics[charKey] as WH40KCharacteristic | undefined;
