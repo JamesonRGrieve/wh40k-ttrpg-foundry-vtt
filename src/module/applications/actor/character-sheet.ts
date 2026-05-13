@@ -54,6 +54,66 @@ type CharacterSheetContext = Record<string, unknown> & {
         armour?: Record<string, unknown>;
     };
     dh?: Record<string, unknown> & { combatActions?: { attacks?: Array<{ subtypes?: string[] }> } };
+    // Explicit declarations to avoid TS4111 (noPropertyAccessFromIndexSignature) on the
+    // intersected Record<string, unknown> for all known sheet-context fields written by
+    // _prepareContext / _preparePartContext / _prepareCombatData / _prepareLoadoutData / ...
+    inEditMode?: boolean;
+    ruleset?: unknown;
+    isDH2?: boolean;
+    isHomebrew?: boolean;
+    isRaw?: boolean;
+    hideThroneGelt?: boolean;
+    originPathSteps?: unknown;
+    originPathSummary?: unknown;
+    originPathComplete?: boolean;
+    originOptions?: Record<string, unknown>;
+    headerFields?: unknown;
+    navigatorPowers?: unknown[];
+    shipRoles?: unknown[];
+    talentsCount?: number;
+    traitsCount?: number;
+    dynastyData?: Record<string, unknown>;
+    activeModifiers?: unknown;
+    tab?: { id: string; group: string; cssClass: string; label: string; active: boolean };
+    tabs?: unknown;
+    skillsFilter?: unknown;
+    skillLists?: unknown;
+    biography?: unknown;
+    aptitudePills?: unknown;
+    aptitudes?: unknown;
+    favoriteSkills?: unknown;
+    favoriteTalents?: unknown;
+    effects?: unknown[];
+    combatTalents?: unknown[];
+    meleeAttacks?: unknown[];
+    rangedAttacks?: unknown[];
+    generalAttacks?: unknown[];
+    woundsPercent?: number;
+    fatiguePercent?: number;
+    dodgeTarget?: number;
+    parryTarget?: number;
+    criticalInjuries?: unknown[];
+    forceField?: unknown;
+    hasForceField?: boolean;
+    armourDisplayLocations?: unknown;
+    armourDisplay?: Record<string, unknown>;
+    equippedWeapons?: unknown[];
+    primaryWeapon?: unknown;
+    secondaryWeapon?: unknown;
+    sidearm?: unknown;
+    grenades?: unknown[];
+    otherWeapons?: unknown[];
+    allItems?: unknown[];
+    allCarriedItems?: unknown[];
+    allShipItems?: unknown[];
+    storageLocations?: unknown[];
+    armourCount?: number;
+    forceFieldCount?: number;
+    cyberneticCount?: number;
+    gearCount?: number;
+    equippedCount?: number;
+    encumbrancePercent?: number;
+    backpackPercent?: number;
 };
 
 type OriginSummary = {
