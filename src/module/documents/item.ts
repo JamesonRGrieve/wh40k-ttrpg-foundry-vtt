@@ -10,7 +10,7 @@ type AttackSpecialIndexEntry = {
     name: string;
     img?: string;
     type?: string;
-    system: Record<string, unknown> & { hasLevel?: boolean; level?: number | string; enabled?: number | string | boolean };
+    system: Record<string, unknown> & { hasLevel?: boolean; level?: number | string | undefined; enabled?: number | string | boolean | undefined };
 };
 /* eslint-enable no-restricted-syntax */
 
@@ -70,7 +70,7 @@ export class WH40KItem extends WH40KItemContainer {
      * @override
      */
     /* eslint-disable no-restricted-syntax -- boundary: Foundry V14 cleanData receives raw source bag */
-    static cleanData(
+    static override cleanData(
         source: Record<string, unknown> = {},
         options: DataModelV14.CleaningOptions = {},
         _state: DataModelV14.UpdateState = {},
@@ -82,14 +82,15 @@ export class WH40KItem extends WH40KItemContainer {
 
         // CRITICAL: Clean img field if present - V13 validation is very strict
         if ('img' in source) {
-            const imgValue = source.img;
-            const typeStr = typeof source.type === 'string' && source.type.length > 0 ? source.type : 'unknown';
+            const imgValue = source['img'];
+            const sourceType = source['type'];
+            const typeStr = typeof sourceType === 'string' && sourceType.length > 0 ? sourceType : 'unknown';
 
             // Handle empty, null, undefined, or non-string img values
             if (typeof imgValue !== 'string' || imgValue.trim() === '') {
                 // Set to type-specific default
-                source.img = this._getDefaultIcon(typeStr);
-                console.warn(`WH40K | cleanData: Invalid img value "${String(imgValue)}" for type "${typeStr}", using default: ${String(source.img)}`);
+                source['img'] = this._getDefaultIcon(typeStr);
+                console.warn(`WH40K | cleanData: Invalid img value "${String(imgValue)}" for type "${typeStr}", using default: ${String(source['img'])}`);
             } else {
                 // Check if has valid extension
                 const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif', '.webm'];
@@ -97,15 +98,15 @@ export class WH40KItem extends WH40KItemContainer {
 
                 // Also check for obviously invalid paths
                 if (imgStr === 'null' || imgStr === 'undefined' || imgStr.length < 5) {
-                    source.img = this._getDefaultIcon(typeStr);
-                    console.warn(`WH40K | cleanData: Invalid img path "${imgValue}" for type "${typeStr}", using default: ${String(source.img)}`);
+                    source['img'] = this._getDefaultIcon(typeStr);
+                    console.warn(`WH40K | cleanData: Invalid img path "${imgValue}" for type "${typeStr}", using default: ${String(source['img'])}`);
                 } else {
                     const hasValidExtension = validExtensions.some((ext) => imgStr.endsWith(ext));
 
                     if (!hasValidExtension) {
                         // Invalid extension - use type-specific default
-                        source.img = this._getDefaultIcon(typeStr);
-                        console.warn(`WH40K | cleanData: No valid extension in "${imgValue}" for type "${typeStr}", using default: ${String(source.img)}`);
+                        source['img'] = this._getDefaultIcon(typeStr);
+                        console.warn(`WH40K | cleanData: No valid extension in "${imgValue}" for type "${typeStr}", using default: ${String(source['img'])}`);
                     }
                 }
             }
@@ -364,7 +365,7 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isInBackpack(): boolean {
-        return (this.system.backpack as { inBackpack?: boolean } | undefined)?.inBackpack === true;
+        return (this.system['backpack'] as { inBackpack?: boolean } | undefined)?.inBackpack === true;
     }
 
     get isJournalEntry(): boolean {
@@ -385,7 +386,7 @@ export class WH40KItem extends WH40KItemContainer {
         super._onCreate(data, options, userId);
     }
 
-    prepareData(): void {
+    override prepareData(): void {
         super.prepareData();
         game.wh40k.log('Item prepare data', this);
 
@@ -416,32 +417,34 @@ export class WH40KItem extends WH40KItemContainer {
     // eslint-disable-next-line no-restricted-syntax -- boundary: returns opaque Foundry Document.update result
     async _determineNestedItems(): Promise<unknown> {
         // Already has items just skip
-        if (this.items.size > 0 || this.hasNested()) return;
+        if (this.items.size > 0 || this.hasNested()) return undefined;
 
         // Check for specials
-        if (this.system.special !== undefined && this.system.special !== null) {
+        if (this.system['special'] !== undefined && this.system['special'] !== null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: legacy `system.special` is a free-form bag pre-migration
-            const specialData = this.system.special as Record<string, unknown>;
-            game.wh40k.log(`Performing first time nested item configuration for item: ${this.name} with specials: `, this.system.special);
+            const specialData = this.system['special'] as Record<string, unknown>;
+            game.wh40k.log(`Performing first time nested item configuration for item: ${this.name} with specials: `, this.system['special']);
             if (this.isWeapon) await this._updateSpecialsFromPack('wh40k-rpg.weapons', specialData);
             if (this.isAmmunition) await this._updateSpecialsFromPack('wh40k-rpg.ammo', specialData);
-            game.wh40k.log(`Special migrated for item: ${this.name}`, this.system.special);
-            this.system.special = undefined;
+            game.wh40k.log(`Special migrated for item: ${this.name}`, this.system['special']);
+            this.system['special'] = undefined;
 
             this.convertNestedToItems();
         }
+        return undefined;
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: receives legacy `system.special` bag
     async _updateSpecialsFromPack(pack: string, data: Record<string, unknown>): Promise<unknown> {
         const compendium = game.packs.find((p: { collection?: string }) => p.collection === pack);
-        if (!compendium) return;
+        if (!compendium) return undefined;
         await compendium.configure({ locked: false });
         const attackSpecials = await this._getAttackSpecials(data);
         if (attackSpecials.length > 0) {
             await this.createNestedDocuments(attackSpecials);
         }
         await compendium.configure({ locked: true });
+        return undefined;
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: receives legacy `system.special` bag
@@ -507,7 +510,7 @@ export class WH40KItem extends WH40KItemContainer {
      * @returns {boolean}
      */
     get isRollable(): boolean {
-        return (this.isTalent && this.system.isRollable) || (this.isSkill && this.system.rollConfig !== undefined && this.system.rollConfig !== null);
+        return (this.isTalent && this.system.isRollable) || (this.isSkill && this.system['rollConfig'] !== undefined && this.system['rollConfig'] !== null);
     }
 
     /**
@@ -569,7 +572,7 @@ export class WH40KItem extends WH40KItemContainer {
             },
         };
 
-        chatData.rollMode = game.settings.get('core', 'rollMode');
+        chatData['rollMode'] = game.settings.get('core', 'rollMode');
         applyRollModeWhispers(chatData);
 
         return ChatMessage.create(chatData);
@@ -618,7 +621,7 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: rollConfig shape lives in talent-specific subsystem
-        const rollConfig = this.system.rollConfig as
+        const rollConfig = this.system['rollConfig'] as
             | {
                   characteristic?: string;
                   modifier?: number;
@@ -685,6 +688,7 @@ export class WH40KItem extends WH40KItemContainer {
         if (navActor === null) return this.sendToChat();
         const perception = navActor.characteristics['perception'];
         const willpower = navActor.characteristics['willpower'];
+        if (perception === undefined || willpower === undefined) return this.sendToChat();
 
         // Use the higher of the two as base, modified by Navigator Rank
         // eslint-disable-next-line no-restricted-syntax -- boundary: navigatorRank lives outside the shared system schema
@@ -823,7 +827,7 @@ export class WH40KItem extends WH40KItemContainer {
         // eslint-disable-next-line no-restricted-syntax -- boundary: items destined for createEmbeddedDocuments
         const itemsToAdd: Record<string, unknown>[] = [];
         // eslint-disable-next-line no-restricted-syntax -- boundary: origin-path modifiers are stored as an opaque bag in the shared item schema
-        const modifiers = (this.system.modifiers ?? {}) as {
+        const modifiers = (this.system.modifiers ?? {}) as unknown as {
             characteristics?: Record<string, number>;
             wounds?: number;
             fate?: number;
@@ -836,7 +840,9 @@ export class WH40KItem extends WH40KItemContainer {
         if (modifiers.characteristics !== undefined) {
             for (const [key, value] of Object.entries(modifiers.characteristics)) {
                 if (value !== 0) {
-                    const currentBonus: number = actor.system.characteristics[key].advance;
+                    const charEntry = actor.system.characteristics[key];
+                    if (charEntry === undefined) continue;
+                    const currentBonus: number = charEntry.advance;
                     updates[`system.characteristics.${key}.advance`] = currentBonus + Number(value);
                 }
             }
@@ -913,7 +919,7 @@ export class WH40KItem extends WH40KItemContainer {
         if (!this.isOriginPath) return null;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: origin-path modifiers are stored as an opaque bag in the shared item schema
-        const modifiers = (this.system.modifiers ?? {}) as {
+        const modifiers = (this.system.modifiers ?? {}) as unknown as {
             characteristics?: Record<string, number>;
             wounds?: number;
             fate?: number;
