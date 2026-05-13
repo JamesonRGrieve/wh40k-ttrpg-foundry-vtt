@@ -108,7 +108,7 @@ export async function spendXP(actor: WH40KBaseActorDocument, cost: number, reaso
 
         // Log the transaction
         if (reason) {
-            console.log(`XP Transaction: ${actor.name} spent ${cost} XP on ${reason}. Available: ${available - cost}`);
+            game.wh40k.log(`XP Transaction: ${actor.name} spent ${cost} XP on ${reason}. Available: ${available - cost}`);
         }
 
         return {
@@ -166,7 +166,7 @@ export async function spendXPBatch(actor: WH40KBaseActorDocument, purchases: XPP
             .map((p: XPPurchase) => p.reason)
             .filter(Boolean)
             .join(', ');
-        console.log(`XP Batch Transaction: ${actor.name} spent ${totalCost} XP on [${reasons}]. Available: ${available - totalCost}`);
+        game.wh40k.log(`XP Batch Transaction: ${actor.name} spent ${totalCost} XP on [${reasons}]. Available: ${available - totalCost}`);
 
         return {
             success: true,
