@@ -25,7 +25,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
     declare source: { book: string; page: string; custom: string };
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -74,12 +74,12 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
     }
 
     /** @inheritdoc */
-    prepareBaseData(): void {
+    override prepareBaseData(): void {
         super.prepareBaseData();
 
         const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);

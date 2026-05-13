@@ -12,7 +12,7 @@ export default class ActivationTemplate extends SystemDataModel {
     declare uses: { value: number | null; max: number | null; per: string; recovery: string };
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             activation: new fields.SchemaField({

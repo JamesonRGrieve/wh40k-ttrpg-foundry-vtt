@@ -43,7 +43,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @protected
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source data
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         // Migrate old overloadThreshold field to overloadMin/overloadMax
         if (source['overloadThreshold'] !== undefined && source['overloadMin'] === undefined) {
@@ -53,7 +53,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     }
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),

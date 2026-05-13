@@ -191,7 +191,7 @@ export default class StarshipData extends ActorDataModel {
      * Calculate stats from equipped components.
      * Called by the Document after items are ready.
      */
-    prepareEmbeddedData(): void {
+    override prepareEmbeddedData(): void {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.items collection
         const actor = this.parent as { items?: Iterable<unknown> } | null | undefined;
         if (actor === null || actor === undefined) return;

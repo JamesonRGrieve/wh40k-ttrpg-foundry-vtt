@@ -7,7 +7,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
  */
 export default class AptitudeData extends ItemDataModel.mixin(DescriptionTemplate) {
     /** @override */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return {
             ...super.defineSchema(),
             // No additional fields - aptitudes are just named references
