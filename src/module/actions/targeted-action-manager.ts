@@ -35,7 +35,9 @@ export class TargetedActionManager {
                         title: 'Attack',
                         icon: 'fas fa-swords',
                         visible: true,
-                        onClick: async () => this.performWeaponAttack(),
+                        onChange: () => {
+                            void this.performWeaponAttack();
+                        },
                         button: true,
                         order: toolOrder,
                     };
