@@ -707,7 +707,7 @@ export default class CharacterData extends CreatureTemplate {
             if (tbMatch) {
                 // Formula contains TB — recompute with current TB
                 // Parse: "2xTB+1d5+1" → TB multiplier=2, remainder needs die result
-                const tbMultiplier = parseInt(tbMatch[1] ?? '') || 1;
+                const tbMultiplier = parseInt(tbMatch.at(1) ?? '', 10) || 1;
                 const tbComponent = tbMultiplier * tb;
 
                 // Strip the TB term and any dice terms to get the flat bonus
@@ -744,7 +744,7 @@ export default class CharacterData extends CreatureTemplate {
                 let dieValue = 0;
                 const rolledValue = rollResult.rolled;
                 if (dieMatch !== null) {
-                    dieValue = parseInt(dieMatch[1] ?? '') || 0;
+                    dieValue = parseInt(dieMatch.at(1) ?? '', 10) || 0;
                 } else {
                     // Fallback: assume die portion = rolled - (flat bonus)
                     // This works for "N+1d5" style (no TB in formula, but we're in TB branch...)

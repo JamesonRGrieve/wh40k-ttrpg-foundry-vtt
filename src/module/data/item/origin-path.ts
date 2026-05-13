@@ -458,9 +458,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             const selected = (this.selectedChoices[choiceKey] as unknown[] | undefined) ?? [];
 
             for (const selectedValue of selected) {
-                const option = (choice.options as ChoiceOption[]).find(
-                    (opt) => ((opt.value as string | undefined) ?? (opt.name as string | undefined)) === selectedValue,
-                );
+                const option = (choice.options as ChoiceOption[]).find((opt) => (opt.value ?? opt.name) === selectedValue);
                 if (option?.grants === undefined) continue;
                 const grants = option.grants;
 

@@ -184,7 +184,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
     static #migrateAptitudes(source: Record<string, unknown>): void {
         if (typeof source['aptitudes'] === 'string' && source['aptitudes']) {
-            source['aptitudes'] = (source['aptitudes'] as string)
+            source['aptitudes'] = source['aptitudes']
                 .split(',')
                 .map((a) => a.trim())
                 .filter(Boolean);
@@ -198,7 +198,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
     static #migrateSpecialization(source: Record<string, unknown>): void {
         if (source['hasSpecialization'] === undefined && typeof source['specialization'] === 'string' && source['specialization']) {
-            source['hasSpecialization'] = (source['specialization'] as string).trim().length > 0;
+            source['hasSpecialization'] = source['specialization'].trim().length > 0;
         }
     }
 

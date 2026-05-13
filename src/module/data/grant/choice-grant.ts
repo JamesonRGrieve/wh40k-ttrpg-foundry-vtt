@@ -137,9 +137,7 @@ export default class ChoiceGrantData extends BaseGrantData {
             result.notifications.push(`Selected: ${optionLabel}`);
 
             const grants = option.grants ?? [];
-            for (let i = 0; i < grants.length; i++) {
-                const grantConfig = grants[i]!;
-
+            for (const [i, grantConfig] of grants.entries()) {
                 const grantResult = await this._applySubGrant(actor, grantConfig, data, options);
                 appliedResult.grantResults[`${optionLabel}:${i}`] = {
                     type: grantConfig['type'],
@@ -163,7 +161,7 @@ export default class ChoiceGrantData extends BaseGrantData {
         const grantResults = (appliedState['grantResults'] ?? {}) as Record<string, Record<string, unknown>>;
         for (const [grantKey, grantEntry] of Object.entries(grantResults)) {
             const [optionLabel, indexStr] = grantKey.split(':');
-            const index = parseInt(indexStr ?? '');
+            const index = parseInt(indexStr ?? '', 10);
 
             const option = this.options.find((o) => o.label === optionLabel);
             if (!option?.grants[index]) continue;
