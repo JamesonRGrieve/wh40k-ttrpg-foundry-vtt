@@ -12,7 +12,7 @@ import BaseActorSheet from './base-actor-sheet.ts';
  */
 export default class StarshipSheet extends BaseActorSheet {
     /** @override */
-    static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+    static override DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         ...BaseActorSheet.DEFAULT_OPTIONS,
         /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
@@ -78,7 +78,7 @@ export default class StarshipSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups: HandlebarsApplicationV14.TabGroupsState = {
+    override tabGroups: HandlebarsApplicationV14.TabGroupsState = {
         primary: 'stats',
     };
 
@@ -88,7 +88,7 @@ export default class StarshipSheet extends BaseActorSheet {
 
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         // isGM + dh now come from BaseActorSheet._prepareCommonContext via super.
 
@@ -112,17 +112,17 @@ export default class StarshipSheet extends BaseActorSheet {
         const items = actor.items;
 
         // Get ship components grouped by type
-        context.shipComponents = items.filter((item: WH40KItem) => item.type === 'shipComponent');
-        context.shipWeapons = items.filter((item: WH40KItem) => item.type === 'shipWeapon');
-        context.shipUpgrades = items.filter((item: WH40KItem) => item.type === 'shipUpgrade');
-        context.shipRoles = items.filter((item: WH40KItem) => item.type === 'shipRole');
+        context['shipComponents'] = items.filter((item: WH40KItem) => item.type === 'shipComponent');
+        context['shipWeapons'] = items.filter((item: WH40KItem) => item.type === 'shipWeapon');
+        context['shipUpgrades'] = items.filter((item: WH40KItem) => item.type === 'shipUpgrade');
+        context['shipRoles'] = items.filter((item: WH40KItem) => item.type === 'shipRole');
 
         // Calculate power and space usage (use DataModel fields)
         let powerGenerated = 0;
         let powerUsed = 0;
         let spaceUsed = 0;
 
-        for (const component of context.shipComponents as WH40KItem[]) {
+        for (const component of context['shipComponents'] as WH40KItem[]) {
             const sys = component.system as {
                 condition?: string;
                 power?: { generated?: number; used?: number };
@@ -135,13 +135,13 @@ export default class StarshipSheet extends BaseActorSheet {
             }
         }
 
-        for (const weapon of context.shipWeapons as WH40KItem[]) {
+        for (const weapon of context['shipWeapons'] as WH40KItem[]) {
             const sys = weapon.system as { power?: number; space?: number };
             powerUsed += sys.power ?? 0;
             spaceUsed += sys.space ?? 0;
         }
 
-        for (const upgrade of context.shipUpgrades as WH40KItem[]) {
+        for (const upgrade of context['shipUpgrades'] as WH40KItem[]) {
             const sys = upgrade.system as {
                 power?: { generated?: number; used?: number };
                 space?: number;
@@ -151,11 +151,11 @@ export default class StarshipSheet extends BaseActorSheet {
             spaceUsed += sys.space ?? 0;
         }
 
-        context.powerGenerated = powerGenerated;
-        context.powerUsed = powerUsed;
-        context.spaceUsed = spaceUsed;
-        context.powerAvailable = powerGenerated - powerUsed;
-        context.spaceAvailable = ((this.actor.system as { space?: { total?: number } }).space?.total ?? 0) - spaceUsed;
+        context['powerGenerated'] = powerGenerated;
+        context['powerUsed'] = powerUsed;
+        context['spaceUsed'] = spaceUsed;
+        context['powerAvailable'] = powerGenerated - powerUsed;
+        context['spaceAvailable'] = ((this.actor.system as { space?: { total?: number } }).space?.total ?? 0) - spaceUsed;
     }
 
     /* -------------------------------------------- */
@@ -165,7 +165,7 @@ export default class StarshipSheet extends BaseActorSheet {
      * @inheritDoc
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _preparePartContext signature uses untyped records
-    async _preparePartContext(partId: string, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _preparePartContext(partId: string, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: super signature varies between V13/V14 typings
         const partContext = await super._preparePartContext(partId, context, options as unknown as Record<string, unknown>);
 
@@ -176,7 +176,7 @@ export default class StarshipSheet extends BaseActorSheet {
             const ctor = this.constructor as unknown as { TABS: HandlebarsApplicationV14.TabDescriptor[] };
             const tabConfig = ctor.TABS.find((t: HandlebarsApplicationV14.TabDescriptor) => t.tab === partId);
             const group = tabConfig?.group ?? 'primary';
-            partContext.tab = {
+            partContext['tab'] = {
                 id: partId,
                 group,
                 active: this.tabGroups[group] === partId,
@@ -200,7 +200,7 @@ export default class StarshipSheet extends BaseActorSheet {
     static async #fireShipWeapon(this: StarshipSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
         const actor = this.actor as unknown as WH40KStarship;
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const weapon = actor.items.get(itemId ?? '');
         if (!weapon) return;
 
