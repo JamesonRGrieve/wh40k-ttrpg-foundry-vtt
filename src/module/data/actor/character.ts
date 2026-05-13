@@ -503,26 +503,26 @@ export default class CharacterData extends CreatureTemplate {
 
         // Update the originPath system data with the names (only if origin builder items exist)
         // RT steps
-        if (stepMap['homeWorld'] !== null) this.originPath.homeWorld = stepMap['homeWorld'].name;
-        if (stepMap['birthright'] !== null) this.originPath.birthright = stepMap['birthright'].name;
-        if (stepMap['lureOfTheVoid'] !== null) this.originPath.lureOfTheVoid = stepMap['lureOfTheVoid'].name;
-        if (stepMap['trialsAndTravails'] !== null) this.originPath.trialsAndTravails = stepMap['trialsAndTravails'].name;
-        if (stepMap['motivation'] !== null) this.originPath.motivation = stepMap['motivation'].name;
-        if (stepMap['career'] !== null) this.originPath.career = stepMap['career'].name;
+        if (stepMap['homeWorld'] != null) this.originPath.homeWorld = stepMap['homeWorld'].name;
+        if (stepMap['birthright'] != null) this.originPath.birthright = stepMap['birthright'].name;
+        if (stepMap['lureOfTheVoid'] != null) this.originPath.lureOfTheVoid = stepMap['lureOfTheVoid'].name;
+        if (stepMap['trialsAndTravails'] != null) this.originPath.trialsAndTravails = stepMap['trialsAndTravails'].name;
+        if (stepMap['motivation'] != null) this.originPath.motivation = stepMap['motivation'].name;
+        if (stepMap['career'] != null) this.originPath.career = stepMap['career'].name;
         // DH2e steps
-        if (stepMap['background'] !== null) this.originPath.background = stepMap['background'].name;
-        if (stepMap['role'] !== null) this.originPath.role = stepMap['role'].name;
-        if (stepMap['elite'] !== null) this.originPath.elite = stepMap['elite'].name;
-        if (stepMap['divination'] !== null) this.originPath.divination = stepMap['divination'].name;
+        if (stepMap['background'] != null) this.originPath.background = stepMap['background'].name;
+        if (stepMap['role'] != null) this.originPath.role = stepMap['role'].name;
+        if (stepMap['elite'] != null) this.originPath.elite = stepMap['elite'].name;
+        if (stepMap['divination'] != null) this.originPath.divination = stepMap['divination'].name;
         // BC steps
-        if (stepMap['race'] !== null) this.originPath.race = stepMap['race'].name;
-        if (stepMap['archetype'] !== null) this.originPath.archetype = stepMap['archetype'].name;
-        if (stepMap['pride'] !== null) this.originPath.pride = stepMap['pride'].name;
-        if (stepMap['disgrace'] !== null) this.originPath.disgrace = stepMap['disgrace'].name;
+        if (stepMap['race'] != null) this.originPath.race = stepMap['race'].name;
+        if (stepMap['archetype'] != null) this.originPath.archetype = stepMap['archetype'].name;
+        if (stepMap['pride'] != null) this.originPath.pride = stepMap['pride'].name;
+        if (stepMap['disgrace'] != null) this.originPath.disgrace = stepMap['disgrace'].name;
         // OW / DW steps
-        if (stepMap['regiment'] !== null) this.originPath.regiment = stepMap['regiment'].name;
-        if (stepMap['speciality'] !== null) this.originPath.speciality = stepMap['speciality'].name;
-        if (stepMap['chapter'] !== null) this.originPath.chapter = stepMap['chapter'].name;
+        if (stepMap['regiment'] != null) this.originPath.regiment = stepMap['regiment'].name;
+        if (stepMap['speciality'] != null) this.originPath.speciality = stepMap['speciality'].name;
+        if (stepMap['chapter'] != null) this.originPath.chapter = stepMap['chapter'].name;
 
         // Collect aptitudes from origin path (DH2e/BC/OW use aptitudes for XP costs).
         // Sources: fixed grants.aptitudes + resolved grants.choices[type=aptitude].
@@ -707,7 +707,7 @@ export default class CharacterData extends CreatureTemplate {
             if (tbMatch) {
                 // Formula contains TB — recompute with current TB
                 // Parse: "2xTB+1d5+1" → TB multiplier=2, remainder needs die result
-                const tbMultiplier = parseInt(tbMatch[1]) || 1;
+                const tbMultiplier = parseInt(tbMatch[1] ?? '') || 1;
                 const tbComponent = tbMultiplier * tb;
 
                 // Strip the TB term and any dice terms to get the flat bonus
@@ -744,7 +744,7 @@ export default class CharacterData extends CreatureTemplate {
                 let dieValue = 0;
                 const rolledValue = rollResult.rolled;
                 if (dieMatch !== null) {
-                    dieValue = parseInt(dieMatch[1]) || 0;
+                    dieValue = parseInt(dieMatch[1] ?? '') || 0;
                 } else {
                     // Fallback: assume die portion = rolled - (flat bonus)
                     // This works for "N+1d5" style (no TB in formula, but we're in TB branch...)
