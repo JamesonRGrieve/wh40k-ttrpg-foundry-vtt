@@ -329,7 +329,7 @@ export default class CharacterData extends CreatureTemplate {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         // Handle old characteristic field names or other character-specific migrations
     }
@@ -406,13 +406,13 @@ export default class CharacterData extends CreatureTemplate {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    prepareDerivedData(): void {
+    override prepareDerivedData(): void {
         super.prepareDerivedData();
         this._prepareExperience();
     }
 
     /** @inheritDoc */
-    prepareEmbeddedData(): void {
+    override prepareEmbeddedData(): void {
         this._computeOriginPathEffects(); // Must run before super to set gameSystem before _prepareSkills
         super.prepareEmbeddedData();
         this._computeExperienceSpent();
@@ -801,7 +801,7 @@ export default class CharacterData extends CreatureTemplate {
     /* -------------------------------------------- */
 
     /** @override */
-    getRollData(): Record<string, unknown> {
+    override getRollData(): Record<string, unknown> {
         return super.getRollData();
     }
 }
