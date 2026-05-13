@@ -87,7 +87,7 @@ export class WH40KItemContainer extends Item {
         const superClass = Object.getPrototypeOf(WH40KItemContainer) as {
             _onCreateOperation?: (items: never, context: never, user: never) => Promise<unknown>;
         };
-        const callSuper = async () => superClass._onCreateOperation?.(items as never, context as never, user as never);
+        const callSuper = async (): Promise<unknown> => superClass._onCreateOperation?.(items as never, context as never, user as never);
         const typedItems = items as unknown as Array<{
             system: ContainerSystemData;
             effects: Iterable<{ data: { transfer: unknown }; toJSON(): Record<string, unknown>; uuid: string }>;
