@@ -18,7 +18,7 @@ export {
     DH1OriginPathBuilder,
     DH2OriginPathBuilder,
     DWOriginPathBuilder,
+    getBuilderForActorType,
     OWOriginPathBuilder,
     RTOriginPathBuilder,
-    getBuilderForActorType,
 } from './system-origin-builders.ts';
