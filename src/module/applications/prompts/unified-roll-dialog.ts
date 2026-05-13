@@ -815,7 +815,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /*  Form Handler                                 */
     /* -------------------------------------------- */
 
-    static async #onFormSubmit(this: UnifiedRollDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
+    static async #onFormSubmit(this: UnifiedRollDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         const data = foundry.utils.expandObject((formData as unknown as { object: Record<string, unknown> }).object);
         // Update roll data fields from form
         const rd = this.rollData;
