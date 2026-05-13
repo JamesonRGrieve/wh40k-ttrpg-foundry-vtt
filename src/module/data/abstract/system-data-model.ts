@@ -148,7 +148,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
      */
     static _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
         for (const template of this._schemaTemplates) {
-            (template as any)._cleanData?.(source, options);
+            template._cleanData?.(source, options);
         }
     }
 
