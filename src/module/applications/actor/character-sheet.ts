@@ -675,7 +675,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    async _prepareHeaderContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareHeaderContext(context: Record<string, unknown>, _options: Record<string, unknown>): Promise<Record<string, unknown>> {
         // Build dynamic origin path select options from compendium packs
         const gameSystem = this._resolveGameSystemId();
         const originOptions = gameSystem ? await this._getOriginPathOptions(gameSystem) : {};
@@ -1975,7 +1975,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #assignDamage(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #assignDamage(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
             const hitData = new Hit();
             const assignData = new AssignDamageData(this.actor as unknown as ActorLike, hitData);
@@ -1997,7 +1997,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollInitiative(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollInitiative(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
             const agBonus = this.actor.system.characteristics.agility.bonus;
 
@@ -2210,7 +2210,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #setMovementMode(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #setMovementMode(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const movementType = target.dataset.movementType;
         if (movementType === undefined || movementType === '') return;
 
