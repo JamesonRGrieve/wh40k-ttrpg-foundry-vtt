@@ -51,13 +51,13 @@ interface SystemVariantBase {
  */
 function makeSystemVariant<TBase extends SystemVariantBase>(baseCls: TBase, className: string, cfg: SystemSheetConfig): TBase {
     const cls = class extends baseCls {
-        static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+        static override DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             ...baseCls.DEFAULT_OPTIONS,
             classes: [...(baseCls.DEFAULT_OPTIONS?.classes ?? []), cfg.cssClass],
         };
-        static PARTS = {
+        static override PARTS = {
             ...baseCls.PARTS,
-            header: { ...baseCls.PARTS.header, template: HEADER + cfg.headerFile },
+            header: { ...baseCls.PARTS['header'], template: HEADER + cfg.headerFile },
         };
     };
     const systemConfig = SystemConfigRegistry.get(cfg.gameSystemId);
@@ -69,50 +69,50 @@ function makeSystemVariant<TBase extends SystemVariantBase>(baseCls: TBase, clas
     return cls;
 }
 
-const SYSTEMS: Array<[string, SystemSheetConfig]> = [
-    ['DarkHeresy2', { cssClass: 'dark-heresy', headerFile: 'header-dh.hbs', gameSystemId: 'dh2e' }],
-    ['RogueTrader', { cssClass: 'rogue-trader', headerFile: 'header-rt.hbs', gameSystemId: 'rt' }],
-    ['BlackCrusade', { cssClass: 'black-crusade', headerFile: 'header-dh.hbs', gameSystemId: 'bc' }],
-    ['OnlyWar', { cssClass: 'only-war', headerFile: 'header-dh.hbs', gameSystemId: 'ow' }],
-    ['Deathwatch', { cssClass: 'deathwatch', headerFile: 'header-dh.hbs', gameSystemId: 'dw' }],
-    ['DarkHeresy1', { cssClass: 'dark-heresy-1e', headerFile: 'header-dh.hbs', gameSystemId: 'dh1e' }],
-    ['ImperiumMaledictum', { cssClass: 'imperium-maledictum', headerFile: 'header-dh.hbs', gameSystemId: 'im' }],
-];
+const SYSTEMS: Record<GameSystemId, SystemSheetConfig> = {
+    dh2e: { cssClass: 'dark-heresy', headerFile: 'header-dh.hbs', gameSystemId: 'dh2e' },
+    rt: { cssClass: 'rogue-trader', headerFile: 'header-rt.hbs', gameSystemId: 'rt' },
+    bc: { cssClass: 'black-crusade', headerFile: 'header-dh.hbs', gameSystemId: 'bc' },
+    ow: { cssClass: 'only-war', headerFile: 'header-dh.hbs', gameSystemId: 'ow' },
+    dw: { cssClass: 'deathwatch', headerFile: 'header-dh.hbs', gameSystemId: 'dw' },
+    dh1e: { cssClass: 'dark-heresy-1e', headerFile: 'header-dh.hbs', gameSystemId: 'dh1e' },
+    im: { cssClass: 'imperium-maledictum', headerFile: 'header-dh.hbs', gameSystemId: 'im' },
+};
 
 // -- Player sheets (extend CharacterSheet) ---------------------------------
 
-export const DarkHeresy2PlayerSheet = makeSystemVariant(CharacterSheet, 'DarkHeresy2PlayerSheet', SYSTEMS[0][1]);
-export const RogueTraderPlayerSheet = makeSystemVariant(CharacterSheet, 'RogueTraderPlayerSheet', SYSTEMS[1][1]);
-export const BlackCrusadePlayerSheet = makeSystemVariant(CharacterSheet, 'BlackCrusadePlayerSheet', SYSTEMS[2][1]);
-export const OnlyWarPlayerSheet = makeSystemVariant(CharacterSheet, 'OnlyWarPlayerSheet', SYSTEMS[3][1]);
-export const DeathwatchPlayerSheet = makeSystemVariant(CharacterSheet, 'DeathwatchPlayerSheet', SYSTEMS[4][1]);
-export const DarkHeresy1PlayerSheet = makeSystemVariant(CharacterSheet, 'DarkHeresy1PlayerSheet', SYSTEMS[5][1]);
-export const ImperiumMaledictumPlayerSheet = makeSystemVariant(CharacterSheet, 'ImperiumMaledictumPlayerSheet', SYSTEMS[6][1]);
+export const DarkHeresy2PlayerSheet = makeSystemVariant(CharacterSheet, 'DarkHeresy2PlayerSheet', SYSTEMS.dh2e);
+export const RogueTraderPlayerSheet = makeSystemVariant(CharacterSheet, 'RogueTraderPlayerSheet', SYSTEMS.rt);
+export const BlackCrusadePlayerSheet = makeSystemVariant(CharacterSheet, 'BlackCrusadePlayerSheet', SYSTEMS.bc);
+export const OnlyWarPlayerSheet = makeSystemVariant(CharacterSheet, 'OnlyWarPlayerSheet', SYSTEMS.ow);
+export const DeathwatchPlayerSheet = makeSystemVariant(CharacterSheet, 'DeathwatchPlayerSheet', SYSTEMS.dw);
+export const DarkHeresy1PlayerSheet = makeSystemVariant(CharacterSheet, 'DarkHeresy1PlayerSheet', SYSTEMS.dh1e);
+export const ImperiumMaledictumPlayerSheet = makeSystemVariant(CharacterSheet, 'ImperiumMaledictumPlayerSheet', SYSTEMS.im);
 
 // -- NPC sheets (extend NPCSheet, which itself extends CharacterSheet) -----
 
-export const DarkHeresy2NPCSheet = makeSystemVariant(NPCSheet, 'DarkHeresy2NPCSheet', SYSTEMS[0][1]);
-export const RogueTraderNPCSheet = makeSystemVariant(NPCSheet, 'RogueTraderNPCSheet', SYSTEMS[1][1]);
-export const BlackCrusadeNPCSheet = makeSystemVariant(NPCSheet, 'BlackCrusadeNPCSheet', SYSTEMS[2][1]);
-export const OnlyWarNPCSheet = makeSystemVariant(NPCSheet, 'OnlyWarNPCSheet', SYSTEMS[3][1]);
-export const DeathwatchNPCSheet = makeSystemVariant(NPCSheet, 'DeathwatchNPCSheet', SYSTEMS[4][1]);
-export const DarkHeresy1NPCSheet = makeSystemVariant(NPCSheet, 'DarkHeresy1NPCSheet', SYSTEMS[5][1]);
-export const ImperiumMaledictumNPCSheet = makeSystemVariant(NPCSheet, 'ImperiumMaledictumNPCSheet', SYSTEMS[6][1]);
+export const DarkHeresy2NPCSheet = makeSystemVariant(NPCSheet, 'DarkHeresy2NPCSheet', SYSTEMS.dh2e);
+export const RogueTraderNPCSheet = makeSystemVariant(NPCSheet, 'RogueTraderNPCSheet', SYSTEMS.rt);
+export const BlackCrusadeNPCSheet = makeSystemVariant(NPCSheet, 'BlackCrusadeNPCSheet', SYSTEMS.bc);
+export const OnlyWarNPCSheet = makeSystemVariant(NPCSheet, 'OnlyWarNPCSheet', SYSTEMS.ow);
+export const DeathwatchNPCSheet = makeSystemVariant(NPCSheet, 'DeathwatchNPCSheet', SYSTEMS.dw);
+export const DarkHeresy1NPCSheet = makeSystemVariant(NPCSheet, 'DarkHeresy1NPCSheet', SYSTEMS.dh1e);
+export const ImperiumMaledictumNPCSheet = makeSystemVariant(NPCSheet, 'ImperiumMaledictumNPCSheet', SYSTEMS.im);
 
 // -- Vehicle sheets (extend VehicleSheet) ---------------------------------
 
-export const DarkHeresy2VehicleSheet = makeSystemVariant(VehicleSheet, 'DarkHeresy2VehicleSheet', SYSTEMS[0][1]);
-export const RogueTraderVehicleSheet = makeSystemVariant(VehicleSheet, 'RogueTraderVehicleSheet', SYSTEMS[1][1]);
-export const BlackCrusadeVehicleSheet = makeSystemVariant(VehicleSheet, 'BlackCrusadeVehicleSheet', SYSTEMS[2][1]);
-export const OnlyWarVehicleSheet = makeSystemVariant(VehicleSheet, 'OnlyWarVehicleSheet', SYSTEMS[3][1]);
-export const DeathwatchVehicleSheet = makeSystemVariant(VehicleSheet, 'DeathwatchVehicleSheet', SYSTEMS[4][1]);
-export const DarkHeresy1VehicleSheet = makeSystemVariant(VehicleSheet, 'DarkHeresy1VehicleSheet', SYSTEMS[5][1]);
-export const ImperiumMaledictumVehicleSheet = makeSystemVariant(VehicleSheet, 'ImperiumMaledictumVehicleSheet', SYSTEMS[6][1]);
+export const DarkHeresy2VehicleSheet = makeSystemVariant(VehicleSheet, 'DarkHeresy2VehicleSheet', SYSTEMS.dh2e);
+export const RogueTraderVehicleSheet = makeSystemVariant(VehicleSheet, 'RogueTraderVehicleSheet', SYSTEMS.rt);
+export const BlackCrusadeVehicleSheet = makeSystemVariant(VehicleSheet, 'BlackCrusadeVehicleSheet', SYSTEMS.bc);
+export const OnlyWarVehicleSheet = makeSystemVariant(VehicleSheet, 'OnlyWarVehicleSheet', SYSTEMS.ow);
+export const DeathwatchVehicleSheet = makeSystemVariant(VehicleSheet, 'DeathwatchVehicleSheet', SYSTEMS.dw);
+export const DarkHeresy1VehicleSheet = makeSystemVariant(VehicleSheet, 'DarkHeresy1VehicleSheet', SYSTEMS.dh1e);
+export const ImperiumMaledictumVehicleSheet = makeSystemVariant(VehicleSheet, 'ImperiumMaledictumVehicleSheet', SYSTEMS.im);
 
 // -- Starship sheets (extend StarshipSheet) -------------------------------
 // Only RT ships starships. Factory leaves room for other systems.
 
-export const RogueTraderStarshipSheet = makeSystemVariant(StarshipSheet, 'RogueTraderStarshipSheet', SYSTEMS[1][1]);
+export const RogueTraderStarshipSheet = makeSystemVariant(StarshipSheet, 'RogueTraderStarshipSheet', SYSTEMS.rt);
 
 // -- Back-compat aliases ---------------------------------------------------
 // `DarkHeresy2Sheet` (etc.) was the PC sheet export name before the split.
