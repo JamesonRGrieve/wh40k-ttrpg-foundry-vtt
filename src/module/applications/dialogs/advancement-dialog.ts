@@ -456,6 +456,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                             ? game.i18n.localize(
                                   CONFIG.wh40k.advancementTiers[nextCost.tier] !== undefined
                                       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- guarded above
+                                      // biome-ignore lint/style/noNonNullAssertion: guarded by the !== undefined check above
                                       ? CONFIG.wh40k.advancementTiers[nextCost.tier]!.label
                                       : nextCost.tier,
                               )
@@ -1084,7 +1085,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         return this.actor.items.some((item) => item.type === 'talent' && item.name.toLowerCase() === searchName);
     }
 
-    static #switchTab(this: AdvancementDialog, event: Event, target: HTMLElement): void {
+    static #switchTab(this: AdvancementDialog, _event: Event, target: HTMLElement): void {
         const tab = target.dataset['tab'];
         if (tab) {
             this.#activeTab = tab;
@@ -1092,7 +1093,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
     }
 
-    static #switchDiscipline(this: AdvancementDialog, event: Event, target: HTMLElement): void {
+    static #switchDiscipline(this: AdvancementDialog, _event: Event, target: HTMLElement): void {
         const discipline = target.dataset['discipline'];
         if (discipline) {
             this.#activeDiscipline = discipline;
@@ -1105,7 +1106,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         void this.render();
     }
 
-    static async #purchaseCharacteristic(this: AdvancementDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #purchaseCharacteristic(this: AdvancementDialog, _event: Event, target: HTMLElement): Promise<void> {
         const charKey = target.dataset['characteristic'];
         if (!charKey) return;
 
@@ -1169,7 +1170,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }, 2000);
     }
 
-    static async #purchaseAdvance(this: AdvancementDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #purchaseAdvance(this: AdvancementDialog, _event: Event, target: HTMLElement): Promise<void> {
         const advanceIndex = parseInt(target.dataset['index'] ?? '0', 10);
         const advanceType = target.dataset['type'];
 
@@ -1370,7 +1371,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         setTimeout(() => this.#recentPurchases.delete(entry.id), 2000);
     }
 
-    async #promptForSpecialization(skillKey: string, skillLabel: string): Promise<string | null> {
+    async #promptForSpecialization(_skillKey: string, skillLabel: string): Promise<string | null> {
         const title = skillLabel.replace(' — add specialization', '');
         const content = `<div class="form-group">
             <label>Specialization</label>
@@ -1647,8 +1648,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const entryIndex = currentEntries.findIndex((e) => (e.name || '').toLowerCase() === advance.specialization?.toLowerCase());
 
             if (entryIndex >= 0) {
-                const currentAdvance = (currentEntries[entryIndex] ?? {}).advance ?? 0;
-                const currentCost = (currentEntries[entryIndex] ?? {}).cost ?? 0;
+                const currentAdvance = currentEntries[entryIndex]?.advance ?? 0;
+                const currentCost = currentEntries[entryIndex]?.cost ?? 0;
                 await this.actor.update({
                     [`system.skills.${skillKey}.entries.${entryIndex}.advance`]: currentAdvance + 1,
                     [`system.skills.${skillKey}.entries.${entryIndex}.cost`]: currentCost + advance.cost,

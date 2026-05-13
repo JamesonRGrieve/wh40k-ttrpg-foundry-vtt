@@ -315,7 +315,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * Handle custom modifier input change.
      */
     static async #onUpdateCustom(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
-        this._customModifier = parseInt((target as HTMLInputElement).value) || 0;
+        this._customModifier = parseInt((target as HTMLInputElement).value, 10) || 0;
         await this.render({ parts: ['form'] });
     }
 

@@ -9,6 +9,7 @@ import {
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 DialogV2 ctor not in shipped types
 const dialogV2Ctor = foundry.applications.api.DialogV2;
 
+// biome-ignore lint/complexity/noStaticOnlyClass: intentional namespace-class pattern; consumed as Class.open() at call sites; converting to a module function would break the exported class name used by hooks-manager
 export class ConvertActorSystemDialog {
     static async open(actor: WH40KBaseActor): Promise<WH40KBaseActor | null> {
         const currentSystem = getCharacterSystemId(actor.type);

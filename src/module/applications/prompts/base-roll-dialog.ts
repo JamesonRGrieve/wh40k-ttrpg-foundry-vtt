@@ -25,7 +25,9 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'roll-dialog', 'standard-form'],
         actions: {
+            // biome-ignore lint/complexity/noBannedTypes: private static methods require cast to assign to ApplicationV2 actions map; no narrower type is available without exposing the method
             roll: BaseRollDialog.#onRoll as Function,
+            // biome-ignore lint/complexity/noBannedTypes: private static methods require cast to assign to ApplicationV2 actions map; no narrower type is available without exposing the method
             cancel: BaseRollDialog.#onCancel as Function,
         },
         // eslint-disable-next-line no-restricted-syntax -- boundary: exactOptionalPropertyTypes: FormConfiguration optional booleans require explicit cast when mixed with handler type cast
@@ -114,7 +116,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
      * @param {HTMLFormElement} form  The form element.
      * @param {FormDataExtended} formData  The form data.
      */
-    static async #onFormSubmit(this: BaseRollDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
+    static async #onFormSubmit(this: BaseRollDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         const data = foundry.utils.expandObject(formData.object);
         this._updateRollData(data as Record<string, unknown>);
 
@@ -144,7 +146,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onRoll(this: BaseRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onRoll(this: BaseRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         await this._performRoll();
     }
 
@@ -156,7 +158,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onCancel(this: BaseRollDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: BaseRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
         await this.close();
     }
 

@@ -263,7 +263,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {Event} event
      */
     #onCustomModifierChange(event: Event): void {
-        this.customModifier = parseInt((event.currentTarget as HTMLInputElement).value) || 0;
+        this.customModifier = parseInt((event.currentTarget as HTMLInputElement).value, 10) || 0;
         void this.render({ parts: ['form'] });
     }
 
@@ -281,7 +281,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #cancel(this: RollConfigurationDialog, event: Event, target: HTMLElement): void {
+    static #cancel(this: RollConfigurationDialog, _event: Event, _target: HTMLElement): void {
         // Note: 'this' is bound to the instance by ApplicationV2 action handler system
         void this.close();
     }
@@ -315,7 +315,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static #toggleSituational(this: RollConfigurationDialog, event: Event, target: HTMLElement): void {
+    static #toggleSituational(this: RollConfigurationDialog, _event: Event, target: HTMLElement): void {
         const modId = target.dataset['modifierId'];
         if (modId === undefined) return;
         if (this.activeSituationalModifiers.has(modId)) {
@@ -332,12 +332,12 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static #onSubmit(this: RollConfigurationDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): void {
+    static #onSubmit(this: RollConfigurationDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): void {
         const data = formData.object;
 
         const difficultyPreset = RollConfigurationDialog.DIFFICULTY_PRESETS.find((p) => p.key === data['difficulty']) ?? { value: 0 };
         const situationalTotal = this._calculateSituationalTotal();
-        const customModifier = parseInt(data['customModifier'] as string) || 0;
+        const customModifier = parseInt(data['customModifier'] as string, 10) || 0;
 
         const result: RollConfig = {
             ...this.config,
