@@ -62,7 +62,7 @@ export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base
             event.preventDefault();
             event.stopPropagation();
 
-            const panelId = target.dataset.targetId;
+            const panelId = target.dataset['targetId'];
             if (!panelId) {
                 console.warn('Expandable element missing data-target-id');
                 return;
@@ -144,7 +144,7 @@ export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base
             for (const element of unenriched) {
                 const content = element.innerHTML;
                 const enriched = await TextEditor.enrichHTML(content, {
-                    relativeTo: (this as any).document as foundry.abstract.Document.Any,
+                    relativeTo: (this as unknown as { document: foundry.abstract.Document.Any }).document,
                 });
                 element.innerHTML = enriched;
                 element.removeAttribute('data-enrich');

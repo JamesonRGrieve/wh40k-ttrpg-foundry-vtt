@@ -285,7 +285,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    get title(): string {
+    override get title(): string {
         const systemConfig = this.#getSystemConfig();
         if (systemConfig !== null && !systemConfig.usesCareerTables) {
             const localized = game.i18n.localize('WH40K.Advancement.Title');
@@ -312,7 +312,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AdvancementContext> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AdvancementContext> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: super._prepareContext has a loose Foundry signature
         const context = (await super._prepareContext(options as unknown as never)) as AdvancementContext;
         const system = this.#getActorSystem();
@@ -392,11 +392,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         if (systemConfig?.usesAptitudes === true) {
             const aptitudeConfig = this.#getAptitudeConfig(systemConfig);
             const psyRating = system.psy?.rating ?? 0;
-            context.isPsyker = psyRating > 0;
-            if (context.isPsyker && aptitudeConfig !== null) {
-                context.psychic = await this.#preparePsychic(aptitudeConfig);
+            context['isPsyker'] = psyRating > 0;
+            if (context['isPsyker'] && aptitudeConfig !== null) {
+                context['psychic'] = await this.#preparePsychic(aptitudeConfig);
             }
-            context.traits = await this.#prepareTraitPanel();
+            context['traits'] = await this.#prepareTraitPanel();
         }
 
         context.recentPurchases = [...this.#recentPurchases];
@@ -455,7 +455,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         nextCost !== null
                             ? game.i18n.localize(
                                   CONFIG.wh40k.advancementTiers[nextCost.tier] !== undefined
-                                      ? CONFIG.wh40k.advancementTiers[nextCost.tier].label
+                                      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- guarded above
+                                      ? CONFIG.wh40k.advancementTiers[nextCost.tier]!.label
                                       : nextCost.tier,
                               )
                             : null,
@@ -672,7 +673,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 const entry = rawEntry as CompendiumIndexEntry;
                 if (entry.type !== 'talent') continue;
                 // eslint-disable-next-line no-restricted-syntax -- boundary: compendium index entry `system` is loosely typed at the Foundry layer
-                const system = (entry.system ?? {}) as {
+                const system = (entry['system'] ?? {}) as {
                     tier?: number;
                     aptitudes?: string[];
                     stackable?: boolean;
@@ -799,7 +800,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const skills = sys?.skills ?? {};
         for (const skillReq of coerceList(prereqs?.skills)) {
             const m = skillReq.match(/^(.+?)\s*\+?(\d+)?$/);
-            const name = (m ? m[1] : skillReq).toLowerCase().trim();
+            const name = (m ? (m[1] ?? '') : skillReq).toLowerCase().trim();
             const bonus = m?.[2] ? parseInt(m[2], 10) : 0;
             const skillKey = Object.keys(skills).find((k) => (skills[k]?.label ?? '').toLowerCase() === name);
             const rank = skillKey ? skills[skillKey]?.rank ?? 0 : 0;
@@ -850,7 +851,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             for (const rawEntry of index) {
                 const entry = rawEntry as CompendiumIndexEntry;
                 if (entry.type !== 'psychicPower') continue;
-                const entrySys = entry.system as { prCost?: number; discipline?: string } | null | undefined;
+                const entrySys = entry['system'] as { prCost?: number; discipline?: string } | null | undefined;
                 const prCost = entrySys?.prCost ?? 1;
                 // Heuristic XP cost: max(100, 200 × prCost). Powers in DH2 core range 100-600 XP.
                 const cost = Math.max(100, 200 * prCost);

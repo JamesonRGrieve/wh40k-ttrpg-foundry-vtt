@@ -71,7 +71,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
 
         /** @override */
         // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender context is untyped record
-        async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
             // Capture current state for comparison
@@ -100,13 +100,16 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
             };
             // eslint-disable-next-line no-restricted-syntax -- boundary: per-system actor schemas read uniformly via local AnimSystem shape
             const system = document.system as unknown as AnimSystem;
-            this._previousState = {
-                wounds: system.wounds?.value,
-                woundsMax: system.wounds?.max,
-                characteristics: {},
-                experience: system.experience?.total,
-                fatigue: system.fatigue?.value,
-            };
+            const snapshot: AnimationSnapshot = { characteristics: {} };
+            const woundsValue = system.wounds?.value;
+            const woundsMax = system.wounds?.max;
+            const experience = system.experience?.total;
+            const fatigue = system.fatigue?.value;
+            if (woundsValue !== undefined) snapshot.wounds = woundsValue;
+            if (woundsMax !== undefined) snapshot.woundsMax = woundsMax;
+            if (experience !== undefined) snapshot.experience = experience;
+            if (fatigue !== undefined) snapshot.fatigue = fatigue;
+            this._previousState = snapshot;
 
             // Capture characteristic bonuses
             const chars = system.characteristics;
@@ -162,9 +165,9 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
             if (fromValue === toValue) return;
             if (this._shouldSkipAnimation()) return;
 
-            const duration = (options.duration as number | undefined) ?? this._animationConfig.counterDuration;
-            const formatFn = (options.format as ((v: number) => string) | undefined) ?? ((v: number) => Math.round(v).toString());
-            const animationKey = element.dataset.animationKey ?? `counter-${Date.now()}`;
+            const duration = (options['duration'] as number | undefined) ?? this._animationConfig.counterDuration;
+            const formatFn = (options['format'] as ((v: number) => string) | undefined) ?? ((v: number) => Math.round(v).toString());
+            const animationKey = element.dataset['animationKey'] ?? `counter-${Date.now()}`;
 
             // Cancel existing animation on this element
             const runningId = this._runningAnimations.get(animationKey);

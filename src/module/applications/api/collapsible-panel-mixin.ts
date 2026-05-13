@@ -111,7 +111,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
 
         /** @override */
         // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext is a framework-defined free-form payload
-        async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
             // eslint-disable-next-line no-restricted-syntax -- boundary: super._prepareContext returns framework-defined free-form payload
             const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
 
@@ -119,8 +119,8 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
             this._loadPanelStates();
 
             // Add panel state to context
-            context.panelStates = this._getPanelStates();
-            context.panelPresets = (this.constructor as typeof CollapsiblePanelApplication).PANEL_PRESETS;
+            context['panelStates'] = this._getPanelStates();
+            context['panelPresets'] = (this.constructor as typeof CollapsiblePanelApplication).PANEL_PRESETS;
 
             return context;
         }
@@ -129,7 +129,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
 
         /** @override */
         // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender context is a framework-defined free-form payload
-        async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
             // Apply saved panel states to DOM
@@ -277,7 +277,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
             const panels = this.element.querySelectorAll<HTMLElement>('[data-panel-id]');
 
             for (const panel of panels) {
-                const panelId = panel.dataset.panelId;
+                const panelId = panel.dataset['panelId'];
                 if (panelId !== undefined && panelId.length > 0) {
                     // eslint-disable-next-line no-await-in-loop -- sequential toggles persist user-flag state in order
                     await this.togglePanel(panelId, true);
@@ -295,7 +295,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
             const panels = this.element.querySelectorAll<HTMLElement>('[data-panel-id]');
 
             for (const panel of panels) {
-                const panelId = panel.dataset.panelId;
+                const panelId = panel.dataset['panelId'];
                 if (panelId !== undefined && panelId.length > 0) {
                     // eslint-disable-next-line no-await-in-loop -- sequential toggles persist user-flag state in order
                     await this.togglePanel(panelId, false);
@@ -328,7 +328,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
             const panels = this.element.querySelectorAll<HTMLElement>('[data-panel-id]');
 
             for (const panel of panels) {
-                const panelId = panel.dataset.panelId;
+                const panelId = panel.dataset['panelId'];
                 if (panelId !== undefined && panelId.length > 0) {
                     const shouldExpand = preset.panels[panelId] ?? false;
                     // eslint-disable-next-line no-await-in-loop -- sequential toggles persist user-flag state in order
@@ -351,7 +351,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
             const panels = this.element.querySelectorAll<HTMLElement>('[data-panel-id]');
 
             for (const panel of panels) {
-                const panelId = panel.dataset.panelId;
+                const panelId = panel.dataset['panelId'];
                 if (panelId !== undefined && panelId.length > 0) {
                     const shouldExpand = panelId === exceptPanelId;
                     // eslint-disable-next-line no-await-in-loop -- sequential toggles persist user-flag state in order
@@ -457,7 +457,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
                 const panelEl = panels[num - 1] as HTMLElement | undefined;
 
                 if (panelEl) {
-                    const panelId = panelEl.dataset.panelId;
+                    const panelId = panelEl.dataset['panelId'];
                     if (panelId !== undefined && panelId.length > 0) {
                         void this.togglePanel(panelId);
 
@@ -484,7 +484,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
             const panel = target.closest<HTMLElement>('[data-panel-id]');
             if (!panel) return;
 
-            const panelId = panel.dataset.panelId;
+            const panelId = panel.dataset['panelId'];
             if (panelId === undefined || panelId.length === 0) return;
 
             // Shift+Click = Collapse all except this one
@@ -508,7 +508,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
          * @protected
          */
         static async _onApplyPreset(this: CollapsiblePanelApplication, event: Event, target: HTMLElement): Promise<void> {
-            const presetName = target.dataset.preset;
+            const presetName = target.dataset['preset'];
             if (presetName === undefined || presetName.length === 0) return;
 
             await this.applyPanelPreset(presetName);

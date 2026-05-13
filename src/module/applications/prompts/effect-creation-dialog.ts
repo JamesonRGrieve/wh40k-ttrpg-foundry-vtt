@@ -233,7 +233,7 @@ export default class EffectCreationDialog extends DialogV2 {
         const conditionId = data.conditionId;
         if (!conditionId) return null;
 
-        const conditions: Record<string, any> = {
+        const conditions: Record<string, Record<string, unknown>> = {
             stunned: {
                 name: 'Stunned',
                 icon: 'icons/svg/daze.svg',
@@ -330,9 +330,10 @@ export default class EffectCreationDialog extends DialogV2 {
 
         if (!characteristic || value === 0) return null;
 
-        const charLabel = (CONFIG as any).WH40K?.characteristics?.[characteristic]?.label ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.WH40K is not on shipped foundry types
+        const charLabel = (CONFIG as unknown as { WH40K?: { characteristics?: Record<string, { label?: string }> } }).WH40K?.characteristics?.[characteristic]?.label ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
 
-        const effectData: Record<string, any> = {
+        const effectData: Record<string, unknown> = {
             name: `${charLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/upgrade.svg',
             changes: [
@@ -375,7 +376,7 @@ export default class EffectCreationDialog extends DialogV2 {
 
         const skillLabel = skill.charAt(0).toUpperCase() + skill.slice(1);
 
-        const effectData: Record<string, any> = {
+        const effectData: Record<string, unknown> = {
             name: `${skillLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/upgrade.svg',
             changes: [
@@ -418,7 +419,7 @@ export default class EffectCreationDialog extends DialogV2 {
 
         const typeLabel = combatType.charAt(0).toUpperCase() + combatType.slice(1);
 
-        const effectData: Record<string, any> = {
+        const effectData: Record<string, unknown> = {
             name: `${typeLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/combat.svg',
             changes: [

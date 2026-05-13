@@ -1,5 +1,8 @@
 {
-  "strict": [],
+  "strict": [
+    "TS4113",
+    "TS4117"
+  ],
   "config": "tsconfig.test.json",
   "totals": {
     "totalErrors": 17

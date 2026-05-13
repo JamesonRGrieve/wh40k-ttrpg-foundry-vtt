@@ -115,7 +115,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
         /** @inheritDoc */
         // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-        async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
             // Enhanced drag-drop setup
@@ -199,7 +199,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          */
         async _onEnhancedDragStart(event: DragEvent): Promise<void> {
             const element = event.currentTarget as HTMLElement;
-            const itemId = element.dataset.itemId;
+            const itemId = element.dataset['itemId'];
             const item = this.#actorDocument().items.get(itemId ?? '') as WH40KItem | undefined;
 
             if (!item) return;
@@ -346,7 +346,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             dropZones.forEach((zone) => {
                 const zoneEl = zone as HTMLElement;
-                const accepts = zoneEl.dataset.accepts?.split(',') ?? [];
+                const accepts = zoneEl.dataset['accepts']?.split(',') ?? [];
 
                 if (accepts.length === 0 || accepts.includes(item.type)) {
                     zoneEl.classList.add('drop-valid');
@@ -482,8 +482,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const item = fetched as unknown as WH40KItem | null;
             if (!item) return;
 
-            const zoneType = zone.dataset.dropZone;
-            const slot = zone.dataset.slot;
+            const zoneType = zone.dataset['dropZone'];
+            const slot = zone.dataset['slot'];
 
             if (zoneType === 'personal') {
                 if (item.actor?.id !== this.document.id) {
@@ -650,7 +650,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const targetRow = (event.target as HTMLElement).closest<HTMLElement>('[data-item-id]');
             if (!targetRow) return;
 
-            const targetId = targetRow.dataset.itemId;
+            const targetId = targetRow.dataset['itemId'];
             const sourceId = this._draggedItem.id;
 
             if (sourceId === targetId) return;
@@ -676,6 +676,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             if (sourceIndex === -1 || targetIndex === -1) return;
 
             const [removed] = items.splice(sourceIndex, 1);
+            if (!removed) return;
             items.splice(targetIndex, 0, removed);
 
             const updates = items.map((item, index) => ({

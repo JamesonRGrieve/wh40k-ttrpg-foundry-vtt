@@ -23,7 +23,7 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2 as unk
     _submitted?: boolean;
 
     /** @override */
-    static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+    static override DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         tag: 'dialog',
         classes: ['wh40k-rpg', 'dialog', 'standard-form'],
         window: {
@@ -40,7 +40,7 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
+    static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         content: {
             template: 'systems/wh40k-rpg/templates/prompt/dialog-content.hbs',
         },
@@ -54,11 +54,11 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         const appOptions = this.options as { content?: string; buttons?: DialogButton[] };
-        context.content = appOptions.content ?? '';
-        context.buttons = appOptions.buttons?.map((button) => ({
+        context['content'] = appOptions.content ?? '';
+        context['buttons'] = appOptions.buttons?.map((button) => ({
             ...button,
             cssClass: button.class,
         }));
