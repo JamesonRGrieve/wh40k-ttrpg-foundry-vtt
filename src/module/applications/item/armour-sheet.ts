@@ -11,7 +11,7 @@ import ContainerItemSheet from './container-item-sheet.ts';
  */
 export default class ArmourSheet extends ContainerItemSheet {
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         ...ContainerItemSheet.DEFAULT_OPTIONS,
         classes: ['wh40k-rpg', 'sheet', 'item', 'armour'],
         position: {
@@ -32,7 +32,7 @@ export default class ArmourSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static override PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-armour-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
@@ -42,7 +42,7 @@ export default class ArmourSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static TABS = [
+    static override TABS = [
         { tab: 'protection', group: 'primary', label: 'Protection' },
         { tab: 'mods', group: 'primary', label: 'Modifications' },
         { tab: 'description', group: 'primary', label: 'Description' },
@@ -52,7 +52,7 @@ export default class ArmourSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups: Record<string, string> = {
+    override tabGroups: Record<string, string> = {
         primary: 'protection',
     };
 
@@ -61,27 +61,27 @@ export default class ArmourSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         const sys = this.item.system as unknown as ArmourDataModel;
 
         // Add armour-specific context
-        context.armourTypes = CONFIG.WH40K?.armourTypes || {};
-        context.bodyLocations = CONFIG.WH40K?.bodyLocations || {};
-        context.availableProperties = this._getAvailableProperties();
-        context.apSummary = sys.apSummary;
-        context.coverageLabel = sys.coverageLabel;
-        context.coverageIcons = sys.coverageIcons;
-        context.propertyLabels = sys.propertyLabels;
+        context['armourTypes'] = CONFIG.WH40K?.armourTypes || {};
+        context['bodyLocations'] = CONFIG.WH40K?.bodyLocations || {};
+        context['availableProperties'] = this._getAvailableProperties();
+        context['apSummary'] = sys.apSummary;
+        context['coverageLabel'] = sys.coverageLabel;
+        context['coverageIcons'] = sys.coverageIcons;
+        context['propertyLabels'] = sys.propertyLabels;
 
         // Convert coverage Set to array for template
-        context.coverageArray = Array.from(sys.coverage || []);
+        context['coverageArray'] = Array.from(sys.coverage || []);
 
         // Add propertiesArray for safe template access
-        context.propertiesArray = Array.from(sys.properties || []);
+        context['propertiesArray'] = Array.from(sys.properties || []);
 
         // Add modifications array for safe template access
-        context.modificationsArray = sys.modifications || [];
+        context['modificationsArray'] = sys.modifications || [];
 
         return context;
     }
@@ -121,7 +121,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {HTMLElement} target
      */
     static async #toggleCoverage(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const location = target.dataset.location;
+        const location = target.dataset['location'];
         const sys = this.item.system as unknown as ArmourDataModel;
         const coverage = new Set(sys.coverage || []);
 
@@ -190,7 +190,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {HTMLElement} target
      */
     static async #removeProperty(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const property = target.dataset.property;
+        const property = target.dataset['property'];
         const sys = this.item.system as unknown as ArmourDataModel;
         const properties = new Set(sys.properties || []);
         if (property) properties.delete(property);
@@ -223,7 +223,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {HTMLElement} target
      */
     static async #editMod(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset.modIndex ?? '', 10);
+        const index = parseInt(target.dataset['modIndex'] ?? '', 10);
         const sys = this.item.system as unknown as ArmourDataModel;
         const mod = sys.modifications[index];
         if (!mod?.uuid) return;
@@ -243,7 +243,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {HTMLElement} target
      */
     static async #removeMod(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset.modIndex ?? '', 10);
+        const index = parseInt(target.dataset['modIndex'] ?? '', 10);
         const sys = this.item.system as unknown as ArmourDataModel;
         const modifications = [...sys.modifications];
         modifications.splice(index, 1);

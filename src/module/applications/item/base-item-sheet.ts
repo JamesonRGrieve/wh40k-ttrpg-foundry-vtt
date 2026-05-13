@@ -37,7 +37,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         tag: 'form',
         actions: {
             editImage: BaseItemSheet.#onEditImage,
@@ -72,7 +72,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
+    static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
@@ -83,7 +83,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /** @override */
     /* eslint-disable no-restricted-syntax -- TODO: BaseItemSheet TAB labels need WH40K.* localization keys */
-    static TABS = [
+    static override TABS = [
         { tab: 'description', group: 'primary', label: 'Description' },
         { tab: 'effects', group: 'primary', label: 'Effects' },
     ];
@@ -92,7 +92,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups: Record<string, string> = {
+    override tabGroups: Record<string, string> = {
         primary: 'description',
     };
 
@@ -156,7 +156,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // Get parent context first
         const parentContext = await super._prepareContext(options);
 
@@ -193,7 +193,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
         // Ensure dh has required config properties for selectOptions (safety measure)
         // eslint-disable-next-line no-restricted-syntax -- boundary: dh is built from heterogeneous CONFIG sources; loose shape required
-        const dh = context.dh as { availabilities?: unknown; craftsmanships?: unknown };
+        const dh = context['dh'] as { availabilities?: unknown; craftsmanships?: unknown };
         // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.WH40K is untyped at the global Foundry CONFIG level
         const cfgWh = (CONFIG as { WH40K?: { availabilities?: unknown; craftsmanships?: unknown } }).WH40K;
         if (dh.availabilities === undefined) {
@@ -215,7 +215,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @protected
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: tab descriptor map is untyped per ApplicationV2 contract
-    _getTabs(): Record<string, Record<string, unknown>> {
+    override _getTabs(): Record<string, Record<string, unknown>> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: tab map is keyed by arbitrary tab id strings
         const tabs: Record<string, Record<string, unknown>> = {};
         interface TabDescriptor {
@@ -261,12 +261,12 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         // CRITICAL FIX: Clean img field if present to prevent validation errors
         // Foundry V13 has very strict validation on img field
         if ('img' in submitData) {
-            const imgValue = submitData.img;
+            const imgValue = submitData['img'];
 
             // If img is invalid (empty, null, undefined, or no extension), remove it
             // This prevents validation errors and lets the document use its existing value
             if (typeof imgValue !== 'string' || imgValue.trim() === '') {
-                delete submitData.img;
+                delete submitData['img'];
             } else {
                 const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif'];
                 const imgStr = imgValue.toLowerCase().trim();
@@ -274,7 +274,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
                 if (!hasValidExtension || imgStr.length < 5 || imgStr === 'null' || imgStr === 'undefined') {
                     // Invalid img - remove from submit data so it doesn't override existing valid value
-                    delete submitData.img;
+                    delete submitData['img'];
                 }
             }
         }
@@ -288,7 +288,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Handle delta inputs for numeric fields
@@ -332,12 +332,12 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         const value = input.value.trim();
         if (!value) return;
 
-        const firstChar = value[0];
+        const firstChar = value.charAt(0);
         if (firstChar === '=') {
             // Set absolute value
             const absolute = parseFloat(value.slice(1));
             if (!isNaN(absolute)) input.value = String(absolute);
-        } else if (['+', '-'].includes(firstChar)) {
+        } else if (firstChar === '+' || firstChar === '-') {
             // Add or subtract delta
             const current = Number(foundry.utils.getProperty(this.item, input.name)) || 0;
             const delta = parseFloat(value);
@@ -351,7 +351,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Handle editing an image via the file browser.
      */
     static async #onEditImage(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
-        const attr = target.dataset.edit ?? 'img';
+        const attr = target.dataset['edit'] ?? 'img';
         const current = foundry.utils.getProperty(this.document._source, attr);
         // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.ux.FilePicker is the V14 file-picker constructor; not in shipped types
         const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse(): Promise<void> };
@@ -404,7 +404,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Handle editing an effect.
      */
     static #effectEdit(this: BaseItemSheet, event: Event, target: HTMLElement): void {
-        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset.effectId;
+        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
         void effect?.sheet?.render(true);
     }
@@ -415,7 +415,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Handle deleting an effect.
      */
     static async #effectDelete(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset.effectId;
+        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
         await effect?.delete();
     }
@@ -426,7 +426,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Handle toggling an effect.
      */
     static async #effectToggle(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset.effectId;
+        const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
         await effect?.update({ disabled: !effect.disabled });
     }
@@ -437,7 +437,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Handle toggling section visibility.
      */
     static #toggleSection(this: BaseItemSheet, event: Event, target: HTMLElement): void {
-        const sectionName = target.dataset.toggle;
+        const sectionName = target.dataset['toggle'];
         if (sectionName === undefined || sectionName === '') return;
 
         // Toggle section visibility in the DOM

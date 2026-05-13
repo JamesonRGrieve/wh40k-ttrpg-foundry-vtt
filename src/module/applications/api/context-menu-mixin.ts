@@ -22,6 +22,7 @@ type ActorType = WH40KAcolyte | WH40KNPC | WH40KBaseActor;
  * Uses Foundry V13's native ContextMenu with fixed positioning.
  */
 export class WH40KContextMenu extends applicationUX.ContextMenu {
+    // biome-ignore lint/complexity/noUselessConstructor: required to forward deprecated ContextMenu args with explicit annotation
     constructor(...args: ConstructorParameters<typeof applicationUX.ContextMenu>) {
         // eslint-disable-next-line @typescript-eslint/no-deprecated -- boundary: ContextMenu super-call deprecated jQuery default; we always pass jQuery: false at call sites
         super(...args);
@@ -73,6 +74,7 @@ export class WH40KContextMenu extends applicationUX.ContextMenu {
 export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): T {
     class ContextMenuApplication extends Base {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixin requirement
+        // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         constructor(...args: any[]) {
             super(...args);
         }
@@ -402,11 +404,11 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
             }
         }
 
-        async _onCharacteristicRollWithModifier(charKey: string): Promise<void> {}
+        async _onCharacteristicRollWithModifier(_charKey: string): Promise<void> {}
 
-        async _showModifierSources(charKey: string): Promise<void> {}
+        async _showModifierSources(_charKey: string): Promise<void> {}
 
-        async _onAdvanceCharacteristic(charKey: string): Promise<void> {}
+        async _onAdvanceCharacteristic(_charKey: string): Promise<void> {}
 
         async _postCharacteristicToChat(charKey: string, char: WH40KCharacteristic): Promise<void> {
             const label = char.label !== '' ? char.label : charKey;
@@ -438,9 +440,9 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
             }
         }
 
-        async _onSkillRollWithModifier(skillKey: string): Promise<void> {}
+        async _onSkillRollWithModifier(_skillKey: string): Promise<void> {}
 
-        async _toggleSkillTraining(skillKey: string, level: string): Promise<void> {}
+        async _toggleSkillTraining(_skillKey: string, _level: string): Promise<void> {}
 
         _showGoverningCharacteristic(skillKey: string, skill: WH40KSkill): void {
             const label = skill.label !== '' ? skill.label : skillKey;
@@ -448,7 +450,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
             ui.notifications.info(`${label} is governed by ${skill.characteristic}`);
         }
 
-        async _addSkillSpecialization(skillKey: string): Promise<void> {}
+        async _addSkillSpecialization(_skillKey: string): Promise<void> {}
 
         async _duplicateItem(item: WH40KItem): Promise<void> {
             await item.clone({ name: `${item.name} (Copy)` }, { save: true });
@@ -471,7 +473,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
             }
         }
 
-        async _weaponAttack(item: WH40KItem, mode: string): Promise<void> {}
+        async _weaponAttack(_item: WH40KItem, _mode: string): Promise<void> {}
 
         async _toggleEquipped(item: WH40KItem): Promise<void> {
             const sys = item.system as { equipped?: boolean };
@@ -483,7 +485,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
             await item.update({ 'system.activated': sys.activated !== true });
         }
 
-        async _spendFate(purpose: string): Promise<void> {}
+        async _spendFate(_purpose: string): Promise<void> {}
 
         async _burnFatePoint(): Promise<void> {
             const confirmed = await dialogV2.confirm({

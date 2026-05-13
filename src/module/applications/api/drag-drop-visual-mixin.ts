@@ -321,7 +321,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                     label: 'Split',
                     callback: (event: SubmitEvent, button: HTMLButtonElement, dialogEl: HTMLElement) => {
                         const input = dialogEl.querySelector<HTMLInputElement>('[name="quantity"]');
-                        const qty = input ? parseInt(input.value) : 0;
+                        const qty = input ? parseInt(input.value, 10) : 0;
                         if (qty > 0 && qty <= quantity) {
                             return { quantity: qty };
                         }

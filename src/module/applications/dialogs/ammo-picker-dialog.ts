@@ -145,7 +145,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /*  Event Handlers                              */
     /* -------------------------------------------- */
 
-    static async #onSelect(this: AmmoPickerDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onSelect(this: AmmoPickerDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         const form = this.element.querySelector('.ammo-picker-content');
         const selected = form?.querySelector('input[name="selectedAmmo"]:checked') as HTMLInputElement | null;
         if (!selected) return;
@@ -160,7 +160,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
 
     /* -------------------------------------------- */
 
-    static async #onCancel(this: AmmoPickerDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: AmmoPickerDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         this.#resolved = true;
         this.#resolve?.(null);
         await this.close();

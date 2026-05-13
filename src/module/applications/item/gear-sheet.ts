@@ -10,7 +10,7 @@ import BaseItemSheet from './base-item-sheet.ts';
 // @ts-expect-error - TS2417 static side inheritance
 export default class GearSheet extends BaseItemSheet {
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'gear'],
         actions: {
             resetUses: GearSheet.#onResetUses,
@@ -25,7 +25,7 @@ export default class GearSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static override PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-gear-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
@@ -35,7 +35,7 @@ export default class GearSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static TABS = [
+    static override TABS = [
         { tab: 'overview', group: 'primary', label: 'Overview' },
         { tab: 'usage', group: 'primary', label: 'Usage' },
         { tab: 'description', group: 'primary', label: 'Description' },
@@ -45,7 +45,7 @@ export default class GearSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups = {
+    override tabGroups = {
         primary: 'overview',
     };
 
@@ -54,15 +54,15 @@ export default class GearSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Add gear-specific computed properties to context
-        context.categoryLabel = this.item.system.categoryLabel;
-        context.categoryIcon = this.item.system.categoryIcon;
-        context.hasLimitedUses = this.item.system.hasLimitedUses;
-        context.usesExhausted = this.item.system.usesExhausted;
-        context.usesDisplay = this.item.system.usesDisplay;
+        context['categoryLabel'] = this.item.system['categoryLabel'];
+        context['categoryIcon'] = this.item.system['categoryIcon'];
+        context['hasLimitedUses'] = this.item.system['hasLimitedUses'];
+        context['usesExhausted'] = this.item.system['usesExhausted'];
+        context['usesDisplay'] = this.item.system['usesDisplay'];
 
         return context;
     }
@@ -76,6 +76,7 @@ export default class GearSheet extends BaseItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: ApplicationV2 static action handler `this` type is not known statically
     static async #onResetUses(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.item.system.resetUses();
     }
@@ -85,6 +86,7 @@ export default class GearSheet extends BaseItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: ApplicationV2 static action handler `this` type is not known statically
     static async #onConsumeUse(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.item.system.consume();
     }

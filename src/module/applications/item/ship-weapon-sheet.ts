@@ -11,7 +11,7 @@ import BaseItemSheet from './base-item-sheet.ts';
 // @ts-expect-error - TS2417 static side inheritance
 export default class ShipWeaponSheet extends BaseItemSheet {
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'ship-weapon'],
         position: {
             width: 600,
@@ -22,7 +22,7 @@ export default class ShipWeaponSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static override PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/ship-weapon-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
@@ -32,7 +32,7 @@ export default class ShipWeaponSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static TABS = [
+    static override TABS = [
         { tab: 'details', group: 'primary', label: 'WH40K.Item.Tabs.Details' },
         { tab: 'effects', group: 'primary', label: 'WH40K.Item.Tabs.Effects' },
     ];
@@ -40,24 +40,25 @@ export default class ShipWeaponSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups = {
+    override tabGroups = {
         primary: 'details',
     };
 
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Add weapon-specific choices
-        context.weaponTypes = this._getWeaponTypeChoices();
-        context.locations = this._getLocationChoices();
-        context.hullTypes = this._getHullTypeChoices();
-        context.availabilities = this._getAvailabilityChoices();
+        context['weaponTypes'] = this._getWeaponTypeChoices();
+        context['locations'] = this._getLocationChoices();
+        context['hullTypes'] = this._getHullTypeChoices();
+        context['availabilities'] = this._getAvailabilityChoices();
 
         // Add display helpers
-        context.hasSpecialQualities = (context.system as any).special?.size > 0;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: system is untyped Record at context level
+        context['hasSpecialQualities'] = (context['system'] as Record<string, unknown>)['special'] !== undefined;
 
         return context;
     }

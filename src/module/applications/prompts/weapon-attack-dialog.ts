@@ -117,7 +117,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /**
      * Handle weapon selection via action.
      */
-    static async #onSelectWeapon(this: WeaponAttackDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectWeapon(this: WeaponAttackDialog, _event: Event, target: HTMLElement): Promise<void> {
         this.weaponAttackData.rollData.selectWeapon?.(target.getAttribute('name') ?? '');
         await this.weaponAttackData.rollData.update?.();
         void this.render();

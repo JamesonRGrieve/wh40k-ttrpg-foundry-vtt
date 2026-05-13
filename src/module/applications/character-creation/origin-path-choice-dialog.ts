@@ -464,7 +464,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #toggleOption(this: OriginPathChoiceDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleOption(this: OriginPathChoiceDialog, _event: Event, target: HTMLElement): Promise<void> {
         const choiceKey = target.dataset['choice'];
         const optionValue = target.dataset['option'];
 
@@ -580,7 +580,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static #confirm(this: OriginPathChoiceDialog, event: Event, target: HTMLElement): void {
+    static #confirm(this: OriginPathChoiceDialog, _event: Event, _target: HTMLElement): void {
         // Validate all choices are complete
         const incomplete = this.pendingChoices.filter((choice) => {
             const selections = this.selections.get(choice._key) ?? new Set<string>();
@@ -612,7 +612,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static #cancel(this: OriginPathChoiceDialog, event: Event, target: HTMLElement): void {
+    static #cancel(this: OriginPathChoiceDialog, _event: Event, _target: HTMLElement): void {
         if (this._resolvePromise !== null) {
             this._resolvePromise(null);
         }
@@ -650,9 +650,9 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {FormDataExtended} formData - The form data
      * @private
      */
-    static #onSubmit(this: OriginPathChoiceDialog, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): void {
+    static #onSubmit(this: OriginPathChoiceDialog, event: Event, _form: HTMLFormElement, _formData: Record<string, unknown>): void {
         // Same as confirm - call directly on instance
-        return OriginPathChoiceDialog.#confirm.call(this, event, form);
+        return OriginPathChoiceDialog.#confirm.call(this, event, document.createElement('div'));
     }
 
     /* -------------------------------------------- */

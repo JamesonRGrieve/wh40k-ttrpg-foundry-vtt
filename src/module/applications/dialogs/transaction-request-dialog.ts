@@ -193,7 +193,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         }
     }
 
-    static #onSubmit(this: TransactionRequestDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): void {
+    static #onSubmit(this: TransactionRequestDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): void {
         const data = formData.object;
         const qty = (data['quantity'] as string | undefined) ?? '';
         const inf = (data['influenceBurn'] as string | undefined) ?? '';
@@ -213,7 +213,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         await this.render(false);
     }
 
-    static async #requestApproval(this: TransactionRequestDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #requestApproval(this: TransactionRequestDialog, event: PointerEvent, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         try {

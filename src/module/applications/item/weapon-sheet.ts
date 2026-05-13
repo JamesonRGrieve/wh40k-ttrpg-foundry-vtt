@@ -80,7 +80,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         ...ContainerItemSheet.DEFAULT_OPTIONS,
         classes: ['wh40k-rpg', 'sheet', 'item', 'weapon', 'wh40k-weapon-sheet-v3'],
         actions: {
@@ -116,7 +116,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static override PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-weapon-sheet.hbs',
             scrollable: ['.wh40k-weapon-body'],
@@ -162,7 +162,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<WeaponSheetContext> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<WeaponSheetContext> {
         const context = (await super._prepareContext(options)) as WeaponSheetContext;
         const system = this.item.system;
         context.system = system;
@@ -193,7 +193,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         context.qualitiesArray = Array.from(system.effectiveSpecial).map((q: string) => {
             // Parse level from quality identifier if present
             const match = /-(\d+)$/.exec(q);
-            const level = match !== null ? parseInt(match[1], 10) : null;
+            const level = match !== null ? parseInt(match[1] ?? '', 10) : null;
 
             // Get localized label using CONFIG helper (CONFIG.wh40k not CONFIG.WH40K)
             const label = CONFIG.wh40k.getQualityLabel(q, level);
@@ -217,10 +217,10 @@ export default class WeaponSheet extends ContainerItemSheet {
         context.effectivePenetration = system.effectivePenetration;
         context.effectiveToHit = system.effectiveToHit;
         context.effectiveWeight = system.effectiveWeight;
-        context.fullDamageFormula = system.fullDamageFormula;
+        context['fullDamageFormula'] = system.fullDamageFormula;
 
         // Prepare modifications data for display
-        context.modificationsData = system.modifications.map((mod, index) => ({
+        context['modificationsData'] = system.modifications.map((mod, index) => ({
             index,
             uuid: mod.uuid,
             name: mod.name,
@@ -233,13 +233,13 @@ export default class WeaponSheet extends ContainerItemSheet {
         }));
 
         // Check if weapon has any modifications affecting stats
-        context.hasModificationEffects = Object.values(system._modificationModifiers).some((v) => v !== 0);
+        context['hasModificationEffects'] = Object.values(system._modificationModifiers).some((v) => v !== 0);
 
         // Loaded ammunition data
-        context.hasLoadedAmmo = system.hasLoadedAmmo;
-        context.loadedAmmoLabel = system.loadedAmmoLabel;
+        context['hasLoadedAmmo'] = system.hasLoadedAmmo;
+        context['loadedAmmoLabel'] = system.loadedAmmoLabel;
         if (system.hasLoadedAmmo) {
-            context.loadedAmmoData = {
+            context['loadedAmmoData'] = {
                 name: system.loadedAmmo.name,
                 uuid: system.loadedAmmo.uuid,
                 modifiers: system.loadedAmmo.modifiers,
@@ -249,13 +249,13 @@ export default class WeaponSheet extends ContainerItemSheet {
         }
 
         // Convenience flags
-        context.hasActions = this.isEditable && this.item.actor !== null;
+        context['hasActions'] = this.isEditable && this.item.actor !== null;
 
         // FAB state
-        context.fabExpanded = this.#fabExpanded;
+        context['fabExpanded'] = this.#fabExpanded;
 
         // Collapsed sections state
-        context.collapsedSections = Object.fromEntries(
+        context['collapsedSections'] = Object.fromEntries(
             ['combat', 'ranged', 'ammunition', 'acquisition', 'description', 'modifications'].map((s) => [s, this.#collapsedSections.has(s)]),
         );
 
@@ -266,7 +266,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts the untyped context record
-    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Set up drag-and-drop visual feedback
@@ -376,7 +376,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    _canAddItem(item: WH40KItem): boolean {
+    override _canAddItem(item: WH40KItem): boolean {
         if (!super._canAddItem(item)) return false;
 
         // Each modification can only be added once
@@ -560,7 +560,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #openQuality(this: WeaponSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const identifier = target.dataset.identifier;
+        const identifier = target.dataset['identifier'];
         if (identifier === undefined || identifier === '') return;
 
         // Try to find the quality in the weapon qualities compendium
@@ -604,7 +604,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #nestedItemEdit(this: WeaponSheet, _event: Event, target: HTMLElement): void {
-        const itemId = target.dataset.itemId;
+        const itemId = target.dataset['itemId'];
         if (itemId === undefined || itemId === '') return;
 
         const nestedItem = this.item.items.get(itemId);
@@ -623,7 +623,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #nestedItemDelete(this: WeaponSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset.itemId;
+        const itemId = target.dataset['itemId'];
         if (itemId === undefined || itemId === '') return;
 
         const nestedItem = this.item.items.get(itemId);
@@ -695,17 +695,19 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #toggleModificationActive(this: WeaponSheet, _event: PointerEvent, target: HTMLButtonElement): Promise<void> {
-        const index = parseInt(target.dataset.modIndex ?? '', 10);
+        const index = parseInt(target.dataset['modIndex'] ?? '', 10);
         if (isNaN(index)) return;
 
         const mods = foundry.utils.deepClone(this.item.system.modifications);
         if (index < 0 || index >= mods.length) return;
 
-        mods[index].active = !mods[index].active;
+        const mod = mods[index];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime guard: noUncheckedIndexedAccess widens array element type to T | undefined
+        if (mod === undefined) return;
+        mod.active = !mod.active;
 
         await this.item.update({ 'system.modifications': mods });
 
-        const mod = mods[index];
         ui.notifications.info(`${mod.name} ${mod.active ? 'activated' : 'deactivated'}.`);
     }
 
@@ -718,7 +720,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #viewModification(this: WeaponSheet, _event: PointerEvent, target: HTMLButtonElement): Promise<void> {
-        const index = parseInt(target.dataset.modIndex ?? '', 10);
+        const index = parseInt(target.dataset['modIndex'] ?? '', 10);
         if (isNaN(index)) return;
 
         const mod = this.item.system.modifications[index];
@@ -745,7 +747,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #removeModification(this: WeaponSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset.modIndex ?? '', 10);
+        const index = parseInt(target.dataset['modIndex'] ?? '', 10);
         if (isNaN(index)) return;
 
         const mod = this.item.system.modifications[index];
@@ -849,7 +851,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #loadAmmo(this: WeaponSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const ammoUuid = target.dataset.ammoUuid;
+        const ammoUuid = target.dataset['ammoUuid'];
         if (ammoUuid === undefined || ammoUuid === '') return;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns the broad Foundry document union; weapon.system.loadAmmo expects the ammo shape, which the WeaponData method validates internally
@@ -912,7 +914,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #toggleSection(this: WeaponSheet, _event: Event, target: HTMLElement): void {
-        const sectionName = target.dataset.section;
+        const sectionName = target.dataset['section'];
         if (sectionName === undefined || sectionName === '') return;
 
         if (this.#collapsedSections.has(sectionName)) {
@@ -1013,7 +1015,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _onDrop(event: DragEvent): Promise<boolean> {
+    override async _onDrop(event: DragEvent): Promise<boolean> {
         event.preventDefault();
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: dataTransfer payload is raw JSON authored by drag source

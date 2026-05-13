@@ -132,7 +132,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {string} [flavor] - Optional flavor text.
      * @returns {Promise<Roll>}
      */
-    async rollCharacteristic(characteristicKey: string, flavor?: string): Promise<void> {
+    override async rollCharacteristic(characteristicKey: string, flavor?: string): Promise<void> {
         const char = this.system.characteristics[characteristicKey];
         if (char === undefined) {
             ui.notifications.warn(`Unknown characteristic: ${characteristicKey}`);

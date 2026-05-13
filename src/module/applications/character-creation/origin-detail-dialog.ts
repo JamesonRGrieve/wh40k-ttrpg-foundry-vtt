@@ -328,7 +328,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @param {HTMLElement} target
      * @private
      */
-    static #confirm(this: OriginDetailDialog, event: PointerEvent, target: HTMLElement): void {
+    static #confirm(this: OriginDetailDialog, _event: PointerEvent, _target: HTMLElement): void {
         if (this._resolvePromise !== null) {
             this._resolvePromise({ selected: true, origin: this.origin });
         }
@@ -342,7 +342,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @param {HTMLElement} target
      * @private
      */
-    static #cancel(this: OriginDetailDialog, event: PointerEvent, target: HTMLElement): void {
+    static #cancel(this: OriginDetailDialog, _event: PointerEvent, _target: HTMLElement): void {
         if (this._resolvePromise !== null) {
             this._resolvePromise({ selected: false, origin: null });
         }
@@ -384,7 +384,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         this.#applyActiveTab();
     }
 
-    static async #openItem(this: OriginDetailDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #openItem(this: OriginDetailDialog, _event: PointerEvent, target: HTMLElement): Promise<void> {
         const uuid = target.dataset['uuid'];
         if (uuid === undefined || uuid === '') return;
 

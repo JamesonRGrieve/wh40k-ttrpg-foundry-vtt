@@ -1415,8 +1415,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const el = e.currentTarget as HTMLInputElement;
                 const key = el.dataset['characteristic'];
                 if (key === undefined || key === '') return;
-                let value = parseInt(el.value);
-                if (isNaN(value) || value < 0) value = 0;
+                let value = parseInt(el.value, 10);
+                if (Number.isNaN(value) || value < 0) value = 0;
                 this._charCustomBases[key] = value;
                 void this.render();
             });
@@ -1435,8 +1435,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
     _onCharRollChipClick(event: Event): void {
         const chip = event.currentTarget as HTMLElement;
-        const index = parseInt(chip.dataset['rollIndex'] ?? '');
-        if (isNaN(index) || chip.querySelector('.csd-roll-input') !== null) return;
+        const index = parseInt(chip.dataset['rollIndex'] ?? '', 10);
+        if (Number.isNaN(index) || chip.querySelector('.csd-roll-input') !== null) return;
 
         const currentValue = this._charRolls[index] !== 0 ? this._charRolls[index] : '';
         const input = document.createElement('input');
@@ -1449,8 +1449,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         input.dataset['rollIndex'] = String(index);
 
         input.addEventListener('blur', () => {
-            let value = parseInt(input.value);
-            if (isNaN(value) || value < 2) value = 0;
+            let value = parseInt(input.value, 10);
+            if (Number.isNaN(value) || value < 2) value = 0;
             if (value > 40) value = 40;
             this._charRolls[index] = value;
             void this.render();
@@ -1475,10 +1475,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _onCharDragStart(event: Event): void {
         this._saveScrollPosition();
         const target = event.currentTarget as HTMLElement;
-        const rollIndex = parseInt(target.dataset['rollIndex'] ?? '');
+        const rollIndex = parseInt(target.dataset['rollIndex'] ?? '', 10);
         const fromCharRaw = target.dataset['characteristic'];
         const fromChar = fromCharRaw !== undefined && fromCharRaw !== '' ? fromCharRaw : null;
-        if (isNaN(rollIndex) || this._charRolls[rollIndex] === 0) {
+        if (Number.isNaN(rollIndex) || this._charRolls[rollIndex] === 0) {
             event.preventDefault();
             return;
         }
@@ -2801,8 +2801,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     static #goToStep(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
         const stepKey = target.dataset['stepKey'];
-        const stepIndex = parseInt(target.dataset['stepIndex'] ?? '');
-        if ((stepKey === undefined || stepKey === '') && isNaN(stepIndex)) return;
+        const stepIndex = parseInt(target.dataset['stepIndex'] ?? '', 10);
+        if ((stepKey === undefined || stepKey === '') && Number.isNaN(stepIndex)) return;
 
         if (stepKey === 'characteristics') {
             if (this.guidedMode && this.selections.size < this.systemConfig.coreSteps.length) {
@@ -2845,7 +2845,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        if (isNaN(stepIndex)) return;
+        if (Number.isNaN(stepIndex)) return;
 
         this.showLineage = false;
         this.showCharacteristics = false;

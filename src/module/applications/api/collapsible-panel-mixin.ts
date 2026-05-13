@@ -27,6 +27,7 @@ function asSheet(host: unknown): BaseActorSheetMixins {
 export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base: T): T {
     class CollapsiblePanelApplication extends Base {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructors must take any[] per TS mixin rule (TS2545)
+        // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         constructor(...args: any[]) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- mixin constructor forwards untyped args; TS mixin rule requires any[]
             super(...args);
@@ -446,8 +447,8 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
             this.element.addEventListener('keydown', (event: KeyboardEvent) => {
                 if (!event.altKey || event.ctrlKey || event.shiftKey || event.metaKey) return;
 
-                const num = parseInt(event.key);
-                if (isNaN(num) || num < 1 || num > 9) return;
+                const num = parseInt(event.key, 10);
+                if (Number.isNaN(num) || num < 1 || num > 9) return;
 
                 event.preventDefault();
                 event.stopPropagation();
@@ -507,7 +508,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
          * @returns {Promise<void>}
          * @protected
          */
-        static async _onApplyPreset(this: CollapsiblePanelApplication, event: Event, target: HTMLElement): Promise<void> {
+        static async _onApplyPreset(this: CollapsiblePanelApplication, _event: Event, target: HTMLElement): Promise<void> {
             const presetName = target.dataset['preset'];
             if (presetName === undefined || presetName.length === 0) return;
 

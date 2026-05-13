@@ -268,7 +268,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /**
      * Toggle a common modifier
      */
-    static async #toggleModifier(this: AcquisitionDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleModifier(this: AcquisitionDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['modifier'];
         if (key === undefined || key === '') return;
 
@@ -286,8 +286,8 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /**
      * Handle form submission
      */
-    static #onSubmit(this: AcquisitionDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): void {
-        this.customModifier = parseInt(formData.object['customModifier'] as string) || 0;
+    static #onSubmit(this: AcquisitionDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): void {
+        this.customModifier = parseInt(formData.object['customModifier'] as string, 10) || 0;
     }
 
     /* -------------------------------------------- */
@@ -295,13 +295,11 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /**
      * Roll the acquisition test
      */
-    static async #roll(this: AcquisitionDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
-        event.preventDefault();
-
+    static async #roll(this: AcquisitionDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         // Get form data
         const form = this.element as HTMLFormElement;
         const formData = new FormDataExtended(form);
-        this.customModifier = parseInt(formData.object['customModifier'] as string) || 0;
+        this.customModifier = parseInt(formData.object['customModifier'] as string, 10) || 0;
 
         // Calculate final target
         const context = await this._prepareContext({ force: true });

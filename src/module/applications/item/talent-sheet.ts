@@ -195,7 +195,7 @@ export default class TalentSheet extends BaseItemSheet {
 
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'talent-sheet'],
         actions: {
             ...super.DEFAULT_OPTIONS.actions,
@@ -219,7 +219,7 @@ export default class TalentSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static override PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/talent-sheet.hbs',
             scrollable: ['.wh40k-talent-content'],
@@ -229,7 +229,7 @@ export default class TalentSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static TABS = [
+    static override TABS = [
         { tab: 'overview', group: 'primary', label: 'WH40K.Tabs.Overview' },
         { tab: 'effects', group: 'primary', label: 'WH40K.Tabs.Effects' },
         { tab: 'properties', group: 'primary', label: 'WH40K.Tabs.Properties' },
@@ -239,7 +239,7 @@ export default class TalentSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups = {
+    override tabGroups = {
         primary: 'overview',
     };
 
@@ -248,32 +248,32 @@ export default class TalentSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         const system = this.item.system;
 
         // Tab state
-        context.tabs = this._getTabs();
-        context.activeTab = this.tabGroups.primary;
+        context['tabs'] = this._getTabs();
+        context['activeTab'] = this.tabGroups['primary'];
 
         // Prepare structured data for template
         const modifiersData = this._prepareModifiersData(system);
         const situationalData = this._prepareSituationalData(system);
         const grantsData = this._prepareGrantsData(system);
 
-        context.talentData = this._prepareTalentData(system);
-        context.prerequisitesData = this._preparePrerequisitesData(system);
-        context.modifiersData = modifiersData;
-        context.grantsData = grantsData;
-        context.situationalData = situationalData;
-        context.rollConfigData = this._prepareRollConfigData(system);
+        context['talentData'] = this._prepareTalentData(system);
+        context['prerequisitesData'] = this._preparePrerequisitesData(system);
+        context['modifiersData'] = modifiersData;
+        context['grantsData'] = grantsData;
+        context['situationalData'] = situationalData;
+        context['rollConfigData'] = this._prepareRollConfigData(system);
 
         // Category options for select
-        context.categoryOptions = this._getCategoryOptions(system.category);
-        context.tierOptions = this._getTierOptions(system.tier);
+        context['categoryOptions'] = this._getCategoryOptions(system.category);
+        context['tierOptions'] = this._getTierOptions(system.tier);
 
         // Determine effects tab section order (sections with data first)
-        context.effectsSectionOrder = this._getEffectsSectionOrder(modifiersData, situationalData, grantsData);
+        context['effectsSectionOrder'] = this._getEffectsSectionOrder(modifiersData, situationalData, grantsData);
 
         return context;
     }
@@ -869,7 +869,7 @@ export default class TalentSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Set up custom tab handling
@@ -888,23 +888,23 @@ export default class TalentSheet extends BaseItemSheet {
             if (tabName === undefined || tabName === '') return;
 
             // Update active tab button
-            tabs.forEach((t) => t.classList.toggle('active', (t as HTMLElement).dataset.tab === tabName));
+            tabs.forEach((t) => t.classList.toggle('active', (t as HTMLElement).dataset['tab'] === tabName));
 
             // Show/hide panels
             const panels = this.element.querySelectorAll('.wh40k-talent-panel');
             panels.forEach((panel) => {
-                panel.classList.toggle('active', (panel as HTMLElement).dataset.tab === tabName);
+                panel.classList.toggle('active', (panel as HTMLElement).dataset['tab'] === tabName);
             });
 
             // Update tab group state
-            this.tabGroups.primary = tabName;
+            this.tabGroups['primary'] = tabName;
         };
 
         // Tab button clicks
         tabs.forEach((tab) => {
             tab.addEventListener('click', (event) => {
                 event.preventDefault();
-                switchTab((tab as HTMLElement).dataset.tab);
+                switchTab((tab as HTMLElement).dataset['tab']);
             });
         });
 
@@ -913,7 +913,7 @@ export default class TalentSheet extends BaseItemSheet {
         if (bannerLink) {
             bannerLink.addEventListener('click', (event) => {
                 event.preventDefault();
-                switchTab((bannerLink as HTMLElement).dataset.tab);
+                switchTab((bannerLink as HTMLElement).dataset['tab']);
             });
         }
     }
@@ -971,7 +971,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @param {HTMLElement} target - The action target
      */
     static async #viewGrantedItem(this: TalentSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const uuid = target.dataset.uuid;
+        const uuid = target.dataset['uuid'];
         if (uuid === undefined || uuid === '') return;
 
         try {
@@ -995,7 +995,7 @@ export default class TalentSheet extends BaseItemSheet {
     static async #adjustRank(this: TalentSheet, event: Event, target: HTMLElement): Promise<void> {
         if (!this.item.system.stackable) return;
 
-        const delta = parseInt(target.dataset.delta ?? '', 10);
+        const delta = parseInt(target.dataset['delta'] ?? '', 10);
         if (isNaN(delta)) return;
 
         const currentRank = this.item.system.rank;
@@ -1013,7 +1013,7 @@ export default class TalentSheet extends BaseItemSheet {
      * @param {HTMLElement} target - The action target
      */
     static async #openTalentEditor(this: TalentSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const section = target.dataset.section;
+        const section = target.dataset['section'];
         if (section === undefined || section === '') return;
 
         // Import and render the TalentEditorDialog
