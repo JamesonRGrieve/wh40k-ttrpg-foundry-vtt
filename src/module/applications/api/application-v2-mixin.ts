@@ -18,6 +18,7 @@ const { HandlebarsApplicationMixin } = applicationAPI;
 export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T) {
     class BaseApplicationWH40K extends HandlebarsApplicationMixin(Base) {
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
+        // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
             super(...args);
         }

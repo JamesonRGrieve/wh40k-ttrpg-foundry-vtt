@@ -28,6 +28,7 @@ const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2
 export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class WhatIfApplication extends Base {
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
+        // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
             super(...args);
         }
