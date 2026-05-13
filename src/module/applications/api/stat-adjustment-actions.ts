@@ -63,8 +63,8 @@ async function adjustStatImpl(this: Host, _event: Event, target: HTMLElement): P
 
     const currentValue = (foundry.utils.getProperty(this.actor, field) as number) || 0;
 
-    const min = target.dataset['min'] !== undefined ? parseInt(target.dataset['min']) : null;
-    let max: number | null = target.dataset['max'] !== undefined ? parseInt(target.dataset['max']) : null;
+    const min = target.dataset['min'] !== undefined ? parseInt(target.dataset['min'], 10) : null;
+    let max: number | null = target.dataset['max'] !== undefined ? parseInt(target.dataset['max'], 10) : null;
 
     if (max === null && field.endsWith('.value')) {
         const basePath = field.substring(0, field.lastIndexOf('.value'));
@@ -82,7 +82,7 @@ async function adjustStatImpl(this: Host, _event: Event, target: HTMLElement): P
         if (min !== null && newValue < min) newValue = min;
     } else {
         // adjustStat called directly — read data-delta when present
-        const delta = target.dataset['delta'] !== undefined ? parseInt(target.dataset['delta']) : 0;
+        const delta = target.dataset['delta'] !== undefined ? parseInt(target.dataset['delta'], 10) : 0;
         newValue = currentValue + delta;
         if (max !== null && newValue > max) newValue = max;
         if (min !== null && newValue < min) newValue = min;
@@ -117,7 +117,7 @@ export async function decrement(this: Host, event: Event, target: HTMLElement): 
 /* -------------------------------------------- */
 
 async function setCriticalPipImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
-    const level = parseInt(target.dataset['critLevel'] || '0');
+    const level = parseInt(target.dataset['critLevel'] || '0', 10);
     const currentCrit = this.actor.system.wounds?.critical || 0;
     const newValue = level === currentCrit ? level - 1 : level;
     const clampedValue = Math.min(Math.max(newValue, 0), 10);
@@ -131,7 +131,7 @@ export async function setCriticalPip(this: Host, event: Event, target: HTMLEleme
 }
 
 async function setFateStarImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
-    const index = parseInt(target.dataset['fateIndex'] || '0');
+    const index = parseInt(target.dataset['fateIndex'] || '0', 10);
     const currentFate = this.actor.system.fate?.value || 0;
     const newValue = index === currentFate ? index - 1 : index;
     const maxFate = this.actor.system.fate?.max || 0;
@@ -146,7 +146,7 @@ export async function setFateStar(this: Host, event: Event, target: HTMLElement)
 }
 
 async function setFatigueBoltImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
-    const index = parseInt(target.dataset['fatigueIndex'] || '0');
+    const index = parseInt(target.dataset['fatigueIndex'] || '0', 10);
     const currentFatigue = this.actor.system.fatigue?.value || 0;
     const newValue = index === currentFatigue ? index - 1 : index;
     const maxFatigue = this.actor.system.fatigue?.max || 0;
@@ -165,8 +165,8 @@ export async function setFatigueBolt(this: Host, event: Event, target: HTMLEleme
 /* -------------------------------------------- */
 
 async function setCorruptionImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
-    const targetValue = parseInt(target.dataset['value'] || '0');
-    if (isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
+    const targetValue = parseInt(target.dataset['value'] || '0', 10);
+    if (Number.isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
         this._notify('error', 'Invalid corruption value', { duration: 3000 });
         return;
     }
@@ -180,8 +180,8 @@ export async function setCorruption(this: Host, event: Event, target: HTMLElemen
 }
 
 async function setInsanityImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
-    const targetValue = parseInt(target.dataset['value'] || '0');
-    if (isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
+    const targetValue = parseInt(target.dataset['value'] || '0', 10);
+    if (Number.isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
         this._notify('error', 'Invalid insanity value', { duration: 3000 });
         return;
     }

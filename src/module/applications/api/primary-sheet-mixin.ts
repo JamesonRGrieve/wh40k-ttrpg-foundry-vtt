@@ -35,6 +35,7 @@ interface SheetTab {
 export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class PrimarySheetWH40K extends DragDropMixin(Base) implements PrimarySheetMixinAPI {
         /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument -- mixin idiom: constructor receives whatever the base class accepts; cannot be narrowed without breaking the mixin chain */
+        // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         constructor(...args: any[]) {
             super(...args);
         }
@@ -367,7 +368,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
 
         /* -------------------------------------------- */
 
-        _addDocument(event: Event, target: HTMLElement): void {}
+        _addDocument(_event: Event, _target: HTMLElement): void {}
 
         /* -------------------------------------------- */
 

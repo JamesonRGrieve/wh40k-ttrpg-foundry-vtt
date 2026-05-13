@@ -112,13 +112,13 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /*  Event Handlers                              */
     /* -------------------------------------------- */
 
-    static async #onConfirm(this: ConfirmationDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onConfirm(this: ConfirmationDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         this.#resolved = true;
         this.#resolve?.(true);
         await this.close();
     }
 
-    static async #onCancel(this: ConfirmationDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: ConfirmationDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         this.#resolved = true;
         this.#resolve?.(false);
         await this.close();

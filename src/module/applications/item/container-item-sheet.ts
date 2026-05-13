@@ -13,7 +13,7 @@ import BaseItemSheet from './base-item-sheet.ts';
  */
 export default class ContainerItemSheet extends BaseItemSheet {
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         ...BaseItemSheet.DEFAULT_OPTIONS,
         /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
@@ -32,14 +32,15 @@ export default class ContainerItemSheet extends BaseItemSheet {
 
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const sys = this.item.system as { container?: boolean };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel extends with container-specific fields not in the base schema
+        const sys = this.item.system as unknown as { container?: boolean };
 
         // Add nested items if this is a container
         if (sys.container === true) {
-            context.nestedItems = this.item.items.contents;
-            context.isContainer = true;
+            context['nestedItems'] = this.item.items.contents;
+            context['isContainer'] = true;
         }
 
         return context;
@@ -51,11 +52,12 @@ export default class ContainerItemSheet extends BaseItemSheet {
 
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Set up drag-drop for container items
-        const sys = this.item.system as { container?: boolean };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel extends with container-specific fields not in the base schema
+        const sys = this.item.system as unknown as { container?: boolean };
         if (this.isEditable && sys.container === true) {
             this._setupContainerDragDrop();
         }
@@ -206,7 +208,8 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @protected
      */
     _canAddItem(item: WH40KItem): boolean {
-        const sys = this.item.system as { container?: boolean; containerTypes?: string[] };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel extends with container-specific fields not in the base schema
+        const sys = this.item.system as unknown as { container?: boolean; containerTypes?: string[] };
         if (!sys.containerTypes) return false;
         return sys.containerTypes.includes(item.type);
     }
@@ -221,7 +224,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
         event.stopPropagation();
 
         const element = event.currentTarget as HTMLElement;
-        const itemId = element.dataset.nestedItemId;
+        const itemId = element.dataset['nestedItemId'];
         if (itemId === undefined || itemId === '') return;
 
         const nestedItem = this.item.items.get(itemId);
@@ -245,7 +248,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * Handle creating a nested item.
      */
     static async #nestedItemCreate(this: ContainerItemSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemType = target.dataset.type ?? 'gear';
+        const itemType = target.dataset['type'] ?? 'gear';
         const data = {
             name: `New ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`,
             type: itemType,
@@ -259,7 +262,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * Handle editing a nested item.
      */
     static #nestedItemEdit(this: ContainerItemSheet, event: Event, target: HTMLElement): void {
-        const itemId = target.closest<HTMLElement>('[data-nested-item-id]')?.dataset.nestedItemId;
+        const itemId = target.closest<HTMLElement>('[data-nested-item-id]')?.dataset['nestedItemId'];
         if (itemId === undefined) return;
         const nestedItem = this.item.items.get(itemId);
         void nestedItem?.sheet?.render(true);
@@ -271,7 +274,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * Handle deleting a nested item.
      */
     static async #nestedItemDelete(this: ContainerItemSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest<HTMLElement>('[data-nested-item-id]')?.dataset.nestedItemId;
+        const itemId = target.closest<HTMLElement>('[data-nested-item-id]')?.dataset['nestedItemId'];
         if (itemId === undefined || itemId === '') return;
 
         const confirmed = await ConfirmationDialog.confirm({

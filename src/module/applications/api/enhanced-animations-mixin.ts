@@ -27,6 +27,7 @@ interface AnimationSnapshot {
 export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class EnhancedAnimationsApplication extends Base implements EnhancedAnimationsMixinAPI {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructor must use any[] per TS 2545 for class merging
+        // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         constructor(...args: any[]) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- super spread accepts any[] from mixin constructor
             super(...args);
@@ -193,7 +194,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
                 const progress = Math.min(elapsed / duration, 1);
 
                 // Ease-out cubic for smooth deceleration
-                const eased = 1 - Math.pow(1 - progress, 3);
+                const eased = 1 - (1 - progress) ** 3;
                 const current = fromValue + difference * eased;
 
                 element.textContent = formatFn(current);
@@ -269,7 +270,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
                 const progress = Math.min(elapsed / duration, 1);
 
                 // Ease-out for smooth transition
-                const eased = 1 - Math.pow(1 - progress, 3);
+                const eased = 1 - (1 - progress) ** 3;
                 const current = fromPercent + (toPercent - fromPercent) * eased;
 
                 barElement.style.setProperty('--wounds-percent', `${current}%`);

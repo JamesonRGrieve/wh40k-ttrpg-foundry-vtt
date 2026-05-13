@@ -30,7 +30,7 @@ function readDialogNumber(html: JQuery<HTMLElement>): number {
     if (root === undefined) return NaN;
     const form = root.querySelector('form');
     const input = form?.querySelector<HTMLInputElement>('[name="value"]') ?? null;
-    return parseInt(input?.value ?? '');
+    return parseInt(input?.value ?? '', 10);
 }
 
 /** Minimal shape of a roll result object produced by this dialog. */
@@ -449,7 +449,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         // Handle TB multiplier
         const tbMatch = withoutDice.match(/(\d+)xTB/i);
         if (tbMatch) {
-            const multiplier = parseInt(tbMatch[1] ?? '');
+            const multiplier = parseInt(tbMatch[1] ?? '', 10);
             staticTotal += multiplier * tb;
             breakdownParts.push(`${multiplier}×${tb}`);
         }
@@ -459,7 +459,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const numberMatches = staticWithoutTB.match(/\d+/g);
         if (numberMatches) {
             for (const n of numberMatches) {
-                const val = parseInt(n);
+                const val = parseInt(n, 10);
                 staticTotal += val;
                 breakdownParts.push(`${val}`);
             }
@@ -501,7 +501,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         // Plain number formula (e.g. "3") — no roll needed
         if (/^\d+$/.test(formula.trim())) {
-            const total = parseInt(formula.trim());
+            const total = parseInt(formula.trim(), 10);
             this.rollResult = {
                 type: this.rollType,
                 formula: this.formula,
@@ -552,9 +552,9 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         for (const match of conditions) {
             const [, min, max, outcome] = match;
-            const minVal = parseInt(min ?? '');
-            const maxVal = parseInt(max ?? '');
-            const outcomeVal = parseInt(outcome ?? '');
+            const minVal = parseInt(min ?? '', 10);
+            const maxVal = parseInt(max ?? '', 10);
+            const outcomeVal = parseInt(outcome ?? '', 10);
 
             if (diceValue >= minVal && diceValue <= maxVal) {
                 result = outcomeVal;
@@ -635,7 +635,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         // Parse formula: e.g., "2xTB+1d5+2"
         // Replace TB with actual value
         const diceFormula = formula.replace(/(\d+)xTB/gi, (_match: string, multiplier: string) => {
-            const value = parseInt(multiplier) * tb;
+            const value = parseInt(multiplier, 10) * tb;
             return value.toString();
         });
 
@@ -668,7 +668,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         // Plain number formula (e.g. "3") — no roll needed, fixed value
         if (/^\d+$/.test(formula.trim())) {
-            const total = parseInt(formula.trim());
+            const total = parseInt(formula.trim(), 10);
             return {
                 type: 'fate',
                 formula: formula,
@@ -696,9 +696,9 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         for (const match of conditions) {
             const [, min, max, outcome] = match;
-            const minVal = parseInt(min ?? '');
-            const maxVal = parseInt(max ?? '');
-            const outcomeVal = parseInt(outcome ?? '');
+            const minVal = parseInt(min ?? '', 10);
+            const maxVal = parseInt(max ?? '', 10);
+            const outcomeVal = parseInt(outcome ?? '', 10);
 
             if (rolledValue >= minVal && rolledValue <= maxVal) {
                 result = outcomeVal;
@@ -730,7 +730,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         // Plain number formula — fixed value
         if (/^\d+$/.test(formula.trim())) {
-            const total = parseInt(formula.trim());
+            const total = parseInt(formula.trim(), 10);
             return {
                 type: 'thrones',
                 formula: formula,
@@ -779,7 +779,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         // Plain number formula — no dice
         if (/^\d+$/.test(formula.trim())) {
-            const fixedTotal = parseInt(formula.trim());
+            const fixedTotal = parseInt(formula.trim(), 10);
             this.rollResult = {
                 type: 'thrones',
                 formula: formula,
@@ -818,7 +818,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const staticMatches = withoutDice.match(/[+-]?\s*\d+/g);
         if (staticMatches) {
             for (const n of staticMatches) {
-                staticTotal += parseInt(n.replace(/\s+/g, ''));
+                staticTotal += parseInt(n.replace(/\s+/g, ''), 10);
             }
         }
 

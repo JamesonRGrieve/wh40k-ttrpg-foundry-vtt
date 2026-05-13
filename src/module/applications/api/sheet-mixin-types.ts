@@ -280,6 +280,7 @@ export interface ActiveModifiersMixinAPI {
 
 /** API surface added by ItemPreviewMixin */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+// biome-ignore lint/suspicious/noEmptyInterface: intentionally empty — all methods are static or private; interface exists for type-checking purposes
 export interface ItemPreviewMixinAPI {
     // All public methods are static action handlers or private (#) members.
     // No public instance API exposed beyond DEFAULT_OPTIONS actions.

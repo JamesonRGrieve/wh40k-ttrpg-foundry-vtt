@@ -139,7 +139,7 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2 as unk
             content,
             ok: {
                 label,
-                callback: (event: SubmitEvent, button: HTMLButtonElement, dialog: HTMLElement) => callback?.(dialog),
+                callback: (_event: SubmitEvent, _button: HTMLButtonElement, dialog: HTMLElement) => callback?.(dialog),
             },
             rejectClose: false,
         });

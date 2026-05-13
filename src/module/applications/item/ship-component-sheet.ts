@@ -11,7 +11,7 @@ import BaseItemSheet from './base-item-sheet.ts';
 // @ts-expect-error - TS2417 static side inheritance
 export default class ShipComponentSheet extends BaseItemSheet {
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'ship-component'],
         position: {
             width: 600,
@@ -22,7 +22,7 @@ export default class ShipComponentSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static override PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/ship-component-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
@@ -32,7 +32,7 @@ export default class ShipComponentSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static TABS = [
+    static override TABS = [
         { tab: 'details', group: 'primary', label: 'WH40K.Item.Tabs.Details' },
         { tab: 'effects', group: 'primary', label: 'WH40K.Item.Tabs.Effects' },
     ];
@@ -40,27 +40,27 @@ export default class ShipComponentSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups = {
+    override tabGroups = {
         primary: 'details',
     };
 
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Add component-specific choices
-        context.componentTypes = this._getComponentTypeChoices();
-        context.hullTypes = this._getHullTypeChoices();
-        context.availabilities = this._getAvailabilityChoices();
-        context.conditions = this._getConditionChoices();
+        context['componentTypes'] = this._getComponentTypeChoices();
+        context['hullTypes'] = this._getHullTypeChoices();
+        context['availabilities'] = this._getAvailabilityChoices();
+        context['conditions'] = this._getConditionChoices();
 
         // Add display helpers
-        const sys = context.system as { hasModifiers?: boolean; power?: { generated?: number; used?: number } };
-        context.isGenerator = (sys.power?.generated ?? 0) > 0;
-        context.isPowerConsumer = (sys.power?.used ?? 0) > 0;
-        context.hasModifiers = sys.hasModifiers;
+        const sys = context['system'] as { hasModifiers?: boolean; power?: { generated?: number; used?: number } };
+        context['isGenerator'] = (sys.power?.generated ?? 0) > 0;
+        context['isPowerConsumer'] = (sys.power?.used ?? 0) > 0;
+        context['hasModifiers'] = sys.hasModifiers;
 
         return context;
     }

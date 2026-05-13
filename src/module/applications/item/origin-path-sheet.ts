@@ -13,7 +13,7 @@ import BaseItemSheet from './base-item-sheet.ts';
 // @ts-expect-error - TS2417 static side inheritance
 export default class OriginPathSheet extends BaseItemSheet {
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'origin-path-sheet'],
         position: {
             width: 700,
@@ -26,7 +26,7 @@ export default class OriginPathSheet extends BaseItemSheet {
     };
 
     /** @override */
-    static PARTS = {
+    static override PARTS = {
         content: {
             template: 'systems/wh40k-rpg/templates/item/item-origin-path-sheet.hbs',
             scrollable: [''],
@@ -34,20 +34,20 @@ export default class OriginPathSheet extends BaseItemSheet {
     };
 
     /** @override */
-    tabGroups = {
+    override tabGroups = {
         primary: 'details',
     };
 
     /* -------------------------------------------- */
 
     /** @override */
-    get title(): string {
+    override get title(): string {
         return this.document.name || 'Origin Path';
     }
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax, complexity -- boundary: ApplicationV2 _prepareContext options/return are framework-defined free-form payloads; complexity is inherent to context assembly
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         interface OriginGrants {

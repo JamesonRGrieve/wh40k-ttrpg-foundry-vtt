@@ -15,6 +15,7 @@ import type { ApplicationV2Ctor } from './application-types.ts';
 export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class VisualFeedbackApplication extends Base {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- standard mixin constructor pattern requires any[]
+        // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         constructor(...args: any[]) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- forwarding mixin args to base
             super(...args);
@@ -206,7 +207,7 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
                 const elapsed = Date.now() - start;
                 const progress = Math.min(elapsed / duration, 1);
 
-                const eased = 1 - Math.pow(1 - progress, 3);
+                const eased = 1 - (1 - progress) ** 3;
                 const current = Math.round(fromValue + difference * eased);
 
                 element.textContent = current.toString();
