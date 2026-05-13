@@ -298,9 +298,11 @@ export class TransactionManager {
     }
 
     static async notifyRequester(message: string, type: 'info' | 'warning' | 'error' = 'info'): Promise<void> {
-        const toast = (foundry.applications?.api as any)?.Toast;
-        if (toast && typeof toast[type] === 'function') {
-            toast[type](message);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 Toast API has no type definitions
+        const toastApi = foundry.applications?.api as unknown as Record<string, Record<string, (msg: string) => void> | undefined>;
+        const toast = toastApi['Toast'];
+        if (toast !== undefined && typeof toast[type] === 'function') {
+            toast[type]?.(message);
             return;
         }
 
@@ -311,7 +313,7 @@ export class TransactionManager {
     }
 
     static #getTargetGM(): User | undefined {
-        return (game.users as any).activeGM ?? game.users.contents.find((user) => user.isGM && user.active);
+        return (game.users as { activeGM?: User }).activeGM ?? game.users.contents.find((user) => user.isGM && user.active);
     }
 
     static async #onSocketMessage(payload: Record<string, unknown>): Promise<void> {
