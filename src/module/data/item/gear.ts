@@ -28,7 +28,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     declare craftsmanship: string;
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -87,12 +87,12 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @protected
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
     }
 
     /** @inheritdoc */
-    prepareBaseData(): void {
+    override prepareBaseData(): void {
         super.prepareBaseData();
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: parent _source is Foundry's pre-processed raw payload, untyped at this layer
@@ -119,19 +119,19 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @protected
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry _cleanData receives untyped legacy source
-    static _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
+    static override _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
         super._cleanData(source, options);
         // Ensure uses values are integers
-        if (source?.uses !== undefined && source.uses !== null && typeof source.uses === 'object') {
+        if (source?.['uses'] !== undefined && source['uses'] !== null && typeof source['uses'] === 'object') {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry _cleanData receives untyped legacy source
-            const uses = source.uses as Record<string, unknown>;
-            const usesValue = uses.value;
+            const uses = source['uses'] as Record<string, unknown>;
+            const usesValue = uses['value'];
             if (usesValue !== undefined) {
-                uses.value = parseInt(typeof usesValue === 'string' || typeof usesValue === 'number' ? String(usesValue) : '') || 0;
+                uses['value'] = parseInt(typeof usesValue === 'string' || typeof usesValue === 'number' ? String(usesValue) : '') || 0;
             }
-            const usesMax = uses.max;
+            const usesMax = uses['max'];
             if (usesMax !== undefined) {
-                uses.max = parseInt(typeof usesMax === 'string' || typeof usesMax === 'number' ? String(usesMax) : '') || 0;
+                uses['max'] = parseInt(typeof usesMax === 'string' || typeof usesMax === 'number' ? String(usesMax) : '') || 0;
             }
         }
     }

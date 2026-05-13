@@ -33,7 +33,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
     declare notes: string;
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -130,7 +130,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
     }
 
@@ -144,14 +144,14 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
+    static override _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData?.(source, options);
         // Ensure hullType is array for Set field
-        if (source?.hullType && !Array.isArray(source.hullType)) {
-            if (typeof source.hullType === 'string') {
-                source.hullType = [source.hullType];
-            } else if (source.hullType instanceof Set) {
-                source.hullType = Array.from(source.hullType);
+        if (source?.['hullType'] && !Array.isArray(source['hullType'])) {
+            if (typeof source['hullType'] === 'string') {
+                source['hullType'] = [source['hullType']];
+            } else if (source['hullType'] instanceof Set) {
+                source['hullType'] = Array.from(source['hullType'] as Set<unknown>);
             }
         }
     }
