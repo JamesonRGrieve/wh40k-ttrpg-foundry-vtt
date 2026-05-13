@@ -2,7 +2,12 @@
  * @file GearSheet - ApplicationV2 sheet for gear/consumable/drug/tool items
  */
 
+import type GearData from '../../data/item/gear.ts';
+import type { WH40KItemDocument } from '../../types/global.d.ts';
 import BaseItemSheet from './base-item-sheet.ts';
+
+/** Gear item with its system data typed to the GearData DataModel. */
+type GearItem = WH40KItemDocument & { system: GearData };
 
 /** Tab label localization keys, hoisted so the static TABS entries reference identifiers. */
 const TAB_LABEL_OVERVIEW = 'WH40K.Tabs.Overview';
@@ -15,7 +20,13 @@ const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class GearSheet extends BaseItemSheet {
+    /** Narrow the inherited item document to its gear DataModel shape. */
+    override get item(): GearItem {
+        return super.item as GearItem;
+    }
+
     /** @override */
+    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'gear'],
         actions: {
@@ -27,6 +38,7 @@ export default class GearSheet extends BaseItemSheet {
             height: 700,
         },
     };
+    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 
@@ -60,7 +72,8 @@ export default class GearSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext returns free-form template context; Record<string, unknown> is the required base shape
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Add gear-specific computed properties to context
@@ -82,8 +95,7 @@ export default class GearSheet extends BaseItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: ApplicationV2 static action handler `this` type is not known statically
-    static async #onResetUses(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onResetUses(this: GearSheet, event: Event, target: HTMLElement): Promise<void> {
         await this.item.system.resetUses();
     }
 
@@ -92,8 +104,7 @@ export default class GearSheet extends BaseItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: ApplicationV2 static action handler `this` type is not known statically
-    static async #onConsumeUse(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onConsumeUse(this: GearSheet, event: Event, target: HTMLElement): Promise<void> {
         await this.item.system.consume();
     }
 }

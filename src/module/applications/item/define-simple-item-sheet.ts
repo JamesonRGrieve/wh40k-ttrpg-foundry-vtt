@@ -28,11 +28,13 @@ export interface SimpleItemSheetTab {
     tab: string;
     group: string;
     label: string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document condition predicates accept any document shape
     condition?: (document: unknown) => boolean;
 }
 
 /** Action handler matching the V14 ApplicationV2 action shape. */
-export type SimpleItemSheetAction = (this: BaseItemSheet, event: Event, target: HTMLElement) => unknown | Promise<unknown>;
+// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 action return type is untyped; unknown is the widest safe type
+export type SimpleItemSheetAction = (this: BaseItemSheet, event: Event, target: HTMLElement) => unknown;
 
 /** Subset of the V14 `static PARTS.sheet` shape we let callers override. */
 export interface SimpleItemSheetPartOverrides {
@@ -75,10 +77,13 @@ export interface DefineSimpleItemSheetOptions<TBase extends BaseItemSheetCtor = 
      * label maps and other constants — it avoids needing a `prepareContext`
      * callback for the common case.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: template context is free-form; Record<string, unknown> is the required shape
     extraContext?: Record<string, unknown>;
     /** Optional async hook to extend the rendered context. Called after the base class's `_prepareContext`. */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: template context is free-form; Record<string, unknown> is the required shape
     prepareContext?: (sheet: BaseItemSheet, context: Record<string, unknown>) => void | Promise<void>;
     /** Optional async hook called after the base class's `_onRender`. */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: template context and render options are free-form Foundry payloads
     onRender?: (sheet: BaseItemSheet, context: Record<string, unknown>, options: Record<string, unknown>) => void | Promise<void>;
 }
 
@@ -97,7 +102,7 @@ export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = 
     const tabs = opts.tabs ?? [];
     const hasTabs = tabs.length > 0;
 
-    if (hasTabs && !opts.defaultTab) {
+    if (hasTabs && opts.defaultTab === undefined) {
         throw new Error(`defineSimpleItemSheet(${opts.className}): defaultTab is required when tabs is non-empty.`);
     }
 
@@ -127,25 +132,27 @@ export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = 
 
         override tabGroups: Record<string, string> = hasTabs ? { primary: opts.defaultTab as string } : {};
 
-        override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const context = await (super._prepareContext as any).call(this, options);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext returns free-form template context; Record<string, unknown> is the required base shape
+        override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, no-restricted-syntax -- boundary: super._prepareContext is not typed in the mixin chain
+            const context = (await (super._prepareContext as any).call(this, options)) as Record<string, unknown>;
 
-            if (opts.extraContext) {
+            if (opts.extraContext !== undefined) {
                 Object.assign(context, opts.extraContext);
             }
 
-            if (opts.prepareContext) {
+            if (opts.prepareContext !== undefined) {
                 await opts.prepareContext(this, context);
             }
 
             return context;
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender context/options are free-form Foundry payloads
         override async _onRender(context: Record<string, unknown>, renderOptions: Record<string, unknown>): Promise<void> {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, no-restricted-syntax -- boundary: super._onRender is not typed in the mixin chain
             await (super._onRender as any).call(this, context, renderOptions);
-            if (opts.onRender) {
+            if (opts.onRender !== undefined) {
                 await opts.onRender(this, context, renderOptions);
             }
         }

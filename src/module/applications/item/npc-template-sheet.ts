@@ -153,13 +153,6 @@ export default class NPCTemplateSheet extends BaseItemSheet {
 
     #renderTimeout: ReturnType<typeof setTimeout> | undefined;
 
-    get _previewThreat(): number {
-        return this.#previewThreat;
-    }
-    set _previewThreat(value: number) {
-        this.#previewThreat = value;
-    }
-
     /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
@@ -169,13 +162,15 @@ export default class NPCTemplateSheet extends BaseItemSheet {
      * @returns {object} Tab configuration object.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _getTabs returns Foundry's free-form tab configuration; Record<string, Record<string, unknown>> is the required base shape
     override _getTabs(): Record<string, Record<string, unknown>> {
         const tabs = super._getTabs();
 
         // Add icons from TABS definition
         for (const tabDef of NPCTemplateSheet.TABS) {
             const tabEntry = tabs[tabDef.tab];
-            if (tabDef.tab in tabs && tabEntry !== undefined) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess makes this undefined-possible under tsconfig.strict.json
+            if (tabEntry !== undefined) {
                 tabEntry['icon'] = tabDef.icon;
             }
         }
@@ -184,6 +179,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext returns free-form template context; Record<string, unknown> is the required base shape
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         const sys = this.item.system;
@@ -293,6 +289,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender context is free-form template context passed by Foundry ApplicationV2
     override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
@@ -517,6 +514,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
                 // Resolve all trait/talent UUIDs in parallel
                 const uuids = [...sys.traits, ...sys.talents].map((ref) => ref.uuid).filter((uuid): uuid is string => uuid !== undefined && uuid !== '');
                 const resolved = await Promise.all(uuids.map(async (uuid) => (await fromUuid(uuid)) as ResolvedItem | null));
+                // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments accepts free-form item data records
                 const itemsToCreate: Array<Record<string, unknown>> = resolved
                     .filter((item): item is ResolvedItem => item !== null)
                     .map((item) => ({

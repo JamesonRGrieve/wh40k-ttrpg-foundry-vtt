@@ -193,7 +193,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         context.qualitiesArray = Array.from(system.effectiveSpecial).map((q: string) => {
             // Parse level from quality identifier if present
             const match = /-(\d+)$/.exec(q);
-            const level = match !== null ? parseInt(match[1] ?? '', 10) : null;
+            const level = match !== null ? parseInt(match[1], 10) : null;
 
             // Get localized label using CONFIG helper (CONFIG.wh40k not CONFIG.WH40K)
             const label = CONFIG.wh40k.getQualityLabel(q, level);
