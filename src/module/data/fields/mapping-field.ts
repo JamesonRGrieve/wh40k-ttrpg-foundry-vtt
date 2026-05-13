@@ -16,14 +16,14 @@ export default class MappingField extends foundry.data.fields.ObjectField {
     constructor(model: foundry.data.fields.DataField.Any, options: Record<string, unknown> = {}) {
         super(options as foundry.data.fields.ObjectField.DefaultOptions);
         this.model = model;
-        this.initialKeys = (options.initialKeys as string[]) ?? null;
-        this.initialKeysOnly = (options.initialKeysOnly as boolean) ?? false;
+        this.initialKeys = (options['initialKeys'] as string[]) ?? null;
+        this.initialKeysOnly = (options['initialKeysOnly'] as boolean) ?? false;
     }
 
     /* -------------------------------------------- */
 
     /** @inheritdoc */
-    _cleanType(value: Record<string, unknown>, options: DataModelV14.CleaningOptions = {}): Record<string, unknown> {
+    override _cleanType(value: Record<string, unknown>, options: DataModelV14.CleaningOptions = {}): Record<string, unknown> {
         const cleaned = super._cleanType(value, options) as Record<string, unknown>;
 
         // Clean each mapped value
@@ -39,7 +39,7 @@ export default class MappingField extends foundry.data.fields.ObjectField {
     /* -------------------------------------------- */
 
     /** @inheritdoc */
-    initialize(
+    override initialize(
         value: Record<string, unknown>,
         model: InstanceType<typeof foundry.abstract.DataModel>,
         options: Record<string, unknown> = {},
@@ -61,7 +61,7 @@ export default class MappingField extends foundry.data.fields.ObjectField {
     /* -------------------------------------------- */
 
     /** @inheritdoc */
-    _validateType(value: unknown, options: Record<string, unknown> = {}): void {
+    override _validateType(value: unknown, options: Record<string, unknown> = {}): void {
         if (foundry.utils.getType(value) !== 'Object') {
             throw new Error('Value must be an object');
         }
