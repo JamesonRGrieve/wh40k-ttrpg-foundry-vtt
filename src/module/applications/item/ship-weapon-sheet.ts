@@ -4,10 +4,6 @@
 
 import BaseItemSheet from './base-item-sheet.ts';
 
-/** Tab label localization keys, hoisted so the static TABS entries reference identifiers. */
-const TAB_LABEL_DETAILS = 'WH40K.Tabs.Details';
-const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
-
 /**
  * Sheet for ship weapon items.
  * Handles macrobatteries, lances, torpedoes, and other ship-scale weapons.
@@ -15,7 +11,7 @@ const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
 // @ts-expect-error - TS2417 static side inheritance
 export default class ShipWeaponSheet extends BaseItemSheet {
     /** @override */
-    static override DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'ship-weapon'],
         position: {
             width: 600,
@@ -26,7 +22,7 @@ export default class ShipWeaponSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static override PARTS = {
+    static PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/ship-weapon-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
@@ -36,34 +32,33 @@ export default class ShipWeaponSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static override TABS = [
-        { tab: 'details', group: 'primary', label: TAB_LABEL_DETAILS },
-        { tab: 'effects', group: 'primary', label: TAB_LABEL_EFFECTS },
+    static TABS = [
+        { tab: 'details', group: 'primary', label: 'WH40K.Item.Tabs.Details' },
+        { tab: 'effects', group: 'primary', label: 'WH40K.Item.Tabs.Effects' },
     ];
 
     /* -------------------------------------------- */
 
     /** @override */
-    override tabGroups = {
+    tabGroups = {
         primary: 'details',
     };
 
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext returns free-form template context; Record<string, unknown> is the required base shape
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Add weapon-specific choices
-        context['weaponTypes'] = this._getWeaponTypeChoices();
-        context['locations'] = this._getLocationChoices();
-        context['hullTypes'] = this._getHullTypeChoices();
-        context['availabilities'] = this._getAvailabilityChoices();
+        context.weaponTypes = this._getWeaponTypeChoices();
+        context.locations = this._getLocationChoices();
+        context.hullTypes = this._getHullTypeChoices();
+        context.availabilities = this._getAvailabilityChoices();
 
         // Add display helpers
-        // eslint-disable-next-line no-restricted-syntax -- boundary: system is untyped Record at context level
-        context['hasSpecialQualities'] = (context['system'] as Record<string, unknown>)['special'] !== undefined;
+        const system = context.system as { special?: { size?: number } } | undefined;
+        context.hasSpecialQualities = (system?.special?.size ?? 0) > 0;
 
         return context;
     }
