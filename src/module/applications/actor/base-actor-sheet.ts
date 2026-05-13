@@ -1432,7 +1432,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (this.isEditable) {
             this.element
                 .querySelectorAll('input[type="text"][data-dtype="Number"]')
-                .forEach((i) => i.addEventListener('change', this._onChangeInputDelta.bind(this)));
+                .forEach((i) => { i.addEventListener('change', this._onChangeInputDelta.bind(this)); });
         }
 
         // Auto-select number input values on focus for easy editing
