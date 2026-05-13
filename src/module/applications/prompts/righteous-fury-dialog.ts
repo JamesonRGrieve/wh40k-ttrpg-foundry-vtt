@@ -27,13 +27,13 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
      */
     constructor(options: RighteousFuryDialogOptions = {}) {
         super(options);
-        this.actor = options.actor;
-        this.characteristic = options.characteristic;
-        this.target = options.target;
-        this.weaponName = options.weaponName;
-        this.isMelee = options.isMelee;
-        this.onConfirm = options.onConfirm;
-        this.onFail = options.onFail;
+        if (options.actor !== undefined) this.actor = options.actor;
+        if (options.characteristic !== undefined) this.characteristic = options.characteristic;
+        if (options.target !== undefined) this.target = options.target;
+        if (options.weaponName !== undefined) this.weaponName = options.weaponName;
+        if (options.isMelee !== undefined) this.isMelee = options.isMelee;
+        if (options.onConfirm !== undefined) this.onConfirm = options.onConfirm;
+        if (options.onFail !== undefined) this.onFail = options.onFail;
         this.confirmationRoll = null;
         this.success = false;
         this.dos = 0;
@@ -42,7 +42,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         tag: 'div',
         classes: ['wh40k-rpg', 'dialog', 'righteous-fury', 'standard-form'],
         actions: {
@@ -61,7 +61,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static override PARTS = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/righteous-fury-prompt.hbs',
             scrollable: [''],
@@ -137,7 +137,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         return {
             ...context,

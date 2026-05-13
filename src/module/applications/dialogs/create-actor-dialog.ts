@@ -50,14 +50,14 @@ export class WH40KCreateActorDialog {
      */
     static async open(opts: CreateActorOptions = {}): Promise<Actor | null> {
         const initialSystem = opts.initialSystem ?? 'dh2';
-        const initialKind = ACTOR_SYSTEM_AVAILABILITY[initialSystem][0];
+        const initialKind = ACTOR_SYSTEM_AVAILABILITY[initialSystem]?.[0] ?? 'character';
 
         const systemSelect = Object.keys(ACTOR_SYSTEM_LABELS)
             .map((k) => `<option value="${k}" ${k === initialSystem ? 'selected' : ''}>${ACTOR_SYSTEM_LABELS[k]}</option>`)
             .join('');
 
         const kindSelect = Object.keys(ACTOR_KIND_LABELS)
-            .filter((k) => ACTOR_SYSTEM_AVAILABILITY[initialSystem].includes(k))
+            .filter((k) => (ACTOR_SYSTEM_AVAILABILITY[initialSystem] ?? []).includes(k))
             .map((k) => `<option value="${k}" ${k === initialKind ? 'selected' : ''}>${ACTOR_KIND_LABELS[k]}</option>`)
             .join('');
 
@@ -97,7 +97,7 @@ export class WH40KCreateActorDialog {
                             const type = `${system}-${kind}`;
                             const name = nameInput || `New ${ACTOR_SYSTEM_LABELS[system]} ${ACTOR_KIND_LABELS[kind]}`;
                             const data: Record<string, unknown> = { name, type };
-                            if (opts.folder) data.folder = opts.folder;
+                            if (opts.folder) data['folder'] = opts.folder;
                             const actor = await Actor.create(data as unknown as Parameters<typeof Actor.create>[0]);
                             resolve((actor as unknown as Actor | null) ?? null);
                         },
@@ -126,7 +126,7 @@ export class WH40KCreateActorDialog {
                         .map((k) => `<option value="${k}" ${k === current ? 'selected' : ''}>${ACTOR_KIND_LABELS[k]}</option>`)
                         .join('');
                     if (!allowed.includes(current)) {
-                        kindSel.value = allowed[0];
+                        kindSel.value = allowed[0] ?? '';
                     }
                 });
             };

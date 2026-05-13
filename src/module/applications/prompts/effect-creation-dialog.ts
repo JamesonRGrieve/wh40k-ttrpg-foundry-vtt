@@ -41,11 +41,12 @@ export default class EffectCreationDialog extends DialogV2 {
             width: 520,
             height: 'auto' as unknown as number,
         },
+        // eslint-disable-next-line no-restricted-syntax -- boundary: exactOptionalPropertyTypes: FormConfiguration optional booleans require explicit cast when mixed with handler type cast
         form: {
             handler: EffectCreationDialog.formHandler as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: true,
-        },
+        } as ApplicationV2Config.FormConfiguration,
         actions: {
             selectCondition: EffectCreationDialog._onSelectCondition,
             selectCategory: EffectCreationDialog._onSelectCategory,
@@ -102,11 +103,11 @@ export default class EffectCreationDialog extends DialogV2 {
     async _prepareContext(_options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context: Record<string, unknown> = {};
 
-        context.actor = this.actor;
-        context.selectedCategory = this.selectedCategory;
+        context['actor'] = this.actor;
+        context['selectedCategory'] = this.selectedCategory;
 
         // Predefined conditions
-        context.conditions = [
+        context['conditions'] = [
             { id: 'stunned', name: 'Stunned', icon: 'fas fa-dizzy', nature: 'harmful' },
             { id: 'prone', name: 'Prone', icon: 'fas fa-person-falling', nature: 'harmful' },
             { id: 'blinded', name: 'Blinded', icon: 'fas fa-eye-slash', nature: 'harmful' },
@@ -119,7 +120,7 @@ export default class EffectCreationDialog extends DialogV2 {
         ];
 
         // Characteristics
-        context.characteristics = [
+        context['characteristics'] = [
             { id: 'weaponSkill', label: 'Weapon Skill' },
             { id: 'ballisticSkill', label: 'Ballistic Skill' },
             { id: 'strength', label: 'Strength' },
@@ -132,7 +133,7 @@ export default class EffectCreationDialog extends DialogV2 {
         ];
 
         // Common skills
-        context.skills = [
+        context['skills'] = [
             { id: 'dodge', label: 'Dodge' },
             { id: 'parry', label: 'Parry' },
             { id: 'awareness', label: 'Awareness' },
@@ -143,7 +144,7 @@ export default class EffectCreationDialog extends DialogV2 {
         ];
 
         // Combat modifiers
-        context.combatTypes = [
+        context['combatTypes'] = [
             { id: 'attack', label: 'Attack Rolls' },
             { id: 'damage', label: 'Damage' },
             { id: 'defense', label: 'Defense' },
@@ -159,7 +160,7 @@ export default class EffectCreationDialog extends DialogV2 {
      * Handle category selection
      */
     static _onSelectCategory(this: EffectCreationDialog, event: Event, target: HTMLElement): void {
-        this.selectedCategory = target.dataset.category ?? 'custom';
+        this.selectedCategory = target.dataset['category'] ?? 'custom';
         void this.render();
     }
 
@@ -169,7 +170,7 @@ export default class EffectCreationDialog extends DialogV2 {
      * Handle quick condition selection
      */
     static _onSelectCondition(this: EffectCreationDialog, event: Event, target: HTMLElement): void {
-        const conditionId = target.dataset.conditionId;
+        const conditionId = target.dataset['conditionId'];
         if (!conditionId) return;
 
         const form = this.element.querySelector('form');
@@ -221,7 +222,7 @@ export default class EffectCreationDialog extends DialogV2 {
 
         // Create the effect
         const effects = await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData as Record<string, unknown> & { name: string }]);
-        return this.resolve(effects[0]);
+        return this.resolve((effects[0] ?? null) as ActiveEffect | null);
     }
 
     /* -------------------------------------------- */
@@ -309,7 +310,7 @@ export default class EffectCreationDialog extends DialogV2 {
         const rounds = parseInt(data.duration?.rounds ?? '0');
         if (rounds > 0) {
             const combat = game.combat;
-            effectData.duration = {
+            effectData['duration'] = {
                 rounds,
                 startRound: combat?.round ?? 0,
                 startTurn: combat?.turn ?? 0,
@@ -353,7 +354,7 @@ export default class EffectCreationDialog extends DialogV2 {
         const rounds = parseInt(data.duration?.rounds ?? '0');
         if (rounds > 0) {
             const combat = game.combat;
-            effectData.duration = {
+            effectData['duration'] = {
                 rounds,
                 startRound: combat?.round ?? 0,
                 startTurn: combat?.turn ?? 0,
@@ -396,7 +397,7 @@ export default class EffectCreationDialog extends DialogV2 {
         const rounds = parseInt(data.duration?.rounds ?? '0');
         if (rounds > 0) {
             const combat = game.combat;
-            effectData.duration = {
+            effectData['duration'] = {
                 rounds,
                 startRound: combat?.round ?? 0,
                 startTurn: combat?.turn ?? 0,
@@ -439,7 +440,7 @@ export default class EffectCreationDialog extends DialogV2 {
         const rounds = parseInt(data.duration?.rounds ?? '0');
         if (rounds > 0) {
             const combat = game.combat;
-            effectData.duration = {
+            effectData['duration'] = {
                 rounds,
                 startRound: combat?.round ?? 0,
                 startTurn: combat?.turn ?? 0,

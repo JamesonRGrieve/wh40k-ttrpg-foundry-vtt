@@ -29,7 +29,7 @@ interface TransactionRequestContext extends Record<string, unknown> {
 }
 
 export default class TransactionRequestDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+    static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         id: 'transaction-request-dialog-{id}',
         classes: ['wh40k-rpg', 'transaction-request-dialog'],
         tag: 'form',
@@ -43,12 +43,13 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 position.height accepts 'auto' but typings list number
             height: 'auto' as unknown as number,
         },
+        // eslint-disable-next-line no-restricted-syntax -- boundary: exactOptionalPropertyTypes: FormConfiguration optional booleans require explicit cast when mixed with handler type cast
         form: {
             // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- ApplicationV2 form handler signature differs from shipped typings
             handler: TransactionRequestDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: false,
-        },
+        } as ApplicationV2Config.FormConfiguration,
         /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             selectItem: TransactionRequestDialog.#selectItem,
@@ -76,10 +77,12 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         this.actor = actor;
 
         const sources = TransactionManager.listSourcesForBuyer(actor);
-        if (sources.length > 0) {
-            this.sourceId = sources[0].id;
-            const items = TransactionManager.listItemsForSource(sources[0]);
-            if (items.length > 0) this.itemId = items[0].id;
+        const firstSource = sources[0];
+        if (firstSource !== undefined) {
+            this.sourceId = firstSource.id;
+            const items = TransactionManager.listItemsForSource(firstSource);
+            const firstItem = items[0];
+            if (firstItem !== undefined) this.itemId = firstItem.id;
         }
     }
 
@@ -87,7 +90,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         return 'Barter';
     }
 
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<TransactionRequestContext> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<TransactionRequestContext> {
         const context = (await super._prepareContext(options)) as TransactionRequestContext;
         const sources = TransactionManager.listSourcesForBuyer(this.actor);
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive null fallback against array .find()/indexed access
@@ -157,7 +160,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         };
     }
 
-    _onRender(context: TransactionRequestContext, options: ApplicationV2Config.RenderOptions): void {
+    override _onRender(context: TransactionRequestContext, options: ApplicationV2Config.RenderOptions): void {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises -- ApplicationV2 _onRender base may return Promise<void> | void
         super._onRender(context, options);
 
@@ -192,9 +195,9 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
 
     static #onSubmit(this: TransactionRequestDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): void {
         const data = formData.object;
-        const qty = (data.quantity as string | undefined) ?? '';
-        const inf = (data.influenceBurn as string | undefined) ?? '';
-        const src = (data.sourceId as string | undefined) ?? '';
+        const qty = (data['quantity'] as string | undefined) ?? '';
+        const inf = (data['influenceBurn'] as string | undefined) ?? '';
+        const src = (data['sourceId'] as string | undefined) ?? '';
         this.quantity = Math.max(1, Number.parseInt(qty !== '' ? qty : '1', 10) || 1);
         this.influenceBurn = Math.max(0, Number.parseInt(inf !== '' ? inf : '0', 10) || 0);
         this.sourceId = src !== '' ? src : this.sourceId;
@@ -202,7 +205,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
 
     static async #selectItem(this: TransactionRequestDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const itemId = target.dataset.itemId;
+        const itemId = target.dataset['itemId'];
         if (itemId === undefined || itemId === '') return;
 
         this.itemId = itemId;
@@ -242,8 +245,8 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options; we add a private _skipResolve marker
-    async close(options: Record<string, unknown> = {}): Promise<unknown> {
-        if (this.#resolve !== null && options._skipResolve !== true) {
+    override async close(options: Record<string, unknown> = {}): Promise<unknown> {
+        if (this.#resolve !== null && options['_skipResolve'] !== true) {
             this.#resolve(null);
         }
         return super.close(options);

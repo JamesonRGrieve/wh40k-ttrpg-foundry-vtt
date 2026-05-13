@@ -49,7 +49,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         id: 'characteristic-setup-{id}',
         classes: ['wh40k-rpg', 'characteristic-setup-dialog'],
         tag: 'div',
@@ -141,7 +141,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         if (!Array.isArray(this.#rolls) || this.#rolls.length !== 9) {
@@ -161,7 +161,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         const characteristics = GENERATION_CHARACTERISTICS.map((key) => {
             const charData: CharacteristicView = allChars[key] ?? {};
             const assignedIndex = this.#assignments[key] ?? null;
-            const assignedRoll = assignedIndex !== null ? this.#rolls[assignedIndex] : 0;
+            const assignedRoll = assignedIndex !== null ? (this.#rolls[assignedIndex] ?? 0) : 0;
             const rollValue = assignedRoll > 0 ? assignedRoll : null;
             const base = this.#advancedMode ? this.#customBases[key] ?? DEFAULT_BASE : DEFAULT_BASE;
             const total = rollValue !== null ? base + rollValue : null;
@@ -215,7 +215,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+    override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises -- ApplicationV2 _onRender base may return Promise<void> | void
         super._onRender(context, options);
         this.#activateListeners();
@@ -259,11 +259,11 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     #onRollChipClick(event: Event): void {
         const chip = event.currentTarget as HTMLElement;
-        const index = parseInt(chip.dataset.rollIndex ?? '0', 10);
+        const index = parseInt(chip.dataset['rollIndex'] ?? '0', 10);
 
         if (chip.querySelector('.csd-roll-input') !== null) return;
 
-        const currentValue = this.#rolls[index] !== 0 ? this.#rolls[index] : '';
+        const currentValue = this.#rolls[index] !== 0 ? (this.#rolls[index] ?? '') : '';
         const input = document.createElement('input');
         input.type = 'number';
         input.className = 'csd-roll-input';
@@ -271,7 +271,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         input.max = '40';
         input.value = currentValue.toString();
         input.placeholder = '2-40';
-        input.dataset.rollIndex = index.toString();
+        input.dataset['rollIndex'] = index.toString();
 
         input.addEventListener('blur', (e) => this.#onRollInputBlur(e));
         input.addEventListener('keydown', (e) => this.#onRollInputKeydown(e));
@@ -305,7 +305,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     #saveRollInput(input: HTMLInputElement): void {
-        const index = parseInt(input.dataset.rollIndex ?? '0', 10);
+        const index = parseInt(input.dataset['rollIndex'] ?? '0', 10);
         let value = parseInt(input.value, 10);
 
         if (isNaN(value) || value < 2) value = 0;
@@ -319,8 +319,8 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     #onDragStart(event: DragEvent): void {
         const target = event.currentTarget as HTMLElement;
-        const rollIndex = parseInt(target.dataset.rollIndex ?? '0', 10);
-        const fromCharacteristic = (target.dataset.characteristic ?? null) as CharacteristicKey | null;
+        const rollIndex = parseInt(target.dataset['rollIndex'] ?? '0', 10);
+        const fromCharacteristic = (target.dataset['characteristic'] ?? null) as CharacteristicKey | null;
 
         if (this.#rolls[rollIndex] === 0) {
             event.preventDefault();
@@ -382,7 +382,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         if (this.#dragData === null) return;
 
         const slot = event.currentTarget as HTMLElement;
-        const targetChar = slot.dataset.characteristic as CharacteristicKey;
+        const targetChar = slot.dataset['characteristic'] as CharacteristicKey;
         const draggedIndex = this.#dragData.index;
         const sourceChar = this.#dragData.characteristic;
 
@@ -423,7 +423,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     #onBaseValueChange(event: Event): void {
         const input = event.currentTarget as HTMLInputElement;
-        const key = input.dataset.characteristic as CharacteristicKey;
+        const key = input.dataset['characteristic'] as CharacteristicKey;
         let value = parseInt(input.value, 10);
 
         if (isNaN(value) || value < 0) value = 0;
@@ -436,7 +436,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     static async #onApply(this: CharacteristicSetupDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         const allAssigned = GENERATION_CHARACTERISTICS.every((key) => {
             const index = this.#assignments[key];
-            return index !== null && index !== undefined && this.#rolls[index] > 0;
+            return index !== null && index !== undefined && (this.#rolls[index] ?? 0) > 0;
         });
 
         if (!allAssigned) {
@@ -458,7 +458,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         for (const key of GENERATION_CHARACTERISTICS) {
             const rollIndex = this.#assignments[key];
             if (rollIndex === null || rollIndex === undefined) continue;
-            const rollValue = this.#rolls[rollIndex];
+            const rollValue = this.#rolls[rollIndex] ?? 0;
             const base = this.#advancedMode ? this.#customBases[key] ?? DEFAULT_BASE : DEFAULT_BASE;
             const total = base + rollValue;
             updateData[`system.characteristics.${key}.base`] = total;
@@ -491,7 +491,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options record
-    async close(options: Record<string, unknown> = {}): Promise<unknown> {
+    override async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (!this.#applied && this.#resolve !== null) {
             this.#resolve(false);
         }

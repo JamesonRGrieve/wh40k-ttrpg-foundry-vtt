@@ -38,7 +38,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+    static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         id: 'roll-configuration-{id}',
         classes: ['wh40k-rpg', 'roll-configuration-dialog'],
         tag: 'form',
@@ -53,12 +53,13 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height accepts number | 'auto'
             height: 'auto' as unknown as number,
         },
+        // eslint-disable-next-line no-restricted-syntax -- boundary: exactOptionalPropertyTypes: FormConfiguration optional booleans require explicit cast when mixed with handler type cast
         form: {
             // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: ApplicationV2 form handler signature differs; bound by framework on action invocation
             handler: RollConfigurationDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: true,
-        },
+        } as ApplicationV2Config.FormConfiguration,
         actions: {
             /* eslint-disable @typescript-eslint/unbound-method -- Foundry action handlers are invoked with the application as `this` */
             toggleSituational: RollConfigurationDialog.#toggleSituational,
@@ -133,7 +134,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext options/return are loose records
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Calculate the difficulty modifier
@@ -229,7 +230,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const situationalModifiers = this.config.situationalModifiers ?? [];
         for (let i = 0; i < situationalModifiers.length; i++) {
             if (this.activeSituationalModifiers.has(`sit-${i}`)) {
-                total += situationalModifiers[i].value;
+                total += situationalModifiers[i]?.value ?? 0;
             }
         }
         return total;
@@ -237,7 +238,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender context/options are loose records
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    override _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
         // Add live update for custom modifier
@@ -291,7 +292,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {HTMLElement} target
      */
     static async #viewModifierSource(this: RollConfigurationDialog, event: Event, target: HTMLElement): Promise<void> {
-        const uuid = target.dataset.uuid;
+        const uuid = target.dataset['uuid'];
         if (uuid === undefined || uuid === '') return;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: opens per-system item sheet via duck-typed structural shape
@@ -315,7 +316,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {HTMLElement} target
      */
     static #toggleSituational(this: RollConfigurationDialog, event: Event, target: HTMLElement): void {
-        const modId = target.dataset.modifierId;
+        const modId = target.dataset['modifierId'];
         if (modId === undefined) return;
         if (this.activeSituationalModifiers.has(modId)) {
             this.activeSituationalModifiers.delete(modId);
@@ -334,17 +335,17 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     static #onSubmit(this: RollConfigurationDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): void {
         const data = formData.object;
 
-        const difficultyPreset = RollConfigurationDialog.DIFFICULTY_PRESETS.find((p) => p.key === data.difficulty) ?? { value: 0 };
+        const difficultyPreset = RollConfigurationDialog.DIFFICULTY_PRESETS.find((p) => p.key === data['difficulty']) ?? { value: 0 };
         const situationalTotal = this._calculateSituationalTotal();
-        const customModifier = parseInt(data.customModifier as string) || 0;
+        const customModifier = parseInt(data['customModifier'] as string) || 0;
 
         const result: RollConfig = {
             ...this.config,
-            difficulty: data.difficulty as string,
+            difficulty: data['difficulty'] as string,
             difficultyModifier: difficultyPreset.value,
             customModifier: customModifier,
             situationalModifier: situationalTotal,
-            rollMode: data.rollMode as string,
+            rollMode: data['rollMode'] as string,
             target: (this.config.target ?? 0) + difficultyPreset.value + customModifier + situationalTotal,
             baseTarget: this.config.target ?? 0,
             modifiers: {
@@ -378,7 +379,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close options is loose record
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    override async close(options: Record<string, unknown> = {}): Promise<void> {
         // Ensure we resolve with null if closed without submitting
         if (this.#resolve && options['submitted'] !== true) {
             this.#resolve(null);

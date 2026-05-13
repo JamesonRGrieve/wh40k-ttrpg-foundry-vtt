@@ -21,7 +21,7 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         classes: ['force-field'],
         window: {
             title: 'Force Field',
@@ -31,7 +31,7 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static override PARTS = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/force-field-prompt.hbs',
             scrollable: [''],
@@ -43,7 +43,7 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
         // Set up button listeners
@@ -80,7 +80,7 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    _validateRoll(): boolean {
+    override _validateRoll(): boolean {
         const ff = this.rollData['forceField'] as { system?: { activated?: boolean; overloaded?: boolean } } | null | undefined;
         if (!ff?.system?.activated) {
             ui.notifications.warn('Force Field not activated!');
@@ -98,7 +98,7 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    async _performRoll(): Promise<void> {
+    override async _performRoll(): Promise<void> {
         if (!this._validateRoll()) return;
 
         await (this.rollData['finalize'] as () => Promise<void>)();

@@ -42,7 +42,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+    static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'specialist-skill', 'standard-form'],
         actions: {
@@ -63,7 +63,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
+    static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/add-speciality-prompt.hbs',
             classes: [],
@@ -118,7 +118,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
 
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         if (!this._compendiumLoaded) {
             await this._loadAllSpecializations();
         }
@@ -161,7 +161,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
 
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: context type matches base class signature
-    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
         setupNumberInputAutoSelect(this.element);
 

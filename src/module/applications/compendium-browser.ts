@@ -561,14 +561,16 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     }
 
     _getEntryCategory(entry: CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> }): string {
-        if (typeof entry.system?.['category'] === 'string' && entry.system['category'] !== '') return entry.system['category'] as string;
+        const category = entry.system?.['category'];
+        if (typeof category === 'string' && category !== '') return category;
         const flags = entry.flags as Record<string, Record<string, unknown>> | undefined;
         if (flags?.['rt']?.['kind'] !== undefined) {
             const kind = flags['wh40k']?.['kind'];
             return typeof kind === 'string' ? kind : '';
         }
-        if (entry.type === 'skill' && typeof entry.system?.['skillType'] === 'string' && entry.system['skillType'] !== '') {
-            return entry.system['skillType'] as string;
+        const skillType = entry.system?.['skillType'];
+        if (entry.type === 'skill' && typeof skillType === 'string' && skillType !== '') {
+            return skillType;
         }
         return '';
     }
