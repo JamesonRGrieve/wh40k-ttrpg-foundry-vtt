@@ -23,7 +23,7 @@ type AttackSpecialRollData = RollData & {
 
 type AttackSpecialSourceRollData = WeaponRollData | PsychicRollData;
 
-export async function updateAttackSpecials(rollData: AttackSpecialSourceRollData): Promise<void> {
+export function updateAttackSpecials(rollData: AttackSpecialSourceRollData): void {
     const mutableRollData = rollData as AttackSpecialSourceRollData & AttackSpecialRollData;
     mutableRollData.attackSpecials = [];
     const actionItem = rollData.weapon ?? rollData.power;
@@ -65,10 +65,10 @@ export async function updateAttackSpecials(rollData: AttackSpecialSourceRollData
     if (actionItem.isRanged) {
         // actionItem.isRanged is true → rollData is WeaponRollData (not PsychicRollData),
         // narrowed at runtime but invisible to the TS type system; cast accordingly.
-        await calculateAmmoAttackSpecials(mutableRollData as unknown as Parameters<typeof calculateAmmoAttackSpecials>[0]);
+        calculateAmmoAttackSpecials(mutableRollData as unknown as Parameters<typeof calculateAmmoAttackSpecials>[0]);
     }
 
-    await calculateWeaponModifiersAttackSpecials(mutableRollData as unknown as Parameters<typeof calculateWeaponModifiersAttackSpecials>[0]);
+    calculateWeaponModifiersAttackSpecials(mutableRollData as unknown as Parameters<typeof calculateWeaponModifiersAttackSpecials>[0]);
 }
 
 /**
