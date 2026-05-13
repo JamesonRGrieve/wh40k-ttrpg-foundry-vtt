@@ -105,6 +105,6 @@ export async function getCriticalDamage(type: string, location: string, amount: 
     const locationMap = getFuzzy(damageMap, location);
     if (locationMap === undefined) return null;
     const clamped = amount > 10 ? 10 : amount;
-    if (!Object.prototype.hasOwnProperty.call(locationMap, clamped)) return null;
+    if (!Object.hasOwn(locationMap, clamped)) return null;
     return locationMap[clamped] ?? null;
 }

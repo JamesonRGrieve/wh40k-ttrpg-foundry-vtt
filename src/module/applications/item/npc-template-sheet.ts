@@ -343,7 +343,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
     static async #removeSkill(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset['index'] ?? '', 10);
-        if (isNaN(index)) return;
+        if (Number.isNaN(index)) return;
 
         const skills = foundry.utils.deepClone(this.item.system.trainedSkills);
         skills.splice(index, 1);
@@ -379,7 +379,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
     static async #removeWeapon(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset['index'] ?? '', 10);
-        if (isNaN(index)) return;
+        if (Number.isNaN(index)) return;
 
         const weapons = foundry.utils.deepClone(this.item.system.customWeapons);
         weapons.splice(index, 1);
@@ -409,7 +409,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
     static async #removeTrait(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset['index'] ?? '', 10);
-        if (isNaN(index)) return;
+        if (Number.isNaN(index)) return;
 
         const traits = foundry.utils.deepClone(this.item.system.traits);
         traits.splice(index, 1);
@@ -439,7 +439,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
     static async #removeTalent(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset['index'] ?? '', 10);
-        if (isNaN(index)) return;
+        if (Number.isNaN(index)) return;
 
         const talents = foundry.utils.deepClone(this.item.system.talents);
         talents.splice(index, 1);
@@ -473,7 +473,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
     static async #removeVariant(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset['index'] ?? '', 10);
-        if (isNaN(index)) return;
+        if (Number.isNaN(index)) return;
 
         const variants = foundry.utils.deepClone(this.item.system.variants);
         variants.splice(index, 1);

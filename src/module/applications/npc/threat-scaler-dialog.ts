@@ -323,7 +323,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #onAdjustThreat(this: NPCThreatScalerDialog, event: PointerEvent, target: HTMLElement): void {
+    static #onAdjustThreat(this: NPCThreatScalerDialog, _event: PointerEvent, target: HTMLElement): void {
         const amount = parseInt(target.dataset['amount'] ?? '0', 10);
         if (amount === 0 || Number.isNaN(amount)) return;
 
@@ -343,7 +343,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #onResetThreat(this: NPCThreatScalerDialog, event: PointerEvent, target: HTMLElement): void {
+    static #onResetThreat(this: NPCThreatScalerDialog, _event: PointerEvent, _target: HTMLElement): void {
         this.#state.newThreatLevel = this.#originalThreat;
 
         // Update slider
@@ -359,7 +359,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {InputEvent} event
      * @param {HTMLElement} target
      */
-    static #onUpdatePreview(this: NPCThreatScalerDialog, event: InputEvent, target: HTMLElement): void {
+    static #onUpdatePreview(this: NPCThreatScalerDialog, _event: InputEvent, target: HTMLElement): void {
         this.#state.newThreatLevel = parseInt((target as HTMLInputElement).value, 10);
 
         // Debounce render
@@ -376,7 +376,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {HTMLFormElement} form
      * @param {foundry.applications.api.FormDataExtended} formData
      */
-    static async #onSubmit(this: NPCThreatScalerDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
+    static async #onSubmit(this: NPCThreatScalerDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         if (!this.#actor) return;
 
         const data = foundry.utils.expandObject(formData.object) as Partial<ScalerState>;
@@ -445,7 +445,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCancel(this: NPCThreatScalerDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: NPCThreatScalerDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         this.#submitted = false;
         if (this.#resolve) this.#resolve(false);
         await this.close();

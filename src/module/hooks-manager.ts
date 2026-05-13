@@ -106,11 +106,13 @@ interface DirectoryContextOption {
     callback: (element: HTMLElement) => void | Promise<void>;
 }
 
+// biome-ignore lint/complexity/noStaticOnlyClass: stable system-bootstrap API surface with many callers
 export class HooksManager {
     static registerHooks(): void {
         // Foundry's Hooks.on overloads in fvtt-types are tightly typed by hook name;
         // cast to a permissive shim so non-core hooks (system-emitted events) compile.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- framework boundary: hook payload typing varies by hook name
+        // biome-ignore lint/suspicious/noExplicitAny: framework boundary — Foundry hook payloads are heterogeneous by hook name
         const hooksOn = Hooks.on.bind(Hooks) as (event: string, fn: (...args: any[]) => unknown) => number;
         Hooks.once('init', () => {
             HooksManager.init();
@@ -750,6 +752,7 @@ export class HooksManager {
         }
     }
 
+    // biome-ignore lint/suspicious/noConfusingVoidType: Foundry hook contract — returning void vs boolean has semantic meaning for hook propagation
     static hotbarDrop(_bar: unknown, data: Record<string, unknown>, slot: number): boolean | void {
         game.wh40k.log('Hotbar Drop:', data);
         switch (data['type']) {

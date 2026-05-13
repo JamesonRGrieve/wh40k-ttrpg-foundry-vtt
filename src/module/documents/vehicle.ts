@@ -24,6 +24,7 @@ type VehicleSystemData = WH40KBaseActor['system'] & {
 export class WH40KVehicle extends WH40KBaseActor {
     declare system: VehicleSystemData;
 
+    // biome-ignore lint/suspicious/noConfusingVoidType: Foundry _preCreate contract — returning false cancels creation; void means proceed
     protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | void> {
         await super._preCreate(data, options, user);
         const dataWithName = data as { name?: string } | undefined;

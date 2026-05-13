@@ -309,8 +309,8 @@ export default class ResourceGrantData extends BaseGrantData {
         if (!normalizedFormula) return 0;
 
         // Handle flat numbers
-        const flat = parseInt(normalizedFormula);
-        if (!isNaN(flat) && String(flat) === normalizedFormula) {
+        const flat = parseInt(normalizedFormula, 10);
+        if (!Number.isNaN(flat) && String(flat) === normalizedFormula) {
             return flat;
         }
 
@@ -339,9 +339,9 @@ export default class ResourceGrantData extends BaseGrantData {
 
         for (const [abbr, charKey] of Object.entries(charAbbreviations)) {
             const regex = new RegExp(`(\\d*)x?${abbr}`, 'gi');
-            processedFormula = processedFormula.replace(regex, (match, multiplier: string) => {
+            processedFormula = processedFormula.replace(regex, (_match, multiplier: string) => {
                 const bonus = (actor.system as { characteristics?: Record<string, { bonus?: number }> }).characteristics?.[charKey]?.bonus ?? 0;
-                const mult = parseInt(multiplier) || 1;
+                const mult = parseInt(multiplier, 10) || 1;
                 return String(bonus * mult);
             });
         }
@@ -372,9 +372,9 @@ export default class ResourceGrantData extends BaseGrantData {
         while (match !== null) {
             const [, minStr = '0', maxStr = '0', valStr = '0'] = match;
             entries.push({
-                min: parseInt(minStr),
-                max: parseInt(maxStr),
-                value: parseInt(valStr),
+                min: parseInt(minStr, 10),
+                max: parseInt(maxStr, 10),
+                value: parseInt(valStr, 10),
             });
             match = entryPattern.exec(formula);
         }

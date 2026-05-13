@@ -121,6 +121,7 @@ export class WH40KBaseActor extends Actor {
         }
     }
 
+    // biome-ignore lint/suspicious/noConfusingVoidType: Foundry _preCreate contract — returning false cancels creation; void means proceed
     protected override async _preCreate(data: never, options: never, user: User.Internal.Implementation): Promise<boolean | void> {
         await super._preCreate(data, options, user as never);
         const createData = data as Record<string, unknown>;

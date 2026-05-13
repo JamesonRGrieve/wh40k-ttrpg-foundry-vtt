@@ -284,6 +284,8 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         this.#templates = [];
 
         // Load from world items
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Foundry game.items filter callback receives untyped Item documents at runtime
+        // biome-ignore lint/suspicious/noExplicitAny: Foundry game.items filter callback receives untyped Item documents at runtime
         const worldTemplates = game.items.filter((i: any) => i.type === 'npcTemplate') as WH40KItem[];
         this.#templates.push(...worldTemplates);
 
@@ -294,6 +296,8 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
             try {
                 const index = await pack.getIndex({ fields: ['type', 'system.category', 'system.faction'] });
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Foundry pack.getIndex returns untyped index entries at runtime
+                // biome-ignore lint/suspicious/noExplicitAny: Foundry pack.getIndex returns untyped index entries at runtime
                 const templateEntries = index.filter((e: any) => e.type === 'npcTemplate');
 
                 for (const entry of templateEntries) {
@@ -348,7 +352,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #selectTemplate(this: TemplateSelector, event: PointerEvent, target: HTMLElement): void {
+    static #selectTemplate(this: TemplateSelector, _event: PointerEvent, target: HTMLElement): void {
         const uuid = target.dataset['uuid'];
         if (!uuid) return;
 
@@ -362,7 +366,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #clearFilter(this: TemplateSelector, event: PointerEvent, target: HTMLElement): void {
+    static #clearFilter(this: TemplateSelector, _event: PointerEvent, _target: HTMLElement): void {
         this.#filters = { category: '', faction: '', search: '' };
         this.render({ parts: ['content'] });
     }
@@ -373,7 +377,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCreate(this: TemplateSelector, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onCreate(this: TemplateSelector, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         if (!this.#selectedUuid) {
             ui.notifications.warn('Select a template first.');
             return;
@@ -460,7 +464,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCancel(this: TemplateSelector, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: TemplateSelector, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         this.#submitted = false;
         if (this.#resolve) this.#resolve(null);
         await this.close();

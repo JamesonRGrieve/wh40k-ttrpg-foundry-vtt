@@ -2,6 +2,7 @@ import { SYSTEM_ID } from './constants.ts';
 
 export type DH2Ruleset = 'raw' | 'homebrew';
 
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with static SETTINGS constants and many callers
 export class WH40KSettings {
     static SETTINGS = {
         worldVersion: 'world-version',

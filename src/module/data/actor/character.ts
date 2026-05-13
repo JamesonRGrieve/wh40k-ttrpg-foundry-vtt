@@ -480,7 +480,7 @@ export default class CharacterData extends CreatureTemplate {
             // Get step from system data (camelCase like "homeWorld", "career")
             const rtFlags = item.flags['rt'] as Record<string, unknown>;
             const step: string = item.system.step ?? (rtFlags['step'] as string | undefined) ?? '';
-            if (Object.prototype.hasOwnProperty.call(stepMap, step)) {
+            if (Object.hasOwn(stepMap, step)) {
                 stepMap[step] = item;
             }
 

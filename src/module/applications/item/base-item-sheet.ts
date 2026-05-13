@@ -29,8 +29,8 @@ const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
  * - ExpandableTooltipMixin (click-to-expand tooltips)
  * - StatBreakdownMixin (stat calculation breakdowns)
  */
-// biome-ignore lint/suspicious/noExplicitAny: boundary - Foundry V14 ItemSheetV2 mixin chain requires `any` to compose; full typing pending
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: Foundry V14 ItemSheetV2 mixin chain requires `any` to compose; full typing pending
+// biome-ignore lint/suspicious/noExplicitAny: boundary - Foundry V14 ItemSheetV2 mixin chain requires `any` to compose; full typing pending
 export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2 as any)))) {
     declare document: WH40KItemDocument;
 
@@ -339,12 +339,12 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         if (firstChar === '=') {
             // Set absolute value
             const absolute = parseFloat(value.slice(1));
-            if (!isNaN(absolute)) input.value = String(absolute);
+            if (!Number.isNaN(absolute)) input.value = String(absolute);
         } else if (firstChar === '+' || firstChar === '-') {
             // Add or subtract delta
             const current = Number(foundry.utils.getProperty(this.item, input.name)) || 0;
             const delta = parseFloat(value);
-            if (!isNaN(delta)) input.value = String(current + delta);
+            if (!Number.isNaN(delta)) input.value = String(current + delta);
         }
     }
 
@@ -353,7 +353,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /**
      * Handle editing an image via the file browser.
      */
-    static async #onEditImage(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #onEditImage(this: BaseItemSheet, _event: Event, target: HTMLElement): Promise<void> {
         const attr = target.dataset['edit'] ?? 'img';
         const current = foundry.utils.getProperty(this.document._source, attr);
         // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.ux.FilePicker is the V14 file-picker constructor; not in shipped types
@@ -375,7 +375,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /**
      * Toggle edit mode for actor-owned items.
      */
-    static #toggleEditMode(this: BaseItemSheet, event: Event, target: HTMLElement): void {
+    static #toggleEditMode(this: BaseItemSheet, _event: Event, _target: HTMLElement): void {
         if (!this.canEdit) return;
         this.#editMode = !this.#editMode;
         void this.render();
@@ -386,7 +386,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /**
      * Handle creating an effect.
      */
-    static async #effectCreate(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #effectCreate(this: BaseItemSheet, _event: Event, _target: HTMLElement): Promise<void> {
         await this.item.createEmbeddedDocuments(
             'ActiveEffect',
             [
@@ -406,7 +406,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /**
      * Handle editing an effect.
      */
-    static #effectEdit(this: BaseItemSheet, event: Event, target: HTMLElement): void {
+    static #effectEdit(this: BaseItemSheet, _event: Event, target: HTMLElement): void {
         const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
         // eslint-disable-next-line @typescript-eslint/no-deprecated -- V14 backward compat: sheet.render(boolean) still works; V2 render(options) is preferred but not typed on the sheet union
@@ -418,7 +418,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /**
      * Handle deleting an effect.
      */
-    static async #effectDelete(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #effectDelete(this: BaseItemSheet, _event: Event, target: HTMLElement): Promise<void> {
         const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
         await effect?.delete();
@@ -429,7 +429,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /**
      * Handle toggling an effect.
      */
-    static async #effectToggle(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #effectToggle(this: BaseItemSheet, _event: Event, target: HTMLElement): Promise<void> {
         const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         const effect = effectId !== undefined ? this.item.effects.get(effectId) : null;
         await effect?.update({ disabled: !effect.disabled });
@@ -440,7 +440,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /**
      * Handle toggling section visibility.
      */
-    static #toggleSection(this: BaseItemSheet, event: Event, target: HTMLElement): void {
+    static #toggleSection(this: BaseItemSheet, _event: Event, target: HTMLElement): void {
         const sectionName = target.dataset['toggle'];
         if (sectionName === undefined || sectionName === '') return;
 

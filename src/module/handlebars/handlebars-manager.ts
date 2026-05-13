@@ -5,6 +5,7 @@ import { registerHandlebarsHelpers } from './handlebars-helpers.ts';
  * Manages Handlebars template loading and helper registration.
  * All templates are loaded at system initialization for simplicity and reliability.
  */
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with many callers across the codebase
 export class HandlebarManager {
     /**
      * Load all templates at startup.

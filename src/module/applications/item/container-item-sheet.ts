@@ -247,7 +247,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
     /**
      * Handle creating a nested item.
      */
-    static async #nestedItemCreate(this: ContainerItemSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #nestedItemCreate(this: ContainerItemSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemType = target.dataset['type'] ?? 'gear';
         const data = {
             name: `New ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`,
@@ -261,7 +261,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
     /**
      * Handle editing a nested item.
      */
-    static #nestedItemEdit(this: ContainerItemSheet, event: Event, target: HTMLElement): void {
+    static #nestedItemEdit(this: ContainerItemSheet, _event: Event, target: HTMLElement): void {
         const itemId = target.closest<HTMLElement>('[data-nested-item-id]')?.dataset['nestedItemId'];
         if (itemId === undefined) return;
         const nestedItem = this.item.items.get(itemId);
@@ -274,7 +274,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
     /**
      * Handle deleting a nested item.
      */
-    static async #nestedItemDelete(this: ContainerItemSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #nestedItemDelete(this: ContainerItemSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.closest<HTMLElement>('[data-nested-item-id]')?.dataset['nestedItemId'];
         if (itemId === undefined || itemId === '') return;
 
@@ -295,7 +295,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
     /**
      * Handle rolling a nested item.
      */
-    static #nestedItemRoll(this: ContainerItemSheet, event: Event, target: HTMLElement): void {
+    static #nestedItemRoll(this: ContainerItemSheet, event: Event, _target: HTMLElement): void {
         // Placeholder for nested item rolls
         event.preventDefault();
     }

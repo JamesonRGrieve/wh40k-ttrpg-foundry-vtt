@@ -96,7 +96,7 @@ export default class AmmoSheet extends BaseItemSheet {
     /**
      * Add a quality to added or removed list.
      */
-    static async #addQuality(this: AmmoSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #addQuality(this: AmmoSheet, _event: Event, target: HTMLElement): Promise<void> {
         const type = target.dataset['type']; // 'added' or 'removed'
         const input = this.element.querySelector<HTMLInputElement>(`[name="new-${type}-quality"]`);
         const quality = input?.value.trim() ?? '';
@@ -116,7 +116,7 @@ export default class AmmoSheet extends BaseItemSheet {
     /**
      * Remove a quality from the added list.
      */
-    static async #removeAddedQuality(this: AmmoSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #removeAddedQuality(this: AmmoSheet, _event: Event, target: HTMLElement): Promise<void> {
         const quality = target.dataset['quality'];
         const qualities = new Set(this.item.system.addedQualities);
         if (quality !== undefined) qualities.delete(quality);
@@ -127,7 +127,7 @@ export default class AmmoSheet extends BaseItemSheet {
     /**
      * Remove a quality from the removed list.
      */
-    static async #removeRemovedQuality(this: AmmoSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #removeRemovedQuality(this: AmmoSheet, _event: Event, target: HTMLElement): Promise<void> {
         const quality = target.dataset['quality'];
         const qualities = new Set(this.item.system.removedQualities);
         if (quality !== undefined) qualities.delete(quality);

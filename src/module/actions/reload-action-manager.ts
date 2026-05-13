@@ -37,6 +37,7 @@ export interface ReloadResult {
  * Manager for weapon reload actions.
  * Handles reload time calculation, action economy validation, and special qualities.
  */
+// biome-ignore lint/complexity/noStaticOnlyClass: stable API surface for weapon reload actions
 export class ReloadActionManager {
     private static getWeaponSystem(weapon: WH40KItem): ReloadWeaponSystem {
         // eslint-disable-next-line no-restricted-syntax -- boundary: per-system weapon schemas read uniformly via local ReloadWeaponSystem shape

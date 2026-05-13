@@ -203,7 +203,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      * @abstract
      */
     // eslint-disable-next-line @typescript-eslint/require-await -- abstract; subclasses await
-    async _applyGrant(actor: WH40KBaseActor, data: GrantRestoreData, options: GrantApplyOptions, result: GrantApplicationResult): Promise<void> {
+    async _applyGrant(_actor: WH40KBaseActor, _data: GrantRestoreData, _options: GrantApplyOptions, _result: GrantApplicationResult): Promise<void> {
         throw new Error(`${this.constructor.name} must implement _applyGrant()`);
     }
 
@@ -215,7 +215,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      * @abstract
      */
     /* eslint-disable-next-line @typescript-eslint/require-await, no-restricted-syntax -- abstract; subclass-specific reverse return */
-    async reverse(actor: WH40KBaseActor, appliedState: Record<string, GrantAppliedEntry>): Promise<unknown> {
+    async reverse(_actor: WH40KBaseActor, _appliedState: Record<string, GrantAppliedEntry>): Promise<unknown> {
         throw new Error(`${this.constructor.name} must implement reverse()`);
     }
 

@@ -35,6 +35,7 @@ interface MigrationSource {
  * Constructor type for mixin base classes, including expected static methods.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- standard mixin constructor pattern requires any[]
+// biome-ignore lint/suspicious/noExplicitAny: standard mixin constructor pattern requires any[]
 type Constructor<T = object> = (new (...args: any[]) => T) & {
     defineSchema(): Record<string, foundry.data.fields.DataField.Any>;
     _migrateData?(source: MigrationSource): void;
@@ -48,6 +49,7 @@ type Constructor<T = object> = (new (...args: any[]) => T) & {
  * @returns {typeof HordeTemplateMixin} The extended class with horde capabilities.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeDataModel generic args are framework internals with no exported constraint
+// biome-ignore lint/suspicious/noExplicitAny: TypeDataModel generic args are framework internals with no exported constraint
 export default function HordeTemplate<T extends Constructor<foundry.abstract.TypeDataModel<any, any>>>(Base: T) {
     return class HordeTemplateMixin extends Base {
         declare horde: HordeData;

@@ -707,7 +707,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
         // eslint-disable-next-line no-restricted-syntax -- boundary: type-guard helper called immediately on free-form form data
         const int = (v: unknown): number => {
             const n = parseInt(String(v), 10);
-            return isNaN(n) ? 0 : n;
+            return Number.isNaN(n) ? 0 : n;
         };
 
         // Process prerequisites
