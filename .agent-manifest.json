@@ -1,4 +1,18 @@
 {
-  "agent": "A4",
-  "allowlist": "applications/{api,base,dialogs,popouts,prompts,character-creation} + top-level"
+  "agent": "B3",
+  "allowlist": "src/module/applications/{api,character-creation,dialogs,prompts}/**/*.ts + compendium-browser.ts",
+  "commits": [
+    "6fc2c6aa ratchet(B3): applications/{api,dialogs,prompts} — biome -42, lint -41",
+    "48065ba5 ratchet(B3): applications/prompts batch 2 — biome -33, lint -66",
+    "1688961e ratchet(B3): api/stat-adjustment-actions — lint -86, biome -34",
+    "3b68a453 ratchet(B3): api/what-if-mixin — lint -10, biome -2",
+    "08d39df1 ratchet(B3): api/application-v2-mixin, compendium-browser — lint/biome fixes"
+  ],
+  "metrics": {
+    "biome_baseline": 456,
+    "biome_delta": -59,
+    "eslint_baseline": 3237,
+    "eslint_delta": -118
+  },
+  "gates_passed": ["typecheck", "strict:ratchet", "ts:ratchet", "biome:ratchet", "lint:ratchet"]
 }
