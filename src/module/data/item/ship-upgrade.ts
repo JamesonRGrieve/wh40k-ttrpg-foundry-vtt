@@ -29,7 +29,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
     declare notes: string;
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -76,7 +76,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Normalize ship upgrade data shape.
      * @param {object} source  Candidate source data
      */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         ShipUpgradeData.#initializeDefaults(source);
     }
@@ -86,10 +86,10 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * @param {object} source  The source data
      */
     static #initializeDefaults(source: Record<string, unknown>): void {
-        source.power ??= 0;
-        source.space ??= 0;
-        source.availability ??= 'common';
-        source.notes ??= '';
+        source['power'] ??= 0;
+        source['space'] ??= 0;
+        source['availability'] ??= 'common';
+        source['notes'] ??= '';
     }
 
     /* -------------------------------------------- */
@@ -102,15 +102,15 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
+    static override _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
         super._cleanData?.(source, options);
         // Ensure power and space are numbers
         if (source) {
-            if (typeof source.power === 'string') {
-                source.power = parseInt(source.power) || 0;
+            if (typeof source['power'] === 'string') {
+                source['power'] = parseInt(source['power'] as string) || 0;
             }
-            if (typeof source.space === 'string') {
-                source.space = parseInt(source.space) || 0;
+            if (typeof source['space'] === 'string') {
+                source['space'] = parseInt(source['space'] as string) || 0;
             }
         }
     }

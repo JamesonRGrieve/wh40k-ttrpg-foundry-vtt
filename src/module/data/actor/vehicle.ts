@@ -48,7 +48,7 @@ export default class VehicleData extends ActorDataModel {
     declare source: string;
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -153,7 +153,7 @@ export default class VehicleData extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @override */
-    prepareBaseData(): void {
+    override prepareBaseData(): void {
         super.prepareBaseData();
 
         // Ensure integrity.value doesn't exceed max
@@ -163,7 +163,7 @@ export default class VehicleData extends ActorDataModel {
     }
 
     /** @override */
-    prepareDerivedData(): void {
+    override prepareDerivedData(): void {
         super.prepareDerivedData();
 
         // No derived calculations needed yet
@@ -276,16 +276,16 @@ export default class VehicleData extends ActorDataModel {
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry getRollData() returns dynamic shorthand keys
-    getRollData(): Record<string, unknown> {
+    override getRollData(): Record<string, unknown> {
         const data = super.getRollData();
 
-        data.man = this.manoeuverability;
-        data.armF = this.armour.front.value;
-        data.armS = this.armour.side.value;
-        data.armR = this.armour.rear.value;
-        data.size = this.size;
-        data.integrity = this.integrity.value;
-        data.integrityMax = this.integrity.max;
+        data['man'] = this.manoeuverability;
+        data['armF'] = this.armour.front.value;
+        data['armS'] = this.armour.side.value;
+        data['armR'] = this.armour.rear.value;
+        data['size'] = this.size;
+        data['integrity'] = this.integrity.value;
+        data['integrityMax'] = this.integrity.max;
 
         return data;
     }
