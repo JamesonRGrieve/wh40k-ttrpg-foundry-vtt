@@ -17,12 +17,14 @@ import type { DragDropMixinAPI } from './sheet-mixin-types.js';
  * @mixin
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixin requirement
+// biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
 type DragDropMixed<T extends abstract new (...args: any[]) => unknown> = T & (new (...args: any[]) => DragDropMixinAPI);
 
 export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T): DragDropMixed<T> {
     return class DragDropApplication extends Base implements DragDropMixinAPI {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixin requirement
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
+        // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
             super(...args);
         }
