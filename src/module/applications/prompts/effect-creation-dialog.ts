@@ -159,7 +159,7 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Handle category selection
      */
-    static _onSelectCategory(this: EffectCreationDialog, event: Event, target: HTMLElement): void {
+    static _onSelectCategory(this: EffectCreationDialog, _event: Event, target: HTMLElement): void {
         this.selectedCategory = target.dataset['category'] ?? 'custom';
         void this.render();
     }
@@ -169,7 +169,7 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Handle quick condition selection
      */
-    static _onSelectCondition(this: EffectCreationDialog, event: Event, target: HTMLElement): void {
+    static _onSelectCondition(this: EffectCreationDialog, _event: Event, target: HTMLElement): void {
         const conditionId = target.dataset['conditionId'];
         if (!conditionId) return;
 
@@ -186,7 +186,7 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Handle form submission
      */
-    static async formHandler(this: EffectCreationDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
+    static async formHandler(this: EffectCreationDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         const data = formData.object as unknown as EffectCreationData;
 
         let effectData: Record<string, unknown> | null = null;
@@ -307,7 +307,7 @@ export default class EffectCreationDialog extends DialogV2 {
         if (!conditionData) return null;
 
         const effectData = foundry.utils.deepClone(conditionData);
-        const rounds = parseInt(data.duration?.rounds ?? '0');
+        const rounds = parseInt(data.duration?.rounds ?? '0', 10);
         if (rounds > 0) {
             const combat = game.combat;
             effectData['duration'] = {
@@ -327,7 +327,7 @@ export default class EffectCreationDialog extends DialogV2 {
      */
     static _createCharacteristicData(data: EffectCreationData): Record<string, unknown> | null {
         const characteristic = data.characteristic;
-        const value = parseInt(data.modifierValue ?? '0') || 0;
+        const value = parseInt(data.modifierValue ?? '0', 10) || 0;
 
         if (!characteristic || value === 0) return null;
 
@@ -351,7 +351,7 @@ export default class EffectCreationDialog extends DialogV2 {
             },
         };
 
-        const rounds = parseInt(data.duration?.rounds ?? '0');
+        const rounds = parseInt(data.duration?.rounds ?? '0', 10);
         if (rounds > 0) {
             const combat = game.combat;
             effectData['duration'] = {
@@ -371,7 +371,7 @@ export default class EffectCreationDialog extends DialogV2 {
      */
     static _createSkillData(data: EffectCreationData): Record<string, unknown> | null {
         const skill = data.skill;
-        const value = parseInt(data.modifierValue ?? '0') || 0;
+        const value = parseInt(data.modifierValue ?? '0', 10) || 0;
 
         if (!skill || value === 0) return null;
 
@@ -394,7 +394,7 @@ export default class EffectCreationDialog extends DialogV2 {
             },
         };
 
-        const rounds = parseInt(data.duration?.rounds ?? '0');
+        const rounds = parseInt(data.duration?.rounds ?? '0', 10);
         if (rounds > 0) {
             const combat = game.combat;
             effectData['duration'] = {
@@ -414,7 +414,7 @@ export default class EffectCreationDialog extends DialogV2 {
      */
     static _createCombatData(data: EffectCreationData): Record<string, unknown> | null {
         const combatType = data.combatType;
-        const value = parseInt(data.modifierValue ?? '0') || 0;
+        const value = parseInt(data.modifierValue ?? '0', 10) || 0;
 
         if (!combatType || value === 0) return null;
 
@@ -437,7 +437,7 @@ export default class EffectCreationDialog extends DialogV2 {
             },
         };
 
-        const rounds = parseInt(data.duration?.rounds ?? '0');
+        const rounds = parseInt(data.duration?.rounds ?? '0', 10);
         if (rounds > 0) {
             const combat = game.combat;
             effectData['duration'] = {
