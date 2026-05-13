@@ -405,12 +405,16 @@ export default class ModifiersTemplate extends SystemDataModel {
      * Get situational modifiers as a structured list.
      * @type {object}
      */
-    get situationalModifiers(): { characteristics: unknown[]; skills: unknown[]; combat: unknown[] } {
-        const situational = (this.modifiers as any).situational || {};
+    get situationalModifiers(): {
+        characteristics: Array<{ key: string; value: number; condition: string; icon: string }>;
+        skills: Array<{ key: string; value: number; condition: string; icon: string }>;
+        combat: Array<{ key: string; value: number; condition: string; icon: string }>;
+    } {
+        const situational = this.modifiers.situational;
         return {
-            characteristics: (situational.characteristics as unknown[]) || [],
-            skills: (situational.skills as unknown[]) || [],
-            combat: (situational.combat as unknown[]) || [],
+            characteristics: situational.characteristics,
+            skills: situational.skills,
+            combat: situational.combat,
         };
     }
 
