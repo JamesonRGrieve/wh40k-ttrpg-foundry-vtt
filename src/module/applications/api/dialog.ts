@@ -133,7 +133,7 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2 as unk
         content,
         label = 'OK',
         callback,
-    }: { title?: string; content?: string; label?: string; callback?: (dialog: HTMLElement) => any } = {}): Promise<unknown> {
+    }: { title?: string; content?: string; label?: string; callback?: (dialog: HTMLElement) => unknown } = {}): Promise<unknown> {
         return foundry.applications.api.DialogV2.prompt({
             window: { title },
             content,

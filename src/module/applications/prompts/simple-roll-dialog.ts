@@ -54,8 +54,8 @@ export default class SimpleRollDialog extends BaseRollDialog {
         const difficultySelect = form.querySelector<HTMLSelectElement>('#difficulty');
         const modifierInput = form.querySelector<HTMLInputElement>('#modifier');
 
-        rollData.modifiers['difficulty'] = parseInt(difficultySelect?.value ?? '0');
-        rollData.modifiers['modifier'] = parseInt(modifierInput?.value ?? '0');
+        rollData.modifiers['difficulty'] = parseInt(difficultySelect?.value ?? '0', 10);
+        rollData.modifiers['modifier'] = parseInt(modifierInput?.value ?? '0', 10);
 
         await rollData.calculateTotalModifiers();
         await (this.simpleSkillData as unknown as { calculateSuccessOrFailure: () => Promise<void> }).calculateSuccessOrFailure();

@@ -122,7 +122,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     /**
      * Handle power selection via action.
      */
-    static async #onSelectPower(this: PsychicPowerDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectPower(this: PsychicPowerDialog, _event: Event, target: HTMLElement): Promise<void> {
         this.psychicAttackData.rollData.selectPower?.(target.getAttribute('name') ?? '');
         await this.psychicAttackData.rollData.update?.();
         void this.render();
