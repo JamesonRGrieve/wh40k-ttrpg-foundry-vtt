@@ -38,7 +38,7 @@ export default class StorageLocationData extends ItemDataModel.mixin(Description
      * Container types this storage location accepts.
      * @returns {string[]}
      */
-    static get containerTypes() {
+    static get containerTypes(): string[] {
         return ['ammunition', 'armour', 'armourModification', 'cybernetic', 'consumable', 'drug', 'forceField', 'gear', 'tool', 'weapon', 'weaponModification'];
     }
 }

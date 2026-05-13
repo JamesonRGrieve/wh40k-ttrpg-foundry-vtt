@@ -93,7 +93,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
      * Get the test description.
      * @type {string}
      */
-    get testLabel() {
+    get testLabel(): string {
         let label = this.testCharacteristicLabel;
         if (this.test.modifier !== 0) {
             label += ` ${this.test.modifier >= 0 ? '+' : ''}${this.test.modifier}`;

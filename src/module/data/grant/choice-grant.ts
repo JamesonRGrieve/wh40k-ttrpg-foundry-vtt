@@ -1,6 +1,5 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import type { GrantApplicationResult, GrantRestoreData, GrantSummary } from './base-grant.ts';
-import BaseGrantData from './base-grant.ts';
+import BaseGrantData, { type GrantApplicationResult, type GrantRestoreData, type GrantSummary } from './base-grant.ts';
 import CharacteristicGrantData from './characteristic-grant.ts';
 import ItemGrantData from './item-grant.ts';
 import ResourceGrantData from './resource-grant.ts';

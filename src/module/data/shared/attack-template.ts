@@ -132,7 +132,7 @@ export default class AttackTemplate extends SystemDataModel {
      * Get a formatted rate of fire string.
      * @type {string}
      */
-    get rateOfFireLabel() {
+    get rateOfFireLabel(): string {
         const rof = this.attack.rateOfFire;
         const parts = [];
         parts.push(rof.single ? 'S' : '-');

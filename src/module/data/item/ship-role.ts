@@ -135,7 +135,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * Get primary ability description.
      * @type {string}
      */
-    get primaryAbility() {
+    get primaryAbility(): string {
         if (this.abilities && this.abilities.length > 0) {
             const ability = this.abilities[0];
             return ability.description || ability.name;
@@ -147,7 +147,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * Get all ship bonuses as array for display.
      * @type {Array<{label: string, value: number, display: string}>}
      */
-    get shipBonusesArray() {
+    get shipBonusesArray(): Array<{ label: string; value: number; display: string }> {
         const bonuses: Array<{ label: string; value: number; display: string }> = [];
         const labels: Record<string, string> = {
             manoeuvrability: 'Manoeuvrability',

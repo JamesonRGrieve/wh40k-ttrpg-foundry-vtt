@@ -166,8 +166,8 @@ import SystemDataModel from '../abstract/system-data-model.ts';
 export default class ModifiersTemplate extends SystemDataModel {
     // Typed property declarations matching defineSchema()
     declare modifiers: {
-        characteristics: Record<string, unknown>;
-        skills: Record<string, unknown>;
+        characteristics: Record<string, number>;
+        skills: Record<string, number>;
         combat: { attack: number; damage: number; penetration: number; defense: number; initiative: number; speed: number };
         resources: { wounds: number; fate: number; insanity: number; corruption: number };
         other: Array<{ key: string; label: string; value: number; mode: string }>;
@@ -336,8 +336,8 @@ export default class ModifiersTemplate extends SystemDataModel {
      * Get all modifiers as a flat array for display.
      * @type {object[]}
      */
-    get modifiersList() {
-        const list = [];
+    get modifiersList(): Array<{ key: string; label: string; value: number; type: string }> {
+        const list: Array<{ key: string; label: string; value: number; type: string }> = [];
         const mods = this.modifiers;
 
         // Characteristics
@@ -420,7 +420,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * Check if this item has any situational modifiers.
      * @type {boolean}
      */
-    get hasSituationalModifiers() {
+    get hasSituationalModifiers(): boolean {
         const sit = this.situationalModifiers;
         return sit.characteristics.length > 0 || sit.skills.length > 0 || sit.combat.length > 0;
     }
