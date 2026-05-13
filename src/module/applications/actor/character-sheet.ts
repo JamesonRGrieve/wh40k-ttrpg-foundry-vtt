@@ -57,6 +57,11 @@ type CharacterSheetContext = Record<string, unknown> & {
     // Explicit declarations to avoid TS4111 (noPropertyAccessFromIndexSignature) on the
     // intersected Record<string, unknown> for all known sheet-context fields written by
     // _prepareContext / _preparePartContext / _prepareCombatData / _prepareLoadoutData / ...
+    // eslint-disable-next-line no-restricted-syntax -- boundary: sheet→template payload; templates consume these via Handlebars where TS shape doesn't reach.
+} & CharacterSheetContextDeclaredFields;
+
+/* eslint-disable no-restricted-syntax -- boundary: sheet→template payload; the fields below describe untyped values passed to Handlebars, where a concrete TS shape doesn't propagate. */
+type CharacterSheetContextDeclaredFields = {
     inEditMode?: boolean;
     ruleset?: unknown;
     isDH2?: boolean;
@@ -116,6 +121,7 @@ type CharacterSheetContext = Record<string, unknown> & {
     backpackPercent?: number;
     transactionSourceCount?: number;
 };
+/* eslint-enable no-restricted-syntax */
 
 type OriginSummary = {
     steps: Record<string, unknown>[];
@@ -901,6 +907,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const radius = 52;
         const circumference = 2 * Math.PI * radius; // ~326.7
 
+        /* eslint-disable no-restricted-syntax -- boundary: HUD characteristic shape mirrors Foundry's CharacteristicField runtime payload; concrete properties exist only to make property writes legal under noPropertyAccessFromIndexSignature. */
         type CharHud = {
             total?: unknown;
             advance?: unknown;
@@ -914,6 +921,7 @@ export default class CharacterSheet extends BaseActorSheet {
             tooltipData?: unknown;
             [key: string]: unknown;
         };
+        /* eslint-enable no-restricted-syntax */
 
         Object.entries(hudCharacteristics).forEach(([key, rawChar]) => {
             const char = rawChar as CharHud;
@@ -984,6 +992,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
             if (item) {
                 completedSteps++;
+                /* eslint-disable no-restricted-syntax -- boundary: origin-path item.system grants/choices vary by game system; per-key fields exist to keep noPropertyAccessFromIndexSignature happy. */
                 type OriginGrants = {
                     skills?: unknown;
                     talents?: unknown;
@@ -1003,6 +1012,7 @@ export default class CharacterSheet extends BaseActorSheet {
                     selectedChoices?: Record<string, unknown[]>;
                     [key: string]: unknown;
                 };
+                /* eslint-enable no-restricted-syntax */
                 const grants: OriginGrants = system.grants ?? {};
                 const modifiers = (system.modifiers?.characteristics ?? {}) as Record<string, unknown>;
                 const selectedChoices = system.selectedChoices ?? {};
