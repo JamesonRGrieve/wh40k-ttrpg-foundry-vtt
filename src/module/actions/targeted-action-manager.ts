@@ -26,9 +26,10 @@ export class TargetedActionManager {
         // Initialize Scene Control Buttons
         Hooks.on('getSceneControlButtons', (controls: Record<string, foundry.applications.ui.SceneControls.Control>) => {
             const tokenControl = controls['tokens'];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; controls['tokens'] may be undefined
             if (tokenControl === undefined) return;
             try {
-                if (!game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
+                if (!Boolean(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls))) {
                     const toolOrder = Object.keys(tokenControl.tools).length;
                     tokenControl.tools['Attack'] = {
                         name: 'Attack',

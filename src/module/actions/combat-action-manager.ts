@@ -47,8 +47,8 @@ export class CombatActionManager {
     async resetFirstAttackFlags(combat: Combat): Promise<void> {
         const updates = [...combat.combatants]
             .map((c) => c.actor)
-            .filter((actor): actor is NonNullable<typeof actor> => actor !== null && actor !== undefined)
-            .map((actor) => actor.unsetFlag('wh40k-rpg', 'hitThisRound'));
+            .filter((actor): actor is NonNullable<typeof actor> => actor !== null)
+            .map(async (actor) => actor.unsetFlag('wh40k-rpg', 'hitThisRound'));
         await Promise.all(updates);
     }
 
