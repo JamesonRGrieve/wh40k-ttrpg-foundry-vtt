@@ -63,9 +63,7 @@ function makeSystemVariant<TBase extends SystemVariantBase>(baseCls: TBase, clas
     const systemConfig = SystemConfigRegistry.get(cfg.gameSystemId);
     const skillRanks = systemConfig.getSkillRanks();
     const proto = cls.prototype as { _getSkillTrainingConfig?: () => SkillRanks; _gameSystemId?: GameSystemId };
-    proto._getSkillTrainingConfig = function () {
-        return skillRanks;
-    };
+    proto._getSkillTrainingConfig = () => skillRanks;
     proto._gameSystemId = cfg.gameSystemId;
     Object.defineProperty(cls, 'name', { value: className });
     return cls;
