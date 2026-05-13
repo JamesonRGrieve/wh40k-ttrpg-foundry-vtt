@@ -109,7 +109,7 @@ export default class ChoiceGrantData extends BaseGrantData {
             return;
         }
 
-        const selectedOptions = (data.selected as string[]) ?? [];
+        const selectedOptions = (data['selected'] as string[]) ?? [];
 
         if (selectedOptions.length < this.count && !this.optional) {
             result.errors.push(`Must select ${this.count} options, only ${selectedOptions.length} selected`);
@@ -142,7 +142,7 @@ export default class ChoiceGrantData extends BaseGrantData {
 
                 const grantResult = await this._applySubGrant(actor, grantConfig, data, options);
                 appliedResult.grantResults[`${optionLabel}:${i}`] = {
-                    type: grantConfig.type,
+                    type: grantConfig['type'],
                     applied: grantResult.applied,
                 };
                 result.notifications.push(...grantResult.notifications);
@@ -155,12 +155,12 @@ export default class ChoiceGrantData extends BaseGrantData {
     override async reverse(actor: WH40KBaseActor, appliedState: Record<string, unknown>): Promise<unknown> {
         const ctor = this.constructor as typeof ChoiceGrantData;
         const restoreData: { selectedOptions: string[]; grantResults: Record<string, unknown> } = {
-            selectedOptions: (appliedState.selectedOptions as string[]) ?? [],
+            selectedOptions: (appliedState['selectedOptions'] as string[]) ?? [],
             grantResults: {},
         };
 
         // Reverse each applied grant in reverse order
-        const grantResults = (appliedState.grantResults ?? {}) as Record<string, Record<string, unknown>>;
+        const grantResults = (appliedState['grantResults'] ?? {}) as Record<string, Record<string, unknown>>;
         for (const [grantKey, grantEntry] of Object.entries(grantResults)) {
             const [optionLabel, indexStr] = grantKey.split(':');
             const index = parseInt(indexStr);
@@ -169,11 +169,11 @@ export default class ChoiceGrantData extends BaseGrantData {
             if (!option?.grants[index]) continue;
 
             const grantConfig = option.grants[index];
-            const grantType = grantConfig.type as keyof typeof ctor.GRANT_TYPES;
+            const grantType = grantConfig['type'] as keyof typeof ctor.GRANT_TYPES;
             const GrantClass = ctor.GRANT_TYPES[grantType];
             if (!GrantClass) continue;
 
-            const grantApplied = grantEntry?.applied as Record<string, unknown>;
+            const grantApplied = grantEntry?.['applied'] as Record<string, unknown>;
 
             const grant: BaseGrantData = new GrantClass(grantConfig);
             const reverseData = await grant.reverse(actor, grantApplied);
@@ -208,7 +208,7 @@ export default class ChoiceGrantData extends BaseGrantData {
             };
 
             for (const grantConfig of option.grants) {
-                const grantType = grantConfig.type as keyof typeof ctor.GRANT_TYPES;
+                const grantType = grantConfig['type'] as keyof typeof ctor.GRANT_TYPES;
                 const GrantClass = ctor.GRANT_TYPES[grantType];
                 if (GrantClass) {
                     const grant = new GrantClass(grantConfig);
@@ -243,10 +243,10 @@ export default class ChoiceGrantData extends BaseGrantData {
         for (const option of options) {
             const grants = option.grants ?? [];
             for (const grantConfig of grants) {
-                const grantType = grantConfig.type as keyof typeof ctor.GRANT_TYPES;
+                const grantType = grantConfig['type'] as keyof typeof ctor.GRANT_TYPES;
                 const GrantClass = ctor.GRANT_TYPES[grantType];
                 if (!GrantClass) {
-                    errors.push(`Unknown grant type "${grantConfig.type as string}" in option "${option.label}"`);
+                    errors.push(`Unknown grant type "${grantConfig['type'] as string}" in option "${option.label}"`);
                 }
             }
         }
@@ -274,30 +274,30 @@ export default class ChoiceGrantData extends BaseGrantData {
         options: Record<string, unknown>,
     ): Promise<GrantApplicationResult> | GrantApplicationResult {
         const ctor = this.constructor as typeof ChoiceGrantData;
-        const grantType = grantConfig.type as keyof typeof ctor.GRANT_TYPES;
+        const grantType = grantConfig['type'] as keyof typeof ctor.GRANT_TYPES;
         const GrantClass = ctor.GRANT_TYPES[grantType];
         if (!GrantClass) {
             return {
                 success: false,
                 applied: {},
                 notifications: [],
-                errors: [`Unknown grant type: ${grantConfig.type as string}`],
+                errors: [`Unknown grant type: ${grantConfig['type'] as string}`],
             };
         }
 
         // Ensure grant config has required fields with defaults
         const fullConfig = {
-            _id: (grantConfig._id as string) || foundry.utils.randomID(),
-            type: grantConfig.type,
-            optional: (grantConfig.optional as boolean) ?? false,
+            _id: (grantConfig['_id'] as string) || foundry.utils.randomID(),
+            type: grantConfig['type'],
+            optional: (grantConfig['optional'] as boolean) ?? false,
             ...grantConfig,
         };
 
         const grant = new GrantClass(fullConfig);
 
         // Pass through any sub-grant specific data
-        const subData = (data as Record<string, unknown>).subGrants as Record<string, GrantRestoreData> | undefined;
-        const subGrantData = subData?.[grantConfig._id as string] ?? {};
+        const subData = (data as Record<string, unknown>)['subGrants'] as Record<string, GrantRestoreData> | undefined;
+        const subGrantData = subData?.[grantConfig['_id'] as string] ?? {};
 
         return grant.apply(actor, subGrantData, options);
     }
