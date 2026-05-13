@@ -391,7 +391,7 @@ export class GrantsManager {
             const itemResult = await this.applyItemGrants(item, actor, {
                 ...options,
                 showNotification: false, // Suppress per-item notifications
-                force: options.reverseExisting, // Force apply if we reversed
+                ...(options.reverseExisting !== undefined ? { force: options.reverseExisting } : {}), // Force apply if we reversed
             });
 
             // Use item.id, item._id, or generate a key from name
@@ -544,6 +544,7 @@ export class GrantsManager {
 
         for (const grantId of grantIds) {
             const grantState = grantsMap[grantId];
+            if (grantState === undefined) continue;
 
             try {
                 // eslint-disable-next-line no-await-in-loop -- reversal must run in reverse application order
@@ -780,16 +781,15 @@ export class GrantsManager {
             'system.plus20': false,
         };
 
-        switch (level) {
-            case 'plus20':
-                updates['system.plus20'] = true;
-            // falls through
-            case 'plus10':
-                updates['system.plus10'] = true;
-            // falls through
-            case 'trained':
-                updates['system.trained'] = true;
-                break;
+        if (level === 'plus20') {
+            updates['system.plus20'] = true;
+            updates['system.plus10'] = true;
+            updates['system.trained'] = true;
+        } else if (level === 'plus10') {
+            updates['system.plus10'] = true;
+            updates['system.trained'] = true;
+        } else if (level === 'trained') {
+            updates['system.trained'] = true;
         }
 
         return updates;

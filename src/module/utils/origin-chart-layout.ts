@@ -245,9 +245,9 @@ export class OriginChartLayout {
             cards.push({
                 origin: origin,
                 id: originId,
-                uuid: origin.uuid,
+                ...(origin.uuid !== undefined ? { uuid: origin.uuid } : {}),
                 name: origin.name,
-                img: origin.img,
+                ...(origin.img !== undefined ? { img: origin.img } : {}),
                 position: position,
                 gridColumn: position + 1,
                 gridRow: stepIndex + 1,

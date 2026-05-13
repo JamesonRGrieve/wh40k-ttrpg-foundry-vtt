@@ -250,8 +250,8 @@ export class EventTracker {
                     target: r.target,
                     type: r.type,
                     currentState,
-                    summary: r.summary,
-                    trigger: lastTrigger,
+                    ...(r.summary !== undefined ? { summary: r.summary } : {}),
+                    ...(lastTrigger !== undefined ? { trigger: lastTrigger } : {}),
                 });
             }
             out[name] = entry;
@@ -506,7 +506,7 @@ export class EventTracker {
                         .off('change')
                         .on('change', (ev: JQuery.ChangeEvent) => {
                             const target = ev.currentTarget as HTMLInputElement;
-                            const id = target.dataset.eventId;
+                            const id = target.dataset['eventId'];
                             if (id === undefined || id === '') return;
                             const isChecked = target.checked;
                             void EventTracker.setResolved(id, isChecked).then(() => {
@@ -520,7 +520,7 @@ export class EventTracker {
                         .off('click')
                         .on('click', (ev: JQuery.ClickEvent) => {
                             const target = ev.currentTarget as HTMLElement;
-                            const rawTab = target.dataset.tab;
+                            const rawTab = target.dataset['tab'];
                             if (rawTab === undefined || rawTab === '') return;
                             const tab = rawTab as 'events' | 'npcs';
                             if (tab === activeTab) return;

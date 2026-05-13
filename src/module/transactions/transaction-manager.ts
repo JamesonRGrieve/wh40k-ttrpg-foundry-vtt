@@ -440,7 +440,7 @@ export class TransactionManager {
         if (itemData.system === undefined) itemData.system = {};
         const itemSystem = itemData.system;
         if (hasQuantityField) {
-            itemSystem.quantity = quote.quantity;
+            itemSystem['quantity'] = quote.quantity;
         }
 
         const stackTarget = TransactionManager.#findStackTarget(quote.buyer, quote.item);
