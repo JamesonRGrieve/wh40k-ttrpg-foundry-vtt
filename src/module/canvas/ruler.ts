@@ -1,5 +1,3 @@
-import type { WH40KBaseActor } from '../documents/base-actor.ts';
-
 type StyleWithColor = { color?: PIXI.ColorSource };
 
 type RulerToken = { _plannedMovement?: unknown };
@@ -49,7 +47,11 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
         const token = this.token as unknown as RulerToken;
         const config = CONFIG as unknown as WH40KConfig;
         const action = waypoint.action;
-        if (!(game.user?.id != null && token._plannedMovement != null) || config.Token.movement.actions[action]?.teleport === true) return style;
+        if (
+            !(game.user.id && token._plannedMovement !== null && token._plannedMovement !== undefined) ||
+            config.Token.movement.actions[action]?.teleport === true
+        )
+            return style;
 
         // Get actor's movement speed for the current action
         const actor = this.token.actor;
