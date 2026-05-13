@@ -67,7 +67,7 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+        static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
             return {
                 ...super.defineSchema(),
                 horde: new SchemaField({
@@ -105,11 +105,11 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        static _migrateData(source: MigrationSource): void {
+        static override _migrateData(source: MigrationSource): void {
             super._migrateData?.(source);
             // Ensure horde object exists
-            if (source.horde === undefined || source.horde === null) {
-                source.horde = {
+            if (source['horde'] === undefined || source['horde'] === null) {
+                source['horde'] = {
                     enabled: false,
                     magnitude: { max: 30, current: 30 },
                     magnitudeLog: [],
@@ -119,7 +119,7 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
                 };
             }
             // Migrate magnitude values to integers
-            const horde = source.horde as unknown as HordeData;
+            const horde = source['horde'] as unknown as HordeData;
             horde.magnitude.max = parseInt(String(horde.magnitude.max), 10) || 30;
             horde.magnitude.current = parseInt(String(horde.magnitude.current), 10) || 30;
         }

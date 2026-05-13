@@ -12,7 +12,7 @@ export default class DamageTemplate extends SystemDataModel {
     declare special: Set<string>;
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             damage: new fields.SchemaField({
@@ -40,7 +40,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @protected
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source data
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         DamageTemplate.#migrateSpecial(source);
     }
@@ -77,12 +77,12 @@ export default class DamageTemplate extends SystemDataModel {
      * @protected
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry _cleanData source data
-    static _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
+    static override _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
         super._cleanData(source, options);
     }
 
     /** @inheritdoc */
-    prepareBaseData(): void {
+    override prepareBaseData(): void {
         super.prepareBaseData();
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry parent _source data
