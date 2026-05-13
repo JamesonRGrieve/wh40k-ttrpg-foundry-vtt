@@ -128,7 +128,11 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static override cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions, _state?: DataModelV14.UpdateState): Record<string, unknown> {
+    static override cleanData(
+        source?: Record<string, unknown>,
+        options?: DataModelV14.CleaningOptions,
+        _state?: DataModelV14.UpdateState,
+    ): Record<string, unknown> {
         this._cleanData(source, options);
         const superClean = super.cleanData as DataModelV14.CleanDataSignature;
         return superClean.call(this, source, options, _state);

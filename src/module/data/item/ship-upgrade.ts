@@ -107,10 +107,10 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
         // Ensure power and space are numbers
         if (source) {
             if (typeof source['power'] === 'string') {
-                source['power'] = parseInt(source['power'] as string) || 0;
+                source['power'] = parseInt(source['power']) || 0;
             }
             if (typeof source['space'] === 'string') {
-                source['space'] = parseInt(source['space'] as string) || 0;
+                source['space'] = parseInt(source['space']) || 0;
             }
         }
     }

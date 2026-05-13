@@ -208,10 +208,10 @@ export default class ItemDataModel extends SystemDataModel {
      */
     static #migrateCollections(source: Record<string, unknown>): void {
         if (Array.isArray(source['coverage'])) {
-            source['coverage'] = new Set(source['coverage'] as unknown[]);
+            source['coverage'] = new Set(source['coverage']);
         }
         if (Array.isArray(source['properties'])) {
-            source['properties'] = new Set(source['properties'] as unknown[]);
+            source['properties'] = new Set(source['properties']);
         }
     }
 

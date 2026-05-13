@@ -150,7 +150,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
             if (source[field] === '-' || source[field] === null || source[field] === undefined) {
                 source[field] = 0;
             } else if (typeof source[field] === 'string') {
-                const parsed = parseInt(source[field] as string);
+                const parsed = parseInt(source[field]);
                 source[field] = isNaN(parsed) ? 0 : parsed;
             }
         }
@@ -158,7 +158,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
 
     static #migrateHullType(source: Record<string, unknown>): void {
         if (typeof source['hullType'] === 'string') {
-            const types = (source['hullType'] as string)
+            const types = source['hullType']
                 .toLowerCase()
                 .replace(/all ships?/i, 'all')
                 .split(/[,\s]+/)
@@ -197,7 +197,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         // Ensure special is array
         if (source?.['special'] && !Array.isArray(source['special'])) {
             if (typeof source['special'] === 'string') {
-                source['special'] = (source['special'] as string).split(',').map((s) => s.trim());
+                source['special'] = source['special'].split(',').map((s) => s.trim());
             } else if (source['special'] instanceof Set) {
                 source['special'] = Array.from(source['special'] as Set<unknown>);
             }
