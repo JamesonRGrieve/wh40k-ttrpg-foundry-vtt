@@ -1,5 +1,5 @@
 import type { AnyMutableObject } from 'fvtt-types/utils';
-import { formatChangeValue, getChangeLabel, type EffectChangeRaw } from '../helpers/effects.ts';
+import { type EffectChangeRaw, formatChangeValue, getChangeLabel } from '../helpers/effects.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 
 /** Shape of an ActiveEffect change entry used throughout this class. */

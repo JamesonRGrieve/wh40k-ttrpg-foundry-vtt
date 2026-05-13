@@ -305,7 +305,7 @@ export class WeaponRollData extends RollData {
         const targetActorSystem = this.targetActor?.system as { size?: string | number };
         if (this.targetActor && targetActorSystem.size !== undefined && targetActorSystem.size !== '' && targetActorSystem.size !== 0) {
             try {
-                const size = Number.parseInt(targetActorSystem.size.toString());
+                const size = Number.parseInt(targetActorSystem.size.toString(), 10);
                 this.modifiers['target-size'] = (size - 4) * 10;
             } catch {
                 // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.RollData.TargetSizeNotANumber localization key not yet in en.json
@@ -317,7 +317,7 @@ export class WeaponRollData extends RollData {
         type ActorWithTalents = WH40KBaseActorDocument & { hasTalent(name: string): boolean };
         const sourceActor = this.sourceActor as ActorWithTalents | null;
         const sourceActorSystem = sourceActor?.system as { fate?: { value: number } };
-        if (sourceActor && sourceActor.hasTalent('Eye of Vengeance') && sourceActorSystem.fate && sourceActorSystem.fate.value > 0) {
+        if (sourceActor?.hasTalent('Eye of Vengeance') && sourceActorSystem.fate && sourceActorSystem.fate.value > 0) {
             this.hasEyeOfVengeanceAvailable = true;
         }
 

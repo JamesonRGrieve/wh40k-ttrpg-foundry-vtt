@@ -1,5 +1,5 @@
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../types/global.d.ts';
-import { roll1d100, applyRollModeWhispers } from './roll-helpers.ts';
+import { applyRollModeWhispers, roll1d100 } from './roll-helpers.ts';
 
 type ForceFieldItem = WH40KItemDocument & {
     system: WH40KItemDocument['system'] & {
