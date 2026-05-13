@@ -676,7 +676,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (partId === 'skills') {
             sheetContext.skillsFilter = this._skillsFilter;
             // Add skillLists for specialist skills panel
-            if (context.skillLists === undefined) {
+            if (sheetContext.skillLists === undefined) {
                 this._prepareSkills(context);
             }
             // Add talents and traits context
@@ -705,9 +705,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     async _prepareBiographyContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const ctx = context;
+        const ctx = context as CharacterSheetContext;
         // First prepare the standard tab context
-        await this._prepareTabPartContext('biography', ctx, options);
+        await this._prepareTabPartContext('biography', context, options);
 
         // Prepare biography data with enriched HTML for ProseMirror
         const rawNotes = this.actor.system.bio.notes ?? '';
@@ -739,15 +739,16 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     async _prepareHeaderContext(context: Record<string, unknown>, _options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        const ctx = context as CharacterSheetContext;
         // Build dynamic origin path select options from compendium packs
         const gameSystem = this._resolveGameSystemId();
         const originOptions = gameSystem ? await this._getOriginPathOptions(gameSystem) : {};
-        context.originOptions = originOptions;
-        context.headerFields = this._getSidebarHeaderFields(gameSystem);
+        ctx.originOptions = originOptions;
+        ctx.headerFields = this._getSidebarHeaderFields(gameSystem);
 
         // Check if origin path is complete (has at least homeWorld + background + role)
         const op = this.actor.system.originPath;
-        context.originPathComplete = op.homeWorld !== '' && op.background !== '' && op.role !== '';
+        ctx.originPathComplete = op.homeWorld !== '' && op.background !== '' && op.role !== '';
 
         return context;
     }
@@ -809,8 +810,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     _prepareTabsContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
+        const ctx = context as CharacterSheetContext;
         // Tabs use the static TABS configuration
-        context.tabs = (this.constructor as unknown as { TABS: SheetTabConfig[] }).TABS.map((tab: SheetTabConfig) => ({
+        ctx.tabs = (this.constructor as unknown as { TABS: SheetTabConfig[] }).TABS.map((tab: SheetTabConfig) => ({
             ...tab,
             active: this.tabGroups[tab.group as keyof typeof this.tabGroups] === tab.tab,
             label: game.i18n.localize(tab.label),
@@ -883,7 +885,7 @@ export default class CharacterSheet extends BaseActorSheet {
             total: value,
         };
         const characteristics = actor.characteristics ?? {};
-        characteristics.influence = entry;
+        characteristics['influence'] = entry;
         actor.characteristics = characteristics;
     }
 
@@ -898,7 +900,22 @@ export default class CharacterSheet extends BaseActorSheet {
         const radius = 52;
         const circumference = 2 * Math.PI * radius; // ~326.7
 
-        Object.entries(hudCharacteristics).forEach(([key, char]) => {
+        type CharHud = {
+            total?: unknown;
+            advance?: unknown;
+            bonus?: unknown;
+            hudMod?: unknown;
+            hudTotal?: unknown;
+            advanceProgress?: unknown;
+            progressCircumference?: unknown;
+            progressOffset?: unknown;
+            nextAdvanceCost?: unknown;
+            tooltipData?: unknown;
+            [key: string]: unknown;
+        };
+
+        Object.entries(hudCharacteristics).forEach(([key, rawChar]) => {
+            const char = rawChar as CharHud;
             const total = Number(char.total ?? 0);
             const advance = Number(char.advance ?? 0);
 
@@ -916,7 +933,7 @@ export default class CharacterSheet extends BaseActorSheet {
             char.nextAdvanceCost = advance < 5 ? xpCosts[advance] : 0;
 
             // Prepare tooltip data using the mixin helper
-            char.tooltipData = this.prepareCharacteristicTooltip(key, char, modifierSources);
+            char.tooltipData = this.prepareCharacteristicTooltip(key, char as Record<string, unknown>, modifierSources);
         });
     }
 
@@ -966,10 +983,28 @@ export default class CharacterSheet extends BaseActorSheet {
 
             if (item) {
                 completedSteps++;
-                const system = item.system as Record<string, unknown>;
-                const grants = (system.grants ?? {}) as Record<string, unknown>;
-                const modifiers = ((system.modifiers as Record<string, unknown> | undefined)?.characteristics ?? {}) as Record<string, unknown>;
-                const selectedChoices = (system.selectedChoices ?? {}) as Record<string, unknown[]>;
+                type OriginGrants = {
+                    skills?: unknown;
+                    talents?: unknown;
+                    traits?: unknown;
+                    choices?: unknown;
+                    characteristics?: unknown;
+                    [key: string]: unknown;
+                };
+                type OriginChoice = {
+                    label?: unknown;
+                    options?: unknown;
+                    [key: string]: unknown;
+                };
+                const system = item.system as unknown as {
+                    grants?: OriginGrants;
+                    modifiers?: { characteristics?: Record<string, unknown> };
+                    selectedChoices?: Record<string, unknown[]>;
+                    [key: string]: unknown;
+                };
+                const grants: OriginGrants = system.grants ?? {};
+                const modifiers = (system.modifiers?.characteristics ?? {}) as Record<string, unknown>;
+                const selectedChoices = system.selectedChoices ?? {};
 
                 // Accumulate base characteristics
                 for (const [key, value] of Object.entries(modifiers)) {
@@ -1005,10 +1040,10 @@ export default class CharacterSheet extends BaseActorSheet {
 
                 // Process choice grants
                 if (Array.isArray(grants.choices)) {
-                    for (const choice of grants.choices as Array<Record<string, unknown>>) {
-                        const selectedValues = selectedChoices[choice.label as string] ?? [];
+                    for (const choice of grants.choices as Array<OriginChoice>) {
+                        const selectedValues = selectedChoices[choice['label'] as string] ?? [];
                         for (const selectedValue of selectedValues) {
-                            const option = (choice.options as Array<{ value?: string; grants?: Record<string, unknown> }> | undefined)?.find(
+                            const option = (choice['options'] as Array<{ value?: string; grants?: OriginGrants }> | undefined)?.find(
                                 (o) => o.value === selectedValue,
                             );
                             if (!option?.grants) continue;
@@ -1158,7 +1193,7 @@ export default class CharacterSheet extends BaseActorSheet {
         for (const item of this.actor.items) {
             const itemType = item.type as string;
             const sys = item.system as Record<string, unknown>;
-            const inShip = sys.inShipStorage === true;
+            const inShip = sys['inShipStorage'] === true;
 
             // Add all equipment to "all" for display
             if (equipmentTypes.includes(itemType)) {
@@ -1182,7 +1217,7 @@ export default class CharacterSheet extends BaseActorSheet {
             else if (itemType === 'criticalInjury' || (item as WH40KItem).isCriticalInjury) categories.criticalInjury.push(item);
 
             // Track equipped items (only non-ship items can be equipped)
-            if (sys.equipped === true && !inShip) categories.equipped.push(item);
+            if (sys['equipped'] === true && !inShip) categories.equipped.push(item);
         }
 
         return categories;
@@ -1267,16 +1302,16 @@ export default class CharacterSheet extends BaseActorSheet {
         type SkillBits = { plus10?: boolean; plus20?: boolean; trained?: boolean; basic?: boolean };
 
         // Dodge target: Ag + Dodge training
-        const dodgeSkill = skills.dodge as unknown as SkillBits | undefined;
-        let dodgeBase = chars.agility.total;
+        const dodgeSkill = skills['dodge'] as unknown as SkillBits | undefined;
+        let dodgeBase = chars['agility']?.total ?? 0;
         if (dodgeSkill?.plus20 === true) dodgeBase += 20;
         else if (dodgeSkill?.plus10 === true) dodgeBase += 10;
         else if (dodgeSkill?.trained !== true && dodgeSkill?.basic !== true) dodgeBase = Math.floor(dodgeBase / 2);
         sheetContext.dodgeTarget = dodgeBase;
 
         // Parry target: WS + Parry training
-        const parrySkill = skills.parry as unknown as SkillBits | undefined;
-        let parryBase = chars.weaponSkill.total;
+        const parrySkill = skills['parry'] as unknown as SkillBits | undefined;
+        let parryBase = chars['weaponSkill']?.total ?? 0;
         if (parrySkill?.plus20 === true) parryBase += 20;
         else if (parrySkill?.plus10 === true) parryBase += 10;
         else if (parrySkill?.trained !== true && parrySkill?.basic !== true) parryBase = Math.floor(parryBase / 2);
@@ -1295,7 +1330,7 @@ export default class CharacterSheet extends BaseActorSheet {
         sheetContext.hasForceField = sheetContext.forceField !== undefined;
         sheetContext.armourDisplayLocations = this.#prepareArmourDisplayLocations(this.actor.system, categorized.armour);
         sheetContext.armourDisplay = Object.fromEntries(
-            (sheetContext.armourDisplayLocations as Array<Record<string, unknown>>).map((entry) => [entry.key, entry]),
+            (sheetContext.armourDisplayLocations as Array<Record<string, unknown>>).map((entry) => [entry['key'], entry]),
         );
 
         // Weapon slots - categorize by class and equipped status
@@ -1393,14 +1428,14 @@ export default class CharacterSheet extends BaseActorSheet {
             const coveringItems = equippedArmour
                 .map((item) => {
                     const itemSystem = item.system as Record<string, unknown>;
-                    const getEff = itemSystem.getEffectiveAPForLocation;
-                    const getAp = itemSystem.getAPForLocation;
+                    const getEff = itemSystem['getEffectiveAPForLocation'];
+                    const getAp = itemSystem['getAPForLocation'];
                     const ap =
                         typeof getEff === 'function'
                             ? Number((getEff as (k: string) => unknown)(locationConfig.key) ?? 0)
                             : typeof getAp === 'function'
                             ? Number((getAp as (k: string) => unknown)(locationConfig.key) ?? 0)
-                            : Number((itemSystem.armourPoints as Record<string, unknown> | undefined)?.[locationConfig.key] ?? 0);
+                            : Number((itemSystem['armourPoints'] as Record<string, unknown> | undefined)?.[locationConfig.key] ?? 0);
                     if (ap <= 0) return null;
 
                     return {
@@ -1426,7 +1461,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
             return {
                 ...locationConfig,
-                total: Number(armourData.total ?? 0),
+                total: Number(armourData['total'] ?? 0),
                 tooltipData: this.prepareArmorTooltip(locationConfig.key, armourData, coveringItems),
                 items: coveringItems,
             };
@@ -1442,7 +1477,13 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     _prepareWH40KFields(rogueTraderData: Record<string, unknown>): Record<string, unknown> {
-        const prepared = rogueTraderData;
+        const prepared = rogueTraderData as Record<string, unknown> & {
+            armour?: unknown;
+            weight?: unknown;
+            acquisitions?: unknown;
+            wounds?: unknown;
+            fate?: unknown;
+        };
         prepared.armour = prepared.armour ?? {
             head: 0,
             rightArm: 0,
@@ -1529,8 +1570,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     _prepareOverviewContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
+        const ctx = context as CharacterSheetContext;
         // Add Active Effects data
-        context.effects = this.actor.effects.map((effect) => ({
+        ctx.effects = this.actor.effects.map((effect) => ({
             id: effect.id,
             name: effect.name,
             // eslint-disable-next-line @typescript-eslint/no-deprecated -- legacy field still consumed by templates pending V14 migration
@@ -1539,7 +1581,7 @@ export default class CharacterSheet extends BaseActorSheet {
         }));
 
         // Add favorite talents for display
-        context.favoriteTalents = this._prepareFavoriteTalents();
+        ctx.favoriteTalents = this._prepareFavoriteTalents();
 
         return context;
     }
@@ -1554,9 +1596,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     async _prepareOverviewDashboardContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const ctx = context;
+        const ctx = context as CharacterSheetContext;
         // First prepare standard tab context
-        await this._prepareTabPartContext('overview', ctx, options);
+        await this._prepareTabPartContext('overview', context, options);
 
         // Add Active Effects data for dashboard preview
         const effects = this.actor.effects.map((effect) => ({
@@ -1636,7 +1678,7 @@ export default class CharacterSheet extends BaseActorSheet {
             const itemSystem = item.system as Record<string, unknown> & { step?: string; grants?: unknown; selectedChoices?: Record<string, string[]> };
             const step = itemSystem.step ?? '';
             const src = `${stepLabels[step] ?? 'Origin'}: ${String(item.name)}`;
-            const grants = (itemSystem.grants ?? {}) as Record<string, unknown>;
+            const grants = (itemSystem.grants ?? {}) as { aptitudes?: unknown; choices?: unknown; [key: string]: unknown };
 
             // Fixed aptitudes
             if (Array.isArray(grants.aptitudes)) {
@@ -1644,7 +1686,13 @@ export default class CharacterSheet extends BaseActorSheet {
             }
 
             // Resolved aptitude choices (mirrors logic in character.ts._computeOriginPathEffects)
-            const choices = (Array.isArray(grants.choices) ? grants.choices : []) as Array<Record<string, unknown>>;
+            const choices = (Array.isArray(grants.choices) ? grants.choices : []) as Array<{
+                label?: unknown;
+                name?: unknown;
+                type?: unknown;
+                options?: unknown;
+                [key: string]: unknown;
+            }>;
             const selectedChoices = itemSystem.selectedChoices ?? {};
             const labelCounts: Record<string, number> = {};
             for (const choice of choices) {
