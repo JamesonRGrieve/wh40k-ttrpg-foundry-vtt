@@ -50,7 +50,16 @@ export interface RangeCalculationOptions {
 /**
  * Range bracket definitions.
  */
-export const RANGE_BRACKETS: Record<string, RangeBracket> = {
+interface RangeBracketMap {
+    pointBlank: RangeBracket;
+    short: RangeBracket;
+    standard: RangeBracket;
+    long: RangeBracket;
+    extreme: RangeBracket;
+    [key: string]: RangeBracket;
+}
+
+export const RANGE_BRACKETS: RangeBracketMap = {
     pointBlank: {
         label: 'Point Blank',
         modifier: 30,

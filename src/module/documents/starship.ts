@@ -35,7 +35,7 @@ export class WH40KStarship extends WH40KBaseActor {
     }
 
     /** @override */
-    prepareData(): void {
+    override prepareData(): void {
         super.prepareData();
         // Call DataModel's embedded data preparation for component calculations
         if (typeof this.system.prepareEmbeddedData === 'function') {
@@ -149,7 +149,7 @@ export class WH40KStarship extends WH40KBaseActor {
         };
         for (const weapon of this.shipWeapons) {
             const weaponItem = weapon as { system: Record<string, unknown> };
-            const loc = (weaponItem.system.location as string | undefined) ?? 'dorsal';
+            const loc = (weaponItem.system['location'] as string | undefined) ?? 'dorsal';
             const bucket = grouped[loc];
             if (bucket !== undefined) bucket.push(weapon);
         }

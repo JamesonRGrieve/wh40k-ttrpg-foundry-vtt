@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { renderSheet } from '../../../../stories/test-helpers';
-import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import templateSrc from '../../../../src/templates/dialogs/characteristic-setup.hbs?raw';
+import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet } from '../../../../stories/test-helpers';
 
 initializeStoryHandlebars();
 

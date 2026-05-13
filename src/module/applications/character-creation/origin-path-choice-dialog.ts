@@ -10,6 +10,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { findSkillUuid } from '../../helpers/skill-uuid-helper.ts';
 import { getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
+
 const { ApplicationV2, HandlebarsApplicationMixin } = (
     foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor; HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T } }
 ).api;

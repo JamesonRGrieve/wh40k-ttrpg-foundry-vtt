@@ -136,7 +136,11 @@ function calculateRangeNameAndBonus(rollData: RollData): void {
     rollData.rangeName = rangeInfo.label;
     rollData.rangeBonus = rangeInfo.modifier;
     mutableRollData.rangeBracket = rangeInfo.bracket;
-    mutableRollData.rangeModifiedBy = rangeInfo.modifiedBy ?? undefined;
+    if (rangeInfo.modifiedBy !== undefined && rangeInfo.modifiedBy !== null) {
+        mutableRollData.rangeModifiedBy = rangeInfo.modifiedBy;
+    } else {
+        delete mutableRollData.rangeModifiedBy;
+    }
     mutableRollData.isMeltaRange = rangeInfo.isMeltaRange;
 }
 
@@ -150,7 +154,7 @@ export function calculateWeaponRange(rollData: WeaponRollData): void {
 
     // Ignore Negative Range Bonus for certain modifications
     if (rollData.rangeBonus < 0) {
-        const aiming = rollData.modifiers['aim'] > 0;
+        const aiming = (rollData.modifiers['aim'] ?? 0) > 0;
         if (aiming && (rollData.hasWeaponModification('Telescopic Sight') || rollData.hasWeaponModification('Omni-Scope'))) {
             rollData.rangeBonus = 0;
             mutableRollData.rangeModifiedBy = 'telescopic-sight';

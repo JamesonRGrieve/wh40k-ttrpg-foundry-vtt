@@ -1,6 +1,7 @@
 import { ACTOR_SYSTEM_LABELS } from '../applications/dialogs/create-actor-dialog.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 
+/* eslint-disable no-restricted-syntax -- boundary: converter types wrap untyped Foundry API shapes */
 type ActorDirectoryLike = {
     id: string;
     name: string;
@@ -38,6 +39,7 @@ type ActorSourceData = Record<string, unknown> & {
         core?: Record<string, unknown>;
     };
 };
+/* eslint-enable no-restricted-syntax */
 
 export type ConvertibleCharacterSystem = keyof typeof ACTOR_SYSTEM_LABELS;
 export type ConvertibleActorKind = 'character' | 'npc' | 'vehicle';
@@ -102,22 +104,28 @@ export function getActorKind(type: string): ConvertibleActorKind | null {
 
 export function getActorSystemId(type: string): ConvertibleCharacterSystem | null {
     if (!isConvertibleActorType(type)) return null;
-    return type.split('-')[0];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess guard for strict tsconfig
+    return (type.split('-')[0] as string | undefined) ?? null;
 }
 
 export function getConvertedActorType(targetSystem: ConvertibleCharacterSystem, kind: ConvertibleActorKind): ConvertibleActorType {
     return `${targetSystem}-${kind}`;
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: systemData is untyped actor system data
 function normalizeSystemSpecificFields(systemData: Record<string, unknown>, targetSystem: ConvertibleCharacterSystem): void {
-    systemData.gameSystem = TARGET_GAME_SYSTEM_IDS[targetSystem];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: systemData is untyped
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess guard for strict tsconfig
+    systemData['gameSystem'] = TARGET_GAME_SYSTEM_IDS[targetSystem] as string | undefined;
 
-    const originPath = systemData.originPath;
-    if (!originPath || typeof originPath !== 'object') return;
+    const originPath = systemData['originPath'];
+    if (originPath === null || originPath === undefined || typeof originPath !== 'object') return;
 
-    const allowedFields = ORIGIN_PATH_FIELDS_BY_SYSTEM[targetSystem];
+    const allowedFields = ORIGIN_PATH_FIELDS_BY_SYSTEM[targetSystem] as ReadonlySet<string> | undefined;
+    if (allowedFields === undefined) return;
     for (const field of ORIGIN_PATH_FIELDS) {
         if (!allowedFields.has(field)) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: originPath is untyped system data
             (originPath as Record<string, unknown>)[field] = '';
         }
     }
@@ -150,6 +158,7 @@ export function buildConvertedActorSource(actor: ActorDirectoryLike, targetSyste
         throw new Error(`Missing actor data model for target type ${targetType}`);
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: source.system comes from deepClone of untyped actor data; fallback is legitimate
     const cleanedSystemSource = foundry.utils.deepClone(source.system ?? {});
     normalizeSystemSpecificFields(cleanedSystemSource, targetSystem);
     targetDataModel.migrateData(cleanedSystemSource);
@@ -161,7 +170,7 @@ export function buildConvertedActorSource(actor: ActorDirectoryLike, targetSyste
     delete source._id;
 
     if (source.flags?.core && typeof source.flags.core === 'object') {
-        delete source.flags.core.sheetClass;
+        delete source.flags.core['sheetClass'];
         if (Object.keys(source.flags.core).length === 0) {
             delete source.flags.core;
         }
@@ -178,7 +187,7 @@ export function buildConvertedCharacterSource(actor: ActorDirectoryLike, targetS
 }
 
 async function repointLinkedSceneTokens(oldActorId: string, newActorId: string): Promise<void> {
-    const scenes = ((game.scenes?.contents ?? []) as SceneLike[]).map(async (scene) => {
+    const scenes = (game.scenes.contents as SceneLike[]).map(async (scene) => {
         const tokenUpdates = scene.tokens.contents
             .map((token): SceneTokenSource => token.toObject() as SceneTokenSource)
             .filter((token) => token.actorLink === true && token.actorId === oldActorId)
@@ -197,7 +206,7 @@ export async function convertCharacterActorSystem(actor: WH40KBaseActor, targetS
         throw new Error(`Actor ${actor.name} is missing an id`);
     }
     const currentSystem = getCharacterSystemId(actor.type);
-    if (!currentSystem) {
+    if (currentSystem === null) {
         throw new Error(`Actor ${actor.id} is not a convertible character actor`);
     }
     if (currentSystem === targetSystem) {
@@ -205,13 +214,14 @@ export async function convertCharacterActorSystem(actor: WH40KBaseActor, targetS
     }
 
     const replacementSource = buildConvertedCharacterSource(actor as WH40KBaseActor & { id: string }, targetSystem);
-    const created = (await Actor.create(replacementSource as unknown as Parameters<typeof Actor.create>[0], {
-        renderSheet: false,
-    })) as unknown as WH40KBaseActor | null;
-    if (!created) {
+    /* eslint-disable no-restricted-syntax -- boundary: Actor.create returns untyped Foundry document */
+    const createdRaw = await Actor.create(replacementSource as unknown as Parameters<typeof Actor.create>[0], { renderSheet: false });
+    const created = createdRaw as unknown as WH40KBaseActor | null;
+    /* eslint-enable no-restricted-syntax */
+    if (created === null) {
         throw new Error(`Failed to create converted actor for ${actor.name}`);
     }
-    if (actor.id === null || created.id === null) {
+    if (created.id === null) {
         throw new Error(`Converted actor for ${actor.name} is missing an id`);
     }
 
@@ -226,7 +236,7 @@ export async function convertActorSystem(actor: WH40KBaseActor, targetSystem: Co
         throw new Error(`Actor ${actor.name} is missing an id`);
     }
     const currentSystem = getActorSystemId(actor.type);
-    if (!currentSystem) {
+    if (currentSystem === null) {
         throw new Error(`Actor ${actor.id} is not a convertible actor`);
     }
     if (currentSystem === targetSystem) {
@@ -234,13 +244,14 @@ export async function convertActorSystem(actor: WH40KBaseActor, targetSystem: Co
     }
 
     const replacementSource = buildConvertedActorSource(actor as WH40KBaseActor & { id: string }, targetSystem);
-    const created = (await Actor.create(replacementSource as unknown as Parameters<typeof Actor.create>[0], {
-        renderSheet: false,
-    })) as unknown as WH40KBaseActor | null;
-    if (!created) {
+    /* eslint-disable no-restricted-syntax -- boundary: Actor.create returns untyped Foundry document */
+    const createdRaw2 = await Actor.create(replacementSource as unknown as Parameters<typeof Actor.create>[0], { renderSheet: false });
+    const created = createdRaw2 as unknown as WH40KBaseActor | null;
+    /* eslint-enable no-restricted-syntax */
+    if (created === null) {
         throw new Error(`Failed to create converted actor for ${actor.name}`);
     }
-    if (actor.id === null || created.id === null) {
+    if (created.id === null) {
         throw new Error(`Converted actor for ${actor.name} is missing an id`);
     }
 

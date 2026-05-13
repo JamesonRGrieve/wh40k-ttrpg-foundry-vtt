@@ -47,6 +47,7 @@ export function clearSkillUuidCache(): void {
  * const loreUuid = await findSkillUuid("Common Lore", "Imperium");
  * // Returns: "Compendium.wh40k-rpg.dh2-core-stats-skills.yyy"
  */
+// eslint-disable-next-line complexity -- UUID lookup requires checking many skill key variants; refactor deferred
 export function findSkillUuid(skillName: string | null | undefined, specialization: string | null = null): string | null | undefined {
     if (skillName === null || skillName === undefined || skillName === '') return null;
 
@@ -56,9 +57,11 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
     let resolvedSpecialization: string | null = specialization;
     if ((resolvedSpecialization === null || resolvedSpecialization === '') && resolvedSkillName.includes('(') && resolvedSkillName.includes(')')) {
         const match = resolvedSkillName.match(/^(.+?)\s*\((.+?)\)\s*$/);
-        if (match) {
-            resolvedSkillName = match[1].trim();
-            resolvedSpecialization = match[2].trim();
+        const matchG1 = match?.[1];
+        const matchG2 = match?.[2];
+        if (matchG1 !== undefined && matchG2 !== undefined) {
+            resolvedSkillName = matchG1.trim();
+            resolvedSpecialization = matchG2.trim();
         }
     }
 
@@ -206,10 +209,12 @@ export function parseSkillName(fullName: string): { name: string; specialization
     if (fullName === '') return { name: '', specialization: null };
 
     const match = fullName.match(/^(.+?)\s*\((.+?)\)\s*$/);
-    if (match) {
+    const parseG1 = match?.[1];
+    const parseG2 = match?.[2];
+    if (parseG1 !== undefined && parseG2 !== undefined) {
         return {
-            name: match[1].trim(),
-            specialization: match[2].trim(),
+            name: parseG1.trim(),
+            specialization: parseG2.trim(),
         };
     }
 

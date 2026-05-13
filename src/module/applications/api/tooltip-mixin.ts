@@ -6,13 +6,13 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KArmourLocation, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill } from '../../types/global.d.ts';
 import {
+    type ModifierTooltipSource,
     prepareArmorTooltipData,
     prepareCharacteristicTooltipData,
     prepareModifierTooltipData,
     prepareQualityTooltipData,
     prepareSkillTooltipData,
     prepareWeaponTooltipData,
-    type ModifierTooltipSource,
 } from '../components/wh40k-tooltip.ts';
 import type { ApplicationV2Ctor } from './application-types.ts';
 

@@ -62,7 +62,7 @@ function isTplObject(v: TplValue): v is TplRecord {
 
 export function capitalize(text: string): string {
     if (text === '') return '';
-    return text[0].toUpperCase() + text.substring(1);
+    return text.charAt(0).toUpperCase() + text.substring(1);
 }
 
 export function toCamelCase(str: string): string {
@@ -80,16 +80,16 @@ const ARMOUR_LOCATIONS = ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rig
 
 function getArmourPointsObject(armour: TplValue): TplRecord | null {
     if (!isTplObject(armour)) return null;
-    const raw = armour.armourPoints;
+    const raw = armour['armourPoints'];
     if (!isTplObject(raw)) return null;
-    const nested = raw.armourPoints;
+    const nested = raw['armourPoints'];
     if (isTplObject(nested)) return nested;
     return raw;
 }
 
 function getArmourAPForLocation(armour: TplValue, location: string): number {
     if (!isTplObject(armour)) return 0;
-    const fn = armour.getAPForLocation;
+    const fn = armour['getAPForLocation'];
     if (typeof fn === 'function') {
         return (fn as (loc: string) => number).call(armour, location);
     }
@@ -101,7 +101,7 @@ function getArmourAPForLocation(armour: TplValue, location: string): number {
     return 0;
 }
 
-export function registerHandlebarsHelpers() {
+export function registerHandlebarsHelpers(): void {
     /**
      * Resolve a per-system theme role into a Tailwind utility class.
      * Reads `_gameSystemId` from the surrounding sheet via Handlebars
@@ -124,9 +124,9 @@ export function registerHandlebarsHelpers() {
 
     Handlebars.registerHelper('isPsychicAttack', (power: TplValue): boolean => {
         if (!isTplObject(power)) return false;
-        const sys = power.system;
+        const sys = power['system'];
         if (!isTplObject(sys)) return false;
-        const subtype = sys.subtype;
+        const subtype = sys['subtype'];
         if (Array.isArray(subtype)) return subtype.includes('Attack');
         return false;
     });
@@ -322,8 +322,9 @@ export function registerHandlebarsHelpers() {
 
     Handlebars.registerHelper('getCharacteristicValue', (name: string, characteristics: Record<string, { short?: string; total?: number }>): number => {
         for (const key of Object.keys(characteristics)) {
-            if (characteristics[key].short === name) {
-                return characteristics[key].total ?? 0;
+            const char = characteristics[key] as { short?: string; total?: number } | undefined;
+            if (char?.short === name) {
+                return char.total ?? 0;
             }
         }
         return 0;
@@ -359,7 +360,7 @@ export function registerHandlebarsHelpers() {
         const s = Number(start);
         const sValid = Number.isFinite(s) ? s : 0;
         const e = end !== undefined ? Number(end) : array.length;
-        return (array as TplValue[]).slice(sValid, e);
+        return array.slice(sValid, e);
     });
 
     /**
@@ -508,9 +509,9 @@ export function registerHandlebarsHelpers() {
 
     Handlebars.registerHelper('rateOfFireDisplay', (rateOfFire: TplValue): string => {
         if (!isTplObject(rateOfFire)) return '';
-        const single = stringifyTpl(rateOfFire.single) || '-';
-        const semi = stringifyTpl(rateOfFire.semi) || '-';
-        const full = stringifyTpl(rateOfFire.full) || '-';
+        const single = stringifyTpl(rateOfFire['single']) || '-';
+        const semi = stringifyTpl(rateOfFire['semi']) || '-';
+        const full = stringifyTpl(rateOfFire['full']) || '-';
         return `${single}/${semi}/${full}`;
     });
 
@@ -740,7 +741,8 @@ export function registerHandlebarsHelpers() {
             unique: 'fa-star',
             general: 'fa-circle',
         };
-        return icons[category] ?? icons['general'];
+        if (Object.hasOwn(icons, category)) return icons[category];
+        return icons['general'] ?? 'fa-circle';
     });
 
     /**
@@ -756,7 +758,10 @@ export function registerHandlebarsHelpers() {
             3: 'tier-gold',
             0: 'tier-none',
         };
-        return colors[Number(tier)] ?? colors[0];
+        const tierKey = Number(tier);
+        if (Object.hasOwn(colors, tierKey)) return colors[tierKey];
+        if (Object.hasOwn(colors, 0)) return colors[0];
+        return 'tier-none';
     });
 
     /**
@@ -840,7 +845,7 @@ export function registerHandlebarsHelpers() {
         // Convert to array if it's a Set; otherwise expect an array of identifier strings.
         let qualityIds: string[];
         if (Array.isArray(specialSet)) {
-            qualityIds = (specialSet as TplValue[]).filter((v): v is string => typeof v === 'string');
+            qualityIds = specialSet.filter((v): v is string => typeof v === 'string');
         } else if (specialSet instanceof Set) {
             qualityIds = Array.from(specialSet).filter((v): v is string => typeof v === 'string');
         } else {
@@ -860,8 +865,10 @@ export function registerHandlebarsHelpers() {
         for (const identifier of qualityIds) {
             // Parse identifier (e.g., "blast-3" → base="blast", level=3)
             const levelMatch = identifier.match(/^(.+?)-(\d+|x)$/i);
-            const baseId = levelMatch ? levelMatch[1] : identifier;
-            const level: number | null = levelMatch ? (levelMatch[2].toLowerCase() === 'x' ? null : parseInt(levelMatch[2], 10)) : null;
+            const matchGroup1 = levelMatch?.[1];
+            const matchGroup2 = levelMatch?.[2];
+            const baseId = matchGroup1 ?? identifier;
+            const level: number | null = matchGroup2 !== undefined ? (matchGroup2.toLowerCase() === 'x' ? null : parseInt(matchGroup2, 10)) : null;
 
             // Look up definition. Use hasOwn to detect missing entries because index access on
             // Record<string, V> returns V (not V | undefined) under our tsconfig.
@@ -877,7 +884,8 @@ export function registerHandlebarsHelpers() {
                 });
                 continue;
             }
-            const def = weaponQualities[baseId];
+            const def = weaponQualities[baseId] as WeaponQualityDef | undefined;
+            if (def === undefined) continue;
 
             // Build rich quality object
             let label = game.i18n.localize(def.label);
@@ -1002,8 +1010,10 @@ export function registerHandlebarsHelpers() {
         const weaponQualities = rtConfig.weaponQualities;
 
         const levelMatch = identifier.match(/^(.+?)-(\d+|x)$/i);
-        const baseId = levelMatch ? levelMatch[1] : identifier;
-        const level: number | null = levelMatch ? (levelMatch[2].toLowerCase() === 'x' ? null : parseInt(levelMatch[2], 10)) : null;
+        const matchGroup1 = levelMatch?.[1];
+        const matchGroup2 = levelMatch?.[2];
+        const baseId = matchGroup1 ?? identifier;
+        const level: number | null = matchGroup2 !== undefined ? (matchGroup2.toLowerCase() === 'x' ? null : parseInt(matchGroup2, 10)) : null;
 
         if (!Object.prototype.hasOwnProperty.call(weaponQualities, baseId)) {
             return {
@@ -1013,7 +1023,10 @@ export function registerHandlebarsHelpers() {
                 level: null,
             };
         }
-        const def = weaponQualities[baseId];
+        const def = weaponQualities[baseId] as WeaponQualityDef | undefined;
+        if (def === undefined) {
+            return { identifier, label: identifier, description: 'Unknown quality', level: null };
+        }
 
         let label = game.i18n.localize(def.label);
         if (def.hasLevel === true && level !== null) {

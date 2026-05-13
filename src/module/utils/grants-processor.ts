@@ -220,8 +220,8 @@ export class GrantsProcessor {
         if (Object.keys(result.characteristics).length > 0) {
             for (const [char, value] of Object.entries(result.characteristics)) {
                 if (value !== 0) {
-                    const actorSystem = actor.system as { characteristics: Record<string, { advance: number }> };
-                    const currentAdvance = actorSystem.characteristics[char].advance;
+                    const actorSystem = actor.system as { characteristics: Record<string, { advance: number } | undefined> };
+                    const currentAdvance = actorSystem.characteristics[char]?.advance ?? 0;
                     updates[`system.characteristics.${char}.advance`] = currentAdvance + Number(value);
                 }
             }
@@ -656,7 +656,7 @@ export class GrantsProcessor {
         if (hasGrantSpec) {
             // eslint-disable-next-line no-restricted-syntax -- assigning to cloned item-data object, not an actor's .system field
             itemData.system ??= {};
-            itemData.system.specialization = grantSpec;
+            itemData.system['specialization'] = grantSpec;
             // Strip any existing "(X)" suffix so we don't produce "Name (X) (X)"
             const bareName = itemData.name.replace(/\s*\([^)]+\)\s*$/, '').trim();
             itemData.name = `${bareName} (${grantSpec})`;
@@ -668,9 +668,9 @@ export class GrantsProcessor {
         // eslint-disable-next-line no-restricted-syntax -- see above
         itemData.flags['wh40k-rpg'] ??= {};
         if (context.sourceItem) {
-            itemData.flags['wh40k-rpg'].grantedBy = context.sourceItem.name;
-            itemData.flags['wh40k-rpg'].grantedById = context.sourceItem.id;
-            itemData.flags['wh40k-rpg'].autoGranted = true;
+            itemData.flags['wh40k-rpg']['grantedBy'] = context.sourceItem.name;
+            itemData.flags['wh40k-rpg']['grantedById'] = context.sourceItem.id;
+            itemData.flags['wh40k-rpg']['autoGranted'] = true;
         }
 
         context.result.itemsToCreate.push(itemData);
@@ -762,7 +762,7 @@ export class GrantsProcessor {
         if (traitGrant.level !== undefined) {
             // eslint-disable-next-line no-restricted-syntax -- assigning to cloned item-data object
             itemData.system ??= {};
-            itemData.system.level = traitGrant.level;
+            itemData.system['level'] = traitGrant.level;
         }
 
         // Mark as granted
@@ -771,9 +771,9 @@ export class GrantsProcessor {
         // eslint-disable-next-line no-restricted-syntax -- see above
         itemData.flags['wh40k-rpg'] ??= {};
         if (context.sourceItem) {
-            itemData.flags['wh40k-rpg'].grantedBy = context.sourceItem.name;
-            itemData.flags['wh40k-rpg'].grantedById = context.sourceItem.id;
-            itemData.flags['wh40k-rpg'].autoGranted = true;
+            itemData.flags['wh40k-rpg']['grantedBy'] = context.sourceItem.name;
+            itemData.flags['wh40k-rpg']['grantedById'] = context.sourceItem.id;
+            itemData.flags['wh40k-rpg']['autoGranted'] = true;
         }
 
         context.result.itemsToCreate.push(itemData);
@@ -836,7 +836,7 @@ export class GrantsProcessor {
         if (equipGrant.quantity !== undefined && equipGrant.quantity > 1) {
             // eslint-disable-next-line no-restricted-syntax -- assigning to cloned item-data object
             itemData.system ??= {};
-            itemData.system.quantity = equipGrant.quantity;
+            itemData.system['quantity'] = equipGrant.quantity;
         }
         context.result.itemsToCreate.push(itemData);
 

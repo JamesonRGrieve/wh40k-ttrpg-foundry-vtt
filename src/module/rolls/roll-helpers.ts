@@ -6,17 +6,17 @@ type DotNotationKey = string | string[];
 export function uuid(): string {
     const chars = '0123456789abcdef'.split('');
 
-    const uuidStr = [],
+    const uuidStr: string[] = [],
         rnd = Math.random;
-    let r;
+    let r: number;
     uuidStr[8] = uuidStr[13] = uuidStr[18] = uuidStr[23] = '-';
     uuidStr[14] = '4'; // version 4
 
     for (let i = 0; i < 36; i++) {
         if (!uuidStr[i]) {
             r = 0 | (rnd() * 16);
-
-            uuidStr[i] = chars[i === 19 ? (r & 0x3) | 0x8 : r & 0xf];
+            const idx = i === 19 ? (r & 0x3) | 0x8 : r & 0xf;
+            uuidStr[i] = chars[idx] ?? '0';
         }
     }
 
@@ -53,11 +53,11 @@ export async function roll1d100(): Promise<Roll> {
  * Mutates chatData in place.
  */
 export function applyRollModeWhispers(chatData: Record<string, unknown>): void {
-    const rollMode = chatData.rollMode;
+    const rollMode = chatData['rollMode'];
     if (typeof rollMode === 'string' && ['gmroll', 'blindroll'].includes(rollMode)) {
-        chatData.whisper = ChatMessage.getWhisperRecipients('GM');
+        chatData['whisper'] = ChatMessage.getWhisperRecipients('GM');
     } else if (rollMode === 'selfroll') {
-        chatData.whisper = [game.user];
+        chatData['whisper'] = [game.user];
     }
 }
 
@@ -70,7 +70,7 @@ export async function sendActionDataToChat(actionData: ActionData): Promise<void
     };
     const rollData = actionData.rollData as typeof actionData.rollData & { isManualRoll?: boolean };
     if (rollData.roll && !rollData.isManualRoll) {
-        chatData.rolls = [actionData.rollData.roll];
+        chatData['rolls'] = [actionData.rollData.roll];
     }
     applyRollModeWhispers(chatData);
     await ChatMessage.create(chatData);

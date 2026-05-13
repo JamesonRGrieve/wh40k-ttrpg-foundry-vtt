@@ -23,7 +23,9 @@ type RankAdvance = {
     cost: number;
     type: string;
     specialization?: string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: career data from untyped external modules
     prerequisites?: unknown[];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: career data from untyped external modules
     [extra: string]: unknown;
 };
 
@@ -71,7 +73,7 @@ export function getCareerAdvancements(careerKey: string): CareerModule | null {
         console.warn(`Career '${careerKey}' not found in advancement registry`);
         return null;
     }
-    return CAREER_REGISTRY[careerKey];
+    return CAREER_REGISTRY[careerKey] ?? null;
 }
 
 /**
@@ -117,8 +119,10 @@ export function getNextCharacteristicCost(careerKey: string, characteristicKey: 
 
     if (currentAdvances >= TIER_ORDER.length) return null; // Already maxed
 
-    const tier = TIER_ORDER[currentAdvances];
-    const cost = charCosts[tier];
+    const tier = TIER_ORDER[currentAdvances] as string | undefined;
+    if (tier === undefined) return null;
+    const cost = charCosts[tier] as number | undefined;
+    if (cost === undefined) return null;
 
     return { cost, tier };
 }
@@ -162,7 +166,7 @@ export function getCareerKeyFromName(careerName: string): string | null {
         'void master': 'voidMaster',
     };
 
-    const mapped = nameToKey[normalized];
+    const mapped = nameToKey[normalized] as string | undefined;
     if (mapped !== undefined) {
         return mapped;
     }

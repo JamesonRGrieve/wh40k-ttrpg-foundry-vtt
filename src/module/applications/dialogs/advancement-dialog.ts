@@ -5,7 +5,7 @@
  * Supports characteristic advances, skills, and talents based on career.
  */
 
-import { getCareerAdvancements, getNextCharacteristicCost, getCareerKeyFromName, TIER_ORDER } from '../../config/advancements/index.ts';
+import { getCareerAdvancements, getCareerKeyFromName, getNextCharacteristicCost, TIER_ORDER } from '../../config/advancements/index.ts';
 import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-based-system-config.ts';
 import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
@@ -14,8 +14,9 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
-import { getAvailableXP, spendXP, canAfford } from '../../utils/xp-transaction.ts';
+import { canAfford, getAvailableXP, spendXP } from '../../utils/xp-transaction.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
+
 const { ApplicationV2, HandlebarsApplicationMixin } =
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry global `foundry.applications` has no shipped type for the v2 api namespace
     (foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor; HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T } })

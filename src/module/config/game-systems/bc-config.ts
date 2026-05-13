@@ -54,13 +54,14 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     }
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
-        const originPath = (actor.system?.originPath ?? {}) as Record<string, string | number>;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: originPath is untyped system data
+        const originPath = (actor.system['originPath'] as Record<string, string | number> | undefined) ?? {};
         return [
-            this.makeField('Home World', 'system.originPath.homeWorld', originPath.homeWorld ?? ''),
-            this.makeField('Archetype', 'system.originPath.role', originPath.role ?? '', 'Archetype'),
-            this.makeField('Pride', 'system.originPath.background', originPath.background ?? ''),
-            this.makeField('Disgrace', 'system.originPath.trialsAndTravails', originPath.trialsAndTravails ?? '', 'Disgrace'),
-            this.makeField('Motivation', 'system.originPath.motivation', originPath.motivation ?? ''),
+            this.makeField('Home World', 'system.originPath.homeWorld', originPath['homeWorld'] ?? ''),
+            this.makeField('Archetype', 'system.originPath.role', originPath['role'] ?? '', 'Archetype'),
+            this.makeField('Pride', 'system.originPath.background', originPath['background'] ?? ''),
+            this.makeField('Disgrace', 'system.originPath.trialsAndTravails', originPath['trialsAndTravails'] ?? '', 'Disgrace'),
+            this.makeField('Motivation', 'system.originPath.motivation', originPath['motivation'] ?? ''),
         ];
     }
 
@@ -120,7 +121,8 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * Get the character's current Chaos alignment.
      */
     getCharacterAlignment(actor: WH40KBaseActor): ChaosAlignment {
-        return ((actor.system as Record<string, unknown>)?.['chaosAlignment'] as ChaosAlignment | undefined) ?? 'unaligned';
+        // eslint-disable-next-line no-restricted-syntax -- boundary: chaosAlignment is untyped system data
+        return ((actor.system as Record<string, unknown>)['chaosAlignment'] as ChaosAlignment | undefined) ?? 'unaligned';
     }
 
     /**
@@ -152,23 +154,30 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     // ── Cost Overrides ───────────────────────────────────────────
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context matches abstract base signature; advanceAlignment extracted and typed below
     override getSkillAdvanceCost(actor: WH40KBaseActor, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
         const baseCost = super.getSkillAdvanceCost(actor, skillKey, currentRank, context);
         if (baseCost === null) return null;
 
-        const advAlignment = (context?.advanceAlignment as ChaosAlignment) ?? 'unaligned';
+        const advAlignment = (context?.['advanceAlignment'] as ChaosAlignment | undefined) ?? 'unaligned';
         const charAlignment = this.getCharacterAlignment(actor);
         const modifier = this.getAlignmentCostModifier(charAlignment, advAlignment);
 
         return Math.ceil(baseCost * modifier);
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: talent and context match abstract base signature; talent cast below; context validated by extractContextAptitudes
     override getTalentAdvanceCost(actor: WH40KBaseActor, talent: unknown, context?: Record<string, unknown>): number | null {
         const baseCost = super.getTalentAdvanceCost(actor, talent, context);
         if (baseCost === null) return null;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: talent is untyped external data cast for property access
         const talentData = talent as Record<string, unknown>;
-        const advAlignment = (context?.advanceAlignment as ChaosAlignment) ?? (talentData.system as Record<string, unknown>)?.chaosAlignment ?? 'unaligned';
+        const advAlignment =
+            (context?.['advanceAlignment'] as ChaosAlignment | undefined) ??
+            // eslint-disable-next-line no-restricted-syntax -- boundary: talentData.system is untyped
+            ((talentData['system'] as Record<string, unknown> | undefined)?.['chaosAlignment'] as ChaosAlignment | undefined) ??
+            'unaligned';
         const charAlignment = this.getCharacterAlignment(actor);
         const modifier = this.getAlignmentCostModifier(charAlignment, advAlignment);
 
