@@ -885,7 +885,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         });
         for (const p of powers) {
             if (!grouped[p.disciplineLabel]) grouped[p.disciplineLabel] = [];
-            grouped[p.disciplineLabel].push(p);
+            (grouped[p.disciplineLabel] ?? []).push(p);
         }
 
         const availableOnly = this.#psyAvailableOnly;
@@ -904,8 +904,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             ...disciplineKeys.map((label) => ({
                 key: label,
                 label,
-                count: grouped[label].length,
-                accessible: grouped[label].filter((p) => !p.blocked).length,
+                count: (grouped[label] ?? []).length,
+                accessible: (grouped[label] ?? []).filter((p) => !p.blocked).length,
                 active: activeDiscipline === label,
             })),
         ];
@@ -917,7 +917,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const visibleLabels = activeDiscipline === 'all' ? disciplineKeys : disciplineKeys.filter((l) => l === activeDiscipline);
         const disciplines = visibleLabels
             .map((label) => {
-                const items = grouped[label].filter((p) => !availableOnly || !p.blocked);
+                const items = (grouped[label] ?? []).filter((p) => !availableOnly || !p.blocked);
                 const byTierMap = new Map<number, PreparedPsychicPower[]>();
                 for (const power of items) {
                     const tier = power.prCost;
@@ -996,7 +996,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const index = await pack.getIndex({ fields: ['name', 'type', 'system.step', 'system.description.value'] });
             for (const rawEntry of index) {
                 const entry = rawEntry as CompendiumIndexEntry;
-                const eliteSys = entry.system as { step?: string; description?: { value?: string } } | null | undefined;
+                const eliteSys = entry['system'] as { step?: string; description?: { value?: string } } | null | undefined;
                 if (eliteSys?.step !== 'elite') continue;
                 const key = entry.name.toLowerCase();
                 if (elitesByName.has(key)) continue;
@@ -1004,10 +1004,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 // Parse XP cost from description HTML (falls back to 1000)
                 const descHtml = eliteSys?.description?.value ?? '';
                 const xpMatch = descHtml.match(/Experience Cost<\/h3>\s*<p>\s*([\d,]+)\s*xp/i) ?? descHtml.match(/([\d,]+)\s*xp/i);
-                const cost = xpMatch ? parseInt(xpMatch[1].replace(/,/g, ''), 10) : 1000;
+                const cost = xpMatch ? parseInt((xpMatch[1] ?? '0').replace(/,/g, ''), 10) : 1000;
                 // Short blurb: first <p> after <h2>
                 const summaryMatch = descHtml.match(/<h2>[^<]*<\/h2>\s*<p>([^<]+)<\/p>/);
-                const summary = summaryMatch ? summaryMatch[1].trim() : '';
+                const summary = summaryMatch ? (summaryMatch[1] ?? '').trim() : '';
 
                 elitesByName.set(key, {
                     id: `elite:${entry.name}`,
@@ -1085,7 +1085,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     static #switchTab(this: AdvancementDialog, event: Event, target: HTMLElement): void {
-        const tab = target.dataset.tab;
+        const tab = target.dataset['tab'];
         if (tab) {
             this.#activeTab = tab;
             void this.render();
@@ -1093,7 +1093,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     static #switchDiscipline(this: AdvancementDialog, event: Event, target: HTMLElement): void {
-        const discipline = target.dataset.discipline;
+        const discipline = target.dataset['discipline'];
         if (discipline) {
             this.#activeDiscipline = discipline;
             void this.render();
@@ -1106,7 +1106,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     static async #purchaseCharacteristic(this: AdvancementDialog, event: Event, target: HTMLElement): Promise<void> {
-        const charKey = target.dataset.characteristic;
+        const charKey = target.dataset['characteristic'];
         if (!charKey) return;
 
         const char = this.#getActorSystem().characteristics?.[charKey];
@@ -1170,8 +1170,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     static async #purchaseAdvance(this: AdvancementDialog, event: Event, target: HTMLElement): Promise<void> {
-        const advanceIndex = parseInt(target.dataset.index ?? '0', 10);
-        const advanceType = target.dataset.type;
+        const advanceIndex = parseInt(target.dataset['index'] ?? '0', 10);
+        const advanceType = target.dataset['type'];
 
         const systemConfig = this.#getSystemConfig();
         if (systemConfig?.usesAptitudes && advanceType === 'skill') {
@@ -1453,18 +1453,18 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             } else {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
                 const data = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
-                data._id = foundry.utils.randomID();
-                data.system.rank = 1;
+                data['_id'] = foundry.utils.randomID();
+                data.system['rank'] = 1;
                 await this.actor.createEmbeddedDocuments('Item', [data] as never[]);
             }
         } else {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
             const data = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
-            data._id = foundry.utils.randomID();
+            data['_id'] = foundry.utils.randomID();
             if (specialization) {
-                data.name = `${entry.name} (${specialization})`;
-                data.system.specialization = specialization;
-                data.system.hasSpecialization = true;
+                data['name'] = `${entry.name} (${specialization})`;
+                data.system['specialization'] = specialization;
+                data.system['hasSpecialization'] = true;
             }
             await this.actor.createEmbeddedDocuments('Item', [data] as never[]);
         }
@@ -1578,7 +1578,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
         const data = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
-        data._id = foundry.utils.randomID();
+        data['_id'] = foundry.utils.randomID();
         await this.actor.createEmbeddedDocuments('Item', [data] as never[]);
 
         this.#recentPurchases.add(entry.id);
@@ -1618,8 +1618,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
         const itemData = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
-        itemData._id = foundry.utils.randomID();
-        itemData.type = 'originPath';
+        itemData['_id'] = foundry.utils.randomID();
+        itemData['type'] = 'originPath';
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry createEmbeddedDocuments returns plain Document refs
         const [created] = (await this.actor.createEmbeddedDocuments('Item', [itemData] as never[])) as unknown as Item[];
 
@@ -1647,8 +1647,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const entryIndex = currentEntries.findIndex((e) => (e.name || '').toLowerCase() === advance.specialization?.toLowerCase());
 
             if (entryIndex >= 0) {
-                const currentAdvance = currentEntries[entryIndex].advance ?? 0;
-                const currentCost = currentEntries[entryIndex].cost ?? 0;
+                const currentAdvance = (currentEntries[entryIndex] ?? {}).advance ?? 0;
+                const currentCost = (currentEntries[entryIndex] ?? {}).cost ?? 0;
                 await this.actor.update({
                     [`system.skills.${skillKey}.entries.${entryIndex}.advance`]: currentAdvance + 1,
                     [`system.skills.${skillKey}.entries.${entryIndex}.cost`]: currentCost + advance.cost,
@@ -1706,7 +1706,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             },
         };
 
-        talentData.system.cost = advance.cost;
+        talentData.system['cost'] = advance.cost;
         await this.actor.createEmbeddedDocuments('Item', [talentData] as never[]);
     }
 
@@ -1714,8 +1714,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         event.preventDefault();
         event.stopPropagation();
 
-        const itemName = target.dataset.name;
-        const itemType = target.dataset.type;
+        const itemName = target.dataset['name'];
+        const itemType = target.dataset['type'];
 
         if (!itemName) return;
 
