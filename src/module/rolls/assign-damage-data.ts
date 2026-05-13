@@ -48,7 +48,7 @@ export class AssignDamageData {
         this.hit = hit;
     }
 
-    update() {
+    update(): void {
         this.armour = 0;
         this.tb = 0;
         const location = this.hit?.location;
@@ -62,7 +62,7 @@ export class AssignDamageData {
         }
     }
 
-    async finalize() {
+    async finalize(): Promise<void> {
         const totalDamage = Number(this.hit.totalDamage);
         const totalPenetration = Number(this.hit.totalPenetration);
 
@@ -120,7 +120,7 @@ export class AssignDamageData {
         }
     }
 
-    async performActionAndSendToChat() {
+    async performActionAndSendToChat(): Promise<void> {
         // Assign Damage - use dot notation to avoid overwriting sibling properties
         await this.actor.update({
             'system.wounds.value': this.actor.system.wounds.value - this.damageTaken,
@@ -151,7 +151,7 @@ export class AssignDamageData {
      * Create a criticalInjury item on the actor from the critical damage.
      * @private
      */
-    async _createCriticalInjuryItem() {
+    async _createCriticalInjuryItem(): Promise<void> {
         const severity = this.actor.system.wounds.critical + this.criticalDamageTaken;
         const clampedSeverity = Math.min(severity, 10);
 
