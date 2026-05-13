@@ -1003,24 +1003,22 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         for (const qualityId of this.effectiveSpecial) {
             // Parse level from quality ID (e.g., "blast-3" -> "blast", 3)
             const match = qualityId.match(/^(.+?)-(\d+)$/);
-            const baseId = match ? match[1] : qualityId;
-            const level = match ? parseInt(match[2]) : null;
+            const [, baseFromMatch, levelStr] = match ?? [];
+            const baseId: string = baseFromMatch ?? qualityId;
+            const level = levelStr !== undefined ? parseInt(levelStr) : null;
 
-            // `config` is typed Record<string, WeaponQualityConfig>, so index access never
-            // returns undefined at the type level. Read via Object.hasOwn to check presence
-            // at runtime; missing entries fall back to the title-cased quality id.
-            const hasBase = Object.hasOwn(config, baseId);
-            const hasFull = Object.hasOwn(config, qualityId);
-            const definition = hasBase ? config[baseId] : hasFull ? config[qualityId] : null;
+            // `config` is typed Record<string, WeaponQualityConfig>, so under strict
+            // index access widens to undefined. Hosted lookup falls back through both ids.
+            const definition: (typeof config)[string] | undefined = config[baseId] ?? config[qualityId];
 
             const fallbackLabel = qualityId.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
             qualities.push({
                 id: qualityId,
                 baseId: baseId,
-                label: definition !== null && definition.label !== '' ? game.i18n.localize(definition.label) : fallbackLabel,
-                description: definition !== null && definition.description !== '' ? game.i18n.localize(definition.description) : '',
+                label: definition !== undefined && definition.label !== '' ? game.i18n.localize(definition.label) : fallbackLabel,
+                description: definition !== undefined && definition.description !== '' ? game.i18n.localize(definition.description) : '',
                 level: level,
-                hasLevel: definition !== null ? definition.hasLevel : false,
+                hasLevel: definition !== undefined ? definition.hasLevel : false,
             });
         }
 
