@@ -35,7 +35,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
     };
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -154,7 +154,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * @protected
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         TalentData.#migratePrerequisites(source);
         TalentData.#migrateAptitudes(source);
@@ -167,9 +167,9 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
     static #migratePrerequisites(source: Record<string, unknown>): void {
-        if (typeof source.prerequisites === 'string') {
-            source.prerequisites = {
-                text: source.prerequisites,
+        if (typeof source['prerequisites'] === 'string') {
+            source['prerequisites'] = {
+                text: source['prerequisites'],
                 characteristics: {},
                 skills: [],
                 talents: [],
@@ -183,8 +183,8 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
     static #migrateAptitudes(source: Record<string, unknown>): void {
-        if (typeof source.aptitudes === 'string' && source.aptitudes) {
-            source.aptitudes = source.aptitudes
+        if (typeof source['aptitudes'] === 'string' && source['aptitudes']) {
+            source['aptitudes'] = (source['aptitudes'] as string)
                 .split(',')
                 .map((a) => a.trim())
                 .filter(Boolean);
@@ -197,8 +197,8 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
     static #migrateSpecialization(source: Record<string, unknown>): void {
-        if (source.hasSpecialization === undefined && typeof source.specialization === 'string' && source.specialization) {
-            source.hasSpecialization = source.specialization.trim().length > 0;
+        if (source['hasSpecialization'] === undefined && typeof source['specialization'] === 'string' && source['specialization']) {
+            source['hasSpecialization'] = (source['specialization'] as string).trim().length > 0;
         }
     }
 
@@ -210,7 +210,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Auto-detect hasSpecialization from talent name containing (X).
      * @override
      */
-    prepareDerivedData(): void {
+    override prepareDerivedData(): void {
         super.prepareDerivedData();
 
         // Auto-infer hasSpecialization from name containing (X)

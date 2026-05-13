@@ -77,7 +77,7 @@ export default class StarshipData extends ActorDataModel {
     declare componentModifiers: Record<string, number>;
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -148,7 +148,7 @@ export default class StarshipData extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @override */
-    prepareDerivedData(): void {
+    override prepareDerivedData(): void {
         super.prepareDerivedData();
         this._prepareResources();
         this._prepareCombatStats();
@@ -326,16 +326,16 @@ export default class StarshipData extends ActorDataModel {
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry getRollData() returns dynamic shorthand keys
-    getRollData(): Record<string, unknown> {
+    override getRollData(): Record<string, unknown> {
         const data = super.getRollData();
 
-        data.speed = this.speed;
-        data.man = this.manoeuvrability;
-        data.det = this.detection;
-        data.arm = this.armour;
-        data.vs = this.voidShields;
-        data.tr = this.turretRating;
-        data.cr = this.crew.crewRating;
+        data['speed'] = this.speed;
+        data['man'] = this.manoeuvrability;
+        data['det'] = this.detection;
+        data['arm'] = this.armour;
+        data['vs'] = this.voidShields;
+        data['tr'] = this.turretRating;
+        data['cr'] = this.crew.crewRating;
 
         return data;
     }
