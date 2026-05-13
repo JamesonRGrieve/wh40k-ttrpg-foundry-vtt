@@ -109,9 +109,9 @@ export function evaluateFateFormula(formula: string): number {
 
         const conditions: FateCondition[] = [];
         const conditionRegex = /\((\d+)-(\d+)\|=(\d+)\)/g;
-        let match: RegExpExecArray | null;
+        let match: RegExpExecArray | null = conditionRegex.exec(trimmedFormula);
 
-        while ((match = conditionRegex.exec(trimmedFormula)) !== null) {
+        while (match !== null) {
             const g1 = (match[1] as string | undefined) ?? '0';
             const g2 = (match[2] as string | undefined) ?? '0';
             const g3 = (match[3] as string | undefined) ?? '0';
@@ -120,6 +120,7 @@ export function evaluateFateFormula(formula: string): number {
                 max: parseInt(g2, 10),
                 value: parseInt(g3, 10),
             });
+            match = conditionRegex.exec(trimmedFormula);
         }
 
         if (conditions.length === 0) {
@@ -205,10 +206,11 @@ export function describeFateFormula(formula: string): string {
 
     const conditions: string[] = [];
     const conditionRegex = /\((\d+)-(\d+)\|=(\d+)\)/g;
-    let match: RegExpExecArray | null;
+    let match: RegExpExecArray | null = conditionRegex.exec(formula);
 
-    while ((match = conditionRegex.exec(formula)) !== null) {
+    while (match !== null) {
         conditions.push(`${match[1]}-${match[2]}=${match[3]}`);
+        match = conditionRegex.exec(formula);
     }
 
     if (conditions.length === 0) {

@@ -330,7 +330,11 @@ export class WeaponRollData extends RollData {
 
     selectWeapon(weaponName: string): void {
         // Unselect All
-        this.weapons.filter((weapon) => weapon.id !== weaponName).forEach((weapon) => ((weapon as { isSelected?: boolean }).isSelected = false));
+        this.weapons
+            .filter((weapon) => weapon.id !== weaponName)
+            .forEach((weapon) => {
+                (weapon as { isSelected?: boolean }).isSelected = false;
+            });
         const found = this.weapons.find((weapon) => weapon.id === weaponName);
         if (found) {
             this.weapon = found;
@@ -423,7 +427,11 @@ export class PsychicRollData extends RollData {
     }
 
     selectPower(powerName: string): void {
-        this.psychicPowers.filter((power) => power.id !== powerName).forEach((power) => ((power as { isSelected?: boolean }).isSelected = false));
+        this.psychicPowers
+            .filter((power) => power.id !== powerName)
+            .forEach((power) => {
+                (power as { isSelected?: boolean }).isSelected = false;
+            });
         const found = this.psychicPowers.find((power) => power.id === powerName);
         if (found) {
             this.power = found;

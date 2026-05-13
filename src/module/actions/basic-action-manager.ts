@@ -19,36 +19,36 @@ export class BasicActionManager {
             // under `.wh40k-rpg`. Chat messages render outside the system's sheet
             // root, so without this class the chat cards lose all Tailwind styling.
             html.classList.add('wh40k-rpg');
-            html.querySelectorAll('.roll-control__hide-control').forEach((el) =>
+            html.querySelectorAll('.roll-control__hide-control').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     this._toggleExpandChatMessage(ev);
-                }),
-            );
-            html.querySelectorAll('.roll-control__refund').forEach((el) =>
+                });
+            });
+            html.querySelectorAll('.roll-control__refund').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._refundResources(ev);
-                }),
-            );
-            html.querySelectorAll('.roll-control__fate-reroll').forEach((el) =>
+                });
+            });
+            html.querySelectorAll('.roll-control__fate-reroll').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._fateReroll(ev);
-                }),
-            );
-            html.querySelectorAll('.roll-control__assign-damage').forEach((el) =>
+                });
+            });
+            html.querySelectorAll('.roll-control__assign-damage').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._assignDamage(ev);
-                }),
-            );
-            html.querySelectorAll('.roll-control__roll-damage').forEach((el) =>
+                });
+            });
+            html.querySelectorAll('.roll-control__roll-damage').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._rollDamage(ev);
-                }),
-            );
-            html.querySelectorAll('.roll-control__apply-damage').forEach((el) =>
+                });
+            });
+            html.querySelectorAll('.roll-control__apply-damage').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._applyDamage(ev);
-                }),
-            );
+                });
+            });
         });
 
         // Initialize Scene Control Buttons

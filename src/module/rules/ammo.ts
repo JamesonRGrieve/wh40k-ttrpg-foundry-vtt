@@ -119,7 +119,8 @@ export function ammoText(item: AmmoItem): string | undefined {
 export async function useAmmo(actionData: AmmoActionData): Promise<void> {
     const actionItem = actionData.rollData.weapon;
     if (actionItem.usesAmmo) {
-        let newValue = (actionItem.system.clip.value -= actionData.rollData.ammoUsed);
+        actionItem.system.clip.value -= actionData.rollData.ammoUsed;
+        let newValue = actionItem.system.clip.value;
         // Reset to 0 if there was a problem
         if (newValue < 0) {
             newValue = 0;
