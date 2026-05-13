@@ -9,7 +9,7 @@
     "unresolved"
   ],
   "totals": {
-    "total": 304
+    "total": 305
   },
   "counts": {
     "files": 27,
@@ -20,7 +20,7 @@
     "unresolved": 0,
     "binaries": 0,
     "exports": 209,
-    "types": 53,
+    "types": 54,
     "enumMembers": 0,
     "classMembers": 0,
     "duplicates": 12,
