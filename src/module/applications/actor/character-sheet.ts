@@ -746,7 +746,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    _prepareTabsContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
+    _prepareTabsContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         // Tabs use the static TABS configuration
         context.tabs = (this.constructor as unknown as { TABS: SheetTabConfig[] }).TABS.map((tab: SheetTabConfig) => ({
             ...tab,
@@ -787,7 +787,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    _prepareBodyContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
+    _prepareBodyContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         // All tab data is already prepared in _prepareContext
         return context;
     }
@@ -1431,7 +1431,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const effectivePF = currentPF + modifier;
 
         // Determine wealth tier (WH40K RPG wealth categories)
-        let wealthTier;
+        let wealthTier: { key: string; label: string; min: number };
         if (effectivePF >= 100) {
             wealthTier = { key: 'legendary', label: 'Legendary Wealth', min: 100 };
         } else if (effectivePF >= 75) {
@@ -1466,7 +1466,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    _prepareOverviewContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
+    _prepareOverviewContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         // Add Active Effects data
         context.effects = this.actor.effects.map((effect) => ({
             id: effect.id,
@@ -1771,7 +1771,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    _prepareCombatTabContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
+    _prepareCombatTabContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         // Combat data already prepared in _prepareCombatData
         return context;
     }
@@ -1785,7 +1785,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    _prepareEquipmentContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
+    _prepareEquipmentContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         // Equipment data already prepared in _prepareLoadoutData
         context.transactionSourceCount = TransactionManager.listSourcesForBuyer(this.actor).length;
         return context;
@@ -1800,7 +1800,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    _prepareAbilitiesContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
+    _prepareAbilitiesContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         // Talents and traits already prepared in _prepareItems
         return context;
     }
@@ -1814,7 +1814,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    _prepareNotesContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
+    _prepareNotesContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         return context;
     }
 
@@ -1827,7 +1827,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    _prepareEffectsContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
+    _prepareEffectsContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         return context;
     }
 
@@ -1921,7 +1921,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #attack(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #attack(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
             await DHTargetedActionManager.performWeaponAttack(this.actor);
         } catch (error: unknown) {
@@ -1939,7 +1939,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #dodge(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #dodge(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
             await this.actor.rollSkill('dodge');
         } catch (error: unknown) {
@@ -1957,7 +1957,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #parry(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #parry(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
             await this.actor.rollSkill('parry');
         } catch (error: unknown) {
@@ -2586,8 +2586,8 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #removeAcquisition(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset.index ?? '-1');
-        if (isNaN(index) || index < 0) return;
+        const index = parseInt(target.dataset.index ?? '-1', 10);
+        if (Number.isNaN(index) || index < 0) return;
 
         const acquisitions = this.actor.system.rogueTrader?.acquisitions;
         if (!Array.isArray(acquisitions)) {
