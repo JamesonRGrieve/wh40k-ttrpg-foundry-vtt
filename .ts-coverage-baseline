@@ -4,7 +4,7 @@
   ],
   "totals": {
     "any": 1,
-    "asAny": 9,
+    "asAny": 7,
     "tsExpectError": 10,
     "tsIgnore": 0
   },
@@ -47,7 +47,7 @@
     },
     "data": {
       "any": 1,
-      "asAny": 5,
+      "asAny": 3,
       "tsExpectError": 0,
       "tsIgnore": 0
     },
