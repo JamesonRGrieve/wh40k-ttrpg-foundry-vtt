@@ -163,7 +163,7 @@ export class TargetedActionManager {
         weaponRollData.sourceActor = rollData.actor;
         weaponRollData.targetActor = rollData.target;
         weaponRollData.distance = rollData.distance;
-        await prepareUnifiedRoll(weaponAttack);
+        prepareUnifiedRoll(weaponAttack);
     }
 
     /**
@@ -191,7 +191,7 @@ export class TargetedActionManager {
         psychicRollData.sourceActor = rollData.actor;
         psychicRollData.targetActor = rollData.target;
         psychicRollData.distance = rollData.distance;
-        await prepareUnifiedRoll(psychicAttack);
+        prepareUnifiedRoll(psychicAttack);
     }
 }
 

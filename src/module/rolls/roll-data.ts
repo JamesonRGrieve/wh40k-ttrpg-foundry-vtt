@@ -280,7 +280,7 @@ export class WeaponRollData extends RollData {
         }
 
         updateWeaponModifiers(this);
-        await updateAttackSpecials(this);
+        updateAttackSpecials(this);
         updateAvailableCombatActions(this);
         calculateCombatActionModifier(this);
         if (weaponSystem.usesAmmo === true) {
@@ -289,7 +289,7 @@ export class WeaponRollData extends RollData {
         } else {
             this.usesAmmo = false;
         }
-        await calculateWeaponRange(this);
+        calculateWeaponRange(this);
         this.updateBaseTarget();
     }
 
@@ -435,7 +435,7 @@ export class PsychicRollData extends RollData {
         this.modifiers['focus'] = this.hasFocus ? 10 : 0;
         this.modifiers['power'] = (this.power.system as { target?: { bonus?: number } }).target?.bonus ?? 0;
         this.hasDamage = (this.power.system as { subtype?: string }).subtype?.includes('Attack') ?? false;
-        await updateAttackSpecials(this);
+        updateAttackSpecials(this);
         this.updateBaseTarget();
         await calculatePsychicPowerRange(this);
     }
