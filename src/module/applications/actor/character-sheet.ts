@@ -160,7 +160,7 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /** @override */
-    static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+    static override DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         ...BaseActorSheet.DEFAULT_OPTIONS,
         /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
@@ -280,7 +280,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * subclasses spread this class's DEFAULT_OPTIONS.
      * @override
      */
-    _getHeaderControls(): foundry.applications.api.ApplicationV2.HeaderControlsEntry[] {
+    override _getHeaderControls(): foundry.applications.api.ApplicationV2.HeaderControlsEntry[] {
         const controls = super._getHeaderControls();
         if (!controls.some((c: { action?: string }) => c.action === 'resetWindowSize')) {
             controls.push({
@@ -393,14 +393,14 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    get title(): string {
+    override get title(): string {
         const actorType = String(this.document.type);
         const base = `${actorType.includes('character') ? 'Player Character' : actorType}: ${this.document.name}`;
         return `${base} — Drag and Drop from Compendium to Add`;
     }
 
     /** @override */
-    tabGroups = {
+    override tabGroups = {
         primary: 'overview',
     };
 
@@ -480,7 +480,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = (await super._prepareContext(options)) as CharacterSheetContext;
 
         // isGM / dh come from BaseActorSheet._prepareCommonContext (called by super).
@@ -553,7 +553,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @override
      * @protected
      */
-    async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const prototype = Object.getPrototypeOf(CharacterSheet.prototype) as {
             _preparePartContext?: (
                 this: CharacterSheet,
@@ -761,7 +761,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onFirstRender(context, options);
 
         // Ensure initial tab is active
@@ -1698,7 +1698,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {string}     Formatted breakdown string
      * @private
      */
-    _getSkillBreakdown(skill: SkillLike, char: CharacteristicLike | undefined): string {
+    override _getSkillBreakdown(skill: SkillLike, char: CharacteristicLike | undefined): string {
         const parts = [];
         const charValue = Number(char?.total ?? 0);
         const trained = skill.trained ?? false;
@@ -2090,7 +2090,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #toggleFavoriteAction(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent parent action from triggering
-        const actionKey = target.dataset.actionKey;
+        const actionKey = target.dataset['actionKey'];
         if (actionKey === undefined || actionKey === '') return;
 
         const currentFavorites = (this.actor.system as Record<string, unknown> & { favoriteCombatActions?: string[] }).favoriteCombatActions ?? [];
@@ -2106,7 +2106,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #combatAction(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const actionKey = target.dataset.combatAction;
+        const actionKey = target.dataset['combatAction'];
         if (actionKey === undefined || actionKey === '') return;
 
         // Route to specific handler based on action key
@@ -2140,7 +2140,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     // eslint-disable-next-line @typescript-eslint/require-await -- ApplicationV2 action handlers expect Promise<void>
     static async #vocalizeCombatAction(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const actionKey = target.dataset.actionKey;
+        const actionKey = target.dataset['actionKey'];
         if (actionKey === undefined || actionKey === '') return;
 
         // Find the action definition in config
@@ -2173,7 +2173,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #vocalizeMovement(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const movementType = target.dataset.movementType as 'half' | 'full' | 'charge' | 'run' | undefined;
+        const movementType = target.dataset['movementType'] as 'half' | 'full' | 'charge' | 'run' | undefined;
         if (movementType === undefined) return;
 
         const movementData = {
@@ -2213,7 +2213,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #setMovementMode(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const movementType = target.dataset.movementType;
+        const movementType = target.dataset['movementType'];
         if (movementType === undefined || movementType === '') return;
 
         // Find the actor's active token on the canvas
@@ -2251,7 +2251,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #toggleEquip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({ 'system.equipped': !(item.system as Record<string, unknown>).equipped });
@@ -2266,7 +2266,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #stowItem(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({
@@ -2285,7 +2285,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #unstowItem(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({ 'system.inBackpack': false });
@@ -2300,7 +2300,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #stowToShip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({
@@ -2319,7 +2319,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #unstowFromShip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({ 'system.inShipStorage': false });
@@ -2353,7 +2353,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Backpack → Ship
         backpackChecks.forEach((cb: Element) => {
-            const itemId = (cb as HTMLElement).dataset.itemId;
+            const itemId = (cb as HTMLElement).dataset['itemId'];
             if (itemId === undefined || itemId === '') return;
 
             const item = this.actor.items.get(itemId);
@@ -2376,7 +2376,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Ship → Backpack/Carried
         shipChecks.forEach((cb: Element) => {
-            const itemId = (cb as HTMLElement).dataset.itemId;
+            const itemId = (cb as HTMLElement).dataset['itemId'];
             if (itemId === undefined || itemId === '') return;
 
             const item = this.actor.items.get(itemId);
@@ -2419,7 +2419,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const itemIds: string[] = [];
         allChecks.forEach((cb: Element) => {
-            const id = (cb as HTMLElement).dataset.itemId;
+            const id = (cb as HTMLElement).dataset['itemId'];
             if (id !== undefined && id !== '') itemIds.push(id);
         });
         if (!itemIds.length) return;
@@ -2481,7 +2481,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #toggleActivate(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
+        const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
         await item.update({ 'system.activated': !(item.system as Record<string, unknown>).activated });
@@ -2497,7 +2497,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #bulkEquip(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const action: string | undefined = target.dataset.bulkAction;
+            const action: string | undefined = target.dataset['bulkAction'];
             const items = this.actor.items;
             let count = 0;
 
@@ -2588,7 +2588,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #removeAcquisition(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset.index ?? '-1', 10);
+        const index = parseInt(target.dataset['index'] ?? '-1', 10);
         if (Number.isNaN(index) || index < 0) return;
 
         const acquisitions = this.actor.system.rogueTrader?.acquisitions;
@@ -2677,7 +2677,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #bonusVocalize(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const bonusName = target.dataset.bonusName;
+            const bonusName = target.dataset['bonusName'];
             const bonus = (this.actor.backgroundEffects as Array<{ name?: string; source?: string; benefit?: string }> | undefined)?.find(
                 (a) => a.name === bonusName,
             );
@@ -3007,7 +3007,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Element that triggered the event.
      */
     static async #toggleFavoriteSkill(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const skillKey = target.dataset.skill;
+        const skillKey = target.dataset['skill'];
         if (skillKey === undefined || skillKey === '') return;
 
         // Get current favorite skills
@@ -3040,7 +3040,7 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #cycleSkillTraining(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const row = target.closest<HTMLElement>('[data-skill]');
-        const skillKey = row?.dataset.skill;
+        const skillKey = row?.dataset['skill'];
         if (skillKey === undefined || skillKey === '') return;
 
         const skill = this.actor.system.skills[skillKey] as { plus10?: boolean; plus20?: boolean; plus30?: boolean; trained?: boolean } | undefined;
@@ -3086,8 +3086,8 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #cycleSpecialistTraining(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const row = target.closest<HTMLElement>('[data-skill]');
-        const skillKey = row?.dataset.skill;
-        const entryIndex = parseInt(row?.dataset.index ?? '', 10);
+        const skillKey = row?.dataset['skill'];
+        const entryIndex = parseInt(row?.dataset['index'] ?? '', 10);
         if (skillKey === undefined || skillKey === '' || isNaN(entryIndex)) return;
 
         const skill = this.actor.system.skills[skillKey] as { entries?: WH40KSkillEntry[] } | undefined;
@@ -3137,8 +3137,8 @@ export default class CharacterSheet extends BaseActorSheet {
      * @this {CharacterSheet}
      */
     static async #toggleFavoriteSpecialistSkill(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const skillKey = target.dataset.skill;
-        const entryIndex = parseInt(target.dataset.index ?? '');
+        const skillKey = target.dataset['skill'];
+        const entryIndex = parseInt(target.dataset['index'] ?? '');
         if (skillKey === undefined || skillKey === '' || isNaN(entryIndex)) return;
 
         // Create a unique key for this specialist skill entry
@@ -3189,7 +3189,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Element that triggered the event.
      */
     static async #toggleFavoriteTalent(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset.itemId;
+        const itemId = target.dataset['itemId'];
         if (itemId === undefined || itemId === '') return;
 
         // Get current favorite talents
@@ -3253,8 +3253,8 @@ export default class CharacterSheet extends BaseActorSheet {
      * @private
      */
     static async #adjustTraitLevel(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset.itemId;
-        const parsedDelta = parseInt(target.dataset.delta ?? '');
+        const itemId = target.dataset['itemId'];
+        const parsedDelta = parseInt(target.dataset['delta'] ?? '');
         const delta = Number.isNaN(parsedDelta) ? 0 : parsedDelta;
 
         if (itemId === undefined || itemId === '') return;
@@ -3312,7 +3312,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #toggleEffect(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const effectId = target.dataset.effectId;
+            const effectId = target.dataset['effectId'];
             if (effectId === undefined || effectId === '') return;
             const effect = this.actor.effects.get(effectId);
 
@@ -3346,7 +3346,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #deleteEffect(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const effectId = target.dataset.effectId;
+            const effectId = target.dataset['effectId'];
             if (effectId === undefined || effectId === '') return;
             const effect = this.actor.effects.get(effectId);
 
@@ -3390,7 +3390,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #rollPower(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const itemId = target.dataset.itemId;
+            const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId === '') return;
             const item = this.actor.items.get(itemId);
             if (item === undefined) {
@@ -3416,7 +3416,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #rollPowerDamage(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const itemId = target.dataset.itemId;
+            const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId === '') return;
             const item = this.actor.items.get(itemId);
             if (item === undefined) {
@@ -3442,7 +3442,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #vocalizePower(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const itemId = target.dataset.itemId;
+            const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId === '') return;
             const item = this.actor.items.get(itemId);
             if (item === undefined) {
@@ -3475,7 +3475,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #togglePowerDetails(this: CharacterSheet, _event: Event, target: HTMLElement): void {
-        const itemId = target.dataset.itemId;
+        const itemId = target.dataset['itemId'];
         const detailsEl = this.element.querySelector(`.wh40k-power-details[data-power-id="${itemId}"]`);
 
         if (detailsEl) {
@@ -3500,7 +3500,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #rollRitual(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const itemId = target.dataset.itemId;
+            const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId === '') return;
             await this.actor.rollItem(itemId);
         } catch (error) {
@@ -3519,7 +3519,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #vocalizeRitual(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const itemId = target.dataset.itemId;
+            const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId === '') return;
             const item = this.actor.items.get(itemId);
             if (item === undefined) return;
@@ -3548,7 +3548,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #rollOrder(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const itemId = target.dataset.itemId;
+            const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId === '') return;
             await this.actor.rollItem(itemId);
         } catch (error) {
@@ -3567,7 +3567,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #vocalizeOrder(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
-            const itemId = target.dataset.itemId;
+            const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId === '') return;
             const item = this.actor.items.get(itemId);
             if (item === undefined) return;
@@ -3677,14 +3677,14 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #filterPowers(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const discipline = target.dataset.discipline ?? '';
+        const discipline = target.dataset['discipline'] ?? '';
 
         this._powersFilter.discipline = discipline;
 
         // Update active class on filter buttons
         const filterBtns = this.element.querySelectorAll('.wh40k-panel-psychic-powers .wh40k-filter-btn');
         filterBtns.forEach((btn: Element) => {
-            btn.classList.toggle('active', (btn as HTMLElement).dataset.discipline === discipline);
+            btn.classList.toggle('active', (btn as HTMLElement).dataset['discipline'] === discipline);
         });
 
         // Re-render the powers part
@@ -3700,14 +3700,14 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #filterOrders(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const category = target.dataset.category ?? '';
+        const category = target.dataset['category'] ?? '';
 
         this._powersFilter.orderCategory = category;
 
         // Update active class on filter buttons
         const filterBtns = this.element.querySelectorAll('.wh40k-panel-orders .wh40k-filter-btn');
         filterBtns.forEach((btn: Element) => {
-            btn.classList.toggle('active', (btn as HTMLElement).dataset.category === category);
+            btn.classList.toggle('active', (btn as HTMLElement).dataset['category'] === category);
         });
 
         // Re-render the powers part
@@ -3728,12 +3728,12 @@ export default class CharacterSheet extends BaseActorSheet {
      * `data-favourite-key` and lives inside a parent `[data-favourite-list="skills|talents"]`
      * container. On drop, splice the flag array and persist. See issue #6.
      */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
         const lists = this.element.querySelectorAll('[data-favourite-list]');
         for (const list of Array.from(lists) as HTMLElement[]) {
-            const kind = list.dataset.favouriteList;
+            const kind = list.dataset['favouriteList'];
             if (kind !== 'skills' && kind !== 'talents') continue;
             const flagKey = kind === 'skills' ? 'favoriteSkills' : 'favoriteTalents';
 
@@ -3741,7 +3741,7 @@ export default class CharacterSheet extends BaseActorSheet {
             list.addEventListener('dragstart', (event) => {
                 const row = (event.target as HTMLElement | null)?.closest<HTMLElement>('[data-favourite-key]');
                 if (row === null || row === undefined) return;
-                dragKey = row.dataset.favouriteKey ?? null;
+                dragKey = row.dataset['favouriteKey'] ?? null;
                 if (event.dataTransfer !== null) {
                     event.dataTransfer.effectAllowed = 'move';
                     event.dataTransfer.setData('text/plain', dragKey ?? '');
@@ -3760,7 +3760,7 @@ export default class CharacterSheet extends BaseActorSheet {
             list.addEventListener('drop', (event) => {
                 event.preventDefault();
                 const targetRow = (event.target as HTMLElement | null)?.closest<HTMLElement>('[data-favourite-key]');
-                const dropKey = targetRow?.dataset.favouriteKey ?? null;
+                const dropKey = targetRow?.dataset['favouriteKey'] ?? null;
                 if (dragKey === null || dropKey === null || dragKey === dropKey) return;
                 const flag = (this.actor.getFlag('wh40k-rpg', flagKey) as string[] | undefined) ?? [];
                 const next = flag.slice();
@@ -3775,7 +3775,7 @@ export default class CharacterSheet extends BaseActorSheet {
         }
     }
 
-    async _onDropItem(event: DragEvent, item: WH40KItem): Promise<unknown> {
+    override async _onDropItem(event: DragEvent, item: WH40KItem): Promise<unknown> {
         // Progression-eligible drops (talents) route through the AdvancementDialog rather
         // than landing on the actor directly — talents cost XP per RAW, so silently creating
         // them on drop bypasses the advancement economy. Already-owned talents fall through
