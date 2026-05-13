@@ -67,14 +67,14 @@ export class WH40KItemContainer extends Item {
         return this.getNested().length > 0;
     }
 
-    async convertNestedToItems(): Promise<void> {
+    convertNestedToItems(): void {
         // Convert Nested to Items
         game.wh40k.log(`Convert ${this.name} Nested`, this.hasNested());
         this.items = new foundry.utils.Collection();
         const itemClass = CONFIG.Item.documentClass;
         for (const nestedData of this.getNested()) {
             const item = new itemClass(nestedData as unknown as never, { parent: this as unknown as never });
-            await this.items.set(nestedData._id, item as unknown as Item);
+            this.items.set(nestedData._id, item as unknown as Item);
         }
         game.wh40k.log(`Item ${this.name} items:`, this.items);
     }

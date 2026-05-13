@@ -428,7 +428,7 @@ export class WH40KItem extends WH40KItemContainer {
             game.wh40k.log(`Special migrated for item: ${this.name}`, this.system.special);
             this.system.special = undefined;
 
-            await this.convertNestedToItems();
+            this.convertNestedToItems();
         }
     }
 

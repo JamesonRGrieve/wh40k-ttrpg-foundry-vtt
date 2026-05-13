@@ -228,7 +228,7 @@ export class BasicActionManager {
         }
 
         const assignData = new AssignDamageData(targetActor as unknown as ActorLike, hitData);
-        await prepareAssignDamageRoll(assignData as unknown as Record<string, unknown>);
+        prepareAssignDamageRoll(assignData as unknown as Record<string, unknown>);
     }
 
     async _applyDamage(event: Event): Promise<void> {
@@ -276,7 +276,7 @@ export class BasicActionManager {
             assignDamageData.ignoreArmour = true;
         }
 
-        await assignDamageData.update();
+        assignDamageData.update();
         await assignDamageData.finalize();
         await assignDamageData.performActionAndSendToChat();
     }
@@ -288,7 +288,7 @@ export class BasicActionManager {
 
         const hitData = new Hit();
         const assignData = new AssignDamageData(sourceActor as unknown as ActorLike, hitData);
-        await prepareAssignDamageRoll(assignData as unknown as Record<string, unknown>);
+        prepareAssignDamageRoll(assignData as unknown as Record<string, unknown>);
     }
 
     getActionData(id: string | undefined): ActionData | null {

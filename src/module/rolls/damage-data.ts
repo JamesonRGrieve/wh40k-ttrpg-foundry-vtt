@@ -285,10 +285,10 @@ export class Hit {
             }
 
             // Ammo
-            await calculateAmmoDamageBonuses(attackData as unknown as Parameters<typeof calculateAmmoDamageBonuses>[0], this);
+            calculateAmmoDamageBonuses(attackData as unknown as Parameters<typeof calculateAmmoDamageBonuses>[0], this);
         }
 
-        await calculateWeaponModifiersDamageBonuses(attackData as unknown as Parameters<typeof calculateWeaponModifiersDamageBonuses>[0], this);
+        calculateWeaponModifiersDamageBonuses(attackData as unknown as Parameters<typeof calculateWeaponModifiersDamageBonuses>[0], this);
 
         // Exotic quality damage bonuses (Force, Witch-Edge, Daemonbane)
         const exoticModifiers = calculateExoticQualityDamageModifiers({
@@ -358,7 +358,7 @@ export class Hit {
             }
 
             // Ammo
-            await calculateAmmoPenetrationBonuses(attackData as unknown as Parameters<typeof calculateAmmoPenetrationBonuses>[0], this);
+            calculateAmmoPenetrationBonuses(attackData as unknown as Parameters<typeof calculateAmmoPenetrationBonuses>[0], this);
         }
 
         if (attackData.rollData.eyeOfVengeance) {
@@ -387,7 +387,7 @@ export class Hit {
             }
         }
 
-        await calculateWeaponModifiersPenetrationBonuses(attackData as unknown as Parameters<typeof calculateWeaponModifiersPenetrationBonuses>[0], this);
+        calculateWeaponModifiersPenetrationBonuses(attackData as unknown as Parameters<typeof calculateWeaponModifiersPenetrationBonuses>[0], this);
     }
 
     async _calculateSpecials(attackData: AttackDataLike) {
@@ -407,7 +407,7 @@ export class Hit {
         }
 
         if (actionItem.isRanged) {
-            await calculateAmmoSpecials(attackData as unknown as Parameters<typeof calculateAmmoSpecials>[0], this);
+            calculateAmmoSpecials(attackData as unknown as Parameters<typeof calculateAmmoSpecials>[0], this);
         }
 
         for (const special of attackData.rollData.attackSpecials) {

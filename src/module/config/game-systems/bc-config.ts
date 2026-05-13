@@ -154,7 +154,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     override getSkillAdvanceCost(actor: WH40KBaseActor, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
         const baseCost = super.getSkillAdvanceCost(actor, skillKey, currentRank, context);
-        if (baseCost == null) return null;
+        if (baseCost === null) return null;
 
         const advAlignment = (context?.advanceAlignment as ChaosAlignment) ?? 'unaligned';
         const charAlignment = this.getCharacterAlignment(actor);
@@ -165,7 +165,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     override getTalentAdvanceCost(actor: WH40KBaseActor, talent: unknown, context?: Record<string, unknown>): number | null {
         const baseCost = super.getTalentAdvanceCost(actor, talent, context);
-        if (baseCost == null) return null;
+        if (baseCost === null) return null;
 
         const talentData = talent as Record<string, unknown>;
         const advAlignment = (context?.advanceAlignment as ChaosAlignment) ?? (talentData.system as Record<string, unknown>)?.chaosAlignment ?? 'unaligned';

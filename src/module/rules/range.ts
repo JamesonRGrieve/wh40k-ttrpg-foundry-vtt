@@ -24,7 +24,7 @@ type PsychicPowerRangeSystem = {
 /**
  * @param rollData {WeaponRollData}
  */
-async function calculateWeaponMaxRange(rollData: WeaponRollData): Promise<void> {
+function calculateWeaponMaxRange(rollData: WeaponRollData): void {
     const weapon = rollData.weapon;
     if (!weapon) {
         rollData.maxRange = 0;
@@ -143,9 +143,9 @@ function calculateRangeNameAndBonus(rollData: RollData): void {
 /**
  * @param rollData {WeaponRollData}
  */
-export async function calculateWeaponRange(rollData: WeaponRollData): Promise<void> {
+export function calculateWeaponRange(rollData: WeaponRollData): void {
     const mutableRollData = rollData as WeaponRollData & RangeAnnotatedRollData;
-    await calculateWeaponMaxRange(rollData);
+    calculateWeaponMaxRange(rollData);
     calculateRangeNameAndBonus(rollData);
 
     // Ignore Negative Range Bonus for certain modifications
