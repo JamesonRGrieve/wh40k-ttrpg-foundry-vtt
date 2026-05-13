@@ -269,7 +269,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     _expandWoundsFormula(formula: string, tb: number): string {
         // Replace "TB" with actual value for display
         // e.g., "2xTB+1d5+2" becomes "2×4+1d5+2"
-        return formula.replace(/(\d+)xTB/gi, (match, multiplier) => {
+        return formula.replace(/(\d+)xTB/gi, (_match, multiplier: string) => {
             return `${multiplier}×${tb}`;
         });
     }
@@ -427,7 +427,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             rejectClose: false,
         });
 
-        if (diceValue === null || isNaN(diceValue) || diceValue === 0) return;
+        if (diceValue === null || Number.isNaN(diceValue) || diceValue === 0) return;
 
         // Calculate the final value using the full formula
         // Parse formula: e.g., "2xTB+1d5+2"
@@ -544,7 +544,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             rejectClose: false,
         });
 
-        if (diceValue === null || isNaN(diceValue) || diceValue === 0) return;
+        if (diceValue === null || Number.isNaN(diceValue) || diceValue === 0) return;
 
         // Find matching condition
         let result = 0;
@@ -810,7 +810,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             rejectClose: false,
         });
 
-        if (diceValue === null || isNaN(diceValue)) return;
+        if (diceValue === null || Number.isNaN(diceValue)) return;
 
         // Sum static bonuses from formula (strip dice terms)
         const withoutDice = formula.replace(/\d+d\d+/gi, '0');
@@ -853,7 +853,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         let breakdown = originalFormula;
 
         // Replace TB with value
-        breakdown = breakdown.replace(/(\d+)xTB/gi, (match, multiplier) => {
+        breakdown = breakdown.replace(/(\d+)xTB/gi, (_match, multiplier: string) => {
             return `${multiplier}×${tb}`;
         });
 

@@ -153,6 +153,13 @@ export interface MockActor {
             age: string;
             gender: string;
             description: string;
+            build?: string;
+            complexion?: string;
+            hair?: string;
+            eyes?: string;
+            quirks?: string;
+            superstition?: string;
+            mementos?: string;
         };
         originPath: {
             homeWorld: string;
@@ -257,39 +264,35 @@ export function mockModifierBadge(overrides?: DeepPartial<MockModifierBadge>): M
 
 export function mockModifierEntry(overrides?: DeepPartial<MockModifierGroupEntry>): MockModifierGroupEntry {
     const id = 'modifier-' + Math.random().toString(36).slice(2, 8);
-    return deepMerge(
-        {
-            id,
-            name: 'Targeting Auspex',
-            img: 'icons/svg/aura.svg',
-            description: '+10 against concealed targets.',
-            duration: 'Sustained',
-            active: true,
-            canToggle: true,
-            stacks: 1,
-            nature: 'positive',
-        },
-        overrides,
-    );
+    const base: MockModifierGroupEntry = {
+        id,
+        name: 'Targeting Auspex',
+        img: 'icons/svg/aura.svg',
+        description: '+10 against concealed targets.',
+        duration: 'Sustained',
+        active: true,
+        canToggle: true,
+        stacks: 1,
+        nature: 'positive',
+    };
+    return deepMerge(base, overrides);
 }
 
 export function mockActiveEffect(overrides?: DeepPartial<MockActiveEffect>): MockActiveEffect {
     const id = 'effect-' + Math.random().toString(36).slice(2, 8);
-    return deepMerge(
-        {
-            id,
-            label: 'Blessed Ammunition',
-            disabled: false,
-            icon: 'icons/svg/aura.svg',
-            sourceName: 'Litany of Wrath',
-            duration: { label: '3 rounds remaining' },
-            changes: [
-                { label: 'Strength', value: '+5' },
-                { label: 'WeaponSkill', value: '+10' },
-            ],
-        },
-        overrides,
-    );
+    const base: MockActiveEffect = {
+        id,
+        label: 'Blessed Ammunition',
+        disabled: false,
+        icon: 'icons/svg/aura.svg',
+        sourceName: 'Litany of Wrath',
+        duration: { label: '3 rounds remaining' },
+        changes: [
+            { label: 'Strength', value: '+5' },
+            { label: 'WeaponSkill', value: '+10' },
+        ],
+    };
+    return deepMerge(base, overrides);
 }
 
 export function mockWeaponQuality(overrides?: DeepPartial<MockWeaponQuality>): MockWeaponQuality {

@@ -8,6 +8,7 @@
  */
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import type { SimpleSkillData as SimpleSkillDataType } from '../src/module/rolls/action-data.ts';
 
 // --- Stub Foundry globals before importing system modules. -----------------
 // `unified-roll-dialog.ts` (transitive import via base-actor.ts) reads
@@ -137,8 +138,8 @@ function assertShape(simpleSkillData: unknown, fixture: RollFixture, sourceActor
 
 // Helper to invoke the protected `_buildSimpleSkillRoll` method without TS protection
 // errors at the call site — equivalent to calling it from a subclass.
-function buildRoll(actor: unknown, opts: Parameters<InstanceType<typeof WH40KBaseActor>['_buildSimpleSkillRoll']>[0]): SimpleSkillData {
-    return (actor as { _buildSimpleSkillRoll: (o: typeof opts) => SimpleSkillData })._buildSimpleSkillRoll(opts);
+function buildRoll(actor: unknown, opts: Parameters<InstanceType<typeof WH40KBaseActor>['_buildSimpleSkillRoll']>[0]): SimpleSkillDataType {
+    return (actor as { _buildSimpleSkillRoll: (o: typeof opts) => SimpleSkillDataType })._buildSimpleSkillRoll(opts);
 }
 
 /* -------------------------------------------- */
@@ -276,7 +277,7 @@ describe('_buildSimpleSkillRoll — PC (acolyte) paths honour situational modifi
             situationalKey: 'weaponSkill',
         });
 
-        const modifiers = (result.rollData as { modifiers: { modifier: number; situational?: number } }).modifiers;
+        const modifiers = (result.rollData as unknown as { modifiers: { modifier: number; situational?: number } }).modifiers;
         expect(modifiers.situational).toBeUndefined();
     });
 });
@@ -403,7 +404,7 @@ describe('_buildSimpleSkillRoll — structural invariants', () => {
             target: 40,
             situationalKey: 'weaponSkill',
         });
-        const modifiers = (result.rollData as { modifiers: { modifier: number; situational?: number } }).modifiers;
+        const modifiers = (result.rollData as unknown as { modifiers: { modifier: number; situational?: number } }).modifiers;
         expect(modifiers.modifier).toBe(0);
         expect(modifiers.situational).toBeUndefined();
     });

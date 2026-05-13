@@ -108,7 +108,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
     });
     Handlebars.registerHelper('add', (...args: unknown[]) => {
         args.pop();
-        return args.reduce((sum, value) => sum + Number(value ?? 0), 0);
+        return args.reduce<number>((sum, value) => sum + Number(value ?? 0), 0);
     });
     Handlebars.registerHelper('multiply', (a: unknown, b: unknown) => Number(a ?? 0) * Number(b ?? 0));
     Handlebars.registerHelper('inc', (value: unknown) => Number(value) + 1);
@@ -180,11 +180,14 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         return applySubstitutions(template, options?.hash ?? {});
     });
 
-    const partials = import.meta.glob('../src/templates/**/*.hbs', {
-        query: '?raw',
-        import: 'default',
-        eager: true,
-    }) as Record<string, string>;
+    const partials = (import.meta as unknown as { glob: (pattern: string, opts: Record<string, unknown>) => Record<string, string> }).glob(
+        '../src/templates/**/*.hbs',
+        {
+            query: '?raw',
+            import: 'default',
+            eager: true,
+        },
+    );
 
     for (const [path, source] of Object.entries(partials)) {
         const idx = path.indexOf(SOURCE_ROOT);

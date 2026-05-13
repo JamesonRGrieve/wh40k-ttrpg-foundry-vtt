@@ -50,7 +50,7 @@ describe('skill tooltip regressions', () => {
                 label: 'Perception',
                 total: 37,
             },
-        } as Record<string, WH40KCharacteristic>;
+        } as unknown as Record<string, WH40KCharacteristic>;
 
         const data = JSON.parse(prepareSkillTooltipData('awareness', skill, characteristics, 'Actor.mock')) as Record<string, unknown>;
 
