@@ -399,7 +399,27 @@
             "Gear": "Gear",
             "Advances": "Advances",
             "Ship": "Ship & Role",
-            "NPC": "NPC"
+            "NPC": "NPC",
+            "Details": "Details",
+            "Effects": "Effects",
+            "Properties": "Properties",
+            "Description": "Description",
+            "Modifiers": "Modifiers",
+            "Compatibility": "Compatibility",
+            "Qualities": "Qualities",
+            "Relationships": "Relationships",
+            "Requirements": "Requirements",
+            "Configuration": "Configuration",
+            "Notes": "Notes",
+            "Protection": "Protection",
+            "Modifications": "Modifications",
+            "Usage": "Usage",
+            "Stats": "Stats",
+            "Info": "Info",
+            "Content": "Content",
+            "Contents": "Contents",
+            "Installation": "Installation",
+            "Effect": "Effect"
         },
         "Combat": {
             "Title": "Combat",
@@ -636,7 +656,10 @@
             "Tier3": "Tier 3",
             "Grants": "Grants",
             "GrantedBy": "Granted by {source}",
-            "AutoGranted": "Auto-Granted"
+            "AutoGranted": "Auto-Granted",
+            "EditorTitle": "Edit Talent Data",
+            "NotRollable": "This talent cannot be rolled.",
+            "MustBeOnActor": "This talent must be on an actor to roll."
         },
         "TraitCategory": {
             "General": "General",
@@ -1158,7 +1181,17 @@
             "Unique": "Unique"
         },
         "Item": {
-            "Properties": "Item Properties"
+            "Properties": "Item Properties",
+            "Tabs": {
+                "Details": "Details",
+                "Effects": "Effects",
+                "Properties": "Properties",
+                "Description": "Description",
+                "Modifiers": "Modifiers",
+                "Compatibility": "Compatibility",
+                "Qualities": "Qualities",
+                "Notes": "Notes"
+            }
         },
         "NPC": {
             "Name": "Name",
@@ -1368,6 +1401,7 @@
                 "NoPowers": "No psychic powers",
                 "TalentsAndTraits": "Talents & Traits",
                 "Created": "Created {name} from template",
+                "CreateError": "Failed to create NPC from template",
                 "SelectTemplate": "Select a Template",
                 "SelectTitle": "Select NPC Template",
                 "CreateFromTemplate": "Create from Template",

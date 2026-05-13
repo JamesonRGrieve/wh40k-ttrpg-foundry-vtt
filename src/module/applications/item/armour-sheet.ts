@@ -3,8 +3,13 @@
  */
 
 import type { default as ArmourDataModel } from '../../data/item/armour.ts';
-import type { WH40KItem } from '../../documents/item.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
+
+/** Tab label localization keys, hoisted so the static TABS entries reference identifiers. */
+const TAB_LABEL_PROTECTION = 'WH40K.Tabs.Protection';
+const TAB_LABEL_MODIFICATIONS = 'WH40K.Tabs.Modifications';
+const TAB_LABEL_DESCRIPTION = 'WH40K.Tabs.Description';
+const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
 
 /**
  * Sheet for armour items with support for armour modifications.
@@ -43,10 +48,10 @@ export default class ArmourSheet extends ContainerItemSheet {
 
     /** @override */
     static override TABS = [
-        { tab: 'protection', group: 'primary', label: 'Protection' },
-        { tab: 'mods', group: 'primary', label: 'Modifications' },
-        { tab: 'description', group: 'primary', label: 'Description' },
-        { tab: 'effects', group: 'primary', label: 'Effects' },
+        { tab: 'protection', group: 'primary', label: TAB_LABEL_PROTECTION },
+        { tab: 'mods', group: 'primary', label: TAB_LABEL_MODIFICATIONS },
+        { tab: 'description', group: 'primary', label: TAB_LABEL_DESCRIPTION },
+        { tab: 'effects', group: 'primary', label: TAB_LABEL_EFFECTS },
     ];
 
     /* -------------------------------------------- */

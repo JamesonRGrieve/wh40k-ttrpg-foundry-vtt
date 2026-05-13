@@ -4,7 +4,7 @@
   ],
   "config": "tsconfig.strict.json",
   "totals": {
-    "totalErrors": 1885
+    "totalErrors": 1707
   },
   "byCode": {
     "TS18048": 201,
@@ -20,8 +20,8 @@
     "TS2722": 4,
     "TS2741": 2,
     "TS2769": 1,
-    "TS4111": 1208,
-    "TS4114": 228,
+    "TS4111": 1051,
+    "TS4114": 207,
     "TS7029": 2,
     "TS7030": 2
   }

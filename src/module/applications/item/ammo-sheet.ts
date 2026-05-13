@@ -5,6 +5,12 @@
 import type AmmunitionData from '../../data/item/ammunition.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
+/** Tab label localization keys, hoisted so the static TABS entries reference identifiers. */
+const TAB_LABEL_MODIFIERS = 'WH40K.Tabs.Modifiers';
+const TAB_LABEL_COMPATIBILITY = 'WH40K.Tabs.Compatibility';
+const TAB_LABEL_QUALITIES = 'WH40K.Tabs.Qualities';
+const TAB_LABEL_DETAILS = 'WH40K.Tabs.Details';
+
 /**
  * Sheet for ammunition items.
  * Displays modifiers with stat bar and weapon compatibility.
@@ -40,10 +46,10 @@ export default class AmmoSheet extends BaseItemSheet {
 
     /** @override */
     static override TABS = [
-        { tab: 'modifiers', group: 'primary', label: 'Modifiers' },
-        { tab: 'compatibility', group: 'primary', label: 'Compatibility' },
-        { tab: 'qualities', group: 'primary', label: 'Qualities' },
-        { tab: 'details', group: 'primary', label: 'Details' },
+        { tab: 'modifiers', group: 'primary', label: TAB_LABEL_MODIFIERS },
+        { tab: 'compatibility', group: 'primary', label: TAB_LABEL_COMPATIBILITY },
+        { tab: 'qualities', group: 'primary', label: TAB_LABEL_QUALITIES },
+        { tab: 'details', group: 'primary', label: TAB_LABEL_DETAILS },
     ];
 
     /* -------------------------------------------- */
