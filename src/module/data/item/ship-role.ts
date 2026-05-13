@@ -158,8 +158,8 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
 
         if (!this.shipBonuses) return bonuses;
 
-        for (const [key, label] of Object.entries(labels)) {
-            const value = (this.shipBonuses as Record<string, number>)[key] || 0;
+        for (const [key, label] of Object.entries(labels) as Array<[keyof typeof this.shipBonuses, string]>) {
+            const value = this.shipBonuses[key] || 0;
             if (value !== 0) {
                 bonuses.push({
                     label,
