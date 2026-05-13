@@ -47,16 +47,16 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
-        if (!source.properties) {
-            source.properties = [];
+        if (!source['properties']) {
+            source['properties'] = [];
         }
-        if (Array.isArray(source.coverage)) {
-            source.coverage = new Set(source.coverage);
+        if (Array.isArray(source['coverage'])) {
+            source['coverage'] = new Set(source['coverage'] as unknown[]);
         }
-        if (Array.isArray(source.properties)) {
-            source.properties = new Set(source.properties);
+        if (Array.isArray(source['properties'])) {
+            source['properties'] = new Set(source['properties'] as unknown[]);
         }
     }
 
@@ -80,7 +80,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
+    static override _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
         // Note: Set to Array conversion is handled by Foundry's SetField
     }
@@ -94,13 +94,13 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} data  The data to validate
      * @protected
      */
-    static _validateJoint(data: Record<string, unknown>): void {
+    static override _validateJoint(data: Record<string, unknown>): void {
         super._validateJoint?.(data);
 
         const lineKey = inferActiveGameLine(data);
-        const armourPoints = resolveLineVariant(data.armourPoints as Record<string, unknown>, lineKey) as Record<string, number> | undefined;
-        const coverageValue = resolveLineVariant(data.coverage as Record<string, unknown>, lineKey);
-        const maxAgility = resolveLineVariant(data.maxAgility, lineKey) as number | null | undefined;
+        const armourPoints = resolveLineVariant(data['armourPoints'] as Record<string, unknown>, lineKey) as Record<string, number> | undefined;
+        const coverageValue = resolveLineVariant(data['coverage'] as Record<string, unknown>, lineKey);
+        const maxAgility = resolveLineVariant(data['maxAgility'], lineKey) as number | null | undefined;
 
         // Validate AP values (0-20 reasonable range)
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
@@ -142,7 +142,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @inheritdoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
 
         return {
@@ -214,7 +214,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /** @inheritdoc */
-    prepareBaseData(): void {
+    override prepareBaseData(): void {
         super.prepareBaseData();
 
         const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
