@@ -903,7 +903,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleHordeMode(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleHordeMode(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         await this.npcActor.system.toggleHordeMode();
     }
@@ -995,7 +995,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollInitiative(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollInitiative(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         // Roll initiative using the system's initiative formula
         const initChar = this.npcActor.system.initiative.characteristic;
@@ -1018,7 +1018,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleArmourMode(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleArmourMode(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const currentMode = this.npcActor.system.armour.mode;
         const newMode = currentMode === 'simple' ? 'locations' : 'simple';
@@ -1342,7 +1342,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static #editImage(this: NPCSheet, event: Event, target: HTMLElement): void {
+    static #editImage(this: NPCSheet, event: Event, _target: HTMLElement): void {
         event.preventDefault();
         const fp = new FilePicker({
             type: 'image',
@@ -1361,7 +1361,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #setupToken(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #setupToken(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const npc = this.npcActor;
         const updates: Record<string, unknown> = {};
@@ -1414,7 +1414,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #duplicateNPC(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #duplicateNPC(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         await this.npcActor.duplicate();
         ui.notifications.info(`Created copy of ${this.actor.name}`);
@@ -1428,7 +1428,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #scaleToThreat(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #scaleToThreat(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         await NPCThreatScalerDialog.scale(this.actor);
     }
@@ -1478,7 +1478,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #deleteNPC(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #deleteNPC(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const confirmed = await foundry.applications.api.DialogV2.confirm({
             window: { title: 'Delete NPC' },
@@ -1499,7 +1499,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static #exportStatBlock(this: NPCSheet, event: Event, target: HTMLElement): void {
+    static #exportStatBlock(this: NPCSheet, event: Event, _target: HTMLElement): void {
         event.preventDefault();
 
         // Open the full exporter dialog
@@ -1513,7 +1513,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #importStatBlock(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #importStatBlock(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         await StatBlockParser.open({ actor: this.actor });
@@ -1553,7 +1553,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static #addTag(this: NPCSheet, event: Event, target: HTMLElement): void {
+    static #addTag(this: NPCSheet, event: Event, _target: HTMLElement): void {
         event.preventDefault();
         const content = `
       <form>
@@ -1637,7 +1637,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleEditMode(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleEditMode(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const { MODES } = this.constructor as typeof NPCSheet;
         this._mode = this._mode === MODES.EDIT ? MODES.PLAY : MODES.EDIT;
@@ -1760,7 +1760,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #applyCustomDamage(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #applyCustomDamage(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const input = this.element.querySelector<HTMLInputElement>('[data-custom-damage]');
         const amount = parseInt(input?.value ?? '1', 10);
@@ -1774,7 +1774,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #healCustomWounds(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #healCustomWounds(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const input = this.element.querySelector<HTMLInputElement>('[data-custom-damage]');
         const amount = parseInt(input?.value ?? '1', 10);
@@ -1868,7 +1868,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareCharacteristicsHUD(context: Record<string, unknown>): void {
+    _prepareCharacteristicsHUD(_context: Record<string, unknown>): void {
         // NPCSheet uses its own characteristic preparation
         // Skip the parent implementation
     }

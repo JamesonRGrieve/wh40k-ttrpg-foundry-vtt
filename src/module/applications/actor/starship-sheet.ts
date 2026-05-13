@@ -197,7 +197,7 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #fireShipWeapon(this: StarshipSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #fireShipWeapon(this: StarshipSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
         const actor = this.actor as unknown as WH40KStarship;
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
@@ -230,7 +230,7 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollInitiative(this: StarshipSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #rollInitiative(this: StarshipSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: rollInitiative is defined on Starship document; not on Actor.Implementation
         const a = this.actor as unknown as { rollInitiative?: () => Promise<void> };
         await a.rollInitiative?.();
