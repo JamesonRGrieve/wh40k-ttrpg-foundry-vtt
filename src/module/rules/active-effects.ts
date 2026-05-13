@@ -1,4 +1,4 @@
-import { roll1d100, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
+import { applyRollModeWhispers, roll1d100 } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 type ActiveEffectChatContext = {

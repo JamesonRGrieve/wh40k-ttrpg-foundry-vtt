@@ -7,15 +7,15 @@ import { D100Roll } from '../dice/_module.ts';
 import type { ActionData } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import type {
-    WH40KActorSystemData,
-    WH40KFatigue,
-    WH40KFate,
-    WH40KPsy,
     WH40KActorBio,
-    WH40KExperience,
-    WH40KEncumbrance,
-    WH40KBackpack,
+    WH40KActorSystemData,
     WH40KArmourLocation,
+    WH40KBackpack,
+    WH40KEncumbrance,
+    WH40KExperience,
+    WH40KFate,
+    WH40KFatigue,
+    WH40KPsy,
     WH40KSkill,
 } from '../types/global.d.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
