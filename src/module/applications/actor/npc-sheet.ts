@@ -1788,7 +1788,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rerollInitiative(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #rerollInitiative(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const actorId = this.actor.id;
         const combat = game.combat;
@@ -1806,7 +1806,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #addToCombat(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #addToCombat(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         if (!game.combat) {
             ui.notifications.warn('No active combat encounter.');
@@ -1835,7 +1835,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #removeFromCombat(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #removeFromCombat(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const actorId = this.actor.id;
         const combat = game.combat;
