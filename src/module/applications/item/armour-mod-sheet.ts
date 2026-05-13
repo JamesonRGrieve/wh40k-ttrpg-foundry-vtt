@@ -23,7 +23,7 @@ interface ArmourModSystem {
  */
 export default class ArmourModSheet extends ContainerItemSheet {
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         ...ContainerItemSheet.DEFAULT_OPTIONS,
         classes: ['wh40k-rpg', 'sheet', 'item', 'armour-modification'],
         actions: {
@@ -46,7 +46,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
+    static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         header: {
             template: 'systems/wh40k-rpg/templates/item/armour-mod-header.hbs',
         },
@@ -75,7 +75,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
     /** @override */
     /* eslint-disable no-restricted-syntax -- labels are WH40K.* localization keys; rule misfires on string literal form */
-    static TABS = [
+    static override TABS = [
         { tab: 'restrictions', group: 'primary', label: 'WH40K.Modification.Restrictions' },
         { tab: 'modifiers', group: 'primary', label: 'WH40K.Modification.Modifiers' },
         { tab: 'properties', group: 'primary', label: 'WH40K.Modification.Properties' },
@@ -86,7 +86,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups = {
+    override tabGroups = {
         primary: 'restrictions',
     };
 
@@ -96,18 +96,18 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext options/return are framework-defined free-form payloads
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel doesn't expose ArmourModSystem-shaped properties to TS
         const system = this.item.system as unknown as ArmourModSystem;
 
         // Add CONFIG reference for template helpers
-        context.dh = CONFIG.wh40k;
+        context['dh'] = CONFIG.wh40k;
 
         // Add armour types config for restrictions
         const armourTypes = (CONFIG.wh40k as { armourTypes?: Record<string, { label: string }> }).armourTypes ?? {};
-        context.armourTypes = armourTypes;
-        context.armourTypesArray = Object.entries(armourTypes).map(([key, config]) => ({
+        context['armourTypes'] = armourTypes;
+        context['armourTypesArray'] = Object.entries(armourTypes).map(([key, config]) => ({
             key,
             label: game.i18n.localize(config.label),
             selected: system.restrictions.armourTypes.has(key),
@@ -115,10 +115,10 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
         // Add properties config
         const armourProperties = (CONFIG.wh40k as { armourProperties?: Record<string, { label: string; description: string }> }).armourProperties ?? {};
-        context.armourProperties = armourProperties;
+        context['armourProperties'] = armourProperties;
 
         // Prepare added properties array
-        context.addedPropertiesArray = Array.from(system.addedProperties).map((key) => {
+        context['addedPropertiesArray'] = Array.from(system.addedProperties).map((key) => {
             const config = armourProperties[key] as { label: string; description: string } | undefined;
             return {
                 key,
@@ -128,7 +128,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
         });
 
         // Prepare removed properties array
-        context.removedPropertiesArray = Array.from(system.removedProperties).map((key) => {
+        context['removedPropertiesArray'] = Array.from(system.removedProperties).map((key) => {
             const config = armourProperties[key] as { label: string; description: string } | undefined;
             return {
                 key,
@@ -139,7 +139,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
         // Available properties (not yet added or removed)
         const usedKeys = new Set([...Array.from(system.addedProperties), ...Array.from(system.removedProperties)]);
-        context.availablePropertiesArray = Object.entries(armourProperties)
+        context['availablePropertiesArray'] = Object.entries(armourProperties)
             .filter(([key]) => !usedKeys.has(key))
             .map(([key, config]) => ({
                 key,
@@ -152,7 +152,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _preparePartContext context/return are framework-defined free-form payloads
-    async _preparePartContext(partId: string, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _preparePartContext(partId: string, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // Get shared context from _prepareContext
         const sharedContext = await this._prepareContext(options);
         const partContext = { ...sharedContext, ...context };
@@ -161,9 +161,9 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
         switch (partId) {
             case 'header':
-                partContext.icon = system.icon;
-                partContext.restrictionsSummary = system.restrictionsLabelEnhanced;
-                partContext.modifiersSummary = system.modifierSummary;
+                partContext['icon'] = system.icon;
+                partContext['restrictionsSummary'] = system.restrictionsLabelEnhanced;
+                partContext['modifiersSummary'] = system.modifierSummary;
                 break;
 
             case 'restrictions':
@@ -171,7 +171,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
                 break;
 
             case 'modifiers':
-                partContext.modifiers = system.modifiers;
+                partContext['modifiers'] = system.modifiers;
                 break;
 
             case 'properties':
@@ -179,8 +179,8 @@ export default class ArmourModSheet extends ContainerItemSheet {
                 break;
 
             case 'effect':
-                partContext.effect = system.effect;
-                partContext.notes = system.notes;
+                partContext['effect'] = system.effect;
+                partContext['notes'] = system.notes;
                 break;
         }
 
@@ -198,7 +198,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
      * @param {HTMLElement} target  The target element
      */
     static async #onToggleArmourType(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const type = target.dataset.type;
+        const type = target.dataset['type'];
         if (type === undefined || type.length === 0) return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel exposes armourTypes as Set but persisted form is array
         const system = this.item.system as unknown as { restrictions: { armourTypes: string[] | Set<string> } };
@@ -225,9 +225,9 @@ export default class ArmourModSheet extends ContainerItemSheet {
      * @param {HTMLElement} target  The target element
      */
     static async #onAdjustModifier(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const field = target.dataset.field;
+        const field = target.dataset['field'];
         if (field === undefined || field.length === 0) return;
-        const delta = parseInt(target.dataset.delta ?? '0', 10);
+        const delta = parseInt(target.dataset['delta'] ?? '0', 10);
         const current = (foundry.utils.getProperty(this.item.system, field) as number | undefined) ?? 0;
 
         await this.item.update({
@@ -242,8 +242,8 @@ export default class ArmourModSheet extends ContainerItemSheet {
      * @param {HTMLElement} target  The target element
      */
     static async #onAddProperty(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const property = target.dataset.property;
-        const list = target.dataset.list; // "added" or "removed"
+        const property = target.dataset['property'];
+        const list = target.dataset['list']; // "added" or "removed"
         if (property === undefined || property.length === 0 || list === undefined || list.length === 0) return;
         const field = `${list}Properties` as 'addedProperties' | 'removedProperties';
         // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel doesn't expose dynamic property indexing to TS
@@ -263,8 +263,8 @@ export default class ArmourModSheet extends ContainerItemSheet {
      * @param {HTMLElement} target  The target element
      */
     static async #onRemoveProperty(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const property = target.dataset.property;
-        const list = target.dataset.list; // "added" or "removed"
+        const property = target.dataset['property'];
+        const list = target.dataset['list']; // "added" or "removed"
         if (property === undefined || property.length === 0 || list === undefined || list.length === 0) return;
         const field = `${list}Properties` as 'addedProperties' | 'removedProperties';
         // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel doesn't expose dynamic property indexing to TS

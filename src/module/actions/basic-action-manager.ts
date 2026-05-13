@@ -55,7 +55,7 @@ export class BasicActionManager {
         // Initialize Scene Control Buttons
         // V14: controls is Record<string, SceneControl> keyed by control name, not an array
         Hooks.on('getSceneControlButtons', (controls: Record<string, foundry.applications.ui.SceneControls.Control>) => {
-            const bar = controls.tokens;
+            const bar = controls['tokens'];
             if (bar == null) return;
             const toolOrder = Object.keys(bar.tools).length;
             bar.tools['assignDamage'] = {
@@ -80,7 +80,7 @@ export class BasicActionManager {
         if (span != null) {
             span.classList.toggle('active');
         }
-        const target = displayToggle.dataset.toggle;
+        const target = displayToggle.dataset['toggle'];
         const targetEl = target != null && target !== '' ? document.getElementById(target) : null;
         if (targetEl != null) {
             targetEl.style.display = targetEl.style.display === 'none' ? '' : 'none';
@@ -90,7 +90,7 @@ export class BasicActionManager {
     async _rollDamage(event: Event): Promise<void> {
         event.preventDefault();
         const btn = event.currentTarget as HTMLButtonElement;
-        const rollId = btn.dataset.rollId;
+        const rollId = btn.dataset['rollId'];
         const actionData = this.getActionData(rollId);
         if (actionData == null) {
             ui.notifications.warn('Roll data no longer available. Cannot roll damage.');
@@ -129,7 +129,7 @@ export class BasicActionManager {
     async _refundResources(event: Event): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget as HTMLElement;
-        const rollId = div.dataset.rollId;
+        const rollId = div.dataset['rollId'];
         const actionData = this.getActionData(rollId);
 
         if (!actionData) {
@@ -153,7 +153,7 @@ export class BasicActionManager {
     async _fateReroll(event: Event): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget as HTMLElement;
-        const rollId = div.dataset.rollId;
+        const rollId = div.dataset['rollId'];
         const actionData = this.getActionData(rollId);
 
         if (!actionData) {
@@ -193,11 +193,11 @@ export class BasicActionManager {
         event.preventDefault();
         const div = event.currentTarget as HTMLElement;
 
-        const location = div.dataset.location;
-        const totalDamage = div.dataset.totalDamage;
-        const totalPenetration = div.dataset.totalPenetration;
-        const totalFatigue = div.dataset.totalFatigue;
-        const damageType = div.dataset.damageType;
+        const location = div.dataset['location'];
+        const totalDamage = div.dataset['totalDamage'];
+        const totalPenetration = div.dataset['totalPenetration'];
+        const totalFatigue = div.dataset['totalFatigue'];
+        const damageType = div.dataset['damageType'];
 
         const hitData = new Hit();
         hitData.location = location ?? 'Body';
@@ -208,7 +208,7 @@ export class BasicActionManager {
         hitWritable.totalFatigue = totalFatigue;
         hitData.damageType = damageType ?? 'Impact';
 
-        const targetUuid = div.dataset.targetUuid;
+        const targetUuid = div.dataset['targetUuid'];
 
         let targetActor: WH40KBaseActorDocument | undefined;
         if (targetUuid != null && targetUuid !== '') {
@@ -234,13 +234,13 @@ export class BasicActionManager {
     async _applyDamage(event: Event): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget as HTMLElement;
-        const targetUuid = div.dataset.uuid;
-        const damageType = div.dataset.type;
-        const ignoreArmour = div.dataset.ignoreArmour;
-        const location = div.dataset.location;
-        const damage = div.dataset.damage;
-        const penetration = div.dataset.penetration;
-        const fatigue = div.dataset.fatigue;
+        const targetUuid = div.dataset['uuid'];
+        const damageType = div.dataset['type'];
+        const ignoreArmour = div.dataset['ignoreArmour'];
+        const location = div.dataset['location'];
+        const damage = div.dataset['damage'];
+        const penetration = div.dataset['penetration'];
+        const fatigue = div.dataset['fatigue'];
 
         if (targetUuid == null || targetUuid === '') {
             ui.notifications.warn(`Cannot determine target UUID to assign hit.`);

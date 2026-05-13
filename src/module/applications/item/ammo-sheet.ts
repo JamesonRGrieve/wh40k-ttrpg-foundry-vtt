@@ -11,7 +11,7 @@ import BaseItemSheet from './base-item-sheet.ts';
  */
 export default class AmmoSheet extends BaseItemSheet {
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         ...BaseItemSheet.DEFAULT_OPTIONS,
         classes: ['wh40k-rpg', 'sheet', 'item', 'ammunition'],
         position: {
@@ -29,7 +29,7 @@ export default class AmmoSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static override PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-ammo-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
@@ -39,7 +39,7 @@ export default class AmmoSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static TABS = [
+    static override TABS = [
         { tab: 'modifiers', group: 'primary', label: 'Modifiers' },
         { tab: 'compatibility', group: 'primary', label: 'Compatibility' },
         { tab: 'qualities', group: 'primary', label: 'Qualities' },
@@ -49,7 +49,7 @@ export default class AmmoSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups: Record<string, string> = {
+    override tabGroups: Record<string, string> = {
         primary: 'modifiers',
     };
 
@@ -58,15 +58,15 @@ export default class AmmoSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Add CONFIG reference for templates
-        context.CONFIG = CONFIG;
+        context['CONFIG'] = CONFIG;
 
         // Add helper for Set checking
-        context.setIncludes = (value: string, set: Set<string>) => set && set.has(value);
-        context.setToArray = (set: Set<string>) => Array.from(set || []);
+        context['setIncludes'] = (value: string, set: Set<string>) => set && set.has(value);
+        context['setToArray'] = (set: Set<string>) => Array.from(set || []);
 
         return context;
     }
@@ -79,7 +79,7 @@ export default class AmmoSheet extends BaseItemSheet {
      * Add a quality to added or removed list.
      */
     static async #addQuality(this: AmmoSheet, event: Event, target: HTMLElement): Promise<void> {
-        const type = target.dataset.type; // 'added' or 'removed'
+        const type = target.dataset['type']; // 'added' or 'removed'
         const input = this.element.querySelector<HTMLInputElement>(`[name="new-${type}-quality"]`);
         const quality = input?.value?.trim();
 
@@ -100,7 +100,7 @@ export default class AmmoSheet extends BaseItemSheet {
      * Remove a quality from the added list.
      */
     static async #removeAddedQuality(this: AmmoSheet, event: Event, target: HTMLElement): Promise<void> {
-        const quality = target.dataset.quality;
+        const quality = target.dataset['quality'];
         const sys = this.item.system as unknown as AmmunitionData;
         const qualities = new Set(sys.addedQualities || []);
         if (quality) qualities.delete(quality);
@@ -112,7 +112,7 @@ export default class AmmoSheet extends BaseItemSheet {
      * Remove a quality from the removed list.
      */
     static async #removeRemovedQuality(this: AmmoSheet, event: Event, target: HTMLElement): Promise<void> {
-        const quality = target.dataset.quality;
+        const quality = target.dataset['quality'];
         const sys = this.item.system as unknown as AmmunitionData;
         const qualities = new Set(sys.removedQualities || []);
         if (quality) qualities.delete(quality);

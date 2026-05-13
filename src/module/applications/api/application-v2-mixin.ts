@@ -17,6 +17,7 @@ const { HandlebarsApplicationMixin } = applicationAPI;
  */
 export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T) {
     class BaseApplicationWH40K extends HandlebarsApplicationMixin(Base) {
+        // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         constructor(...args: any[]) {
             super(...args);
         }
@@ -127,7 +128,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
          * @param {object} options  Render options.
          * @protected
          */
-        _renderContainers(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+        _renderContainers(_context: Record<string, unknown>, _options: ApplicationV2Config.RenderOptions): void {
             const root = (this as unknown as { element: HTMLElement }).element;
             const containerElements = Array.from(root.querySelectorAll<HTMLElement>('[data-container-id]'));
             const containers: Record<string, HTMLElement> = Object.fromEntries(containerElements.map((el) => [el.dataset['containerId']!, el]));

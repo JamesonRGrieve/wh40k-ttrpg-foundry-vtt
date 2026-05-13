@@ -22,6 +22,7 @@ type DragDropMixed<T extends abstract new (...args: any[]) => unknown> = T & (ne
 export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T): DragDropMixed<T> {
     return class DragDropApplication extends Base implements DragDropMixinAPI {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixin requirement
+        // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         constructor(...args: any[]) {
             super(...args);
         }
@@ -46,7 +47,7 @@ export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T): Dra
          * @protected
          */
         // eslint-disable-next-line no-restricted-syntax -- boundary: drop-event payload is framework-supplied untyped data
-        _allowedDropBehaviors(event: DragEvent, data: Record<string, unknown>): Set<string> {
+        _allowedDropBehaviors(_event: DragEvent, data: Record<string, unknown>): Set<string> {
             if (data['uuid'] === undefined || data['uuid'] === null || data['uuid'] === '') return new Set(['copy', 'link']);
             return new Set(['copy', 'move', 'link']);
         }
@@ -61,7 +62,7 @@ export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T): Dra
          * @protected
          */
         // eslint-disable-next-line no-restricted-syntax -- boundary: drop-event payload is framework-supplied untyped data
-        _defaultDropBehavior(event: DragEvent, data: Record<string, unknown>): string {
+        _defaultDropBehavior(_event: DragEvent, data: Record<string, unknown>): string {
             if (typeof data['uuid'] !== 'string') return 'copy';
             const d = foundry.utils.parseUuid(data['uuid']);
             // eslint-disable-next-line no-restricted-syntax -- boundary: mixin sees `this` typed as ApplicationV2 but document is bound by sheet subclass

@@ -107,7 +107,7 @@ export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = 
     // so call sites are clean.
     // @ts-expect-error - TS2417 static side inheritance
     const Cls = class extends Base {
-        static DEFAULT_OPTIONS = {
+        static override DEFAULT_OPTIONS = {
             classes: opts.classes,
             position: {
                 width: opts.width,
@@ -116,18 +116,18 @@ export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = 
             ...(opts.actions ? { actions: opts.actions } : {}),
         };
 
-        static PARTS = {
+        static override PARTS = {
             sheet: {
                 template: opts.template,
                 scrollable: opts.partOverrides?.scrollable ?? ['.wh40k-tab-content'],
             },
         };
 
-        static TABS = tabs;
+        static override TABS = tabs;
 
-        tabGroups: Record<string, string> = hasTabs ? { primary: opts.defaultTab as string } : {};
+        override tabGroups: Record<string, string> = hasTabs ? { primary: opts.defaultTab as string } : {};
 
-        async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const context = await (super._prepareContext as any).call(this, options);
 
@@ -142,7 +142,7 @@ export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = 
             return context;
         }
 
-        async _onRender(context: Record<string, unknown>, renderOptions: Record<string, unknown>): Promise<void> {
+        override async _onRender(context: Record<string, unknown>, renderOptions: Record<string, unknown>): Promise<void> {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             await (super._onRender as any).call(this, context, renderOptions);
             if (opts.onRender) {

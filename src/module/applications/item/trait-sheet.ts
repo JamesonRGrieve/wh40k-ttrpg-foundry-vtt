@@ -10,7 +10,7 @@ import BaseItemSheet from './base-item-sheet.ts';
 // @ts-expect-error - TS2417 static side inheritance
 export default class TraitSheet extends BaseItemSheet {
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'trait'],
         position: {
             width: 600,
@@ -21,7 +21,7 @@ export default class TraitSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static override PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-trait-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
@@ -31,7 +31,7 @@ export default class TraitSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static TABS = [
+    static override TABS = [
         { tab: 'properties', group: 'primary', label: 'Properties' },
         { tab: 'effects', group: 'primary', label: 'Effects' },
         { tab: 'description', group: 'primary', label: 'Description' },
@@ -40,7 +40,7 @@ export default class TraitSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups = {
+    override tabGroups = {
         primary: 'properties',
     };
 }

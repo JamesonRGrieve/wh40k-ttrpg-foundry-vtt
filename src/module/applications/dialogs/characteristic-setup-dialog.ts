@@ -308,7 +308,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         const index = parseInt(input.dataset['rollIndex'] ?? '0', 10);
         let value = parseInt(input.value, 10);
 
-        if (isNaN(value) || value < 2) value = 0;
+        if (Number.isNaN(value) || value < 2) value = 0;
         if (value > 40) value = 40;
 
         this.#rolls[index] = value;
@@ -426,14 +426,14 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         const key = input.dataset['characteristic'] as CharacteristicKey;
         let value = parseInt(input.value, 10);
 
-        if (isNaN(value) || value < 0) value = 0;
+        if (Number.isNaN(value) || value < 0) value = 0;
         this.#customBases[key] = value;
         void this.render();
     }
 
     /* -------------------------------------------- */
 
-    static async #onApply(this: CharacteristicSetupDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onApply(this: CharacteristicSetupDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         const allAssigned = GENERATION_CHARACTERISTICS.every((key) => {
             const index = this.#assignments[key];
             return index !== null && index !== undefined && (this.#rolls[index] ?? 0) > 0;
@@ -474,7 +474,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     }
 
     // eslint-disable-next-line @typescript-eslint/require-await -- ApplicationV2 action handlers are awaited by the framework regardless of body
-    static async #onReset(this: CharacteristicSetupDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onReset(this: CharacteristicSetupDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         for (const key of GENERATION_CHARACTERISTICS) {
             this.#assignments[key] = null;
         }
@@ -482,7 +482,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     }
 
     // eslint-disable-next-line @typescript-eslint/require-await -- ApplicationV2 action handlers are awaited by the framework regardless of body
-    static async #onToggleAdvanced(this: CharacteristicSetupDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+    static async #onToggleAdvanced(this: CharacteristicSetupDialog, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         this.#advancedMode = !this.#advancedMode;
         void this.render();
     }

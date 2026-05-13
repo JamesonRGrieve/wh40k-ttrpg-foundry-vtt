@@ -88,7 +88,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
 
     /** @override */
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    static PARTS = {
+    static override PARTS = {
         header: {
             template: 'systems/wh40k-rpg/templates/item/npc-template/header.hbs',
         },
@@ -126,7 +126,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
 
     /** @override */
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    static TABS = [
+    static override TABS = [
         { tab: 'basics', group: 'primary', icon: 'fa-solid fa-user', label: TAB_LABEL_BASICS },
         { tab: 'characteristics', group: 'primary', icon: 'fa-solid fa-chart-bar', label: TAB_LABEL_CHARACTERISTICS },
         { tab: 'equipment', group: 'primary', icon: 'fa-solid fa-swords', label: TAB_LABEL_EQUIPMENT },
@@ -137,7 +137,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups = {
+    override tabGroups = {
         primary: 'basics',
     };
 
@@ -174,8 +174,9 @@ export default class NPCTemplateSheet extends BaseItemSheet {
 
         // Add icons from TABS definition
         for (const tabDef of NPCTemplateSheet.TABS) {
-            if (tabDef.tab in tabs) {
-                tabs[tabDef.tab].icon = tabDef.icon;
+            const tabEntry = tabs[tabDef.tab];
+            if (tabDef.tab in tabs && tabEntry !== undefined) {
+                tabEntry['icon'] = tabDef.icon;
             }
         }
 
@@ -344,7 +345,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
      */
     static async #removeSkill(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const index = parseInt(target.dataset.index ?? '', 10);
+        const index = parseInt(target.dataset['index'] ?? '', 10);
         if (isNaN(index)) return;
 
         const skills = foundry.utils.deepClone(this.item.system.trainedSkills);
@@ -380,7 +381,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
      */
     static async #removeWeapon(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const index = parseInt(target.dataset.index ?? '', 10);
+        const index = parseInt(target.dataset['index'] ?? '', 10);
         if (isNaN(index)) return;
 
         const weapons = foundry.utils.deepClone(this.item.system.customWeapons);
@@ -410,7 +411,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
      */
     static async #removeTrait(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const index = parseInt(target.dataset.index ?? '', 10);
+        const index = parseInt(target.dataset['index'] ?? '', 10);
         if (isNaN(index)) return;
 
         const traits = foundry.utils.deepClone(this.item.system.traits);
@@ -440,7 +441,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
      */
     static async #removeTalent(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const index = parseInt(target.dataset.index ?? '', 10);
+        const index = parseInt(target.dataset['index'] ?? '', 10);
         if (isNaN(index)) return;
 
         const talents = foundry.utils.deepClone(this.item.system.talents);
@@ -474,7 +475,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
      */
     static async #removeVariant(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const index = parseInt(target.dataset.index ?? '', 10);
+        const index = parseInt(target.dataset['index'] ?? '', 10);
         if (isNaN(index)) return;
 
         const variants = foundry.utils.deepClone(this.item.system.variants);
