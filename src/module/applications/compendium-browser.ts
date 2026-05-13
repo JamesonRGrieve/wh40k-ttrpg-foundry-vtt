@@ -193,7 +193,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     async _getSources(): Promise<unknown> {
-        const sources = new Set();
+        const sources = new Set<string>();
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
 
         for (const pack of packs) {
@@ -204,11 +204,11 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             }
         }
 
-        return Array.from(sources).sort();
+        return Array.from(sources).sort((a, b) => a.localeCompare(b));
     }
 
     async _getCategories(): Promise<unknown> {
-        const categories = new Set();
+        const categories = new Set<string>();
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
 
         for (const pack of packs) {
@@ -221,7 +221,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             }
         }
 
-        return Array.from(categories).sort();
+        return Array.from(categories).sort((a, b) => a.localeCompare(b));
     }
 
     async _getFilteredResults(): Promise<BrowserResult[]> {
@@ -479,7 +479,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             description = game.i18n.localize(def.description);
         } else if (typeof system['effect'] === 'string' && system['effect'] !== '') {
             // Legacy: system.effect might be HTML or page number
-            const effectStr = system['effect'] as string;
+            const effectStr = system['effect'];
             if (!effectStr.match(/^\d+$/)) {
                 description = effectStr.replace(/<[^>]*>/g, ''); // Strip HTML
             } else {

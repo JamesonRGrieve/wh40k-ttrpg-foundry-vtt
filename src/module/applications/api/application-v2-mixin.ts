@@ -62,7 +62,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
          */
         get subtitle(): string {
             const options = (this as unknown as { options: { window?: { subtitle?: string } } }).options;
-            return game.i18n.localize(options?.window?.subtitle ?? '');
+            return game.i18n.localize(options.window?.subtitle ?? '');
         }
 
         /* -------------------------------------------- */
@@ -76,8 +76,8 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
             };
             prototype._configureRenderOptions?.call(this, options);
             if (options.isFirstRender && (this as unknown as { hasFrame: boolean }).hasFrame) {
-                options.window ||= {};
-                options.window.subtitle ||= this.subtitle;
+                options.window ??= {};
+                options.window.subtitle ??= this.subtitle;
             }
         }
 
