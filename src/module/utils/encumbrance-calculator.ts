@@ -43,13 +43,15 @@ export function computeEncumbrance(actor: WH40KBaseActorDocument): {
     // Filter out storage location items and ship-stowed items
     const carriedItems = actor.items.filter((item) => {
         if (item.isStorageLocation) return false;
-        if (item.system.inShipStorage === true) return false;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
+        if ((item.system as Record<string, unknown> | undefined)?.['inShipStorage'] === true) return false;
         return true;
     });
 
     if (backpack?.hasBackpack === true) {
         for (const item of carriedItems) {
-            if (item.system.inBackpack === true) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
+            if ((item.system as Record<string, unknown> | undefined)?.['inBackpack'] === true) {
                 backpackWeight += item.totalWeight;
             } else {
                 currentWeight += item.totalWeight;
@@ -66,10 +68,10 @@ export function computeEncumbrance(actor: WH40KBaseActorDocument): {
     }
 
     // Calculate max carry capacity from S+T bonus using lookup table
-    const strengthBonus = Number(actor.characteristics.strength.bonus);
-    const toughnessBonus = Number(actor.characteristics.toughness.bonus);
+    const strengthBonus = Number((actor.characteristics['strength'] as (typeof actor.characteristics)[string] | undefined)?.bonus ?? 0);
+    const toughnessBonus = Number((actor.characteristics['toughness'] as (typeof actor.characteristics)[string] | undefined)?.bonus ?? 0);
     const attrBonus = Math.max(0, Math.min(strengthBonus + toughnessBonus, ENCUMBRANCE_TABLE.length - 1));
-    const maxWeight = ENCUMBRANCE_TABLE[attrBonus];
+    const maxWeight = (ENCUMBRANCE_TABLE[attrBonus] as number | undefined) ?? 0;
 
     // Round weights to 2 decimal places for display
     currentWeight = Math.round(currentWeight * 100) / 100;
@@ -92,7 +94,8 @@ export function computeEncumbrance(actor: WH40KBaseActorDocument): {
  */
 export function getCarryCapacity(bonus: number): number {
     const index = Math.max(0, Math.min(bonus, ENCUMBRANCE_TABLE.length - 1));
-    return ENCUMBRANCE_TABLE[index];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess guard for strict tsconfig
+    return (ENCUMBRANCE_TABLE[index] as number | undefined) ?? 0;
 }
 
 export { ENCUMBRANCE_TABLE };

@@ -73,7 +73,7 @@ function normalizeKey(value: string | undefined): string | null {
 function stripOuterParagraph(html: string): string {
     const trimmed = html.trim();
     const match = /^<p>([\s\S]*?)<\/p>$/.exec(trimmed);
-    return match !== null ? match[1] : trimmed;
+    return match !== null && match[1] !== undefined ? match[1] : trimmed;
 }
 
 export function getFuzzy<T>(obj: Record<string, T>, term: string): T | undefined {
@@ -104,5 +104,5 @@ export async function getCriticalDamage(type: string, location: string, amount: 
     if (locationMap === undefined) return null;
     const clamped = amount > 10 ? 10 : amount;
     if (!Object.prototype.hasOwnProperty.call(locationMap, clamped)) return null;
-    return locationMap[clamped];
+    return locationMap[clamped] ?? null;
 }

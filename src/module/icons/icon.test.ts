@@ -5,6 +5,7 @@ import { ICON_REGISTRY } from './registry.generated.ts';
 
 // Minimal Handlebars stub for the helper test. We don't need the real engine —
 // the helper only consumes Handlebars.registerHelper + Handlebars.SafeString.
+// eslint-disable-next-line no-restricted-syntax -- boundary: HelperFn matches Handlebars' untyped callback signature
 type HelperFn = (...args: unknown[]) => unknown;
 
 interface HandlebarsStub {
@@ -65,10 +66,9 @@ describe('icon registry', () => {
         expect(hasIcon('fa:nonexistent-xyz')).toBe(false);
         // ensure narrowed key can be passed to icon()
         const k = 'fa:cog';
-        if (hasIcon(k)) {
-            const out: string = icon(k);
-            expect(out).toContain('<svg');
-        }
+        expect(hasIcon(k)).toBe(true);
+        const out: string = icon(k);
+        expect(out).toContain('<svg');
     });
 });
 
@@ -111,6 +111,7 @@ describe('icon() runtime helper', () => {
 
     it('returns empty string for missing keys (defensive)', () => {
         // Bypass the type system to simulate a registry-vs-union drift.
+        // eslint-disable-next-line no-restricted-syntax -- test: intentionally casting to IconKey to simulate drift
         const result = icon('fa:does-not-exist' as unknown as IconKey);
         expect(result).toBe('');
     });
@@ -121,23 +122,30 @@ describe('Handlebars {{icon}} helper', () => {
 
     beforeEach(() => {
         stub = makeHandlebarsStub();
+        // eslint-disable-next-line no-restricted-syntax -- test: injecting Handlebars mock into globalThis boundary
         (globalThis as unknown as { Handlebars: HandlebarsStub }).Handlebars = stub;
         registerIconHelper();
     });
 
     it('registers an "iconSvg" helper', () => {
-        expect(stub.helpers.iconSvg).toBeTypeOf('function');
+        expect(stub.helpers['iconSvg']).toBeTypeOf('function');
     });
 
     it('renders SafeString-wrapped SVG markup', () => {
-        const result = stub.helpers.iconSvg('fa:dice-d20', { hash: { class: 'tw-text-bronze' } });
+        const fn = stub.helpers['iconSvg'] as HelperFn | undefined;
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: throws if helper missing, not a conditional assertion
+        if (fn === undefined) throw new Error('iconSvg helper not registered');
+        const result = fn('fa:dice-d20', { hash: { class: 'tw-text-bronze' } });
         const out = String((result as { toString(): string }).toString());
         expect(out).toContain('<svg');
         expect(out).toContain('tw-text-bronze');
     });
 
     it('passes through label and size options', () => {
-        const result = stub.helpers.iconSvg('lucide:settings', {
+        const fn = stub.helpers['iconSvg'] as HelperFn | undefined;
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: throws if helper missing, not a conditional assertion
+        if (fn === undefined) throw new Error('iconSvg helper not registered');
+        const result = fn('lucide:settings', {
             hash: { label: 'Configure', size: 20 },
         });
         const out = String((result as { toString(): string }).toString());
@@ -147,7 +155,10 @@ describe('Handlebars {{icon}} helper', () => {
 
     it('warns and renders empty string for unknown keys', () => {
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        const result = stub.helpers.iconSvg('fa:not-a-real-icon', { hash: {} });
+        const fn = stub.helpers['iconSvg'] as HelperFn | undefined;
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: throws if helper missing, not a conditional assertion
+        if (fn === undefined) throw new Error('iconSvg helper not registered');
+        const result = fn('fa:not-a-real-icon', { hash: {} });
         const out = String((result as { toString(): string }).toString());
         expect(out).toBe('');
         expect(warn).toHaveBeenCalled();
@@ -156,7 +167,10 @@ describe('Handlebars {{icon}} helper', () => {
 
     it('warns and renders empty string for non-string keys', () => {
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        const result = stub.helpers.iconSvg(42, { hash: {} });
+        const fn = stub.helpers['iconSvg'] as HelperFn | undefined;
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: throws if helper missing, not a conditional assertion
+        if (fn === undefined) throw new Error('iconSvg helper not registered');
+        const result = fn(42, { hash: {} });
         const out = String((result as { toString(): string }).toString());
         expect(out).toBe('');
         expect(warn).toHaveBeenCalled();

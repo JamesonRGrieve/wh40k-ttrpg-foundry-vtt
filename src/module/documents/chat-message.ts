@@ -73,7 +73,7 @@ export class ChatMessageWH40K extends ChatMessage {
         const roll = this.rolls[0];
         const target = this.getFlag('wh40k-rpg', 'target');
 
-        if (target === undefined || target === null) return null;
+        if (target === undefined || target === null || roll === undefined) return null;
 
         // Check if this is a d100 roll
         const total = roll.total;
@@ -197,13 +197,13 @@ export class ChatMessageWH40K extends ChatMessage {
     static async onChatCardAction(event: Event, html: HTMLElement): Promise<void> {
         event.preventDefault();
         const button = event.currentTarget as HTMLElement;
-        const action = button.dataset.action;
+        const action = button.dataset['action'];
 
         // Get the message from the card
         const card = button.closest<HTMLElement>('.chat-message');
         if (card === null) return;
 
-        const messageId = card.dataset.messageId ?? '';
+        const messageId = card.dataset['messageId'] ?? '';
         const message = game.messages.get(messageId);
 
         if (message === undefined) {
@@ -219,11 +219,11 @@ export class ChatMessageWH40K extends ChatMessage {
                 return;
 
             case 'applyDamage': {
-                const damage = parseInt(button.dataset.damage ?? '0', 10) || 0;
+                const damage = parseInt(button.dataset['damage'] ?? '0', 10) || 0;
                 const options = {
-                    damageType: button.dataset.damageType,
-                    penetration: parseInt(button.dataset.penetration ?? '0', 10) || 0,
-                    location: button.dataset.location,
+                    damageType: button.dataset['damageType'],
+                    penetration: parseInt(button.dataset['penetration'] ?? '0', 10) || 0,
+                    location: button.dataset['location'],
                 };
                 await (message as ChatMessageWH40K).applyDamage(damage, options);
                 return;
@@ -235,7 +235,7 @@ export class ChatMessageWH40K extends ChatMessage {
                 return;
 
             case 'attack': {
-                const itemUuid = button.dataset.itemUuid ?? (message as ChatMessageWH40K).itemUuid;
+                const itemUuid = button.dataset['itemUuid'] ?? (message as ChatMessageWH40K).itemUuid;
                 if (itemUuid !== null && itemUuid !== '') {
                     const item = (await fromUuid(itemUuid)) as RollableItem | null;
                     const actor = item?.actor;
@@ -249,7 +249,7 @@ export class ChatMessageWH40K extends ChatMessage {
             }
 
             case 'roll': {
-                const itemUuid = button.dataset.itemUuid ?? (message as ChatMessageWH40K).itemUuid;
+                const itemUuid = button.dataset['itemUuid'] ?? (message as ChatMessageWH40K).itemUuid;
                 if (itemUuid !== null && itemUuid !== '') {
                     const item = (await fromUuid(itemUuid)) as RollableItem | null;
                     if (item !== null && typeof item.roll === 'function') {
@@ -332,8 +332,8 @@ export class ChatMessageWH40K extends ChatMessage {
         html.querySelectorAll('[data-action]').forEach((btn) => {
             // Add message ID if not present
             const btnEl = btn as HTMLElement;
-            if (btnEl.dataset.messageId === undefined || btnEl.dataset.messageId === '') {
-                btnEl.dataset.messageId = messageId;
+            if (btnEl.dataset['messageId'] === undefined || btnEl.dataset['messageId'] === '') {
+                btnEl.dataset['messageId'] = messageId;
             }
         });
     }

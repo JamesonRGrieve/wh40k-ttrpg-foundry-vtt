@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 import templateSrc from '../../../../src/templates/prompt/add-speciality-prompt.hbs?raw';
+import { clickAction, renderSheet } from '../../../../stories/test-helpers';
 
 interface SkillOption {
     key: string;

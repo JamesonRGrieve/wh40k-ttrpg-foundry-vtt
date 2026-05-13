@@ -37,7 +37,7 @@ export class WH40KVehicle extends WH40KBaseActor {
         this.updateSource(initData);
     }
 
-    prepareData(): void {
+    override prepareData(): void {
         super.prepareData();
     }
 
@@ -86,11 +86,11 @@ export class WH40KVehicle extends WH40KBaseActor {
     get vehicleClass(): string {
         return this.system.vehicleClass;
     }
-    get size(): number {
+    override get size(): number {
         return this.system.size;
     }
 
-    async rollItem(itemId: string): Promise<void> {
+    override async rollItem(itemId: string): Promise<void> {
         const item = this.items.get(itemId);
         if (!item) {
             ui.notifications.warn(`Vehicle item not found: ${itemId}`);

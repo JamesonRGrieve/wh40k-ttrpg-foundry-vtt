@@ -72,7 +72,7 @@ export function evaluateWoundsFormula(formula: string, actor: WH40KBaseActorDocu
             // Match patterns like "2xTB" or "TB" (with or without multiplier)
             const regex = new RegExp(`(\\d+)x${abbr}|${abbr}`, 'gi');
             evaluated = evaluated.replace(regex, (_match: string, multiplier?: string) => {
-                const bonus = actor.system.characteristics[charName].bonus;
+                const bonus = (actor.system.characteristics[charName] as (typeof actor.system.characteristics)[string] | undefined)?.bonus ?? 0;
                 const mult = multiplier !== undefined && multiplier !== '' ? parseInt(multiplier, 10) : 1;
                 return (bonus * mult).toString();
             });
@@ -112,10 +112,13 @@ export function evaluateFateFormula(formula: string): number {
         let match: RegExpExecArray | null;
 
         while ((match = conditionRegex.exec(trimmedFormula)) !== null) {
+            const g1 = (match[1] as string | undefined) ?? '0';
+            const g2 = (match[2] as string | undefined) ?? '0';
+            const g3 = (match[3] as string | undefined) ?? '0';
             conditions.push({
-                min: parseInt(match[1], 10),
-                max: parseInt(match[2], 10),
-                value: parseInt(match[3], 10),
+                min: parseInt(g1, 10),
+                max: parseInt(g2, 10),
+                value: parseInt(g3, 10),
             });
         }
 
@@ -155,7 +158,8 @@ export function parseTBMultiplier(formula: string): number {
     }
 
     const match = formula.match(/(\d+)xTB/i);
-    return match ? parseInt(match[1], 10) : formula.match(/TB/i) ? 1 : 0;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig
+    return match ? parseInt(match[1] ?? '0', 10) : formula.match(/TB/i) ? 1 : 0;
 }
 
 /**
@@ -170,7 +174,7 @@ export function parseDiceRoll(formula: string): string | null {
     }
 
     const match = formula.match(/(\d+d\d+(?:[+-]\d+)*)/i);
-    return match ? match[1] : null;
+    return match?.[1] ?? null;
 }
 
 /**

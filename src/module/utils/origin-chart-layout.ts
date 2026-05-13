@@ -135,7 +135,9 @@ export class OriginChartLayout {
             if (step === undefined || step === '') continue;
 
             if (!Object.hasOwn(groups, step)) groups[step] = [];
-            groups[step].push(origin);
+            const stepGroup = groups[step];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig
+            if (stepGroup !== undefined) stepGroup.push(origin);
         }
 
         // Sort each group by primary position

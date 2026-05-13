@@ -136,7 +136,7 @@ export class EventTracker {
     /** Check if an event's prerequisites are all met. */
     static isAvailable(eventId: string): boolean {
         const event = EventTracker._graph?.[eventId];
-        if (event === null || event === undefined) return false;
+        if (event === undefined) return false;
         const resolved = EventTracker.getResolved();
 
         const reqsMet = event.requires === undefined || event.requires.length === 0 || event.requires.every((id: string) => id in resolved);
@@ -149,7 +149,7 @@ export class EventTracker {
     /** Get the unmet prerequisites for a locked event. */
     static getBlockingReasons(eventId: string): string[] {
         const event = EventTracker._graph?.[eventId];
-        if (event === null || event === undefined) return [];
+        if (event === undefined) return [];
         const resolved = EventTracker.getResolved();
         const reasons: string[] = [];
 
@@ -231,6 +231,8 @@ export class EventTracker {
             for (const [target, entries] of byTarget.entries()) {
                 const triggered = entries.find((e) => e.trigger !== undefined && e.trigger !== '' && e.trigger in resolved);
                 const fallback = entries.find((e) => e.default === true) ?? entries[0];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; entries[0] may be undefined
+                if (fallback === undefined) continue;
                 entry.dispositions[target] = triggered ?? fallback;
             }
 
@@ -371,7 +373,8 @@ export class EventTracker {
         html += `<div class="evt-stats">${names.length} NPC(s) with disposition/relationship data &bull; state recomputed from resolved events</div>`;
 
         for (const name of names) {
-            const s = states[name];
+            const s = states[name] as (typeof states)[string] | undefined;
+            if (s === undefined) continue;
             html += `<div class="evt-group evt-npc-group">`;
             html += `<h3>${name}</h3>`;
 
@@ -380,7 +383,8 @@ export class EventTracker {
             if (dispTargets.length) {
                 html += `<div class="evt-npc-disp">`;
                 for (const target of dispTargets.sort((a, b) => (a === 'party' ? -1 : b === 'party' ? 1 : a.localeCompare(b)))) {
-                    const d = s.dispositions[target];
+                    const d = s.dispositions[target] as DispositionEntry | undefined;
+                    if (d === undefined) continue;
                     const color = EventTracker._stateColor(d.attitude);
                     const badge = `<span class="evt-badge" style="background:${color};">${d.attitude !== '' ? d.attitude : 'unknown'}</span>`;
                     const targetLabel = target === 'party' ? '<strong>Party</strong>' : target;

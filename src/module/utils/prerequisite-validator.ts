@@ -226,9 +226,9 @@ function findSkill(actor: WH40KBaseActorDocument, skillName: string): SkillLike 
     const match = skillName.match(/^(.+?)\s*(?:\((.+)\))?$/);
     if (!match) return null;
 
-    const baseName = match[1].trim().toLowerCase();
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess not set; match[2] is undefined when group 2 didn't participate
-    const specialization: string | undefined = match[2] !== undefined ? match[2].trim().toLowerCase() : undefined;
+    const baseName = ((match[1] as string | undefined) ?? '').trim().toLowerCase();
+    const match2 = match[2] as string | undefined;
+    const specialization: string | undefined = match2 !== undefined ? match2.trim().toLowerCase() : undefined;
 
     // Map common skill names to system keys
     const skillKey = getSkillKey(baseName);
@@ -315,11 +315,13 @@ export function parsePrerequisiteString(prereqString: string): Prerequisite | nu
 
     // Check for characteristic prerequisite pattern: "Fel 30", "WS 40"
     const charMatch = trimmed.match(/^([A-Za-z]+)\s+(\d+)$/);
-    if (charMatch) {
+    const charMatchG1 = charMatch?.[1];
+    const charMatchG2 = charMatch?.[2];
+    if (charMatchG1 !== undefined && charMatchG2 !== undefined) {
         return {
             type: 'characteristic',
-            key: charMatch[1],
-            value: parseInt(charMatch[2], 10),
+            key: charMatchG1,
+            value: parseInt(charMatchG2, 10),
         };
     }
 

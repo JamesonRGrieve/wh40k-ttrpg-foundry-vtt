@@ -23,7 +23,8 @@ export default class TextPatternExtractor {
         const headerLower = header.toLowerCase();
 
         for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
+            const line = lines[i] as string | undefined;
+            if (line === undefined) continue;
             const lineLower = line.toLowerCase();
 
             if (!lineLower.startsWith(headerLower)) continue;
@@ -34,7 +35,8 @@ export default class TextPatternExtractor {
 
             // Collect subsequent lines until next section header
             for (let j = i + 1; j < lines.length; j++) {
-                const nextLine = lines[j];
+                const nextLine = lines[j] as string | undefined;
+                if (nextLine === undefined) continue;
 
                 // Check if this is another section header
                 if (this.isSectionHeader(nextLine, sectionHeaders)) {
@@ -139,7 +141,7 @@ export default class TextPatternExtractor {
      */
     static extractParentheticalNumbers(line: string): number[] {
         const matches = [...line.matchAll(/\((\d+)\)/g)];
-        return matches.map((match) => parseInt(match[1], 10));
+        return matches.map((match) => parseInt((match[1] as string | undefined) ?? '0', 10));
     }
 
     /**
@@ -152,7 +154,8 @@ export default class TextPatternExtractor {
         const matches = text.matchAll(/\(([^)]+)\)/g);
 
         for (const match of matches) {
-            groups.push(match[1].trim());
+            const group = match[1] as string | undefined;
+            if (group !== undefined) groups.push(group.trim());
         }
 
         return groups;
@@ -224,7 +227,8 @@ export default class TextPatternExtractor {
 
         if (parts.length === 0) return '';
 
-        const [first, ...rest] = parts;
+        const [first, ...rest] = parts as [string | undefined, ...string[]];
+        if (first === undefined) return '';
         const key = [first.toLowerCase(), ...rest.map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())].join('');
 
         if (!capitalize) return key;
@@ -251,10 +255,12 @@ export default class TextPatternExtractor {
     static parseValueWithModifier(entry: string): { value: string; bonus: number; hasBonus: boolean } {
         const match = entry.match(/^(.+?)\s*\+\s*(\d+)$/);
 
-        if (match) {
+        const matchG1 = match?.[1];
+        const matchG2 = match?.[2];
+        if (matchG1 !== undefined && matchG2 !== undefined) {
             return {
-                value: match[1].trim(),
-                bonus: parseInt(match[2], 10),
+                value: matchG1.trim(),
+                bonus: parseInt(matchG2, 10),
                 hasBonus: true,
             };
         }
@@ -274,7 +280,7 @@ export default class TextPatternExtractor {
     static parseRange(text: string): { value: number; unit: string | null; type: 'ranged' | 'melee' } | null {
         // Match patterns like "10m", "5-10m", "Melee", etc.
         const meterMatch = text.match(/(\d+)\s*m/i);
-        if (meterMatch) {
+        if (meterMatch?.[1] !== undefined) {
             return {
                 value: parseInt(meterMatch[1], 10),
                 unit: 'm',

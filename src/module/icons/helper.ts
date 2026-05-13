@@ -1,7 +1,15 @@
 import { hasIcon, icon, type IconOptions } from './icon.ts';
 
+interface HandlebarsHelperHash {
+    class?: string;
+    label?: string;
+    size?: string | number;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars hash can contain arbitrary unknown values
+    [key: string]: unknown;
+}
+
 interface HandlebarsHelperOptions {
-    hash?: Record<string, unknown>;
+    hash?: HandlebarsHelperHash;
 }
 
 /**
@@ -24,13 +32,14 @@ interface HandlebarsHelperOptions {
  * `IconKey` union catches misspellings in TS call sites.
  */
 export function registerIconHelper(): void {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars passes raw unknown to helpers; immediately type-guarded below
     Handlebars.registerHelper('iconSvg', function iconHelper(key: unknown, options: HandlebarsHelperOptions) {
         if (typeof key !== 'string' || !hasIcon(key)) {
             // eslint-disable-next-line no-console
             console.warn(`[wh40k-icons] unknown icon key: ${String(key)}`);
             return new Handlebars.SafeString('');
         }
-        const hash: Record<string, unknown> = options.hash ?? {};
+        const hash: HandlebarsHelperHash = options.hash ?? {};
         const opts: IconOptions = {};
         if (typeof hash.class === 'string') opts.class = hash.class;
         if (typeof hash.label === 'string') opts.label = hash.label;

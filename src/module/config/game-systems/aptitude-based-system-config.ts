@@ -21,7 +21,7 @@ function extractContextAptitudes(
     // eslint-disable-next-line no-restricted-syntax -- boundary: context is an open bag from callers; advanceAptitudes is validated by Array.isArray below
     context: Record<string, unknown> | undefined,
 ): string[] | undefined {
-    const apts = context?.advanceAptitudes;
+    const apts = context?.['advanceAptitudes'];
     return Array.isArray(apts) ? (apts as string[]) : undefined;
 }
 
@@ -157,10 +157,12 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         const advAptitudes = this.getCharacteristicAptitudes(charKey);
         const matches = this.countMatchingAptitudes(charAptitudes, advAptitudes);
 
-        const costRow = this.getCharacteristicCostTable()[matches];
-        const cost = costRow[currentTier];
+        const costRow = this.getCharacteristicCostTable()[matches] as number[] | undefined;
+        const cost = costRow?.[currentTier];
+        const tier = tiers[currentTier] as string | undefined;
+        if (cost === undefined || tier === undefined) return null;
 
-        return { cost, tier: tiers[currentTier] };
+        return { cost, tier };
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: context matches abstract base signature; advanceAptitudes extracted and typed by extractContextAptitudes
@@ -171,7 +173,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         const advAptitudes = extractContextAptitudes(context) ?? this.getSkillAptitudes(skillKey);
         const matches = this.countMatchingAptitudes(charAptitudes, advAptitudes);
 
-        return this.getSkillCostTable()[matches][currentRank];
+        return (this.getSkillCostTable()[matches] as number[] | undefined)?.[currentRank] ?? null;
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: talent and context match abstract base signature; talent cast to TalentLike below; context validated by extractContextAptitudes
@@ -182,7 +184,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         const matches = this.countMatchingAptitudes(charAptitudes, advAptitudes);
 
         const tier = typeof talentSystem?.tier === 'number' ? talentSystem.tier : 1;
-        return this.getTalentCostTable()[tier][matches];
+        return (this.getTalentCostTable()[tier] as Record<number, number> | undefined)?.[matches] ?? null;
     }
 
     getAvailableAdvances(_actor: WH40KBaseActor): AdvanceOption[] {

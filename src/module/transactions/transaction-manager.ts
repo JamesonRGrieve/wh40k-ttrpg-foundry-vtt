@@ -59,8 +59,22 @@ interface TransactionRequestPayload {
     influenceBurn: number;
 }
 
+interface SocketPayload {
+    scope: string;
+    action: string;
+    targetUserId: string;
+    request?: TransactionRequestPayload;
+    message?: string;
+    resultType?: string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: socket payloads from Foundry are untyped
+    [key: string]: unknown;
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: normalizeInt accepts untyped Foundry data values
 function normalizeInt(value: unknown, fallback = 0): number {
-    const parsed = Number.parseInt(String(value ?? fallback), 10);
+    const strValue = value !== null && value !== undefined && typeof value !== 'object' ? (value as string | number | boolean | bigint | symbol) : null;
+    const str = strValue !== null ? String(strValue) : String(fallback);
+    const parsed = Number.parseInt(str, 10);
     return Number.isNaN(parsed) ? fallback : parsed;
 }
 
@@ -82,7 +96,7 @@ export class TransactionManager {
     static initialize(): void {
         if (TransactionManager.#initialized) return;
         TransactionManager.#initialized = true;
-        game.socket.on(SOCKET_CHANNEL, (payload) => {
+        game.socket.on(SOCKET_CHANNEL, (payload: SocketPayload) => {
             void TransactionManager.#onSocketMessage(payload);
         });
     }
@@ -123,6 +137,7 @@ export class TransactionManager {
                 return 'Barter';
             case 'requisition':
                 return 'Requisition';
+            case 'none':
             default:
                 return 'Disabled';
         }
@@ -141,13 +156,16 @@ export class TransactionManager {
     static listItemsForSource(source: Actor.Implementation | null | undefined): Item.Implementation[] {
         if (!source) return [];
 
-        return source.items.contents
-            .filter((item) => !item.system?.inShipStorage)
-            .filter((item) => {
-                const quantity = TransactionManager.#getAvailableQuantity(item);
-                return quantity > 0;
-            })
-            .sort((left, right) => left.name.localeCompare(right.name, game.i18n.lang));
+        return (
+            source.items.contents
+                // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
+                .filter((item) => (item.system as Record<string, unknown>)['inShipStorage'] !== true)
+                .filter((item) => {
+                    const quantity = TransactionManager.#getAvailableQuantity(item);
+                    return quantity > 0;
+                })
+                .sort((left, right) => left.name.localeCompare(right.name, game.i18n.lang))
+        );
     }
 
     static prepareQuote(params: { buyerActorId: string; sourceActorId: string; itemId: string; quantity?: number; influenceBurn?: number }): TransactionQuote {
@@ -169,11 +187,13 @@ export class TransactionManager {
         const influenceBurnRequested = Math.max(0, normalizeInt(params.influenceBurn, 0));
         const stockAvailable = profile.inventoryAccess === 'virtual' ? true : TransactionManager.#getAvailableQuantity(item) >= quantity;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
         const itemSystem = item.system as Record<string, unknown> & {
             cost?: { value?: number | string } | number | string;
             influence?: number | string;
         };
         const baseItemCost = normalizeInt(
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive null guard; schema does not include null but runtime data may
             typeof itemSystem.cost === 'object' && itemSystem.cost !== null ? itemSystem.cost.value ?? 0 : itemSystem.cost ?? 0,
             0,
         );
@@ -191,7 +211,8 @@ export class TransactionManager {
 
         let influenceBurn = 0;
         if (profile.mode === 'barter' && influenceBurnRequested > 0) {
-            const availableInfluence = normalizeInt((buyer.system as Record<string, unknown> | undefined)?.influence ?? 0, 0);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: buyer.system is untyped Foundry data
+            const availableInfluence = normalizeInt((buyer.system as Record<string, unknown>)['influence'] ?? 0, 0);
             influenceBurn = Math.min(influenceBurnRequested, profile.barter.maxInfluenceBurn, availableInfluence);
             if (influenceBurn > 0) {
                 const subtotal = baseCost + adjustments.reduce((sum, adjustment) => sum + adjustment.value, 0);
@@ -215,7 +236,8 @@ export class TransactionManager {
 
         const finalCost = Math.max(0, baseCost + adjustments.reduce((sum, adjustment) => sum + adjustment.value, 0));
         const resourceType: ResourceType = profile.mode === 'barter' ? 'throneGelt' : 'requisition';
-        const availableResource = normalizeInt((buyer.system as Record<string, unknown> | undefined)?.[resourceType] ?? 0, 0);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: buyer.system is untyped Foundry data
+        const availableResource = normalizeInt((buyer.system as Record<string, unknown>)[resourceType] ?? 0, 0);
 
         return {
             mode: profile.mode,
@@ -233,7 +255,8 @@ export class TransactionManager {
             stockAvailable,
             influenceBurn,
             remainingResource: Math.max(0, availableResource - finalCost),
-            remainingInfluence: Math.max(0, normalizeInt((buyer.system as Record<string, unknown> | undefined)?.influence ?? 0, 0) - influenceBurn),
+            // eslint-disable-next-line no-restricted-syntax -- boundary: buyer.system is untyped Foundry actor system data
+            remainingInfluence: Math.max(0, normalizeInt((buyer.system as Record<string, unknown> | undefined)?.['influence'] ?? 0, 0) - influenceBurn),
         };
     }
 
@@ -297,18 +320,22 @@ export class TransactionManager {
         return quote;
     }
 
-    static async notifyRequester(message: string, type: 'info' | 'warning' | 'error' = 'info'): Promise<void> {
+    static notifyRequester(message: string, type: 'info' | 'warning' | 'error' = 'info'): void {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 Toast API has no type definitions
-        const toastApi = foundry.applications?.api as unknown as Record<string, Record<string, (msg: string) => void> | undefined>;
+        const toastApi = foundry.applications.api as unknown as Record<string, Record<string, (msg: string) => void> | undefined>;
         const toast = toastApi['Toast'];
-        if (toast !== undefined && typeof toast[type] === 'function') {
-            toast[type]?.(message);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess guard for strict tsconfig
+        const toastFn = toast?.[type] as ((msg: string) => void) | undefined;
+        if (toastFn !== undefined) {
+            toastFn(message);
             return;
         }
 
         const method = type === 'warning' ? 'warn' : type;
-        if (ui.notifications && typeof ui.notifications[method] === 'function') {
-            ui.notifications[method](message);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ui.notifications typed interface; cast to generic for dynamic method access
+        const notifFn = (ui.notifications as unknown as Record<string, ((msg: string) => void) | undefined> | null | undefined)?.[method];
+        if (notifFn !== undefined) {
+            notifFn(message);
         }
     }
 
@@ -316,8 +343,8 @@ export class TransactionManager {
         return (game.users as { activeGM?: User }).activeGM ?? game.users.contents.find((user) => user.isGM && user.active);
     }
 
-    static async #onSocketMessage(payload: Record<string, unknown>): Promise<void> {
-        if (payload?.scope !== 'transactions') return;
+    static async #onSocketMessage(payload: SocketPayload): Promise<void> {
+        if (payload.scope !== 'transactions') return;
 
         if (payload.action === REQUEST_APPROVAL && payload.targetUserId === game.user.id && game.user.isGM) {
             await TransactionManager.#handleApprovalRequest(payload.request as TransactionRequestPayload);
@@ -325,7 +352,7 @@ export class TransactionManager {
         }
 
         if (payload.action === REQUEST_RESULT && payload.targetUserId === game.user.id) {
-            await TransactionManager.notifyRequester(String(payload.message), (payload.resultType as 'info' | 'warning' | 'error' | undefined) ?? 'info');
+            TransactionManager.notifyRequester(String(payload.message), (payload.resultType as 'info' | 'warning' | 'error' | undefined) ?? 'info');
         }
     }
 
@@ -334,7 +361,7 @@ export class TransactionManager {
         try {
             quote = TransactionManager.prepareQuote(request);
         } catch (error) {
-            await TransactionManager.#emitResult(request.requesterUserId, error instanceof Error ? error.message : 'Transaction request failed.', 'error');
+            TransactionManager.#emitResult(request.requesterUserId, error instanceof Error ? error.message : 'Transaction request failed.', 'error');
             return;
         }
 
@@ -347,23 +374,23 @@ export class TransactionManager {
         });
 
         if (!approved) {
-            await TransactionManager.#emitResult(request.requesterUserId, 'Transaction request rejected by the GM.', 'warning');
+            TransactionManager.#emitResult(request.requesterUserId, 'Transaction request rejected by the GM.', 'warning');
             return;
         }
 
         try {
             const result = await TransactionManager.commitTransaction(request);
             const message = `${result.buyer.name} received ${result.quantity}x ${result.item.name} for ${result.finalCost} ${result.resourceLabel}.`;
-            await TransactionManager.#emitResult(request.requesterUserId, message, 'info');
-            await TransactionManager.notifyRequester(message, 'info');
+            TransactionManager.#emitResult(request.requesterUserId, message, 'info');
+            TransactionManager.notifyRequester(message, 'info');
         } catch (error) {
-            await TransactionManager.#emitResult(request.requesterUserId, error instanceof Error ? error.message : 'Transaction failed.', 'error');
+            TransactionManager.#emitResult(request.requesterUserId, error instanceof Error ? error.message : 'Transaction failed.', 'error');
         }
     }
 
-    static async #emitResult(targetUserId: string, message: string, resultType: 'info' | 'warning' | 'error'): Promise<void> {
+    static #emitResult(targetUserId: string, message: string, resultType: 'info' | 'warning' | 'error'): void {
         if (targetUserId === game.user.id) {
-            await TransactionManager.notifyRequester(message, resultType);
+            TransactionManager.notifyRequester(message, resultType);
             return;
         }
 
@@ -397,33 +424,40 @@ export class TransactionManager {
     }
 
     static #getAvailableQuantity(item: Item.Implementation): number {
-        const quantity = normalizeInt((item.system as Record<string, unknown> | undefined)?.quantity ?? 1, 1);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
+        const quantity = normalizeInt((item.system as Record<string, unknown>)['quantity'] ?? 1, 1);
         return quantity > 0 ? quantity : 0;
     }
 
     static async #transferItem(quote: TransactionQuote): Promise<void> {
         const sourceQuantity = TransactionManager.#getAvailableQuantity(quote.item);
-        const hasQuantityField = Number.isFinite(Number((quote.item.system as Record<string, unknown> | undefined)?.quantity ?? 1));
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
+        const hasQuantityField = Number.isFinite(Number((quote.item.system as Record<string, unknown>)['quantity'] ?? 1));
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: toObject() returns untyped Foundry item source data
         const { _id: _ignoredId, ...itemData } = quote.item.toObject() as Record<string, unknown> & { system?: Record<string, unknown> };
-        const itemSystem = (itemData.system ??= {});
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- ??= blocked by no-restricted-syntax; explicit if-assignment is correct
+        if (itemData.system === undefined) itemData.system = {};
+        const itemSystem = itemData.system;
         if (hasQuantityField) {
             itemSystem.quantity = quote.quantity;
         }
 
         const stackTarget = TransactionManager.#findStackTarget(quote.buyer, quote.item);
         if (stackTarget && hasQuantityField) {
-            await stackTarget.update({
-                'system.quantity': normalizeInt((stackTarget.system as Record<string, unknown> | undefined)?.quantity ?? 0, 0) + quote.quantity,
-            });
+            /* eslint-disable no-restricted-syntax -- boundary: stackTarget.system is untyped Foundry data */
+            const stackQty = normalizeInt((stackTarget.system as Record<string, unknown>)['quantity'] ?? 0, 0);
+            /* eslint-enable no-restricted-syntax */
+            await stackTarget.update({ 'system.quantity': stackQty + quote.quantity });
         } else {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments param type requires cast
             await quote.buyer.createEmbeddedDocuments('Item', [itemData] as unknown as Parameters<typeof quote.buyer.createEmbeddedDocuments<'Item'>>[1]);
         }
 
         if (TransactionManager.getProfile(quote.source).inventoryAccess === 'virtual') return;
 
         if (!hasQuantityField || sourceQuantity <= quote.quantity) {
-            if (!quote.item.id) return;
+            if (quote.item.id === null || quote.item.id === '') return;
             await quote.source.deleteEmbeddedDocuments('Item', [quote.item.id]);
             return;
         }
@@ -434,10 +468,14 @@ export class TransactionManager {
     }
 
     static #findStackTarget(actor: Actor.Implementation, sourceItem: Item.Implementation): Item.Implementation | undefined {
+        /* eslint-disable no-restricted-syntax -- boundary: item.system is untyped Foundry data */
+        const sourceQty = (sourceItem.system as Record<string, unknown>)['quantity'];
+        /* eslint-enable no-restricted-syntax */
         return actor.items.find((candidate) => {
-            const candidateQuantity = (candidate.system as Record<string, unknown> | undefined)?.quantity;
-            const sourceQuantity = (sourceItem.system as Record<string, unknown> | undefined)?.quantity;
-            if (typeof candidateQuantity !== 'number' || typeof sourceQuantity !== 'number') return false;
+            /* eslint-disable no-restricted-syntax -- boundary: candidate.system is untyped Foundry data */
+            const candidateQuantity = (candidate.system as Record<string, unknown>)['quantity'];
+            /* eslint-enable no-restricted-syntax */
+            if (typeof candidateQuantity !== 'number' || typeof sourceQty !== 'number') return false;
             if (candidate.type !== sourceItem.type) return false;
             if (candidate.name !== sourceItem.name) return false;
             return true;
@@ -457,8 +495,9 @@ export class TransactionManager {
             influenceBurn: quote.influenceBurn,
         };
 
-        const append = async (actor: Actor.Implementation) => {
-            const history = ((actor.getFlag(SYSTEM_ID, HISTORY_FLAG) as Record<string, unknown>[]) ?? []).slice(-19);
+        const append = async (actor: Actor.Implementation): Promise<void> => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: getFlag returns untyped Foundry flag data
+            const history = ((actor.getFlag(SYSTEM_ID, HISTORY_FLAG) as Record<string, unknown>[] | null | undefined) ?? []).slice(-19);
             history.push(entry);
             await actor.setFlag(SYSTEM_ID, HISTORY_FLAG, history);
         };
