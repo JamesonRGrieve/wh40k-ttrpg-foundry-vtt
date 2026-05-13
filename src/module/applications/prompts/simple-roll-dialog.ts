@@ -22,7 +22,7 @@ export default class SimpleRollDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         classes: ['simple-roll'],
         position: {
             width: 300,
@@ -35,7 +35,7 @@ export default class SimpleRollDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static override PARTS = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/simple-roll-prompt.hbs',
             scrollable: [''],
@@ -47,7 +47,7 @@ export default class SimpleRollDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    async _performRoll(): Promise<void> {
+    override async _performRoll(): Promise<void> {
         const form = this.element.querySelector('form') ?? this.element;
         const rollData = this.simpleSkillData.rollData;
 

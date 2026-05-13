@@ -35,7 +35,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+    static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         ...BaseRollDialog.DEFAULT_OPTIONS,
         classes: ['weapon-attack'],
         actions: {
@@ -51,7 +51,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
+    static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/weapon-roll-prompt.hbs',
             classes: [],
@@ -65,7 +65,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
 
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Set up weapon selection listeners
@@ -128,7 +128,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    _validateRoll(): boolean {
+    override _validateRoll(): boolean {
         if (this.weaponAttackData.rollData.fireRate === 0) {
             // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Weapon.NotEnoughAmmo localization key
             ui.notifications.warn('Not enough ammo to perform action. Do you need to reload?');
@@ -140,7 +140,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    async _performRoll(): Promise<void> {
+    override async _performRoll(): Promise<void> {
         if (!this._validateRoll()) return;
 
         await this.weaponAttackData.rollData.finalize?.();

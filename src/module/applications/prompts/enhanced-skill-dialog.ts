@@ -60,7 +60,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+    static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'enhanced-skill-roll', 'standard-form'],
         /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
@@ -90,7 +90,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
+    static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/enhanced-skill-roll.hbs',
         },
@@ -157,7 +157,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         const rollData = this.simpleSkillData.rollData;
 
@@ -203,7 +203,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         setupNumberInputAutoSelect(this.element);
@@ -284,13 +284,13 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * Handle difficulty button click.
      */
     static async #onSelectDifficulty(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
-        const modifier = parseInt(target.dataset.modifier ?? '0', 10);
+        const modifier = parseInt(target.dataset['modifier'] ?? '0', 10);
         this._selectedDifficulty = modifier;
 
         // Animate selection
-        target.dataset.flash = 'true';
+        target.dataset['flash'] = 'true';
         setTimeout(() => {
-            delete target.dataset.flash;
+            delete target.dataset['flash'];
         }, 300);
 
         await this.render({ parts: ['form'] });
@@ -302,7 +302,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * Handle common modifier checkbox toggle.
      */
     static async #onToggleModifier(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
-        const key = target.dataset.modifierKey;
+        const key = target.dataset['modifierKey'];
         if (key !== undefined && key !== '') {
             this._commonModifiers[key] = (target as HTMLInputElement).checked;
             await this.render({ parts: ['form'] });
@@ -334,7 +334,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * Handle repeat last roll button click.
      */
     static async #onRollRepeat(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
-        const modifier = parseInt(target.dataset.modifier ?? '0', 10);
+        const modifier = parseInt(target.dataset['modifier'] ?? '0', 10);
 
         // Apply the modifier directly
         this._customModifier = modifier - this._selectedDifficulty;

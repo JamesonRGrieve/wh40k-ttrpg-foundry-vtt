@@ -33,7 +33,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         id: 'confirmation-dialog-{id}',
         classes: ['wh40k-rpg', 'confirmation-dialog'],
         tag: 'div',
@@ -98,7 +98,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<ConfirmationContext> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<ConfirmationContext> {
         const context = await super._prepareContext(options);
         return {
             ...context,
@@ -129,7 +129,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options?: Record<string, unknown>): Promise<unknown> {
+    override async close(options?: Record<string, unknown>): Promise<unknown> {
         if (!this.#resolved && this.#resolve) {
             this.#resolve(false);
         }
