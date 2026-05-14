@@ -55,6 +55,8 @@
     "size-limit": "size-limit",
     "size-limit:json": "size-limit --json",
     "lockfile:validate": "node scripts/lockfile-validate.mjs",
+    "packs:audit": "node scripts/build-compendium-uuid-index.mjs",
+    "packs:audit:strict": "node scripts/build-compendium-uuid-index.mjs --strict",
     "i18n:gen": "node scripts/gen-i18n-types.mjs",
     "i18n:check": "node scripts/gen-i18n-types.mjs --check",
     "icons:gen": "node scripts/gen-icons.mjs",
