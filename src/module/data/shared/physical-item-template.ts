@@ -48,9 +48,10 @@ export default class PhysicalItemTemplate extends SystemDataModel {
             availability: new fields.StringField({
                 required: true,
                 initial: 'common',
-                choices: () =>
-                    Object.keys(CONFIG.WH40K.availabilities).length > 0
-                        ? Object.keys(CONFIG.WH40K.availabilities)
+                choices: () => {
+                    const keys = Object.keys(CONFIG.wh40k.availabilities);
+                    return keys.length > 0
+                        ? keys
                         : [
                               'ubiquitous',
                               'abundant',
@@ -63,13 +64,16 @@ export default class PhysicalItemTemplate extends SystemDataModel {
                               'extremely-rare',
                               'near-unique',
                               'unique',
-                          ],
+                          ];
+                },
             }),
             craftsmanship: new fields.StringField({
                 required: true,
                 initial: 'common',
-                choices: () =>
-                    Object.keys(CONFIG.WH40K.craftsmanships).length > 0 ? Object.keys(CONFIG.WH40K.craftsmanships) : ['poor', 'common', 'good', 'best'],
+                choices: () => {
+                    const keys = Object.keys(CONFIG.wh40k.craftsmanships);
+                    return keys.length > 0 ? keys : ['poor', 'common', 'good', 'best'];
+                },
             }),
             quantity: new fields.NumberField({
                 required: true,

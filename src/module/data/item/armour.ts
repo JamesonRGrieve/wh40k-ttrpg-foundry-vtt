@@ -526,7 +526,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     get propertiesArray(): Array<{ id: string; label: string; description: string }> {
         const props: Array<{ id: string; label: string; description: string }> = [];
         const armourPropConfig =
-            (CONFIG.WH40K as { armourProperties?: Record<string, { label: string; description: string }> } | undefined)?.armourProperties ?? {};
+            (CONFIG.wh40k as { armourProperties?: Record<string, { label: string; description: string }> } | undefined)?.armourProperties ?? {};
 
         for (const propId of this.properties) {
             // Convert kebab-case to PascalCase for i18n lookup

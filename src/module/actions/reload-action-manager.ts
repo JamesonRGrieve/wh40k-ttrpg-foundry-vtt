@@ -147,6 +147,7 @@ export class ReloadActionManager {
 
         // --- Inventory-aware reload ---
         const previousValue = system.clip.value;
+        const currentLoadedAmmo = system.loadedAmmo;
 
         if (actor !== null) {
             // Step 1: Return remaining rounds to inventory
@@ -167,18 +168,18 @@ export class ReloadActionManager {
 
             const selectedAmmo = await AmmoPickerDialog.pick({
                 ammoItems: spareAmmo,
-                currentAmmoUuid: system.loadedAmmo.uuid,
+                currentAmmoUuid: currentLoadedAmmo?.uuid ?? '',
                 weaponName: weapon.name,
                 clipMax: effectiveMax,
             });
 
             if (selectedAmmo === null) {
                 // User cancelled — restore the rounds we returned
-                if (previousValue > 0 && system.hasLoadedAmmo) {
+                if (previousValue > 0 && currentLoadedAmmo !== undefined) {
                     // Re-deduct the rounds we just returned (reverse the return)
                     const prevAmmoItem =
-                        actor.items.find((i: WH40KItem) => i.uuid === system.loadedAmmo.uuid) ??
-                        actor.items.find((i: WH40KItem) => i.type === 'ammunition' && i.name === system.loadedAmmo.name);
+                        actor.items.find((i: WH40KItem) => i.uuid === currentLoadedAmmo.uuid) ??
+                        actor.items.find((i: WH40KItem) => i.type === 'ammunition' && i.name === currentLoadedAmmo.name);
                     if (prevAmmoItem !== undefined) {
                         const prevAmmoSystem = this.getAmmoSystem(prevAmmoItem);
                         await prevAmmoItem.update({ 'system.quantity': (prevAmmoSystem.quantity ?? 0) - previousValue });
@@ -202,7 +203,7 @@ export class ReloadActionManager {
             await selectedAmmo.update({ 'system.quantity': ammoQuantity - roundsToLoad });
 
             // Update weapon — set loadedAmmo reference if different type
-            const isSameAmmo = selectedAmmo.uuid === system.loadedAmmo.uuid;
+            const isSameAmmo = selectedAmmo.uuid === currentLoadedAmmo?.uuid;
             // eslint-disable-next-line no-restricted-syntax -- boundary: weapon.update accepts loose document update payload
             const updateData: Record<string, unknown> = { 'system.clip.value': roundsToLoad };
 
@@ -399,7 +400,7 @@ export class ReloadActionManager {
     static findSpareAmmunition(actor: WH40KBaseActor, weapon: WH40KItem): WH40KItem[] {
         const system = this.getWeaponSystem(weapon);
         const weaponType = system.type;
-        const currentAmmoUuid = system.loadedAmmo.uuid;
+        const currentAmmoUuid = system.loadedAmmo?.uuid ?? '';
 
         // Find ammunition items compatible with this weapon type that have rounds available
         const compatible = actor.items.filter((item: WH40KItem) => {

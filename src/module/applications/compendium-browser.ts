@@ -151,8 +151,8 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         // Add armour-specific filters if filtering armour
         const hasArmour = results.some((r) => r.type === 'armour');
         if (hasArmour) {
-            /* eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.WH40K is set dynamically at runtime; no typed schema */
-            context['armourTypes'] = (CONFIG.WH40K as unknown as Record<string, unknown> | undefined)?.['armourTypes'] ?? {};
+            /* eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is set dynamically at runtime; no typed schema */
+            context['armourTypes'] = (CONFIG.wh40k as unknown as Record<string, unknown> | undefined)?.['armourTypes'] ?? {};
             context['hasArmourFilters'] = true;
         }
 
@@ -160,8 +160,8 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         const hasArmourMods = results.some((r) => r.type === 'armourModification');
         if (hasArmourMods) {
             context['hasArmourModFilters'] = true;
-            /* eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.WH40K is set dynamically at runtime; no typed schema */
-            context['armourTypesForMods'] = (CONFIG.WH40K as unknown as Record<string, unknown> | undefined)?.['armourTypes'] ?? {};
+            /* eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is set dynamically at runtime; no typed schema */
+            context['armourTypesForMods'] = (CONFIG.wh40k as unknown as Record<string, unknown> | undefined)?.['armourTypes'] ?? {};
         }
 
         return context;
@@ -398,7 +398,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      * @param {object} system  The armour modification system data
      * @returns {object}       Prepared armour mod data
      */
-    /* eslint-disable no-restricted-syntax -- boundary: system is a compendium payload; restrictions/modifiers/CONFIG.WH40K are dynamically typed at runtime */
+    /* eslint-disable no-restricted-syntax -- boundary: system is a compendium payload; restrictions/modifiers/CONFIG.wh40k are dynamically typed at runtime */
     _prepareArmourModData(system: Record<string, unknown>): Record<string, unknown> {
         const restrictions = (system['restrictions'] ?? {}) as { armourTypes?: string[] };
         const modifiers = (system['modifiers'] ?? {}) as { armourPoints?: number; maxAgility?: number; weight?: number };
@@ -410,7 +410,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             interface ArmourTypeConfig {
                 label: string;
             }
-            const wh40kArmourTypes = (CONFIG.WH40K as unknown as Record<string, Record<string, ArmourTypeConfig>> | undefined)?.['armourTypes'];
+            const wh40kArmourTypes = (CONFIG.wh40k as unknown as Record<string, Record<string, ArmourTypeConfig>> | undefined)?.['armourTypes'];
             const labels = armourTypes.map((type: string) => {
                 const config = wh40kArmourTypes?.[type];
                 return config !== undefined ? game.i18n.localize(config.label) : type;
@@ -468,7 +468,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      * @param {object} system  The weapon quality system data
      * @returns {object}       Prepared quality data
      */
-    /* eslint-disable no-restricted-syntax -- boundary: system is a compendium payload; CONFIG.WH40K is set at runtime; all field accesses are via index */
+    /* eslint-disable no-restricted-syntax -- boundary: system is a compendium payload; CONFIG.wh40k is set at runtime; all field accesses are via index */
     _prepareQualityData(system: Record<string, unknown>): Record<string, unknown> {
         interface QualityDef {
             label: string;
@@ -479,11 +479,11 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             weaponQualities?: Record<string, QualityDef>;
             armourTypes?: Record<string, { label: string }>;
         }
-        // Access CONFIG.WH40K (set during init hook)
-        const wh40kConfig = CONFIG.WH40K as unknown as WH40KConfigShape | undefined;
+        // Access CONFIG.wh40k (set during init hook)
+        const wh40kConfig = CONFIG.wh40k as unknown as WH40KConfigShape | undefined;
 
         if (wh40kConfig === undefined) {
-            console.warn('WH40K | CONFIG.WH40K not available in compendium browser');
+            console.warn('WH40K | CONFIG.wh40k not available in compendium browser');
             return {
                 identifier: system['identifier'] ?? '',
                 label: system['name'] ?? 'Unknown Quality',

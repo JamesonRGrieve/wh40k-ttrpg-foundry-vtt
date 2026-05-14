@@ -352,7 +352,7 @@ export default class EffectCreationDialog extends DialogV2 {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- characteristic is string|undefined from EffectCreationData; falsy check covers both undefined and ''
         if (!characteristic || value === 0) return null;
 
-        /* eslint-disable no-restricted-syntax -- boundary: CONFIG.WH40K is not on shipped foundry types; double-cast required */
+        /* eslint-disable no-restricted-syntax -- boundary: CONFIG.wh40k is not on shipped foundry types; double-cast required */
         const charLabel =
             (CONFIG as unknown as { WH40K?: { characteristics?: Record<string, { label?: string }> } }).WH40K?.characteristics?.[characteristic]?.label ??
             /* eslint-enable no-restricted-syntax */
