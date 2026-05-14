@@ -953,9 +953,17 @@ export default class WeaponSheet extends ContainerItemSheet {
         // Update toggle icon
         const icon = target.querySelector('.wh40k-body-toggle__icon');
         if (icon !== null) {
-            icon.classList.toggle('fa-chevron-down', !this.#bodyCollapsed);
-            icon.classList.toggle('fa-chevron-up', this.#bodyCollapsed);
+            icon.classList.toggle('fa-chevron-down', this.#bodyCollapsed);
+            icon.classList.toggle('fa-chevron-up', !this.#bodyCollapsed);
         }
+
+        // Update button label and tooltip so the click is visibly reflected.
+        const label = game.i18n.localize(this.#bodyCollapsed ? 'WH40K.Weapon.ShowDetails' : 'WH40K.Weapon.HideDetails');
+        const labelEl = target.querySelector('.wh40k-body-toggle__label');
+        if (labelEl !== null) {
+            labelEl.textContent = label;
+        }
+        target.setAttribute('title', label);
 
         // Adjust window height
         const expandedHeight = 700;

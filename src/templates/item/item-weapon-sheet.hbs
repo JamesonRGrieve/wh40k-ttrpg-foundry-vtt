@@ -206,8 +206,8 @@
       </div>
 
       {{!-- Body Toggle Button --}}
-      <button type="button" class="tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-sm)] tw-w-full tw-py-2 tw-px-4 tw-mt-2 tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.4),rgba(16,20,28,0.3))] tw-border tw-border-[rgba(212,175,55,0.25)] tw-rounded-[6px] tw-text-[rgba(214,221,235,0.8)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.55),rgba(16,20,28,0.4))] hover:tw-border-[rgba(212,175,55,0.4)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="toggleBody" title="{{#if bodyCollapsed}}Show Details{{else}}Hide Details{{/if}}">
-        <span>{{#if bodyCollapsed}}Show Details{{else}}Hide Details{{/if}}</span>
+      <button type="button" class="tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-sm)] tw-w-full tw-py-2 tw-px-4 tw-mt-2 tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.4),rgba(16,20,28,0.3))] tw-border tw-border-[rgba(212,175,55,0.25)] tw-rounded-[6px] tw-text-[rgba(214,221,235,0.8)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.55),rgba(16,20,28,0.4))] hover:tw-border-[rgba(212,175,55,0.4)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="toggleBody" title="{{#if bodyCollapsed}}{{localize "WH40K.Weapon.ShowDetails"}}{{else}}{{localize "WH40K.Weapon.HideDetails"}}{{/if}}">
+        <span class="wh40k-body-toggle__label">{{#if bodyCollapsed}}{{localize "WH40K.Weapon.ShowDetails"}}{{else}}{{localize "WH40K.Weapon.HideDetails"}}{{/if}}</span>
         <i class="fa-solid {{#if bodyCollapsed}}fa-chevron-down{{else}}fa-chevron-up{{/if}} wh40k-body-toggle__icon tw-text-[0.75rem] tw-transition-transform"></i>
       </button>
     </div>
