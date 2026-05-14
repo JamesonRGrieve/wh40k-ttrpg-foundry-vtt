@@ -349,6 +349,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             manualInfluence: OriginPathBuilder.#manualInfluence,
             commit: OriginPathBuilder.#commit,
             openItem: OriginPathBuilder.#openItem,
+            goToEquipment: OriginPathBuilder.#goToEquipment,
+            toggleEquipmentItem: OriginPathBuilder.#toggleEquipmentItem,
+            clearEquipment: OriginPathBuilder.#clearEquipment,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
     };
@@ -453,7 +456,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             this._charAssignments[key] = assignments[key] ?? null;
             this._charCustomBases[key] = customBases[key] ?? defaultBase;
         }
-        this._charAdvancedMode = !!customBases.enabled;
+        this._charAdvancedMode = customBases['enabled'] === true;
 
         const persistedMode = genData.mode;
         this._charGenMode = persistedMode === 'point-buy' || persistedMode === 'roll' ? persistedMode : 'roll-pool-hb';
@@ -498,9 +501,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (optional) return optional;
         }
         // currentStepIndex is always kept in bounds by the navigation logic
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- currentStepIndex is always in bounds
-        // biome-ignore lint/style/noNonNullAssertion: currentStepIndex is always in bounds (maintained by navigation logic)
-        return this.orderedSteps[this.currentStepIndex]!;
+        const step = this.orderedSteps[this.currentStepIndex];
+        if (step == null) throw new Error(`currentStepIndex ${this.currentStepIndex} out of bounds`);
+        return step;
     }
 
     /* -------------------------------------------- */
@@ -3268,7 +3271,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 </div>
             `,
             ok: {
-                callback: (_event: Event, button: HTMLButtonElement) => {
+                callback: (_cbEvent: Event, button: HTMLButtonElement) => {
                     const input = button.form?.elements.namedItem('value') as HTMLInputElement | null;
                     return parseInt(input?.value ?? '', 10) || null;
                 },
@@ -3487,7 +3490,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             window: { title: 'Enter Divination' },
             content: '<div class="form-group"><label>Divination:</label><input type="text" name="divination" autofocus /></div>',
             ok: {
-                callback: (_event: Event, button: HTMLButtonElement) => {
+                callback: (_cbEvent: Event, button: HTMLButtonElement) => {
                     const input = button.form?.elements.namedItem('divination') as HTMLInputElement | null;
                     return input?.value ?? '';
                 },
@@ -3522,7 +3525,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             window: { title: 'Enter Starting Throne Gelt' },
             content: '<div class="form-group"><label>Thrones:</label><input type="number" name="value" min="0" autofocus /></div>',
             ok: {
-                callback: (_event: Event, button: HTMLButtonElement) => {
+                callback: (_cbEvent: Event, button: HTMLButtonElement) => {
                     const input = button.form?.elements.namedItem('value') as HTMLInputElement | null;
                     return parseInt(input?.value ?? '', 10);
                 },
@@ -3561,7 +3564,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             window: { title: 'Enter Starting Influence' },
             content: '<div class="form-group"><label>Influence:</label><input type="number" name="value" min="0" autofocus /></div>',
             ok: {
-                callback: (_event: Event, button: HTMLButtonElement) => {
+                callback: (_cbEvent: Event, button: HTMLButtonElement) => {
                     const input = button.form?.elements.namedItem('value') as HTMLInputElement | null;
                     return parseInt(input?.value ?? '', 10);
                 },
@@ -3628,7 +3631,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             `,
             ok: {
                 label: game.i18n.localize('WH40K.OriginPath.CommitToCharacter'),
-                callback: (_event: Event, button: HTMLButtonElement) => {
+                callback: (_cbEvent: Event, button: HTMLButtonElement) => {
                     const form = button.form;
                     const read = (name: string): boolean => (form?.elements.namedItem(name) as HTMLInputElement | null)?.checked ?? false;
                     return {

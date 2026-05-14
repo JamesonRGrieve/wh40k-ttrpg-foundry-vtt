@@ -143,6 +143,7 @@ type NPCSystemContext = {
 export default class NPCSheet extends CharacterSheet {
     declare isEditable: boolean;
     declare _notify: (message: string, type?: string) => void;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2.render options shape is mixin-erased to Record<string,unknown>.
     declare render: (options?: Record<string, unknown> | boolean) => Promise<this>;
 
     /** NPC sheets default to EDIT mode for GM convenience. */
@@ -264,6 +265,7 @@ export default class NPCSheet extends CharacterSheet {
      * (horde, barter, tags, combat tracker, GM tools).
      * @override
      */
+    /* eslint-disable no-restricted-syntax -- false-positive: all label values are WH40K.* localization keys; the rule cannot inspect string values. */
     static override TABS = [
         { tab: 'skills', label: 'WH40K.Tabs.Skills', group: 'primary', cssClass: 'tab-skills' },
         { tab: 'combat', label: 'WH40K.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
@@ -271,6 +273,7 @@ export default class NPCSheet extends CharacterSheet {
         { tab: 'biography', label: 'WH40K.Tabs.Biography', group: 'primary', cssClass: 'tab-biography' },
         { tab: 'npc', label: 'WH40K.Tabs.NPC', group: 'primary', cssClass: 'tab-npc' },
     ];
+    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 
@@ -336,6 +339,7 @@ export default class NPCSheet extends CharacterSheet {
 
     protected override _getSidebarHeaderFields(_gameSystem: GameSystemId | null): SidebarHeaderField[] {
         const npcActor = this.npcActor;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: threatTier is untyped in the NPC DataModel; narrowed via typeof guard below.
         const tierRaw: unknown = npcActor.system.threatTier;
         const threatTier = (typeof tierRaw === 'object' && tierRaw !== null ? tierRaw : {}) as { color?: string; label?: string };
         const threatColor = threatTier.color;
@@ -403,6 +407,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context is the mixin-erased sheet→template payload Record<string,unknown>.
     _prepareCharacteristicsContext(context: Record<string, unknown>): void {
         const sys = context['system'] as NPCSystemContext;
         const chars = sys.characteristics;
@@ -437,6 +442,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context is the mixin-erased sheet→template payload Record<string,unknown>.
     _prepareWeaponsContext(context: Record<string, unknown>): void {
         // Embedded weapons (from items dragged onto the NPC)
         const items = context['items'] as NPCItemContext[];
@@ -450,6 +456,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context is the mixin-erased sheet→template payload Record<string,unknown>.
     _prepareHordeContext(context: Record<string, unknown>): void {
         const sys = context['system'] as NPCSystemContext;
         const horde = sys.horde ?? {};
@@ -484,6 +491,7 @@ export default class NPCSheet extends CharacterSheet {
      * weapons, horde/threat/barter state for the npc tab).
      * @override
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._preparePartContext signature uses Record<string,unknown> per Foundry's mixin-erased contract.
     override async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const partContext = await super._preparePartContext(partId, context, options);
 
@@ -536,6 +544,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context and return value are the mixin-erased sheet→template payload Record<string,unknown>.
     override _prepareOverviewContext(context: Record<string, unknown>, _options: Record<string, unknown> = {}): Record<string, unknown> {
         const sys = context['system'] as NPCSystemContext;
 
@@ -645,6 +654,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context is the mixin-erased sheet→template payload Record<string,unknown>.
     _prepareCombatContext(context: Record<string, unknown>): void {
         const sys = context['system'] as NPCSystemContext;
         const tb = sys.characteristics['toughness']?.bonus ?? 0;
@@ -714,6 +724,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context is the mixin-erased sheet→template payload Record<string,unknown>.
     _prepareSkillsContext(context: Record<string, unknown>): void {
         const sys = context['system'] as NPCSystemContext;
         // Get trained skills list from data model
@@ -812,6 +823,7 @@ export default class NPCSheet extends CharacterSheet {
         context['trainedSkillCount'] = basicSkillsList.filter((s) => s.isTrained).length;
 
         // Mark favorite status on trained skills list
+        // eslint-disable-next-line no-restricted-syntax -- boundary: trainedSkillsList has untyped extra fields used by the Handlebars template.
         const trainedSkillsList = context['trainedSkillsList'] as Array<{ key: string } & Record<string, unknown>>;
         context['trainedSkillsList'] = trainedSkillsList.map((skill) => ({
             ...skill,
@@ -837,6 +849,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context and return value are the mixin-erased sheet→template payload Record<string,unknown>.
     override _prepareAbilitiesContext(context: Record<string, unknown>, _options: Record<string, unknown> = {}): Record<string, unknown> {
         const sys = context['system'] as NPCSystemContext;
 
@@ -880,6 +893,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context and return value are the mixin-erased sheet→template payload Record<string,unknown>.
     override _prepareNotesContext(context: Record<string, unknown>, _options: Record<string, unknown> = {}): Record<string, unknown> {
         const sys = context['system'] as NPCSystemContext;
 
@@ -1206,9 +1220,7 @@ export default class NPCSheet extends CharacterSheet {
                         plus10: true,
                         plus20: false,
                     };
-                    const ch = cs?.characteristic !== undefined && cs.characteristic !== ''
-                        ? cs.characteristic
-                        : skillCharMap[skillKey] ?? 'perception';
+                    const ch = cs?.characteristic !== undefined && cs.characteristic !== '' ? cs.characteristic : skillCharMap[skillKey] ?? 'perception';
                     if (ch !== undefined) entry.characteristic = ch;
                     entry.bonus = cs?.bonus ?? 0;
                     currentSkills[skillKey] = entry;
@@ -1236,9 +1248,7 @@ export default class NPCSheet extends CharacterSheet {
                         plus10: true,
                         plus20: true,
                     };
-                    const ch = cs?.characteristic !== undefined && cs.characteristic !== ''
-                        ? cs.characteristic
-                        : skillCharMap[skillKey] ?? 'perception';
+                    const ch = cs?.characteristic !== undefined && cs.characteristic !== '' ? cs.characteristic : skillCharMap[skillKey] ?? 'perception';
                     if (ch !== undefined) entry.characteristic = ch;
                     entry.bonus = cs?.bonus ?? 0;
                     currentSkills[skillKey] = entry;
@@ -1355,7 +1365,9 @@ export default class NPCSheet extends CharacterSheet {
      */
     static #editImage(this: NPCSheet, event: Event, _target: HTMLElement): void {
         event.preventDefault();
-        const fp = new FilePicker({
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.ux.FilePicker is untyped in Foundry V14; constructor options shape is opaque Record.
+        const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse(): Promise<void> };
+        const fp = new FilePickerCtor({
             type: 'image',
             ...(this.actor.img != null ? { current: this.actor.img } : {}),
             callback: (path: string) => {
@@ -1375,6 +1387,7 @@ export default class NPCSheet extends CharacterSheet {
     static async #setupToken(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         const npc = this.npcActor;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document update payload is Record<string,unknown>; token/prototypeToken fields are untyped.
         const updates: Record<string, unknown> = {};
 
         // Size-based dimensions
@@ -1820,7 +1833,7 @@ export default class NPCSheet extends CharacterSheet {
     static async #addToCombat(this: NPCSheet, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
         if (!game.combat) {
-            ui.notifications.warn('No active combat encounter.');
+            ui.notifications.warn(game.i18n.localize('WH40K.Warning.NoActiveCombatEncounter'));
             return;
         }
         // Prevent duplicate combatants
@@ -1879,6 +1892,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _context is the mixin-erased sheet→template payload Record<string,unknown>.
     override _prepareCharacteristicsHUD(_context: Record<string, unknown>): void {
         // NPCSheet uses its own characteristic preparation
         // Skip the parent implementation
@@ -1894,6 +1908,7 @@ export default class NPCSheet extends CharacterSheet {
      * indicators, current target, and tooltip data.
      * @override
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context is the mixin-erased sheet→template payload Record<string,unknown>.
     override _prepareSkills(context: Record<string, unknown>): void {
         const actor = this.npcActor;
         const characteristics = actor.system.characteristics;
@@ -1974,6 +1989,7 @@ export default class NPCSheet extends CharacterSheet {
      * @param {object} context - The render context.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context is the mixin-erased sheet→template payload Record<string,unknown>.
     override _prepareItems(context: Record<string, unknown>): void {
         // NPCSheet uses simplified item system
         const items = context['items'] as NPCItemContext[];

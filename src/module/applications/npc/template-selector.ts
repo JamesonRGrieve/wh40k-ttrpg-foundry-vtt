@@ -62,9 +62,13 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
             height: 650,
         },
         actions: {
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
             selectTemplate: TemplateSelector.#selectTemplate,
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
             clearFilter: TemplateSelector.#clearFilter,
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
             create: TemplateSelector.#onCreate,
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
             cancel: TemplateSelector.#onCancel,
         },
     };
@@ -153,7 +157,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         // Get selected template details
         let selectedTemplate: WH40KItem | undefined;
         let preview: Record<string, unknown> | null = null;
-        if (this.#selectedUuid) {
+        if (this.#selectedUuid !== null) {
             selectedTemplate = this.#templates.find((t) => t.uuid === this.#selectedUuid);
             if (selectedTemplate) {
                 preview = (selectedTemplate.system as unknown as NpcTemplateSys).previewAtThreat(this.#threatLevel);
@@ -290,24 +294,24 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         this.#templates.push(...worldTemplates);
 
         // Load from compendiums
-        for (const pack of game.packs) {
-            if (pack.documentName !== 'Item') continue;
-            if (pack.locked && !pack.visible) continue;
+        const eligiblePacks = game.packs.filter((pack) => pack.documentName === 'Item' && !(pack.locked && !pack.visible));
+        await Promise.all(
+            eligiblePacks.map(async (pack) => {
+                try {
+                    const index = await pack.getIndex({ fields: ['type', 'system.category', 'system.faction'] });
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Foundry pack.getIndex returns untyped index entries at runtime
+                    // biome-ignore lint/suspicious/noExplicitAny: Foundry pack.getIndex returns untyped index entries at runtime
+                    const templateEntries = index.filter((e: any) => e.type === 'npcTemplate');
 
-            try {
-                const index = await pack.getIndex({ fields: ['type', 'system.category', 'system.faction'] });
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Foundry pack.getIndex returns untyped index entries at runtime
-                // biome-ignore lint/suspicious/noExplicitAny: Foundry pack.getIndex returns untyped index entries at runtime
-                const templateEntries = index.filter((e: any) => e.type === 'npcTemplate');
-
-                for (const entry of templateEntries) {
-                    const item = (await pack.getDocument(entry._id)) as WH40KItem | null;
-                    if (item) this.#templates.push(item);
+                    const items = await Promise.all(templateEntries.map(async (entry) => (await pack.getDocument(entry._id)) as WH40KItem | null));
+                    for (const item of items) {
+                        if (item) this.#templates.push(item);
+                    }
+                } catch (err) {
+                    console.warn(`Failed to load templates from pack ${pack.collection}:`, err);
                 }
-            } catch (err) {
-                console.warn(`Failed to load templates from pack ${pack.collection}:`, err);
-            }
-        }
+            }),
+        );
     }
 
     /**
@@ -319,20 +323,20 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         return this.#templates.filter((t) => {
             const system = t.system as unknown as NpcTemplateSys;
             // Category filter
-            if (this.#filters.category && system.category !== this.#filters.category) {
+            if (this.#filters.category !== '' && system.category !== this.#filters.category) {
                 return false;
             }
 
             // Faction filter
-            if (this.#filters.faction && system.faction !== this.#filters.faction) {
+            if (this.#filters.faction !== '' && system.faction !== this.#filters.faction) {
                 return false;
             }
 
             // Search filter
-            if (this.#filters.search) {
+            if (this.#filters.search !== '') {
                 const search = this.#filters.search.toLowerCase();
                 const name = t.name.toLowerCase();
-                const faction = (system.faction || '').toLowerCase();
+                const faction = (system.faction !== '' ? system.faction : '').toLowerCase();
                 if (!name.includes(search) && !faction.includes(search)) {
                     return false;
                 }
@@ -354,10 +358,10 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      */
     static #selectTemplate(this: TemplateSelector, _event: PointerEvent, target: HTMLElement): void {
         const uuid = target.dataset['uuid'];
-        if (!uuid) return;
+        if (uuid === undefined || uuid === '') return;
 
         this.#selectedUuid = uuid;
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] });
     }
 
     /**
@@ -368,7 +372,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      */
     static #clearFilter(this: TemplateSelector, _event: PointerEvent, _target: HTMLElement): void {
         this.#filters = { category: '', faction: '', search: '' };
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] });
     }
 
     /**
@@ -378,7 +382,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target
      */
     static async #onCreate(this: TemplateSelector, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        if (!this.#selectedUuid) {
+        if (this.#selectedUuid === null) {
             ui.notifications.warn('Select a template first.');
             return;
         }
@@ -395,7 +399,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
             const actorData = {
                 name: template.name,
                 type: 'npcV2',
-                img: template.img || 'icons/svg/mystery-man.svg',
+                img: template.img ?? 'icons/svg/mystery-man.svg',
                 system: systemData,
             };
 
@@ -413,31 +417,18 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                     system: object;
                 }
 
-                for (const trait of templateSys.traits ?? []) {
-                    if (trait.uuid) {
-                        const item = (await fromUuid(trait.uuid)) as EmbeddableItem | null;
-                        if (item) {
-                            itemsToCreate.push({
-                                name: item.name,
-                                type: item.type,
-                                img: item.img,
-                                system: foundry.utils.deepClone(item.system),
-                            });
-                        }
-                    }
-                }
-
-                for (const talent of templateSys.talents ?? []) {
-                    if (talent.uuid) {
-                        const item = (await fromUuid(talent.uuid)) as EmbeddableItem | null;
-                        if (item) {
-                            itemsToCreate.push({
-                                name: item.name,
-                                type: item.type,
-                                img: item.img,
-                                system: foundry.utils.deepClone(item.system),
-                            });
-                        }
+                const traitUuids = (templateSys.traits ?? []).map((t) => t.uuid).filter((u): u is string => u !== undefined && u !== '');
+                const talentUuids = (templateSys.talents ?? []).map((t) => t.uuid).filter((u): u is string => u !== undefined && u !== '');
+                const allUuids = [...traitUuids, ...talentUuids];
+                const resolvedItems = await Promise.all(allUuids.map(async (uuid) => (await fromUuid(uuid)) as EmbeddableItem | null));
+                for (const item of resolvedItems) {
+                    if (item) {
+                        itemsToCreate.push({
+                            name: item.name,
+                            type: item.type,
+                            img: item.img,
+                            system: foundry.utils.deepClone(item.system),
+                        });
                     }
                 }
 
@@ -446,7 +437,8 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                 }
 
                 ui.notifications.info(`Created NPC: ${actor.name}`);
-                actor.sheet?.render(true);
+                // eslint-disable-next-line @typescript-eslint/no-deprecated -- actor.sheet may be ApplicationV1; use V1 signature until sheet is migrated
+                void actor.sheet?.render(true);
 
                 this.#submitted = true;
                 if (this.#resolve) this.#resolve(actor);
@@ -508,8 +500,8 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     static async open(options: Partial<FilterState> = {}): Promise<WH40KNPC | null> {
         const selector = new this();
 
-        if (options.category) selector.#filters.category = options.category;
-        if (options.faction) selector.#filters.faction = options.faction;
+        if (options.category !== undefined && options.category !== '') selector.#filters.category = options.category;
+        if (options.faction !== undefined && options.faction !== '') selector.#filters.faction = options.faction;
 
         return selector.wait();
     }

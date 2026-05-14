@@ -90,7 +90,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         base: string;
         bonus: number;
     };
-    declare trainedSkills: Record<string, NPCV2TrainedSkill>;
+    declare trainedSkills: Partial<Record<string, NPCV2TrainedSkill>>;
     declare weapons: {
         mode: 'simple' | 'embedded';
         simple: NPCV2SimpleWeapon[];
@@ -425,9 +425,11 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         wounds: number;
         movement: number;
     } {
+        const characteristics: Record<string, number> = {};
+        const skills: Record<string, number> = {};
         const stats = {
-            characteristics: {} as Record<string, number>,
-            skills: {} as Record<string, number>,
+            characteristics,
+            skills,
             combat: {
                 initiative: this.initiative.bonus,
                 dodge: this.getSkillTarget('dodge'),
@@ -505,14 +507,15 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             target: number;
         }> = [];
         for (const [key, skill] of Object.entries(this.trainedSkills)) {
+            if (skill === undefined) continue;
             list.push({
                 key,
-                name: skill.name || key,
-                characteristic: skill.characteristic || 'Per',
-                trained: skill.trained || false,
-                plus10: skill.plus10 || false,
-                plus20: skill.plus20 || false,
-                bonus: skill.bonus || 0,
+                name: skill.name !== '' ? skill.name : key,
+                characteristic: skill.characteristic !== '' ? skill.characteristic : 'Per',
+                trained: skill.trained,
+                plus10: skill.plus10,
+                plus20: skill.plus20,
+                bonus: skill.bonus,
                 target: this.getSkillTarget(key),
             });
         }
@@ -546,12 +549,11 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {object|null}
      */
     getCharacteristic(key: string): NPCCharacteristicData | null {
-        const direct = this.characteristics[key];
-        if (direct !== undefined) {
-            return direct;
+        if (key in this.characteristics) {
+            return this.characteristics[key] ?? null;
         }
         const fullKey = NPCData.CHARACTERISTIC_MAP[key];
-        if (fullKey === undefined) {
+        if (fullKey == null || !(fullKey in this.characteristics)) {
             return null;
         }
         return this.characteristics[fullKey] ?? null;
@@ -604,21 +606,24 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     getSkillTarget(skillName: string): number {
         const skill = this.trainedSkills[skillName];
-        const charKey = skill?.characteristic || NPCData.SKILL_CHARACTERISTIC_MAP[skillName] || 'perception';
+        const charKey =
+            (skill?.characteristic !== undefined && skill.characteristic !== '' ? skill.characteristic : null) ??
+            (skillName in NPCData.SKILL_CHARACTERISTIC_MAP ? NPCData.SKILL_CHARACTERISTIC_MAP[skillName] : null) ??
+            'perception';
         const char = this.getCharacteristic(charKey);
-        if (!char) return 0;
+        if (char === null) return 0;
 
         const gameSystem = (this.constructor as { gameSystem?: string }).gameSystem;
-        const systemConfig = gameSystem ? SystemConfigRegistry.getOrNull(gameSystem) : null;
+        const systemConfig = gameSystem !== undefined ? SystemConfigRegistry.getOrNull(gameSystem) : null;
         let target = char.total;
 
         // Apply training bonuses
-        if (skill) {
+        if (skill !== undefined) {
             // trained baseline: no bonus
             if (skill.plus10) target += 10;
             if (skill.plus20) target += 10; // cumulative: plus10 + plus20 = +20
             if (skill.plus30 === true) target += 10; // cumulative: plus10 + plus20 + plus30 = +30 (DH2e Veteran)
-            target += skill.bonus || 0;
+            target += skill.bonus !== 0 ? skill.bonus : 0;
         } else {
             // Untrained: flat -20 in DH2e (Known/Trained/Experienced/Veteran ladder),
             // half characteristic for career-based systems.
@@ -641,6 +646,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {number} bonus - Additional bonus
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is unknown because this.parent.update returns an untyped Foundry Promise
     addTrainedSkill(name: string, characteristic: string | null = null, level = 'trained', bonus = 0): unknown {
         const skills = foundry.utils.deepClone(this.trainedSkills);
 
@@ -655,6 +661,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             bonus: bonus,
         };
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
         return this.parent.update({ 'system.trainedSkills': skills });
     }
 
@@ -663,9 +670,11 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {string} name - The skill key
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is unknown because this.parent.update returns an untyped Foundry Promise
     removeSkill(name: string): unknown {
         const skills = foundry.utils.deepClone(this.trainedSkills);
         delete skills[name];
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
         return this.parent.update({ 'system.trainedSkills': skills });
     }
 
@@ -675,11 +684,13 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {Object} updates - Properties to update
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: updates object contains caller-provided data; Record<string,unknown> is the documented pattern here
     updateSkill(name: string, updates: Record<string, unknown>): unknown {
         const skills = foundry.utils.deepClone(this.trainedSkills);
-        if (!skills[name]) return this.parent;
+        if (skills[name] === undefined) return this.parent;
 
         Object.assign(skills[name], updates);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
         return this.parent.update({ 'system.trainedSkills': skills });
     }
 
@@ -692,8 +703,10 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {string} mode - The mode to switch to: "simple" or "embedded"
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is unknown because this.parent.update returns an untyped Foundry Promise
     switchWeaponMode(mode: string): unknown {
         if (!['simple', 'embedded'].includes(mode)) return this.parent;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
         return this.parent.update({ 'system.weapons.mode': mode });
     }
 
@@ -702,6 +715,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {Object} data - Weapon data
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: data is caller-supplied weapon data; Record<string,unknown> is the documented pattern; return is untyped Foundry Promise
     addSimpleWeapon(data: Record<string, unknown> = {}): unknown {
         const weapons = foundry.utils.deepClone(this.weapons.simple);
         const weaponClass = (data['class'] as NPCV2SimpleWeapon['class']) || 'melee';
@@ -716,6 +730,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             special: (data['special'] as string) || '',
             class: weaponClass,
         });
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
         return this.parent.update({ 'system.weapons.simple': weapons });
     }
 
@@ -724,10 +739,12 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {number} index - The weapon index
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is unknown because this.parent.update returns an untyped Foundry Promise
     removeSimpleWeapon(index: number): unknown {
         const weapons = foundry.utils.deepClone(this.weapons.simple);
         if (index < 0 || index >= weapons.length) return this.parent;
         weapons.splice(index, 1);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
         return this.parent.update({ 'system.weapons.simple': weapons });
     }
 
@@ -736,6 +753,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {number} index - The simple weapon index to promote
      * @returns {Promise<Item|null>} The created weapon item, or null on failure
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is unknown because createEmbeddedDocuments returns an untyped Foundry Document
     async promoteSimpleWeapon(index: number): Promise<unknown> {
         const weapons = this.weapons.simple;
         const weapon = weapons[index];
@@ -757,6 +775,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             },
         };
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, no-restricted-syntax -- boundary: this.parent is any-typed Foundry document; result array holds untyped Document
         const [createdItem] = (await this.parent.createEmbeddedDocuments('Item', [itemData])) as [unknown];
 
         // Remove from simple weapons
@@ -776,8 +795,10 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {string} mode - The mode to switch to: "simple" or "locations"
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is unknown because this.parent.update returns an untyped Foundry Promise
     switchArmourMode(mode: string): unknown {
         if (!['simple', 'locations'].includes(mode)) return this.parent;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
         return this.parent.update({ 'system.armour.mode': mode });
     }
 
@@ -802,12 +823,15 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {string} skillKey - The skill key to toggle
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is unknown because this.parent.setFlag returns an untyped Foundry Promise
     toggleFavoriteSkill(skillKey: string): unknown {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
         const flagValue = this.parent.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | null | undefined;
         const favorites = [...(flagValue ?? [])];
         const index = favorites.indexOf(skillKey);
         if (index >= 0) favorites.splice(index, 1);
         else favorites.push(skillKey);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
         return this.parent.setFlag('wh40k-rpg', 'favoriteSkills', favorites);
     }
 
@@ -816,12 +840,15 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {string} itemId - The talent item ID to toggle
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is unknown because this.parent.setFlag returns an untyped Foundry Promise
     toggleFavoriteTalent(itemId: string): unknown {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
         const flagValue = this.parent.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | null | undefined;
         const favorites = [...(flagValue ?? [])];
         const index = favorites.indexOf(itemId);
         if (index >= 0) favorites.splice(index, 1);
         else favorites.push(itemId);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
         return this.parent.setFlag('wh40k-rpg', 'favoriteTalents', favorites);
     }
 
@@ -830,6 +857,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @type {Array<string>}
      */
     get favoriteSkills(): string[] {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
         return (this.parent.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | null | undefined) ?? [];
     }
 
@@ -838,6 +866,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @type {Array<string>}
      */
     get favoriteTalents(): string[] {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
         return (this.parent.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | null | undefined) ?? [];
     }
 
@@ -850,10 +879,12 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {string} itemId - The item ID to pin
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is unknown because this.parent.update returns an untyped Foundry Promise
     pinAbility(itemId: string): unknown {
         const pinned = foundry.utils.deepClone(this.pinnedAbilities);
         if (!pinned.includes(itemId)) {
             pinned.push(itemId);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
             return this.parent.update({ 'system.pinnedAbilities': pinned });
         }
         return this.parent;
@@ -864,11 +895,13 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {string} itemId - The item ID to unpin
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is unknown because this.parent.update returns an untyped Foundry Promise
     unpinAbility(itemId: string): unknown {
         const pinned = foundry.utils.deepClone(this.pinnedAbilities);
         const idx = pinned.indexOf(itemId);
         if (idx >= 0) {
             pinned.splice(idx, 1);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: this.parent is any-typed Foundry document
             return this.parent.update({ 'system.pinnedAbilities': pinned });
         }
         return this.parent;
@@ -879,6 +912,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @param {string} itemId - The item ID to toggle
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is unknown because pinAbility/unpinAbility return untyped Foundry Promises
     togglePinAbility(itemId: string): unknown {
         const pinned = this.pinnedAbilities;
         if (pinned.includes(itemId)) {
@@ -958,6 +992,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: getRollData must return Record<string,unknown> to match the base class signature
     override getRollData(): Record<string, unknown> {
         const data = super.getRollData();
 
@@ -994,6 +1029,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @returns {number}
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: value is untyped migration source data; unknown is intentional here as the entry point of conversion
     static _toInt(value: unknown, fallback = 0): number {
         if (value === null || value === undefined || value === '') return fallback;
         const num = Number(value);
@@ -1002,8 +1038,9 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     }
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData receives untyped Foundry source data before schema validation
     static override _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
         NPCData.#migrateSize(source);
         NPCData.#migrateWounds(source);
         NPCData.#migrateThreatLevel(source);
@@ -1013,6 +1050,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * Migrate size to integer.
      * @param {object} source - The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #migrateSize(source: Record<string, unknown>): void {
         if (source['size'] !== undefined) {
             const sizeInt = this._toInt(source['size'], 4);
@@ -1024,8 +1062,10 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * Migrate wounds values to integers.
      * @param {object} source - The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #migrateWounds(source: Record<string, unknown>): void {
-        if (source['wounds'] && typeof source['wounds'] === 'object') {
+        if (typeof source['wounds'] === 'object' && source['wounds'] !== null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: source['wounds'] is untyped legacy migration data
             const wounds = source['wounds'] as Record<string, unknown>;
             if (wounds['max'] !== undefined) {
                 wounds['max'] = this._toInt(wounds['max'], 10);
@@ -1043,6 +1083,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * Migrate threat level to integer.
      * @param {object} source - The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #migrateThreatLevel(source: Record<string, unknown>): void {
         if (source['threatLevel'] !== undefined) {
             source['threatLevel'] = this._toInt(source['threatLevel'], 5);
