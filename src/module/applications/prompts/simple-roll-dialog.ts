@@ -9,12 +9,14 @@ import BaseRollDialog from './base-roll-dialog.ts';
 /**
  * Dialog for configuring simple skill or characteristic rolls.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: BaseRollDialog options are passed through to ApplicationV2 super; no narrower type available
 type SimpleRollDialogOptions = Record<string, unknown>;
 
 export default class SimpleRollDialog extends BaseRollDialog {
     simpleSkillData: ActionData;
 
     constructor(simpleSkillData: ActionData, options: SimpleRollDialogOptions = {}) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseRollDialog ctor accepts rollData as Record<string, unknown>; ActionData is the concrete type at call sites
         super(simpleSkillData as unknown as Record<string, unknown>, options);
         this.simpleSkillData = simpleSkillData;
     }
@@ -28,7 +30,8 @@ export default class SimpleRollDialog extends BaseRollDialog {
             width: 300,
         },
         window: {
-            title: 'Roll Modifier',
+            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
+            title: 'WH40K.Dialog.RollModifierTitle',
         },
     };
 
@@ -58,6 +61,7 @@ export default class SimpleRollDialog extends BaseRollDialog {
         rollData.modifiers['modifier'] = parseInt(modifierInput?.value ?? '0', 10);
 
         await rollData.calculateTotalModifiers();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData.calculateSuccessOrFailure exists at runtime but is not declared on the TS type
         await (this.simpleSkillData as unknown as { calculateSuccessOrFailure: () => Promise<void> }).calculateSuccessOrFailure();
         await sendActionDataToChat(this.simpleSkillData);
 
@@ -73,7 +77,7 @@ export default class SimpleRollDialog extends BaseRollDialog {
  * Open a simple roll dialog.
  * @param {object} simpleSkillData  The skill data.
  */
-export function prepareSimpleRoll(simpleSkillData: ActionData) {
+export function prepareSimpleRoll(simpleSkillData: ActionData): void {
     const prompt = new SimpleRollDialog(simpleSkillData);
-    prompt.render(true);
+    void prompt.render({ force: true });
 }

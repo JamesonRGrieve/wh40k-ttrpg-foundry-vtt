@@ -171,7 +171,8 @@ function getRogueTraderConfig(): RogueTraderConfigBag['ROGUE_TRADER'] {
 function getSkillDescriptionLookup(): SkillDescriptionLookup | undefined {
     // eslint-disable-next-line no-restricted-syntax -- boundary: game.wh40k is the system's own namespace, attached after init; types are erased at the boundary.
     const wh40k = (game as { wh40k?: { tooltips?: unknown } }).wh40k;
-    return wh40k?.tooltips as unknown as SkillDescriptionLookup | undefined;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: wh40k.tooltips is a runtime-attached namespace; cast to interface is the only viable approach
+    return wh40k?.tooltips as SkillDescriptionLookup | undefined;
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: accepts heterogeneous doc / DataModel surfaces to extract an optional richTooltip(); type-erasing the parameter is the safest reading.
@@ -479,6 +480,7 @@ export class TooltipsWH40K {
         let trainingBonus = dataTB ?? 0;
         if (level > 0 && level <= skillRanks.length) {
             const rank = skillRanks[level - 1];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: array element may be undefined at runtime despite in-bounds check
             if (rank == null) throw new Error(`skillRanks[${level - 1}] is undefined; this should be unreachable.`);
             training = rank.tooltip;
             trainingBonus = dataTB ?? rank.bonus;

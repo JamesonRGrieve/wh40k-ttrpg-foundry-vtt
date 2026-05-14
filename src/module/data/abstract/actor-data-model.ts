@@ -65,7 +65,9 @@ export default class ActorDataModel extends SystemDataModel {
      *                                           that could be either a die term or a flat term.
      * @returns {object}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: getRollData must spread `this` (TypeDataModel instance) into a plain object; no DataModel schema to narrow
     getRollData({ deterministic: _deterministic = false } = {}): Record<string, unknown> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: spreading TypeDataModel instance into plain object for dice roll formula resolution
         const data: Record<string, unknown> = { ...(this as unknown as Record<string, unknown>) };
         return data;
     }

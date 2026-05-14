@@ -230,6 +230,7 @@ async function spendFateImpl(this: Host, _event: Event, target: HTMLElement): Pr
     }
 
     let message = '';
+    // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check -- default: branch handles undefined and all unlisted actions
     switch (action) {
         case 'reroll':
             message = `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>re-roll</strong> a test!`;

@@ -54,6 +54,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         classes: ['wh40k-rpg', 'batch-create-dialog'],
         tag: 'form',
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.NPC.BatchCreate.Title',
             icon: 'fa-solid fa-users',
             minimizable: false,
@@ -296,6 +297,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             if (this.#state.openSheets) {
                 const toOpen = actors.slice(0, 5);
                 for (const actor of toOpen) {
+                    // eslint-disable-next-line @typescript-eslint/no-deprecated -- render(true) is the V14-compatible force-open idiom
                     void actor.sheet?.render(true);
                 }
             }
@@ -365,8 +367,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             }
 
             try {
-                // eslint-disable-next-line no-await-in-loop -- batch creation is sequential by design to surface errors per actor
-                // eslint-disable-next-line no-restricted-syntax -- boundary: NPCActorData is the system-internal shape; Foundry's Actor.create accepts the same record at runtime
+                // eslint-disable-next-line no-await-in-loop, no-restricted-syntax -- batch creation is sequential by design to surface errors per actor; boundary: NPCActorData is the system-internal shape
                 const actor = (await Actor.create(actorData as unknown as Actor.CreateData)) as WH40KNPC | undefined;
                 if (actor) actors.push(actor);
             } catch (err) {
@@ -492,8 +493,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 folder: typeof folder === 'string' && folder !== '' ? folder : undefined,
             };
 
-            // eslint-disable-next-line no-await-in-loop -- batch creation is sequential by design
-            // eslint-disable-next-line no-restricted-syntax -- boundary: NPCActorData is the system-internal shape; Foundry's Actor.create accepts the same record at runtime
+            // eslint-disable-next-line no-await-in-loop, no-restricted-syntax -- batch creation is sequential by design; boundary: NPCActorData is the system-internal shape
             const actor = (await Actor.create(actorData as unknown as Actor.CreateData)) as WH40KNPC | undefined;
             if (actor) actors.push(actor);
         }

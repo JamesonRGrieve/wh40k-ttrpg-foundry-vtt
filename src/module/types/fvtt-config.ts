@@ -87,6 +87,7 @@ declare module 'fvtt-types/configuration' {
         [key: `wh40k-rpg.${string}`]: foundry.helpers.ClientSettings.Type;
     }
 
+    /* eslint-disable no-restricted-syntax -- boundary: Foundry FlagConfig requires Record<string,unknown> shapes per fvtt-types interface */
     interface FlagConfig {
         Actor: {
             'wh40k-rpg': Record<string, unknown>;
@@ -103,6 +104,7 @@ declare module 'fvtt-types/configuration' {
             'wh40k-rpg': Record<string, unknown>;
         };
     }
+    /* eslint-enable no-restricted-syntax */
 
     interface DocumentClassConfig {
         // WH40KActorProxy is a Proxy around WH40KBaseActor — its type is typeof WH40KBaseActor
@@ -113,18 +115,22 @@ declare module 'fvtt-types/configuration' {
         TokenDocument: typeof TokenDocumentWH40K;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- type param required by fvtt-types parent interface; body maps to single document type
     interface ConfiguredActor<SubType extends Actor.SubType> {
         document: WH40KBaseActor;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- type param required by fvtt-types parent interface; body maps to single document type
     interface ConfiguredItem<SubType extends Item.SubType> {
         document: WH40KItem;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- type param required by fvtt-types parent interface; body maps to single document type
     interface ConfiguredActiveEffect<SubType extends ActiveEffect.SubType> {
         document: WH40KActiveEffect;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- type param required by fvtt-types parent interface; body maps to single document type
     interface ConfiguredChatMessage<SubType extends ChatMessage.SubType> {
         document: ChatMessageWH40K;
     }

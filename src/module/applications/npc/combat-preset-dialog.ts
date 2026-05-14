@@ -58,6 +58,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         classes: ['wh40k-rpg', 'combat-preset-dialog'],
         tag: 'div',
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.NPC.CombatPresets',
             icon: 'fa-solid fa-bookmark',
         },

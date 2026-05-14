@@ -34,7 +34,8 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         classes: ['wh40k-rpg', 'transaction-request-dialog'],
         tag: 'form',
         window: {
-            title: 'Barter',
+            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
+            title: 'WH40K.Dialog.BarterTitle',
             icon: 'fa-solid fa-handshake',
             resizable: true,
         },
@@ -43,13 +44,12 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 position.height accepts 'auto' but typings list number
             height: 'auto' as unknown as number,
         },
-        // eslint-disable-next-line no-restricted-syntax -- boundary: exactOptionalPropertyTypes: FormConfiguration optional booleans require explicit cast when mixed with handler type cast
         form: {
             // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- ApplicationV2 form handler signature differs from shipped typings
-            handler: TransactionRequestDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
+            handler: TransactionRequestDialog.#onSubmit as unknown as NonNullable<ApplicationV2Config.FormConfiguration['handler']>,
             submitOnChange: false,
             closeOnSubmit: false,
-        } as ApplicationV2Config.FormConfiguration,
+        },
         /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             selectItem: TransactionRequestDialog.#selectItem,
@@ -78,16 +78,18 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
 
         const sources = TransactionManager.listSourcesForBuyer(actor);
         const firstSource = sources[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: sources[0] may be undefined at runtime
         if (firstSource !== undefined) {
             this.sourceId = firstSource.id;
             const items = TransactionManager.listItemsForSource(firstSource);
             const firstItem = items[0];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: items[0] may be undefined at runtime
             if (firstItem !== undefined) this.itemId = firstItem.id;
         }
     }
 
     get title(): string {
-        return 'Barter';
+        return game.i18n.localize('WH40K.Dialog.BarterTitle');
     }
 
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<TransactionRequestContext> {
@@ -229,18 +231,18 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
                 influenceBurn: this.influenceBurn,
             });
 
-            await TransactionManager.notifyRequester('Transaction request sent to the GM for approval.', 'info');
+            TransactionManager.notifyRequester('Transaction request sent to the GM for approval.', 'info');
             this.#resolve?.(true);
             await this.close({ _skipResolve: true });
         } catch (error) {
-            await TransactionManager.notifyRequester(error instanceof Error ? error.message : 'Unable to submit transaction request.', 'error');
+            TransactionManager.notifyRequester(error instanceof Error ? error.message : 'Unable to submit transaction request.', 'error');
         }
     }
 
     async wait(): Promise<boolean | null> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
-            void this.render(true);
+            void this.render({ force: true });
         });
     }
 

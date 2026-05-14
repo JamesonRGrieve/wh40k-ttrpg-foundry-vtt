@@ -2,6 +2,20 @@ import type { WH40KBaseActor } from '../../../documents/base-actor.ts';
 
 const { SchemaField, NumberField, BooleanField, ArrayField, StringField } = foundry.data.fields;
 
+/** Shape of the instance extensions provided by HordeTemplate mixin. */
+export interface HordeMixinExtensions {
+    readonly horde: HordeData;
+    readonly parent: WH40KBaseActor;
+    readonly parentActor: WH40KBaseActor;
+    readonly hordeDamageMultiplier: number;
+    readonly hordeDestroyed: boolean;
+    readonly magnitudePercent: number;
+    _prepareHordeData(): void;
+    applyMagnitudeDamage(amount: number, source?: string): Promise<WH40KBaseActor>;
+    restoreMagnitude(amount: number, source?: string): Promise<WH40KBaseActor>;
+    toggleHordeMode(): Promise<WH40KBaseActor>;
+}
+
 /**
  * Interface representing a single entry in the horde magnitude log.
  */
@@ -34,7 +48,7 @@ interface MigrationSource {
 /**
  * Constructor type for mixin base classes, including expected static methods.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- standard mixin constructor pattern requires any[]
+/* eslint-disable @typescript-eslint/no-explicit-any -- standard mixin constructor and TypeDataModel generic args require any[] at Foundry framework boundaries */
 // biome-ignore lint/suspicious/noExplicitAny: standard mixin constructor pattern requires any[]
 type Constructor<T = object> = (new (...args: any[]) => T) & {
     defineSchema(): Record<string, foundry.data.fields.DataField.Any>;
@@ -46,11 +60,14 @@ type Constructor<T = object> = (new (...args: any[]) => T) & {
  * Provides magnitude tracking, damage multipliers, and horde-specific rules.
  *
  * @param {typeof foundry.abstract.TypeDataModel} Base - The base class to extend.
- * @returns {typeof HordeTemplateMixin} The extended class with horde capabilities.
+ * @returns The extended class with horde capabilities.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeDataModel generic args are framework internals with no exported constraint
-// biome-ignore lint/suspicious/noExplicitAny: TypeDataModel generic args are framework internals with no exported constraint
-export default function HordeTemplate<T extends Constructor<foundry.abstract.TypeDataModel<any, any>>>(Base: T) {
+// biome-ignore lint/suspicious/noExplicitAny: TypeDataModel generic args and mixin return constructor require any[] at Foundry framework boundaries
+export default function HordeTemplate<T extends Constructor<foundry.abstract.TypeDataModel<any, any>>>(
+    Base: T,
+    // biome-ignore lint/suspicious/noExplicitAny: mixin return constructor type requires any[] for compatibility
+): T & (new (...args: any[]) => HordeMixinExtensions) {
+    /* eslint-enable @typescript-eslint/no-explicit-any */
     return class HordeTemplateMixin extends Base {
         declare horde: HordeData;
 
@@ -109,18 +126,18 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
         /** @inheritDoc */
         static override _migrateData(source: MigrationSource): void {
             super._migrateData?.(source);
-            // Ensure horde object exists
-            if (source['horde'] === undefined || source['horde'] === null) {
-                source['horde'] = {
-                    enabled: false,
-                    magnitude: { max: 30, current: 30 },
-                    magnitudeLog: [],
-                    traits: [],
-                    damageMultiplier: 1.0,
-                    sizeModifier: 0,
-                };
-            }
+            // Ensure horde object exists (MigrationSource can have null values for absent/unset fields)
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ??= is banned project-wide but ??= is the only way to avoid prefer-nullish-coalescing here; _migrateData is a Foundry framework boundary with opaque source data
+            source['horde'] ??= {
+                enabled: false,
+                magnitude: { max: 30, current: 30 },
+                magnitudeLog: [],
+                traits: [],
+                damageMultiplier: 1.0,
+                sizeModifier: 0,
+            };
             // Migrate magnitude values to integers
+            // eslint-disable-next-line no-restricted-syntax -- boundary: raw migration source data from Foundry _migrateData hook; no schema available at this point
             const horde = source['horde'] as unknown as HordeData;
             horde.magnitude.max = parseInt(String(horde.magnitude.max), 10) || 30;
             horde.magnitude.current = parseInt(String(horde.magnitude.current), 10) || 30;

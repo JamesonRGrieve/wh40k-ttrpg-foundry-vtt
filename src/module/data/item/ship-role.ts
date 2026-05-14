@@ -19,6 +19,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
     declare abilities: Array<{ name: string; description: string; bonus: number; action: string; actionType: string; skill: string }>;
     declare effect: string;
     declare shipBonuses: { manoeuvrability: number; detection: number; ballisticSkill: number; crewRating: number };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: skillBonuses is a dynamic SchemaField with no defined keys; Record<string,unknown> is the narrowest safe type
     declare skillBonuses: Record<string, unknown>;
     declare notes: string;
 
@@ -28,6 +29,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but TS can't verify the mixin constraint without casting
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Role rank/priority
@@ -136,7 +138,9 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * @type {string}
      */
     get primaryAbility(): string {
-        const ability = this.abilities?.[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: array[0] may be undefined at runtime
+        const ability = this.abilities[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: ability may be undefined despite array declaration
         if (ability !== undefined) {
             return ability.description || ability.name;
         }
@@ -155,8 +159,6 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
             ballisticSkill: 'Ballistic Skill',
             crewRating: 'Crew Rating',
         };
-
-        if (!this.shipBonuses) return bonuses;
 
         for (const [key, label] of Object.entries(labels) as Array<[keyof typeof this.shipBonuses, string]>) {
             const value = this.shipBonuses[key] || 0;
@@ -188,6 +190,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels return type mirrors base ItemDataModel schema
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             rank: this.rank,

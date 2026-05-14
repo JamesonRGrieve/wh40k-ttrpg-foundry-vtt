@@ -15,6 +15,7 @@ type CombatAction = {
  * @param rollData {WeaponRollData}
  */
 export function calculateCombatActionModifier(rollData: WeaponRollData): void {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.actions stores per-system action name→name map; values are strings at runtime
     const actions = rollData.actions as Record<string, string>;
     const currentAction = actions[rollData.action];
 
@@ -29,7 +30,7 @@ export function calculateCombatActionModifier(rollData: WeaponRollData): void {
     }
 
     const actionInfo = allCombatActions().find((action: CombatAction) => action.name === currentAction);
-    if (actionInfo?.attack?.modifier) {
+    if (actionInfo?.attack?.modifier != null && actionInfo.attack.modifier !== 0) {
         rollData.modifiers['attack'] = actionInfo.attack.modifier;
     } else {
         rollData.modifiers['attack'] = 0;
@@ -68,20 +69,21 @@ export function updateAvailableCombatActions(rollData: WeaponRollData): void {
     }
 
     rollData.actions = {};
+    // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.actions stores per-system action name→name map; values are strings at runtime
     const actionsByName = rollData.actions as Record<string, string>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: combatActionInformation stores per-system CombatAction objects; typed as unknown to avoid import cycle
     rollData.combatActionInformation = actions as unknown as Record<string, unknown>;
     for (const action of actions) {
         actionsByName[action.name] = action.name;
     }
 
     // If action no longer exists -- set to first available
-    if (!Object.keys(actionsByName).find((a) => a === rollData.action)) {
+    if (Object.keys(actionsByName).find((a) => a === rollData.action) === undefined) {
         const firstKey = Object.keys(actionsByName)[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: Object.keys()[0] may be undefined at runtime
         if (firstKey !== undefined) {
-            const firstAction = actionsByName[firstKey];
-            if (firstAction) {
-                rollData.action = firstAction;
-            }
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: actionsByName[firstKey] may be undefined despite Record<string, string> type
+            rollData.action = actionsByName[firstKey] ?? '';
         }
     }
 }

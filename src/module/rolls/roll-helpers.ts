@@ -1,5 +1,6 @@
 import type { ActionData } from './action-data.ts';
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: recursive dot-notation traversal; values are unknown by design
 type DotNotationTarget = Record<string, unknown>;
 type DotNotationKey = string | string[];
 
@@ -52,6 +53,7 @@ export async function roll1d100(): Promise<Roll> {
  * Apply whisper recipients to a chatData object based on the current rollMode.
  * Mutates chatData in place.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ChatMessage.create accepts an untyped record-shaped payload
 export function applyRollModeWhispers(chatData: Record<string, unknown>): void {
     const rollMode = chatData['rollMode'];
     if (typeof rollMode === 'string' && ['gmroll', 'blindroll'].includes(rollMode)) {
@@ -62,14 +64,16 @@ export function applyRollModeWhispers(chatData: Record<string, unknown>): void {
 }
 
 export async function sendActionDataToChat(actionData: ActionData): Promise<void> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate expects a plain record; ActionData is duck-typed to satisfy the shape
     const html = await foundry.applications.handlebars.renderTemplate(actionData.template, actionData as unknown as Record<string, unknown>);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped record-shaped payload
     const chatData: Record<string, unknown> = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
         content: html,
     };
     const rollData = actionData.rollData as typeof actionData.rollData & { isManualRoll?: boolean };
-    if (rollData.roll && !rollData.isManualRoll) {
+    if (rollData.roll != null && rollData.isManualRoll !== true) {
         chatData['rolls'] = [actionData.rollData.roll];
     }
     applyRollModeWhispers(chatData);
@@ -82,6 +86,7 @@ export function recursiveUpdate(targetObject: DotNotationTarget, updateObject: D
     }
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: recursive dot-notation update traverses arbitrary nested unknown values
 export function handleDotNotationUpdate(targetObject: DotNotationTarget, key: DotNotationKey, value: unknown): void {
     if (typeof key === 'string') {
         // Key Starts as string and we split across dots
@@ -94,25 +99,23 @@ export function handleDotNotationUpdate(targetObject: DotNotationTarget, key: Do
             delete targetObject[leafKey];
         } else if ('object' === typeof value && !Array.isArray(value)) {
             const current = targetObject[leafKey];
-            if (current && typeof current === 'object' && !Array.isArray(current)) {
+            if (current != null && typeof current === 'object' && !Array.isArray(current)) {
                 recursiveUpdate(current as DotNotationTarget, value as DotNotationTarget);
             } else {
                 targetObject[leafKey] = value;
             }
-        } else {
+        } else if ('number' === typeof targetObject[leafKey]) {
             // Coerce numbers
-            if ('number' === typeof targetObject[leafKey]) {
-                targetObject[leafKey] = Number(value);
-            } else {
-                targetObject[leafKey] = value;
-            }
+            targetObject[leafKey] = Number(value);
+        } else {
+            targetObject[leafKey] = value;
         }
     } else {
         // Go a layer deeper into object
         const [head, ...tail] = key;
         if (!head) return;
         const next = targetObject[head];
-        if (!next || typeof next !== 'object' || Array.isArray(next)) return;
+        if (next == null || typeof next !== 'object' || Array.isArray(next)) return;
         handleDotNotationUpdate(next as DotNotationTarget, tail, value);
     }
 }

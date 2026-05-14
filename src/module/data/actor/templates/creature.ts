@@ -811,10 +811,12 @@ export default class CreatureTemplate extends CommonTemplate {
      */
     getCharacteristic(key: string): CharacteristicData | null {
         const direct = this.characteristics[key];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: index signature access may be undefined at runtime
         if (direct !== undefined) {
             return direct;
         }
         const fullKey = CreatureTemplate.CHARACTERISTIC_MAP[key];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: Record index access may be undefined at runtime
         if (fullKey === undefined) {
             return null;
         }
@@ -918,6 +920,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
         // Update initiative bonus from characteristic
         const initChar = this.characteristics[this.initiative.characteristic];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: dynamic key access on characteristics may return undefined at runtime
         if (initChar !== undefined) {
             this.initiative.bonus = initChar.bonus;
         }
@@ -1083,6 +1086,7 @@ export default class CreatureTemplate extends CommonTemplate {
             for (const [combatKey, value] of Object.entries(mods.combat)) {
                 if (typeof value !== 'number') continue;
                 const list = combatSources[combatKey];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: index signature access on combatSources may return undefined at runtime
                 if (list === undefined) continue;
                 list.push({ ...source, value });
             }
@@ -1140,6 +1144,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
         // Update initiative bonus from characteristic (recalculate from base)
         const initChar = this.characteristics[this.initiative.characteristic];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: dynamic key access on characteristics may return undefined at runtime
         const baseInitBonus = initChar?.bonus ?? 0;
 
         // Apply combat modifiers from items

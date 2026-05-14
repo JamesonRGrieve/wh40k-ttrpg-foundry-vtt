@@ -31,7 +31,7 @@ export class ActionData {
     }
 
     checkForPerils(): void {
-        if (this.rollData.power !== null) {
+        if (this.rollData.power != null) {
             const sourceActor = this.rollData.sourceActor;
             const sourceSystem = sourceActor !== null ? (sourceActor.system as { psy?: { rating: number } }) : null;
             const psyRating = sourceSystem?.psy?.rating ?? 0;

@@ -12,6 +12,7 @@ import type { ApplicationV2Ctor } from './application-types.ts';
  * @returns {any}
  * @mixin
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- mixin factory: return type is the inner class, which cannot be named at the outer function scope
 export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class VisualFeedbackApplication extends Base {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- standard mixin constructor pattern requires any[]
@@ -204,7 +205,7 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
             const start = Date.now();
             const difference = toValue - fromValue;
 
-            const animate = () => {
+            const animate = (): void => {
                 const elapsed = Date.now() - start;
                 const progress = Math.min(elapsed / duration, 1);
 

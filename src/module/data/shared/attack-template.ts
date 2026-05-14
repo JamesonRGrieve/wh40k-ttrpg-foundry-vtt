@@ -1,6 +1,14 @@
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
 
+/** Typed shape of the parent document's _source.system used during prepareBaseData. */
+interface AttackParentSource {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry _source.system is untyped at this layer; Record<string,unknown> is the narrowest safe type
+    _source?: { system?: Record<string, unknown> };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry parent actor reference is untyped at the DataModel layer
+    actor?: unknown;
+}
+
 /**
  * Template for items with attack capabilities.
  * @mixin
@@ -54,10 +62,12 @@ export default class AttackTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; source mirrors parent migrateData signature
     static override _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: attack empty-value shape mirrors Foundry Record schema
     static #emptyAttack(): Record<string, unknown> {
         return {
             type: 'melee',
@@ -86,18 +96,23 @@ export default class AttackTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static override _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
-        super._cleanData?.(source, options);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; source mirrors parent cleanData signature
+    static override _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
+        super._cleanData(source, options);
     }
 
     /** @inheritdoc */
     override prepareBaseData(): void {
         super.prepareBaseData();
 
-        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry parent _source data; no typed access to _source.system
+        const parent = this.parent as AttackParentSource | undefined;
+        const lineKey = inferActiveGameLine(parent?._source?.system ?? {}, parent ?? null);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: per-line variant resolved at runtime
         const resolvedAttack = resolveLineVariant(this.attack, lineKey) as Record<string, unknown>;
 
-        this.attack = foundry.utils.mergeObject(AttackTemplate.#emptyAttack(), resolvedAttack ?? {}, { inplace: false }) as typeof this.attack;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: mergeObject return is untyped; cast to schema shape
+        this.attack = foundry.utils.mergeObject(AttackTemplate.#emptyAttack(), resolvedAttack, { inplace: false }) as typeof this.attack;
     }
 
     /* -------------------------------------------- */
