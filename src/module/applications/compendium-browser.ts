@@ -64,7 +64,9 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         classes: ['wh40k-rpg', 'wh40k-compendium-browser', 'standard-form'],
         tag: 'div',
         actions: {
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
             clearFilters: RTCompendiumBrowser.#clearFilters,
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
             openItem: RTCompendiumBrowser.#openItem,
         },
         position: {
@@ -193,101 +195,104 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     async _getSources(): Promise<unknown> {
-        const sources = new Set<string>();
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
-
-        for (const pack of packs) {
-            const index = await pack.getIndex({ fields: ['system.source'] });
-            for (const entry of index) {
-                const source = this._getEntrySource(entry as unknown as CompendiumIndexEntry & { system?: Record<string, unknown> });
-                if (source) sources.add(source);
-            }
-        }
-
+        const perPackSources = await Promise.all(
+            packs.map(async (pack) => {
+                const index = await pack.getIndex({ fields: ['system.source'] });
+                return index
+                    .map((entry) => this._getEntrySource(entry as unknown as CompendiumIndexEntry & { system?: Record<string, unknown> }))
+                    .filter((s): s is string => s !== null && s !== '');
+            }),
+        );
+        const sources = new Set<string>(perPackSources.flat());
         return Array.from(sources).sort((a, b) => a.localeCompare(b));
     }
 
     async _getCategories(): Promise<unknown> {
-        const categories = new Set<string>();
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
-
-        for (const pack of packs) {
-            const index = await pack.getIndex({ fields: ['system.category', 'flags'] });
-            for (const entry of index) {
-                const category = this._getEntryCategory(
-                    entry as unknown as CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> },
-                );
-                if (category) categories.add(category);
-            }
-        }
-
+        const perPackCategories = await Promise.all(
+            packs.map(async (pack) => {
+                const index = await pack.getIndex({ fields: ['system.category', 'flags'] });
+                return index
+                    .map((entry) =>
+                        this._getEntryCategory(
+                            entry as unknown as CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> },
+                        ),
+                    )
+                    .filter((c): c is string => c !== null && c !== '');
+            }),
+        );
+        const categories = new Set<string>(perPackCategories.flat());
         return Array.from(categories).sort((a, b) => a.localeCompare(b));
     }
 
     async _getFilteredResults(): Promise<BrowserResult[]> {
-        const results: BrowserResult[] = [];
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg');
+        const perPackResults = await Promise.all(
+            packs.map(async (pack) => {
+                const packResults: BrowserResult[] = [];
+                const index = await pack.getIndex({
+                    fields: [
+                        'name',
+                        'type',
+                        'img',
+                        'system.source',
+                        'system.category',
+                        'flags',
+                        // Armour-specific fields
+                        'system.type',
+                        'system.armourPoints',
+                        'system.coverage',
+                        'system.maxAgility',
+                        'system.properties',
+                        // Armour modification fields
+                        'system.restrictions.armourTypes',
+                        'system.modifiers.armourPoints',
+                        'system.modifiers.maxAgility',
+                        'system.modifiers.weight',
+                        'system.addedProperties',
+                        'system.removedProperties',
+                    ],
+                });
 
-        for (const pack of packs) {
-            const index = await pack.getIndex({
-                fields: [
-                    'name',
-                    'type',
-                    'img',
-                    'system.source',
-                    'system.category',
-                    'flags',
-                    // Armour-specific fields
-                    'system.type',
-                    'system.armourPoints',
-                    'system.coverage',
-                    'system.maxAgility',
-                    'system.properties',
-                    // Armour modification fields
-                    'system.restrictions.armourTypes',
-                    'system.modifiers.armourPoints',
-                    'system.modifiers.maxAgility',
-                    'system.modifiers.weight',
-                    'system.addedProperties',
-                    'system.removedProperties',
-                ],
-            });
+                for (const entry of index) {
+                    const e = entry as CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> };
+                    if (!this._passesFilters(e, pack as unknown as CompendiumPack)) continue;
 
-            for (const entry of index) {
-                const e = entry as CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> };
-                if (!this._passesFilters(e, pack as unknown as CompendiumPack)) continue;
+                    const sourceLabel = this._getEntrySource(e);
+                    const categoryLabel = this._getEntryCategory(e);
 
-                const sourceLabel = this._getEntrySource(e);
-                const categoryLabel = this._getEntryCategory(e);
+                    const result: BrowserResult = {
+                        ...e,
+                        pack: pack.metadata.label,
+                        packId: pack.metadata.id,
+                        sourceLabel,
+                        categoryLabel,
+                        uuid: `Compendium.${pack.metadata.id}.${e._id}`,
+                    };
 
-                const result: BrowserResult = {
-                    ...e,
-                    pack: pack.metadata.label,
-                    packId: pack.metadata.id,
-                    sourceLabel,
-                    categoryLabel,
-                    uuid: `Compendium.${pack.metadata.id}.${e._id}`,
-                };
+                    // Add armour-specific metadata
+                    if (e.type === 'armour' && e.system) {
+                        result.armourData = this._prepareArmourData(e.system);
+                    }
 
-                // Add armour-specific metadata
-                if (e.type === 'armour' && e.system) {
-                    result.armourData = this._prepareArmourData(e.system);
+                    // Add armour modification metadata
+                    if (e.type === 'armourModification' && e.system) {
+                        result.armourModData = this._prepareArmourModData(e.system);
+                    }
+
+                    // Add weapon quality metadata
+                    if (e.type === 'weaponQuality' && e.system) {
+                        result.qualityData = this._prepareQualityData(e.system);
+                    }
+
+                    packResults.push(result);
                 }
+                return packResults;
+            }),
+        );
 
-                // Add armour modification metadata
-                if (e.type === 'armourModification' && e.system) {
-                    result.armourModData = this._prepareArmourModData(e.system);
-                }
-
-                // Add weapon quality metadata
-                if (e.type === 'weaponQuality' && e.system) {
-                    result.qualityData = this._prepareQualityData(e.system);
-                }
-
-                results.push(result);
-            }
-        }
-
+        const results = perPackResults.flat();
         results.sort((a, b) => a.name.localeCompare(b.name));
         return results;
     }
@@ -761,7 +766,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      */
     static open(options: Record<string, unknown> = {}): RTCompendiumBrowser {
         const browser = new RTCompendiumBrowser(options);
-        void browser.render(true);
+        void browser.render({ force: true });
         return browser;
     }
 }

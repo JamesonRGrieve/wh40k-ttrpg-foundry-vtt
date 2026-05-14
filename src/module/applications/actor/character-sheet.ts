@@ -13,7 +13,7 @@ import { summarizeChanges, type EffectChangeRaw } from '../../helpers/effects.ts
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
-import type { WH40KActorSystemData, WH40KItemSystemData, WH40KSkillEntry } from '../../types/global.d.ts';
+import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/global.d.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { DialogV2Like, TextEditorImplementationLike } from '../api/application-types.ts';
 import * as StatActions from '../api/stat-adjustment-actions.ts';
@@ -195,7 +195,7 @@ export default class CharacterSheet extends BaseActorSheet {
     private readonly _gameSystemId?: GameSystemId;
 
     /** Origin-path option cache keyed by game system id (packs don't change at runtime). */
-    #originOptionsCache = new Map<GameSystemId, Record<string, string[]>>();
+    readonly #originOptionsCache = new Map<GameSystemId, Record<string, string[]>>();
 
     /**
      * Whether the sheet is in edit mode (showing inline stat fields).
@@ -785,6 +785,7 @@ export default class CharacterSheet extends BaseActorSheet {
             const prefix = gameSystem === 'dh2e' ? 'dh2' : gameSystem === 'dh1e' ? 'dh1' : gameSystem;
             if (!packName.startsWith(prefix) && !packName.startsWith('homebrew')) continue;
 
+            // eslint-disable-next-line no-await-in-loop -- sequential pack fetches are intentional; each pack's data is independent and accumulation order doesn't matter, but parallelising requires restructuring the entire loop body
             const index = (await pack.getIndex({
                 fields: ['type', 'system.step'],
             })) as unknown as Array<{ _id: string; name: string; type?: string; system?: { step?: string } }>;
@@ -942,9 +943,55 @@ export default class CharacterSheet extends BaseActorSheet {
             char.nextAdvanceCost = advance < 5 ? xpCosts[advance] : 0;
 
             // Prepare tooltip data using the mixin helper
-            char.tooltipData = this.prepareCharacteristicTooltip(key, char as Record<string, unknown>, modifierSources);
+            char.tooltipData = this.prepareCharacteristicTooltip(key, char, modifierSources);
         });
     }
+
+    /* -------------------------------------------- */
+
+    /** Accumulate grants from an origin-path choice option into the running accumulators. */
+    /* eslint-disable no-restricted-syntax -- boundary: grants shape varies per game system; typed via local OriginGrants alias */
+    #accumulateOriginGrants(
+        grants: {
+            characteristics?: unknown;
+            skills?: unknown;
+            talents?: unknown;
+            traits?: unknown;
+            [key: string]: unknown;
+        },
+        charTotals: Record<string, number>,
+        skillSet: Set<string>,
+        talentSet: Set<string>,
+        traitSet: Set<string>,
+    ): void {
+        if (grants.characteristics !== undefined && grants.characteristics !== null) {
+            for (const [key, value] of Object.entries(grants.characteristics as Record<string, unknown>)) {
+                if (value !== 0) {
+                    charTotals[key] = (charTotals[key] ?? 0) + Number(value);
+                }
+            }
+        }
+        if (Array.isArray(grants.skills)) {
+            for (const skill of grants.skills as Array<{ name?: string; specialization?: string }>) {
+                const skillName =
+                    skill.specialization !== undefined && skill.specialization !== ''
+                        ? `${String(skill.name ?? '')} (${skill.specialization})`
+                        : skill.name ?? '';
+                skillSet.add(skillName);
+            }
+        }
+        if (Array.isArray(grants.talents)) {
+            for (const talent of grants.talents as Array<{ name?: string }>) {
+                talentSet.add(talent.name ?? '');
+            }
+        }
+        if (Array.isArray(grants.traits)) {
+            for (const trait of grants.traits as Array<{ name?: string }>) {
+                traitSet.add(trait.name ?? '');
+            }
+        }
+    }
+    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 
@@ -978,9 +1025,9 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Calculate totals from all origins
         const charTotals: Record<string, number> = {};
-        const skillSet = new Set();
-        const talentSet = new Set();
-        const traitSet = new Set();
+        const skillSet = new Set<string>();
+        const talentSet = new Set<string>();
+        const traitSet = new Set<string>();
         let completedSteps = 0;
 
         const preparedSteps = steps.map((step) => {
@@ -1014,40 +1061,18 @@ export default class CharacterSheet extends BaseActorSheet {
                 };
                 /* eslint-enable no-restricted-syntax */
                 const grants: OriginGrants = system.grants ?? {};
-                const modifiers = (system.modifiers?.characteristics ?? {}) as Record<string, unknown>;
+                const modifiers = system.modifiers?.characteristics ?? {};
                 const selectedChoices = system.selectedChoices ?? {};
 
-                // Accumulate base characteristics
+                // Accumulate base characteristics from modifiers
                 for (const [key, value] of Object.entries(modifiers)) {
                     if (value !== 0) {
                         charTotals[key] = (charTotals[key] ?? 0) + Number(value);
                     }
                 }
 
-                // Collect base skills
-                if (Array.isArray(grants.skills)) {
-                    for (const skill of grants.skills as Array<{ name?: string; specialization?: string }>) {
-                        const skillName =
-                            skill.specialization !== undefined && skill.specialization !== ''
-                                ? `${String(skill.name ?? '')} (${skill.specialization})`
-                                : skill.name ?? '';
-                        skillSet.add(skillName);
-                    }
-                }
-
-                // Collect base talents
-                if (Array.isArray(grants.talents)) {
-                    for (const talent of grants.talents as Array<{ name?: string }>) {
-                        talentSet.add(talent.name ?? '');
-                    }
-                }
-
-                // Collect base traits
-                if (Array.isArray(grants.traits)) {
-                    for (const trait of grants.traits as Array<{ name?: string }>) {
-                        traitSet.add(trait.name ?? '');
-                    }
-                }
+                // Collect base skills, talents, and traits from grants
+                this.#accumulateOriginGrants(grants, charTotals, skillSet, talentSet, traitSet);
 
                 // Process choice grants
                 if (Array.isArray(grants.choices)) {
@@ -1057,38 +1082,8 @@ export default class CharacterSheet extends BaseActorSheet {
                             const option = (choice['options'] as Array<{ value?: string; grants?: OriginGrants }> | undefined)?.find(
                                 (o) => o.value === selectedValue,
                             );
-                            if (!option?.grants) continue;
-
-                            const choiceGrants = option.grants;
-
-                            if (choiceGrants.characteristics !== undefined && choiceGrants.characteristics !== null) {
-                                for (const [key, value] of Object.entries(choiceGrants.characteristics as Record<string, unknown>)) {
-                                    if (value !== 0) {
-                                        charTotals[key] = (charTotals[key] ?? 0) + Number(value);
-                                    }
-                                }
-                            }
-
-                            if (Array.isArray(choiceGrants.skills)) {
-                                for (const skill of choiceGrants.skills as Array<{ name?: string; specialization?: string }>) {
-                                    const skillName =
-                                        skill.specialization !== undefined && skill.specialization !== ''
-                                            ? `${String(skill.name ?? '')} (${skill.specialization})`
-                                            : skill.name ?? '';
-                                    skillSet.add(skillName);
-                                }
-                            }
-
-                            if (Array.isArray(choiceGrants.talents)) {
-                                for (const talent of choiceGrants.talents as Array<{ name?: string }>) {
-                                    talentSet.add(talent.name ?? '');
-                                }
-                            }
-
-                            if (Array.isArray(choiceGrants.traits)) {
-                                for (const trait of choiceGrants.traits as Array<{ name?: string }>) {
-                                    traitSet.add(trait.name ?? '');
-                                }
+                            if (option?.grants !== undefined) {
+                                this.#accumulateOriginGrants(option.grants, charTotals, skillSet, talentSet, traitSet);
                             }
                         }
                     }
@@ -1149,9 +1144,9 @@ export default class CharacterSheet extends BaseActorSheet {
             totalSteps: 6,
             isComplete: completedSteps === 6,
             characteristics: characteristicBonuses,
-            skills: Array.from(skillSet) as string[],
-            talents: Array.from(talentSet) as string[],
-            traits: Array.from(traitSet) as string[],
+            skills: Array.from(skillSet),
+            talents: Array.from(talentSet),
+            traits: Array.from(traitSet),
         };
 
         return preparedSteps;
@@ -1284,6 +1279,46 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
+    /** Calculate wounds and fatigue percentages for the combat vitals display. */
+    #prepareCombatVitals(sheetContext: CharacterSheetContext, system: WH40KActorSystemData | NonNullable<CharacterSheetContext['system']>): void {
+        const woundsValue = system.wounds?.value;
+        const woundsMaxRaw = system.wounds?.max;
+        const woundsMax = typeof woundsMaxRaw === 'number' && woundsMaxRaw > 0 ? woundsMaxRaw : 1;
+        sheetContext.woundsPercent = Math.min(100, Math.round(((woundsValue ?? 0) / woundsMax) * 100));
+
+        const fatigueValue = system.fatigue?.value;
+        const fatigueMaxRaw = system.fatigue?.max;
+        const fatigueMax = typeof fatigueMaxRaw === 'number' && fatigueMaxRaw > 0 ? fatigueMaxRaw : 1;
+        sheetContext.fatiguePercent = Math.min(100, Math.round(((fatigueValue ?? 0) / fatigueMax) * 100));
+    }
+
+    /* -------------------------------------------- */
+
+    /** Calculate dodge and parry reaction targets from skills and characteristics. */
+    #prepareCombatReactionTargets(sheetContext: CharacterSheetContext): void {
+        const skills = this.actor.skills;
+        const chars = this.actor.characteristics;
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: skills keyed by string; SkillBits not in DataModel schema
+        type SkillBits = { plus10?: boolean; plus20?: boolean; trained?: boolean; basic?: boolean };
+
+        const dodgeSkill = skills['dodge'] as unknown as SkillBits | undefined;
+        let dodgeBase = chars['agility']?.total ?? 0;
+        if (dodgeSkill?.plus20 === true) dodgeBase += 20;
+        else if (dodgeSkill?.plus10 === true) dodgeBase += 10;
+        else if (dodgeSkill?.trained !== true && dodgeSkill?.basic !== true) dodgeBase = Math.floor(dodgeBase / 2);
+        sheetContext.dodgeTarget = dodgeBase;
+
+        const parrySkill = skills['parry'] as unknown as SkillBits | undefined;
+        let parryBase = chars['weaponSkill']?.total ?? 0;
+        if (parrySkill?.plus20 === true) parryBase += 20;
+        else if (parrySkill?.plus10 === true) parryBase += 10;
+        else if (parrySkill?.trained !== true && parrySkill?.basic !== true) parryBase = Math.floor(parryBase / 2);
+        sheetContext.parryTarget = parryBase;
+    }
+
+    /* -------------------------------------------- */
+
     /**
      * Prepare combat tab data for the template.
      * @param {object} context      The template render context.
@@ -1295,38 +1330,8 @@ export default class CharacterSheet extends BaseActorSheet {
         const weapons = categorized.weapons as WeaponLike[];
         const system = sheetContext.system ?? this.actor.system;
 
-        // Calculate vitals percentages
-        const woundsValue = system.wounds?.value;
-        const woundsMaxRaw = system.wounds?.max;
-        const woundsMax = typeof woundsMaxRaw === 'number' && woundsMaxRaw > 0 ? woundsMaxRaw : 1;
-        sheetContext.woundsPercent = Math.min(100, Math.round(((woundsValue ?? 0) / woundsMax) * 100));
-
-        const fatigueValue = system.fatigue?.value;
-        const fatigueMaxRaw = system.fatigue?.max;
-        const fatigueMax = typeof fatigueMaxRaw === 'number' && fatigueMaxRaw > 0 ? fatigueMaxRaw : 1;
-        sheetContext.fatiguePercent = Math.min(100, Math.round(((fatigueValue ?? 0) / fatigueMax) * 100));
-
-        // Calculate reaction targets
-        const skills = this.actor.skills;
-        const chars = this.actor.characteristics;
-
-        type SkillBits = { plus10?: boolean; plus20?: boolean; trained?: boolean; basic?: boolean };
-
-        // Dodge target: Ag + Dodge training
-        const dodgeSkill = skills['dodge'] as unknown as SkillBits | undefined;
-        let dodgeBase = chars['agility']?.total ?? 0;
-        if (dodgeSkill?.plus20 === true) dodgeBase += 20;
-        else if (dodgeSkill?.plus10 === true) dodgeBase += 10;
-        else if (dodgeSkill?.trained !== true && dodgeSkill?.basic !== true) dodgeBase = Math.floor(dodgeBase / 2);
-        sheetContext.dodgeTarget = dodgeBase;
-
-        // Parry target: WS + Parry training
-        const parrySkill = skills['parry'] as unknown as SkillBits | undefined;
-        let parryBase = chars['weaponSkill']?.total ?? 0;
-        if (parrySkill?.plus20 === true) parryBase += 20;
-        else if (parrySkill?.plus10 === true) parryBase += 10;
-        else if (parrySkill?.trained !== true && parrySkill?.basic !== true) parryBase = Math.floor(parryBase / 2);
-        sheetContext.parryTarget = parryBase;
+        this.#prepareCombatVitals(sheetContext, system);
+        this.#prepareCombatReactionTargets(sheetContext);
 
         // Critical injuries
         sheetContext.criticalInjuries = categorized.criticalInjury;
@@ -1340,9 +1345,13 @@ export default class CharacterSheet extends BaseActorSheet {
             }) ?? forceFields[0];
         sheetContext.hasForceField = sheetContext.forceField !== undefined;
         sheetContext.armourDisplayLocations = this.#prepareArmourDisplayLocations(this.actor.system, categorized.armour);
-        sheetContext.armourDisplay = Object.fromEntries(
-            (sheetContext.armourDisplayLocations as Array<Record<string, unknown>>).map((entry) => [entry['key'], entry]),
-        );
+        const armourDisplayMap: Record<string, Record<string, unknown>> = {};
+        for (const entry of sheetContext.armourDisplayLocations as Array<Record<string, unknown>>) {
+            if (typeof entry['key'] === 'string') {
+                armourDisplayMap[entry['key']] = entry;
+            }
+        }
+        sheetContext.armourDisplay = armourDisplayMap;
 
         // Weapon slots - categorize by class and equipped status
         const equippedWeapons = weapons.filter((w) => w.system.equipped);
@@ -1432,7 +1441,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     #prepareArmourDisplayLocations(system: WH40KActorSystemData, armourItems: WH40KItem[]): Array<Record<string, unknown>> {
-        const equippedArmour = armourItems.filter((item) => (item.system as { equipped?: boolean }).equipped);
+        const equippedArmour = armourItems.filter((item) => (item.system as { equipped?: boolean }).equipped === true);
 
         return ARMOUR_DISPLAY_LOCATIONS.map((locationConfig) => {
             const armourData = (system.armour as Record<string, Record<string, unknown>> | undefined)?.[locationConfig.key] ?? {};
@@ -1507,7 +1516,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const acquisitions = Array.isArray(prepared.acquisitions)
             ? prepared.acquisitions
-            : prepared.acquisitions
+            : prepared.acquisitions !== null && prepared.acquisitions !== undefined
             ? [{ name: '', availability: '', modifier: 0, notes: prepared.acquisitions, acquired: false }]
             : [];
         prepared.acquisitions = acquisitions;
@@ -2103,7 +2112,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #assignDamage(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+    static #assignDamage(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
         try {
             const hitData = new Hit();
             const assignData = new AssignDamageData(this.actor as unknown as ActorLike, hitData);
@@ -2125,7 +2134,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollInitiative(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+    static async #rollInitiative(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
         try {
             const agBonus = this.actor.system.characteristics.agility.bonus;
 
@@ -2244,7 +2253,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 await CharacterSheet.#parry.call(this, event, target);
                 break;
             case 'assignDamage':
-                await CharacterSheet.#assignDamage.call(this, event, target);
+                CharacterSheet.#assignDamage.call(this, event, target);
                 break;
             case 'initiative':
                 await CharacterSheet.#rollInitiative.call(this, event, target);
@@ -2344,7 +2353,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Find the actor's active token on the canvas
         const token = this.actor.getActiveTokens()[0]?.document;
-        if (!token) {
+        if (token === null || token === undefined) {
             ui.notifications.info(`${game.i18n.localize('WH40K.MOVEMENT.Label')}: No active token on canvas.`);
             return;
         }
@@ -2380,7 +2389,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
-        await item.update({ 'system.equipped': !(item.system as Record<string, unknown>)['equipped'] });
+        await item.update({ 'system.equipped': (item.system as Record<string, unknown>)['equipped'] !== true });
     }
 
     /* -------------------------------------------- */
@@ -2573,7 +2582,7 @@ export default class CharacterSheet extends BaseActorSheet {
             },
         });
 
-        if (!targetId || typeof targetId !== 'string') return;
+        if (targetId === null || targetId === undefined || typeof targetId !== 'string') return;
         const targetActor = game.actors.get(targetId);
         if (!targetActor) return;
 
@@ -2613,7 +2622,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
-        await item.update({ 'system.activated': !(item.system as Record<string, unknown>)['activated'] });
+        await item.update({ 'system.activated': (item.system as Record<string, unknown>)['activated'] !== true });
     }
 
     /* -------------------------------------------- */
@@ -2635,12 +2644,9 @@ export default class CharacterSheet extends BaseActorSheet {
                     break;
                 case 'equip-armour': {
                     const armourItems = items.filter((i: WH40KItem & { isArmour?: boolean }) => i.type === 'armour' || i.isArmour);
-                    for (const item of armourItems) {
-                        if (!item.system.equipped) {
-                            await item.update({ 'system.equipped': true });
-                            count++;
-                        }
-                    }
+                    const toEquip = armourItems.filter((item) => item.system.equipped !== true);
+                    await Promise.all(toEquip.map(async (item) => item.update({ 'system.equipped': true })));
+                    count = toEquip.length;
                     this._notify('info', `Equipped ${count} armour piece${count !== 1 ? 's' : ''}`, {
                         duration: 3000,
                     });
@@ -2649,10 +2655,8 @@ export default class CharacterSheet extends BaseActorSheet {
 
                 case 'unequip-all': {
                     const equippedItems = items.filter((i: WH40KItem) => (i.system as { equipped?: boolean }).equipped === true);
-                    for (const item of equippedItems) {
-                        await item.update({ 'system.equipped': false });
-                        count++;
-                    }
+                    await Promise.all(equippedItems.map(async (item) => item.update({ 'system.equipped': false })));
+                    count = equippedItems.length;
                     this._notify('info', `Unequipped ${count} item${count !== 1 ? 's' : ''}`, {
                         duration: 3000,
                     });
@@ -2662,15 +2666,17 @@ export default class CharacterSheet extends BaseActorSheet {
                 case 'stow-gear': {
                     const gearItems = items.filter(
                         (i: WH40KItem & { isGear?: boolean; system: WH40KItem['system'] & { inBackpack?: boolean } }) =>
-                            (i.type === 'gear' || i.isGear) && !i.system.inBackpack,
+                            (i.type === 'gear' || i.isGear) && i.system.inBackpack !== true,
                     );
-                    for (const item of gearItems) {
-                        await item.update({
-                            'system.inBackpack': true,
-                            'system.equipped': false,
-                        });
-                        count++;
-                    }
+                    await Promise.all(
+                        gearItems.map(async (item) =>
+                            item.update({
+                                'system.inBackpack': true,
+                                'system.equipped': false,
+                            }),
+                        ),
+                    );
+                    count = gearItems.length;
                     this._notify('info', `Stowed ${count} gear item${count !== 1 ? 's' : ''} in backpack`, {
                         duration: 3000,
                     });
@@ -3158,106 +3164,6 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Re-render skills tab and overview tab
         await this.render({ parts: ['skills', 'overview'] });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Cycle a skill's training level: untrained → trained → +10 → +20 → untrained.
-     * Right-click cycles backwards.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #cycleSkillTraining(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.preventDefault();
-        const row = target.closest<HTMLElement>('[data-skill]');
-        const skillKey = row?.dataset['skill'];
-        if (skillKey === undefined || skillKey === '') return;
-
-        const skill = this.actor.system.skills[skillKey] as { plus10?: boolean; plus20?: boolean; plus30?: boolean; trained?: boolean } | undefined;
-        if (skill === undefined) return;
-
-        // Max level from training config (3 for RT, 4 for DH2e)
-        const config = this._getSkillTrainingConfig();
-        const maxLevel = config.length;
-
-        // Determine current level
-        let level = 0;
-        if (skill.plus30 === true) level = 4;
-        else if (skill.plus20 === true) level = 3;
-        else if (skill.plus10 === true) level = 2;
-        else if (skill.trained === true) level = 1;
-
-        // Cycle: shift-click goes backwards
-        if ((event as MouseEvent).shiftKey) {
-            level = level <= 0 ? maxLevel : level - 1;
-        } else {
-            level = level >= maxLevel ? 0 : level + 1;
-        }
-
-        // Update flags
-        const update = {
-            [`system.skills.${skillKey}.trained`]: level >= 1,
-            [`system.skills.${skillKey}.plus10`]: level >= 2,
-            [`system.skills.${skillKey}.plus20`]: level >= 3,
-            [`system.skills.${skillKey}.plus30`]: level >= 4,
-        };
-        await this.actor.update(update);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Cycle a specialist skill entry's training level.
-     * Shift-click cycles backwards.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #cycleSpecialistTraining(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.preventDefault();
-        const row = target.closest<HTMLElement>('[data-skill]');
-        const skillKey = row?.dataset['skill'];
-        const entryIndex = parseInt(row?.dataset['index'] ?? '', 10);
-        if (skillKey === undefined || skillKey === '' || Number.isNaN(entryIndex)) return;
-
-        const skill = this.actor.system.skills[skillKey] as { entries?: WH40KSkillEntry[] } | undefined;
-        if (skill === undefined) return;
-
-        const skillEntries = skill.entries ?? [];
-        const entries: WH40KSkillEntry[] = Array.isArray(skillEntries) ? [...skillEntries] : [];
-        const entry = entries[entryIndex];
-        if (entry === undefined) return;
-
-        // Max level from training config (3 for RT, 4 for DH2e)
-        const config = this._getSkillTrainingConfig();
-        const maxLevel = config.length;
-
-        // Determine current level
-        let level = 0;
-        if (entry.plus30 === true) level = 4;
-        else if (entry.plus20) level = 3;
-        else if (entry.plus10) level = 2;
-        else if (entry.trained) level = 1;
-
-        // Cycle
-        if ((event as MouseEvent).shiftKey) {
-            level = level <= 0 ? maxLevel : level - 1;
-        } else {
-            level = level >= maxLevel ? 0 : level + 1;
-        }
-
-        // Update entry
-        entries[entryIndex] = {
-            ...entry,
-            trained: level >= 1,
-            plus10: level >= 2,
-            plus20: level >= 3,
-            plus30: level >= 4,
-        };
-
-        await this.actor.update({ [`system.skills.${skillKey}.entries`]: entries });
     }
 
     /* -------------------------------------------- */

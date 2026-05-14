@@ -394,7 +394,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const aptitudeConfig = this.#getAptitudeConfig(systemConfig);
             const psyRating = system.psy?.rating ?? 0;
             context['isPsyker'] = psyRating > 0;
-            if (context['isPsyker'] && aptitudeConfig !== null) {
+            if (context['isPsyker'] === true && aptitudeConfig !== null) {
                 context['psychic'] = await this.#preparePsychic(aptitudeConfig);
             }
             context['traits'] = await this.#prepareTraitPanel();
@@ -452,16 +452,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     tiers,
                     nextCost: nextCost?.cost ?? null,
                     nextTier: nextCost?.tier ?? null,
-                    nextTierLabel:
-                        nextCost !== null
-                            ? game.i18n.localize(
-                                  CONFIG.wh40k.advancementTiers[nextCost.tier] !== undefined
-                                      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- guarded above
-                                      // biome-ignore lint/style/noNonNullAssertion: guarded by the !== undefined check above
-                                      ? CONFIG.wh40k.advancementTiers[nextCost.tier]!.label
-                                      : nextCost.tier,
-                              )
-                            : null,
+                    nextTierLabel: nextCost !== null ? game.i18n.localize(CONFIG.wh40k.advancementTiers[nextCost.tier]?.label ?? nextCost.tier) : null,
                     isMaxed,
                     canPurchase,
                     cantAfford: !isMaxed && nextCost !== null && available < nextCost.cost,
@@ -685,8 +676,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 };
                 const tier = system.tier ?? 1;
                 const aptitudes = Array.isArray(system.aptitudes) ? system.aptitudes : [];
-                const stackable = !!system.stackable;
-                const hasSpec = !!system.hasSpecialization;
+                const stackable = system.stackable === true;
+                const hasSpec = system.hasSpecialization === true;
                 const baseName = entry.name;
                 const baseKey = baseName.toLowerCase();
 
@@ -787,7 +778,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // eslint-disable-next-line no-restricted-syntax -- boundary: value is the parameter to this type guard
         const coerceList = (value: unknown): string[] => {
             if (Array.isArray(value)) return value.filter((v): v is string => typeof v === 'string');
-            if (value && typeof value === 'object') return Object.values(value).filter((v): v is string => typeof v === 'string');
+            if (typeof value === 'object' && value !== null) return Object.values(value).filter((v): v is string => typeof v === 'string');
             return [];
         };
 
@@ -802,10 +793,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const skills = sys?.skills ?? {};
         for (const skillReq of coerceList(prereqs?.skills)) {
             const m = skillReq.match(/^(.+?)\s*\+?(\d+)?$/);
-            const name = (m ? (m[1] ?? '') : skillReq).toLowerCase().trim();
-            const bonus = m?.[2] ? parseInt(m[2], 10) : 0;
+            const name = (m ? m[1] ?? '' : skillReq).toLowerCase().trim();
+            const bonus = m?.[2] !== undefined ? parseInt(m[2], 10) : 0;
             const skillKey = Object.keys(skills).find((k) => (skills[k]?.label ?? '').toLowerCase() === name);
-            const rank = skillKey ? skills[skillKey]?.rank ?? 0 : 0;
+            const rank = skillKey !== undefined ? skills[skillKey]?.rank ?? 0 : 0;
             const rankThreshold = bonus === 0 ? 1 : bonus === 10 ? 2 : bonus === 20 ? 3 : bonus === 30 ? 4 : 1;
             if (rank < rankThreshold) unmet.push(skillReq);
         }
@@ -1088,7 +1079,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     static #switchTab(this: AdvancementDialog, _event: Event, target: HTMLElement): void {
         const tab = target.dataset['tab'];
-        if (tab) {
+        if (tab !== undefined) {
             this.#activeTab = tab;
             void this.render();
         }
@@ -1096,7 +1087,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     static #switchDiscipline(this: AdvancementDialog, _event: Event, target: HTMLElement): void {
         const discipline = target.dataset['discipline'];
-        if (discipline) {
+        if (discipline !== undefined) {
             this.#activeDiscipline = discipline;
             void this.render();
         }
@@ -1109,7 +1100,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     static async #purchaseCharacteristic(this: AdvancementDialog, _event: Event, target: HTMLElement): Promise<void> {
         const charKey = target.dataset['characteristic'];
-        if (!charKey) return;
+        if (charKey === undefined) return;
 
         const char = this.#getActorSystem().characteristics?.[charKey];
         if (!char) return;
@@ -1134,11 +1125,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const charLabel = charConfig ? game.i18n.localize(charConfig.label) : charKey;
         const tierLabel = game.i18n.localize(CONFIG.wh40k.advancementTiers[nextCost.tier]?.label ?? nextCost.tier);
 
-        const confirmed = await Dialog.confirm({
+        const confirmed = await foundry.appv1.api.Dialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(nextCost.cost), name: `${charLabel} (${tierLabel})` }),
         });
-        if (!confirmed) return;
+        if (confirmed !== true) return;
 
         const result = await spendXP(this.actor, nextCost.cost, `${charLabel} (${tierLabel})`);
         if (!result.success) {
@@ -1176,23 +1167,23 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const advanceType = target.dataset['type'];
 
         const systemConfig = this.#getSystemConfig();
-        if (systemConfig?.usesAptitudes && advanceType === 'skill') {
+        if (systemConfig?.usesAptitudes === true && advanceType === 'skill') {
             const aptitudeConfig = this.#getAptitudeConfig(systemConfig);
             if (!aptitudeConfig) return;
             await this.#purchaseAptitudeSkillAt(advanceIndex, aptitudeConfig);
             return;
         }
-        if (systemConfig?.usesAptitudes && advanceType === 'talent') {
+        if (systemConfig?.usesAptitudes === true && advanceType === 'talent') {
             const aptitudeConfig = this.#getAptitudeConfig(systemConfig);
             if (!aptitudeConfig) return;
             await this.#purchaseAptitudeTalentAt(advanceIndex, aptitudeConfig);
             return;
         }
-        if (systemConfig?.usesAptitudes && advanceType === 'psychic-power') {
+        if (systemConfig?.usesAptitudes === true && advanceType === 'psychic-power') {
             await this.#purchasePsychicPowerAt(advanceIndex);
             return;
         }
-        if (systemConfig?.usesAptitudes && advanceType === 'elite') {
+        if (systemConfig?.usesAptitudes === true && advanceType === 'elite') {
             await this.#purchaseEliteAt(advanceIndex);
             return;
         }
@@ -1219,13 +1210,14 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const displayName = advance.specialization ? `${advance.name} (${advance.specialization})` : advance.name;
+        const displayName =
+            advance.specialization !== undefined && advance.specialization.length > 0 ? `${advance.name} (${advance.specialization})` : advance.name;
 
-        const confirmed = await Dialog.confirm({
+        const confirmed = await foundry.appv1.api.Dialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(advance.cost), name: displayName }),
         });
-        if (!confirmed) return;
+        if (confirmed !== true) return;
 
         const result = await spendXP(this.actor, advance.cost, displayName);
         if (!result.success) {
@@ -1272,7 +1264,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // Specialist skill: adding a new specialization (prompt for name)
         if (entry.specialization === '__new') {
             const specName = await this.#promptForSpecialization(entry.skillKey, entry.name);
-            if (!specName) return;
+            if (specName === null || specName.length === 0) return;
 
             // Prevent dup
             const existing = (actorSkill.entries ?? []).some((e) => (e.name ?? '').toLowerCase() === specName.toLowerCase());
@@ -1282,11 +1274,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }
 
             const addDisplayName = `${entry.name.replace(' — add specialization', '')} (${specName}) — ${entry.nextLabel}`;
-            const addConfirmed = await Dialog.confirm({
+            const addConfirmed = await foundry.appv1.api.Dialog.confirm({
                 title: game.i18n.localize('WH40K.Advancement.Title'),
                 content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: addDisplayName }),
             });
-            if (!addConfirmed) return;
+            if (addConfirmed !== true) return;
 
             const addResult = await spendXP(this.actor, entry.cost, addDisplayName);
             if (!addResult.success) {
@@ -1314,16 +1306,16 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
 
         // Specialist skill: bumping an existing entry
-        if (entry.specialization) {
+        if (entry.specialization !== undefined && entry.specialization.length > 0) {
             const entryIndex = (actorSkill.entries ?? []).findIndex((e) => (e.name ?? '').toLowerCase() === entry.specialization?.toLowerCase());
             if (entryIndex < 0) return;
 
-            const bumpDisplayName = entry.nextLabel ? `${entry.name} — ${entry.nextLabel}` : entry.name;
-            const bumpConfirmed = await Dialog.confirm({
+            const bumpDisplayName = entry.nextLabel !== null && entry.nextLabel.length > 0 ? `${entry.name} — ${entry.nextLabel}` : entry.name;
+            const bumpConfirmed = await foundry.appv1.api.Dialog.confirm({
                 title: game.i18n.localize('WH40K.Advancement.Title'),
                 content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: bumpDisplayName }),
             });
-            if (!bumpConfirmed) return;
+            if (bumpConfirmed !== true) return;
 
             const bumpResult = await spendXP(this.actor, entry.cost, bumpDisplayName);
             if (!bumpResult.success) {
@@ -1346,12 +1338,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
 
         // Basic skill: single track
-        const displayName = entry.nextLabel ? `${entry.name} (${entry.nextLabel})` : entry.name;
-        const confirmed = await Dialog.confirm({
+        const displayName = entry.nextLabel !== null && entry.nextLabel.length > 0 ? `${entry.name} (${entry.nextLabel})` : entry.name;
+        const confirmed = await foundry.appv1.api.Dialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: displayName }),
         });
-        if (!confirmed) return;
+        if (confirmed !== true) return;
 
         const result = await spendXP(this.actor, entry.cost, displayName);
         if (!result.success) {
@@ -1381,7 +1373,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             <p class="notes">The new ${title} specialization will be purchased at Known (rank 1).</p>
         </div>`;
         return new Promise((resolve) => {
-            new Dialog({
+            new foundry.appv1.api.Dialog({
                 title: `${title} — Add Specialization`,
                 content,
                 buttons: {
@@ -1389,8 +1381,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         icon: '<i class="fas fa-check"></i>',
                         label: 'Purchase',
                         callback: (html: JQuery) => {
-                            const value = (html.find('input[name="specialization"]').val() as string | undefined)?.trim() || '';
-                            resolve(value || null);
+                            const value = (html.find('input[name="specialization"]').val() as string | undefined)?.trim() ?? '';
+                            resolve(value.length > 0 ? value : null);
                         },
                     },
                     cancel: {
@@ -1400,7 +1392,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     },
                 },
                 default: 'ok',
-            }).render(true);
+            }).render();
         });
     }
 
@@ -1425,18 +1417,18 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         let displayName = entry.name;
         if (entry.kind === 'specialist') {
             const spec = await this.#promptForTalentSpecialization(entry.name, entry.ownedSpecs ?? []);
-            if (!spec) return;
+            if (spec === null || spec.length === 0) return;
             specialization = spec;
             displayName = `${entry.name} (${spec})`;
         } else if (entry.kind === 'stackable') {
             displayName = `${entry.name} (Rank ${(entry.currentRank ?? 0) + 1})`;
         }
 
-        const confirmed = await Dialog.confirm({
+        const confirmed = await foundry.appv1.api.Dialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: displayName }),
         });
-        if (!confirmed) return;
+        if (confirmed !== true) return;
 
         const result = await spendXP(this.actor, entry.cost, displayName);
         if (!result.success) {
@@ -1486,7 +1478,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             ${ownedNote}
         </div>`;
         return new Promise((resolve) => {
-            new Dialog({
+            new foundry.appv1.api.Dialog({
                 title: `${talentName} — Specialization`,
                 content,
                 buttons: {
@@ -1494,13 +1486,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         icon: '<i class="fas fa-check"></i>',
                         label: 'Purchase',
                         callback: (html: JQuery) => {
-                            const value = (html.find('input[name="specialization"]').val() as string | undefined)?.trim() || '';
-                            if (value && ownedSpecs.some((s) => s.toLowerCase() === value.toLowerCase())) {
+                            const value = (html.find('input[name="specialization"]').val() as string | undefined)?.trim() ?? '';
+                            if (value.length > 0 && ownedSpecs.some((s) => s.toLowerCase() === value.toLowerCase())) {
                                 ui.notifications.warn(game.i18n.localize('WH40K.Advancement.SpecializationAlreadyOwned'));
                                 resolve(null);
                                 return;
                             }
-                            resolve(value || null);
+                            resolve(value.length > 0 ? value : null);
                         },
                     },
                     cancel: {
@@ -1510,7 +1502,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     },
                 },
                 default: 'ok',
-            }).render(true);
+            }).render();
         });
     }
 
@@ -1528,11 +1520,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const confirmed = await Dialog.confirm({
+        const confirmed = await foundry.appv1.api.Dialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(cost), name: `Psy Rating ${nextRating}` }),
         });
-        if (!confirmed) return;
+        if (confirmed !== true) return;
 
         const result = await spendXP(this.actor, cost, `Psy Rating ${nextRating}`);
         if (!result.success) {
@@ -1566,11 +1558,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const confirmed = await Dialog.confirm({
+        const confirmed = await foundry.appv1.api.Dialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: entry.name }),
         });
-        if (!confirmed) return;
+        if (confirmed !== true) return;
 
         const result = await spendXP(this.actor, entry.cost, entry.name);
         if (!result.success) {
@@ -1605,12 +1597,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const confirmed = await Dialog.confirm({
+        const confirmed = await foundry.appv1.api.Dialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: `<p>${game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: entry.name })}</p>
                 <p class="notes"><i class="fas fa-exclamation-triangle"></i> Elite advances represent large, lasting character changes. GM approval is expected per RAW.</p>`,
         });
-        if (!confirmed) return;
+        if (confirmed !== true) return;
 
         const result = await spendXP(this.actor, entry.cost, `Elite: ${entry.name}`);
         if (!result.success) {
@@ -1644,9 +1636,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        if (advance.specialization) {
+        if (advance.specialization !== undefined && advance.specialization.length > 0) {
             const currentEntries = this.#getActorSystem().skills?.[skillKey]?.entries ?? [];
-            const entryIndex = currentEntries.findIndex((e) => (e.name || '').toLowerCase() === advance.specialization?.toLowerCase());
+            const entryIndex = currentEntries.findIndex((e) => (e.name ?? '').toLowerCase() === advance.specialization?.toLowerCase());
 
             if (entryIndex >= 0) {
                 const currentAdvance = currentEntries[entryIndex]?.advance ?? 0;
@@ -1678,7 +1670,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     async #applyTalentAdvance(advance: AdvancementAdvance): Promise<void> {
-        const talentName = advance.specialization ? `${advance.name} (${advance.specialization})` : advance.name;
+        const talentName =
+            advance.specialization !== undefined && advance.specialization.length > 0 ? `${advance.name} (${advance.specialization})` : advance.name;
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload
         let talentData: (Record<string, unknown> & { system: Record<string, unknown> }) | null = null;
 
@@ -1719,7 +1712,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const itemName = target.dataset['name'];
         const itemType = target.dataset['type'];
 
-        if (!itemName) return;
+        if (itemName === undefined) return;
 
         for (const pack of game.packs.filter((p) => p.documentName === 'Item')) {
             const index = await pack.getIndex({ fields: ['name', 'type'] });
@@ -1730,7 +1723,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
             if (match) {
                 const doc = await pack.getDocument(match._id);
-                void doc?.sheet?.render(true);
+                void doc?.sheet?.render();
                 return;
             }
         }
@@ -1741,7 +1734,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
             if (match) {
                 const doc = await pack.getDocument(match._id);
-                void doc?.sheet?.render(true);
+                void doc?.sheet?.render();
                 return;
             }
         }

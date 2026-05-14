@@ -95,7 +95,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     constructor(actionData: ActionData, options: Partial<ApplicationV2Config.DefaultOptions> = {}) {
         super(options);
         this.actionData = actionData;
-        this._selectedDifficultyIndex = UnifiedRollDialog.DIFFICULTIES.findIndex((d) => d.default);
+        this._selectedDifficultyIndex = UnifiedRollDialog.DIFFICULTIES.findIndex((d) => d.default === true);
         this._situationalModifiers = {};
         this._customModifier = 0;
         this._manualRollTens = null;
@@ -230,7 +230,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const rd = this.rollData;
         if (rd.constructor.name === 'WeaponRollData') return 'weapon';
         if (rd.constructor.name === 'PsychicRollData') return 'psychic';
-        if (rd['forceField']) return 'forceField';
+        if (rd['forceField'] !== undefined && rd['forceField'] !== false && rd['forceField'] !== null) return 'forceField';
         return 'simple';
     }
 
@@ -245,9 +245,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     get _currentDifficulty(): (typeof UnifiedRollDialog.DIFFICULTIES)[number] {
         const ctor = this.constructor as typeof UnifiedRollDialog;
         const difficulty = ctor.DIFFICULTIES[this._selectedDifficultyIndex] ?? ctor.DIFFICULTIES[0];
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- DIFFICULTIES is a non-empty readonly tuple; index 0 always exists
-        // biome-ignore lint/style/noNonNullAssertion: DIFFICULTIES is a non-empty readonly tuple; index 0 always exists
-        return difficulty!;
+        if (difficulty == null) throw new Error('DIFFICULTIES is empty');
+        return difficulty;
     }
 
     /** Get the applicable modifier list for the current roll type */
@@ -279,7 +278,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
             // Sync card state with initial rollData
             if (this.rollType === 'weapon') {
-                const isRanged = !!this.rollData.weapon?.isRanged;
+                const isRanged = this.rollData.weapon?.isRanged === true;
                 this._attackModeKey = getAttackModeKeyForAction(this.rollData.action, isRanged);
                 this._aimModeKey = getAimKeyForModifier(this.rollData.modifiers?.['aim'] ?? 0);
             }
@@ -389,9 +388,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Roll name
         const rollName = isForceField
-            ? (rollData['forceField'] as { name?: string } | null | undefined)?.name || 'Force Field'
-            : rollData.name || rollData.nameOverride || 'Test';
-        const rollSubtitle = isForceField ? 'Force Field Activation' : rollData['type'] || rollData.action || '';
+            ? ((rollData['forceField'] as { name?: string } | null | undefined)?.name ?? '') || 'Force Field'
+            : (rollData.name ?? '') || (rollData.nameOverride ?? '') || 'Test';
+        const rollSubtitle = isForceField
+            ? 'Force Field Activation'
+            : (typeof rollData['type'] === 'string' && rollData['type'].length > 0 ? rollData['type'] : null) ?? rollData.action ?? '';
 
         return {
             ...context,
@@ -547,7 +548,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const rd = this.rollData;
 
         // Apply range bracket override if user selected one
-        if (this._selectedRangeBracket && rd.weapon?.isRanged) {
+        if (this._selectedRangeBracket !== null && rd.weapon?.isRanged === true) {
             const bracket = RANGE_BRACKETS[this._selectedRangeBracket];
             if (bracket) {
                 rd.rangeName = bracket.label;
@@ -558,29 +559,30 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Build range bracket list for UI with meter values
         const maxRange = rd.maxRange || 0;
-        const rangeBrackets = rd.weapon?.isRanged
-            ? Object.entries(RANGE_BRACKETS).map(([key, b]) => {
-                  let rangeText = '';
-                  if (maxRange > 0) {
-                      if (key === 'pointBlank') rangeText = '≤2m';
-                      else if (key === 'short') rangeText = `≤${Math.floor(maxRange * 0.5)}m`;
-                      else if (key === 'standard') rangeText = `≤${maxRange * 2}m`;
-                      else if (key === 'long') rangeText = `≤${maxRange * 3}m`;
-                      else if (key === 'extreme') rangeText = `>${maxRange * 3}m`;
-                  }
-                  return {
-                      key,
-                      label: b.label,
-                      modifier: b.modifier,
-                      modifierLabel: b.modifier >= 0 ? `+${b.modifier}` : `${b.modifier}`,
-                      rangeText,
-                      isSelected: (this._selectedRangeBracket ?? rd['rangeBracket']) === key,
-                  };
-              })
-            : [];
+        const rangeBrackets =
+            rd.weapon?.isRanged === true
+                ? Object.entries(RANGE_BRACKETS).map(([key, b]) => {
+                      let rangeText = '';
+                      if (maxRange > 0) {
+                          if (key === 'pointBlank') rangeText = '≤2m';
+                          else if (key === 'short') rangeText = `≤${Math.floor(maxRange * 0.5)}m`;
+                          else if (key === 'standard') rangeText = `≤${maxRange * 2}m`;
+                          else if (key === 'long') rangeText = `≤${maxRange * 3}m`;
+                          else if (key === 'extreme') rangeText = `>${maxRange * 3}m`;
+                      }
+                      return {
+                          key,
+                          label: b.label,
+                          modifier: b.modifier,
+                          modifierLabel: b.modifier >= 0 ? `+${b.modifier}` : `${b.modifier}`,
+                          rangeText,
+                          isSelected: (this._selectedRangeBracket ?? rd['rangeBracket']) === key,
+                      };
+                  })
+                : [];
 
         // Card-based attack modes
-        const isRanged = !!rd.weapon?.isRanged;
+        const isRanged = rd.weapon?.isRanged === true;
         const attackModes = rd.weapon
             ? getAvailableAttackModes(rd.weapon as unknown as AttackOptionWeaponLike).map((m) => ({
                   ...m,
@@ -655,7 +657,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             : { label: 'Average (4)', modifier: 0, modifierLabel: '+0' };
 
         return {
-            weapons: rd['weapons'] || [],
+            weapons: Array.isArray(rd['weapons']) ? rd['weapons'] : [],
             weapon: rd.weapon,
             weaponSelect: rd['weaponSelect'],
             isRanged,
@@ -709,7 +711,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     _getPsychicContext(): Record<string, unknown> {
         const rd = this.rollData;
         return {
-            psychicPowers: rd['psychicPowers'] || [],
+            psychicPowers: Array.isArray(rd['psychicPowers']) ? rd['psychicPowers'] : [],
             power: rd.power,
             powerSelect: rd['powerSelect'],
             pr: rd['pr'],
@@ -737,7 +739,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     _collectSituationalModifiers(): Array<{ key: string; source: string; value: number; label: string }> {
         const actor = this.rollData.sourceActor ?? (this.rollData as Record<string, unknown>)['actor'];
-        if (!(actor as { getSituationalModifiers?: unknown })?.getSituationalModifiers) return [];
+        if (typeof (actor as { getSituationalModifiers?: unknown })?.getSituationalModifiers !== 'function') return [];
         const rd = this.rollData;
         const type = rd['type'] === 'Skill' ? 'skills' : rd['type'] === 'Characteristic' ? 'characteristics' : 'combat';
         const key = (rd['rollKey'] as string | null) ?? null;
@@ -761,7 +763,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      */
     _calculateCombatSituationalModifiers(): number {
         if (this._activeCombatSituationals.size === 0) return 0;
-        const isRanged = !!this.rollData.weapon?.isRanged;
+        const isRanged = this.rollData.weapon?.isRanged === true;
         const situationals = getSituationalModifiers(isRanged);
         let total = 0;
         for (const s of situationals) {
@@ -788,7 +790,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const duration = 400;
         const start = performance.now();
         const diff = to - from;
-        const step = (now: number) => {
+        const step = (now: number): void => {
             const elapsed = now - start;
             const progress = Math.min(elapsed / duration, 1);
             const eased = 1 - (1 - progress) ** 3; // ease-out cubic
@@ -850,7 +852,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     static async #onToggleSituational(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['toggleKey'];
-        if (!key) return;
+        if (key === undefined) return;
         this._situationalModifiers[key] = !this._situationalModifiers[key];
         await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
@@ -902,7 +904,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     static async #onSelectWeapon(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
-        const weaponId = target.dataset['weaponId'] || (target as HTMLInputElement).name;
+        const weaponId = target.dataset['weaponId'] ?? (target as HTMLInputElement).name;
         const rd = this.rollData;
         if (typeof rd['selectWeapon'] === 'function') {
             (rd['selectWeapon'] as (id: string) => void)(weaponId);
@@ -912,7 +914,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     static async #onSelectPower(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
-        const powerId = target.dataset['powerId'] || (target as HTMLInputElement).name;
+        const powerId = target.dataset['powerId'] ?? (target as HTMLInputElement).name;
         const rd = this.rollData;
         if (typeof rd['selectPower'] === 'function') {
             (rd['selectPower'] as (id: string) => void)(powerId);
@@ -929,14 +931,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     static async #onSelectAttackMode(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['modeKey'];
-        if (!key) return;
+        if (key === undefined) return;
         this._attackModeKey = key;
 
         // Map card key to combat action name and set on rollData
         const rd = this.rollData;
-        const isRanged = !!rd.weapon?.isRanged;
+        const isRanged = rd.weapon?.isRanged === true;
         const actionName = getActionNameForMode(key, isRanged);
-        if (actionName) {
+        if (actionName !== undefined && actionName !== null) {
             rd.action = actionName;
         }
 
@@ -947,7 +949,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // If aim is disabled by this mode (e.g., All Out Attack), reset aim
         if (typeof rd['update'] === 'function') await (rd['update'] as () => Promise<void>)();
-        if (!rd['canAim'] && this._aimModeKey !== 'none') {
+        if (rd['canAim'] === false && this._aimModeKey !== 'none') {
             this._aimModeKey = 'none';
             rd.modifiers['aim'] = 0;
         }
@@ -957,7 +959,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     static async #onSelectAimMode(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['aimKey'];
-        if (!key) return;
+        if (key === undefined) return;
         this._aimModeKey = key;
         const rd = this.rollData;
         rd.modifiers['aim'] = getAimModifier(key);
@@ -967,7 +969,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     static async #onToggleCombatSituational(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['situationalKey'];
-        if (!key) return;
+        if (key === undefined) return;
         if (this._activeCombatSituationals.has(key)) {
             this._activeCombatSituationals.delete(key);
         } else {
@@ -978,7 +980,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     static async #onSelectSizeModifier(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['sizeKey'];
-        if (!key) return;
+        if (key === undefined) return;
         this._sizeModifierKey = key;
         this.rollData.modifiers['target-size'] = (parseInt(key, 10) - 4) * 10;
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
@@ -1006,7 +1008,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     static async #onSelectRangeBracket(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const bracket = target.dataset['bracket'];
-        if (!bracket) return;
+        if (bracket === undefined) return;
         this._selectedRangeBracket = bracket;
         const bracketData = RANGE_BRACKETS[bracket];
         if (bracketData) {
@@ -1126,7 +1128,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Apply combat situational card modifiers (weapon panel)
         if (this.rollType === 'weapon' && this._activeCombatSituationals.size > 0) {
-            const isRanged = !!rd.weapon?.isRanged;
+            const isRanged = rd.weapon?.isRanged === true;
             const situationals = getSituationalModifiers(isRanged);
             let combatSitTotal = 0;
             for (const s of situationals) {
@@ -1222,11 +1224,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     _validateForceFieldRoll(): boolean {
         const ff = this.rollData['forceField'] as { system?: { activated?: boolean; overloaded?: boolean } } | null | undefined;
-        if (!ff?.system?.activated) {
+        if (ff?.system?.activated !== true) {
             ui.notifications.warn(game.i18n.localize('WH40K.Roll.ForceFieldNotActivated'));
             return false;
         }
-        if (ff?.system?.overloaded) {
+        if (ff?.system?.overloaded === true) {
             ui.notifications.warn(game.i18n.localize('WH40K.Roll.ForceFieldOverloaded'));
             return false;
         }
