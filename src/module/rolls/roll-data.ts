@@ -431,7 +431,7 @@ export class PsychicRollData extends RollData {
         if (firstPower === undefined) return;
         this.power = firstPower;
         (this.power as { isSelected?: boolean }).isSelected = true;
-        this.hasDamage = (this.power.system as { subtype?: string }).subtype?.includes('Attack') ?? false;
+        this.hasDamage = (this.power.system as { isAttack?: boolean }).isAttack === true;
     }
 
     selectPower(powerName: string): void {
@@ -455,7 +455,7 @@ export class PsychicRollData extends RollData {
         this.modifiers['bonus'] = 10 * Math.floor((sourceActor.psy?.rating ?? 0) - this.pr);
         this.modifiers['focus'] = this.hasFocus ? 10 : 0;
         this.modifiers['power'] = (this.power.system as { target?: { bonus?: number } }).target?.bonus ?? 0;
-        this.hasDamage = (this.power.system as { subtype?: string }).subtype?.includes('Attack') ?? false;
+        this.hasDamage = (this.power.system as { isAttack?: boolean }).isAttack === true;
         updateAttackSpecials(this);
         this.updateBaseTarget();
         await calculatePsychicPowerRange(this);

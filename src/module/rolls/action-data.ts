@@ -2,6 +2,9 @@ import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+import { RollTableUtils } from '../utils/roll-table-utils.ts';
+import { SYSTEM_ID } from '../constants.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
 import { getDegree, getOpposedDegrees, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
@@ -34,23 +37,37 @@ export class ActionData {
         // No-op default — subclasses (e.g. PsychicActionData) can override
     }
 
-    checkForPerils(): void {
-        if (this.rollData.power !== undefined) {
-            const sourceActor = this.rollData.sourceActor;
-            const sourceSystem = sourceActor !== null ? (sourceActor.system as { psy?: { rating: number } }) : null;
-            const psyRating = sourceSystem?.psy?.rating ?? 0;
-            if (sourceActor !== null && psyRating < (this.rollData as PsychicRollData).pr) {
-                const rollTotal = this.rollData.roll?.total;
-                if (rollTotal !== undefined && !/^(.)\1+$/.test(rollTotal.toString())) {
-                    this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
-                }
-            } else {
-                const rollTotal = this.rollData.roll?.total;
-                if (rollTotal !== undefined && /^(.)\1+$/.test(rollTotal.toString())) {
-                    this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
-                }
-            }
+    async checkForPerils(): Promise<void> {
+        if (this.rollData.power === undefined) return;
+
+        const sourceActor = this.rollData.sourceActor;
+        if (sourceActor === null) return;
+
+        const sourceSystem = sourceActor.system as { psy?: { rating: number } };
+        const psyRating = sourceSystem.psy?.rating ?? 0;
+        const rollTotal = this.rollData.roll?.total;
+        if (rollTotal === undefined) return;
+
+        const isDoubles = /^(.)\1+$/.test(rollTotal.toString());
+        const overchannelling = psyRating < (this.rollData as PsychicRollData).pr;
+        // RAW DH2e: overchannelling triggers phenomena on any non-double; normal
+        // casts trigger phenomena only on doubles.
+        const phenomenaTriggered = overchannelling ? !isDoubles : isDoubles;
+        if (!phenomenaTriggered) return;
+
+        this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
+
+        let autoRoll = true;
+        try {
+            autoRoll = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.autoPsychicPhenomena) === true;
+        } catch {
+            // Setting may not be registered yet during early-boot rolls; default to on.
         }
+        if (!autoRoll) return;
+
+        const power = this.rollData.power;
+        const phenomenaModifier = (power.system as { phenomenaModifier?: number }).phenomenaModifier ?? 0;
+        await RollTableUtils.rollPsychicPhenomena(sourceActor, phenomenaModifier);
     }
 
     async checkForOpposed(): Promise<void> {
@@ -374,7 +391,7 @@ export class ActionData {
 
         if (this.rollData.action !== 'Stun') {
             await this.checkForOpposed();
-            this.checkForPerils();
+            await this.checkForPerils();
 
             if (this.rollData.success) {
                 (this.rollData as { hitLocation?: string }).hitLocation = getHitLocationForRoll(this.rollData.roll?.total ?? 0) ?? '';
