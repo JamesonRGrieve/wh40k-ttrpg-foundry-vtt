@@ -468,8 +468,8 @@ export class PsychicRollData extends RollData {
         // so cast through a structural type rather than widening the base class.
         type FuzzySkill = { current: number; label?: string };
         type SkillResolver = WH40KBaseActorDocument & {
-            getSkillFuzzy(skill: string): FuzzySkill | undefined;
-            getCharacteristicFuzzy(characteristic: string): { total: number; short: string } | undefined;
+            getSkillFuzzy: (skill: string) => FuzzySkill | undefined;
+            getCharacteristicFuzzy: (characteristic: string) => { total: number; short: string } | undefined;
         };
         type PowerTarget = {
             useSkill?: boolean;
