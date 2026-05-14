@@ -553,6 +553,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             return this.characteristics[key] ?? null;
         }
         const fullKey = NPCData.CHARACTERISTIC_MAP[key];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: Record index access may be undefined at runtime
         if (fullKey == null || !(fullKey in this.characteristics)) {
             return null;
         }
@@ -631,7 +632,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         }
 
         // Apply custom override if enabled
-        if (this.customStats.enabled && this.customStats.skills[skillName] !== null && this.customStats.skills[skillName] !== undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: Record<string,number> index access may be undefined at runtime
+        if (this.customStats.enabled && this.customStats.skills[skillName] != null) {
             return this.customStats.skills[skillName];
         }
 
@@ -650,6 +652,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     addTrainedSkill(name: string, characteristic: string | null = null, level = 'trained', bonus = 0): unknown {
         const skills = foundry.utils.deepClone(this.trainedSkills);
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: Record index access may be undefined at runtime
         const charKey = characteristic ?? NPCData.SKILL_CHARACTERISTIC_MAP[name] ?? 'perception';
 
         skills[name] = {
@@ -718,7 +721,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     // eslint-disable-next-line no-restricted-syntax -- boundary: data is caller-supplied weapon data; Record<string,unknown> is the documented pattern; return is untyped Foundry Promise
     addSimpleWeapon(data: Record<string, unknown> = {}): unknown {
         const weapons = foundry.utils.deepClone(this.weapons.simple);
-        const weaponClass = (data['class'] as NPCV2SimpleWeapon['class']) || 'melee';
+        const weaponClass = (data['class'] as NPCV2SimpleWeapon['class'] | undefined) ?? 'melee';
         weapons.push({
             name: (data['name'] as string) || 'New Weapon',
             damage: (data['damage'] as string) || '1d10',
@@ -757,7 +760,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     async promoteSimpleWeapon(index: number): Promise<unknown> {
         const weapons = this.weapons.simple;
         const weapon = weapons[index];
-        if (!weapon) return null;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: array index access may be undefined at runtime
+        if (weapon == null) return null;
 
         // Create the weapon item
         const itemData = {
@@ -967,8 +971,6 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     _prepareMovement(): void {
         const agility = this.characteristics.agility;
-        if (!agility) return;
-
         const ab = agility.bonus;
         const baseMove = ab + this.size - 4;
 
@@ -984,6 +986,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     _prepareInitiative(): void {
         const initChar = this.characteristics[this.initiative.characteristic];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: dynamic key access on characteristics may return undefined at runtime
         this.initiative.bonus = initChar?.bonus ?? 0;
     }
 

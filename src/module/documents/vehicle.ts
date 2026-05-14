@@ -17,7 +17,10 @@ type VehicleSystemData = WH40KBaseActor['system'] & {
     integrity: { value: number; max: number };
     speed: number;
     vehicleClass: string;
-    crew: Record<string, unknown>;
+    crew: {
+        required: number;
+        notes: string;
+    };
     size: number;
 };
 
@@ -28,6 +31,7 @@ export class WH40KVehicle extends WH40KBaseActor {
     protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | void> {
         await super._preCreate(data, options, user);
         const dataWithName = data as { name?: string } | undefined;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: updateSource expects typed token delta; Record<string,unknown> is the only viable shape for dot-notation token update paths
         const initData: Record<string, unknown> = {
             'token.bar1': { attribute: 'integrity' },
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
@@ -81,7 +85,7 @@ export class WH40KVehicle extends WH40KBaseActor {
     get speed(): number {
         return this.system.speed;
     }
-    get crew(): Record<string, unknown> {
+    get crew(): { required: number; notes: string } {
         return this.system.crew;
     }
     get vehicleClass(): string {
@@ -92,24 +96,27 @@ export class WH40KVehicle extends WH40KBaseActor {
     }
 
     override async rollItem(itemId: string): Promise<void> {
+        // Foundry's base rollItem opens a roll dialog; for vehicles we delegate to the character
+        await Promise.resolve();
         const item = this.items.get(itemId);
-        if (!item) {
-            ui.notifications.warn(`Vehicle item not found: ${itemId}`);
+        if (item == null) {
+            // eslint-disable-next-line no-restricted-syntax -- string is a localization key passed via { localize: true }
+            ui.notifications.warn('WH40K.Vehicle.Errors.ItemNotFound', { localize: true });
             return;
         }
         const character = game.user.character;
-        if (!character) {
-            ui.notifications.warn("Vehicle items are rolled using the current users' character. However, no character found.");
+        if (character == null) {
+            // eslint-disable-next-line no-restricted-syntax -- string is a localization key passed via { localize: true }
+            ui.notifications.warn('WH40K.Vehicle.Errors.NoCharacterForRoll', { localize: true });
             return;
         }
 
         game.wh40k.log(`Vehicle ${this.name} is rolling ${item.name} for character ${character.name}`);
-        switch (item.type) {
-            case 'weapon':
-                await DHTargetedActionManager.performWeaponAttack(character, null, item);
-                break;
-            default:
-                ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
+        if (item.type === 'weapon') {
+            DHTargetedActionManager.performWeaponAttack(character, null, item);
+        } else {
+            // eslint-disable-next-line no-restricted-syntax -- string is a localization key interpolated via game.i18n.format; item.type is a known item type identifier
+            ui.notifications.warn(game.i18n.format('WH40K.Vehicle.Errors.NoActionForItemType', { type: item.type }));
         }
     }
 }

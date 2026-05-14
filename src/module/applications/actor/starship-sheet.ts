@@ -164,8 +164,13 @@ export default class StarshipSheet extends BaseActorSheet {
      * Prepare context for specific parts.
      * @inheritDoc
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _preparePartContext signature uses untyped records
-    override async _preparePartContext(partId: string, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    /* eslint-disable no-restricted-syntax -- boundary: ApplicationV2 _preparePartContext signature uses untyped records */
+    override async _preparePartContext(
+        partId: string,
+        context: Record<string, unknown>,
+        options: ApplicationV2Config.RenderOptions,
+    ): Promise<Record<string, unknown>> {
+        /* eslint-enable no-restricted-syntax */
         // eslint-disable-next-line no-restricted-syntax -- boundary: super signature varies between V13/V14 typings
         const partContext = await super._preparePartContext(partId, context, options as unknown as Record<string, unknown>);
 

@@ -7,6 +7,7 @@ import BaseRollDialog from './base-roll-dialog.ts';
 /**
  * Dialog for assigning damage to a target.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: BaseRollDialog options are passed through to ApplicationV2 super; no narrower type available
 type AssignDamageDialogOptions = Record<string, unknown>;
 
 export default class AssignDamageDialog extends BaseRollDialog {
@@ -24,7 +25,8 @@ export default class AssignDamageDialog extends BaseRollDialog {
     static override DEFAULT_OPTIONS = {
         classes: ['assign-damage'],
         window: {
-            title: 'Assign Damage',
+            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
+            title: 'WH40K.Dialog.AssignDamageTitle',
         },
     };
 
@@ -43,12 +45,17 @@ export default class AssignDamageDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender context/options are untyped Record at the base class level
     override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
         // Set up button listeners
-        this.element.querySelector('#assign-damage')?.addEventListener('click', this._onAssignDamage.bind(this));
-        this.element.querySelector('#cancel-prompt')?.addEventListener('click', this._onCancelPrompt.bind(this));
+        this.element.querySelector('#assign-damage')?.addEventListener('click', (e) => {
+            void this._onAssignDamage(e);
+        });
+        this.element.querySelector('#cancel-prompt')?.addEventListener('click', (e) => {
+            void this._onCancelPrompt(e);
+        });
     }
 
     /* -------------------------------------------- */
@@ -95,7 +102,8 @@ export default class AssignDamageDialog extends BaseRollDialog {
  * Open an assign damage dialog.
  * @param {object} assignDamageData  The damage assignment data.
  */
-export function prepareAssignDamageRoll(assignDamageData: Record<string, unknown>) {
+// eslint-disable-next-line no-restricted-syntax -- boundary: assignDamageData is a plain legacy object passed from call sites; no narrower type available
+export function prepareAssignDamageRoll(assignDamageData: Record<string, unknown>): void {
     const prompt = new AssignDamageDialog(assignDamageData);
-    prompt.render(true);
+    void prompt.render({ force: true });
 }

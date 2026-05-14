@@ -32,7 +32,7 @@
     "no-template-curly-in-string": "warn",
     "no-unreachable-loop": "warn",
     "no-use-before-define": ["warn", { "functions": false, "classes": false }],
-    "eqeqeq": ["warn", "always"],
+    "eqeqeq": ["warn", "always", { "null": "ignore" }],
     "no-eval": "warn",
     "no-implied-eval": "warn",
     "no-new-func": "warn",

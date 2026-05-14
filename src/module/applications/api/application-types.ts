@@ -1,12 +1,15 @@
 export type AnyApplicationV2 = foundry.applications.api.ApplicationV2.Any;
 
 // TypeScript's mixin support still requires an `any[]` constructor signature.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: mixin constructor requires any[] per TS mixin rule (TS2545)
 // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
-export type ApplicationV2Ctor<TApplication extends AnyApplicationV2 = AnyApplicationV2> = new (...args: any[]) => TApplication;
+export type ApplicationV2Ctor<TApplication extends AnyApplicationV2 = AnyApplicationV2> = new (...args: any[]) => TApplication; // eslint-disable-line @typescript-eslint/no-explicit-any -- boundary: mixin constructor requires any[] per TS mixin rule (TS2545)
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: mixin constructor requires any[] per TS mixin rule (TS2545)
 // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
-export type ConstructorOf<TInstance> = new (...args: any[]) => TInstance;
+export type ConstructorOf<TInstance> = new (...args: any[]) => TInstance; // eslint-disable-line @typescript-eslint/no-explicit-any -- boundary: mixin constructor requires any[] per TS mixin rule (TS2545)
 
+/* eslint-disable no-restricted-syntax -- boundary: ApplicationV2/Foundry interface shapes use unknown for free-form config payloads */
 export interface DialogV2Like {
     wait(config: Record<string, unknown>): Promise<unknown>;
     confirm(config: Record<string, unknown>): Promise<boolean>;
@@ -23,9 +26,10 @@ export interface FoundryApplicationApiLike {
 }
 
 export interface FoundryApplicationUXLike {
-    ContextMenu: typeof ContextMenu;
+    ContextMenu: typeof foundry.applications.ux.ContextMenu;
     TextEditor: { implementation: TextEditorImplementationLike };
 }
+/* eslint-enable no-restricted-syntax */
 
 export type ContextMenuEntryLike = {
     name: string;

@@ -21,6 +21,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but TS can't verify the mixin constraint without casting
             identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Does this quality have a level/rating?
@@ -44,7 +45,8 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
      * @type {string}
      */
     get fullName(): string {
-        let name = this.parent?.name ?? '';
+        const parentItem = this.parent as { name?: string } | undefined;
+        let name = parentItem?.name ?? '';
         if (this.hasLevel && this.level !== null) {
             name += ` (${this.level})`;
         }
@@ -69,6 +71,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels return type mirrors base ItemDataModel schema
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             level: this.hasLevel ? this.level : '-',

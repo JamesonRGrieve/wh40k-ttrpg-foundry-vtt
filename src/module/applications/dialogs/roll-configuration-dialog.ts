@@ -53,13 +53,12 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height accepts number | 'auto'
             height: 'auto' as unknown as number,
         },
-        // eslint-disable-next-line no-restricted-syntax -- boundary: exactOptionalPropertyTypes: FormConfiguration optional booleans require explicit cast when mixed with handler type cast
         form: {
             // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: ApplicationV2 form handler signature differs; bound by framework on action invocation
-            handler: RollConfigurationDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
+            handler: RollConfigurationDialog.#onSubmit as unknown as NonNullable<ApplicationV2Config.FormConfiguration['handler']>,
             submitOnChange: false,
             closeOnSubmit: true,
-        } as ApplicationV2Config.FormConfiguration,
+        },
         actions: {
             /* eslint-disable @typescript-eslint/unbound-method -- Foundry action handlers are invoked with the application as `this` */
             toggleSituational: RollConfigurationDialog.#toggleSituational,

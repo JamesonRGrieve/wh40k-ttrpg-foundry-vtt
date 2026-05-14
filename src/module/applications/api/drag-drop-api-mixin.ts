@@ -16,7 +16,7 @@ import type { DragDropMixinAPI } from './sheet-mixin-types.js';
  * @returns {any}
  * @mixin
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixin requirement
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, no-restricted-syntax -- TypeScript mixin requirement; unknown in constraint is required by the mixin pattern
 // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
 type DragDropMixed<T extends abstract new (...args: any[]) => unknown> = T & (new (...args: any[]) => DragDropMixinAPI);
 
@@ -26,6 +26,7 @@ export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T): Dra
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- spreading any[] is inherent to the mixin pattern (TS2545)
             super(...args);
         }
 

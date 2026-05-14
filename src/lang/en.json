@@ -60,6 +60,9 @@
         "No": "No",
         "Roll": {
             "Title": "Roll Test",
+            "SkillTest": "Skill Test",
+            "PsychicPower": "Psychic Power",
+            "WeaponAttack": "Weapon Attack",
             "NoTokenForActor": "No token found for the attacking actor.",
             "TargetFirst": "Target a token first, then click Select Target.",
             "NotEnoughAmmo": "Not enough ammo to perform action. Do you need to reload?",
@@ -638,6 +641,12 @@
                 "starship": "Starship"
             }
         },
+        "Dialog": {
+            "BarterTitle": "Barter",
+            "DamageRollTitle": "Damage Roll",
+            "RollModifierTitle": "Roll Modifier",
+            "AssignDamageTitle": "Assign Damage"
+        },
         "TalentCategory": {
             "General": "General",
             "Combat": "Combat",
@@ -1108,6 +1117,9 @@
                 "PastHistory": "Past History",
                 "Complications": "Complications",
                 "Notes": "Notes"
+            },
+            "Errors": {
+                "InvalidShipWeapon": "Invalid ship weapon"
             }
         },
         "ShipComponent": {
@@ -1472,7 +1484,12 @@
             "Crew": "Crew",
             "Passengers": "Passenger Capacity",
             "Weapons": "Mounted Weapons",
-            "SpecialRules": "Special Rules & Traits"
+            "SpecialRules": "Special Rules & Traits",
+            "Errors": {
+                "ItemNotFound": "Vehicle item not found: {id}",
+                "NoCharacterForRoll": "Vehicle items are rolled using the current user's character. However, no character found.",
+                "NoActionForItemType": "No actions implemented for item type: {type}"
+            }
         },
         "Theme": {
             "Switched": "Theme switched to {theme} mode"

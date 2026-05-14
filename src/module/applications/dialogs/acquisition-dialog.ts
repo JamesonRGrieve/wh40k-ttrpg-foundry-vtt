@@ -73,6 +73,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         classes: ['wh40k-rpg', 'acquisition-dialog'],
         tag: 'form',
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.Acquisition.Title',
             icon: 'fa-solid fa-coins',
             resizable: false,
@@ -82,13 +83,12 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 position.height accepts 'auto' but typings list number
             height: 'auto' as unknown as number,
         },
-        // eslint-disable-next-line no-restricted-syntax -- boundary: exactOptionalPropertyTypes: FormConfiguration optional booleans require explicit cast when mixed with handler type cast
         form: {
             // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- ApplicationV2 form handler signature differs from shipped typings
-            handler: AcquisitionDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
+            handler: AcquisitionDialog.#onSubmit as unknown as NonNullable<ApplicationV2Config.FormConfiguration['handler']>,
             submitOnChange: false,
             closeOnSubmit: true,
-        } as ApplicationV2Config.FormConfiguration,
+        },
         /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             toggleModifier: AcquisitionDialog.#toggleModifier,

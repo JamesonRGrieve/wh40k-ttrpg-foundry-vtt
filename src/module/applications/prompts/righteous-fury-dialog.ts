@@ -21,6 +21,7 @@ interface RighteousFuryDialogOptions {
  * Dialog for confirming Righteous Fury triggers.
  * Shows the confirmation roll (d100 vs BS/WS) and handles the result.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2Mixin requires a constructor type; Foundry's ApplicationV2 class does not match the ctor constraint directly
 export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     /**
      * @param {RighteousFuryDialogOptions} options - Dialog options
@@ -45,15 +46,18 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
     static override DEFAULT_OPTIONS = {
         tag: 'div',
         classes: ['wh40k-rpg', 'dialog', 'righteous-fury', 'standard-form'],
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             roll: RighteousFuryDialog.#onRoll,
             cancel: RighteousFuryDialog.#onCancel,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 400,
         },
         window: {
-            title: '⚡ Righteous Fury! ⚡',
+            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
+            title: 'WH40K.RighteousFury.Title',
             minimizable: false,
         },
     };
@@ -88,7 +92,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
      * Target number for confirmation
      * @type {number}
      */
-    target?: number;
+    target: number = 0;
 
     /**
      * Name of the weapon
@@ -137,6 +141,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext is typed as Record<string, unknown> in Foundry's shipped typings
     override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         return {
@@ -168,7 +173,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
         this.confirmationRoll = new Roll('1d100', {});
         await this.confirmationRoll.evaluate();
         const rollTotal = this.confirmationRoll.total ?? 0;
-        const targetNumber = this.target ?? 0;
+        const targetNumber = this.target;
 
         // Check success
         this.success = rollTotal <= targetNumber;
@@ -179,7 +184,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
         }
 
         // Re-render to show result
-        await this.render(true);
+        await this.render({ force: true });
     }
 
     /* -------------------------------------------- */
@@ -216,6 +221,6 @@ export async function promptRighteousFury(options: RighteousFuryDialogOptions): 
             onConfirm: () => resolve(true),
             onFail: () => resolve(false),
         });
-        dialog.render(true);
+        void dialog.render({ force: true });
     });
 }

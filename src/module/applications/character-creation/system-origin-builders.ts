@@ -19,6 +19,7 @@ import OriginPathBuilder from './origin-path-builder.ts';
  */
 function make(gameSystem: string, className: string): typeof OriginPathBuilder {
     class SystemOriginPathBuilder extends OriginPathBuilder {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: constructor options forwarded to ApplicationV2 base; Record<string, unknown> is the required shape
         constructor(actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
             super(actor, { ...options, gameSystem });
         }

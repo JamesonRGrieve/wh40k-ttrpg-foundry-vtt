@@ -13,6 +13,14 @@ interface QuickAction {
     variant: 'primary' | 'secondary' | 'danger';
 }
 
+/** Narrow system fields read by QuickActionsBar across item types. */
+interface ItemSystemFlags {
+    equipped?: boolean;
+    isRollable?: boolean;
+    rollable?: boolean;
+    consumable?: boolean;
+}
+
 // biome-ignore lint/complexity/noStaticOnlyClass: exported as default for module re-export compatibility; callers use QuickActionsBar.method() syntax and _module.ts re-exports the default
 export default class QuickActionsBar {
     /**
@@ -21,10 +29,11 @@ export default class QuickActionsBar {
     static getActionsForItem(item: WH40KItem, { compact: _compact = false, inSheet = false }: { compact?: boolean; inSheet?: boolean } = {}): QuickAction[] {
         const actions: QuickAction[] = [];
         const type = item.type;
-        const system = item.system as Record<string, unknown>;
+        const system = item.system as ItemSystemFlags;
         const itemId: string = item.id ?? '';
 
         // Type-specific actions
+        // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check -- default: branch handles all unhandled item types
         switch (type) {
             case 'weapon':
                 actions.push(
@@ -35,7 +44,7 @@ export default class QuickActionsBar {
                 break;
 
             case 'armour': {
-                const isEquipped = system['equipped'] as boolean;
+                const isEquipped = system.equipped === true;
                 actions.push(
                     this.#createAction(
                         'equip',
@@ -49,20 +58,20 @@ export default class QuickActionsBar {
             }
 
             case 'talent':
-                if (system['isRollable']) {
+                if (system.isRollable === true) {
                     actions.push(this.#createAction('roll', 'fa-solid fa-dice-d20', 'Roll', 'itemRoll', { itemId }));
                 }
                 actions.push(this.#createAction('favorite', 'fa-solid fa-star', 'Favorite', 'toggleFavorite', { itemId }));
                 break;
 
             case 'trait':
-                if (system['rollable']) {
+                if (system.rollable === true) {
                     actions.push(this.#createAction('roll', 'fa-solid fa-dice-d20', 'Roll', 'itemRoll', { itemId }));
                 }
                 break;
 
             case 'gear':
-                if (system['consumable']) {
+                if (system.consumable === true) {
                     actions.push(
                         this.#createAction('use', 'fa-solid fa-flask', 'Use', 'useItem', { itemId }),
                         this.#createAction('adjust', 'fa-solid fa-sliders', 'Adjust', 'adjustQuantity', { itemId }),
@@ -100,6 +109,10 @@ export default class QuickActionsBar {
 
             case 'ammunition':
                 actions.push(this.#createAction('load', 'fa-solid fa-arrow-up-from-bracket', 'Load', 'loadAmmo', { itemId }));
+                break;
+
+            default:
+                // No type-specific actions for this item type
                 break;
         }
 
