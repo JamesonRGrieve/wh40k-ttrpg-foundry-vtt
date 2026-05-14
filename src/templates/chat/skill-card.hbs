@@ -4,13 +4,26 @@
     outerExtraClass="tw-overflow-hidden tw-rounded-md"
     image=skill.img
     imageAlt=skill.name
-    title=skill.name
+    title=(iff specialUse (concat skill.name ' — ' specialUse.name) skill.name)
     gameSystem=gameSystem
     badges=(array
         (hash label=skill.system.skillTypeLabel)
         (hash label=(concat skill.system.characteristicLabel ' (' skill.system.characteristicAbbr ')'))
         (hash icon="fa-check-circle" label=(iff skill.system.isBasic 'Can Use Untrained' '')))
 }}
+    {{#if specialUse}}
+    <div class="tw-mb-2 tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-text-xs">
+        {{#if specialUse.difficulty}}
+        <span class="tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded-sm tw-bg-[rgba(230,126,34,0.15)] tw-border tw-border-[rgba(230,126,34,0.4)] tw-text-[#e67e22]"><strong>{{localize "WH40K.SpecialUse.Difficulty"}}:</strong>&nbsp;{{specialUse.difficulty}}</span>
+        {{/if}}
+        <span class="tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded-sm tw-font-bold {{#if (gt specialUse.modifier 0)}}tw-text-success{{else if (lt specialUse.modifier 0)}}tw-text-crimson{{else}}tw-opacity-70{{/if}}">
+            <strong>{{localize "WH40K.SpecialUse.Modifier"}}:</strong>&nbsp;{{#if (gt specialUse.modifier 0)}}+{{/if}}{{specialUse.modifier}}
+        </span>
+    </div>
+    {{#if specialUse.description}}
+    <div class="tw-mb-2 tw-text-sm">{{{specialUse.description}}}</div>
+    {{/if}}
+    {{else}}
     {{#if skill.system.descriptor}}
     <div class="tw-mb-2">
         <p class="tw-italic tw-text-sm tw-m-0 tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure">{{skill.system.descriptor}}</p>
@@ -22,6 +35,7 @@
         <h4 class="tw-m-0 tw-mb-1 tw-text-sm tw-font-bold"><i class="fas fa-list-check"></i> Uses</h4>
         <div class="tw-text-sm">{{{skill.system.uses}}}</div>
     </div>
+    {{/if}}
     {{/if}}
 
     {{#if skill.system.specialRules}}
