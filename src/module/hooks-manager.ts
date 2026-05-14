@@ -224,7 +224,7 @@ export class HooksManager {
             element.dataset['entryId'] ??
             element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-document-id') ??
             element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-entry-id');
-        if (actorId === null || actorId === undefined) return null;
+        if (actorId == null) return null;
         return (game.actors.get(actorId) as WH40KBaseActor | undefined) ?? null;
     }
 
@@ -765,8 +765,7 @@ export class HooksManager {
     }
 
     /* eslint-disable no-restricted-syntax -- boundary: hotbarDrop payload is an untyped Record from Foundry; _bar is unknown per hook contract */
-    // biome-ignore lint/suspicious/noConfusingVoidType: Foundry hook contract — returning void vs boolean has semantic meaning for hook propagation
-    static hotbarDrop(_bar: unknown, data: Record<string, unknown>, slot: number): boolean | void {
+    static hotbarDrop(_bar: unknown, data: Record<string, unknown>, slot: number): boolean {
         /* eslint-enable no-restricted-syntax */
         game.wh40k.log('Hotbar Drop:', data);
         switch (data['type']) {

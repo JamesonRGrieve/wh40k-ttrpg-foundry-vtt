@@ -55,7 +55,6 @@ const NPC_SKILL_CHAR_MAP: Readonly<Record<string, string>> = {
 /** Pick characteristic from existing state or fall back to the map default. */
 function resolveSkillChar(existing: NPCV2TrainedSkillData | undefined, skillKey: string): string {
     const fromState = existing?.characteristic;
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: NPC_SKILL_CHAR_MAP is Record-indexed
     return fromState !== undefined && fromState !== '' ? fromState : NPC_SKILL_CHAR_MAP[skillKey] ?? 'perception';
 }
 
@@ -288,7 +287,6 @@ export default class NPCSheet extends CharacterSheet {
         const parent = CharacterSheet.PARTS;
         const inherited: Record<string, ApplicationV2Config.PartConfiguration> = {};
         for (const key of ['header', 'tabs', 'skills', 'combat', 'equipment', 'biography'] as const) {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: parent is Record-indexed; part may be undefined at runtime
             const part = parent[key] ?? undefined;
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: part is undefined when key is absent from parent Record
             if (part !== undefined) inherited[key] = part;
@@ -311,7 +309,6 @@ export default class NPCSheet extends CharacterSheet {
      * (horde, barter, tags, combat tracker, GM tools).
      * @override
      */
-    /* eslint-disable no-restricted-syntax -- false-positive: all label values are WH40K.* localization keys; the rule cannot inspect string values. */
     static override TABS = [
         { tab: 'skills', label: 'WH40K.Tabs.Skills', group: 'primary', cssClass: 'tab-skills' },
         { tab: 'combat', label: 'WH40K.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
@@ -319,7 +316,6 @@ export default class NPCSheet extends CharacterSheet {
         { tab: 'biography', label: 'WH40K.Tabs.Biography', group: 'primary', cssClass: 'tab-biography' },
         { tab: 'npc', label: 'WH40K.Tabs.NPC', group: 'primary', cssClass: 'tab-npc' },
     ];
-    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 
@@ -610,9 +606,7 @@ export default class NPCSheet extends CharacterSheet {
         context['favoriteSkills'] = favoriteSkillKeys
             .map((key: string) => {
                 // sys.trainedSkills is a sparse map; lookup is genuinely optional at runtime
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 const skillData = sys.trainedSkills[key];
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (skillData === undefined) return null;
 
                 // Get characteristic for this skill
@@ -1206,14 +1200,12 @@ export default class NPCSheet extends CharacterSheet {
         const level = target.dataset['level'];
         if (skillKey === undefined || skillKey === '' || level === undefined || level === '') return;
 
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: trainedSkills is Record-indexed
         if (level === 'untrained') {
             await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
             return;
         }
 
         const currentSkills: Record<string, NPCV2TrainedSkillData> = foundry.utils.deepClone(this.npcActor.system.trainedSkills);
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: currentSkills is Record-indexed
         const prior = currentSkills[skillKey];
 
         currentSkills[skillKey] = NPCSheet.#resolveSkillLevelToggle(skillKey, level, prior);
@@ -1252,7 +1244,6 @@ export default class NPCSheet extends CharacterSheet {
         if (skillKey === undefined || skillKey === '') return;
 
         const currentSkills: Record<string, NPCV2TrainedSkillData> = foundry.utils.deepClone(this.npcActor.system.trainedSkills);
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: currentSkills is Record-indexed
         const current = currentSkills[skillKey];
 
         // Determine current level and cycle to next

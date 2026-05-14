@@ -680,7 +680,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     get availableFireModes(): Array<{ mode: string; label: string; rof: number; modifier: number; description: string; actionType: string }> {
         if (!this.isRangedWeapon) return [];
 
-        const modes = [];
+        const modes: Array<{ mode: string; label: string; rof: number; modifier: number; description: string; actionType: string }> = [];
         const rof = this.attack.rateOfFire;
         const hasStorm = this.effectiveSpecial.has('storm');
 
@@ -856,7 +856,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         // Show craftsmanship modifiers if any
         const craftMods = this.craftsmanshipModifiers;
         if (craftMods.toHit !== 0 || craftMods.damage !== 0) {
-            const modParts = [];
+            const modParts: string[] = [];
             if (craftMods.toHit !== 0) modParts.push(`${craftMods.toHit > 0 ? '+' : ''}${craftMods.toHit} Hit`);
             if (craftMods.damage !== 0) modParts.push(`+${craftMods.damage} Dmg`);
             props.push(`Craftsmanship: ${modParts.join(', ')}`);
@@ -978,7 +978,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get compendiumSummary(): string {
-        const parts = [];
+        const parts: string[] = [];
         parts.push(this.damageLabel || '-');
         if (this.damage.penetration > 0) parts.push(`Pen ${this.damage.penetration}`);
         if (this.isRangedWeapon && this.rangeLabel !== '-') parts.push(this.rangeLabel);
@@ -990,7 +990,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get statLine(): string {
-        const parts = [];
+        const parts: string[] = [];
         parts.push(`${this.classLabel}`);
         if (this.isRangedWeapon) {
             parts.push(`${this.rangeLabel}`);
@@ -1007,7 +1007,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {Array<{id: string, label: string, description: string, level: number|null}>}
      */
     get qualitiesArray(): Array<{ id: string; baseId: string; label: string; description: string; level: number | null; hasLevel: boolean }> {
-        const qualities = [];
+        const qualities: Array<{ id: string; baseId: string; label: string; description: string; level: number | null; hasLevel: boolean }> = [];
         const config = CONFIG.WH40K.weaponQualities;
 
         for (const qualityId of this.effectiveSpecial) {
@@ -1113,7 +1113,6 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             return this.parent;
         }
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: actor is Foundry Document with untyped API; cast to structural shape required
         const actor: AmmoActorLike | null = (this.parent.actor as AmmoActorLike | null | undefined) ?? null;
 
         // Eject current ammo first (return remaining rounds to inventory)
@@ -1168,7 +1167,6 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         }
 
         // Return remaining rounds to inventory
-        // eslint-disable-next-line no-restricted-syntax -- boundary: actor is Foundry Document with untyped API; cast to structural shape required
         const actor: AmmoActorLike | null = (this.parent.actor as AmmoActorLike | null | undefined) ?? null;
         if (this.clip.value > 0 && actor !== null) {
             await this._returnRoundsToInventory(actor, this.clip.value);

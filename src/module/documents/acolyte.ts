@@ -163,9 +163,9 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // Initialize defaults before DataModel runs (cast through unknown for legacy migration paths)
         // eslint-disable-next-line no-restricted-syntax -- boundary: legacy migration path writes through to system data
         const sys = this.system as Record<string, unknown>;
-        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/prefer-nullish-coalescing -- legacy migration: ??= would mask schema default-init bugs
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- legacy migration: ??= would mask schema default-init bugs
         if (sys['corruption'] === undefined || sys['corruption'] === null) sys['corruption'] = 0;
-        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/prefer-nullish-coalescing -- legacy migration: ??= would mask schema default-init bugs
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- legacy migration: ??= would mask schema default-init bugs
         if (sys['insanity'] === undefined || sys['insanity'] === null) sys['insanity'] = 0;
 
         // Let the DataModel do base preparation first
@@ -333,7 +333,6 @@ export class WH40KAcolyte extends WH40KBaseActor {
     override async rollCharacteristic(charKey: string, flavorOverride?: string, _options: Record<string, unknown> = {}): Promise<void> {
         const char = this.system.characteristics[charKey] as (typeof this.system.characteristics)[string] | undefined;
         if (char === undefined) {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.CharacteristicNotFound localization key not yet in en.json
             ui.notifications.warn(`Characteristic "${charKey}" not found`);
             return;
         }
@@ -361,7 +360,6 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const resolvedSkillName = this._resolveSkillName(skillName);
         const skill = this.skills[resolvedSkillName] as WH40KSkill | undefined;
         if (skill === undefined) {
-            // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.SkillNotFound localization key not yet in en.json
             ui.notifications.warn(`Unable to find skill ${skillName}`);
             return;
         }
@@ -540,7 +538,6 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 await this.rollPsychicPowerDamage(item);
                 return;
             default:
-                // eslint-disable-next-line no-restricted-syntax -- TODO: WH40K.Acolyte.NoActionForItemType localization key not yet in en.json
                 ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
         }
     }

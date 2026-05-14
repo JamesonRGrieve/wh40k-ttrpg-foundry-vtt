@@ -40,7 +40,6 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         classes: ['wh40k-rpg', 'difficulty-calculator-dialog'],
         tag: 'div',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- this IS a localization key, not hardcoded English
             title: 'WH40K.NPC.DifficultyCalculator',
             icon: 'fa-solid fa-calculator',
         },

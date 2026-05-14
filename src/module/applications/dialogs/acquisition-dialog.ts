@@ -73,7 +73,6 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         classes: ['wh40k-rpg', 'acquisition-dialog'],
         tag: 'form',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.Acquisition.Title',
             icon: 'fa-solid fa-coins',
             resizable: false,
@@ -139,7 +138,6 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     get title(): string {
-        // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Acquisition.AcquireItem and WH40K.Acquisition.PFTest localization keys
         return this.item ? `Acquire: ${this.item.name}` : 'Profit Factor Acquisition Test';
     }
 
@@ -337,7 +335,6 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         // On success, add item to inventory
         if (success && this.item) {
             await this.actor.createEmbeddedDocuments('Item', [this.item]);
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Acquisition.Acquired localization key
             ui.notifications.info(`Acquired ${this.item.name}`);
         }
 
@@ -347,7 +344,6 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             const currentPF = rogueTrader?.profitFactor?.current ?? 0;
             const newPF = Math.max(0, currentPF - 1);
             await this.actor.update({ 'system.rogueTrader.profitFactor.current': newPF });
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Acquisition.CriticalFailure localization key
             ui.notifications.warn(`Critical failure! Profit Factor reduced to ${newPF}`);
         }
 

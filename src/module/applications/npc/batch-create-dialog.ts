@@ -54,7 +54,6 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         classes: ['wh40k-rpg', 'batch-create-dialog'],
         tag: 'form',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.NPC.BatchCreate.Title',
             icon: 'fa-solid fa-users',
             minimizable: false,

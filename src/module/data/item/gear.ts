@@ -33,7 +33,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unsafe-call -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Gear category
@@ -260,7 +260,6 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /** @override */
     get chatProperties(): string[] {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: prototype getter call returns generic value type
         const inherited = (Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? [];
         const props = [...inherited, this.categoryLabel];
 

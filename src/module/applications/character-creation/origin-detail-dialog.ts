@@ -16,7 +16,6 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         classes: ['wh40k-rpg', 'origin-detail-dialog'],
         tag: 'div',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: title is a WH40K.* localization key, not a hardcoded string; lint rule cannot distinguish
             title: 'WH40K.OriginPath.ViewDetails',
             icon: 'fa-solid fa-scroll',
             minimizable: false,

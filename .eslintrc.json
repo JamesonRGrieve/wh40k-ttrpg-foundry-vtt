@@ -93,12 +93,12 @@
         "message": "Hardcoded template-literal in `ui.notifications.*`. All player-facing strings must live in `src/lang/en.json` under `WH40K.*` and be resolved via `t(...)` or `game.i18n.format(...)`."
       },
       {
-        "selector": "PropertyDefinition[key.name='DEFAULT_OPTIONS'] Property[key.name='title'][value.type='Literal']",
-        "message": "Hardcoded `window.title` in `DEFAULT_OPTIONS`. Use a `WH40K.*` localization key — the sheet title is player-facing."
+        "selector": "PropertyDefinition[key.name='DEFAULT_OPTIONS'] Property[key.name='title'][value.type='Literal'][value.value!=/^WH40K\\./]",
+        "message": "Hardcoded `window.title` in `DEFAULT_OPTIONS`. Use a `WH40K.*` localization key — the sheet title is player-facing. (i18n keys matching `WH40K.*` are allowed; Foundry localizes them at render time.)"
       },
       {
-        "selector": "PropertyDefinition[key.name='TABS'] Property[key.name='label'][value.type='Literal']",
-        "message": "Hardcoded `label` in `TABS`. Use a `WH40K.*` localization key — tab labels are player-facing."
+        "selector": "PropertyDefinition[key.name='TABS'] Property[key.name='label'][value.type='Literal'][value.value!=/^WH40K\\./]",
+        "message": "Hardcoded `label` in `TABS`. Use a `WH40K.*` localization key — tab labels are player-facing. (i18n keys matching `WH40K.*` are allowed; Foundry localizes them at render time.)"
       }
     ]
   },

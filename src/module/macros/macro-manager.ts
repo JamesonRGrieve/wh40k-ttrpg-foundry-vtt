@@ -89,7 +89,6 @@ export function rollItemMacro(actorId: string, itemId: string): unknown {
 
     const item = actor.items.find((i) => i._id === itemId);
     if (item === undefined) {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n keys not established at macro invocation
         ui.notifications.warn(`Actor does not have an item id: ${itemId}`);
         return undefined;
     }
@@ -142,7 +141,6 @@ export async function rollSkillMacro(actorId: string, skillName: string, special
     /* eslint-enable no-restricted-syntax */
     const skill = actorExt.getSkillFuzzy !== undefined ? actorExt.getSkillFuzzy(skillName) : actorExt.skills?.[skillName];
     if (skill === undefined || skill === null) {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n keys not established at macro invocation
         ui.notifications.warn(`Your controlled Actor does not have a skill named ${skillName}`);
         return;
     }
@@ -184,7 +182,6 @@ export async function rollCharacteristicMacro(actorId: string, characteristic: s
     const actorExt = actor as unknown as { characteristics: Record<string, unknown>; rollCharacteristic: (c: string) => Promise<void> };
     const charCheck = actorExt.characteristics[characteristic];
     if (charCheck === undefined || charCheck === null) {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n keys not established at macro invocation
         ui.notifications.warn(`Your controlled Actor does not have a characteristic named ${characteristic}`);
         return;
     }

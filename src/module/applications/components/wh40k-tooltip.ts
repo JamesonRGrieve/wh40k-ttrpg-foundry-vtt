@@ -171,13 +171,11 @@ function getRogueTraderConfig(): RogueTraderConfigBag['ROGUE_TRADER'] {
 function getSkillDescriptionLookup(): SkillDescriptionLookup | undefined {
     // eslint-disable-next-line no-restricted-syntax -- boundary: game.wh40k is the system's own namespace, attached after init; types are erased at the boundary.
     const wh40k = (game as { wh40k?: { tooltips?: unknown } }).wh40k;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: wh40k.tooltips is a runtime-attached namespace; cast to interface is the only viable approach
     return wh40k?.tooltips as SkillDescriptionLookup | undefined;
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: accepts heterogeneous doc / DataModel surfaces to extract an optional richTooltip(); type-erasing the parameter is the safest reading.
 function getRichTooltipProducer(value: unknown): RichTooltipProducer {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: same boundary as the parameter type — duck-typed lookup of richTooltip across two unrelated parent types.
     return value as RichTooltipProducer;
 }
 
@@ -288,7 +286,6 @@ export class TooltipsWH40K {
 
         if (tooltipType !== undefined && tooltipType !== '' && tooltipDataAttr !== undefined && tooltipDataAttr !== '') {
             try {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse of a serialised tooltip payload; the discriminated TooltipPayload union narrows it inside each builder.
                 const data = JSON.parse(tooltipDataAttr) as TooltipPayload;
                 const content = await this._buildTooltipContent(data, tooltipType);
                 if (content !== '' && this.#tooltip !== null) {
@@ -481,7 +478,7 @@ export class TooltipsWH40K {
         if (level > 0 && level <= skillRanks.length) {
             const rank = skillRanks[level - 1];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: array element may be undefined at runtime despite in-bounds check
-            if (rank == null) throw new Error(`skillRanks[${level - 1}] is undefined; this should be unreachable.`);
+            if (rank === undefined) throw new Error(`skillRanks[${level - 1}] is undefined; this should be unreachable.`);
             training = rank.tooltip;
             trainingBonus = dataTB ?? rank.bonus;
         }

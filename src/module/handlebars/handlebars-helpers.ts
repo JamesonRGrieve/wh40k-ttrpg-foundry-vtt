@@ -51,7 +51,6 @@ interface WH40KConfig {
 }
 
 function getRtConfig(): WH40KConfig | undefined {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG is untyped Foundry global; narrowed to WH40KConfig immediately
     const rt = (CONFIG as { rt?: WH40KConfig }).rt;
     return rt;
 }
@@ -182,7 +181,6 @@ export function registerHandlebarsHelpers(): void {
             return expanded.includes(field);
         }
         // Fallback to global CONFIG for compatibility (old system)
-        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is untyped Foundry global
         const wh40kConfig = CONFIG.wh40k as { ui?: { expanded?: string[] } };
         const expandedList = wh40kConfig.ui?.expanded;
         return Array.isArray(expandedList) && expandedList.includes(field);
@@ -211,7 +209,6 @@ export function registerHandlebarsHelpers(): void {
     });
 
     Handlebars.registerHelper('getBioOptions', (field: string): TplValue => {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is untyped Foundry global
         const bioConfig = CONFIG.wh40k as { bio?: Record<string, TplValue> };
         return bioConfig.bio?.[field];
     });
@@ -582,7 +579,6 @@ export function registerHandlebarsHelpers(): void {
 
     Handlebars.registerHelper('skillIcon', (skillKey: string): string => {
         const rtConfig = getRtConfig();
-        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is untyped Foundry global
         const wh40kConfig = CONFIG.wh40k as WH40KConfig;
         const config: WH40KConfig | typeof WH40K = rtConfig?.getSkillIcon !== undefined ? wh40kConfig : WH40K;
         const icon = config.getSkillIcon?.(skillKey) ?? 'modules/game-icons-net-font/svg/skills.svg';

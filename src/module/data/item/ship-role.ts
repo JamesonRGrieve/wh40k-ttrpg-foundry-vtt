@@ -138,7 +138,6 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * @type {string}
      */
     get primaryAbility(): string {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: array[0] may be undefined at runtime
         const ability = this.abilities[0];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: ability may be undefined despite array declaration
         if (ability !== undefined) {

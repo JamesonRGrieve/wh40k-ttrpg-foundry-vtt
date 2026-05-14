@@ -138,7 +138,6 @@ export default class CharacteristicGrantData extends BaseGrantData {
         const updates: Record<string, number> = {};
         const charSystem = actor.system as CharacteristicActorSystem;
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: GrantRestoreData payload typed at base
         const characteristics = (restoreData as Partial<CharacteristicRestoreData>).characteristics ?? {};
         for (const [key, state] of Object.entries(characteristics)) {
             const currentAdvance: number = charSystem.characteristics[key]?.advance ?? 0;

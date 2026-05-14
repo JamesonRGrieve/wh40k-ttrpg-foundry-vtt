@@ -74,14 +74,12 @@ export default class ArmourModSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    /* eslint-disable no-restricted-syntax -- labels are WH40K.* localization keys; rule misfires on string literal form */
     static override TABS = [
         { tab: 'restrictions', group: 'primary', label: 'WH40K.Modification.Restrictions' },
         { tab: 'modifiers', group: 'primary', label: 'WH40K.Modification.Modifiers' },
         { tab: 'properties', group: 'primary', label: 'WH40K.Modification.Properties' },
         { tab: 'effect', group: 'primary', label: 'WH40K.Modification.Effect' },
     ];
-    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 

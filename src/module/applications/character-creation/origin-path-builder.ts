@@ -309,7 +309,6 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         classes: ['wh40k-rpg', 'origin-path-builder'],
         tag: 'div',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- i18n: value is a WH40K.* localization key; the rule fires on any string; ApplicationV2 resolves this key at render time
             title: 'WH40K.OriginPath.BuilderTitle',
             icon: 'fa-solid fa-route',
             resizable: true,
@@ -505,8 +504,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
         // currentStepIndex is always kept in bounds by the navigation logic
         const step = this.orderedSteps[this.currentStepIndex];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, eqeqeq -- noUncheckedIndexedAccess: orderedSteps is an array; == null intentionally catches both null and undefined
-        if (step == null) throw new Error(`currentStepIndex ${this.currentStepIndex} out of bounds`);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: orderedSteps is an array; element may be undefined at runtime
+        if (step === undefined) throw new Error(`currentStepIndex ${this.currentStepIndex} out of bounds`);
         return step;
     }
 
@@ -1656,7 +1655,6 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         const configWh40k = (CONFIG as { wh40k?: { availabilities?: Record<string, { label: string; modifier: number }> } }).wh40k;
-        /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: CONFIG.wh40k?.availabilities may be absent at runtime; fallback to static WH40K.availabilities */
         const availabilityConfig = configWh40k?.availabilities ?? WH40K.availabilities;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: availabilityConfig['scarce'] may be absent; modifier may be absent
         const scarceModifier = availabilityConfig['scarce']?.modifier ?? 0;
@@ -3124,7 +3122,6 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             selection = this.lineageSelection ?? this.previewedOrigin;
         } else {
             // Check confirmed selection first, then previewed
-            // eslint-disable-next-line no-restricted-syntax -- dialog state: previewedOrigin is application state; ?? falls back when no confirmed selection
             selection = this.selections.get(currentStep.step) ?? this.previewedOrigin;
         }
 

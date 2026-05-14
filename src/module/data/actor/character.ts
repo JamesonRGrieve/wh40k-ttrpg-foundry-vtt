@@ -548,7 +548,6 @@ export default class CharacterData extends CreatureTemplate {
         const allAptitudes = new Set<string>();
 
         for (const item of originItems) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.grants is not in the typed schema; accessing as OriginPathGrants via unknown
             const grants = item.system.grants as OriginPathGrants | undefined;
             if (grants === undefined) continue;
 

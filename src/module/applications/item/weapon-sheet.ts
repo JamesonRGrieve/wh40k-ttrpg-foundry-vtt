@@ -11,7 +11,6 @@ import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
 
-// eslint-disable-next-line @typescript-eslint/no-deprecated -- foundry.appv1.api.Dialog is the new namespace; the legacy global still ships and is what we target here
 const LegacyDialog = foundry.appv1.api.Dialog;
 
 /** Weapon item document narrowed to its DataModel. */
@@ -193,7 +192,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         context.qualitiesArray = Array.from(system.effectiveSpecial).map((q: string) => {
             // Parse level from quality identifier if present
             const match = /-(\d+)$/.exec(q);
-            const level = match?.[1] != null ? parseInt(match[1], 10) : null;
+            const level = match?.[1] !== undefined ? parseInt(match[1], 10) : null;
 
             // Get localized label using CONFIG helper (CONFIG.wh40k not CONFIG.WH40K)
             const label = CONFIG.wh40k.getQualityLabel(q, level);
@@ -734,7 +733,6 @@ export default class WeaponSheet extends ContainerItemSheet {
             return;
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- V2 sheet?.render usage still consumes deprecated V1 boolean signature
         void modItem.sheet?.render(true);
     }
 
@@ -854,7 +852,6 @@ export default class WeaponSheet extends ContainerItemSheet {
         const ammoUuid = target.dataset['ammoUuid'];
         if (ammoUuid === undefined || ammoUuid === '') return;
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns the broad Foundry document union; weapon.system.loadAmmo expects the ammo shape, which the WeaponData method validates internally
         const ammoItem = (await fromUuid(ammoUuid)) as Parameters<WeaponData['loadAmmo']>[0] | null;
         if (ammoItem === null) {
             ui.notifications.error(game.i18n.localize('WH40K.WeaponSheet.AmmoNotFound'));
@@ -1018,7 +1015,6 @@ export default class WeaponSheet extends ContainerItemSheet {
     override async _onDrop(event: DragEvent): Promise<boolean> {
         event.preventDefault();
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: dataTransfer payload is raw JSON authored by drag source
         let data: { type?: string; uuid?: string };
         try {
             data = JSON.parse(event.dataTransfer?.getData('text/plain') ?? '') as { type?: string; uuid?: string };

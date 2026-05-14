@@ -212,7 +212,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         classes: ['wh40k-rpg', 'advancement-dialog'],
         tag: 'div',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- localization key resolved by Foundry V14 ApplicationV2 at render
             title: 'WH40K.Advancement.Title' as const,
             icon: 'fa-solid fa-chart-line',
             minimizable: true,
@@ -292,7 +291,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const localized = game.i18n.localize('WH40K.Advancement.Title');
             return localized.length > 0 ? localized : 'Advancement';
         }
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: careers[key] may be undefined at runtime
         const career = CONFIG.wh40k.careers[this.careerKey];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: career may be undefined despite indexed access type
         const careerLabel = game.i18n.localize(career !== undefined ? career.label : this.careerKey);
@@ -323,7 +321,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const systemConfig = this.#getSystemConfig();
         context.systemConfig = systemConfig;
-        // eslint-disable-next-line no-restricted-syntax -- legacy actors may lack `gameSystem`; default to 'rt' for display only
         context._gameSystemId = this.#getActorSystem().gameSystem ?? 'rt';
         context.usesAptitudes = systemConfig?.usesAptitudes ?? false;
         context.usesCareerTables = systemConfig?.usesCareerTables ?? true;
@@ -434,7 +431,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 const canPurchase = !isMaxed && nextCost !== null && available >= nextCost.cost;
 
                 const tiers = tierOrder.map((tier, index) => {
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: advancementTiers[tier] may be undefined
                     const tierConfig = CONFIG.wh40k.advancementTiers[tier];
                     return {
                         tier,
@@ -455,9 +451,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     currentValue: char.total ?? 0,
                     currentAdvances,
                     tiers,
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- nextCost may be null at runtime depending on career config; optional chain + ?? is defensive
                     nextCost: nextCost?.cost ?? null,
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- nextCost may be null at runtime depending on career config; optional chain + ?? is defensive
                     nextTier: nextCost?.tier ?? null,
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: advancementTiers[tier] may be undefined; optional chain + ?? is defensive
                     nextTierLabel: nextCost !== null ? game.i18n.localize(CONFIG.wh40k.advancementTiers[nextCost.tier]?.label ?? nextCost.tier) : null,
@@ -491,7 +485,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 displayName,
                 cost: advance.cost,
                 type: advance.type,
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- advance.prerequisites may be absent in legacy career data
                 prerequisites: advance.prerequisites ?? [],
                 prereqDisplay: prereqResult.unmet,
                 owned,
@@ -514,7 +507,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const result: PreparedSkillAdvance[] = [];
 
         for (const skillKey of visibleSkills) {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: actorSkills[key] may be undefined at runtime
             const skillData = actorSkills[skillKey];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skillData may be undefined despite indexed access type
             if (skillData === undefined) continue;
@@ -539,9 +531,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     const entryIsMaxed = entryRank >= ranks.length;
                     const entryCost = entryIsMaxed ? null : systemConfig.getSkillAdvanceCost(this.actor, skillKey, entryRank);
                     const entryCanPurchase = !entryIsMaxed && entryCost !== null && available >= entryCost;
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: ranks[i] may be undefined; optional chain + ?? is defensive
                     const entryCurrentLabel = entryRank > 0 ? ranks[entryRank - 1]?.tooltip ?? 'Untrained' : 'Untrained';
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: ranks[entryRank] may be undefined
                     const entryNextRank = ranks[entryRank];
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: entryNextRank may be undefined despite indexed access type
                     const entryNextLabel = !entryIsMaxed && entryNextRank !== undefined ? entryNextRank.tooltip : null;
@@ -596,9 +586,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const cost = isMaxed ? null : systemConfig.getSkillAdvanceCost(this.actor, skillKey, effectiveRank);
             const canPurchase = !isMaxed && cost !== null && available >= cost;
 
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: ranks[i] may be undefined; optional chain + ?? is defensive
             const currentLabel = effectiveRank > 0 ? ranks[effectiveRank - 1]?.tooltip ?? 'Untrained' : 'Untrained';
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: ranks[effectiveRank] may be undefined
             const nextRank = ranks[effectiveRank];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: nextRank may be undefined despite indexed access type
             const nextLabel = !isMaxed && nextRank !== undefined ? nextRank.tooltip : null;
@@ -687,7 +675,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             for (const rawEntry of index) {
                 const entry = rawEntry as CompendiumIndexEntry;
                 if (entry.type !== 'talent') continue;
-                // eslint-disable-next-line no-restricted-syntax -- boundary: compendium index entry `system` is loosely typed at the Foundry layer
                 const system = (entry['system'] ?? {}) as {
                     tier?: number;
                     aptitudes?: string[];
@@ -907,7 +894,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         for (const p of powers) {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: grouped[key] may be undefined; guard is required
             if (!grouped[p.disciplineLabel]) grouped[p.disciplineLabel] = [];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: grouped[key] may be undefined after the guard; ?? [] is defensive
             (grouped[p.disciplineLabel] ?? []).push(p);
         }
 

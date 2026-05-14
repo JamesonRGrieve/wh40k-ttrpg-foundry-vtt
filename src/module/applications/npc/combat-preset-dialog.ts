@@ -58,7 +58,6 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         classes: ['wh40k-rpg', 'combat-preset-dialog'],
         tag: 'div',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.NPC.CombatPresets',
             icon: 'fa-solid fa-bookmark',
         },
@@ -288,7 +287,6 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         };
 
         await npc.update(updates);
-        // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetApplied localization key
         ui.notifications.info(`Applied preset "${preset.name}" to ${npc.name}`);
     }
 
@@ -358,7 +356,6 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         const preset = CombatPresetDialog.createPresetFromNPC(this.#state.npc, name, description);
         await CombatPresetDialog.addPreset(preset);
 
-        // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetSaved localization key
         ui.notifications.info(`Saved preset "${name}"`);
         void this.close();
     }
@@ -416,7 +413,6 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
         if (confirmed) {
             await CombatPresetDialog.deletePresetById(presetId);
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetDeleted localization key
             ui.notifications.info(`Deleted preset "${preset.name}"`);
             void this.render();
         }
@@ -459,7 +455,6 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
                 try {
                     const text = await file.text();
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse returns any; narrowed to Preset at consumer
                     const preset = JSON.parse(text) as Preset;
 
                     // Basic validation
@@ -469,12 +464,10 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
                     }
 
                     await CombatPresetDialog.addPreset(preset);
-                    // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetImported localization key
                     ui.notifications.info(`Imported preset "${preset.name}"`);
                     void this.render();
                 } catch (error) {
                     const msg = error instanceof Error ? error.message : String(error);
-                    // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.NPC.PresetImportFailed localization key
                     ui.notifications.error(`Failed to import preset: ${msg}`);
                 }
             })();

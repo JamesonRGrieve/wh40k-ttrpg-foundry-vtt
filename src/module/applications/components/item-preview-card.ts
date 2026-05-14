@@ -79,18 +79,12 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
         }
 
         /* eslint-disable
-            @typescript-eslint/no-non-null-assertion,
             @typescript-eslint/strict-boolean-expressions,
             no-restricted-syntax,
-            @typescript-eslint/no-unsafe-member-access,
-            @typescript-eslint/no-unsafe-call,
-            @typescript-eslint/no-unsafe-assignment,
             @typescript-eslint/no-base-to-string,
             @typescript-eslint/restrict-template-expressions,
-            @typescript-eslint/no-explicit-any,
             @typescript-eslint/no-unnecessary-condition,
             @typescript-eslint/prefer-nullish-coalescing,
-            @typescript-eslint/explicit-function-return-type,
             @typescript-eslint/switch-exhaustiveness-check
             -- generate* methods build HTML from heterogeneous item.system shapes via narrow inline interfaces; the boundary cluster here is intentional and porting to Zod-validated DataModels is tracked separately */
 
@@ -151,7 +145,7 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
          */
         #closePreview(itemId: string): void {
             const root = this.element[0];
-            if (root == null) return;
+            if (root === undefined) return;
             const preview = root.querySelector(`[data-preview-id="${itemId}"]`);
             if (!preview) return;
 

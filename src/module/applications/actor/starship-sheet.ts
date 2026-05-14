@@ -65,7 +65,6 @@ export default class StarshipSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    /* eslint-disable no-restricted-syntax -- labels here ARE WH40K.* keys; the rule's literal-detection cannot see that */
     static TABS: HandlebarsApplicationV14.TabDescriptor[] = [
         { tab: 'stats', label: 'WH40K.Starship.Tabs.Stats', group: 'primary', cssClass: 'tab-stats' },
         { tab: 'components', label: 'WH40K.Starship.Tabs.Components', group: 'primary', cssClass: 'tab-components' },
@@ -73,7 +72,6 @@ export default class StarshipSheet extends BaseActorSheet {
         { tab: 'crew', label: 'WH40K.Starship.Tabs.Crew', group: 'primary', cssClass: 'tab-crew' },
         { tab: 'history', label: 'WH40K.Starship.Tabs.History', group: 'primary', cssClass: 'tab-history' },
     ];
-    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 

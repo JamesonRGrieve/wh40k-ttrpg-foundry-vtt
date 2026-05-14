@@ -196,7 +196,6 @@ export default class VehicleSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    /* eslint-disable no-restricted-syntax -- i18n: WH40K localization keys resolved at runtime; rule fires on any literal in TABS label position */
     static TABS: HandlebarsApplicationV14.TabDescriptor[] = [
         { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
         { tab: 'combat', label: 'WH40K.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
@@ -204,7 +203,6 @@ export default class VehicleSheet extends BaseActorSheet {
         { tab: 'components', label: 'WH40K.Vehicle.Components', group: 'primary', cssClass: 'tab-components' },
         { tab: 'notes', label: 'WH40K.NPC.Notes', group: 'primary', cssClass: 'tab-notes' },
     ];
-    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 

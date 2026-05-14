@@ -167,7 +167,6 @@ export default class ContainerItemSheet extends BaseItemSheet {
         }
 
         // Add the item to the container
-        // eslint-disable-next-line no-restricted-syntax -- boundary: createNestedDocuments accepts source-data records; the runtime serialises the document
         await this.item.createNestedDocuments([droppedItem.toObject()]);
 
         // Remove from source actor if applicable
@@ -194,7 +193,6 @@ export default class ContainerItemSheet extends BaseItemSheet {
         while (parent !== null && count < 10) {
             count++;
             canAdd = canAdd && parent.id !== droppedItem._id;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: parent chain is heterogeneous
             parent = (parent.parent ?? null) as typeof parent;
         }
 

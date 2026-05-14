@@ -55,7 +55,6 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
             width: 420,
         },
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.Skills.AddSpecialistSkillTitle',
         },
     };

@@ -128,8 +128,7 @@ export class WH40KBaseActor extends Actor {
         }
     }
 
-    // biome-ignore lint/suspicious/noConfusingVoidType: Foundry _preCreate contract — returning false cancels creation; void means proceed
-    protected override async _preCreate(data: never, options: never, user: User.Internal.Implementation): Promise<boolean | void> {
+    protected override async _preCreate(data: never, options: never, user: User.Internal.Implementation): Promise<boolean | undefined> {
         await super._preCreate(data, options, user as never);
         // eslint-disable-next-line no-restricted-syntax -- boundary: _preCreate data/options typed as never; cast to Record is necessary to access fields
         const createData = data as Record<string, unknown>;
@@ -159,6 +158,7 @@ export class WH40KBaseActor extends Actor {
             }
         }
         this.updateSource(initData);
+        return undefined;
     }
 
     get characteristics(): Record<string, WH40KCharacteristic> {
@@ -328,7 +328,6 @@ export class WH40KBaseActor extends Actor {
         }
 
         const initChar = this.initiative.characteristic;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- characteristic may be undefined per noUncheckedIndexedAccess on initiative object
         if (initChar !== undefined && initChar !== '') {
             const charEntry = this.characteristics[initChar];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
@@ -339,9 +338,7 @@ export class WH40KBaseActor extends Actor {
     }
 
     _computeMovement(): void {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is typed as Record<string, WH40KCharacteristic>; undefined|null guard needed for actors without DataModel
         const chars = this.characteristics as Record<string, WH40KCharacteristic> | undefined | null;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- chars may be undefined/null for actors without DataModel; guard is intentional
         const agility = chars !== undefined && chars !== null ? chars['agility'] : undefined;
         // Skip movement calculation if agility is not available (e.g., for starships)
         if (agility === undefined) return;
@@ -367,7 +364,7 @@ export class WH40KBaseActor extends Actor {
     async addSpecialitySkill(skill: string, speciality: string): Promise<void> {
         const parent = this.system.skills[skill];
         const specialityKey = toCamelCase(speciality);
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, eqeqeq -- noUncheckedIndexedAccess: skills[key] may be undefined; null check is for runtime safety
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skills[key] may be undefined; null check is for runtime safety
         if (parent === undefined || parent === null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn(`Skill not specified -- unexpected error.`);
@@ -423,7 +420,6 @@ export class WH40KBaseActor extends Actor {
         /* eslint-enable no-restricted-syntax */
         const characteristic = sysChars !== undefined ? sysChars[statKey] : undefined;
         if (characteristic !== undefined && characteristic !== null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: characteristic is unknown from index access; cast to CharacteristicLike is necessary
             return this.#getCharacteristicBreakdown(statKey, characteristic as CharacteristicLike);
         }
 
@@ -433,7 +429,6 @@ export class WH40KBaseActor extends Actor {
         /* eslint-enable no-restricted-syntax */
         const skill = sysSkills !== undefined ? sysSkills[statKey] : undefined;
         if (skill !== undefined && skill !== null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: skill is unknown from index access; cast to SkillLike is necessary
             return this.#getSkillBreakdown(statKey, skill as SkillLike);
         }
 

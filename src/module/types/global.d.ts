@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars -- ambient type declarations for consumer use */
 /* eslint-disable no-restricted-syntax -- file is a Foundry V14 framework-boundary type surface; see header */
 /**
  * Global type declarations for the WH40K RPG Foundry VTT System.

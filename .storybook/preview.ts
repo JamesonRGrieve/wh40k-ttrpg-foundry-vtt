@@ -1,11 +1,14 @@
 import type { Preview } from '@storybook/html-vite';
 import { initializeStoryHandlebars } from '../stories/template-support';
 
-// Foundry's compiled stylesheet (foundry2.css) is served as a static asset and loaded
-// via a <link> tag in preview-head.html — it cannot go through Vite's PostCSS pipeline
-// because Tailwind interprets Foundry's native CSS @layer cascade directives as its own
-// @layer directives and errors out. The system CSS does run through PostCSS so Tailwind
-// utilities still get generated.
+// Storybook chrome CSS — REPLACEMENT for Foundry's `foundry2.css`. The chrome
+// stylesheet authors `@apply` directives against a dedicated Tailwind profile
+// (`tailwind.storybook.config.js`) so the deployable Storybook bundle ships
+// ZERO Foundry-origin assets. The main app stylesheet still loads alongside
+// it (utilities, design tokens, legacy component classes) — both pass through
+// PostCSS but with isolated Tailwind configs, see `.storybook/main.ts` for
+// the per-file plugin that handles the chrome compile.
+import '../stories/css/foundry-chrome.css';
 import '../src/css/entry.css';
 initializeStoryHandlebars();
 

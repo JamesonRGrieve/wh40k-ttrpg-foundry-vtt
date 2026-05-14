@@ -31,7 +31,7 @@ export class ActionData {
     }
 
     checkForPerils(): void {
-        if (this.rollData.power != null) {
+        if (this.rollData.power !== undefined) {
             const sourceActor = this.rollData.sourceActor;
             const sourceSystem = sourceActor !== null ? (sourceActor.system as { psy?: { rating: number } }) : null;
             const psyRating = sourceSystem?.psy?.rating ?? 0;
@@ -128,7 +128,7 @@ export class ActionData {
         const actionItem = this.rollData.weapon ?? this.rollData.power;
         const weaponRollData = this.rollData as WeaponRollData;
 
-        if (actionItem != null) {
+        if (actionItem !== undefined) {
             if (this.rollData.action === 'All Out Attack') {
                 this.addEffect('All Out Attack', 'The character cannot attempt Evasion reactions until the beginning of his next turn.');
             }
@@ -242,7 +242,7 @@ export class ActionData {
             this.rollData.dos = 1 + getDegree(this.rollData.modifiedTarget, this.rollData.roll?.total ?? 0);
 
             const damageData = this.damageData;
-            if (actionItem != null && damageData != null) {
+            if (actionItem !== undefined && damageData !== undefined) {
                 const itemSystem = actionItem.system as { isRanged?: boolean; isPsychicBarrage?: boolean; isPsychicStorm?: boolean; usesAmmo?: boolean };
                 if (
                     this.rollData.action === 'Semi-Auto Burst' ||
@@ -277,7 +277,7 @@ export class ActionData {
                 }
             }
 
-            if (this.rollData.dos > 1 && this.rollData.hasAttackSpecial('Twin-Linked') && damageData != null) {
+            if (this.rollData.dos > 1 && this.rollData.hasAttackSpecial('Twin-Linked') && damageData !== undefined) {
                 damageData.additionalHits++;
             }
         } else {
@@ -296,7 +296,7 @@ export class ActionData {
 
     async calculateHits(): Promise<void> {
         const weaponRollData = this.rollData as WeaponRollData;
-        if ((this.rollData.success || weaponRollData.isThrown) && this.damageData != null) {
+        if ((this.rollData.success || weaponRollData.isThrown) && this.damageData !== undefined) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔AttackDataLike are duck-typed siblings
             const attackData = this as unknown as AttackDataLike;
             let hit = await Hit.createHit(attackData, 0);
