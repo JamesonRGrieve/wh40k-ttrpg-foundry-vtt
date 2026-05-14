@@ -3789,6 +3789,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
             await this.actor.createEmbeddedDocuments('Item', cleanOriginItems as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
 
+            // Materialize granted talents on the actor so picks like
+            // "Weapon Training (Chain)" appear in the Talents tab with the
+            // chosen specialization stamped onto the item — instead of the
+            // generic "Weapon Training (any)" the source compendium entry
+            // carries. Choice-driven grants resolve through activeModifiers
+            // (see OriginPathData._calculateActiveModifiers).
+            await this._applyTalentGrantsFromOrigins();
+
             // Apply characteristic rolls if any are assigned
             const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
             const charRolls = this._charRolls;
@@ -4108,6 +4116,88 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         if (creations.length > 0) {
             await this.actor.createEmbeddedDocuments('Item', creations as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
+        }
+    }
+
+    /**
+     * Walk every committed origin's fixed talent grants AND its resolved
+     * choice-driven activeModifiers, fetch the source talent compendium item
+     * by UUID, stamp the player's chosen specialization onto the clone, and
+     * create it on the actor. Duplicates (same name + same specialization,
+     * case-insensitive) are skipped so a re-commit doesn't pile up identical
+     * talents.
+     * @private
+     */
+    async _applyTalentGrantsFromOrigins(): Promise<void> {
+        interface TalentPlan {
+            uuid: string;
+            specialization?: string;
+        }
+        const plans: TalentPlan[] = [];
+
+        const pushPlan = (uuid: string | null | undefined, specialization: string | undefined): void => {
+            if (typeof uuid !== 'string' || uuid === '') return;
+            plans.push({ uuid, specialization: specialization === '' ? undefined : specialization });
+        };
+
+        for (const [, selection] of this.selections) {
+            const system = this._getSelectionSystem(selection) as OriginPathSystemData | undefined;
+            // Fixed talents written into grants.talents
+            const fixedTalents = (system?.grants?.talents as Array<{ uuid?: string; specialization?: string }> | undefined) ?? [];
+            for (const t of fixedTalents) {
+                pushPlan(t.uuid, t.specialization);
+            }
+            // Choice-resolved talents in activeModifiers (type === 'talent')
+            const activeMods = system?.activeModifiers as Array<{ type?: string; itemUuid?: string | null; specialization?: string }> | undefined;
+            if (Array.isArray(activeMods)) {
+                for (const mod of activeMods) {
+                    if (mod?.type !== 'talent') continue;
+                    pushPlan(mod.itemUuid ?? null, mod.specialization);
+                }
+            }
+        }
+
+        if (plans.length === 0) return;
+
+        const toCreate: Record<string, unknown>[] = [];
+        const seenKeys = new Set<string>();
+
+        const normSpec = (s: string | undefined): string => (s ?? '').toLowerCase().trim();
+        const actorHasTalent = (name: string, specialization: string | undefined): boolean =>
+            this.actor.items.some((i) => {
+                if (i.type !== 'talent' || i.name !== name) return false;
+                const actorSpec = normSpec((i.system as { specialization?: string } | undefined)?.specialization);
+                return actorSpec === normSpec(specialization);
+            });
+
+        for (const plan of plans) {
+            const source = await fromUuid(plan.uuid);
+            if (!source) continue;
+            const sourceDoc = source as unknown as { name?: string; type?: string; toObject?: () => Record<string, unknown> };
+            if (sourceDoc.type !== 'talent') continue;
+            const itemData = sourceDoc.toObject ? sourceDoc.toObject() : (foundry.utils.deepClone(source) as unknown as Record<string, unknown>);
+            delete itemData._id;
+            itemData.system = (itemData.system as Record<string, unknown> | undefined) ?? {};
+            if (plan.specialization !== undefined && plan.specialization !== '') {
+                (itemData.system as Record<string, unknown>).specialization = plan.specialization;
+            }
+            const name = typeof itemData.name === 'string' ? itemData.name : sourceDoc.name ?? '';
+            const dedupKey = `${name}::${normSpec(plan.specialization)}`;
+            if (seenKeys.has(dedupKey)) continue;
+            seenKeys.add(dedupKey);
+            if (actorHasTalent(name, plan.specialization)) continue;
+
+            (itemData.flags as Record<string, unknown>) ??= {};
+            (itemData.flags as Record<string, Record<string, unknown>>).core ??= {};
+            (itemData.flags as Record<string, Record<string, unknown>>).core.sourceId = plan.uuid;
+            (itemData.flags as Record<string, Record<string, unknown>>)['wh40k-rpg'] ??= {};
+            (itemData.flags as Record<string, Record<string, unknown>>)['wh40k-rpg'].originPathGranted = true;
+
+            toCreate.push(itemData);
+        }
+
+        if (toCreate.length > 0) {
+            await this.actor.createEmbeddedDocuments('Item', toCreate as unknown as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
         }
     }
 
