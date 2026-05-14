@@ -420,7 +420,6 @@ export class TooltipsWH40K {
         const name = data.name ?? '';
         const { label } = data;
         const { baseValue } = data;
-        const basic = data.basic ?? false;
         const dataTB = data.trainingBonus;
         const actorUuid = data.actorUuid;
 
@@ -473,7 +472,7 @@ export class TooltipsWH40K {
         }
 
         const level = plus30 ? 4 : plus20 ? 3 : plus10 ? 2 : trained ? 1 : 0;
-        let training = basic ? localize('WH40K.Tooltip.Skill.BasicUntrained') : localize('WH40K.Skills.Untrained');
+        let training = localize('WH40K.Skills.Untrained');
         let trainingBonus = dataTB ?? 0;
         if (level > 0 && level <= skillRanks.length) {
             const rank = skillRanks[level - 1];

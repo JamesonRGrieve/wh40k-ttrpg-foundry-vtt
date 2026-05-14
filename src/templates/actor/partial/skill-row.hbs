@@ -5,7 +5,7 @@
     Hash params:
         entry — [skillKey, skillData] tuple from skillLists.standardColumns
 --}}
-<div class="tw-grid tw-grid-cols-skill-row tw-gap-2 tw-items-center tw-py-1 tw-px-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-md hover:tw-bg-[var(--color-bg-tertiary)] hover:tw-border-[var(--color-border-highlight)]{{#if (eq entry.[1].advanced true)}}{{/if}}{{#unless entry.[1].isGranted}} tw-opacity-50 hover:tw-opacity-65{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
+<div class="tw-grid tw-grid-cols-skill-row tw-gap-2 tw-items-center tw-py-1 tw-px-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-md hover:tw-bg-[var(--color-bg-tertiary)] hover:tw-border-[var(--color-border-highlight)]{{#unless (gt entry.[1].trainingLevel 0)}} tw-opacity-50 hover:tw-opacity-65{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
     <div class="tw-flex tw-items-center tw-gap-1.5 tw-min-w-0">
         <span class="tw-block tw-w-4 tw-h-4 tw-shrink-0 tw-opacity-90 tw-bg-contain tw-bg-no-repeat tw-bg-center" style="--icon-url: url('{{skillIcon entry.[0]}}'); background-image: var(--icon-url);"></span>
         <div class="tw-flex tw-items-center tw-gap-1 tw-flex-1 tw-min-w-0">
