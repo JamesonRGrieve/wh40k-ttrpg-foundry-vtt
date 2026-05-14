@@ -224,6 +224,22 @@ These rules are a starting point, not a contract. When you encounter a case the 
 
 The auto-fix tooling (`.auto-fix/run.py`) prompt encodes the same policy — cheap-model grinders are instructed to look for upstream schema/interface fixes before reaching for a Record cast.
 
+**Where boundary types belong**: extending Foundry's surface shapes is the job of `foundry-v14-overrides.d.ts`. When a Record cast is genuinely required at a Foundry boundary, the fix is to add the narrower shape to that overrides file as a `declare global` or `declare module 'fvtt-types/configuration'` augmentation — not to scatter `// eslint-disable` suppressions across every call site. Inline suppression is a last resort for shapes that don't yet exist in the overrides; the path to zero suppression is moving each unique boundary pattern into the overrides file once.
+
+### Null and undefined: choose the operator that matches the type
+
+This codebase runs with `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes` strict. Both flags produce `T | undefined` (never `T | null`) for many constructs. Using the wrong null-check operator creates an unreachable branch that ESLint's `no-unnecessary-condition` correctly flags — and is then suppressed, masking what is really a wrong-operator mistake.
+
+Match the operator to the actual type:
+
+| Value's type | Correct check |
+| --- | --- |
+| `T \| undefined` (index access, optional params, `noUncheckedIndexedAccess` results, optional fields) | `x === undefined` (or `x !== undefined`) |
+| `T \| null \| undefined` (DataModel optional schema fields with `nullable: true`, API responses, hand-typed unions) | `x == null` (loose, narrows both) |
+| `T \| null` (rare; explicit nullable result) | `x === null` |
+
+`eqeqeq` is configured `["warn", "always", { "null": "ignore" }]`, so `== null` is allowed for genuinely-nullable values; it is **not** a free pass to use loose equality everywhere. Using `x == null` on a `T | undefined` adds an unreachable `null` branch and earns an ESLint warning that must not be silenced with a suppression — change the operator instead.
+
 ### i18n typing
 
 - `pnpm i18n:gen` — flatten `src/lang/en.json` into a string-literal union at `src/module/types/i18n-keys.d.ts`. The pre-commit hook regenerates automatically.

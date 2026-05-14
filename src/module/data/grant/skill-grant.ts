@@ -144,14 +144,12 @@ export default class SkillGrantData extends BaseGrantData {
             }
 
             const currentSkill = skillSystem(actor).skills[schemaKey];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime safety: actor data may lack key
             if (currentSkill === undefined) {
                 result.errors.push(`Skill not found on actor: ${schemaKey}`);
                 continue;
             }
 
             const upgradeResult =
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: legacy data may lack specialization
                 specialization !== '' && Array.isArray(currentSkill.entries)
                     ? this._applySpecialistSkillUpgrade(actor, schemaKey, specialization, skillConfig.level, updates, result)
                     : this._applyStandardSkillUpgrade(actor, schemaKey, skillConfig.level, updates, result);

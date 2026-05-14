@@ -49,7 +49,6 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         classes: ['wh40k-rpg', 'npc-threat-scaler-dialog'],
         tag: 'form',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.NPC.ScaleThreat',
             icon: 'fa-solid fa-chart-line',
             minimizable: false,

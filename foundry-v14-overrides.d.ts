@@ -460,6 +460,30 @@ declare global {
     }
 
     // =========================================================================
+    // Mixin constructor signatures — TS2545 lock-in (documentation only)
+    // =========================================================================
+    //
+    // TypeScript's mixin-class rule (TS2545) requires every class returned by a
+    // mixin factory to declare `constructor(...args: any[]) { super(...args); }`.
+    // The `any[]` is mandatory: `ConstructorParameters<T>` errors with TS2545
+    // ("A mixin class must have a constructor with a single rest parameter of
+    // type 'any[]'"). This was tested empirically — the spread bivariance
+    // required for `class extends Base` to compose with an arbitrary base does
+    // not survive substitution with a generic constructor-parameters tuple.
+    //
+    // Therefore the ~10 mixin files in this codebase that declare
+    //   constructor(...args: any[]) { super(...args); }
+    // are NOT a suppression cop-out — they are the only TS-legal shape. The
+    // `eslint-disable @typescript-eslint/no-explicit-any` and
+    // `biome-ignore lint/suspicious/noExplicitAny` comments on those lines
+    // cannot be removed until TypeScript loosens the TS2545 constraint or the
+    // project adopts a non-mixin pattern (e.g. composition over inheritance).
+    //
+    // If you are tempted to "fix" one of these constructors with a generic, run
+    //   pnpm typecheck
+    // first — TS2545 will surface immediately and the build will fail.
+
+    // =========================================================================
     // Hooks V14
     // =========================================================================
 

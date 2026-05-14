@@ -1,0 +1,148 @@
+/**
+ * Storybook chrome stylesheet — replacement for Foundry's `foundry2.css`.
+ *
+ * Foundry's lead developer has declined permission for this repo to
+ * redistribute `foundry2.css` (or any other Foundry distribution asset).
+ * Storybook previously loaded `foundry2.css` via a `<link>` in
+ * `.storybook/preview-head.html`, which made the deployable Storybook bundle
+ * depend on `.foundry-release/public/css/foundry2.css`.
+ *
+ * This file replaces that load. Every selector below is one of the ~15
+ * "chrome" class names that story render trees produce (the audit set:
+ * `.app`, `.window-app`, `.sheet`, `.window-header`, `.window-content`,
+ * `.themed`, `.theme-dark`, `.form-group`, `.form-fields`, `.tabs`, `.tab`,
+ * `.active`, `.sheet-tabs`, `.prosemirror`, `.editor-content`). The
+ * declarations are AUTHORED, not transcribed — each rule composes Tailwind
+ * utilities resolved by `tailwind.storybook.config.js` against a palette
+ * we picked, not Foundry's. The visual goal is "story render looks like a
+ * dark 40K-themed sheet against a dark Storybook backdrop"; the source of
+ * the styling is utility composition.
+ *
+ * Hover / focus / active variants are included where a control would
+ * realistically need them in story interaction tests. Sizes (`min-w-[...]`,
+ * `min-h-[...]`) reflect typical sheet dimensions used by `renderSheet*`
+ * helpers, not Foundry's actual window sizing.
+ */
+/* biome-ignore-start lint/suspicious/noUnknownAtRules: tailwind directives processed by PostCSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* biome-ignore-end lint/suspicious/noUnknownAtRules: tailwind directives processed by PostCSS */
+
+@layer components {
+    /* App / window container — top-level box for any sheet-like surface.
+       Composed: dark stone background, amber frame, body text color,
+       soft shadow, generous padding so contents breathe. */
+    .app,
+    .window-app {
+        @apply bg-chrome-bg text-chrome-text border border-chrome-border rounded-chrome-md shadow-xl;
+        @apply min-w-[320px] min-h-[200px] flex flex-col;
+        font-family: 'Lusitana', serif;
+    }
+
+    /* Window title bar. Slightly raised tone, accent-colored text, bottom
+       frame seam against the content. */
+    .window-header {
+        @apply bg-chrome-bg-elev text-chrome-accent border-b border-chrome-border;
+        @apply px-3 py-2 font-semibold tracking-wide rounded-t-chrome-md;
+        font-family: 'Cinzel', serif;
+        font-size: 0.95rem;
+    }
+
+    /* Window body — where partials mount. Inner padding plus scroll capacity
+       for tall sheets. */
+    .window-content {
+        @apply bg-chrome-bg text-chrome-text p-3 flex-1 overflow-auto;
+    }
+
+    /* Sheet — same surface treatment as .app, slightly tighter padding so a
+       full-sheet story (header + tabs + body) reads as one tree. */
+    .sheet {
+        @apply bg-chrome-bg text-chrome-text border border-chrome-border rounded-chrome-md;
+        @apply flex flex-col p-2;
+    }
+
+    /* Themed root + dark theme — Foundry's UI theming gates many classes
+       behind these. We honor them by anchoring the dark palette here, so
+       the chrome reads consistently whether the canvas is themed or not. */
+    .themed {
+        @apply text-chrome-text;
+    }
+    .theme-dark {
+        @apply bg-chrome-bg text-chrome-text;
+    }
+
+    /* Form group — label-over-input pair, the unit most dialogs compose.
+       Matches the shape of the main app's `.form-group` addComponents rule
+       but with chrome-palette values so unstyled stories don't look raw. */
+    .form-group {
+        @apply mb-2 flex flex-col gap-1;
+    }
+    .form-group > label {
+        @apply text-chrome-text font-semibold text-sm;
+        font-family: 'Cinzel', serif;
+    }
+    .form-group input[type='text'],
+    .form-group input[type='number'],
+    .form-group input[type='email'],
+    .form-group input[type='password'],
+    .form-group select,
+    .form-group textarea {
+        @apply bg-chrome-bg-input text-chrome-text border border-chrome-border rounded-chrome-sm;
+        @apply px-2 py-1 outline-none w-full;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        @apply border-chrome-border-strong;
+    }
+
+    /* Form fields — horizontal cluster of inline controls, common inside
+       a single form-group for paired number+unit, etc. */
+    .form-fields {
+        @apply flex flex-row items-center gap-2;
+    }
+
+    /* Tab strip + individual tabs. Inactive tabs sit on the elevated tone;
+       the active tab uses the accent border + slightly raised background to
+       signal selection. Sheet-tabs is the dedicated strip Foundry sheets use
+       above their PARTS content. */
+    .tabs,
+    .sheet-tabs {
+        @apply flex flex-row gap-1 border-b border-chrome-border;
+        @apply bg-chrome-bg-elev rounded-t-chrome-sm;
+    }
+    .tab {
+        @apply px-3 py-1.5 text-chrome-text-muted cursor-pointer select-none;
+        @apply border-b-2 border-transparent;
+        font-family: 'Cinzel', serif;
+        font-size: 0.85rem;
+    }
+    .tab:hover {
+        @apply text-chrome-text;
+    }
+    .tab.active,
+    .active.tab {
+        @apply text-chrome-accent border-chrome-accent;
+    }
+
+    /* Standalone `.active` modifier — Foundry sprinkles this on non-tab
+       elements (list rows, buttons, toggles). Provide a low-intensity
+       accent treatment so it's distinguishable but not loud. */
+    .active:not(.tab) {
+        @apply text-chrome-accent;
+    }
+
+    /* ProseMirror / editor content — the rich-text editor surface. A few
+       sheets embed this in compendium-safe wrappers; we render it as a
+       sunken pad so story snapshots match interactive ones. */
+    .prosemirror,
+    .editor-content {
+        @apply bg-chrome-bg-input text-chrome-text border border-chrome-border rounded-chrome-sm;
+        @apply p-2 min-h-[80px];
+    }
+    .prosemirror:focus-within,
+    .editor-content:focus-within {
+        @apply border-chrome-border-strong;
+    }
+}

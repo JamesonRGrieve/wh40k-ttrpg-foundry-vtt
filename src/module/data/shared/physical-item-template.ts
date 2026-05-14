@@ -140,7 +140,6 @@ export default class PhysicalItemTemplate extends SystemDataModel {
             return;
         }
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: CostShape describes pre-migration data where numeric fields may be any type; unknown is correct here
         interface CostShape {
             dh1?: { throneGelt?: unknown }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
             dh2?: { influence?: unknown; homebrew?: { requisition?: unknown; throneGelt?: unknown } }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field values may be any type

@@ -131,7 +131,6 @@ type RawSource = Record<string, unknown>;
 // eslint-disable-next-line no-restricted-syntax -- boundary: receives raw unvalidated source
 function asRawSource(value: unknown): RawSource | null {
     if (typeof value === 'object' && value !== null) {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: migration receives raw unvalidated source
         return value as RawSource;
     }
     return null;

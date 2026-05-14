@@ -93,7 +93,6 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
             Array.isArray(resolvedWeaponTypes) ? (resolvedWeaponTypes as string[]) : Array.from((resolvedWeaponTypes as Set<string>) ?? new Set()),
         );
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: resolveLineVariant accepts unknown to dispatch over line-variant union shapes; casts are necessary throughout this block
         this.modifiers = foundry.utils.mergeObject(
             {
                 damage: 0,
@@ -146,7 +145,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         if (!this.weaponTypes.size) return game.i18n.localize('WH40K.Ammunition.AllWeapons');
         return Array.from(this.weaponTypes)
             .map((t) => {
-                // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: CONFIG.WH40K is populated at Foundry runtime; optional chaining guards against missing registry during early init or tests
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: CONFIG.WH40K is populated at Foundry runtime; optional chaining guards against missing registry during early init or tests
                 const label = CONFIG.WH40K?.weaponTypes?.[t]?.label;
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- label type may appear non-nullable after the optional chain but can be undefined at runtime
                 return label !== undefined ? game.i18n.localize(label) : t;

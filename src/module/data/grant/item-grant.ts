@@ -97,7 +97,6 @@ export default class ItemGrantData extends BaseGrantData {
 
         for (const [configIndex, itemConfig] of items.entries()) {
             const { uuid, optional, overrides } = itemConfig;
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: fetchedItems is array-indexed
             const sourceItem = fetchedItems[configIndex] ?? null;
 
             if (!sourceItem) {
@@ -145,7 +144,6 @@ export default class ItemGrantData extends BaseGrantData {
 
             // Track what was applied
             for (const [index, item] of created.entries()) {
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: itemsToCreate is array-indexed
                 const sourceUuid = itemsToCreate[index]?.uuid ?? '';
                 result.applied[sourceUuid] = item.id ?? '';
                 result.notifications.push(`Granted: ${item.name}`);
@@ -207,7 +205,6 @@ export default class ItemGrantData extends BaseGrantData {
         );
 
         for (const [index, item] of created.entries()) {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: items is array-indexed
             result.applied[items[index]?.uuid ?? ''] = item.id ?? '';
             result.notifications.push(`Restored: ${item.name}`);
         }
@@ -232,7 +229,6 @@ export default class ItemGrantData extends BaseGrantData {
         const fetchedItems = await Promise.all(this.items.map(async (cfg) => this._fetchItem(cfg.uuid)));
 
         for (const [idx, itemConfig] of this.items.entries()) {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: fetchedItems is array-indexed
             const item = fetchedItems[idx] ?? null;
             if (item) {
                 summary.details.push({

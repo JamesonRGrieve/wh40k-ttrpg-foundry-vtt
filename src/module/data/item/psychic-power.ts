@@ -160,12 +160,10 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             this.disciplineLabel,
             `PR Cost: ${this.prCost}`,
             `Focus: ${this.focusTestLabel}`,
-            // eslint-disable-next-line no-restricted-syntax -- boundary: prototype getter invoked via descriptor; return type is unknown at compile time
             ...((Object.getOwnPropertyDescriptor(ActivationTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []),
         ];
 
         if (this.isAttack) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: prototype getter invoked via descriptor; return type is unknown at compile time
             props.push(...((Object.getOwnPropertyDescriptor(DamageTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []));
         }
 

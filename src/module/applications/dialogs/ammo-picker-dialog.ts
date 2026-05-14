@@ -47,7 +47,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
         classes: ['wh40k-rpg', 'ammo-picker-dialog'],
         tag: 'div',
         window: {
-            title: game.i18n.localize('WH40K.AmmoPicker.Title'),
+            title: 'WH40K.AmmoPicker.Title',
             icon: 'fa-solid fa-crosshairs',
             minimizable: false,
             resizable: false,

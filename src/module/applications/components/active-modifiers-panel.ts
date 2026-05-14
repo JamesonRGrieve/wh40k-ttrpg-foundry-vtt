@@ -53,7 +53,6 @@ interface ModifierEntry {
     isEffect?: boolean | undefined;
 }
 
-// eslint-disable-next-line no-restricted-syntax -- boundary: actions table is a free-form record indexed by Foundry's action dispatcher
 type BaseWithOptions = {
     DEFAULT_OPTIONS?: {
         // eslint-disable-next-line no-restricted-syntax -- boundary: actions table is a free-form record indexed by Foundry's action dispatcher
@@ -107,7 +106,6 @@ export function ActiveModifiersMixin<TBase extends ActorSheetCtor>(Base: TBase):
             // Toggle the item's active state
             const system = item.system as { active?: boolean };
             const isActive = system.active ?? true;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update accepts arbitrary path-keyed payloads
             await item.update({ 'system.active': !isActive });
         }
 

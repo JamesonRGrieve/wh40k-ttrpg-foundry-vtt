@@ -79,7 +79,6 @@ type PackLike = {
 };
 /* eslint-enable no-restricted-syntax */
 
-// eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns an untyped Foundry Document; cast to EmbeddedItemLike is safe because callers only use fields declared on that type
 async function fetchByUuid(uuid: string): Promise<EmbeddedItemLike | null> {
     return (await fromUuid(uuid)) as EmbeddedItemLike | null;
 }
@@ -96,14 +95,14 @@ function writeProperty(obj: Record<string, unknown>, path: string, value: unknow
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: type guard; value is unknown by design — this is the validation boundary
 function isPackLike(value: unknown): value is PackLike {
-    if (value === null || value === undefined || typeof value !== 'object') return false;
+    if (value == null || typeof value !== 'object') return false;
     const pack = value as Partial<PackLike>;
     return pack.metadata !== undefined && typeof pack.getIndex === 'function';
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: type guard; value is unknown by design — this is the validation boundary
 function isIndexEntry(value: unknown): value is IndexEntry {
-    if (value === null || value === undefined || typeof value !== 'object') return false;
+    if (value == null || typeof value !== 'object') return false;
     const entry = value as Partial<IndexEntry>;
     return typeof entry._id === 'string' && typeof entry.type === 'string' && typeof entry.name === 'string';
 }
@@ -240,7 +239,6 @@ interface ActorResyncStats {
  * Process all items on one actor: resolve sources, build patches, apply them.
  * Returns stats for logging.
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: updateEmbeddedDocuments update payload is Record<string,unknown>
 async function processActor(
     actor: ActorLike,
     sourceByUuid: Map<string, EmbeddedItemLike | null>,
@@ -267,7 +265,6 @@ async function processActor(
             const key = `${gameSystem ?? '?'}|${item.type}|${item.name ?? '?'}`;
             if (!warnedKeys.has(key)) {
                 warnedKeys.add(key);
-                // eslint-disable-next-line no-console
                 console.warn(
                     `[wh40k-rpg] compendium resync: no source for ${item.type} "${item.name}" ` +
                         `on actor "${actor.name}" (gameSystem=${gameSystem ?? 'unknown'})`,
@@ -312,7 +309,6 @@ async function processActor(
  */
 export async function resyncWorldFromCompendiums(): Promise<void> {
     if (!game.user.isGM) return;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get() returns any; Foundry does not type individual settings values
     const enabled = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.resyncOnReady) as boolean | undefined;
     if (enabled === false) return;
 

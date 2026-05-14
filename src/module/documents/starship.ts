@@ -32,8 +32,7 @@ type StarshipSystemData = WH40KBaseActor['system'] & {
 export class WH40KStarship extends WH40KBaseActor {
     declare system: StarshipSystemData;
 
-    // biome-ignore lint/suspicious/noConfusingVoidType: Foundry _preCreate contract — returning false cancels creation; void means proceed
-    protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | void> {
+    protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | undefined> {
         await super._preCreate(data, options, user);
         const dataWithName = data as { name?: string } | undefined;
         // eslint-disable-next-line no-restricted-syntax -- boundary: updateSource expects typed token delta; Record<string,unknown> is the only viable shape for dot-notation token update paths
@@ -46,6 +45,7 @@ export class WH40KStarship extends WH40KBaseActor {
             'token.name': dataWithName?.name,
         };
         this.updateSource(initData);
+        return undefined;
     }
 
     /** @override */

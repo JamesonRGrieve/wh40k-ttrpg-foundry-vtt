@@ -114,7 +114,6 @@ export function getConvertedActorType(targetSystem: ConvertibleCharacterSystem, 
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: systemData is untyped actor system data
 function normalizeSystemSpecificFields(systemData: Record<string, unknown>, targetSystem: ConvertibleCharacterSystem): void {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: systemData is untyped
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess guard for strict tsconfig
     systemData['gameSystem'] = TARGET_GAME_SYSTEM_IDS[targetSystem] as string | undefined;
 

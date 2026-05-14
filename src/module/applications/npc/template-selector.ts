@@ -53,7 +53,6 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         classes: ['wh40k-rpg', 'template-selector'],
         tag: 'div',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: title is a WH40K.* localization key, not a hardcoded string; lint rule cannot distinguish
             title: 'WH40K.NPC.Template.SelectTitle',
             icon: 'fa-solid fa-file-lines',
             minimizable: false,
@@ -451,7 +450,6 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                     await actor.createEmbeddedDocuments('Item', itemsToCreate as unknown as Parameters<typeof actor.createEmbeddedDocuments<'Item'>>[1]);
                 }
 
-                // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
                 ui.notifications.info(`Created NPC: ${actor.name}`);
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 marks Document.sheet.render legacy in typedefs; minimal local interface mirrors the V2 runtime contract
                 const actorSheet = (actor as unknown as { sheet?: { render(force: boolean): void } }).sheet;

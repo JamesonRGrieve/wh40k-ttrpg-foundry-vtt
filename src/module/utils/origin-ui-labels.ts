@@ -70,7 +70,6 @@ export function getTrainingLabel(level: string, systemConfig?: BaseSystemConfig)
         veteran: 'Veteran',
     };
     // level in GENERIC_LABELS guarantees the value is present at runtime; ?? handles strict tsconfig
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig
     if (level in GENERIC_LABELS) return GENERIC_LABELS[level] ?? level;
     return level !== '' ? level : 'Trained';
 }

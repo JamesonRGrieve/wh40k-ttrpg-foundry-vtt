@@ -62,8 +62,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: armourPoints is untyped Foundry validation data
     static #inferCoverageFromArmourPoints(armourPoints: Record<string, unknown> | undefined): Set<string> {
-        // eslint-disable-next-line eqeqeq -- intentional: == null checks both null and undefined
-        if (armourPoints == null || typeof armourPoints !== 'object') return new Set();
+        if (armourPoints === undefined || typeof armourPoints !== 'object') return new Set();
 
         return new Set(
             Object.entries(armourPoints)
@@ -224,7 +223,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     override prepareBaseData(): void {
         super.prepareBaseData();
 
-        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument -- boundary: this.parent is any-typed Foundry document; _source is untyped
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument -- boundary: this.parent is any-typed Foundry document; _source is untyped
         const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
         this.type = resolveLineVariant(this.type, lineKey);
         this.armourPoints = foundry.utils.mergeObject(
@@ -302,7 +301,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         const hasArms = covered.includes('leftArm') && covered.includes('rightArm');
         const hasLegs = covered.includes('leftLeg') && covered.includes('rightLeg');
 
-        const parts = [];
+        const parts: string[] = [];
         if (covered.includes('head')) parts.push('Head');
         if (covered.includes('body')) parts.push('Body');
         if (hasArms) parts.push('Arms');
@@ -327,7 +326,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         const coverage = this._getEffectiveCoverage();
         if (coverage.has('all')) return '●●●●●●';
 
-        const icons = [];
+        const icons: string[] = [];
         if (coverage.has('head')) icons.push('●');
         else icons.push('○');
         if (coverage.has('body')) icons.push('●');
@@ -526,7 +525,6 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get propertiesArray(): Array<{ id: string; label: string; description: string }> {
         const props: Array<{ id: string; label: string; description: string }> = [];
-        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.WH40K is typed non-null but populated lazily at runtime
         const armourPropConfig =
             (CONFIG.WH40K as { armourProperties?: Record<string, { label: string; description: string }> } | undefined)?.armourProperties ?? {};
 
@@ -557,7 +555,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get compendiumSummary(): string {
-        const parts = [];
+        const parts: string[] = [];
         parts.push(`AP ${this.maxAP}`);
         parts.push(this.coverageLabel);
         if (this.maxAgility !== null) parts.push(`Max Ag ${this.maxAgility}`);
@@ -569,7 +567,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get statLine(): string {
-        const parts = [];
+        const parts: string[] = [];
         parts.push(this.typeLabel);
         parts.push(`AP: ${this.apSummary}`);
         parts.push(`Coverage: ${this.coverageLabel}`);
@@ -717,7 +715,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @override */
     get chatProperties(): string[] {
-        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: mixin prototype access; calling getter with explicit this binding
+        // eslint-disable-next-line @typescript-eslint/unbound-method -- boundary: mixin prototype access; calling getter with explicit this binding
         const parentGet = Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get;
         const props = [...((parentGet?.call(this) as string[] | undefined) ?? [])];
 

@@ -27,7 +27,6 @@ export default class DamageRollDialog extends BaseRollDialog {
             width: 300,
         },
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.Dialog.DamageRollTitle',
         },
     };

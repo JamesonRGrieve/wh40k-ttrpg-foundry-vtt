@@ -67,7 +67,6 @@ export class TargetedActionManager {
         let sourceToken: CanvasToken | undefined;
 
         if (source !== null) {
-            // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
             sourceToken = (source as CanvasToken).actor != null ? (source as CanvasToken) : (source as WH40KBaseActor).getActiveTokens()[0];
         } else {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- game.canvas?.tokens?.controlled optional chain; undefined is possible at invocation
@@ -85,7 +84,7 @@ export class TargetedActionManager {
             sourceToken = controlled[0];
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, eqeqeq -- sourceToken guard per noUncheckedIndexedAccess; loose null check intentional
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- sourceToken guard per noUncheckedIndexedAccess; loose null check intentional
         if (sourceToken !== undefined && sourceToken.actor == null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn('Token must be associated with an actor!');
@@ -103,11 +102,10 @@ export class TargetedActionManager {
         let targetToken: CanvasToken | undefined;
 
         if (target !== null) {
-            // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
             targetToken = (target as CanvasToken).actor != null ? (target as CanvasToken) : (target as WH40KBaseActor).getActiveTokens()[0];
         } else {
             const targetedObjects = game.user.targets;
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, eqeqeq -- game.user.targets may be undefined at invocation time; loose null check intentional
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- targetedObjects may be null at runtime per Foundry typing gaps
             if (targetedObjects == null || targetedObjects.size === 0) return undefined;
             if (targetedObjects.size > 1) {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
@@ -117,7 +115,7 @@ export class TargetedActionManager {
             targetToken = [...targetedObjects.values()][0];
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, eqeqeq -- targetToken guard per noUncheckedIndexedAccess; loose null check intentional
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- targetToken guard per noUncheckedIndexedAccess; loose null check intentional
         if (targetToken !== undefined && targetToken.actor == null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn('Target token must be associated with an actor!');
@@ -138,18 +136,15 @@ export class TargetedActionManager {
 
         // Source
         const sourceToken = this.getSourceToken(source);
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         const sourceActorData = sourceToken != null ? (sourceToken.actor as WH40KBaseActor) : (source as WH40KBaseActor);
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, eqeqeq -- sourceActorData may be null/undefined; loose null check intentional
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- sourceActorData may be null at runtime despite non-null type
         if (sourceActorData == null) return undefined;
 
         // Target
         const targetToken = this.getTargetToken(target);
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         const targetActorData = targetToken != null ? (targetToken.actor as WH40KBaseActor) : (target as WH40KBaseActor);
 
         // Distance
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         const targetDistance = sourceToken != null && targetToken != null ? this.tokenDistance(sourceToken, targetToken) : 0;
 
         return {
@@ -169,12 +164,10 @@ export class TargetedActionManager {
     ): void {
         game.wh40k.log('performWeaponAttack', { source, target, weapon });
         const rollData = this.createSourceAndTargetData(source, target);
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (rollData == null) return;
 
         // Weapon
         const weapons =
-            // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
             weapon != null
                 ? [weapon]
                 : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'weapon' && item.system.equipped === true) as WH40KItem[]);
@@ -203,11 +196,9 @@ export class TargetedActionManager {
     ): void {
         game.wh40k.log('performPsychicAttack');
         const rollData = this.createSourceAndTargetData(source, target);
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (rollData == null) return;
 
         // Powers
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         const powers = psychicPower != null ? [psychicPower] : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'psychicPower') as WH40KItem[]);
         if (powers.length === 0) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately

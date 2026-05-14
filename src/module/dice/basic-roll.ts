@@ -228,7 +228,7 @@ export default class BasicRollWH40K extends Roll {
         const parts = [(config['base'] as string | undefined) ?? '1d100'];
 
         // Add flat modifier
-        if (config['modifier'] !== undefined && config['modifier'] !== null && config['modifier'] !== '') {
+        if (config['modifier'] != null && config['modifier'] !== '') {
             const mod = parseInt(config['modifier'] as string, 10);
             if (mod !== 0) {
                 parts.push(mod > 0 ? `+ ${mod}` : `- ${Math.abs(mod)}`);

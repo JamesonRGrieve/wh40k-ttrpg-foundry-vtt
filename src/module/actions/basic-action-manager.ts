@@ -79,14 +79,11 @@ export class BasicActionManager {
         event.preventDefault();
         const displayToggle = event.currentTarget as HTMLElement;
         const span = displayToggle.querySelector('span');
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (span != null) {
             span.classList.toggle('active');
         }
         const target = displayToggle.dataset['toggle'];
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         const targetEl = target != null && target !== '' ? document.getElementById(target) : null;
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (targetEl != null) {
             targetEl.style.display = targetEl.style.display === 'none' ? '' : 'none';
         }
@@ -97,7 +94,6 @@ export class BasicActionManager {
         const btn = event.currentTarget as HTMLButtonElement;
         const rollId = btn.dataset['rollId'];
         const actionData = this.getActionData(rollId);
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (actionData == null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn('Roll data no longer available. Cannot roll damage.');
@@ -107,14 +103,12 @@ export class BasicActionManager {
         // Disable button to prevent double-rolling
         btn.disabled = true;
         const statusSpan = btn.querySelector('span:last-child');
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (statusSpan != null) statusSpan.textContent = 'Rolled';
 
         // Calculate hits (deferred from attack roll)
         await actionData.calculateHits();
 
         // Build template data
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         const damageRolls = actionData.damageData?.hits.map((h: Hit) => h.damageRoll).filter((r: Roll | undefined): r is Roll => r != null);
         const templateData = {
             weaponName: actionData.rollData.name,
@@ -143,7 +137,6 @@ export class BasicActionManager {
         const rollId = div.dataset['rollId'];
         const actionData = this.getActionData(rollId);
 
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (actionData == null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn(`Action data expired. Unable to perform action.`);
@@ -170,7 +163,6 @@ export class BasicActionManager {
         const rollId = div.dataset['rollId'];
         const actionData = this.getActionData(rollId);
 
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (actionData == null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn(`Action data expired. Unable to perform action.`);
@@ -231,7 +223,6 @@ export class BasicActionManager {
         const targetUuid = div.dataset['targetUuid'];
 
         let targetActor: WH40KBaseActorDocument | undefined;
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (targetUuid != null && targetUuid !== '') {
             const doc = await fromUuid(targetUuid);
             // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid result may be a TokenDocument with .actor; no typed accessor in fvtt-types
@@ -245,7 +236,6 @@ export class BasicActionManager {
                 targetActor = token.actor as WH40KBaseActorDocument | undefined;
             }
         }
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (targetActor == null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn(`Cannot determine target actor to assign hit.`);
@@ -269,7 +259,6 @@ export class BasicActionManager {
         const penetration = div.dataset['penetration'];
         const fatigue = div.dataset['fatigue'];
 
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (targetUuid == null || targetUuid === '') {
             // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn(`Cannot determine target UUID to assign hit.`);
@@ -284,14 +273,12 @@ export class BasicActionManager {
                 : ((actor as unknown as { actor?: unknown } | null)?.actor as WH40KBaseActorDocument | undefined);
         /* eslint-enable no-restricted-syntax */
 
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (targetActor == null) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn(`Cannot determine actor to assign hit.`);
             return;
         }
         for (const field of [damage, penetration, fatigue]) {
-            // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
             if (field != null && field !== '' && Number.isNaN(parseInt(field, 10))) {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
                 ui.notifications.warn(`Unable to determine damage/penetration/fatigue to assign.`);
@@ -300,15 +287,10 @@ export class BasicActionManager {
         }
 
         const hit = new Hit();
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (location != null && location !== '') hit.location = location;
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (damage != null && damage !== '') hit.totalDamage = Number.parseInt(damage, 10);
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (penetration != null && penetration !== '') hit.totalPenetration = Number.parseInt(penetration, 10);
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (fatigue != null && fatigue !== '') hit.totalFatigue = Number.parseInt(fatigue, 10);
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (damageType != null && damageType !== '') hit.damageType = damageType;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: AssignDamageData accepts untyped system ActorLike; cast through unknown is necessary
@@ -325,7 +307,6 @@ export class BasicActionManager {
     assignDamageTool(): void {
         const sourceToken = DHTargetedActionManager.getSourceToken();
         const sourceActor = sourceToken?.actor as WH40KBaseActorDocument | undefined;
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (sourceActor == null) return;
 
         const hitData = new Hit();
@@ -336,7 +317,6 @@ export class BasicActionManager {
     }
 
     getActionData(id: string | undefined): ActionData | null {
-        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
         if (id == null || id === '') return null;
         return this.storedRolls[id] ?? null;
     }

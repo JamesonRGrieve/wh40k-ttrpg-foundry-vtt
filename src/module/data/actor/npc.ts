@@ -554,7 +554,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         }
         const fullKey = NPCData.CHARACTERISTIC_MAP[key];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: Record index access may be undefined at runtime
-        if (fullKey == null || !(fullKey in this.characteristics)) {
+        if (fullKey === undefined || !(fullKey in this.characteristics)) {
             return null;
         }
         return this.characteristics[fullKey] ?? null;
@@ -633,7 +633,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
 
         // Apply custom override if enabled
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: Record<string,number> index access may be undefined at runtime
-        if (this.customStats.enabled && this.customStats.skills[skillName] != null) {
+        if (this.customStats.enabled && this.customStats.skills[skillName] !== undefined) {
             return this.customStats.skills[skillName];
         }
 
@@ -761,7 +761,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         const weapons = this.weapons.simple;
         const weapon = weapons[index];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: array index access may be undefined at runtime
-        if (weapon == null) return null;
+        if (weapon === undefined) return null;
 
         // Create the weapon item
         const itemData = {

@@ -34,7 +34,6 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         classes: ['wh40k-rpg', 'transaction-request-dialog'],
         tag: 'form',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.Dialog.BarterTitle',
             icon: 'fa-solid fa-handshake',
             resizable: true,
@@ -147,7 +146,6 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
                 type: item.type,
                 // eslint-disable-next-line no-restricted-syntax -- boundary: TransactionManager surfaces items as base Item.Implementation; system shape is system-specific
                 quantity: (item.system as TransactionItemSystemView).quantity ?? 1,
-                // eslint-disable-next-line no-restricted-syntax -- boundary: TransactionManager surfaces items as base Item.Implementation; system shape is system-specific
                 cost: (item.system as TransactionItemSystemView).cost?.value ?? 0,
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- selectedItem may be null
                 selected: item.id === selectedItem?.id,

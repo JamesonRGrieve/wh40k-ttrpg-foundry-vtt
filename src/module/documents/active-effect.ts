@@ -26,7 +26,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      */
     override get isTemporary(): boolean {
         const duration = this.duration.seconds ?? this.duration.rounds ?? this.duration.turns;
-        return duration !== undefined && duration !== null && duration > 0;
+        return duration != null && duration > 0;
     }
 
     /**
@@ -260,15 +260,15 @@ export class WH40KActiveEffect extends ActiveEffect {
             return game.i18n.localize('WH40K.ActiveEffect.Permanent');
         }
 
-        if (d.rounds !== null && d.rounds !== undefined && d.rounds > 0) {
+        if (d.rounds != null && d.rounds > 0) {
             return game.i18n.format('WH40K.ActiveEffect.DurationRounds', { rounds: String(d.rounds) });
         }
 
-        if (d.turns !== null && d.turns !== undefined && d.turns > 0) {
+        if (d.turns != null && d.turns > 0) {
             return game.i18n.format('WH40K.ActiveEffect.DurationTurns', { turns: String(d.turns) });
         }
 
-        if (d.seconds !== null && d.seconds !== undefined && d.seconds > 0) {
+        if (d.seconds != null && d.seconds > 0) {
             return game.i18n.format('WH40K.ActiveEffect.DurationSeconds', { seconds: String(d.seconds) });
         }
 
@@ -285,13 +285,13 @@ export class WH40KActiveEffect extends ActiveEffect {
         const d = this.duration;
         const combat = game.combat;
 
-        if (d.rounds !== null && d.rounds !== undefined && d.rounds > 0 && combat) {
+        if (d.rounds != null && d.rounds > 0 && combat) {
             const startRound = d.startRound ?? 0;
             const currentRound = combat.round;
             return Math.max(0, startRound + d.rounds - currentRound);
         }
 
-        if (d.turns !== null && d.turns !== undefined && d.turns > 0 && combat) {
+        if (d.turns != null && d.turns > 0 && combat) {
             const startTurn = d.startTurn ?? 0;
             const currentTurn = combat.turn ?? 0;
             const startRound = d.startRound ?? 0;
@@ -301,7 +301,7 @@ export class WH40KActiveEffect extends ActiveEffect {
             return Math.max(0, totalStart + d.turns - totalCurrent);
         }
 
-        if (d.seconds !== null && d.seconds !== undefined && d.seconds > 0) {
+        if (d.seconds != null && d.seconds > 0) {
             const startTime = d.startTime ?? 0;
             const currentTime = game.time.worldTime;
             return Math.max(0, startTime + d.seconds - currentTime);

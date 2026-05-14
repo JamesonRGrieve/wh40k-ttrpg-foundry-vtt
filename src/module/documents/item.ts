@@ -620,7 +620,6 @@ export class WH40KItem extends WH40KItemContainer {
             return this.sendToChat();
         }
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: rollConfig shape lives in talent-specific subsystem
         const rollConfig = this.system['rollConfig'] as
             | {
                   characteristic?: string;
@@ -738,7 +737,6 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Orders typically use Command or relevant skill
         const orderActor = this.#wh40kActor();
-        // eslint-disable-next-line no-restricted-syntax -- boundary: skill bag indexed by free-form key
         const command = (orderActor?.system as { skills?: Record<string, { current?: number }> } | undefined)?.skills?.['command'];
         const targetValue = command?.current ?? 50;
 
@@ -858,7 +856,6 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Apply fate modifier
         if (modifiers.fate !== undefined && modifiers.fate !== 0) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: fate is optional on OriginActorLike legacy shape
             const currentFate: number = actor.system.fate?.total ?? 0;
             updates['system.fate.total'] = currentFate + modifiers.fate;
         }

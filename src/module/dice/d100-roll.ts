@@ -48,7 +48,6 @@ export default class D100Roll extends BasicRollWH40K {
      * @type {number}
      */
     get target(): number {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: configuration['target'] may be undefined at runtime; 0 is the safe fallback
         return (this.configuration['target'] as number | undefined) ?? 0;
     }
 
@@ -253,7 +252,7 @@ export default class D100Roll extends BasicRollWH40K {
         // Add d100-specific flags
         // eslint-disable-next-line no-restricted-syntax -- boundary: chatData['flags'] is an untyped Foundry flags bag from parent; cast required to access wh40k-rpg sub-bag
         const flags = chatData['flags'] as Record<string, unknown>;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- no-unnecessary-condition: noUncheckedIndexedAccess guard: flags['wh40k-rpg'] may be undefined; no-restricted-syntax: boundary cast
+        // eslint-disable-next-line no-restricted-syntax -- boundary: noUncheckedIndexedAccess guard: flags['wh40k-rpg'] may be undefined; boundary cast
         const existingFlags = (flags['wh40k-rpg'] as Record<string, unknown> | undefined) ?? {};
         flags['wh40k-rpg'] = {
             ...existingFlags,

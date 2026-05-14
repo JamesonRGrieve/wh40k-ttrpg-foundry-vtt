@@ -121,7 +121,6 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         classes: ['wh40k-rpg', 'stat-block-parser'],
         tag: 'form',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- already a WH40K.* langpack key; rule false-positives on static title
             title: 'WH40K.NPC.Import.Title',
             icon: 'fa-solid fa-file-import',
             minimizable: false,
@@ -420,7 +419,6 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} input - JSON string.
      * @returns {Object} Parsed data with validation.
      */
-    /* eslint-disable no-restricted-syntax, @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-nullish-coalescing -- boundary: parseJSON ingests user-pasted free-form JSON */
     static parseJSON(input: string): ParseResult {
         const result: ParseResult = {
             data: null,
@@ -429,6 +427,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             info: [],
         };
 
+        /* eslint-disable no-restricted-syntax, @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition -- boundary: parseJSON ingests user-pasted free-form JSON */
         try {
             const parsed = JSON.parse(input) as Record<string, unknown>;
 
@@ -470,14 +469,14 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         return result;
     }
-    /* eslint-enable no-restricted-syntax, @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-nullish-coalescing */
+    /* eslint-enable no-restricted-syntax, @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition */
 
     /**
      * Parse structured text format.
      * @param {string} input - Text input.
      * @returns {Object} Parsed data with validation.
      */
-    /* eslint-disable @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-nullish-coalescing -- boundary: parseText branches on optional regex capture results; defensive truthiness checks are intentional */
+    /* eslint-disable @typescript-eslint/strict-boolean-expressions -- boundary: parseText branches on optional regex capture results; defensive truthiness checks are intentional */
     static parseText(input: string): ParseResult {
         const result: ParseResult = {
             data: null,
@@ -587,7 +586,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         return result;
     }
-    /* eslint-enable @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-nullish-coalescing */
+    /* eslint-enable @typescript-eslint/strict-boolean-expressions */
 
     static _normalizeInput(input: string): string {
         return TextPatternExtractor.normalizeInput(input);
@@ -1262,7 +1261,6 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                 system: this.#parsedData.system,
             };
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.create accepts free-form actor data
             const actorResult = await Actor.create(actorData as Parameters<typeof Actor.create>[0]);
             const actor = Array.isArray(actorResult) ? actorResult[0] : actorResult;
             if (!actor) throw new Error('Actor.create() returned nothing');

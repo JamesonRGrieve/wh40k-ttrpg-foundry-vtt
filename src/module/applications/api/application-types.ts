@@ -1,11 +1,9 @@
 export type AnyApplicationV2 = foundry.applications.api.ApplicationV2.Any;
 
 // TypeScript's mixin support still requires an `any[]` constructor signature.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: mixin constructor requires any[] per TS mixin rule (TS2545)
 // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
 export type ApplicationV2Ctor<TApplication extends AnyApplicationV2 = AnyApplicationV2> = new (...args: any[]) => TApplication; // eslint-disable-line @typescript-eslint/no-explicit-any -- boundary: mixin constructor requires any[] per TS mixin rule (TS2545)
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: mixin constructor requires any[] per TS mixin rule (TS2545)
 // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
 export type ConstructorOf<TInstance> = new (...args: any[]) => TInstance; // eslint-disable-line @typescript-eslint/no-explicit-any -- boundary: mixin constructor requires any[] per TS mixin rule (TS2545)
 

@@ -30,7 +30,7 @@ export function calculateCombatActionModifier(rollData: WeaponRollData): void {
     }
 
     const actionInfo = allCombatActions().find((action: CombatAction) => action.name === currentAction);
-    if (actionInfo?.attack?.modifier != null && actionInfo.attack.modifier !== 0) {
+    if (actionInfo?.attack?.modifier !== undefined && actionInfo.attack.modifier !== 0) {
         rollData.modifiers['attack'] = actionInfo.attack.modifier;
     } else {
         rollData.modifiers['attack'] = 0;
@@ -82,7 +82,6 @@ export function updateAvailableCombatActions(rollData: WeaponRollData): void {
         const firstKey = Object.keys(actionsByName)[0];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: Object.keys()[0] may be undefined at runtime
         if (firstKey !== undefined) {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: actionsByName[firstKey] may be undefined despite Record<string, string> type
             rollData.action = actionsByName[firstKey] ?? '';
         }
     }

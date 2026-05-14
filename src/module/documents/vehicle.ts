@@ -27,8 +27,7 @@ type VehicleSystemData = WH40KBaseActor['system'] & {
 export class WH40KVehicle extends WH40KBaseActor {
     declare system: VehicleSystemData;
 
-    // biome-ignore lint/suspicious/noConfusingVoidType: Foundry _preCreate contract — returning false cancels creation; void means proceed
-    protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | void> {
+    protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | undefined> {
         await super._preCreate(data, options, user);
         const dataWithName = data as { name?: string } | undefined;
         // eslint-disable-next-line no-restricted-syntax -- boundary: updateSource expects typed token delta; Record<string,unknown> is the only viable shape for dot-notation token update paths
@@ -40,6 +39,7 @@ export class WH40KVehicle extends WH40KBaseActor {
             'token.name': dataWithName?.name,
         };
         this.updateSource(initData);
+        return undefined;
     }
 
     override prepareData(): void {
@@ -99,13 +99,13 @@ export class WH40KVehicle extends WH40KBaseActor {
         // Foundry's base rollItem opens a roll dialog; for vehicles we delegate to the character
         await Promise.resolve();
         const item = this.items.get(itemId);
-        if (item == null) {
+        if (item === undefined) {
             // eslint-disable-next-line no-restricted-syntax -- string is a localization key passed via { localize: true }
             ui.notifications.warn('WH40K.Vehicle.Errors.ItemNotFound', { localize: true });
             return;
         }
         const character = game.user.character;
-        if (character == null) {
+        if (character === null) {
             // eslint-disable-next-line no-restricted-syntax -- string is a localization key passed via { localize: true }
             ui.notifications.warn('WH40K.Vehicle.Errors.NoCharacterForRoll', { localize: true });
             return;
@@ -115,7 +115,6 @@ export class WH40KVehicle extends WH40KBaseActor {
         if (item.type === 'weapon') {
             DHTargetedActionManager.performWeaponAttack(character, null, item);
         } else {
-            // eslint-disable-next-line no-restricted-syntax -- string is a localization key interpolated via game.i18n.format; item.type is a known item type identifier
             ui.notifications.warn(game.i18n.format('WH40K.Vehicle.Errors.NoActionForItemType', { type: item.type }));
         }
     }

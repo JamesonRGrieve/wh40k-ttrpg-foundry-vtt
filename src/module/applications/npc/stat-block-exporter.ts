@@ -39,7 +39,6 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         classes: ['wh40k-rpg', 'stat-block-exporter'],
         tag: 'div',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.NPC.Export.Title',
             icon: 'fa-solid fa-file-export',
             minimizable: false,

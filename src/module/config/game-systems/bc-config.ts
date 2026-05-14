@@ -54,7 +54,6 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     }
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: originPath is untyped system data
         const originPath = (actor.system['originPath'] as Record<string, string | number> | undefined) ?? {};
         return [
             this.makeField('Home World', 'system.originPath.homeWorld', originPath['homeWorld'] ?? ''),
