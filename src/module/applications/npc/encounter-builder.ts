@@ -574,16 +574,16 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         /* eslint-disable no-restricted-syntax -- boundary: CombatLike/CombatConstructor/DeployActor are local structural adapters; Record<string,unknown> is the Foundry embedded-document API shape */
         interface CombatLike {
-            createEmbeddedDocuments(type: string, data: Record<string, unknown>[]): Promise<unknown>;
+            createEmbeddedDocuments: (type: string, data: Record<string, unknown>[]) => Promise<unknown>;
         }
         interface CombatConstructor {
-            create(data: Record<string, unknown>): Promise<CombatLike | null>;
+            create: (data: Record<string, unknown>) => Promise<CombatLike | null>;
         }
         interface DeployActor {
             id: string;
             name: string;
             img: string;
-            getTokenDocument(data: Record<string, unknown>): Promise<unknown>;
+            getTokenDocument: (data: Record<string, unknown>) => Promise<unknown>;
         }
 
         // Ensure combat exists

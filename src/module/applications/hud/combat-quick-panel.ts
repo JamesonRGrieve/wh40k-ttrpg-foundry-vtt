@@ -58,8 +58,8 @@ function findCombatantForActor(actorId: string): CombatantView | null {
 
 /** Flag-bearing user (game.user) — narrows just the two flag methods we touch. */
 interface FlaggableUser {
-    getFlag(scope: string, key: string): PanelPosition | undefined;
-    setFlag(scope: string, key: string, value: PanelPosition): Promise<void>;
+    getFlag: (scope: string, key: string) => PanelPosition | undefined;
+    setFlag: (scope: string, key: string, value: PanelPosition) => Promise<void>;
 }
 
 /**
