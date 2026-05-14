@@ -26,10 +26,11 @@ interface AnimationSnapshot {
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- mixin return type is the inferred derived class shape
 export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class EnhancedAnimationsApplication extends Base implements EnhancedAnimationsMixinAPI {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructor must use any[] per TS 2545 for class merging
+        /* eslint-disable @typescript-eslint/no-explicit-any -- mixin constructor must use any[] per TS 2545 for class merging */
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
+            /* eslint-enable @typescript-eslint/no-explicit-any */
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- super spread accepts any[] from mixin constructor
             super(...args);
         }

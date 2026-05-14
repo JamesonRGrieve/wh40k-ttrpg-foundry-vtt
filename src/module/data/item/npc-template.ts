@@ -399,6 +399,7 @@ export default class NPCTemplateData extends ItemDataModel {
             const unnatural = this.unnaturals[key] ?? 0;
 
             const labels = charLabels[key];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: charLabels[key] may be undefined at runtime
             if (labels === undefined) continue;
             characteristics[key] = {
                 label: labels.label,
@@ -436,7 +437,8 @@ export default class NPCTemplateData extends ItemDataModel {
         }
 
         // Generate weapons
-        let weapons: unknown;
+        type WeaponsPayload = { mode: string; simple: object[] };
+        let weapons: WeaponsPayload;
         if (this.equipmentPreset === 'custom' && this.customWeapons.length > 0) {
             weapons = {
                 mode: 'simple',
@@ -445,7 +447,7 @@ export default class NPCTemplateData extends ItemDataModel {
         } else {
             // Use ThreatCalculator for preset weapons
             // eslint-disable-next-line no-restricted-syntax -- boundary: game.wh40k namespace populated at runtime
-            const wh40kNs = game.wh40k as { ThreatCalculator?: { generateWeapons: (preset: string, threat: number) => unknown } } | undefined;
+            const wh40kNs = game.wh40k as { ThreatCalculator?: { generateWeapons: (preset: string, threat: number) => WeaponsPayload } } | undefined;
             const ThreatCalculator = wh40kNs?.ThreatCalculator;
             if (ThreatCalculator !== undefined) {
                 weapons = ThreatCalculator.generateWeapons(this.equipmentPreset, targetThreat);

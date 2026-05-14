@@ -16,9 +16,10 @@ import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KItemModifiers } from '../../types/global.d.ts';
 import QuickActionsBar from './quick-actions-bar.ts';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructor signature must use any[] per TS mixin rule
+/* eslint-disable @typescript-eslint/no-explicit-any -- mixin constructor signature must use any[] per TS mixin rule */
 // biome-ignore lint/suspicious/noExplicitAny: boundary - mixin constructor signature must use any[] per TS mixin rule
 type ActorSheetCtor = new (...args: any[]) => foundry.appv1.sheets.ActorSheet;
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
  * Mixin that adds item preview card functionality to actor sheets
@@ -46,9 +47,10 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
         /**
          * Toggle an item preview card
          */
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin-internal action handler runs against host sheet whose concrete type is unknown to the mixin
+        /* eslint-disable @typescript-eslint/no-explicit-any -- mixin-internal action handler runs against host sheet whose concrete type is unknown to the mixin */
         // biome-ignore lint/suspicious/noExplicitAny: boundary - mixin action handler; host sheet type is unknown to the mixin
         static toggleItemPreview(this: any, _event: Event, target: HTMLElement): void {
+            /* eslint-enable @typescript-eslint/no-explicit-any */
             const itemId = target.dataset['itemId'];
             if (itemId === undefined || itemId.length === 0) return;
 

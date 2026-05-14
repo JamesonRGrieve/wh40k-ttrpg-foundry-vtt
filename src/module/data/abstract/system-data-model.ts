@@ -12,9 +12,10 @@ type SystemDataModelMetadata = {
     systemFlagsModel: null | object;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeDataModel parent-doc generic has no exported constraint; any is required for the mixin pattern
+/* eslint-disable @typescript-eslint/no-explicit-any -- TypeDataModel parent-doc generic has no exported constraint; any is required for the mixin pattern */
 // biome-ignore lint/suspicious/noExplicitAny: TypeDataModel parent-doc generic has no exported constraint — any is required
 export default class SystemDataModel extends foundry.abstract.TypeDataModel<Record<string, foundry.data.fields.DataField.Any>, any> {
+    /* eslint-enable @typescript-eslint/no-explicit-any */
     /**
      * System type that this data model represents (e.g. "acolyte", "npcV2", "vehicle").
      * @type {string}

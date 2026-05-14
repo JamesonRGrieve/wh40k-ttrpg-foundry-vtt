@@ -42,24 +42,29 @@ async function buildCriticalDamageTable(): Promise<CriticalDamageTable> {
     const pack = game.packs.get(CRITICAL_INJURY_PACK);
     if (pack === undefined) return {};
     const docs = (await pack.getDocuments()) as ConsolidatedCriticalInjuryItem[];
-    const table: CriticalDamageTable = {};
+
+    // Use Maps for construction to avoid noUncheckedIndexedAccess warnings on intermediate writes
+    const dtMap = new Map<string, Map<string, Map<number, string>>>();
     for (const doc of docs) {
         const dt = normalizeKey(doc.system?.damageType);
         const bp = normalizeKey(doc.system?.bodyPart);
         if (dt === null || bp === null) continue;
-        table[dt] ??= {};
-        const dtRow = table[dt];
-        dtRow[bp] ??= {};
-        const bpRow = dtRow[bp];
+        if (!dtMap.has(dt)) dtMap.set(dt, new Map());
+        const bpMap = dtMap.get(dt) as Map<string, Map<number, string>>;
+        if (!bpMap.has(bp)) bpMap.set(bp, new Map());
+        const sMap = bpMap.get(bp) as Map<number, string>;
         const effects = doc.system?.effects ?? {};
         for (const [severityStr, effect] of Object.entries(effects)) {
             const severity = Number.parseInt(severityStr, 10);
             if (!Number.isFinite(severity)) continue;
             const raw = effect.text ?? '';
-            bpRow[severity] = stripOuterParagraph(raw);
+            sMap.set(severity, stripOuterParagraph(raw));
         }
     }
-    return table;
+
+    return Object.fromEntries(
+        [...dtMap.entries()].map(([dt, bpMap]) => [dt, Object.fromEntries([...bpMap.entries()].map(([bp, sMap]) => [bp, Object.fromEntries(sMap)]))]),
+    );
 }
 
 /** Discard the cached lookup — call after editing pack items at runtime. */
@@ -75,7 +80,7 @@ function normalizeKey(value: string | undefined): string | null {
 function stripOuterParagraph(html: string): string {
     const trimmed = html.trim();
     const match = /^<p>([\s\S]*?)<\/p>$/.exec(trimmed);
-    return match !== null && match[1] !== undefined ? match[1] : trimmed;
+    return match?.[1] ?? trimmed;
 }
 
 export function getFuzzy<T>(obj: Record<string, T>, term: string): T | undefined {

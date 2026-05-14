@@ -17,6 +17,7 @@ import * as WH40K from '../advancements/wh40k-rpg.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: career module namespace imports are structurally CareerEntry but typed as unknown at the registry boundary
 const RT_CAREER_REGISTRY: Record<string, unknown> = {
     rogueTrader: WH40K,
     archMilitant: ArchMilitant,
@@ -66,6 +67,7 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
         };
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns the opaque career registry; cast to concrete type at usage site
     getCareerRegistry(): Record<string, unknown> {
         return RT_CAREER_REGISTRY;
     }
@@ -77,7 +79,7 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
         const get = (key: string): string | number => this.readOriginPathField(actor, key);
-        const rank = actor.system.rank ?? 1;
+        const rank = actor.system.rank;
         return [
             this.makeField(game.i18n.localize('WH40K.OriginPath.HomeWorld'), 'system.originPath.homeWorld', get('homeWorld'), 'Home World'),
             this.makeField(game.i18n.localize('WH40K.OriginPath.Career'), 'system.originPath.career', get('career'), 'Career'),

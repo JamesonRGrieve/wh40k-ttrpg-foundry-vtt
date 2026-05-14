@@ -45,6 +45,7 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
     // ── Career Lookup (abstract — subclasses provide data) ───────
 
     /** Get the career module registry for this system */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: career module namespaces are opaque; concrete types are structurally CareerEntry but typed as unknown at the registry boundary
     abstract getCareerRegistry(): Record<string, unknown>;
 
     /** Resolve the character's career key from actor data */
@@ -61,6 +62,7 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
 
         const career = this.getCareerRegistry()[careerKey] as CareerEntry | undefined;
         const tierKey = tiers[currentTier];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: tiers[currentTier] is string | undefined at runtime
         if (tierKey === undefined) return null;
         const cost = career?.CHARACTERISTIC_COSTS?.[charKey]?.[tierKey];
         if (cost === undefined) return null;
@@ -74,6 +76,7 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
         return null;
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: talent type is system-specific; unknown matches base class abstract signature
     getTalentAdvanceCost(_actor: WH40KBaseActor, _talent: unknown): number | null {
         // Same: cost is in the career advance entry.
         return null;

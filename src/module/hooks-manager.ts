@@ -111,9 +111,10 @@ export class HooksManager {
     static registerHooks(): void {
         // Foundry's Hooks.on overloads in fvtt-types are tightly typed by hook name;
         // cast to a permissive shim so non-core hooks (system-emitted events) compile.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-deprecated, no-restricted-syntax -- framework boundary: Hooks.on is deprecated in V14; hook payload typing varies by hook name; hooksOn shim return type must be unknown
+        /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-deprecated, no-restricted-syntax -- framework boundary: Hooks.on is deprecated in V14; hook payload typing varies by hook name; hooksOn shim return type must be unknown */
         // biome-ignore lint/suspicious/noExplicitAny: framework boundary — Foundry hook payloads are heterogeneous by hook name
         const hooksOn = Hooks.on.bind(Hooks) as (event: string, fn: (...args: any[]) => unknown) => number;
+        /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-deprecated, no-restricted-syntax */
         Hooks.once('init', () => {
             HooksManager.init();
         });
@@ -763,9 +764,10 @@ export class HooksManager {
         }
     }
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: hotbarDrop payload is an untyped Record from Foundry; _bar is unknown per hook contract
+    /* eslint-disable no-restricted-syntax -- boundary: hotbarDrop payload is an untyped Record from Foundry; _bar is unknown per hook contract */
     // biome-ignore lint/suspicious/noConfusingVoidType: Foundry hook contract — returning void vs boolean has semantic meaning for hook propagation
     static hotbarDrop(_bar: unknown, data: Record<string, unknown>, slot: number): boolean | void {
+        /* eslint-enable no-restricted-syntax */
         game.wh40k.log('Hotbar Drop:', data);
         switch (data['type']) {
             case 'characteristic':

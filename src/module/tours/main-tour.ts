@@ -1,10 +1,5 @@
 import { WH40KTour } from './wh40k-rpg-tour.ts';
 
-type MainTourStep = foundry.nue.Tour.Step & {
-    selector: string;
-    action?: 'click' | 'scrollTo';
-};
-
 export class DHTourMain extends WH40KTour {
     constructor() {
         super({
@@ -51,7 +46,7 @@ export class DHTourMain extends WH40KTour {
                     title: 'Assign Damage',
                     content: 'Select a token click here to assign damage and fatigue.',
                 },
-            ] as MainTourStep[],
-        } as unknown as foundry.nue.Tour.Config);
+            ] as foundry.nue.Tour.Step[],
+        } as foundry.nue.Tour.Config);
     }
 }

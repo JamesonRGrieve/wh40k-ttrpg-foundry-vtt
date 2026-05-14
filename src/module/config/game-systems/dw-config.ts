@@ -28,6 +28,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
         };
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: matches abstract CareerBasedSystemConfig.getCareerRegistry() return type
     getCareerRegistry(): Record<string, unknown> {
         // DW specialty advance tables TBD
         return {};

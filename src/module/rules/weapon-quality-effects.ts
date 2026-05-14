@@ -217,7 +217,7 @@ export function rollDataHasQuality(rollData: WeaponRollData, qualityName: string
  */
 export function calculateQualityAttackModifiers(rollData: WeaponRollData): QualityModifierMap {
     const modifiers: QualityModifierMap = {};
-    // boundary: WeaponRollData.weapon is the real WH40KItem document; QualityItem is a structural subset
+    // eslint-disable-next-line no-restricted-syntax -- boundary: WeaponRollData.weapon is the real WH40KItem document; QualityItem is a structural subset narrowing required for quality checks
     const weapon = rollData.weapon as unknown as QualityItem;
 
     // Accurate: +10 BS when using Aim action
@@ -370,7 +370,7 @@ export function calculateExoticQualityDamageModifiers(damageContext: ExoticDamag
             actor.system.species?.toLowerCase().includes('eldar') === true ||
             actor.system.traits?.some((t: { name?: string }) => t.name?.toLowerCase().includes('eldar') === true) === true;
         if (isEldar && weapon.system?.isMeleeWeapon === true) {
-            const strengthBonus = actor.system.characteristics?.strength?.bonus ?? 0;
+            const strengthBonus = actor.system.characteristics.strength?.bonus ?? 0;
             modifiers['Witch-Edge (Extra SB)'] = strengthBonus;
         }
     }

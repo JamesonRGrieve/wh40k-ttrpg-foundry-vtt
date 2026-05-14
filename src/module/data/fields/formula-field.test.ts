@@ -9,16 +9,15 @@ import { describe, expect, it } from 'vitest';
  */
 describe('FormulaField', () => {
     it('exposes a default export when the Foundry env supports it', async () => {
-        let imported: unknown;
-        try {
-            imported = await import('./formula-field');
-        } catch (err) {
+        const mod = await import('./formula-field').catch((err) => {
             const msg = err instanceof Error ? err.message : String(err);
             console.warn(`FormulaField could not be imported in this environment: ${msg}`);
-            return;
-        }
-        expect(imported).toBeTruthy();
-        expect((imported as { default?: unknown }).default).toBeTruthy();
+            return undefined;
+        });
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: early return when Foundry runtime unavailable, not a conditional assertion branch
+        if (mod === undefined) return;
+        expect(mod).toBeTruthy();
+        expect(mod.default).toBeTruthy();
     });
 
     // TODO: once Foundry test infrastructure expands:

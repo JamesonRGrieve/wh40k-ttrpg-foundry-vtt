@@ -11,8 +11,9 @@ type Wh40KUiState = {
     toggleExpanded: (name: string) => void;
 };
 
-type Wh40KRulesConfig = Record<string, unknown> & {
+type Wh40KRulesConfig = {
     ui: Wh40KUiState;
+    [key: string]: object | string | number | boolean | null;
 };
 
 export const WH40K: Wh40KRulesConfig = {} as Wh40KRulesConfig;
@@ -129,6 +130,7 @@ WH40K.ui = {
 };
 
 export function toggleUIExpanded(name: string): void {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is untyped in Foundry's global CONFIG; cast to known shape is required
     (CONFIG.wh40k as unknown as Wh40KRulesConfig).ui.toggleExpanded(name);
 }
 

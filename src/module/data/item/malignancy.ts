@@ -21,6 +21,7 @@ export default class MalignancyData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends `any`; the as-unknown chain satisfies DataField.Any brand without runtime effect
             identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Effect description
@@ -44,7 +45,7 @@ export default class MalignancyData extends ItemDataModel.mixin(DescriptionTempl
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels is a free-form record consumed by sheet templates
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {};
     }
