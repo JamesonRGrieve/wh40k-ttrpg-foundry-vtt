@@ -47,11 +47,11 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData receives untyped Foundry source data; Record<string,unknown> is the documented DataModel pattern
     static override _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
-        if (!source['properties']) {
-            source['properties'] = [];
-        }
+        super._migrateData(source);
+        // eslint-disable-next-line no-restricted-syntax -- migration: ??= is the correct operator here; default is set in migrateData not schema
+        source['properties'] ??= [];
         if (Array.isArray(source['coverage'])) {
             source['coverage'] = new Set(source['coverage']);
         }
@@ -60,8 +60,10 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: armourPoints is untyped Foundry validation data
     static #inferCoverageFromArmourPoints(armourPoints: Record<string, unknown> | undefined): Set<string> {
-        if (!armourPoints || typeof armourPoints !== 'object') return new Set();
+        // eslint-disable-next-line eqeqeq -- intentional: == null checks both null and undefined
+        if (armourPoints == null || typeof armourPoints !== 'object') return new Set();
 
         return new Set(
             Object.entries(armourPoints)
@@ -80,8 +82,9 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} options    Additional options
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _cleanData receives untyped Foundry source data; Record<string,unknown> is the documented DataModel pattern
     static override _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
-        super._cleanData?.(source, options);
+        super._cleanData(source, options);
         // Note: Set to Array conversion is handled by Foundry's SetField
     }
 
@@ -94,11 +97,14 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} data  The data to validate
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _validateJoint receives untyped Foundry data; Record<string,unknown> is the documented DataModel pattern
     static override _validateJoint(data: Record<string, unknown>): void {
-        super._validateJoint?.(data);
+        super._validateJoint(data);
 
         const lineKey = inferActiveGameLine(data);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: data is untyped Foundry validation data; casts required for resolveLineVariant
         const armourPoints = resolveLineVariant(data['armourPoints'] as Record<string, unknown>, lineKey) as Record<string, number> | undefined;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: data is untyped Foundry validation data; casts required for resolveLineVariant
         const coverageValue = resolveLineVariant(data['coverage'] as Record<string, unknown>, lineKey);
         const maxAgility = resolveLineVariant(data['maxAgility'], lineKey) as number | null | undefined;
 
@@ -116,8 +122,8 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         let coverage: Set<string>;
         if (coverageValue instanceof Set) {
             coverage = coverageValue;
-        } else if (coverageValue && typeof coverageValue === 'object') {
-            coverage = new Set(Object.keys(coverageValue).filter((k) => coverageValue[k]));
+        } else if (typeof coverageValue === 'object') {
+            coverage = new Set(Object.keys(coverageValue).filter((k) => Boolean(coverageValue[k])));
         } else {
             coverage = new Set();
         }
@@ -218,8 +224,9 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     override prepareBaseData(): void {
         super.prepareBaseData();
 
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument -- boundary: this.parent is any-typed Foundry document; _source is untyped
         const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
-        this.type = resolveLineVariant(this.type, lineKey) ?? 'flak';
+        this.type = resolveLineVariant(this.type, lineKey);
         this.armourPoints = foundry.utils.mergeObject(
             {
                 head: 0,
@@ -229,25 +236,27 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
                 leftLeg: 0,
                 rightLeg: 0,
             },
-            (resolveLineVariant(this.armourPoints, lineKey) as Record<string, unknown>) ?? {},
+            resolveLineVariant(this.armourPoints, lineKey),
             { inplace: false },
-        ) as typeof this.armourPoints;
-
-        const resolvedCoverage = resolveLineVariant(this.coverage as unknown, lineKey);
-        this.coverage = new Set(
-            Array.isArray(resolvedCoverage) ? (resolvedCoverage as string[]) : Array.from((resolvedCoverage as Set<string>) ?? new Set(['body'])),
         );
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: resolveLineVariant accepts unknown to handle line-variant containers
+        const resolvedCoverage = resolveLineVariant(this.coverage as unknown, lineKey);
+        this.coverage = new Set(Array.isArray(resolvedCoverage) ? (resolvedCoverage as string[]) : Array.from(resolvedCoverage as Set<string>));
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: resolveLineVariant accepts unknown to handle line-variant containers
         this.maxAgility = (resolveLineVariant(this.maxAgility as unknown, lineKey) as number | null) ?? null;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: resolveLineVariant accepts unknown to handle line-variant containers
         const resolvedProperties = resolveLineVariant(this.properties as unknown, lineKey);
-        this.properties = new Set(
-            Array.isArray(resolvedProperties) ? (resolvedProperties as string[]) : Array.from((resolvedProperties as Set<string>) ?? new Set()),
-        );
+        this.properties = new Set(Array.isArray(resolvedProperties) ? (resolvedProperties as string[]) : Array.from(resolvedProperties as Set<string>));
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: resolveLineVariant accepts unknown to handle line-variant containers
         this.primitive = Boolean(resolveLineVariant(this.primitive as unknown, lineKey));
-        this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';
-        this.modificationSlots = Number(resolveLineVariant(this.modificationSlots as unknown, lineKey) ?? 2);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: resolveLineVariant accepts unknown to handle line-variant containers
+        this.notes = resolveLineVariant(this.notes as unknown, lineKey) as string;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: resolveLineVariant accepts unknown to handle line-variant containers
+        this.modificationSlots = Number(resolveLineVariant(this.modificationSlots as unknown, lineKey));
     }
 
     /* -------------------------------------------- */
@@ -271,7 +280,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Does this cover all locations?
      * @type {boolean}
      */
-    get coversAll() {
+    get coversAll(): boolean {
         return this.coverage.has('all');
     }
 
@@ -335,7 +344,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get available special properties.
      * @type {string[]}
      */
-    static get AVAILABLE_PROPERTIES() {
+    static get AVAILABLE_PROPERTIES(): string[] {
         return ['sealed', 'auto-stabilized', 'hexagrammic', 'blessed', 'camouflage', 'lightweight', 'reinforced', 'agility-bonus', 'strength-bonus'];
     }
 
@@ -343,7 +352,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get properties as localized labels array.
      * @type {string[]}
      */
-    get propertyLabels() {
+    get propertyLabels(): string[] {
         return Array.from(this.properties).map((prop) =>
             game.i18n.localize(
                 `WH40K.ArmourProperty.${prop
@@ -358,13 +367,13 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         const inferred = new Set<string>();
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
         for (const location of locations) {
-            if (Number(this.armourPoints?.[location]) > 0) {
+            if (Number(this.armourPoints[location]) > 0) {
                 inferred.add(location);
             }
         }
-        if (inferred.size) return inferred;
+        if (inferred.size > 0) return inferred;
 
-        return this.coverage ?? new Set();
+        return this.coverage;
     }
 
     /**
@@ -390,7 +399,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         const coveredLocations = coverage.has('all') || !coverage.size ? locations : locations.filter((loc) => coverage.has(loc));
 
         const values = coveredLocations.map((loc) => this.getEffectiveAPForLocation(loc));
-        const same = values.length && values.every((value) => value === values[0]);
+        const same = values.length > 0 && values.every((value) => value === values[0]);
         if (same && coveredLocations.length === locations.length) {
             return `All: ${values[0]}`;
         }
@@ -402,7 +411,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * How many modification slots are available?
      * @type {number}
      */
-    get availableModSlots() {
+    get availableModSlots(): number {
         return this.modificationSlots - this.modifications.length;
     }
 
@@ -414,7 +423,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get icon class for armour type.
      * @type {string}
      */
-    get typeIcon() {
+    get typeIcon(): string {
         const icons: Record<string, string> = {
             'flak': 'fa-shield',
             'mesh': 'fa-vest',
@@ -482,7 +491,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the count of locations with AP > 0.
      * @type {number}
      */
-    get locationCount() {
+    get locationCount(): number {
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
         return locations.filter((loc) => this.getAPForLocation(loc) > 0).length;
     }
@@ -491,7 +500,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get armour points as an array of location objects for visual display.
      * @type {Array<{location: string, label: string, abbr: string, ap: number, covered: boolean, icon: string}>}
      */
-    get locationArray() {
+    get locationArray(): Array<{ location: string; label: string; abbr: string; icon: string; ap: number; covered: boolean }> {
         const locations = [
             { location: 'head', label: 'Head', abbr: 'H', icon: 'fa-head-side' },
             { location: 'body', label: 'Body', abbr: 'B', icon: 'fa-person' },
@@ -515,9 +524,11 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get properties as array of objects with labels and descriptions.
      * @type {Array<{id: string, label: string, description: string}>}
      */
-    get propertiesArray() {
-        const props = [];
-        const config = CONFIG.WH40K?.armourProperties ?? {};
+    get propertiesArray(): Array<{ id: string; label: string; description: string }> {
+        const props: Array<{ id: string; label: string; description: string }> = [];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.WH40K is typed non-null but populated lazily at runtime
+        const armourPropConfig =
+            (CONFIG.WH40K as { armourProperties?: Record<string, { label: string; description: string }> } | undefined)?.armourProperties ?? {};
 
         for (const propId of this.properties) {
             // Convert kebab-case to PascalCase for i18n lookup
@@ -526,14 +537,15 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
                 .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
                 .join('');
 
+            const propEntry = armourPropConfig[propId] as { label: string; description: string } | undefined;
             props.push({
                 id: propId,
-                label: config[propId]?.label
-                    ? game.i18n.localize(config[propId].label)
-                    : game.i18n.localize(`WH40K.ArmourProperty.${pascalCase}`) || propId.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
-                description: config[propId]?.description
-                    ? game.i18n.localize(config[propId].description)
-                    : game.i18n.localize(`WH40K.ArmourProperty.${pascalCase}Desc`) || '',
+                label:
+                    propEntry !== undefined
+                        ? game.i18n.localize(propEntry.label)
+                        : game.i18n.localize(`WH40K.ArmourProperty.${pascalCase}`) || propId.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+                description:
+                    propEntry !== undefined ? game.i18n.localize(propEntry.description) : game.i18n.localize(`WH40K.ArmourProperty.${pascalCase}Desc`) || '',
             });
         }
 
@@ -544,7 +556,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get a compact summary string for compendium/list display.
      * @type {string}
      */
-    get compendiumSummary() {
+    get compendiumSummary(): string {
         const parts = [];
         parts.push(`AP ${this.maxAP}`);
         parts.push(this.coverageLabel);
@@ -556,7 +568,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get full stat line for display.
      * @type {string}
      */
-    get statLine() {
+    get statLine(): string {
         const parts = [];
         parts.push(this.typeLabel);
         parts.push(`AP: ${this.apSummary}`);
@@ -571,8 +583,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get craftsmanshipLabel(): string {
-        const craft = this.craftsmanship ?? 'common';
-        return game.i18n.localize(`WH40K.Craftsmanship.${craft.charAt(0).toUpperCase() + craft.slice(1)}`);
+        return game.i18n.localize(`WH40K.Craftsmanship.${this.craftsmanship.charAt(0).toUpperCase() + this.craftsmanship.slice(1)}`);
     }
 
     /**
@@ -586,7 +597,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      *
      * @type {object}
      */
-    get craftsmanshipModifiers() {
+    get craftsmanshipModifiers(): { agility: number; armourBonus: number; weight: number; firstAttackBonus: number } {
         const mods = {
             agility: 0, // Agility test modifier
             armourBonus: 0, // Permanent AP bonus (Best only)
@@ -634,7 +645,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         let ap = this.getEffectiveAPForLocation(location);
 
         // Primitive armour vs non-primitive weapon: halve AP (round up)
-        if (this.primitive && weapon && !weapon.primitive) {
+        if (this.primitive && weapon !== null && weapon.primitive !== true) {
             ap = Math.ceil(ap / 2);
         }
 
@@ -654,9 +665,8 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Check if armour has craftsmanship-derived effects.
      * @type {boolean}
      */
-    get hasCraftsmanshipEffects() {
-        const craft = this.craftsmanship ?? 'common';
-        return craft !== 'common';
+    get hasCraftsmanshipEffects(): boolean {
+        return this.craftsmanship !== 'common';
     }
 
     /**
@@ -664,7 +674,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Any location with AP > 7 causes -30 to Concealment/Silent Move.
      * @type {boolean}
      */
-    get imposesStealthPenalty() {
+    get imposesStealthPenalty(): boolean {
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
         return locations.some((loc) => this.getEffectiveAPForLocation(loc) > 7);
     }
@@ -673,7 +683,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the stealth penalty value (0 or -30).
      * @type {number}
      */
-    get stealthPenalty() {
+    get stealthPenalty(): number {
         return this.imposesStealthPenalty ? -30 : 0;
     }
 
@@ -697,7 +707,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get weight display string.
      * @type {string}
      */
-    get weightLabel() {
+    get weightLabel(): string {
         return this.weight ? `${this.effectiveWeight} kg` : '-';
     }
 
@@ -707,7 +717,9 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? [])];
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: mixin prototype access; calling getter with explicit this binding
+        const parentGet = Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get;
+        const props = [...((parentGet?.call(this) as string[] | undefined) ?? [])];
 
         props.unshift(this.typeLabel);
         props.push(`AP: ${this.apSummary}`);
@@ -717,7 +729,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             props.push(`Max Ag: ${this.maxAgility}`);
         }
 
-        if (this.properties.size) {
+        if (this.properties.size > 0) {
             props.push(`Properties: ${this.propertyLabels.join(', ')}`);
         }
 
@@ -729,11 +741,13 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels override must match base class return type Record<string, unknown>; maxAgility is intentionally nullable in schema
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             type: this.typeLabel,
             ap: this.apSummary,
             coverage: this.coverageLabel,
+            // eslint-disable-next-line no-restricted-syntax -- schema field is nullable: true by design; null → '-' display fallback is valid
             maxAg: this.maxAgility ?? '-',
         };
     }

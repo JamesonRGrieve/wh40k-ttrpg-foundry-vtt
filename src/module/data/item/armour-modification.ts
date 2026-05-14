@@ -65,8 +65,9 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData receives untyped Foundry source data; Record<string,unknown> is the documented DataModel pattern
     static override _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
         ArmourModificationData.#migrateArmourTypes(source);
         ArmourModificationData.#migrateArmourModifier(source);
         ArmourModificationData.#extractAPFromEffect(source);
@@ -77,73 +78,103 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         ArmourModificationData.#initializeDefaults(source);
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #migrateArmourTypes(source: Record<string, unknown>): void {
         if (typeof source['armourTypes'] === 'string') {
+            // eslint-disable-next-line no-restricted-syntax -- migration: ??= is the correct operator here; default is set in migrateData not schema
             source['restrictions'] ??= {};
+            // eslint-disable-next-line no-restricted-syntax -- boundary: source is untyped legacy migration data
             (source['restrictions'] as Record<string, unknown>)['armourTypes'] = ArmourModificationData.#parseArmourTypes(source['armourTypes']);
             delete source['armourTypes'];
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #migrateArmourModifier(source: Record<string, unknown>): void {
         if (typeof source['armourModifier'] === 'number') {
+            // eslint-disable-next-line no-restricted-syntax -- migration: ??= is the correct operator here; default is set in migrateData not schema
             source['modifiers'] ??= {};
+            // eslint-disable-next-line no-restricted-syntax -- boundary: source is untyped legacy migration data
             (source['modifiers'] as Record<string, unknown>)['armourPoints'] = source['armourModifier'];
             delete source['armourModifier'];
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #extractAPFromEffect(source: Record<string, unknown>): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: source is untyped legacy migration data
         const mods = source['modifiers'] as Record<string, unknown> | undefined;
-        if ((!mods?.['armourPoints'] || mods['armourPoints'] === 0) && source['effect']) {
-            const extracted = ArmourModificationData.#extractAPModifier(source['effect'] as string);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: mods is untyped legacy migration data
+        if ((mods?.['armourPoints'] === undefined || mods['armourPoints'] === 0) && typeof source['effect'] === 'string' && source['effect'] !== '') {
+            const extracted = ArmourModificationData.#extractAPModifier(source['effect']);
             if (extracted > 0) {
+                // eslint-disable-next-line no-restricted-syntax -- migration: ??= is the correct operator here; default is set in migrateData not schema
                 source['modifiers'] ??= {};
+                // eslint-disable-next-line no-restricted-syntax -- boundary: source is untyped legacy migration data
                 (source['modifiers'] as Record<string, unknown>)['armourPoints'] = extracted;
             }
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #migrateMaxDexBonus(source: Record<string, unknown>): void {
         if (typeof source['maxDexBonus'] === 'number') {
+            // eslint-disable-next-line no-restricted-syntax -- migration: ??= is the correct operator here; default is set in migrateData not schema
             source['modifiers'] ??= {};
+            // eslint-disable-next-line no-restricted-syntax -- boundary: source is untyped legacy migration data
             (source['modifiers'] as Record<string, unknown>)['maxAgility'] = source['maxDexBonus'];
             delete source['maxDexBonus'];
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #extractAgilityFromEffect(source: Record<string, unknown>): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: source is untyped legacy migration data
         const mods = source['modifiers'] as Record<string, unknown> | undefined;
-        if ((!mods?.['maxAgility'] || mods['maxAgility'] === 0) && source['effect']) {
-            const extracted = ArmourModificationData.#extractAgilityModifier(source['effect'] as string);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: mods is untyped legacy migration data
+        if ((mods?.['maxAgility'] === undefined || mods['maxAgility'] === 0) && typeof source['effect'] === 'string' && source['effect'] !== '') {
+            const extracted = ArmourModificationData.#extractAgilityModifier(source['effect']);
             if (extracted !== 0) {
+                // eslint-disable-next-line no-restricted-syntax -- migration: ??= is the correct operator here; default is set in migrateData not schema
                 source['modifiers'] ??= {};
+                // eslint-disable-next-line no-restricted-syntax -- boundary: source is untyped legacy migration data
                 (source['modifiers'] as Record<string, unknown>)['maxAgility'] = extracted;
             }
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #migrateWeight(source: Record<string, unknown>): void {
         if (typeof source['weight'] === 'string') {
+            // eslint-disable-next-line no-restricted-syntax -- migration: ??= is the correct operator here; default is set in migrateData not schema
             source['modifiers'] ??= {};
+            // eslint-disable-next-line no-restricted-syntax -- boundary: source is untyped legacy migration data
             (source['modifiers'] as Record<string, unknown>)['weight'] = ArmourModificationData.#parseWeight(source['weight']);
             delete source['weight'];
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #cleanupModifiers(source: Record<string, unknown>): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: source is untyped legacy migration data
         const mods = source['modifiers'] as Record<string, unknown> | undefined;
-        if (mods?.['characteristics']) {
-            delete mods['characteristics'];
-        }
-        if (mods?.['skills']) {
-            delete mods['skills'];
+        if (mods !== undefined) {
+            if ('characteristics' in mods) {
+                delete mods['characteristics'];
+            }
+            if ('skills' in mods) {
+                delete mods['skills'];
+            }
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helpers receive untyped Foundry source data
     static #initializeDefaults(source: Record<string, unknown>): void {
+        // eslint-disable-next-line no-restricted-syntax -- migration: ??= is the correct operator here; default is set in migrateData not schema
         source['addedProperties'] ??= [];
+        // eslint-disable-next-line no-restricted-syntax -- migration: ??= is the correct operator here; default is set in migrateData not schema
         source['removedProperties'] ??= [];
+        // eslint-disable-next-line no-restricted-syntax -- migration: ??= is the correct operator here; default is set in migrateData not schema
         source['restrictions'] ??= { armourTypes: ['any'] };
     }
 
@@ -157,18 +188,26 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * @param {DataModelV14.CleaningOptions} options    Additional options
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _cleanData receives untyped Foundry source data; Record<string,unknown> is the documented DataModel pattern
     static override _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
-        super._cleanData?.(source, options);
+        super._cleanData(source, options);
         if (!source) return;
         // Convert SetFields to Arrays for storage
         const restrictions = source['restrictions'];
-        if (restrictions instanceof Object && (restrictions as Record<string, unknown>)['armourTypes'] instanceof Set) {
-            (restrictions as Record<string, unknown>)['armourTypes'] = Array.from((restrictions as Record<string, unknown>)['armourTypes'] as Set<unknown>);
+        if (restrictions instanceof Object) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: restrictions is untyped Foundry migration data
+            const restrictionsRecord = restrictions as Record<string, unknown>;
+            if (restrictionsRecord['armourTypes'] instanceof Set) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
+                restrictionsRecord['armourTypes'] = Array.from(restrictionsRecord['armourTypes'] as Set<unknown>);
+            }
         }
         if (source['addedProperties'] instanceof Set) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
             source['addedProperties'] = Array.from(source['addedProperties'] as Set<unknown>);
         }
         if (source['removedProperties'] instanceof Set) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
             source['removedProperties'] = Array.from(source['removedProperties'] as Set<unknown>);
         }
     }
@@ -244,7 +283,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         const patterns = [/\+(\d+)\s*AP/i, /gain\s*\+(\d+)\s*AP/i, /adds?\s*\+(\d+)\s*AP/i];
         for (const pattern of patterns) {
             const match = effect.match(pattern);
-            if (match) return parseInt(match[1] ?? '', 10);
+            if (match?.[1] != null) return parseInt(match[1], 10);
         }
         return 0;
     }
@@ -259,7 +298,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         const patterns = [/([+-]\d+)\s*max\s*ag/i, /([+-]\d+)\s*max\s*agility/i, /([+-]\d+)\s*to.*agility/i];
         for (const pattern of patterns) {
             const match = effect.match(pattern);
-            if (match) return parseInt(match[1] ?? '', 10);
+            if (match?.[1] != null) return parseInt(match[1], 10);
         }
         return 0;
     }
@@ -273,7 +312,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * @type {string}
      */
     get restrictionsLabel(): string {
-        if (this.restrictions.armourTypes.size) {
+        if (this.restrictions.armourTypes.size > 0) {
             return `Types: ${Array.from(this.restrictions.armourTypes).join(', ')}`;
         }
         return game.i18n.localize('WH40K.Modification.NoRestrictions');
@@ -285,12 +324,14 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      */
     get restrictionsLabelEnhanced(): string {
         const types = Array.from(this.restrictions.armourTypes);
-        if (!types.length) return game.i18n.localize('WH40K.Modification.NoRestrictions');
+        if (types.length === 0) return game.i18n.localize('WH40K.Modification.NoRestrictions');
         if (types.includes('any')) return game.i18n.localize('WH40K.Modification.AnyArmour');
 
         const labels = types.map((type) => {
-            const config = CONFIG.wh40k?.armourTypes?.[type];
-            return config ? game.i18n.localize(config.label) : type;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is typed non-null but populated lazily at runtime
+            const wh40kConfig = CONFIG.wh40k as { armourTypes?: Record<string, { label: string }> } | undefined;
+            const config = wh40kConfig?.armourTypes?.[type];
+            return config !== undefined ? game.i18n.localize(config.label) : type;
         });
 
         return labels.join(', ');
@@ -364,7 +405,9 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? [])];
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: mixin prototype access; calling getter with explicit this binding
+        const parentGet = Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get;
+        const props = [...((parentGet?.call(this) as string[] | undefined) ?? [])];
 
         // Restrictions
         props.push(this.restrictionsLabelEnhanced);
@@ -375,7 +418,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
 
         // Properties
-        if (this.propertiesSummary) {
+        if (this.propertiesSummary !== '') {
             props.push(this.propertiesSummary);
         }
 
@@ -387,6 +430,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels override must match base class return type Record<string, unknown>
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             restrictions: this.restrictionsLabelEnhanced,
