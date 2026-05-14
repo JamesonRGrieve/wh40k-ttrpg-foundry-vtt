@@ -119,7 +119,7 @@ type PreviousSheetState = {
     experience?: number;
     characteristics?: Record<string, { total?: number }>;
 };
-function getFlag<T>(actor: { getFlag(scope: string, key: string): unknown }, key: string): T | undefined {
+function getFlag<T>(actor: { getFlag: (scope: 'wh40k-rpg', key: string) => unknown }, key: string): T | undefined {
     return actor.getFlag('wh40k-rpg', key) as T | undefined;
 }
 
@@ -1765,7 +1765,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const docSource = this.document.toObject(true);
         const current = foundry.utils.getProperty(docSource, attr);
         // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.ux.FilePicker is untyped in Foundry V14; constructor options shape is opaque Record.
-        const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse(): Promise<void> };
+        const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse: () => Promise<void> };
         const fp = new FilePickerCtor({
             current,
             type: 'image',
@@ -2054,7 +2054,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     static #effectEdit(this: BaseActorSheet, _event: Event, target: HTMLElement): void {
         const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         if (effectId === undefined || effectId === '') return;
-        const effect = this.actor.effects.get(effectId) as { sheet?: { render(force?: boolean): void } } | undefined;
+        const effect = this.actor.effects.get(effectId) as { sheet?: { render: (force?: boolean) => void } } | undefined;
         effect?.sheet?.render(true);
     }
 
@@ -2070,7 +2070,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         if (effectId === undefined || effectId === '') return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect delete() returns Promise<unknown> per Foundry's Document API.
-        const effect = this.actor.effects.get(effectId) as { delete(): Promise<unknown> } | undefined;
+        const effect = this.actor.effects.get(effectId) as { delete: () => Promise<unknown> } | undefined;
         await effect?.delete();
     }
 
@@ -2086,7 +2086,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         if (effectId === undefined || effectId === '') return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect update() takes opaque Record payload per Foundry's Document API.
-        const effect = this.actor.effects.get(effectId) as { disabled: boolean; update(data: Record<string, unknown>): Promise<unknown> } | undefined;
+        const effect = this.actor.effects.get(effectId) as { disabled: boolean; update: (data: Record<string, unknown>) => Promise<unknown> } | undefined;
         if (effect === undefined) return;
         await effect.update({ disabled: !effect.disabled });
     }
@@ -2349,7 +2349,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Conditions are GM-imposed game state. Block players from dropping new conditions
         // onto an actor; only the GM may add them.
-        if (item.type === 'condition' && !(game.user?.isGM ?? false)) {
+        if (item.type === 'condition' && !game.user.isGM) {
             ui.notifications.warn(game.i18n.localize('WH40K.Warning.ConditionGMOnly'));
             return false;
         }

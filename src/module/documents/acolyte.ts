@@ -338,7 +338,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // both surfaces dispatch through the same unified-roll pipeline.
         if (charKey === 'influence') {
             const value = Number(this.system.influence);
-            const simpleSkillData = this._buildSimpleSkillRoll({
+            const influenceRollData = this._buildSimpleSkillRoll({
                 key: 'influence',
                 type: 'characteristic',
                 label: `${game.i18n.localize('WH40K.Characteristic.Influence')} Test`,
@@ -346,7 +346,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 situationalKey: 'influence',
                 nameOverride: flavorOverride !== undefined && flavorOverride !== '' ? flavorOverride : undefined,
             });
-            prepareUnifiedRoll(simpleSkillData);
+            prepareUnifiedRoll(influenceRollData);
             return;
         }
 

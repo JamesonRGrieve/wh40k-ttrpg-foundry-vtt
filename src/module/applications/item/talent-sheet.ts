@@ -262,7 +262,7 @@ export default class TalentSheet extends BaseItemSheet {
 
         // Tab state
         context['tabs'] = this._getTabs();
-        context['activeTab'] = this.tabGroups['primary'];
+        context['activeTab'] = this.tabGroups.primary;
 
         // Prepare structured data for template
         const modifiersData = this._prepareModifiersData(system);

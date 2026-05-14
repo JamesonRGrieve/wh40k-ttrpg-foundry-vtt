@@ -54,7 +54,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      */
     get nature(): string {
         // eslint-disable-next-line no-restricted-syntax -- boundary: getFlag returns unknown; narrowed by type guard on next line
-        const flagNature: unknown = (this as unknown as { getFlag(scope: string, key: string): unknown }).getFlag('wh40k-rpg', 'nature');
+        const flagNature: unknown = (this as unknown as { getFlag: (scope: string, key: string) => unknown }).getFlag('wh40k-rpg', 'nature');
         if (typeof flagNature === 'string' && flagNature.length > 0) return flagNature;
 
         // Analyze changes to determine nature

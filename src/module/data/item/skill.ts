@@ -222,23 +222,23 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      * difficulty instead of the skill's general uses.
      * @param index Position of the entry within `specialUses`.
      */
-    async toChatSpecialUse(index: number): Promise<unknown> {
+    async toChatSpecialUse(index: number): Promise<ChatMessage | null | undefined> {
         const entry = this.specialUses[index];
-        if (entry === undefined) return null;
+        const parent = this.parent as { id: string; name: string };
 
         const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/skill-card.hbs', {
             skill: this.parent,
             specialUse: entry,
         });
 
-        const messageData = {
-            type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+        const messageData: Parameters<typeof ChatMessage.create>[0] = {
+            style: CONST.CHAT_MESSAGE_STYLES.OTHER,
             speaker: ChatMessage.getSpeaker(),
             content,
             flags: {
                 'wh40k-rpg': {
-                    skillId: this.parent.id,
-                    skillName: this.parent.name,
+                    skillId: parent.id,
+                    skillName: parent.name,
                     specialUseIndex: index,
                     specialUseName: entry.name,
                     type: 'skill-special-use-card',
@@ -246,6 +246,6 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
             },
         };
 
-        return ChatMessage.create(messageData as unknown as Parameters<typeof ChatMessage.create>[0]);
+        return ChatMessage.create(messageData);
     }
 }

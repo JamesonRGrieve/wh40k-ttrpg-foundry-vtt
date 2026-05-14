@@ -664,6 +664,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         try {
             const item = await fromUuid(uuid);
             if (item !== null) {
+                // eslint-disable-next-line @typescript-eslint/no-deprecated -- ApplicationV1 sheet.render(true) is still the correct call for item sheets in V14
                 (item as { sheet?: { render: (force?: boolean) => void } }).sheet?.render(true);
             }
         } catch (error) {
@@ -705,7 +706,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         });
 
         // eslint-disable-next-line @typescript-eslint/no-deprecated -- dialog.render is the V14 render method; migration to V2 render will be addressed separately
-        await dialog.render(true);
+        await dialog.render({ force: true });
 
         return result;
     }

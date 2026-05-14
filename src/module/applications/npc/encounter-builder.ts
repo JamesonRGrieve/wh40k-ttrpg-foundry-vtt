@@ -630,7 +630,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         const uuid = target.dataset['uuid'];
         if (uuid === undefined || uuid === '') return;
 
-        const actor = (await fromUuid(uuid)) as { sheet?: { render(force: boolean): void } } | null;
+        const actor = (await fromUuid(uuid)) as { sheet?: { render: (force: boolean) => void } } | null;
         if (actor?.sheet !== undefined) {
             actor.sheet.render(true);
         }

@@ -241,8 +241,10 @@ export class RollTableUtils {
 }
 
 // Register global access
-Hooks.once('ready', () => {
-    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: progressive initialisation of game.wh40k namespace; ??= is defensive for partial initialisation order
-    game.wh40k ??= {} as WH40KGameSystem;
-    game.wh40k.rollTable = RollTableUtils;
-});
+if (typeof Hooks !== 'undefined') {
+    Hooks.once('ready', () => {
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: progressive initialisation of game.wh40k namespace; ??= is defensive for partial initialisation order
+        game.wh40k ??= {} as WH40KGameSystem;
+        game.wh40k.rollTable = RollTableUtils;
+    });
+}

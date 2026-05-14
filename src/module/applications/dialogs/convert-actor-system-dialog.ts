@@ -67,7 +67,7 @@ export class ConvertActorSystemDialog {
                                         system: game.i18n.localize(`WH40K.TYPES.Actor.${targetSystem}-character`),
                                     }),
                                 );
-                                // eslint-disable-next-line @typescript-eslint/no-deprecated -- render(true) is the V14-compatible force-open idiom
+                                // eslint-disable-next-line @typescript-eslint/no-deprecated -- ApplicationV1 sheet.render(true) is still the correct call for actor sheets in V14
                                 if (converted.sheet) await converted.sheet.render(true);
                                 resolve(converted);
                             } catch (error) {
@@ -87,6 +87,7 @@ export class ConvertActorSystemDialog {
                 rejectClose: false,
             });
 
+            // eslint-disable-next-line @typescript-eslint/no-deprecated -- render(true) is the compatible open call for this dialog wrapper in the current Foundry typing surface
             void dialog.render(true);
         });
     }

@@ -100,7 +100,7 @@ export class WH40KItemContainer extends Item {
         const callSuper = async (): Promise<unknown> => superClass._onCreateOperation?.(items as never, context as never, user as never);
         const typedItems = items as unknown as Array<{
             system: ContainerSystemData;
-            effects: Iterable<{ data: { transfer: unknown }; toJSON(): Record<string, unknown>; uuid: string }>;
+            effects: Iterable<{ data: { transfer: unknown }; toJSON: () => Record<string, unknown>; uuid: string }>;
             uuid: string;
         }>;
         // Parent is not an item -- ignore
@@ -120,7 +120,7 @@ export class WH40KItemContainer extends Item {
         if (toCreate.length === 0) return [];
         game.wh40k.log(`ItemContainer: ${this.name} _onCreateDocuments`);
         const cls = getDocumentClass('ActiveEffect');
-        return (cls as unknown as { createDocuments(data: Record<string, unknown>[], context: Record<string, unknown>): Promise<unknown> }).createDocuments(
+        return (cls as unknown as { createDocuments: (data: Record<string, unknown>[], context: Record<string, unknown>) => Promise<unknown> }).createDocuments(
             toCreate,
             context,
         );

@@ -6,7 +6,7 @@ interface ActorParent {
     items: {
         filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[];
         get: (id: string) => WH40KItem | undefined;
-        [Symbol.iterator](): Iterator<WH40KItem>;
+        [Symbol.iterator]: () => Iterator<WH40KItem>;
     };
 }
 
@@ -491,7 +491,7 @@ export default class CharacterData extends CreatureTemplate {
         for (const item of originItems) {
             // Get step from system data (camelCase like "homeWorld", "career")
             // eslint-disable-next-line no-restricted-syntax -- boundary: item.flags is a Foundry opaque Record; 'rt' key is a legacy namespace
-            const rtFlags = item.flags['rt'] as Record<string, unknown>;
+            const rtFlags = item.flags.rt as Record<string, unknown>;
             // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.step may be undefined on legacy items without a step field
             const step: string = item.system.step ?? (rtFlags['step'] as string | undefined) ?? '';
             if (Object.hasOwn(stepMap, step)) {

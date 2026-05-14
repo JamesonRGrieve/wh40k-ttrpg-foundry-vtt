@@ -115,7 +115,7 @@
 
   {{!-- Condition Actions: GM-only. Conditions are GM-imposed game state; players see them as read-only. --}}
   {{#if (eq item.type "condition")}}
-    {{#if @root.isGM}}
+    {{#unless (eq @root.isGM false)}}
     <button type="button"
             class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-[rgba(100,100,120,0.25)] tw-border-[rgba(100,100,120,0.4)] tw-text-[color:var(--color-text-secondary)]"
             data-action="stackCondition"
@@ -140,7 +140,7 @@
       <i class="fa-solid fa-xmark"></i>
       {{#unless compact}}<span>{{localize "WH40K.Action.Remove"}}</span>{{/unless}}
     </button>
-    {{/if}}
+    {{/unless}}
   {{/if}}
 
   {{!-- Critical Injury Actions --}}
@@ -216,7 +216,7 @@
     {{#if item.isOwner}}
       {{!-- Suppress delete for condition items unless the user is the GM (conditions are GM-imposed game state). --}}
       {{#if (eq item.type "condition")}}
-        {{#if @root.isGM}}
+        {{#unless (eq @root.isGM false)}}
         <button type="button"
                 class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-[rgba(239,68,68,0.2)] tw-border-[rgba(239,68,68,0.3)] tw-text-[#fca5a5]"
                 data-action="deleteItem"
@@ -225,7 +225,7 @@
           <i class="fa-solid fa-trash"></i>
           {{#unless compact}}<span>{{localize "WH40K.Action.Delete"}}</span>{{/unless}}
         </button>
-        {{/if}}
+        {{/unless}}
       {{else}}
         <button type="button"
                 class="tw-inline-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-item-spacing-xs)] tw-px-3 tw-py-[6px] tw-text-[var(--wh40k-item-font-size-sm)] tw-font-medium tw-rounded-[var(--wh40k-item-radius-sm)] tw-border tw-cursor-pointer tw-whitespace-nowrap tw-select-none tw-bg-[rgba(239,68,68,0.2)] tw-border-[rgba(239,68,68,0.3)] tw-text-[#fca5a5]"

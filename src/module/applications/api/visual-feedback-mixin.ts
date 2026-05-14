@@ -37,7 +37,7 @@ export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T
 
         /* -------------------------------------------- */
 
-        declare document: { toObject(): Record<string, number | string | boolean | null> } | null;
+        declare document: { toObject: () => Record<string, number | string | boolean | null> } | null;
 
         /* -------------------------------------------- */
         /*  Form Submission Override                    */

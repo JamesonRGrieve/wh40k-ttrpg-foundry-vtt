@@ -481,8 +481,9 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
 
         /* -------------------------------------------- */
 
-        _sortItems<TItem extends { sort: number }>(items: TItem[], _mode: string): TItem[] {
-            return items.sort((a, b) => a.sort - b.sort);
+        _sortItems(items: unknown[], _mode: string): unknown[] {
+            const sortableItems = items as Array<{ sort: number }>;
+            return sortableItems.sort((a, b) => a.sort - b.sort);
         }
     };
 }
