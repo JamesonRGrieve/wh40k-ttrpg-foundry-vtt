@@ -116,6 +116,30 @@ export default class CharacterData extends CreatureTemplate {
         regiment: string;
         speciality: string;
         chapter: string;
+        // Parallel UUID slots — the per-step compendium-source reference for
+        // each origin selection. When populated, downstream code (advancement
+        // registry, sheet lookups) should prefer this over the display-name
+        // string so renaming a compendium item doesn't sever the reference.
+        // The display name is computed at render time via
+        // `uuidNameCache.getName(uuid)` once Phase D's cutover reaches the
+        // origin sheet.
+        homeWorldUuid: string;
+        birthrightUuid: string;
+        lureOfTheVoidUuid: string;
+        trialsAndTravailsUuid: string;
+        motivationUuid: string;
+        careerUuid: string;
+        backgroundUuid: string;
+        roleUuid: string;
+        eliteUuid: string;
+        divinationUuid: string;
+        raceUuid: string;
+        archetypeUuid: string;
+        prideUuid: string;
+        disgraceUuid: string;
+        regimentUuid: string;
+        specialityUuid: string;
+        chapterUuid: string;
     };
     declare experience: {
         used: number;
@@ -223,6 +247,29 @@ export default class CharacterData extends CreatureTemplate {
                 regiment: new fields.StringField({ required: false, blank: true }),
                 speciality: new fields.StringField({ required: false, blank: true }),
                 chapter: new fields.StringField({ required: false, blank: true }),
+                // Parallel UUID slots (Phase F). Populated when an origin
+                // step is applied from a compendium item; blank for legacy
+                // PCs until the runtime backfill at world `ready` resolves
+                // names against the uuid-name cache. Display names continue
+                // to come from the matched fields above for backwards
+                // compatibility; downstream lookups should prefer these.
+                homeWorldUuid: new fields.StringField({ required: false, blank: true }),
+                birthrightUuid: new fields.StringField({ required: false, blank: true }),
+                lureOfTheVoidUuid: new fields.StringField({ required: false, blank: true }),
+                trialsAndTravailsUuid: new fields.StringField({ required: false, blank: true }),
+                motivationUuid: new fields.StringField({ required: false, blank: true }),
+                careerUuid: new fields.StringField({ required: false, blank: true }),
+                backgroundUuid: new fields.StringField({ required: false, blank: true }),
+                roleUuid: new fields.StringField({ required: false, blank: true }),
+                eliteUuid: new fields.StringField({ required: false, blank: true }),
+                divinationUuid: new fields.StringField({ required: false, blank: true }),
+                raceUuid: new fields.StringField({ required: false, blank: true }),
+                archetypeUuid: new fields.StringField({ required: false, blank: true }),
+                prideUuid: new fields.StringField({ required: false, blank: true }),
+                disgraceUuid: new fields.StringField({ required: false, blank: true }),
+                regimentUuid: new fields.StringField({ required: false, blank: true }),
+                specialityUuid: new fields.StringField({ required: false, blank: true }),
+                chapterUuid: new fields.StringField({ required: false, blank: true }),
             }),
 
             // ===== EXPERIENCE =====
