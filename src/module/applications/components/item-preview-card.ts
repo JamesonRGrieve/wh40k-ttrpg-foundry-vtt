@@ -223,8 +223,12 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
         #generateWeaponPreview(item: WH40KItem): string {
             const sys = item.system as unknown as WeaponDataModel;
             const sysRec = sys as unknown as Record<string, unknown>;
-            const damage = sysRec['damage'] as { formula?: string };
-            const stats = sysRec['stats'] as { penetration?: number; range?: string; rof?: string };
+            const damage = sys.damage;
+            const stats = {
+                penetration: sys.damage?.penetration ?? 0,
+                range: sys.rangeLabel ?? 'N/A',
+                rof: sys.rateOfFireLabel ?? 'N/A',
+            };
 
             return `
                 <div class="wh40k-weapon-preview-stats tw-flex tw-flex-wrap tw-gap-[var(--wh40k-space-sm)] tw-mb-2">

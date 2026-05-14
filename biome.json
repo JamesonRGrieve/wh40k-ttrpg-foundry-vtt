@@ -12,6 +12,16 @@
             "complexity": {
                 "noThisInStatic": "off",
                 "useLiteralKeys": "off"
+            },
+            "style": {
+                "useFilenamingConvention": {
+                    "level": "warn",
+                    "options": {
+                        "filenameCases": ["kebab-case"],
+                        "strictCase": false,
+                        "requireAscii": true
+                    }
+                }
             }
         },
         "includes": [

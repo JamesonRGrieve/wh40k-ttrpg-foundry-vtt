@@ -331,6 +331,25 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/require-await, @typescript-eslint/no-misused-promises -- override returns Promise; consumers may await it. Base impl is sync.
     override async rollCharacteristic(charKey: string, flavorOverride?: string, _options: Record<string, unknown> = {}): Promise<void> {
+        // Issue #13: Influence is a percentile testable stat (DH2e core p. 28) regardless of
+        // whether it currently lives on the Statistics panel (RAW) or the Overview > Resources
+        // panel (Homebrew). The DataModel stores it as a flat 0-100 number outside the
+        // `characteristics` map, so synthesize a CharacteristicField-shaped target here so
+        // both surfaces dispatch through the same unified-roll pipeline.
+        if (charKey === 'influence') {
+            const value = Number(this.system.influence);
+            const simpleSkillData = this._buildSimpleSkillRoll({
+                key: 'influence',
+                type: 'characteristic',
+                label: `${game.i18n.localize('WH40K.Characteristic.Influence')} Test`,
+                target: value,
+                situationalKey: 'influence',
+                nameOverride: flavorOverride !== undefined && flavorOverride !== '' ? flavorOverride : undefined,
+            });
+            prepareUnifiedRoll(simpleSkillData);
+            return;
+        }
+
         const char = this.system.characteristics[charKey] as (typeof this.system.characteristics)[string] | undefined;
         if (char === undefined) {
             ui.notifications.warn(`Characteristic "${charKey}" not found`);
