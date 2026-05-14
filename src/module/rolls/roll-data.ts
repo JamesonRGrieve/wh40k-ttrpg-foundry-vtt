@@ -141,6 +141,7 @@ export class RollData {
         for (const m of Object.keys(this.modifiers)) {
             try {
                 const value = this.modifiers[m];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: modifiers[m] may be undefined despite Record<string, number> type
                 if (value !== undefined && value !== 0) {
                     modifiers[m.toUpperCase()] = value;
                 }
@@ -164,6 +165,7 @@ export class RollData {
         const rollParams: Record<string, number> = {};
         for (const modifier of Object.keys(this.modifiers)) {
             const value = this.modifiers[modifier];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: modifiers[modifier] may be undefined despite Record<string, number> type
             if (value !== undefined && value !== 0) {
                 if (value >= 0) {
                     formula += ` + @${modifier}`;
@@ -239,7 +241,7 @@ export class WeaponRollData extends RollData {
         return this.weaponModifications.find((s) => s.name === special);
     }
 
-    async update(): Promise<void> {
+    update(): void {
         const weaponSystem = this.weapon.system as { attackBonus?: number; type?: string; usesAmmo?: boolean };
         if (weaponSystem.attackBonus !== undefined && weaponSystem.attackBonus !== 0) {
             this.modifiers['attack'] = weaponSystem.attackBonus;
@@ -272,9 +274,11 @@ export class WeaponRollData extends RollData {
         if (this.isOpposed && this.targetActor) {
             const targetActor = this.targetActor;
             if (this.isFeint) {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
                 this.opposedTarget = targetActor.characteristics['weaponSkill']?.total ?? 0;
                 this.opposedChar = 'WS';
             } else if (this.isKnockDown) {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
                 this.opposedTarget = targetActor.characteristics['strength']?.total ?? 0;
                 this.opposedChar = 'S';
             }
@@ -317,12 +321,13 @@ export class WeaponRollData extends RollData {
         type ActorWithTalents = WH40KBaseActorDocument & { hasTalent(name: string): boolean };
         const sourceActor = this.sourceActor as ActorWithTalents | null;
         const sourceActorSystem = sourceActor?.system as { fate?: { value: number } };
-        if (sourceActor?.hasTalent('Eye of Vengeance') && sourceActorSystem.fate && sourceActorSystem.fate.value > 0) {
+        if (sourceActor?.hasTalent('Eye of Vengeance') === true && sourceActorSystem.fate !== undefined && sourceActorSystem.fate.value > 0) {
             this.hasEyeOfVengeanceAvailable = true;
         }
 
         this.weaponSelect = this.weapons.length > 1;
         const firstWeapon = this.weapons[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: weapons[0] may be undefined despite WH40KItem[] type
         if (firstWeapon === undefined) return;
         this.weapon = firstWeapon;
         (this.weapon as { isSelected?: boolean }).isSelected = true;
@@ -348,14 +353,17 @@ export class WeaponRollData extends RollData {
 
         const weaponSystem = this.weapon.system as { isRanged?: boolean };
         if (weaponSystem.isRanged === true) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
             this.baseTarget = sourceActor.characteristics['ballisticSkill']?.total ?? 0;
             this.baseChar = 'BS';
         } else {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
             this.baseTarget = sourceActor.characteristics['weaponSkill']?.total ?? 0;
             this.baseChar = 'WS';
         }
 
         if (this.action === 'Knock Down') {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
             this.baseTarget = sourceActor.characteristics['strength']?.total ?? 0;
             this.baseChar = 'S';
         }
@@ -420,6 +428,7 @@ export class PsychicRollData extends RollData {
 
         this.powerSelect = this.psychicPowers.length > 1;
         const firstPower = this.psychicPowers[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: psychicPowers[0] may be undefined despite WH40KItem[] type
         if (firstPower === undefined) return;
         this.power = firstPower;
         (this.power as { isSelected?: boolean }).isSelected = true;

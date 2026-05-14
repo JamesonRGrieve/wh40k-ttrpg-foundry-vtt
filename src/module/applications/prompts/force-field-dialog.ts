@@ -7,6 +7,7 @@ import BaseRollDialog from './base-roll-dialog.ts';
 /**
  * Dialog for configuring force field rolls.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 options type; callers pass unknown option shapes
 type ForceFieldDialogOptions = Record<string, unknown>;
 
 export default class ForceFieldDialog extends BaseRollDialog {
@@ -23,10 +24,14 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /** @override */
     static override DEFAULT_OPTIONS = {
         classes: ['force-field'],
-        window: {
-            title: 'Force Field',
-        },
     };
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    override get title(): string {
+        return game.i18n.localize('WH40K.Roll.ForceFieldTitle');
+    }
 
     /* -------------------------------------------- */
 
@@ -43,12 +48,13 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._onRender context and options are untyped Foundry framework parameters
     override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
         // Set up button listeners
-        this.element.querySelector('#roll-force-field')?.addEventListener('click', this._onRollForceField.bind(this));
-        this.element.querySelector('#cancel-prompt')?.addEventListener('click', this._onCancelPrompt.bind(this));
+        this.element.querySelector('#roll-force-field')?.addEventListener('click', (e) => void this._onRollForceField(e));
+        this.element.querySelector('#cancel-prompt')?.addEventListener('click', (e) => void this._onCancelPrompt(e));
     }
 
     /* -------------------------------------------- */
@@ -82,13 +88,13 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /** @override */
     override _validateRoll(): boolean {
         const ff = this.rollData['forceField'] as { system?: { activated?: boolean; overloaded?: boolean } } | null | undefined;
-        if (!ff?.system?.activated) {
-            ui.notifications.warn('Force Field not activated!');
+        if (ff?.system?.activated !== true) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Roll.ForceFieldNotActivated'));
             return false;
         }
 
-        if (ff?.system?.overloaded) {
-            ui.notifications.warn('Force Field currently overloaded!');
+        if (ff.system.overloaded === true) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Roll.ForceFieldOverloaded'));
             return false;
         }
 
@@ -115,7 +121,8 @@ export default class ForceFieldDialog extends BaseRollDialog {
  * Open a force field dialog.
  * @param {object} forceFieldData  The force field data.
  */
-export function prepareForceFieldRoll(forceFieldData: Record<string, unknown>) {
+// eslint-disable-next-line no-restricted-syntax -- boundary: forceFieldData is passed from the item document roll API; caller knows concrete shape but this API accepts any compatible object
+export function prepareForceFieldRoll(forceFieldData: Record<string, unknown>): void {
     const prompt = new ForceFieldDialog(forceFieldData);
-    prompt.render(true);
+    void prompt.render({ force: true });
 }

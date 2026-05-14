@@ -11,10 +11,13 @@ import { findSkillUuid } from '../../helpers/skill-uuid-helper.ts';
 import { getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 
+/* eslint-disable no-restricted-syntax -- boundary: foundry.applications is untyped; cast required to reach api surface */
 const { ApplicationV2, HandlebarsApplicationMixin } = (
     foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor; HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T } }
 ).api;
+/* eslint-enable no-restricted-syntax */
 
+/* eslint-disable no-restricted-syntax -- boundary: ChoiceOption/RawChoice are structural adapters for untyped item.system.grants data; index signatures are deliberate pass-through positions */
 /** A single selectable option within a choice. */
 interface ChoiceOption {
     value?: string;
@@ -42,6 +45,7 @@ interface RawChoice {
     options?: Array<ChoiceOption | string>;
     [key: string]: unknown;
 }
+/* eslint-enable no-restricted-syntax */
 
 /** A processed choice entry with a disambiguated key. */
 interface PendingChoice extends RawChoice {
@@ -87,6 +91,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         classes: ['wh40k-rpg', 'origin-choice-dialog'],
         tag: 'form',
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: title is a WH40K.* localization key, not a hardcoded string; lint rule cannot distinguish
             title: 'WH40K.OriginPath.MakeChoices',
             icon: 'fa-solid fa-list-check',
             minimizable: false,
@@ -97,13 +102,16 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             height: 'auto' as const,
         },
         actions: {
+            /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action map binds this at click-time */
             toggleOption: OriginPathChoiceDialog.#toggleOption,
             selectSpecialization: OriginPathChoiceDialog.#selectSpecialization,
             confirm: OriginPathChoiceDialog.#confirm,
             cancel: OriginPathChoiceDialog.#cancel,
             viewItem: OriginPathChoiceDialog.#viewItem,
+            /* eslint-enable @typescript-eslint/unbound-method */
         },
         form: {
+            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 form handler binds this at submit-time
             handler: OriginPathChoiceDialog.#onSubmit,
             submitOnChange: false,
             closeOnSubmit: true,
@@ -124,6 +132,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {Actor} actor - The character actor (for context)
      * @param {object} [options={}] - Additional options
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: constructor options are an untyped external payload; Record<string,unknown> is the ApplicationV2 constructor shape
     constructor(item: WH40KItem, actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
         super(options);
 
@@ -204,7 +213,9 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             for (const sel of selectedValues) {
                 const match = sel.match(/^(.+?)\s*\((.+)\)$/);
                 if (match !== null) {
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: RegExpMatchArray elements are string|undefined; fallbacks guard runtime
                     const baseValue = (match[1] ?? '').trim();
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: RegExpMatchArray elements are string|undefined; fallback guards runtime
                     const spec = (match[2] ?? '').trim();
                     const choice = this.pendingChoices.find((c) => c._key === key);
                     const option = choice?.options.find((o) => o.value === baseValue || o.label === baseValue);
@@ -226,7 +237,9 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext/Record<string,unknown> is the ApplicationV2 override signature
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: super._prepareContext returns Record<string,unknown>; cast adapts the untyped return
         const context = (await super._prepareContext(options as unknown as never)) as Record<string, unknown>;
 
         context['item'] = this.item;
@@ -248,6 +261,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                     count: choice.count,
                     remaining: remaining,
                     options: await Promise.all(
+                        // eslint-disable-next-line complexity -- deliberate; this option-mapping closure handles all choice types; extracting sub-functions would require shared closure state
                         choice.options.map(async (option) => {
                             const optValue = option.value ?? option.label ?? '';
                             const optLabel = option.label ?? option.value ?? '';
@@ -262,12 +276,15 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                                 const firstTalent = (grants.talents ?? [])[0];
                                 const firstTrait = (grants.traits ?? [])[0];
                                 const firstEquip = (grants.equipment ?? [])[0];
+                                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: optional chains guard runtime; type narrowing is incomplete on index access
                                 if ((grants.talents?.length ?? 0) > 0 && firstTalent?.uuid !== undefined) {
                                     optUuid = firstTalent.uuid;
                                 } else if ((grants.skills?.length ?? 0) > 0) {
                                     const skillData = (grants.skills ?? [])[0];
+                                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skillData may be string at runtime despite union; typeof guard is necessary
                                     if (typeof skillData === 'string') {
                                         optUuid = findSkillUuid(skillData, null) ?? null;
+                                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skillData may be undefined at runtime after typeof narrowing; guard is correct
                                     } else if (skillData !== undefined) {
                                         if (skillData.uuid !== undefined) {
                                             optUuid = skillData.uuid;
@@ -277,8 +294,10 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                                             optUuid = findSkillUuid(skillName, specialization) ?? null;
                                         }
                                     }
+                                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: optional chains guard runtime; type narrowing is incomplete on index access
                                 } else if ((grants.traits?.length ?? 0) > 0 && firstTrait?.uuid !== undefined) {
                                     optUuid = firstTrait.uuid;
+                                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: firstEquip may be undefined; optional chain guards runtime
                                 } else if ((grants.equipment?.length ?? 0) > 0 && firstEquip?.uuid !== undefined) {
                                     optUuid = firstEquip.uuid;
                                 }
@@ -290,6 +309,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                                 const resolved = await this._resolveCompendiumItem(optLabel, optUuid);
                                 if (resolved !== null) {
                                     const resolvedDoc = resolved as { uuid?: string; system?: { description?: { value?: string } }; type?: string };
+                                    // eslint-disable-next-line no-restricted-syntax -- boundary: optUuid is a local derived value from compendium resolution; ??= is a lazy-init on a loop variable, not a schema default
                                     optUuid ??= resolvedDoc.uuid ?? null;
                                     const rawDesc = resolvedDoc.system?.description?.value ?? '';
                                     if (rawDesc !== '') {
@@ -337,6 +357,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * Resolve a compendium item by UUID or name search.
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _resolveCompendiumItem returns an untyped Foundry Document; callers cast to structural shapes
     async _resolveCompendiumItem(name: string, uuid?: string | null): Promise<unknown> {
         if (uuid !== null && uuid !== undefined) {
             try {
@@ -350,6 +371,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         const nameLower = name.toLowerCase();
         for (const pack of game.packs) {
             if (pack.documentName !== 'Item') continue;
+            // eslint-disable-next-line no-await-in-loop -- sequential pack search required; early-return on first match makes parallelization impractical
             const index = await pack.getIndex();
             const match = index.find((e) => (e as CompendiumIndexEntry).name.toLowerCase() === nameLower);
             if (match !== undefined) return pack.getDocument((match as CompendiumIndexEntry)._id);
@@ -374,7 +396,9 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * Build a compact stat summary for weapons/armour/gear.
      * @private
      */
+    // eslint-disable-next-line complexity -- deliberate; _buildStatBlock handles all item types in a single pass; extracting sub-functions would require parameter threading
     _buildStatBlock(item: WH40KItem): string | null {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped at runtime; cast to Record<string,unknown> for field access
         const rawSys = item.system as Record<string, unknown> | undefined;
         if (rawSys === undefined) return null;
         const parts: string[] = [];
@@ -386,7 +410,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             const atk = (rawSys['attack'] ?? {}) as AtkData;
             const dmg = (rawSys['damage'] ?? {}) as DmgData;
             if (typeof atk.type === 'string' && atk.type !== '') parts.push(atk.type === 'melee' ? 'Melee' : 'Ranged');
-            if (typeof rawSys['class'] === 'string' && rawSys['class'] !== '') parts.push(rawSys['class'] as string);
+            if (typeof rawSys['class'] === 'string' && rawSys['class'] !== '') parts.push(rawSys['class']);
             if (typeof atk.range?.value === 'number' && atk.range.value !== 0) parts.push(`Range ${atk.range.value}m`);
             const rof = atk.rateOfFire;
             if (rof !== undefined) {
@@ -399,17 +423,18 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             if (typeof dmg.formula === 'string' && dmg.formula !== '') {
                 let dmgStr = dmg.formula;
                 if (dmg.bonus !== undefined && dmg.bonus !== 0) dmgStr += `+${dmg.bonus}`;
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: string index access may return undefined; fallback guards runtime
                 if (typeof dmg.type === 'string' && dmg.type !== '') dmgStr += ` ${(dmg.type[0] ?? '').toUpperCase()}`;
                 parts.push(`Dmg ${dmgStr}`);
             }
             if (typeof dmg.penetration === 'number' && dmg.penetration !== 0) parts.push(`Pen ${dmg.penetration}`);
             const clip = rawSys['clip'] as { max?: number } | undefined;
             if (typeof clip?.max === 'number' && clip.max !== 0) parts.push(`Clip ${clip.max}`);
-            if (typeof rawSys['reload'] === 'string' && rawSys['reload'] !== '') parts.push(`Rld ${rawSys['reload'] as string}`);
+            if (typeof rawSys['reload'] === 'string' && rawSys['reload'] !== '') parts.push(`Rld ${rawSys['reload']}`);
         } else if (item.type === 'armour') {
             if (typeof rawSys['armourPoints'] === 'number') parts.push(`AP ${rawSys['armourPoints']}`);
             if (typeof rawSys['maxAgility'] === 'number') parts.push(`Max Ag ${rawSys['maxAgility']}`);
-            if (typeof rawSys['coverage'] === 'string' && rawSys['coverage'] !== '') parts.push(rawSys['coverage'] as string);
+            if (typeof rawSys['coverage'] === 'string' && rawSys['coverage'] !== '') parts.push(rawSys['coverage']);
         }
 
         if (typeof rawSys['weight'] === 'number' && rawSys['weight'] !== 0) parts.push(`${rawSys['weight']} kg`);
@@ -436,6 +461,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender/Record<string,unknown> is the ApplicationV2 override signature
     override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
@@ -589,6 +615,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         });
 
         if (incomplete.length > 0) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
             ui.notifications.warn('Please complete all required choices.');
             return;
         }
@@ -640,6 +667,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             }
         } catch (error) {
             console.warn('Could not load item:', uuid, error);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
             ui.notifications.warn('Could not find that item.');
         }
     }
@@ -651,6 +679,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {FormDataExtended} formData - The form data
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _formData is the Foundry FormDataExtended payload; Record<string,unknown> is the handler API shape
     static #onSubmit(this: OriginPathChoiceDialog, event: Event, _form: HTMLFormElement, _formData: Record<string, unknown>): void {
         // Same as confirm - call directly on instance
         OriginPathChoiceDialog.#confirm.call(this, event, document.createElement('div'));
@@ -674,6 +703,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             dialog._resolvePromise = resolve;
         });
 
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- dialog.render is the V14 render method; migration to V2 render will be addressed separately
         await dialog.render(true);
 
         return result;

@@ -254,8 +254,9 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel._migrateData receives raw unknown source data before schema validation
     static override _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
         ModifiersTemplate.#normalizeModifiers(source);
     }
 
@@ -263,16 +264,18 @@ export default class ModifiersTemplate extends SystemDataModel {
      * Ensure modifiers nested objects exist.
      * @param {object} source  The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
     static #normalizeModifiers(source: Record<string, unknown>): void {
-        if (!source['modifiers']) return;
+        if (source['modifiers'] === null || source['modifiers'] === undefined) return;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: modifiers is a raw object from source data before schema validation; cast to Record for property initialization
         const mods = source['modifiers'] as Record<string, unknown>;
-        mods['characteristics'] ??= {};
-        mods['skills'] ??= {};
-        mods['combat'] ??= {};
-        mods['resources'] ??= {};
-        mods['other'] ??= [];
-        mods['situational'] ??= { characteristics: [], skills: [], combat: [] };
+        if (!('characteristics' in mods) || mods['characteristics'] === undefined) mods['characteristics'] = {};
+        if (!('skills' in mods) || mods['skills'] === undefined) mods['skills'] = {};
+        if (!('combat' in mods) || mods['combat'] === undefined) mods['combat'] = {};
+        if (!('resources' in mods) || mods['resources'] === undefined) mods['resources'] = {};
+        if (!('other' in mods) || mods['other'] === undefined) mods['other'] = [];
+        if (!('situational' in mods) || mods['situational'] === undefined) mods['situational'] = { characteristics: [], skills: [], combat: [] };
     }
 
     /* -------------------------------------------- */
@@ -285,8 +288,9 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel._cleanData receives raw source before schema validation
     static override _cleanData(source: Record<string, unknown> | undefined, options?: DataModelV14.CleaningOptions): void {
-        super._cleanData?.(source, options);
+        super._cleanData(source, options);
     }
 
     /* -------------------------------------------- */
@@ -301,10 +305,10 @@ export default class ModifiersTemplate extends SystemDataModel {
         if (Object.keys(mods.skills).length) return true;
         if (Object.values(mods.combat).some((v) => v !== 0)) return true;
         if (Object.values(mods.resources).some((v) => v !== 0)) return true;
-        if (mods.other?.length) return true;
-        if (mods.situational?.characteristics?.length) return true;
-        if (mods.situational?.skills?.length) return true;
-        if (mods.situational?.combat?.length) return true;
+        if (mods.other.length > 0) return true;
+        if (mods.situational.characteristics.length > 0) return true;
+        if (mods.situational.skills.length > 0) return true;
+        if (mods.situational.combat.length > 0) return true;
         return false;
     }
 

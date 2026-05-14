@@ -11,6 +11,7 @@ import SkillGrantData from './skill-grant.ts';
 interface ChoiceOption {
     label: string;
     description: string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: grants are heterogeneous grant config objects stored in Foundry ObjectField; no fixed schema per grant type
     grants: Array<Record<string, unknown>>;
 }
 
@@ -55,6 +56,7 @@ export default class ChoiceGrantData extends BaseGrantData {
     declare count: number;
     declare options: ChoiceOption[];
     declare allowDuplicates: boolean;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: applied tracks mixed grant result objects in a Foundry ObjectField; no fixed schema
     declare applied: Record<string, unknown>;
 
     /* -------------------------------------------- */
@@ -102,13 +104,16 @@ export default class ChoiceGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: options is a pass-through Foundry grant options bag; no fixed schema
     override async _applyGrant(actor: WH40KBaseActor, data: GrantRestoreData, options: Record<string, unknown>, result: GrantApplicationResult): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: this.options may be absent on legacy serialized grant data; defensive fallback required
         const choiceOptions = this.options ?? [];
         if (choiceOptions.length === 0) {
             result.notifications.push('Choice grant has no options to apply');
             return;
         }
 
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: data['selected'] is an untyped GrantRestoreData field; may be absent on first apply
         const selectedOptions = (data['selected'] as string[]) ?? [];
 
         if (selectedOptions.length < this.count && !this.optional) {
@@ -124,6 +129,7 @@ export default class ChoiceGrantData extends BaseGrantData {
             }
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: result.applied is a Foundry grant result bag; cast narrows to the known structure for this grant type
         const appliedResult = result.applied as { selectedOptions: string[]; grantResults: Record<string, unknown> };
 
         for (const optionLabel of selectedOptions) {
@@ -136,8 +142,11 @@ export default class ChoiceGrantData extends BaseGrantData {
             appliedResult.selectedOptions.push(optionLabel);
             result.notifications.push(`Selected: ${optionLabel}`);
 
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- option.grants may be absent on legacy/migrated data despite the interface declaration
             const grants = option.grants ?? [];
+            // eslint-disable-next-line no-await-in-loop -- sequential by design: each sub-grant may depend on prior apply state
             for (const [i, grantConfig] of grants.entries()) {
+                // eslint-disable-next-line no-await-in-loop -- sequential by design (see above)
                 const grantResult = await this._applySubGrant(actor, grantConfig, data, options);
                 appliedResult.grantResults[`${optionLabel}:${i}`] = {
                     type: grantConfig['type'],
@@ -150,30 +159,40 @@ export default class ChoiceGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: appliedState is an opaque Foundry grant result bag; return Promise<unknown> matches base class signature
     override async reverse(actor: WH40KBaseActor, appliedState: Record<string, unknown>): Promise<unknown> {
         const ctor = this.constructor as typeof ChoiceGrantData;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: restoreData contains mixed grant result types; Record<string, unknown> is the required storage shape
         const restoreData: { selectedOptions: string[]; grantResults: Record<string, unknown> } = {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- appliedState['selectedOptions'] may be absent on legacy persisted data
             selectedOptions: (appliedState['selectedOptions'] as string[]) ?? [],
             grantResults: {},
         };
 
         // Reverse each applied grant in reverse order
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: appliedState['grantResults'] is untyped Foundry grant result storage; cast to nested Record is required
         const grantResults = (appliedState['grantResults'] ?? {}) as Record<string, Record<string, unknown>>;
+        // eslint-disable-next-line no-await-in-loop -- sequential by design: each grant reverse may depend on prior state; parallelizing could cause conflicts
         for (const [grantKey, grantEntry] of Object.entries(grantResults)) {
             const [optionLabel, indexStr] = grantKey.split(':');
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- indexStr may be undefined if grantKey has unexpected format
             const index = parseInt(indexStr ?? '', 10);
 
             const option = this.options.find((o) => o.label === optionLabel);
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- option may not have grants at the given index on legacy/migrated data
             if (!option?.grants[index]) continue;
 
             const grantConfig = option.grants[index];
             const grantType = grantConfig['type'] as keyof typeof ctor.GRANT_TYPES;
             const GrantClass = ctor.GRANT_TYPES[grantType];
-            if (!GrantClass) continue;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- grantType may not match a registered GRANT_TYPES key on legacy/unknown grant types
+            if (GrantClass === undefined) continue;
 
+            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: grantEntry is untyped legacy grant result storage; cast to Record required for reverse() parameter
             const grantApplied = grantEntry?.['applied'] as Record<string, unknown>;
 
             const grant: BaseGrantData = new GrantClass(grantConfig);
+            // eslint-disable-next-line no-await-in-loop -- sequential by design (see above)
             const reverseData = await grant.reverse(actor, grantApplied);
             restoreData.grantResults[grantKey] = reverseData;
         }
@@ -205,11 +224,14 @@ export default class ChoiceGrantData extends BaseGrantData {
                 grants: [],
             };
 
+            // eslint-disable-next-line no-await-in-loop -- sequential by design: grant summary fetches may load external data; order must be preserved
             for (const grantConfig of option.grants) {
                 const grantType = grantConfig['type'] as keyof typeof ctor.GRANT_TYPES;
                 const GrantClass = ctor.GRANT_TYPES[grantType];
-                if (GrantClass) {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- grantType may not match a registered GRANT_TYPES key on unknown grant types
+                if (GrantClass !== undefined) {
                     const grant = new GrantClass(grantConfig);
+                    // eslint-disable-next-line no-await-in-loop -- sequential by design (see above)
                     const grantSummary = await grant.getSummary();
                     optionSummary.grants.push(grantSummary);
                 }
@@ -227,6 +249,7 @@ export default class ChoiceGrantData extends BaseGrantData {
         const errors = super.validateGrant();
 
         // Handle missing/undefined options gracefully
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: this.options may be absent on legacy serialized grant data; defensive fallback required
         const options = this.options ?? [];
 
         if (options.length === 0) {
@@ -239,11 +262,13 @@ export default class ChoiceGrantData extends BaseGrantData {
 
         // Validate sub-grants
         for (const option of options) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- option.grants may be absent on legacy/migrated data despite the interface declaration
             const grants = option.grants ?? [];
             for (const grantConfig of grants) {
                 const grantType = grantConfig['type'] as keyof typeof ctor.GRANT_TYPES;
                 const GrantClass = ctor.GRANT_TYPES[grantType];
-                if (!GrantClass) {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- grantType may not match a registered GRANT_TYPES key on unknown/legacy grant types
+                if (GrantClass === undefined) {
                     errors.push(`Unknown grant type "${grantConfig['type'] as string}" in option "${option.label}"`);
                 }
             }
@@ -265,16 +290,20 @@ export default class ChoiceGrantData extends BaseGrantData {
      * @returns {Promise<GrantApplicationResult>}
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: grantConfig and options are heterogeneous Foundry grant config bags; no fixed schema
     _applySubGrant(
         actor: WH40KBaseActor,
+        // eslint-disable-next-line no-restricted-syntax -- boundary: grantConfig is a heterogeneous Foundry grant config object; type is discriminated at runtime via grantConfig['type']
         grantConfig: Record<string, unknown>,
         data: GrantRestoreData,
+        // eslint-disable-next-line no-restricted-syntax -- boundary: options is a pass-through Foundry grant options bag; no fixed schema
         options: Record<string, unknown>,
     ): Promise<GrantApplicationResult> | GrantApplicationResult {
         const ctor = this.constructor as typeof ChoiceGrantData;
         const grantType = grantConfig['type'] as keyof typeof ctor.GRANT_TYPES;
         const GrantClass = ctor.GRANT_TYPES[grantType];
-        if (!GrantClass) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- grantType may not match a registered GRANT_TYPES key on unknown/legacy grant types
+        if (GrantClass === undefined) {
             return {
                 success: false,
                 applied: {},
@@ -287,6 +316,7 @@ export default class ChoiceGrantData extends BaseGrantData {
         const fullConfig = {
             _id: (grantConfig['_id'] as string) || foundry.utils.randomID(),
             type: grantConfig['type'],
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- grantConfig['optional'] may be absent on legacy grant configs; defensive fallback required
             optional: (grantConfig['optional'] as boolean) ?? false,
             ...grantConfig,
         };
@@ -294,7 +324,9 @@ export default class ChoiceGrantData extends BaseGrantData {
         const grant = new GrantClass(fullConfig);
 
         // Pass through any sub-grant specific data
+        // eslint-disable-next-line no-restricted-syntax -- boundary: GrantRestoreData is opaque; 'subGrants' is an extension field not declared in the type
         const subData = (data as Record<string, unknown>)['subGrants'] as Record<string, GrantRestoreData> | undefined;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- subData may be undefined; subGrantData defaults to empty object when no sub-grant data exists
         const subGrantData = subData?.[grantConfig['_id'] as string] ?? {};
 
         return grant.apply(actor, subGrantData, options);

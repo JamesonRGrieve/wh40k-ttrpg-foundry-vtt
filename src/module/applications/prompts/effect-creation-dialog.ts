@@ -12,6 +12,7 @@ interface EffectCreationDialogOptions {
     resolve: (value: ActiveEffect | null) => void;
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: EffectCreationData extends Record for FormDataExtended compatibility; index signature is deliberate
 interface EffectCreationData extends Record<string, unknown> {
     effectType: 'condition' | 'characteristic' | 'skill' | 'combat' | 'custom';
     conditionId?: string;
@@ -34,22 +35,27 @@ export default class EffectCreationDialog extends DialogV2 {
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         classes: ['wh40k-rpg', 'wh40k-effect-creation-dialog'],
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: title is a WH40K.* localization key, not a hardcoded string; lint rule cannot distinguish
             title: 'WH40K.ActiveEffect.CreateEffect',
             icon: 'fas fa-sparkles',
         },
         position: {
             width: 520,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2Config position.height type is number but 'auto' is a valid runtime value
             height: 'auto' as unknown as number,
         },
-        // eslint-disable-next-line no-restricted-syntax -- boundary: exactOptionalPropertyTypes: FormConfiguration optional booleans require explicit cast when mixed with handler type cast
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: exactOptionalPropertyTypes TS2375: cast required because FormConfiguration has optional booleans that conflict with literal false/true under exactOptionalPropertyTypes
         form: {
+            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/unbound-method -- boundary: handler cast required for FormConfiguration type; unbound-method fires on static method reference
             handler: EffectCreationDialog.formHandler as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: true,
         } as ApplicationV2Config.FormConfiguration,
         actions: {
+            /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/unbound-method -- ApplicationV2 action map binds this at click-time; unnecessary-type-assertion fires on static method references */
             selectCondition: EffectCreationDialog._onSelectCondition,
             selectCategory: EffectCreationDialog._onSelectCategory,
+            /* eslint-enable @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/unbound-method */
         },
         // DialogV2-specific buttons config (not in the shared DefaultOptions type)
         ...({
@@ -86,11 +92,13 @@ export default class EffectCreationDialog extends DialogV2 {
      */
     static async show(actor: WH40KBaseActor): Promise<ActiveEffect | null> {
         return new Promise((resolve) => {
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises -- render returns a Promise but the dialog lifecycle is managed via the resolve callback
             new this({ actor, resolve }).render(true);
         });
     }
 
     constructor(options: EffectCreationDialogOptions) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 constructor accepts Record<string,unknown>; EffectCreationDialogOptions is structurally compatible
         super(options as unknown as Record<string, unknown>);
         this.actor = options.actor;
         this.resolve = options.resolve;
@@ -100,8 +108,11 @@ export default class EffectCreationDialog extends DialogV2 {
     /* -------------------------------------------- */
 
     /** @override */
+    /* eslint-disable no-restricted-syntax -- boundary: _prepareContext signature uses Record<string,unknown> as the ApplicationV2 override shape */
+    // eslint-disable-next-line @typescript-eslint/require-await -- _prepareContext must be async per ApplicationV2 contract even when no internal awaits are needed
     async _prepareContext(_options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context: Record<string, unknown> = {};
+        /* eslint-enable no-restricted-syntax */
 
         context['actor'] = this.actor;
         context['selectedCategory'] = this.selectedCategory;
@@ -171,6 +182,7 @@ export default class EffectCreationDialog extends DialogV2 {
      */
     static _onSelectCondition(this: EffectCreationDialog, _event: Event, target: HTMLElement): void {
         const conditionId = target.dataset['conditionId'];
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- conditionId is string|undefined from dataset; falsy check covers both undefined and ''
         if (!conditionId) return;
 
         const form = this.element.querySelector('form');
@@ -187,8 +199,10 @@ export default class EffectCreationDialog extends DialogV2 {
      * Handle form submission
      */
     static async formHandler(this: EffectCreationDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: formData.object is Foundry's FormDataExtended payload; cast to EffectCreationData for typed access
         const data = formData.object as unknown as EffectCreationData;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: effectData is an ActiveEffect creation payload; Record<string,unknown> is the Foundry createEmbeddedDocuments API shape
         let effectData: Record<string, unknown> | null = null;
 
         const Ctor = this.constructor as typeof EffectCreationDialog;
@@ -215,13 +229,17 @@ export default class EffectCreationDialog extends DialogV2 {
                 break;
         }
 
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- effectData is Record|null; null check is deliberate guard
         if (!effectData) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40K.ActiveEffect.InvalidData is a localization key, not a hardcoded string; lint rule cannot distinguish
             ui.notifications.warn('WH40K.ActiveEffect.InvalidData');
             return this.resolve(null);
         }
 
         // Create the effect
+        // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments requires {name:string}&Record<string,unknown>; effectData is known-valid at this point
         const effects = await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData as Record<string, unknown> & { name: string }]);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- noUncheckedIndexedAccess: effects[0] is Document|undefined; cast to ActiveEffect|null after null-coalescing guard
         return this.resolve((effects[0] ?? null) as ActiveEffect | null);
     }
 
@@ -230,10 +248,13 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Create condition effect data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is Foundry ActiveEffect creation payload; Record<string,unknown> is the API shape
     static _createConditionData(data: EffectCreationData): Record<string, unknown> | null {
         const conditionId = data.conditionId;
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- conditionId is string|undefined from EffectCreationData; falsy check covers both undefined and ''
         if (!conditionId) return null;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: conditions map holds Foundry ActiveEffect creation payloads; Record<string,unknown> is the API shape
         const conditions: Record<string, Record<string, unknown>> = {
             stunned: {
                 name: 'Stunned',
@@ -304,6 +325,7 @@ export default class EffectCreationDialog extends DialogV2 {
         };
 
         const conditionData = conditions[conditionId];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: index access on Record may return undefined; guard is required at runtime
         if (!conditionData) return null;
 
         const effectData = foundry.utils.deepClone(conditionData);
@@ -325,15 +347,21 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Create characteristic modifier data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is Foundry ActiveEffect creation payload; Record<string,unknown> is the API shape
     static _createCharacteristicData(data: EffectCreationData): Record<string, unknown> | null {
         const characteristic = data.characteristic;
         const value = parseInt(data.modifierValue ?? '0', 10) || 0;
 
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- characteristic is string|undefined from EffectCreationData; falsy check covers both undefined and ''
         if (!characteristic || value === 0) return null;
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.WH40K is not on shipped foundry types
-        const charLabel = (CONFIG as unknown as { WH40K?: { characteristics?: Record<string, { label?: string }> } }).WH40K?.characteristics?.[characteristic]?.label ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
+        /* eslint-disable no-restricted-syntax -- boundary: CONFIG.WH40K is not on shipped foundry types; double-cast required */
+        const charLabel =
+            (CONFIG as unknown as { WH40K?: { characteristics?: Record<string, { label?: string }> } }).WH40K?.characteristics?.[characteristic]?.label ??
+            /* eslint-enable no-restricted-syntax */
+            characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: effectData is a Foundry ActiveEffect creation payload; Record<string,unknown> is the createEmbeddedDocuments API shape
         const effectData: Record<string, unknown> = {
             name: `${charLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/upgrade.svg',
@@ -369,14 +397,17 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Create skill modifier data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is Foundry ActiveEffect creation payload; Record<string,unknown> is the API shape
     static _createSkillData(data: EffectCreationData): Record<string, unknown> | null {
         const skill = data.skill;
         const value = parseInt(data.modifierValue ?? '0', 10) || 0;
 
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- skill is string|undefined from EffectCreationData; falsy check covers both undefined and ''
         if (!skill || value === 0) return null;
 
         const skillLabel = skill.charAt(0).toUpperCase() + skill.slice(1);
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: effectData is a Foundry ActiveEffect creation payload; Record<string,unknown> is the createEmbeddedDocuments API shape
         const effectData: Record<string, unknown> = {
             name: `${skillLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/upgrade.svg',
@@ -412,14 +443,17 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Create combat modifier data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is Foundry ActiveEffect creation payload; Record<string,unknown> is the API shape
     static _createCombatData(data: EffectCreationData): Record<string, unknown> | null {
         const combatType = data.combatType;
         const value = parseInt(data.modifierValue ?? '0', 10) || 0;
 
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- combatType is string|undefined from EffectCreationData; falsy check covers both undefined and ''
         if (!combatType || value === 0) return null;
 
         const typeLabel = combatType.charAt(0).toUpperCase() + combatType.slice(1);
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: effectData is a Foundry ActiveEffect creation payload; Record<string,unknown> is the createEmbeddedDocuments API shape
         const effectData: Record<string, unknown> = {
             name: `${typeLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/combat.svg',
@@ -455,9 +489,11 @@ export default class EffectCreationDialog extends DialogV2 {
     /**
      * Create custom effect data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return type is Foundry ActiveEffect creation payload; Record<string,unknown> is the API shape
     static _createCustomData(data: EffectCreationData): Record<string, unknown> | null {
         const name = data.customName?.trim();
 
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- name is string|undefined after optional chain + trim; falsy check covers both undefined and ''
         if (!name) return null;
 
         return {

@@ -39,7 +39,7 @@ export default class ItemDataModel extends SystemDataModel {
      * Metadata describing this item data model.
      * @type {ItemDataModelMetadata}
      */
-    static override metadata: Record<string, unknown> = Object.freeze(
+    static override metadata = Object.freeze(
         foundry.utils.mergeObject(
             super.metadata,
             {

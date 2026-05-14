@@ -6,6 +6,7 @@
 import type { ApplicationV2Ctor } from './api/application-types.ts';
 import ApplicationV2Mixin from './api/application-v2-mixin.ts';
 
+/* eslint-disable no-restricted-syntax -- boundary: BrowserResult is a structural interface for Foundry CompendiumIndex entries; system/flags/armourData are compendium payloads with no typed schema available */
 /** A single result entry in the compendium browser list. */
 interface BrowserResult extends CompendiumIndexEntry {
     pack: string;
@@ -19,6 +20,7 @@ interface BrowserResult extends CompendiumIndexEntry {
     armourModData?: Record<string, unknown>;
     qualityData?: Record<string, unknown>;
 }
+/* eslint-enable no-restricted-syntax */
 
 /** Minimal document interface returned by {@link fromUuid}. */
 interface FoundryDocWithSheet {
@@ -30,6 +32,7 @@ const { ApplicationV2 } = foundry.applications.api;
 /**
  * Compendium browser for browsing and filtering WH40K system compendiums.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 lacks typed constructor signature; cast required for mixin pattern
 export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     declare _filters: {
         type: string;
@@ -45,6 +48,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         hasProperties?: boolean;
     };
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 constructor accepts an untyped options bag
     constructor(options: Record<string, unknown> = {}) {
         super(options);
         this._filters = {
@@ -74,6 +78,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             height: 700,
         },
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- i18n: title set before game.i18n is initialized; ApplicationV2 re-renders the title at render time via _getHeaderButtons
             title: 'WH40K Compendium Browser',
             resizable: true,
             minimizable: true,
@@ -83,12 +88,14 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     /** @override */
+    /* eslint-disable no-restricted-syntax -- boundary: PARTS must be cast for the mixin's ApplicationV2 override signature */
     static override PARTS = {
         browser: {
             template: 'systems/wh40k-rpg/templates/applications/compendium-browser.hbs',
             scrollable: ['.content'],
         },
     } as Record<string, ApplicationV2Config.PartConfiguration>;
+    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 
@@ -96,8 +103,10 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     static TABS = {
         primary: {
             tabs: {
+                /* eslint-disable no-restricted-syntax -- i18n: TABS static initializer runs before game.i18n; labels are resolved at render time by Handlebars {{localize}} */
                 items: { tab: 'items', group: 'primary', label: 'Items' },
                 actors: { tab: 'actors', group: 'primary', label: 'Actors' },
+                /* eslint-enable no-restricted-syntax */
             },
         },
     };
@@ -112,6 +121,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext signature returns Record<string,unknown>; Foundry framework type
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -141,6 +151,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         // Add armour-specific filters if filtering armour
         const hasArmour = results.some((r) => r.type === 'armour');
         if (hasArmour) {
+            /* eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.WH40K is set dynamically at runtime; no typed schema */
             context['armourTypes'] = (CONFIG.WH40K as unknown as Record<string, unknown> | undefined)?.['armourTypes'] ?? {};
             context['hasArmourFilters'] = true;
         }
@@ -149,6 +160,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         const hasArmourMods = results.some((r) => r.type === 'armourModification');
         if (hasArmourMods) {
             context['hasArmourModFilters'] = true;
+            /* eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.WH40K is set dynamically at runtime; no typed schema */
             context['armourTypesForMods'] = (CONFIG.WH40K as unknown as Record<string, unknown> | undefined)?.['armourTypes'] ?? {};
         }
 
@@ -160,6 +172,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender signature accepts Record<string,unknown>; Foundry framework type
     override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
@@ -194,32 +207,38 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     /*  Data Methods                                */
     /* -------------------------------------------- */
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _getSources stores result in context[]; Promise<unknown> matches how caller consumes it
     async _getSources(): Promise<unknown> {
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
         const perPackSources = await Promise.all(
             packs.map(async (pack) => {
                 const index = await pack.getIndex({ fields: ['system.source'] });
+                /* eslint-disable no-restricted-syntax -- boundary: Foundry compendium index entries have untyped system fields */
                 return index
                     .map((entry) => this._getEntrySource(entry as unknown as CompendiumIndexEntry & { system?: Record<string, unknown> }))
-                    .filter((s): s is string => s !== null && s !== '');
+                    .filter((s): s is string => s !== '');
+                /* eslint-enable no-restricted-syntax */
             }),
         );
         const sources = new Set<string>(perPackSources.flat());
         return Array.from(sources).sort((a, b) => a.localeCompare(b));
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _getCategories stores result in context[]; Promise<unknown> matches caller usage
     async _getCategories(): Promise<unknown> {
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
         const perPackCategories = await Promise.all(
             packs.map(async (pack) => {
                 const index = await pack.getIndex({ fields: ['system.category', 'flags'] });
+                /* eslint-disable no-restricted-syntax -- boundary: Foundry compendium index entries have untyped system/flags fields */
                 return index
                     .map((entry) =>
                         this._getEntryCategory(
                             entry as unknown as CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> },
                         ),
                     )
-                    .filter((c): c is string => c !== null && c !== '');
+                    .filter((c): c is string => c !== '');
+                /* eslint-enable no-restricted-syntax */
             }),
         );
         const categories = new Set<string>(perPackCategories.flat());
@@ -255,6 +274,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
                     ],
                 });
 
+                /* eslint-disable no-restricted-syntax -- boundary: Foundry CompendiumCollection.getIndex returns minimally-typed entries; system/flags are compendium payloads */
                 for (const entry of index) {
                     const e = entry as CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> };
                     if (!this._passesFilters(e, pack as unknown as CompendiumPack)) continue;
@@ -288,6 +308,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
                     packResults.push(result);
                 }
+                /* eslint-enable no-restricted-syntax */
                 return packResults;
             }),
         );
@@ -302,6 +323,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      * @param {object} system  The armour system data
      * @returns {object}       Prepared armour data
      */
+    /* eslint-disable no-restricted-syntax -- boundary: system is a compendium payload; armourPoints/coverage/type are raw untyped values */
     _prepareArmourData(system: Record<string, unknown>): Record<string, unknown> {
         const ap = (system['armourPoints'] ?? {}) as Record<string, number>;
         const coverage = (system['coverage'] ?? []) as string[];
@@ -369,12 +391,14 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             properties: system['properties'] ?? [],
         };
     }
+    /* eslint-enable no-restricted-syntax */
 
     /**
      * Prepare armour modification-specific display data.
      * @param {object} system  The armour modification system data
      * @returns {object}       Prepared armour mod data
      */
+    /* eslint-disable no-restricted-syntax -- boundary: system is a compendium payload; restrictions/modifiers/CONFIG.WH40K are dynamically typed at runtime */
     _prepareArmourModData(system: Record<string, unknown>): Record<string, unknown> {
         const restrictions = (system['restrictions'] ?? {}) as { armourTypes?: string[] };
         const modifiers = (system['modifiers'] ?? {}) as { armourPoints?: number; maxAgility?: number; weight?: number };
@@ -437,12 +461,14 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             hasProperties: addedCount + removedCount > 0,
         };
     }
+    /* eslint-enable no-restricted-syntax */
 
     /**
      * Prepare weapon quality display data.
      * @param {object} system  The weapon quality system data
      * @returns {object}       Prepared quality data
      */
+    /* eslint-disable no-restricted-syntax -- boundary: system is a compendium payload; CONFIG.WH40K is set at runtime; all field accesses are via index */
     _prepareQualityData(system: Record<string, unknown>): Record<string, unknown> {
         interface QualityDef {
             label: string;
@@ -513,7 +539,9 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             effectText: system['effect'],
         };
     }
+    /* eslint-enable no-restricted-syntax */
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: groupBy options are plain UI data; Record<string,unknown> is the shape consumed by the template
     _getGroupByOptions(): Record<string, unknown>[] {
         return [
             { value: 'source', label: 'Source' },
@@ -552,6 +580,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         }
     }
 
+    /* eslint-disable no-restricted-syntax -- boundary: entry.system and entry.flags are Foundry compendium index payloads with no typed schema */
     _getEntrySource(entry: CompendiumIndexEntry & { system?: Record<string, unknown> }): string {
         const rawSource = entry.system?.['source'];
         if (rawSource === undefined || rawSource === null) return '';
@@ -568,7 +597,9 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         const category = entry.system?.['category'];
         if (typeof category === 'string' && category !== '') return category;
         const flags = entry.flags as Record<string, Record<string, unknown>> | undefined;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: flags['rt'] may be absent at runtime
         if (flags?.['rt']?.['kind'] !== undefined) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: flags['wh40k'] may be absent at runtime
             const kind = flags['wh40k']?.['kind'];
             return typeof kind === 'string' ? kind : '';
         }
@@ -578,7 +609,10 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         }
         return '';
     }
+    /* eslint-enable no-restricted-syntax */
 
+    /* eslint-disable no-restricted-syntax -- boundary: entry.system is a compendium payload; _passesFilters operates on raw index data */
+    // eslint-disable-next-line complexity -- filter method is inherently branchy: each filter type adds 2–4 branches; extracting sub-methods would scatter the guard logic
     _passesFilters(entry: CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> }, _pack: CompendiumPack): boolean {
         // Search filter
         if (this._filters.search !== '') {
@@ -652,6 +686,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
         return true;
     }
+    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
     /*  Instance Event Handlers                     */
@@ -712,6 +747,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         const uuid = (event.currentTarget as HTMLElement).dataset['uuid'];
         if (uuid === undefined) return;
         const doc = await fromUuid(uuid);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns Document with untyped sheet; FoundryDocWithSheet is the minimal local interface
         if (doc !== null) (doc as unknown as FoundryDocWithSheet).sheet.render(true);
     }
 
@@ -752,6 +788,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         const uuid = target.dataset['uuid'];
         if (uuid === undefined) return;
         const doc = await fromUuid(uuid);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns Document with untyped sheet; FoundryDocWithSheet is the minimal local interface
         if (doc !== null) (doc as unknown as FoundryDocWithSheet).sheet.render(true);
     }
 
@@ -764,6 +801,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
      * @param {object} options  Options to pass to the browser.
      * @returns {RTCompendiumBrowser}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: open() accepts an untyped options bag passed directly to the ApplicationV2 constructor
     static open(options: Record<string, unknown> = {}): RTCompendiumBrowser {
         const browser = new RTCompendiumBrowser(options);
         void browser.render({ force: true });

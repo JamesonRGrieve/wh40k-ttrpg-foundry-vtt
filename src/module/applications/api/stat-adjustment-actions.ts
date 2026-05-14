@@ -29,6 +29,7 @@ import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
  * Structural type the stat-adjustment handlers expect. Any sheet that plays the
  * same role can satisfy this without inheriting from a specific base.
  */
+/* eslint-disable no-restricted-syntax -- boundary: StatAdjustmentHost is a structural adapter interface; unknown is deliberate at all pass-through positions */
 export interface StatAdjustmentHost {
     actor: {
         id: string;
@@ -44,6 +45,7 @@ export interface StatAdjustmentHost {
     _notify(type: 'info' | 'warning' | 'error', message: string, options?: Record<string, unknown>): void;
     _updateSystemField(field: string, value: unknown): Promise<void>;
 }
+/* eslint-enable no-restricted-syntax */
 
 type Host = StatAdjustmentHost;
 
@@ -54,7 +56,7 @@ type Host = StatAdjustmentHost;
 async function adjustStatImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
     const field = target.dataset['field'];
     const action = target.dataset['statAction'];
-    if (!field) return;
+    if (field === undefined || field === '') return;
 
     if (action === 'clear-fatigue') {
         await this._updateSystemField('system.fatigue.value', 0);
@@ -70,6 +72,7 @@ async function adjustStatImpl(this: Host, _event: Event, target: HTMLElement): P
         const basePath = field.substring(0, field.lastIndexOf('.value'));
         const maxPath = `${basePath}.max`;
         const derivedMax = foundry.utils.getProperty(this.actor, maxPath) as number | undefined;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: getProperty returns unknown; null check guards runtime
         if (derivedMax !== undefined && derivedMax !== null) max = derivedMax;
     }
 
@@ -95,8 +98,9 @@ async function adjustStatImpl(this: Host, _event: Event, target: HTMLElement): P
 
 export async function adjustStat(this: Host, event: Event, target: HTMLElement): Promise<void> {
     const field = target.dataset['field'];
-    if (!field) return;
+    if (field === undefined || field === '') return;
     const throttleKey = `adjustStat-${field}-${this.actor.id}`;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
     await this._throttle(throttleKey, 200, adjustStatImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
 }
 
@@ -117,7 +121,7 @@ export async function decrement(this: Host, event: Event, target: HTMLElement): 
 /* -------------------------------------------- */
 
 async function setCriticalPipImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
-    const level = parseInt(target.dataset['critLevel'] || '0', 10);
+    const level = parseInt(target.dataset['critLevel'] ?? '0', 10);
     const currentCrit = this.actor.system.wounds?.critical ?? 0;
     const newValue = level === currentCrit ? level - 1 : level;
     const clampedValue = Math.min(Math.max(newValue, 0), 10);
@@ -127,11 +131,12 @@ async function setCriticalPipImpl(this: Host, _event: Event, target: HTMLElement
 export async function setCriticalPip(this: Host, event: Event, target: HTMLElement): Promise<void> {
     event.stopPropagation();
     const throttleKey = `setCriticalPip-${this.actor.id}`;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
     await this._throttle(throttleKey, 200, setCriticalPipImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
 }
 
 async function setFateStarImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
-    const index = parseInt(target.dataset['fateIndex'] || '0', 10);
+    const index = parseInt(target.dataset['fateIndex'] ?? '0', 10);
     const currentFate = this.actor.system.fate?.value ?? 0;
     const newValue = index === currentFate ? index - 1 : index;
     const maxFate = this.actor.system.fate?.max ?? 0;
@@ -142,11 +147,12 @@ async function setFateStarImpl(this: Host, _event: Event, target: HTMLElement): 
 export async function setFateStar(this: Host, event: Event, target: HTMLElement): Promise<void> {
     event.stopPropagation();
     const throttleKey = `setFateStar-${this.actor.id}`;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
     await this._throttle(throttleKey, 200, setFateStarImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
 }
 
 async function setFatigueBoltImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
-    const index = parseInt(target.dataset['fatigueIndex'] || '0', 10);
+    const index = parseInt(target.dataset['fatigueIndex'] ?? '0', 10);
     const currentFatigue = this.actor.system.fatigue?.value ?? 0;
     const newValue = index === currentFatigue ? index - 1 : index;
     const maxFatigue = this.actor.system.fatigue?.max ?? 0;
@@ -157,6 +163,7 @@ async function setFatigueBoltImpl(this: Host, _event: Event, target: HTMLElement
 export async function setFatigueBolt(this: Host, event: Event, target: HTMLElement): Promise<void> {
     event.stopPropagation();
     const throttleKey = `setFatigueBolt-${this.actor.id}`;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
     await this._throttle(throttleKey, 200, setFatigueBoltImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
 }
 
@@ -165,7 +172,7 @@ export async function setFatigueBolt(this: Host, event: Event, target: HTMLEleme
 /* -------------------------------------------- */
 
 async function setCorruptionImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
-    const targetValue = parseInt(target.dataset['value'] || '0', 10);
+    const targetValue = parseInt(target.dataset['value'] ?? '0', 10);
     if (Number.isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
         this._notify('error', 'Invalid corruption value', { duration: 3000 });
         return;
@@ -176,11 +183,12 @@ async function setCorruptionImpl(this: Host, _event: Event, target: HTMLElement)
 export async function setCorruption(this: Host, event: Event, target: HTMLElement): Promise<void> {
     event.stopPropagation();
     const throttleKey = `setCorruption-${this.actor.id}`;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
     await this._throttle(throttleKey, 200, setCorruptionImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
 }
 
 async function setInsanityImpl(this: Host, _event: Event, target: HTMLElement): Promise<void> {
-    const targetValue = parseInt(target.dataset['value'] || '0', 10);
+    const targetValue = parseInt(target.dataset['value'] ?? '0', 10);
     if (Number.isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
         this._notify('error', 'Invalid insanity value', { duration: 3000 });
         return;
@@ -191,6 +199,7 @@ async function setInsanityImpl(this: Host, _event: Event, target: HTMLElement): 
 export async function setInsanity(this: Host, event: Event, target: HTMLElement): Promise<void> {
     event.stopPropagation();
     const throttleKey = `setInsanity-${this.actor.id}`;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
     await this._throttle(throttleKey, 200, setInsanityImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
 }
 
@@ -207,6 +216,7 @@ async function restoreFateImpl(this: Host, _event: Event, _target: HTMLElement):
 export async function restoreFate(this: Host, event: Event, target: HTMLElement): Promise<void> {
     event.stopPropagation();
     const throttleKey = `restoreFate-${this.actor.id}`;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
     await this._throttle(throttleKey, 500, restoreFateImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
 }
 
@@ -257,6 +267,7 @@ async function spendFateImpl(this: Host, _event: Event, target: HTMLElement): Pr
     await this._updateSystemField('system.fate.value', currentFate - 1);
 
     await ChatMessage.create({
+        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor is assignment-compatible but getSpeaker expects the concrete Foundry type
         speaker: ChatMessage.getSpeaker({ actor: this.actor as unknown as WH40KBaseActor }),
         content: `
             <div class="wh40k-fate-spend-message">
@@ -273,5 +284,6 @@ export async function spendFate(this: Host, event: Event, target: HTMLElement): 
     event.stopPropagation();
     const action = target.dataset['fateAction'];
     const throttleKey = `spendFate-${action}-${this.actor.id}`;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: as unknown cast required to adapt typed impl fn to generic throttle signature
     await this._throttle(throttleKey, 500, spendFateImpl as unknown as (...args: unknown[]) => unknown, this, [event, target]);
 }

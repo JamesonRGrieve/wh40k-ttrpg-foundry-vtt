@@ -1,3 +1,8 @@
+type MappingFieldOptions = Partial<foundry.data.fields.ObjectField.DefaultOptions> & {
+    initialKeys?: string[];
+    initialKeysOnly?: boolean;
+};
+
 /**
  * A special ObjectField for mapping data.
  * Similar to DnD5e's MappingField for handling object-based data.
@@ -13,17 +18,19 @@ export default class MappingField extends foundry.data.fields.ObjectField {
      * @param {string[]} [options.initialKeys]   Initial keys to populate.
      * @param {boolean} [options.initialKeysOnly]   Only allow initial keys.
      */
-    constructor(model: foundry.data.fields.DataField.Any, options: Record<string, unknown> = {}) {
+    constructor(model: foundry.data.fields.DataField.Any, options: MappingFieldOptions = {}) {
         super(options as foundry.data.fields.ObjectField.DefaultOptions);
         this.model = model;
-        this.initialKeys = (options['initialKeys'] as string[]) ?? null;
-        this.initialKeysOnly = (options['initialKeysOnly'] as boolean) ?? false;
+        this.initialKeys = options.initialKeys ?? null;
+        this.initialKeysOnly = options.initialKeysOnly ?? false;
     }
 
     /* -------------------------------------------- */
 
     /** @inheritdoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ObjectField override; value/return mirror parent signature
     override _cleanType(value: Record<string, unknown>, options: DataModelV14.CleaningOptions = {}): Record<string, unknown> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: super._cleanType returns unknown; cast is required to iterate
         const cleaned = super._cleanType(value, options) as Record<string, unknown>;
 
         // Clean each mapped value
@@ -40,12 +47,12 @@ export default class MappingField extends foundry.data.fields.ObjectField {
 
     /** @inheritdoc */
     override initialize(
-        value: Record<string, unknown>,
+        value: Record<string, unknown>, // eslint-disable-line no-restricted-syntax -- boundary: Foundry DataField override; value/options/return mirror ObjectField parent signature
         model: InstanceType<typeof foundry.abstract.DataModel>,
-        options: Record<string, unknown> = {},
+        options: Record<string, unknown> = {}, // eslint-disable-line no-restricted-syntax -- boundary: Foundry DataField override; options shape mirrors parent
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataField override; return type mirrors parent
     ): Record<string, unknown> {
-        if (!value) return {};
-
+        // eslint-disable-next-line no-restricted-syntax -- boundary: mapping accumulator; values are initialized by the model field at runtime
         const initialized: Record<string, unknown> = {};
         for (const [key, v] of Object.entries(value)) {
             if (this.model instanceof foundry.data.fields.SchemaField || this.model instanceof foundry.data.fields.DataField) {
@@ -61,12 +68,14 @@ export default class MappingField extends foundry.data.fields.ObjectField {
     /* -------------------------------------------- */
 
     /** @inheritdoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataField override; value is untyped at validation time; options shape mirrors parent
     override _validateType(value: unknown, options: Record<string, unknown> = {}): void {
         if (foundry.utils.getType(value) !== 'Object') {
             throw new Error('Value must be an object');
         }
 
         const errors: string[] = [];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: value narrowed to object by getType guard above
         for (const [key, v] of Object.entries(value as Record<string, unknown>)) {
             if (this.initialKeysOnly && this.initialKeys && !this.initialKeys.includes(key)) {
                 errors.push(`Key "${key}" is not allowed`);

@@ -53,6 +53,7 @@ function stripSpecialization(name: string): string {
 
 type CompendiumStats = { compendiumSource?: string | null };
 
+/* eslint-disable no-restricted-syntax -- boundary: Foundry item/actor/pack types carry open-ended Record<string,unknown> and unknown at framework boundaries */
 type EmbeddedItemLike = {
     id: string | null;
     name: string | null;
@@ -76,25 +77,33 @@ type PackLike = {
     metadata: { id: string; name: string; type: string };
     getIndex: (options?: { fields?: string[] }) => Promise<Iterable<unknown>>;
 };
+/* eslint-enable no-restricted-syntax */
 
-declare const fromUuid: (uuid: string) => Promise<EmbeddedItemLike | null>;
+// eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns an untyped Foundry Document; cast to EmbeddedItemLike is safe because callers only use fields declared on that type
+async function fetchByUuid(uuid: string): Promise<EmbeddedItemLike | null> {
+    return (await fromUuid(uuid)) as EmbeddedItemLike | null;
+}
 
-function getProperty(obj: unknown, path: string): unknown {
+// eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty accepts object but we receive unknown at this boundary
+function readProperty(obj: unknown, path: string): unknown {
     return foundry.utils.getProperty(obj as object, path);
 }
 
-function setProperty(obj: Record<string, unknown>, path: string, value: unknown): void {
+// eslint-disable-next-line no-restricted-syntax -- boundary: setProperty value is unknown at this boundary; Foundry utils.setProperty accepts any
+function writeProperty(obj: Record<string, unknown>, path: string, value: unknown): void {
     foundry.utils.setProperty(obj, path, value);
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard; value is unknown by design — this is the validation boundary
 function isPackLike(value: unknown): value is PackLike {
-    if (!value || typeof value !== 'object') return false;
+    if (value === null || value === undefined || typeof value !== 'object') return false;
     const pack = value as Partial<PackLike>;
-    return !!pack.metadata && typeof pack.getIndex === 'function';
+    return pack.metadata !== undefined && typeof pack.getIndex === 'function';
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard; value is unknown by design — this is the validation boundary
 function isIndexEntry(value: unknown): value is IndexEntry {
-    if (!value || typeof value !== 'object') return false;
+    if (value === null || value === undefined || typeof value !== 'object') return false;
     const entry = value as Partial<IndexEntry>;
     return typeof entry._id === 'string' && typeof entry.type === 'string' && typeof entry.name === 'string';
 }
@@ -113,12 +122,14 @@ async function getNameIndexFor(gameSystem: string, cache: Map<string, Map<string
 
     const lookup = new Map<string, string>();
     const prefix = `${gameSystemPackPrefix(gameSystem)}-`;
-    const packs = Array.from(game.packs?.contents ?? []).filter(isPackLike);
+    const packs = Array.from(game.packs.contents)
+        .filter(isPackLike)
+        .filter((p) => p.metadata.type === 'Item' && p.metadata.name.startsWith(prefix));
 
-    for (const pack of packs) {
-        if (pack.metadata.type !== 'Item') continue;
-        if (!pack.metadata.name.startsWith(prefix)) continue;
-        const index = await pack.getIndex({ fields: ['type', 'name'] });
+    // Fetch all pack indexes in parallel to avoid await-in-loop
+    const indexes = await Promise.all(packs.map(async (pack) => ({ pack, index: await pack.getIndex({ fields: ['type', 'name'] }) })));
+
+    for (const { pack, index } of indexes) {
         for (const entry of index) {
             if (!isIndexEntry(entry)) continue;
             const key = buildLookupKey(entry.type, entry.name);
@@ -137,14 +148,15 @@ async function getNameIndexFor(gameSystem: string, cache: Map<string, Map<string
  * runtime paths declared for this item type. Returns `null` if nothing would
  * change.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: patch is a Foundry updateEmbeddedDocuments payload with open-ended item fields
 function buildResyncPatch(embedded: EmbeddedItemLike, source: EmbeddedItemLike): Record<string, unknown> | null {
     const preserve = RUNTIME_PRESERVE_PATHS[embedded.type] ?? [];
     const newSystem = foundry.utils.deepClone(source.system);
 
     for (const path of preserve) {
-        const current = getProperty(embedded.system, path);
+        const current = readProperty(embedded.system, path);
         if (current !== undefined) {
-            setProperty(newSystem, path, current);
+            writeProperty(newSystem, path, current);
         }
     }
 
@@ -177,6 +189,113 @@ function compendiumSourceUuid(item: EmbeddedItemLike): string | null {
     return stats?.compendiumSource ?? null;
 }
 
+/** Result of resolving a single item's compendium source. */
+type ItemResolution = { source: EmbeddedItemLike; uuid: string; backfillNeeded: boolean } | null;
+
+/**
+ * Resolve the compendium source for a single item, using UUID (direct) or
+ * name-based index lookup (fallback). Updates `sourceByUuid` in-place as a
+ * shared fetch cache to avoid duplicate requests across items.
+ */
+async function resolveSource(
+    item: EmbeddedItemLike,
+    gameSystem: string | undefined,
+    sourceByUuid: Map<string, EmbeddedItemLike | null>,
+    indexByGameSystem: Map<string, Map<string, string>>,
+): Promise<ItemResolution> {
+    const directUuid = compendiumSourceUuid(item);
+
+    if (directUuid !== null) {
+        let directCached = sourceByUuid.get(directUuid);
+        if (directCached === undefined) {
+            directCached = await fetchByUuid(directUuid);
+            sourceByUuid.set(directUuid, directCached);
+        }
+        return directCached !== null ? { source: directCached, uuid: directUuid, backfillNeeded: false } : null;
+    }
+
+    if (gameSystem === undefined || gameSystem === '') return null;
+
+    const index = await getNameIndexFor(gameSystem, indexByGameSystem);
+    const rawName = item.name ?? '';
+    const candidate = index.get(buildLookupKey(item.type, rawName)) ?? index.get(buildLookupKey(item.type, stripSpecialization(rawName)));
+    if (candidate === undefined) return null;
+
+    let cached = sourceByUuid.get(candidate);
+    if (cached === undefined) {
+        cached = await fetchByUuid(candidate);
+        sourceByUuid.set(candidate, cached);
+    }
+    return cached !== null ? { source: cached, uuid: candidate, backfillNeeded: true } : null;
+}
+
+/** Per-actor statistics accumulated during item processing. */
+interface ActorResyncStats {
+    backfilled: number;
+    frozen: number;
+    unresolved: number;
+}
+
+/**
+ * Process all items on one actor: resolve sources, build patches, apply them.
+ * Returns stats for logging.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: updateEmbeddedDocuments update payload is Record<string,unknown>
+async function processActor(
+    actor: ActorLike,
+    sourceByUuid: Map<string, EmbeddedItemLike | null>,
+    indexByGameSystem: Map<string, Map<string, string>>,
+    warnedKeys: Set<string>,
+): Promise<{ touched: number; stats: ActorResyncStats }> {
+    const gameSystem = actor.system?.gameSystem;
+    const stats: ActorResyncStats = { backfilled: 0, frozen: 0, unresolved: 0 };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: item update payloads are Foundry open-ended objects
+    const updates: Array<Record<string, unknown>> = [];
+
+    for (const item of actor.items.contents) {
+        if (isFrozen(item)) {
+            stats.frozen += 1;
+            continue;
+        }
+        if (SKIP_TYPES.has(item.type)) continue;
+        if (item.name !== null && item.name !== '' && STUB_NAMES.has(item.name)) continue;
+
+        // eslint-disable-next-line no-await-in-loop -- sequential is intentional: sourceByUuid cache is shared; parallel resolution would cause duplicate fetches
+        const resolution = await resolveSource(item, gameSystem, sourceByUuid, indexByGameSystem);
+
+        if (resolution === null) {
+            const key = `${gameSystem ?? '?'}|${item.type}|${item.name ?? '?'}`;
+            if (!warnedKeys.has(key)) {
+                warnedKeys.add(key);
+                // eslint-disable-next-line no-console
+                console.warn(
+                    `[wh40k-rpg] compendium resync: no source for ${item.type} "${item.name}" ` +
+                        `on actor "${actor.name}" (gameSystem=${gameSystem ?? 'unknown'})`,
+                );
+            }
+            stats.unresolved += 1;
+            continue;
+        }
+
+        const { source, uuid, backfillNeeded } = resolution;
+        const patch = buildResyncPatch(item, source);
+        if (patch === null && !backfillNeeded) continue;
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: patch is a Foundry update payload with open-ended fields
+        const finalPatch: Record<string, unknown> = patch ?? { _id: item.id };
+        if (backfillNeeded) {
+            writeProperty(finalPatch, '_stats.compendiumSource', uuid);
+            stats.backfilled += 1;
+        }
+        updates.push(finalPatch);
+    }
+
+    if (updates.length > 0) {
+        await actor.updateEmbeddedDocuments('Item', updates);
+    }
+    return { touched: updates.length, stats };
+}
+
 /**
  * Reconcile every embedded item on every world actor with its compendium
  * source. GM-only, gated by the `resyncOnReady` setting. Idempotent.
@@ -193,10 +312,11 @@ function compendiumSourceUuid(item: EmbeddedItemLike): string | null {
  */
 export async function resyncWorldFromCompendiums(): Promise<void> {
     if (!game.user.isGM) return;
-    const enabled = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.resyncOnReady);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get() returns any; Foundry does not type individual settings values
+    const enabled = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.resyncOnReady) as boolean | undefined;
     if (enabled === false) return;
 
-    const actors = (game.actors?.contents ?? []) as ActorLike[];
+    const actors = game.actors.contents as ActorLike[];
     const sourceByUuid = new Map<string, EmbeddedItemLike | null>();
     const indexByGameSystem = new Map<string, Map<string, string>>();
     const warnedKeys = new Set<string>();
@@ -207,83 +327,15 @@ export async function resyncWorldFromCompendiums(): Promise<void> {
     let itemsSkippedFrozen = 0;
     let itemsUnresolved = 0;
 
+    // Process actors sequentially to avoid race conditions on the shared sourceByUuid cache
     for (const actor of actors) {
-        const gameSystem = actor.system?.gameSystem;
-        const updates: Array<Record<string, unknown>> = [];
-
-        for (const item of actor.items.contents) {
-            if (isFrozen(item)) {
-                itemsSkippedFrozen += 1;
-                continue;
-            }
-            if (SKIP_TYPES.has(item.type)) continue;
-            if (item.name && STUB_NAMES.has(item.name)) continue;
-
-            let uuid = compendiumSourceUuid(item);
-            let source: EmbeddedItemLike | null = null;
-            let backfillNeeded = false;
-
-            if (uuid) {
-                let cached = sourceByUuid.get(uuid);
-                if (cached === undefined) {
-                    cached = await fromUuid(uuid);
-                    sourceByUuid.set(uuid, cached);
-                }
-                source = cached;
-            } else if (gameSystem) {
-                const index = await getNameIndexFor(gameSystem, indexByGameSystem);
-                const rawName = item.name ?? '';
-                // Try the full name first; on miss, fall back to the bare name
-                // with any ` (specialization)` suffix stripped. Specialist
-                // talents and lore skills carry the specialization on the
-                // instance, while the compendium has the base entry with an
-                // empty `specializations[]` — that picks gets preserved by
-                // RUNTIME_PRESERVE_PATHS.
-                const candidate = index.get(buildLookupKey(item.type, rawName)) ?? index.get(buildLookupKey(item.type, stripSpecialization(rawName)));
-                if (candidate) {
-                    let cached = sourceByUuid.get(candidate);
-                    if (cached === undefined) {
-                        cached = await fromUuid(candidate);
-                        sourceByUuid.set(candidate, cached);
-                    }
-                    if (cached) {
-                        uuid = candidate;
-                        source = cached;
-                        backfillNeeded = true;
-                    }
-                }
-            }
-
-            if (!source) {
-                const key = `${gameSystem ?? '?'}|${item.type}|${item.name ?? '?'}`;
-                if (!warnedKeys.has(key)) {
-                    warnedKeys.add(key);
-                    // eslint-disable-next-line no-console
-                    console.warn(
-                        `[wh40k-rpg] compendium resync: no source for ${item.type} "${item.name}" ` +
-                            `on actor "${actor.name}" (gameSystem=${gameSystem ?? 'unknown'})`,
-                    );
-                }
-                itemsUnresolved += 1;
-                continue;
-            }
-
-            const patch = buildResyncPatch(item, source);
-            if (!patch && !backfillNeeded) continue;
-
-            const finalPatch: Record<string, unknown> = patch ?? { _id: item.id };
-            if (backfillNeeded && uuid) {
-                setProperty(finalPatch, '_stats.compendiumSource', uuid);
-                itemsBackfilled += 1;
-            }
-            updates.push(finalPatch);
-        }
-
-        if (updates.length > 0) {
-            await actor.updateEmbeddedDocuments('Item', updates);
-            actorsTouched += 1;
-            itemsTouched += updates.length;
-        }
+        // eslint-disable-next-line no-await-in-loop -- sequential is intentional: sourceByUuid cache is shared across actors; parallel processing would cause race conditions
+        const { touched, stats } = await processActor(actor, sourceByUuid, indexByGameSystem, warnedKeys);
+        if (touched > 0) actorsTouched += 1;
+        itemsTouched += touched;
+        itemsBackfilled += stats.backfilled;
+        itemsSkippedFrozen += stats.frozen;
+        itemsUnresolved += stats.unresolved;
     }
 
     // eslint-disable-next-line no-console

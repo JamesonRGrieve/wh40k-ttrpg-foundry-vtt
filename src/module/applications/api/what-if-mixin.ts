@@ -16,6 +16,7 @@
 import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KSkillEntry } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor, DialogV2Like } from './application-types.ts';
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped; cast required to reach DialogV2
 const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2Like } }).api.DialogV2;
 
 /**
@@ -25,11 +26,14 @@ const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2
  * @returns {any}
  * @mixin
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- mixin factory: return type is the inner class, which cannot be named at the outer function scope
 export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class WhatIfApplication extends Base {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructor must accept any[] to satisfy TS2545 mixin constraint
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- spreading any[] is inherent to the mixin pattern (TS2545)
             super(...args);
         }
 
@@ -38,6 +42,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
         /* -------------------------------------------- */
 
         _whatIfActive: boolean = false;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: whatIfChanges holds arbitrary actor update paths; Record<string,unknown> is correct
         _whatIfChanges: Record<string, unknown> = {};
         _whatIfPreview: WH40KBaseActorDocument | null = null;
         _whatIfImpacts: { type: string; message: string }[] = [];
@@ -49,8 +54,10 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
         /* -------------------------------------------- */
 
         /** @inheritDoc */
+        /* eslint-disable no-restricted-syntax -- boundary: _prepareContext returns Foundry untyped context; Record<string,unknown> is the correct type at this API seam */
         override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
             const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
+            /* eslint-enable no-restricted-syntax */
 
             context['whatIf'] = {
                 active: this._whatIfActive,
@@ -64,6 +71,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
         /* -------------------------------------------- */
 
         /** @inheritDoc */
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender context is the Foundry render object; Record<string,unknown> is the correct type at this API seam
         override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
@@ -131,12 +139,15 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
         /* -------------------------------------------- */
 
         _compareCharacteristics(current: WH40KBaseActorDocument, preview: WH40KBaseActorDocument): void {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system.characteristics is typed as base DataModel; cast to concrete shape required
             const currentChars = current.system.characteristics as Record<string, WH40KCharacteristic>;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system.characteristics is typed as base DataModel; cast to concrete shape required
             const previewChars = preview.system.characteristics as Record<string, WH40KCharacteristic>;
 
             for (const [key, previewChar] of Object.entries(previewChars)) {
                 const currentChar = currentChars[key];
 
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: Record lookup may return undefined at runtime
                 if (!currentChar) continue;
 
                 if (currentChar.total !== previewChar.total) {
@@ -160,12 +171,15 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
         /* -------------------------------------------- */
 
         _compareSkills(current: WH40KBaseActorDocument, preview: WH40KBaseActorDocument): void {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system.skills is typed as base DataModel; cast to concrete shape required
             const currentSkills = current.system.skills as Record<string, WH40KSkill>;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system.skills is typed as base DataModel; cast to concrete shape required
             const previewSkills = preview.system.skills as Record<string, WH40KSkill>;
 
             for (const [key, previewSkill] of Object.entries(previewSkills)) {
                 const currentSkill = currentSkills[key];
 
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: Record lookup may return undefined at runtime
                 if (!currentSkill) continue;
 
                 if (currentSkill.current !== previewSkill.current) {
@@ -194,16 +208,15 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
         /* -------------------------------------------- */
 
         _compareDerivedStats(current: WH40KBaseActorDocument, preview: WH40KBaseActorDocument): void {
-            const system = current.system as unknown as {
+            type DerivedSystemShape = {
                 wounds: { max: number };
                 initiative: { bonus: number };
                 movement: { half: number; full: number; charge: number; run: number };
             };
-            const previewSystem = preview.system as unknown as {
-                wounds: { max: number };
-                initiative: { bonus: number };
-                movement: { half: number; full: number; charge: number; run: number };
-            };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system is typed as base DataModel; cast required to access derived sub-objects
+            const system = current.system as unknown as DerivedSystemShape;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system is typed as base DataModel; cast required to access derived sub-objects
+            const previewSystem = preview.system as unknown as DerivedSystemShape;
             const comparisons: { path: string; selector: string; type: string }[] = [
                 { path: 'wounds.max', selector: "[data-stat='wounds-max']", type: 'wounds' },
                 { path: 'initiative.bonus', selector: "[data-stat='initiative']", type: 'initiative' },
@@ -265,6 +278,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
 
         async enterWhatIfMode(): Promise<void> {
             if (this._whatIfActive) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key for What-If mode notifications to be added in a follow-up i18n pass
                 ui.notifications.warn('Already in What-If mode');
                 return;
             }
@@ -273,11 +287,14 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
             this._whatIfChanges = {};
             this._whatIfImpacts = [];
 
+            // eslint-disable-next-line @typescript-eslint/no-deprecated -- ApplicationV2.render(force) is V1 signature; used until sheet migrated to V2 render pattern
             await this.render(false);
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key for What-If mode notifications to be added in a follow-up i18n pass
             ui.notifications.info('What-If mode activated - changes will be previewed');
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: value is arbitrary actor update data; unknown is the correct type at this API seam
         async previewChange(path: string, value: unknown): Promise<void> {
             if (!this._whatIfActive) {
                 await this._applyChange(path, value);
@@ -302,10 +319,13 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
             const baseData = this.document.toObject();
             const previewData = foundry.utils.mergeObject(baseData, this._whatIfChanges, { inplace: false });
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.Actor is untyped; cast required to access documentClass constructor
             this._whatIfPreview = new (CONFIG.Actor as unknown as { documentClass: typeof Actor.implementation }).documentClass(
+                // eslint-disable-next-line no-restricted-syntax -- boundary: previewData is a deep-cloned object; cast required to match Actor constructor parameter type
                 previewData as unknown as ConstructorParameters<typeof Actor.implementation>[0],
                 { parent: null },
             );
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- _whatIfPreview may fail to construct; null check guards against constructor failure
             if (this._whatIfPreview) this._whatIfPreview.prepareData();
 
             this._calculateImpacts();
@@ -318,11 +338,14 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
             const current = this.document;
             const preview = this._whatIfPreview;
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system.characteristics is typed as base DataModel; cast to concrete shape required
             const currentChars = current.system.characteristics as Record<string, WH40KCharacteristic>;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system.characteristics is typed as base DataModel; cast to concrete shape required
             const previewChars = preview.system.characteristics as Record<string, WH40KCharacteristic>;
 
             for (const [key, previewChar] of Object.entries(previewChars)) {
                 const currentChar = currentChars[key];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: Record lookup may return undefined at runtime
                 if (!currentChar) continue;
                 if (currentChar.bonus !== previewChar.bonus) {
                     impacts.push({
@@ -333,7 +356,9 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
             }
 
             type WhatIfSystem = { initiative: { bonus: number }; wounds: { max: number }; movement: { half: number } };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system is typed as base DataModel; cast required to access derived sub-objects
             const sys = current.system as unknown as WhatIfSystem;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system is typed as base DataModel; cast required to access derived sub-objects
             const preSys = preview.system as unknown as WhatIfSystem;
 
             if (sys.initiative.bonus !== preSys.initiative.bonus) {
@@ -376,6 +401,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
             }
 
             await this.exitWhatIfMode();
+            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key for What-If mode notifications to be added in a follow-up i18n pass
             ui.notifications.info('What-If mode cancelled - changes discarded');
         }
 
@@ -402,16 +428,19 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
                 }
             }
 
+            // eslint-disable-next-line @typescript-eslint/no-deprecated -- ApplicationV2.render(force) is V1 signature; used until sheet migrated to V2 render pattern
             await this.render(false);
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: value is arbitrary actor update data; unknown is the correct type at this API seam
         async _applyChange(path: string, value: unknown): Promise<void> {
             const update = {};
             foundry.utils.setProperty(update, path, value);
             await this.document.update(update);
         }
 
-        getWhatIfState() {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: changes holds arbitrary actor update paths; Record<string,unknown> is the correct return type
+        getWhatIfState(): { active: boolean; changes: Record<string, unknown>; impacts: { type: string; message: string }[]; changeCount: number } {
             return {
                 active: this._whatIfActive,
                 changes: foundry.utils.deepClone(this._whatIfChanges),

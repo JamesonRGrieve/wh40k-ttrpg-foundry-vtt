@@ -33,6 +33,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField via `any` due to Foundry untyped fields; double-cast required to satisfy constructor signature
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Cybernetic type
@@ -77,36 +78,32 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
     override prepareBaseData(): void {
         super.prepareBaseData();
 
-        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
-        this.type = (resolveLineVariant(this.type as unknown, lineKey) as string) ?? 'replacement';
+        // eslint-disable-next-line no-restricted-syntax -- boundary: parent is Foundry Document (any); _source is untyped backing store
+        const parentDoc = this.parent as { _source?: { system?: Record<string, unknown> } } | null | undefined;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: parent is Foundry Document type (any); actor field is untyped on base DataModel parent
+        const lineKey = inferActiveGameLine(parentDoc?._source?.system ?? {}, this.parent as { actor?: unknown } | null | undefined);
 
-        const resolvedLocations = resolveLineVariant(this.locations as unknown, lineKey);
-        this.locations = new Set(
-            Array.isArray(resolvedLocations) ? (resolvedLocations as string[]) : Array.from((resolvedLocations as Set<string>) ?? new Set()),
-        );
+        this.type = resolveLineVariant(this.type, lineKey);
 
-        this.hasArmourPoints = Boolean(resolveLineVariant(this.hasArmourPoints as unknown, lineKey));
-        this.armourPoints = foundry.utils.mergeObject(
-            {
-                head: 0,
-                leftArm: 0,
-                rightArm: 0,
-                body: 0,
-                leftLeg: 0,
-                rightLeg: 0,
-            },
-            (resolveLineVariant(this.armourPoints as unknown, lineKey) as Record<string, unknown>) ?? {},
-            { inplace: false },
-        ) as typeof this.armourPoints;
+        const resolvedLocations = resolveLineVariant(this.locations, lineKey);
+        this.locations = resolvedLocations instanceof Set ? resolvedLocations : new Set(Array.isArray(resolvedLocations) ? resolvedLocations : []);
 
-        this.effect = (resolveLineVariant(this.effect as unknown, lineKey) as string) ?? '';
-        this.drawbacks = (resolveLineVariant(this.drawbacks as unknown, lineKey) as string) ?? '';
-        this.installation = foundry.utils.mergeObject(
-            { surgery: '', difficulty: '', recoveryTime: '' },
-            (resolveLineVariant(this.installation as unknown, lineKey) as Record<string, unknown>) ?? {},
-            { inplace: false },
-        ) as typeof this.installation;
-        this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';
+        this.hasArmourPoints = Boolean(resolveLineVariant(this.hasArmourPoints, lineKey));
+
+        const resolvedAP = resolveLineVariant(this.armourPoints, lineKey);
+        this.armourPoints = foundry.utils.mergeObject({ head: 0, leftArm: 0, rightArm: 0, body: 0, leftLeg: 0, rightLeg: 0 }, resolvedAP, {
+            inplace: false,
+        });
+
+        this.effect = resolveLineVariant(this.effect, lineKey);
+        this.drawbacks = resolveLineVariant(this.drawbacks, lineKey);
+
+        const resolvedInstallation = resolveLineVariant(this.installation, lineKey);
+        this.installation = foundry.utils.mergeObject({ surgery: '', difficulty: '', recoveryTime: '' }, resolvedInstallation, {
+            inplace: false,
+        });
+
+        this.notes = resolveLineVariant(this.notes, lineKey);
     }
 
     /* -------------------------------------------- */
@@ -144,7 +141,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
     /** @override */
     get chatProperties(): string[] {
         const props = [
-            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
+            ...((Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []),
             this.typeLabel,
             `Location: ${this.locationsLabel}`,
         ];
@@ -166,7 +163,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
+    get headerLabels(): Record<string, string> {
         return {
             type: this.typeLabel,
             location: this.locationsLabel,

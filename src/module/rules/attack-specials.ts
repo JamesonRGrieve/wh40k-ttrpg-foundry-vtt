@@ -6,14 +6,14 @@ import { applyQualityModifiersToRollData } from './weapon-quality-effects.ts';
 
 type AttackSpecialLike = {
     name: string;
-    level?: unknown;
+    level?: number | boolean | string;
 };
 
 type AttackSpecialCarrier = WH40KItemDocument & {
     isAttackSpecial: boolean;
     system: WH40KItemDocument['system'] & {
         enabled?: boolean;
-        level?: unknown;
+        level?: number | boolean | string;
     };
 };
 
@@ -24,16 +24,16 @@ type AttackSpecialRollData = RollData & {
 type AttackSpecialSourceRollData = WeaponRollData | PsychicRollData;
 
 export function updateAttackSpecials(rollData: AttackSpecialSourceRollData): void {
-    const mutableRollData = rollData as AttackSpecialSourceRollData & AttackSpecialRollData;
+    const mutableRollData = rollData as AttackSpecialRollData;
     mutableRollData.attackSpecials = [];
     const actionItem = rollData.weapon ?? rollData.power;
     if (!actionItem) return;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: actionItem.items is untyped in WH40KItemDocument; cast to structural type for attack-special access
     for (const i of actionItem.items as unknown as AttackSpecialCarrier[]) {
-        if (i.isAttackSpecial && (i.system.equipped || i.system.enabled)) {
-            mutableRollData.attackSpecials.push({
-                name: i.name,
-                level: i.system.level,
-            });
+        if (i.isAttackSpecial && (i.system.equipped === true || i.system.enabled === true)) {
+            const entry: AttackSpecialLike = { name: i.name };
+            if (i.system.level !== undefined) entry.level = i.system.level;
+            mutableRollData.attackSpecials.push(entry);
         }
     }
 
@@ -65,9 +65,11 @@ export function updateAttackSpecials(rollData: AttackSpecialSourceRollData): voi
     if (actionItem.isRanged) {
         // actionItem.isRanged is true → rollData is WeaponRollData (not PsychicRollData),
         // narrowed at runtime but invisible to the TS type system; cast accordingly.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: runtime-narrowed WeaponRollData; TS union can't see isRanged implies weapon not power
         calculateAmmoAttackSpecials(mutableRollData as unknown as Parameters<typeof calculateAmmoAttackSpecials>[0]);
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: runtime-narrowed union; WeaponModifiers accepts WeaponRollData at runtime
     calculateWeaponModifiersAttackSpecials(mutableRollData as unknown as Parameters<typeof calculateWeaponModifiersAttackSpecials>[0]);
 }
 
@@ -80,6 +82,7 @@ export function calculateAttackSpecialAttackBonuses(rollData: RollData): void {
     const actionItem = rollData.weapon ?? rollData.power;
     if (!actionItem) return;
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: actionItem.items is untyped in WH40KItemDocument; cast to structural type for attack-special access
     for (const item of actionItem.items as unknown as AttackSpecialCarrier[]) {
         if (!item.isAttackSpecial) continue;
         switch (item.name) {
@@ -111,6 +114,7 @@ export function calculateAttackSpecialAttackBonuses(rollData: RollData): void {
     }
 
     // Apply weapon quality effects (Phase 1: Accurate aim bonus)
+    // eslint-disable-next-line no-restricted-syntax -- boundary: runtime-narrowed RollData; QualityEffects expects WeaponRollData shape at runtime
     applyQualityModifiersToRollData(rollData as unknown as Parameters<typeof applyQualityModifiersToRollData>[0]);
 }
 

@@ -111,7 +111,7 @@ export class HooksManager {
     static registerHooks(): void {
         // Foundry's Hooks.on overloads in fvtt-types are tightly typed by hook name;
         // cast to a permissive shim so non-core hooks (system-emitted events) compile.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- framework boundary: hook payload typing varies by hook name
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-deprecated, no-restricted-syntax -- framework boundary: Hooks.on is deprecated in V14; hook payload typing varies by hook name; hooksOn shim return type must be unknown
         // biome-ignore lint/suspicious/noExplicitAny: framework boundary — Foundry hook payloads are heterogeneous by hook name
         const hooksOn = Hooks.on.bind(Hooks) as (event: string, fn: (...args: any[]) => unknown) => number;
         Hooks.once('init', () => {
@@ -120,7 +120,9 @@ export class HooksManager {
         hooksOn('ready', () => {
             void HooksManager.ready();
         });
+        // eslint-disable-next-line no-restricted-syntax -- boundary: hotbarDrop hook payload is an untyped Record from Foundry
         hooksOn('hotbarDrop', (bar: unknown, data: Record<string, unknown>, slot: number) => HooksManager.hotbarDrop(bar, data, slot));
+        /* eslint-disable no-restricted-syntax, @typescript-eslint/no-deprecated -- boundary: Foundry hook payloads use deprecated globals (CompendiumDirectory, ActorDirectory, Application); migration tracked separately */
         hooksOn('renderCompendiumDirectory', (app: CompendiumDirectory, html: JQuery, data: Record<string, unknown>) =>
             HooksManager.renderCompendiumDirectory(app, html, data),
         );
@@ -130,6 +132,7 @@ export class HooksManager {
         hooksOn('renderDocumentSheetConfig', (app: Application, html: JQuery, data: Record<string, unknown>) =>
             HooksManager.renderDocumentSheetConfig(app, html, data),
         );
+        /* eslint-enable no-restricted-syntax, @typescript-eslint/no-deprecated */
         hooksOn('getActorDirectoryEntryContext', (_html: JQuery, options: DirectoryContextOption[]) => HooksManager.getActorDirectoryEntryContext(options));
         hooksOn('getActorSheetClass', (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) =>
             HooksManager.getActorSheetClass(actor, sheetData),
@@ -145,6 +148,7 @@ export class HooksManager {
      * WH40KCreateActorDialog so users pick system + kind rather than a
      * flat type list.
      */
+    // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- boundary: ActorDirectory is the V14 hook global; Record<string, unknown> is the Foundry hook payload type; migration tracked separately
     static renderActorDirectory(_app: ActorDirectory, html: JQuery, _data: Record<string, unknown>): void {
         const root = html[0] as HTMLElement | undefined;
         if (root === undefined) return;
@@ -170,7 +174,9 @@ export class HooksManager {
         ); // capture-phase so we beat Foundry's own handler
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- boundary: Application is the V14 hook global; Record<string, unknown> is the Foundry hook payload type; migration tracked separately
     static renderDocumentSheetConfig(app: Application, html: JQuery, _data: Record<string, unknown>): void {
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Application is the V14 global; migration tracked separately
         const document = (app as Application & { document?: Actor | Item }).document;
         if (document?.documentName !== 'Actor') return;
 
@@ -228,7 +234,7 @@ export class HooksManager {
         const consolePrefix = 'WH40K RPG | ';
         game.wh40k = {
             debug: false,
-            // eslint-disable-next-line no-console -- the wh40k.log/warn/error wrappers are the canonical console interface
+            /* eslint-disable no-restricted-syntax, no-console -- boundary: game.wh40k system-global; console wrappers are the canonical logging interface; unknown params and as-unknown casts necessary for the polymorphic API */
             log: (s: string, o?: unknown) => (game.wh40k.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
             warn: (s: string, o?: unknown) => console.warn(`${consolePrefix}${s}`, o),
             error: (s: string, o?: unknown) => console.error(`${consolePrefix}${s}`, o),
@@ -278,10 +284,12 @@ export class HooksManager {
             // tooltips is initialized in ready()
             tooltips: null as unknown as WH40KGameSystem['tooltips'],
         };
+        /* eslint-enable no-restricted-syntax */
 
         //CONFIG.debug.hooks = true;
 
         // Add custom constants for configuration.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40K config cast to internal system config type; no fvtt-types schema available
         CONFIG.wh40k = WH40K as unknown as WH40KSystemConfig;
         CONFIG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
         CONFIG.MeasuredTemplate.defaults.angle = 30.0;
@@ -290,6 +298,7 @@ export class HooksManager {
         CONFIG.Actor.documentClass = WH40KActorProxy;
         // Per (system, kind) document class registrations. The generic proxy
         // dispatches to the right concrete class based on the actor's `type`.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.Actor documentClasses is a system extension not in fvtt-types
         (CONFIG.Actor as Record<string, unknown>)['documentClasses'] = {
             'dh2-character': documents.WH40KDH2Character,
             'dh2-npc': documents.WH40KDH2NPC,
@@ -424,6 +433,7 @@ export class HooksManager {
         // Unregister both core actor sheet generations so "Default Sheet"
         // never appears alongside the system's type-bound sheets.
         DocumentSheetConfig.unregisterSheet(Actor, 'core', foundry.appv1.sheets.ActorSheet);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications.sheets is not fully typed; ActorSheetV2 may not exist in all V14 builds
         const actorSheetV2 = (foundry.applications.sheets as Record<string, unknown>)['ActorSheetV2'];
         if (actorSheetV2 !== undefined) {
             DocumentSheetConfig.unregisterSheet(Actor, 'core', actorSheetV2 as Parameters<typeof DocumentSheetConfig.unregisterSheet>[2]);
@@ -731,6 +741,7 @@ export class HooksManager {
         // Register movement actions and Token HUD hooks (after settings are available)
         documents.TokenDocumentWH40K.registerMovementActions();
         documents.TokenDocumentWH40K.registerHUDListeners();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: costAggregator callback signature is untyped in fvtt-types; unknown[] is the correct boundary type
         CONFIG.Token.movement.costAggregator = (results: unknown[], _distance: unknown, _segment: unknown) => {
             return Math.max(...results.map((i) => (i as { cost: number }).cost));
         };
@@ -752,6 +763,7 @@ export class HooksManager {
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: hotbarDrop payload is an untyped Record from Foundry; _bar is unknown per hook contract
     // biome-ignore lint/suspicious/noConfusingVoidType: Foundry hook contract — returning void vs boolean has semantic meaning for hook propagation
     static hotbarDrop(_bar: unknown, data: Record<string, unknown>, slot: number): boolean | void {
         game.wh40k.log('Hotbar Drop:', data);
@@ -771,9 +783,12 @@ export class HooksManager {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- boundary: CompendiumDirectory is the V14 hook global; Record<string, unknown> is the Foundry hook payload; migration tracked separately
     static renderCompendiumDirectory(_app: CompendiumDirectory, html: JQuery, _data: Record<string, unknown>): void {
         const rawRoot = html[0] as HTMLElement | undefined;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: html may be a JQuery or HTMLElement; cast through unknown is necessary for V13/V14 compat
         const root: HTMLElement | null = rawRoot instanceof HTMLElement ? rawRoot : (html as unknown as HTMLElement | null);
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- third-party @types annotation flags HTMLElement.querySelector as deprecated; the DOM method itself is not
         if (root === null || typeof root.querySelector !== 'function') return;
         const header = root.querySelector('.directory-header');
         if (header === null) return;
@@ -805,6 +820,7 @@ export class HooksManager {
         if ((actor.type as string) !== 'npcV2') return null;
 
         // Check primaryUse field
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system is DataModel-backed but primaryUse field access requires index signature; fix defineSchema() is tracked separately
         const primaryUse = (actor.system as Record<string, unknown>)['primaryUse'];
 
         // Auto-select vehicle sheet for vehicle/ship NPCs

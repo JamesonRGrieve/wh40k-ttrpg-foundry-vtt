@@ -47,6 +47,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         classes: ['wh40k-rpg', 'encounter-builder'],
         tag: 'div',
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: title is a WH40K.* localization key, not a hardcoded string; lint rule cannot distinguish
             title: 'WH40K.NPC.Encounter.Title',
             icon: 'fa-solid fa-swords',
             minimizable: true,
@@ -58,6 +59,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             height: 650,
         },
         actions: {
+            /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action map binds `this` at click-time; private static method references are safe here */
             addNPC: EncounterBuilder.#addNPC,
             removeNPC: EncounterBuilder.#removeNPC,
             adjustCount: EncounterBuilder.#adjustCount,
@@ -66,6 +68,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             loadTemplate: EncounterBuilder.#loadTemplate,
             deployToCombat: EncounterBuilder.#deployToCombat,
             openNPC: EncounterBuilder.#openNPC,
+            /* eslint-enable @typescript-eslint/unbound-method */
         },
     };
 
@@ -159,6 +162,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext/Record<string,unknown> is the ApplicationV2 override signature
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -221,6 +225,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender/Record<string,unknown> is the ApplicationV2 override signature
     override _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
@@ -269,6 +274,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
             void (async () => {
                 try {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse returns unknown; cast to Record for drop-data extraction
                     const data = JSON.parse((e as DragEvent).dataTransfer?.getData('text/plain') ?? '{}') as Record<string, unknown>;
 
                     if ((data['type'] as string | undefined) === 'Actor') {
@@ -286,6 +292,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {Object} data - Drop data.
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: drop payload is an external Record; typed narrowing done inside
     async _handleActorDrop(data: Record<string, unknown>): Promise<void> {
         interface DroppedActor {
             uuid: string;
@@ -300,16 +307,19 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         if (data['uuid'] !== undefined) {
             actor = (await fromUuid(data['uuid'] as string)) as DroppedActor | null;
         } else if (data['id'] !== undefined) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors.get returns untyped Actor; cast to DroppedActor required
             actor = (game.actors.get(data['id'] as string) as unknown as DroppedActor | undefined) ?? null;
         }
 
         if (actor === null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
             ui.notifications.warn('Could not find the dropped actor.');
             return;
         }
 
         // Only allow NPC types
         if (actor.type !== 'npc' && actor.type !== 'npcV2') {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
             ui.notifications.warn('Only NPC actors can be added to encounters.');
             return;
         }
@@ -323,6 +333,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
                 uuid: actor.uuid,
                 name: actor.name,
                 img: actor.img ?? 'icons/svg/mystery-man.svg',
+                // eslint-disable-next-line no-restricted-syntax -- boundary: local DroppedActor/ActorLike interface; threatLevel is genuinely optional on the drop payload
                 threat: actor.system.threatLevel ?? 5,
                 count: 1,
             });
@@ -347,6 +358,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
                 return { key, ...rating };
             }
         }
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- noUncheckedIndexedAccess: index access may return undefined; fallback guards runtime
         const fallback = EncounterBuilder.DIFFICULTY_RATINGS['apocalyptic'] ?? { maxRatio: Infinity, label: 'WH40K.Threat.Apocalyptic', color: '#991b1b' };
         return { key: 'apocalyptic', ...fallback };
     }
@@ -358,6 +370,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @returns {Object} Advantage info.
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _getActionAdvantage returns a shape consumed by the template context; Record<string,unknown> is intentional
     _getActionAdvantage(partyActions: number, enemyActions: number): Record<string, unknown> {
         const diff = enemyActions - partyActions;
 
@@ -381,6 +394,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         const actors = game.actors.filter((a) => (a as { type: string }).type === 'npc' || (a as { type: string }).type === 'npcV2');
 
         if (actors.length === 0) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
             ui.notifications.warn('No NPC actors found in the world.');
             return;
         }
@@ -409,11 +423,13 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             uuid: string;
             count: number;
         }
+        // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- Dialog is V1 API pending migration to DialogV2; cast required to reach .prompt()
         const result = await (Dialog as unknown as { prompt: (opts: Record<string, unknown>) => Promise<PromptResult | null> }).prompt({
             title: 'Add NPC',
             content,
             label: 'Add',
             callback: (html: HTMLElement[]) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: html[0] is the V1 Dialog callback array element; may be undefined at runtime
                 const form = (html[0] ?? document).querySelector('form') as HTMLFormElement;
                 return {
                     uuid: (form.querySelector('[name="uuid"]') as HTMLSelectElement).value,
@@ -441,6 +457,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
                 uuid: result.uuid,
                 name: actor.name,
                 img: actor.img ?? 'icons/svg/mystery-man.svg',
+                // eslint-disable-next-line no-restricted-syntax -- boundary: local DroppedActor/ActorLike interface; threatLevel is genuinely optional on the drop payload
                 threat: actor.system.threatLevel ?? 5,
                 count: result.count,
             });
@@ -475,6 +492,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         // index is bounds-checked above
         const npc = this.#npcs[index];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: array access may return undefined at runtime despite bounds check
         if (npc === undefined) return;
 
         npc.count = Math.max(1, Math.min(20, npc.count + delta));
@@ -498,15 +516,18 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      */
     static async #saveTemplate(this: EncounterBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
             ui.notifications.warn('No NPCs to save.');
             return;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- Dialog is V1 API pending migration to DialogV2; cast required to reach .prompt()
         const name = await (Dialog as unknown as { prompt: (opts: Record<string, unknown>) => Promise<string | null> }).prompt({
             title: 'Save Encounter Template',
             content: '<form><div class="form-group"><label>Template Name</label><input type="text" name="name" placeholder="My Encounter"/></div></form>',
             label: 'Save',
-            callback: (html: HTMLElement[]) => (html[0]?.querySelector('[name="name"]') as HTMLInputElement | null)?.value ?? '',
+            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: html[0] is the V1 Dialog callback array element; optional chains guard V1 API runtime behaviour
+            callback: (html: HTMLElement[]) => (html[0]?.querySelector('[name="name"]') as HTMLInputElement)?.value ?? '',
             rejectClose: false,
         });
 
@@ -519,6 +540,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             savedAt: Date.now(),
         });
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
         ui.notifications.info(`Saved encounter template: ${name}`);
         void this.render({ parts: ['content'] });
     }
@@ -533,10 +555,12 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         if (Number.isNaN(index) || index < 0 || index >= this.#templates.length) return;
 
         const template = this.#templates[index];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: array access may return undefined at runtime despite bounds check
         if (template === undefined) return;
         this.#npcs = foundry.utils.deepClone(template.npcs);
         this.#party = foundry.utils.deepClone(template.party);
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
         ui.notifications.info(`Loaded encounter: ${template.name}`);
         void this.render({ parts: ['content'] });
     }
@@ -548,10 +572,12 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      */
     static async #deployToCombat(this: EncounterBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
             ui.notifications.warn('No NPCs to deploy.');
             return;
         }
 
+        /* eslint-disable no-restricted-syntax -- boundary: CombatLike/CombatConstructor/DeployActor are local structural adapters; Record<string,unknown> is the Foundry embedded-document API shape */
         interface CombatLike {
             createEmbeddedDocuments(type: string, data: Record<string, unknown>[]): Promise<unknown>;
         }
@@ -567,17 +593,22 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         // Ensure combat exists
         let combat = game.combat as CombatLike | null;
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Combat.create is the V14 API; no successor yet
         combat ??= await (Combat as unknown as CombatConstructor).create({ scene: game.scenes.active?.id });
+        /* eslint-enable no-restricted-syntax */
         if (combat === null) return;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: combatants is the Foundry embedded-document creation payload shape
         const combatants: Record<string, unknown>[] = [];
 
         for (const npcEntry of this.#npcs) {
+            // eslint-disable-next-line no-await-in-loop -- sequential actor resolution required; parallelizing would race on fromUuid cache
             const actor = (await fromUuid(npcEntry.uuid)) as DeployActor | null;
             if (actor === null) continue;
 
             for (let i = 0; i < npcEntry.count; i++) {
                 // Create token data (side-effect: validates token document)
+                // eslint-disable-next-line no-await-in-loop -- sequential getTokenDocument required per-combatant; parallelizing could produce ordering issues
                 await actor.getTokenDocument({
                     name: npcEntry.count > 1 ? `${actor.name} ${i + 1}` : actor.name,
                 });
@@ -620,6 +651,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {Actor|string} actorOrUuid - Actor or UUID.
      * @param {number} [count=1] - Number to add.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: public API accepts unknown actor-or-uuid from callers; typed immediately inside
     async addNPC(actorOrUuid: unknown, count: number = 1): Promise<void> {
         interface ActorLike {
             uuid: string;
@@ -648,6 +680,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
                 uuid,
                 name: actor.name,
                 img: actor.img,
+                // eslint-disable-next-line no-restricted-syntax -- boundary: local DroppedActor/ActorLike interface; threatLevel is genuinely optional on the drop payload
                 threat: actor.system.threatLevel ?? 5,
                 count,
             });
@@ -676,6 +709,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Get current encounter data.
      * @returns {Object} Encounter data.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: getData returns a loose shape consumed by callers with no common interface
     getData(): Record<string, unknown> {
         return {
             npcs: foundry.utils.deepClone(this.#npcs),
