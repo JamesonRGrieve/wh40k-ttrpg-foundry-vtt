@@ -229,7 +229,6 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         | null;
     declare _clickOutsideHandler: ((event: Event) => void) | null;
     declare _resizeObserver: ResizeObserver | null;
-    declare _traitsFilter: Record<string, unknown>;
 
     // Foundry base methods
     declare render: (options?: Record<string, unknown> | boolean) => Promise<this>;
@@ -341,6 +340,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @type {{ search: string, characteristic: string, training: string }}
      */
     _skillsFilter = { search: '', characteristic: '', training: '' };
+
+    /**
+     * Filter state for traits panel.
+     * @type {{ search: string, category: string, hasLevel: boolean }}
+     */
+    _traitsFilter: { search: string; category: string; hasLevel: boolean } = { search: '', category: '', hasLevel: false };
 
     /**
      * Scroll positions for scrollable containers.
@@ -1214,24 +1219,18 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Apply filters if present
         let filteredTraits = traits;
-        const filter = this._traitsFilter as {
-            search?: string;
-            category?: string;
-            hasLevel?: boolean;
-        };
+        const filter = this._traitsFilter;
 
-        const filterSearch = typeof filter.search === 'string' ? filter.search : '';
-        if (filterSearch !== '') {
-            const search = filterSearch.toLowerCase();
+        if (filter.search !== '') {
+            const search = filter.search.toLowerCase();
             filteredTraits = filteredTraits.filter((t) => t.name.toLowerCase().includes(search));
         }
 
-        const filterCategory = typeof filter.category === 'string' ? filter.category : '';
-        if (filterCategory !== '' && filterCategory !== 'all') {
-            filteredTraits = filteredTraits.filter((t) => t.system.category === filterCategory);
+        if (filter.category !== '' && filter.category !== 'all') {
+            filteredTraits = filteredTraits.filter((t) => t.system.category === filter.category);
         }
 
-        if (filter.hasLevel === true) {
+        if (filter.hasLevel) {
             filteredTraits = filteredTraits.filter((t) => t.system.hasLevel === true);
         }
 
