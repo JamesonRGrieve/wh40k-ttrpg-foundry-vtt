@@ -61,7 +61,7 @@
                         data-action-key="{{action.key}}"
                         data-tooltip
                         aria-label="{{localize action.label}}: {{localize action.description}}"
-                        title="{{localize action.label}}"
+                        title="{{localize action.label}} — {{localize "WH40K.Combat.Actions.ButtonTitleClickForDescription"}}"
                     >
                         <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                         <i class="fas {{action.icon}} tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
@@ -89,7 +89,7 @@
                         data-action-key="{{action.key}}"
                         data-tooltip
                         aria-label="{{localize action.label}}: {{localize action.description}}"
-                        title="{{localize action.label}}"
+                        title="{{localize action.label}} — {{localize "WH40K.Combat.Actions.ButtonTitleClickForDescription"}}"
                     >
                         <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                         <i class="fas {{action.icon}} tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
@@ -117,7 +117,7 @@
                         data-action-key="{{action.key}}"
                         data-tooltip
                         aria-label="{{localize action.label}}: {{localize action.description}}"
-                        title="{{localize action.label}}"
+                        title="{{localize action.label}} — {{localize "WH40K.Combat.Actions.ButtonTitleClickForDescription"}}"
                     >
                         <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                         <i class="fas {{action.icon}} tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
@@ -144,7 +144,7 @@
                         data-action-key="{{action.key}}"
                         data-tooltip
                         aria-label="{{localize action.label}}: {{localize action.description}}"
-                        title="{{localize action.label}}"
+                        title="{{localize action.label}} — {{localize "WH40K.Combat.Actions.ButtonTitleClickForDescription"}}"
                     >
                         <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                         <i class="fas {{action.icon}} tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
@@ -216,7 +216,7 @@
                         data-action-key="{{action.key}}"
                         data-tooltip
                         aria-label="{{localize action.label}}: {{localize action.description}}"
-                        title="{{localize action.label}}"
+                        title="{{localize action.label}} — {{localize "WH40K.Combat.Actions.ButtonTitleClickForDescription"}}"
                     >
                         <span class="tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-w-[3px] tw-bg-[var(--action-color,var(--wh40k-border-medium))] tw-opacity-0 tw-transition-opacity tw-pointer-events-none group-hover:tw-opacity-100" aria-hidden="true"></span>
                         <i class="fas {{action.icon}} tw-text-[1.1rem] tw-text-[color:var(--action-color)] tw-transition-all"></i>
@@ -230,13 +230,13 @@
         {{! Info Note }}
         <div class="tw-flex tw-items-start tw-gap-[var(--wh40k-space-xs)] tw-p-[var(--wh40k-space-sm)] tw-mt-[var(--wh40k-space-md)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.06)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.15)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.65rem] tw-leading-[1.4] tw-text-[color:var(--wh40k-text-secondary)]">
             <i class="fas fa-info-circle tw-text-[0.75rem] tw-text-[color:var(--wh40k-accent-gold)] tw-shrink-0 tw-mt-[2px]"></i>
-            <span>Click any action for a detailed description. Action types:
-                <strong class="tw-text-[color:var(--wh40k-text-primary)] tw-font-bold">Half</strong>
-                (½ turn),
-                <strong class="tw-text-[color:var(--wh40k-text-primary)] tw-font-bold">Full</strong>
-                (full turn),
-                <strong class="tw-text-[color:var(--wh40k-text-primary)] tw-font-bold">Reaction</strong>
-                (out of turn).</span>
+            <span>{{localize "WH40K.Combat.Actions.ClickHint"}}
+                <strong class="tw-text-[color:var(--wh40k-text-primary)] tw-font-bold">{{localize "WH40K.Combat.Actions.ClickHintHalf"}}</strong>
+                {{localize "WH40K.Combat.Actions.ClickHintHalfNote"}},
+                <strong class="tw-text-[color:var(--wh40k-text-primary)] tw-font-bold">{{localize "WH40K.Combat.Actions.ClickHintFull"}}</strong>
+                {{localize "WH40K.Combat.Actions.ClickHintFullNote"}},
+                <strong class="tw-text-[color:var(--wh40k-text-primary)] tw-font-bold">{{localize "WH40K.Combat.Actions.ClickHintReaction"}}</strong>
+                {{localize "WH40K.Combat.Actions.ClickHintReactionNote"}}</span>
         </div>
     </div>
 </div>
