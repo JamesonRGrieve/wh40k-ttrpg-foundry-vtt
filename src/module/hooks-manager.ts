@@ -71,6 +71,7 @@ import {
 import * as npcApplications from './applications/npc/_module.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { resyncWorldFromCompendiums } from './compendium-resync.ts';
+import { uuidNameCache } from './utils/uuid-name-cache.ts';
 import type { WH40KSystemConfig } from './config.ts';
 import { SYSTEM_ID } from './constants.ts';
 import * as dataModels from './data/_module.ts';
@@ -142,6 +143,23 @@ export class HooksManager {
         DHTargetedActionManager.initializeHooks();
         DHBasicActionManager.initializeHooks();
         DHCombatActionManager.initializeHooks();
+
+        // Keep the UUID → display-name cache warm as world docs change.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document hook payloads carry framework-typed loose shapes
+        const onDocChange = (doc: { uuid?: string; name?: string }): void => {
+            if (typeof doc?.uuid === 'string' && typeof doc?.name === 'string') {
+                uuidNameCache.set(doc.uuid, doc.name);
+            }
+        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: see above
+        const onDocDelete = (doc: { uuid?: string }): void => {
+            if (typeof doc?.uuid === 'string') uuidNameCache.remove(doc.uuid);
+        };
+        for (const docType of ['Item', 'Actor', 'JournalEntry', 'RollTable'] as const) {
+            hooksOn(`create${docType}`, onDocChange);
+            hooksOn(`update${docType}`, onDocChange);
+            hooksOn(`delete${docType}`, onDocDelete);
+        }
     }
 
     /**
@@ -751,6 +769,7 @@ export class HooksManager {
     static async ready(): Promise<void> {
         await checkAndMigrateWorld();
         await resyncWorldFromCompendiums();
+        await uuidNameCache.build();
 
         // Initialize rich tooltip system
         game.wh40k.tooltips = new TooltipsWH40K();
