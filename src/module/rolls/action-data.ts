@@ -14,6 +14,10 @@ export class ActionData {
     damageData: { hits: Hit[]; additionalHits: number; reset: () => void } | undefined;
     effects: string[] = [];
     effectOutput: { name: string; effect: string }[] = [];
+    // Tracks Fate Point spends across the lifetime of this roll-chain. Survives reset()
+    // so that re-rolling does not also reset the single-spend lockout (unless the homebrew
+    // `multipleFateBurnPerRoll` setting is enabled, in which case the handlers ignore these).
+    fateUses: { reroll: boolean; addDoS: boolean } = { reroll: false, addDoS: false };
 
     constructor() {
         this.rollData = new RollData();

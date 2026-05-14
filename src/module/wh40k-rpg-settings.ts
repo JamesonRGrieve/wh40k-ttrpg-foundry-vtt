@@ -14,7 +14,17 @@ export class WH40KSettings {
         dh2Ruleset: 'dh2-ruleset',
         characteristicOffset: 'characteristic-offset',
         resyncOnReady: 'resync-on-ready',
+        multipleFateBurnPerRoll: 'multiple-fate-burn-per-roll',
     };
+
+    /** Homebrew: allow more than one Fate Point spend on the same roll. RAW permits only one. */
+    static isMultipleFateBurnAllowed(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.multipleFateBurnPerRoll) === true;
+        } catch {
+            return false;
+        }
+    }
 
     /** Integer offset added to the 20-point characteristic baseline during character generation. Defaults to 0. */
     static getCharacteristicOffset(): number {
@@ -122,6 +132,14 @@ export class WH40KSettings {
                 display: 'WH40K.SETTINGS.MovementAutomation.Display',
                 none: 'WH40K.SETTINGS.MovementAutomation.None',
             },
+        });
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.multipleFateBurnPerRoll, {
+            name: 'WH40K.SETTINGS.MultipleFateBurnPerRoll.Name',
+            hint: 'WH40K.SETTINGS.MultipleFateBurnPerRoll.Hint',
+            scope: 'world',
+            config: true,
+            default: false,
+            type: Boolean,
         });
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.resyncOnReady, {
             name: 'Resync Embedded Items From Compendiums on World Boot',
