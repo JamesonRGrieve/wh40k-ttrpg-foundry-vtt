@@ -144,6 +144,19 @@ export class WH40KBaseActor extends Actor {
             'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
             'token.name': createData['name'],
         };
+
+        // Seed system.gameSystem from the concrete DataModel's static, so a
+        // freshly-created dh2-character / dh1-character / etc actor reflects
+        // its actual ruleset instead of inheriting the 'rt' schema default.
+        const actorType = typeof createData['type'] === 'string' ? createData['type'] : null;
+        if (actorType !== null) {
+            const dataModelClass = (CONFIG.Actor.dataModels as Record<string, { gameSystem?: string } | undefined>)[actorType];
+            const staticGameSystem = dataModelClass?.gameSystem;
+            const currentSystem = (this.system as { gameSystem?: string } | undefined)?.gameSystem;
+            if (typeof staticGameSystem === 'string' && staticGameSystem !== '' && currentSystem !== staticGameSystem) {
+                initData['system.gameSystem'] = staticGameSystem;
+            }
+        }
         if (createData['type'] === 'vehicle') {
             initData['token.bar1'] = { attribute: 'integrity' };
             initData['token.bar2'] = undefined;

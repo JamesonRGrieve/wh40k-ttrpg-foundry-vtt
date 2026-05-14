@@ -580,8 +580,15 @@ export default class CharacterData extends CreatureTemplate {
         }
         this.aptitudes = [...allAptitudes];
 
-        // Derive gameSystem from origin path items if not already set
-        if (originItems.length > 0 && this.gameSystem === 'rt') {
+        // Derive gameSystem: prefer the concrete DataModel's static identifier
+        // (set per actor type, e.g. dh2-character → 'dh2e') and fall back to
+        // the first origin-path item's gameSystem. This prevents a fresh
+        // dh2-character from being treated as Rogue Trader just because the
+        // schema's neutral default is 'rt'.
+        const staticGameSystem = (this.constructor as { gameSystem?: string }).gameSystem;
+        if (typeof staticGameSystem === 'string' && staticGameSystem !== '' && this.gameSystem !== staticGameSystem) {
+            this.gameSystem = staticGameSystem as CharacterData['gameSystem'];
+        } else if (originItems.length > 0 && this.gameSystem === 'rt') {
             const firstSystem = originItems[0]?.system?.['gameSystem'];
             if (typeof firstSystem === 'string' && firstSystem !== this.gameSystem) {
                 this.gameSystem = firstSystem as CharacterData['gameSystem'];
