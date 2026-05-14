@@ -506,9 +506,17 @@ export function registerHandlebarsHelpers(): void {
 
     Handlebars.registerHelper('rateOfFireDisplay', (rateOfFire: TplValue): string => {
         if (!isTplObject(rateOfFire)) return '';
-        const single = stringifyTpl(rateOfFire['single']) || '-';
-        const semi = stringifyTpl(rateOfFire['semi']) || '-';
-        const full = stringifyTpl(rateOfFire['full']) || '-';
+        // RoF segments use canonical "S/B/F" format. Each segment is either:
+        //   - 'S' / numeric count (when the mode is supported), or
+        //   - '-' (when the mode is unsupported).
+        // single: boolean → 'S' when true, '-' when false/missing.
+        // semi/full: number → numeric string when > 0, '-' when 0/missing.
+        const singleRaw = rateOfFire['single'];
+        const single = singleRaw === true ? 'S' : '-';
+        const semiNum = typeof rateOfFire['semi'] === 'number' ? rateOfFire['semi'] : 0;
+        const fullNum = typeof rateOfFire['full'] === 'number' ? rateOfFire['full'] : 0;
+        const semi = semiNum > 0 ? String(semiNum) : '-';
+        const full = fullNum > 0 ? String(fullNum) : '-';
         return `${single}/${semi}/${full}`;
     });
 

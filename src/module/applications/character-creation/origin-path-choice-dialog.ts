@@ -401,7 +401,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         if (rawSys === undefined) return null;
         const parts: string[] = [];
 
-        type AtkData = { type?: string; range?: { value?: number }; rateOfFire?: { single?: number; semi?: number; full?: number } };
+        type AtkData = { type?: string; range?: { value?: number }; rateOfFire?: { single?: boolean | number; semi?: number; full?: number } };
         type DmgData = { formula?: string; bonus?: number; type?: string; penetration?: number };
 
         if (item.type === 'weapon') {
@@ -412,11 +412,14 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             if (typeof atk.range?.value === 'number' && atk.range.value !== 0) parts.push(`Range ${atk.range.value}m`);
             const rof = atk.rateOfFire;
             if (rof !== undefined) {
-                const modes: string[] = [];
-                if (rof.single !== undefined && rof.single !== 0) modes.push('S');
-                if (rof.semi !== undefined && rof.semi !== 0) modes.push(`${rof.semi}`);
-                if (rof.full !== undefined && rof.full !== 0) modes.push(`${rof.full}`);
-                if (modes.length > 0) parts.push(`RoF ${modes.join('/')}`);
+                // Canonical "S/B/F" RoF format — each segment is the mode count or '-' when unsupported.
+                // Filtering empty segments out (the previous behaviour) renders 'S/-/6' as 'S/6' and is wrong.
+                const singleSeg = rof.single === true || (typeof rof.single === 'number' && rof.single !== 0) ? 'S' : '-';
+                const semiSeg = typeof rof.semi === 'number' && rof.semi > 0 ? `${rof.semi}` : '-';
+                const fullSeg = typeof rof.full === 'number' && rof.full > 0 ? `${rof.full}` : '-';
+                if (singleSeg !== '-' || semiSeg !== '-' || fullSeg !== '-') {
+                    parts.push(`RoF ${singleSeg}/${semiSeg}/${fullSeg}`);
+                }
             }
             if (typeof dmg.formula === 'string' && dmg.formula !== '') {
                 let dmgStr = dmg.formula;

@@ -392,6 +392,24 @@
                                 <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap" data-action="increment" data-field="system.influence" data-max="100" title="+1">
                                     <i class="fas fa-plus"></i>
                                 </button>
+                                {{#if isHomebrew}}
+                                {{!-- Issue #13 follow-up: Influence is not solely an economy stat
+                                     (it gates social manipulation, audiences, Requisition tests).
+                                     In Homebrew mode Influence lives here rather than Statistics,
+                                     so surface a roll button that reuses the same `roll` action
+                                     dispatch as the RAW characteristic row (rollType=characteristic,
+                                     rollTarget=influence → actor.rollCharacteristic('influence')). --}}
+                                <button type="button"
+                                    class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[6px] tw-text-[var(--color-text-primary)] tw-font-bold tw-cursor-pointer tw-w-7 tw-h-7 tw-text-base tw-select-none tw-whitespace-nowrap tw-ml-1"
+                                    data-action="roll"
+                                    data-roll-type="characteristic"
+                                    data-roll-target="influence"
+                                    data-characteristic="influence"
+                                    data-tooltip="{{localize 'WH40K.CharacteristicSetup.RollInfluence'}}"
+                                    aria-label="{{localize 'WH40K.CharacteristicSetup.RollInfluence'}}">
+                                    <i class="fas fa-dice-d10"></i>
+                                </button>
+                                {{/if}}
                             </div>
                         </div>
                         {{/unless}}
