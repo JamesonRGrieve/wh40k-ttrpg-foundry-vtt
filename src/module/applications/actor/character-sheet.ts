@@ -186,10 +186,9 @@ export default class CharacterSheet extends BaseActorSheet {
     declare actor: WH40KAcolyte;
     declare document: WH40KAcolyte & BaseActorSheet['document'];
     declare isEditable: boolean;
-    declare _powersFilter: { discipline?: unknown; orderCategory?: unknown; [key: string]: unknown };
+    _powersFilter: { discipline: string; orderCategory: string } = { discipline: '', orderCategory: '' };
     declare _equipmentFilter: { search: string; type: string; status: string };
     declare _skillsFilter: { search: string; characteristic: string; training: string; [key: string]: string };
-    declare _traitsFilter: Record<string, unknown>;
     /* eslint-enable no-restricted-syntax */
     declare _throttleTimers?: Map<string, number>;
     declare _originPathSummary?: OriginSummary;
@@ -2086,8 +2085,8 @@ export default class CharacterSheet extends BaseActorSheet {
         const orderCategories = Array.from(categories.values());
 
         // Get filter state
-        const activeDiscipline = (this._powersFilter.discipline as string | undefined) ?? '';
-        const activeOrderCategory = (this._powersFilter.orderCategory as string | undefined) ?? '';
+        const activeDiscipline = this._powersFilter.discipline;
+        const activeOrderCategory = this._powersFilter.orderCategory;
 
         // Apply discipline filter to psychic powers
         let filteredPsychicPowers = psychicPowers;
