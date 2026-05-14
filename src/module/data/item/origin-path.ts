@@ -464,7 +464,11 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         const splitComposite = (raw: string): { base: string; specialization?: string } => {
             const match = raw.match(/^(.+?)\s*\((.+)\)\s*$/);
             if (match === null) return { base: raw };
-            return { base: match[1].trim(), specialization: match[2].trim() };
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: capture-group access is `string | undefined` under strict tsconfig, `string` under regular tsconfig; the fallback satisfies both
+            const base = match[1] ?? raw;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: see above
+            const specialization = match[2] ?? '';
+            return { base: base.trim(), specialization: specialization.trim() };
         };
 
         // Labels can collide ("Skill", "Skill") — the choice dialog disambiguates

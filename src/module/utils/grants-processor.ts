@@ -128,9 +128,11 @@ export const GRANT_MODE = {
  * embedded-item identity.
  */
 function readCompendiumSource(item: WH40KItem): string | null {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document _stats / flags shapes; fvtt-types models them loosely. compendiumSource is the V14 location, flags.core.sourceId is the V11/V12 legacy location
     const stats = (item as unknown as { _stats?: { compendiumSource?: unknown } })._stats;
     const fromStats = stats?.compendiumSource;
     if (typeof fromStats === 'string' && fromStats.length > 0) return fromStats;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: see above
     const flags = (item as unknown as { flags?: { core?: { sourceId?: unknown } } }).flags;
     const fromFlag = flags?.core?.sourceId;
     return typeof fromFlag === 'string' && fromFlag.length > 0 ? fromFlag : null;
@@ -639,13 +641,11 @@ export class GrantsProcessor {
         const existing = context.actor.items.find((i) => {
             if (i.type !== 'talent') return false;
             const sourceUuid = readCompendiumSource(i);
-            if (talentGrant.uuid && sourceUuid && sourceUuid === talentGrant.uuid) {
+            const grantUuid = typeof talentGrant.uuid === 'string' && talentGrant.uuid.length > 0 ? talentGrant.uuid : null;
+            if (grantUuid !== null && sourceUuid !== null && sourceUuid === grantUuid) {
                 return !hasGrantSpec || (i.system as { specialization?: string } | undefined)?.specialization === grantSpec;
             }
-            return (
-                i.name === talentGrant.name &&
-                (!hasGrantSpec || (i.system as { specialization?: string } | undefined)?.specialization === grantSpec)
-            );
+            return i.name === talentGrant.name && (!hasGrantSpec || (i.system as { specialization?: string } | undefined)?.specialization === grantSpec);
         });
 
         if (existing) {
@@ -753,7 +753,8 @@ export class GrantsProcessor {
         const existing = context.actor.items.find((i) => {
             if (i.type !== 'trait') return false;
             const sourceUuid = readCompendiumSource(i);
-            if (traitGrant.uuid && sourceUuid && sourceUuid === traitGrant.uuid) return true;
+            const grantUuid = typeof traitGrant.uuid === 'string' && traitGrant.uuid.length > 0 ? traitGrant.uuid : null;
+            if (grantUuid !== null && sourceUuid !== null && sourceUuid === grantUuid) return true;
             return i.name === traitGrant.name;
         });
 

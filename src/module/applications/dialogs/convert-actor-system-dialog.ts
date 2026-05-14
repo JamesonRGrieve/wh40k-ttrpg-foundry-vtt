@@ -87,7 +87,7 @@ export class ConvertActorSystemDialog {
                 rejectClose: false,
             });
 
-            void dialog.render({ force: true });
+            void dialog.render(true);
         });
     }
 }

@@ -77,6 +77,8 @@ async function specialUseRoll(this: BaseItemSheet, _event: Event, target: HTMLEl
     const item = getSkillSheetItem(this);
     const system = item.system;
     const entry = system.specialUses[index];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: regular tsconfig types entry as defined, strict tsconfig flags possibly-undefined; guard satisfies both
+    if (entry === undefined) return;
 
     // Always post the entry to chat so the GM and players see what's being rolled.
     await system.toChatSpecialUse(index);
