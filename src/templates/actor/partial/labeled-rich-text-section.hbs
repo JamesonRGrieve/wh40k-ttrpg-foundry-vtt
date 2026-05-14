@@ -2,14 +2,21 @@
     Labeled rich-text section — icon + uppercase label + rich-text body block.
     Used by power/order/ritual panels for Effect / Failure / Requirements / etc.
 
+    The partial self-gates on `content`: callers no longer need to wrap the call
+    in `{{#if X.system.field}}`. Pass the content directly; nothing renders when
+    the content is falsy/empty.
+
     Hash params:
-        content       — required, raw HTML string (caller passes triple-stash)
+        content       — required, raw HTML string (caller passes triple-stash).
+                        Falsy/empty values cause the partial to render nothing.
         label         — required, label text
         icon          — optional FA class (e.g. "fa-list-check"); omitted when no icon
         labelClass    — optional Tailwind text-color class (default text-secondary)
         wrapperClass  — optional override for outer mb spacing
 --}}
+{{#if content}}
 <div class="{{#if wrapperClass}}{{wrapperClass}}{{else}}tw-mb-[var(--wh40k-space-md)]{{/if}}">
     <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.04em] tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure {{#if labelClass}}{{labelClass}}{{else}}tw-text-[color:var(--wh40k-text-secondary)]{{/if}} tw-mb-1">{{#if icon}}<i class="fas {{icon}} tw-text-[0.7rem]"></i> {{/if}}{{label}}</span>
     <div class="tw-p-[var(--wh40k-space-sm)] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.8rem] tw-leading-relaxed tw-text-[color:var(--wh40k-text-dark)]">{{{content}}}</div>
 </div>
+{{/if}}

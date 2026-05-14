@@ -46,15 +46,9 @@
                     (hash action="vocalizePower" icon="fa-comment" title="Post to Chat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
                     (hash action="togglePowerDetails" icon="fa-chevron-down" title="Toggle Details" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]")))
         }}
-            {{#if power.system.effect}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Effect" content=power.system.effect}}
-            {{/if}}
-            {{#if power.system.overbleed}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Overbleed" icon="fa-fire" labelClass="tw-text-[#f97316]" content=power.system.overbleed}}
-            {{/if}}
-            {{#if power.system.description}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Description" content=power.system.description}}
-            {{/if}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Effect" content=power.system.effect}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Overbleed" icon="fa-fire" labelClass="tw-text-[#f97316]" content=power.system.overbleed}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Description" content=power.system.description}}
         {{/systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs}}
         {{else}}
         {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-hat-wizard" text="No psychic powers" padding="md"}}
