@@ -45,21 +45,13 @@ export function registerCustomEnrichers(): void {
             pattern: /\[\[\/armor (?<config>[^\]]+)]](?:{(?<label>[^}]+)})?/gi,
             enricher: enrichArmor,
         },
-        {
-            // @Quality[tearing]
-            pattern: /@Quality\[(?<config>[^\]]+)\](?:{(?<label>[^}]+)})?/gi,
-            enricher: enrichQuality,
-        },
-        {
-            // @Property[sealed]
-            pattern: /@Property\[(?<config>[^\]]+)\](?:{(?<label>[^}]+)})?/gi,
-            enricher: enrichProperty,
-        },
-        {
-            // @Condition[stunned]
-            pattern: /@Condition\[(?<config>[^\]]+)\](?:{(?<label>[^}]+)})?/gi,
-            enricher: enrichCondition,
-        },
+        // Note: `@Quality[name]`, `@Property[name]`, `@Condition[name]` were
+        // custom name-based enrichers that did `pack.getIndex().find(name)`
+        // at render time. They've been removed in favor of Foundry's native
+        // `@UUID[Compendium.wh40k-rpg.<pack>.<type>.<id>]` syntax, which
+        // renders the linked document's *current* name with no custom code,
+        // no per-render index scan, and standard click-through behavior.
+        // Authoring docs: use @UUID for any compendium-document reference.
     );
 
     // Register click handlers for interactive elements
@@ -429,144 +421,10 @@ async function handleEnricherClick(event: MouseEvent): Promise<void> {
 }
 
 /* -------------------------------------------- */
-
-/**
- * Enrich a weapon quality reference.
- * @param {RegExpMatchArray} match       The regular expression match result.
- * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
- * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
- */
-async function enrichQuality(match: RegExpMatchArray, _options?: EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
-    const label = getGroup(match.groups, 'label');
-    const configRawQuality = match.groups['config'];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
-    if (configRawQuality === undefined) return createErrorElement(match[0], 'Missing config group');
-    const config = configRawQuality.trim().toLowerCase();
-
-    // Try to find the quality in compendiums
-    const qualityPack = game.packs.get('wh40k-rpg.wh40k-items-weapon-qualities');
-    let quality: { name: string; uuid: string } | null = null;
-
-    if (qualityPack !== undefined) {
-        const index = await qualityPack.getIndex();
-        const entry = index.find(
-            (e: { name?: string; _id: string }) => (e.name ?? '').toLowerCase() === config || (e.name ?? '').toLowerCase().includes(config),
-        );
-        if (entry !== undefined) {
-            quality = (await qualityPack.getDocument(entry._id)) as { name: string; uuid: string } | null;
-        }
-    }
-
-    // Create enriched element
-    const span = document.createElement('span');
-    span.className = 'wh40k-enricher wh40k-enricher-quality';
-    span.dataset['enricherType'] = 'quality';
-    span.dataset['enricherConfig'] = config;
-
-    if (quality !== null) {
-        span.dataset['itemUuid'] = quality.uuid;
-        span.title = `${quality.name}\nClick to open | Shift+Click to chat | Ctrl+Click for sheet`;
-    } else {
-        span.title = config;
-    }
-
-    const displayLabel = label !== undefined && label.length > 0 ? label : quality?.name ?? config;
-    span.innerHTML = `<i class="fa-solid fa-star"></i> ${displayLabel}`;
-
-    return span;
-}
-
-/**
- * Enrich an armour property reference.
- * @param {RegExpMatchArray} match       The regular expression match result.
- * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
- * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
- */
-async function enrichProperty(match: RegExpMatchArray, _options?: EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
-    const label = getGroup(match.groups, 'label');
-    const configRawProperty = match.groups['config'];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
-    if (configRawProperty === undefined) return createErrorElement(match[0], 'Missing config group');
-    const config = configRawProperty.trim().toLowerCase();
-
-    // Try to find the property in compendiums
-    const propertyPack = game.packs.get('wh40k-rpg.rt-items-armour-properties');
-    let property: { name: string; uuid: string } | null = null;
-
-    if (propertyPack !== undefined) {
-        const index = await propertyPack.getIndex();
-        const entry = index.find(
-            (e: { name?: string; _id: string }) => (e.name ?? '').toLowerCase() === config || (e.name ?? '').toLowerCase().includes(config),
-        );
-        if (entry !== undefined) {
-            property = (await propertyPack.getDocument(entry._id)) as { name: string; uuid: string } | null;
-        }
-    }
-
-    // Create enriched element
-    const span = document.createElement('span');
-    span.className = 'wh40k-enricher wh40k-enricher-property';
-    span.dataset['enricherType'] = 'property';
-    span.dataset['enricherConfig'] = config;
-
-    if (property !== null) {
-        span.dataset['itemUuid'] = property.uuid;
-        span.title = `${property.name}\nClick to open | Shift+Click to chat | Ctrl+Click for sheet`;
-    } else {
-        span.title = config;
-    }
-
-    const displayLabel = label !== undefined && label.length > 0 ? label : property?.name ?? config;
-    span.innerHTML = `<i class="fa-solid fa-shield"></i> ${displayLabel}`;
-
-    return span;
-}
-
-/**
- * Enrich a condition reference.
- * @param {RegExpMatchArray} match       The regular expression match result.
- * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
- * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
- */
-async function enrichCondition(match: RegExpMatchArray, _options?: EnrichmentOptions): Promise<HTMLElement> {
-    if (match.groups === undefined) return createErrorElement(match[0], 'No match groups');
-    const label = getGroup(match.groups, 'label');
-    const configRawCondition = match.groups['config'];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; match.groups['config'] may be undefined
-    if (configRawCondition === undefined) return createErrorElement(match[0], 'Missing config group');
-    const config = configRawCondition.trim().toLowerCase();
-
-    // Try to find the condition in compendiums
-    const conditionPack = game.packs.get('wh40k-rpg.dh2-core-stats-conditions');
-    let condition: { name: string; uuid: string } | null = null;
-
-    if (conditionPack !== undefined) {
-        const index = await conditionPack.getIndex();
-        const entry = index.find(
-            (e: { name?: string; _id: string }) => (e.name ?? '').toLowerCase() === config || (e.name ?? '').toLowerCase().includes(config),
-        );
-        if (entry !== undefined) {
-            condition = (await conditionPack.getDocument(entry._id)) as { name: string; uuid: string } | null;
-        }
-    }
-
-    // Create enriched element
-    const span = document.createElement('span');
-    span.className = 'wh40k-enricher wh40k-enricher-condition';
-    span.dataset['enricherType'] = 'condition';
-    span.dataset['enricherConfig'] = config;
-
-    if (condition !== null) {
-        span.dataset['itemUuid'] = condition.uuid;
-        span.title = `${condition.name}\nClick to open | Shift+Click to chat | Ctrl+Click for sheet`;
-    } else {
-        span.title = config;
-    }
-
-    const displayLabel = label !== undefined && label.length > 0 ? label : condition?.name ?? config;
-    span.innerHTML = `<i class="fa-solid fa-exclamation-triangle"></i> ${displayLabel}`;
-
-    return span;
-}
+// `enrichQuality`, `enrichProperty`, `enrichCondition` were removed when
+// the system standardized on Foundry's native `@UUID[Compendium…]` syntax
+// for compendium-document references in description text. Foundry's
+// native enricher resolves the linked document's current name on render
+// and provides click-through, hover preview, and broken-link styling out
+// of the box. See `src/module/utils/uuid-name-cache.ts` for the
+// structured-field analog (`{{uuid-name}}` Handlebars helper).
