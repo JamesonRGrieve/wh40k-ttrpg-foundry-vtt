@@ -621,6 +621,11 @@
             }
         },
         "Sheet": {
+            "Biography": {
+                "Contacts": "Contacts",
+                "Adversaries": "Adversaries",
+                "ConnectionsHint": "Narrative relationships. The Peer, Enemy, and Hatred talents are separate purchases and live on the Talents tab."
+            },
             "ResetWindowSize": "Reset Window Size",
             "Acolyte": "Character Sheet",
             "PlayerCharacter": "Player Character Sheet",
