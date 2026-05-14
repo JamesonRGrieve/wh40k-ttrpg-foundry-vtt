@@ -235,6 +235,7 @@ export default class StarshipData extends ActorDataModel {
                 if (sys.modifiers !== undefined) {
                     for (const [key, value] of Object.entries(sys.modifiers)) {
                         const existing = componentModifiers[key];
+                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: Record<string,number> index may return undefined at runtime
                         if (existing !== undefined) {
                             componentModifiers[key] = existing + Number(value);
                         }

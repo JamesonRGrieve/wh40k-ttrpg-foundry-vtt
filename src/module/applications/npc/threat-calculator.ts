@@ -125,6 +125,7 @@ export interface NPCMovement {
     run: number;
 }
 
+/* eslint-disable no-restricted-syntax -- boundary: NPCSystemData/ScaleUpdates are structural adapters for untyped Foundry actor.system; unknown fields are deliberate pass-through positions */
 export interface NPCSystemData {
     faction: unknown;
     subfaction: string;
@@ -156,6 +157,7 @@ export interface NPCSystemData {
 interface ScaleUpdates {
     [key: string]: unknown;
 }
+/* eslint-enable no-restricted-syntax */
 
 /**
  * Threat Calculator utility class.
@@ -384,6 +386,7 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level.
      * @returns {Object} Object with label and color.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: getTierInfo returns a loose shape consumed by templates; Record<string,unknown> is intentional
     static getTierInfo(threatLevel: number): Record<string, unknown> {
         const tier = this.getTier(threatLevel);
         const colors: Record<string, string> = {
@@ -419,6 +422,7 @@ export default class ThreatCalculator {
             skills: ['awareness', 'dodge', 'stealth'],
             weaponPreset: 'mixed',
         };
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- noUncheckedIndexedAccess: index access may return undefined; fallback chain guards runtime
         const profile = this.ROLE_PROFILES[role] ?? this.ROLE_PROFILES['specialist'] ?? specialistFallback;
 
         // Calculate position within tier (0.0 to 1.0)
@@ -554,6 +558,7 @@ export default class ThreatCalculator {
             skills: ['awareness', 'dodge', 'stealth'],
             weaponPreset: 'mixed',
         };
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- noUncheckedIndexedAccess: index access may return undefined; fallback chain guards runtime
         const profile = this.ROLE_PROFILES[role] ?? this.ROLE_PROFILES['specialist'] ?? specialistFallback;
         const tier = this.getTier(threatLevel);
 
@@ -609,6 +614,7 @@ export default class ThreatCalculator {
         }
 
         // Add dodge for all NPCs
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions, no-restricted-syntax -- noUncheckedIndexedAccess: skills index may return undefined; truthiness guard is correct
         if (!skills['dodge']) {
             skills['dodge'] = {
                 name: 'dodge',
@@ -621,6 +627,7 @@ export default class ThreatCalculator {
         }
 
         // Add awareness for all NPCs
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions, no-restricted-syntax -- noUncheckedIndexedAccess: skills index may return undefined; truthiness guard is correct
         if (!skills['awareness']) {
             skills['awareness'] = {
                 name: 'awareness',
@@ -648,6 +655,7 @@ export default class ThreatCalculator {
             weapons: [{ name: 'Autopistol', damage: '1d10+2', pen: 0, range: '30m', rof: 'S/-/6', clip: 18, reload: 'Full', special: '', class: 'pistol' }],
             armour: 3,
         };
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- noUncheckedIndexedAccess: index access may return undefined; fallback chain guards runtime
         const equipment = this.EQUIPMENT_PRESETS[preset] ?? this.EQUIPMENT_PRESETS['mixed'] ?? mixedFallback;
 
         // Scale weapon damage based on threat
@@ -674,6 +682,7 @@ export default class ThreatCalculator {
      */
     static generateArmour(preset: string, threatLevel: number): NPCArmourData {
         const mixedFallback: EquipmentPreset = { name: 'Mixed', description: 'Balanced loadout with medium armor', weapons: [], armour: 3 };
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- noUncheckedIndexedAccess: index access may return undefined; fallback chain guards runtime
         const equipment = this.EQUIPMENT_PRESETS[preset] ?? this.EQUIPMENT_PRESETS['mixed'] ?? mixedFallback;
 
         // Scale armour based on threat
@@ -717,6 +726,7 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level.
      * @returns {Object} Horde object for NPC system data.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: generateHorde returns a shape consumed by the template context; Record<string,unknown> is intentional
     static generateHorde(isHorde: boolean, threatLevel: number): Record<string, unknown> {
         if (!isHorde) {
             return {
@@ -763,9 +773,11 @@ export default class ThreatCalculator {
      * @param {boolean} [config.isHorde] - Whether this is a horde.
      * @returns {Object} Complete system data object.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: config is an external generation payload; Record<string,unknown> is the caller API shape
     static generateNPCData(config: Record<string, unknown>): NPCSystemData {
         const { threatLevel = 5, role = 'specialist', type = 'troop', preset = 'mixed', faction = '', isHorde = false } = config;
 
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- isHorde is destructured from Record<string,unknown>; boolean coercion is deliberate
         const actualType = isHorde ? 'horde' : type;
 
         return {
@@ -828,6 +840,7 @@ export default class ThreatCalculator {
      * @param {boolean} options.scaleArmour - Scale armour values.
      * @returns {Object} Updated system data with scaled values.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: options is an external scaling config payload; Record<string,unknown> is the caller API shape
     static scaleToThreat(currentData: NPCSystemData, currentThreat: number, newThreat: number, options: Record<string, unknown> = {}): ScaleUpdates {
         const { scaleCharacteristics = true, scaleWounds = true, scaleSkills = true, scaleWeapons = true, scaleArmour = true } = options;
 
@@ -838,6 +851,7 @@ export default class ThreatCalculator {
         const updates: ScaleUpdates = {};
 
         // Scale characteristics
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- value destructured from Record<string,unknown>; boolean coercion is deliberate
         if (scaleCharacteristics) {
             for (const [key, char] of Object.entries(currentData.characteristics)) {
                 const newBase = Math.round(char.base * scaleFactor);
@@ -846,6 +860,7 @@ export default class ThreatCalculator {
         }
 
         // Scale wounds
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- value destructured from Record<string,unknown>; boolean coercion is deliberate
         if (scaleWounds) {
             const newMax = Math.round(currentData.wounds.max * scaleFactor);
             updates['wounds.max'] = Math.max(1, newMax);
@@ -853,6 +868,7 @@ export default class ThreatCalculator {
         }
 
         // Scale skill bonuses
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- value destructured from Record<string,unknown>; boolean coercion is deliberate
         if (scaleSkills) {
             for (const [key, skill] of Object.entries(currentData.trainedSkills)) {
                 const newBonus = Math.round((skill.bonus || 0) + diff * 2);
@@ -861,6 +877,7 @@ export default class ThreatCalculator {
         }
 
         // Scale weapon damage
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition -- values destructured from Record<string,unknown>; optional chain guards NPCWeaponsData.simple which may be absent
         if (scaleWeapons && currentData.weapons?.simple) {
             const damageBonus = Math.floor(diff / 2);
             const penBonus = Math.floor(diff / 5);
@@ -875,6 +892,7 @@ export default class ThreatCalculator {
         }
 
         // Scale armour
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- value destructured from Record<string,unknown>; boolean coercion is deliberate
         if (scaleArmour) {
             if (currentData.armour.mode === 'simple') {
                 const newArmour = Math.round(currentData.armour.total * scaleFactor);
@@ -891,7 +909,9 @@ export default class ThreatCalculator {
         updates['threatLevel'] = Math.max(1, Math.min(30, newThreat));
 
         // Scale horde magnitude if applicable
+        // eslint-disable-next-line no-restricted-syntax -- boundary: horde is from NPCSystemData.horde which is Record<string,unknown>; cast to structural shape for access
         const horde = currentData.horde as { enabled?: boolean; magnitude?: { max: number } } | undefined;
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- horde.enabled is boolean | undefined; truthiness guard is deliberate
         if (horde?.enabled) {
             const newMag = Math.round((horde.magnitude?.max ?? 0) * scaleFactor);
             updates['horde.magnitude.max'] = Math.max(10, newMag);
@@ -909,14 +929,17 @@ export default class ThreatCalculator {
      * @param {Object} options - Scaling options.
      * @returns {Object} Preview object with current and new values.
      */
+    /* eslint-disable no-restricted-syntax -- boundary: previewScaling options/return use Record<string,unknown> as the caller API shape and template context shape */
     static previewScaling(
         currentData: NPCSystemData,
         currentThreat: number,
         newThreat: number,
         options: Record<string, unknown> = {},
     ): Record<string, unknown> {
+        /* eslint-enable no-restricted-syntax */
         const updates = this.scaleToThreat(currentData, currentThreat, newThreat, options);
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: preview accumulates heterogeneous shape for template rendering
         const preview: Record<string, unknown> = {
             threatLevel: {
                 current: currentThreat,
@@ -937,6 +960,7 @@ export default class ThreatCalculator {
         // Add characteristic previews
         for (const [key, char] of Object.entries(currentData.characteristics)) {
             const newBase = (updates[`characteristics.${key}.base`] as number | undefined) ?? char.base;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: preview['characteristics'] is Record<string,unknown>; cast required to index-assign
             (preview['characteristics'] as Record<string, unknown>)[key] = {
                 label: char.label,
                 short: char.short,
@@ -967,7 +991,9 @@ export default class ThreatCalculator {
         const match = damage.match(/^(\d+d\d+)([+-]\d+)?$/);
         if (!match) return damage;
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: RegExpMatchArray elements are string|undefined; fallbacks guard runtime
         const dice = match[1] ?? '';
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: RegExpMatchArray elements are string|undefined; fallback guards runtime
         const existingBonus = parseInt(match[2] ?? '0', 10);
         const newBonus = existingBonus + bonus;
 

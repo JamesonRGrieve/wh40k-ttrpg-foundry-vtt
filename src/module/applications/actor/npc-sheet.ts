@@ -27,6 +27,50 @@ interface NPCV2TrainedSkillData {
     bonus?: number;
 }
 
+/** Mapping from WH40K skill key to its governing characteristic key. */
+const NPC_SKILL_CHAR_MAP: Readonly<Record<string, string>> = {
+    acrobatics: 'agility',
+    athletics: 'strength',
+    awareness: 'perception',
+    charm: 'fellowship',
+    command: 'fellowship',
+    commerce: 'fellowship',
+    deceive: 'fellowship',
+    dodge: 'agility',
+    inquiry: 'fellowship',
+    interrogation: 'willpower',
+    intimidate: 'strength',
+    logic: 'intelligence',
+    medicae: 'intelligence',
+    parry: 'weaponSkill',
+    psyniscience: 'perception',
+    scrutiny: 'perception',
+    security: 'intelligence',
+    sleightOfHand: 'agility',
+    stealth: 'agility',
+    survival: 'perception',
+    techUse: 'intelligence',
+} as const;
+
+/** Pick characteristic from existing state or fall back to the map default. */
+function resolveSkillChar(existing: NPCV2TrainedSkillData | undefined, skillKey: string): string {
+    const fromState = existing?.characteristic;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: NPC_SKILL_CHAR_MAP is Record-indexed
+    return fromState !== undefined && fromState !== '' ? fromState : NPC_SKILL_CHAR_MAP[skillKey] ?? 'perception';
+}
+
+/** Build a trained-skill entry at the requested level, preserving characteristic and bonus from the prior state. */
+function buildSkillEntry(skillKey: string, level: 'trained' | 'plus10' | 'plus20', prior: NPCV2TrainedSkillData | undefined): NPCV2TrainedSkillData {
+    return {
+        name: skillKey,
+        characteristic: resolveSkillChar(prior, skillKey),
+        trained: true,
+        plus10: level !== 'trained',
+        plus20: level === 'plus20',
+        bonus: prior?.bonus ?? 0,
+    };
+}
+
 /* eslint-disable no-restricted-syntax -- boundary: render-context types interop with Foundry's untyped Handlebars context */
 /** Typed shape of a prepared item entry on the NPC sheet context. */
 type NPCItemContext = {
@@ -244,7 +288,9 @@ export default class NPCSheet extends CharacterSheet {
         const parent = CharacterSheet.PARTS;
         const inherited: Record<string, ApplicationV2Config.PartConfiguration> = {};
         for (const key of ['header', 'tabs', 'skills', 'combat', 'equipment', 'biography'] as const) {
-            const part = parent[key];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: parent is Record-indexed; part may be undefined at runtime
+            const part = parent[key] ?? undefined;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: part is undefined when key is absent from parent Record
             if (part !== undefined) inherited[key] = part;
         }
         return {
@@ -418,6 +464,7 @@ export default class NPCSheet extends CharacterSheet {
 
         for (const key of npcCharKeys) {
             const char = chars[key];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: chars is Record-indexed so entries may be absent at runtime
             if (char === undefined) continue;
             charArray.push({
                 key,
@@ -594,6 +641,7 @@ export default class NPCSheet extends CharacterSheet {
                 };
                 const charKey = charMap[key] ?? 'intelligence';
                 const char = sys.characteristics[charKey];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics is Record-indexed so entries may be absent at runtime
                 if (char === undefined) return null;
                 const target = sys.getSkillTarget ? sys.getSkillTarget(key) : char.total;
 
@@ -639,6 +687,7 @@ export default class NPCSheet extends CharacterSheet {
         };
 
         // Toughness bonus for armor display
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics is Record-indexed
         context['toughnessBonus'] = sys.characteristics['toughness']?.bonus ?? 0;
 
         // Threat tier
@@ -657,6 +706,7 @@ export default class NPCSheet extends CharacterSheet {
     // eslint-disable-next-line no-restricted-syntax -- boundary: context is the mixin-erased sheet→template payload Record<string,unknown>.
     _prepareCombatContext(context: Record<string, unknown>): void {
         const sys = context['system'] as NPCSystemContext;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics is Record-indexed
         const tb = sys.characteristics['toughness']?.bonus ?? 0;
         context['toughnessBonus'] = tb;
 
@@ -780,6 +830,7 @@ export default class NPCSheet extends CharacterSheet {
             const isTrained = trainedData !== undefined;
 
             // Calculate target
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics is Record-indexed
             let target = charData?.total ?? 0;
             if (trainedData !== undefined) {
                 if (trainedData.plus20 === true) target += 20;
@@ -930,11 +981,11 @@ export default class NPCSheet extends CharacterSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollCharacteristic(this: NPCSheet, event: Event, target: HTMLElement): Promise<void> {
+    static #rollCharacteristic(this: NPCSheet, event: Event, target: HTMLElement): void {
         event.preventDefault();
         const charKey = target.dataset['characteristic'];
         if (charKey === undefined || charKey === '') return;
-        await this.npcActor.rollCharacteristic(charKey);
+        this.npcActor.rollCharacteristic(charKey);
     }
 
     /* -------------------------------------------- */
@@ -1016,6 +1067,7 @@ export default class NPCSheet extends CharacterSheet {
         const initChar = this.npcActor.system.initiative.characteristic;
         const char = this.npcActor.system.characteristics[initChar];
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics is Record-indexed
         const formula = `1d10 + ${char?.bonus ?? 0}`;
         const roll = new Roll(formula);
         await roll.evaluate();
@@ -1154,110 +1206,36 @@ export default class NPCSheet extends CharacterSheet {
         const level = target.dataset['level'];
         if (skillKey === undefined || skillKey === '' || level === undefined || level === '') return;
 
-        const currentSkills: Record<string, NPCV2TrainedSkillData> = foundry.utils.deepClone(this.npcActor.system.trainedSkills);
-        const currentState = currentSkills[skillKey];
-
-        // Skill characteristic mapping
-        const skillCharMap: Record<string, string> = {
-            acrobatics: 'agility',
-            athletics: 'strength',
-            awareness: 'perception',
-            charm: 'fellowship',
-            command: 'fellowship',
-            commerce: 'fellowship',
-            deceive: 'fellowship',
-            dodge: 'agility',
-            inquiry: 'fellowship',
-            interrogation: 'willpower',
-            intimidate: 'strength',
-            logic: 'intelligence',
-            medicae: 'intelligence',
-            parry: 'weaponSkill',
-            psyniscience: 'perception',
-            scrutiny: 'perception',
-            security: 'intelligence',
-            sleightOfHand: 'agility',
-            stealth: 'agility',
-            survival: 'perception',
-            techUse: 'intelligence',
-        };
-
-        // Handle toggle logic
-        switch (level) {
-            case 'untrained':
-                // Remove the skill entirely using Foundry's deletion syntax
-                await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
-                return; // Early return - we've already updated
-            case 'trained':
-                // Add skill at trained level
-                currentSkills[skillKey] = {
-                    name: skillKey,
-                    characteristic: skillCharMap[skillKey] ?? 'perception',
-                    trained: true,
-                    plus10: false,
-                    plus20: false,
-                    bonus: 0,
-                };
-                break;
-            case 'plus10': {
-                // Toggle +10: if already at +10 (and not +20), drop to trained; otherwise set to +10
-                const cs = currentState;
-                if (cs?.plus10 === true && cs.plus20 !== true) {
-                    const entry: NPCV2TrainedSkillData = {
-                        name: skillKey,
-                        trained: true,
-                        plus10: false,
-                        plus20: false,
-                    };
-                    const ch = cs.characteristic !== undefined && cs.characteristic !== '' ? cs.characteristic : skillCharMap[skillKey] ?? 'perception';
-                    if (ch !== undefined) entry.characteristic = ch;
-                    if (cs.bonus !== undefined) entry.bonus = cs.bonus;
-                    currentSkills[skillKey] = entry;
-                } else {
-                    const entry: NPCV2TrainedSkillData = {
-                        name: skillKey,
-                        trained: true,
-                        plus10: true,
-                        plus20: false,
-                    };
-                    const ch = cs?.characteristic !== undefined && cs.characteristic !== '' ? cs.characteristic : skillCharMap[skillKey] ?? 'perception';
-                    if (ch !== undefined) entry.characteristic = ch;
-                    entry.bonus = cs?.bonus ?? 0;
-                    currentSkills[skillKey] = entry;
-                }
-                break;
-            }
-            case 'plus20': {
-                const cs = currentState;
-                // Toggle +20: if already at +20, drop to +10; otherwise set to +20
-                if (cs?.plus20 === true) {
-                    const entry: NPCV2TrainedSkillData = {
-                        name: skillKey,
-                        trained: true,
-                        plus10: true,
-                        plus20: false,
-                    };
-                    const ch = cs.characteristic !== undefined && cs.characteristic !== '' ? cs.characteristic : skillCharMap[skillKey] ?? 'perception';
-                    if (ch !== undefined) entry.characteristic = ch;
-                    if (cs.bonus !== undefined) entry.bonus = cs.bonus;
-                    currentSkills[skillKey] = entry;
-                } else {
-                    const entry: NPCV2TrainedSkillData = {
-                        name: skillKey,
-                        trained: true,
-                        plus10: true,
-                        plus20: true,
-                    };
-                    const ch = cs?.characteristic !== undefined && cs.characteristic !== '' ? cs.characteristic : skillCharMap[skillKey] ?? 'perception';
-                    if (ch !== undefined) entry.characteristic = ch;
-                    entry.bonus = cs?.bonus ?? 0;
-                    currentSkills[skillKey] = entry;
-                }
-                break;
-            }
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: trainedSkills is Record-indexed
+        if (level === 'untrained') {
+            await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
+            return;
         }
 
+        const currentSkills: Record<string, NPCV2TrainedSkillData> = foundry.utils.deepClone(this.npcActor.system.trainedSkills);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: currentSkills is Record-indexed
+        const prior = currentSkills[skillKey];
+
+        currentSkills[skillKey] = NPCSheet.#resolveSkillLevelToggle(skillKey, level, prior);
         await this.actor.update({ 'system.trainedSkills': currentSkills });
+    }
+
+    /** Compute the next skill-entry state when the user clicks a level button. */
+    static #resolveSkillLevelToggle(skillKey: string, level: string, prior: NPCV2TrainedSkillData | undefined): NPCV2TrainedSkillData {
+        switch (level) {
+            case 'trained':
+                return buildSkillEntry(skillKey, 'trained', prior);
+            case 'plus10':
+                // Toggle +10: if already at +10 (and not +20), drop to trained; otherwise set to +10
+                return prior?.plus10 === true && prior.plus20 !== true
+                    ? buildSkillEntry(skillKey, 'trained', prior)
+                    : buildSkillEntry(skillKey, 'plus10', prior);
+            case 'plus20':
+                // Toggle +20: if already at +20, drop to +10; otherwise set to +20
+                return prior?.plus20 === true ? buildSkillEntry(skillKey, 'plus10', prior) : buildSkillEntry(skillKey, 'plus20', prior);
+            default:
+                return prior ?? { name: skillKey };
+        }
     }
 
     /* -------------------------------------------- */
@@ -1274,53 +1252,23 @@ export default class NPCSheet extends CharacterSheet {
         if (skillKey === undefined || skillKey === '') return;
 
         const currentSkills: Record<string, NPCV2TrainedSkillData> = foundry.utils.deepClone(this.npcActor.system.trainedSkills);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: currentSkills is Record-indexed
         const current = currentSkills[skillKey];
-
-        // Skill characteristic mapping
-        const skillCharMap: Record<string, string> = {
-            acrobatics: 'agility',
-            athletics: 'strength',
-            awareness: 'perception',
-            charm: 'fellowship',
-            command: 'fellowship',
-            commerce: 'fellowship',
-            deceive: 'fellowship',
-            dodge: 'agility',
-            inquiry: 'fellowship',
-            interrogation: 'willpower',
-            intimidate: 'strength',
-            logic: 'intelligence',
-            medicae: 'intelligence',
-            parry: 'weaponSkill',
-            psyniscience: 'perception',
-            scrutiny: 'perception',
-            security: 'intelligence',
-            sleightOfHand: 'agility',
-            stealth: 'agility',
-            survival: 'perception',
-            techUse: 'intelligence',
-        };
 
         // Determine current level and cycle to next
         // Untrained → Trained → +10 → +20 → Untrained
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: currentSkills is Record-indexed so entries may be absent at runtime
         if (current === undefined) {
             // Untrained → Trained
-            currentSkills[skillKey] = {
-                name: skillKey,
-                characteristic: skillCharMap[skillKey] ?? 'perception',
-                trained: true,
-                plus10: false,
-                plus20: false,
-                bonus: 0,
-            };
+            currentSkills[skillKey] = buildSkillEntry(skillKey, 'trained', undefined);
             await this.actor.update({ 'system.trainedSkills': currentSkills });
         } else if (current.trained === true && current.plus10 !== true && current.plus20 !== true) {
             // Trained → +10
-            currentSkills[skillKey] = { ...current, plus10: true, plus20: false };
+            currentSkills[skillKey] = buildSkillEntry(skillKey, 'plus10', current);
             await this.actor.update({ 'system.trainedSkills': currentSkills });
         } else if (current.plus10 === true && current.plus20 !== true) {
             // +10 → +20
-            currentSkills[skillKey] = { ...current, plus10: true, plus20: true };
+            currentSkills[skillKey] = buildSkillEntry(skillKey, 'plus20', current);
             await this.actor.update({ 'system.trainedSkills': currentSkills });
         } else {
             // +20 → Untrained (remove)
@@ -1369,7 +1317,7 @@ export default class NPCSheet extends CharacterSheet {
         const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse(): Promise<void> };
         const fp = new FilePickerCtor({
             type: 'image',
-            ...(this.actor.img != null ? { current: this.actor.img } : {}),
+            ...(this.actor.img !== null ? { current: this.actor.img } : {}),
             callback: (path: string) => {
                 void this.actor.update({ img: path });
             },
@@ -1944,6 +1892,7 @@ export default class NPCSheet extends CharacterSheet {
             const label = tuple[1];
             const charShort = tuple[2];
             const t = trainedSkills[key];
+            /* eslint-disable @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guards: trainedSkills is Record-indexed so t may be absent at runtime */
             const skill: SkillLike = {
                 label,
                 characteristic: charShort,
@@ -1954,8 +1903,10 @@ export default class NPCSheet extends CharacterSheet {
                 advanced: false,
                 hidden: false,
             };
+            /* eslint-enable @typescript-eslint/no-unnecessary-condition */
             // Compute current target (½ char when untrained, full char + training bonus otherwise).
             const charKey = this._charShortToKey(charShort);
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics is Record-indexed
             const charTotal = characteristics[charKey]?.total ?? 0;
             const level = skill.plus20 === true ? 3 : skill.plus10 === true ? 2 : skill.trained === true ? 1 : 0;
             const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;

@@ -1,3 +1,4 @@
+import { t } from '../i18n/t.ts';
 import type { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.ts';
 import { calculateRangeModifier } from '../utils/range-calculator.ts';
 
@@ -26,6 +27,7 @@ type PsychicPowerRangeSystem = {
  */
 function calculateWeaponMaxRange(rollData: WeaponRollData): void {
     const weapon = rollData.weapon;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess guard: weapon is declared non-optional but may be unset before initialize() runs
     if (!weapon) {
         rollData.maxRange = 0;
         return;
@@ -39,7 +41,7 @@ function calculateWeaponMaxRange(rollData: WeaponRollData): void {
     // Get base range from weapon
     let range = 0;
     const weaponSystem = weapon.system as WeaponRangeSystem;
-    const weaponRange = weaponSystem.attack?.range?.value || weaponSystem.range;
+    const weaponRange = weaponSystem.attack?.range?.value ?? weaponSystem.range;
 
     if (Number.isInteger(weaponRange)) {
         range = Number(weaponRange);
@@ -47,11 +49,12 @@ function calculateWeaponMaxRange(rollData: WeaponRollData): void {
         range = 0;
     } else {
         try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Roll formula data context is an arbitrary plain object
             const rangeCalculation = new Roll(String(weaponRange), rollData as unknown as Record<string, unknown>);
             rangeCalculation.evaluateSync();
             range = rangeCalculation.total ?? 0;
         } catch {
-            ui.notifications.warn('Range formula failed - setting to 0');
+            ui.notifications.warn(t('WH40K.Warning.RangeFormulaFailed'));
             range = 0;
         }
     }
@@ -79,6 +82,7 @@ function calculateWeaponMaxRange(rollData: WeaponRollData): void {
  */
 async function calculatePsychicAbilityMaxRange(rollData: PsychicRollData): Promise<void> {
     const data = rollData;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess guard: power is declared non-optional but may be unset before initialize() runs
     if (!data.power) {
         data.maxRange = 0;
         return;
@@ -92,11 +96,12 @@ async function calculatePsychicAbilityMaxRange(rollData: PsychicRollData): Promi
         range = 0;
     } else {
         try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Roll formula data context is an arbitrary plain object
             const rangeCalculation = new Roll(String(powerSystem.range ?? ''), data as unknown as Record<string, unknown>);
             await rangeCalculation.evaluate();
             range = rangeCalculation.total ?? 0;
         } catch {
-            ui.notifications.warn('Range formula failed - setting to 0');
+            ui.notifications.warn(t('WH40K.Warning.RangeFormulaFailed'));
             range = 0;
         }
     }
@@ -110,7 +115,7 @@ async function calculatePsychicAbilityMaxRange(rollData: PsychicRollData): Promi
  */
 function calculateRangeNameAndBonus(rollData: RollData): void {
     const mutableRollData = rollData as RangeAnnotatedRollData;
-    if (rollData.weapon?.isMelee) {
+    if (rollData.weapon?.isMelee === true) {
         rollData.rangeName = 'Melee';
         rollData.rangeBonus = 0;
         mutableRollData.rangeBracket = 'melee';
@@ -118,8 +123,8 @@ function calculateRangeNameAndBonus(rollData: RollData): void {
         return;
     }
 
-    const targetDistance = rollData.distance ?? 0;
-    const maxRange = rollData.maxRange ?? 0;
+    const targetDistance = rollData.distance;
+    const maxRange = rollData.maxRange;
 
     // Get weapon qualities if available
     const weaponQualities = (rollData.weapon?.system as WeaponRangeSystem | undefined)?.effectiveSpecial ?? new Set<string>();
@@ -136,7 +141,7 @@ function calculateRangeNameAndBonus(rollData: RollData): void {
     rollData.rangeName = rangeInfo.label;
     rollData.rangeBonus = rangeInfo.modifier;
     mutableRollData.rangeBracket = rangeInfo.bracket;
-    if (rangeInfo.modifiedBy !== undefined && rangeInfo.modifiedBy !== null) {
+    if (rangeInfo.modifiedBy !== null) {
         mutableRollData.rangeModifiedBy = rangeInfo.modifiedBy;
     } else {
         delete mutableRollData.rangeModifiedBy;

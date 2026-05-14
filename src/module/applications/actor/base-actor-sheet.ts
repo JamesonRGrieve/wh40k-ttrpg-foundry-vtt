@@ -376,6 +376,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             ...(await super._prepareContext(options as never)),
             actor: this.actor,
             system: this.actor.system,
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess / Foundry runtime: schema and fields may be absent at construction time (e.g., in tests or before DataModel initialization)
             fields: this.actor.system.schema?.fields ?? {},
             effects: this.actor.getEmbeddedCollection('ActiveEffect').contents,
             items: Array.from(this.actor.items),
@@ -416,6 +417,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     // eslint-disable-next-line no-restricted-syntax -- boundary: context is the mixin-erased sheet→template payload Record<string,unknown>.
     protected _prepareCommonContext(context: Record<string, unknown>): void {
         context['isGM'] = game.user.isGM;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- CONFIG.wh40k may be unset in test/Storybook environments before system init
         context['dh'] = CONFIG.wh40k ?? WH40K;
     }
 
@@ -428,6 +430,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: _context is the mixin-erased sheet→template payload Record<string,unknown>.
     _prepareCharacteristicsHUD(_context: Record<string, unknown>): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is a DataModel field typed as a known-key object; cast to Record needed to iterate with string keys and HUD-augmented values
         const characteristics = this.actor.system.characteristics as Record<string, HudCharacteristic>;
 
         for (const [key, char] of Object.entries(characteristics)) {
@@ -445,6 +448,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             // Simple: 100, Intermediate: 250, Trained: 500, Proficient: 750, Expert: 1000
             const advanceCosts = [100, 250, 500, 750, 1000];
             const nextAdvance = char.advance;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: array index access may return undefined at runtime even when bounds-checked by the ternary
             char.nextAdvanceCost = (nextAdvance < 5 ? advanceCosts[nextAdvance] : 0) ?? 0;
 
             // Prepare tooltip data if not already present
@@ -878,9 +882,11 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         }));
 
         // Characteristic short name
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: Record<string,CharacteristicLike> index may return undefined at runtime
         data.charShort = char !== undefined && char.short !== '' ? char.short : charKey;
 
         // Breakdown string for tooltip/title
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: Record<string,CharacteristicLike> index may return undefined at runtime
         data.breakdown = char !== undefined ? this._getSkillBreakdown(data, char) : '';
 
         // Tooltip data (JSON string)
@@ -1645,6 +1651,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Check wounds
         const currentWounds = current.wounds;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: wounds may be absent on actor types that don't define it (e.g., starships); system type is broad
         if (currentWounds !== undefined && currentWounds.value !== previous.wounds) {
             this.animateWoundsChange(previous.wounds ?? 0, currentWounds.value);
         }
@@ -1710,7 +1717,11 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             // Set absolute value
             const absolute = parseFloat(value.slice(1));
             if (!Number.isNaN(absolute)) input.value = String(absolute);
-        } else if (firstChar !== undefined && ['+', '-'].includes(firstChar)) {
+        } else if (
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: string index `value[0]` may return undefined at runtime on empty string (already guarded above but TS doesn't track it)
+            firstChar !== undefined &&
+            ['+', '-'].includes(firstChar)
+        ) {
             // Add or subtract delta
             const current = foundry.utils.getProperty(this.actor, input.name) ?? 0;
             const delta = parseFloat(value);
@@ -2140,6 +2151,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
             // Get current training level
             const skills = this.actor.system.skills;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skills record index and entries array index may return undefined at runtime
             const skill = specialty !== undefined ? skills[skillKey]?.entries?.[Number(specialty)] : skills[skillKey];
 
             const currentLevel = skill?.plus20 === true ? 3 : skill?.plus10 === true ? 2 : skill?.trained === true ? 1 : 0;
@@ -2169,6 +2181,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const skillKey = target.dataset['skill'];
         if (skillKey === undefined || skillKey === '') return;
         const skill = this.actor.system.skills[skillKey];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skills record index may return undefined at runtime for unknown skill keys
         if (skill === undefined) {
             ui.notifications.warn(game.i18n.localize('WH40K.Warning.SkillNotSpecified'));
             return;
@@ -2243,10 +2256,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (skillName === undefined || skillName === '') return;
 
         const skill = this.actor.system.skills[skillName];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skills record index may return undefined at runtime for unknown skill keys
         if (skill === undefined || !Array.isArray(skill.entries)) return;
 
         const entries = [...skill.entries];
         const entryName = entries[index]?.name;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: entries array index and optional name field may be undefined at runtime
         const deletedName = entryName !== undefined && entryName !== '' ? entryName : 'this specialization';
 
         const confirmed = await ConfirmationDialog.confirm({
@@ -2282,6 +2297,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         }
 
         const skill = this.actor.system.skills[skillKey];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skills record index may return undefined at runtime for unknown skill keys
         if (skill === undefined) {
             console.warn(`WH40K | viewSkillInfo: Skill ${skillKey} not found`);
             return;

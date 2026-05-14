@@ -19,8 +19,10 @@ interface NpcTemplateSys {
     summary: string;
     traits?: Array<{ uuid?: string }>;
     talents?: Array<{ uuid?: string }>;
+    /* eslint-disable no-restricted-syntax -- boundary: NpcTemplateSys is a structural adapter for untyped item.system; Record<string,unknown> is the Foundry data-prep return shape */
     previewAtThreat(threatLevel: number): Record<string, unknown>;
     generateAtThreat(threatLevel: number, options: { isHorde: boolean }): Record<string, unknown>;
+    /* eslint-enable no-restricted-syntax */
 }
 
 interface TemplateRow {
@@ -51,6 +53,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         classes: ['wh40k-rpg', 'template-selector'],
         tag: 'div',
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: title is a WH40K.* localization key, not a hardcoded string; lint rule cannot distinguish
             title: 'WH40K.NPC.Template.SelectTitle',
             icon: 'fa-solid fa-file-lines',
             minimizable: false,
@@ -143,6 +146,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext/Record<string,unknown> is the ApplicationV2 override signature
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -156,6 +160,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
         // Get selected template details
         let selectedTemplate: WH40KItem | undefined;
+        /* eslint-disable no-restricted-syntax -- boundary: item.system is untyped at runtime; cast to NpcTemplateSys for data-prep access */
         let preview: Record<string, unknown> | null = null;
         if (this.#selectedUuid !== null) {
             selectedTemplate = this.#templates.find((t) => t.uuid === this.#selectedUuid);
@@ -186,6 +191,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                     selected: t.uuid === this.#selectedUuid,
                 }),
             ),
+            /* eslint-enable no-restricted-syntax */
             hasTemplates: filteredTemplates.length > 0,
             templateCount: filteredTemplates.length,
 
@@ -216,6 +222,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender/Record<string,unknown> is the ApplicationV2 override signature
     override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
@@ -288,7 +295,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         this.#templates = [];
 
         // Load from world items
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Foundry game.items filter callback receives untyped Item documents at runtime
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- Foundry game.items filter callback receives untyped Item documents at runtime
         // biome-ignore lint/suspicious/noExplicitAny: Foundry game.items filter callback receives untyped Item documents at runtime
         const worldTemplates = game.items.filter((i: any) => i.type === 'npcTemplate') as WH40KItem[];
         this.#templates.push(...worldTemplates);
@@ -299,7 +306,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
             eligiblePacks.map(async (pack) => {
                 try {
                     const index = await pack.getIndex({ fields: ['type', 'system.category', 'system.faction'] });
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Foundry pack.getIndex returns untyped index entries at runtime
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- Foundry pack.getIndex returns untyped index entries at runtime
                     // biome-ignore lint/suspicious/noExplicitAny: Foundry pack.getIndex returns untyped index entries at runtime
                     const templateEntries = index.filter((e: any) => e.type === 'npcTemplate');
 
@@ -321,6 +328,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      */
     _filterTemplates(): WH40KItem[] {
         return this.#templates.filter((t) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped at runtime; cast to NpcTemplateSys for filter access
             const system = t.system as unknown as NpcTemplateSys;
             // Category filter
             if (this.#filters.category !== '' && system.category !== this.#filters.category) {
@@ -383,6 +391,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      */
     static async #onCreate(this: TemplateSelector, _event: PointerEvent, _target: HTMLElement): Promise<void> {
         if (this.#selectedUuid === null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
             ui.notifications.warn('Select a template first.');
             return;
         }
@@ -391,6 +400,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         if (!template) return;
 
         try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped at runtime; cast to NpcTemplateSys for method access
             const templateSys = template.system as unknown as NpcTemplateSys;
             const systemData = templateSys.generateAtThreat(this.#threatLevel, {
                 isHorde: this.#isHorde,
@@ -403,10 +413,12 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                 system: systemData,
             };
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create params are untyped in Foundry V14; cast required to pass structured actorData
             const actor = (await Actor.create(actorData as unknown as Parameters<typeof Actor.create>[0])) as WH40KNPC | undefined;
 
             if (actor) {
                 // Create embedded traits and talents
+                // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments payload is an untyped Foundry API shape
                 const itemsToCreate: Record<string, unknown>[] = [];
 
                 /** Shape of Foundry documents returned by fromUuid for item embedding. */
@@ -433,12 +445,15 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                 }
 
                 if (itemsToCreate.length > 0) {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments params are untyped in Foundry V14
                     await actor.createEmbeddedDocuments('Item', itemsToCreate as unknown as Parameters<typeof actor.createEmbeddedDocuments<'Item'>>[1]);
                 }
 
+                // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
                 ui.notifications.info(`Created NPC: ${actor.name}`);
-                // eslint-disable-next-line @typescript-eslint/no-deprecated -- actor.sheet may be ApplicationV1; use V1 signature until sheet is migrated
-                void actor.sheet?.render(true);
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 marks Document.sheet.render legacy in typedefs; minimal local interface mirrors the V2 runtime contract
+                const actorSheet = (actor as unknown as { sheet?: { render(force: boolean): void } }).sheet;
+                actorSheet?.render(true);
 
                 this.#submitted = true;
                 if (this.#resolve) this.#resolve(actor);
@@ -446,6 +461,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
             }
         } catch (err) {
             console.error('Failed to create NPC from template:', err);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
             ui.notifications.error('Failed to create NPC from template');
         }
     }
@@ -467,6 +483,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: close/Record<string,unknown> is the ApplicationV2 override signature
     override async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 

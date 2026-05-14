@@ -14,7 +14,7 @@ export default class ActorDataModel extends SystemDataModel {
      * Actor-specific metadata.
      * @type {ActorDataModelMetadata}
      */
-    static override metadata: Record<string, unknown> = Object.freeze(
+    static override metadata = Object.freeze(
         foundry.utils.mergeObject(
             super.metadata,
             {

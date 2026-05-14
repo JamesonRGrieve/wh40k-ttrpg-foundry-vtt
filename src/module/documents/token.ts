@@ -16,9 +16,11 @@ type TokenMovementConfigEntry = {
     visualize: boolean;
     canSelect: (token: TokenDocument | null | undefined) => boolean;
     getAnimationOptions?: (token: TokenDocument | null | undefined) => { movementSpeed?: number };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry movement API dictates getCostFunction signature; args are typed by the engine, not this codebase
     getCostFunction?: (...args: unknown[]) => MovementCostFunction;
 };
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry movement cost function signature; `from`/`to` are grid positions with unknown shape from the engine
 type MovementCostFunction = (cost: number, from?: unknown, to?: unknown, distance?: number) => number;
 
 type TokenConfigLike = {
@@ -39,6 +41,7 @@ type TokenHUDLike = {
 };
 
 type TokenWithFlags = TokenDocument & {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's TokenDocument.getFlag returns unknown; the caller casts to the expected type after retrieval
     getFlag: (scope: string, key: string) => unknown;
 };
 
@@ -64,6 +67,7 @@ export class TokenDocumentWH40K extends TokenDocument {
         const wh40kConfig = CONFIG.wh40k as Wh40kTokenConfig;
         for (const [type, config] of Object.entries(wh40kConfig.movementTypes)) {
             // Create the action entry if it doesn't already exist (WH40K-specific actions)
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ??= is used to register WH40K movement actions into CONFIG.Token.movement.actions during system init (framework registration, not call-site default)
             tokenConfig.movement.actions[type] ??= {
                 label: config.label,
                 icon: config.icon,
@@ -87,7 +91,9 @@ export class TokenDocumentWH40K extends TokenDocument {
                 }
                 return {};
             };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: getCostFunction signature is defined by Foundry's movement API; token and options are untyped engine values
             actionConfig.getCostFunction = (token: unknown, options?: unknown) =>
+                // eslint-disable-next-line no-restricted-syntax -- boundary: casting engine-provided unknown args to concrete types after API boundary
                 this.#getMovementCostFunction(type, token as TokenDocument, options as Record<string, unknown> | undefined);
         }
     }
@@ -102,6 +108,7 @@ export class TokenDocumentWH40K extends TokenDocument {
      * @param {object} [options] - Additional options
      * @returns {Function} Cost function (cost, from, to, distance, segment) => number
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _options shape is dictated by Foundry's movement API; content is not used by this implementation
     static #getMovementCostFunction(type: string, token: TokenDocument, _options?: Record<string, unknown>): MovementCostFunction {
         const noAutomation = game.settings.get(SYSTEM_ID, 'movementAutomation') === 'none';
         const { actor } = token;
@@ -111,9 +118,10 @@ export class TokenDocumentWH40K extends TokenDocument {
         const hasSpeed = speed !== undefined && speed !== 0;
 
         // If automation is disabled, actor has no movement data, or speed is available, use default cost
-        return noAutomation || !hasMovement || hasSpeed
-            ? (cost: number) => cost
-            : (cost: number, _from?: unknown, _to?: unknown, distance = 0) => cost + distance;
+        const costFn: MovementCostFunction = (cost: number) => cost;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: MovementCostFunction signature requires `from`/`to` as unknown; they are engine-provided grid positions not used in this calculation
+        const trackingFn: MovementCostFunction = (cost: number, _from?: unknown, _to?: unknown, distance = 0) => cost + distance;
+        return noAutomation || !hasMovement || hasSpeed ? costFn : trackingFn;
     }
 
     /* -------------------------------------------- */
@@ -168,6 +176,7 @@ export class TokenDocumentWH40K extends TokenDocument {
 
         for (const [type, config] of Object.entries(movementTypes)) {
             const speed: number | undefined = movement[type];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: Record<string,number> index may return undefined at runtime
             if (speed === undefined) continue;
 
             const btn = document.createElement('button');
@@ -245,6 +254,7 @@ export class TokenDocumentWH40K extends TokenDocument {
     static #setMovementAction(token: TokenDocument, type: string): void {
         const movementTypes = (CONFIG.wh40k as Wh40kTokenConfig).movementTypes;
         const config: MovementTypeConfig | undefined = movementTypes[type];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: Record<string,MovementTypeConfig> index may return undefined at runtime
         const label = config !== undefined ? game.i18n.localize(config.label) : type;
         const speed = (token.actor?.system.movement as Record<string, number> | undefined)?.[type];
         void token.update({ flags: { 'wh40k-rpg': { movementAction: type } } } as TokenDocument.UpdateInput);

@@ -19,13 +19,15 @@ import type { ApplicationV2Ctor } from './application-types.ts';
  * Mixin for expandable tooltip functionality
  * @template {ApplicationV2} T
  * @param {T} Base - The base class to extend
- * @returns {any} Extended class with expandable tooltip support
+ * @returns Extended class with expandable tooltip support
  */
-export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base: T) {
+export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base: T): T {
     return class ExpandableTooltipApplication extends Base {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TypeScript mixin pattern requires any[] constructor args to satisfy TS2545
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- mixin: spreading any[] args is safe here; these are the base class constructor args forwarded unchanged
             super(...args);
         }
 
@@ -40,14 +42,16 @@ export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base
          * Add expandable tooltip action handlers
          * @override
          */
+        /* eslint-disable no-restricted-syntax -- boundary: Base class is typed as ApplicationV2Ctor with unknown static shape; casts needed to access DEFAULT_OPTIONS for mixin merge */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             ...((Base as unknown as { DEFAULT_OPTIONS?: Partial<ApplicationV2Config.DefaultOptions> }).DEFAULT_OPTIONS ?? {}),
             actions: {
-                ...(((Base as unknown as { DEFAULT_OPTIONS?: { actions?: Record<string, unknown> } }).DEFAULT_OPTIONS?.actions as Record<string, unknown>) ??
-                    {}),
+                ...((Base as unknown as { DEFAULT_OPTIONS?: { actions?: Record<string, unknown> } }).DEFAULT_OPTIONS?.actions ?? {}),
+                // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 action handlers: framework binds `this` at call time
                 toggleExpandable: ExpandableTooltipApplication.#toggleExpandable,
             },
         };
+        /* eslint-enable no-restricted-syntax */
 
         /* -------------------------------------------- */
         /*  Action Handlers                             */
@@ -65,7 +69,7 @@ export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base
             event.stopPropagation();
 
             const panelId = target.dataset['targetId'];
-            if (!panelId) {
+            if (panelId === undefined || panelId === '') {
                 console.warn('Expandable element missing data-target-id');
                 return;
             }
@@ -140,17 +144,22 @@ export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base
          * @private
          */
         async #enrichPanelContent(panel: HTMLElement): Promise<void> {
-            const unenriched = panel.querySelectorAll<HTMLElement>('[data-enrich="true"]');
+            const unenriched = Array.from(panel.querySelectorAll<HTMLElement>('[data-enrich="true"]'));
             if (unenriched.length === 0) return;
 
-            for (const element of unenriched) {
-                const content = element.innerHTML;
-                const enriched = await TextEditor.enrichHTML(content, {
-                    relativeTo: (this as unknown as { document: foundry.abstract.Document.Any }).document,
-                });
-                element.innerHTML = enriched;
-                element.removeAttribute('data-enrich');
-            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 mixin classes have a `document` property at runtime but TypeScript doesn't know; cast needed to access it
+            const relDoc = (this as unknown as { document: foundry.abstract.Document.Any }).document;
+            await Promise.all(
+                unenriched.map(async (element) => {
+                    const content = element.innerHTML;
+                    const enriched = await foundry.applications.ux.TextEditor.implementation.enrichHTML(content, {
+                        relativeTo: relDoc,
+                    });
+                    // eslint-disable-next-line require-atomic-updates -- each element is a unique closure variable per Promise.all iteration; no shared state
+                    element.innerHTML = enriched;
+                    element.removeAttribute('data-enrich');
+                }),
+            );
         }
 
         /* -------------------------------------------- */

@@ -153,6 +153,7 @@ export default class CharacterData extends CreatureTemplate {
     declare chaosAlignment: 'unaligned' | 'khorne' | 'nurgle' | 'slaanesh' | 'tzeentch';
     declare backgroundEffects: {
         abilities: BackgroundAbility[];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: originPath is a dynamic map keyed by step names (homeWorld, career, etc.) storing WH40KItem references; no fixed schema
         originPath: Record<string, unknown>;
     };
     declare characterGeneration: {
@@ -329,12 +330,14 @@ export default class CharacterData extends CreatureTemplate {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData is a Foundry framework override; parameter type is dictated by SystemDataModel base class
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         // Handle old characteristic field names or other character-specific migrations
     }
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _cleanData is a Foundry framework override; parameter types are dictated by SystemDataModel base class
     static override _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown> = {}): void {
         super._cleanData(source, options);
         CharacterData.#cleanExperience(source);
@@ -346,8 +349,10 @@ export default class CharacterData extends CreatureTemplate {
      * Clean experience fields.
      * @param {Record<string, unknown>} source - The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: source is raw Foundry DataModel source object; Record<string,unknown> is the only safe type at this migration boundary
     static #cleanExperience(source: Record<string, unknown> | undefined): void {
         if (typeof source?.['experience'] !== 'object' || source['experience'] === null) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: experience sub-object is untyped source data; cast required to mutate numeric fields
         const experience = source['experience'] as Record<string, unknown>;
 
         const fields = ['used', 'total', 'available', 'spentCharacteristics', 'spentSkills', 'spentTalents', 'spentPsychicPowers', 'calculatedTotal'];
@@ -362,6 +367,7 @@ export default class CharacterData extends CreatureTemplate {
      * Clean mental state fields.
      * @param {Record<string, unknown>} source - The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: source is raw Foundry DataModel source object; Record<string,unknown> is the only safe type at this migration boundary
     static #cleanMentalState(source: Record<string, unknown> | undefined): void {
         if (!source) return;
         const fields = ['insanity', 'corruption', 'insanityBonus', 'corruptionBonus'];
@@ -376,25 +382,30 @@ export default class CharacterData extends CreatureTemplate {
      * Clean Rogue Trader / WH40K fields.
      * @param {Record<string, unknown>} source - The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: source is raw Foundry DataModel source object; Record<string,unknown> is the only safe type at this migration boundary
     static #cleanRogueTrader(source: Record<string, unknown> | undefined): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rogueTrader sub-object is untyped source data; cast required to mutate numeric fields
         const rt = source?.['rogueTrader'] as Record<string, unknown> | undefined;
-        if (!rt) return;
+        if (rt === undefined) return;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: profitFactor sub-object is untyped source data
         const pf = rt['profitFactor'] as Record<string, unknown> | undefined;
-        if (pf) {
+        if (pf !== undefined) {
             for (const field of ['current', 'starting', 'modifier']) {
                 if (typeof pf[field] === 'string') pf[field] = Number(pf[field]);
             }
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: endeavour sub-object is untyped source data
         const endeavour = rt['endeavour'] as Record<string, unknown> | undefined;
-        if (endeavour) {
+        if (endeavour !== undefined) {
             for (const field of ['achievementCurrent', 'achievementRequired', 'reward']) {
                 if (typeof endeavour[field] === 'string') endeavour[field] = Number(endeavour[field]);
             }
         }
 
         if (Array.isArray(rt['acquisitions'])) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: acquisitions array entries are untyped source data
             for (const acquisition of rt['acquisitions'] as Array<Record<string, unknown>>) {
                 if (typeof acquisition['modifier'] === 'string') acquisition['modifier'] = Number(acquisition['modifier']);
             }
@@ -441,6 +452,7 @@ export default class CharacterData extends CreatureTemplate {
      * Compute origin path effects from items.
      * @protected
      */
+    // eslint-disable-next-line complexity -- processes all 7 game systems' origin path steps in one pass; extraction requires API redesign tracked separately
     _computeOriginPathEffects(): void {
         const actor = this.parent as ActorParent | null | undefined;
         if (actor?.items === undefined) return;
@@ -478,7 +490,9 @@ export default class CharacterData extends CreatureTemplate {
 
         for (const item of originItems) {
             // Get step from system data (camelCase like "homeWorld", "career")
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.flags is a Foundry opaque Record; 'rt' key is a legacy namespace
             const rtFlags = item.flags['rt'] as Record<string, unknown>;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.step may be undefined on legacy items without a step field
             const step: string = item.system.step ?? (rtFlags['step'] as string | undefined) ?? '';
             if (Object.hasOwn(stepMap, step)) {
                 stepMap[step] = item;
@@ -486,9 +500,11 @@ export default class CharacterData extends CreatureTemplate {
 
             // Get human-readable step name for display
             const stepLabel = this._getStepLabel(step);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is a dynamic Foundry ItemData; accessing legacy fields not in the typed schema
             const sysData = item.system as Record<string, unknown>;
             const sysEffects = typeof sysData['effects'] === 'string' ? sysData['effects'] : '';
             const sysDescText = typeof sysData['descriptionText'] === 'string' ? sysData['descriptionText'] : '';
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.description may be an object with .value (ProseMirror) or a string on legacy items
             const descValue = typeof item.system.description === 'object' ? (item.system.description as { value?: string }).value ?? '' : '';
             const benefit = sysEffects !== '' ? sysEffects : sysDescText !== '' ? sysDescText : descValue;
             this.backgroundEffects.abilities.push({
@@ -532,6 +548,7 @@ export default class CharacterData extends CreatureTemplate {
         const allAptitudes = new Set<string>();
 
         for (const item of originItems) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.grants is not in the typed schema; accessing as OriginPathGrants via unknown
             const grants = item.system.grants as OriginPathGrants | undefined;
             if (grants === undefined) continue;
 
@@ -544,6 +561,7 @@ export default class CharacterData extends CreatureTemplate {
 
             // Resolved aptitude choices — mirrors the key logic in origin-path-builder._prepareChoices
             const choices: GrantChoice[] = Array.isArray(grants.choices) ? grants.choices : [];
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.selectedChoices is a dynamic field not in the typed schema; keyed by choice label
             const selectedChoices = (item.system['selectedChoices'] ?? {}) as Record<string, string[]>;
             const labelCounts: Partial<Record<string, number>> = {};
             for (const choice of choices) {
@@ -618,6 +636,7 @@ export default class CharacterData extends CreatureTemplate {
         this.experience.spentSkills = 0;
         this.experience.spentTalents = 0;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: psy field is added by CreatureTemplate mixin at runtime; not in CharacterData's own declare list
         const psySelf = this as unknown as { psy?: { cost?: number } };
         this.experience.spentPsychicPowers = psySelf.psy?.cost ?? 0;
 
@@ -636,6 +655,7 @@ export default class CharacterData extends CreatureTemplate {
         }
 
         for (const item of actor.items) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.cost may be undefined on items without an explicit cost field; default 0
             const itemCost = String(item.system.cost ?? '0');
             if (item.isTalent) {
                 this.experience.spentTalents += parseInt(itemCost, 10);
@@ -665,6 +685,7 @@ export default class CharacterData extends CreatureTemplate {
             totalWoundsModifier: number;
             totalFateModifier: number;
         }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: modifierSources/_getOriginPath* are added by CreatureTemplate mixin at runtime; not in CharacterData's own declare list
         const extSelf = this as unknown as ExtendedData;
         const itemWounds = extSelf.modifierSources?.wounds?.reduce((total, src) => total + (src.value ?? 0), 0) ?? 0;
         const itemFate = extSelf.modifierSources?.fate?.reduce((total, src) => total + (src.value ?? 0), 0) ?? 0;
@@ -691,6 +712,7 @@ export default class CharacterData extends CreatureTemplate {
         let hasWoundFormula = false;
 
         for (const item of originItems) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is a dynamic Foundry ItemData; accessing rollResults/grants not in the typed schema
             const itemSys = item.system as Record<string, unknown>;
             const grants = itemSys['grants'] as OriginPathGrants | undefined;
             const formula: string | undefined = grants?.woundsFormula;
@@ -801,6 +823,7 @@ export default class CharacterData extends CreatureTemplate {
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: getRollData() return type is dictated by the Foundry DataModel base class; cannot be narrowed without breaking the override contract
     override getRollData(): Record<string, unknown> {
         return super.getRollData();
     }

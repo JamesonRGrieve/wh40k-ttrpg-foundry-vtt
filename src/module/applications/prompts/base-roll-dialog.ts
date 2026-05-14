@@ -7,11 +7,13 @@ const { ApplicationV2 } = foundry.applications.api;
  * Base dialog class for roll prompts.
  * Provides common functionality for weapon, psychic, force field, and other roll dialogs.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2Mixin requires ApplicationV2Ctor; cast needed because Foundry's ApplicationV2 class shape doesn't match the constructor type exactly
 export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     /**
      * @param {Record<string, unknown>} rollData     The roll data to configure.
      * @param {ApplicationV2Config.DefaultOptions} [options={}] Dialog options.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: rollData accepts any roll configuration object; callers know the concrete shape
     constructor(rollData: Record<string, unknown> = {}, options: ApplicationV2Config.DefaultOptions = {}) {
         super(options);
         this.rollData = rollData;
@@ -24,18 +26,17 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
     static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'roll-dialog', 'standard-form'],
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action handlers: framework binds `this` at call time */
         actions: {
-            // biome-ignore lint/complexity/noBannedTypes: private static methods require cast to assign to ApplicationV2 actions map; no narrower type is available without exposing the method
-            roll: BaseRollDialog.#onRoll as Function,
-            // biome-ignore lint/complexity/noBannedTypes: private static methods require cast to assign to ApplicationV2 actions map; no narrower type is available without exposing the method
-            cancel: BaseRollDialog.#onCancel as Function,
+            roll: BaseRollDialog.#onRoll,
+            cancel: BaseRollDialog.#onCancel,
         },
-        // eslint-disable-next-line no-restricted-syntax -- boundary: exactOptionalPropertyTypes: FormConfiguration optional booleans require explicit cast when mixed with handler type cast
         form: {
-            handler: BaseRollDialog.#onFormSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
+            handler: BaseRollDialog.#onFormSubmit,
             submitOnChange: true,
             closeOnSubmit: false,
-        } as ApplicationV2Config.FormConfiguration,
+        },
+        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 500,
         },
@@ -63,6 +64,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
      * The roll data being configured.
      * @type {object}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: rollData holds any roll configuration shape; subclasses access known fields via type assertions
     rollData: Record<string, unknown>;
 
     /**
@@ -76,6 +78,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext must return Record<string,unknown> per framework contract
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // Initialize roll data on first render
         if (!this.initialized && typeof this.rollData['initialize'] === 'function') {
@@ -101,6 +104,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._onRender context is untyped framework parameter
     override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
         setupNumberInputAutoSelect(this.element);
@@ -118,6 +122,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
      */
     static async #onFormSubmit(this: BaseRollDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         const data = foundry.utils.expandObject(formData.object);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: formData.object is a Foundry framework type; expandObject returns unknown shape
         this._updateRollData(data as Record<string, unknown>);
 
         if (typeof this.rollData['update'] === 'function') {
@@ -132,6 +137,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
      * @param {object} formData  The expanded form data.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: formData is expanded form data from Foundry's FormDataExtended; shape depends on the form fields
     _updateRollData(formData: Record<string, unknown>): void {
         foundry.utils.mergeObject(this.rollData, formData, { recursive: true });
     }

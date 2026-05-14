@@ -8,6 +8,11 @@
  * @see https://github.com/foundryvtt/dnd5e/blob/master/module/data/abstract/system-data-model.mjs
  */
 
+type SystemDataModelMetadata = {
+    systemFlagsModel: null | object;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeDataModel parent-doc generic has no exported constraint; any is required for the mixin pattern
 // biome-ignore lint/suspicious/noExplicitAny: TypeDataModel parent-doc generic has no exported constraint — any is required
 export default class SystemDataModel extends foundry.abstract.TypeDataModel<Record<string, foundry.data.fields.DataField.Any>, any> {
     /**
@@ -32,6 +37,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
      * @type {Set<string>}
      * @private
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention -- Foundry convention: _schemaTemplateFields mirrors DND5e pattern; underscore prefix is part of the schema-template API
     static get _schemaTemplateFields(): Set<string> {
         const fieldNames = Object.freeze(new Set(this._schemaTemplates.flatMap((t) => Array.from(t.schema.keys()))));
         Object.defineProperty(this, '_schemaTemplateFields', {
@@ -74,11 +80,11 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
      * Metadata that describes this DataModel.
      * @type {SystemDataModelMetadata}
      */
-    static metadata: Record<string, unknown> = Object.freeze({
+    static metadata: SystemDataModelMetadata = Object.freeze({
         systemFlagsModel: null,
     });
 
-    get metadata(): Record<string, unknown> {
+    get metadata(): SystemDataModelMetadata {
         return (this.constructor as typeof SystemDataModel).metadata;
     }
 
@@ -100,6 +106,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     static override defineSchema(): Record<string, foundry.data.fields.DataField> {
         const schema: Record<string, foundry.data.fields.DataField> = {};
         for (const template of this._schemaTemplates) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- defensive: template could be an arbitrary mixin lacking defineSchema at runtime
             if (!template.defineSchema) {
                 throw new Error(`Invalid WH40K template mixin ${String(template)} defined on class ${String(this.constructor)}`);
             }
@@ -130,11 +137,13 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
 
     /** @inheritDoc */
     static override cleanData(
-        source?: Record<string, unknown>,
+        source?: Record<string, unknown>, // eslint-disable-line no-restricted-syntax -- boundary: Foundry TypeDataModel override; source mirrors parent cleanData signature
         options?: DataModelV14.CleaningOptions,
         _state?: DataModelV14.UpdateState,
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry TypeDataModel override; return type mirrors parent cleanData signature
     ): Record<string, unknown> {
         this._cleanData(source, options);
+        // eslint-disable-next-line @typescript-eslint/unbound-method, @typescript-eslint/no-unnecessary-type-assertion -- super.cleanData must be extracted and called with explicit `this` for V14 compat; cast to V14 signature is required
         const superClean = super.cleanData as DataModelV14.CleanDataSignature;
         return superClean.call(this, source, options, _state);
     }
@@ -147,8 +156,10 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
      * @param {object} [options={}]     Additional options (see DataModel.cleanData)
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; source mirrors parent cleanData signature
     static _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
         for (const template of this._schemaTemplates) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: template may lack _cleanData when mixing non-SystemDataModel templates
             template._cleanData?.(source, options);
         }
     }
@@ -158,11 +169,13 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry generator override; unknown is the generator return slot type from the parent class
     static override *_initializationOrder(): Generator<[string, foundry.data.fields.DataField], void, unknown> {
         for (const template of this._schemaTemplates) {
             for (const entry of template._initializationOrder()) {
                 const field = this.schema.get(entry[0]);
                 if (field) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- noUncheckedIndexedAccess: schema.get returns DataField | undefined; field is truthy-guarded above
                     entry[1] = field;
                 }
                 yield entry;
@@ -179,6 +192,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; data mirrors parent validateJoint signature
     static override validateJoint(data: Record<string, unknown>): void {
         this._validateJoint(data);
         super.validateJoint(data as never);
@@ -192,8 +206,10 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
      * @throws                  An error if a validation failure is detected
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; data mirrors parent validateJoint signature
     static _validateJoint(data: Record<string, unknown>): void {
         for (const template of this._schemaTemplates) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: template may lack _validateJoint when mixing non-SystemDataModel templates
             template._validateJoint?.(data);
         }
     }
@@ -203,6 +219,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; source/return mirror parent migrateData signature
     static override migrateData(source: Record<string, unknown>): Record<string, unknown> {
         this._migrateData(source);
         return super.migrateData(source);
@@ -215,8 +232,10 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
      * @param {object} source     The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; source mirrors parent migrateData signature
     static _migrateData(source: Record<string, unknown>): void {
         for (const template of this._schemaTemplates) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: template may lack _migrateData when mixing non-SystemDataModel templates
             template._migrateData?.(source);
         }
     }
@@ -224,7 +243,12 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static override shimData(data: Record<string, unknown>, options?: Record<string, unknown>): Record<string, unknown> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; data/options/return all mirror parent shimData signature
+    static override shimData(
+        data: Record<string, unknown>, // eslint-disable-line no-restricted-syntax -- boundary: data mirrors parent shimData signature
+        options?: Record<string, unknown>, // eslint-disable-line no-restricted-syntax -- boundary: options mirrors parent shimData signature
+        // eslint-disable-next-line no-restricted-syntax -- boundary: return type mirrors parent shimData signature
+    ): Record<string, unknown> {
         this._shimData(data, options);
         return super.shimData(data, options);
     }
@@ -237,8 +261,13 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
      * @param {object} [options]    Additional options (see DataModel.shimData)
      * @protected
      */
-    static _shimData(data: Record<string, unknown>, options?: Record<string, unknown>): void {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; data/options mirror parent shimData signature
+    static _shimData(
+        data: Record<string, unknown>, // eslint-disable-line no-restricted-syntax -- boundary: data mirrors parent shimData signature
+        options?: Record<string, unknown>, // eslint-disable-line no-restricted-syntax -- boundary: options mirrors parent shimData signature
+    ): void {
         for (const template of this._schemaTemplates) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: template may lack _shimData when mixing non-SystemDataModel templates
             template._shimData?.(data, options);
         }
     }

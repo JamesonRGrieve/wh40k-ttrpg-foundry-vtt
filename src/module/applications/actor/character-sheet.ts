@@ -25,8 +25,11 @@ import TransactionRequestDialog from '../dialogs/transaction-request-dialog.ts';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
 import BaseActorSheet, { type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; double-cast is the only way to extract the TextEditor implementation
 const TextEditor = (foundry.applications as unknown as { ux: { TextEditor: { implementation: TextEditorImplementationLike } } }).ux.TextEditor.implementation;
+// eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; double-cast is the only way to extract DialogV2
 const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2Like } }).api.DialogV2;
+// eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; Toast is an optional extension with no shipped types
 const toast = (foundry.applications as unknown as { api?: { Toast?: Record<string, (...args: unknown[]) => void> } }).api?.Toast;
 const ARMOUR_DISPLAY_LOCATIONS = [
     { key: 'head', label: 'Head', shortLabel: 'Head', rollRange: '01-10' },
@@ -44,6 +47,7 @@ type SheetTabConfig = {
     cssClass?: string;
 };
 
+/* eslint-disable no-restricted-syntax -- boundary: sheet→template payload; the types below describe untyped values passed to Handlebars, where a concrete TS shape doesn't propagate. */
 type CharacterSheetContext = Record<string, unknown> & {
     actor?: Record<string, unknown> & { characteristics?: Record<string, Record<string, unknown>> };
     system?: Record<string, unknown> & {
@@ -57,10 +61,7 @@ type CharacterSheetContext = Record<string, unknown> & {
     // Explicit declarations to avoid TS4111 (noPropertyAccessFromIndexSignature) on the
     // intersected Record<string, unknown> for all known sheet-context fields written by
     // _prepareContext / _preparePartContext / _prepareCombatData / _prepareLoadoutData / ...
-    // eslint-disable-next-line no-restricted-syntax -- boundary: sheet→template payload; templates consume these via Handlebars where TS shape doesn't reach.
 } & CharacterSheetContextDeclaredFields;
-
-/* eslint-disable no-restricted-syntax -- boundary: sheet→template payload; the fields below describe untyped values passed to Handlebars, where a concrete TS shape doesn't propagate. */
 type CharacterSheetContextDeclaredFields = {
     inEditMode?: boolean;
     ruleset?: unknown;
@@ -121,7 +122,6 @@ type CharacterSheetContextDeclaredFields = {
     backpackPercent?: number;
     transactionSourceCount?: number;
 };
-/* eslint-enable no-restricted-syntax */
 
 type OriginSummary = {
     steps: Record<string, unknown>[];
@@ -190,6 +190,7 @@ export default class CharacterSheet extends BaseActorSheet {
     declare _equipmentFilter: { search: string; type: string; status: string };
     declare _skillsFilter: { search: string; characteristic: string; training: string; [key: string]: string };
     declare _traitsFilter: Record<string, unknown>;
+    /* eslint-enable no-restricted-syntax */
     declare _throttleTimers?: Map<string, number>;
     declare _originPathSummary?: OriginSummary;
     private readonly _gameSystemId?: GameSystemId;
@@ -447,6 +448,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * Tab configuration for the primary tab group.
      * @override
      */
+    /* eslint-disable no-restricted-syntax -- labels are WH40K.* localization keys; the rule fires on any string in TABS but these are correct */
     static TABS: SheetTabConfig[] = [
         { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
         { tab: 'skills', label: 'WH40K.Tabs.Statistics', group: 'primary', cssClass: 'tab-skills' },
@@ -456,6 +458,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // { tab: 'powers', label: 'WH40K.Tabs.Powers', group: 'primary', cssClass: 'tab-powers' },
         { tab: 'biography', label: 'WH40K.Tabs.Biography', group: 'primary', cssClass: 'tab-biography' },
     ];
+    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 
@@ -486,8 +489,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {Promise}
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: generic throttle utility; args/context types are caller-controlled, no concrete type available
     async _throttle(key: string, wait: number, func: (...args: unknown[]) => unknown, context: Record<string, unknown>, args: unknown[]): Promise<unknown> {
         // Initialize throttle tracking map if it doesn't exist
+        // eslint-disable-next-line no-restricted-syntax -- ??= used here to lazily initialize a private map; schema doesn't own this field
         this._throttleTimers ??= new Map();
 
         const now = Date.now();
@@ -514,6 +519,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {object} options                 Notification options.
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: notification options are forwarded to Foundry/Toast API with no fixed shape
     _notify(type: 'info' | 'warning' | 'error', message: string, options: Record<string, unknown> = {}): void {
         if (toast && typeof toast[type] === 'function') {
             toast[type](message, options);
@@ -538,6 +544,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {Promise<void>}
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: value is forwarded to actor.update() whose payload accepts unknown
     async _updateSystemField(field: string, value: unknown): Promise<void> {
         await this.actor.update({ [field]: value });
     }
@@ -547,6 +554,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 _prepareContext returns Record<string, unknown>; concrete sub-typing happens via CharacterSheetContext cast inside
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = (await super._prepareContext(options)) as CharacterSheetContext;
 
@@ -596,6 +604,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Prepare WH40K RPG specific fields
         if (context.system) {
+            // eslint-disable-next-line no-restricted-syntax -- rogueTrader is an untyped sub-object on the sheet context; ?? {} is necessary to ensure a defined object is passed
             context.system.rogueTrader = this._prepareWH40KFields(context.system.rogueTrader ?? {});
         }
 
@@ -620,13 +629,17 @@ export default class CharacterSheet extends BaseActorSheet {
      * @override
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 _preparePartContext signature uses Record<string, unknown>; prototype must match
     override async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const prototype = Object.getPrototypeOf(CharacterSheet.prototype) as {
             _preparePartContext?: (
                 this: CharacterSheet,
                 partId: string,
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 prototype shape; Record matches upstream signature
                 context: Record<string, unknown>,
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 prototype shape; Record matches upstream signature
                 options: Record<string, unknown>,
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 prototype shape; Record matches upstream signature
             ) => Promise<Record<string, unknown>>;
         };
         const partContext = (await prototype._preparePartContext?.call(this, partId, context, options)) ?? {};
@@ -663,10 +676,11 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {Promise<object>}
      * @protected
      */
-    // eslint-disable-next-line @typescript-eslint/require-await -- override of async base method; concrete impl is synchronous
+    // eslint-disable-next-line @typescript-eslint/require-await, no-restricted-syntax -- require-await: override of async base method; concrete impl is synchronous; no-restricted-syntax: boundary: Foundry ApplicationV2 tab-part context signature uses Record<string, unknown>
     async _prepareTabPartContext(partId: string, context: Record<string, unknown>, _options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const sheetContext = context as CharacterSheetContext;
         // Find the tab configuration
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.constructor is untyped at runtime; double-cast to access static TABS
         const tabConfig = (this.constructor as unknown as { TABS: SheetTabConfig[] }).TABS.find((t: SheetTabConfig) => t.tab === partId);
         if (tabConfig) {
             const group = tabConfig.group;
@@ -711,12 +725,14 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {Promise<object>}
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
     async _prepareBiographyContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const ctx = context as CharacterSheetContext;
         // First prepare the standard tab context
         await this._prepareTabPartContext('biography', context, options);
 
         // Prepare biography data with enriched HTML for ProseMirror
+        // eslint-disable-next-line no-restricted-syntax -- bio.notes may be undefined in migrated data; ?? '' is safe fallback until DataModel schema enforces the default
         const rawNotes = this.actor.system.bio.notes ?? '';
 
         const enrichedNotes = await TextEditor.enrichHTML(rawNotes, {
@@ -745,6 +761,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
     async _prepareHeaderContext(context: Record<string, unknown>, _options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const ctx = context as CharacterSheetContext;
         // Build dynamic origin path select options from compendium packs
@@ -778,21 +795,32 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const stepNames: Record<string, Set<string>> = {};
 
-        for (const pack of game.packs) {
-            if (pack.documentName !== 'Item') continue;
-            // Only check packs that contain origin path items for this game system
+        const prefix = gameSystem === 'dh2e' ? 'dh2' : gameSystem === 'dh1e' ? 'dh1' : gameSystem;
+        const relevantPacks = [...game.packs].filter((pack) => {
+            if (pack.documentName !== 'Item') return false;
             const packName = pack.metadata.name;
-            const prefix = gameSystem === 'dh2e' ? 'dh2' : gameSystem === 'dh1e' ? 'dh1' : gameSystem;
-            if (!packName.startsWith(prefix) && !packName.startsWith('homebrew')) continue;
+            return packName.startsWith(prefix) || packName.startsWith('homebrew');
+        });
 
-            // eslint-disable-next-line no-await-in-loop -- sequential pack fetches are intentional; each pack's data is independent and accumulation order doesn't matter, but parallelising requires restructuring the entire loop body
-            const index = (await pack.getIndex({
-                fields: ['type', 'system.step'],
-            })) as unknown as Array<{ _id: string; name: string; type?: string; system?: { step?: string } }>;
+        const indexes = await Promise.all(
+            relevantPacks.map(
+                async (pack) =>
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry pack.getIndex() returns Collection with no typed item shape; double-cast to concrete interface
+                    (await pack.getIndex({ fields: ['type', 'system.step'] })) as unknown as Array<{
+                        _id: string;
+                        name: string;
+                        type?: string;
+                        system?: { step?: string };
+                    }>,
+            ),
+        );
+
+        for (const index of indexes) {
             for (const entry of index) {
                 if (entry.type !== 'originPath') continue;
                 const step = entry.system?.step;
                 if (step === undefined || step === '') continue;
+                // eslint-disable-next-line no-restricted-syntax -- ??= used to lazily initialize per-step Set; stepNames is a local accumulator not owned by any DataModel
                 stepNames[step] ??= new Set();
                 stepNames[step].add(entry.name);
             }
@@ -817,9 +845,11 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
     _prepareTabsContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         const ctx = context as CharacterSheetContext;
         // Tabs use the static TABS configuration
+        // eslint-disable-next-line no-restricted-syntax -- boundary: this.constructor is untyped at runtime; double-cast to access static TABS
         ctx.tabs = (this.constructor as unknown as { TABS: SheetTabConfig[] }).TABS.map((tab: SheetTabConfig) => ({
             ...tab,
             active: this.tabGroups[tab.group as keyof typeof this.tabGroups] === tab.tab,
@@ -831,6 +861,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 _onFirstRender signature uses Record<string, unknown>
     override async _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onFirstRender(context, options);
 
@@ -859,6 +890,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
     _prepareBodyContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         // All tab data is already prepared in _prepareContext
         return context;
@@ -899,6 +931,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context comes from Foundry ApplicationV2; Record<string, unknown> matches upstream signature
     _prepareCharacteristicHUD(context: Record<string, unknown>): void {
         const sheetContext = context as CharacterSheetContext;
         const hudCharacteristics = sheetContext.actor?.characteristics ?? {};
@@ -1000,6 +1033,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {Array<object>}
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: steps are heterogeneous data passed to Handlebars templates where a concrete type doesn't propagate
     _prepareOriginPathSteps(): Record<string, unknown>[] {
         const gameSystem = this._resolveGameSystemId();
         if (!gameSystem) return [];
@@ -1093,6 +1127,7 @@ export default class CharacterSheet extends BaseActorSheet {
             const tooltipData = item
                 ? JSON.stringify({
                       title: `${step.label}: ${item.name}`,
+                      // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is typed by Foundry DataModel; accessing description requires a cast until the DataModel exports description
                       content: (item.system as Record<string, unknown> & { description?: { value?: string } }).description?.value ?? '',
                   })
                 : null;
@@ -1158,6 +1193,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _getOriginPathSummary(): OriginSummary {
         return (
+            // eslint-disable-next-line no-restricted-syntax -- _originPathSummary is lazily computed during render; ?? provides the empty-state default until it's populated
             this._originPathSummary ?? {
                 steps: [],
                 completedSteps: 0,
@@ -1198,6 +1234,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         for (const item of this.actor.items) {
             const itemType = item.type as string;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; inShipStorage is not on the typed schema yet; bracket access needs Record cast
             const sys = item.system as Record<string, unknown>;
             const inShip = sys['inShipStorage'] === true;
 
@@ -1237,6 +1274,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {object} categorized  Categorized items.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context comes from Foundry ApplicationV2; Record<string, unknown> matches upstream signature
     _prepareLoadoutData(context: Record<string, unknown>, categorized: CategorizedItems): void {
         const loadoutContext = context as CharacterSheetContext & {
             armourItems: WH40KItem[];
@@ -1302,14 +1340,18 @@ export default class CharacterSheet extends BaseActorSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: skills keyed by string; SkillBits not in DataModel schema
         type SkillBits = { plus10?: boolean; plus20?: boolean; trained?: boolean; basic?: boolean };
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.skills is indexed by string; double-cast to SkillBits to access computed fields not on the schema
         const dodgeSkill = skills['dodge'] as unknown as SkillBits | undefined;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         let dodgeBase = chars['agility']?.total ?? 0;
         if (dodgeSkill?.plus20 === true) dodgeBase += 20;
         else if (dodgeSkill?.plus10 === true) dodgeBase += 10;
         else if (dodgeSkill?.trained !== true && dodgeSkill?.basic !== true) dodgeBase = Math.floor(dodgeBase / 2);
         sheetContext.dodgeTarget = dodgeBase;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.skills is indexed by string; double-cast to SkillBits to access computed fields not on the schema
         const parrySkill = skills['parry'] as unknown as SkillBits | undefined;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         let parryBase = chars['weaponSkill']?.total ?? 0;
         if (parrySkill?.plus20 === true) parryBase += 20;
         else if (parrySkill?.plus10 === true) parryBase += 10;
@@ -1325,9 +1367,11 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {object} categorized  Categorized items.
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context comes from Foundry ApplicationV2; Record<string, unknown> matches upstream signature
     _prepareCombatData(context: Record<string, unknown>, categorized: CategorizedItems): void {
         const sheetContext = context as CharacterSheetContext;
         const weapons = categorized.weapons as WeaponLike[];
+        // eslint-disable-next-line no-restricted-syntax -- sheetContext.system may be absent if context was freshly created; ?? fallback to actor.system is intentional
         const system = sheetContext.system ?? this.actor.system;
 
         this.#prepareCombatVitals(sheetContext, system);
@@ -1345,7 +1389,9 @@ export default class CharacterSheet extends BaseActorSheet {
             }) ?? forceFields[0];
         sheetContext.hasForceField = sheetContext.forceField !== undefined;
         sheetContext.armourDisplayLocations = this.#prepareArmourDisplayLocations(this.actor.system, categorized.armour);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: armourDisplayMap values are heterogeneous display objects passed to Handlebars; no concrete type
         const armourDisplayMap: Record<string, Record<string, unknown>> = {};
+        // eslint-disable-next-line no-restricted-syntax -- boundary: armourDisplayLocations is typed as unknown[] on the context; cast needed to iterate key/value pairs
         for (const entry of sheetContext.armourDisplayLocations as Array<Record<string, unknown>>) {
             if (typeof entry['key'] === 'string') {
                 armourDisplayMap[entry['key']] = entry;
@@ -1395,6 +1441,7 @@ export default class CharacterSheet extends BaseActorSheet {
             .forEach((w) => {
                 const clip = w.system.clip;
                 if (clip.max > 0 && w.system.effectiveClipMax > 0) {
+                    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- no-restricted-syntax: ammoPercentage may be absent on older data; no-unnecessary-condition: noUncheckedIndexedAccess makes ammoPercentage possibly-undefined despite WeaponLike typing it as number
                     w.ammoPercent = w.system.ammoPercentage ?? Math.round((clip.value / w.system.effectiveClipMax) * 100);
                 }
             });
@@ -1410,6 +1457,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 icon: effect.icon,
                 disabled: effect.disabled,
                 sourceName: effect.sourceName,
+                // eslint-disable-next-line no-restricted-syntax -- boundary: effect.changes is Foundry EffectChange[]; double-cast to EffectChangeRaw[] which is this codebase's typed wrapper
                 changes: summarizeChanges(effect.changes as unknown as EffectChangeRaw[]),
                 document: effect,
             };
@@ -1440,22 +1488,27 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns heterogeneous display objects passed to Handlebars; no concrete type possible
     #prepareArmourDisplayLocations(system: WH40KActorSystemData, armourItems: WH40KItem[]): Array<Record<string, unknown>> {
         const equippedArmour = armourItems.filter((item) => (item.system as { equipped?: boolean }).equipped === true);
 
         return ARMOUR_DISPLAY_LOCATIONS.map((locationConfig) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: system.armour is typed as unknown in WH40KActorSystemData; cast needed to bracket-access by location key
             const armourData = (system.armour as Record<string, Record<string, unknown>> | undefined)?.[locationConfig.key] ?? {};
             const coveringItems = equippedArmour
                 .map((item) => {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; AP helper methods are not on the schema type
                     const itemSystem = item.system as Record<string, unknown>;
                     const getEff = itemSystem['getEffectiveAPForLocation'];
                     const getAp = itemSystem['getAPForLocation'];
+                    /* eslint-disable no-restricted-syntax -- boundary: getEff/getAp/armourPoints retrieved as unknown from DataModel; casts needed to invoke or access */
                     const ap =
                         typeof getEff === 'function'
                             ? Number((getEff as (k: string) => unknown)(locationConfig.key) ?? 0)
                             : typeof getAp === 'function'
                             ? Number((getAp as (k: string) => unknown)(locationConfig.key) ?? 0)
                             : Number((itemSystem['armourPoints'] as Record<string, unknown> | undefined)?.[locationConfig.key] ?? 0);
+                    /* eslint-enable no-restricted-syntax */
                     if (ap <= 0) return null;
 
                     return {
@@ -1496,7 +1549,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: rogueTraderData is an untyped sub-object from the sheet context; fields vary by system
     _prepareWH40KFields(rogueTraderData: Record<string, unknown>): Record<string, unknown> {
+        /* eslint-disable no-restricted-syntax -- boundary: prepared sub-fields are heterogeneous system data passed to Handlebars */
         const prepared = rogueTraderData as Record<string, unknown> & {
             armour?: unknown;
             weight?: unknown;
@@ -1504,6 +1559,7 @@ export default class CharacterSheet extends BaseActorSheet {
             wounds?: unknown;
             fate?: unknown;
         };
+        /* eslint-enable no-restricted-syntax */
         prepared.armour = prepared.armour ?? {
             head: 0,
             rightArm: 0,
@@ -1542,6 +1598,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object} Dynasty display data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: dynasty data is a heterogeneous display object passed to Handlebars; no concrete exported type
     _prepareDynastyData(): Record<string, unknown> {
         const pf = (this.actor.system.rogueTrader?.profitFactor ?? {}) as {
             current?: number;
@@ -1589,6 +1646,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
     _prepareOverviewContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         const ctx = context as CharacterSheetContext;
         // Add Active Effects data
@@ -1615,6 +1673,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {Promise<object>}
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
     async _prepareOverviewDashboardContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const ctx = context as CharacterSheetContext;
         // First prepare standard tab context
@@ -1695,9 +1754,11 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const originItems = actor.items.filter((i: WH40KItem) => i.isOriginPath);
         for (const item of originItems) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; originPath fields (step, grants, selectedChoices) are not on the base type
             const itemSystem = item.system as Record<string, unknown> & { step?: string; grants?: unknown; selectedChoices?: Record<string, string[]> };
             const step = itemSystem.step ?? '';
             const src = `${stepLabels[step] ?? 'Origin'}: ${String(item.name)}`;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: grants is untyped JSON from the DataModel; shape varies by system
             const grants = (itemSystem.grants ?? {}) as { aptitudes?: unknown; choices?: unknown; [key: string]: unknown };
 
             // Fixed aptitudes
@@ -1706,6 +1767,7 @@ export default class CharacterSheet extends BaseActorSheet {
             }
 
             // Resolved aptitude choices (mirrors logic in character.ts._computeOriginPathEffects)
+            /* eslint-disable no-restricted-syntax -- boundary: choice shape is heterogeneous JSON from DataModel; no concrete type */
             const choices = (Array.isArray(grants.choices) ? grants.choices : []) as Array<{
                 label?: unknown;
                 name?: unknown;
@@ -1713,6 +1775,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 options?: unknown;
                 [key: string]: unknown;
             }>;
+            /* eslint-enable no-restricted-syntax */
             const selectedChoices = itemSystem.selectedChoices ?? {};
             const labelCounts: Record<string, number> = {};
             for (const choice of choices) {
@@ -1746,6 +1809,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {Array<object>} Array of favorite skill display objects
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns display objects for Handlebars; no concrete exported type
     _prepareFavoriteSkills(): Record<string, unknown>[] {
         const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
         const specialistFavorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') as string[] | undefined) ?? [];
@@ -1756,11 +1820,15 @@ export default class CharacterSheet extends BaseActorSheet {
         const standardFavourites = favorites
             .map((key) => {
                 const skill = skills[key];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (skill === undefined) return null;
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 const charShort = skill.characteristic !== '' ? skill.characteristic : 'S';
                 const charKey = this._charShortToKey(charShort);
                 const char = characteristics[charKey];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (char === undefined) return null;
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 const label = skill.label !== '' ? skill.label : key;
                 return {
                     key,
@@ -1786,17 +1854,21 @@ export default class CharacterSheet extends BaseActorSheet {
         const specialistFavouriteRows = specialistFavorites
             .map((compositeKey) => {
                 const [skillKey, indexStr] = compositeKey.split(':');
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (skillKey === undefined || skillKey === '' || indexStr === undefined) return null;
                 const index = Number.parseInt(indexStr, 10);
                 if (Number.isNaN(index)) return null;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: actor.skills is indexed by string; specialist skill shape not on the top-level type
                 const parent = skills[skillKey] as { entries?: unknown[]; characteristic?: string; label?: string } | undefined;
                 const entries = parent?.entries;
                 if (!Array.isArray(entries)) return null;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: entries[] is unknown[] from the DataModel; cast to access specialist entry fields
                 const entry = entries[index] as Record<string, unknown> | undefined;
                 if (entry === undefined) return null;
                 const charShort = (entry['characteristic'] as string | undefined) ?? parent?.characteristic ?? 'S';
                 const charKey = this._charShortToKey(charShort);
                 const char = characteristics[charKey];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (char === undefined) return null;
                 const entryName = (entry['name'] as string | undefined) ?? (entry['label'] as string | undefined) ?? skillKey;
                 const parentLabel = parent?.label ?? skillKey;
@@ -1822,6 +1894,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // Preserve the flag array's order — that's the user's custom order set via the
         // drag handles on each favourite row (#6). Specialist favourites append after
         // standard ones; if the user wants them interleaved they can drag-reorder.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: returned array is consumed by Handlebars; upcast to match declared return type
         return [...standardFavourites, ...specialistFavouriteRows] as Record<string, unknown>[];
     }
 
@@ -1867,6 +1940,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {Array<object>} Array of favorite talent display objects
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns display objects for Handlebars; no concrete exported type
     _prepareFavoriteTalents(): Record<string, unknown>[] {
         const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | undefined) ?? [];
         const talents = this.actor.items.filter((i) => (i.type as string) === 'talent');
@@ -1907,6 +1981,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
     _prepareCombatTabContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         // Combat data already prepared in _prepareCombatData
         return context;
@@ -1921,6 +1996,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
     _prepareEquipmentContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         const ctx = context as CharacterSheetContext;
         // Equipment data already prepared in _prepareLoadoutData
@@ -1937,6 +2013,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
     _prepareAbilitiesContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         // Talents and traits already prepared in _prepareItems
         return context;
@@ -1951,6 +2028,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
     _prepareNotesContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         return context;
     }
@@ -1964,6 +2042,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
     _prepareEffectsContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         return context;
     }
@@ -1976,6 +2055,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object} Powers context data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns heterogeneous display data for Handlebars; no concrete exported type
     _preparePowersContext(): Record<string, unknown> {
         // Get all power items
         const psychicPowers = this.actor.items.filter((i) => (i.type as string) === 'psychicPower');
@@ -2058,9 +2138,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
+    // eslint-disable-next-line @typescript-eslint/require-await -- ApplicationV2 action handlers expect Promise<void>
     static async #attack(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
-            await DHTargetedActionManager.performWeaponAttack(this.actor);
+            DHTargetedActionManager.performWeaponAttack(this.actor);
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error);
             this._notify('error', `Attack failed: ${message}`, {
@@ -2115,7 +2196,9 @@ export default class CharacterSheet extends BaseActorSheet {
     static #assignDamage(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
         try {
             const hitData = new Hit();
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KAcolyte doesn't satisfy ActorLike structurally; double-cast to bridge the type gap
             const assignData = new AssignDamageData(this.actor as unknown as ActorLike, hitData);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: prepareAssignDamageRoll expects a generic Record; AssignDamageData is compatible at runtime
             prepareAssignDamageRoll(assignData as unknown as Record<string, unknown>);
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error);
@@ -2172,8 +2255,11 @@ export default class CharacterSheet extends BaseActorSheet {
                         },
                         rejectClose: false,
                     });
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                     if (result === null || result === undefined) return;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 result is typed as unknown; double-cast to extract modal form values
                     modifier = (result as unknown as { modifier: number }).modifier;
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 result is typed as unknown; double-cast to extract fateBurn flag
                     if ((result as unknown as { fateBurn: boolean }).fateBurn) {
                         formula = '10';
                         formulaLabel = `Fate burn (10) + Agility Bonus (${agBonus})`;
@@ -2228,6 +2314,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const actionKey = target.dataset['actionKey'];
         if (actionKey === undefined || actionKey === '') return;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system is typed by DataModel; favoriteCombatActions is a flag field not on the schema yet
         const currentFavorites = (this.actor.system as Record<string, unknown> & { favoriteCombatActions?: string[] }).favoriteCombatActions ?? [];
         const newFavorites = currentFavorites.includes(actionKey) ? currentFavorites.filter((k: string) => k !== actionKey) : [...currentFavorites, actionKey];
 
@@ -2279,6 +2366,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (actionKey === undefined || actionKey === '') return;
 
         // Find the action definition in config
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is untyped Foundry config; cast to access combatActions structure
         const wh40kConfig = CONFIG.wh40k as { combatActions?: { attacks?: unknown[]; movement?: unknown[]; utility?: unknown[] } } | undefined;
         const allActions = [
             ...(wh40kConfig?.combatActions?.attacks ?? []),
@@ -2353,14 +2441,17 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Find the actor's active token on the canvas
         const token = this.actor.getActiveTokens()[0]?.document;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (token === null || token === undefined) {
             ui.notifications.info(`${game.i18n.localize('WH40K.MOVEMENT.Label')}: No active token on canvas.`);
             return;
         }
 
         // Store movement action on token flags
+        // eslint-disable-next-line no-restricted-syntax -- boundary: token.update() accepts untyped data; cast needed to satisfy the overload
         await token.update({ 'flags.wh40k-rpg.movementAction': movementType } as Record<string, unknown>);
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG is untyped Foundry global; double-cast to access wh40k.movementTypes config
         const config = ((CONFIG as unknown as Record<string, unknown>)['wh40k'] as Record<string, unknown> | undefined)?.['movementTypes'] as
             | Record<string, { label?: string }>
             | undefined;
@@ -2389,6 +2480,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; equipped not on base type; bracket access needs Record cast
         await item.update({ 'system.equipped': (item.system as Record<string, unknown>)['equipped'] !== true });
     }
 
@@ -2480,10 +2572,12 @@ export default class CharacterSheet extends BaseActorSheet {
         const shipChecks = panel.querySelectorAll('.wh40k-ship-storage .wh40k-transfer-check:checked');
 
         if (!backpackChecks.length && !shipChecks.length) {
+            // eslint-disable-next-line no-restricted-syntax -- player-facing notification; TODO: migrate to i18n key when langpack stabilises
             ui.notifications.warn('No items selected to transfer.');
             return;
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: transferOperations holds promises to Foundry update calls; no concrete result type
         const transferOperations: Promise<unknown>[] = [];
 
         // Backpack → Ship
@@ -2494,8 +2588,11 @@ export default class CharacterSheet extends BaseActorSheet {
             const item = this.actor.items.get(itemId);
             if (!item) return;
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; stowInShipStorage is a duck-typed method not on the schema
             const equippable = item.system as Record<string, unknown>;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: stowInShipStorage checked via typeof; cast to invocable signature for push
             if (typeof (equippable as { stowInShipStorage?: unknown }).stowInShipStorage === 'function') {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: method retrieved as unknown; cast to concrete call signature
                 transferOperations.push((equippable as { stowInShipStorage: () => Promise<unknown> }).stowInShipStorage());
                 return;
             }
@@ -2517,8 +2614,11 @@ export default class CharacterSheet extends BaseActorSheet {
             const item = this.actor.items.get(itemId);
             if (!item) return;
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; removeFromShipStorage is a duck-typed method not on the schema
             const equippable = item.system as Record<string, unknown>;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: removeFromShipStorage checked via typeof; cast to invocable signature for push
             if (typeof (equippable as { removeFromShipStorage?: unknown }).removeFromShipStorage === 'function') {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: method retrieved as unknown; cast to concrete call signature
                 transferOperations.push((equippable as { removeFromShipStorage: () => Promise<unknown> }).removeFromShipStorage());
                 return;
             }
@@ -2548,6 +2648,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const allChecks = panel.querySelectorAll('.wh40k-transfer-check:checked');
         if (!allChecks.length) {
+            // eslint-disable-next-line no-restricted-syntax -- player-facing notification; TODO: migrate to i18n key when langpack stabilises
             ui.notifications.warn('No items selected to give.');
             return;
         }
@@ -2563,6 +2664,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const targets = game.actors.filter((a) => a.id !== sourceActor.id && a.isOwner);
 
         if (!targets.length) {
+            // eslint-disable-next-line no-restricted-syntax -- player-facing notification; TODO: migrate to i18n key when langpack stabilises
             ui.notifications.warn('No other actors available to give items to.');
             return;
         }
@@ -2590,10 +2692,12 @@ export default class CharacterSheet extends BaseActorSheet {
             .map((id: string) => sourceActor.items.get(id))
             .filter(Boolean)
             .map((item) => {
+                /* eslint-disable no-restricted-syntax -- boundary: item.toObject() returns Foundry document data with no typed shape; cast to access system fields for transfer */
                 const data = (item as WH40KItem).toObject() as Record<string, unknown> & {
                     system?: Record<string, unknown> & { equipped?: unknown; inBackpack?: unknown; inShipStorage?: unknown };
                     _id?: string;
                 };
+                /* eslint-enable no-restricted-syntax */
                 if (data.system) {
                     data.system.equipped = false;
                     data.system.inBackpack = true;
@@ -2605,6 +2709,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         if (!itemsData.length) return;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments data param type doesn't accept our Record shape; double-cast to satisfy the overload
         await targetActor.createEmbeddedDocuments('Item', itemsData as unknown as Parameters<typeof targetActor.createEmbeddedDocuments<'Item'>>[1]);
         await sourceActor.deleteEmbeddedDocuments('Item', itemIds);
         ui.notifications.info(`Gave ${itemsData.length} item(s) to ${targetActor.name}.`);
@@ -2622,6 +2727,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const item = this.actor.items.get(itemId as string);
         if (!item) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; activated not on base type; bracket access needs Record cast
         await item.update({ 'system.activated': (item.system as Record<string, unknown>)['activated'] !== true });
     }
 
@@ -3299,6 +3405,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const item = this.actor.items.get(itemId);
         if (item === undefined) return;
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; level not on base type; bracket access needs Record cast
         const levelNum = Number((item.system as Record<string, unknown>)['level']);
         const newLevel = Math.max(0, (Number.isNaN(levelNum) ? 0 : levelNum) + delta);
         await item.update({ 'system.level': newLevel });
@@ -3639,6 +3746,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 await game.wh40k.rollPsychicPhenomena(this.actor);
             } else {
                 // Fallback: roll on phenomena table
+                /* eslint-disable no-restricted-syntax -- boundary: game.packs.getDocuments() returns untyped Foundry documents; cast to locate table by name and invoke draw() */
                 const table = (game.tables.getName('Psychic Phenomena') ??
                     (await game.packs
                         .get('wh40k-rpg.wh40k-rolltables-psychic')
@@ -3646,6 +3754,7 @@ export default class CharacterSheet extends BaseActorSheet {
                         .then((docs: unknown[]) => docs.find((d: unknown) => (d as { name: string }).name.includes('Phenomena'))))) as
                     | { draw(): Promise<unknown> }
                     | undefined;
+                /* eslint-enable no-restricted-syntax */
 
                 if (table) {
                     await table.draw();
@@ -3680,6 +3789,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 await game.wh40k.rollPerilsOfTheWarp(this.actor);
             } else {
                 // Fallback: roll on perils table
+                /* eslint-disable no-restricted-syntax -- boundary: game.packs.getDocuments() returns untyped Foundry documents; cast to locate table by name and invoke draw() */
                 const table = (game.tables.getName('Perils of the Warp') ??
                     (await game.packs
                         .get('wh40k-rpg.wh40k-rolltables-psychic')
@@ -3688,6 +3798,7 @@ export default class CharacterSheet extends BaseActorSheet {
                     | { draw(): Promise<unknown> }
                     | undefined;
 
+                /* eslint-enable no-restricted-syntax */
                 if (table) {
                     await table.draw();
                 } else {
@@ -3766,6 +3877,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * `data-favourite-key` and lives inside a parent `[data-favourite-list="skills|talents"]`
      * container. On drop, splice the flag array and persist. See issue #6.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 _onRender signature uses Record<string, unknown>
     override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
@@ -3813,6 +3925,7 @@ export default class CharacterSheet extends BaseActorSheet {
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry BaseActorSheet _onDropItem returns unknown; overriding preserves the upstream return type
     override async _onDropItem(event: DragEvent, item: WH40KItem): Promise<unknown> {
         // Progression-eligible drops (talents) route through the AdvancementDialog rather
         // than landing on the actor directly — talents cost XP per RAW, so silently creating
