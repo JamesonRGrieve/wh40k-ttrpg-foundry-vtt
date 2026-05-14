@@ -250,8 +250,7 @@ export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
                 element.classList.add('what-if-preview');
                 if (!element.querySelector('.wh40k-what-if__pulse-border')) {
                     const pulseBorder = document.createElement('span');
-                    pulseBorder.className =
-                        'wh40k-what-if__pulse-border tw-animate-preview-pulse tw-absolute tw-inset-[-2px] tw-border-2 tw-border-solid tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-pointer-events-none';
+                    pulseBorder.className = 'wh40k-what-if__pulse-border tw-animate-preview-pulse tw-absolute tw-inset-[-2px] tw-border-2 tw-border-solid tw-border-[var(--wh40k-gold)] tw-rounded-[var(--wh40k-radius-md)] tw-pointer-events-none';
                     element.appendChild(pulseBorder);
                 }
 
