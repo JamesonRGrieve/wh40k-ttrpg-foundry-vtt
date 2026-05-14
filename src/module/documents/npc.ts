@@ -216,7 +216,7 @@ export class WH40KNPC extends WH40KBaseActor {
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
                     this.rollCharacteristic('willpower', item.name ?? undefined);
                 } else {
-                    DHTargetedActionManager.performPsychicAttack(this, null, item);
+                    DHTargetedActionManager.performPsychicCast(this, null, item);
                 }
                 return;
             }

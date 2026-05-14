@@ -481,7 +481,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls) === true) {
                     await this.rollCharacteristic('willpower', item.name);
                 } else {
-                    DHTargetedActionManager.performPsychicAttack(this, null, item);
+                    DHTargetedActionManager.performPsychicCast(this, null, item);
                 }
                 return;
             case 'forceField':
