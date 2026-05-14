@@ -26,7 +26,10 @@ export default class QuickActionsBar {
     /**
      * Get action definitions for an item
      */
-    static getActionsForItem(item: WH40KItem, { compact: _compact = false, inSheet = false }: { compact?: boolean; inSheet?: boolean } = {}): QuickAction[] {
+    static getActionsForItem(
+        item: WH40KItem,
+        { compact: _compact = false, inSheet = false, isGM = game.user?.isGM ?? false }: { compact?: boolean; inSheet?: boolean; isGM?: boolean } = {},
+    ): QuickAction[] {
         const actions: QuickAction[] = [];
         const type = item.type;
         const system = item.system as ItemSystemFlags;
@@ -88,11 +91,15 @@ export default class QuickActionsBar {
                 break;
 
             case 'condition':
-                actions.push(
-                    this.#createAction('stack', 'fa-solid fa-plus', 'Stack', 'stackCondition', { itemId }),
-                    this.#createAction('reduce', 'fa-solid fa-minus', 'Reduce', 'reduceCondition', { itemId }),
-                    this.#createAction('remove', 'fa-solid fa-xmark', 'Remove', 'removeCondition', { itemId }),
-                );
+                // Conditions are GM-imposed game state. Only the GM may stack/reduce/remove them
+                // from the actor; players see conditions as read-only display.
+                if (isGM) {
+                    actions.push(
+                        this.#createAction('stack', 'fa-solid fa-plus', 'Stack', 'stackCondition', { itemId }),
+                        this.#createAction('reduce', 'fa-solid fa-minus', 'Reduce', 'reduceCondition', { itemId }),
+                        this.#createAction('remove', 'fa-solid fa-xmark', 'Remove', 'removeCondition', { itemId }),
+                    );
+                }
                 break;
 
             case 'criticalInjury':
@@ -125,7 +132,7 @@ export default class QuickActionsBar {
             actions.push(this.#createAction('edit', 'fa-solid fa-pen-to-square', 'Edit', 'editItem', { itemId }));
         }
 
-        if (!inSheet && item.isOwner) {
+        if (!inSheet && item.isOwner && (type !== 'condition' || isGM)) {
             actions.push(this.#createAction('delete', 'fa-solid fa-trash', 'Delete', 'deleteItem', { itemId }, 'danger'));
         }
 

@@ -195,7 +195,7 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
             }
 
             // Get quick actions
-            const actions = QuickActionsBar.getActionsForItem(item, { compact: false, inSheet: false });
+            const actions = QuickActionsBar.getActionsForItem(item, { compact: false, inSheet: false, isGM: game.user?.isGM ?? false });
             const actionsHTML = QuickActionsBar.renderActions(actions, false);
 
             return `

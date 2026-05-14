@@ -2347,6 +2347,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     async _onDropItem(event: DragEvent, item: WH40KItem): Promise<unknown> {
         if (!this.actor.isOwner) return undefined;
 
+        // Conditions are GM-imposed game state. Block players from dropping new conditions
+        // onto an actor; only the GM may add them.
+        if (item.type === 'condition' && !(game.user?.isGM ?? false)) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Warning.ConditionGMOnly'));
+            return false;
+        }
+
         // Check if this item type is supported
         const ctor = this.constructor as typeof BaseActorSheet;
         if (ctor.unsupportedItemTypes.has(item.type)) {
