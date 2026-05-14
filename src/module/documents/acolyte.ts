@@ -57,9 +57,9 @@ type WH40KCharacterSystemData = WH40KActorSystemData & {
     modifierSources: CharacterModifierSources;
     totalWoundsModifier: number;
     totalFateModifier: number;
-    _getTotalCharacteristicModifier(charKey: string): number;
-    _getTotalSkillModifier(skillKey: string): number;
-    _getTotalCombatModifier(combatKey: string): number;
+    _getTotalCharacteristicModifier: (charKey: string) => number;
+    _getTotalSkillModifier: (skillKey: string) => number;
+    _getTotalCombatModifier: (combatKey: string) => number;
 };
 
 /** Interface representing a resolved D100Roll result used in opposed tests. */
