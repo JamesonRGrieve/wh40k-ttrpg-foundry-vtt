@@ -142,6 +142,9 @@ interface PreparedPsychicPower {
     canPurchase: boolean;
     cantAfford: boolean;
     blocked: boolean;
+    /** True when one or more tree-path prerequisite powers are not owned. */
+    prereqMissing: boolean;
+    /** Display names of unmet prerequisites (PR gate + missing tree powers). */
     prereqDisplay: string[];
 }
 
@@ -858,37 +861,70 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const ownedPowers = new Set(this.actor.items.filter((i) => i.type === 'psychicPower').map((i) => i.name.toLowerCase()));
 
-        const powers: PreparedPsychicPower[] = [];
+        // Two-pass build so tree-path prerequisites (UUIDs) can be resolved
+        // to display names. First pass: index every entry across all packs
+        // into a uuid→name map. Second pass: build the prepared power list.
+        type RawEntry = CompendiumIndexEntry & { system?: { prCost?: number; discipline?: string; requires?: string[] }; uuid?: string };
+        const rawEntries: RawEntry[] = [];
         for (const pack of packs) {
             // eslint-disable-next-line no-await-in-loop -- Foundry compendium pack indexes must be loaded sequentially; cannot be parallelised safely
-            const index = await pack.getIndex({ fields: ['name', 'type', 'system.discipline', 'system.prCost'] });
+            const index = await pack.getIndex({ fields: ['name', 'type', 'system.discipline', 'system.prCost', 'system.requires'] });
             for (const rawEntry of index) {
-                const entry = rawEntry as CompendiumIndexEntry;
+                const entry = rawEntry as RawEntry;
                 if (entry.type !== 'psychicPower') continue;
-                const entrySys = entry['system'] as { prCost?: number; discipline?: string } | null | undefined;
-                const prCost = entrySys?.prCost ?? 1;
-                // Heuristic XP cost: max(100, 200 × prCost). Powers in DH2 core range 100-600 XP.
-                const cost = Math.max(100, 200 * prCost);
-                const owned = ownedPowers.has(entry.name.toLowerCase());
-                const blocked = prCost > currentRating;
-                const discipline = (entrySys?.discipline ?? 'unknown').toString();
-
-                powers.push({
-                    id: `psy:${entry.name}`,
-                    uuid: entry.uuid ?? '',
-                    name: entry.name,
-                    displayName: entry.name,
-                    discipline,
-                    disciplineLabel: discipline.charAt(0).toUpperCase() + discipline.slice(1),
-                    prCost,
-                    cost,
-                    owned,
-                    canPurchase: !owned && !blocked && available >= cost,
-                    cantAfford: !owned && !blocked && available < cost,
-                    blocked,
-                    prereqDisplay: blocked ? [`Psy Rating ${prCost}`] : [],
-                });
+                rawEntries.push(entry);
             }
+        }
+
+        const uuidToName = new Map<string, string>();
+        for (const e of rawEntries) {
+            if (typeof e.uuid === 'string' && e.uuid.length > 0) uuidToName.set(e.uuid, e.name);
+        }
+
+        const powers: PreparedPsychicPower[] = [];
+        for (const entry of rawEntries) {
+            const entrySys = entry.system ?? {};
+            const prCost = entrySys.prCost ?? 1;
+            // Heuristic XP cost: max(100, 200 × prCost). Powers in DH2 core range 100-600 XP.
+            const cost = Math.max(100, 200 * prCost);
+            const owned = ownedPowers.has(entry.name.toLowerCase());
+            const prGate = prCost > currentRating;
+            const discipline = (entrySys.discipline ?? 'unknown').toString();
+
+            // Tree-path prerequisites: every UUID in `requires` resolves to a
+            // power name; if that power is not owned, the prereq is missing.
+            const requires = Array.isArray(entrySys.requires) ? entrySys.requires : [];
+            const missingPrereqNames: string[] = [];
+            for (const reqUuid of requires) {
+                const reqName = uuidToName.get(reqUuid);
+                // Unresolvable UUIDs (e.g. a Beyond-book power that's not packed
+                // yet) are silently skipped — a future migration can fill them in.
+                if (reqName === undefined) continue;
+                if (!ownedPowers.has(reqName.toLowerCase())) missingPrereqNames.push(reqName);
+            }
+            const prereqMissing = missingPrereqNames.length > 0;
+            const blocked = prGate || prereqMissing;
+
+            const prereqDisplay: string[] = [];
+            if (prGate) prereqDisplay.push(`Psy Rating ${prCost}`);
+            for (const n of missingPrereqNames) prereqDisplay.push(n);
+
+            powers.push({
+                id: `psy:${entry.name}`,
+                uuid: entry.uuid ?? '',
+                name: entry.name,
+                displayName: entry.name,
+                discipline,
+                disciplineLabel: discipline.charAt(0).toUpperCase() + discipline.slice(1),
+                prCost,
+                cost,
+                owned,
+                canPurchase: !owned && !blocked && available >= cost,
+                cantAfford: !owned && !blocked && available < cost,
+                blocked,
+                prereqMissing,
+                prereqDisplay,
+            });
         }
 
         // Group by discipline for the template
