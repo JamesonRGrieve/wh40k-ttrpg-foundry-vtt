@@ -633,6 +633,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @protected
      */
     _captureScrollPositions(): void {
+        // `this.element` is null after Foundry tears the DOM down — _onClose still
+        // runs _saveSheetState (we need to persist scroll positions) but there is
+        // nothing left to read by then. Skip silently.
+        const root = this.element as HTMLElement | null;
+        if (root === null) return;
+
         // Common scrollable containers
         const scrollableSelectors = [
             '.wh40k-body',
@@ -644,7 +650,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         ];
 
         scrollableSelectors.forEach((selector) => {
-            const elements = this.element.querySelectorAll<HTMLElement>(selector);
+            const elements = root.querySelectorAll<HTMLElement>(selector);
             elements.forEach((el, index) => {
                 const key = `${selector}-${index}`;
                 if (el.scrollTop > 0) {
@@ -660,6 +666,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      */
     _applyScrollPositions(): void {
         if (this._scrollPositions.size === 0) return;
+        const root = this.element as HTMLElement | null;
+        if (root === null) return;
 
         const scrollableSelectors = [
             '.wh40k-body',
@@ -671,7 +679,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         ];
 
         scrollableSelectors.forEach((selector) => {
-            const elements = this.element.querySelectorAll<HTMLElement>(selector);
+            const elements = root.querySelectorAll<HTMLElement>(selector);
             elements.forEach((el, index) => {
                 const key = `${selector}-${index}`;
                 const savedPosition = this._scrollPositions.get(key);
