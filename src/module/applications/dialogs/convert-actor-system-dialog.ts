@@ -87,8 +87,7 @@ export class ConvertActorSystemDialog {
                 rejectClose: false,
             });
 
-            // eslint-disable-next-line @typescript-eslint/no-deprecated -- render(true) is the compatible open call for this dialog wrapper in the current Foundry typing surface
-            void dialog.render(true);
+            void dialog.render({ force: true });
         });
     }
 }
