@@ -524,13 +524,12 @@ export class TooltipsWH40K {
             `;
         }
 
-        const trainingDisplay = trainingBonus > 0 ? `${training} (+${trainingBonus})` : training;
-        html += `
-            <div class="wh40k-tooltip__line">
-                <span class="wh40k-tooltip__label">${localize('WH40K.Skills.Training')}:</span>
-                <span class="wh40k-tooltip__value">${trainingDisplay}</span>
-            </div>
-        `;
+        // The standalone Training: line was previously rendered here; it duplicated the
+        // information already shown in the Training Progression track below (current rank
+        // highlighted). Dropped per issue #36 collaborator follow-up. The progression track
+        // is now the single source of training-state display.
+        void training;
+        void trainingBonus;
 
         if (bonus !== 0) {
             html += `
