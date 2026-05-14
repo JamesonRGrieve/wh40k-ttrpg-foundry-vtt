@@ -168,14 +168,14 @@ describe('vital-edit-input partial', () => {
         expect(input?.hasAttribute('readonly')).toBe(false);
     });
 
-    it('renders readonly when readonly=true (used by fatigue threshold)', () => {
+    it('renders readonly when readonly=true (display-only fields)', () => {
         const html = editInputTemplate({
-            name: 'system.fatigue.max',
-            label: 'Threshold',
+            name: 'system.derived.example',
+            label: 'Derived',
             value: 4,
             readonly: true,
         });
-        const input = dom(html).querySelector('input[name="system.fatigue.max"]');
+        const input = dom(html).querySelector('input[name="system.derived.example"]');
         expect(input?.hasAttribute('readonly')).toBe(true);
     });
 });
