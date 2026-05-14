@@ -475,8 +475,12 @@ declare global {
         wh40k: WH40KGameSystem;
     }
     interface CONFIG {
+        // Only `wh40k` (lowercase) is assigned at runtime by `hooks-manager.ts`.
+        // An older `WH40K` (uppercase) augmentation was present here but never
+        // assigned — this type lie hid runtime crashes (Cannot read properties of
+        // undefined ...) on every call site that touched it. If a new namespace
+        // needs adding, ALSO add the assignment.
         wh40k: WH40KSystemConfig;
-        WH40K: WH40KSystemConfig;
     }
 }
 

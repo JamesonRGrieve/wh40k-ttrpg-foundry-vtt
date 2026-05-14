@@ -83,8 +83,8 @@ export default class ArmourSheet extends ContainerItemSheet {
         const sys = this.item.system;
 
         // Add armour-specific context
-        context['armourTypes'] = CONFIG.WH40K.armourTypes;
-        context['bodyLocations'] = CONFIG.WH40K.bodyLocations;
+        context['armourTypes'] = CONFIG.wh40k.armourTypes;
+        context['bodyLocations'] = CONFIG.wh40k.bodyLocations;
         context['availableProperties'] = this._getAvailableProperties();
         context['apSummary'] = sys.apSummary;
         context['coverageLabel'] = sys.coverageLabel;

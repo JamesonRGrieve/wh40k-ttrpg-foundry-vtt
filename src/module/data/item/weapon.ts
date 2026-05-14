@@ -93,14 +93,19 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     declare melee: boolean;
     declare clip: { max: number; value: number; type: string };
     // Note: 'reload' schema field accessed via [key: string]: any; to avoid conflict with reload() method
-    declare loadedAmmo: {
-        uuid: string;
-        name: string;
-        modifiers: { damage: number; penetration: number; range: number };
-        clipModifier: number;
-        addedQualities: Set<string>;
-        removedQualities: Set<string>;
-    };
+    // May be undefined at runtime when the schema fails to initialize (e.g. an
+    // upstream validation error on a sibling field — Foundry leaves later fields
+    // un-populated). Type matches the live behavior so consumers must guard.
+    declare loadedAmmo:
+        | {
+              uuid: string;
+              name: string;
+              modifiers: { damage: number; penetration: number; range: number };
+              clipModifier: number;
+              addedQualities: Set<string>;
+              removedQualities: Set<string>;
+          }
+        | undefined;
     declare modifications: Array<{
         uuid: string;
         name: string;
@@ -371,8 +376,9 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             }
         }
 
-        // Add loaded ammunition modifiers
-        if (this.loadedAmmo.uuid) {
+        // Add loaded ammunition modifiers (loadedAmmo may be undefined if the
+        // schema failed to initialize due to upstream validation errors)
+        if (this.loadedAmmo !== undefined && this.loadedAmmo.uuid !== '') {
             this._modificationModifiers.damage += this.loadedAmmo.modifiers.damage;
             this._modificationModifiers.penetration += this.loadedAmmo.modifiers.penetration;
             this._modificationModifiers.range += this.loadedAmmo.modifiers.range;
@@ -498,7 +504,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         }
 
         // Apply loaded ammunition quality modifications
-        if (this.loadedAmmo.uuid) {
+        if (this.loadedAmmo?.uuid !== undefined && this.loadedAmmo.uuid !== '') {
             // Add qualities from ammo
             for (const quality of this.loadedAmmo.addedQualities) {
                 qualities.add(quality);
@@ -932,7 +938,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get effectiveClipMax(): number {
         const base = this.clip.max;
-        const ammoMod = this.loadedAmmo.clipModifier;
+        const ammoMod = this.loadedAmmo?.clipModifier ?? 0;
         return Math.max(1, base + ammoMod);
     }
 
@@ -1008,7 +1014,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get qualitiesArray(): Array<{ id: string; baseId: string; label: string; description: string; level: number | null; hasLevel: boolean }> {
         const qualities: Array<{ id: string; baseId: string; label: string; description: string; level: number | null; hasLevel: boolean }> = [];
-        const config = CONFIG.WH40K.weaponQualities;
+        const config = CONFIG.wh40k.weaponQualities;
 
         for (const qualityId of this.effectiveSpecial) {
             // Parse level from quality ID (e.g., "blast-3" -> "blast", 3)
@@ -1061,7 +1067,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {boolean}
      */
     get hasLoadedAmmo(): boolean {
-        return this.loadedAmmo.uuid !== '';
+        return this.loadedAmmo?.uuid !== undefined && this.loadedAmmo.uuid !== '';
     }
 
     /**
@@ -1070,7 +1076,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get loadedAmmoLabel(): string {
         if (!this.hasLoadedAmmo) return 'Standard';
-        return this.loadedAmmo.name || 'Unknown';
+        return this.loadedAmmo?.name !== undefined && this.loadedAmmo.name !== '' ? this.loadedAmmo.name : 'Unknown';
     }
 
     /* -------------------------------------------- */
@@ -1197,25 +1203,25 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @private
      */
     async _returnRoundsToInventory(actor: AmmoActorLike, rounds: number): Promise<void> {
-        if (rounds <= 0 || !this.loadedAmmo.uuid) return;
+        const loaded = this.loadedAmmo;
+        if (rounds <= 0 || loaded === undefined || loaded.uuid === '') return;
 
         // Try to find the ammo item by UUID first, then fall back to name+type.
-        const ammoItem =
-            actor.items.find((i) => i.uuid === this.loadedAmmo.uuid) ?? actor.items.find((i) => i.type === 'ammunition' && i.name === this.loadedAmmo.name);
+        const ammoItem = actor.items.find((i) => i.uuid === loaded.uuid) ?? actor.items.find((i) => i.type === 'ammunition' && i.name === loaded.name);
 
         if (ammoItem) {
             await ammoItem.update({ 'system.quantity': ammoItem.system.quantity + rounds });
         } else {
             // Last resort: create a new ammo item with the returned rounds
             try {
-                const sourceItem = (await fromUuid(this.loadedAmmo.uuid)) as SourceItemLike | null;
+                const sourceItem = (await fromUuid(loaded.uuid)) as SourceItemLike | null;
                 if (sourceItem) {
                     const itemData = sourceItem.toObject();
                     itemData.system.quantity = rounds;
                     await actor.createEmbeddedDocuments('Item', [itemData]);
                 }
             } catch {
-                console.warn(`wh40k-rpg | Could not return ${rounds} rounds of ${this.loadedAmmo.name} to inventory`);
+                console.warn(`wh40k-rpg | Could not return ${rounds} rounds of ${loaded.name} to inventory`);
             }
         }
     }

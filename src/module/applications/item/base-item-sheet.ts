@@ -198,7 +198,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         // Ensure dh has required config properties for selectOptions (safety measure)
         // eslint-disable-next-line no-restricted-syntax -- boundary: dh is built from heterogeneous CONFIG sources; loose shape required
         const dh = context['dh'] as { availabilities?: unknown; craftsmanships?: unknown };
-        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.WH40K is untyped at the global Foundry CONFIG level
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is untyped at the global Foundry CONFIG level
         const cfgWh = (CONFIG as { WH40K?: { availabilities?: unknown; craftsmanships?: unknown } }).WH40K;
         if (dh.availabilities === undefined) {
             dh.availabilities = cfgWh?.availabilities ?? WH40K.availabilities;
