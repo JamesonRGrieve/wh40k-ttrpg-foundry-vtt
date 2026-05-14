@@ -1823,6 +1823,11 @@ export default class CharacterSheet extends BaseActorSheet {
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (char === undefined) return null;
                 const label = skill.label !== '' ? skill.label : key;
+                // Route favourites through the same prepareSkillTooltip(...) path the
+                // Statistics tab uses (issue #36) so the per-system rank labels (Known/
+                // Trained/Experienced/Veteran vs Trained/+10/+20) resolve identically.
+                // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics map is a Record<string, CharacteristicLike>; the mixin signature takes Record<string, unknown>.
+                const tooltipData = this.prepareSkillTooltip(key, { ...skill, label } as unknown as Record<string, unknown>, characteristics as unknown as Record<string, unknown>);
                 return {
                     key,
                     label,
@@ -1830,13 +1835,7 @@ export default class CharacterSheet extends BaseActorSheet {
                     characteristic: charKey,
                     charShort: char.short !== '' ? char.short : charKey,
                     breakdown: this._getSkillBreakdown(skill as SkillLike, char),
-                    tooltipData: JSON.stringify({
-                        name: label,
-                        value: skill.current,
-                        characteristic: char.label !== '' ? char.label : charKey,
-                        charValue: char.total,
-                        breakdown: this._getSkillBreakdown(skill as SkillLike, char),
-                    }),
+                    tooltipData,
                 };
             })
             .filter((row): row is NonNullable<typeof row> => row !== null);
@@ -1866,6 +1865,13 @@ export default class CharacterSheet extends BaseActorSheet {
                 const entryName = (entry['name'] as string | undefined) ?? (entry['label'] as string | undefined) ?? skillKey;
                 const parentLabel = parent?.label ?? skillKey;
                 const composedLabel = `${parentLabel} (${entryName})`;
+                // Specialist entries carry the same trained/plus10/plus20/plus30 flags as
+                // standard skills (WH40KSkillEntry shape); route them through the shared
+                // prepareSkillTooltip(...) path so per-system rank labels resolve via the
+                // active GameSystemConfig (issue #36).
+                const synthesizedSkill = { ...entry, characteristic: charShort, label: composedLabel };
+                // eslint-disable-next-line no-restricted-syntax -- boundary: synthesised from the raw entries[] payload (Record<string, unknown>); the mixin signature takes Record<string, unknown>.
+                const tooltipData = this.prepareSkillTooltip(compositeKey, synthesizedSkill as Record<string, unknown>, characteristics as unknown as Record<string, unknown>);
                 return {
                     key: compositeKey,
                     label: composedLabel,
@@ -1873,22 +1879,20 @@ export default class CharacterSheet extends BaseActorSheet {
                     characteristic: charKey,
                     charShort: char.short !== '' ? char.short : charKey,
                     breakdown: this._getSkillBreakdown(entry, char),
-                    tooltipData: JSON.stringify({
-                        name: composedLabel,
-                        value: (entry['current'] as number | undefined) ?? 0,
-                        characteristic: char.label !== '' ? char.label : charKey,
-                        charValue: char.total,
-                        breakdown: this._getSkillBreakdown(entry, char),
-                    }),
+                    tooltipData,
                 };
             })
             .filter((row) => row !== null);
 
-        // Preserve the flag array's order — that's the user's custom order set via the
-        // drag handles on each favourite row (#6). Specialist favourites append after
-        // standard ones; if the user wants them interleaved they can drag-reorder.
+        // Sort the rendered rows by their displayed label, locale-aware. This is the
+        // single source of ordering for favourites (#6): the stored flag array's order
+        // is ignored at render time so add / remove / re-add always produces the same
+        // alphabetical sequence regardless of any historical insertion order drift.
+        const lang = game.i18n.lang;
+        const merged: { label: string }[] = [...standardFavourites, ...specialistFavouriteRows];
+        merged.sort((a, b) => a.label.localeCompare(b.label, lang, { sensitivity: 'base' }));
         // eslint-disable-next-line no-restricted-syntax -- boundary: returned array is consumed by Handlebars; upcast to match declared return type
-        return [...standardFavourites, ...specialistFavouriteRows] as Record<string, unknown>[];
+        return merged as Record<string, unknown>[];
     }
 
     /**
@@ -1938,7 +1942,9 @@ export default class CharacterSheet extends BaseActorSheet {
         const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | undefined) ?? [];
         const talents = this.actor.items.filter((i) => (i.type as string) === 'talent');
 
-        // Preserve the flag array's order so drag-handle reorder (#6) persists.
+        // Render the favourite talents and sort by their displayed name unconditionally
+        // (#6) — flag array order is ignored so add / remove / re-add is stable. Falls
+        // back to talent.name when fullName isn't set; matches what the template shows.
         const rows = favorites
             .map((id: string) => {
                 const talent = talents.find((t) => t.id === id);
@@ -1949,11 +1955,12 @@ export default class CharacterSheet extends BaseActorSheet {
                     specialization?: string;
                     category?: string;
                 };
+                const fullName = sys.fullName !== undefined && sys.fullName !== '' ? sys.fullName : talent.name;
                 return {
                     id: talent.id,
                     name: talent.name,
                     img: talent.img,
-                    fullName: sys.fullName !== undefined && sys.fullName !== '' ? sys.fullName : talent.name,
+                    fullName,
                     specialization: sys.specialization ?? '',
                     system: {
                         tier: sys.tier ?? 0,
@@ -1962,6 +1969,8 @@ export default class CharacterSheet extends BaseActorSheet {
                 };
             })
             .filter((talent) => talent !== null);
+        const lang = game.i18n.lang;
+        rows.sort((a, b) => a.fullName.localeCompare(b.fullName, lang, { sensitivity: 'base' }));
         return rows;
     }
 
@@ -2347,13 +2356,21 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Handle vocalizing combat actions to chat.
+     * Handle clicks on combat action buttons.
+     *
+     * Default behavior (plain click): show the action's description as a
+     * sticky in-sheet tooltip anchored to the clicked button — a "personal"
+     * description for the player, not posted anywhere else. This matches the
+     * reaction buttons (Dodge/Parry), which never auto-post a description.
+     *
+     * Modifier behavior (Shift+Click): explicit opt-in to post the action
+     * to chat as a public combat-action card. Posting to chat is a deliberate
+     * secondary action, never the default.
      * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    // eslint-disable-next-line @typescript-eslint/require-await -- ApplicationV2 action handlers expect Promise<void>
-    static async #vocalizeCombatAction(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+    static async #vocalizeCombatAction(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const actionKey = target.dataset['actionKey'];
         if (actionKey === undefined || actionKey === '') return;
 
@@ -2364,7 +2381,7 @@ export default class CharacterSheet extends BaseActorSheet {
             ...(wh40kConfig?.combatActions?.attacks ?? []),
             ...(wh40kConfig?.combatActions?.movement ?? []),
             ...(wh40kConfig?.combatActions?.utility ?? []),
-        ] as Array<{ key: string; label: string; description: string; subtypes?: string[] }>;
+        ] as Array<{ key: string; label: string; description: string; type?: string; icon?: string; subtypes?: string[] }>;
 
         const actionConfig = allActions.find((a) => a.key === actionKey);
         if (actionConfig === undefined) {
@@ -2376,9 +2393,36 @@ export default class CharacterSheet extends BaseActorSheet {
         const actionDescription = game.i18n.localize(actionConfig.description);
         const actionSubtypes = actionConfig.subtypes !== undefined && actionConfig.subtypes.length > 0 ? ` (${actionConfig.subtypes.join(', ')})` : '';
 
-        this._notify('info', `${actionName}${actionSubtypes}: ${actionDescription}`, {
-            duration: 6000,
-        });
+        // Shift+Click is the explicit opt-in to vocalize into chat.
+        const isShiftClick = event instanceof MouseEvent && event.shiftKey;
+        if (isShiftClick) {
+            const chatData = {
+                user: game.user.id,
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/combat-action-card.hbs', {
+                    name: actionName,
+                    actor: this.actor.name,
+                    actionType: actionConfig.type ?? '',
+                    description: actionDescription,
+                    subtypes: actionConfig.subtypes?.join(', ') ?? '',
+                    icon: actionConfig.icon ?? '',
+                }),
+            };
+            await ChatMessage.create(chatData);
+            return;
+        }
+
+        // Default: show the description as a sticky in-sheet tooltip on the
+        // clicked button. No chat post, no global notification toast.
+        const tooltipText = `<strong>${actionName}${actionSubtypes}</strong><br/>${actionDescription}`;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 TooltipManager (game.tooltip) is untyped in fvtt-types; minimal local shape
+        const tooltipManager = (game as unknown as { tooltip?: { activate?: (element: HTMLElement, options?: { text?: string; direction?: string; cssClass?: string }) => void } }).tooltip;
+        if (tooltipManager?.activate !== undefined) {
+            tooltipManager.activate(target, { text: tooltipText, direction: 'UP', cssClass: 'wh40k-action-description' });
+        } else {
+            // Fallback for environments without the tooltip manager (e.g., tests).
+            target.setAttribute('data-tooltip', `${actionName}${actionSubtypes}: ${actionDescription}`);
+        }
     }
 
     /**
@@ -3250,7 +3294,8 @@ export default class CharacterSheet extends BaseActorSheet {
         const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
         const index = favorites.indexOf(skillKey);
 
-        // Toggle
+        // Toggle. Storage order is irrelevant — _prepareFavoriteSkills sorts by display
+        // label at render time (#6), so add / remove / re-add is stable alphabetically.
         if (index > -1) {
             favorites.splice(index, 1);
         } else {
@@ -3284,7 +3329,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') as string[] | undefined) ?? [];
         const index = favorites.indexOf(favoriteKey);
 
-        // Toggle
+        // Storage order is irrelevant — render-time sort is authoritative (#6).
         if (index > -1) {
             favorites.splice(index, 1);
         } else {
@@ -3332,7 +3377,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | undefined) ?? [];
         const index = favorites.indexOf(itemId);
 
-        // Toggle
+        // Storage order is irrelevant — render-time sort is authoritative (#6).
         if (index > -1) {
             favorites.splice(index, 1);
         } else {
