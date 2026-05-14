@@ -24,6 +24,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     declare sustained: boolean;
     declare rangePerPR: number;
     declare notes: string;
+    declare requires: string[];
 
     // Getters from ActivationTemplate
     declare activationLabel: string;
@@ -79,6 +80,11 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
+
+            // Tree-path prerequisites: UUIDs of psychic-power items that must
+            // be owned before this power can be purchased. Empty array means
+            // no power-tree dependency (still gated on prCost vs PR).
+            requires: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
         };
     }
 
