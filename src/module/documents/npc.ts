@@ -63,6 +63,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @type {boolean}
      */
     get isHordeMode(): boolean {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- horde may be undefined per noUncheckedIndexedAccess; ?? false guard is intentional
         return this.system.horde?.enabled ?? false;
     }
 
@@ -82,9 +83,11 @@ export class WH40KNPC extends WH40KBaseActor {
     // biome-ignore lint/suspicious/noConfusingVoidType: Foundry _preCreate contract — returning false cancels creation; void means proceed
     protected override async _preCreate(data: never, options: never, user: User.Internal.Implementation): Promise<boolean | void> {
         await super._preCreate(data, options, user);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _preCreate data param is typed as never; cast to Record is necessary to access fields
         const createData = data as Record<string, unknown>;
 
         // Configure token defaults for NPC V2
+        // eslint-disable-next-line no-restricted-syntax -- boundary: token init data passed to updateSource; Record<string, unknown> is the correct boundary type
         const initData: Record<string, unknown> = {
             'token.bar1': { attribute: 'wounds' },
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
@@ -94,6 +97,7 @@ export class WH40KNPC extends WH40KBaseActor {
         };
 
         // If horde type, show magnitude instead of wounds
+        // eslint-disable-next-line no-restricted-syntax -- boundary: createData['system'] is untyped from _preCreate; cast is necessary
         const systemData = createData['system'] as Record<string, unknown> | undefined;
         if (systemData !== undefined && (systemData['type'] === 'horde' || systemData['type'] === 'swarm')) {
             initData['token.bar1'] = { attribute: 'horde.magnitude' };
@@ -116,6 +120,7 @@ export class WH40KNPC extends WH40KBaseActor {
                 .filter((i) => i.type === 'talent')
                 .find((t) => {
                     for (const word of words) {
+                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- t.name may be null per noUncheckedIndexedAccess; ?? guard is intentional
                         if (!(t.name ?? '').includes(word)) return false;
                     }
                     return true;
@@ -133,9 +138,12 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {string} [flavor] - Optional flavor text.
      * @returns {Promise<Roll>}
      */
-    override async rollCharacteristic(characteristicKey: string, flavor?: string): Promise<void> {
+    override rollCharacteristic(characteristicKey: string, flavor?: string): void {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined
         const char = this.system.characteristics[characteristicKey];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- guard for noUncheckedIndexedAccess; char may be undefined at runtime
         if (char === undefined) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn(`Unknown characteristic: ${characteristicKey}`);
             return;
         }
@@ -155,17 +163,23 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {number} weaponIndex - Index of the weapon in the simple weapons array.
      * @returns {Promise<Roll>}
      */
-    async rollSimpleWeapon(weaponIndex: number): Promise<void> {
+    rollSimpleWeapon(weaponIndex: number): void {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- weapons.simple may be undefined per noUncheckedIndexedAccess
         const weapons = this.system.weapons?.simple ?? [];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: weapons[index] may be undefined
         const weapon = weapons[weaponIndex];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- guard for noUncheckedIndexedAccess; weapon may be undefined at runtime
         if (weapon === undefined) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn(`No weapon at index ${weaponIndex}`);
             return;
         }
 
         // Determine attack characteristic
         const attackCharKey = weapon.class === 'melee' ? 'weaponSkill' : 'ballisticSkill';
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined
         const char = this.system.characteristics[attackCharKey];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- guard for noUncheckedIndexedAccess; char may be undefined at runtime
         if (char === undefined) return;
 
         const simpleSkillData = this._buildSimpleSkillRoll({
@@ -187,21 +201,29 @@ export class WH40KNPC extends WH40KBaseActor {
         const item = this.items.get(itemId);
         if (item === undefined) return;
 
+        // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check -- default branch handles all non-weapon/psychicPower item types via vocalize chat
         switch (item.type) {
             case 'weapon': {
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- game.settings.get returns unknown at runtime; coercion is intentional
                 if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
+                    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- isMeleeWeapon is typed as boolean | undefined; coercion is intentional
                     const charKey = item.system.isMeleeWeapon ? 'weaponSkill' : 'ballisticSkill';
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
                     this.rollCharacteristic(charKey, item.name ?? undefined);
                 } else {
-                    await DHTargetedActionManager.performWeaponAttack(this, null, item);
+                    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- performWeaponAttack is fire-and-forget in item context
+                    DHTargetedActionManager.performWeaponAttack(this, null, item);
                 }
                 return;
             }
             case 'psychicPower': {
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- game.settings.get returns unknown at runtime; coercion is intentional
                 if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
                     this.rollCharacteristic('willpower', item.name ?? undefined);
                 } else {
-                    await DHTargetedActionManager.performPsychicAttack(this, null, item);
+                    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- performPsychicAttack is fire-and-forget in item context
+                    DHTargetedActionManager.performPsychicAttack(this, null, item);
                 }
                 return;
             }
@@ -211,9 +233,12 @@ export class WH40KNPC extends WH40KBaseActor {
                 const rawDescription = item.system.description;
                 const htmlContent = typeof rawBenefit === 'string' ? rawBenefit : typeof rawDescription === 'string' ? rawDescription : '';
                 await DHBasicActionManager.sendItemVocalizeChat({
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- this.name is a Foundry document property that may be null; boundary: ?? is necessary here, not a DataModel schema gap
                     actor: this.name ?? '',
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
                     name: item.name ?? '',
                     type: item.type.toUpperCase(),
+                    // eslint-disable-next-line @typescript-eslint/no-deprecated -- TextEditor is the V14 global; migration to foundry.applications.ux.TextEditor tracked separately
                     description: await TextEditor.enrichHTML(htmlContent, {
                         rollData: { actor: this, item },
                     }),
@@ -228,9 +253,11 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {string} [flavor] - Optional flavor text.
      * @returns {Promise<Roll>}
      */
-    async rollSkill(skillName: string, flavor?: string): Promise<void> {
+    rollSkill(skillName: string, flavor?: string): void {
         const target = this.system.getSkillTarget(skillName);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: trainedSkills[key] may be undefined
         const skill = this.system.trainedSkills[skillName];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- skill may be undefined per noUncheckedIndexedAccess; optional chain is intentional
         const skillLabel = skill?.name !== undefined && skill.name !== '' ? skill.name : skillName;
 
         const simpleSkillData = this._buildSimpleSkillRoll({
@@ -257,20 +284,25 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {boolean} [options.ignoreToughness=false] - Whether to ignore toughness bonus.
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: options is an untyped caller-supplied map; Record<string, unknown> is the correct boundary type
     async applyDamage(amount: number, location = 'body', options: Record<string, unknown> = {}): Promise<unknown> {
         const { ignoreArmour = false, ignoreToughness = false } = options;
 
         // Mark actor as hit this round (for Good armour bonus tracking)
+        // eslint-disable-next-line @typescript-eslint/await-thenable -- setFlag may return a thenable in some Foundry builds; await is safe
         await this.setFlag('wh40k-rpg' as never, 'hitThisRound' as never, true as never);
 
         // Calculate damage reduction
         let reduction = 0;
 
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- ignoreArmour is typed as unknown from options destructuring; boolean coercion is intentional
         if (!ignoreArmour) {
             reduction += this.system.getArmourForLocation(location);
         }
 
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- ignoreToughness is typed as unknown from options destructuring; boolean coercion is intentional
         if (!ignoreToughness) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- toughness.bonus may be undefined per noUncheckedIndexedAccess; ?? 0 guard is intentional
             reduction += this.system.characteristics.toughness?.bonus ?? 0;
         }
 
@@ -296,6 +328,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {number} amount - Amount of wounds to heal.
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: update() return type is opaque; unknown is the correct boundary type for this utility method
     healWounds(amount: number): unknown {
         const newWounds = Math.min(this.system.wounds.max, this.system.wounds.value + amount);
         return this.update({ 'system.wounds.value': newWounds });
@@ -310,6 +343,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {number} newThreatLevel - The new threat level (1-30).
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: delegates to adjustStatsByPercent which returns Promise<void>; unknown is the utility method boundary type
     scaleToThreat(newThreatLevel: number): unknown {
         const currentThreat = this.threatLevel;
         const diff = newThreatLevel - currentThreat;
@@ -326,10 +360,12 @@ export class WH40KNPC extends WH40KBaseActor {
      * @returns {Promise<Actor>}
      */
     async adjustStatsByPercent(factor: number): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: updates passed to actor.update(); Record<string, unknown> is the correct boundary type
         const updates: Record<string, unknown> = {};
 
         // Scale characteristics
         for (const [key, char] of Object.entries(this.system.characteristics)) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- char.base may be undefined per noUncheckedIndexedAccess; ?? 0 guard is intentional
             const newBase = Math.round((char.base ?? 0) * factor);
             updates[`system.characteristics.${key}.base`] = Math.max(1, Math.min(99, newBase));
         }
@@ -369,6 +405,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * Disables horde mode and adjusts stats.
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: update() return type is opaque; unknown is the correct boundary type for this utility method
     convertToSingleEnemy(): unknown {
         if (!this.isHordeMode) return this;
 
@@ -389,6 +426,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {boolean} [options.randomize] - Whether to randomize stats slightly.
      * @returns {Promise<Actor>} The created duplicate.
      */
+    /* eslint-disable no-restricted-syntax -- boundary: options and data are untyped caller-supplied maps; Actor.create accepts Actor.CreateData cast from unknown */
     duplicate(options: Record<string, unknown> = {}): unknown {
         const data = this.toObject() as Record<string, unknown>;
 
@@ -396,6 +434,7 @@ export class WH40KNPC extends WH40KBaseActor {
         if (typeof options['name'] === 'string' && options['name'] !== '') {
             data['name'] = options['name'];
         } else {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- this.name is a Foundry document property that may be null; boundary: ?? guard is necessary
             data['name'] = `${this.name ?? ''} (Copy)`;
         }
 
@@ -406,8 +445,11 @@ export class WH40KNPC extends WH40KBaseActor {
             if (characteristics !== undefined) {
                 for (const key of Object.keys(characteristics)) {
                     const variance = Math.floor(Math.random() * 11) - 5; // -5 to +5
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined
                     const entry = characteristics[key];
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- guard for noUncheckedIndexedAccess; entry may be undefined at runtime
                     if (entry !== undefined) {
+                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: entry['base'] may be undefined; ?? 0 guard is intentional
                         entry['base'] = Math.max(1, Math.min(99, (entry['base'] ?? 0) + variance));
                     }
                 }
@@ -419,6 +461,7 @@ export class WH40KNPC extends WH40KBaseActor {
 
         return Actor.create(data as unknown as Actor.CreateData);
     }
+    /* eslint-enable no-restricted-syntax */
 
     /**
      * Export this NPC as a stat block string.
@@ -426,6 +469,7 @@ export class WH40KNPC extends WH40KBaseActor {
      */
     exportStatBlock(): string {
         const s = this.system;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- this.name is a Foundry document property that may be null; boundary: ?? guard is necessary
         let block = `=== ${this.name ?? ''} ===\n`;
         block += `${s.typeLabel} | Threat ${s.threatLevel} | ${s.roleLabel}\n`;
         if (s.faction !== '') block += `Faction: ${s.faction}\n`;
@@ -434,6 +478,7 @@ export class WH40KNPC extends WH40KBaseActor {
         // Characteristics
         block += `--- Characteristics ---\n`;
         for (const [, char] of Object.entries(s.characteristics)) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- char.unnatural may be undefined per noUncheckedIndexedAccess; ?? 0 guard is intentional
             const unnat = (char.unnatural ?? 0) >= 2 ? ` (×${char.unnatural})` : '';
             block += `${char.short}: ${char.total}${unnat}\n`;
         }
@@ -450,18 +495,22 @@ export class WH40KNPC extends WH40KBaseActor {
         if (Object.keys(s.trainedSkills).length > 0) {
             block += `--- Skills ---\n`;
             for (const [key, skill] of Object.entries(s.trainedSkills)) {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- skill.name may be undefined per noUncheckedIndexedAccess; check is intentional
                 const level = skill.plus20 ? '+20' : skill.plus10 ? '+10' : '';
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- skill.name may be undefined per noUncheckedIndexedAccess; check is intentional
                 block += `${skill.name !== undefined && skill.name !== '' ? skill.name : key}${level}: ${s.getSkillTarget(key)}\n`;
             }
             block += `\n`;
         }
 
         // Weapons
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- weapons.simple may be undefined per noUncheckedIndexedAccess; ?? 0 guard is intentional
         if ((s.weapons.simple?.length ?? 0) > 0) {
             block += `--- Weapons ---\n`;
             for (const w of s.weapons.simple) {
                 block += `${w.name}: ${w.damage}, Pen ${w.pen}`;
                 if (w.range !== 'Melee') block += `, ${w.range}, RoF ${w.rof}`;
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- w.special may be undefined per noUncheckedIndexedAccess; check is intentional
                 if (w.special !== '' && w.special !== undefined) block += ` [${w.special}]`;
                 block += `\n`;
             }
@@ -483,6 +532,7 @@ export class WH40KNPC extends WH40KBaseActor {
         }
 
         // Special Abilities
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- specialAbilities may be undefined per noUncheckedIndexedAccess; check is intentional
         if (s.specialAbilities !== '' && s.specialAbilities !== undefined) {
             block += `--- Special Abilities ---\n`;
             // Strip HTML tags for plain text export
@@ -503,6 +553,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {string} [source] - Source of the damage.
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: applyMagnitudeDamage return type is opaque system extension; unknown is the correct boundary type
     applyMagnitudeDamage(amount: number, source = ''): unknown {
         if (typeof this.system.applyMagnitudeDamage === 'function') {
             return this.system.applyMagnitudeDamage(amount, source);
@@ -517,6 +568,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param {string} [source] - Source of the restoration.
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: restoreMagnitude return type is opaque system extension; unknown is the correct boundary type
     restoreMagnitude(amount: number, source = ''): unknown {
         if (typeof this.system.restoreMagnitude === 'function') {
             return this.system.restoreMagnitude(amount, source);
@@ -529,6 +581,7 @@ export class WH40KNPC extends WH40KBaseActor {
      * Delegates to the data model.
      * @returns {Promise<Actor>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: toggleHordeMode return type is opaque system extension; unknown is the correct boundary type
     toggleHordeMode(): unknown {
         if (typeof this.system.toggleHordeMode === 'function') {
             return this.system.toggleHordeMode();

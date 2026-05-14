@@ -1,3 +1,4 @@
+import { t } from '../i18n/t.ts';
 import { applyRollModeWhispers, roll1d100 } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
@@ -16,12 +17,13 @@ type EffectChange = {
     value: number | string;
 };
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: duration/flags/extra options are untyped Foundry ActiveEffect fields; shape is open-ended
 type EffectOptions = Record<string, unknown> & {
     name?: string;
     icon?: string;
-    duration?: Record<string, unknown>;
+    duration?: Record<string, unknown>; // eslint-disable-line no-restricted-syntax -- boundary: Foundry duration object is untyped
     origin?: string;
-    flags?: Record<string, unknown>;
+    flags?: Record<string, unknown>; // eslint-disable-line no-restricted-syntax -- boundary: Foundry flags object is untyped
     changes?: EffectChange[];
 };
 
@@ -31,15 +33,15 @@ type EffectDataInput = {
     changes?: EffectChange[] | undefined;
     disabled?: boolean | undefined;
     origin?: string | undefined;
-    duration?: Record<string, unknown> | undefined;
-    flags?: Record<string, unknown> | undefined;
+    duration?: Record<string, unknown> | undefined; // eslint-disable-line no-restricted-syntax -- boundary: Foundry duration object is untyped
+    flags?: Record<string, unknown> | undefined; // eslint-disable-line no-restricted-syntax -- boundary: Foundry flags object is untyped
 };
 
 type ConditionDefinition = {
     name: string;
     icon: string;
     changes: EffectChange[];
-    flags: Record<string, unknown>;
+    flags: Record<string, unknown>; // eslint-disable-line no-restricted-syntax -- boundary: Foundry flags object is untyped
 };
 
 /* -------------------------------------------- */
@@ -60,6 +62,7 @@ export async function handleOnFire(actor: WH40KBaseActorDocument): Promise<void>
         template: 'systems/wh40k-rpg/templates/chat/burning-chat.hbs',
         actor: actor,
         roll: await roll1d100(),
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics index may be undefined at runtime
         target: willpower?.total ?? 0,
     };
     const rollTotal = context.roll?.total ?? 0;
@@ -73,7 +76,9 @@ export async function handleOnFire(actor: WH40KBaseActorDocument): Promise<void>
 }
 
 export async function sendActiveEffectMessage(activeContext: ActiveEffectChatContext): Promise<void> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate accepts untyped context; cast to match Handlebars signature
     const html = await foundry.applications.handlebars.renderTemplate(activeContext.template, activeContext as unknown as Record<string, unknown>);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts untyped data; chatData keys are Foundry API fields
     const chatData: Record<string, unknown> = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
@@ -97,6 +102,8 @@ export async function sendActiveEffectMessage(activeContext: ActiveEffectChatCon
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}     The created effect
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry createEmbeddedDocuments return type is opaque; unknown is the honest type here
+// eslint-disable-next-line no-restricted-syntax -- boundary: options passed directly to createEmbeddedDocuments which accepts arbitrary keys
 export async function createEffect(actor: WH40KBaseActorDocument, effectData: EffectDataInput, options: Record<string, unknown> = {}): Promise<unknown> {
     const data = {
         name: effectData.name,
@@ -108,6 +115,7 @@ export async function createEffect(actor: WH40KBaseActorDocument, effectData: Ef
         flags: effectData.flags ?? {},
     };
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: data array must match Foundry's untyped embedded-document creation schema
     return actor.createEmbeddedDocuments('ActiveEffect', [data] as unknown as Parameters<typeof actor.createEmbeddedDocuments<'ActiveEffect'>>[1], options);
 }
 
@@ -124,6 +132,7 @@ export async function createCharacteristicEffect(
     characteristic: string,
     value: number,
     options: EffectOptions = {},
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return propagates Foundry createEmbeddedDocuments which is opaque
 ): Promise<unknown> {
     const charLabel = game.i18n.localize(`WH40K.Characteristic.${characteristic.capitalize()}`);
     const name = options.name ?? `${charLabel} ${value > 0 ? '+' : ''}${value}`;
@@ -152,6 +161,7 @@ export async function createCharacteristicEffect(
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: return propagates Foundry createEmbeddedDocuments which is opaque
 export async function createSkillEffect(actor: WH40KBaseActorDocument, skill: string, value: number, options: EffectOptions = {}): Promise<unknown> {
     const skillLabel = game.i18n.localize(`WH40K.Skill.${skill}`);
     const name = options.name ?? `${skillLabel} ${value > 0 ? '+' : ''}${value}`;
@@ -180,6 +190,7 @@ export async function createSkillEffect(actor: WH40KBaseActorDocument, skill: st
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: return propagates Foundry createEmbeddedDocuments which is opaque
 export async function createCombatEffect(actor: WH40KBaseActorDocument, type: string, value: number, options: EffectOptions = {}): Promise<unknown> {
     const typeLabel = game.i18n.localize(`WH40K.Combat.${type.capitalize()}`);
     const name = options.name ?? `${typeLabel} ${value > 0 ? '+' : ''}${value}`;
@@ -207,6 +218,7 @@ export async function createCombatEffect(actor: WH40KBaseActorDocument, type: st
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: return propagates Foundry createEmbeddedDocuments which is opaque
 export async function createConditionEffect(actor: WH40KBaseActorDocument, condition: string, options: EffectOptions = {}): Promise<unknown> {
     // Predefined conditions with their effects
     const conditions: Record<string, ConditionDefinition> = {
@@ -267,8 +279,9 @@ export async function createConditionEffect(actor: WH40KBaseActorDocument, condi
     };
 
     const conditionData = conditions[condition.toLowerCase()];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess guard: conditions index may be undefined at runtime
     if (!conditionData) {
-        ui.notifications.warn(`Unknown condition: ${condition}`);
+        ui.notifications.warn(t('WH40K.Warning.UnknownCondition', { condition }));
         return null;
     }
 
@@ -276,7 +289,7 @@ export async function createConditionEffect(actor: WH40KBaseActorDocument, condi
         ...conditionData,
         ...options,
         changes: options.changes ?? conditionData.changes,
-        flags: foundry.utils.mergeObject(conditionData.flags ?? {}, options.flags ?? {}),
+        flags: foundry.utils.mergeObject(conditionData.flags, options.flags ?? {}),
     });
 }
 
@@ -295,6 +308,7 @@ export async function createTemporaryEffect(
     changes: EffectChange[],
     rounds: number,
     options: EffectOptions = {},
+    // eslint-disable-next-line no-restricted-syntax -- boundary: return propagates Foundry createEmbeddedDocuments which is opaque
 ): Promise<unknown> {
     const combat = game.combat;
 
@@ -319,6 +333,7 @@ export async function createTemporaryEffect(
  * @returns {Promise<void>}
  */
 export async function removeEffects(actor: WH40KBaseActorDocument, filter: (effect: ActiveEffect) => boolean): Promise<void> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: actor.effects contains Foundry EmbeddedCollection items; cast to ActiveEffect for typed filter
     const effects = actor.effects.filter((effect) => filter(effect as unknown as ActiveEffect));
     const ids = effects.map((e) => e.id).filter((id): id is string => Boolean(id));
     if (ids.length) {

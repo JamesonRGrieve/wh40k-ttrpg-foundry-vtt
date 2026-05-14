@@ -1,6 +1,7 @@
 import type { ReloadResult } from '../../actions/reload-action-manager.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { capitalize } from '../../handlebars/handlebars-helpers.ts';
+import { t } from '../../i18n/t.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -20,6 +21,7 @@ interface AmmoItemLike {
     type: string;
     name: string;
     uuid: string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Item.update return type is opaque; Promise<unknown> is the honest type here
     update: (data: DataDict) => Promise<unknown>;
     system: {
         clipModifier?: number;
@@ -36,6 +38,7 @@ interface InventoryAmmoItem {
     type: string;
     name: string;
     system: { quantity: number };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Item.update return type is opaque; Promise<unknown> is the honest type here
     update: (d: DataDict) => Promise<unknown>;
 }
 
@@ -66,6 +69,7 @@ interface AmmoActorLike {
     items: {
         find: (pred: (i: InventoryAmmoItem) => boolean) => InventoryAmmoItem | undefined;
     };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.createEmbeddedDocuments return type is opaque; Promise<unknown> is the honest type here
     createEmbeddedDocuments: (type: string, data: DataDict[]) => Promise<unknown>;
 }
 
@@ -144,6 +148,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but isn't statically typed as such; cast required for schema registration
             identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.StringField,
 
             // Weapon classification (usage pattern only)
@@ -253,6 +258,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; source mirrors parent _migrateData signature
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         WeaponData.#migrateSpecial(source);
@@ -264,6 +270,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Ensure special is an array for SetField compatibility.
      * @param {object} source  The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: mirrors _migrateData source signature for internal migration helpers
     static #migrateSpecial(source: Record<string, unknown>): void {
         const special = source['special'];
         if (Array.isArray(special)) return;
@@ -278,6 +285,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate old class values (chain, power, shock, force) to type field.
      * @param {object} source  The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: mirrors _migrateData source signature for internal migration helpers
     static #migrateClass(source: Record<string, unknown>): void {
         const techTypeValues = ['chain', 'power', 'shock', 'force'];
         const cls = source['class'];
@@ -291,6 +299,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate proficiency -> requiredTraining.
      * @param {object} source  The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: mirrors _migrateData source signature for internal migration helpers
     static #migrateProficiency(source: Record<string, unknown>): void {
         if (source['proficiency'] !== undefined) {
             source['requiredTraining'] = source['proficiency'];
@@ -324,7 +333,8 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     override prepareBaseData(): void {
         super.prepareBaseData();
 
-        const sourceSystem = (this.parent?._source.system ?? {}) as { gameSystems?: string[] };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _source.system is Foundry raw document data (not DataModel); may be absent on uninitialized items
+        const sourceSystem = (this.parent._source.system ?? {}) as { gameSystems?: string[] };
         const lineKey = inferActiveGameLine(sourceSystem, this.parent);
         this.class = resolveLineVariant(this.class, lineKey);
         this.type = resolveLineVariant(this.type, lineKey);
@@ -1004,8 +1014,10 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             // Parse level from quality ID (e.g., "blast-3" -> "blast", 3)
             const match = qualityId.match(/^(.+?)-(\d+)$/);
             const [, baseFromMatch, levelStr] = match ?? [];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: baseFromMatch is string|undefined from regex destructure
             const baseId: string = baseFromMatch ?? qualityId;
-            const level = levelStr !== undefined ? parseInt(levelStr) : null;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: levelStr is string|undefined from regex destructure
+            const level = levelStr !== undefined ? parseInt(levelStr, 10) : null;
 
             // `config` is typed Record<string, WeaponQualityConfig>, so under strict
             // index access widens to undefined. Hosted lookup falls back through both ids.
@@ -1015,9 +1027,12 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             qualities.push({
                 id: qualityId,
                 baseId: baseId,
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: definition is WeaponQualityConfig|undefined under strict indexing
                 label: definition !== undefined && definition.label !== '' ? game.i18n.localize(definition.label) : fallbackLabel,
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: definition is WeaponQualityConfig|undefined under strict indexing
                 description: definition !== undefined && definition.description !== '' ? game.i18n.localize(definition.description) : '',
                 level: level,
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: definition is WeaponQualityConfig|undefined under strict indexing
                 hasLevel: definition !== undefined ? definition.hasLevel : false,
             });
         }
@@ -1070,7 +1085,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     fire(shots = 1): WH40KItem | null | Promise<WH40KItem | undefined> {
         if (!this.usesAmmo) return this.parent;
         const newValue = Math.max(0, this.clip.value - shots);
-        return this.parent?.update({ 'system.clip.value': newValue });
+        return this.parent.update({ 'system.clip.value': newValue });
     }
 
     /**
@@ -1084,9 +1099,6 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     async reload(options: { skipValidation?: boolean; force?: boolean } = {}): Promise<ReloadResult> {
         // Dynamic import to avoid circular dependency
         const { ReloadActionManager } = await import('../../actions/reload-action-manager.ts');
-        if (this.parent === null) {
-            return { success: false, message: '', actionsSpent: { half: 0, full: 0, label: '' } };
-        }
         return ReloadActionManager.reloadWeapon(this.parent, options);
     }
 
@@ -1097,11 +1109,12 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     async loadAmmo(ammoItem: AmmoItemLike): Promise<WH40KItem | null> {
         if (ammoItem.type !== 'ammunition') {
-            ui.notifications.warn('Invalid ammunition item');
+            ui.notifications.warn(t('WH40K.Warning.InvalidAmmunition'));
             return this.parent;
         }
 
-        const actor: AmmoActorLike | null = (this.parent?.actor as AmmoActorLike | null | undefined) ?? null;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor is Foundry Document with untyped API; cast to structural shape required
+        const actor: AmmoActorLike | null = (this.parent.actor as AmmoActorLike | null | undefined) ?? null;
 
         // Eject current ammo first (return remaining rounds to inventory)
         if (this.clip.value > 0 && this.hasLoadedAmmo && actor !== null) {
@@ -1135,12 +1148,12 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             await ammoItem.update({ 'system.quantity': quantity - roundsToLoad });
         }
 
-        await this.parent?.update({
+        await this.parent.update({
             'system.loadedAmmo': loadedAmmoData,
             'system.clip.value': roundsToLoad,
         });
 
-        ui.notifications.info(`${ammoItem.name} loaded into ${this.parent?.name ?? ''} (${roundsToLoad} rounds)`);
+        ui.notifications.info(`${ammoItem.name} loaded into ${this.parent.name} (${roundsToLoad} rounds)`);
         return this.parent;
     }
 
@@ -1150,17 +1163,18 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     async ejectAmmo(): Promise<WH40KItem | null> {
         if (!this.hasLoadedAmmo) {
-            ui.notifications.warn('No ammunition loaded');
+            ui.notifications.warn(t('WH40K.Warning.NoAmmunitionLoaded'));
             return this.parent;
         }
 
         // Return remaining rounds to inventory
-        const actor: AmmoActorLike | null = (this.parent?.actor as AmmoActorLike | null | undefined) ?? null;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor is Foundry Document with untyped API; cast to structural shape required
+        const actor: AmmoActorLike | null = (this.parent.actor as AmmoActorLike | null | undefined) ?? null;
         if (this.clip.value > 0 && actor !== null) {
             await this._returnRoundsToInventory(actor, this.clip.value);
         }
 
-        await this.parent?.update({
+        await this.parent.update({
             'system.loadedAmmo': {
                 uuid: '',
                 name: '',
@@ -1172,7 +1186,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             'system.clip.value': 0,
         });
 
-        ui.notifications.info(`Ammunition ejected from ${this.parent?.name ?? ''}`);
+        ui.notifications.info(`Ammunition ejected from ${this.parent.name}`);
         return this.parent;
     }
 

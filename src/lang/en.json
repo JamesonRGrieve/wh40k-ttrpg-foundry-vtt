@@ -63,6 +63,7 @@
             "NoTokenForActor": "No token found for the attacking actor.",
             "TargetFirst": "Target a token first, then click Select Target.",
             "NotEnoughAmmo": "Not enough ammo to perform action. Do you need to reload?",
+            "ForceFieldTitle": "Force Field",
             "ForceFieldNotActivated": "Force Field not activated!",
             "ForceFieldOverloaded": "Force Field currently overloaded!",
             "ConfigureRoll": "Configure Roll",
@@ -1229,6 +1230,7 @@
             "Interaction": "Interaction",
             "QuickCreate": "Quick Create NPC",
             "QuickCreateSubtitle": "Generate a balanced NPC based on threat level and role",
+            "QuickCreateFailed": "Failed to create NPC",
             "Create": "Create NPC",
             "EquipmentPreset": "Equipment Preset",
             "EnableHordeMode": "Enable Horde Mode",
@@ -2215,7 +2217,11 @@
             "SkillNotSpecified": "Skill not specified.",
             "SkillsCompendiumNotFound": "Skills compendium not found.",
             "InvalidItem": "{itemType} cannot be dropped on a {actorType}.",
-            "NoActiveCombatEncounter": "No active combat encounter."
+            "NoActiveCombatEncounter": "No active combat encounter.",
+            "RangeFormulaFailed": "Range formula failed — setting to 0",
+            "InvalidAmmunition": "Invalid ammunition item",
+            "NoAmmunitionLoaded": "No ammunition loaded",
+            "UnknownCondition": "Unknown condition: {condition}"
         }
     }
 }

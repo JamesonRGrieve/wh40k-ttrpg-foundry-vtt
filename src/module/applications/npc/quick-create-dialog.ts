@@ -28,7 +28,6 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         classes: ['wh40k-rpg', 'npc-quick-create-dialog'],
         tag: 'form',
         window: {
-            title: 'WH40K.NPC.QuickCreate',
             icon: 'fa-solid fa-user-plus',
             minimizable: false,
             resizable: true,
@@ -38,6 +37,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             width: 650,
             height: 700,
         },
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action/form handlers: framework binds `this` at call time */
         form: {
             handler: NPCQuickCreateDialog.#onSubmit,
             submitOnChange: false,
@@ -47,6 +47,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             cancel: NPCQuickCreateDialog.#onCancel,
             updatePreview: NPCQuickCreateDialog.#onUpdatePreview,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -57,6 +58,13 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             template: 'systems/wh40k-rpg/templates/dialogs/npc-quick-create.hbs',
         },
     };
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    get title(): string {
+        return game.i18n.localize('WH40K.NPC.QuickCreate');
+    }
 
     /* -------------------------------------------- */
     /*  Properties                                  */
@@ -94,6 +102,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {Partial<NPCState>} [config] - Initial configuration.
      * @param {Object} [options] - Application options.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 constructor accepts options as Record<string,unknown>; no narrower type is available from the base class
     constructor(config: Partial<NPCState> = {}, options: Record<string, unknown> = {}) {
         super(options);
         this.#state = {
@@ -112,6 +121,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext must return Record<string,unknown> per framework contract
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -121,6 +131,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const types = ThreatCalculator.getTypes();
 
         // Generate preview data
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ThreatCalculator.generateNPCData accepts Record<string,unknown>; NPCState satisfies the shape at runtime
         const previewData = ThreatCalculator.generateNPCData(this.#state as unknown as Record<string, unknown>);
         const tier = ThreatCalculator.getTier(this.#state.threatLevel);
 
@@ -215,6 +226,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._onRender context is an untyped framework parameter
     override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
@@ -323,6 +335,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         this.#state.isHorde = data.isHorde === true || String(data.isHorde) === 'true';
 
         // Generate NPC data
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ThreatCalculator.generateNPCData accepts Record<string,unknown>; NPCState satisfies the shape at runtime
         const npcSystemData = ThreatCalculator.generateNPCData(this.#state as unknown as Record<string, unknown>);
 
         // Create the actor
@@ -334,12 +347,14 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         };
 
         try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create expects a complex Foundry type; actorData matches the required shape at runtime
             const actor = (await Actor.create(actorData as unknown as Parameters<typeof Actor.create>[0])) as WH40KNPC | undefined;
 
             if (actor) {
                 ui.notifications.info(`Created NPC: ${String(actor.name)}`);
 
                 // Open the sheet
+                // eslint-disable-next-line @typescript-eslint/no-deprecated -- actor.sheet.render(true) is the V14 pattern for reopening actor sheets; render({ force: true }) breaks actor sheets
                 void actor.sheet?.render(true);
 
                 this.#submitted = true;
@@ -347,7 +362,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             }
         } catch (error) {
             console.error('Failed to create NPC:', error);
-            ui.notifications.error('Failed to create NPC');
+            ui.notifications.error(game.i18n.localize('WH40K.NPC.QuickCreateFailed'));
             if (this.#resolve) this.#resolve(null);
         }
     }
@@ -378,6 +393,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2.close() accepts untyped options; signature must match the framework override
     override async close(options: Record<string, unknown> = {}): Promise<void> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
@@ -428,16 +444,14 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {Record<string, unknown>} config.baseConfig - Base NPC configuration.
      * @returns {Promise<WH40KNPC[]>} Array of created actors.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: baseConfig is a caller-provided NPC configuration object with unknown field shapes
     static async createBatch(config: { count: number; namePattern: string; randomize: boolean; baseConfig: Record<string, unknown> }): Promise<WH40KNPC[]> {
         const { count = 1, namePattern = 'NPC {n}', randomize = false, baseConfig = {} } = config;
 
-        const actors: WH40KNPC[] = [];
         const baseData = ThreatCalculator.generateNPCData(baseConfig);
 
-        for (let i = 1; i <= count; i++) {
-            const name = namePattern.replace('{n}', String(i));
-
-            // Clone and optionally randomize
+        const actorDataList = Array.from({ length: count }, (_, idx) => {
+            const name = namePattern.replace('{n}', String(idx + 1));
             const systemData = foundry.utils.deepClone(baseData);
 
             if (randomize) {
@@ -450,15 +464,19 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
                 }
             }
 
-            const actorData = {
+            return {
                 name,
                 type: 'npcV2',
                 img: 'icons/svg/mystery-man.svg',
                 system: systemData,
-            };
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create expects a complex Foundry type; the actorData object satisfies the required shape at runtime
+            } as unknown as Parameters<typeof Actor.create>[0];
+        });
 
-            const actor = (await Actor.create(actorData as unknown as Parameters<typeof Actor.create>[0])) as WH40KNPC | undefined;
-            if (actor) actors.push(actor);
+        const results = await Promise.all(actorDataList.map(async (data) => Actor.create(data)));
+        const actors: WH40KNPC[] = [];
+        for (const result of results) {
+            if (result !== undefined) actors.push(result as WH40KNPC);
         }
 
         ui.notifications.info(`Created ${actors.length} NPCs`);

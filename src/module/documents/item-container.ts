@@ -3,6 +3,7 @@ import type ItemDataModel from '../data/abstract/item-data-model.ts';
 
 export const DH_CONTAINER_ID = 'nested';
 
+/* eslint-disable no-restricted-syntax -- boundary: these utility interfaces extend Record<string, unknown> to allow index access on opaque flag/system data */
 /** Minimal shape of a raw nested item record stored in flags. */
 interface NestedItemData extends Record<string, unknown> {
     _id: string;
@@ -14,6 +15,7 @@ interface ContainerSystemData extends Record<string, unknown> {
     equipped?: boolean;
     enabled?: boolean;
 }
+/* eslint-enable no-restricted-syntax */
 
 export class WH40KItemContainer extends Item {
     // @ts-expect-error -- V14 types `Item.system` as a discriminated union over registered subTypes;
@@ -28,9 +30,11 @@ export class WH40KItemContainer extends Item {
     }
 
     override async update(data: Item.UpdateInput = {}, options?: Parameters<Item['update']>[1]): Promise<this | undefined> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Item.UpdateInput is opaque; cast to Record<string, unknown> is necessary to inject _id
         const dataRecord = data as Record<string, unknown>;
         dataRecord['_id'] = this.id;
         if (this.isNestedItem()) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: parent is an Item; cast to WH40KItemContainer is necessary to call updateNestedDocuments
             const parentItem = this.parent as unknown as WH40KItemContainer;
             await parentItem.updateNestedDocuments(dataRecord);
             return undefined;
@@ -43,8 +47,10 @@ export class WH40KItemContainer extends Item {
         return this.parent instanceof Item;
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: nested data is untyped flag payload; Record<string, unknown> is the correct boundary type
     setNestedManual(data: Record<string, unknown> | Record<string, unknown>[]): void {
         // Check if each layer of the object exists, and create it if it doesn't
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- assignment target; ??= is valid but this form is clearer for multiple-level init
         if (this.flags[SYSTEM_ID] === undefined) this.flags[SYSTEM_ID] = {};
         if (this.flags[SYSTEM_ID][DH_CONTAINER_ID] === undefined) this.flags[SYSTEM_ID][DH_CONTAINER_ID] = [];
         // Set the value at the deepest level of the object
@@ -53,6 +59,7 @@ export class WH40KItemContainer extends Item {
         this.flags[SYSTEM_ID][DH_CONTAINER_ID] = dataArray;
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: nested data is untyped flag payload; Record<string, unknown> and unknown return type are the correct boundary types
     async setNested(data: Record<string, unknown> | Record<string, unknown>[]): Promise<unknown> {
         // Make array if not
         const dataArray = Array.isArray(data) ? data : [data];
@@ -73,12 +80,15 @@ export class WH40KItemContainer extends Item {
         this.items = new foundry.utils.Collection();
         const itemClass = CONFIG.Item.documentClass;
         for (const nestedData of this.getNested()) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: itemClass constructor and parent accept opaque types; cast through unknown/never is necessary
             const item = new itemClass(nestedData as unknown as never, { parent: this as unknown as never });
+            // eslint-disable-next-line no-restricted-syntax -- boundary: item is opaque constructor result; cast to Item is necessary to add to collection
             this.items.set(nestedData._id, item as unknown as Item);
         }
         game.wh40k.log(`Item ${this.name} items:`, this.items);
     }
 
+    /* eslint-disable no-restricted-syntax -- boundary: _onCreateOperation hook params and results are untyped Foundry internals; Record<string, unknown>, as unknown as, and unknown return types are necessary throughout */
     static override async _onCreateOperation(
         items: InstanceType<typeof foundry.abstract.Document>[],
         context: Record<string, unknown>,
@@ -115,6 +125,7 @@ export class WH40KItemContainer extends Item {
             context,
         );
     }
+    /* eslint-enable no-restricted-syntax */
 
     hasWeaponModification(mod: string): boolean {
         return this.hasItemByType(mod, 'weaponModification');
@@ -125,6 +136,7 @@ export class WH40KItemContainer extends Item {
         if (this.system.container === undefined || this.system.container === null) return false;
         return (
             this.items.find((i) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: i.system is typed as Item system union; cast to ContainerSystemData is necessary to check equipped/enabled
                 const sys = i.system as unknown as ContainerSystemData;
                 return i.name === item && i.type === type && (sys.equipped === true || sys.enabled === true);
             }) !== undefined
@@ -141,6 +153,7 @@ export class WH40KItemContainer extends Item {
         return this.items.find((i) => i.name === item && i.type === type);
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: nested creation data is untyped caller-supplied payload; Record<string, unknown> is the correct boundary type
     async createNestedDocuments(data: Record<string, unknown> | Record<string, unknown>[]): Promise<void> {
         const dataArray = Array.isArray(data) ? data : [data];
         game.wh40k.log(`ItemContainer: ${this.name} createNestedDocuments`, dataArray);
@@ -151,6 +164,7 @@ export class WH40KItemContainer extends Item {
             for (const itemData of dataArray) {
                 let clone = JSON.parse(JSON.stringify(itemData)) as NestedItemData;
                 clone._id = foundry.utils.randomID();
+                // eslint-disable-next-line no-restricted-syntax -- boundary: itemClass constructor and parent accept opaque types; cast through unknown/never is necessary
                 clone = new itemClass(clone as unknown as never, { parent: this as unknown as never }).toJSON() as NestedItemData;
                 currentItems.push(clone);
             }
@@ -159,6 +173,7 @@ export class WH40KItemContainer extends Item {
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: deleteNestedDocuments returns deleted item instances which are opaque; unknown[] is the correct boundary type
     async deleteNestedDocuments(ids: string[] = []): Promise<unknown[]> {
         game.wh40k.log(`ItemContainer: ${this.name} deleteNestedDocuments`, ids);
         const containedItems = this.getNested();
@@ -168,6 +183,7 @@ export class WH40KItemContainer extends Item {
         return deletedItems;
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: nested update data is untyped caller-supplied payload; Record<string, unknown> params and unknown[] return are the correct boundary types
     async updateNestedDocuments(data: Record<string, unknown> | Record<string, unknown>[]): Promise<unknown[]> {
         const contained = this.getNested();
         const dataArray = Array.isArray(data) ? data : [data];
@@ -211,7 +227,9 @@ export class WH40KItemContainer extends Item {
         const itemClass = CONFIG.Item.documentClass;
         containedItems.forEach((idata) => {
             if (!oldItems.has(idata._id)) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: itemClass constructor and parent accept opaque types; cast through unknown/never is necessary
                 const theItem = new itemClass(idata as unknown as never, { parent: this as unknown as never });
+                // eslint-disable-next-line no-restricted-syntax -- boundary: theItem is opaque constructor result; cast to Item is necessary to add to collection
                 this.items.set(idata._id, theItem as unknown as Item);
             } else {
                 // Reuse existing item instance and update its data

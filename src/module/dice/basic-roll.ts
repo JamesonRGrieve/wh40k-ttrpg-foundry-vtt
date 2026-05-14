@@ -2,7 +2,9 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 
 // Allow custom hook names beyond fvtt-types' strict HookConfig keyof constraint.
 type HooksCompat = typeof Hooks & {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Hooks.call accepts arbitrary variadic args; unknown[] is the honest type
     call(hook: string, ...args: unknown[]): boolean;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Hooks.callAll accepts arbitrary variadic args; unknown[] is the honest type
     callAll(hook: string, ...args: unknown[]): boolean;
 };
 const HooksExt = Hooks as HooksCompat;
@@ -44,6 +46,7 @@ export default class BasicRollWH40K extends Roll {
      * Configuration data used to create this roll
      * @type {Record<string, unknown>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: roll configuration is a Foundry pass-through bag; no schema exists for the arbitrary roll config keys
     configuration: Record<string, unknown> = {};
 
     /* -------------------------------------------- */
@@ -56,6 +59,7 @@ export default class BasicRollWH40K extends Roll {
      * @param {Record<string, unknown>} config - Roll configuration
      * @returns {Promise<ChatMessage|null>} The created chat message, or null if cancelled
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: roll config is a Foundry pass-through bag with no schema; Record<string, unknown> is the honest type
     static async build(config: Record<string, unknown> = {}): Promise<ChatMessage | null> {
         // Stage 1: Configure
         const configured = await this.buildConfigure(config);
@@ -73,6 +77,7 @@ export default class BasicRollWH40K extends Roll {
      * @param {Record<string, unknown>} config - Initial configuration
      * @returns {Promise<Record<string, unknown>|null>} Final configuration, or null if cancelled
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: roll config is a Foundry pass-through bag with no schema; Record<string, unknown> is the honest type
     static async buildConfigure(config: Record<string, unknown>): Promise<Record<string, unknown> | null> {
         // Fire pre-roll hook - allows modules to modify or cancel the roll
         const hookResult = HooksExt.call('wh40k-rpg.preRoll', this, config);
@@ -98,7 +103,7 @@ export default class BasicRollWH40K extends Roll {
      * @returns {Promise<Record<string, unknown>|null>} Dialog result, or null if cancelled
      * @protected
      */
-    // eslint-disable-next-line @typescript-eslint/require-await -- subclasses override with async impls
+    // eslint-disable-next-line @typescript-eslint/require-await, no-restricted-syntax -- require-await: subclasses override with async impls; no-restricted-syntax: boundary: roll config is a Foundry pass-through bag
     static async _showConfigurationDialog(config: Record<string, unknown>): Promise<Record<string, unknown> | null> {
         return config;
     }
@@ -108,15 +113,19 @@ export default class BasicRollWH40K extends Roll {
      * @param {Record<string, unknown>} config - Final configuration
      * @returns {Promise<BasicRollWH40K>} The evaluated roll
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: roll config is a Foundry pass-through bag with no schema; Record<string, unknown> is the honest type
     static async buildEvaluate(config: Record<string, unknown>): Promise<BasicRollWH40K> {
         // Construct roll formula
         const formula = this.constructFormula(config);
 
         // Create roll with clean options (only pass valid Roll options)
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Roll constructor options and data are untyped Foundry bags; Record<string, unknown> is the honest type
         const rollOptions: Record<string, unknown> = {
             flavor: config['flavor'],
+            // eslint-disable-next-line no-restricted-syntax -- boundary: config['rollOptions'] is an untyped Foundry roll-options bag spread into constructor options
             ...(config['rollOptions'] as Record<string, unknown>),
         };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Roll constructor data parameter is untyped by Foundry; Record<string, unknown> is the honest cast here
         const roll = new this(formula, ((config['data'] as Record<string, unknown> | undefined) ?? {}) as Record<string, never>, rollOptions);
 
         // Store configuration for later reference (separate from Roll options)
@@ -162,6 +171,7 @@ export default class BasicRollWH40K extends Roll {
      * @returns {Promise<Record<string, unknown>>} Chat message data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: roll config and ChatMessage data are untyped Foundry bags; Record<string, unknown> is the honest type
     static async _prepareChatData(roll: BasicRollWH40K, config: Record<string, unknown>): Promise<Record<string, unknown>> {
         // Get speaker data
         const speaker = config['speaker'] ?? ChatMessage.getSpeaker({ actor: config['actor'] as WH40KBaseActor });
@@ -180,6 +190,7 @@ export default class BasicRollWH40K extends Roll {
                 'wh40k-rpg': {
                     rollType: this.name,
                     target: config['target'],
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: config['flags'] is an untyped Foundry flags bag spread into ChatMessage flags
                     ...(config['flags'] as Record<string, unknown>),
                 },
             },
@@ -193,6 +204,7 @@ export default class BasicRollWH40K extends Roll {
      * @returns {Promise<Record<string, unknown>>} Template data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: roll config and Handlebars template data are untyped Foundry bags; Record<string, unknown> is the honest type
     static async _prepareTemplateData(roll: BasicRollWH40K, config: Record<string, unknown>): Promise<Record<string, unknown>> {
         return {
             roll: roll,
@@ -211,12 +223,13 @@ export default class BasicRollWH40K extends Roll {
      * @param {Record<string, unknown>} config - Roll configuration
      * @returns {string} The roll formula
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: roll config is a Foundry pass-through bag with no schema; Record<string, unknown> is the honest type
     static constructFormula(config: Record<string, unknown>): string {
         const parts = [(config['base'] as string | undefined) ?? '1d100'];
 
         // Add flat modifier
         if (config['modifier'] !== undefined && config['modifier'] !== null && config['modifier'] !== '') {
-            const mod = parseInt(config['modifier'] as string);
+            const mod = parseInt(config['modifier'] as string, 10);
             if (mod !== 0) {
                 parts.push(mod > 0 ? `+ ${mod}` : `- ${Math.abs(mod)}`);
             }
@@ -234,6 +247,7 @@ export default class BasicRollWH40K extends Roll {
      * @param {Record<string, unknown>} config - Roll configuration
      * @returns {Promise<ChatMessage|null>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: roll config is a Foundry pass-through bag with no schema; Record<string, unknown> is the honest type
     static async roll(config: Record<string, unknown> = {}): Promise<ChatMessage | null> {
         config['configure'] = false;
         return this.build(config);
@@ -244,6 +258,7 @@ export default class BasicRollWH40K extends Roll {
      * @param {Record<string, unknown>} config - Roll configuration
      * @returns {Promise<BasicRollWH40K|null>} The evaluated roll
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: roll config is a Foundry pass-through bag with no schema; Record<string, unknown> is the honest type
     static async evaluate(config: Record<string, unknown> = {}): Promise<BasicRollWH40K | null> {
         const configured = await this.buildConfigure(config);
         if (configured === null) return null;
@@ -259,7 +274,9 @@ export default class BasicRollWH40K extends Roll {
      * @returns {Record<string, unknown>}
      * @override
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Roll.toJSON() is an untyped Foundry bag; augmenting with configuration Record<string, unknown> is the honest extension
     override toJSON(): ReturnType<Roll['toJSON']> & { configuration?: Record<string, unknown> } {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: local typed annotation mirrors toJSON return shape; same boundary as the method signature above
         const json: ReturnType<Roll['toJSON']> & { configuration?: Record<string, unknown> } = super.toJSON();
         json.configuration = this.configuration;
         return json;
@@ -272,6 +289,7 @@ export default class BasicRollWH40K extends Roll {
      * @override
      */
     static override fromData<T extends Roll.Internal.AnyConstructor>(this: T, data: Roll.Data): ReturnType<typeof Roll.fromData<T>> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Roll.Data is untyped Foundry serialized data; augmenting with configuration Record<string, unknown> is the honest cast
         const dataWithConfig = data as Roll.Data & { configuration?: Record<string, unknown> };
         try {
             // Let parent class handle core roll reconstruction

@@ -16,6 +16,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         classes: ['wh40k-rpg', 'origin-detail-dialog'],
         tag: 'div',
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: title is a WH40K.* localization key, not a hardcoded string; lint rule cannot distinguish
             title: 'WH40K.OriginPath.ViewDetails',
             icon: 'fa-solid fa-scroll',
             minimizable: false,
@@ -26,10 +27,12 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             height: 600,
         },
         actions: {
+            /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action map binds this at click-time */
             confirm: OriginDetailDialog.#confirm,
             cancel: OriginDetailDialog.#cancel,
             openItem: OriginDetailDialog.#openItem,
             switchOriginTab: OriginDetailDialog.#switchOriginTab,
+            /* eslint-enable @typescript-eslint/unbound-method */
         },
     };
 
@@ -82,6 +85,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @param {boolean} [options.allowSelection=true] - Whether to show the confirm button
      * @param {boolean} [options.isSelected=false] - Whether this origin is already selected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: constructor options are an untyped external payload; Record<string,unknown> is the ApplicationV2 constructor shape
     constructor(origin: WH40KItem, options: Record<string, unknown> = {}) {
         super(options);
 
@@ -102,6 +106,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
+    /* eslint-disable no-restricted-syntax -- boundary: _prepareContext/Record<string,unknown> is the ApplicationV2 override signature; all casts in this method adapt untyped item.system data for template rendering */
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         const system = this.origin.system as Record<string, unknown>;
@@ -242,6 +247,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
 
         return context;
     }
+    /* eslint-enable no-restricted-syntax */
 
     /**
      * Prepare talents with item lookup
@@ -256,6 +262,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             let item: { system?: { description?: { value?: string } } } | null = null;
             if (talent.uuid !== undefined) {
                 try {
+                    // eslint-disable-next-line no-await-in-loop, no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- sequential uuid lookup; cast adapts fromUuid return to structural shape
                     item = (await fromUuid(talent.uuid)) as unknown as { system?: { description?: { value?: string } } } | null;
                 } catch {
                     // Item not found
@@ -285,6 +292,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             let item: { system?: { description?: { value?: string } } } | null = null;
             if (trait.uuid !== undefined) {
                 try {
+                    // eslint-disable-next-line no-await-in-loop, no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- sequential uuid lookup; cast adapts fromUuid return to structural shape
                     item = (await fromUuid(trait.uuid)) as unknown as { system?: { description?: { value?: string } } } | null;
                 } catch {
                     // Item not found
@@ -379,7 +387,9 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender/Record<string,unknown> is the ApplicationV2 override signature
     override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises -- super._onRender is synchronous in the base class; V14 type signature is async but implementation is not
         super._onRender(context, options);
         this.#applyActiveTab();
     }
@@ -389,6 +399,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         if (uuid === undefined || uuid === '') return;
 
         try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid return is untyped; cast to structural shape for sheet rendering
             const item = (await fromUuid(uuid)) as unknown as { sheet?: { render(force: boolean): void } } | null;
             if (item?.sheet !== undefined) {
                 item.sheet.render(true);
@@ -408,6 +419,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @param {Record<string, unknown>} [options={}] - Additional options
      * @returns {Promise<{selected: boolean, origin: WH40KItem|null}>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: show options are an untyped external payload; Record<string,unknown> is the ApplicationV2 options shape
     static async show(origin: WH40KItem, options: Record<string, unknown> = {}): Promise<{ selected: boolean; origin: WH40KItem | null }> {
         const dialog = new OriginDetailDialog(origin, options);
 
@@ -421,6 +433,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: close/Record<string,unknown> is the ApplicationV2 override signature
     override async close(options: Record<string, unknown> = {}): Promise<void> {
         // Resolve with cancelled if not already resolved
         if (this._resolvePromise !== null) {

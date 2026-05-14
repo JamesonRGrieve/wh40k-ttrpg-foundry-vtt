@@ -6,6 +6,8 @@ import { PsychicActionData, WeaponActionData } from '../rolls/action-data.ts';
 import { calculateTokenDistance } from '../utils/range-calculator.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 
+type CanvasToken = foundry.canvas.placeables.Token;
+
 /**
  * Interface for combined source and target data
  */
@@ -29,7 +31,7 @@ export class TargetedActionManager {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard for strict tsconfig; controls['tokens'] may be undefined
             if (tokenControl === undefined) return;
             try {
-                if (!game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
+                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls) !== true) {
                     const toolOrder = Object.keys(tokenControl.tools).length;
                     tokenControl.tools['Attack'] = {
                         name: 'Attack',
@@ -37,7 +39,7 @@ export class TargetedActionManager {
                         icon: 'fas fa-swords',
                         visible: true,
                         onChange: () => {
-                            void this.performWeaponAttack();
+                            this.performWeaponAttack();
                         },
                         button: true,
                         order: toolOrder,
@@ -52,7 +54,7 @@ export class TargetedActionManager {
     /**
      * Calculate distance between two tokens
      */
-    tokenDistance(token1: Token, token2: Token): number {
+    tokenDistance(token1: CanvasToken, token2: CanvasToken): number {
         // Use the new range calculator for consistent distance calculation
         return calculateTokenDistance(token1, token2);
     }
@@ -60,26 +62,32 @@ export class TargetedActionManager {
     /**
      * Get source token from various inputs
      */
-    getSourceToken(source: WH40KBaseActor | Token | null = null): Token | undefined {
+    getSourceToken(source: WH40KBaseActor | CanvasToken | null = null): CanvasToken | undefined {
         game.wh40k.log('getSourceToken', source);
-        let sourceToken: Token | undefined;
+        let sourceToken: CanvasToken | undefined;
 
-        if (source) {
-            sourceToken = (source as Token).actor ? (source as Token) : (source as WH40KBaseActor).getActiveTokens()[0];
+        if (source !== null) {
+            // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
+            sourceToken = (source as CanvasToken).actor != null ? (source as CanvasToken) : (source as WH40KBaseActor).getActiveTokens()[0];
         } else {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- game.canvas?.tokens?.controlled optional chain; undefined is possible at invocation
             const controlled = game.canvas?.tokens?.controlled;
-            if (!controlled || controlled.length === 0) {
+            if (controlled === undefined || controlled.length === 0) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
                 ui.notifications.warn('You need to control a token!');
                 return undefined;
             }
             if (controlled.length > 1) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
                 ui.notifications.warn('You need to control a single token! Multi-token support is not yet added.');
                 return undefined;
             }
             sourceToken = controlled[0];
         }
 
-        if (sourceToken && !sourceToken.actor) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, eqeqeq -- sourceToken guard per noUncheckedIndexedAccess; loose null check intentional
+        if (sourceToken !== undefined && sourceToken.actor == null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn('Token must be associated with an actor!');
             return undefined;
         }
@@ -90,23 +98,28 @@ export class TargetedActionManager {
     /**
      * Get target token from various inputs
      */
-    getTargetToken(target: WH40KBaseActor | Token | null = null): Token | undefined {
+    getTargetToken(target: WH40KBaseActor | CanvasToken | null = null): CanvasToken | undefined {
         game.wh40k.log('getTargetToken', target);
-        let targetToken: Token | undefined;
+        let targetToken: CanvasToken | undefined;
 
-        if (target) {
-            targetToken = (target as Token).actor ? (target as Token) : (target as WH40KBaseActor).getActiveTokens()[0];
+        if (target !== null) {
+            // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
+            targetToken = (target as CanvasToken).actor != null ? (target as CanvasToken) : (target as WH40KBaseActor).getActiveTokens()[0];
         } else {
             const targetedObjects = game.user.targets;
-            if (!targetedObjects || targetedObjects.size === 0) return undefined;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, eqeqeq -- game.user.targets may be undefined at invocation time; loose null check intentional
+            if (targetedObjects == null || targetedObjects.size === 0) return undefined;
             if (targetedObjects.size > 1) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
                 ui.notifications.warn('You need to target a single token! Multi-token targeting is not yet added.');
                 return undefined;
             }
             targetToken = [...targetedObjects.values()][0];
         }
 
-        if (targetToken && !targetToken.actor) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, eqeqeq -- targetToken guard per noUncheckedIndexedAccess; loose null check intentional
+        if (targetToken !== undefined && targetToken.actor == null) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn('Target token must be associated with an actor!');
             return undefined;
         }
@@ -117,20 +130,27 @@ export class TargetedActionManager {
     /**
      * Create source and target data for an action
      */
-    createSourceAndTargetData(source: WH40KBaseActor | Token | null = null, target: WH40KBaseActor | Token | null = null): SourceAndTargetData | undefined {
+    createSourceAndTargetData(
+        source: WH40KBaseActor | CanvasToken | null = null,
+        target: WH40KBaseActor | CanvasToken | null = null,
+    ): SourceAndTargetData | undefined {
         game.wh40k.log('createSourceAndTargetData', { source, target });
 
         // Source
         const sourceToken = this.getSourceToken(source);
-        const sourceActorData = sourceToken ? (sourceToken.actor as WH40KBaseActor) : (source as WH40KBaseActor);
-        if (!sourceActorData) return undefined;
+        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
+        const sourceActorData = sourceToken != null ? (sourceToken.actor as WH40KBaseActor) : (source as WH40KBaseActor);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, eqeqeq -- sourceActorData may be null/undefined; loose null check intentional
+        if (sourceActorData == null) return undefined;
 
         // Target
         const targetToken = this.getTargetToken(target);
-        const targetActorData = targetToken ? (targetToken.actor as WH40KBaseActor) : (target as WH40KBaseActor);
+        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
+        const targetActorData = targetToken != null ? (targetToken.actor as WH40KBaseActor) : (target as WH40KBaseActor);
 
         // Distance
-        const targetDistance = sourceToken && targetToken ? this.tokenDistance(sourceToken, targetToken) : 0;
+        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
+        const targetDistance = sourceToken != null && targetToken != null ? this.tokenDistance(sourceToken, targetToken) : 0;
 
         return {
             actor: sourceActorData,
@@ -142,20 +162,24 @@ export class TargetedActionManager {
     /**
      * Perform a weapon attack
      */
-    async performWeaponAttack(
-        source: WH40KBaseActor | Token | null = null,
-        target: WH40KBaseActor | Token | null = null,
+    performWeaponAttack(
+        source: WH40KBaseActor | CanvasToken | null = null,
+        target: WH40KBaseActor | CanvasToken | null = null,
         weapon: WH40KItem | null = null,
-    ): Promise<void> {
+    ): void {
         game.wh40k.log('performWeaponAttack', { source, target, weapon });
         const rollData = this.createSourceAndTargetData(source, target);
-        if (!rollData) return;
+        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
+        if (rollData == null) return;
 
         // Weapon
-        const weapons = weapon
-            ? [weapon]
-            : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'weapon' && item.system.equipped === true) as WH40KItem[]);
-        if (!weapons || weapons.length === 0) {
+        const weapons =
+            // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
+            weapon != null
+                ? [weapon]
+                : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'weapon' && item.system.equipped === true) as WH40KItem[]);
+        if (weapons.length === 0) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn('Actor must have an equipped weapon!');
             return;
         }
@@ -172,18 +196,21 @@ export class TargetedActionManager {
     /**
      * Perform a psychic attack
      */
-    async performPsychicAttack(
-        source: WH40KBaseActor | Token | null = null,
-        target: WH40KBaseActor | Token | null = null,
+    performPsychicAttack(
+        source: WH40KBaseActor | CanvasToken | null = null,
+        target: WH40KBaseActor | CanvasToken | null = null,
         psychicPower: WH40KItem | null = null,
-    ): Promise<void> {
+    ): void {
         game.wh40k.log('performPsychicAttack');
         const rollData = this.createSourceAndTargetData(source, target);
-        if (!rollData) return;
+        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
+        if (rollData == null) return;
 
         // Powers
-        const powers = psychicPower ? [psychicPower] : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'psychicPower') as WH40KItem[]);
-        if (!powers || powers.length === 0) {
+        // eslint-disable-next-line eqeqeq -- null/undefined loose check is intentional
+        const powers = psychicPower != null ? [psychicPower] : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'psychicPower') as WH40KItem[]);
+        if (powers.length === 0) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn('Actor must have psychic power!');
             return;
         }

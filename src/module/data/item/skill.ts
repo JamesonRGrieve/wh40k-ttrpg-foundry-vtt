@@ -31,6 +31,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but isn't statically typed as such; cast required for constructor call
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Linked characteristic
@@ -118,6 +119,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
             willpower: 'WP',
             fellowship: 'Fel',
         };
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: abbrs[this.characteristic] may be undefined
         return abbrs[this.characteristic] ?? this.characteristic ?? '';
     }
 
@@ -165,7 +167,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
+    get headerLabels(): Record<string, string> | Array<Record<string, string>> {
         return {
             characteristic: this.characteristicAbbr,
             type: this.skillTypeLabel,
@@ -180,20 +182,22 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      * Post this skill to chat.
      * @returns {Promise<ChatMessage|null>}
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create return type is opaque; unknown is the honest type here
     async toChat(): Promise<unknown> {
+        const parent = this.parent as { id: string; name: string };
         const messageData = {
-            type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+            style: CONST.CHAT_MESSAGE_STYLES.OTHER,
             speaker: ChatMessage.getSpeaker(),
             content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/skill-card.hbs', { skill: this.parent }),
             flags: {
                 'wh40k-rpg': {
-                    skillId: this.parent.id,
-                    skillName: this.parent.name,
+                    skillId: parent.id,
+                    skillName: parent.name,
                     type: 'skill-card',
                 },
             },
         };
 
-        return ChatMessage.create(messageData as unknown as Parameters<typeof ChatMessage.create>[0]);
+        return ChatMessage.create(messageData);
     }
 }

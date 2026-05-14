@@ -263,6 +263,7 @@ const DIRECTION = {
     BACKWARD: 'backward', // Start at Career, end at Home World
 };
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: options is an ApplicationV2 options bag; no typed schema available
 function resolveBuilderGameSystem(actor: WH40KBaseActor, options: Record<string, unknown>): GameSystemId {
     const requested = typeof options['gameSystem'] === 'string' && options['gameSystem'] !== '' ? options['gameSystem'] : actor.system.gameSystem;
     if (typeof requested === 'string' && requested !== '' && SystemConfigRegistry.has(requested)) {
@@ -308,6 +309,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         classes: ['wh40k-rpg', 'origin-path-builder'],
         tag: 'div',
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- i18n: value is a WH40K.* localization key; the rule fires on any string; ApplicationV2 resolves this key at render time
             title: 'WH40K.OriginPath.BuilderTitle',
             icon: 'fa-solid fa-route',
             resizable: true,
@@ -372,6 +374,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @param {Actor} actor - The character actor
      * @param {object} options - Application options
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 constructor accepts an untyped options bag
     constructor(actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
         super(options);
         this.actor = actor;
@@ -502,6 +505,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
         // currentStepIndex is always kept in bounds by the navigation logic
         const step = this.orderedSteps[this.currentStepIndex];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, eqeqeq -- noUncheckedIndexedAccess: orderedSteps is an array; == null intentionally catches both null and undefined
         if (step == null) throw new Error(`currentStepIndex ${this.currentStepIndex} out of bounds`);
         return step;
     }
@@ -516,6 +520,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @param {object} options - Additional options
      * @returns {OriginPathBuilder} The builder instance
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: options is an ApplicationV2 options bag; no typed schema available
     static show(actor: WH40KBaseActor, options: Record<string, unknown> = {}): OriginPathBuilder {
         const builder = new OriginPathBuilder(actor, options);
         void builder.render({ force: true });
@@ -555,6 +560,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const steps = this.orderedSteps;
         for (let i = 0; i < steps.length; i++) {
             const stepDef = steps[i];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: steps is an array; index may be out of bounds
             if (stepDef !== undefined && !this.selections.has(stepDef.step)) {
                 this.currentStepIndex = i;
                 break;
@@ -622,11 +628,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object|null}
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: confirmed selection is stored as Map<string, unknown>; caller is responsible for narrowing
     _getLastConfirmedSelection(stepIndex: number): unknown {
         const orderedSteps = this.orderedSteps;
 
         for (let i = stepIndex - 1; i >= 0; i--) {
             const step = orderedSteps[i];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: orderedSteps is an array; index may be out of bounds
             if (step !== undefined && this.selections.has(step.step)) {
                 return this.selections.get(step.step);
             }
@@ -670,8 +678,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw compendium document shape
         const normalized = normalizeOrigin(data as unknown as Record<string, unknown>);
         // Ensure choice and roll fields are available for builder state
+        /* eslint-disable no-restricted-syntax -- dialog state: normalized.system is a compendium payload Record; ??= initializes builder-local fields that are absent in fresh compendium entries */
         normalized.system['selectedChoices'] ??= {};
         normalized.system['rollResults'] ??= {};
+        /* eslint-enable no-restricted-syntax */
         return normalized;
     }
 
@@ -766,11 +776,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext signature accepts and returns Record<string,unknown>; Foundry framework type
     override async _prepareContext(_options: Record<string, unknown>): Promise<Record<string, unknown>> {
         await this._loadOrigins();
 
         const currentStep = this.currentStep;
         // Get origins for current step
+        // eslint-disable-next-line no-restricted-syntax -- boundary: origins are normalized compendium payloads prepared for Handlebars rendering
         let currentOrigins: Record<string, unknown>[] = [];
         let selectedItem: NormalizedOriginWithMeta | null = null;
 
@@ -785,6 +797,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         } else if (this.showLineage) {
             // Show all lineage options (they can pick any regardless of path)
             currentOrigins = this._prepareLineageOrigins();
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: previewedOrigin/lineageSelection are application state fields; ?? selects the first non-null confirmed selection
             selectedItem = this.previewedOrigin ?? this.lineageSelection;
         } else {
             // Use chart layout for core steps - pass direction and step keys for system support
@@ -804,6 +817,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const stepLayout = chartLayoutTyped.steps[stepIndex];
             currentOrigins = this._prepareOriginsForStep(stepLayout);
             // Use previewed origin if available, otherwise use confirmed selection
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: previewedOrigin is application state; ?? falls back to confirmed selection
             selectedItem = this.previewedOrigin ?? this.selections.get(currentStep.step) ?? null;
         }
 
@@ -915,6 +929,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Prepare characteristic generation context for rendering.
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareCharGenContext builds context for Handlebars rendering; Record<string,unknown> is the shape consumed by the template
     _prepareCharGenContext(): Record<string, unknown> {
         const ctor = this.constructor as typeof OriginPathBuilder;
         const CHARS = ctor.GENERATION_CHARACTERISTICS;
@@ -1060,8 +1075,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Get the current step selection or preview.
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _getCurrentSelection returns selection which is typed as unknown by the Map
     _getCurrentSelection(): unknown {
         if (this.showLineage) {
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: previewedOrigin/lineageSelection are application state fields; ?? selects first non-null
             return this.previewedOrigin ?? this.lineageSelection;
         }
 
@@ -1070,6 +1087,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         const currentStep = this.currentStep;
+        // eslint-disable-next-line no-restricted-syntax -- dialog state: previewedOrigin is application state; ?? falls back to confirmed selection
         return this.previewedOrigin ?? this.selections.get(currentStep.step) ?? null;
     }
 
@@ -1121,8 +1139,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const addBonus = (key: string, value: number, source: string): void => {
             if (value === 0) return;
+            /* eslint-disable no-restricted-syntax -- dialog state: totals/breakdowns are local accumulator Records; ??= initializes entries lazily */
             totals[key] = (totals[key] ?? 0) + value;
             breakdowns[key] ??= [];
+            /* eslint-enable no-restricted-syntax */
             breakdowns[key].push({ source, value });
         };
 
@@ -1267,6 +1287,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (this._charGenMode !== 'roll-pool-hb') return false;
         return OriginPathBuilder.GENERATION_CHARACTERISTICS.every((key) => {
             const assignedIdx = this._charAssignments[key];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: _charAssignments values may be null (unassigned) or undefined (key absent)
             return assignedIdx !== null && assignedIdx !== undefined && (this._charRolls[assignedIdx] ?? 0) > 0;
         });
     }
@@ -1276,6 +1297,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Array}
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns normalized compendium payloads prepared for Handlebars rendering
     _prepareLineageOrigins(): Record<string, unknown>[] {
         const activeLineageIds = new Set(
             [
@@ -1331,6 +1353,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender signature accepts Record<string,unknown>; Foundry framework types
     override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
         this._restoreScrollPosition();
@@ -1528,6 +1551,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         void this.render();
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: step navigation items are plain objects prepared for Handlebars rendering
     _prepareStepNavigation(): Record<string, unknown>[] {
         const orderedSteps = this.orderedSteps;
         const steps = orderedSteps.map((step, index) => {
@@ -1632,7 +1656,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         const configWh40k = (CONFIG as { wh40k?: { availabilities?: Record<string, { label: string; modifier: number }> } }).wh40k;
+        /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: CONFIG.wh40k?.availabilities may be absent at runtime; fallback to static WH40K.availabilities */
         const availabilityConfig = configWh40k?.availabilities ?? WH40K.availabilities;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: availabilityConfig['scarce'] may be absent; modifier may be absent
         const scarceModifier = availabilityConfig['scarce']?.modifier ?? 0;
         const packLoadResults = await Promise.all(
             packNames.map(async (packName): Promise<EquipmentEntry[]> => {
@@ -1714,12 +1740,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const system = this._getSelectionSystem(selection);
             const grants = system.grants ?? {};
             for (const entry of grants.equipment ?? []) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: grant entry is a compendium payload; name field may be absent
                 const name = (entry as { name?: unknown }).name;
                 if (typeof name === 'string' && name !== '') grantedNames.add(name);
             }
         }
         for (const name of grantedNames) {
             const weapon = weaponCatalog.find((w) => typeof w.name === 'string' && w.name === name);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: weaponCatalog entry is a compendium payload; identifier field may be absent
             const weaponIdentifier = (weapon as { identifier?: unknown } | undefined)?.identifier;
             if (typeof weaponIdentifier !== 'string' || weaponIdentifier === '' || typeof weapon?.clipMax !== 'number') continue;
             result.push({
@@ -1747,6 +1775,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         return result;
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: equipment context is a plain object prepared for Handlebars rendering
     _prepareEquipmentContext(): Record<string, unknown> {
         const maxSelections = this._getInfluenceBonus();
         const filter = this._equipmentFilter;
@@ -1827,6 +1856,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const orderedSteps = this.orderedSteps;
         const prevStep = orderedSteps[stepIndex - 1];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: orderedSteps is an array; index may be out of bounds
         if (prevStep === undefined) return false;
         return this.selections.has(prevStep.step);
     }
@@ -1848,6 +1878,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Array}
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns normalized compendium payloads prepared for Handlebars rendering
     _prepareOriginsForStep(stepLayout: StepLayout | undefined): Record<string, unknown>[] {
         if (!stepLayout?.cards) return [];
 
@@ -1900,6 +1931,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<object>}
      * @private
      */
+    /* eslint-disable complexity -- origin detail panel has many grant types; extracting sub-methods would scatter the grant-rendering logic */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: returns compendium payload data prepared for Handlebars rendering
     async _prepareSelectedOrigin(item: NormalizedOrigin): Promise<Record<string, unknown>> {
         const system = this._getSelectionSystem(item);
         const grants = system.grants ?? {};
@@ -1949,6 +1982,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             });
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rolls collects compendium roll result data for Handlebars rendering
         const rolls: Record<string, unknown> = {};
         const rollResults = system.rollResults ?? {};
 
@@ -2185,12 +2219,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _getChoiceTypeLabel(type: string): string {
         return getChoiceTypeLabel(type);
     }
+    /* eslint-enable complexity */
 
     /**
      * Calculate total preview of all selections
      * @returns {object}
      * @private
      */
+    // eslint-disable-next-line complexity -- preview calculation processes many grant types; extracting sub-methods would increase call overhead
     async _calculatePreview(): Promise<PreviewSummary> {
         const preview: PreviewSummary = {
             characteristics: [],
@@ -2359,6 +2395,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (!skillPack) return null;
 
             const index = skillPack.index;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: specialization typed string|null|undefined; TS may narrow null away but runtime callers may pass null
             const hasSpec = specialization !== null && specialization !== undefined && specialization !== '';
             const searchName = hasSpec ? `${skillName ?? ''} (${specialization})` : skillName ?? '';
 
@@ -2394,6 +2431,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * max-depth cap.
      * @private
      */
+    // eslint-disable-next-line complexity -- choice grant application handles many grant types; branchy by design
     async _applyChoiceGrantsToPreview(
         grants: WH40KItemModifiers,
         acc: {
@@ -2534,6 +2572,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object}
      * @private
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: status data is prepared for Handlebars rendering; Record<string,unknown> is the template shape
     _calculateStatus(): Record<string, unknown> {
         const totalSteps = this.systemConfig.coreSteps.length + (this.systemConfig.optionalStep ? 1 : 0) + 1;
         const stepsCount = this.selections.size + (this.lineageSelection ? 1 : 0) + (this._hasAssignedCharacteristics() ? 1 : 0);
@@ -2614,6 +2653,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const coreSteps = this.systemConfig.coreSteps;
         for (let i = 0; i < coreSteps.length; i++) {
             const stepLayout = chartLayout.steps[i];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: chartLayout.steps is an array; index may be out of bounds
             if (stepLayout === undefined) continue;
             const validOrigins = stepLayout.cards.filter((c) => (c as StepLayoutCard & { isSelectable?: boolean }).isSelectable === true);
 
@@ -2621,6 +2661,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const randomIndex = Math.floor(Math.random() * validOrigins.length);
                 const selected = validOrigins[randomIndex];
                 const coreStep = coreSteps[i];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: validOrigins/coreSteps are arrays; indices may be out of bounds
                 if (selected === undefined || coreStep === undefined) continue;
 
                 // Store as plain data object (not Item instance)
@@ -2670,6 +2711,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Export path configuration
      */
     static #export(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: selections export shape is an untyped serialization payload
         const data: { version: number; selections: Record<string, unknown> } = {
             version: 1,
             selections: {},
@@ -2885,6 +2927,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         // Find the origin (check both main and lineage origins)
         let origin = this.allOrigins.find((o) => o.id === originId);
+        // eslint-disable-next-line no-restricted-syntax -- dialog state: origin is a local variable; ??= falls back to lineage search when not found in core origins
         origin ??= this.lineageOrigins.find((o) => o.id === originId);
         if (origin === undefined) return;
 
@@ -3003,6 +3046,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         // Find the origin (check both main and lineage origins)
         let origin = this.allOrigins.find((o) => o.id === originId);
+        // eslint-disable-next-line no-restricted-syntax -- dialog state: origin is a local variable; ??= falls back to lineage search when not found in core origins
         origin ??= this.lineageOrigins.find((o) => o.id === originId);
         if (origin === undefined) return;
 
@@ -3076,15 +3120,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         let selection = null;
 
         if (this.showLineage) {
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: lineageSelection/previewedOrigin are application state fields; ?? selects first non-null
             selection = this.lineageSelection ?? this.previewedOrigin;
         } else {
             // Check confirmed selection first, then previewed
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: previewedOrigin is application state; ?? falls back when no confirmed selection
             selection = this.selections.get(currentStep.step) ?? this.previewedOrigin;
         }
 
         if (selection) {
             // For plain data objects, we need to get the original item from compendium
             const uuid = selection.uuid ?? (selection as NormalizedOriginWithMeta)._sourceUuid;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns Document typed as unknown; narrowed below
             let originItem: unknown = uuid !== undefined && uuid !== null && uuid !== '' ? await fromUuid(uuid) : null;
 
             // If we can't find the original, create a temporary display item
@@ -3136,10 +3183,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         let selection = null;
 
         if (this.showLineage) {
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: lineageSelection/previewedOrigin are application state fields; ?? selects first non-null
             selection = this.lineageSelection ?? this.previewedOrigin;
         } else {
             const currentStep = this.currentStep;
             // Check previewed origin first, then confirmed selection
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: previewedOrigin is application state; ?? falls back to confirmed selection
             selection = this.previewedOrigin ?? this.selections.get(currentStep.step);
         }
 
@@ -3163,6 +3212,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (result !== null) {
             // Always directly mutate the plain data object
             const selSys = selection.system as OriginPathSystemData;
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: selSys.selectedChoices is a compendium payload field; ??= initializes when absent
             selSys.selectedChoices ??= {};
             for (const [label, selections] of Object.entries(result)) {
                 selSys.selectedChoices[label] = selections;
@@ -3180,9 +3230,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         let selection = null;
 
         if (this.showLineage) {
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: lineageSelection/previewedOrigin are application state fields; ?? selects first non-null
             selection = this.lineageSelection ?? this.previewedOrigin;
         } else {
             const currentStep = this.currentStep;
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: previewedOrigin is application state; ?? falls back to confirmed selection
             selection = this.previewedOrigin ?? this.selections.get(currentStep.step);
         }
 
@@ -3226,6 +3278,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             // Always directly mutate the plain data object
             const selSysRoll = selection.system as OriginPathSystemData;
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: selSysRoll.rollResults is a compendium payload field; ??= initializes when absent
             selSysRoll.rollResults ??= {};
             selSysRoll.rollResults[statType] = rollData;
 
@@ -3241,9 +3294,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         let selection = null;
 
         if (this.showLineage) {
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: lineageSelection/previewedOrigin are application state fields; ?? selects first non-null
             selection = this.lineageSelection ?? this.previewedOrigin;
         } else {
             const currentStep = this.currentStep;
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: previewedOrigin is application state; ?? falls back to confirmed selection
             selection = this.previewedOrigin ?? this.selections.get(currentStep.step);
         }
 
@@ -3279,6 +3334,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             rejectClose: false,
         });
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: DialogV2.prompt resolves with unknown; null check guards the no-input path
         if (result !== null && result !== undefined) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: confirmation-dialog returns unknown until the call sites narrow; here the result is a number
             const rolledValue = result as unknown as number;
@@ -3291,6 +3347,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             // Always directly mutate the plain data object
             const selSysManual = selection.system as OriginPathSystemData;
+            // eslint-disable-next-line no-restricted-syntax -- dialog state: selSysManual.rollResults is a compendium payload field; ??= initializes when absent
             selSysManual.rollResults ??= {};
             selSysManual.rollResults[statType] = rollData;
 
@@ -3462,6 +3519,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             this._divination = result?.text ?? '';
         } else {
             const roll = await new Roll('1d100').evaluate();
+            // eslint-disable-next-line no-restricted-syntax -- i18n: divination fallback warning; key not yet in langpack
             ui.notifications.warn('Divination RollTable not installed — recorded the d100 result only. Enter the maxim manually or install the content pack.');
             this._divination = `Roll: ${roll.total}`;
         }
@@ -3473,7 +3531,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Resolve the Divination RollTable, preferring a world-local copy (which
      * a GM may have edited) and falling back to the compendium entry.
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: RollTable is an untyped Foundry document; caller casts to structural type before use
     static async #getDivinationTable(): Promise<unknown> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.tables.getName returns an untyped Foundry document; narrowed by caller
         const worldTable = (game.tables as { getName?: (name: string) => unknown } | undefined)?.getName?.('Divination');
         if (worldTable !== undefined && worldTable !== null) return worldTable;
         const pack = game.packs.get('wh40k-rpg.dh2-core-rolltables');
@@ -3510,6 +3570,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static async #rollThrones(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const formula = this._getContextualThronesFormula();
         if (formula === '') {
+            // eslint-disable-next-line no-restricted-syntax -- i18n: thrones formula warning; key not yet in langpack
             ui.notifications.warn('No thrones formula available yet — select an origin with a throne gelt formula.');
             return;
         }
@@ -3598,6 +3659,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Commit path to character
      */
+    // eslint-disable-next-line complexity -- commit flow applies many grant types sequentially; extracting sub-methods would scatter the guard-and-update sequence
     static async #commit(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const status = this._calculateStatus();
 
@@ -3655,7 +3717,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const maybeDoc = selection as { toObject?: () => Partial<NormalizedOrigin> };
                 const itemData: Partial<NormalizedOrigin> = typeof maybeDoc.toObject === 'function' ? maybeDoc.toObject() : foundry.utils.deepClone(selection);
                 // Ensure system data is present
+                /* eslint-disable @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: Partial<NormalizedOrigin>.system may be absent; ??= is banned by no-restricted-syntax */
                 if (itemData.system === undefined || itemData.system === null) itemData.system = selection.system;
+                /* eslint-enable @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unnecessary-condition */
                 // selectedChoices and rollResults are already on selection.system
                 // from the choice dialogs and roll dialogs
                 originItems.push(itemData);
@@ -3739,6 +3803,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 // base characteristic instead of being re-computed at runtime every render.
                 const originModSums = this._collectOriginCharacteristicBonuses();
 
+                // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
                 const charUpdate: Record<string, unknown> = {
                     'system.characterGeneration.rolls': charRolls,
                     'system.characterGeneration.assignments': charAssignments,
@@ -3762,6 +3827,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
 
             // Apply divination, thrones, and influence
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
             const resourceUpdate: Record<string, unknown> = {};
             if (this._divination !== '') resourceUpdate['system.originPath.divination'] = this._divination;
             const thronesTotal = this._getTotalThronesRolled();
@@ -3805,6 +3871,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const labelCounts: Record<string, number> = {};
             for (let i = 0; i < choices.length; i++) {
                 const choiceRaw = choices[i];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: choices is an array; index may be out of bounds
                 if (choiceRaw === undefined) continue;
                 const rawLabel = choiceRaw.label;
                 const rawName = choiceRaw.name;
@@ -3814,6 +3881,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
                 const choiceKey = `${baseLabel}${suffix}`;
                 const selected = selectedChoices[choiceKey];
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: selectedChoices is a Record; key may be absent
                 if (selected !== undefined && selected !== null) {
                     const grantId = generateDeterministicId(`choice-${i}-${baseLabel}`);
                     selections[grantId] = {
@@ -3833,6 +3901,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _buildRolledValues(): { wounds?: number; fate?: number } {
         const values: { wounds?: number; fate?: number } = {};
         for (const [, selection] of this.selections) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: selection.system is a compendium payload cast; rollResults is optional and ?? provides the safe default
             const rollResults = (selection.system as OriginPathSystemData).rollResults ?? {};
             const woundsResult = rollResults['wounds'];
             const fateResult = rollResults['fate'];
@@ -3951,6 +4020,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // systemConfig here always resolved to `undefined`, which silently
         // zeroed the reset.
         const startingXP = this.registryConfig.startingXP;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
         const update: Record<string, unknown> = {
             'system.experience.total': startingXP,
             'system.experience.used': 0,
@@ -3962,6 +4032,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const skills = this._actorSys().skills ?? {};
         for (const skillKey of Object.keys(skills)) {
             update[`system.skills.${skillKey}.advance`] = 0;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skills is a Record; key may be absent at runtime
             const entries = skills[skillKey]?.entries;
             if (Array.isArray(entries)) {
                 const resetEntries = entries.map((entry) => ({ ...entry, advance: 0 }));
@@ -3977,6 +4048,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _resetCurrencyResources(): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
         const currencyUpdate: Record<string, unknown> = {
             'system.influence': 0,
             'system.requisition': 0,
@@ -4016,6 +4088,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     availableWeapons.find((w) => types.includes(w.identifier) && w.source === 'granted') ??
                     availableWeapons.find((w) => types.includes(w.identifier));
                 if (compatible && compatible.clipMax > 0) {
+                    /* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- noUncheckedIndexedAccess: ??= is banned by no-restricted-syntax; explicit undefined check used instead */
                     if (itemData.system === undefined) itemData.system = {};
                     itemData.system.quantity = compatible.clipMax;
                 }

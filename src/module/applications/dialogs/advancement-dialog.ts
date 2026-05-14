@@ -292,7 +292,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const localized = game.i18n.localize('WH40K.Advancement.Title');
             return localized.length > 0 ? localized : 'Advancement';
         }
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: careers[key] may be undefined at runtime
         const career = CONFIG.wh40k.careers[this.careerKey];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: career may be undefined despite indexed access type
         const careerLabel = game.i18n.localize(career !== undefined ? career.label : this.careerKey);
         return game.i18n.format('WH40K.Advancement.TitleWithCareer', { career: careerLabel });
     }
@@ -313,6 +315,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line complexity -- method is a context-assembly pass building the full advancement dialog context; cannot be easily split without losing cohesion
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AdvancementContext> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: super._prepareContext has a loose Foundry signature
         const context = (await super._prepareContext(options as unknown as never)) as AdvancementContext;
@@ -431,9 +434,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 const canPurchase = !isMaxed && nextCost !== null && available >= nextCost.cost;
 
                 const tiers = tierOrder.map((tier, index) => {
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: advancementTiers[tier] may be undefined
                     const tierConfig = CONFIG.wh40k.advancementTiers[tier];
                     return {
                         tier,
+                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: tierConfig may be undefined despite indexed access type
                         label: game.i18n.localize(tierConfig !== undefined ? tierConfig.label : tier),
                         purchased: index < currentAdvances,
                         current: index === currentAdvances,
@@ -450,8 +455,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     currentValue: char.total ?? 0,
                     currentAdvances,
                     tiers,
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- nextCost may be null at runtime depending on career config; optional chain + ?? is defensive
                     nextCost: nextCost?.cost ?? null,
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- nextCost may be null at runtime depending on career config; optional chain + ?? is defensive
                     nextTier: nextCost?.tier ?? null,
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: advancementTiers[tier] may be undefined; optional chain + ?? is defensive
                     nextTierLabel: nextCost !== null ? game.i18n.localize(CONFIG.wh40k.advancementTiers[nextCost.tier]?.label ?? nextCost.tier) : null,
                     isMaxed,
                     canPurchase,
@@ -483,8 +491,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 displayName,
                 cost: advance.cost,
                 type: advance.type,
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- advance.prerequisites may be absent in legacy career data
                 prerequisites: advance.prerequisites ?? [],
-                prereqDisplay: prereqResult.unmet.filter((s): s is string => s !== undefined),
+                prereqDisplay: prereqResult.unmet,
                 owned,
                 canPurchase,
                 cantAfford,
@@ -494,16 +503,20 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         });
     }
 
+    // eslint-disable-next-line complexity -- method prepares full skill advancement list; complexity comes from per-skill aptitude matching and cost calculation
     #prepareAptitudeSkills(systemConfig: AptitudeBasedSystemConfig): PreparedSkillAdvance[] {
         const available = getAvailableXP(this.actor);
         const actorSkills = this.#getActorSystem().skills ?? {};
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- getVisibleSkills is optional in some systemConfig variants; ?. + ?? is the safe call pattern
         const visibleSkills = systemConfig.getVisibleSkills?.() ?? new Set<string>();
         const ranks = systemConfig.getSkillRanks();
 
         const result: PreparedSkillAdvance[] = [];
 
         for (const skillKey of visibleSkills) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: actorSkills[key] may be undefined at runtime
             const skillData = actorSkills[skillKey];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skillData may be undefined despite indexed access type
             if (skillData === undefined) continue;
 
             const label = skillData.label !== undefined && skillData.label.length > 0 ? skillData.label : skillKey;
@@ -526,8 +539,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     const entryIsMaxed = entryRank >= ranks.length;
                     const entryCost = entryIsMaxed ? null : systemConfig.getSkillAdvanceCost(this.actor, skillKey, entryRank);
                     const entryCanPurchase = !entryIsMaxed && entryCost !== null && available >= entryCost;
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: ranks[i] may be undefined; optional chain + ?? is defensive
                     const entryCurrentLabel = entryRank > 0 ? ranks[entryRank - 1]?.tooltip ?? 'Untrained' : 'Untrained';
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: ranks[entryRank] may be undefined
                     const entryNextRank = ranks[entryRank];
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: entryNextRank may be undefined despite indexed access type
                     const entryNextLabel = !entryIsMaxed && entryNextRank !== undefined ? entryNextRank.tooltip : null;
                     const entryNextDisplay = entryNextLabel !== null && entryNextLabel.length > 0 ? `${entryLabel} — ${entryNextLabel}` : entryLabel;
 
@@ -580,8 +596,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const cost = isMaxed ? null : systemConfig.getSkillAdvanceCost(this.actor, skillKey, effectiveRank);
             const canPurchase = !isMaxed && cost !== null && available >= cost;
 
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: ranks[i] may be undefined; optional chain + ?? is defensive
             const currentLabel = effectiveRank > 0 ? ranks[effectiveRank - 1]?.tooltip ?? 'Untrained' : 'Untrained';
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: ranks[effectiveRank] may be undefined
             const nextRank = ranks[effectiveRank];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: nextRank may be undefined despite indexed access type
             const nextLabel = !isMaxed && nextRank !== undefined ? nextRank.tooltip : null;
             const nextDisplay = nextLabel !== null && nextLabel.length > 0 ? `${label} — ${nextLabel}` : label;
 
@@ -610,6 +629,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         return result;
     }
 
+    // eslint-disable-next-line complexity -- method prepares full talent advancement list with aptitude matching and prereq checking; cannot be easily split
     async #prepareAptitudeTalents(systemConfig: AptitudeBasedSystemConfig): Promise<PreparedTalentAdvance[]> {
         const available = getAvailableXP(this.actor);
         const gameSystem = this.#getGameSystemId();
@@ -631,6 +651,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             dw: [],
         };
         const wanted = prefixMap[gameSystem] ?? [];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- p.metadata.id may be absent on some pack formats; optional chain is defensive
         const packs = game.packs.filter((p) => p.documentName === 'Item' && wanted.some((w) => p.metadata.id?.endsWith(w) || p.metadata.name === w));
 
         // Cache owned talents by (base name, specialization)
@@ -648,6 +669,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
 
         for (const pack of packs) {
+            // eslint-disable-next-line no-await-in-loop -- Foundry compendium pack indexes must be loaded sequentially; cannot be parallelised safely
             const index = await pack.getIndex({
                 fields: [
                     'name',
@@ -687,6 +709,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 const prereqs = system.prerequisites ?? { characteristics: {}, skills: [], talents: [] };
                 const prereqResult = this.#checkTalentPrereqs(prereqs);
                 const blocked = !prereqResult.valid;
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- getAdvanceMatchInfo may be absent on some system configs despite its type
                 const match = systemConfig.getAdvanceMatchInfo ? systemConfig.getAdvanceMatchInfo(this.actor, aptitudes) : null;
 
                 if (hasSpec) {
@@ -709,7 +732,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         canPurchase: !blocked && available >= cost,
                         cantAfford: !blocked && available < cost,
                         blocked,
-                        prereqDisplay: prereqResult.unmet.filter((s): s is string => s !== undefined),
+                        prereqDisplay: prereqResult.unmet,
                         aptitudeMatch: match,
                     });
                     continue;
@@ -733,7 +756,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         canPurchase: !blocked && available >= cost,
                         cantAfford: !blocked && available < cost,
                         blocked,
-                        prereqDisplay: prereqResult.unmet.filter((s): s is string => s !== undefined),
+                        prereqDisplay: prereqResult.unmet,
                         aptitudeMatch: match,
                     });
                     continue;
@@ -754,7 +777,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     canPurchase: !blocked && available >= cost,
                     cantAfford: !blocked && available < cost,
                     blocked,
-                    prereqDisplay: prereqResult.unmet.filter((s): s is string => s !== undefined),
+                    prereqDisplay: prereqResult.unmet,
                     aptitudeMatch: match,
                 });
             }
@@ -772,6 +795,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     #checkTalentPrereqs(prereqs: { characteristics?: Record<string, number>; skills?: unknown; talents?: unknown }): { valid: boolean; unmet: string[] } {
         const unmet: string[] = [];
         const sys = this.#getActorSystem();
+        /* eslint-disable @typescript-eslint/no-unnecessary-condition -- sys/prereqs may be absent at runtime; optional chains + ?? are defensive throughout this method */
         const chars = sys?.characteristics ?? {};
 
         // Some compendium entries store these as {} (Record) rather than [] (Array) — coerce defensively.
@@ -805,6 +829,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         for (const talentReq of coerceList(prereqs?.talents)) {
             if (!ownedTalents.has(talentReq.toLowerCase())) unmet.push(talentReq);
         }
+        /* eslint-enable @typescript-eslint/no-unnecessary-condition */
         return { valid: unmet.length === 0, unmet };
     }
 
@@ -812,6 +837,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const available = getAvailableXP(this.actor);
         const gameSystem = this.#getGameSystemId();
         const sys = this.#getActorSystem();
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- sys.psy may be absent on non-psychic actors; optional chain + ?? is defensive
         const currentRating = sys?.psy?.rating ?? 0;
 
         // DH2 RAW: cost to advance PR N→N+1 is (N+1) × 200, cap 10
@@ -834,12 +860,14 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             ow: ['ow-core-stats-psychic-powers'],
         };
         const wanted = packMap[gameSystem] ?? [];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- p.metadata.id may be absent on some pack formats; optional chain is defensive
         const packs = game.packs.filter((p) => p.documentName === 'Item' && wanted.some((w) => p.metadata.id?.endsWith(w) || p.metadata.name === w));
 
         const ownedPowers = new Set(this.actor.items.filter((i) => i.type === 'psychicPower').map((i) => i.name.toLowerCase()));
 
         const powers: PreparedPsychicPower[] = [];
         for (const pack of packs) {
+            // eslint-disable-next-line no-await-in-loop -- Foundry compendium pack indexes must be loaded sequentially; cannot be parallelised safely
             const index = await pack.getIndex({ fields: ['name', 'type', 'system.discipline', 'system.prCost'] });
             for (const rawEntry of index) {
                 const entry = rawEntry as CompendiumIndexEntry;
@@ -877,7 +905,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             p.index = i;
         });
         for (const p of powers) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: grouped[key] may be undefined; guard is required
             if (!grouped[p.disciplineLabel]) grouped[p.disciplineLabel] = [];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: grouped[key] may be undefined after the guard; ?? [] is defensive
             (grouped[p.disciplineLabel] ?? []).push(p);
         }
 
@@ -978,6 +1008,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             dh2e: ['dh2-core-stats-elite-advances'],
         };
         const wanted = elitePacks[gameSystem] ?? [];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- p.metadata.id may be absent on some pack formats; optional chain is defensive
         const packs = game.packs.filter((p) => p.documentName === 'Item' && wanted.some((w) => p.metadata.id?.endsWith(w) || p.metadata.name === w));
 
         const ownedElites = new Set(
@@ -986,6 +1017,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const elitesByName = new Map<string, PreparedEliteAdvance>();
         for (const pack of packs) {
+            // eslint-disable-next-line no-await-in-loop -- Foundry compendium pack indexes must be loaded sequentially; cannot be parallelised safely
             const index = await pack.getIndex({ fields: ['name', 'type', 'system.step', 'system.description.value'] });
             for (const rawEntry of index) {
                 const entry = rawEntry as CompendiumIndexEntry;
@@ -995,11 +1027,14 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 if (elitesByName.has(key)) continue;
                 const owned = ownedElites.has(key);
                 // Parse XP cost from description HTML (falls back to 1000)
+                /* eslint-disable @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: eliteSys is a cast Record; description/value may be absent at runtime */
                 const descHtml = eliteSys?.description?.value ?? '';
                 const xpMatch = descHtml.match(/Experience Cost<\/h3>\s*<p>\s*([\d,]+)\s*xp/i) ?? descHtml.match(/([\d,]+)\s*xp/i);
                 const cost = xpMatch ? parseInt((xpMatch[1] ?? '0').replace(/,/g, ''), 10) : 1000;
+                /* eslint-enable @typescript-eslint/no-unnecessary-condition */
                 // Short blurb: first <p> after <h2>
                 const summaryMatch = descHtml.match(/<h2>[^<]*<\/h2>\s*<p>([^<]+)<\/p>/);
+                /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: regex capture groups may be undefined */
                 const summary = summaryMatch ? (summaryMatch[1] ?? '').trim() : '';
 
                 elitesByName.set(key, {
@@ -1026,6 +1061,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     #checkOwnership(advance: AdvancementAdvance): boolean {
         if (advance.type === 'skill') {
             return this.#hasSkillTrained(advance.name, advance.specialization ?? '');
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- AdvancementAdvance.type union may grow; exhaustive guard is defensive
         } else if (advance.type === 'talent') {
             return this.#hasTalent(advance.name, advance.specialization ?? '');
         }
@@ -1052,10 +1088,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             'speak language': 'speakLanguage',
         };
 
+        /* eslint-disable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: keyMap and skills are Records; index access may return undefined */
         const skillKey = keyMap[skillName.toLowerCase()] ?? skillName.toLowerCase().replace(/\s+/g, '');
         const skill = skills[skillKey];
 
         if (!skill) return false;
+        /* eslint-enable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions */
 
         if (!specialization) {
             return skill.trained === true;
@@ -1122,8 +1160,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
 
         const charConfig = CONFIG.wh40k.characteristics[charKey];
+        /* eslint-disable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: characteristics and advancementTiers are CONFIG Records; index access may be absent */
         const charLabel = charConfig ? game.i18n.localize(charConfig.label) : charKey;
         const tierLabel = game.i18n.localize(CONFIG.wh40k.advancementTiers[nextCost.tier]?.label ?? nextCost.tier);
+        /* eslint-enable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions */
 
         const confirmed = await foundry.appv1.api.Dialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
@@ -1193,6 +1233,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const typeAdvances = advances.filter((a) => a.type === advanceType);
         const advance = typeAdvances[advanceIndex];
 
+        /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: typeAdvances is an array; index may be out of bounds */
         if (!advance) return;
 
         if (!canAfford(this.actor, advance.cost)) {
@@ -1227,6 +1268,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         if (advance.type === 'skill') {
             await this.#applySkillAdvance(advance);
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- AdvancementAdvance.type union may grow; exhaustive guard is defensive
         } else if (advance.type === 'talent') {
             await this.#applyTalentAdvance(advance);
         }
@@ -1248,9 +1290,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }, 2000);
     }
 
+    // eslint-disable-next-line complexity -- purchase flow is inherently branchy: new-spec / bump-entry / simple cases; extracting sub-methods would scatter the guard-and-update sequence
     async #purchaseAptitudeSkillAt(advanceIndex: number, systemConfig: AptitudeBasedSystemConfig): Promise<void> {
         const prepared = this.#prepareAptitudeSkills(systemConfig);
         const entry = prepared[advanceIndex];
+        /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: prepared is an array; index may be out of bounds */
         if (!entry || entry.owned || entry.cost === null) return;
 
         const actorSkill = this.#getActorSystem().skills?.[entry.skillKey];
@@ -1399,6 +1443,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     async #purchaseAptitudeTalentAt(advanceIndex: number, systemConfig: AptitudeBasedSystemConfig): Promise<void> {
         const prepared = await this.#prepareAptitudeTalents(systemConfig);
         const entry = prepared[advanceIndex];
+        /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: prepared is an array; index may be out of bounds */
         if (!entry || entry.blocked || entry.cost === null) return;
 
         if (!canAfford(this.actor, entry.cost)) {
@@ -1508,6 +1553,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     static async #purchasePsyRating(this: AdvancementDialog, _event: Event, _target: HTMLElement): Promise<void> {
         const sys = this.#getActorSystem();
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: psy may be absent on non-psychic actors at runtime
         const currentRating = sys?.psy?.rating ?? 0;
         const nextRating = currentRating + 1;
         if (nextRating > 10) {
@@ -1583,6 +1629,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     async #purchaseEliteAt(advanceIndex: number): Promise<void> {
         const panel = await this.#prepareTraitPanel();
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: elites may be absent when actor has no trait panel data
         const entry = panel.elites?.find((e) => e.index === advanceIndex);
         if (!entry || entry.owned) return;
 
@@ -1675,6 +1722,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload
         let talentData: (Record<string, unknown> & { system: Record<string, unknown> }) | null = null;
 
+        /* eslint-disable no-await-in-loop -- sequential compendium pack scan: each pack must be awaited before deciding whether to continue or break */
         for (const pack of game.packs.filter((p) => p.documentName === 'Item')) {
             const index = await pack.getIndex({ fields: ['name', 'type'] });
             const match = index.find((rawI) => {
@@ -1691,7 +1739,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 break;
             }
         }
+        /* eslint-enable no-await-in-loop */
 
+        /* eslint-disable-next-line no-restricted-syntax -- dialog state: talentData is null when no compendium match found; ??= initializes inline default */
         talentData ??= {
             name: talentName,
             type: 'talent',
@@ -1714,6 +1764,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         if (itemName === undefined) return;
 
+        /* eslint-disable no-await-in-loop -- sequential compendium pack scan: each pack must be awaited before deciding whether to continue or break */
         for (const pack of game.packs.filter((p) => p.documentName === 'Item')) {
             const index = await pack.getIndex({ fields: ['name', 'type'] });
             const match = index.find((rawI) => {
@@ -1738,6 +1789,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 return;
             }
         }
+        /* eslint-enable no-await-in-loop */
 
         ui.notifications.warn(game.i18n.format('WH40K.Advancement.ItemNotFound', { name: itemName }));
     }

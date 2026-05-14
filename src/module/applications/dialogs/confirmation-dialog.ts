@@ -21,6 +21,7 @@ interface ConfirmationConfig {
     rejectOnClose: boolean;
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext must return Record<string,unknown> per ApplicationV2 contract; ConfirmationContext adds typed fields on top
 interface ConfirmationContext extends Record<string, unknown> {
     content: string;
     confirmLabel: string;
@@ -38,7 +39,6 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
         classes: ['wh40k-rpg', 'confirmation-dialog'],
         tag: 'div',
         window: {
-            title: 'Confirm',
             icon: 'fa-solid fa-question-circle',
             minimizable: false,
             resizable: false,
@@ -46,12 +46,15 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
         },
         position: {
             width: 400,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height typed as number but 'auto' is a valid runtime value that Foundry handles
             height: 'auto' as unknown as number,
         },
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action handlers: framework binds `this` at call time */
         actions: {
             confirm: ConfirmationDialog.#onConfirm,
             cancel: ConfirmationDialog.#onCancel,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -76,12 +79,13 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     constructor(config: Partial<ConfirmationConfig> = {}, options: ApplicationV2Config.DefaultOptions = {}) {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 super() constructor accepts options as Record<string,unknown>; typed DefaultOptions requires cast
         super(options as Record<string, unknown>);
         this.#config = {
-            title: config.title || 'Confirm',
-            content: config.content || 'Are you sure?',
-            confirmLabel: config.confirmLabel || 'Confirm',
-            cancelLabel: config.cancelLabel || 'Cancel',
+            title: config.title !== undefined && config.title !== '' ? config.title : 'Confirm',
+            content: config.content !== undefined && config.content !== '' ? config.content : 'Are you sure?',
+            confirmLabel: config.confirmLabel !== undefined && config.confirmLabel !== '' ? config.confirmLabel : 'Confirm',
+            cancelLabel: config.cancelLabel !== undefined && config.cancelLabel !== '' ? config.cancelLabel : 'Cancel',
             rejectOnClose: config.rejectOnClose ?? false,
         };
     }
@@ -89,7 +93,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
+    get title(): string {
         return this.#config.title;
     }
 
@@ -129,6 +133,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2.close() accepts untyped options; signature must match the framework override
     override async close(options?: Record<string, unknown>): Promise<unknown> {
         if (!this.#resolved && this.#resolve) {
             this.#resolve(false);

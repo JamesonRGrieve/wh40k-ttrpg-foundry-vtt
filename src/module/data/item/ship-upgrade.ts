@@ -34,6 +34,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField is a DataField.Any at runtime but TypeScript can't verify the cast
             identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Resource requirements
@@ -76,8 +77,9 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Normalize ship upgrade data shape.
      * @param {object} source  Candidate source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel._migrateData receives raw unknown source data before schema validation
     static override _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
         ShipUpgradeData.#initializeDefaults(source);
     }
 
@@ -85,11 +87,12 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Initialize missing fields with defaults.
      * @param {object} source  The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
     static #initializeDefaults(source: Record<string, unknown>): void {
-        source['power'] ??= 0;
-        source['space'] ??= 0;
-        source['availability'] ??= 'common';
-        source['notes'] ??= '';
+        if (!('power' in source) || source['power'] === undefined) source['power'] = 0;
+        if (!('space' in source) || source['space'] === undefined) source['space'] = 0;
+        if (!('availability' in source) || source['availability'] === undefined) source['availability'] = 'common';
+        if (!('notes' in source) || source['notes'] === undefined) source['notes'] = '';
     }
 
     /* -------------------------------------------- */
@@ -102,8 +105,9 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * @param {object} options    Additional options
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel._cleanData receives raw source before schema validation; options is a Foundry framework type
     static override _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
-        super._cleanData?.(source, options);
+        super._cleanData(source, options);
         // Ensure power and space are numbers
         if (source) {
             if (typeof source['power'] === 'string') {
@@ -175,6 +179,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels return type is defined in ItemDataModel base class; values are primitive strings/numbers consumed by the sheet template
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             power: this.powerLabel,

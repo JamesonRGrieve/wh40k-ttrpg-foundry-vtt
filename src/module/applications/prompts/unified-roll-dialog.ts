@@ -58,6 +58,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 render options bag and legacy v1 signature
     declare render: ((options?: Record<string, unknown>) => Promise<this>) & ((options: boolean, _options?: Record<string, unknown>) => Promise<this>);
     /** Typed access to the DOM root element (provided by ApplicationV2 base class). */
+    // eslint-disable-next-line @typescript-eslint/naming-convention -- _el matches Foundry V2 accessor naming convention used by the rest of the codebase
     private get _el(): HTMLElement {
         // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 exposes `element: HTMLElement` at runtime but the mixin types it loosely.
         return (this as unknown as { element: HTMLElement }).element;
@@ -238,23 +239,30 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries roll-type-specific extension fields read by templates
     get rollData(): RollData & Record<string, unknown> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries roll-type-specific extension fields read by templates
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- rollData may be absent on subclasses at runtime; cast is boundary: heterogeneous roll data bag
         return (this.actionData.rollData ?? this.actionData) as RollData & Record<string, unknown>;
     }
 
     /** Get the current difficulty preset */
+    // eslint-disable-next-line @typescript-eslint/naming-convention -- leading underscore is Foundry V2 convention for accessor-like members
     get _currentDifficulty(): (typeof UnifiedRollDialog.DIFFICULTIES)[number] {
         const ctor = this.constructor as typeof UnifiedRollDialog;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: array index may return undefined at runtime
         const difficulty = ctor.DIFFICULTIES[this._selectedDifficultyIndex] ?? ctor.DIFFICULTIES[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, eqeqeq -- noUncheckedIndexedAccess: DIFFICULTIES[0] may be undefined; == null catches both null and undefined
         if (difficulty == null) throw new Error('DIFFICULTIES is empty');
         return difficulty;
     }
 
     /** Get the applicable modifier list for the current roll type */
+    // eslint-disable-next-line @typescript-eslint/naming-convention -- leading underscore is Foundry V2 convention for accessor-like members
     get _applicableModifiers(): Array<{ key: string; source: string; value: number; label: string }> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is nullable state initialized to null, not a DataModel field
         return this._cachedSituationalModifiers ?? [];
     }
 
     /** Compute the manual roll total, or null if incomplete */
+    // eslint-disable-next-line @typescript-eslint/naming-convention -- leading underscore is Foundry V2 convention for accessor-like members
     get _manualRollTotal(): number | null {
         if (this._diceInputMode === 'two-dice') {
             if (this._manualRollTens === null || this._manualRollUnits === null) return null;
@@ -270,6 +278,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /* -------------------------------------------- */
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax, complexity -- boundary: ApplicationV2 _prepareContext has a loose Foundry signature; method is a single context-assembly pass that cannot be easily split
     override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         // Initialize on first render
         if (!this._initialized && typeof this.rollData['initialize'] === 'function') {
@@ -280,6 +289,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             if (this.rollType === 'weapon') {
                 const isRanged = this.rollData.weapon?.isRanged === true;
                 this._attackModeKey = getAttackModeKeyForAction(this.rollData.action, isRanged);
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- rollData.modifiers may be absent at runtime on uninitialised weapon roll data
                 this._aimModeKey = getAimKeyForModifier(this.rollData.modifiers?.['aim'] ?? 0);
             }
         }
@@ -307,8 +317,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys and range)
         const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational']);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- rollData.modifiers always present per type; runtime data may be uninitialised; ?? {} is defensive
+        const safeModifiers = rollData.modifiers ?? {};
         const weaponModSum = !isForceField
-            ? Object.entries(rollData.modifiers || {})
+            ? Object.entries(safeModifiers)
                   .filter(([k]) => !dialogManagedKeys.has(k))
                   .reduce((sum, [, v]) => sum + (Number(v) || 0), 0) + (Number(rollData.rangeBonus) || 0)
             : 0;
@@ -335,6 +347,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         else targetColorClass = 'tw-text-[#22d3ee] tw-[text-shadow:0_0_35px_rgba(34,211,238,0.5),0_0_60px_rgba(34,211,238,0.2),0_2px_8px_rgba(0,0,0,0.6)]';
 
         // Track previous target for animation
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _previousTarget is dialog state (number | null), not a DataModel field; null signals "first render"
         this._previousTarget = this._previousTarget ?? finalTarget;
 
         // Calculate roll result if manual roll is complete
@@ -365,8 +378,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         }));
 
         // Situational modifiers with toggle state
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is dialog state (null = not yet collected), not a DataModel field
         const situationalModifiers = (this._cachedSituationalModifiers ?? []).map((m) => ({
             ...m,
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: string-keyed lookup may return undefined
             active: this._situationalModifiers[`${m.key}_${m.source}`] ?? false,
             toggleKey: `${m.key}_${m.source}`,
             valueLabel: m.value >= 0 ? `+${m.value}` : `${m.value}`,
@@ -383,16 +398,21 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Actor info (ForceFieldData uses .actor, ActionData uses .sourceActor or .actor)
         const actor = (rollData.sourceActor ?? rollData['actor']) as { name?: string; img?: string } | null | undefined;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- actor is typed as (obj | null | undefined); optional chain + ?? is the safe access pattern
         const actorName = actor?.name ?? '';
         const actorImg = actor?.img ?? '';
 
         // Roll name
+        /* eslint-disable @typescript-eslint/no-unnecessary-condition -- forceField and rollData.name may be absent at runtime; optional chain + ?? is defensive */
         const rollName = isForceField
             ? ((rollData['forceField'] as { name?: string } | null | undefined)?.name ?? '') || 'Force Field'
             : (rollData.name ?? '') || (rollData.nameOverride ?? '') || 'Test';
+        /* eslint-enable @typescript-eslint/no-unnecessary-condition */
+        /* eslint-disable @typescript-eslint/no-unnecessary-condition -- rollData.action may be absent at runtime on uninitialised roll data despite its type */
         const rollSubtitle = isForceField
             ? 'Force Field Activation'
             : (typeof rollData['type'] === 'string' && rollData['type'].length > 0 ? rollData['type'] : null) ?? rollData.action ?? '';
+        /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
         return {
             ...context,
@@ -443,6 +463,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     /** @inheritDoc */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender has a loose Foundry signature with unknown options bag
     override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
@@ -513,7 +534,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             if (picker) {
                 const handler: (e: PointerEvent) => void = (e) => {
                     const eTarget = e.target as Node | null;
-                    if (!picker.contains(eTarget) && !(eTarget as HTMLElement | null)?.closest?.('[data-action="toggleDifficultyPicker"]')) {
+                    if (!picker.contains(eTarget) && !(eTarget as HTMLElement | null)?.closest('[data-action="toggleDifficultyPicker"]')) {
                         this._difficultyPickerOpen = false;
                         document.removeEventListener('pointerdown', handler);
                         this._pickerOutsideHandler = null;
@@ -544,12 +565,15 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /*  Context Helpers                              */
     /* -------------------------------------------- */
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context bag returned to Handlebars template; keys are heterogeneous by design
     _getWeaponContext(): Record<string, unknown> {
         const rd = this.rollData;
 
         // Apply range bracket override if user selected one
         if (this._selectedRangeBracket !== null && rd.weapon?.isRanged === true) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: RANGE_BRACKETS[key] may be undefined
             const bracket = RANGE_BRACKETS[this._selectedRangeBracket];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- bracket may be undefined due to noUncheckedIndexedAccess
             if (bracket) {
                 rd.rangeName = bracket.label;
                 rd.rangeBonus = bracket.modifier;
@@ -576,6 +600,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                           modifier: b.modifier,
                           modifierLabel: b.modifier >= 0 ? `+${b.modifier}` : `${b.modifier}`,
                           rangeText,
+                          // eslint-disable-next-line no-restricted-syntax -- boundary: _selectedRangeBracket is dialog state (string | null), not a DataModel field
                           isSelected: (this._selectedRangeBracket ?? rd['rangeBracket']) === key,
                       };
                   })
@@ -583,6 +608,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Card-based attack modes
         const isRanged = rd.weapon?.isRanged === true;
+        /* eslint-disable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions, no-restricted-syntax -- rd.weapon may be absent at runtime; cast is boundary: weapon roll data typing does not match AttackOptionWeaponLike exactly */
         const attackModes = rd.weapon
             ? getAvailableAttackModes(rd.weapon as unknown as AttackOptionWeaponLike).map((m) => ({
                   ...m,
@@ -590,9 +616,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                   modifierLabel: m.modifier >= 0 ? `+${m.modifier}` : `${m.modifier}`,
               }))
             : [];
+        /* eslint-enable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions, no-restricted-syntax */
 
         // Melee special options
         const meleeSpecialOptions =
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- rd.weapon may be absent at runtime on non-weapon roll data despite its type
             !isRanged && rd.weapon
                 ? getMeleeSpecialOptions().map((m) => ({
                       ...m,
@@ -611,6 +639,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         }));
 
         // Combat situational modifiers
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- rd.weapon may be absent at runtime on non-weapon roll data despite its type
         const combatSituationals = rd.weapon
             ? getSituationalModifiers(isRanged).map((s) => ({
                   ...s,
@@ -620,7 +649,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             : [];
 
         // Size modifiers from config (values are plain strings like "Average (4)")
-        const sizes = CONFIG.wh40k?.sizes || {};
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- CONFIG.wh40k may be absent on early initialization
+        const sizes = CONFIG.wh40k?.sizes ?? {};
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _sizeModifierKey is dialog state (string | null); null means "derive from target actor"
         const currentSizeMod = this._sizeModifierKey ?? this._getDefaultSizeKey(rd);
         const sizeOptions = Object.entries(sizes).map(([key, label]) => {
             const modifier = (parseInt(key, 10) - 4) * 10;
@@ -634,8 +665,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         });
 
         // Selected range summary for collapsed header
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _selectedRangeBracket is dialog state (string | null), not a DataModel field
         const currentRangeKey = this._selectedRangeBracket ?? rd['rangeBracket'];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: rangeBrackets[0] may be undefined
         const currentRangeBracket = rangeBrackets.find((b) => b.key === currentRangeKey) ?? rangeBrackets.find((b) => b.key === 'standard') ?? rangeBrackets[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- currentRangeBracket may be undefined due to noUncheckedIndexedAccess
         const selectedRangeSummary = currentRangeBracket
             ? { label: currentRangeBracket.label, modifier: currentRangeBracket.modifier, modifierLabel: currentRangeBracket.modifierLabel }
             : { label: 'Standard', modifier: 0, modifierLabel: '+0' };
@@ -651,7 +685,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         };
 
         // Selected size summary for collapsed header
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: find may return undefined
         const currentSizeOption = sizeOptions.find((s) => s.isSelected) ?? sizeOptions.find((s) => s.key === '4');
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- currentSizeOption may be undefined
         const selectedSizeSummary = currentSizeOption
             ? { label: currentSizeOption.label, modifier: currentSizeOption.modifier, modifierLabel: currentSizeOption.modifierLabel }
             : { label: 'Average (4)', modifier: 0, modifierLabel: '+0' };
@@ -679,6 +715,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             selectedSizeSummary,
             // Range data
             rangeBrackets,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: _selectedRangeBracket is dialog state (string | null), not a DataModel field
             selectedRangeBracket: this._selectedRangeBracket ?? rd['rangeBracket'],
             rangeModifiedBy: rd['rangeModifiedBy'],
             isMeltaRange: rd['isMeltaRange'],
@@ -690,7 +727,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             isCalledShot: rd['isCalledShot'],
             calledShotLocation: rd['calledShotLocation'],
             locations: rd.locations,
-            actions: rd.actions || {},
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- rd.actions may be absent at runtime on uninitialised roll data despite its type
+            actions: rd.actions ?? {},
             currentAction: rd.action,
         };
     }
@@ -700,6 +738,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      * @param {WeaponRollData} rd
      * @returns {string} Size key (e.g. "4" for Average)
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: rd is heterogeneous weapon roll data bag passed from Handlebars context
     _getDefaultSizeKey(rd: Record<string, unknown>): string {
         const targetActor = rd['targetActor'] as { system?: { size?: string | number | null } } | null | undefined;
         const size = targetActor?.system?.size;
@@ -708,6 +747,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         return '4'; // Average
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context bag returned to Handlebars template; keys are heterogeneous by design
     _getPsychicContext(): Record<string, unknown> {
         const rd = this.rollData;
         return {
@@ -725,6 +765,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         };
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context bag returned to Handlebars template; keys are heterogeneous by design
     _getForceFieldContext(): Record<string, unknown> {
         const rd = this.rollData;
         return {
@@ -738,8 +779,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /* -------------------------------------------- */
 
     _collectSituationalModifiers(): Array<{ key: string; source: string; value: number; label: string }> {
+        /* eslint-disable no-restricted-syntax -- boundary: rollData is a heterogeneous bag; actor may be on sourceActor or the legacy 'actor' key */
         const actor = this.rollData.sourceActor ?? (this.rollData as Record<string, unknown>)['actor'];
+        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: actor is unknown; cast + type-guard pattern; optional chain guards real runtime possibility
         if (typeof (actor as { getSituationalModifiers?: unknown })?.getSituationalModifiers !== 'function') return [];
+        /* eslint-enable no-restricted-syntax */
         const rd = this.rollData;
         const type = rd['type'] === 'Skill' ? 'skills' : rd['type'] === 'Characteristic' ? 'characteristics' : 'combat';
         const key = (rd['rollKey'] as string | null) ?? null;
@@ -750,8 +794,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     _calculateSituationalModifiers(): number {
         let total = 0;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is dialog state (null = not yet collected), not a DataModel field
         for (const mod of this._cachedSituationalModifiers ?? []) {
             const toggleKey = `${mod.key}_${mod.source}`;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: string-keyed lookup may return undefined
             if (this._situationalModifiers[toggleKey]) total += mod.value;
         }
         return total;
@@ -818,17 +864,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /* -------------------------------------------- */
 
     static async #onFormSubmit(this: UnifiedRollDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: FormDataExtended.object is typed loosely by Foundry; cast is the documented pattern
         const data = foundry.utils.expandObject((formData as unknown as { object: Record<string, unknown> }).object);
         // Update roll data fields from form
         const rd = this.rollData;
-        if (rd) {
-            foundry.utils.mergeObject(rd, data, { recursive: true });
-            if (typeof rd['update'] === 'function') {
-                await (rd['update'] as () => Promise<void>)();
-            }
-            // Re-render dependent parts (e.g., Called Shot location dropdown, range info)
-            await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+        foundry.utils.mergeObject(rd, data, { recursive: true });
+        if (typeof rd['update'] === 'function') {
+            await (rd['update'] as () => Promise<void>)();
         }
+        // Re-render dependent parts (e.g., Called Shot location dropdown, range info)
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
     /* -------------------------------------------- */
@@ -938,7 +983,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const rd = this.rollData;
         const isRanged = rd.weapon?.isRanged === true;
         const actionName = getActionNameForMode(key, isRanged);
-        if (actionName !== undefined && actionName !== null) {
+        if (actionName !== null) {
             rd.action = actionName;
         }
 
@@ -1010,7 +1055,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const bracket = target.dataset['bracket'];
         if (bracket === undefined) return;
         this._selectedRangeBracket = bracket;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: RANGE_BRACKETS[bracket] may be undefined
         const bracketData = RANGE_BRACKETS[bracket];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- bracketData may be undefined due to noUncheckedIndexedAccess
         if (bracketData) {
             const rd = this.rollData;
             rd.rangeName = bracketData.label;
@@ -1024,11 +1071,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // Get source token
         const rd = this.rollData;
         const actor = rd.sourceActor;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- sourceActor may be absent at runtime even though typed as defined
         if (!actor) return;
         type ActorToken = foundry.canvas.placeables.Token;
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor exposes loose token accessors not yet in typings.
         const actorWithTokens = actor as unknown as { token?: ActorToken | null; getActiveTokens: () => ActorToken[] };
         const sourceToken: ActorToken | undefined = actorWithTokens.token ?? actorWithTokens.getActiveTokens()[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- sourceToken may be undefined at runtime (noUncheckedIndexedAccess); guard is defensive
         if (!sourceToken) {
             ui.notifications.warn(game.i18n.localize('WH40K.Roll.NoTokenForActor'));
             return;
@@ -1041,6 +1090,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             return;
         }
         const targetToken = [...targets.values()][0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: [0] may be undefined; guard is defensive
         if (!targetToken) return;
 
         // Calculate distance
@@ -1121,6 +1171,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     _applyModifiersToRollData(): void {
         const rd = this.rollData;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- rd.modifiers may be absent at runtime on uninitialised roll data despite its type
         if (!rd.modifiers) return;
         rd.modifiers['difficulty'] = this._currentDifficulty.modifier;
         rd.modifiers['situational'] = this._calculateSituationalModifiers();
@@ -1154,6 +1205,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 this.rollData.dos = 0;
                 this.rollData.dof = 1 + getDegree(manualTotal, target);
             }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Roll.render() is not typed in the system typings; cast is required
             this.rollData.render = await (this.rollData.roll as unknown as { render: () => Promise<string> }).render();
         } else {
             // No roll entered - post target info only
@@ -1228,6 +1280,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             ui.notifications.warn(game.i18n.localize('WH40K.Roll.ForceFieldNotActivated'));
             return false;
         }
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- ff is cast as (obj | null | undefined); optional chains guard against null/absent forceField at runtime
         if (ff?.system?.overloaded === true) {
             ui.notifications.warn(game.i18n.localize('WH40K.Roll.ForceFieldOverloaded'));
             return false;

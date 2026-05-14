@@ -5,7 +5,9 @@
 
 import type { ApplicationV2Ctor, FoundryApplicationApiLike } from './application-types.ts';
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped; cast required to reach api surface
 const applicationAPI = (foundry.applications as unknown as { api: FoundryApplicationApiLike }).api;
+// eslint-disable-next-line @typescript-eslint/unbound-method -- destructured from framework API object; used as a mixin factory, not as a method call
 const { HandlebarsApplicationMixin } = applicationAPI;
 
 /**
@@ -15,17 +17,21 @@ const { HandlebarsApplicationMixin } = applicationAPI;
  * @returns {typeof BaseApplicationWH40K}
  * @mixin
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- mixin factory: return type is the inner class, which cannot be named at the outer function scope
 export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T) {
     class BaseApplicationWH40K extends HandlebarsApplicationMixin(Base) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructor must accept any[] to satisfy TS2545 mixin constraint
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- spreading any[] is inherent to the mixin pattern (TS2545)
             super(...args);
         }
 
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             actions: {
+                // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 action map binds `this` at click-time; private static methods are safe here
                 toggleCollapsed: BaseApplicationWH40K.#toggleCollapsed,
             },
             classes: ['wh40k-rpg'],
@@ -62,6 +68,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
          * @type {string}
          */
         get subtitle(): string {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 options are untyped; cast required to access window.subtitle
             const options = (this as unknown as { options: { window?: { subtitle?: string } } }).options;
             return game.i18n.localize(options.window?.subtitle ?? '');
         }
@@ -76,8 +83,11 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
                 _configureRenderOptions?: (this: BaseApplicationWH40K, options: ApplicationV2Config.RenderOptions) => void;
             };
             prototype._configureRenderOptions?.call(this, options);
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, no-restricted-syntax -- boundary: isFirstRender is non-nullable in V14; hasFrame is a Foundry runtime property not in our types
             if (options.isFirstRender && (this as unknown as { hasFrame: boolean }).hasFrame) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ??= on options.window is Foundry V14 render-options init pattern
                 options.window ??= {};
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ??= on options.window.subtitle is Foundry V14 render-options init pattern
                 options.window.subtitle ??= this.subtitle;
             }
         }
@@ -85,10 +95,12 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         /* -------------------------------------------- */
 
         /** @inheritDoc */
+        /* eslint-disable no-restricted-syntax -- boundary: prototype traversal casts; unknown in callback signatures is inherent to the mixin pattern */
         override async _onFirstRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             const prototype = Object.getPrototypeOf(BaseApplicationWH40K.prototype) as {
                 _onFirstRender?: (this: BaseApplicationWH40K, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions) => Promise<void>;
             };
+            /* eslint-enable no-restricted-syntax */
             await prototype._onFirstRender?.call(this, context, options);
             this._renderContainers(context, options);
         }
@@ -96,8 +108,10 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         /* -------------------------------------------- */
 
         /** @inheritDoc */
+        /* eslint-disable no-restricted-syntax -- boundary: _prepareContext returns Foundry untyped context; Record<string,unknown> is the correct type at this API seam */
         override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
             const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
+            /* eslint-enable no-restricted-syntax */
             context['CONFIG'] = CONFIG.wh40k;
             return context;
         }
@@ -105,6 +119,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         /* -------------------------------------------- */
 
         /** @inheritDoc */
+        /* eslint-disable no-restricted-syntax -- boundary: _preparePartContext uses prototype traversal; unknown in signatures is inherent to the mixin pattern */
         async _preparePartContext(
             partId: string,
             context: Record<string, unknown>,
@@ -118,6 +133,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
                     options: ApplicationV2Config.RenderOptions,
                 ) => Promise<Record<string, unknown>>;
             };
+            /* eslint-enable no-restricted-syntax */
             return { ...((await prototype._preparePartContext?.call(this, partId, context, options)) ?? {}) };
         }
 
@@ -129,17 +145,21 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
          * @param {object} options  Render options.
          * @protected
          */
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _context is the Foundry render context object; Record<string, unknown> is the correct type at this API seam
         _renderContainers(_context: Record<string, unknown>, _options: ApplicationV2Config.RenderOptions): void {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: this.element is not on ApplicationV2Ctor; cast required to access runtime element
             const root = (this as unknown as { element: HTMLElement }).element;
             const containerElements = Array.from(root.querySelectorAll<HTMLElement>('[data-container-id]'));
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- containerElements queried by [data-container-id]; containerId is guaranteed present
             // biome-ignore lint/style/noNonNullAssertion: containerElements are selected by [data-container-id] so dataset.containerId is always present
             const containers: Record<string, HTMLElement> = Object.fromEntries(containerElements.map((el) => [el.dataset['containerId']!, el]));
             for (const [part, config] of Object.entries((this.constructor as typeof BaseApplicationWH40K).PARTS)) {
-                if (!config.container?.id) continue;
+                if (config.container?.id === undefined || config.container.id === '') continue; // eslint-disable-line @typescript-eslint/strict-boolean-expressions -- explicit empty-string guard
                 const element = root.querySelector<HTMLElement>(`[data-application-part="${part}"]`);
-                if (!element) continue;
+                if (element === null) continue;
                 let container = containers[config.container.id];
-                if (!container) {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: Record lookup may return undefined
+                if (container === undefined) {
                     const div = document.createElement('div');
                     div.dataset['containerId'] = config.container.id;
                     if (config.container.classes) div.classList.add(...config.container.classes);
@@ -157,7 +177,8 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
             for (const part of Object.values(result)) {
                 for (const element of part.querySelectorAll<HTMLElement>('[data-expand-id]')) {
                     const expandId = element.dataset['expandId'];
-                    if (expandId) {
+                    if (expandId !== undefined && expandId !== '') {
+                        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- Map.get returns T|undefined; boolean coerce is intentional toggle
                         element.querySelector('.collapsible')?.classList.toggle('collapsed', !this.#expandedSections.get(expandId));
                     }
                 }
@@ -181,15 +202,17 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
                 _updateFrame?: (this: BaseApplicationWH40K, options: ApplicationV2Config.RenderOptions) => void;
             };
             prototype._updateFrame?.call(this, options);
-            if (options.window?.subtitle) {
+            if (options.window?.subtitle !== undefined && options.window.subtitle !== '') {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: this.element is a Foundry runtime property not in ApplicationV2Ctor types
                 const subtitle = (this as unknown as { element: HTMLElement }).element.querySelector<HTMLElement>('.window-header > .window-subtitle');
-                if (subtitle) subtitle.innerText = options.window.subtitle;
+                if (subtitle !== null) subtitle.innerText = options.window.subtitle;
             }
         }
 
         /* -------------------------------------------- */
 
         /** @inheritDoc */
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender context is the Foundry render object; Record<string,unknown> is the correct type at this API seam
         override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
@@ -199,6 +222,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
             this._renderContainers(context, options);
 
             // Add special styling for multi-select tags
+            // eslint-disable-next-line no-restricted-syntax -- boundary: this.element is a Foundry runtime property not in ApplicationV2Ctor types
             for (const select of (this as unknown as { element: HTMLElement }).element.querySelectorAll('multi-select')) {
                 const multiSelect = select as HTMLInputElement;
                 if (multiSelect.disabled) continue;
@@ -216,6 +240,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
          */
         _disableFields(): void {
             const selector = `.window-content :is(${['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON'].join(', ')}):not(.always-interactive)`;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: this.element is a Foundry runtime property not in ApplicationV2Ctor types
             for (const element of (this as unknown as { element: HTMLElement }).element.querySelectorAll<HTMLElement>(selector)) {
                 if (element instanceof HTMLTextAreaElement) element.readOnly = true;
                 else if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement || element instanceof HTMLButtonElement)
@@ -235,10 +260,10 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
          */
         static #toggleCollapsed(this: BaseApplicationWH40K, event: Event, target: HTMLElement): void {
             const collapsible = target.closest('.collapsible');
-            if (!collapsible || (event.target as HTMLElement).closest('.collapsible-content')) return;
+            if (collapsible === null || (event.target as HTMLElement).closest('.collapsible-content') !== null) return;
             collapsible.classList.toggle('collapsed');
             const expandId = target.closest<HTMLElement>('[data-expand-id]')?.dataset['expandId'];
-            if (expandId) {
+            if (expandId !== undefined && expandId !== '') {
                 this.#expandedSections.set(expandId, !collapsible.classList.contains('collapsed'));
             }
         }

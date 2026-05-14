@@ -153,6 +153,7 @@ export interface WH40KSystemConfig {
     getQualityDefinition: (identifier: string) => WeaponQualityConfig | null;
     getQualityLabel: (identifier: string, level?: number | null) => string;
     getQualityDescription: (identifier: string) => string;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: getJamThreshold accepts any weapon doc shape; caller knows the concrete type but this interface is shared across all systems
     getJamThreshold: (weapon: unknown) => number | null;
     combatActions: Record<string, CombatActionConfig[]>;
     advancementTiers: Record<string, OriginPathStepConfig>;
@@ -822,7 +823,7 @@ WH40K.defaultIcons = {
     starship: 'modules/game-icons-net-font/svg/spaceship.svg',
 };
 
-const gameIconPath = (name: string) => `modules/game-icons-net-font/svg/${name}.svg`;
+const gameIconPath = (name: string): string => `modules/game-icons-net-font/svg/${name}.svg`;
 
 WH40K.skillIcons = {
     acrobatics: gameIconPath('jump-across'),
@@ -884,11 +885,12 @@ WH40K.skillIcons = {
 
 WH40K.getSkillIcon = function (skillKey) {
     const key = typeof skillKey === 'string' ? skillKey : '';
-    const icon = this.skillIcons?.[key];
-    if (icon) {
+    const icon = this.skillIcons[key];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: Record<string,string> index may return undefined at runtime
+    if (icon !== undefined && icon !== '') {
         return icon;
     }
-    if (key) {
+    if (key !== '') {
         const parts = key
             .replace(/[_-]+/g, ' ')
             .replace(/[^a-zA-Z0-9 ]/g, ' ')
@@ -901,8 +903,9 @@ WH40K.getSkillIcon = function (skillKey) {
                 return lower.charAt(0).toUpperCase() + lower.slice(1);
             })
             .join('');
-        const normalizedIcon = this.skillIcons?.[normalized];
-        if (normalizedIcon) return normalizedIcon;
+        const normalizedIcon = this.skillIcons[normalized];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: Record<string,string> index may return undefined at runtime
+        if (normalizedIcon !== undefined && normalizedIcon !== '') return normalizedIcon;
     }
     return this.getDefaultIcon('skill');
 };
@@ -1382,17 +1385,17 @@ WH40K.getQualityDescription = function (identifier) {
 WH40K.getJamThreshold = (weapon) => {
     const w = weapon as { system?: { craftsmanship?: string; effectiveSpecial?: Set<string>; special?: Set<string> } };
     const craftsmanship = w.system?.craftsmanship;
-    const qualities = w.system?.effectiveSpecial || w.system?.special;
+    const qualities = w.system?.effectiveSpecial ?? w.system?.special;
 
     // Best/Master-crafted never jam
-    if (craftsmanship && ['best', 'master-crafted'].includes(craftsmanship)) {
+    if (craftsmanship !== undefined && craftsmanship !== '' && ['best', 'master-crafted'].includes(craftsmanship)) {
         return null;
     }
 
     // Check for reliability qualities
-    if (qualities?.has?.('unreliable-2')) return 90;
-    if (qualities?.has?.('unreliable')) return 96;
-    if (qualities?.has?.('reliable')) return 95;
+    if (qualities?.has('unreliable-2') === true) return 90;
+    if (qualities?.has('unreliable') === true) return 96;
+    if (qualities?.has('reliable') === true) return 95;
 
     return 100; // Normal jamming threshold
 };

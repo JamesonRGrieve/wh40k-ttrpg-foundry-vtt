@@ -49,7 +49,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
                 required: true,
                 initial: 'common',
                 choices: () =>
-                    Object.keys(CONFIG.WH40K?.availabilities ?? {}).length
+                    Object.keys(CONFIG.WH40K.availabilities).length > 0
                         ? Object.keys(CONFIG.WH40K.availabilities)
                         : [
                               'ubiquitous',
@@ -69,7 +69,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
                 required: true,
                 initial: 'common',
                 choices: () =>
-                    Object.keys(CONFIG.WH40K?.craftsmanships ?? {}).length ? Object.keys(CONFIG.WH40K.craftsmanships) : ['poor', 'common', 'good', 'best'],
+                    Object.keys(CONFIG.WH40K.craftsmanships).length > 0 ? Object.keys(CONFIG.WH40K.craftsmanships) : ['poor', 'common', 'good', 'best'],
             }),
             quantity: new fields.NumberField({
                 required: true,
@@ -114,8 +114,9 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel._migrateData receives raw unknown source data before schema validation
     static override _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
         PhysicalItemTemplate.#migrateCost(source);
     }
 
@@ -123,8 +124,10 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * Normalize cost field shape.
      * @param {object} source  The source data
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
     static #migrateCost(source: Record<string, unknown>): void {
         const emptyCost = PhysicalItemTemplate.#emptyCost();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeNullableNumber receives raw field values from pre-migration source data
         const normalizeNullableNumber = (value: unknown): number | null => {
             if (value === null || value === undefined || value === '') return null;
             const numericValue = Number(value);
@@ -132,18 +135,19 @@ export default class PhysicalItemTemplate extends SystemDataModel {
             return numericValue;
         };
 
-        if (!source['cost'] || typeof source['cost'] !== 'object') {
+        if (source['cost'] === null || source['cost'] === undefined || typeof source['cost'] !== 'object') {
             source['cost'] = emptyCost;
             return;
         }
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: CostShape describes pre-migration data where numeric fields may be any type; unknown is correct here
         interface CostShape {
-            dh1?: { throneGelt?: unknown };
-            dh2?: { influence?: unknown; homebrew?: { requisition?: unknown; throneGelt?: unknown } };
-            rt?: { profitFactor?: unknown };
-            dw?: { requisition?: unknown };
-            bc?: { infamy?: unknown };
-            ow?: { logistics?: unknown };
+            dh1?: { throneGelt?: unknown }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
+            dh2?: { influence?: unknown; homebrew?: { requisition?: unknown; throneGelt?: unknown } }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field values may be any type
+            rt?: { profitFactor?: unknown }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
+            dw?: { requisition?: unknown }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
+            bc?: { infamy?: unknown }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
+            ow?: { logistics?: unknown }; // eslint-disable-line no-restricted-syntax -- boundary: pre-migration numeric field value may be any type
         }
         const cost = source['cost'] as CostShape;
 
@@ -173,6 +177,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
         };
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: emptyCost returns a raw object assigned to source data before schema validation
     static #emptyCost(): Record<string, unknown> {
         return {
             dh1: {
@@ -210,8 +215,9 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel._cleanData receives raw source before schema validation
     static override _cleanData(source: Record<string, unknown> | undefined, options?: DataModelV14.CleaningOptions): void {
-        super._cleanData?.(source, options);
+        super._cleanData(source, options);
     }
 
     /* -------------------------------------------- */

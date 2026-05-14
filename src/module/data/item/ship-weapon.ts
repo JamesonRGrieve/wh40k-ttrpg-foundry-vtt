@@ -30,6 +30,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField at runtime but TypeScript doesn't know; cast needed for Foundry field registration
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Weapon type
@@ -83,8 +84,9 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel._migrateData receives raw unknown source data before schema validation
     static override _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
         ShipWeaponData.#migratePowerUsage(source);
         ShipWeaponData.#migrateSpaceUsage(source);
         ShipWeaponData.#migrateSpCost(source);
@@ -92,9 +94,9 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         ShipWeaponData.#migrateType(source);
         ShipWeaponData.#migrateNumericFields(source);
         ShipWeaponData.#migrateHullType(source);
-        ShipWeaponData.#initializeSpecial(source);
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
     static #migratePowerUsage(source: Record<string, unknown>): void {
         if ('powerUsage' in source && source['power'] === undefined) {
             source['power'] = source['powerUsage'];
@@ -102,6 +104,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
     static #migrateSpaceUsage(source: Record<string, unknown>): void {
         if ('spaceUsage' in source && source['space'] === undefined) {
             source['space'] = source['spaceUsage'];
@@ -109,6 +112,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
     static #migrateSpCost(source: Record<string, unknown>): void {
         if ('spCost' in source && source['shipPoints'] === undefined) {
             source['shipPoints'] = source['spCost'];
@@ -116,6 +120,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
     static #migrateCritRating(source: Record<string, unknown>): void {
         if ('critRating' in source && source['crit'] === undefined) {
             source['crit'] = source['critRating'];
@@ -123,9 +128,10 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
     static #migrateType(source: Record<string, unknown>): void {
         if ('type' in source) {
-            if (!source['weaponType']) {
+            if (source['weaponType'] === null || source['weaponType'] === undefined || source['weaponType'] === '') {
                 const typeMap: Record<string, string> = {
                     'macrocannon': 'macrobattery',
                     'macrobattery': 'macrobattery',
@@ -144,18 +150,21 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
     static #migrateNumericFields(source: Record<string, unknown>): void {
         const numericFields = ['power', 'space', 'shipPoints', 'crit', 'strength'];
         for (const field of numericFields) {
             if (source[field] === '-' || source[field] === null || source[field] === undefined) {
                 source[field] = 0;
             } else if (typeof source[field] === 'string') {
-                const parsed = parseInt(source[field] as string, 10);
+                const fieldVal = source[field];
+                const parsed = parseInt(fieldVal, 10);
                 source[field] = Number.isNaN(parsed) ? 0 : parsed;
             }
         }
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: migration helper receives raw source from _migrateData
     static #migrateHullType(source: Record<string, unknown>): void {
         if (typeof source['hullType'] === 'string') {
             const types = source['hullType']
@@ -164,13 +173,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
                 .split(/[,\s]+/)
                 .map((s) => s.trim().replace(/\s+/g, '-'))
                 .filter(Boolean);
-            source['hullType'] = types.length ? types : ['all'];
-        }
-    }
-
-    static #initializeSpecial(source: Record<string, unknown>): void {
-        if (!source['special']) {
-            source['special'] = [];
+            source['hullType'] = types.length > 0 ? types : ['all'];
         }
     }
 
@@ -184,21 +187,24 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} options    Additional options
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel._cleanData receives raw source before schema validation; options is a Foundry framework type
     static override _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
-        super._cleanData?.(source, options);
+        super._cleanData(source, options);
         // Ensure hullType is array
-        if (source?.['hullType'] && !Array.isArray(source['hullType'])) {
+        if (source?.['hullType'] !== null && source?.['hullType'] !== undefined && !Array.isArray(source['hullType'])) {
             if (typeof source['hullType'] === 'string') {
                 source['hullType'] = [source['hullType']];
             } else if (source['hullType'] instanceof Set) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: SetField stores unknown elements; cast is safe here as we're converting to array before schema validation
                 source['hullType'] = Array.from(source['hullType'] as Set<unknown>);
             }
         }
         // Ensure special is array
-        if (source?.['special'] && !Array.isArray(source['special'])) {
+        if (source?.['special'] !== null && source?.['special'] !== undefined && !Array.isArray(source['special'])) {
             if (typeof source['special'] === 'string') {
                 source['special'] = source['special'].split(',').map((s) => s.trim());
             } else if (source['special'] instanceof Set) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: SetField stores unknown elements; cast is safe here as we're converting to array before schema validation
                 source['special'] = Array.from(source['special'] as Set<unknown>);
             }
         }
@@ -271,6 +277,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels return type is defined in ItemDataModel base class; values are primitive strings/numbers consumed by the sheet template
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             type: this.weaponTypeLabel,
