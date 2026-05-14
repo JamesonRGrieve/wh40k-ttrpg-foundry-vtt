@@ -13,7 +13,7 @@ import defineSimpleItemSheet from './define-simple-item-sheet.ts';
  */
 interface SkillSheetItemSystem {
     specialUses: Array<{ name: string; description: string; modifier: number; difficulty: string }>;
-    toChatSpecialUse(index: number): Promise<unknown>;
+    toChatSpecialUse: (index: number) => Promise<unknown>;
 }
 
 interface SkillSheetActor {

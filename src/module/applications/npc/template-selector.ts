@@ -20,8 +20,8 @@ interface NpcTemplateSys {
     traits?: Array<{ uuid?: string }>;
     talents?: Array<{ uuid?: string }>;
     /* eslint-disable no-restricted-syntax -- boundary: NpcTemplateSys is a structural adapter for untyped item.system; Record<string,unknown> is the Foundry data-prep return shape */
-    previewAtThreat(threatLevel: number): Record<string, unknown>;
-    generateAtThreat(threatLevel: number, options: { isHorde: boolean }): Record<string, unknown>;
+    previewAtThreat: (threatLevel: number) => Record<string, unknown>;
+    generateAtThreat: (threatLevel: number, options: { isHorde: boolean }) => Record<string, unknown>;
     /* eslint-enable no-restricted-syntax */
 }
 

@@ -83,9 +83,9 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
 
         type AnyPack = {
             metadata: { type: string; name: string };
-            getIndex(): Promise<foundry.utils.Collection<{ _id: string; name: string }>>;
+            getIndex: () => Promise<foundry.utils.Collection<{ _id: string; name: string }>>;
             // eslint-disable-next-line no-restricted-syntax -- boundary: compendium doc type varies by pack; validated via shape check below
-            getDocument(id: string): Promise<unknown>;
+            getDocument: (id: string) => Promise<unknown>;
         };
 
         // Filter skill packs up front, then fan-out all index fetches in parallel.
