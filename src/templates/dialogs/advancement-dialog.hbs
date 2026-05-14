@@ -258,48 +258,54 @@
     {{#if (eq activeTab "psychic")}}
     <div class="tw-animate-[fadeIn_250ms_ease]">
       {{#if psychic}}
-      <div>
-        <div>
-          <i class="fas fa-brain"></i>
-          <span>Psy Rating</span>
-          <span>{{psychic.psyAdvance.currentRating}}</span>
+      {{!-- Psy Rating header card --}}
+      <div class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-px-3 tw-py-2 tw-rounded-md tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.08),rgba(0,0,0,0.15))] tw-border tw-border-[var(--wh40k-border-color)]">
+        <div class="tw-flex tw-items-center tw-gap-2">
+          <i class="fas fa-brain tw-text-[color:var(--wh40k-color-gold)]"></i>
+          <span class="tw-text-[0.75rem] tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--color-text-secondary)]">Psy Rating</span>
+          <span class="tw-font-display tw-text-[1.4rem] tw-font-bold tw-leading-none tw-text-[color:var(--wh40k-color-gold-light)]">{{psychic.psyAdvance.currentRating}}</span>
         </div>
         {{#if psychic.psyAdvance.maxed}}
-        <span><i class="fas fa-crown"></i> Maximum</span>
+        <span class="tw-inline-flex tw-items-center tw-gap-1.5 tw-py-1 tw-px-2 tw-rounded tw-bg-[rgba(201,162,39,0.15)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">
+          <i class="fas fa-crown"></i> Maximum
+        </span>
         {{else if psychic.psyAdvance.canPurchase}}
-        <button class="tw-py-[0.4rem] tw-px-[0.8rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]" data-action="purchasePsyRating" type="button">
+        <button class="tw-inline-flex tw-items-center tw-gap-2 tw-py-[0.4rem] tw-px-[0.8rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.8rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]" data-action="purchasePsyRating" type="button">
           <span>Advance to {{psychic.psyAdvance.nextRating}}</span>
-          <span>{{psychic.psyAdvance.cost}} XP</span>
+          <span class="tw-py-[0.1rem] tw-px-[0.4rem] tw-rounded tw-bg-[rgba(0,0,0,0.25)] tw-text-[0.7rem]">{{psychic.psyAdvance.cost}} XP</span>
         </button>
         {{else}}
-        <div>
+        <div class="tw-inline-flex tw-items-center tw-gap-1.5 tw-text-[color:var(--color-text-tertiary)] tw-text-[0.75rem]">
           <i class="fas fa-coins"></i>
           <span>Advance to {{psychic.psyAdvance.nextRating}} — {{psychic.psyAdvance.cost}} XP</span>
         </div>
         {{/if}}
       </div>
 
+      {{!-- Discipline filter chips + "available only" toggle --}}
       {{#if psychic.chips.length}}
-      <div>
-        <nav>
+      <div class="tw-flex tw-items-center tw-flex-wrap tw-gap-2 tw-mb-3">
+        <nav class="tw-flex tw-flex-wrap tw-gap-1.5 tw-flex-1">
           {{#each psychic.chips as |chip|}}
           <button type="button"
-                  class="{{#if chip.active}}active{{/if}}"
+                  class="tw-inline-flex tw-items-center tw-gap-1.5 tw-py-1 tw-px-2.5 tw-rounded-full tw-text-[0.72rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all
+                         {{#if chip.active}}tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.3),rgba(139,112,21,0.4))] tw-border tw-border-[var(--wh40k-color-gold)] tw-text-[color:var(--wh40k-color-gold-light)]{{else}}tw-bg-[rgba(0,0,0,0.15)] tw-border tw-border-[var(--wh40k-border-color)] tw-text-[color:var(--color-text-secondary)] hover:tw-border-[var(--wh40k-color-gold-dark)] hover:tw-text-[color:var(--wh40k-color-gold-light)]{{/if}}"
                   data-action="switchDiscipline"
                   data-discipline="{{chip.key}}"
                   title="{{chip.accessible}} accessible / {{chip.count}} total">
             <span>{{chip.label}}</span>
-            <span>{{chip.accessible}}/{{chip.count}}</span>
+            <span class="tw-py-[0.1rem] tw-px-[0.4rem] tw-rounded-full tw-bg-[rgba(0,0,0,0.3)] tw-text-[0.65rem] tw-font-mono tw-tracking-normal">{{chip.accessible}}/{{chip.count}}</span>
           </button>
           {{/each}}
         </nav>
         {{#if psychic.hasBlocked}}
         <button type="button"
-                class="{{#if psychic.availableOnly}}active{{/if}}"
+                class="tw-inline-flex tw-items-center tw-gap-1.5 tw-py-1 tw-px-2.5 tw-rounded tw-text-[0.72rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all
+                       {{#if psychic.availableOnly}}tw-bg-[rgba(201,162,39,0.2)] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-text-[color:var(--wh40k-color-gold-light)]{{else}}tw-bg-[rgba(0,0,0,0.15)] tw-border tw-border-[var(--wh40k-border-color)] tw-text-[color:var(--color-text-secondary)] hover:tw-border-[var(--wh40k-color-gold-dark)]{{/if}}"
                 data-action="toggleAvailableOnly"
                 title="Show only powers at or below your Psy Rating">
           <i class="fas {{#if psychic.availableOnly}}fa-check-square{{else}}fa-square{{/if}}"></i>
-          Available to me
+          <span>Available</span>
         </button>
         {{/if}}
       </div>
@@ -375,15 +381,15 @@
       {{/each}}
 
       {{#unless psychic.disciplines.length}}
-      <div>
-        <i class="fas fa-filter"></i>
-        <p>No powers match the current filter.</p>
+      <div class="tw-flex tw-flex-col tw-items-center tw-gap-2 tw-py-8 tw-px-4 tw-text-center tw-text-[color:var(--color-text-tertiary)]">
+        <i class="fas fa-filter tw-text-[1.5rem] tw-opacity-50"></i>
+        <p class="tw-text-[0.85rem] tw-m-0">No powers match the current filter.</p>
       </div>
       {{/unless}}
       {{else}}
-      <div>
-        <i class="fas fa-brain"></i>
-        <p>No psychic powers available. Take the Psyker elite advance to unlock.</p>
+      <div class="tw-flex tw-flex-col tw-items-center tw-gap-2 tw-py-8 tw-px-4 tw-text-center tw-text-[color:var(--color-text-tertiary)]">
+        <i class="fas fa-brain tw-text-[2rem] tw-opacity-40"></i>
+        <p class="tw-text-[0.9rem] tw-m-0 tw-max-w-[28rem]">No psychic powers available. Take the Psyker elite advance from the <strong class="tw-text-[color:var(--wh40k-color-gold)]">Traits</strong> tab to unlock.</p>
       </div>
       {{/if}}
     </div>
