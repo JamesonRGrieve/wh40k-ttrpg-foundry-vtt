@@ -41,6 +41,15 @@
         {{> systems/wh40k-rpg/templates/actor/partial/stat-breakdown-button.hbs
             statKey="fate"
             position="absolute"}}
+
+        {{!-- Fate Uses reference (issue #35) — opens a popout listing every spend option. --}}
+        <button type="button"
+                class="wh40k-fate-uses-trigger tw-mt-1 tw-px-2 tw-py-1 tw-flex tw-items-center tw-gap-1.5 tw-bg-transparent tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded tw-text-[0.72rem] tw-text-[color:var(--color-text-secondary)] tw-cursor-pointer tw-transition-colors hover:tw-text-[color:var(--wh40k-text-medium)]"
+                data-action="viewFateUses"
+                title="{{localize 'WH40K.FateUses.DialogTitle'}}">
+            <i class="fas fa-circle-info"></i>
+            <span>{{localize "WH40K.FateUses.ViewLinkLabel"}}</span>
+        </button>
     </div>
 
     {{!-- Edit Mode (Expandable) --}}

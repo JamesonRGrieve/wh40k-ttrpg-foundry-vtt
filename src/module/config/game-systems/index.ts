@@ -94,6 +94,7 @@ export type {
     GameSystemId,
     SkillRankDef,
     CharacteristicTierDef,
+    FatePointUseDef,
     OriginStepDef,
     OriginStepConfig,
     AdvanceCostResult,
