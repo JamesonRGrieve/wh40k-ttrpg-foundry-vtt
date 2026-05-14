@@ -30,25 +30,25 @@ export interface ApplicationV2MixinAPI {
     readonly subtitle: string;
 
     // Protected rendering helpers
-    _configureRenderOptions(options: Record<string, unknown>): void;
-    _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): void;
-    _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>>;
-    _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>>;
-    _renderContainers(context: Record<string, unknown>, options: Record<string, unknown>): void;
-    _replaceHTML(result: Record<string, HTMLElement>, content: HTMLElement, options: Record<string, unknown>): void;
-    _updateFrame(options: Record<string, unknown>): void;
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void;
-    _disableFields(): void;
+    _configureRenderOptions: (options: Record<string, unknown>) => void;
+    _onFirstRender: (context: Record<string, unknown>, options: Record<string, unknown>) => void;
+    _prepareContext: (options: Record<string, unknown>) => Promise<Record<string, unknown>>;
+    _preparePartContext: (partId: string, context: Record<string, unknown>, options: Record<string, unknown>) => Promise<Record<string, unknown>>;
+    _renderContainers: (context: Record<string, unknown>, options: Record<string, unknown>) => void;
+    _replaceHTML: (result: Record<string, HTMLElement>, content: HTMLElement, options: Record<string, unknown>) => void;
+    _updateFrame: (options: Record<string, unknown>) => void;
+    _onRender: (context: Record<string, unknown>, options: Record<string, unknown>) => void;
+    _disableFields: () => void;
 }
 
 /* -------------------------------------------- */
 
 /** API surface added by DragDropMixin (drag-drop-api-mixin) */
 export interface DragDropMixinAPI {
-    _allowedDropBehaviors(event: DragEvent, data: Record<string, unknown>): Set<string>;
-    _defaultDropBehavior(event: DragEvent, data: Record<string, unknown>): string;
-    _dropBehavior(event: DragEvent): string;
-    _onDragStart(event: DragEvent): Promise<void>;
+    _allowedDropBehaviors: (event: DragEvent, data: Record<string, unknown>) => Set<string>;
+    _defaultDropBehavior: (event: DragEvent, data: Record<string, unknown>) => string;
+    _dropBehavior: (event: DragEvent) => string;
+    _onDragStart: (event: DragEvent) => Promise<void>;
 }
 
 /* -------------------------------------------- */
@@ -60,39 +60,39 @@ export interface PrimarySheetMixinAPI extends DragDropMixinAPI {
     /** The current sheet mode (PLAY=1, EDIT=2). */
     _mode: number | null;
 
-    _configureRenderOptions(options: Record<string, unknown>): void;
-    _configureRenderParts(options: Record<string, unknown>): Record<string, unknown>;
-    _renderFrame(options: Record<string, unknown>): Promise<HTMLElement>;
-    _renderModeToggle(): void;
-    _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>>;
-    _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>>;
-    _getTabs(): Record<string, Record<string, unknown>>;
-    _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void>;
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void>;
-    _activateTabs(): void;
-    _activateTab(tab: string, group: string, nav: HTMLElement, content: HTMLElement): void;
-    animateStatChange(element: HTMLElement, type?: string): void;
-    animateValueChange(element: HTMLElement, oldValue: number, newValue: number): void;
-    _addDocument(event: Event, target: HTMLElement): void;
-    changeTab(tab: string, group: string, options: Record<string, unknown>): void;
-    _deleteDocument(event: Event, target: HTMLElement): Promise<unknown>;
-    _onChangeSheetMode(event: Event): Promise<void>;
-    _onClickAction(event: Event, target: HTMLElement): void;
-    _showDocument(event: Event, target: HTMLElement): Promise<unknown>;
-    _sortChildren(collection: string, mode: string): unknown[];
-    _sortItems(items: unknown[], mode: string): unknown[];
+    _configureRenderOptions: (options: Record<string, unknown>) => void;
+    _configureRenderParts: (options: Record<string, unknown>) => Record<string, unknown>;
+    _renderFrame: (options: Record<string, unknown>) => Promise<HTMLElement>;
+    _renderModeToggle: () => void;
+    _prepareContext: (options: Record<string, unknown>) => Promise<Record<string, unknown>>;
+    _preparePartContext: (partId: string, context: Record<string, unknown>, options: Record<string, unknown>) => Promise<Record<string, unknown>>;
+    _getTabs: () => Record<string, Record<string, unknown>>;
+    _onFirstRender: (context: Record<string, unknown>, options: Record<string, unknown>) => Promise<void>;
+    _onRender: (context: Record<string, unknown>, options: Record<string, unknown>) => Promise<void>;
+    _activateTabs: () => void;
+    _activateTab: (tab: string, group: string, nav: HTMLElement, content: HTMLElement) => void;
+    animateStatChange: (element: HTMLElement, type?: string) => void;
+    animateValueChange: (element: HTMLElement, oldValue: number, newValue: number) => void;
+    _addDocument: (event: Event, target: HTMLElement) => void;
+    changeTab: (tab: string, group: string, options: Record<string, unknown>) => void;
+    _deleteDocument: (event: Event, target: HTMLElement) => Promise<unknown>;
+    _onChangeSheetMode: (event: Event) => Promise<void>;
+    _onClickAction: (event: Event, target: HTMLElement) => void;
+    _showDocument: (event: Event, target: HTMLElement) => Promise<unknown>;
+    _sortChildren: (collection: string, mode: string) => unknown[];
+    _sortItems: (items: unknown[], mode: string) => unknown[];
 }
 
 /* -------------------------------------------- */
 
 /** API surface added by TooltipMixin */
 export interface TooltipMixinAPI {
-    prepareCharacteristicTooltip(key: string, characteristic: Record<string, unknown>, modifierSources?: Record<string, unknown>): string;
-    prepareSkillTooltip(key: string, skill: Record<string, unknown>, characteristics: Record<string, unknown>): string;
-    prepareArmorTooltip(location: string, armorData: Record<string, unknown>, equipped?: unknown[]): string;
-    prepareWeaponTooltip(weapon: Record<string, unknown>): string;
-    prepareModifierTooltip(title: string, sources: unknown[]): string;
-    prepareQualityTooltip(identifier: string, level?: number | null): string;
+    prepareCharacteristicTooltip: (key: string, characteristic: Record<string, unknown>, modifierSources?: Record<string, unknown>) => string;
+    prepareSkillTooltip: (key: string, skill: Record<string, unknown>, characteristics: Record<string, unknown>) => string;
+    prepareArmorTooltip: (location: string, armorData: Record<string, unknown>, equipped?: unknown[]) => string;
+    prepareWeaponTooltip: (weapon: Record<string, unknown>) => string;
+    prepareModifierTooltip: (title: string, sources: unknown[]) => string;
+    prepareQualityTooltip: (identifier: string, level?: number | null) => string;
 }
 
 /* -------------------------------------------- */
@@ -104,16 +104,16 @@ export interface VisualFeedbackMixinAPI {
     /** Track the last form submission time to prevent animation spam. */
     _lastSubmitTime: number;
 
-    _captureCurrentValues(): void;
-    _flashStatChange(fieldName: string, oldValue: number | string, newValue: number | string): void;
-    _findFieldElement(fieldName: string): HTMLElement | null;
-    _getAnimationClass(fieldName: string, oldValue: number | string, newValue: number | string): string;
-    _applyAnimation(element: HTMLElement, animationClass: string): void;
-    _animateDerivedStat(selector: string): void;
-    _animateCounter(element: HTMLElement, fromValue: number, toValue: number, duration?: number): void;
-    _showBriefNotification(element: HTMLElement, message: string, type?: string): void;
-    animateStatChange(fieldName: string, animationType?: string): void;
-    visualizeChanges(changes: Record<string, unknown>): void;
+    _captureCurrentValues: () => void;
+    _flashStatChange: (fieldName: string, oldValue: number | string, newValue: number | string) => void;
+    _findFieldElement: (fieldName: string) => HTMLElement | null;
+    _getAnimationClass: (fieldName: string, oldValue: number | string, newValue: number | string) => string;
+    _applyAnimation: (element: HTMLElement, animationClass: string) => void;
+    _animateDerivedStat: (selector: string) => void;
+    _animateCounter: (element: HTMLElement, fromValue: number, toValue: number, duration?: number) => void;
+    _showBriefNotification: (element: HTMLElement, message: string, type?: string) => void;
+    animateStatChange: (fieldName: string, animationType?: string) => void;
+    visualizeChanges: (changes: Record<string, unknown>) => void;
 }
 
 /* -------------------------------------------- */
@@ -135,66 +135,66 @@ export interface EnhancedAnimationsMixinAPI {
     /** MutationObserver for dynamic content. */
     _mutationObserver: MutationObserver | null;
 
-    _captureAnimationState(): void;
-    _setupMutationObserver(): void;
-    animateCounter(element: HTMLElement, fromValue: number, toValue: number, options?: Record<string, unknown>): void;
-    animateWoundsChange(oldValue: number, newValue: number): void;
-    _animateWoundsBar(barElement: HTMLElement, fromPercent: number, toPercent: number): void;
-    animateCharacteristicChange(charKey: string, oldValue: number, newValue: number): void;
-    animateCharacteristicBonus(charKey: string, oldBonus: number, newBonus: number): void;
-    animateXPGain(oldXP: number, newXP: number): void;
-    _animateProgressBar(barElement: HTMLElement): void;
-    _flashElement(element: HTMLElement, animClass: string, duration?: number): void;
-    _shouldSkipAnimation(): boolean;
-    close(options: Record<string, unknown>): Promise<unknown>;
+    _captureAnimationState: () => void;
+    _setupMutationObserver: () => void;
+    animateCounter: (element: HTMLElement, fromValue: number, toValue: number, options?: Record<string, unknown>) => void;
+    animateWoundsChange: (oldValue: number, newValue: number) => void;
+    _animateWoundsBar: (barElement: HTMLElement, fromPercent: number, toPercent: number) => void;
+    animateCharacteristicChange: (charKey: string, oldValue: number, newValue: number) => void;
+    animateCharacteristicBonus: (charKey: string, oldBonus: number, newBonus: number) => void;
+    animateXPGain: (oldXP: number, newXP: number) => void;
+    _animateProgressBar: (barElement: HTMLElement) => void;
+    _flashElement: (element: HTMLElement, animClass: string, duration?: number) => void;
+    _shouldSkipAnimation: () => boolean;
+    close: (options: Record<string, unknown>) => Promise<unknown>;
 }
 
 /* -------------------------------------------- */
 
 /** API surface added by CollapsiblePanelMixin */
 export interface CollapsiblePanelMixinAPI {
-    _loadPanelStates(): void;
-    _savePanelState(panelId: string, isExpanded: boolean): Promise<void>;
-    _getPanelFlagKey(): string;
-    _getPanelStates(): Record<string, boolean>;
-    _applyPanelStates(): void;
-    togglePanel(panelId: string, forceState?: boolean): Promise<void>;
-    expandAllPanels(): Promise<void>;
-    collapseAllPanels(): Promise<void>;
-    applyPanelPreset(presetName: string): Promise<void>;
-    collapseAllExcept(exceptPanelId: string): Promise<void>;
-    _animatePanelToggle(panel: HTMLElement, willBeExpanded: boolean): Promise<void>;
-    _setupPanelKeyboardShortcuts(): void;
+    _loadPanelStates: () => void;
+    _savePanelState: (panelId: string, isExpanded: boolean) => Promise<void>;
+    _getPanelFlagKey: () => string;
+    _getPanelStates: () => Record<string, boolean>;
+    _applyPanelStates: () => void;
+    togglePanel: (panelId: string, forceState?: boolean) => Promise<void>;
+    expandAllPanels: () => Promise<void>;
+    collapseAllPanels: () => Promise<void>;
+    applyPanelPreset: (presetName: string) => Promise<void>;
+    collapseAllExcept: (exceptPanelId: string) => Promise<void>;
+    _animatePanelToggle: (panel: HTMLElement, willBeExpanded: boolean) => Promise<void>;
+    _setupPanelKeyboardShortcuts: () => void;
 }
 
 /* -------------------------------------------- */
 
 /** API surface added by ContextMenuMixin */
 export interface ContextMenuMixinAPI {
-    _createContextMenus(): void;
-    _createCustomContextMenus(): void;
-    _getCharacteristicContextOptions(target: HTMLElement): Record<string, unknown>[];
-    _getSkillContextOptions(target: HTMLElement): Record<string, unknown>[];
-    _getItemContextOptions(target: HTMLElement): Record<string, unknown>[];
-    _getFatePointContextOptions(): Record<string, unknown>[];
-    _onCharacteristicRoll(charKey: string): Promise<void>;
-    _onCharacteristicRollWithModifier(charKey: string): Promise<void>;
-    _showModifierSources(charKey: string): Promise<void>;
-    _onAdvanceCharacteristic(charKey: string): Promise<void>;
-    _postCharacteristicToChat(charKey: string, char: Record<string, unknown>): Promise<void>;
-    _onEditCharacteristic(charKey: string): Promise<void>;
-    _onSkillRoll(skillKey: string): Promise<void>;
-    _onSkillRollWithModifier(skillKey: string): Promise<void>;
-    _toggleSkillTraining(skillKey: string, level: string): Promise<void>;
-    _showGoverningCharacteristic(skillKey: string, skill: Record<string, unknown>): void;
-    _addSkillSpecialization(skillKey: string): Promise<void>;
-    _duplicateItem(item: WH40KItem): Promise<void>;
-    _deleteItem(item: WH40KItem): Promise<void>;
-    _weaponAttack(item: WH40KItem, mode: string): Promise<void>;
-    _toggleEquipped(item: WH40KItem): Promise<void>;
-    _toggleActivated(item: WH40KItem): Promise<void>;
-    _spendFate(purpose: string): Promise<void>;
-    _burnFatePoint(): Promise<void>;
+    _createContextMenus: () => void;
+    _createCustomContextMenus: () => void;
+    _getCharacteristicContextOptions: (target: HTMLElement) => Record<string, unknown>[];
+    _getSkillContextOptions: (target: HTMLElement) => Record<string, unknown>[];
+    _getItemContextOptions: (target: HTMLElement) => Record<string, unknown>[];
+    _getFatePointContextOptions: () => Record<string, unknown>[];
+    _onCharacteristicRoll: (charKey: string) => Promise<void>;
+    _onCharacteristicRollWithModifier: (charKey: string) => Promise<void>;
+    _showModifierSources: (charKey: string) => Promise<void>;
+    _onAdvanceCharacteristic: (charKey: string) => Promise<void>;
+    _postCharacteristicToChat: (charKey: string, char: Record<string, unknown>) => Promise<void>;
+    _onEditCharacteristic: (charKey: string) => Promise<void>;
+    _onSkillRoll: (skillKey: string) => Promise<void>;
+    _onSkillRollWithModifier: (skillKey: string) => Promise<void>;
+    _toggleSkillTraining: (skillKey: string, level: string) => Promise<void>;
+    _showGoverningCharacteristic: (skillKey: string, skill: Record<string, unknown>) => void;
+    _addSkillSpecialization: (skillKey: string) => Promise<void>;
+    _duplicateItem: (item: WH40KItem) => Promise<void>;
+    _deleteItem: (item: WH40KItem) => Promise<void>;
+    _weaponAttack: (item: WH40KItem, mode: string) => Promise<void>;
+    _toggleEquipped: (item: WH40KItem) => Promise<void>;
+    _toggleActivated: (item: WH40KItem) => Promise<void>;
+    _spendFate: (purpose: string) => Promise<void>;
+    _burnFatePoint: () => Promise<void>;
 }
 
 /* -------------------------------------------- */
@@ -205,33 +205,33 @@ export interface EnhancedDragDropMixinAPI {
     _dragStartPos: { x: number; y: number } | null;
     _splitResult: { quantity: number } | null;
 
-    _setupEnhancedDragDrop(): void;
-    _setupDropZones(): void;
-    _setupFavoritesBar(): void;
-    _onEnhancedDragStart(event: DragEvent): Promise<void>;
-    _createDragGhost(item: WH40KItem, event: DragEvent): HTMLElement;
-    _canSplitItem(item: WH40KItem): boolean;
-    _showSplitDialog(item: WH40KItem): Promise<{ quantity: number } | null>;
-    _highlightValidDropZones(item: WH40KItem): void;
-    _onEnhancedDragOver(event: DragEvent): void;
-    _onEnhancedDragLeave(event: DragEvent): void;
-    _onInventoryDragOver(event: DragEvent): void;
-    _onFavoritesDragOver(event: DragEvent): void;
-    _onEnhancedDrop(event: DragEvent): Promise<void>;
-    _handleEquipmentDrop(item: WH40KItem, slot: string): Promise<void>;
-    _validateEquipmentSlot(item: WH40KItem, slot: string): boolean;
-    _handleGeneralDrop(item: WH40KItem, event: DragEvent): Promise<void>;
-    _handleSplitDrop(item: WH40KItem, quantity: number): Promise<void>;
-    _onInventoryDrop(event: DragEvent): Promise<void>;
-    _reorderItems(sourceId: string, targetId: string, clientY: number): Promise<void>;
-    _onFavoritesDrop(event: DragEvent): Promise<void>;
-    _addToFavorites(item: WH40KItem): Promise<void>;
-    _onEnhancedDragEnd(event: DragEvent): void;
-    _resetDrag(): void;
-    _animateSnapToSlot(item: WH40KItem): void;
-    removeFromFavorites(itemId: string): Promise<void>;
-    clearFavorites(): Promise<void>;
-    getFavoriteItems(): unknown[];
+    _setupEnhancedDragDrop: () => void;
+    _setupDropZones: () => void;
+    _setupFavoritesBar: () => void;
+    _onEnhancedDragStart: (event: DragEvent) => Promise<void>;
+    _createDragGhost: (item: WH40KItem, event: DragEvent) => HTMLElement;
+    _canSplitItem: (item: WH40KItem) => boolean;
+    _showSplitDialog: (item: WH40KItem) => Promise<{ quantity: number } | null>;
+    _highlightValidDropZones: (item: WH40KItem) => void;
+    _onEnhancedDragOver: (event: DragEvent) => void;
+    _onEnhancedDragLeave: (event: DragEvent) => void;
+    _onInventoryDragOver: (event: DragEvent) => void;
+    _onFavoritesDragOver: (event: DragEvent) => void;
+    _onEnhancedDrop: (event: DragEvent) => Promise<void>;
+    _handleEquipmentDrop: (item: WH40KItem, slot: string) => Promise<void>;
+    _validateEquipmentSlot: (item: WH40KItem, slot: string) => boolean;
+    _handleGeneralDrop: (item: WH40KItem, event: DragEvent) => Promise<void>;
+    _handleSplitDrop: (item: WH40KItem, quantity: number) => Promise<void>;
+    _onInventoryDrop: (event: DragEvent) => Promise<void>;
+    _reorderItems: (sourceId: string, targetId: string, clientY: number) => Promise<void>;
+    _onFavoritesDrop: (event: DragEvent) => Promise<void>;
+    _addToFavorites: (item: WH40KItem) => Promise<void>;
+    _onEnhancedDragEnd: (event: DragEvent) => void;
+    _resetDrag: () => void;
+    _animateSnapToSlot: (item: WH40KItem) => void;
+    removeFromFavorites: (itemId: string) => Promise<void>;
+    clearFavorites: () => Promise<void>;
+    getFavoriteItems: () => unknown[];
 }
 
 /* -------------------------------------------- */
@@ -243,37 +243,37 @@ export interface WhatIfMixinAPI {
     _whatIfPreview: unknown;
     _whatIfImpacts: unknown[] | Record<string, unknown>;
 
-    enterWhatIfMode(): Promise<void>;
-    previewChange(path: string, value: unknown): Promise<void>;
-    _updatePreview(): void;
-    _calculateImpacts(): void;
-    commitWhatIfChanges(): Promise<void>;
-    cancelWhatIfChanges(): Promise<void>;
-    exitWhatIfMode(): Promise<void>;
-    _applyChange(path: string, value: unknown): Promise<void>;
-    getWhatIfState(): { active: boolean; changes: Record<string, unknown>; impacts: unknown; changeCount: number };
-    isWhatIfActive(): boolean;
-    _renderWhatIfOverlay(): void;
-    _createWhatIfToolbar(): HTMLElement;
-    _updateComparisonDisplays(): void;
-    _compareCharacteristics(current: Record<string, unknown>, preview: Record<string, unknown>): void;
-    _compareSkills(current: Record<string, unknown>, preview: Record<string, unknown>): void;
-    _compareDerivedStats(current: Record<string, unknown>, preview: Record<string, unknown>): void;
-    _showComparison(selector: string, data: { current: number; preview: number; type: string }): void;
+    enterWhatIfMode: () => Promise<void>;
+    previewChange: (path: string, value: unknown) => Promise<void>;
+    _updatePreview: () => void;
+    _calculateImpacts: () => void;
+    commitWhatIfChanges: () => Promise<void>;
+    cancelWhatIfChanges: () => Promise<void>;
+    exitWhatIfMode: () => Promise<void>;
+    _applyChange: (path: string, value: unknown) => Promise<void>;
+    getWhatIfState: () => { active: boolean; changes: Record<string, unknown>; impacts: unknown; changeCount: number };
+    isWhatIfActive: () => boolean;
+    _renderWhatIfOverlay: () => void;
+    _createWhatIfToolbar: () => HTMLElement;
+    _updateComparisonDisplays: () => void;
+    _compareCharacteristics: (current: Record<string, unknown>, preview: Record<string, unknown>) => void;
+    _compareSkills: (current: Record<string, unknown>, preview: Record<string, unknown>) => void;
+    _compareDerivedStats: (current: Record<string, unknown>, preview: Record<string, unknown>) => void;
+    _showComparison: (selector: string, data: { current: number; preview: number; type: string }) => void;
 }
 
 /* -------------------------------------------- */
 
 /** API surface added by StatBreakdownMixin */
 export interface StatBreakdownMixinAPI {
-    close(options?: Record<string, unknown>): Promise<void>;
+    close: (options?: Record<string, unknown>) => Promise<void>;
 }
 
 /* -------------------------------------------- */
 
 /** API surface added by ActiveModifiersMixin */
 export interface ActiveModifiersMixinAPI {
-    prepareActiveModifiers(): unknown;
+    prepareActiveModifiers: () => unknown;
 }
 
 /* -------------------------------------------- */
@@ -333,11 +333,11 @@ export interface BaseActorSheetMixins
     options: Record<string, unknown>;
 
     /** Render the application. */
-    render(options?: Record<string, unknown> | boolean): Promise<unknown>;
+    render: (options?: Record<string, unknown> | boolean) => Promise<unknown>;
     /** Submit the application's form. */
-    submit(): Promise<void>;
+    submit: () => Promise<void>;
     /** Set the rendered position. */
-    setPosition(pos: Partial<{ top: number; left: number; width: number; height: number }>): void;
+    setPosition: (pos: Partial<{ top: number; left: number; width: number; height: number }>) => void;
 
     /* -------------------------------------------- */
     /*  ApplicationV2 Protected Methods             */
@@ -347,11 +347,11 @@ export interface BaseActorSheetMixins
      * Retrieve header control button configuration from ApplicationV2 base.
      * Protected; declared here so subclasses can override and call super.
      */
-    _getHeaderControls(): { icon: string; label: string; action?: string; visible?: boolean }[];
+    _getHeaderControls: () => { icon: string; label: string; action?: string; visible?: boolean }[];
 
     /**
      * Lifecycle hook called after the application is first rendered.
      * Protected; declared here so subclasses can override and call super.
      */
-    _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void>;
+    _onFirstRender: (context: Record<string, unknown>, options: Record<string, unknown>) => Promise<void>;
 }

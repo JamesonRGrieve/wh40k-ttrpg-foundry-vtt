@@ -39,11 +39,11 @@ export interface StatAdjustmentHost {
             wounds?: { critical?: number; value?: number; max?: number };
             fatigue?: { value?: number; max?: number };
         };
-        update(data: Record<string, unknown>): Promise<unknown>;
+        update: (data: Record<string, unknown>) => Promise<unknown>;
     };
     _throttle(key: string, wait: number, fn: (...args: unknown[]) => unknown, ctx: unknown, args: unknown[]): Promise<unknown>;
-    _notify(type: 'info' | 'warning' | 'error', message: string, options?: Record<string, unknown>): void;
-    _updateSystemField(field: string, value: unknown): Promise<void>;
+    _notify: (type: 'info' | 'warning' | 'error', message: string, options?: Record<string, unknown>) => void;
+    _updateSystemField: (field: string, value: unknown) => Promise<void>;
 }
 /* eslint-enable no-restricted-syntax */
 
