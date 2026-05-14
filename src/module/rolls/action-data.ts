@@ -1,9 +1,9 @@
 import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
+import { SYSTEM_ID } from '../constants.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
-import { SYSTEM_ID } from '../constants.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
@@ -66,7 +66,9 @@ export class ActionData {
         if (!autoRoll) return;
 
         const power = this.rollData.power;
-        const phenomenaModifier = (power.system as { phenomenaModifier?: number }).phenomenaModifier ?? 0;
+        const powerSystem = power.system as { phenomenaModifier?: number };
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- `.system ??` defaults are banned by repo policy; explicit undefined handling is intentional here
+        const phenomenaModifier = powerSystem.phenomenaModifier === undefined ? 0 : powerSystem.phenomenaModifier;
         await RollTableUtils.rollPsychicPhenomena(sourceActor, phenomenaModifier);
     }
 
@@ -203,7 +205,7 @@ export class ActionData {
             };
             if (itemSystem.isMelee === true) {
                 if (!this.rollData.success) {
-                    type ActorWithHasTalent = WH40KBaseActorDocument & { hasTalent(name: string): boolean };
+                    type ActorWithHasTalent = WH40KBaseActorDocument & { hasTalent: (name: string) => boolean };
                     const sourceActor = this.rollData.sourceActor as ActorWithHasTalent | null;
                     if (sourceActor?.hasTalent('Blademaster') === true) {
                         this.effects.push('blademaster');

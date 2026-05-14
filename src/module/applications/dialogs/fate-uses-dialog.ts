@@ -9,8 +9,7 @@
  * Implements issue #35.
  */
 
-import type { FatePointUseDef, GameSystemId } from '../../config/game-systems/index.ts';
-import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import { SystemConfigRegistry, type FatePointUseDef, type GameSystemId } from '../../config/game-systems/index.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -22,6 +21,7 @@ export interface FateBonusAttribute {
     summary: string;
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 context is a free-form template payload; Record<string, unknown> is the correct base shape
 interface FateUsesContext extends Record<string, unknown> {
     uses: FatePointUseDef[];
     bonusAttributes: FateBonusAttribute[];
@@ -35,7 +35,7 @@ interface FateUsesConfig {
 
 export default class FateUsesDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static override DEFAULT_OPTIONS = {
         id: 'fate-uses-dialog-{id}',
         classes: ['wh40k-rpg', 'fate-uses-dialog'],
         tag: 'div',
@@ -48,6 +48,7 @@ export default class FateUsesDialog extends HandlebarsApplicationMixin(Applicati
         },
         position: {
             width: 460,
+            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- Foundry accepts 'auto' here at runtime, but ApplicationV2's static typing still requires number
             height: 'auto' as unknown as number,
         },
         actions: {},
@@ -62,6 +63,7 @@ export default class FateUsesDialog extends HandlebarsApplicationMixin(Applicati
 
     readonly #config: FateUsesConfig;
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: constructor options are forwarded to ApplicationV2 and remain a free-form Foundry options bag
     constructor(config: Partial<FateUsesConfig> = {}, options: Record<string, unknown> = {}) {
         super(options);
         this.#config = {
@@ -76,7 +78,7 @@ export default class FateUsesDialog extends HandlebarsApplicationMixin(Applicati
     }
 
     /** @override */
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<FateUsesContext> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<FateUsesContext> {
         const context = await super._prepareContext(options);
         const systemId = this.#config.gameSystem;
         // Fall back to the DH2e canon if the active actor's game system is unknown.

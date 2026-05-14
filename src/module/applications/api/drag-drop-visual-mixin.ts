@@ -590,7 +590,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             }
 
             // eslint-disable-next-line no-restricted-syntax -- boundary: _dropBehavior is added by sibling DragDropAPIMixin; cross-mixin access
-            const behavior = (this as unknown as { _dropBehavior(e: DragEvent): string })._dropBehavior(event);
+            const behavior = (this as unknown as { _dropBehavior: (e: DragEvent) => string })._dropBehavior(event);
 
             if (behavior === 'copy') {
                 const itemData = item.toObject();

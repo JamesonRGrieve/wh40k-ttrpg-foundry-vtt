@@ -437,6 +437,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * This populates the activeModifiers array based on what the player has chosen.
      * @private
      */
+    // eslint-disable-next-line complexity -- choice resolution spans fixed grants, generic choice synthesis, and specialization splitting; refactoring it is larger than this lint-focused change
     _calculateActiveModifiers(): void {
         interface OptionGrants {
             characteristics?: Record<string, unknown>;
@@ -448,10 +449,12 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         interface ChoiceOption {
             value?: string;
             name?: string;
+            uuid?: string;
             grants?: OptionGrants;
         }
 
-        const activeModifiers: Array<{ source: string; type: string; key: string; value: number | null; itemUuid: string | null; specialization?: string }> = [];
+        const activeModifiers: Array<{ source: string; type: string; key: string; value: number | null; itemUuid: string | null; specialization?: string }> =
+            [];
 
         /**
          * Composite picks land in selectedChoices as e.g. "Weapon Training (Chain)".
@@ -460,7 +463,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
          */
         const splitComposite = (raw: string): { base: string; specialization?: string } => {
             const match = raw.match(/^(.+?)\s*\((.+)\)\s*$/);
-            if (!match) return { base: raw };
+            if (match === null) return { base: raw };
             return { base: match[1].trim(), specialization: match[2].trim() };
         };
 
@@ -476,18 +479,13 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             labelCounts[baseLabel] = (labelCounts[baseLabel] ?? 0) + 1;
             const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
             const choiceKey = `${baseLabel}${suffix}`;
-            const selected =
-                (this.selectedChoices[choiceKey] as unknown[] | undefined) ??
-                // Fall back to the un-suffixed key for legacy origin items that
-                // stored selections before the dedup pass landed.
-                (this.selectedChoices[baseLabel] as unknown[] | undefined) ??
-                [];
+            const selectedChoice = this.selectedChoices[choiceKey];
+            const legacyChoice = this.selectedChoices[baseLabel];
+            const selected = Array.isArray(selectedChoice) ? selectedChoice : Array.isArray(legacyChoice) ? legacyChoice : [];
 
             for (const selectedValue of selected) {
                 const selectedStr = String(selectedValue);
-                const option = (choice.options as ChoiceOption[]).find(
-                    (opt) => ((opt.value as string | undefined) ?? (opt.name as string | undefined)) === selectedStr,
-                );
+                const option = (choice.options as ChoiceOption[]).find((opt) => (opt.value ?? opt.name) === selectedStr);
                 // When the option carries no explicit grants, synthesize an
                 // activeModifier from the choice's declared type so picks like
                 // "Sleight of Hand" on a generic skill choice or
@@ -500,14 +498,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     if (choiceType === '') continue;
                     const parts = splitComposite(selectedStr);
                     const optionUuid = typeof option?.uuid === 'string' ? option.uuid : null;
-                    activeModifiers.push({
-                        source: choiceKey,
-                        type: choiceType,
-                        key: parts.base,
-                        value: null,
-                        itemUuid: optionUuid,
-                        specialization: parts.specialization,
-                    });
+                    const base = { source: choiceKey, type: choiceType, key: parts.base, value: null, itemUuid: optionUuid };
+                    activeModifiers.push(parts.specialization === undefined ? base : { ...base, specialization: parts.specialization });
                     continue;
                 }
                 const grants = option.grants;
@@ -550,14 +542,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                         // value so picks like "Weapon Training" → "Weapon Training (Chain)"
                         // promoted via the dialog still record the spec.
                         const composite = parts.specialization !== undefined ? parts : splitComposite(selectedStr);
-                        activeModifiers.push({
-                            source: choiceKey,
-                            type: 'talent',
-                            key: composite.base,
-                            value: null,
-                            itemUuid: talent.uuid ?? null,
-                            specialization: composite.specialization,
-                        });
+                        const base = { source: choiceKey, type: 'talent', key: composite.base, value: null, itemUuid: talent.uuid ?? null };
+                        activeModifiers.push(composite.specialization === undefined ? base : { ...base, specialization: composite.specialization });
                     }
                 }
 

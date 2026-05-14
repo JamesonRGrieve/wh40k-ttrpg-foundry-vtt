@@ -11,7 +11,7 @@ type HelperFn = (...args: unknown[]) => unknown;
 interface HandlebarsStub {
     helpers: Record<string, HelperFn>;
     registerHelper: (name: string, fn: HelperFn) => void;
-    SafeString: new (s: string) => { toString(): string };
+    SafeString: new (s: string) => { toString: () => string };
 }
 
 function makeHandlebarsStub(): HandlebarsStub {
@@ -136,7 +136,7 @@ describe('Handlebars {{icon}} helper', () => {
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: throws if helper missing, not a conditional assertion
         if (fn === undefined) throw new Error('iconSvg helper not registered');
         const result = fn('fa:dice-d20', { hash: { class: 'tw-text-bronze' } });
-        const out = String((result as { toString(): string }).toString());
+        const out = String((result as { toString: () => string }).toString());
         expect(out).toContain('<svg');
         expect(out).toContain('tw-text-bronze');
     });
@@ -148,7 +148,7 @@ describe('Handlebars {{icon}} helper', () => {
         const result = fn('lucide:settings', {
             hash: { label: 'Configure', size: 20 },
         });
-        const out = String((result as { toString(): string }).toString());
+        const out = String((result as { toString: () => string }).toString());
         expect(out).toContain('aria-label="Configure"');
         expect(out).toContain('width:20px');
     });
@@ -159,7 +159,7 @@ describe('Handlebars {{icon}} helper', () => {
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: throws if helper missing, not a conditional assertion
         if (fn === undefined) throw new Error('iconSvg helper not registered');
         const result = fn('fa:not-a-real-icon', { hash: {} });
-        const out = String((result as { toString(): string }).toString());
+        const out = String((result as { toString: () => string }).toString());
         expect(out).toBe('');
         expect(warn).toHaveBeenCalled();
         warn.mockRestore();
@@ -171,7 +171,7 @@ describe('Handlebars {{icon}} helper', () => {
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: throws if helper missing, not a conditional assertion
         if (fn === undefined) throw new Error('iconSvg helper not registered');
         const result = fn(42, { hash: {} });
-        const out = String((result as { toString(): string }).toString());
+        const out = String((result as { toString: () => string }).toString());
         expect(out).toBe('');
         expect(warn).toHaveBeenCalled();
         warn.mockRestore();

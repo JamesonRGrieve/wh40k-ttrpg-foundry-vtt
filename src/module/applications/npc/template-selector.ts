@@ -452,7 +452,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
                 ui.notifications.info(`Created NPC: ${actor.name}`);
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 marks Document.sheet.render legacy in typedefs; minimal local interface mirrors the V2 runtime contract
-                const actorSheet = (actor as unknown as { sheet?: { render(force: boolean): void } }).sheet;
+                const actorSheet = (actor as unknown as { sheet?: { render: (force: boolean) => void } }).sheet;
                 actorSheet?.render(true);
 
                 this.#submitted = true;

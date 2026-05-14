@@ -140,7 +140,7 @@ export class TokenDocumentWH40K extends TokenDocument {
      * @param {TokenHUD} app - The TokenHUD application
      * @param {HTMLElement} html - The rendered HTML
      */
-    static onTokenHUDRender(app: TokenHUDLike, html: HTMLElement | JQuery<HTMLElement>): void {
+    static onTokenHUDRender(app: TokenHUDLike, html: HTMLElement | JQuery): void {
         const token = app.object?.document;
         const actor = token?.actor;
         const movement = actor?.system.movement as Record<string, number> | undefined;

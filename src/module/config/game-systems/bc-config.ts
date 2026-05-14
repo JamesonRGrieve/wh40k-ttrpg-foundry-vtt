@@ -58,16 +58,11 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * Compendium item: bc-core-archetypes/psyker.
      */
     override isPsyker(actor: WH40KBaseActor): boolean {
-        return actor.items.some(
-            (i) =>
-                i.isOriginPath &&
-                (i.system as { step?: string }).step === 'archetype' &&
-                i.name.toLowerCase() === 'psyker',
-        );
+        return actor.items.some((i) => i.isOriginPath && (i.system as { step?: string }).step === 'archetype' && i.name.toLowerCase() === 'psyker');
     }
 
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
-        const originPath = (actor.system['originPath'] as Record<string, string | number> | undefined) ?? {};
+        const originPath = (actor.system.originPath as Record<string, string | number> | undefined) ?? {};
         return [
             this.makeField('Home World', 'system.originPath.homeWorld', originPath['homeWorld'] ?? ''),
             this.makeField('Archetype', 'system.originPath.role', originPath['role'] ?? '', 'Archetype'),

@@ -41,7 +41,7 @@ export interface StatAdjustmentHost {
         };
         update: (data: Record<string, unknown>) => Promise<unknown>;
     };
-    _throttle(key: string, wait: number, fn: (...args: unknown[]) => unknown, ctx: unknown, args: unknown[]): Promise<unknown>;
+    _throttle: (key: string, wait: number, fn: (...args: unknown[]) => unknown, ctx: unknown, args: unknown[]) => Promise<unknown>;
     _notify: (type: 'info' | 'warning' | 'error', message: string, options?: Record<string, unknown>) => void;
     _updateSystemField: (field: string, value: unknown) => Promise<void>;
 }

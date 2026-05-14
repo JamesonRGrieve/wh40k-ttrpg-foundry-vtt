@@ -154,8 +154,8 @@ export default class ItemDataModel extends SystemDataModel {
             materializeItemVariants(systemSource, lineKey);
             return;
         }
-        const lineKey = inferActiveGameLine(source);
-        materializeItemVariants(source, lineKey);
+        const rootLineKey = inferActiveGameLine(source);
+        materializeItemVariants(source, rootLineKey);
     }
 
     /**

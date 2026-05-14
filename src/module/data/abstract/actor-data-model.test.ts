@@ -50,8 +50,8 @@ describe('ActorDataModel', () => {
         const ActorDataModel = mod.default;
         const source = { name: 'Inquisitor Tharn', type: 'npc' };
         ActorDataModel._migrateData(source);
-        expect(source['name']).toBe('Inquisitor Tharn');
-        expect(source['type']).toBe('npc');
+        expect(source.name).toBe('Inquisitor Tharn');
+        expect(source.type).toBe('npc');
     });
 
     it('mergeSchema is inherited from SystemDataModel', async () => {

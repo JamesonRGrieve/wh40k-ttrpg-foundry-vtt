@@ -59,12 +59,7 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
      * Compendium item: ow-core-specialities/sanctioned-psyker.
      */
     override isPsyker(actor: WH40KBaseActor): boolean {
-        return actor.items.some(
-            (i) =>
-                i.isOriginPath &&
-                (i.system as { step?: string }).step === 'speciality' &&
-                i.name.toLowerCase() === 'sanctioned psyker',
-        );
+        return actor.items.some((i) => i.isOriginPath && (i.system as { step?: string }).step === 'speciality' && i.name.toLowerCase() === 'sanctioned psyker');
     }
 
     /** OW characteristic aptitude pairs — same as DH2e */

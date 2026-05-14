@@ -1125,6 +1125,8 @@ export type I18nKey =
     | 'WH40K.OriginPath.NoEffects'
     | 'WH40K.OriginPath.NoOriginsAvailable'
     | 'WH40K.OriginPath.NoPreviewedOrigin'
+    | 'WH40K.OriginPath.OpenAdvancementPrompt'
+    | 'WH40K.OriginPath.OpenAdvancementTitle'
     | 'WH40K.OriginPath.Optional'
     | 'WH40K.OriginPath.OriginNotAvailable'
     | 'WH40K.OriginPath.PathComplete'

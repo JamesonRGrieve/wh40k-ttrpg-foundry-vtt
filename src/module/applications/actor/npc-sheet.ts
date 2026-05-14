@@ -1305,7 +1305,7 @@ export default class NPCSheet extends CharacterSheet {
     static #editImage(this: NPCSheet, event: Event, _target: HTMLElement): void {
         event.preventDefault();
         // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.ux.FilePicker is untyped in Foundry V14; constructor options shape is opaque Record.
-        const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse(): Promise<void> };
+        const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse: () => Promise<void> };
         const fp = new FilePickerCtor({
             type: 'image',
             ...(this.actor.img !== null ? { current: this.actor.img } : {}),
