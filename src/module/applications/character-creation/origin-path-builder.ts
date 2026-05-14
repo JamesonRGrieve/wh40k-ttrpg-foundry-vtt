@@ -21,6 +21,7 @@ import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import AdvancementDialog from '../dialogs/advancement-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import { type NormalizedChoice, type NormalizedChoiceOption, type NormalizedOrigin, normalizeOrigin } from './normalized-origin.ts';
 import OriginDetailDialog from './origin-detail-dialog.ts';
@@ -3922,6 +3923,25 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Snapshot builder-specific state (equipment picks, characteristic rolls) so a later
             // builder open can re-hydrate the UI to what was last committed.
             await this._persistBuilderFlagState();
+
+            // Stage 4 XP spend (DH2e Core p.78): if the actor has unspent
+            // starting XP (which _resetExperienceAndAdvancements set to the
+            // system's startingXP, e.g. 1000 for DH2e), offer to open the
+            // Advancement dialog so the player can spend it now instead of
+            // having to discover it later. Skipped when the actor has no
+            // available XP — re-commits without a reset land here.
+            const xpData = (this.actor.system as { experience?: { total?: number; used?: number } } | undefined)?.experience;
+            const availableXP = (xpData?.total ?? 0) - (xpData?.used ?? 0);
+            if (availableXP > 0) {
+                const openAdvancement = await foundry.applications.api.DialogV2.confirm({
+                    window: { title: game.i18n.localize('WH40K.OriginPath.OpenAdvancementTitle') },
+                    content: `<p>${game.i18n.format('WH40K.OriginPath.OpenAdvancementPrompt', { xp: String(availableXP) })}</p>`,
+                    rejectClose: false,
+                });
+                if (openAdvancement === true) {
+                    AdvancementDialog.open(this.actor);
+                }
+            }
 
             // Success
             ui.notifications.info(game.i18n.localize('WH40K.OriginPath.CommitSuccess'));
