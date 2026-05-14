@@ -10,7 +10,7 @@
 /* eslint-disable no-restricted-syntax -- migration / cleaning operate on raw Foundry V14 source payloads (true framework boundary) */
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
-import { isLineVariantContainer } from '../../utils/item-variant-utils.ts';
+import { inferActiveGameLine, isLineVariantContainer, materializeItemVariants } from '../../utils/item-variant-utils.ts';
 import SystemDataModel from './system-data-model.ts';
 
 const { NumberField } = foundry.data.fields;
@@ -130,6 +130,32 @@ export default class ItemDataModel extends SystemDataModel {
         ItemDataModel.#migrateDescription(source);
         ItemDataModel.#migrateSource(source);
         ItemDataModel.#migrateCollections(source);
+        ItemDataModel.#flattenLineVariants(source);
+    }
+
+    /**
+     * Flatten per-game-line variant containers (e.g. `modifiers: { dh2: {...}, rt: {...} }`)
+     * down to the active line's branch (e.g. `modifiers: {...}`) so that schema validation
+     * sees a payload matching the flat field shape declared in `defineSchema()`. Without
+     * this step, Foundry's validator strips the unknown `dh1/dh2/rt/...` keys and falls
+     * back to schema initials (typically 0 / empty Set), surfacing as "all zeros" in
+     * compendium item sheets for ammunition, weapons, armour, etc.
+     *
+     * The raw on-disk JSON is unaffected; only the in-memory document source is flattened.
+     * @param {object} source  The source data
+     */
+    static #flattenLineVariants(source: Record<string, unknown>): void {
+        const systemContainer = source['system'];
+        // Foundry passes the inner `system` payload directly in most paths; some legacy
+        // call sites pass the whole document. Materialize whichever shape we received.
+        if (systemContainer !== null && typeof systemContainer === 'object' && !Array.isArray(systemContainer)) {
+            const systemSource = systemContainer as Record<string, unknown>;
+            const lineKey = inferActiveGameLine(systemSource);
+            materializeItemVariants(systemSource, lineKey);
+            return;
+        }
+        const lineKey = inferActiveGameLine(source);
+        materializeItemVariants(source, lineKey);
     }
 
     /**
