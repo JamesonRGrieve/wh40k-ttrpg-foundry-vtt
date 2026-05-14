@@ -674,12 +674,30 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Store actor item id if this is an existing actor item
         data._actorItemId = item.parent === this.actor ? item.id : null;
 
+        // Capture the previously-persisted choice + roll state BEFORE normalize
+        // runs (normalize replaces the system object reference). Without this,
+        // re-opening the builder against an existing actor origin item showed
+        // empty Choice Required selections and re-prompted for thrones/wounds
+        // rolls — even though the data was sitting on the item.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: raw compendium document shape pre-normalize
+        const sourceSystem = ((data.system as Record<string, unknown> | undefined) ?? {}) as Record<string, unknown>;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: persisted snapshot is an open-ended Record we copy verbatim
+        const persistedChoices = sourceSystem['selectedChoices'] as Record<string, unknown> | undefined;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: persisted snapshot is an open-ended Record we copy verbatim
+        const persistedRolls = sourceSystem['rollResults'] as Record<string, unknown> | undefined;
+
         // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw compendium document shape
         const normalized = normalizeOrigin(data as unknown as Record<string, unknown>);
-        // Ensure choice and roll fields are available for builder state
-        /* eslint-disable no-restricted-syntax -- dialog state: normalized.system is a compendium payload Record; ??= initializes builder-local fields that are absent in fresh compendium entries */
-        normalized.system['selectedChoices'] ??= {};
-        normalized.system['rollResults'] ??= {};
+        // Ensure choice and roll fields are available for builder state, and
+        // explicitly seed them from the persisted snapshot if normalize dropped
+        // the reference along the way.
+        /* eslint-disable no-restricted-syntax -- dialog state: normalized.system is a compendium payload Record */
+        if (normalized.system['selectedChoices'] === undefined) {
+            normalized.system['selectedChoices'] = persistedChoices !== undefined ? foundry.utils.deepClone(persistedChoices) : {};
+        }
+        if (normalized.system['rollResults'] === undefined) {
+            normalized.system['rollResults'] = persistedRolls !== undefined ? foundry.utils.deepClone(persistedRolls) : {};
+        }
         /* eslint-enable no-restricted-syntax */
         return normalized;
     }
@@ -3731,6 +3749,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 await this.actor.deleteEmbeddedDocuments('Item', idsToDelete);
             }
 
+            // Also reverse any items we previously materialized from origin
+            // grants (talents stamped with flags.wh40k-rpg.originPathGranted),
+            // so re-applying the builder is idempotent and doesn't stack
+            // duplicate "Weapon Training (Chain)" + "Weapon Training (Chain)".
+            const grantedItems = this.actor.items.filter((i) => {
+                const flags = (i.flags as Record<string, Record<string, unknown> | undefined> | undefined)?.['wh40k-rpg'];
+                return flags?.originPathGranted === true;
+            });
+            if (grantedItems.length > 0) {
+                const grantedIds = grantedItems.map((i) => i.id).filter((id): id is string => id !== null);
+                await this.actor.deleteEmbeddedDocuments('Item', grantedIds);
+            }
+
             // Optional resets requested from the commit confirmation dialog
             if (resetChoices.resetInventory) {
                 await this._resetInventoryItems();
@@ -3831,13 +3862,41 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 await this.actor.update(charUpdate);
             }
 
-            // Apply divination, thrones, and influence
+            // Apply divination, thrones, influence, wounds and fate.
+            // These are ABSOLUTE writes (not additive) so re-committing the
+            // builder doesn't stack +10 wounds / +3 fate on top of values the
+            // player already had: each commit re-derives the final from the
+            // current selections + rolled values, replacing whatever the
+            // previous commit (or a manual edit) had written.
             // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
             const resourceUpdate: Record<string, unknown> = {};
             if (this._divination !== '') resourceUpdate['system.originPath.divination'] = this._divination;
             const thronesTotal = this._getTotalThronesRolled();
             if (thronesTotal > 0) resourceUpdate['system.throneGelt'] = thronesTotal;
             if (this._influenceRolled !== 0) resourceUpdate['system.influence'] = this._influenceRolled;
+
+            // Sum rolled wounds + rolled fate across every committed origin so
+            // the totals match what the builder previewed at confirm time.
+            let woundsRolled = 0;
+            let fateRolled = 0;
+            for (const [, selection] of this.selections) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: selection.system shape is OriginPathSystemData | undefined per the open-ended selection map
+                const selSys = selection.system as OriginPathSystemData | undefined;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: rollResults is a runtime-built per-origin Record we read structurally
+                const rollResults = (selSys?.rollResults ?? {}) as Record<string, { rolled?: number } | undefined>;
+                const wRolled = rollResults['wounds']?.rolled;
+                const fRolled = rollResults['fate']?.rolled;
+                if (typeof wRolled === 'number') woundsRolled += wRolled;
+                if (typeof fRolled === 'number') fateRolled += fRolled;
+            }
+            if (woundsRolled > 0) {
+                resourceUpdate['system.wounds.max'] = woundsRolled;
+                resourceUpdate['system.wounds.value'] = woundsRolled;
+            }
+            if (fateRolled > 0) {
+                resourceUpdate['system.fate.total'] = fateRolled;
+                resourceUpdate['system.fate.value'] = fateRolled;
+            }
             if (Object.keys(resourceUpdate).length > 0) {
                 await this.actor.update(resourceUpdate);
             }
