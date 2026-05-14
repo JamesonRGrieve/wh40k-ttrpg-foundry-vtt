@@ -23,8 +23,10 @@ import { SYSTEM_ID } from '../constants.ts';
  * empty string.
  */
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: Pack.getIndex returns a Foundry Collection whose entries are typed loosely as `unknown` by fvtt-types; we narrow via isIndexEntry on the next pass
 type PackLike = {
     metadata: { id: string; name: string; type: string };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: see above
     getIndex: (options?: { fields?: string[] }) => Promise<Iterable<unknown>>;
 };
 
@@ -62,6 +64,7 @@ class UuidNameCache {
 
         await Promise.all(
             ourPacks.map(async (pack) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: pack.getIndex result is unknown-typed by fvtt-types; narrowed via isIndexEntry
                 let index: Iterable<unknown>;
                 try {
                     index = await pack.getIndex({ fields: ['name', 'type'] });
@@ -151,8 +154,10 @@ class UuidNameCache {
     }
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard; value is unknown by design — this is the validation boundary for compendium index entries
 function isIndexEntry(value: unknown): value is IndexEntry {
     if (value == null || typeof value !== 'object') return false;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: narrowing cast immediately followed by the validating typeof checks below
     const entry = value as Partial<IndexEntry>;
     return typeof entry._id === 'string' && typeof entry.name === 'string';
 }
@@ -170,23 +175,26 @@ function packDocumentType(packType: string): string {
  * yields plain documents (no embedded subdocs) — embedded items are stored as
  * UUID references on their parent and don't need their own cache entry.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: yields Foundry world-doc collections; each doc is narrowed via readUuid/readName at the call site
 function* worldCollections(): IterableIterator<Iterable<unknown>> {
-    /* eslint-disable no-restricted-syntax -- boundary: game.* collections are framework-typed loosely by fvtt-types */
-    if (game.items != null) yield game.items as unknown as Iterable<unknown>;
-    if (game.actors != null) yield game.actors as unknown as Iterable<unknown>;
-    if (game.journal != null) yield game.journal as unknown as Iterable<unknown>;
-    if (game.tables != null) yield game.tables as unknown as Iterable<unknown>;
-    /* eslint-enable no-restricted-syntax */
+    yield game.items;
+    yield game.actors;
+    yield game.journal;
+    yield game.tables;
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: doc is a Foundry document; uuid/name access is the validation
 function readUuid(doc: unknown): string | null {
     if (doc == null || typeof doc !== 'object') return null;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: narrowing object cast immediately followed by typeof check
     const u = (doc as { uuid?: unknown }).uuid;
     return typeof u === 'string' ? u : null;
 }
 
+// eslint-disable-next-line no-restricted-syntax -- boundary: see readUuid
 function readName(doc: unknown): string | null {
     if (doc == null || typeof doc !== 'object') return null;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: narrowing object cast immediately followed by typeof check
     const n = (doc as { name?: unknown }).name;
     return typeof n === 'string' ? n : null;
 }

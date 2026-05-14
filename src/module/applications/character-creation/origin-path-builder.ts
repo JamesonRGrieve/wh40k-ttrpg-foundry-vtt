@@ -4246,7 +4246,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (Array.isArray(activeMods)) {
                 for (const mod of activeMods) {
                     if (mod.type !== 'talent') continue;
-                    pushPlan(typeof mod.itemUuid === 'string' ? mod.itemUuid : null, typeof mod.specialization === 'string' ? mod.specialization : undefined);
+                    pushPlan(
+                        typeof mod['itemUuid'] === 'string' ? mod['itemUuid'] : null,
+                        typeof mod['specialization'] === 'string' ? mod['specialization'] : undefined,
+                    );
                 }
             }
         }

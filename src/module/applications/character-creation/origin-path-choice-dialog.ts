@@ -664,7 +664,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         try {
             const item = await fromUuid(uuid);
             if (item !== null) {
-                // eslint-disable-next-line @typescript-eslint/no-deprecated -- ApplicationV1 sheet.render(true) is still the correct call for item sheets in V14
+                // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- boundary: ApplicationV1 sheet.render(true) is still the correct call for item sheets in V14; the inline `as {...}` is the Foundry framework boundary cast for item.sheet
                 (item as { sheet?: { render: (force?: boolean, options?: Record<string, unknown>) => void } }).sheet?.render(true);
             }
         } catch (error) {
