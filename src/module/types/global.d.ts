@@ -312,7 +312,7 @@ export type WH40KItemSystemData = ItemDataModel & {
 // =========================================================================
 
 interface TooltipsWH40K {
-    initialize(): Promise<void>;
+    initialize: () => Promise<void>;
 }
 
 // =========================================================================
@@ -415,21 +415,21 @@ declare global {
     }
 
     interface ClientSettings {
-        get(module: string, key: string): unknown;
-        set(module: string, key: string, value: unknown): Promise<unknown>;
-        register(module: string, key: string, data: ClientSettingRegistration): void;
+        get: (module: string, key: string) => unknown;
+        set: (module: string, key: string, value: unknown) => Promise<unknown>;
+        register: (module: string, key: string, data: ClientSettingRegistration) => void;
         settings: Map<string, unknown>;
     }
 
     interface FoundrySidebar {
         tabs: Record<string, unknown>;
-        activateTab(name: string): void;
+        activateTab: (name: string) => void;
     }
 
     interface FoundryControls {
         controls: Record<string, SceneControl>;
         activeControl: string;
-        render(force?: boolean): void;
+        render: (force?: boolean) => void;
     }
 
     interface UI {
@@ -464,10 +464,10 @@ declare global {
         documentName: string;
         metadata: { id: string; label: string; package: string; type: string; system?: string; [key: string]: unknown };
         index: foundry.utils.Collection<CompendiumIndexEntry>;
-        getIndex(options?: { fields?: string[] }): Promise<foundry.utils.Collection<CompendiumIndexEntry>>;
-        getDocument(id: string): Promise<foundry.abstract.Document.Any | undefined>;
-        getDocuments(query?: Record<string, unknown>): Promise<foundry.abstract.Document.Any[]>;
-        importDocument(document: foundry.abstract.Document.Any, options?: Record<string, unknown>): Promise<foundry.abstract.Document.Any>;
+        getIndex: (options?: { fields?: string[] }) => Promise<foundry.utils.Collection<CompendiumIndexEntry>>;
+        getDocument: (id: string) => Promise<foundry.abstract.Document.Any | undefined>;
+        getDocuments: (query?: Record<string, unknown>) => Promise<foundry.abstract.Document.Any[]>;
+        importDocument: (document: foundry.abstract.Document.Any, options?: Record<string, unknown>) => Promise<foundry.abstract.Document.Any>;
     }
 
     // Augment ReadyGame to include wh40k
