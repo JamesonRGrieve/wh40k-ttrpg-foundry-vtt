@@ -124,6 +124,8 @@ interface PreparedTalentAdvance {
     canPurchase: boolean;
     cantAfford: boolean;
     blocked: boolean;
+    /** True when blocked specifically because no lower-tier talent is owned. */
+    tierLocked: boolean;
     prereqDisplay: string[];
     aptitudeMatch: AdvancementMatchInfo | null;
 }
@@ -393,7 +395,26 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const aptitudeConfig = this.#getAptitudeConfig(systemConfig);
             if (aptitudeConfig === null) return context;
             context.skills = this.#prepareAptitudeSkills(aptitudeConfig);
-            context.talents = await this.#prepareAptitudeTalents(aptitudeConfig);
+            const talents = await this.#prepareAptitudeTalents(aptitudeConfig);
+            context.talents = talents;
+
+            // Group talents by tier for the template's progressive-disclosure
+            // layout. A group is `unlocked` when its items are not tier-locked
+            // (i.e. the actor owns ≥1 talent in the previous tier, or this is
+            // tier 1 which is always unlocked).
+            const tierMap = new Map<number, PreparedTalentAdvance[]>();
+            for (const t of talents) {
+                if (!tierMap.has(t.tier)) tierMap.set(t.tier, []);
+                tierMap.get(t.tier)?.push(t);
+            }
+            context['talentsByTier'] = [...tierMap.entries()]
+                .sort(([a], [b]) => a - b)
+                .map(([tier, items]) => ({
+                    tier,
+                    prevTier: tier - 1,
+                    unlocked: tier === 1 || items.every((i) => !i.tierLocked),
+                    items,
+                }));
         }
 
         // Psychic Powers tab — gated on the per-system psyker unlock item
@@ -665,6 +686,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             ownedByKey.set(`${base}|${spec}`, item as unknown as Item);
         }
 
+        // Count owned talents per tier so the post-loop tier-lock pass can
+        // hide higher tiers until at least one lower-tier talent is owned.
+        // Built from the compendium index in the loop below — the actor's
+        // own items don't directly expose tier.
+        const ownedTierCount: Record<number, number> = {};
+
         for (const pack of packs) {
             // eslint-disable-next-line no-await-in-loop -- Foundry compendium pack indexes must be loaded sequentially; cannot be parallelised safely
             const index = await pack.getIndex({
@@ -714,6 +741,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         .filter((k) => k.startsWith(`${baseKey}|`))
                         .map((k) => k.split('|')[1])
                         .filter(Boolean);
+                    if (ownedSpecs.length > 0) ownedTierCount[tier] = (ownedTierCount[tier] ?? 0) + 1;
                     result.push({
                         id: `talent-spec:${baseName}`,
                         uuid: entry.uuid ?? '',
@@ -728,6 +756,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         canPurchase: !blocked && available >= cost,
                         cantAfford: !blocked && available < cost,
                         blocked,
+                        tierLocked: false,
                         prereqDisplay: prereqResult.unmet,
                         aptitudeMatch: match,
                     });
@@ -738,6 +767,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     // Stackable talent: one item on actor, rank increments
                     const owned = ownedByKey.get(`${baseKey}|`);
                     const currentRank = (owned?.system as { rank?: number } | undefined)?.rank ?? 0;
+                    if (currentRank > 0) ownedTierCount[tier] = (ownedTierCount[tier] ?? 0) + 1;
                     result.push({
                         id: `talent-rank:${baseName}`,
                         uuid: entry.uuid ?? '',
@@ -752,14 +782,18 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         canPurchase: !blocked && available >= cost,
                         cantAfford: !blocked && available < cost,
                         blocked,
+                        tierLocked: false,
                         prereqDisplay: prereqResult.unmet,
                         aptitudeMatch: match,
                     });
                     continue;
                 }
 
-                // Single-instance talent: hide once owned
-                if (ownedByKey.has(`${baseKey}|`)) continue;
+                // Single-instance talent: hide once owned but still count toward tier ownership
+                if (ownedByKey.has(`${baseKey}|`)) {
+                    ownedTierCount[tier] = (ownedTierCount[tier] ?? 0) + 1;
+                    continue;
+                }
                 result.push({
                     id: `talent:${baseName}`,
                     uuid: entry.uuid ?? '',
@@ -773,9 +807,24 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     canPurchase: !blocked && available >= cost,
                     cantAfford: !blocked && available < cost,
                     blocked,
+                    tierLocked: false,
                     prereqDisplay: prereqResult.unmet,
                     aptitudeMatch: match,
                 });
+            }
+        }
+
+        // Tier-lock pass: a talent in tier N (N > 1) is hidden behind tier N-1
+        // until the actor owns at least one tier N-1 talent. This is a UI
+        // progressive-disclosure rule layered on top of per-talent RAW prereqs;
+        // both must clear for the talent to be purchasable.
+        for (const r of result) {
+            if (r.tier > 1 && (ownedTierCount[r.tier - 1] ?? 0) === 0) {
+                r.tierLocked = true;
+                r.blocked = true;
+                r.canPurchase = false;
+                r.cantAfford = false;
+                r.prereqDisplay = [...r.prereqDisplay, `Own a Tier ${r.tier - 1} talent`];
             }
         }
 
