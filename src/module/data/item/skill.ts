@@ -22,6 +22,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     declare source: { book: string; page: string; custom: string };
     declare specialRules: string;
     declare exampleDifficulties: Array<{ difficulty: string; modifier: number; example: string }>;
+    declare specialUses: Array<{ name: string; description: string; modifier: number; difficulty: string }>;
     declare useTime: string;
     declare rollConfig: { defaultModifier: number; canBeUsedUntrained: boolean; untrainedPenalty: number };
 
@@ -72,6 +73,19 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
                     difficulty: new fields.StringField({ required: true }),
                     modifier: new fields.NumberField({ required: true, integer: true }),
                     example: new fields.StringField({ required: true }),
+                }),
+                { required: true, initial: [] },
+            ),
+
+            // Structured special uses — discrete named applications of the skill, each with
+            // an optional pre-populated modifier and difficulty so they can be rolled or
+            // posted to chat individually. See issue #50.
+            specialUses: new fields.ArrayField(
+                new fields.SchemaField({
+                    name: new fields.StringField({ required: true, blank: true, initial: '' }),
+                    description: new fields.HTMLField({ required: false, blank: true, initial: '' }),
+                    modifier: new fields.NumberField({ required: true, integer: true, initial: 0 }),
+                    difficulty: new fields.StringField({ required: false, blank: true, initial: '' }),
                 }),
                 { required: true, initial: [] },
             ),
@@ -199,5 +213,39 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
         };
 
         return ChatMessage.create(messageData);
+    }
+
+    /**
+     * Post a single special use entry to chat.
+     * Renders the existing skill-card template with a `specialUse` override
+     * so the card shows the entry's name, description, modifier, and
+     * difficulty instead of the skill's general uses.
+     * @param index Position of the entry within `specialUses`.
+     */
+    async toChatSpecialUse(index: number): Promise<unknown> {
+        const entry = this.specialUses[index];
+        if (entry === undefined) return null;
+
+        const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/skill-card.hbs', {
+            skill: this.parent,
+            specialUse: entry,
+        });
+
+        const messageData = {
+            type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+            speaker: ChatMessage.getSpeaker(),
+            content,
+            flags: {
+                'wh40k-rpg': {
+                    skillId: this.parent.id,
+                    skillName: this.parent.name,
+                    specialUseIndex: index,
+                    specialUseName: entry.name,
+                    type: 'skill-special-use-card',
+                },
+            },
+        };
+
+        return ChatMessage.create(messageData as unknown as Parameters<typeof ChatMessage.create>[0]);
     }
 }
