@@ -15,6 +15,7 @@ export class WH40KSettings {
         characteristicOffset: 'characteristic-offset',
         resyncOnReady: 'resync-on-ready',
         multipleFateBurnPerRoll: 'multiple-fate-burn-per-roll',
+        autoPsychicPhenomena: 'auto-psychic-phenomena',
     };
 
     /** Homebrew: allow more than one Fate Point spend on the same roll. RAW permits only one. */
@@ -89,6 +90,14 @@ export class WH40KSettings {
             config: true,
             requiresReload: true,
             default: false,
+            type: Boolean,
+        });
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.autoPsychicPhenomena, {
+            name: 'Auto-roll Psychic Phenomena',
+            hint: 'When a psychic power triggers phenomena (per PR sufficiency and doubles rules), automatically draw from the Psychic Phenomena roll table. A draw of 75+ auto-cascades to the Perils of the Warp table. Disable to let the GM draw manually via the sheet buttons.',
+            scope: 'world',
+            config: true,
+            default: true,
             type: Boolean,
         });
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.combatPresets, {

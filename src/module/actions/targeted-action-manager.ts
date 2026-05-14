@@ -187,14 +187,20 @@ export class TargetedActionManager {
     }
 
     /**
-     * Perform a psychic attack
+     * Invoke a psychic power. Drives the unified cast pipeline for both attack
+     * powers (which roll damage on a successful focus test) and non-attack
+     * powers (which produce a chat card with the power's effect text only).
+     * The attack-vs-non-attack distinction is read off the power's
+     * `system.isAttack` field via PsychicRollData; this method itself is
+     * single-shape for both — target/distance fall through unchanged when the
+     * power doesn't need a target.
      */
-    performPsychicAttack(
+    performPsychicCast(
         source: WH40KBaseActor | CanvasToken | null = null,
         target: WH40KBaseActor | CanvasToken | null = null,
         psychicPower: WH40KItem | null = null,
     ): void {
-        game.wh40k.log('performPsychicAttack');
+        game.wh40k.log('performPsychicCast');
         const rollData = this.createSourceAndTargetData(source, target);
         if (rollData == null) return;
 
@@ -206,13 +212,13 @@ export class TargetedActionManager {
             return;
         }
 
-        const psychicAttack = new PsychicActionData();
-        const psychicRollData = psychicAttack.rollData;
+        const psychicCast = new PsychicActionData();
+        const psychicRollData = psychicCast.rollData;
         psychicRollData.psychicPowers = powers;
         psychicRollData.sourceActor = rollData.actor;
         psychicRollData.targetActor = rollData.target;
         psychicRollData.distance = rollData.distance;
-        prepareUnifiedRoll(psychicAttack);
+        prepareUnifiedRoll(psychicCast);
     }
 }
 
