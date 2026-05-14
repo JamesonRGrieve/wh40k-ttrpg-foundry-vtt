@@ -2048,7 +2048,6 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const effectId = target.closest<HTMLElement>('[data-effect-id]')?.dataset['effectId'];
         if (effectId === undefined || effectId === '') return;
         const effect = this.actor.effects.get(effectId) as { sheet?: { render(force?: boolean): void } } | undefined;
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- render(true) is the V14-compatible force-open idiom; render({ force: true }) fails the overloaded type.
         effect?.sheet?.render(true);
     }
 

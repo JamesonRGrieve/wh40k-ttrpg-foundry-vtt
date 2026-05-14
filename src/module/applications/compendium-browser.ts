@@ -365,7 +365,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         if (coverage.includes('all')) {
             coverageIcons = '●●●●●●';
         } else {
-            const icons = [];
+            const icons: string[] = [];
             icons.push(coverage.includes('head') ? '●' : '○');
             icons.push(coverage.includes('body') ? '●' : '○');
             icons.push(coverage.includes('leftArm') || coverage.includes('rightArm') ? '●' : '○');
@@ -447,7 +447,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         const removedCount = (system['removedProperties'] as unknown[] | undefined)?.length ?? 0;
         let propertiesSummary = '';
         if (addedCount > 0 || removedCount > 0) {
-            const parts = [];
+            const parts: string[] = [];
             if (addedCount > 0) parts.push(`+${addedCount}`);
             if (removedCount > 0) parts.push(`-${removedCount}`);
             propertiesSummary = `${parts.join(' ')} props`;
@@ -597,7 +597,6 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         const category = entry.system?.['category'];
         if (typeof category === 'string' && category !== '') return category;
         const flags = entry.flags as Record<string, Record<string, unknown>> | undefined;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: flags['rt'] may be absent at runtime
         if (flags?.['rt']?.['kind'] !== undefined) {
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: flags['wh40k'] may be absent at runtime
             const kind = flags['wh40k']?.['kind'];

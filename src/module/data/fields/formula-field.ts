@@ -43,7 +43,6 @@ export default class FormulaField extends foundry.data.fields.StringField {
      * @param {object} data   Roll data for formula evaluation.
      * @returns {number|null}
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry roll-data payload
     /* eslint-disable no-restricted-syntax -- boundary: Foundry roll-data payload + DataField parent/name introspection */
     evaluate(data: Record<string, unknown> = {}): number | null {
         const ctx = this as unknown as { parent?: Record<string, unknown>; name?: string };

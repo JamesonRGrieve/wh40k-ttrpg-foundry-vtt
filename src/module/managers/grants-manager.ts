@@ -20,7 +20,6 @@ import type { WH40KItem } from '../documents/item.ts';
  */
 interface AppliedGrantStateEntry {
     type: string;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: applied state is subclass-defined; narrow at the type-specific reverse helper
     applied: Record<string, GrantAppliedEntry>;
 }
 
@@ -212,7 +211,6 @@ export class GrantsManager {
 
             // Get selection data for this grant
             const rawSelection = options.selections?.[grant._id];
-            // eslint-disable-next-line no-restricted-syntax -- boundary: caller-supplied selection payload; shape validated by createGrant() per-subclass
             const grantData: GrantConfig = (
                 rawSelection !== undefined && rawSelection !== null && typeof rawSelection === 'object' ? rawSelection : {}
             ) as GrantConfig;
@@ -663,7 +661,6 @@ export class GrantsManager {
      * Reverse characteristic grant.
      * @private
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: applied state is subclass-defined; narrowed inline below per characteristic-grant.ts
     static async _reverseCharacteristicGrant(actor: WH40KBaseActor, applied: Record<string, GrantAppliedEntry>, result: GrantReverseResult): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update payload
         const updates: Record<string, unknown> = {};
@@ -685,7 +682,6 @@ export class GrantsManager {
      * Reverse skill grant.
      * @private
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: applied state is subclass-defined; narrowed inline below per skill-grant.ts
     static async _reverseSkillGrant(actor: WH40KBaseActor, applied: Record<string, GrantAppliedEntry>, result: GrantReverseResult): Promise<void> {
         const idsToDelete: string[] = [];
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry updateEmbeddedDocuments payload
@@ -718,7 +714,6 @@ export class GrantsManager {
      * Reverse item grant.
      * @private
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: item-grant applied map values are item ids (strings); narrowed inline
     static async _reverseItemGrant(actor: WH40KBaseActor, applied: Record<string, GrantAppliedEntry>, result: GrantReverseResult): Promise<void> {
         const idsToDelete: string[] = [];
 
@@ -740,7 +735,6 @@ export class GrantsManager {
      * Reverse resource grant.
      * @private
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: applied state is subclass-defined; narrowed inline per resource-grant.ts
     static async _reverseResourceGrant(actor: WH40KBaseActor, applied: Record<string, GrantAppliedEntry>, result: GrantReverseResult): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update payload
         const updates: Record<string, unknown> = {};
@@ -808,7 +802,6 @@ export class GrantsManager {
      * @private
      */
     static _extractGrants(item: WH40KItem): GrantConfig[] {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: grantsV2 array is an opaque payload from item.system until createGrant() parses each entry
         const system = item.system as { grantsV2?: GrantConfig[] };
         if (Array.isArray(system.grantsV2)) {
             return system.grantsV2;
@@ -820,7 +813,6 @@ export class GrantsManager {
      * Process nested grants from granted items.
      * @private
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: item-grant applied values are item ids; narrowed inline (typeof === 'string')
     static async _processNestedGrants(actor: WH40KBaseActor, appliedItems: Record<string, GrantAppliedEntry>, options: ApplyItemGrantsOptions): Promise<void> {
         for (const raw of Object.values(appliedItems)) {
             if (typeof raw !== 'string') continue;

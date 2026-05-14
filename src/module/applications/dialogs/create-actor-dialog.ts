@@ -97,14 +97,12 @@ export class WH40KCreateActorDialog {
                             const kind = (form.querySelector('[name="kind"]') as HTMLSelectElement).value;
                             const nameInput = (form.querySelector('[name="name"]') as HTMLInputElement).value.trim();
                             const type = `${selectedSystem}-${kind}`;
-                            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: lookup table indexed by user-supplied select value
                             const systemLabel = ACTOR_SYSTEM_LABELS[selectedSystem] ?? selectedSystem;
-                            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: lookup table indexed by user-supplied select value
                             const kindLabel = ACTOR_KIND_LABELS[kind] ?? kind;
                             const name = nameInput !== '' ? nameInput : `New ${systemLabel} ${kindLabel}`;
                             // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create expects document creation data; no typed overload matches plain object
                             const data: Record<string, unknown> = { name, type };
-                            if (opts.folder != null) data['folder'] = opts.folder;
+                            if (opts.folder !== undefined) data['folder'] = opts.folder;
                             // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create parameter type is a complex Foundry generic; casting through unknown is the only viable path
                             const actor = await Actor.create(data as unknown as Parameters<typeof Actor.create>[0]);
                             // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create return type is Document.ToConfiguredInstance which doesn't match Actor directly

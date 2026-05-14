@@ -478,7 +478,6 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const zone = event.currentTarget as HTMLElement;
             zone.classList.remove('drop-hover');
 
-            // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- boundary: Foundry V14 TextEditor.getDragEventData returns untyped record; new namespace not yet on shipped types
             const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event) as DragEventPayload;
             if (data.uuid === undefined || data.uuid === '') return;
 
@@ -545,13 +544,11 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             const validSlot = this._validateEquipmentSlot(item, slot);
             if (!validSlot) {
-                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.CannotEquipInSlot localization key
                 ui.notifications.warn(`${item.name} cannot be equipped in ${slot} slot`);
                 return;
             }
 
             await item.update({ 'system.equipped': true });
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.Equipped localization key
             ui.notifications.info(`Equipped ${item.name}`);
             this._animateSnapToSlot(item);
         }
@@ -598,10 +595,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             if (behavior === 'copy') {
                 const itemData = item.toObject();
                 await this.#actorDocument().createEmbeddedDocuments('Item', [itemData]);
-                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.AddedToInventory localization key
                 ui.notifications.info(`Added ${item.name} to inventory`);
             } else if (behavior === 'move') {
-                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.Moved localization key
                 ui.notifications.info(`Moved ${item.name}`);
             }
         }
@@ -633,7 +628,6 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             await this.#actorDocument().createEmbeddedDocuments('Item', [newItemData]);
             await item.update({ 'system.quantity': remaining });
 
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.Split localization key
             ui.notifications.info(`Split ${item.name}: ${quantity} moved, ${remaining} remaining`);
         }
 
@@ -711,7 +705,6 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const favBar = event.currentTarget as HTMLElement;
             favBar.classList.remove('drop-hover');
 
-            // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- boundary: Foundry V14 TextEditor.getDragEventData returns untyped record; new namespace not yet on shipped types
             const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event) as DragEventPayload;
             if (data.uuid === undefined || data.uuid === '') return;
 
@@ -736,7 +729,6 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             if (item.id === null || item.id === '') return;
             if (favorites.includes(item.id)) {
-                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.AlreadyInFavorites localization key
                 ui.notifications.warn(`${item.name} is already in favorites`);
                 return;
             }
@@ -749,7 +741,6 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             favorites.push(item.id);
             await this.#actorDocument().setFlag('wh40k-rpg', 'favorites', favorites);
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.DragDrop.AddedToFavorites localization key
             ui.notifications.info(`Added ${item.name} to favorites`);
         }
 

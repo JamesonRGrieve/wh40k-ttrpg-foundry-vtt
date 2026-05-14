@@ -448,7 +448,6 @@ export default class CharacterSheet extends BaseActorSheet {
      * Tab configuration for the primary tab group.
      * @override
      */
-    /* eslint-disable no-restricted-syntax -- labels are WH40K.* localization keys; the rule fires on any string in TABS but these are correct */
     static TABS: SheetTabConfig[] = [
         { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
         { tab: 'skills', label: 'WH40K.Tabs.Statistics', group: 'primary', cssClass: 'tab-skills' },
@@ -458,7 +457,6 @@ export default class CharacterSheet extends BaseActorSheet {
         // { tab: 'powers', label: 'WH40K.Tabs.Powers', group: 'primary', cssClass: 'tab-powers' },
         { tab: 'biography', label: 'WH40K.Tabs.Biography', group: 'primary', cssClass: 'tab-biography' },
     ];
-    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 
@@ -1337,7 +1335,6 @@ export default class CharacterSheet extends BaseActorSheet {
         const skills = this.actor.skills;
         const chars = this.actor.characteristics;
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: skills keyed by string; SkillBits not in DataModel schema
         type SkillBits = { plus10?: boolean; plus20?: boolean; trained?: boolean; basic?: boolean };
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: actor.skills is indexed by string; double-cast to SkillBits to access computed fields not on the schema
@@ -1452,7 +1449,6 @@ export default class CharacterSheet extends BaseActorSheet {
             return {
                 id: effect.id,
                 label: effect.name,
-                // eslint-disable-next-line @typescript-eslint/no-deprecated -- legacy field still consumed by templates pending V14 migration
                 // eslint-disable-next-line @typescript-eslint/no-deprecated -- legacy field still consumed by templates pending V14 migration
                 icon: effect.icon,
                 disabled: effect.disabled,
@@ -1822,13 +1818,11 @@ export default class CharacterSheet extends BaseActorSheet {
                 const skill = skills[key];
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (skill === undefined) return null;
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 const charShort = skill.characteristic !== '' ? skill.characteristic : 'S';
                 const charKey = this._charShortToKey(charShort);
                 const char = characteristics[charKey];
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (char === undefined) return null;
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 const label = skill.label !== '' ? skill.label : key;
                 return {
                     key,
@@ -2255,8 +2249,7 @@ export default class CharacterSheet extends BaseActorSheet {
                         },
                         rejectClose: false,
                     });
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                    if (result === null || result === undefined) return;
+                    if (result === null) return;
                     // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 result is typed as unknown; double-cast to extract modal form values
                     modifier = (result as unknown as { modifier: number }).modifier;
                     // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 result is typed as unknown; double-cast to extract fateBurn flag

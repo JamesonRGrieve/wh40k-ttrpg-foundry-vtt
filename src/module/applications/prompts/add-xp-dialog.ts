@@ -46,9 +46,9 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unk
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'add-xp-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/unbound-method
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             apply: AddXPDialog.#onApply as ActionHandler,
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/unbound-method
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: AddXPDialog.#onCancel as ActionHandler,
         },
         form: {
@@ -61,7 +61,6 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unk
             width: 400,
         },
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.VitalEditBody.AdjustTotalXPTitle',
             resizable: false,
         },
@@ -142,7 +141,6 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unk
         const currentTotal = this.actor.experience.total;
         const newTotal = Math.max(0, currentTotal + this.xpAmount);
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts Record for dotted-path writes
         await this.actor.update({ 'system.experience.total': newTotal });
 
         const verb = this.xpAmount > 0 ? 'added' : 'removed';

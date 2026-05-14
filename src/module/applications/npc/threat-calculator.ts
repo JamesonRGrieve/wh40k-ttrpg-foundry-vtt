@@ -422,7 +422,7 @@ export default class ThreatCalculator {
             skills: ['awareness', 'dodge', 'stealth'],
             weaponPreset: 'mixed',
         };
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- noUncheckedIndexedAccess: index access may return undefined; fallback chain guards runtime
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: index access may return undefined; fallback chain guards runtime
         const profile = this.ROLE_PROFILES[role] ?? this.ROLE_PROFILES['specialist'] ?? specialistFallback;
 
         // Calculate position within tier (0.0 to 1.0)
@@ -558,7 +558,7 @@ export default class ThreatCalculator {
             skills: ['awareness', 'dodge', 'stealth'],
             weaponPreset: 'mixed',
         };
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- noUncheckedIndexedAccess: index access may return undefined; fallback chain guards runtime
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: index access may return undefined; fallback chain guards runtime
         const profile = this.ROLE_PROFILES[role] ?? this.ROLE_PROFILES['specialist'] ?? specialistFallback;
         const tier = this.getTier(threatLevel);
 
@@ -614,7 +614,7 @@ export default class ThreatCalculator {
         }
 
         // Add dodge for all NPCs
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions, no-restricted-syntax -- noUncheckedIndexedAccess: skills index may return undefined; truthiness guard is correct
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: skills index may return undefined; truthiness guard is correct
         if (!skills['dodge']) {
             skills['dodge'] = {
                 name: 'dodge',
@@ -627,7 +627,7 @@ export default class ThreatCalculator {
         }
 
         // Add awareness for all NPCs
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions, no-restricted-syntax -- noUncheckedIndexedAccess: skills index may return undefined; truthiness guard is correct
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: skills index may return undefined; truthiness guard is correct
         if (!skills['awareness']) {
             skills['awareness'] = {
                 name: 'awareness',
@@ -655,7 +655,7 @@ export default class ThreatCalculator {
             weapons: [{ name: 'Autopistol', damage: '1d10+2', pen: 0, range: '30m', rof: 'S/-/6', clip: 18, reload: 'Full', special: '', class: 'pistol' }],
             armour: 3,
         };
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- noUncheckedIndexedAccess: index access may return undefined; fallback chain guards runtime
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: index access may return undefined; fallback chain guards runtime
         const equipment = this.EQUIPMENT_PRESETS[preset] ?? this.EQUIPMENT_PRESETS['mixed'] ?? mixedFallback;
 
         // Scale weapon damage based on threat
@@ -682,7 +682,7 @@ export default class ThreatCalculator {
      */
     static generateArmour(preset: string, threatLevel: number): NPCArmourData {
         const mixedFallback: EquipmentPreset = { name: 'Mixed', description: 'Balanced loadout with medium armor', weapons: [], armour: 3 };
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- noUncheckedIndexedAccess: index access may return undefined; fallback chain guards runtime
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: index access may return undefined; fallback chain guards runtime
         const equipment = this.EQUIPMENT_PRESETS[preset] ?? this.EQUIPMENT_PRESETS['mixed'] ?? mixedFallback;
 
         // Scale armour based on threat
@@ -909,7 +909,6 @@ export default class ThreatCalculator {
         updates['threatLevel'] = Math.max(1, Math.min(30, newThreat));
 
         // Scale horde magnitude if applicable
-        // eslint-disable-next-line no-restricted-syntax -- boundary: horde is from NPCSystemData.horde which is Record<string,unknown>; cast to structural shape for access
         const horde = currentData.horde as { enabled?: boolean; magnitude?: { max: number } } | undefined;
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- horde.enabled is boolean | undefined; truthiness guard is deliberate
         if (horde?.enabled) {

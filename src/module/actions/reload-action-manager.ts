@@ -312,7 +312,7 @@ export class ReloadActionManager {
 
         // Check if it's the actor's turn
         const currentCombatant = combat.combatant;
-        const isActorsTurn = currentCombatant !== undefined && currentCombatant !== null && currentCombatant.actor?.id === actor.id;
+        const isActorsTurn = currentCombatant != null && currentCombatant.actor?.id === actor.id;
 
         if (!isActorsTurn) {
             // Not actor's turn - ask for confirmation

@@ -105,13 +105,11 @@ export default class AttackTemplate extends SystemDataModel {
     override prepareBaseData(): void {
         super.prepareBaseData();
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry parent _source data; no typed access to _source.system
         const parent = this.parent as AttackParentSource | undefined;
         const lineKey = inferActiveGameLine(parent?._source?.system ?? {}, parent ?? null);
         // eslint-disable-next-line no-restricted-syntax -- boundary: per-line variant resolved at runtime
         const resolvedAttack = resolveLineVariant(this.attack, lineKey) as Record<string, unknown>;
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: mergeObject return is untyped; cast to schema shape
         this.attack = foundry.utils.mergeObject(AttackTemplate.#emptyAttack(), resolvedAttack, { inplace: false }) as typeof this.attack;
     }
 

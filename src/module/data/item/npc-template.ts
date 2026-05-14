@@ -446,7 +446,6 @@ export default class NPCTemplateData extends ItemDataModel {
             };
         } else {
             // Use ThreatCalculator for preset weapons
-            // eslint-disable-next-line no-restricted-syntax -- boundary: game.wh40k namespace populated at runtime
             const wh40kNs = game.wh40k as { ThreatCalculator?: { generateWeapons: (preset: string, threat: number) => WeaponsPayload } } | undefined;
             const ThreatCalculator = wh40kNs?.ThreatCalculator;
             if (ThreatCalculator !== undefined) {

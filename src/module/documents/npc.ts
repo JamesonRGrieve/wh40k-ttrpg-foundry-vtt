@@ -80,8 +80,7 @@ export class WH40KNPC extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // biome-ignore lint/suspicious/noConfusingVoidType: Foundry _preCreate contract — returning false cancels creation; void means proceed
-    protected override async _preCreate(data: never, options: never, user: User.Internal.Implementation): Promise<boolean | void> {
+    protected override async _preCreate(data: never, options: never, user: User.Internal.Implementation): Promise<boolean | undefined> {
         await super._preCreate(data, options, user);
         // eslint-disable-next-line no-restricted-syntax -- boundary: _preCreate data param is typed as never; cast to Record is necessary to access fields
         const createData = data as Record<string, unknown>;
@@ -104,6 +103,7 @@ export class WH40KNPC extends WH40KBaseActor {
         }
 
         this.updateSource(initData);
+        return undefined;
     }
 
     /* -------------------------------------------- */
@@ -139,11 +139,9 @@ export class WH40KNPC extends WH40KBaseActor {
      * @returns {Promise<Roll>}
      */
     override rollCharacteristic(characteristicKey: string, flavor?: string): void {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined
         const char = this.system.characteristics[characteristicKey];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- guard for noUncheckedIndexedAccess; char may be undefined at runtime
         if (char === undefined) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn(`Unknown characteristic: ${characteristicKey}`);
             return;
         }
@@ -166,18 +164,15 @@ export class WH40KNPC extends WH40KBaseActor {
     rollSimpleWeapon(weaponIndex: number): void {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- weapons.simple may be undefined per noUncheckedIndexedAccess
         const weapons = this.system.weapons?.simple ?? [];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: weapons[index] may be undefined
         const weapon = weapons[weaponIndex];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- guard for noUncheckedIndexedAccess; weapon may be undefined at runtime
         if (weapon === undefined) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
             ui.notifications.warn(`No weapon at index ${weaponIndex}`);
             return;
         }
 
         // Determine attack characteristic
         const attackCharKey = weapon.class === 'melee' ? 'weaponSkill' : 'ballisticSkill';
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined
         const char = this.system.characteristics[attackCharKey];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- guard for noUncheckedIndexedAccess; char may be undefined at runtime
         if (char === undefined) return;
@@ -211,7 +206,6 @@ export class WH40KNPC extends WH40KBaseActor {
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
                     this.rollCharacteristic(charKey, item.name ?? undefined);
                 } else {
-                    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- performWeaponAttack is fire-and-forget in item context
                     DHTargetedActionManager.performWeaponAttack(this, null, item);
                 }
                 return;
@@ -222,7 +216,6 @@ export class WH40KNPC extends WH40KBaseActor {
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
                     this.rollCharacteristic('willpower', item.name ?? undefined);
                 } else {
-                    // eslint-disable-next-line @typescript-eslint/no-floating-promises -- performPsychicAttack is fire-and-forget in item context
                     DHTargetedActionManager.performPsychicAttack(this, null, item);
                 }
                 return;
@@ -255,7 +248,6 @@ export class WH40KNPC extends WH40KBaseActor {
      */
     rollSkill(skillName: string, flavor?: string): void {
         const target = this.system.getSkillTarget(skillName);
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: trainedSkills[key] may be undefined
         const skill = this.system.trainedSkills[skillName];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- skill may be undefined per noUncheckedIndexedAccess; optional chain is intentional
         const skillLabel = skill?.name !== undefined && skill.name !== '' ? skill.name : skillName;
@@ -289,7 +281,6 @@ export class WH40KNPC extends WH40KBaseActor {
         const { ignoreArmour = false, ignoreToughness = false } = options;
 
         // Mark actor as hit this round (for Good armour bonus tracking)
-        // eslint-disable-next-line @typescript-eslint/await-thenable -- setFlag may return a thenable in some Foundry builds; await is safe
         await this.setFlag('wh40k-rpg' as never, 'hitThisRound' as never, true as never);
 
         // Calculate damage reduction
@@ -434,7 +425,7 @@ export class WH40KNPC extends WH40KBaseActor {
         if (typeof options['name'] === 'string' && options['name'] !== '') {
             data['name'] = options['name'];
         } else {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- this.name is a Foundry document property that may be null; boundary: ?? guard is necessary
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- this.name is a Foundry document property that may be null; ?? guard is necessary
             data['name'] = `${this.name ?? ''} (Copy)`;
         }
 
@@ -445,11 +436,9 @@ export class WH40KNPC extends WH40KBaseActor {
             if (characteristics !== undefined) {
                 for (const key of Object.keys(characteristics)) {
                     const variance = Math.floor(Math.random() * 11) - 5; // -5 to +5
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined
                     const entry = characteristics[key];
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- guard for noUncheckedIndexedAccess; entry may be undefined at runtime
                     if (entry !== undefined) {
-                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: entry['base'] may be undefined; ?? 0 guard is intentional
                         entry['base'] = Math.max(1, Math.min(99, (entry['base'] ?? 0) + variance));
                     }
                 }
@@ -495,7 +484,6 @@ export class WH40KNPC extends WH40KBaseActor {
         if (Object.keys(s.trainedSkills).length > 0) {
             block += `--- Skills ---\n`;
             for (const [key, skill] of Object.entries(s.trainedSkills)) {
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- skill.name may be undefined per noUncheckedIndexedAccess; check is intentional
                 const level = skill.plus20 ? '+20' : skill.plus10 ? '+10' : '';
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- skill.name may be undefined per noUncheckedIndexedAccess; check is intentional
                 block += `${skill.name !== undefined && skill.name !== '' ? skill.name : key}${level}: ${s.getSkillTarget(key)}\n`;

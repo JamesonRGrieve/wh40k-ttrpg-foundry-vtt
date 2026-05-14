@@ -91,7 +91,6 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         classes: ['wh40k-rpg', 'origin-choice-dialog'],
         tag: 'form',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: title is a WH40K.* localization key, not a hardcoded string; lint rule cannot distinguish
             title: 'WH40K.OriginPath.MakeChoices',
             icon: 'fa-solid fa-list-check',
             minimizable: false,
@@ -281,7 +280,6 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                                     optUuid = firstTalent.uuid;
                                 } else if ((grants.skills?.length ?? 0) > 0) {
                                     const skillData = (grants.skills ?? [])[0];
-                                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skillData may be string at runtime despite union; typeof guard is necessary
                                     if (typeof skillData === 'string') {
                                         optUuid = findSkillUuid(skillData, null) ?? null;
                                         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: skillData may be undefined at runtime after typeof narrowing; guard is correct

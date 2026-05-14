@@ -35,7 +35,6 @@ export default class EffectCreationDialog extends DialogV2 {
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         classes: ['wh40k-rpg', 'wh40k-effect-creation-dialog'],
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: title is a WH40K.* localization key, not a hardcoded string; lint rule cannot distinguish
             title: 'WH40K.ActiveEffect.CreateEffect',
             icon: 'fas fa-sparkles',
         },
@@ -44,7 +43,7 @@ export default class EffectCreationDialog extends DialogV2 {
             // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2Config position.height type is number but 'auto' is a valid runtime value
             height: 'auto' as unknown as number,
         },
-        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: exactOptionalPropertyTypes TS2375: cast required because FormConfiguration has optional booleans that conflict with literal false/true under exactOptionalPropertyTypes
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- boundary: exactOptionalPropertyTypes TS2375: cast required because FormConfiguration has optional booleans that conflict with literal false/true under exactOptionalPropertyTypes
         form: {
             // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/unbound-method -- boundary: handler cast required for FormConfiguration type; unbound-method fires on static method reference
             handler: EffectCreationDialog.formHandler as unknown as ApplicationV2Config.FormConfiguration['handler'],
@@ -52,10 +51,10 @@ export default class EffectCreationDialog extends DialogV2 {
             closeOnSubmit: true,
         } as ApplicationV2Config.FormConfiguration,
         actions: {
-            /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/unbound-method -- ApplicationV2 action map binds this at click-time; unnecessary-type-assertion fires on static method references */
+            /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action map binds this at click-time */
             selectCondition: EffectCreationDialog._onSelectCondition,
             selectCategory: EffectCreationDialog._onSelectCategory,
-            /* eslint-enable @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/unbound-method */
+            /* eslint-enable @typescript-eslint/unbound-method */
         },
         // DialogV2-specific buttons config (not in the shared DefaultOptions type)
         ...({
@@ -199,8 +198,7 @@ export default class EffectCreationDialog extends DialogV2 {
      * Handle form submission
      */
     static async formHandler(this: EffectCreationDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: formData.object is Foundry's FormDataExtended payload; cast to EffectCreationData for typed access
-        const data = formData.object as unknown as EffectCreationData;
+        const data = formData.object as EffectCreationData;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: effectData is an ActiveEffect creation payload; Record<string,unknown> is the Foundry createEmbeddedDocuments API shape
         let effectData: Record<string, unknown> | null = null;
@@ -229,7 +227,6 @@ export default class EffectCreationDialog extends DialogV2 {
                 break;
         }
 
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- effectData is Record|null; null check is deliberate guard
         if (!effectData) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: WH40K.ActiveEffect.InvalidData is a localization key, not a hardcoded string; lint rule cannot distinguish
             ui.notifications.warn('WH40K.ActiveEffect.InvalidData');

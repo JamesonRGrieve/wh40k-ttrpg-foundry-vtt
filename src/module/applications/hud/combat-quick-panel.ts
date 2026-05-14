@@ -144,7 +144,6 @@ export default class CombatQuickPanel extends ApplicationV2 {
         classes: ['wh40k-rpg', 'combat-hud', 'floating-panel'],
         tag: 'aside',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: value IS a WH40K.* i18n key, but the ESLint selector flags any literal here.
             title: 'WH40K.CombatPanel.Title',
             icon: 'fa-solid fa-crosshairs',
             minimizable: true,
@@ -655,7 +654,6 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     static async #aim(this: CombatQuickPanel, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: this.actor is nullable when the panel outlives its actor (post-deletion); fallback is a localized placeholder, not a schema default.
         const actorName = this.actor?.name ?? t('WH40K.CombatPanel.UnknownActor');
         await ChatMessage.create({
             // eslint-disable-next-line no-restricted-syntax -- boundary: getSpeaker accepts Actor | undefined; this.actor is null at the boundary, so coerce nullability away.
@@ -689,7 +687,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
         const chosen = weapons[0];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: array element may be undefined at runtime
-        if (chosen == null) return;
+        if (chosen === undefined) return;
         await chosen.update({ 'system.equipped': true });
         ui.notifications.info(t('WH40K.CombatPanel.DrewWeapon', { name: chosen.name }));
     }
@@ -724,7 +722,6 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
         if (!item) return;
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: this.actor is nullable when the panel outlives its actor (post-deletion); fallback is a localized placeholder, not a schema default.
         const actorName = this.actor?.name ?? t('WH40K.CombatPanel.UnknownActor');
         const itemName = item.name;
         // TODO: Implement consumable use logic

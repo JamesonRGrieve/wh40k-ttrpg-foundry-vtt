@@ -23,7 +23,6 @@ describe('CreatureTemplate', () => {
         if (mod === undefined) return;
 
         const CreatureTemplate = mod.default;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData accepts RawSource = Record<string, unknown>; empty object is the minimal valid source for this migration test
         const source: Parameters<typeof CreatureTemplate._migrateData>[0] = {};
 
         expect(() => CreatureTemplate._migrateData(source)).not.toThrow();

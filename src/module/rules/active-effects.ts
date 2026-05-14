@@ -102,7 +102,6 @@ export async function sendActiveEffectMessage(activeContext: ActiveEffectChatCon
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}     The created effect
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry createEmbeddedDocuments return type is opaque; unknown is the honest type here
 // eslint-disable-next-line no-restricted-syntax -- boundary: options passed directly to createEmbeddedDocuments which accepts arbitrary keys
 export async function createEffect(actor: WH40KBaseActorDocument, effectData: EffectDataInput, options: Record<string, unknown> = {}): Promise<unknown> {
     const data = {

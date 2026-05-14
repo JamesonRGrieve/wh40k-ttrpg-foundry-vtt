@@ -244,7 +244,6 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; data/options/return all mirror parent shimData signature
     static override shimData(
         data: Record<string, unknown>, // eslint-disable-line no-restricted-syntax -- boundary: data mirrors parent shimData signature
         options?: Record<string, unknown>, // eslint-disable-line no-restricted-syntax -- boundary: options mirrors parent shimData signature
@@ -262,7 +261,6 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
      * @param {object} [options]    Additional options (see DataModel.shimData)
      * @protected
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; data/options mirror parent shimData signature
     static _shimData(
         data: Record<string, unknown>, // eslint-disable-line no-restricted-syntax -- boundary: data mirrors parent shimData signature
         options?: Record<string, unknown>, // eslint-disable-line no-restricted-syntax -- boundary: options mirrors parent shimData signature

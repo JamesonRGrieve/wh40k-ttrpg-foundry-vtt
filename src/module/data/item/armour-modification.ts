@@ -104,7 +104,6 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     static #extractAPFromEffect(source: Record<string, unknown>): void {
         // eslint-disable-next-line no-restricted-syntax -- boundary: source is untyped legacy migration data
         const mods = source['modifiers'] as Record<string, unknown> | undefined;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: mods is untyped legacy migration data
         if ((mods?.['armourPoints'] === undefined || mods['armourPoints'] === 0) && typeof source['effect'] === 'string' && source['effect'] !== '') {
             const extracted = ArmourModificationData.#extractAPModifier(source['effect']);
             if (extracted > 0) {
@@ -131,7 +130,6 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     static #extractAgilityFromEffect(source: Record<string, unknown>): void {
         // eslint-disable-next-line no-restricted-syntax -- boundary: source is untyped legacy migration data
         const mods = source['modifiers'] as Record<string, unknown> | undefined;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: mods is untyped legacy migration data
         if ((mods?.['maxAgility'] === undefined || mods['maxAgility'] === 0) && typeof source['effect'] === 'string' && source['effect'] !== '') {
             const extracted = ArmourModificationData.#extractAgilityModifier(source['effect']);
             if (extracted !== 0) {
@@ -283,7 +281,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         const patterns = [/\+(\d+)\s*AP/i, /gain\s*\+(\d+)\s*AP/i, /adds?\s*\+(\d+)\s*AP/i];
         for (const pattern of patterns) {
             const match = effect.match(pattern);
-            if (match?.[1] != null) return parseInt(match[1], 10);
+            if (match?.[1] !== undefined) return parseInt(match[1], 10);
         }
         return 0;
     }
@@ -298,7 +296,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         const patterns = [/([+-]\d+)\s*max\s*ag/i, /([+-]\d+)\s*max\s*agility/i, /([+-]\d+)\s*to.*agility/i];
         for (const pattern of patterns) {
             const match = effect.match(pattern);
-            if (match?.[1] != null) return parseInt(match[1], 10);
+            if (match?.[1] !== undefined) return parseInt(match[1], 10);
         }
         return 0;
     }
@@ -328,7 +326,6 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         if (types.includes('any')) return game.i18n.localize('WH40K.Modification.AnyArmour');
 
         const labels = types.map((type) => {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is typed non-null but populated lazily at runtime
             const wh40kConfig = CONFIG.wh40k as { armourTypes?: Record<string, { label: string }> } | undefined;
             const config = wh40kConfig?.armourTypes?.[type];
             return config !== undefined ? game.i18n.localize(config.label) : type;
@@ -351,7 +348,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * @type {string}
      */
     get modifierSummary(): string {
-        const parts = [];
+        const parts: string[] = [];
         const mods = this.modifiers;
 
         if (mods.armourPoints !== 0) {
@@ -374,7 +371,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     get propertiesSummary(): string {
         const added = Array.from(this.addedProperties);
         const removed = Array.from(this.removedProperties);
-        const parts = [];
+        const parts: string[] = [];
 
         if (added.length) {
             parts.push(`+${added.length} ${game.i18n.localize('WH40K.Modification.Properties')}`);
@@ -405,7 +402,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /** @override */
     get chatProperties(): string[] {
-        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: mixin prototype access; calling getter with explicit this binding
+        // eslint-disable-next-line @typescript-eslint/unbound-method -- boundary: mixin prototype access; calling getter with explicit this binding
         const parentGet = Object.getOwnPropertyDescriptor(PhysicalItemTemplate.prototype, 'chatProperties')?.get;
         const props = [...((parentGet?.call(this) as string[] | undefined) ?? [])];
 

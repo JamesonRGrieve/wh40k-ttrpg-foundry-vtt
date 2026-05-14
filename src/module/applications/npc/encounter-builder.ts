@@ -47,7 +47,6 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         classes: ['wh40k-rpg', 'encounter-builder'],
         tag: 'div',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: title is a WH40K.* localization key, not a hardcoded string; lint rule cannot distinguish
             title: 'WH40K.NPC.Encounter.Title',
             icon: 'fa-solid fa-swords',
             minimizable: true,
@@ -358,7 +357,6 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
                 return { key, ...rating };
             }
         }
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- noUncheckedIndexedAccess: index access may return undefined; fallback guards runtime
         const fallback = EncounterBuilder.DIFFICULTY_RATINGS['apocalyptic'] ?? { maxRatio: Infinity, label: 'WH40K.Threat.Apocalyptic', color: '#991b1b' };
         return { key: 'apocalyptic', ...fallback };
     }
@@ -429,7 +427,6 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             content,
             label: 'Add',
             callback: (html: HTMLElement[]) => {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: html[0] is the V1 Dialog callback array element; may be undefined at runtime
                 const form = (html[0] ?? document).querySelector('form') as HTMLFormElement;
                 return {
                     uuid: (form.querySelector('[name="uuid"]') as HTMLSelectElement).value,
@@ -526,7 +523,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             title: 'Save Encounter Template',
             content: '<form><div class="form-group"><label>Template Name</label><input type="text" name="name" placeholder="My Encounter"/></div></form>',
             label: 'Save',
-            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: html[0] is the V1 Dialog callback array element; optional chains guard V1 API runtime behaviour
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: html[0] is the V1 Dialog callback array element; optional chains guard V1 API runtime behaviour
             callback: (html: HTMLElement[]) => (html[0]?.querySelector('[name="name"]') as HTMLInputElement)?.value ?? '',
             rejectClose: false,
         });
@@ -540,7 +537,6 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             savedAt: Date.now(),
         });
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
         ui.notifications.info(`Saved encounter template: ${name}`);
         void this.render({ parts: ['content'] });
     }
@@ -560,7 +556,6 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         this.#npcs = foundry.utils.deepClone(template.npcs);
         this.#party = foundry.utils.deepClone(template.party);
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: i18n key to be added in a follow-up i18n pass
         ui.notifications.info(`Loaded encounter: ${template.name}`);
         void this.render({ parts: ['content'] });
     }
@@ -593,7 +588,6 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         // Ensure combat exists
         let combat = game.combat as CombatLike | null;
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- Combat.create is the V14 API; no successor yet
         combat ??= await (Combat as unknown as CombatConstructor).create({ scene: game.scenes.active?.id });
         /* eslint-enable no-restricted-syntax */
         if (combat === null) return;

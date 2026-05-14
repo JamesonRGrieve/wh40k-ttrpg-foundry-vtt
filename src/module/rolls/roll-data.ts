@@ -267,7 +267,6 @@ export class WeaponRollData extends RollData {
         this.ignoreSuccess = this.isSpray;
         this.ignoreControls = this.isFeint || this.isStun || this.isKnockDown;
         this.ignoreDamage = this.isStun || this.isFeint || this.isKnockDown;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: isThrown is a per-weapon flag set by item document
         this.isThrown = (this.weapon as { isThrown?: boolean }).isThrown ?? false;
 
         this.isOpposed = this.isKnockDown || this.isFeint;

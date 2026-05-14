@@ -52,7 +52,6 @@ export default class NPCTemplateSheet extends BaseItemSheet {
 
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     static override DEFAULT_OPTIONS = {
         ...BaseItemSheet.DEFAULT_OPTIONS,
         classes: ['sheet', 'wh40k-rpg', 'npc-template-sheet'],
@@ -87,7 +86,6 @@ export default class NPCTemplateSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     static override PARTS = {
         header: {
             template: 'systems/wh40k-rpg/templates/item/npc-template/header.hbs',
@@ -125,7 +123,6 @@ export default class NPCTemplateSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     static override TABS = [
         { tab: 'basics', group: 'primary', icon: 'fa-solid fa-user', label: TAB_LABEL_BASICS },
         { tab: 'characteristics', group: 'primary', icon: 'fa-solid fa-chart-bar', label: TAB_LABEL_CHARACTERISTICS },
@@ -507,7 +504,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
 
         try {
             // boundary: Foundry's `Actor.create` lacks a typed payload for arbitrary system schemas.
-            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: typed signature for static Actor.create
+            // eslint-disable-next-line no-restricted-syntax -- boundary: typed signature for static Actor.create
             const actor = (await (Actor.create as (data: Record<string, unknown>) => Promise<unknown>)(actorData)) as CreatedActor | null;
 
             if (actor !== null) {

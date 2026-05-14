@@ -158,7 +158,6 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
         _getCharacteristicContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
             const charKey = target.dataset['characteristic'];
             if (charKey === undefined || charKey === '') return [];
-            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies by gameSystem
             const characteristics = (this.actor.system as { characteristics?: Record<string, WH40KCharacteristic> }).characteristics;
             const char = characteristics?.[charKey];
             if (!char) return [];
@@ -209,7 +208,6 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
         _getSkillContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
             const skillKey = target.dataset['skill'];
             if (skillKey === undefined || skillKey === '') return [];
-            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies by gameSystem
             const skills = (this.actor.system as { skills?: Record<string, WH40KSkill> }).skills;
             const skill = skills?.[skillKey];
             if (!skill) return [];
@@ -450,7 +448,6 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
 
         _showGoverningCharacteristic(skillKey: string, skill: WH40KSkill): void {
             const label = skill.label !== '' ? skill.label : skillKey;
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Skill.GovernedBy localization key
             ui.notifications.info(`${label} is governed by ${skill.characteristic}`);
         }
 
@@ -458,7 +455,6 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
 
         async _duplicateItem(item: WH40KItem): Promise<void> {
             await item.clone({ name: `${item.name} (Copy)` }, { save: true });
-            // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Item.Duplicated localization key
             ui.notifications.info(`Duplicated ${item.name}`);
         }
 
@@ -472,7 +468,6 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
 
             if (confirmed) {
                 await item.delete();
-                // eslint-disable-next-line no-restricted-syntax -- TODO: needs WH40K.Item.Deleted localization key
                 ui.notifications.info(`Deleted ${item.name}`);
             }
         }
@@ -500,7 +495,6 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
             });
 
             if (confirmed) {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system.fate shape varies by gameSystem
                 const fate = (this.actor.system as { fate?: { total?: number } }).fate;
                 const currentTotal = fate?.total ?? 0;
                 if (currentTotal > 0) {

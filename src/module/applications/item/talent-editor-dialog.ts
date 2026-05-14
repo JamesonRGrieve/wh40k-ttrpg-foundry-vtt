@@ -229,7 +229,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line @typescript-eslint/require-await, no-restricted-syntax, @typescript-eslint/no-unused-vars -- boundary: ApplicationV2 _prepareContext options is a framework-defined free-form payload
+    // eslint-disable-next-line @typescript-eslint/require-await, no-restricted-syntax -- boundary: ApplicationV2 _prepareContext options is a framework-defined free-form payload
     override async _prepareContext(_options: Record<string, unknown>): Promise<PreparedContext> {
         const system: TalentSystem = this.item.system;
 

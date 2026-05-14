@@ -88,7 +88,7 @@ export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T): Dra
          * @protected
          */
         _dropBehavior(event: DragEvent): string {
-            // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- boundary: Foundry V14 TextEditor.getDragEventData returns untyped record; new namespace not yet on shipped types
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 TextEditor.getDragEventData returns untyped record; new namespace not yet on shipped types
             const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event) as Record<string, unknown>;
             const allowed = this._allowedDropBehaviors(event, data);
             if (event.shiftKey && allowed.has('copy')) return 'copy';

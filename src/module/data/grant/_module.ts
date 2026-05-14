@@ -61,7 +61,6 @@ export function createGrant(config: GrantConfig): BaseGrantData | null {
  * @param config - Grant configuration
  * @returns Array of validation errors
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: external grant config from item flags
 export function validateGrantConfig(config: GrantConfig): string[] {
     const grant = createGrant(config);
     if (!grant) {

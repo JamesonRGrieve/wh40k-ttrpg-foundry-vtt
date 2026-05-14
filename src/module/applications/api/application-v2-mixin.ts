@@ -158,7 +158,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
                 }),
             );
             for (const [part, config] of Object.entries((this.constructor as typeof BaseApplicationWH40K).PARTS)) {
-                if (config.container?.id === undefined || config.container.id === '') continue; // eslint-disable-line @typescript-eslint/strict-boolean-expressions -- explicit empty-string guard
+                if (config.container?.id === undefined || config.container.id === '') continue;
                 const element = root.querySelector<HTMLElement>(`[data-application-part="${part}"]`);
                 if (element === null) continue;
                 let container = containers[config.container.id];

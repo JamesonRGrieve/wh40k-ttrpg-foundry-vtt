@@ -43,7 +43,6 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         classes: ['wh40k-rpg', 'roll-configuration-dialog'],
         tag: 'form',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- this IS a localization key, not hardcoded English
             title: 'WH40K.Roll.ConfigureRoll',
             icon: 'fa-solid fa-dice-d20',
             resizable: false,

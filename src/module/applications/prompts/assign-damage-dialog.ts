@@ -25,7 +25,6 @@ export default class AssignDamageDialog extends BaseRollDialog {
     static override DEFAULT_OPTIONS = {
         classes: ['assign-damage'],
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.Dialog.AssignDamageTitle',
         },
     };

@@ -54,7 +54,6 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         classes: ['wh40k-rpg', 'characteristic-setup-dialog'],
         tag: 'div',
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.CharacteristicSetup.Title',
             icon: 'fa-solid fa-dice-d20',
             minimizable: false,

@@ -169,7 +169,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             height: 'auto' as unknown as number,
         },
         window: {
-            // eslint-disable-next-line no-restricted-syntax -- localization key resolved by Foundry V14 ApplicationV2 at render
             title: 'WH40K.Roll.Title' as const,
         },
     };
@@ -238,7 +237,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /** @returns {object} The underlying roll data (ForceFieldData IS the rollData) */
     // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries roll-type-specific extension fields read by templates
     get rollData(): RollData & Record<string, unknown> {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries roll-type-specific extension fields read by templates
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- rollData may be absent on subclasses at runtime; cast is boundary: heterogeneous roll data bag
         return (this.actionData.rollData ?? this.actionData) as RollData & Record<string, unknown>;
     }
@@ -247,10 +245,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     // eslint-disable-next-line @typescript-eslint/naming-convention -- leading underscore is Foundry V2 convention for accessor-like members
     get _currentDifficulty(): (typeof UnifiedRollDialog.DIFFICULTIES)[number] {
         const ctor = this.constructor as typeof UnifiedRollDialog;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: array index may return undefined at runtime
         const difficulty = ctor.DIFFICULTIES[this._selectedDifficultyIndex] ?? ctor.DIFFICULTIES[0];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, eqeqeq -- noUncheckedIndexedAccess: DIFFICULTIES[0] may be undefined; == null catches both null and undefined
-        if (difficulty == null) throw new Error('DIFFICULTIES is empty');
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: DIFFICULTIES[0] may be undefined; guard is required at runtime
+        if (difficulty === undefined) throw new Error('DIFFICULTIES is empty');
         return difficulty;
     }
 
@@ -381,7 +378,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is dialog state (null = not yet collected), not a DataModel field
         const situationalModifiers = (this._cachedSituationalModifiers ?? []).map((m) => ({
             ...m,
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: string-keyed lookup may return undefined
             active: this._situationalModifiers[`${m.key}_${m.source}`] ?? false,
             toggleKey: `${m.key}_${m.source}`,
             valueLabel: m.value >= 0 ? `+${m.value}` : `${m.value}`,
@@ -398,7 +394,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Actor info (ForceFieldData uses .actor, ActionData uses .sourceActor or .actor)
         const actor = (rollData.sourceActor ?? rollData['actor']) as { name?: string; img?: string } | null | undefined;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- actor is typed as (obj | null | undefined); optional chain + ?? is the safe access pattern
         const actorName = actor?.name ?? '';
         const actorImg = actor?.img ?? '';
 
@@ -571,7 +566,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Apply range bracket override if user selected one
         if (this._selectedRangeBracket !== null && rd.weapon?.isRanged === true) {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: RANGE_BRACKETS[key] may be undefined
             const bracket = RANGE_BRACKETS[this._selectedRangeBracket];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- bracket may be undefined due to noUncheckedIndexedAccess
             if (bracket) {
@@ -608,7 +602,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Card-based attack modes
         const isRanged = rd.weapon?.isRanged === true;
-        /* eslint-disable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions, no-restricted-syntax -- rd.weapon may be absent at runtime; cast is boundary: weapon roll data typing does not match AttackOptionWeaponLike exactly */
+        /* eslint-disable no-restricted-syntax -- boundary: rd.weapon cast is boundary; weapon roll data typing does not match AttackOptionWeaponLike exactly */
         const attackModes = rd.weapon
             ? getAvailableAttackModes(rd.weapon as unknown as AttackOptionWeaponLike).map((m) => ({
                   ...m,
@@ -616,11 +610,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                   modifierLabel: m.modifier >= 0 ? `+${m.modifier}` : `${m.modifier}`,
               }))
             : [];
-        /* eslint-enable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions, no-restricted-syntax */
+        /* eslint-enable no-restricted-syntax */
 
         // Melee special options
         const meleeSpecialOptions =
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- rd.weapon may be absent at runtime on non-weapon roll data despite its type
             !isRanged && rd.weapon
                 ? getMeleeSpecialOptions().map((m) => ({
                       ...m,
@@ -639,7 +632,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         }));
 
         // Combat situational modifiers
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- rd.weapon may be absent at runtime on non-weapon roll data despite its type
         const combatSituationals = rd.weapon
             ? getSituationalModifiers(isRanged).map((s) => ({
                   ...s,
@@ -649,7 +641,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             : [];
 
         // Size modifiers from config (values are plain strings like "Average (4)")
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- CONFIG.wh40k may be absent on early initialization
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- CONFIG.wh40k may be absent on early initialization
         const sizes = CONFIG.wh40k?.sizes ?? {};
         // eslint-disable-next-line no-restricted-syntax -- boundary: _sizeModifierKey is dialog state (string | null); null means "derive from target actor"
         const currentSizeMod = this._sizeModifierKey ?? this._getDefaultSizeKey(rd);
@@ -667,7 +659,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // Selected range summary for collapsed header
         // eslint-disable-next-line no-restricted-syntax -- boundary: _selectedRangeBracket is dialog state (string | null), not a DataModel field
         const currentRangeKey = this._selectedRangeBracket ?? rd['rangeBracket'];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: rangeBrackets[0] may be undefined
         const currentRangeBracket = rangeBrackets.find((b) => b.key === currentRangeKey) ?? rangeBrackets.find((b) => b.key === 'standard') ?? rangeBrackets[0];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- currentRangeBracket may be undefined due to noUncheckedIndexedAccess
         const selectedRangeSummary = currentRangeBracket
@@ -685,9 +676,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         };
 
         // Selected size summary for collapsed header
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: find may return undefined
         const currentSizeOption = sizeOptions.find((s) => s.isSelected) ?? sizeOptions.find((s) => s.key === '4');
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- currentSizeOption may be undefined
         const selectedSizeSummary = currentSizeOption
             ? { label: currentSizeOption.label, modifier: currentSizeOption.modifier, modifierLabel: currentSizeOption.modifierLabel }
             : { label: 'Average (4)', modifier: 0, modifierLabel: '+0' };
@@ -727,7 +716,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             isCalledShot: rd['isCalledShot'],
             calledShotLocation: rd['calledShotLocation'],
             locations: rd.locations,
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- rd.actions may be absent at runtime on uninitialised roll data despite its type
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- rd.actions may be absent at runtime on uninitialised roll data despite its type
             actions: rd.actions ?? {},
             currentAction: rd.action,
         };
@@ -781,7 +770,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     _collectSituationalModifiers(): Array<{ key: string; source: string; value: number; label: string }> {
         /* eslint-disable no-restricted-syntax -- boundary: rollData is a heterogeneous bag; actor may be on sourceActor or the legacy 'actor' key */
         const actor = this.rollData.sourceActor ?? (this.rollData as Record<string, unknown>)['actor'];
-        // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: actor is unknown; cast + type-guard pattern; optional chain guards real runtime possibility
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: actor is unknown; cast + type-guard pattern; optional chain guards real runtime possibility
         if (typeof (actor as { getSituationalModifiers?: unknown })?.getSituationalModifiers !== 'function') return [];
         /* eslint-enable no-restricted-syntax */
         const rd = this.rollData;
@@ -797,7 +786,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is dialog state (null = not yet collected), not a DataModel field
         for (const mod of this._cachedSituationalModifiers ?? []) {
             const toggleKey = `${mod.key}_${mod.source}`;
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: string-keyed lookup may return undefined
             if (this._situationalModifiers[toggleKey]) total += mod.value;
         }
         return total;
@@ -1055,7 +1043,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const bracket = target.dataset['bracket'];
         if (bracket === undefined) return;
         this._selectedRangeBracket = bracket;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: RANGE_BRACKETS[bracket] may be undefined
         const bracketData = RANGE_BRACKETS[bracket];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- bracketData may be undefined due to noUncheckedIndexedAccess
         if (bracketData) {
@@ -1071,7 +1058,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // Get source token
         const rd = this.rollData;
         const actor = rd.sourceActor;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- sourceActor may be absent at runtime even though typed as defined
         if (!actor) return;
         type ActorToken = foundry.canvas.placeables.Token;
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor exposes loose token accessors not yet in typings.

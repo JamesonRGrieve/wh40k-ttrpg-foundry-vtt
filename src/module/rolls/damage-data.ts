@@ -117,12 +117,11 @@ export class Hit {
             const initialHit = getHitLocationForRoll(roll?.total ?? 0) ?? 'Body';
             // eslint-disable-next-line no-restricted-syntax -- boundary: additionalHitLocations() returns a plain object from legacy JS with no TypeScript schema
             const locationTable = additionalHitLocations() as Record<string, Record<number, string>>;
-            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- boundary: table lookup may return undefined at runtime despite the cast type
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: table lookup may return undefined at runtime despite the cast type
             hit.location = locationTable[initialHit]?.[hitNumber <= 5 ? hitNumber : 5] ?? 'Body';
         }
 
         // Determine Righteous Fury Effects
-        // eslint-disable-next-line no-await-in-loop -- sequential by design: each critical damage lookup depends on the prior hit state
         for (const righteousFury of hit.righteousFury) {
             const rfTotal = righteousFury.roll.total ?? 0;
             // eslint-disable-next-line no-await-in-loop -- sequential by design (see above)
@@ -322,7 +321,6 @@ export class Hit {
         });
 
         // Handle exotic modifiers - most are numeric, but Daemonbane is a dice formula
-        // eslint-disable-next-line no-await-in-loop -- sequential by design: each exotic modifier roll is independent but rare (at most 1 Daemonbane per hit)
         for (const [key, value] of Object.entries(exoticModifiers)) {
             if (typeof value === 'string' && value.includes('d')) {
                 // Daemonbane: "2d10" - roll additional dice
