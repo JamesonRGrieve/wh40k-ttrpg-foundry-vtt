@@ -51,6 +51,9 @@
         }
     },
     "WH40K": {
+        "Warning": {
+            "ConditionGMOnly": "Only the GM may add, modify, or remove conditions on an actor."
+        },
         "Confirm": "Confirm",
         "Cancel": "Cancel",
         "Close": "Close",
