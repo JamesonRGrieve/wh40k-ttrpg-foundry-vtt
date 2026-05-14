@@ -29,7 +29,7 @@ export default class StorageLocationData extends ItemDataModel.mixin(Description
         return props;
     }
 
-    /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels return type mirrors base ItemDataModel schema
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return [{ label: this.location || 'Storage', icon: 'fa-solid fa-warehouse' }];
     }

@@ -11,8 +11,10 @@ import type { WH40KItem } from '../documents/item.ts';
 import { SkillKeyHelper } from '../helpers/skill-key-helper.ts';
 import { evaluateWoundsFormula, evaluateFateFormula } from './formula-evaluator.ts';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- documentation: union of all grant DataModel types this processor handles
-type _GrantDataModel = ItemGrantData | SkillGrantData | CharacteristicGrantData | ChoiceGrantData | ResourceGrantData;
+/* eslint-disable @typescript-eslint/no-unused-vars -- documentation: union of all grant DataModel types this processor handles */
+// biome-ignore lint/correctness/noUnusedVariables: documentation: union of all grant DataModel types this processor handles
+type GrantDataModelUnion = ItemGrantData | SkillGrantData | CharacteristicGrantData | ChoiceGrantData | ResourceGrantData;
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /** Choice-grant per-option payload. Fields are subclass-defined; narrowed at use. */
 interface GrantChoiceOptionGrants {

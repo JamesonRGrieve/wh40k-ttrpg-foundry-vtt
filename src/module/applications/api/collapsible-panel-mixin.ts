@@ -26,10 +26,11 @@ function asSheet(host: unknown): BaseActorSheetMixins {
  */
 export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base: T): T {
     class CollapsiblePanelApplication extends Base {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructors must take any[] per TS mixin rule (TS2545)
+        /* eslint-disable @typescript-eslint/no-explicit-any -- mixin constructors must take any[] per TS mixin rule (TS2545) */
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
+            /* eslint-enable @typescript-eslint/no-explicit-any */
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- mixin constructor forwards untyped args; TS mixin rule requires any[]
             super(...args);
         }

@@ -28,12 +28,14 @@ export interface IconOptions {
  *   3. Typecheck picks up the new union member automatically.
  */
 export function icon(key: IconKey, opts: IconOptions = {}): string {
-    // Index access: TypeScript views Record<string, string> as total, but the
-    // registry can drift if the typed union and the generated map fall out of
-    // sync mid-build / hot-reload. Cast through unknown so the runtime guard
-    // still kicks in without an unnecessary-condition lint warning.
-    const svg = (ICON_REGISTRY as Record<string, string | undefined>)[key];
-    if (svg === undefined || svg === '') return '';
+    // Index access: the registry can drift if the typed union and the generated
+    // map fall out of sync mid-build / hot-reload. Use Object.hasOwn to guard
+    // defensively without a cast.
+    if (!Object.hasOwn(ICON_REGISTRY, key)) return '';
+    const svg = ICON_REGISTRY[key];
+    /* eslint-disable @typescript-eslint/no-unnecessary-condition -- defensive guard: registry can drift during hot-reload; svg typed as string but may be null at runtime */
+    if (svg == null || svg === '') return '';
+    /* eslint-enable @typescript-eslint/no-unnecessary-condition */
     const classes = ['wh40k-icon', `wh40k-icon--${key.replace(':', '-')}`];
     if (opts.class !== undefined && opts.class !== '') classes.push(opts.class);
     const labelAttrs =

@@ -50,8 +50,7 @@ export class WH40KTour extends foundry.nue.Tour {
 
     override async _postStep(): Promise<void> {
         await super._postStep();
-        const stepIndex = this.stepIndex ?? -1;
-        if (stepIndex < 0 || !this.hasNext) return;
+        if (this.stepIndex == null || this.stepIndex < 0 || !this.hasNext) return;
 
         if (!this.currentWh40KStep.action) return;
 

@@ -390,7 +390,7 @@ export class WH40KItem extends WH40KItemContainer {
         super.prepareData();
         game.wh40k.log('Item prepare data', this);
 
-        void this.convertNestedToItems();
+        this.convertNestedToItems();
 
         if (this.isPsychicPower) {
             if (this.system.damage === undefined || this.system.damage === '') {
@@ -688,6 +688,7 @@ export class WH40KItem extends WH40KItemContainer {
         if (navActor === null) return this.sendToChat();
         const perception = navActor.characteristics['perception'];
         const willpower = navActor.characteristics['willpower'];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
         if (perception === undefined || willpower === undefined) return this.sendToChat();
 
         // Use the higher of the two as base, modified by Navigator Rank
@@ -841,6 +842,7 @@ export class WH40KItem extends WH40KItemContainer {
             for (const [key, value] of Object.entries(modifiers.characteristics)) {
                 if (value !== 0) {
                     const charEntry = actor.system.characteristics[key];
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
                     if (charEntry === undefined) continue;
                     const currentBonus: number = charEntry.advance;
                     updates[`system.characteristics.${key}.advance`] = currentBonus + Number(value);

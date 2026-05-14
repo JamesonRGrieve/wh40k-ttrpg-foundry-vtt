@@ -91,9 +91,10 @@ function ensureGlobalDragTracking(): void {
  * @returns {any}
  * @mixin
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin constructor signature must accept open-ended args to compose with other mixins
+/* eslint-disable @typescript-eslint/no-explicit-any -- mixin constructor signature must accept open-ended args to compose with other mixins */
 // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
 export default function EnhancedDragDropMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T): T {
+    /* eslint-enable @typescript-eslint/no-explicit-any */
     return class EnhancedDragDropApplication extends Base implements EnhancedDragDropMixinAPI {
         #actorDocument(): WH40KBaseActorDocument {
             return this.document as WH40KBaseActorDocument;

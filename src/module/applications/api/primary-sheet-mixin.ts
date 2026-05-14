@@ -314,9 +314,11 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                     });
                 }
 
-                if (activeTab != null && activeTab !== '') {
+                /* eslint-disable @typescript-eslint/no-unnecessary-condition -- defensive guard: tabGroups index returns string but may be empty at runtime before initialization */
+                if (activeTab !== undefined && activeTab !== '') {
                     this._activateTab(activeTab, group, nav, content);
                 }
+                /* eslint-enable @typescript-eslint/no-unnecessary-condition */
             }
         }
 

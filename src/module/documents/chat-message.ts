@@ -73,6 +73,7 @@ export class ChatMessageWH40K extends ChatMessage {
         const roll = this.rolls[0];
         const target = this.getFlag('wh40k-rpg', 'target');
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: this.rolls[0] may be undefined despite length check
         if (target === undefined || target === null || roll === undefined) return null;
 
         // Check if this is a d100 roll
@@ -242,7 +243,7 @@ export class ChatMessageWH40K extends ChatMessage {
                     if (item !== null && actor !== null) {
                         // Import and use targeted action manager
                         const { DHTargetedActionManager } = await import('../actions/targeted-action-manager.ts');
-                        await DHTargetedActionManager.performWeaponAttack(actor as never, null, item as never);
+                        DHTargetedActionManager.performWeaponAttack(actor as never, null, item as never);
                     }
                 }
                 return;

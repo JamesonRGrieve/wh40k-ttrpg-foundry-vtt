@@ -31,6 +31,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends `any`; the as-unknown cast satisfies StringField constructor typing without runtime effect
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Power test configuration
@@ -128,7 +129,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
     get chatProperties(): string[] {
         const props = [
             `Test: ${this.testLabel}`,
-            ...((Object.getOwnPropertyDescriptor(ActivationTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
+            ...(Object.getOwnPropertyDescriptor(ActivationTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]),
         ];
 
         return props;
@@ -138,7 +139,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
     /*  Header Labels                               */
     /* -------------------------------------------- */
 
-    /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels is a free-form record consumed by sheet templates
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             test: this.testLabel,

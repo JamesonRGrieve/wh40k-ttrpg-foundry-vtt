@@ -142,6 +142,7 @@ export class WH40KActiveEffect extends ActiveEffect {
     _applyCharacteristicChange(actor: WH40KBaseActor, change: EffectChange): number | null {
         const path = change.key;
         const charKey = path.split('.')[2]; // e.g., "strength" from "system.characteristics.strength.modifier"
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: split result may be undefined at runtime
         if (charKey === undefined) return null;
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime safety: key may be absent despite schema
@@ -161,6 +162,7 @@ export class WH40KActiveEffect extends ActiveEffect {
     _applySkillChange(actor: WH40KBaseActor, change: EffectChange): number | null {
         const path = change.key;
         const skillKey = path.split('.')[2]; // e.g., "acrobatics"
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: split result may be undefined at runtime
         if (skillKey === undefined) return null;
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime safety: key may be absent despite schema

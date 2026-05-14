@@ -89,6 +89,7 @@ export abstract class BaseSystemConfig {
      * @param context     Optional system-specific context
      * @returns Cost in XP, or null if not advanceable
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: context is a system-specific extension point; concrete types are defined by each system's implementation
     abstract getSkillAdvanceCost(actor: WH40KBaseActor, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null;
 
     /**
@@ -98,6 +99,7 @@ export abstract class BaseSystemConfig {
      * @param context Optional system-specific context
      * @returns Cost in XP, or null if not available
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: talent and context are system-specific extension points; concrete types vary per system
     abstract getTalentAdvanceCost(actor: WH40KBaseActor, talent: unknown, context?: Record<string, unknown>): number | null;
 
     /**
@@ -168,7 +170,7 @@ export abstract class BaseSystemConfig {
      */
     protected readOriginPathField(actor: WH40KBaseActor, key: string): string | number {
         const source = actor.system.originPath;
-        if (source === null || source === undefined) return '';
+        if (source == null) return '';
         const value = source[key];
         if (typeof value === 'string' || typeof value === 'number') return value;
         return '';

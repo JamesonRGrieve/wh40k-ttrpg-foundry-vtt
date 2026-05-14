@@ -295,9 +295,10 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         this.#templates = [];
 
         // Load from world items
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- Foundry game.items filter callback receives untyped Item documents at runtime
+        /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- Foundry game.items filter callback receives untyped Item documents at runtime */
         // biome-ignore lint/suspicious/noExplicitAny: Foundry game.items filter callback receives untyped Item documents at runtime
         const worldTemplates = game.items.filter((i: any) => i.type === 'npcTemplate') as WH40KItem[];
+        /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access */
         this.#templates.push(...worldTemplates);
 
         // Load from compendiums
@@ -306,9 +307,10 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
             eligiblePacks.map(async (pack) => {
                 try {
                     const index = await pack.getIndex({ fields: ['type', 'system.category', 'system.faction'] });
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- Foundry pack.getIndex returns untyped index entries at runtime
+                    /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- Foundry pack.getIndex returns untyped index entries at runtime */
                     // biome-ignore lint/suspicious/noExplicitAny: Foundry pack.getIndex returns untyped index entries at runtime
                     const templateEntries = index.filter((e: any) => e.type === 'npcTemplate');
+                    /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access */
 
                     const items = await Promise.all(templateEntries.map(async (entry) => (await pack.getDocument(entry._id)) as WH40KItem | null));
                     for (const item of items) {

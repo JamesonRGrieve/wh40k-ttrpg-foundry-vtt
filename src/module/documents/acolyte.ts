@@ -476,14 +476,14 @@ export class WH40KAcolyte extends WH40KBaseActor {
                         await this.rollCharacteristic('weaponSkill', item.name);
                     }
                 } else {
-                    await DHTargetedActionManager.performWeaponAttack(this, null, item);
+                    DHTargetedActionManager.performWeaponAttack(this, null, item);
                 }
                 return;
             case 'psychicPower':
                 if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls) === true) {
                     await this.rollCharacteristic('willpower', item.name);
                 } else {
-                    await DHTargetedActionManager.performPsychicAttack(this, null, item);
+                    DHTargetedActionManager.performPsychicAttack(this, null, item);
                 }
                 return;
             case 'forceField':
