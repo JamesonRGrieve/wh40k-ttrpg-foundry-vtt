@@ -10,10 +10,10 @@ export interface HordeMixinExtensions {
     readonly hordeDamageMultiplier: number;
     readonly hordeDestroyed: boolean;
     readonly magnitudePercent: number;
-    _prepareHordeData(): void;
-    applyMagnitudeDamage(amount: number, source?: string): Promise<WH40KBaseActor>;
-    restoreMagnitude(amount: number, source?: string): Promise<WH40KBaseActor>;
-    toggleHordeMode(): Promise<WH40KBaseActor>;
+    _prepareHordeData: () => void;
+    applyMagnitudeDamage: (amount: number, source?: string) => Promise<WH40KBaseActor>;
+    restoreMagnitude: (amount: number, source?: string) => Promise<WH40KBaseActor>;
+    toggleHordeMode: () => Promise<WH40KBaseActor>;
 }
 
 /**
@@ -51,8 +51,8 @@ interface MigrationSource {
 /* eslint-disable @typescript-eslint/no-explicit-any -- standard mixin constructor and TypeDataModel generic args require any[] at Foundry framework boundaries */
 // biome-ignore lint/suspicious/noExplicitAny: standard mixin constructor pattern requires any[]
 type Constructor<T = object> = (new (...args: any[]) => T) & {
-    defineSchema(): Record<string, foundry.data.fields.DataField.Any>;
-    _migrateData?(source: MigrationSource): void;
+    defineSchema: () => Record<string, foundry.data.fields.DataField.Any>;
+    _migrateData?: (source: MigrationSource) => void;
 };
 
 /**
