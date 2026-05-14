@@ -1887,7 +1887,9 @@
             "Clip": "Clip",
             "Reload": "Reload",
             "Special": "Special",
-            "RollDamage": "Roll Damage"
+            "RollDamage": "Roll Damage",
+            "ShowDetails": "Show Details",
+            "HideDetails": "Hide Details"
         },
         "Reload": {
             "Free": "Free Action",
