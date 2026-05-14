@@ -28,14 +28,12 @@ interface I18nLike {
 }
 
 function getI18n(): I18nLike {
-    const g = (globalThis as unknown as { game?: { i18n?: I18nLike } }).game;
-    return (
-        g?.i18n ?? {
-            // Fallback for non-Foundry environments (Vitest, Storybook). Returns
-            // the key unchanged so call sites still produce deterministic output.
-            localize: (key: string) => key,
-        }
-    );
+    // In Vitest / Storybook, `game` may not be initialised; fall back to a
+    // pass-through localizer so call sites produce deterministic output.
+    if (typeof game !== 'undefined') {
+        return game.i18n;
+    }
+    return { localize: (key: string) => key };
 }
 
 function capitalize(s: string): string {
@@ -117,6 +115,6 @@ export function summarizeChange(change: EffectChangeRaw): EffectChangeSummary {
 
 /** Summarize a list of raw changes. */
 export function summarizeChanges(changes: readonly EffectChangeRaw[] | undefined): EffectChangeSummary[] {
-    if (!changes?.length) return [];
+    if (changes === undefined || changes.length === 0) return [];
     return changes.map(summarizeChange);
 }

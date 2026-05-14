@@ -23,13 +23,14 @@ import type { ApplicationV2Ctor } from './application-types.ts';
  */
 export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base: T): T {
     return class ExpandableTooltipApplication extends Base {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- mixin: TypeScript mixin pattern requires any[] constructor args to satisfy TS2545
+        /* eslint-disable @typescript-eslint/no-explicit-any -- mixin: TypeScript mixin pattern requires any[] constructor args to satisfy TS2545 */
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- mixin: spreading any[] args is safe here; these are the base class constructor args forwarded unchanged
             super(...args);
         }
+        /* eslint-enable @typescript-eslint/no-explicit-any */
 
         /**
          * Storage for currently open expandable panels

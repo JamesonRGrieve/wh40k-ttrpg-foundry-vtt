@@ -4,7 +4,6 @@
  * marker (lived on the data model side — see src/module/data/actor/concrete/).
  */
 
-
 export { default as WH40KBCCharacter } from './bc-character.ts';
 export { default as WH40KBCNPC } from './bc-npc.ts';
 export { default as WH40KBCVehicle } from './bc-vehicle.ts';

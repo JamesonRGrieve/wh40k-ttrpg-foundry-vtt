@@ -31,6 +31,7 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
         return { coreSteps: [], optionalStep: null, packs: [] };
     }
 
+    // eslint-disable-next-line no-restricted-syntax -- boundary: matches abstract CareerBasedSystemConfig.getCareerRegistry() return type
     getCareerRegistry(): Record<string, unknown> {
         // DH1e career tables TBD
         return {};

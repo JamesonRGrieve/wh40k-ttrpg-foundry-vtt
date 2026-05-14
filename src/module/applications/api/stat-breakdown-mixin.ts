@@ -36,10 +36,11 @@ interface BreakdownData {
  */
 export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T): T {
     return class StatBreakdownApplication extends Base {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixin requirement
+        /* eslint-disable @typescript-eslint/no-explicit-any -- TypeScript mixin requirement */
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
+            /* eslint-enable @typescript-eslint/no-explicit-any */
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- TypeScript mixin requirement: forwarding variadic args to unknown base
             super(...args);
         }

@@ -15,10 +15,11 @@ import type { ApplicationV2Ctor } from './application-types.ts';
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- mixin factory: return type is the inner class, which cannot be named at the outer function scope
 export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class VisualFeedbackApplication extends Base {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- standard mixin constructor pattern requires any[]
+        /* eslint-disable @typescript-eslint/no-explicit-any -- standard mixin constructor pattern requires any[] */
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
+            /* eslint-enable @typescript-eslint/no-explicit-any */
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- forwarding mixin args to base
             super(...args);
         }

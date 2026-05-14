@@ -39,9 +39,10 @@ interface SystemSheetConfig {
 type SkillRanks = ReturnType<ReturnType<typeof SystemConfigRegistry.get>['getSkillRanks']>;
 
 interface SystemVariantBase {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixin requirement: must accept any[] for `class extends baseCls`
+    /* eslint-disable @typescript-eslint/no-explicit-any -- TypeScript mixin requirement: must accept any[] for `class extends baseCls` */
     // biome-ignore lint/suspicious/noExplicitAny: TypeScript mixin requirement: must accept any[] for `class extends baseCls`
     new (...args: any[]): object;
+    /* eslint-enable @typescript-eslint/no-explicit-any */
     DEFAULT_OPTIONS?: Partial<ApplicationV2Config.DefaultOptions>;
     PARTS: Record<string, { template?: string }>;
 }
