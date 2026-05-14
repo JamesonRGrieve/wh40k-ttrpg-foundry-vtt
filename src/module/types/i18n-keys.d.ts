@@ -1751,6 +1751,7 @@ export type I18nKey =
     | 'WH40K.WH40KRPG.WoundsCritical'
     | 'WH40K.WH40KRPG.WoundsCurrent'
     | 'WH40K.WH40KRPG.WoundsTotal'
+    | 'WH40K.Warning.ConditionGMOnly'
     | 'WH40K.Warning.InvalidAmmunition'
     | 'WH40K.Warning.InvalidCharacteristic'
     | 'WH40K.Warning.InvalidItem'
