@@ -55,6 +55,7 @@ playwright-report/
 .theme-coverage.json
 .important-coverage.json
 .compendium-uuid-index.json
+.compendium-uuid-migration.json
 
 ## Stray TypeScript transpile output (source-of-truth is the .ts files)
 stories/**/*.js
