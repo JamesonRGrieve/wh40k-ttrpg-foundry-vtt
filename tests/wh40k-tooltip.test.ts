@@ -92,8 +92,10 @@ describe('skill tooltip regressions', () => {
             label: 'Awareness',
         });
 
-        expect(html).toContain('Training:</span>');
-        expect(html).toContain('Veteran (+30)');
+        // The standalone "Training:" line was removed (issue #36 follow-up); the
+        // progression track is the single source of training-state display.
+        expect(html).not.toContain('Training:</span>');
+        expect(html).toContain('Training Progression');
         expect(html).toContain('<span class="">Known</span>');
         expect(html).toContain('<span class="">Experienced</span>');
         expect(html).toContain('<span class="active">Veteran</span>');
@@ -134,8 +136,8 @@ describe('skill tooltip regressions', () => {
         });
 
         expect(html).toContain('Perception Characteristic Total:');
-        expect(html).toContain('Training:</span>');
-        expect(html).toContain('Known</span>');
+        expect(html).not.toContain('Training:</span>');
+        expect(html).toContain('<span class="active">Known</span>');
     });
 
     it('hides the half-characteristic untrained base line for non-RT systems', async () => {
@@ -169,6 +171,51 @@ describe('skill tooltip regressions', () => {
         });
 
         expect(html).not.toContain('Untrained Test Base');
+    });
+
+    it('uses per-system rank labels when the favourite-skill payload carries actorUuid (issue #36)', async () => {
+        // Reproduces the favourite-skill tab flow: prepareSkillTooltipData(...) is the
+        // single code path the Statistics tab and the Favourites tab both go through, so
+        // a DH2e actor's favourite skill must render Known/Trained/Experienced/Veteran —
+        // never the career-based-system fallback labels (Trained/+10/+20).
+        const skill = {
+            label: 'Awareness',
+            characteristic: 'perception',
+            trained: true,
+            plus10: true,
+            plus20: false,
+            plus30: false,
+            current: 47,
+            bonus: 0,
+        } as WH40KSkill;
+        const characteristics = {
+            perception: { label: 'Perception', total: 37 },
+        } as unknown as Record<string, WH40KCharacteristic>;
+
+        const payload = JSON.parse(prepareSkillTooltipData('awareness', skill, characteristics, 'Actor.fav')) as Record<string, unknown>;
+        expect(payload.actorUuid).toBe('Actor.fav');
+        expect(payload.trained).toBe(true);
+        expect(payload.plus10).toBe(true);
+
+        const actor = {
+            system: {
+                gameSystem: 'dh2e',
+                characteristics: { perception: { label: 'Perception', total: 37 } },
+                skills: {
+                    awareness: { ...skill },
+                },
+            },
+        } as WH40KBaseActor;
+        (globalThis as Record<string, unknown>).fromUuid = async () => actor;
+
+        const tooltip = new TooltipsWH40K();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: SkillTooltipPayload shape is the JSON-parsed contract emitted by prepareSkillTooltipData; the cast is over the parsed payload.
+        const html = await tooltip._buildSkillTooltip(payload as Parameters<typeof tooltip._buildSkillTooltip>[0]);
+
+        expect(html).toContain('<span class="">Known</span>');
+        expect(html).toContain('<span class="active">Trained</span>');
+        expect(html).toContain('<span class="">Experienced</span>');
+        expect(html).toContain('<span class="">Veteran</span>');
     });
 
     it('shows the half-characteristic untrained base line for Rogue Trader', async () => {
