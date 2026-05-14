@@ -210,6 +210,7 @@ export default class TalentSheet extends BaseItemSheet {
             viewGrantedItem: TalentSheet.#viewGrantedItem,
             adjustRank: TalentSheet.#adjustRank,
             openTalentEditor: TalentSheet.#openTalentEditor,
+            switchTab: TalentSheet.#switchTab,
         },
         position: {
             width: 650,
@@ -875,61 +876,24 @@ export default class TalentSheet extends BaseItemSheet {
     /*  Event Handlers                              */
     /* -------------------------------------------- */
 
-    /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender context is free-form template context passed by Foundry ApplicationV2
-    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
-        await super._onRender(context, options);
-
-        // Set up custom tab handling
-        this._setupTalentTabs();
-    }
-
+    /* -------------------------------------------- */
+    /*  Action Handlers                             */
     /* -------------------------------------------- */
 
     /**
-     * Set up tab click listeners.
-     * @protected
+     * Switch to the tab identified by the target's data-tab/data-group attributes.
+     * Used by the Effects banner "View Details" link to jump into the Effects tab.
+     * @this {TalentSheet}
+     * @param {Event} event - The triggering event
+     * @param {HTMLElement} target - The action target
      */
-    _setupTalentTabs(): void {
-        const tabs = this.element.querySelectorAll('.wh40k-talent-tabs .wh40k-talent-tab');
-        const switchTab = (tabName: string | undefined): void => {
-            if (tabName === undefined || tabName === '') return;
-
-            // Update active tab button
-            tabs.forEach((t) => {
-                t.classList.toggle('active', (t as HTMLElement).dataset['tab'] === tabName);
-            });
-
-            // Show/hide panels
-            const panels = this.element.querySelectorAll('.wh40k-talent-panel');
-            panels.forEach((panel) => {
-                panel.classList.toggle('active', (panel as HTMLElement).dataset['tab'] === tabName);
-            });
-
-            // Update tab group state
-            this.tabGroups['primary'] = tabName;
-        };
-
-        // Tab button clicks
-        tabs.forEach((tab) => {
-            tab.addEventListener('click', (event) => {
-                event.preventDefault();
-                switchTab((tab as HTMLElement).dataset['tab']);
-            });
-        });
-
-        // Effects banner link click
-        const bannerLink = this.element.querySelector('.wh40k-effects-banner__link');
-        if (bannerLink) {
-            bannerLink.addEventListener('click', (event) => {
-                event.preventDefault();
-                switchTab((bannerLink as HTMLElement).dataset['tab']);
-            });
-        }
+    static #switchTab(this: TalentSheet, event: Event, target: HTMLElement): void {
+        const tab = target.dataset['tab'];
+        const group = target.dataset['group'] ?? 'primary';
+        if (tab === undefined || tab === '') return;
+        this.changeTab(tab, group, {});
     }
 
-    /* -------------------------------------------- */
-    /*  Action Handlers                             */
     /* -------------------------------------------- */
 
     /**
