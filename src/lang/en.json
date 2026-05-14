@@ -228,6 +228,18 @@
         "Abilities": "Abilities",
         "Wounds": "Wounds",
         "Fate": "Fate",
+        "FateReroll": "Re-roll",
+        "FateRefund": "Refund",
+        "FateAddDoS": "+1 DoS",
+        "FateActionExpired": "Action data expired. Unable to spend Fate Point.",
+        "FateAlreadySpent": "A Fate Point has already been spent on this roll. Enable 'Multiple Fate Burn Per Roll' in system settings to allow stacking.",
+        "FateInsufficient": "Actor does not have enough Fate Points!",
+        "FateAddDoSNotSuccess": "Cannot add a Degree of Success to a failed roll.",
+        "FateRerollConfirmTitle": "Spend Fate: Re-Roll",
+        "FateRerollConfirmContent": "Spend a Fate Point to re-roll this test?",
+        "FateAddDoSConfirmTitle": "Spend Fate: Add Degree of Success",
+        "FateAddDoSConfirmContent": "Spend a Fate Point to add one Degree of Success to this test?",
+        "FateAddDoSChat": "<strong>{name}</strong> spent a Fate Point to add a Degree of Success (now {dos} DoS).",
         "Name": "Name",
         "Stat": "Stat",
         "Current": "Current",
@@ -307,6 +319,10 @@
             "CharacteristicOffset": {
                 "Name": "Characteristic Offset",
                 "Hint": "Integer added to the 20-point baseline used during character generation. Effective base = 20 + offset. May be negative."
+            },
+            "MultipleFateBurnPerRoll": {
+                "Name": "Multiple Fate Burn Per Roll (Homebrew)",
+                "Hint": "Allow spending more than one Fate Point on the same roll (e.g., re-roll AND add a Degree of Success). RAW (Dark Heresy 2e) permits only one Fate spend per Test."
             }
         },
         "ActiveEffect": {

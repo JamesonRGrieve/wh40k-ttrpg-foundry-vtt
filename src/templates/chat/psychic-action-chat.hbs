@@ -66,9 +66,15 @@
                             <span>Effect</span>
                         </button>
                     {{/if}}
+                    {{#if success}}
+                        <button class="roll-control__fate-add-dos tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-powers-bg)] tw-border tw-border-[var(--wh40k-powers-border)] tw-rounded-md tw-text-[var(--wh40k-powers-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(106,32,144,0.2)] hover:tw-border-[var(--wh40k-powers-primary)] hover:tw-shadow-[0_0_12px_rgba(106,32,144,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
+                            <span class="material-icons tw-text-[16px]">add_circle</span>
+                            <span>{{localize "WH40K.FateAddDoS"}}</span>
+                        </button>
+                    {{/if}}
                     <button class="roll-control__fate-reroll tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-powers-bg)] tw-border tw-border-[var(--wh40k-powers-border)] tw-rounded-md tw-text-[var(--wh40k-powers-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(106,32,144,0.2)] hover:tw-border-[var(--wh40k-powers-primary)] hover:tw-shadow-[0_0_12px_rgba(106,32,144,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
                         <span class="material-icons tw-text-[16px]">casino</span>
-                        <span>Re-roll</span>
+                        <span>{{localize "WH40K.FateReroll"}}</span>
                     </button>
                 </div>
             {{/with}}
