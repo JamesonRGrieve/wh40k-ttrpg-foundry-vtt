@@ -24,7 +24,7 @@ interface BrowserResult extends CompendiumIndexEntry {
 
 /** Minimal document interface returned by {@link fromUuid}. */
 interface FoundryDocWithSheet {
-    sheet: { render(force: boolean): void };
+    sheet: { render: (force: boolean) => void };
 }
 
 const { ApplicationV2 } = foundry.applications.api;

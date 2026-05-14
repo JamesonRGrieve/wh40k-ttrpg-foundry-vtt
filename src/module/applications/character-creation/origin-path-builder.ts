@@ -34,6 +34,7 @@ import type {
     CoreFlags,
     EquipmentEntry,
     ItemDataLike,
+    ItemSystemLike,
     PreviewGrantEntry,
     PreviewSummary,
 } from './types.ts';
@@ -459,7 +460,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             this._charAssignments[key] = assignments[key] ?? null;
             this._charCustomBases[key] = customBases[key] ?? defaultBase;
         }
-        this._charAdvancedMode = customBases['enabled'] === true;
+        this._charAdvancedMode = customBases.enabled === true;
 
         const persistedMode = genData.mode;
         this._charGenMode = persistedMode === 'point-buy' || persistedMode === 'roll' ? persistedMode : 'roll-pool-hb';
@@ -681,7 +682,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // empty Choice Required selections and re-prompted for thrones/wounds
         // rolls — even though the data was sitting on the item.
         // eslint-disable-next-line no-restricted-syntax -- boundary: raw compendium document shape pre-normalize
-        const sourceSystem = ((data.system as Record<string, unknown> | undefined) ?? {}) as Record<string, unknown>;
+        const sourceSystem = (data.system as Record<string, unknown> | undefined) ?? {};
         // eslint-disable-next-line no-restricted-syntax -- boundary: persisted snapshot is an open-ended Record we copy verbatim
         const persistedChoices = sourceSystem['selectedChoices'] as Record<string, unknown> | undefined;
         // eslint-disable-next-line no-restricted-syntax -- boundary: persisted snapshot is an open-ended Record we copy verbatim
@@ -2028,7 +2029,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Per-origin throne gelt roll (homebrew only, homeworld and background steps each roll their own formula).
         const thronesFormulaForItem = this._getSelectionThronesFormula(item);
         const itemSys = item.system as OriginPathSystemData;
-        const thronesEligibleStep = itemSys['step'] === 'homeWorld' || itemSys['step'] === 'background';
+        const thronesEligibleStep = itemSys.step === 'homeWorld' || itemSys.step === 'background';
         const thronesAllowedByRuleset = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
         if (thronesFormulaForItem !== '' && thronesEligibleStep && thronesAllowedByRuleset) {
             const thronesResult = rollResults['thrones'];
@@ -2589,7 +2590,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object}
      * @private
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: status data is prepared for Handlebars rendering; Record<string,unknown> is the template shape
+    // eslint-disable-next-line complexity, no-restricted-syntax -- boundary: status data is prepared for Handlebars rendering; Record<string,unknown> is the template shape
     _calculateStatus(): Record<string, unknown> {
         const totalSteps = this.systemConfig.coreSteps.length + (this.systemConfig.optionalStep ? 1 : 0) + 1;
         const stepsCount = this.selections.size + (this.lineageSelection ? 1 : 0) + (this._hasAssignedCharacteristics() ? 1 : 0);
@@ -3768,11 +3769,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // so re-applying the builder is idempotent and doesn't stack
             // duplicate "Weapon Training (Chain)" + "Weapon Training (Chain)".
             const grantedItems = this.actor.items.filter((i) => {
-                const flags = (i.flags as Record<string, Record<string, unknown> | undefined> | undefined)?.['wh40k-rpg'];
-                return flags?.originPathGranted === true;
+                const flags = i.flags as { 'wh40k-rpg'?: { originPathGranted?: boolean } } | undefined;
+                return flags?.['wh40k-rpg']?.originPathGranted === true;
             });
             if (grantedItems.length > 0) {
-                const grantedIds = grantedItems.map((i) => i.id).filter((id): id is string => id !== null);
+                const grantedIds = grantedItems.map((i) => i.id).filter((id): id is string => typeof id === 'string');
                 await this.actor.deleteEmbeddedDocuments('Item', grantedIds);
             }
 
@@ -3938,7 +3939,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     content: `<p>${game.i18n.format('WH40K.OriginPath.OpenAdvancementPrompt', { xp: String(availableXP) })}</p>`,
                     rejectClose: false,
                 });
-                if (openAdvancement === true) {
+                if (openAdvancement) {
                     AdvancementDialog.open(this.actor);
                 }
             }
@@ -4229,29 +4230,30 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const pushPlan = (uuid: string | null | undefined, specialization: string | undefined): void => {
             if (typeof uuid !== 'string' || uuid === '') return;
-            plans.push({ uuid, specialization: specialization === '' ? undefined : specialization });
+            const cleanSpec = specialization === '' ? undefined : specialization;
+            plans.push(cleanSpec === undefined ? { uuid } : { uuid, specialization: cleanSpec });
         };
 
         for (const [, selection] of this.selections) {
-            const system = this._getSelectionSystem(selection) as OriginPathSystemData | undefined;
+            const system = this._getSelectionSystem(selection);
             // Fixed talents written into grants.talents
-            const fixedTalents = (system?.grants?.talents as Array<{ uuid?: string; specialization?: string }> | undefined) ?? [];
+            const fixedTalents = system.grants?.talents ?? [];
             for (const t of fixedTalents) {
                 pushPlan(t.uuid, t.specialization);
             }
             // Choice-resolved talents in activeModifiers (type === 'talent')
-            const activeMods = system?.activeModifiers as Array<{ type?: string; itemUuid?: string | null; specialization?: string }> | undefined;
+            const activeMods = system.activeModifiers;
             if (Array.isArray(activeMods)) {
                 for (const mod of activeMods) {
-                    if (mod?.type !== 'talent') continue;
-                    pushPlan(mod.itemUuid ?? null, mod.specialization);
+                    if (mod.type !== 'talent') continue;
+                    pushPlan(typeof mod.itemUuid === 'string' ? mod.itemUuid : null, typeof mod.specialization === 'string' ? mod.specialization : undefined);
                 }
             }
         }
 
         if (plans.length === 0) return;
 
-        const toCreate: Record<string, unknown>[] = [];
+        const toCreate: ItemDataLike[] = [];
         const seenKeys = new Set<string>();
 
         const normSpec = (s: string | undefined): string => (s ?? '').toLowerCase().trim();
@@ -4263,15 +4265,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             });
 
         for (const plan of plans) {
+            // eslint-disable-next-line no-await-in-loop -- sequential: each UUID resolves to a distinct source item before we can stamp specialization and dedupe
             const source = await fromUuid(plan.uuid);
             if (!source) continue;
-            const sourceDoc = source as unknown as { name?: string; type?: string; toObject?: () => Record<string, unknown> };
+            const sourceDoc = source as { name?: string; type?: string; toObject?: () => ItemDataLike };
             if (sourceDoc.type !== 'talent') continue;
-            const itemData = sourceDoc.toObject ? sourceDoc.toObject() : (foundry.utils.deepClone(source) as unknown as Record<string, unknown>);
+            const itemData: ItemDataLike = sourceDoc.toObject ? sourceDoc.toObject() : (foundry.utils.deepClone(source) as ItemDataLike);
             delete itemData._id;
-            itemData.system = (itemData.system as Record<string, unknown> | undefined) ?? {};
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- `.system ?? {}` is banned by the repo's no-restricted-syntax rule for DataModel-backed fields
+            const itemSystem: ItemSystemLike & { specialization?: string } = itemData.system === undefined ? {} : itemData.system;
+            itemData.system = itemSystem;
             if (plan.specialization !== undefined && plan.specialization !== '') {
-                (itemData.system as Record<string, unknown>).specialization = plan.specialization;
+                itemSystem.specialization = plan.specialization;
             }
             const name = typeof itemData.name === 'string' ? itemData.name : sourceDoc.name ?? '';
             const dedupKey = `${name}::${normSpec(plan.specialization)}`;
@@ -4279,17 +4284,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             seenKeys.add(dedupKey);
             if (actorHasTalent(name, plan.specialization)) continue;
 
-            (itemData.flags as Record<string, unknown>) ??= {};
-            (itemData.flags as Record<string, Record<string, unknown>>).core ??= {};
-            (itemData.flags as Record<string, Record<string, unknown>>).core.sourceId = plan.uuid;
-            (itemData.flags as Record<string, Record<string, unknown>>)['wh40k-rpg'] ??= {};
-            (itemData.flags as Record<string, Record<string, unknown>>)['wh40k-rpg'].originPathGranted = true;
+            const itemFlags: { 'core'?: CoreFlags; 'wh40k-rpg'?: { originPathGranted?: boolean } } & ItemDataLike['flags'] = itemData.flags ?? {};
+            itemFlags.core = itemFlags.core ?? {};
+            itemFlags.core.sourceId = plan.uuid;
+            itemFlags['wh40k-rpg'] = itemFlags['wh40k-rpg'] ?? {};
+            itemFlags['wh40k-rpg'].originPathGranted = true;
+            itemData.flags = itemFlags;
 
             toCreate.push(itemData);
         }
 
         if (toCreate.length > 0) {
-            await this.actor.createEmbeddedDocuments('Item', toCreate as unknown as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
+            await this.actor.createEmbeddedDocuments('Item', toCreate as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
         }
     }
 

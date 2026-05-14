@@ -498,7 +498,7 @@ export class EventTracker {
             buttons: {
                 close: { label: 'Close' },
             },
-            render: (html: JQuery<HTMLElement>) => {
+            render: (html: JQuery) => {
                 const $html = html instanceof HTMLElement ? $(html) : html;
                 const rebind = (): void => {
                     // Event checkboxes

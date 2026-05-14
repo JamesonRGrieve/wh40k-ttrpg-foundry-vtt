@@ -399,7 +399,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
 
         try {
             // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid return is untyped; cast to structural shape for sheet rendering
-            const item = (await fromUuid(uuid)) as unknown as { sheet?: { render(force: boolean): void } } | null;
+            const item = (await fromUuid(uuid)) as unknown as { sheet?: { render: (force: boolean) => void } } | null;
             if (item?.sheet !== undefined) {
                 item.sheet.render(true);
             }

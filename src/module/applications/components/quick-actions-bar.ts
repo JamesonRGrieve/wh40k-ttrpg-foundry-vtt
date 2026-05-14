@@ -26,9 +26,10 @@ export default class QuickActionsBar {
     /**
      * Get action definitions for an item
      */
+    // eslint-disable-next-line complexity -- quick-action availability is intentionally centralized here so item-type button rules stay in one place
     static getActionsForItem(
         item: WH40KItem,
-        { compact: _compact = false, inSheet = false, isGM = game.user?.isGM ?? false }: { compact?: boolean; inSheet?: boolean; isGM?: boolean } = {},
+        { compact: _compact = false, inSheet = false, isGM = game.user.isGM }: { compact?: boolean; inSheet?: boolean; isGM?: boolean } = {},
     ): QuickAction[] {
         const actions: QuickAction[] = [];
         const type = item.type;

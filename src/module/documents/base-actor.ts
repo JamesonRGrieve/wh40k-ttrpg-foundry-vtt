@@ -150,7 +150,8 @@ export class WH40KBaseActor extends Actor {
         // its actual ruleset instead of inheriting the 'rt' schema default.
         const actorType = typeof createData['type'] === 'string' ? createData['type'] : null;
         if (actorType !== null) {
-            const dataModelClass = (CONFIG.Actor.dataModels as Record<string, { gameSystem?: string } | undefined>)[actorType];
+            const dataModels = CONFIG.Actor.dataModels as { [key: string]: { gameSystem?: string } | undefined };
+            const dataModelClass = dataModels[actorType];
             const staticGameSystem = dataModelClass?.gameSystem;
             const currentSystem = (this.system as { gameSystem?: string } | undefined)?.gameSystem;
             if (typeof staticGameSystem === 'string' && staticGameSystem !== '' && currentSystem !== staticGameSystem) {

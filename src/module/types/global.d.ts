@@ -435,18 +435,18 @@ declare global {
     interface UI {
         notifications: WH40KNotifications;
         sidebar: FoundrySidebar;
-        chat: { scrollBottom(options?: Record<string, unknown>): void; postOne?(...args: unknown[]): void };
-        combat: { render(force?: boolean): void };
-        compendium: { render(force?: boolean): void };
+        chat: { scrollBottom: (options?: Record<string, unknown>) => void; postOne?: (...args: unknown[]) => void };
+        combat: { render: (force?: boolean) => void };
+        compendium: { render: (force?: boolean) => void };
         controls: FoundryControls;
-        players: { render(force?: boolean): void };
-        settings: { render(force?: boolean): void };
-        tables: { render(force?: boolean): void };
-        tours: { render(force?: boolean): void };
-        nav: { render(force?: boolean): void };
-        bubbles: { say(token: unknown, message: string, options?: Record<string, unknown>): void };
-        broadcaster: { render(force?: boolean): void };
-        menu: { render(force?: boolean): void };
+        players: { render: (force?: boolean) => void };
+        settings: { render: (force?: boolean) => void };
+        tables: { render: (force?: boolean) => void };
+        tours: { render: (force?: boolean) => void };
+        nav: { render: (force?: boolean) => void };
+        bubbles: { say: (token: unknown, message: string, options?: Record<string, unknown>) => void };
+        broadcaster: { render: (force?: boolean) => void };
+        menu: { render: (force?: boolean) => void };
         activeWindow: unknown;
         windows: Record<number, unknown>;
     }

@@ -1110,9 +1110,9 @@ export default class CharacterSheet extends BaseActorSheet {
                 // Process choice grants
                 if (Array.isArray(grants.choices)) {
                     for (const choice of grants.choices as Array<OriginChoice>) {
-                        const selectedValues = selectedChoices[choice['label'] as string] ?? [];
+                        const selectedValues = selectedChoices[choice.label as string] ?? [];
                         for (const selectedValue of selectedValues) {
-                            const option = (choice['options'] as Array<{ value?: string; grants?: OriginGrants }> | undefined)?.find(
+                            const option = (choice.options as Array<{ value?: string; grants?: OriginGrants }> | undefined)?.find(
                                 (o) => o.value === selectedValue,
                             );
                             if (option?.grants !== undefined) {
@@ -1824,12 +1824,12 @@ export default class CharacterSheet extends BaseActorSheet {
                 const char = characteristics[charKey];
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (char === undefined) return null;
-                const label = skill.label !== '' ? skill.label : key;
+                const label: string = skill.label !== undefined && skill.label !== '' ? skill.label : key;
                 // Route favourites through the same prepareSkillTooltip(...) path the
                 // Statistics tab uses (issue #36) so the per-system rank labels (Known/
                 // Trained/Experienced/Veteran vs Trained/+10/+20) resolve identically.
                 // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics map is a Record<string, CharacteristicLike>; the mixin signature takes Record<string, unknown>.
-                const tooltipData = this.prepareSkillTooltip(key, { ...skill, label } as unknown as Record<string, unknown>, characteristics as unknown as Record<string, unknown>);
+                const tooltipData = this.prepareSkillTooltip(key, { ...skill, label }, characteristics);
                 return {
                     key,
                     label,
@@ -1873,7 +1873,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 // active GameSystemConfig (issue #36).
                 const synthesizedSkill = { ...entry, characteristic: charShort, label: composedLabel };
                 // eslint-disable-next-line no-restricted-syntax -- boundary: synthesised from the raw entries[] payload (Record<string, unknown>); the mixin signature takes Record<string, unknown>.
-                const tooltipData = this.prepareSkillTooltip(compositeKey, synthesizedSkill as Record<string, unknown>, characteristics as unknown as Record<string, unknown>);
+                const tooltipData = this.prepareSkillTooltip(compositeKey, synthesizedSkill, characteristics);
                 return {
                     key: compositeKey,
                     label: composedLabel,
@@ -1894,7 +1894,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const merged: { label: string }[] = [...standardFavourites, ...specialistFavouriteRows];
         merged.sort((a, b) => a.label.localeCompare(b.label, lang, { sensitivity: 'base' }));
         // eslint-disable-next-line no-restricted-syntax -- boundary: returned array is consumed by Handlebars; upcast to match declared return type
-        return merged as Record<string, unknown>[];
+        return merged;
     }
 
     /**
@@ -2417,8 +2417,11 @@ export default class CharacterSheet extends BaseActorSheet {
         // Default: show the description as a sticky in-sheet tooltip on the
         // clicked button. No chat post, no global notification toast.
         const tooltipText = `<strong>${actionName}${actionSubtypes}</strong><br/>${actionDescription}`;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 TooltipManager (game.tooltip) is untyped in fvtt-types; minimal local shape
-        const tooltipManager = (game as unknown as { tooltip?: { activate?: (element: HTMLElement, options?: { text?: string; direction?: string; cssClass?: string }) => void } }).tooltip;
+        const tooltipManager = (
+            game as foundry.Game & {
+                tooltip?: { activate?: (element: HTMLElement, options?: { text?: string; direction?: string; cssClass?: string }) => void };
+            }
+        ).tooltip;
         if (tooltipManager?.activate !== undefined) {
             tooltipManager.activate(target, { text: tooltipText, direction: 'UP', cssClass: 'wh40k-action-description' });
         } else {
@@ -3802,7 +3805,7 @@ export default class CharacterSheet extends BaseActorSheet {
                         .get('wh40k-rpg.wh40k-rolltables-psychic')
                         ?.getDocuments()
                         .then((docs: unknown[]) => docs.find((d: unknown) => (d as { name: string }).name.includes('Phenomena'))))) as
-                    | { draw(): Promise<unknown> }
+                    | { draw: () => Promise<unknown> }
                     | undefined;
                 /* eslint-enable no-restricted-syntax */
 
@@ -3845,7 +3848,7 @@ export default class CharacterSheet extends BaseActorSheet {
                         .get('wh40k-rpg.wh40k-rolltables-psychic')
                         ?.getDocuments()
                         .then((docs: unknown[]) => docs.find((d: unknown) => (d as { name: string }).name.includes('Perils'))))) as
-                    | { draw(): Promise<unknown> }
+                    | { draw: () => Promise<unknown> }
                     | undefined;
 
                 /* eslint-enable no-restricted-syntax */

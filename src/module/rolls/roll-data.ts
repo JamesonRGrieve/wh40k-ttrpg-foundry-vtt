@@ -317,7 +317,7 @@ export class WeaponRollData extends RollData {
         }
 
         // Talents
-        type ActorWithTalents = WH40KBaseActorDocument & { hasTalent(name: string): boolean };
+        type ActorWithTalents = WH40KBaseActorDocument & { hasTalent: (name: string) => boolean };
         const sourceActor = this.sourceActor as ActorWithTalents | null;
         const sourceActorSystem = sourceActor?.system as { fate?: { value: number } };
         if (sourceActor?.hasTalent('Eye of Vengeance') === true && sourceActorSystem.fate !== undefined && sourceActorSystem.fate.value > 0) {

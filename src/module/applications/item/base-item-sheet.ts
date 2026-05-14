@@ -358,7 +358,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         const attr = target.dataset['edit'] ?? 'img';
         const current = foundry.utils.getProperty(this.document._source, attr);
         // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.ux.FilePicker is the V14 file-picker constructor; not in shipped types
-        const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse(): Promise<void> };
+        const FilePickerCtor = CONFIG.ux.FilePicker as unknown as new (options: Record<string, unknown>) => { browse: () => Promise<void> };
         const fp = new FilePickerCtor({
             current,
             type: 'image',

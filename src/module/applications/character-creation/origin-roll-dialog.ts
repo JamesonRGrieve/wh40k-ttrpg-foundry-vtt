@@ -25,7 +25,7 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundryApi.api;
 const LegacyDialog = foundry.appv1.api.Dialog;
 
 /** Extract numeric value from a Foundry v1 Dialog callback `html` argument. */
-function readDialogNumber(html: JQuery<HTMLElement>): number {
+function readDialogNumber(html: JQuery): number {
     const root = html[0];
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: JQuery index may be undefined at runtime
     if (root === undefined) return NaN;
@@ -423,7 +423,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
                     </div>
                 </form>
             `,
-            callback: (html: JQuery<HTMLElement>) => readDialogNumber(html),
+            callback: (html: JQuery) => readDialogNumber(html),
             rejectClose: false,
         });
 
@@ -541,7 +541,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
                     </div>
                 </form>
             `,
-            callback: (html: JQuery<HTMLElement>) => readDialogNumber(html),
+            callback: (html: JQuery) => readDialogNumber(html),
             rejectClose: false,
         });
 
@@ -813,7 +813,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
                     </div>
                 </form>
             `,
-            callback: (html: JQuery<HTMLElement>) => readDialogNumber(html),
+            callback: (html: JQuery) => readDialogNumber(html),
             rejectClose: false,
         });
 

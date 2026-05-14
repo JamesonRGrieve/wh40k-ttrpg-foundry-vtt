@@ -223,7 +223,7 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isOriginPath(): boolean {
-        const rtFlags = this.flags['rt'];
+        const rtFlags = this.flags.rt;
         return this._type === 'originPath' || (this._type === 'trait' && rtFlags?.['kind'] === 'origin');
     }
 
@@ -268,12 +268,12 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isCondition(): boolean {
-        const rtFlags = this.flags['rt'];
+        const rtFlags = this.flags.rt;
         return this._type === 'trait' && rtFlags?.['kind'] === 'condition';
     }
 
     get originPathStep(): string {
-        const rtFlags = this.flags['rt'];
+        const rtFlags = this.flags.rt;
         const flagStep = rtFlags?.['step'];
         if (typeof flagStep === 'string' && flagStep !== '') return flagStep;
         // eslint-disable-next-line no-restricted-syntax -- boundary: system.step optional in shared item schema
