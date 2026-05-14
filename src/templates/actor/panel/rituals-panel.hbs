@@ -23,21 +23,11 @@
                 (hash action="vocalizeRitual" icon="fa-comment" title="Post to Chat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
                 (hash action="togglePowerDetails" icon="fa-chevron-down" title="Toggle Details" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
         }}
-            {{#if ritual.system.requirements}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Requirements" icon="fa-list-check" content=ritual.system.requirements}}
-            {{/if}}
-            {{#if ritual.system.costs}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Costs" icon="fa-coins" content=ritual.system.costs}}
-            {{/if}}
-            {{#if ritual.system.effect}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Effect" icon="fa-check-circle" labelClass="tw-text-[#22c55e]" content=ritual.system.effect}}
-            {{/if}}
-            {{#if ritual.system.failure}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Failure" icon="fa-skull" labelClass="tw-text-[#ef4444]" content=ritual.system.failure}}
-            {{/if}}
-            {{#if ritual.system.description}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Description" content=ritual.system.description}}
-            {{/if}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Requirements" icon="fa-list-check" content=ritual.system.requirements}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Costs" icon="fa-coins" content=ritual.system.costs}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Effect" icon="fa-check-circle" labelClass="tw-text-[#22c55e]" content=ritual.system.effect}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Failure" icon="fa-skull" labelClass="tw-text-[#ef4444]" content=ritual.system.failure}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Description" content=ritual.system.description}}
         {{/systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs}}
         {{else}}
         {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-pray" text="No rituals known" padding="md"}}

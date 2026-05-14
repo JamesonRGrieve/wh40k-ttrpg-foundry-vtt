@@ -32,18 +32,10 @@
                 (hash action="vocalizeOrder" icon="fa-comment" title="Post to Chat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
                 (hash action="togglePowerDetails" icon="fa-chevron-down" title="Toggle Details" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
         }}
-            {{#if order.system.requirements}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Requirements" icon="fa-list-check" content=order.system.requirements}}
-            {{/if}}
-            {{#if order.system.effect}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Effect" icon="fa-check-circle" labelClass="tw-text-[#22c55e]" content=order.system.effect}}
-            {{/if}}
-            {{#if order.system.failure}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Failure" icon="fa-exclamation-triangle" labelClass="tw-text-[#ef4444]" content=order.system.failure}}
-            {{/if}}
-            {{#if order.system.description}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Description" content=order.system.description}}
-            {{/if}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Requirements" icon="fa-list-check" content=order.system.requirements}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Effect" icon="fa-check-circle" labelClass="tw-text-[#22c55e]" content=order.system.effect}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Failure" icon="fa-exclamation-triangle" labelClass="tw-text-[#ef4444]" content=order.system.failure}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Description" content=order.system.description}}
         {{/systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs}}
         {{else}}
         {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-ship" text="No ship orders known" padding="md"}}

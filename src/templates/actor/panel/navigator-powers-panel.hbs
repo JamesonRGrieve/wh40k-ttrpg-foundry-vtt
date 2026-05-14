@@ -17,21 +17,11 @@
                 (hash action="vocalizePower" icon="fa-comment" title="Post to Chat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
                 (hash action="togglePowerDetails" icon="fa-chevron-down" title="Toggle Details" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
         }}
-            {{#if power.system.levels.novice.effect}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Novice" icon="fa-seedling" labelClass="tw-text-[#22c55e]" content=power.system.levels.novice.effect}}
-            {{/if}}
-            {{#if power.system.levels.adept.effect}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Adept" icon="fa-star-half-alt" labelClass="tw-text-[#3b82f6]" content=power.system.levels.adept.effect}}
-            {{/if}}
-            {{#if power.system.levels.master.effect}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Master" icon="fa-crown" labelClass="tw-text-[#f59e0b]" content=power.system.levels.master.effect}}
-            {{/if}}
-            {{#if power.system.sideEffects}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Side Effects" icon="fa-exclamation-triangle" labelClass="tw-text-[#ef4444]" content=power.system.sideEffects}}
-            {{/if}}
-            {{#if power.system.description}}
-                {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Description" content=power.system.description}}
-            {{/if}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Novice" icon="fa-seedling" labelClass="tw-text-[#22c55e]" content=power.system.levels.novice.effect}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Adept" icon="fa-star-half-alt" labelClass="tw-text-[#3b82f6]" content=power.system.levels.adept.effect}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Master" icon="fa-crown" labelClass="tw-text-[#f59e0b]" content=power.system.levels.master.effect}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Side Effects" icon="fa-exclamation-triangle" labelClass="tw-text-[#ef4444]" content=power.system.sideEffects}}
+            {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label="Description" content=power.system.description}}
         {{/systems/wh40k-rpg/templates/actor/partial/item-list-row.hbs}}
         {{else}}
         {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-eye" text="No navigator powers" padding="md"}}
