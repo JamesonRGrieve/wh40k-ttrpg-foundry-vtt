@@ -8,6 +8,7 @@ import type {
     GameSystemId,
     SkillRankDef,
     CharacteristicTierDef,
+    FatePointUseDef,
     OriginStepConfig,
     AdvanceCostResult,
     AdvanceOption,
@@ -211,6 +212,26 @@ export abstract class BaseSystemConfig {
             labels[step.key] = localized !== key ? localized : step.key;
         }
         return labels;
+    }
+
+    // ── Fate Point Uses ──────────────────────────────────────────
+
+    /**
+     * Canonical list of ways a Fate Point can be spent in this game system.
+     * The default returns the DH2e core uses (which match BC / OW / DW / DH1e
+     * within minor wording differences and are a safe baseline for RT and IM
+     * until a per-system override lands). Subclasses override to surface
+     * system-specific entries (e.g. IM's Patron Boons).
+     */
+    getFatePointUses(): FatePointUseDef[] {
+        return [
+            { key: 'reroll', label: 'WH40K.FateUses.RerollTitle', description: 'WH40K.FateUses.RerollDesc', icon: 'fa-dice-d10' },
+            { key: 'addBonus', label: 'WH40K.FateUses.AddBonusTitle', description: 'WH40K.FateUses.AddBonusDesc', icon: 'fa-plus' },
+            { key: 'countHit', label: 'WH40K.FateUses.CountHitTitle', description: 'WH40K.FateUses.CountHitDesc', icon: 'fa-crosshairs' },
+            { key: 'recoverWounds', label: 'WH40K.FateUses.RecoverWoundsTitle', description: 'WH40K.FateUses.RecoverWoundsDesc', icon: 'fa-heart' },
+            { key: 'recoverStun', label: 'WH40K.FateUses.RecoverStunTitle', description: 'WH40K.FateUses.RecoverStunDesc', icon: 'fa-bolt' },
+            { key: 'survive', label: 'WH40K.FateUses.SurviveTitle', description: 'WH40K.FateUses.SurviveDesc', icon: 'fa-skull', burn: true },
+        ];
     }
 
     // ── Skill Level Mapping ──────────────────────────────────────

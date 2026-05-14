@@ -104,6 +104,27 @@ export interface SystemTheme {
 /** Roles a template can request from `themeClassFor`. */
 export type SystemThemeRole = keyof SystemTheme;
 
+/**
+ * A canonical Fate Point spend option as surfaced by the Fate Uses reference
+ * dialog. Each entry's `label` and `description` are localization keys under
+ * the `WH40K.*` namespace, resolved by the dialog at render time.
+ */
+export interface FatePointUseDef {
+    /** Stable internal key (e.g. 'reroll'). */
+    key: string;
+    /** Localization key for the short heading. */
+    label: string;
+    /** Localization key for the body description. */
+    description: string;
+    /** Optional FontAwesome icon class (e.g. 'fa-dice-d10'). */
+    icon?: string;
+    /**
+     * Whether this use permanently burns a fate point (max decreases).
+     * Burned uses get a distinct visual treatment in the dialog.
+     */
+    burn?: boolean;
+}
+
 /** Sidebar header field row used by the player sheet identity panel. */
 export interface SidebarHeaderField {
     label: string;

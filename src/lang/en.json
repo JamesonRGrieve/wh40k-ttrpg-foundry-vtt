@@ -2223,6 +2223,26 @@
             "ExperienceAboutTitle": "About Experience Points",
             "ExperienceAboutDesc": "Spend XP to improve characteristics, acquire skills and talents, or gain psychic powers. Costs vary based on the advancement being purchased."
         },
+        "FateUses": {
+            "DialogTitle": "Uses of Fate Points",
+            "ViewLinkLabel": "View Fate Uses",
+            "Intro": "A Fate Point may be spent at any time to invoke the Emperor's favor. Each entry below describes one canonical use. Spending a Fate Point normally returns at the start of the next session; burning a Fate Point removes it permanently.",
+            "BurnTag": "burn",
+            "BonusAttributesTitle": "Additional Fate Effects",
+            "Footer": "Some careers, talents, and elite advances grant additional Fate Point effects. Refer to your career rules for the full list.",
+            "RerollTitle": "Re-roll a Failed Test",
+            "RerollDesc": "Re-roll any single failed Test. The second result stands, even if it is worse.",
+            "AddBonusTitle": "Add a +10 Bonus",
+            "AddBonusDesc": "Add +10 to a single Test before the dice are rolled.",
+            "CountHitTitle": "Count an Attack as a Hit",
+            "CountHitDesc": "Treat a single attack as having struck, scoring one Degree of Success on the hit (additional Degrees of Success are not gained).",
+            "RecoverWoundsTitle": "Recover Wounds",
+            "RecoverWoundsDesc": "Immediately recover 1d5 wounds, regardless of normal healing limits.",
+            "RecoverStunTitle": "Recover from Stunning",
+            "RecoverStunDesc": "Immediately remove all Stunned conditions and stand up if prone.",
+            "SurviveTitle": "Survive a Fatal Injury",
+            "SurviveDesc": "Burn a Fate Point to survive what should have been a fatal blow. The character is left at the edge of death — battered, scarred, and permanently down one maximum Fate Point — but alive."
+        },
         "Effects": {
             "Label": "Effect",
             "ActiveLabel": "Active Effects",
