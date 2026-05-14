@@ -133,7 +133,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             height: 700,
         },
         form: {
-            /* eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: Foundry V14 FormConfiguration handler signature is too narrow; bound via `this:` parameter declaration */
+            /* eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method, @typescript-eslint/no-unnecessary-type-assertion -- boundary: Foundry V14 FormConfiguration handler signature is too narrow; double cast required to bypass strict type checking */
             handler: StatBlockParser._onSubmit as unknown as NonNullable<ApplicationV2Config.FormConfiguration['handler']>,
             submitOnChange: false,
             closeOnSubmit: true,
@@ -599,10 +599,11 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     static _extractName(lines: string[], input: string): string {
         const firstLine = lines[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: array element may be undefined at runtime
         if (firstLine === undefined) return 'Imported NPC';
         if (this._looksLikeCharacteristicHeader(firstLine)) {
             const nameMatch = input.match(this.PATTERNS.name);
-            return nameMatch?.[1] ? nameMatch[1].trim() : 'Imported NPC';
+            return nameMatch?.[1] !== undefined && nameMatch[1] !== '' ? nameMatch[1].trim() : 'Imported NPC';
         }
         if (this._isSectionHeader(firstLine)) {
             return 'Imported NPC';

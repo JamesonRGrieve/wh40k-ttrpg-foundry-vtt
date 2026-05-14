@@ -10,6 +10,7 @@ import BaseRollDialog from './base-roll-dialog.ts';
 /**
  * Dialog for configuring damage rolls.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: BaseRollDialog options are passed through to ApplicationV2 super; no narrower type available
 type DamageRollDialogOptions = Record<string, unknown>;
 
 export default class DamageRollDialog extends BaseRollDialog {
@@ -26,7 +27,8 @@ export default class DamageRollDialog extends BaseRollDialog {
             width: 300,
         },
         window: {
-            title: 'Damage Roll',
+            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
+            title: 'WH40K.Dialog.DamageRollTitle',
         },
     };
 
@@ -57,7 +59,9 @@ export default class DamageRollDialog extends BaseRollDialog {
         this.rollData['pr'] = form.querySelector<HTMLInputElement>('#pr')?.value;
         this.rollData['template'] = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
 
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData is a plain object passed from legacy call sites; RollData type is inferred structurally
         const typedRollData = this.rollData as unknown as RollData;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Roll ctor accepts Record<string, never> for data; rollData is a legacy plain object
         const theRoll = new Roll(this.rollData['damage'] as string, this.rollData as unknown as Record<string, never>);
         typedRollData.roll = theRoll;
         await theRoll.evaluate();
@@ -77,8 +81,9 @@ export default class DamageRollDialog extends BaseRollDialog {
  * Open a damage roll dialog.
  * @param {object} rollData  The roll data.
  */
-export function prepareDamageRoll(rollData: Record<string, unknown>) {
+// eslint-disable-next-line no-restricted-syntax -- boundary: rollData is a plain legacy object passed from call sites; no narrower type available
+export function prepareDamageRoll(rollData: Record<string, unknown>): void {
     rollData['dh'] = CONFIG.wh40k;
     const prompt = new DamageRollDialog(rollData);
-    prompt.render(true);
+    void prompt.render({ force: true });
 }

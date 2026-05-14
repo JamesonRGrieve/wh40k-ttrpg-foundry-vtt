@@ -38,6 +38,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but TS can't verify the mixin constraint without casting
             identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
 
             // Component type/category
@@ -130,8 +131,9 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * @param {object} source  The source data
      * @protected
      */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; source mirrors parent migrateData signature
     static override _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
+        super._migrateData(source);
     }
 
     /* -------------------------------------------- */
@@ -144,13 +146,15 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * @param {object} options    Additional options
      * @protected
      */
-    static override _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown>): void {
-        super._cleanData?.(source, options);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; source mirrors parent cleanData signature
+    static override _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
+        super._cleanData(source, options);
         // Ensure hullType is array for Set field
-        if (source?.['hullType'] && !Array.isArray(source['hullType'])) {
+        if (source?.['hullType'] != null && !Array.isArray(source['hullType'])) {
             if (typeof source['hullType'] === 'string') {
                 source['hullType'] = [source['hullType']];
             } else if (source['hullType'] instanceof Set) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> is the correct type here; Foundry source data is untyped
                 source['hullType'] = Array.from(source['hullType'] as Set<unknown>);
             }
         }
@@ -266,6 +270,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels return type mirrors base ItemDataModel schema
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             type: this.componentTypeLabel,

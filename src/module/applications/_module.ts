@@ -2,7 +2,6 @@
  * @file Main applications module exports for WH40K RPG
  */
 
-
 // Actor sheet exports
 export * from './actor/_module.ts';
 // API exports

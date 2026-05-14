@@ -682,6 +682,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             if (sourceIndex === -1 || targetIndex === -1) return;
 
             const [removed] = items.splice(sourceIndex, 1);
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess guard: splice may return undefined at runtime
             if (!removed) return;
             items.splice(targetIndex, 0, removed);
 

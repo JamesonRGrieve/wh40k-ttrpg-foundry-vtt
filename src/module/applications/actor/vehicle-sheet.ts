@@ -115,8 +115,6 @@ interface VehicleSheetContext extends Record<string, unknown> {
  */
 type VehicleActor = WH40KNPC & {
     system: VehicleActorSystem;
-    rollCharacteristic: (characteristicKey: string, flavor?: string) => Promise<void>;
-    rollSkill: (skillName: string, flavor?: string) => Promise<void>;
     rollInitiative: (options: { createCombatants?: boolean }) => Promise<void>;
 };
 
@@ -198,6 +196,7 @@ export default class VehicleSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @override */
+    /* eslint-disable no-restricted-syntax -- i18n: WH40K localization keys resolved at runtime; rule fires on any literal in TABS label position */
     static TABS: HandlebarsApplicationV14.TabDescriptor[] = [
         { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
         { tab: 'combat', label: 'WH40K.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
@@ -205,6 +204,7 @@ export default class VehicleSheet extends BaseActorSheet {
         { tab: 'components', label: 'WH40K.Vehicle.Components', group: 'primary', cssClass: 'tab-components' },
         { tab: 'notes', label: 'WH40K.NPC.Notes', group: 'primary', cssClass: 'tab-notes' },
     ];
+    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 
@@ -430,11 +430,11 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollCharacteristic(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+    static #rollCharacteristic(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): void {
         const char = target.dataset['characteristic'];
         if (char === undefined || char === '') return;
 
-        await this.actor.rollCharacteristic(char);
+        this.actor.rollCharacteristic(char);
     }
 
     /* -------------------------------------------- */
@@ -445,12 +445,12 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollSkill(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+    static #rollSkill(this: VehicleSheet, _event: PointerEvent, target: HTMLElement): void {
         const skill = target.dataset['skill'];
         const spec = target.dataset['specialization'];
         if (skill === undefined || skill === '') return;
 
-        await this.actor.rollSkill(skill, spec);
+        this.actor.rollSkill(skill, spec);
     }
 
     /* -------------------------------------------- */

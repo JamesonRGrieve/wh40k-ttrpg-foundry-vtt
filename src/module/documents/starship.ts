@@ -1,8 +1,10 @@
 import { WH40KBaseActor } from './base-actor.ts';
+import type { WH40KItem } from './item.ts';
 
 type StarshipSystemData = WH40KBaseActor['system'] & {
     hullType: string;
     hullClass: string;
+    gameSystem?: string;
     hullIntegrity: { value: number; max: number };
     speed: number;
     manoeuvrability: number;
@@ -11,10 +13,20 @@ type StarshipSystemData = WH40KBaseActor['system'] & {
     armour: number;
     voidShields: number;
     turretRating: number;
-    crew: Record<string, unknown>;
+    crew: {
+        population: number;
+        crewRating: number;
+        morale: { value: number; max: number };
+    };
     power: { used: number; total: number };
     space: { used: number; total: number };
-    weaponCapacity: Record<string, unknown>;
+    weaponCapacity: {
+        dorsal: number;
+        prow: number;
+        port: number;
+        starboard: number;
+        keel: number;
+    };
 };
 
 export class WH40KStarship extends WH40KBaseActor {
@@ -24,6 +36,7 @@ export class WH40KStarship extends WH40KBaseActor {
     protected override async _preCreate(data: never, options: never, user: never): Promise<boolean | void> {
         await super._preCreate(data, options, user);
         const dataWithName = data as { name?: string } | undefined;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: updateSource expects typed token delta; Record<string,unknown> is the only viable shape for dot-notation token update paths
         const initData: Record<string, unknown> = {
             'token.bar1': { attribute: 'hullIntegrity' },
             'token.bar2': { attribute: 'crew.morale' },
@@ -84,7 +97,7 @@ export class WH40KStarship extends WH40KBaseActor {
         return this.system.turretRating;
     }
 
-    get crew(): Record<string, unknown> {
+    get crew(): { population: number; crewRating: number; morale: { value: number; max: number } } {
         return this.system.crew;
     }
 
@@ -96,7 +109,7 @@ export class WH40KStarship extends WH40KBaseActor {
         return this.system.space;
     }
 
-    get weaponCapacity(): Record<string, unknown> {
+    get weaponCapacity(): { dorsal: number; prow: number; port: number; starboard: number; keel: number } {
         return this.system.weaponCapacity;
     }
 
@@ -119,29 +132,29 @@ export class WH40KStarship extends WH40KBaseActor {
     /**
      * Get all ship components
      */
-    get shipComponents(): unknown[] {
-        return this.items.filter((i) => (i.type as string) === 'shipComponent');
+    get shipComponents(): WH40KItem[] {
+        return this.items.filter((i) => i.type === 'shipComponent');
     }
 
     /**
      * Get all ship weapons
      */
-    get shipWeapons(): unknown[] {
-        return this.items.filter((i) => (i.type as string) === 'shipWeapon');
+    get shipWeapons(): WH40KItem[] {
+        return this.items.filter((i) => i.type === 'shipWeapon');
     }
 
     /**
      * Get all ship upgrades
      */
-    get shipUpgrades(): unknown[] {
-        return this.items.filter((i) => (i.type as string) === 'shipUpgrade');
+    get shipUpgrades(): WH40KItem[] {
+        return this.items.filter((i) => i.type === 'shipUpgrade');
     }
 
     /**
      * Get ship weapons grouped by location
      */
-    get weaponsByLocation(): Record<string, unknown[]> {
-        const grouped: Record<string, unknown[]> = {
+    get weaponsByLocation(): Record<string, WH40KItem[]> {
+        const grouped: Record<string, WH40KItem[]> = {
             prow: [],
             dorsal: [],
             port: [],
@@ -149,9 +162,11 @@ export class WH40KStarship extends WH40KBaseActor {
             keel: [],
         };
         for (const weapon of this.shipWeapons) {
-            const weaponItem = weapon as { system: Record<string, unknown> };
-            const loc = (weaponItem.system['location'] as string | undefined) ?? 'dorsal';
-            const bucket = grouped[loc];
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ship weapon item.system fields are not typed in this document layer; accessing location requires dynamic lookup
+            const loc = (weapon.system as Record<string, unknown>)['location'];
+            const locStr = typeof loc === 'string' ? loc : 'dorsal';
+            const bucket = grouped[locStr];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: Record index access may be undefined at runtime
             if (bucket !== undefined) bucket.push(weapon);
         }
         return grouped;
@@ -163,8 +178,9 @@ export class WH40KStarship extends WH40KBaseActor {
      */
     async fireWeapon(weaponId: string): Promise<void> {
         const weapon = this.items.get(weaponId);
-        if (!weapon || (weapon.type as string) !== 'shipWeapon') {
-            ui.notifications.warn('Invalid ship weapon');
+        if (weapon?.type !== 'shipWeapon') {
+            // eslint-disable-next-line no-restricted-syntax -- string is a localization key passed via { localize: true }
+            ui.notifications.warn('WH40K.Starship.Errors.InvalidShipWeapon', { localize: true });
             return;
         }
 
@@ -172,15 +188,16 @@ export class WH40KStarship extends WH40KBaseActor {
         const cardData = {
             actor: this,
             weapon: weapon,
-            crewRating: (this.system.crew as Record<string, unknown> | undefined)?.['crewRating'] || 30,
+            crewRating: this.system.crew.crewRating,
             detectionBonus: this.detectionBonus,
-            gameSystem: (this.system as { gameSystem?: string }).gameSystem,
+            gameSystem: this.system.gameSystem,
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
         await ChatMessage.create({
             user: game.user.id,
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker requires Actor.Implementation; WH40KStarship extends it but type narrowing requires cast
             speaker: ChatMessage.getSpeaker({ actor: this as unknown as Actor.Implementation }),
             content: html,
         });
@@ -205,6 +222,7 @@ export class WH40KStarship extends WH40KBaseActor {
         `;
 
         await ChatMessage.create({
+            // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.getSpeaker requires Actor.Implementation; WH40KStarship extends it but type narrowing requires cast
             speaker: ChatMessage.getSpeaker({ actor: this as unknown as Actor.Implementation }),
             content: content,
             rolls: [roll],

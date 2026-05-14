@@ -34,6 +34,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
         return {
             ...super.defineSchema(),
 
+            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but TS can't verify the mixin constraint without casting
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
             // Psychic discipline
@@ -159,11 +160,13 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             this.disciplineLabel,
             `PR Cost: ${this.prCost}`,
             `Focus: ${this.focusTestLabel}`,
-            ...((Object.getOwnPropertyDescriptor(ActivationTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []),
+            // eslint-disable-next-line no-restricted-syntax -- boundary: prototype getter invoked via descriptor; return type is unknown at compile time
+            ...((Object.getOwnPropertyDescriptor(ActivationTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []),
         ];
 
         if (this.isAttack) {
-            props.push(...((Object.getOwnPropertyDescriptor(DamageTemplate.prototype, 'chatProperties')?.get?.call(this) as string[]) ?? []));
+            // eslint-disable-next-line no-restricted-syntax -- boundary: prototype getter invoked via descriptor; return type is unknown at compile time
+            props.push(...((Object.getOwnPropertyDescriptor(DamageTemplate.prototype, 'chatProperties')?.get?.call(this) as string[] | undefined) ?? []));
         }
 
         if (this.sustained) {
@@ -178,6 +181,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels return type mirrors base ItemDataModel schema
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             discipline: this.disciplineLabel,

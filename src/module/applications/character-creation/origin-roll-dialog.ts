@@ -27,6 +27,7 @@ const LegacyDialog = foundry.appv1.api.Dialog;
 /** Extract numeric value from a Foundry v1 Dialog callback `html` argument. */
 function readDialogNumber(html: JQuery<HTMLElement>): number {
     const root = html[0];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: JQuery index may be undefined at runtime
     if (root === undefined) return NaN;
     const form = root.querySelector('form');
     const input = form?.querySelector<HTMLInputElement>('[name="value"]') ?? null;
@@ -107,7 +108,6 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         classes: ['wh40k-rpg', 'origin-roll-dialog'],
         tag: 'form',
         window: {
-            title: 'WH40K.OriginPath.StartingStats',
             icon: 'fa-solid fa-dice',
             minimizable: false,
             resizable: false,
@@ -449,6 +449,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         // Handle TB multiplier
         const tbMatch = withoutDice.match(/(\d+)xTB/i);
         if (tbMatch) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: regex capture groups may be undefined at runtime
             const multiplier = parseInt(tbMatch[1] ?? '', 10);
             staticTotal += multiplier * tb;
             breakdownParts.push(`${multiplier}×${tb}`);
@@ -552,8 +553,11 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         for (const match of conditions) {
             const [, min, max, outcome] = match;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: regex capture groups may be undefined at runtime
             const minVal = parseInt(min ?? '', 10);
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: regex capture groups may be undefined at runtime
             const maxVal = parseInt(max ?? '', 10);
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: regex capture groups may be undefined at runtime
             const outcomeVal = parseInt(outcome ?? '', 10);
 
             if (diceValue >= minVal && diceValue <= maxVal) {
@@ -696,8 +700,11 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         for (const match of conditions) {
             const [, min, max, outcome] = match;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: regex capture groups may be undefined at runtime
             const minVal = parseInt(min ?? '', 10);
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: regex capture groups may be undefined at runtime
             const maxVal = parseInt(max ?? '', 10);
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: regex capture groups may be undefined at runtime
             const outcomeVal = parseInt(outcome ?? '', 10);
 
             if (rolledValue >= minVal && rolledValue <= maxVal) {

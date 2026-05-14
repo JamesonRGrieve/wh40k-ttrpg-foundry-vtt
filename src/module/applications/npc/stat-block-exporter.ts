@@ -39,6 +39,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         classes: ['wh40k-rpg', 'stat-block-exporter'],
         tag: 'div',
         window: {
+            // eslint-disable-next-line no-restricted-syntax -- i18n: WH40K localization key resolved at runtime; rule fires on any literal in this position
             title: 'WH40K.NPC.Export.Title',
             icon: 'fa-solid fa-file-export',
             minimizable: false,
@@ -49,12 +50,14 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
             width: 700,
             height: 600,
         },
+        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             copyToClipboard: StatBlockExporter.#onCopyToClipboard,
             exportJson: StatBlockExporter.#onExportJson,
             exportText: StatBlockExporter.#onExportText,
             close: StatBlockExporter.#onClose,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -88,9 +91,9 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /**
      * @param {WH40KBaseActor} actor - The NPC actor to export.
-     * @param {Record<string, unknown>} [options] - Application options.
+     * @param {ApplicationV2Config.DefaultOptions} [options] - Application options.
      */
-    constructor(actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
+    constructor(actor: WH40KBaseActor, options: Partial<ApplicationV2Config.DefaultOptions> = {}) {
         super(options);
         this.#actor = actor;
     }
@@ -115,67 +118,79 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         const sys = actor.system as NpcSystemExport;
         const lines: string[] = [];
 
-        // Header
+        StatBlockExporter._appendHeader(lines, actor, sys);
+        StatBlockExporter._appendCharacteristics(lines, sys);
+        StatBlockExporter._appendVitals(lines, sys);
+        StatBlockExporter._appendArmour(lines, sys);
+        StatBlockExporter._appendSkills(lines, sys);
+        StatBlockExporter._appendWeapons(lines, sys);
+        StatBlockExporter._appendItemSection(
+            lines,
+            actor.items.filter((i) => i.type === 'talent'),
+            'TALENTS',
+        );
+        StatBlockExporter._appendItemSection(
+            lines,
+            actor.items.filter((i) => i.type === 'trait'),
+            'TRAITS',
+        );
+        StatBlockExporter._appendHtmlSection(lines, sys.specialAbilities, 'SPECIAL ABILITIES');
+        StatBlockExporter._appendHtmlSection(lines, sys.quickNotes, 'GM NOTES');
+
+        lines.push('═'.repeat(50));
+        return lines.join('\n');
+    }
+
+    /** @private */
+    private static _appendHeader(lines: string[], actor: WH40KBaseActor, sys: NpcSystemExport): void {
         lines.push('═'.repeat(50));
         lines.push(actor.name.toUpperCase());
         lines.push('═'.repeat(50));
         lines.push('');
-
-        // Identity
         if (sys.faction !== undefined) lines.push(`Faction: ${sys.faction}`);
         if (sys.subfaction !== undefined) lines.push(`Subfaction: ${sys.subfaction}`);
         lines.push(`Type: ${sys.type?.titleCase?.() ?? 'Unknown'} | Role: ${sys.role?.titleCase?.() ?? 'Unknown'}`);
         lines.push(`Threat Level: ${sys.threatLevel ?? 5}`);
         lines.push('');
+    }
 
-        // Characteristics
+    /** @private */
+    private static _appendCharacteristics(lines: string[], sys: NpcSystemExport): void {
         lines.push('─'.repeat(50));
         lines.push('CHARACTERISTICS');
         lines.push('─'.repeat(50));
-
         const chars = sys.characteristics;
         if (chars !== undefined) {
-            const charLine1: string[] = [];
-            const charLine2: string[] = [];
-
-            const order = ['weaponSkill', 'ballisticSkill', 'strength', 'toughness', 'agility'];
-            for (const key of order) {
-                const c = chars[key];
-                if (c !== undefined) {
-                    charLine1.push(`${c.short}: ${c.total}`);
-                }
-            }
-
-            const order2 = ['intelligence', 'perception', 'willpower', 'fellowship', 'influence'];
-            for (const key of order2) {
-                const c = chars[key];
-                if (c !== undefined) {
-                    charLine2.push(`${c.short}: ${c.total}`);
-                }
-            }
-
-            lines.push(charLine1.join(' | '));
-            lines.push(charLine2.join(' | '));
+            const buildRow = (keys: string[]): string =>
+                keys
+                    .map((key) => chars[key])
+                    .filter((c): c is NonNullable<typeof c> => c !== undefined)
+                    .map((c) => `${c.short}: ${c.total}`)
+                    .join(' | ');
+            lines.push(buildRow(['weaponSkill', 'ballisticSkill', 'strength', 'toughness', 'agility']));
+            lines.push(buildRow(['intelligence', 'perception', 'willpower', 'fellowship', 'influence']));
         }
         lines.push('');
+    }
 
-        // Vitals
+    /** @private */
+    private static _appendVitals(lines: string[], sys: NpcSystemExport): void {
         lines.push('─'.repeat(50));
         lines.push('VITALS');
         lines.push('─'.repeat(50));
         lines.push(`Wounds: ${sys.wounds?.value ?? 0}/${sys.wounds?.max ?? 0}`);
-
         if (sys.horde?.enabled === true) {
             lines.push(`Magnitude: ${sys.horde.magnitude?.current ?? 0}/${sys.horde.magnitude?.max ?? 100}`);
         }
-
         const mv = sys.movement;
         if (mv !== undefined) {
             lines.push(`Movement: H${mv.half} / F${mv.full} / C${mv.charge} / R${mv.run}`);
         }
         lines.push('');
+    }
 
-        // Armour
+    /** @private */
+    private static _appendArmour(lines: string[], sys: NpcSystemExport): void {
         lines.push('─'.repeat(50));
         lines.push('ARMOUR');
         lines.push('─'.repeat(50));
@@ -187,87 +202,60 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
             lines.push(`Arms: ${locs.leftArm ?? 0}/${locs.rightArm ?? 0} | Legs: ${locs.leftLeg ?? 0}/${locs.rightLeg ?? 0}`);
         }
         lines.push('');
+    }
 
-        // Trained Skills
-        if (sys.trainedSkills !== undefined && Object.keys(sys.trainedSkills).length > 0) {
-            lines.push('─'.repeat(50));
-            lines.push('SKILLS');
-            lines.push('─'.repeat(50));
-
-            const skillLines: string[] = [];
-            for (const [key, skill] of Object.entries(sys.trainedSkills)) {
-                let level = '';
-                if (skill.plus20 === true) level = '+20';
-                else if (skill.plus10 === true) level = '+10';
-
-                const bonus = skill.bonus !== undefined ? ` (+${skill.bonus})` : '';
-                skillLines.push(`${skill.name ?? key}${level}${bonus}`);
-            }
-            lines.push(skillLines.join(', '));
-            lines.push('');
+    /** @private */
+    private static _appendSkills(lines: string[], sys: NpcSystemExport): void {
+        if (sys.trainedSkills === undefined || Object.keys(sys.trainedSkills).length === 0) return;
+        lines.push('─'.repeat(50));
+        lines.push('SKILLS');
+        lines.push('─'.repeat(50));
+        const skillLines: string[] = [];
+        for (const [key, skill] of Object.entries(sys.trainedSkills)) {
+            let level = '';
+            if (skill.plus20 === true) level = '+20';
+            else if (skill.plus10 === true) level = '+10';
+            const bonus = skill.bonus !== undefined ? ` (+${skill.bonus})` : '';
+            skillLines.push(`${skill.name ?? key}${level}${bonus}`);
         }
+        lines.push(skillLines.join(', '));
+        lines.push('');
+    }
 
-        // Weapons
+    /** @private */
+    private static _appendWeapons(lines: string[], sys: NpcSystemExport): void {
         const weaponsSimple = sys.weapons?.simple ?? [];
-        if (weaponsSimple.length > 0) {
-            lines.push('─'.repeat(50));
-            lines.push('WEAPONS');
-            lines.push('─'.repeat(50));
-
-            for (const w of weaponsSimple) {
-                const special = w.special !== undefined ? ` [${w.special}]` : '';
-                lines.push(`${w.name}: ${w.damage} Pen ${w.pen} | ${w.range} | RoF: ${w.rof}${special}`);
-            }
-            lines.push('');
+        if (weaponsSimple.length === 0) return;
+        lines.push('─'.repeat(50));
+        lines.push('WEAPONS');
+        lines.push('─'.repeat(50));
+        for (const w of weaponsSimple) {
+            const special = w.special !== undefined ? ` [${w.special}]` : '';
+            lines.push(`${w.name}: ${w.damage} Pen ${w.pen} | ${w.range} | RoF: ${w.rof}${special}`);
         }
+        lines.push('');
+    }
 
-        // Talents (from items)
-        const talents = actor.items.filter((i) => i.type === 'talent');
-        if (talents.length > 0) {
-            lines.push('─'.repeat(50));
-            lines.push('TALENTS');
-            lines.push('─'.repeat(50));
-            lines.push(talents.map((t) => t.name).join(', '));
-            lines.push('');
-        }
+    /** @private */
+    private static _appendItemSection(lines: string[], items: { name: string }[], heading: string): void {
+        if (items.length === 0) return;
+        lines.push('─'.repeat(50));
+        lines.push(heading);
+        lines.push('─'.repeat(50));
+        lines.push(items.map((i) => i.name).join(', '));
+        lines.push('');
+    }
 
-        // Traits (from items)
-        const traits = actor.items.filter((i) => i.type === 'trait');
-        if (traits.length > 0) {
-            lines.push('─'.repeat(50));
-            lines.push('TRAITS');
-            lines.push('─'.repeat(50));
-            lines.push(traits.map((t) => t.name).join(', '));
-            lines.push('');
-        }
-
-        // Special Abilities
-        if (sys.specialAbilities !== undefined) {
-            const plainText = this._stripHtml(sys.specialAbilities);
-            if (plainText.trim()) {
-                lines.push('─'.repeat(50));
-                lines.push('SPECIAL ABILITIES');
-                lines.push('─'.repeat(50));
-                lines.push(plainText);
-                lines.push('');
-            }
-        }
-
-        // Notes
-        if (sys.quickNotes !== undefined) {
-            const plainText = this._stripHtml(sys.quickNotes);
-            if (plainText.trim()) {
-                lines.push('─'.repeat(50));
-                lines.push('GM NOTES');
-                lines.push('─'.repeat(50));
-                lines.push(plainText);
-                lines.push('');
-            }
-        }
-
-        lines.push('═'.repeat(50));
-
-        return lines.join('\n');
+    /** @private */
+    private static _appendHtmlSection(lines: string[], html: string | undefined, heading: string): void {
+        if (html === undefined) return;
+        const plainText = this._stripHtml(html);
+        if (plainText.trim() === '') return;
+        lines.push('─'.repeat(50));
+        lines.push(heading);
+        lines.push('─'.repeat(50));
+        lines.push(plainText);
+        lines.push('');
     }
 
     /**
@@ -320,6 +308,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext return contract
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
@@ -350,6 +339,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     }
 
     /** @override */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._onRender context parameter contract
     override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 

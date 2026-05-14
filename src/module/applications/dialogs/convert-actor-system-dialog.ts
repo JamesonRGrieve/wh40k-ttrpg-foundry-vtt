@@ -68,6 +68,7 @@ export class ConvertActorSystemDialog {
                                         system: game.i18n.localize(`WH40K.TYPES.Actor.${targetSystem}-character`),
                                     }),
                                 );
+                                // eslint-disable-next-line @typescript-eslint/no-deprecated -- render(true) is the V14-compatible force-open idiom
                                 if (converted.sheet) await converted.sheet.render(true);
                                 resolve(converted);
                             } catch (error) {

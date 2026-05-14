@@ -688,6 +688,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         }
 
         const chosen = weapons[0];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: array element may be undefined at runtime
         if (chosen == null) return;
         await chosen.update({ 'system.equipped': true });
         ui.notifications.info(t('WH40K.CombatPanel.DrewWeapon', { name: chosen.name }));

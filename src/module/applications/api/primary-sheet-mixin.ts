@@ -314,7 +314,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                     });
                 }
 
-                if (activeTab !== undefined && activeTab !== '') {
+                if (activeTab != null && activeTab !== '') {
                     this._activateTab(activeTab, group, nav, content);
                 }
             }

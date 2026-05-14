@@ -77,6 +77,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
         // biome-ignore lint/complexity/noUselessConstructor: required to forward any[] args per TS mixin rule (TS2545)
         // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)
         constructor(...args: any[]) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- spreading any[] is inherent to the mixin pattern (TS2545)
             super(...args);
         }
 
@@ -337,6 +338,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
                     name: 'Edit Item',
                     icon: '<i class="fas fa-edit"></i>',
                     callback: () => {
+                        // eslint-disable-next-line @typescript-eslint/no-deprecated -- render(true) is the V14-compatible force-open idiom
                         void item.sheet?.render(true);
                     },
                 },

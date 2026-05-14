@@ -51,6 +51,7 @@ export class WH40KCreateActorDialog {
      */
     static async open(opts: CreateActorOptions = {}): Promise<Actor | null> {
         const initialSystem = opts.initialSystem ?? 'dh2';
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: array index may be undefined at runtime
         const initialKind = ACTOR_SYSTEM_AVAILABILITY[initialSystem]?.[0] ?? 'character';
 
         const systemSelect = Object.keys(ACTOR_SYSTEM_LABELS)
@@ -92,14 +93,21 @@ export class WH40KCreateActorDialog {
                         default: true,
                         callback: async (_event: Event, button: HTMLElement) => {
                             const form = button.closest('form') as HTMLFormElement;
-                            const system = (form.querySelector('[name="system"]') as HTMLSelectElement).value;
+                            const selectedSystem = (form.querySelector('[name="system"]') as HTMLSelectElement).value;
                             const kind = (form.querySelector('[name="kind"]') as HTMLSelectElement).value;
                             const nameInput = (form.querySelector('[name="name"]') as HTMLInputElement).value.trim();
-                            const type = `${system}-${kind}`;
-                            const name = nameInput || `New ${ACTOR_SYSTEM_LABELS[system]} ${ACTOR_KIND_LABELS[kind]}`;
+                            const type = `${selectedSystem}-${kind}`;
+                            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: lookup table indexed by user-supplied select value
+                            const systemLabel = ACTOR_SYSTEM_LABELS[selectedSystem] ?? selectedSystem;
+                            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: lookup table indexed by user-supplied select value
+                            const kindLabel = ACTOR_KIND_LABELS[kind] ?? kind;
+                            const name = nameInput !== '' ? nameInput : `New ${systemLabel} ${kindLabel}`;
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create expects document creation data; no typed overload matches plain object
                             const data: Record<string, unknown> = { name, type };
-                            if (opts.folder) data['folder'] = opts.folder;
+                            if (opts.folder != null) data['folder'] = opts.folder;
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create parameter type is a complex Foundry generic; casting through unknown is the only viable path
                             const actor = await Actor.create(data as unknown as Parameters<typeof Actor.create>[0]);
+                            // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create return type is Document.ToConfiguredInstance which doesn't match Actor directly
                             resolve((actor as unknown as Actor | null) ?? null);
                         },
                     },
@@ -113,7 +121,8 @@ export class WH40KCreateActorDialog {
                 rejectClose: false,
             });
 
-            const afterRender = () => {
+            const afterRender = (): void => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 exposes element but typings don't declare it on the return type
                 const root = (dialog as unknown as { element: HTMLElement }).element;
                 const sysSel = root.querySelector<HTMLSelectElement>('[name="system"]');
                 const kindSel = root.querySelector<HTMLSelectElement>('[name="kind"]');

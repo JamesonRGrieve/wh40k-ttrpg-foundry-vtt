@@ -132,7 +132,8 @@ export function calculateWeaponModifiersDamageBonuses(actionData: WeaponModifier
         if (item.system.equipped !== true) continue;
         if (!item.isWeaponModification) continue;
         const effects = MOD_EFFECTS[item.name];
-        if (effects === undefined || effects.damagePhasePenetrationMods === undefined) continue;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-optional-chain -- noUncheckedIndexedAccess guard: MOD_EFFECTS[item.name] may be undefined at runtime
+        if (effects == null || effects.damagePhasePenetrationMods == null) continue;
         for (const [key, value] of Object.entries(effects.damagePhasePenetrationMods)) {
             hit.penetrationModifiers[key] = value;
         }
@@ -148,7 +149,8 @@ export function calculateWeaponModifiersPenetrationBonuses(actionData: WeaponMod
         if (item.system.equipped !== true) continue;
         if (!item.isWeaponModification) continue;
         const effects = MOD_EFFECTS[item.name];
-        if (effects === undefined || effects.penetrationModifiers === undefined) continue;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-optional-chain -- noUncheckedIndexedAccess guard: MOD_EFFECTS[item.name] may be undefined at runtime
+        if (effects == null || effects.penetrationModifiers == null) continue;
         for (const [key, value] of Object.entries(effects.penetrationModifiers)) {
             hit.penetrationModifiers[key] = value;
         }
@@ -164,7 +166,8 @@ export function calculateWeaponModifiersAttackSpecials(rollData: WeaponModifierB
         if (item.system.equipped !== true) continue;
         if (!item.isWeaponModification) continue;
         const effects = MOD_EFFECTS[item.name];
-        if (effects === undefined || effects.attackSpecials === undefined) continue;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-optional-chain -- noUncheckedIndexedAccess guard: MOD_EFFECTS[item.name] may be undefined at runtime
+        if (effects == null || effects.attackSpecials == null) continue;
         for (const spec of effects.attackSpecials) {
             if (spec.remove !== undefined && spec.remove !== '') rollData.attackSpecials.findSplice((i: { name: string }) => i.name === spec.remove);
         }
@@ -185,7 +188,8 @@ export function calculateWeaponModifiersAttackBonuses(rollData: WeaponModifierBo
         if (item.system.equipped !== true) continue;
         if (!item.isWeaponModification) continue;
         const effects = MOD_EFFECTS[item.name];
-        if (effects === undefined || effects.attackBonus === undefined) continue;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-optional-chain -- noUncheckedIndexedAccess guard: MOD_EFFECTS[item.name] may be undefined at runtime
+        if (effects == null || effects.attackBonus == null) continue;
         const bonuses = effects.attackBonus(rollData, item);
         for (const [key, value] of Object.entries(bonuses)) {
             rollData.weaponModifiers[key] = value;

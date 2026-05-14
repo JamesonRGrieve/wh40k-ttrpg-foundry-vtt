@@ -11,7 +11,9 @@ export interface ActorLike {
         fatigue: { value: number };
     };
     hasTalent: (name: string) => boolean;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.update accepts arbitrary update data; return type is unknown
     update: (data: Record<string, unknown>) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.createEmbeddedDocuments return type is unknown
     createEmbeddedDocuments: (type: string, data: Record<string, unknown>[]) => Promise<unknown>;
 }
 
@@ -51,7 +53,7 @@ export class AssignDamageData {
     update(): void {
         this.armour = 0;
         this.tb = 0;
-        const location = this.hit?.location;
+        const location = this.hit.location;
         if (location) {
             for (const [name, locationArmour] of Object.entries(this.actor.system.armour)) {
                 if (location.replace(/\s/g, '').toUpperCase() === name.toUpperCase()) {
@@ -85,17 +87,15 @@ export class AssignDamageData {
                 // All applied as critical
                 this.hasCriticalDamage = true;
                 this.criticalDamageTaken = reducedDamage;
-            } else {
+            } else if (this.actor.system.wounds.value >= reducedDamage) {
                 //Reduce Wounds First
-                if (this.actor.system.wounds.value >= reducedDamage) {
-                    // Only Wound Damage
-                    this.damageTaken = reducedDamage;
-                } else {
-                    // Wound and Critical
-                    this.damageTaken = this.actor.system.wounds.value;
-                    this.hasCriticalDamage = true;
-                    this.criticalDamageTaken = reducedDamage - this.damageTaken;
-                }
+                // Only Wound Damage
+                this.damageTaken = reducedDamage;
+            } else {
+                // Wound and Critical
+                this.damageTaken = this.actor.system.wounds.value;
+                this.hasCriticalDamage = true;
+                this.criticalDamageTaken = reducedDamage - this.damageTaken;
             }
         }
 
@@ -134,10 +134,10 @@ export class AssignDamageData {
             await this._createCriticalInjuryItem();
         }
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs',
-            this as unknown as Record<string, unknown>,
-        );
+        // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate expects a plain record; AssignDamageData is duck-typed to satisfy the shape
+        const templateData = this as unknown as Record<string, unknown>;
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs', templateData);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped record-shaped payload
         const chatData: Record<string, unknown> = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),
