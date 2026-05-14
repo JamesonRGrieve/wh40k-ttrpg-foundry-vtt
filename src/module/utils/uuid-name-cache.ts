@@ -36,6 +36,13 @@ const TOKEN_RE = /\{\{(Compendium\.[A-Za-z0-9_.-]+)\}\}/g;
 class UuidNameCache {
     /** uuid → display name */
     readonly #cache = new Map<string, string>();
+    /**
+     * Reverse index: `${packPrefix}|${normalized-name}` → uuid. Used by the
+     * Phase F originPath backfill where we have a legacy name string and need
+     * to find the matching compendium UUID. Pack-prefix scoping keeps the
+     * lookup per-game-system; see `findByName()` for the resolution order.
+     */
+    readonly #byName = new Map<string, string>();
     /** uuids we've already logged a "broken" warning for, to avoid log spam */
     readonly #warned = new Set<string>();
     #initialized = false;
@@ -46,6 +53,7 @@ class UuidNameCache {
      */
     async build(): Promise<void> {
         this.#cache.clear();
+        this.#byName.clear();
         this.#warned.clear();
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs is Foundry framework state typed loosely by fvtt-types
@@ -62,10 +70,13 @@ class UuidNameCache {
                     return;
                 }
                 const docKey = packDocumentType(pack.metadata.type);
+                const packPrefix = pack.metadata.name.split('-')[0] ?? '';
                 for (const raw of index) {
                     if (!isIndexEntry(raw)) continue;
                     const uuid = `Compendium.${pack.metadata.id}.${docKey}.${raw._id}`;
                     this.#cache.set(uuid, raw.name);
+                    const reverseKey = `${packPrefix}|${raw.name.trim().toLowerCase()}`;
+                    if (!this.#byName.has(reverseKey)) this.#byName.set(reverseKey, uuid);
                 }
             }),
         );
@@ -108,6 +119,24 @@ class UuidNameCache {
     /** Drop a UUID from the cache. Called by document delete hooks. */
     remove(uuid: string): void {
         this.#cache.delete(uuid);
+    }
+
+    /**
+     * Reverse lookup: find a UUID by display name, scoped to the given pack
+     * prefix (`dh1`, `dh2`, `bc`, `dw`, `ow`, `rt`). Falls back to a
+     * specialization-stripped match. Returns null on miss — callers should
+     * treat that as "leave the legacy name alone" rather than a hard error.
+     */
+    findByName(packPrefix: string, name: string): string | null {
+        const normalized = name.trim().toLowerCase();
+        const exact = this.#byName.get(`${packPrefix}|${normalized}`);
+        if (exact != null) return exact;
+        const stripped = normalized.replace(/\s*\([^)]*\)\s*$/u, '').trim();
+        if (stripped !== normalized) {
+            const fallback = this.#byName.get(`${packPrefix}|${stripped}`);
+            if (fallback != null) return fallback;
+        }
+        return null;
     }
 
     /**

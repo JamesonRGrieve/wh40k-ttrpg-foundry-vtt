@@ -72,6 +72,7 @@ import * as npcApplications from './applications/npc/_module.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { resyncWorldFromCompendiums } from './compendium-resync.ts';
 import { uuidNameCache } from './utils/uuid-name-cache.ts';
+import { backfillOriginPathUuids } from './utils/origin-path-uuid-backfill.ts';
 import type { WH40KSystemConfig } from './config.ts';
 import { SYSTEM_ID } from './constants.ts';
 import * as dataModels from './data/_module.ts';
@@ -770,6 +771,7 @@ export class HooksManager {
         await checkAndMigrateWorld();
         await resyncWorldFromCompendiums();
         await uuidNameCache.build();
+        await backfillOriginPathUuids();
 
         // Initialize rich tooltip system
         game.wh40k.tooltips = new TooltipsWH40K();
