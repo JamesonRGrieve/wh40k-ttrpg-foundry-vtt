@@ -203,6 +203,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     static DIFFICULTIES = [
         { key: 'trivial', label: 'Trivial', modifier: 60, icon: 'fa-smile', description: 'Automatic success unless complications' },
+        { key: 'elementary', label: 'Elementary', modifier: 50, icon: 'fa-smile-beam', description: 'Almost trivial with minor effort' },
+        { key: 'simple', label: 'Simple', modifier: 40, icon: 'fa-grin-beam', description: 'Easy tasks under no pressure' },
         { key: 'easy', label: 'Easy', modifier: 30, icon: 'fa-grin', description: 'Simple tasks with no pressure' },
         { key: 'routine', label: 'Routine', modifier: 20, icon: 'fa-meh', description: 'Standard tasks with time' },
         { key: 'ordinary', label: 'Ordinary', modifier: 10, icon: 'fa-smile-beam', description: 'Typical difficulty' },
@@ -210,6 +212,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         { key: 'difficult', label: 'Difficult', modifier: -10, icon: 'fa-frown', description: 'Complex or contested tasks' },
         { key: 'hard', label: 'Hard', modifier: -20, icon: 'fa-dizzy', description: 'Very challenging circumstances' },
         { key: 'veryHard', label: 'Very Hard', modifier: -30, icon: 'fa-tired', description: 'Exceptional difficulty' },
+        { key: 'arduous', label: 'Arduous', modifier: -40, icon: 'fa-sad-tear', description: 'Punishing odds against success' },
+        { key: 'punishing', label: 'Punishing', modifier: -50, icon: 'fa-sad-cry', description: 'Verging on impossible' },
         { key: 'hellish', label: 'Hellish', modifier: -60, icon: 'fa-skull', description: 'Near-impossible feats' },
     ];
 
