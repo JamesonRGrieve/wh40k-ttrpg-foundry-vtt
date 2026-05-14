@@ -39,7 +39,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     declare effectText: string;
     declare notes: string;
     declare selectedChoices: Record<string, unknown[]>;
-    declare activeModifiers: Array<{ source: string; type: string; key: string; value: number | null; itemUuid: string | null }>;
+    declare activeModifiers: Array<{ source: string; type: string; key: string; value: number | null; itemUuid: string | null; specialization?: string }>;
     declare homebrew: { throneGelt: string; thrones: string };
     declare rollResults: {
         wounds: { formula: string; rolled: number; breakdown: string; timestamp: number };
@@ -242,6 +242,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     key: new fields.StringField({ required: true }),
                     value: new fields.NumberField({ required: false }),
                     itemUuid: new fields.StringField({ required: false, blank: true }), // For fetching item details
+                    specialization: new fields.StringField({ required: false, blank: true }), // For talents with composite specs e.g. "Weapon Training (Chain)"
                 }),
                 { required: true, initial: [] },
             ),
@@ -450,16 +451,65 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             grants?: OptionGrants;
         }
 
-        const activeModifiers: Array<{ source: string; type: string; key: string; value: number | null; itemUuid: string | null }> = [];
+        const activeModifiers: Array<{ source: string; type: string; key: string; value: number | null; itemUuid: string | null; specialization?: string }> = [];
+
+        /**
+         * Composite picks land in selectedChoices as e.g. "Weapon Training (Chain)".
+         * Split into base name + specialization so the granted talent on the actor
+         * carries the player's chosen variant rather than the generic "(any)" item.
+         */
+        const splitComposite = (raw: string): { base: string; specialization?: string } => {
+            const match = raw.match(/^(.+?)\s*\((.+)\)\s*$/);
+            if (!match) return { base: raw };
+            return { base: match[1].trim(), specialization: match[2].trim() };
+        };
+
+        // Labels can collide ("Skill", "Skill") — the choice dialog disambiguates
+        // duplicates by appending " (N)" to the second+ occurrence so each entry
+        // gets its own slot in selectedChoices. Mirror that here so each choice
+        // resolves to its own player picks instead of all colliding on the first.
+        const labelCounts: Record<string, number> = {};
 
         for (const choice of this.grants.choices) {
             // DH2e/BC/OW packs use 'name' while RT uses 'label' — handle both
-            const choiceKey: string = choice.label !== '' ? choice.label : choice.name ?? '';
-            const selected = (this.selectedChoices[choiceKey] as unknown[] | undefined) ?? [];
+            const baseLabel: string = choice.label !== '' ? choice.label : choice.name ?? '';
+            labelCounts[baseLabel] = (labelCounts[baseLabel] ?? 0) + 1;
+            const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
+            const choiceKey = `${baseLabel}${suffix}`;
+            const selected =
+                (this.selectedChoices[choiceKey] as unknown[] | undefined) ??
+                // Fall back to the un-suffixed key for legacy origin items that
+                // stored selections before the dedup pass landed.
+                (this.selectedChoices[baseLabel] as unknown[] | undefined) ??
+                [];
 
             for (const selectedValue of selected) {
-                const option = (choice.options as ChoiceOption[]).find((opt) => (opt.value ?? opt.name) === selectedValue);
-                if (option?.grants === undefined) continue;
+                const selectedStr = String(selectedValue);
+                const option = (choice.options as ChoiceOption[]).find(
+                    (opt) => ((opt.value as string | undefined) ?? (opt.name as string | undefined)) === selectedStr,
+                );
+                // When the option carries no explicit grants, synthesize an
+                // activeModifier from the choice's declared type so picks like
+                // "Sleight of Hand" on a generic skill choice or
+                // "Weapon Training (Chain)" on a talent choice still attach to
+                // the actor. The composite "(specialization)" suffix is
+                // preserved in the key so downstream consumers can stamp the
+                // specialization onto the granted item.
+                if (option?.grants === undefined) {
+                    const choiceType = typeof choice.type === 'string' ? choice.type : '';
+                    if (choiceType === '') continue;
+                    const parts = splitComposite(selectedStr);
+                    const optionUuid = typeof option?.uuid === 'string' ? option.uuid : null;
+                    activeModifiers.push({
+                        source: choiceKey,
+                        type: choiceType,
+                        key: parts.base,
+                        value: null,
+                        itemUuid: optionUuid,
+                        specialization: parts.specialization,
+                    });
+                    continue;
+                }
                 const grants = option.grants;
 
                 // Extract characteristic modifiers
@@ -490,15 +540,23 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     }
                 }
 
-                // Extract talent grants
+                // Extract talent grants — split composite picks like
+                // "Weapon Training (Chain)" so the spec lands on the actor item.
                 if (grants.talents !== undefined) {
                     for (const talent of grants.talents) {
+                        const parts = splitComposite(talent.name);
+                        // If the talent name already carries a (spec), prefer that;
+                        // otherwise fall back to splitting the option's selected
+                        // value so picks like "Weapon Training" → "Weapon Training (Chain)"
+                        // promoted via the dialog still record the spec.
+                        const composite = parts.specialization !== undefined ? parts : splitComposite(selectedStr);
                         activeModifiers.push({
                             source: choiceKey,
                             type: 'talent',
-                            key: talent.name,
+                            key: composite.base,
                             value: null,
                             itemUuid: talent.uuid ?? null,
+                            specialization: composite.specialization,
                         });
                     }
                 }
