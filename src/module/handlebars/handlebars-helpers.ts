@@ -1,5 +1,6 @@
 import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
 import WH40K from '../config.ts';
+import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 
 /**
  * Template-supplied value. Handlebars helpers receive heterogeneous values from .hbs files
@@ -1046,6 +1047,31 @@ export function registerHandlebarsHelpers(): void {
             ...(def.hasLevel !== undefined ? { hasLevel: def.hasLevel } : {}),
             level,
         };
+    });
+
+    /**
+     * Resolve a Compendium UUID to the linked document's current display name.
+     * Backed by `uuidNameCache`, which is populated on the `ready` hook from
+     * every compendium pack index and every world-side document.
+     *
+     * @example  {{uuid-name grant.uuid}}
+     * @example  {{uuid-name "Compendium.wh40k-rpg.dh2-core-stats-talents.Item.…"}}
+     */
+    Handlebars.registerHelper('uuid-name', (uuid: TplValue): string => {
+        if (typeof uuid !== 'string' || uuid.length === 0) return '';
+        return uuidNameCache.getName(uuid);
+    });
+
+    /**
+     * Expand `{{Compendium.…}}` template tokens embedded in a freeform string
+     * to the linked documents' current display names. Use for prerequisite /
+     * requirement text where a structured UUID slot would be overkill.
+     *
+     * @example  {{uuid-expand item.system.prerequisites.text}}
+     */
+    Handlebars.registerHelper('uuid-expand', (text: TplValue): string => {
+        if (typeof text !== 'string') return '';
+        return uuidNameCache.expandTemplates(text);
     });
 }
 
