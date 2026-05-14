@@ -21,6 +21,7 @@ import AcquisitionDialog from '../dialogs/acquisition-dialog.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
 import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
+import FateUsesDialog from '../dialogs/fate-uses-dialog.ts';
 import TransactionRequestDialog from '../dialogs/transaction-request-dialog.ts';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
 import BaseActorSheet, { type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
@@ -233,6 +234,7 @@ export default class CharacterSheet extends BaseActorSheet {
         actions: {
             ...(BaseActorSheet.DEFAULT_OPTIONS.actions ?? {}),
             'toggleEditMode': CharacterSheet.#toggleEditMode,
+            'viewFateUses': CharacterSheet.#viewFateUses,
             // Combat actions
             'attack': CharacterSheet.#attack,
             'dodge': CharacterSheet.#dodge,
@@ -3019,6 +3021,17 @@ export default class CharacterSheet extends BaseActorSheet {
         if (!this.isEditable) return;
         this.#editMode = !this.#editMode;
         void this.render();
+    }
+
+    /**
+     * Open the Fate Point uses reference dialog. Triggered by clicking the
+     * Fate Point icon / label on the character sheet (issue #35).
+     * @this {CharacterSheet}
+     */
+    static #viewFateUses(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
+        FateUsesDialog.open({
+            gameSystem: this._resolveGameSystemId(),
+        });
     }
 
     /**
