@@ -174,7 +174,7 @@
         </div>
         {{/if}}
       </div>
-      <a class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" data-tab="effects" data-group="primary">
+      <a class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" data-action="switchTab" data-tab="effects" data-group="primary">
         <span>View Details</span>
         <i class="fa-solid fa-arrow-right"></i>
       </a>
@@ -184,7 +184,7 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="tw-flex tw-flex-shrink-0 tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)]" data-group="primary">
+    <nav class="wh40k-tabs tw-flex tw-flex-shrink-0 tw-gap-0.5 tw-px-3 tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-b tw-border-[var(--wh40k-border-color)]" data-group="primary">
       <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-text-sm tw-font-medium tw-cursor-pointer {{#if (eq activeTab"overview")}}active tw-text-[color:var(--wh40k-talents-primary)] tw-bg-[var(--wh40k-talents-bg)] tw-border-b-[color:var(--wh40k-talents-primary)]{{else}}tw-text-[color:var(--wh40k-text-muted)] tw-border-b-transparent hover:tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-panel-bg-translucent)]{{/if}}"
               data-tab="overview" data-group="primary">
         <i class="fa-solid fa-eye tw-text-[0.9rem]"></i>
@@ -210,12 +210,12 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="tw-flex-1 tw-overflow-y-auto tw-min-h-0 tw-p-3 [&::-webkit-scrollbar]:tw-w-2 [&::-webkit-scrollbar-track]:tw-bg-[var(--wh40k-panel-bg)] [&::-webkit-scrollbar-thumb]:tw-bg-[var(--wh40k-border-color)] [&::-webkit-scrollbar-thumb]:tw-rounded-md">
+    <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-min-h-0 tw-p-3 [&::-webkit-scrollbar]:tw-w-2 [&::-webkit-scrollbar-track]:tw-bg-[var(--wh40k-panel-bg)] [&::-webkit-scrollbar-thumb]:tw-bg-[var(--wh40k-border-color)] [&::-webkit-scrollbar-thumb]:tw-rounded-md">
 
       {{!-- ─────────────────────────────────────────────────────────────────
            OVERVIEW TAB: Benefit and effects summary
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="{{#if (eq activeTab"overview")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="overview" data-group="primary">
+      <div class="wh40k-talent-panel [&:not(.active)]:tw-hidden{{#if (eq activeTab"overview")}} active{{/if}}" data-tab="overview" data-group="primary">
 
         {{!-- Benefit Section (Editable with hover button) --}}
         <div class="{{#if inEditMode}}tw-ring-1 tw-ring-[color:var(--wh40k-accent-gold)]{{/if}}">
@@ -295,7 +295,7 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            PROPERTIES TAB: Configuration and details
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="{{#if (eq activeTab"properties")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="properties" data-group="primary">
+      <div class="wh40k-talent-panel [&:not(.active)]:tw-hidden{{#if (eq activeTab"properties")}} active{{/if}}" data-tab="properties" data-group="primary">
 
         {{!-- Basic Properties --}}
         <div >
@@ -596,7 +596,7 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            EFFECTS TAB: Modifiers and mechanical effects
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="{{#if (eq activeTab"effects")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="effects" data-group="primary">
+      <div class="wh40k-talent-panel [&:not(.active)]:tw-hidden{{#if (eq activeTab"effects")}} active{{/if}}" data-tab="effects" data-group="primary">
 
         {{!-- Permanent Modifiers --}}
         <div  data-section-id="modifiers" data-has-data="{{modifiersData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "modifiers")}}{{@index}}{{/if}}{{/each}}">
@@ -908,7 +908,7 @@
       {{!-- ─────────────────────────────────────────────────────────────────
            DESCRIPTION TAB: Benefit, notes, technical
       ───────────────────────────────────────────────────────────────── --}}
-      <div class="{{#if (eq activeTab"description")}}active tw-block{{else}}tw-hidden{{/if}}" data-tab="description" data-group="primary">
+      <div class="wh40k-talent-panel [&:not(.active)]:tw-hidden{{#if (eq activeTab"description")}} active{{/if}}" data-tab="description" data-group="primary">
 
         {{!-- Benefit (Editable with hover button) --}}
         <div class="{{#if inEditMode}}tw-ring-1 tw-ring-[color:var(--wh40k-accent-gold)]{{/if}}">
