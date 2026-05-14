@@ -56,8 +56,8 @@ function packPrefixForActor(gameSystem: string | undefined): string {
 
 export async function backfillOriginPathUuids(): Promise<void> {
     if (!uuidNameCache.isReady()) return;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors typed loosely by fvtt-types
-    const actors = Array.from((game.actors ?? []) as unknown as Iterable<ActorLike>);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors is a Foundry WorldCollection typed loosely by fvtt-types; narrowing to ActorLike shapes the surface we read on the next pass
+    const actors = Array.from(game.actors as unknown as Iterable<ActorLike>);
 
     for (const actor of actors) {
         if (actor.type !== 'character') continue;
@@ -81,6 +81,7 @@ export async function backfillOriginPathUuids(): Promise<void> {
         if (Object.keys(updates).length === 0) continue;
         if (typeof actor.update === 'function') {
             try {
+                // eslint-disable-next-line no-await-in-loop -- sequential actor updates avoid race against Foundry's actor-document write queue
                 await actor.update(updates);
             } catch (err) {
                 console.warn('[wh40k-rpg] originPath UUID backfill: actor update failed', err);

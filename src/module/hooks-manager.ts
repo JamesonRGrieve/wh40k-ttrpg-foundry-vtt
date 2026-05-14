@@ -71,8 +71,6 @@ import {
 import * as npcApplications from './applications/npc/_module.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { resyncWorldFromCompendiums } from './compendium-resync.ts';
-import { uuidNameCache } from './utils/uuid-name-cache.ts';
-import { backfillOriginPathUuids } from './utils/origin-path-uuid-backfill.ts';
 import type { WH40KSystemConfig } from './config.ts';
 import { SYSTEM_ID } from './constants.ts';
 import * as dataModels from './data/_module.ts';
@@ -95,7 +93,9 @@ import { DHTourMain } from './tours/main-tour.ts';
 import { TransactionManager } from './transactions/transaction-manager.ts';
 import type { WH40KGameSystem } from './types/global.d.ts';
 import { isConvertibleCharacterActorType } from './utils/actor-system-converter.ts';
+import { backfillOriginPathUuids } from './utils/origin-path-uuid-backfill.ts';
 import { RollTableUtils } from './utils/roll-table-utils.ts';
+import { uuidNameCache } from './utils/uuid-name-cache.ts';
 import { checkAndMigrateWorld } from './wh40k-rpg-migrations.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
@@ -148,13 +148,13 @@ export class HooksManager {
         // Keep the UUID → display-name cache warm as world docs change.
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry document hook payloads carry framework-typed loose shapes
         const onDocChange = (doc: { uuid?: string; name?: string }): void => {
-            if (typeof doc?.uuid === 'string' && typeof doc?.name === 'string') {
+            if (typeof doc.uuid === 'string' && typeof doc.name === 'string') {
                 uuidNameCache.set(doc.uuid, doc.name);
             }
         };
         // eslint-disable-next-line no-restricted-syntax -- boundary: see above
         const onDocDelete = (doc: { uuid?: string }): void => {
-            if (typeof doc?.uuid === 'string') uuidNameCache.remove(doc.uuid);
+            if (typeof doc.uuid === 'string') uuidNameCache.remove(doc.uuid);
         };
         for (const docType of ['Item', 'Actor', 'JournalEntry', 'RollTable'] as const) {
             hooksOn(`create${docType}`, onDocChange);

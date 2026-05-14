@@ -878,6 +878,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         return { valid: unmet.length === 0, unmet };
     }
 
+    // eslint-disable-next-line complexity -- existing complex aggregation across psychic-power tree branching; refactor tracked separately
     async #preparePsychic(_systemConfig: AptitudeBasedSystemConfig): Promise<PreparedPsychicPanel> {
         const available = getAvailableXP(this.actor);
         const gameSystem = this.#getGameSystemId();
@@ -932,6 +933,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const powers: PreparedPsychicPower[] = [];
         for (const entry of rawEntries) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: entries here are raw index/document objects with loose Foundry typing; `?? {}` covers the case where the index entry omits the system block
             const entrySys = entry.system ?? {};
             const prCost = entrySys.prCost ?? 1;
             // Heuristic XP cost: max(100, 200 × prCost). Powers in DH2 core range 100-600 XP.

@@ -224,6 +224,8 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      */
     async toChatSpecialUse(index: number): Promise<ChatMessage | null | undefined> {
         const entry = this.specialUses[index];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: regular tsconfig types entry as defined, strict tsconfig flags possibly-undefined; guard satisfies both
+        if (entry === undefined) return undefined;
         const parent = this.parent as { id: string; name: string };
 
         const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/skill-card.hbs', {

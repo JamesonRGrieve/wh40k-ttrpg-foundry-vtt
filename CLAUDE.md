@@ -411,6 +411,11 @@ See `src/module/data/actor/templates/creature.ts`.
 8. **Class names** use `.wh40k-{component-abbreviation}-{element}--{modifier}` — generic `.wh40k-` classes collide across unrelated components, so include the component abbreviation (e.g., `.wh40k-hdr-name`, not `.wh40k-name`).
 9. **Foundry V14 `SystemDataModel.cleanData`** must pass `_state` to `super` or partial cleaning breaks. See migration history before touching `cleanData` overrides.
 10. **Foundry V14 `registerSheet`** receives factory-returned anonymous classes that all get `name=""` and collide. Use `Object.defineProperty` to set the class name explicitly.
+11. **Compendium references are UUID-primary.** Talent / trait / skill grants, prerequisites, originPath steps, and description-text references store the Foundry UUID (`Compendium.wh40k-rpg.<pack>.<type>.<id>`); display names are computed at render time. Three resolution paths, in order of preference:
+    - **Structured fields** (DataModel slots): store the UUID, read the display name with `uuidNameCache.getName(uuid)` from `src/module/utils/uuid-name-cache.ts`, or `{{uuid-name uuid}}` in Handlebars. Each name-based reference field has a parallel `…Uuid` slot during the migration window — populate the UUID slot and let the legacy name field become read-only display.
+    - **Inline freeform text**: embed `{{Compendium.wh40k-rpg.<pack>.<type>.<id>}}` tokens; expand via `uuidNameCache.expandTemplates(text)` or the `{{uuid-expand text}}` Handlebars helper.
+    - **Rich-text / description HTML**: use Foundry's native `@UUID[Compendium.wh40k-rpg.<pack>.<type>.<id>]` syntax. The custom `@Quality[…]` / `@Property[…]` / `@Condition[…]` enrichers were removed in favor of native `@UUID[…]`.
+    Tooling: `pnpm packs:audit` rebuilds `.compendium-uuid-index.json`; `scripts/migrate-refs-to-uuid.mjs` resolves legacy name refs in compendium JSON. Per-system scoping is mandatory — `Dodge` exists in six systems with different UUIDs; lookups must scope by the actor / item's owning game system (pack prefix `dh1` / `dh2` / `bc` / `dw` / `ow` / `rt`).
 
 ---
 
