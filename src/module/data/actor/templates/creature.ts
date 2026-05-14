@@ -1006,14 +1006,19 @@ export default class CreatureTemplate extends CommonTemplate {
 
     /**
      * Prepare fatigue threshold.
-     * Per core rules: threshold = Toughness Bonus.
-     * Characters can take TB levels of fatigue before collapsing.
+     * Per core rules: threshold = Toughness Bonus. We treat that as the default
+     * floor — if the stored `fatigue.max` is unset (0), derive it from TB so
+     * new actors come up with a sensible value. A non-zero stored value is a
+     * deliberate user override (talents, homebrew, special traits) and is
+     * preserved so the field remains editable on the sheet.
      * Any fatigue imposes -10 to all Tests.
      * @protected
      */
     _prepareFatigue(): void {
-        const toughness = this.characteristics.toughness;
-        this.fatigue.max = toughness.bonus;
+        if (this.fatigue.max <= 0) {
+            const toughness = this.characteristics.toughness;
+            this.fatigue.max = toughness.bonus;
+        }
     }
 
     /**
