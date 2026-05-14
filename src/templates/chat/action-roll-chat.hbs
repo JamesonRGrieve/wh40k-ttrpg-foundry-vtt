@@ -127,11 +127,17 @@
                         <div class="tw-flex tw-gap-1.5">
                             <button class="roll-control__refund tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold hover:tw-shadow-[0_0_12px_var(--wh40k-gold-glow)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
                                 <span class="material-icons tw-text-[14px]">deblur</span>
-                                <span>Refund</span>
+                                <span>{{localize "WH40K.FateRefund"}}</span>
                             </button>
+                            {{#if success}}
+                                <button class="roll-control__fate-add-dos tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-powers-bg)] tw-border tw-border-[var(--wh40k-powers-border)] tw-rounded-md tw-text-[var(--wh40k-powers-secondary)] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(106,32,144,0.2)] hover:tw-border-[var(--wh40k-powers-primary)] hover:tw-shadow-[0_0_12px_rgba(106,32,144,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
+                                    <span class="material-icons tw-text-[14px]">add_circle</span>
+                                    <span>{{localize "WH40K.FateAddDoS"}}</span>
+                                </button>
+                            {{/if}}
                             <button class="roll-control__fate-reroll tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-powers-bg)] tw-border tw-border-[var(--wh40k-powers-border)] tw-rounded-md tw-text-[var(--wh40k-powers-secondary)] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(106,32,144,0.2)] hover:tw-border-[var(--wh40k-powers-primary)] hover:tw-shadow-[0_0_12px_rgba(106,32,144,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
                                 <span class="material-icons tw-text-[14px]">casino</span>
-                                <span>Re-roll</span>
+                                <span>{{localize "WH40K.FateReroll"}}</span>
                             </button>
                         </div>
                     </div>

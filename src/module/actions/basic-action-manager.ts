@@ -5,6 +5,7 @@ import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts
 import { Hit } from '../rolls/damage-data.ts';
 import { uuid, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
 
 type CanvasToken = foundry.canvas.placeables.Token;
@@ -34,6 +35,11 @@ export class BasicActionManager {
             html.querySelectorAll('.roll-control__fate-reroll').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._fateReroll(ev);
+                });
+            });
+            html.querySelectorAll('.roll-control__fate-add-dos').forEach((el) => {
+                el.addEventListener('click', (ev: Event) => {
+                    void this._fateAddDoS(ev);
                 });
             });
             html.querySelectorAll('.roll-control__assign-damage').forEach((el) => {
@@ -164,24 +170,27 @@ export class BasicActionManager {
         const actionData = this.getActionData(rollId);
 
         if (actionData == null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn(`Action data expired. Unable to perform action.`);
+            ui.notifications.warn(game.i18n.localize('WH40K.FateActionExpired'));
+            return;
+        }
+
+        if (!WH40KSettings.isMultipleFateBurnAllowed() && (actionData.fateUses.reroll || actionData.fateUses.addDoS)) {
+            ui.notifications.warn(game.i18n.localize('WH40K.FateAlreadySpent'));
             return;
         }
 
         const sourceActor = actionData.rollData.sourceActor;
         const sourceFate = (sourceActor?.system as { fate?: { value?: number } } | undefined)?.fate?.value ?? 0;
         if (sourceFate <= 0) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: hardcoded fallback; i18n key migration tracked separately
-            ui.notifications.warn(`Actor does not have enough fate points!`);
+            ui.notifications.warn(game.i18n.localize('WH40K.FateInsufficient'));
             return;
         }
 
         const confirmed = await ConfirmationDialog.confirm({
-            title: 'Confirm Re-Roll',
-            content: 'Are you sure you would like to use a fate point to re-roll action?',
-            confirmLabel: 'Re-Roll',
-            cancelLabel: 'Cancel',
+            title: game.i18n.localize('WH40K.FateRerollConfirmTitle'),
+            content: game.i18n.localize('WH40K.FateRerollConfirmContent'),
+            confirmLabel: game.i18n.localize('WH40K.FateReroll'),
+            cancelLabel: game.i18n.localize('WH40K.Cancel'),
         });
 
         if (confirmed) {
@@ -190,13 +199,71 @@ export class BasicActionManager {
             // Use a FP
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- spendFate is a system extension; may not exist on all WH40KBaseActorDocument subtypes
             await sourceActor?.spendFate?.();
+            actionData.fateUses.reroll = true;
             // Refund Initial Resources
             await actionData.refundResources();
-            // Reset
+            // Reset (preserves fateUses by design — single-spend lockout survives the reroll)
             actionData.reset();
             // Run it back
             await actionData.performActionAndSendToChat();
         }
+    }
+
+    async _fateAddDoS(event: Event): Promise<void> {
+        event.preventDefault();
+        const btn = event.currentTarget as HTMLElement;
+        const rollId = btn.dataset['rollId'];
+        const actionData = this.getActionData(rollId);
+
+        if (actionData == null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.FateActionExpired'));
+            return;
+        }
+
+        if (!actionData.rollData.success) {
+            ui.notifications.warn(game.i18n.localize('WH40K.FateAddDoSNotSuccess'));
+            return;
+        }
+
+        if (!WH40KSettings.isMultipleFateBurnAllowed() && (actionData.fateUses.reroll || actionData.fateUses.addDoS)) {
+            ui.notifications.warn(game.i18n.localize('WH40K.FateAlreadySpent'));
+            return;
+        }
+
+        const sourceActor = actionData.rollData.sourceActor;
+        const sourceFate = (sourceActor?.system as { fate?: { value?: number } } | undefined)?.fate?.value ?? 0;
+        if (sourceFate <= 0) {
+            ui.notifications.warn(game.i18n.localize('WH40K.FateInsufficient'));
+            return;
+        }
+
+        const confirmed = await ConfirmationDialog.confirm({
+            title: game.i18n.localize('WH40K.FateAddDoSConfirmTitle'),
+            content: game.i18n.localize('WH40K.FateAddDoSConfirmContent'),
+            confirmLabel: game.i18n.localize('WH40K.FateAddDoS'),
+            cancelLabel: game.i18n.localize('WH40K.Cancel'),
+        });
+        if (!confirmed) return;
+
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- spendFate is a system extension; may not exist on all WH40KBaseActorDocument subtypes
+        await sourceActor?.spendFate?.();
+        actionData.fateUses.addDoS = true;
+        actionData.rollData.dos += 1;
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: programmatic actor-name fallback, not a player-facing label
+        const actorName = sourceActor?.name ?? 'Actor';
+        const announcement = game.i18n.format('WH40K.FateAddDoSChat', {
+            name: actorName,
+            dos: String(actionData.rollData.dos),
+        });
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped payload; Record<string, unknown> is the correct boundary type
+        const chatData: Record<string, unknown> = {
+            user: game.user.id,
+            rollMode: game.settings.get('core', 'rollMode'),
+            content: `<div class="wh40k-rpg tw-font-ui tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-[var(--wh40k-powers-border)] tw-bg-[var(--wh40k-powers-bg)] tw-text-[var(--wh40k-powers-secondary)] tw-text-[0.85rem]">${announcement}</div>`,
+        };
+        applyRollModeWhispers(chatData);
+        await ChatMessage.create(chatData);
     }
 
     async _assignDamage(event: Event): Promise<void> {
