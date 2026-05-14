@@ -80,6 +80,19 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
         };
     }
 
+    /**
+     * DH2e: psyker unlock is the "Psyker" elite advance (step='elite').
+     * Compendium item: dh2-core-stats-elite-advances/psyker.
+     */
+    override isPsyker(actor: WH40KBaseActor): boolean {
+        return actor.items.some(
+            (i) =>
+                i.isOriginPath &&
+                (i.system as { step?: string }).step === 'elite' &&
+                i.name.toLowerCase() === 'psyker',
+        );
+    }
+
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
         const get = (key: string): string | number => this.readOriginPathField(actor, key);
         return [
