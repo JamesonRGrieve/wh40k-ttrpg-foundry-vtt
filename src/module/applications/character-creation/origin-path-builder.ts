@@ -2593,6 +2593,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const totalSteps = this.systemConfig.coreSteps.length + (this.systemConfig.optionalStep ? 1 : 0) + 1;
         const stepsCount = this.selections.size + (this.lineageSelection ? 1 : 0) + (this._hasAssignedCharacteristics() ? 1 : 0);
         const coreStepsComplete = this.selections.size >= this.systemConfig.coreSteps.length;
+        // DH2e Stage 4 Armory step (core p.81) surfaces a cap of
+        // floor(Influence/10) Scarce-or-better picks. The campaign also runs
+        // a homebrew interpretation in which the Armory step is skipped
+        // entirely (Influence is spent in play instead), so the cap is for
+        // display only and commit is never gated on it. The equipment step
+        // UI continues to enforce per-toggle caps via _toggleEquipmentByUuid.
+        const equipmentAvailable = this.systemConfig.equipmentStep !== undefined;
+        const equipmentMaxPicks = equipmentAvailable ? this._getInfluenceBonus() : 0;
+        const equipmentRequired = false;
+        const equipmentComplete = true;
         let pendingChoices = 0;
         let pendingRolls = 0;
 
@@ -2631,9 +2641,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             totalSteps: totalSteps,
             stepsComplete: coreStepsComplete,
             choicesComplete: pendingChoices === 0,
+            equipmentRequired,
+            equipmentComplete,
+            equipmentMaxPicks,
             pendingChoices: pendingChoices,
             pendingRolls: pendingRolls,
-            canCommit: coreStepsComplete && pendingChoices === 0,
+            canCommit: coreStepsComplete && pendingChoices === 0 && equipmentComplete,
         };
     }
 
