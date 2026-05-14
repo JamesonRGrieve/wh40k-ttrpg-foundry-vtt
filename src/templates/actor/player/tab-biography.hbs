@@ -21,10 +21,11 @@
             </div>
         </div>
         
-        {{!-- Connections Panel --}}
+        {{!-- Contacts & Adversaries Panel (narrative relationships; Peer/Enemy/Hatred Talents live on Talents tab) --}}
             <div class="wh40k-panel">
                 <div class="wh40k-panel-header">
-                    <span class="wh40k-panel-title"><i class="fas fa-users"></i> Connections</span>
+                    <span class="wh40k-panel-title"><i class="fas fa-users"></i> {{localize "WH40K.Sheet.Biography.Contacts"}} &amp; {{localize "WH40K.Sheet.Biography.Adversaries"}}</span>
+                    <i class="fas fa-circle-info tw-ml-1 tw-text-xs tw-text-[color:var(--wh40k-text-muted)] tw-cursor-help" data-tooltip="{{localize "WH40K.Sheet.Biography.ConnectionsHint"}}" aria-label="{{localize "WH40K.Sheet.Biography.ConnectionsHint"}}"></i>
                 </div>
                 <div class="wh40k-panel-body">
                     <div class="tw-mb-2 last:tw-mb-0">
@@ -63,7 +64,7 @@
                     </div>
                 </div>
             </div>
-        {{!-- End of Connections Panel --}}
+        {{!-- End of Contacts & Adversaries Panel --}}
 
         </div>
     {{!-- End of Left Column --}}
