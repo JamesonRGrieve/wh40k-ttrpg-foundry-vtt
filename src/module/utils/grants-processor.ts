@@ -121,6 +121,22 @@ export const GRANT_MODE = {
 };
 
 /**
+ * Read the compendium-source UUID Foundry writes when an item is imported
+ * from a pack. V14 lives at `_stats.compendiumSource`; some legacy world
+ * data still has it at `flags.core.sourceId`. UUID-first dedup compares
+ * grant.uuid against this value so renames in the compendium don't break
+ * embedded-item identity.
+ */
+function readCompendiumSource(item: WH40KItem): string | null {
+    const stats = (item as unknown as { _stats?: { compendiumSource?: unknown } })._stats;
+    const fromStats = stats?.compendiumSource;
+    if (typeof fromStats === 'string' && fromStats.length > 0) return fromStats;
+    const flags = (item as unknown as { flags?: { core?: { sourceId?: unknown } } }).flags;
+    const fromFlag = flags?.core?.sourceId;
+    return typeof fromFlag === 'string' && fromFlag.length > 0 ? fromFlag : null;
+}
+
+/**
  * Context object for grant processing
  */
 class GrantContext {
@@ -617,13 +633,20 @@ export class GrantsProcessor {
     static async _processTalentGrant(talentGrant: Grant, context: GrantContext): Promise<void> {
         const grantSpec = talentGrant.specialization ?? '';
         const hasGrantSpec = grantSpec !== '';
-        // Check for duplicates
-        const existing = context.actor.items.find(
-            (i) =>
-                i.type === 'talent' &&
+        // Check for duplicates — prefer UUID match against compendiumSource;
+        // fall back to name match for legacy data without a populated UUID
+        // and for items the actor never resync'd back to a compendium source.
+        const existing = context.actor.items.find((i) => {
+            if (i.type !== 'talent') return false;
+            const sourceUuid = readCompendiumSource(i);
+            if (talentGrant.uuid && sourceUuid && sourceUuid === talentGrant.uuid) {
+                return !hasGrantSpec || (i.system as { specialization?: string } | undefined)?.specialization === grantSpec;
+            }
+            return (
                 i.name === talentGrant.name &&
-                (!hasGrantSpec || (i.system as { specialization?: string } | undefined)?.specialization === grantSpec),
-        );
+                (!hasGrantSpec || (i.system as { specialization?: string } | undefined)?.specialization === grantSpec)
+            );
+        });
 
         if (existing) {
             game.wh40k.log(`Talent ${talentGrant.name} already exists, skipping grant`);
@@ -725,8 +748,14 @@ export class GrantsProcessor {
      * @private
      */
     static async _processTraitGrant(traitGrant: Grant, context: GrantContext): Promise<void> {
-        // Check for duplicates (stackable traits can increase level)
-        const existing = context.actor.items.find((i) => i.type === 'trait' && i.name === traitGrant.name);
+        // Check for duplicates — UUID-first via compendiumSource, with name
+        // fallback for legacy data.
+        const existing = context.actor.items.find((i) => {
+            if (i.type !== 'trait') return false;
+            const sourceUuid = readCompendiumSource(i);
+            if (traitGrant.uuid && sourceUuid && sourceUuid === traitGrant.uuid) return true;
+            return i.name === traitGrant.name;
+        });
 
         const existingSys = existing ? (existing.system as { stackable?: boolean; level?: number } | undefined) : undefined;
         if (existing && existingSys?.stackable === true && traitGrant.level !== undefined) {
