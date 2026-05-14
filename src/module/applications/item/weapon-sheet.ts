@@ -194,7 +194,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             const match = /-(\d+)$/.exec(q);
             const level = match?.[1] !== undefined ? parseInt(match[1], 10) : null;
 
-            // Get localized label using CONFIG helper (CONFIG.wh40k not CONFIG.WH40K)
+            // Get localized label using CONFIG helper (CONFIG.wh40k not CONFIG.wh40k)
             const label = CONFIG.wh40k.getQualityLabel(q, level);
 
             // Get definition for description
@@ -237,13 +237,14 @@ export default class WeaponSheet extends ContainerItemSheet {
         // Loaded ammunition data
         context['hasLoadedAmmo'] = system.hasLoadedAmmo;
         context['loadedAmmoLabel'] = system.loadedAmmoLabel;
-        if (system.hasLoadedAmmo) {
+        const loadedAmmo = system.loadedAmmo;
+        if (system.hasLoadedAmmo && loadedAmmo !== undefined) {
             context['loadedAmmoData'] = {
-                name: system.loadedAmmo.name,
-                uuid: system.loadedAmmo.uuid,
-                modifiers: system.loadedAmmo.modifiers,
-                addedQualities: Array.from(system.loadedAmmo.addedQualities),
-                removedQualities: Array.from(system.loadedAmmo.removedQualities),
+                name: loadedAmmo.name,
+                uuid: loadedAmmo.uuid,
+                modifiers: loadedAmmo.modifiers,
+                addedQualities: Array.from(loadedAmmo.addedQualities),
+                removedQualities: Array.from(loadedAmmo.removedQualities),
             };
         }
 

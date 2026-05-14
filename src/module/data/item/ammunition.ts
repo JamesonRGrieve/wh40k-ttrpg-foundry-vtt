@@ -145,8 +145,8 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         if (!this.weaponTypes.size) return game.i18n.localize('WH40K.Ammunition.AllWeapons');
         return Array.from(this.weaponTypes)
             .map((t) => {
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: CONFIG.WH40K is populated at Foundry runtime; optional chaining guards against missing registry during early init or tests
-                const label = CONFIG.WH40K?.weaponTypes?.[t]?.label;
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: CONFIG.wh40k is populated at Foundry runtime; optional chaining guards against missing registry during early init or tests
+                const label = CONFIG.wh40k?.weaponTypes?.[t]?.label;
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- label type may appear non-nullable after the optional chain but can be undefined at runtime
                 return label !== undefined ? game.i18n.localize(label) : t;
             })

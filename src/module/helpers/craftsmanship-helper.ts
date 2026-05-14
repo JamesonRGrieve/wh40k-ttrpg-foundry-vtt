@@ -4,7 +4,7 @@
  * Centralized utility for applying craftsmanship modifiers and qualities
  * across all item types (weapons, armour, gear, force fields).
  *
- * Uses CONFIG.WH40K.craftsmanshipRules as single source of truth.
+ * Uses CONFIG.wh40k.craftsmanshipRules as single source of truth.
  */
 
 type Craftsmanship = string;

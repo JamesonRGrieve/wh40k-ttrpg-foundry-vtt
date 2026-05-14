@@ -145,7 +145,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @type {string}
      */
     get categoryLabel(): string {
-        const config = CONFIG.WH40K.gearCategories[this.category] as { label?: string; icon?: string } | undefined;
+        const config = CONFIG.wh40k.gearCategories[this.category] as { label?: string; icon?: string } | undefined;
         if (config?.label !== undefined && config.label.length > 0) return game.i18n.localize(config.label);
         return game.i18n.localize(`WH40K.GearCategory.${this.category.capitalize()}`);
     }
@@ -155,7 +155,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @type {string}
      */
     get categoryIcon(): string {
-        const config = CONFIG.WH40K.gearCategories[this.category] as { icon?: string } | undefined;
+        const config = CONFIG.wh40k.gearCategories[this.category] as { icon?: string } | undefined;
         return config?.icon ?? 'fa-box';
     }
 
