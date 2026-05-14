@@ -112,6 +112,19 @@ function buildLookupKey(type: string, name: string): string {
 }
 
 /**
+ * Foundry's `DocumentUUIDField` rejects update payloads whose terminal id
+ * segment is not exactly 16 alphanumeric characters (see `isValidId` in
+ * `foundry.mjs` — the regex is `/^[a-zA-Z0-9]{16}$/`). If we hand it a
+ * malformed UUID via `_stats.compendiumSource`, the whole
+ * `updateEmbeddedDocuments` call rejects and the resync aborts mid-actor,
+ * stranding every later actor unsynced. Validate before writing.
+ */
+const FOUNDRY_ID_RE = /^[a-zA-Z0-9]{16}$/;
+function isValidFoundryId(id: string): boolean {
+    return FOUNDRY_ID_RE.test(id);
+}
+
+/**
  * Build a per-gameSystem `(type|name) → compendium UUID` map by enumerating
  * every Item pack whose name starts with `<gameSystem>-`. Cached across actors.
  */
@@ -131,6 +144,10 @@ async function getNameIndexFor(gameSystem: string, cache: Map<string, Map<string
     for (const { pack, index } of indexes) {
         for (const entry of index) {
             if (!isIndexEntry(entry)) continue;
+            if (!isValidFoundryId(entry._id)) {
+                console.warn(`[wh40k-rpg] compendium resync: skipping pack entry with invalid id "${entry._id}" in ${pack.metadata.id} (name="${entry.name}")`);
+                continue;
+            }
             const key = buildLookupKey(entry.type, entry.name);
             if (!lookup.has(key)) {
                 lookup.set(key, `Compendium.${pack.metadata.id}.Item.${entry._id}`);
@@ -281,14 +298,31 @@ async function processActor(
         // eslint-disable-next-line no-restricted-syntax -- boundary: patch is a Foundry update payload with open-ended fields
         const finalPatch: Record<string, unknown> = patch ?? { _id: item.id };
         if (backfillNeeded) {
-            writeProperty(finalPatch, '_stats.compendiumSource', uuid);
-            stats.backfilled += 1;
+            // Defensive: even though getNameIndexFor filters bad ids, validate the
+            // terminal segment here so a future code path that introduces a different
+            // UUID source cannot crash the resync.
+            const tail = uuid.split('.').at(-1) ?? '';
+            if (!isValidFoundryId(tail)) {
+                console.warn(
+                    `[wh40k-rpg] compendium resync: refusing to backfill _stats.compendiumSource with malformed uuid "${uuid}" on item "${item.name}" of actor "${actor.name}"`,
+                );
+                if (patch === null) continue;
+            } else {
+                writeProperty(finalPatch, '_stats.compendiumSource', uuid);
+                stats.backfilled += 1;
+            }
         }
         updates.push(finalPatch);
     }
 
     if (updates.length > 0) {
-        await actor.updateEmbeddedDocuments('Item', updates);
+        try {
+            await actor.updateEmbeddedDocuments('Item', updates);
+        } catch (err) {
+            // One malformed item must not abort the whole resync. Log and move on.
+            console.warn(`[wh40k-rpg] compendium resync: updateEmbeddedDocuments failed for actor "${actor.name}"; skipping this actor's batch.`, err);
+            return { touched: 0, stats };
+        }
     }
     return { touched: updates.length, stats };
 }

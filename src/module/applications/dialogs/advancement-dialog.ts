@@ -368,8 +368,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             { id: 'talents', label: 'WH40K.Advancement.Tab.Talents', icon: 'fa-star', active: this.#activeTab === 'talents' },
         ];
         if (systemConfig?.usesAptitudes === true) {
-            const psyRating = system.psy?.rating ?? 0;
-            if (psyRating > 0) {
+            // Psychic Powers tab is gated on the per-system psyker unlock
+            // (DH2: 'Psyker' elite advance; BC: 'Psyker' archetype; OW:
+            // 'Sanctioned Psyker' speciality). Players take that unlock via
+            // the Traits tab; once owned, the Psychic Powers tab appears on
+            // re-render.
+            if (systemConfig.isPsyker(this.actor)) {
                 tabs.push({ id: 'psychic', label: 'WH40K.Advancement.Tab.Psychic', icon: 'fa-brain', active: this.#activeTab === 'psychic' });
             }
             tabs.push({ id: 'traits', label: 'WH40K.Advancement.Tab.Traits', icon: 'fa-dna', active: this.#activeTab === 'traits' });
@@ -389,11 +393,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             context.talents = await this.#prepareAptitudeTalents(aptitudeConfig);
         }
 
-        // Psychic Powers tab — psykers only
+        // Psychic Powers tab — gated on the per-system psyker unlock item
+        // (see tabs block above for details). Falls back to false when no
+        // aptitude-based system is active so the template's "Take the Psyker
+        // elite advance to unlock" message stays correct.
         if (systemConfig?.usesAptitudes === true) {
             const aptitudeConfig = this.#getAptitudeConfig(systemConfig);
-            const psyRating = system.psy?.rating ?? 0;
-            context['isPsyker'] = psyRating > 0;
+            context['isPsyker'] = systemConfig.isPsyker(this.actor);
             if (context['isPsyker'] === true && aptitudeConfig !== null) {
                 context['psychic'] = await this.#preparePsychic(aptitudeConfig);
             }

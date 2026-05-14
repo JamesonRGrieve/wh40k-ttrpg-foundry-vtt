@@ -109,6 +109,21 @@ export abstract class BaseSystemConfig {
      */
     abstract getAvailableAdvances(actor: WH40KBaseActor): AdvanceOption[];
 
+    // ── Psyker Gating ────────────────────────────────────────────
+
+    /**
+     * Whether this character is a psyker in the current system.
+     *
+     * Drives visibility of the Psychic Powers section in the advancement
+     * dialog. Default returns false; aptitude-based systems override to
+     * check ownership of the system-specific psyker-unlock origin path
+     * item (DH2: 'Psyker' elite advance; BC: 'Psyker' archetype; OW:
+     * 'Sanctioned Psyker' speciality).
+     */
+    isPsyker(_actor: WH40KBaseActor): boolean {
+        return false;
+    }
+
     // ── Skill Visibility ─────────────────────────────────────────
 
     /**

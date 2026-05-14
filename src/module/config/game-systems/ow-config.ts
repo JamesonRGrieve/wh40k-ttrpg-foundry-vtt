@@ -54,6 +54,19 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
         ];
     }
 
+    /**
+     * OW: psyker unlock is the "Sanctioned Psyker" speciality (step='speciality').
+     * Compendium item: ow-core-specialities/sanctioned-psyker.
+     */
+    override isPsyker(actor: WH40KBaseActor): boolean {
+        return actor.items.some(
+            (i) =>
+                i.isOriginPath &&
+                (i.system as { step?: string }).step === 'speciality' &&
+                i.name.toLowerCase() === 'sanctioned psyker',
+        );
+    }
+
     /** OW characteristic aptitude pairs — same as DH2e */
     getCharacteristicAptitudes(charKey: string): [string, string] {
         const map: Record<string, [string, string]> = {

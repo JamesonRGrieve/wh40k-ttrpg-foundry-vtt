@@ -53,6 +53,19 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
         };
     }
 
+    /**
+     * BC: psyker unlock is the "Psyker" archetype (step='archetype').
+     * Compendium item: bc-core-archetypes/psyker.
+     */
+    override isPsyker(actor: WH40KBaseActor): boolean {
+        return actor.items.some(
+            (i) =>
+                i.isOriginPath &&
+                (i.system as { step?: string }).step === 'archetype' &&
+                i.name.toLowerCase() === 'psyker',
+        );
+    }
+
     getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
         const originPath = (actor.system['originPath'] as Record<string, string | number> | undefined) ?? {};
         return [
