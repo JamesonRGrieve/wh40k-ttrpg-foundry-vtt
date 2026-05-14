@@ -162,6 +162,65 @@
                 </div>
             </section>
 
+            {{!-- Special Uses (structured, individually rollable) — issue #50 --}}
+            <section class="tw-bg-black/20 tw-border tw-border-white/[0.08] tw-rounded-md tw-p-3">
+                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-pb-2 tw-mb-3 tw-border-b tw-border-white/10">
+                    <i class="fas fa-list-check tw-text-[var(--wh40k-accent-info)]"></i> {{localize "WH40K.SpecialUse.Header"}}
+                    {{#if canEdit}}
+                    <button type="button" class="tw-ml-auto tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-bg-black/30 tw-border tw-border-white/10 hover:tw-bg-white/[0.05]" data-action="specialUseAdd" title="{{localize "WH40K.SpecialUse.Add"}}">
+                        <i class="fas fa-plus"></i> {{localize "WH40K.SpecialUse.Add"}}
+                    </button>
+                    {{/if}}
+                </h3>
+
+                {{#if item.system.specialUses.length}}
+                <div class="tw-flex tw-flex-col tw-gap-2">
+                    {{#each item.system.specialUses}}
+                    <div class="tw-bg-black/30 tw-border tw-border-white/[0.06] tw-rounded-sm tw-p-2 tw-flex tw-flex-col tw-gap-2">
+                        {{#if ../inEditMode}}
+                        <div class="tw-grid tw-gap-2" style="grid-template-columns: 2fr 1fr 1fr auto;">
+                            <input type="text" name="system.specialUses.{{@index}}.name" value="{{this.name}}" placeholder="{{localize "WH40K.SpecialUse.NamePlaceholder"}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+                            <input type="number" name="system.specialUses.{{@index}}.modifier" value="{{this.modifier}}" placeholder="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" title="{{localize "WH40K.SpecialUse.Modifier"}}" />
+                            <input type="text" name="system.specialUses.{{@index}}.difficulty" value="{{this.difficulty}}" placeholder="{{localize "WH40K.SpecialUse.DifficultyPlaceholder"}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+                            <button type="button" class="tw-px-2 tw-rounded-sm tw-text-xs tw-bg-black/30 tw-border tw-border-crimson/40 tw-text-crimson hover:tw-bg-crimson/10" data-action="specialUseDelete" data-index="{{@index}}" title="{{localize "WH40K.SpecialUse.Delete"}}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="editor tw-text-sm" data-edit="system.specialUses.{{@index}}.description">
+                            {{{this.description}}}
+                        </div>
+                        {{else}}
+                        <div class="tw-flex tw-items-center tw-gap-2 tw-flex-wrap">
+                            <span class="tw-font-semibold tw-text-sm tw-text-[var(--wh40k-accent-info)]">{{this.name}}</span>
+                            {{#if this.difficulty}}
+                            <span class="tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-bg-[rgba(230,126,34,0.15)] tw-border tw-border-[rgba(230,126,34,0.4)] tw-text-[#e67e22]">{{this.difficulty}}</span>
+                            {{/if}}
+                            <span class="tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-font-bold {{#if (gt this.modifier 0)}}tw-text-success{{else if (lt this.modifier 0)}}tw-text-crimson{{else}}tw-opacity-70{{/if}}">
+                                {{#if (gt this.modifier 0)}}+{{/if}}{{this.modifier}}
+                            </span>
+                            <div class="tw-ml-auto tw-flex tw-gap-1">
+                                <button type="button" class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-bg-black/30 tw-border tw-border-white/10 hover:tw-bg-white/[0.05]" data-action="specialUseRoll" data-index="{{@index}}" title="{{localize "WH40K.SpecialUse.Roll"}}">
+                                    <i class="fas fa-dice-d20"></i> {{localize "WH40K.SpecialUse.Roll"}}
+                                </button>
+                                <button type="button" class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs tw-bg-black/30 tw-border tw-border-white/10 hover:tw-bg-white/[0.05]" data-action="specialUseChat" data-index="{{@index}}" title="{{localize "WH40K.SpecialUse.SendToChat"}}">
+                                    <i class="fas fa-comment"></i> {{localize "WH40K.SpecialUse.SendToChat"}}
+                                </button>
+                            </div>
+                        </div>
+                        {{#if this.description}}
+                        <div class="tw-text-sm tw-opacity-90">{{{this.description}}}</div>
+                        {{/if}}
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                </div>
+                {{else}}
+                <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-italic tw-opacity-70 tw-p-2">
+                    <i class="fas fa-info-circle"></i> {{localize "WH40K.SpecialUse.None"}}
+                </div>
+                {{/if}}
+            </section>
+
             {{!-- Difficulty Examples Table --}}
             <section class="tw-bg-black/20 tw-border tw-border-white/[0.08] tw-rounded-md tw-p-3">
                 <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-pb-2 tw-mb-3 tw-border-b tw-border-white/10">

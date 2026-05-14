@@ -248,6 +248,18 @@
             "Favorite": "Favorite",
             "Unfavorite": "Unfavorite"
         },
+        "SpecialUse": {
+            "Header": "Special Uses",
+            "Add": "Add Special Use",
+            "Delete": "Remove",
+            "Roll": "Roll",
+            "SendToChat": "Send to Chat",
+            "None": "No special uses defined",
+            "NamePlaceholder": "Use name (e.g., Forbidden Lore: Heresy)",
+            "DifficultyPlaceholder": "Difficulty (e.g., Challenging)",
+            "Modifier": "Modifier",
+            "Difficulty": "Difficulty"
+        },
         "SkillsGranted": "Skills Granted",
         "Talents": "Talents",
         "TalentsGranted": "Talents Granted",
