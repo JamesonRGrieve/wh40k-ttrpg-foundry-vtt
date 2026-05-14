@@ -3,9 +3,9 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 // Allow custom hook names beyond fvtt-types' strict HookConfig keyof constraint.
 type HooksCompat = typeof Hooks & {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Hooks.call accepts arbitrary variadic args; unknown[] is the honest type
-    call(hook: string, ...args: unknown[]): boolean;
+    call: (hook: string, ...args: unknown[]) => boolean;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Hooks.callAll accepts arbitrary variadic args; unknown[] is the honest type
-    callAll(hook: string, ...args: unknown[]): boolean;
+    callAll: (hook: string, ...args: unknown[]) => boolean;
 };
 const HooksExt = Hooks as HooksCompat;
 
