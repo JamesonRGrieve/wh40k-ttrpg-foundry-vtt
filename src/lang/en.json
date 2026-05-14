@@ -878,6 +878,8 @@
             "AllChoicesComplete": "All choices complete",
             "ChoicesPending": "choices pending",
             "RollsPending": "rolls pending",
+            "OpenAdvancementTitle": "Spend Starting Experience",
+            "OpenAdvancementPrompt": "Your Acolyte has {xp} XP to spend on starting advances. Open the Advancement dialog now?",
             "HomeWorldDesc": "Where you were born and raised shapes your fundamental nature",
             "BackgroundDesc": "The organisation or circumstances that trained you before the Inquisition",
             "RoleDesc": "Your specialised function within the warband",
