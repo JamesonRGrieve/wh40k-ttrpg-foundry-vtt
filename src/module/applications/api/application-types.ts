@@ -9,17 +9,17 @@ export type ConstructorOf<TInstance> = new (...args: any[]) => TInstance; // esl
 
 /* eslint-disable no-restricted-syntax -- boundary: ApplicationV2/Foundry interface shapes use unknown for free-form config payloads */
 export interface DialogV2Like {
-    wait(config: Record<string, unknown>): Promise<unknown>;
-    confirm(config: Record<string, unknown>): Promise<boolean>;
-    prompt(config: Record<string, unknown>): Promise<unknown>;
+    wait: (config: Record<string, unknown>) => Promise<unknown>;
+    confirm: (config: Record<string, unknown>) => Promise<boolean>;
+    prompt: (config: Record<string, unknown>) => Promise<unknown>;
 }
 
 export interface TextEditorImplementationLike {
-    enrichHTML(content: string, options?: Record<string, unknown>): Promise<string>;
+    enrichHTML: (content: string, options?: Record<string, unknown>) => Promise<string>;
 }
 
 export interface FoundryApplicationApiLike {
-    HandlebarsApplicationMixin<T extends ApplicationV2Ctor>(base: T): ApplicationV2Ctor;
+    HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => ApplicationV2Ctor;
     DialogV2: DialogV2Like;
 }
 

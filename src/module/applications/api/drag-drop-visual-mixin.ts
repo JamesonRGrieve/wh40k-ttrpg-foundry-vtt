@@ -306,7 +306,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2.prompt typings are V13 vs V14 mixed; opts/result narrowed locally
             const dialog = foundry.applications.api.DialogV2 as unknown as {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 prompt opts vary by version
-                prompt(opts: unknown): Promise<{ quantity: number } | null>;
+                prompt: (opts: unknown) => Promise<{ quantity: number } | null>;
             };
             return dialog.prompt({
                 window: { title: `Split ${item.name}` },
