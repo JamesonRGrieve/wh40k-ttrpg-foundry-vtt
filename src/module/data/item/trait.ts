@@ -17,6 +17,13 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
     declare benefit: string;
     declare level: number;
     declare notes: string;
+    /**
+     * Fear (X) rating per core.md §"Fear" — 0 = no fear test required,
+     * 1–4 = test difficulty tiers, 5+ = roll on Shock table with the X
+     * value as a modifier. Independent of `level` because some non-Fear
+     * traits already use `level` for unrelated tiers.
+     */
+    declare fearRating: number;
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -50,6 +57,9 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
 
             // Level/rating (matching template.json)
             level: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+
+            // Fear (X) — 0 disables, 1+ triggers Fear test on encounter.
+            fearRating: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
