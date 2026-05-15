@@ -163,6 +163,14 @@ export default class CreatureTemplate extends CommonTemplate {
     declare fate: {
         max: number;
         value: number;
+        /**
+         * Burn-fate threshold (core.md §"Fate Threshold"). When a character is
+         * reduced to 0 wounds, burning a Fate Point keeps them alive at the
+         * `threshold` value; below 0 wounds it is consulted to determine the
+         * cheat-death cost. Origin-path grants populate this via the
+         * `fateThreshold` field on the `origin-path` item.
+         */
+        threshold: number;
     };
     declare initiative: {
         characteristic: string;
@@ -395,6 +403,7 @@ export default class CreatureTemplate extends CommonTemplate {
             fate: new SchemaField({
                 max: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 value: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                threshold: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
             }),
 
             initiative: new SchemaField({

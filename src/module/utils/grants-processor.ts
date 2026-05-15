@@ -42,6 +42,7 @@ interface GrantChoiceData {
 interface ItemGrantsShape {
     woundsFormula?: string;
     fateFormula?: string;
+    fateThreshold?: number;
     skills?: Grant[];
     talents?: Grant[];
     traits?: Grant[];
@@ -93,6 +94,12 @@ export interface GrantResult {
     skillUpdates: Record<string, unknown>;
     woundsBonus: number;
     fateBonus: number;
+    /**
+     * Cumulative burn-fate threshold granted by origin-path steps. The
+     * applier writes this into `system.fate.threshold` on the actor so
+     * the cheat-death flow has somewhere to read it from.
+     */
+    fateThresholdBonus: number;
     corruptionBonus: number;
     insanityBonus: number;
     aptitudes: string[];
@@ -167,6 +174,7 @@ class GrantContext {
             skillUpdates: {},
             woundsBonus: 0,
             fateBonus: 0,
+            fateThresholdBonus: 0,
             corruptionBonus: 0,
             insanityBonus: 0,
             aptitudes: [],
@@ -264,6 +272,14 @@ export class GrantsProcessor {
             const max = actorSystem.fate?.max ?? 0;
             updates['system.fate.value'] = current + result.fateBonus;
             updates['system.fate.max'] = max + result.fateBonus;
+        }
+
+        // Apply fate threshold bonus (origin-path `fateThreshold` grant — used
+        // by the burn-fate / cheat-death flow; see creature.ts:fate.threshold).
+        if (result.fateThresholdBonus !== 0) {
+            const actorSystem = actor.system as { fate?: { threshold?: number } };
+            const current = actorSystem.fate?.threshold ?? 0;
+            updates['system.fate.threshold'] = current + result.fateThresholdBonus;
         }
 
         // Apply corruption/insanity
@@ -401,6 +417,11 @@ export class GrantsProcessor {
         if (typeof grants.fateFormula === 'string') {
             const fateValue = await this._evaluateFate(grants.fateFormula, originItem);
             context.result.fateBonus += fateValue;
+        }
+
+        // Fate threshold (burn-fate / cheat-death target on creature.ts:fate.threshold)
+        if (typeof grants.fateThreshold === 'number' && Number.isFinite(grants.fateThreshold)) {
+            context.result.fateThresholdBonus += grants.fateThreshold;
         }
 
         // Process grant arrays
@@ -1068,6 +1089,7 @@ export class GrantsProcessor {
         // Merge bonuses
         parent.woundsBonus += child.woundsBonus;
         parent.fateBonus += child.fateBonus;
+        parent.fateThresholdBonus += child.fateThresholdBonus;
         parent.corruptionBonus += child.corruptionBonus;
         parent.insanityBonus += child.insanityBonus;
 
