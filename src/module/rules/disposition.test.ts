@@ -12,7 +12,7 @@ describe('labelForDisposition', () => {
         expect(labelForDisposition(99)).toBe('Helpful');
     });
     it('label list has the canonical 7 entries', () => {
-        expect(DISPOSITION_LABELS.length).toBe(7);
+        expect(DISPOSITION_LABELS).toHaveLength(7);
     });
 });
 

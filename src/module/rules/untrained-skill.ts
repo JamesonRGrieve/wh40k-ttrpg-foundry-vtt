@@ -45,7 +45,7 @@ export interface UntrainedTestOutput {
 
 export function resolveUntrainedTarget(input: UntrainedTestInput): UntrainedTestOutput {
     const usedAlt = typeof input.altCharacteristicTotal === 'number';
-    const base = usedAlt ? (input.altCharacteristicTotal ?? 0) : input.characteristicTotal;
+    const base = usedAlt ? input.altCharacteristicTotal ?? 0 : input.characteristicTotal;
     if (input.advance > 0) {
         return { target: base, untrainedAdvanced: false, halved: false, usedAltCharacteristic: usedAlt };
     }

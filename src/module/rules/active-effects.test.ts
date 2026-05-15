@@ -13,7 +13,22 @@ describe('active-effects condition registry', () => {
         const path = await import('node:path');
         const source = await fs.readFile(path.resolve(process.cwd(), 'src/module/rules/active-effects.ts'), 'utf8');
         // Each entry below appears as `<key>: {` in the conditions registry.
-        for (const key of ['stunned', 'prone', 'blinded', 'deafened', 'grappled', 'pinned', 'unconscious', 'suffocating', 'bloodloss', 'uselessLimb', 'fatigued', 'manacled', 'inspired', 'blessed']) {
+        for (const key of [
+            'stunned',
+            'prone',
+            'blinded',
+            'deafened',
+            'grappled',
+            'pinned',
+            'unconscious',
+            'suffocating',
+            'bloodloss',
+            'uselessLimb',
+            'fatigued',
+            'manacled',
+            'inspired',
+            'blessed',
+        ]) {
             expect(source).toContain(`${key}: {`);
         }
     });

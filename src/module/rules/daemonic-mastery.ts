@@ -42,6 +42,9 @@ export function buildDaemonicMasteryTest(input: DaemonicMasteryInput): DaemonicM
     for (const factor of input.factors) {
         if (factor.modifier !== 0) breakdown.push({ label: factor.label, value: factor.modifier });
     }
-    const target = Math.max(0, breakdown.reduce((sum, m) => sum + m.value, 0));
+    const target = Math.max(
+        0,
+        breakdown.reduce((sum, m) => sum + m.value, 0),
+    );
     return { target, breakdown };
 }

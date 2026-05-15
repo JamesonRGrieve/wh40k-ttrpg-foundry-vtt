@@ -27,11 +27,7 @@ describe('buildDaemonicMasteryTest', () => {
     it('captures every factor in the breakdown', () => {
         const r = buildDaemonicMasteryTest({
             willpowerTotal: 40,
-            factors: [
-                DAEMONIC_MASTERY_FACTORS.BASE_DIFFICULTY,
-                DAEMONIC_MASTERY_FACTORS.TRUE_NAME,
-                DAEMONIC_MASTERY_FACTORS.PROPER_COMPONENTS,
-            ],
+            factors: [DAEMONIC_MASTERY_FACTORS.BASE_DIFFICULTY, DAEMONIC_MASTERY_FACTORS.TRUE_NAME, DAEMONIC_MASTERY_FACTORS.PROPER_COMPONENTS],
         });
         expect(r.breakdown.map((b) => b.label)).toEqual([
             'Willpower',
@@ -51,6 +47,6 @@ describe('buildDaemonicMasteryTest', () => {
 
     it('skips zero-modifier factors in the breakdown', () => {
         const r = buildDaemonicMasteryTest({ willpowerTotal: 30, factors: [{ label: 'Filler', modifier: 0 }] });
-        expect(r.breakdown.length).toBe(1);
+        expect(r.breakdown).toHaveLength(1);
     });
 });
