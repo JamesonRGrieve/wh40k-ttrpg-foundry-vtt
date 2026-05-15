@@ -50,6 +50,47 @@ export class WH40KBaseActor extends Actor {
 
     async spendFate(): Promise<void> {}
 
+    /**
+     * Apply fatigue to the actor (core.md §"Fatigue"). Knock-Down, Forced
+     * Marching, Suppressing Fire, and several conditions all push fatigue
+     * without going through the full damage pipeline. Clamps at the
+     * fatigue threshold (typically `2 × TB`) but does NOT auto-knock the
+     * actor unconscious — surface that decision to the GM via chat
+     * notification when the cap is reached.
+     *
+     * @param amount Positive integers add fatigue; negative integers
+     *   remove it (clamped at 0).
+     */
+    async applyFatigue(amount: number): Promise<void> {
+        if (!Number.isFinite(amount) || amount === 0) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies by subclass; the fatigue slot is guaranteed by `creature.ts` for the relevant subclasses
+        const fatigue = (this.system as { fatigue?: { value: number; max: number } }).fatigue;
+        if (!fatigue) return;
+        const next = Math.max(0, fatigue.value + Math.trunc(amount));
+        await this.update({ 'system.fatigue.value': next });
+    }
+
+    /**
+     * Apply recoverable characteristic damage (core.md §"Characteristic
+     * Damage"). The damage slot lives on each characteristic; the actor's
+     * effective value is `total − damage`. Always non-negative.
+     *
+     * @param characteristic Lowercase characteristic key
+     *   (e.g. `'weaponSkill'`, `'toughness'`).
+     * @param amount Positive integers add damage; negative integers
+     *   heal it (clamped at 0).
+     */
+    async applyCharacteristicDamage(characteristic: string, amount: number): Promise<void> {
+        if (!Number.isFinite(amount) || amount === 0) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is a dynamic record keyed by characteristic slug
+        const chars = (this.system as { characteristics?: Record<string, { damage?: number } | undefined> }).characteristics;
+        const slot = chars?.[characteristic];
+        if (!slot) return;
+        const current = slot.damage ?? 0;
+        const next = Math.max(0, current + Math.trunc(amount));
+        await this.update({ [`system.characteristics.${characteristic}.damage`]: next });
+    }
+
     /* -------------------------------------------- */
     /*  Descendant Document Hooks                   */
     /* -------------------------------------------- */

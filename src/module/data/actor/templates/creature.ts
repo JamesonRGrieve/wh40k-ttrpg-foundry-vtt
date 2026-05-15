@@ -22,6 +22,8 @@ interface CharacteristicData {
     modifier: number;
     unnatural: number;
     cost: number;
+    /** Recoverable characteristic damage (subtracted from effective value/bonus during data prep). */
+    damage: number;
     total: number;
     bonus: number;
     /** Set during _applyModifiersToCharacteristics */
@@ -365,6 +367,13 @@ export default class CreatureTemplate extends CommonTemplate {
             modifier: new NumberField({ required: true, initial: 0, integer: true }),
             unnatural: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
             cost: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            /**
+             * Recoverable characteristic damage (core.md §"Characteristic Damage").
+             * Subtracted from the effective value and bonus during data prep so a
+             * 30-WS character with `damage: 10` rolls against 20-WS. Restored by
+             * rest and certain Medicae actions. Always ≥ 0.
+             */
+            damage: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
             // Derived values
             total: new NumberField({ required: true, initial: 0, integer: true }),
             bonus: new NumberField({ required: true, initial: 0, integer: true }),
@@ -916,7 +925,8 @@ export default class CreatureTemplate extends CommonTemplate {
     _prepareCharacteristics(): void {
         for (const [, char] of Object.entries(this.characteristics)) {
             // Calculate total: base + (advance * 5) + modifier
-            char.total = char.base + char.advance * 5 + char.modifier;
+            // Initial prep without modifier accumulation; damage subtraction lands in _applyModifiersToCharacteristics.
+            char.total = char.base + char.advance * 5 + char.modifier - (char.damage ?? 0);
 
             // Base modifier is tens digit
             const baseModifier = Math.floor(char.total / 10);
@@ -1146,8 +1156,10 @@ export default class CreatureTemplate extends CommonTemplate {
 
             // Recalculate total from BASE values to avoid accumulation
             // Base total is: base + (advance * 5) + modifier (from schema)
+            // Subtract recoverable characteristic damage (core.md §"Characteristic Damage").
             const baseTotal = char.base + char.advance * 5 + char.modifier;
-            char.total = baseTotal + totalMod;
+            const damage = char.damage ?? 0;
+            char.total = Math.max(0, baseTotal + totalMod - damage);
 
             // Recalculate bonus with new total
             const baseModifier = Math.floor(char.total / 10);
