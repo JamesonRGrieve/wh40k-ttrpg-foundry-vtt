@@ -180,6 +180,18 @@ export default class CreatureTemplate extends CommonTemplate {
      * recovery test. Capped at WP-bonus + Toughness-bonus per RAW.
      */
     declare shock: { value: number; max: number };
+
+    /**
+     * Possession track (beyond.md p. 69). Latent / Possessed states
+     * gate session-limited Unleash Daemon uses.
+     */
+    declare possession: {
+        state: 'none' | 'latent' | 'possessed';
+        /** Unleash-Daemon uses spent this session. */
+        unleashUsed: number;
+        /** Cap per session — typically 1 plus Push-tier bonuses. */
+        unleashMax: number;
+    };
     declare initiative: {
         characteristic: string;
         base: string;
@@ -424,6 +436,12 @@ export default class CreatureTemplate extends CommonTemplate {
             shock: new SchemaField({
                 value: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 max: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            }),
+
+            possession: new SchemaField({
+                state: new StringField({ required: true, initial: 'none', choices: ['none', 'latent', 'possessed'] }),
+                unleashUsed: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                unleashMax: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
             }),
 
             initiative: new SchemaField({
