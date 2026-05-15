@@ -22,6 +22,17 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     declare duration: string;
     declare notes: string;
 
+    /**
+     * Active-Effect grants applied while the gear is equipped and used
+     * (drugs in particular — Stimm, Slaught, Spook). Each entry is a
+     * `{ key, mode, value, duration }` tuple consumed by the use-action
+     * to create a temporary AE on the actor. Mirrors the talent grants
+     * pattern at `talent.ts:100`.
+     */
+    declare grants: {
+        activeEffects: Array<{ key: string; mode: number; value: number; durationRounds: number }>;
+    };
+
     // Properties from PhysicalItemTemplate
     declare weight: number;
     declare quantity: number;
@@ -74,6 +85,20 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
+
+            // Active-Effect grants (drugs primarily). Each entry creates
+            // a temporary AE on use.
+            grants: new fields.SchemaField({
+                activeEffects: new fields.ArrayField(
+                    new fields.SchemaField({
+                        key: new fields.StringField({ required: true }),
+                        mode: new fields.NumberField({ required: true, initial: 2, integer: true }), // ACTIVE_EFFECT_MODES.ADD
+                        value: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                        durationRounds: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                    }),
+                    { required: true, initial: [] },
+                ),
+            }),
         };
     }
 

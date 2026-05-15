@@ -26,6 +26,15 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
     declare drawbacks: string;
     declare installation: { surgery: string; difficulty: string; recoveryTime: string };
     declare notes: string;
+    /**
+     * Active-Effect grants applied while the cybernetic is installed.
+     * MIU bonus, Calculus Logi Int bonus, Cerebral Implant Per bonus,
+     * Mechadendrite skill bonus etc. each express via this list.
+     * Permanent by default (durationRounds = 0).
+     */
+    declare grants: {
+        activeEffects: Array<{ key: string; mode: number; value: number; durationRounds: number }>;
+    };
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -71,6 +80,19 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
+
+            // Active-Effect grants while installed.
+            grants: new fields.SchemaField({
+                activeEffects: new fields.ArrayField(
+                    new fields.SchemaField({
+                        key: new fields.StringField({ required: true }),
+                        mode: new fields.NumberField({ required: true, initial: 2, integer: true }),
+                        value: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                        durationRounds: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                    }),
+                    { required: true, initial: [] },
+                ),
+            }),
         };
     }
 
