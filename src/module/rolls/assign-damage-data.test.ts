@@ -1,5 +1,4 @@
 import { describe, expect, it, vi } from 'vitest';
-
 import { AssignDamageData, type ActorLike } from './assign-damage-data';
 
 function buildActor(overrides: Partial<ActorLike['system']> = {}): ActorLike {
@@ -14,8 +13,8 @@ function buildActor(overrides: Partial<ActorLike['system']> = {}): ActorLike {
             ...overrides,
         },
         hasTalent: () => false,
-        update: vi.fn(async () => undefined),
-        createEmbeddedDocuments: vi.fn(async () => undefined),
+        update: vi.fn<ActorLike['update']>().mockResolvedValue(undefined),
+        createEmbeddedDocuments: vi.fn<ActorLike['createEmbeddedDocuments']>().mockResolvedValue(undefined),
     };
 }
 

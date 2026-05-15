@@ -1583,7 +1583,7 @@ export default class CharacterSheet extends BaseActorSheet {
         prepared.fate = {
             total: this.actor.fate.max,
             current: this.actor.fate.value,
-            threshold: this.actor.fate.threshold ?? 0,
+            threshold: this.actor.fate.threshold,
         };
 
         return prepared;
