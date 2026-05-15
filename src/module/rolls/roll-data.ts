@@ -210,6 +210,13 @@ export class WeaponRollData extends RollData {
     weaponModifications: { name: string }[] = [];
     isCalledShot: boolean = false;
     calledShotLocation: string | undefined;
+    /**
+     * Cover armour-point bonus applied to the target at the hit location,
+     * collected from active "Cover" situational modifiers in the roll dialog.
+     * Read by `AssignDamageData.update()` after location lookup so the
+     * armour total includes cover before AP / TB reduction.
+     */
+    coverAP: number = 0;
     usesAmmo: boolean = false;
     ammoText: string = '';
     ammoPerShot: number = 1;

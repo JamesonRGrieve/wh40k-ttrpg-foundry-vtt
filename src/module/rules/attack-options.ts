@@ -34,12 +34,30 @@ type AttackModeAvailability = AttackModeOption & {
     available: boolean;
 };
 
+/**
+ * Side-effects a situational modifier has at damage-application time, beyond
+ * the flat to-hit modifier. The dialog gathers active situationals, sums the
+ * `modifier` into the attack roll target, then passes any `damageEffect`
+ * down to `AssignDamageData` so cover AP and forced hit locations land
+ * before the AP / TB reduction.
+ */
+type SituationalDamageEffect = {
+    /** Bonus armour points granted to the target at the hit location (cover). */
+    coverAP?: number;
+    /**
+     * Override the rolled hit location. Used by Helpless-target melee per
+     * core.md §"Helpless Targets" (RAW: auto-hit head).
+     */
+    forceLocation?: string;
+};
+
 type SituationalModifierOption = {
     key: string;
     label: string;
     modifier: number;
     icon: string;
     tooltip: string;
+    damageEffect?: SituationalDamageEffect;
 };
 
 // ──────────────────────────────────────────────
@@ -295,6 +313,66 @@ export const RANGED_SITUATIONAL_MODIFIERS: SituationalModifierOption[] = [
         icon: 'fas fa-dizzy',
         tooltip: 'Target is stunned and unable to react. +20 to attack.',
     },
+    {
+        key: 'helplessTarget',
+        label: 'Helpless Target',
+        modifier: 30,
+        icon: 'fas fa-bed',
+        tooltip: 'Target is bound, sleeping, or otherwise helpless. +30 to attack.',
+    },
+    {
+        key: 'fogLight',
+        label: 'Fog/Smoke (Light)',
+        modifier: -10,
+        icon: 'fas fa-smog',
+        tooltip: 'Light fog, mist, or smoke between you and the target. −10 to ranged attacks.',
+    },
+    {
+        key: 'fogHeavy',
+        label: 'Fog/Smoke (Heavy)',
+        modifier: -20,
+        icon: 'fas fa-smog',
+        tooltip: 'Heavy fog, mist, or smoke between you and the target. −20 to ranged attacks.',
+    },
+    {
+        key: 'fogTotal',
+        label: 'Fog/Smoke (Total)',
+        modifier: -30,
+        icon: 'fas fa-smog',
+        tooltip: 'Smoke or shadow rendering the target invisible. −30 to ranged attacks.',
+    },
+    {
+        key: 'coverLight',
+        label: 'Light Cover',
+        modifier: 0,
+        icon: 'fas fa-tree',
+        tooltip: 'Target benefits from light cover (e.g., thin wood, low wall). +4 AP at hit location.',
+        damageEffect: { coverAP: 4 },
+    },
+    {
+        key: 'coverMedium',
+        label: 'Medium Cover',
+        modifier: 0,
+        icon: 'fas fa-tree-city',
+        tooltip: 'Target benefits from medium cover (e.g., sandbags, dense wood). +6 AP at hit location.',
+        damageEffect: { coverAP: 6 },
+    },
+    {
+        key: 'coverHeavy',
+        label: 'Heavy Cover',
+        modifier: 0,
+        icon: 'fas fa-shield-halved',
+        tooltip: 'Target benefits from heavy cover (e.g., stone wall, thick steel). +8 AP at hit location.',
+        damageEffect: { coverAP: 8 },
+    },
+    {
+        key: 'coverSuperior',
+        label: 'Superior Cover',
+        modifier: 0,
+        icon: 'fas fa-shield',
+        tooltip: 'Target benefits from superior cover (e.g., fortified bunker, plasteel). +16 AP at hit location.',
+        damageEffect: { coverAP: 16 },
+    },
 ];
 
 /**
@@ -335,6 +413,21 @@ export const MELEE_SITUATIONAL_MODIFIERS: SituationalModifierOption[] = [
         modifier: 20,
         icon: 'fas fa-dizzy',
         tooltip: 'Target is stunned and unable to react. +20 to attack.',
+    },
+    {
+        key: 'helplessTarget',
+        label: 'Helpless Target',
+        modifier: 30,
+        icon: 'fas fa-bed',
+        tooltip: 'Target is bound, sleeping, or otherwise helpless. +30 to attack and auto-hits the head.',
+        damageEffect: { forceLocation: 'Head' },
+    },
+    {
+        key: 'higherGround',
+        label: 'Higher Ground',
+        modifier: 10,
+        icon: 'fas fa-mountain',
+        tooltip: 'Attacking from elevated terrain. +10 to melee attacks.',
     },
 ];
 
@@ -430,3 +523,32 @@ export function getAimKeyForModifier(modifier: number): string {
 export function isMeleeSpecialOption(key: string): boolean {
     return MELEE_SPECIAL_OPTIONS.some((opt) => opt.key === key);
 }
+
+/**
+ * Aggregate the damage-side effects of a set of active situational keys.
+ * Cover AP stacks additively (the highest-priority cover layer wins in
+ * RAW; here we honour what the GM toggled and trust them to pick one).
+ * `forceLocation` is single-valued — the last active wins.
+ * @param activeKeys - Iterable of active situational keys
+ * @param isRanged - Whether to query the ranged or melee set
+ */
+export function aggregateSituationalDamageEffects(
+    activeKeys: Iterable<string>,
+    isRanged: boolean,
+): SituationalDamageEffect {
+    const list = isRanged ? RANGED_SITUATIONAL_MODIFIERS : MELEE_SITUATIONAL_MODIFIERS;
+    const active = new Set(activeKeys);
+    let coverAP = 0;
+    let forceLocation: string | undefined;
+    for (const s of list) {
+        if (!active.has(s.key) || !s.damageEffect) continue;
+        if (typeof s.damageEffect.coverAP === 'number') coverAP += s.damageEffect.coverAP;
+        if (typeof s.damageEffect.forceLocation === 'string') forceLocation = s.damageEffect.forceLocation;
+    }
+    const effect: SituationalDamageEffect = {};
+    if (coverAP > 0) effect.coverAP = coverAP;
+    if (forceLocation !== undefined) effect.forceLocation = forceLocation;
+    return effect;
+}
+
+export type { SituationalDamageEffect, SituationalModifierOption };

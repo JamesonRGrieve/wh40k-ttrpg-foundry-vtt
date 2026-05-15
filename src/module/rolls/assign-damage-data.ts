@@ -3,7 +3,7 @@ import { damageTypeDropdown } from '../rules/damage-type.ts';
 import { hitDropdown } from '../rules/hit-locations.ts';
 import { applyRollModeWhispers } from './roll-helpers.ts';
 
-/** Minimal actor shape needed for damage assignment. */
+/** Minimal actor shape needed for damage assignment. Exported for tests. */
 export interface ActorLike {
     system: {
         armour: Record<string, { value: number; toughnessBonus: number }>;
@@ -24,6 +24,8 @@ interface HitLike {
     totalDamage: number;
     totalPenetration: number;
     totalFatigue: number;
+    /** Cover AP added at the hit location (from active Cover situational modifiers). */
+    coverAP?: number;
 }
 
 export class AssignDamageData {
@@ -34,6 +36,8 @@ export class AssignDamageData {
     ignoreArmour = false;
 
     armour = 0;
+    /** Cover AP applied on top of the location armour. Surfaced separately for chat-card display. */
+    coverAP = 0;
     tb = 0;
 
     hasFatigueDamage = false;
@@ -53,6 +57,7 @@ export class AssignDamageData {
     update(): void {
         this.armour = 0;
         this.tb = 0;
+        this.coverAP = this.hit.coverAP ?? 0;
         const location = this.hit.location;
         if (location) {
             for (const [name, locationArmour] of Object.entries(this.actor.system.armour)) {
@@ -62,6 +67,7 @@ export class AssignDamageData {
                 }
             }
         }
+        this.armour += this.coverAP;
     }
 
     async finalize(): Promise<void> {

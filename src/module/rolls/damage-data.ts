@@ -43,6 +43,7 @@ export interface AttackDataLike {
         roll: { total: number } | null;
         isCalledShot?: boolean;
         calledShotLocation?: string;
+        coverAP?: number;
         action: string;
         rangeName: string;
         attackSpecials: { name: string; level?: number }[];
@@ -73,6 +74,13 @@ export class DamageData {
 
 export class Hit {
     location = 'Body';
+
+    /**
+     * Cover armour bonus the target benefits from at this hit location.
+     * Populated from active Cover situational modifiers in the roll dialog
+     * (see `attack-options.ts`); consumed by `AssignDamageData.update()`.
+     */
+    coverAP = 0;
 
     totalFatigue = 0;
 
@@ -109,6 +117,8 @@ export class Hit {
         await hit._calculatePenetration(attackData);
         hit._totalPenetration();
         hit._calculateSpecials(attackData);
+
+        hit.coverAP = attackData.rollData.coverAP ?? 0;
 
         if (attackData.rollData.isCalledShot === true) {
             hit.location = attackData.rollData.calledShotLocation ?? 'Body';
