@@ -120,6 +120,20 @@ export class WH40KBaseActor extends Actor {
         await this.update({ 'system.subtlety.value': next });
     }
 
+    /**
+     * Adjust an NPC's disposition toward the warband (core.md §"Disposition").
+     * Clamps at the −3..+3 range. The reason is informational only; an
+     * audit log would be a separate sheet feature.
+     */
+    async adjustDisposition(delta: number, _reason?: string): Promise<void> {
+        if (!Number.isFinite(delta) || delta === 0) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: disposition lives on npc.ts only
+        const disposition = (this.system as { disposition?: { value: number } }).disposition;
+        if (!disposition) return;
+        const next = Math.max(-3, Math.min(3, disposition.value + Math.trunc(delta)));
+        await this.update({ 'system.disposition.value': next });
+    }
+
     /* -------------------------------------------- */
     /*  Descendant Document Hooks                   */
     /* -------------------------------------------- */
