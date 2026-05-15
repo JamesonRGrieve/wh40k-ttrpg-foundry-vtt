@@ -134,6 +134,20 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     declare description: string;
     declare tactics: string;
     declare source: string;
+    /**
+     * Disposition toward the warband (core.md §"Disposition", p. 277).
+     * Range -3..+3 maps to: Hostile, Antagonistic, Wary, Neutral,
+     * Cooperative, Friendly, Helpful. The vault campaign instructions
+     * also carry a `dispositions[]` array on the file side; the live
+     * NPC actor only stores the current single value.
+     */
+    declare disposition: { value: number };
+    /**
+     * Flag marking this NPC as available as a Reinforcement Character
+     * (core.md §"Reinforcement Characters", p. 294). Picked up by the
+     * acquisition flow (#77) when the warband calls in support.
+     */
+    declare isReinforcement: boolean;
 
     // From HordeTemplate mixin
     declare horde: HordeData;
@@ -332,6 +346,15 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             description: new HTMLField({ required: false, initial: '', blank: true }),
             tactics: new HTMLField({ required: false, initial: '', blank: true }),
             source: new StringField({ required: false, initial: '', blank: true }), // Book reference
+
+            // === SOCIAL / DISPOSITION (core.md §"Disposition", p. 277) ===
+            disposition: new SchemaField({
+                value: new NumberField({ required: true, initial: 0, min: -3, max: 3, integer: true }),
+            }),
+
+            // === REINFORCEMENT (core.md §"Reinforcement Characters", p. 294) ===
+            // True when this NPC may be called in via Influence as a Reinforcement.
+            isReinforcement: new BooleanField({ required: true, initial: false }),
         };
     }
 
