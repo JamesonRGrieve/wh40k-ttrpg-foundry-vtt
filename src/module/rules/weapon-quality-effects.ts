@@ -168,7 +168,7 @@ export const WEAPON_QUALITY_EFFECTS = {
     },
     'razor-sharp': {
         type: 'penetration',
-        description: 'On 2+ DoS, the weapon\'s Penetration is doubled.',
+        description: "On 2+ DoS, the weapon's Penetration is doubled.",
         razorSharpDoubleOnDoS: 2,
     },
     'proven': {

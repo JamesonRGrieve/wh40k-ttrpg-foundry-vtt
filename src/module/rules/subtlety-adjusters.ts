@@ -8,11 +8,11 @@
  */
 
 export type SubtletyAdjusterSource =
-    | 'quarantineWorld'      // Beyond p. 30: -2 with min -1 on any decrease
-    | 'daemonWeaponWielded'  // Beyond p. 50: passive while wielded
-    | 'darkPactDiscovered'   // Beyond p. 72
-    | 'inquestPursued'       // Within p. 62
-    | 'manual';              // GM ad-hoc
+    | 'quarantineWorld' // Beyond p. 30: -2 with min -1 on any decrease
+    | 'daemonWeaponWielded' // Beyond p. 50: passive while wielded
+    | 'darkPactDiscovered' // Beyond p. 72
+    | 'inquestPursued' // Within p. 62
+    | 'manual'; // GM ad-hoc
 
 export interface SubtletyAdjuster {
     source: SubtletyAdjusterSource;

@@ -27,7 +27,7 @@ export const ELITE_ADVANCES: Record<string, EliteAdvanceDefinition> = {
         id: 'astropath',
         label: 'Astropath',
         description:
-            'You are bound to the Emperor\'s soul and serve as a telepathic relay. Gains Bound to the Highest Power (ignore one Psychic Phenomena roll per session) and Supreme Telepath (+1 PR when using Telepathy powers).',
+            "You are bound to the Emperor's soul and serve as a telepathic relay. Gains Bound to the Highest Power (ignore one Psychic Phenomena roll per session) and Supreme Telepath (+1 PR when using Telepathy powers).",
         xpCost: 1000,
         prerequisites: [
             { type: 'characteristic', key: 'willpower', minimum: 40 },

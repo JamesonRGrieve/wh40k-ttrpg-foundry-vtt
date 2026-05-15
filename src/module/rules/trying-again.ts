@@ -11,22 +11,10 @@
  */
 
 /** Skills that RAW recommend cannot be retried without circumstance change. */
-export const NO_RETRY_SKILLS: ReadonlySet<string> = new Set([
-    'inquiry',
-    'awareness',
-    'logic',
-    'forbiddenLore',
-    'scholasticLore',
-    'commonLore',
-]);
+export const NO_RETRY_SKILLS: ReadonlySet<string> = new Set(['inquiry', 'awareness', 'logic', 'forbiddenLore', 'scholasticLore', 'commonLore']);
 
 /** Skills that take a cumulative −10 per retry within the scene. */
-export const CUMULATIVE_PENALTY_SKILLS: ReadonlySet<string> = new Set([
-    'charm',
-    'deceive',
-    'intimidate',
-    'command',
-]);
+export const CUMULATIVE_PENALTY_SKILLS: ReadonlySet<string> = new Set(['charm', 'deceive', 'intimidate', 'command']);
 
 export interface RetryAdvice {
     /** True if the skill is in the no-retry list. */

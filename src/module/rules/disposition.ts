@@ -12,15 +12,7 @@
 
 export type DispositionLabel = 'Hostile' | 'Antagonistic' | 'Wary' | 'Neutral' | 'Cooperative' | 'Friendly' | 'Helpful';
 
-export const DISPOSITION_LABELS: ReadonlyArray<DispositionLabel> = [
-    'Hostile',
-    'Antagonistic',
-    'Wary',
-    'Neutral',
-    'Cooperative',
-    'Friendly',
-    'Helpful',
-];
+export const DISPOSITION_LABELS: ReadonlyArray<DispositionLabel> = ['Hostile', 'Antagonistic', 'Wary', 'Neutral', 'Cooperative', 'Friendly', 'Helpful'];
 
 /** Map −3..+3 to the canonical label. */
 export function labelForDisposition(value: number): DispositionLabel {

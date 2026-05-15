@@ -22,16 +22,15 @@ export function getDamageTier(woundsValue: number, woundsMax: number): DamageTie
     return 'heavilyDamaged';
 }
 
+const NATURAL_HEALING_DAYS: Record<DamageTier, number> = {
+    unharmed: 0,
+    lightlyDamaged: 1,
+    heavilyDamaged: 7,
+};
+
 /** Days of natural rest required to recover 1 wound at the given tier. */
 export function getNaturalHealingDays(tier: DamageTier): number {
-    switch (tier) {
-        case 'unharmed':
-            return 0;
-        case 'lightlyDamaged':
-            return 1;
-        case 'heavilyDamaged':
-            return 7;
-    }
+    return NATURAL_HEALING_DAYS[tier];
 }
 
 export type MedicaeActionKind = 'firstAid' | 'extendedCare' | 'surgery' | 'diagnose' | 'extractBullet';
