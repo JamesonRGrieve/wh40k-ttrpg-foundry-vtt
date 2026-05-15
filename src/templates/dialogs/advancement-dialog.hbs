@@ -1,20 +1,20 @@
 {{!-- Advancement Dialog Template --}}
 <div class="tw-flex tw-flex-col tw-h-full tw-gap-0 tw-font-[var(--wh40k-font-ui)]" data-wh40k-system="{{_gameSystemId}}">
 
-  {{!-- Header with XP Display (sticky so totals stay visible while content scrolls — #22) --}}
-  <header class="tw-sticky tw-top-0 tw-z-20 tw-bg-[var(--color-bg-secondary)] tw-shrink-0">
-    <div>
-      <div>
-        <div style="width: {{xp.usedPercent}}%">
+  {{!-- Header with XP Display: a normal flex child (no sticky overlay) --}}
+  <header class="tw-shrink-0 tw-bg-[var(--color-bg-secondary)] tw-border-b tw-border-[var(--wh40k-border-color)] tw-px-3 tw-py-2">
+    <div class="tw-flex tw-flex-col tw-gap-1.5">
+      <div class="tw-relative tw-h-1.5 tw-rounded-full tw-overflow-hidden tw-bg-[rgba(0,0,0,0.25)]">
+        <div class="tw-absolute tw-inset-y-0 tw-left-0 tw-bg-[linear-gradient(90deg,var(--wh40k-color-gold-dark),var(--wh40k-color-gold))]" style="width: {{xp.usedPercent}}%">
           <span class="tw-pointer-events-none tw-absolute tw-inset-0 tw-animate-xp-shimmer tw-bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)]"></span>
         </div>
       </div>
-      <div>
-        <span class="bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat im:tw-text-failure ow:tw-text-brass-l20 rt:tw-text-gold">
+      <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.8rem]">
+        <span class="tw-inline-flex tw-items-center tw-gap-1.5 tw-font-semibold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat im:tw-text-failure ow:tw-text-brass-l20 rt:tw-text-gold">
           <i class="fas fa-bolt"></i>
           <strong>{{xp.available}}</strong> {{localize "WH40K.Advancement.XPAvailable"}}
         </span>
-        <span>
+        <span class="tw-text-[color:var(--color-text-tertiary)] tw-text-[0.72rem]">
           ({{xp.used}} / {{xp.total}} {{localize "WH40K.Advancement.XPUsed"}})
         </span>
       </div>
@@ -36,8 +36,8 @@
   </div>
   {{else}}
 
-  {{!-- Tab Navigation (sticky alongside the header so the tab bar stays anchored) --}}
-  <nav class="tw-sticky tw-top-[var(--wh40k-adv-header-h,4rem)] tw-z-10 tw-shrink-0 tw-flex tw-items-stretch tw-gap-0.5 tw-bg-[var(--color-bg-secondary)] tw-border-b tw-border-[var(--wh40k-border-color)] tw-px-1 tw-py-1 tw-overflow-x-auto">
+  {{!-- Tab Navigation: a flex row sibling of the content (no sticky overlay) --}}
+  <nav class="tw-shrink-0 tw-flex tw-items-stretch tw-gap-0.5 tw-bg-[var(--color-bg-secondary)] tw-border-b tw-border-[var(--wh40k-border-color)] tw-px-1 tw-py-1 tw-overflow-x-auto">
     {{#each tabs}}
     <button
       class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1.5 tw-rounded tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-whitespace-nowrap tw-cursor-pointer tw-transition-all tw-shrink-0
@@ -300,10 +300,20 @@
     </div>
     {{/if}}
 
-    {{!-- Psychic Powers Tab (psykers only) --}}
+    {{!-- Psychic Powers Tab (always visible; locked for non-psykers) --}}
     {{#if (eq activeTab "psychic")}}
     <div class="tw-animate-[fadeIn_250ms_ease]">
       {{#if psychic}}
+      {{#unless isPsyker}}
+      {{!-- Locked banner: non-psykers can browse the catalogue but cannot purchase --}}
+      <div class="tw-flex tw-items-start tw-gap-2.5 tw-mb-3 tw-px-3 tw-py-2 tw-rounded-md tw-bg-[rgba(168,50,50,0.08)] tw-border tw-border-[var(--wh40k-color-warning)]">
+        <i class="fas fa-lock tw-text-[color:var(--wh40k-color-warning)] tw-text-[1rem] tw-mt-0.5"></i>
+        <div class="tw-flex tw-flex-col tw-gap-0.5 tw-flex-1 tw-text-[0.8rem]">
+          <span class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-color-warning)]">Psychic Powers Locked</span>
+          <span class="tw-text-[color:var(--color-text-secondary)]">Take the <strong class="tw-text-[color:var(--wh40k-color-gold)]">Psyker</strong> elite advance from the <strong class="tw-text-[color:var(--wh40k-color-gold)]">Traits</strong> tab to unlock purchases. The catalogue is shown read-only for reference.</span>
+        </div>
+      </div>
+      {{/unless}}
       {{!-- Psy Rating header card --}}
       <div class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-3 tw-px-3 tw-py-2 tw-rounded-md tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.08),rgba(0,0,0,0.15))] tw-border tw-border-[var(--wh40k-border-color)]">
         <div class="tw-flex tw-items-center tw-gap-2">
