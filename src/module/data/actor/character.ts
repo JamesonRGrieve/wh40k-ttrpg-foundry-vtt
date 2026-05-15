@@ -171,6 +171,13 @@ export default class CharacterData extends CreatureTemplate {
     declare influence: number;
     declare requisition: number;
     declare throneGelt: number;
+    /**
+     * Subtlety pool (core.md §"Influence And Subtlety", p. 268). DH2-only
+     * concept tracking how covert the warband is. Adjusted by mission
+     * events; tested against on certain triggers. Max defaults to 100;
+     * starting value is set by the GM at campaign start.
+     */
+    declare subtlety: { value: number; max: number };
     declare insanity: number;
     declare corruption: number;
     declare aptitudes: string[];
@@ -314,6 +321,15 @@ export default class CharacterData extends CreatureTemplate {
             // mode it presents as an economy resource, but the cap still applies — Influence
             // never exceeds a percentile characteristic ceiling.
             influence: new fields.NumberField({ required: true, initial: 0, min: 0, max: 100, integer: true }),
+
+            // Subtlety pool — DH2-only per core.md §"Influence And Subtlety".
+            // RAW: 0–100. Adjusted by mission events; consulted by Subtlety
+            // tests. Per-system gate: the character sheet hides this field
+            // on non-DH2 systems.
+            subtlety: new fields.SchemaField({
+                value: new fields.NumberField({ required: true, initial: 60, min: 0, max: 100, integer: true }),
+                max: new fields.NumberField({ required: true, initial: 100, min: 0, max: 100, integer: true }),
+            }),
             requisition: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             throneGelt: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
