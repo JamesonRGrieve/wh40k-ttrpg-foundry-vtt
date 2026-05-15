@@ -85,6 +85,11 @@ export interface WH40KWounds {
 export interface WH40KFate {
     value: number;
     max: number;
+    /**
+     * Burn-fate / cheat-death threshold (core.md §"Fate Threshold").
+     * Set from origin-path grants; consulted by `creature.ts:fate.threshold`.
+     */
+    threshold: number;
     total?: number;
     rolled?: boolean;
 }
