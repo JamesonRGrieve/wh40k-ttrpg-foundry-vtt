@@ -291,6 +291,13 @@ function allCombatActions(): CombatAction[] {
             },
         },
         {
+            name: 'Two-Weapon Fighting',
+            type: ['Full'],
+            subtype: ['Attack', 'Melee', 'Ranged'],
+            description:
+                'Attack with both wielded weapons. Baseline −20 to each attack. Two-Weapon Wielder (Melee/Ranged) drops the main-hand penalty to 0. Two-Weapon Master (Melee/Ranged) drops both penalties to 0. Ambidextrous reduces the off-hand penalty by an additional 10. See `rules/two-weapon-fighting.ts:resolveTwoWeaponPenalties()`.',
+        },
+        {
             name: 'Unjam',
             type: ['Full'],
             subtype: ['Miscellaneous', 'Ranged'],
