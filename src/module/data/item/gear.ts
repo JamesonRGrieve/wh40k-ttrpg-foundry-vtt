@@ -32,6 +32,13 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     declare grants: {
         activeEffects: Array<{ key: string; mode: number; value: number; durationRounds: number }>;
     };
+    /**
+     * Profane Object payload (within.md p. 52). When non-null, this gear
+     * piece carries the corruption-bound mechanical hook; the engine
+     * consults `rules/profane-objects.ts` for the shape and applies the
+     * aura / per-action effect while the item is held / equipped.
+     */
+    declare profaneObjectId: string | null;
 
     // Properties from PhysicalItemTemplate
     declare weight: number;
@@ -85,6 +92,9 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
+
+            // Profane Object slug (within.md p. 52). Null for ordinary gear.
+            profaneObjectId: new fields.StringField({ required: false, blank: true, initial: '', nullable: true }),
 
             // Active-Effect grants (drugs primarily). Each entry creates
             // a temporary AE on use.
