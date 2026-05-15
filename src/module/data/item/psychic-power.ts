@@ -38,11 +38,12 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but TS can't verify the mixin constraint without casting
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
-            // Psychic discipline
+            // Psychic discipline. 'minor' covers powers from within.md
+            // p. 59-61 that don't belong to a discipline tree.
             discipline: new fields.StringField({
                 required: true,
                 initial: 'telepathy',
-                choices: ['telepathy', 'telekinesis', 'divination', 'pyromancy', 'biomancy', 'daemonology', 'malefic', 'sanctic'],
+                choices: ['telepathy', 'telekinesis', 'divination', 'pyromancy', 'biomancy', 'daemonology', 'malefic', 'sanctic', 'minor'],
             }),
 
             // Psy Rating cost
