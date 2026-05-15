@@ -23,13 +23,7 @@ export function getJamFloor(action: string): number {
 }
 
 /** Check whether a ranged-attack roll should jam given weapon qualities. */
-export function shouldJamRoll(opts: {
-    action: string;
-    rollTotal: number;
-    success: boolean;
-    hasReliable: boolean;
-    hasUnreliable: boolean;
-}): boolean {
+export function shouldJamRoll(opts: { action: string; rollTotal: number; success: boolean; hasReliable: boolean; hasUnreliable: boolean }): boolean {
     if (opts.hasUnreliable && !opts.success) return true;
     if (opts.hasReliable) return opts.rollTotal === 100;
     return opts.rollTotal >= getJamFloor(opts.action);

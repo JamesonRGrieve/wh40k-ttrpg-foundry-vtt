@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest';
-
-import {
-    aggregateSituationalDamageEffects,
-    getSituationalModifiers,
-    MELEE_SITUATIONAL_MODIFIERS,
-    RANGED_SITUATIONAL_MODIFIERS,
-} from './attack-options';
+import { aggregateSituationalDamageEffects, getSituationalModifiers, MELEE_SITUATIONAL_MODIFIERS, RANGED_SITUATIONAL_MODIFIERS } from './attack-options';
 
 describe('attack-options situational modifiers', () => {
     describe('ranged set', () => {
