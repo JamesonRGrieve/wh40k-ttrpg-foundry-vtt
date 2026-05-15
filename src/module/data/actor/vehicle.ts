@@ -165,9 +165,45 @@ export default class VehicleData extends ActorDataModel {
     /** @override */
     override prepareDerivedData(): void {
         super.prepareDerivedData();
+        this._applyVehicleTraitModifiers();
+    }
 
-        // No derived calculations needed yet
-        // Future: Apply trait/upgrade modifiers here
+    /**
+     * Walk embedded vehicle-trait items and fold their stat modifiers
+     * into the derived stat block (core.md §"Vehicle Traits"). Each
+     * trait carries `modifiers: { speed, manoeuvrability, armour, integrity }`;
+     * non-zero entries adjust the corresponding stat. Armour applies to
+     * every facing equally (RAW does not distinguish trait-driven
+     * armour by facing; per-facing modifiers come from explicit
+     * components, not traits).
+     */
+    _applyVehicleTraitModifiers(): void {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: parent.items is an EmbeddedCollection; iteration is typed loose
+        const parent = (this as unknown as { parent?: { items?: Iterable<{ type: string; system: unknown }> } }).parent;
+        const items = parent?.items;
+        if (!items) return;
+        for (const item of items) {
+            if (item.type !== 'vehicleTrait') continue;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: per-item system shape narrowed by item type guard above
+            const mods = (item.system as { modifiers?: { speed?: number; manoeuvrability?: number; armour?: number; integrity?: number } }).modifiers;
+            if (!mods) continue;
+            if (typeof mods.speed === 'number') {
+                this.speed.cruising = Math.max(0, this.speed.cruising + mods.speed);
+                this.speed.tactical = Math.max(0, this.speed.tactical + mods.speed);
+            }
+            if (typeof mods.manoeuvrability === 'number') {
+                this.manoeuverability += mods.manoeuvrability;
+            }
+            if (typeof mods.armour === 'number') {
+                this.armour.front.value = Math.max(0, this.armour.front.value + mods.armour);
+                this.armour.side.value = Math.max(0, this.armour.side.value + mods.armour);
+                this.armour.rear.value = Math.max(0, this.armour.rear.value + mods.armour);
+            }
+            if (typeof mods.integrity === 'number') {
+                this.integrity.max = Math.max(0, this.integrity.max + mods.integrity);
+                if (this.integrity.value > this.integrity.max) this.integrity.value = this.integrity.max;
+            }
+        }
     }
 
     /* -------------------------------------------- */
