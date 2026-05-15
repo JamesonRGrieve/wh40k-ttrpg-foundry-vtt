@@ -2,13 +2,32 @@ import ItemDataModel from '../abstract/item-data-model.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 
 /**
+ * Status of an Investigation Lead (core.md §"Conducting The Investigation").
+ * - `active`: the lead is open and worth pursuing.
+ * - `pursued`: acolytes are currently working it.
+ * - `resolved`: the lead paid off and is closed.
+ * - `deadEnd`: the lead was investigated and yielded nothing.
+ */
+export type LeadStatus = 'active' | 'pursued' | 'resolved' | 'deadEnd';
+
+/**
  * Data model for Journal Entry items.
- * These are in-character notes and logs.
+ *
+ * Doubles as the Investigation Lead container per core.md §"Leads"
+ * (p. 282) — when `isLead === true`, the additional lead-specific
+ * fields (status, source, owner) are populated and the sheet renders
+ * the lead view. Otherwise the entry is a plain in-character note.
  */
 export default class JournalEntryItemData extends ItemDataModel.mixin(DescriptionTemplate) {
     // Typed property declarations matching defineSchema()
     declare time: string;
     declare place: string;
+    declare isLead: boolean;
+    declare leadStatus: LeadStatus;
+    /** The clue / source that produced this lead. */
+    declare leadSource: string;
+    /** GM-only flag — true if the lead is a deliberate dead-end (red herring). */
+    declare leadGmRedHerring: boolean;
 
     /** @override */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -17,6 +36,14 @@ export default class JournalEntryItemData extends ItemDataModel.mixin(Descriptio
             ...super.defineSchema(),
             time: new fields.StringField({ initial: '' }),
             place: new fields.StringField({ initial: '' }),
+            isLead: new fields.BooleanField({ required: true, initial: false }),
+            leadStatus: new fields.StringField({
+                required: true,
+                initial: 'active',
+                choices: ['active', 'pursued', 'resolved', 'deadEnd'],
+            }),
+            leadSource: new fields.StringField({ required: false, initial: '', blank: true }),
+            leadGmRedHerring: new fields.BooleanField({ required: true, initial: false }),
         };
     }
 
