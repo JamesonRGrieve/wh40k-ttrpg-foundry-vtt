@@ -174,6 +174,12 @@ export default class CreatureTemplate extends CommonTemplate {
          */
         threshold: number;
     };
+    /**
+     * Shock counter (core.md §"Shock And Snapping Out Of It", p. 287).
+     * Accumulates from Fear failures / mental trauma; drives the Snap-Out
+     * recovery test. Capped at WP-bonus + Toughness-bonus per RAW.
+     */
+    declare shock: { value: number; max: number };
     declare initiative: {
         characteristic: string;
         base: string;
@@ -413,6 +419,11 @@ export default class CreatureTemplate extends CommonTemplate {
                 max: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 value: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 threshold: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            }),
+
+            shock: new SchemaField({
+                value: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                max: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
             }),
 
             initiative: new SchemaField({

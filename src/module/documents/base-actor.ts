@@ -91,6 +91,35 @@ export class WH40KBaseActor extends Actor {
         await this.update({ [`system.characteristics.${characteristic}.damage`]: next });
     }
 
+    /**
+     * Adjust the actor's Shock counter (core.md §"Shock And Snapping
+     * Out Of It"). Positive amounts add shock; negative amounts (e.g.
+     * after a successful Snap-Out test) reduce it. Clamps at 0.
+     */
+    async applyShock(amount: number): Promise<void> {
+        if (!Number.isFinite(amount) || amount === 0) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: shock slot is optional and per-subclass
+        const shock = (this.system as { shock?: { value: number } }).shock;
+        if (!shock) return;
+        const next = Math.max(0, shock.value + Math.trunc(amount));
+        await this.update({ 'system.shock.value': next });
+    }
+
+    /**
+     * Adjust the actor's Subtlety pool (DH2-only, core.md §"Influence
+     * And Subtlety"). Positive amounts raise the warband's subtlety;
+     * negative amounts (most common, since missions usually erode it)
+     * lower it. Clamps at 0..max.
+     */
+    async applySubtlety(amount: number): Promise<void> {
+        if (!Number.isFinite(amount) || amount === 0) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: subtlety lives on character.ts only
+        const subtlety = (this.system as { subtlety?: { value: number; max: number } }).subtlety;
+        if (!subtlety) return;
+        const next = Math.max(0, Math.min(subtlety.max, subtlety.value + Math.trunc(amount)));
+        await this.update({ 'system.subtlety.value': next });
+    }
+
     /* -------------------------------------------- */
     /*  Descendant Document Hooks                   */
     /* -------------------------------------------- */
