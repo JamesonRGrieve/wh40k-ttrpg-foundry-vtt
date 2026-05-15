@@ -532,10 +532,7 @@ export function isMeleeSpecialOption(key: string): boolean {
  * @param activeKeys - Iterable of active situational keys
  * @param isRanged - Whether to query the ranged or melee set
  */
-export function aggregateSituationalDamageEffects(
-    activeKeys: Iterable<string>,
-    isRanged: boolean,
-): SituationalDamageEffect {
+export function aggregateSituationalDamageEffects(activeKeys: Iterable<string>, isRanged: boolean): SituationalDamageEffect {
     const list = isRanged ? RANGED_SITUATIONAL_MODIFIERS : MELEE_SITUATIONAL_MODIFIERS;
     const active = new Set(activeKeys);
     let coverAP = 0;

@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import { getJamFloor, shouldJamRoll } from './weapon-jam';
 
 describe('getJamFloor', () => {
