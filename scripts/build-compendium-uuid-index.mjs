@@ -129,11 +129,42 @@ function* iterPackJson() {
   }
 }
 
+/**
+ * Foundry's `DocumentUUIDField` rejects any id that isn't exactly 16
+ * alphanumeric characters (see `isValidId` in `foundry.mjs`). An invalid
+ * `_id` anywhere — top-level pack doc or embedded page / item — silently
+ * breaks every reference to that entry because compendium-resync skips
+ * it at index-build time.
+ */
+const FOUNDRY_ID_RE = /^[a-zA-Z0-9]{16}$/;
+
+/**
+ * Walk a doc collecting every embedded `_id` that violates the Foundry id
+ * shape. Currently checks the top level and `pages[]` (the only embedded
+ * collection we ship in compendiums that has its own ids). Effects, items
+ * embedded on actors, etc. can be added here if a violation surfaces.
+ */
+function collectInvalidIds(doc, basePath) {
+  const out = [];
+  if (typeof doc._id === 'string' && !FOUNDRY_ID_RE.test(doc._id)) {
+    out.push({ id: doc._id, where: 'top-level', sourcePath: basePath, name: doc.name });
+  }
+  if (Array.isArray(doc.pages)) {
+    for (const pg of doc.pages) {
+      if (pg && typeof pg._id === 'string' && !FOUNDRY_ID_RE.test(pg._id)) {
+        out.push({ id: pg._id, where: `pages[]: ${pg.name ?? '?'}`, sourcePath: basePath, name: doc.name });
+      }
+    }
+  }
+  return out;
+}
+
 function main() {
   /** @type {Map<string, Map<string, Map<string, Array<{uuid: string, id: string, name: string, sourcePath: string, packName: string}>>>>} */
   const index = new Map();
   const collisions = [];
   const parseErrors = [];
+  const invalidIds = [];
   let totalDocs = 0;
   let totalRefStubs = 0;
 
@@ -153,6 +184,13 @@ function main() {
       continue;
     }
     totalDocs += 1;
+
+    // Every embedded `_id` must be a valid Foundry id. An invalid id breaks
+    // compendium-resync's name index, every cross-pack UUID reference to
+    // this entry, and Foundry's own `DocumentUUIDField` validation.
+    for (const violation of collectInvalidIds(doc, entry.relPath)) {
+      invalidIds.push(violation);
+    }
 
     const gameSystem = gameSystemForPack(entry.packName);
     const docKey = detectCollectionType(entry.packName);
@@ -221,10 +259,12 @@ function main() {
       systems: Object.keys(canonical).length,
       collisions: collisions.length,
       parseErrors: parseErrors.length,
+      invalidIds: invalidIds.length,
     },
     canonical,
     collisions,
     parseErrors,
+    invalidIds,
   };
 
   fs.writeFileSync(OUT_FILE, JSON.stringify(summary, null, 2));
@@ -233,10 +273,19 @@ function main() {
   const lines = [
     `[uuid-index] ${totalDocs} documents indexed across ${Object.keys(canonical).length} game systems`,
     `[uuid-index] ${totalRefStubs} reference stubs resolved`,
-    `[uuid-index] ${collisions.length} name collisions, ${parseErrors.length} parse errors`,
+    `[uuid-index] ${collisions.length} name collisions, ${parseErrors.length} parse errors, ${invalidIds.length} invalid Foundry ids`,
     `[uuid-index] index written to ${path.relative(REPO_ROOT, OUT_FILE)}`,
   ];
   for (const line of lines) console.log(line);
+
+  if (!QUIET && invalidIds.length > 0) {
+    console.log('');
+    console.log('[uuid-index] invalid Foundry ids (must match /^[a-zA-Z0-9]{16}$/):');
+    for (const v of invalidIds.slice(0, 30)) {
+      console.log(`  "${v.id}" (${v.id.length} chars) in ${v.where} of ${v.sourcePath} (name="${v.name ?? '?'}")`);
+    }
+    if (invalidIds.length > 30) console.log(`  …and ${invalidIds.length - 30} more`);
+  }
 
   if (!QUIET && collisions.length > 0) {
     console.log('');
@@ -263,6 +312,12 @@ function main() {
     }
   }
 
+  // Invalid Foundry ids are always a hard failure — they silently break
+  // compendium-resync's name index and Foundry's own UUID validation. There
+  // is no `--strict` opt-in for this gate.
+  if (invalidIds.length > 0) {
+    process.exit(1);
+  }
   if (STRICT && (collisions.length > 0 || parseErrors.length > 0)) {
     process.exit(1);
   }
