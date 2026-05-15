@@ -44,6 +44,8 @@ export default class VehicleData extends ActorDataModel {
     declare weapons: string;
     declare specialRules: string;
     declare traitsText: string;
+    /** Flyer altitude tier (without.md p. 54). Ground for non-Flyer vehicles. */
+    declare altitude: 'ground' | 'low' | 'high' | 'orbital';
     declare availability: string;
     declare source: string;
 
@@ -141,6 +143,14 @@ export default class VehicleData extends ActorDataModel {
 
             // === Traits (text until items are dragged on) ===
             traitsText: new fields.StringField({ required: false, initial: '', blank: true }),
+
+            // === Flyer altitude (without.md p. 54-55) ===
+            // Only meaningful when the vehicle has the Flyer trait.
+            altitude: new fields.StringField({
+                required: true,
+                initial: 'ground',
+                choices: ['ground', 'low', 'high', 'orbital'],
+            }),
 
             // === Availability & Source ===
             availability: new fields.StringField({ required: false, initial: 'common', blank: true }),
