@@ -334,6 +334,16 @@ export async function createConditionEffect(actor: WH40KBaseActorDocument, condi
             changes: [],
             flags: { 'wh40k-rpg': { nature: 'harmful', uselessLimb: true } },
         },
+        manacled: {
+            // Errata p. 176 — Manacles impose −40 to BS and WS tests until removed.
+            name: 'Manacled',
+            icon: 'icons/svg/chains.svg',
+            changes: [
+                { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -40 },
+                { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -40 },
+            ],
+            flags: { 'wh40k-rpg': { nature: 'harmful' } },
+        },
         fatigued: {
             // core.md §"Fatigue": each level adds -10 to all tests. The
             // applicator should be `applyFatigue(n)` on the actor; this AE
