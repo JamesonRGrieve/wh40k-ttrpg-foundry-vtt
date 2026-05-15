@@ -58,6 +58,8 @@ type PenetrationContext = {
     weapon?: QualityItem | null | undefined;
     rangeName?: string | undefined;
     basePenetration?: number | undefined;
+    /** Degrees of success on the attack roll, used by Razor Sharp (Pen × 2 on 2+ DoS). */
+    dos?: number;
 };
 
 type ExoticDamageContext = {
@@ -151,6 +153,94 @@ export const WEAPON_QUALITY_EFFECTS = {
         description: 'Righteous Fury triggers on 8, 9, or 10 on damage die (replaces standard RF)',
         rfThreshold: 8,
     },
+
+    // Phase 5: Mechanical-effect qualities (#57 partial). The audit's umbrella
+    // covers 28 qualities; this set encodes the ones whose effect fits the
+    // existing modifier-flag pipeline without new infrastructure. The rest
+    // (Blast template, Spray template, Scatter range-bands, Flame
+    // auto-burning, Hallucinogenic table, Haywire jam table, Indirect,
+    // Lance, Maximal mode-switch, Crippling, Smoke, Snare, Toxic save) are
+    // tracked as per-quality follow-up issues.
+    'inaccurate': {
+        type: 'attack',
+        description: 'Aim grants no bonus with this weapon.',
+        cancelsAim: true,
+    },
+    'razor-sharp': {
+        type: 'penetration',
+        description: 'On 2+ DoS, the weapon\'s Penetration is doubled.',
+        razorSharpDoubleOnDoS: 2,
+    },
+    'proven': {
+        type: 'damage',
+        description: 'Each damage die treats a result less than the Proven (X) value as X.',
+        provenFloor: true,
+    },
+    'twin-linked': {
+        type: 'attack',
+        description: '+20 BS on single shots, scoring an additional hit on a successful test with 2+ DoS.',
+        attackBonus: 20,
+        bonusHitOnTwoDoS: true,
+    },
+    'storm': {
+        type: 'attack',
+        description: 'Rate of fire is doubled; semi/full-auto bursts score two additional hits per successful attack.',
+        doublesAdditionalHits: true,
+    },
+    'reliable': {
+        type: 'reliability',
+        description: 'Weapon jams only on a natural 100. (See `rules/weapon-jam.ts:shouldJamRoll`.)',
+        reliable: true,
+    },
+    'unreliable': {
+        type: 'reliability',
+        description: 'Weapon jams on any failed attack roll. (See `rules/weapon-jam.ts:shouldJamRoll`.)',
+        unreliable: true,
+    },
+    'sanctified': {
+        type: 'damage',
+        description: 'Daemons cannot ignore damage from this weapon.',
+        ignoresDaemonResistance: true,
+    },
+    'power-field': {
+        type: 'parry',
+        description: 'A successful parry against a non-Power, non-Force weapon destroys the parried weapon.',
+        powerFieldDestroysOnParry: true,
+    },
+    'overheats': {
+        type: 'reliability',
+        description: 'On a roll of 91+ (or 1, depending on weapon), the weapon overheats. (See `action-data.ts` overheat branch.)',
+        overheats: true,
+    },
+    'recharge': {
+        type: 'reliability',
+        description: 'Cannot fire on consecutive turns; must spend a round recharging.',
+        recharge: true,
+    },
+
+    // Phase 6: Description-only qualities (#57 follow-up surface). These are
+    // tracked here so GMs see the canonical mechanic; the engine does not
+    // automate them and they should be resolved narratively (or via a
+    // future per-quality issue).
+    'blast': { type: 'description-only', description: 'Hits all targets within X metres of the impact point.' },
+    'concussive': { type: 'description-only', description: 'On a hit, target makes a Toughness test or is stunned for X rounds.' },
+    'corrosive': { type: 'description-only', description: 'Damage rolls a d10 against armour; armour loses that many points.' },
+    'crippling': { type: 'description-only', description: 'If wounded, target gains the Crippled condition until healed.' },
+    'flame': { type: 'description-only', description: 'On any failed Agility test against the attack, the target catches fire.' },
+    'flexible': { type: 'description-only', description: 'Cannot be parried.' },
+    'graviton': { type: 'description-only', description: 'On a hit, target makes a Strength test or falls Prone; vehicles must Agility test or skid.' },
+    'hallucinogenic': { type: 'description-only', description: 'Toughness test or roll on the Hallucinogenic table for the duration listed.' },
+    'haywire': { type: 'description-only', description: 'On a hit, technological items roll on the Haywire table for X rounds.' },
+    'indirect': { type: 'description-only', description: 'Can be fired without line of sight; +X BS penalty.' },
+    'lance': { type: 'description-only', description: 'Each DoS multiplies Penetration by 1.' },
+    'maximal': { type: 'description-only', description: 'Once per encounter, fire at +2 damage and +2 penetration; weapon Overheats and gains Recharge.' },
+    'primitive': { type: 'description-only', description: 'Damage reduced against non-Primitive armour.' },
+    'scatter': { type: 'description-only', description: 'Range-banded damage and Penetration: bonus at Point Blank/Short Range, penalty at Long/Extreme.' },
+    'shocking': { type: 'description-only', description: 'On a hit, target makes a Toughness test or is Stunned for 1 round.' },
+    'smoke': { type: 'description-only', description: 'On detonation, creates a smoke cloud X metres across that grants concealment.' },
+    'snare': { type: 'description-only', description: 'On a hit, target makes an Agility test or is Snared (immobilised) until cleared.' },
+    'spray': { type: 'description-only', description: 'No BS test required; all targets in a cone make an Agility test to avoid being hit.' },
+    'toxic': { type: 'description-only', description: 'On a wound, target makes a Toughness test or takes additional damage; severity varies by X.' },
 };
 
 /* -------------------------------------------- */
@@ -224,6 +314,26 @@ export function calculateQualityAttackModifiers(rollData: WeaponRollData): Quali
     if (weaponHasQuality(weapon, 'accurate')) {
         if ((rollData.modifiers['aim'] ?? 0) > 0) {
             modifiers['Accurate'] = WEAPON_QUALITY_EFFECTS.accurate.aimBonus;
+        }
+    }
+
+    // Inaccurate: aim grants no bonus. Cancels whatever the dialog applied
+    // by emitting the negation modifier rather than mutating the source,
+    // so the breakdown still shows the player what was applied vs cancelled.
+    if (weaponHasQuality(weapon, 'inaccurate')) {
+        const aimMod = rollData.modifiers['aim'] ?? 0;
+        if (aimMod > 0) {
+            modifiers['Inaccurate'] = -aimMod;
+        }
+    }
+
+    // Twin-linked: +20 BS on single shots (Standard Attack / Called Shot).
+    // The "additional hit on 2+ DoS" half lives in `action-data.ts` since
+    // it manipulates `damageData.additionalHits` rather than the to-hit roll.
+    if (weaponHasQuality(weapon, 'twin-linked')) {
+        const action = rollData.action;
+        if (action === 'Standard Attack' || action === 'Called Shot') {
+            modifiers['Twin-Linked'] = 20;
         }
     }
 
@@ -329,6 +439,13 @@ export function calculateQualityPenetrationModifiers(damageContext: PenetrationC
             // Add the base penetration again to double it
             modifiers['Melta'] = basePenetration;
         }
+    }
+
+    // Razor Sharp: On 2+ DoS the weapon's penetration is doubled. We add
+    // basePenetration as the modifier (so the dialog breakdown shows it as
+    // a separate line), guarding against missing DoS context.
+    if (weaponHasQuality(weapon, 'razor-sharp') && (damageContext.dos ?? 0) >= 2) {
+        modifiers['Razor Sharp'] = basePenetration;
     }
 
     return modifiers;

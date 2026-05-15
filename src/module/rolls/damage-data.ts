@@ -410,12 +410,13 @@ export class Hit {
             }
         }
 
-        // Quality-based penetration modifiers (Melta via weapon qualities)
+        // Quality-based penetration modifiers (Melta + Razor Sharp via weapon qualities)
         const qualityPenModifiers = calculateQualityPenetrationModifiers({
             // eslint-disable-next-line no-restricted-syntax -- boundary: actionItem is a minimal interface; quality function expects full weapon type
             weapon: actionItem as unknown as Parameters<typeof calculateQualityPenetrationModifiers>[0]['weapon'],
             rangeName: attackData.rollData.rangeName,
             basePenetration: this.penetration,
+            dos: attackData.rollData.dos,
         });
 
         // Apply quality modifiers (merge with existing to avoid duplication)
