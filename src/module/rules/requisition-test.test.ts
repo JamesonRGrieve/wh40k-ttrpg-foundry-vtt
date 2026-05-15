@@ -25,9 +25,14 @@ describe('getRequisitionTestTarget', () => {
         expect(r.target).toBe(40);
     });
 
-    it('subtracts craftsmanship + availability', () => {
+    it('subtracts craftsmanship + availability (clamped at 0)', () => {
         const r = getRequisitionTestTarget({ influence: 40, availability: 'rare', craftsmanship: 'best' });
-        expect(r.target).toBe(40 - 20 - 30); // -10
+        // 40 - 20 - 30 = -10, clamped to 0.
+        expect(r.target).toBe(0);
+    });
+    it('higher base influence keeps a residual after both penalties', () => {
+        const r = getRequisitionTestTarget({ influence: 80, availability: 'rare', craftsmanship: 'best' });
+        expect(r.target).toBe(30);
     });
 
     it('clamps the target at 0 for a Unique Best item', () => {
