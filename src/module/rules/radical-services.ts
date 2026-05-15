@@ -32,13 +32,13 @@ export interface RadicalServiceDefinition {
 }
 
 export const RADICAL_SERVICES: Record<RadicalServiceId, RadicalServiceDefinition> = {
-    bountyHunter:   { id: 'bountyHunter',   label: 'Bounty Hunter',    availability: 'scarce',         threatLevel: 1, subtletyOnHire: -1 },
-    darkOracle:     { id: 'darkOracle',     label: 'Dark Oracle',      availability: 'veryRare',       threatLevel: 3, subtletyOnHire: -3 },
-    deathCult:      { id: 'deathCult',      label: 'Death Cult',       availability: 'rare',           threatLevel: 2, subtletyOnHire: -2 },
-    heretek:        { id: 'heretek',        label: 'Heretek',          availability: 'veryRare',       threatLevel: 3, subtletyOnHire: -3 },
-    hiveGang:       { id: 'hiveGang',       label: 'Hive Gang',        availability: 'common',         threatLevel: 1, subtletyOnHire: -1 },
-    maleficScholar: { id: 'maleficScholar', label: 'Malefic Scholar',  availability: 'extremelyRare',  threatLevel: 4, subtletyOnHire: -4 },
-    mutantMercenary:{ id: 'mutantMercenary',label: 'Mutant Mercenary', availability: 'rare',           threatLevel: 2, subtletyOnHire: -2 },
-    roguePsyker:    { id: 'roguePsyker',    label: 'Rogue Psyker',     availability: 'extremelyRare',  threatLevel: 4, subtletyOnHire: -4 },
-    recidivist:     { id: 'recidivist',     label: 'Recidivist',       availability: 'scarce',         threatLevel: 2, subtletyOnHire: -2 },
+    bountyHunter: { id: 'bountyHunter', label: 'Bounty Hunter', availability: 'scarce', threatLevel: 1, subtletyOnHire: -1 },
+    darkOracle: { id: 'darkOracle', label: 'Dark Oracle', availability: 'veryRare', threatLevel: 3, subtletyOnHire: -3 },
+    deathCult: { id: 'deathCult', label: 'Death Cult', availability: 'rare', threatLevel: 2, subtletyOnHire: -2 },
+    heretek: { id: 'heretek', label: 'Heretek', availability: 'veryRare', threatLevel: 3, subtletyOnHire: -3 },
+    hiveGang: { id: 'hiveGang', label: 'Hive Gang', availability: 'common', threatLevel: 1, subtletyOnHire: -1 },
+    maleficScholar: { id: 'maleficScholar', label: 'Malefic Scholar', availability: 'extremelyRare', threatLevel: 4, subtletyOnHire: -4 },
+    mutantMercenary: { id: 'mutantMercenary', label: 'Mutant Mercenary', availability: 'rare', threatLevel: 2, subtletyOnHire: -2 },
+    roguePsyker: { id: 'roguePsyker', label: 'Rogue Psyker', availability: 'extremelyRare', threatLevel: 4, subtletyOnHire: -4 },
+    recidivist: { id: 'recidivist', label: 'Recidivist', availability: 'scarce', threatLevel: 2, subtletyOnHire: -2 },
 };

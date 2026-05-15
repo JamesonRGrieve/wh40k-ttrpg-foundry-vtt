@@ -36,16 +36,14 @@ export interface PsyModeInput {
 
 export function resolvePsyMode(input: PsyModeInput): PsyModeResolved {
     const basePR = Math.max(0, Math.trunc(input.basePR));
-    switch (input.mode) {
-        case 'fettered': {
-            const half = Math.floor(basePR / 2);
-            return { effectivePR: half, focusModifier: 10, forcePhenomena: false, phenomenaModifier: 0 };
-        }
-        case 'unfettered':
-            return { effectivePR: basePR, focusModifier: 0, forcePhenomena: false, phenomenaModifier: 0 };
-        case 'push': {
-            const push = Math.max(1, Math.trunc(input.pushLevel ?? 1));
-            return { effectivePR: basePR + push, focusModifier: -10 * push, forcePhenomena: true, phenomenaModifier: 5 * push };
-        }
+    if (input.mode === 'fettered') {
+        const half = Math.floor(basePR / 2);
+        return { effectivePR: half, focusModifier: 10, forcePhenomena: false, phenomenaModifier: 0 };
     }
+    if (input.mode === 'push') {
+        const push = Math.max(1, Math.trunc(input.pushLevel ?? 1));
+        return { effectivePR: basePR + push, focusModifier: -10 * push, forcePhenomena: true, phenomenaModifier: 5 * push };
+    }
+    // 'unfettered' — base values.
+    return { effectivePR: basePR, focusModifier: 0, forcePhenomena: false, phenomenaModifier: 0 };
 }

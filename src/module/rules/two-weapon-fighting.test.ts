@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { resolveTwoWeaponPenalties } from './two-weapon-fighting';
 
-const set = (...t: string[]) => new Set(t);
+const set = (...t: string[]): Set<string> => new Set(t);
 
 describe('resolveTwoWeaponPenalties', () => {
     describe('melee', () => {
@@ -22,11 +22,17 @@ describe('resolveTwoWeaponPenalties', () => {
         });
 
         it('Wielder + Ambidextrous: main 0, off −10', () => {
-            expect(resolveTwoWeaponPenalties({ isMelee: true, talents: set('Two-Weapon Wielder (Melee)', 'Ambidextrous') })).toEqual({ mainPenalty: 0, offPenalty: -10 });
+            expect(resolveTwoWeaponPenalties({ isMelee: true, talents: set('Two-Weapon Wielder (Melee)', 'Ambidextrous') })).toEqual({
+                mainPenalty: 0,
+                offPenalty: -10,
+            });
         });
 
         it('Master + Ambidextrous: still capped at 0', () => {
-            expect(resolveTwoWeaponPenalties({ isMelee: true, talents: set('Two-Weapon Master (Melee)', 'Ambidextrous') })).toEqual({ mainPenalty: 0, offPenalty: 0 });
+            expect(resolveTwoWeaponPenalties({ isMelee: true, talents: set('Two-Weapon Master (Melee)', 'Ambidextrous') })).toEqual({
+                mainPenalty: 0,
+                offPenalty: 0,
+            });
         });
 
         it('ignores ranged talents when attacking with melee', () => {

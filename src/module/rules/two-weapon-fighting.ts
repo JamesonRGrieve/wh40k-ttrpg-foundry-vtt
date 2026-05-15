@@ -47,7 +47,7 @@ export function resolveTwoWeaponPenalties(ctx: TwoWeaponContext): TwoWeaponPenal
 
     // Baseline −20 / −20. Wielder zeroes main-hand. Master zeroes both.
     // Ambidextrous reduces the off-hand penalty by 10 (never raises above 0).
-    let mainPenalty = hasWielder ? 0 : -20;
+    const mainPenalty = hasWielder ? 0 : -20;
     let offPenalty = hasMaster ? 0 : -20;
     if (hasAmbidextrous) {
         offPenalty = Math.min(0, offPenalty + 10);

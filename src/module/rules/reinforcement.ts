@@ -25,8 +25,9 @@ export const REINFORCEMENT_MODIFIER: Record<ReinforcementTier, number> = {
 };
 
 /** Whether the tier exists in the modifier table. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard accepts unknown user input and narrows it to ReinforcementTier; the parameter is the validation surface itself
 export function isReinforcementTier(value: unknown): value is ReinforcementTier {
-    return typeof value === 'string' && Object.prototype.hasOwnProperty.call(REINFORCEMENT_MODIFIER, value);
+    return typeof value === 'string' && Object.hasOwn(REINFORCEMENT_MODIFIER, value);
 }
 
 /**

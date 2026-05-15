@@ -955,7 +955,7 @@ export default class CreatureTemplate extends CommonTemplate {
         for (const [, char] of Object.entries(this.characteristics)) {
             // Calculate total: base + (advance * 5) + modifier
             // Initial prep without modifier accumulation; damage subtraction lands in _applyModifiersToCharacteristics.
-            char.total = char.base + char.advance * 5 + char.modifier - (char.damage ?? 0);
+            char.total = char.base + char.advance * 5 + char.modifier - char.damage;
 
             // Base modifier is tens digit
             const baseModifier = Math.floor(char.total / 10);
@@ -1187,8 +1187,7 @@ export default class CreatureTemplate extends CommonTemplate {
             // Base total is: base + (advance * 5) + modifier (from schema)
             // Subtract recoverable characteristic damage (core.md §"Characteristic Damage").
             const baseTotal = char.base + char.advance * 5 + char.modifier;
-            const damage = char.damage ?? 0;
-            char.total = Math.max(0, baseTotal + totalMod - damage);
+            char.total = Math.max(0, baseTotal + totalMod - char.damage);
 
             // Recalculate bonus with new total
             const baseModifier = Math.floor(char.total / 10);
