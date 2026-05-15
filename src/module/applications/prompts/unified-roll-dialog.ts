@@ -15,6 +15,7 @@ import type { RollData } from '../../rolls/roll-data.ts';
 import { getDegree, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import {
     AIM_OPTIONS,
+    aggregateSituationalDamageEffects,
     getActionNameForMode,
     getAimKeyForModifier,
     getAimModifier,
@@ -1168,7 +1169,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         rd.modifiers['modifier'] = this._customModifier;
 
         // Apply combat situational card modifiers (weapon panel)
-        if (this.rollType === 'weapon' && this._activeCombatSituationals.size > 0) {
+        if (this.rollType === 'weapon') {
             const isRanged = rd.weapon?.isRanged === true;
             const situationals = getSituationalModifiers(isRanged);
             let combatSitTotal = 0;
@@ -1178,6 +1179,17 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 }
             }
             rd.modifiers['combat-situational'] = combatSitTotal;
+
+            // Propagate damage-side effects (Cover AP, forced hit location)
+            // from active situationals onto WeaponRollData so AssignDamageData
+            // sees them at apply time.
+            const damage = aggregateSituationalDamageEffects(this._activeCombatSituationals, isRanged);
+            const weaponRollData = rd as { coverAP?: number; isCalledShot?: boolean; calledShotLocation?: string };
+            weaponRollData.coverAP = damage.coverAP ?? 0;
+            if (damage.forceLocation !== undefined) {
+                weaponRollData.isCalledShot = true;
+                weaponRollData.calledShotLocation = damage.forceLocation;
+            }
         }
     }
 
