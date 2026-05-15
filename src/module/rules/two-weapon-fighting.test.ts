@@ -46,5 +46,18 @@ describe('resolveTwoWeaponPenalties', () => {
         it('ignores melee talents when attacking ranged', () => {
             expect(resolveTwoWeaponPenalties({ isMelee: false, talents: set('Two-Weapon Master (Melee)') })).toEqual({ mainPenalty: -20, offPenalty: -20 });
         });
+
+        // Errata p. 132 regression: Two-Weapon Wielder applies to ranged
+        // single-shot AND single-burst (not just standard attacks). The
+        // resolver doesn't distinguish modes — it returns the same penalty
+        // pair regardless of which ranged action is selected — so the
+        // errata's clarification holds.
+        it('errata p. 132: Wielder (Ranged) returns the same pair regardless of attack mode', () => {
+            const w = resolveTwoWeaponPenalties({ isMelee: false, talents: set('Two-Weapon Wielder (Ranged)') });
+            expect(w).toEqual({ mainPenalty: 0, offPenalty: -20 });
+            // No conditional on a "mode" parameter — the resolver doesn't
+            // accept one, which is consistent with the errata's "applies to
+            // single shot or single burst" wording.
+        });
     });
 });
