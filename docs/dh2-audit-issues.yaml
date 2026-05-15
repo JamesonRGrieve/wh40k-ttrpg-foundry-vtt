@@ -606,3 +606,510 @@ issues:
       - [ ] Flag on NPC actors marking them as reinforcement candidates.
       - [ ] Influence-cost-to-call wired into the acquisition flow.
       - [ ] Tests + story.
+
+  # ════════════════════════════════════════════════════════════════════
+  # Supplement audit — Enemies Beyond / Within / Without + Errata
+  # Generated 2026-05-15 from three parallel Explore-agent passes.
+  # ════════════════════════════════════════════════════════════════════
+
+  # ────────────────────────────────────────────────────────────────────
+  # Enemies Beyond — Daemon supplement
+  # ────────────────────────────────────────────────────────────────────
+
+  - id: beyond-malefic-corruption-on-use
+    title: "DH2 audit · P1 · Beyond · Malefic Daemonology corruption-on-use automation"
+    labels: [dh2-audit, "audit:p1", "source:beyond", "area:psychic", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `beyond.md` §"Malefic Daemonology" — every successful manifestation
+      of a Malefic power grants Corruption equal to the psy rating used.
+      Not automated; players manually adjust.
+
+      ## Acceptance criteria
+
+      - [ ] On a successful Malefic focus power test, the actor's
+            Corruption increases by the PR used (clamped sanely).
+      - [ ] Push interaction: pushed PR counts.
+      - [ ] Settings toggle to disable for groups using manual tracking.
+      - [ ] Tests + story coverage.
+
+  - id: beyond-daemonic-mastery-test
+    title: "DH2 audit · P1 · Beyond · Daemonic Mastery test framework"
+    labels: [dh2-audit, "audit:p1", "source:beyond", "area:psychic", enhancement]
+    body: |
+      ## Audit point
+
+      `beyond.md` p. 59 — Daemonic Mastery is an opposed Willpower test
+      at Very Hard (−30) baseline, modified by True Name (+30), proper
+      ritual components, etc. Used by Summoning, Binding, and Exorcism.
+
+      ## Acceptance criteria
+
+      - [ ] `acolyte.rollDaemonicMasteryTest(target, modifiers)`.
+      - [ ] Opposed-test pathway already exists in roll-data; this just
+            seeds it with the Daemonic Mastery defaults.
+      - [ ] Modifier sources documented and stackable.
+
+  - id: beyond-daemon-summoning-ritual
+    title: "DH2 audit · P1 · Beyond · Daemon summoning ritual mechanics"
+    labels: [dh2-audit, "audit:p1", "source:beyond", "area:psychic", "area:narrative", enhancement]
+    body: |
+      ## Audit point
+
+      `beyond.md` p. 59 — full summoning ritual: Hellish (−60) Forbidden
+      Lore test, ritual components, True Name bonus +30, Daemonic Mastery
+      opposed against the daemon's Willpower, binding duration = 1 hour
+      per DoS.
+
+      ## Acceptance criteria
+
+      - [ ] Ritual outcome captured as a chat-card workflow with the
+            Forbidden Lore test, optional Daemonic Mastery follow-up,
+            and a generated binding-duration timer.
+      - [ ] Failure consequences (loose daemon) flagged for GM.
+
+  - id: beyond-daemon-weapon-binding
+    title: "DH2 audit · P2 · Beyond · Daemon weapon binding + Binding Strength + personality"
+    labels: [dh2-audit, "audit:p2", "source:beyond", "area:combat", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `beyond.md` p. 50 — Daemon weapons bind via Daemonic Mastery test;
+      Binding Strength tier governs the weapon's stats, granted
+      Attributes, and personality traits (Jealous, Prideful, Vindictive,
+      Overbearing) that trigger conditional effects.
+
+      ## Acceptance criteria
+
+      - [ ] `weapon-modification.ts` or a new `daemon-binding` item type
+            captures Binding Strength + Attribute selections.
+      - [ ] Personality-triggered effects surface as Active Effects when
+            condition met.
+      - [ ] Subtlety penalty applied while wielded (see Beyond p. 75).
+
+  - id: beyond-possession-track
+    title: "DH2 audit · P2 · Beyond · Possession track + Unleash Daemon"
+    labels: [dh2-audit, "audit:p2", "source:beyond", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `beyond.md` p. 69 — Possession traits by Corruption tier,
+      session-limited Daemon unleash uses, Willpower resist test by
+      Corruption level.
+
+      ## Acceptance criteria
+
+      - [ ] Possession state field on actor (none / latent / possessed).
+      - [ ] Unleash counter resets per session; spend tracking.
+      - [ ] Resist-test integration.
+
+  - id: beyond-exorcism-ritual
+    title: "DH2 audit · P2 · Beyond · Exorcism ritual"
+    labels: [dh2-audit, "audit:p2", "source:beyond", "area:psychic", enhancement]
+    body: |
+      ## Audit point
+
+      `beyond.md` p. 70 — Extended Daemonic Mastery test; Exorcism
+      Modifiers table; required DoS computed from possessor's
+      Willpower; Toughness save for the host's survival on success.
+
+      ## Acceptance criteria
+
+      - [ ] Hooks into the Extended Test ladder from #59.
+      - [ ] Modifier table codified.
+      - [ ] Survival check resolves on completion.
+
+  - id: beyond-dark-pacts
+    title: "DH2 audit · P2 · Beyond · Dark Pacts (negotiation + Boons/Banes)"
+    labels: [dh2-audit, "audit:p2", "source:beyond", "area:narrative", enhancement]
+    body: |
+      ## Audit point
+
+      `beyond.md` p. 72 — Daemon Disposition starting value, Boons/Banes
+      tables, Pact payment mechanics, Subtlety modifier shifts on
+      discovery.
+
+      ## Acceptance criteria
+
+      - [ ] Pact tracking on actor (active pacts list + payment status).
+      - [ ] Subtlety hook adjusts on discovery event.
+      - [ ] Boons/Banes apply as Active Effects.
+
+  - id: beyond-daemonhost-creation
+    title: "DH2 audit · P3 · Beyond · Daemonhost creation + Binding Strength tables"
+    labels: [dh2-audit, "audit:p3", "source:beyond", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `beyond.md` p. 66 — Daemonhost as a Reinforcement Character;
+      Binding Strength table; host preparation test; Unholy Changes
+      table application.
+
+      ## Acceptance criteria
+
+      - [ ] Daemonhost actor template or NPC sub-type.
+      - [ ] Binding Strength selection drives stat tier.
+      - [ ] Unholy Changes traits applied on creation.
+
+  - id: beyond-astropath-elite-advance
+    title: "DH2 audit · P2 · Beyond · Astropath Elite Advance"
+    labels: [dh2-audit, "audit:p2", "source:beyond", "area:psychic", enhancement]
+    body: |
+      ## Audit point
+
+      `beyond.md` p. 36 — Astropath Elite Advance with Bound-to-the-Highest-
+      Power (ignore Psychic Phenomena) and Supreme Telepath (boost PR on
+      Telepathy). Currently a career but not an Elite Advance path.
+
+      ## Acceptance criteria
+
+      - [ ] Elite advance item with the talent grants attached.
+
+  - id: beyond-warband-subtlety-conditional
+    title: "DH2 audit · P3 · Beyond · Warband Subtlety conditional modifiers"
+    labels: [dh2-audit, "audit:p3", "source:beyond", "area:narrative", enhancement]
+    body: |
+      ## Audit point
+
+      `beyond.md` — Quarantine World, daemon weapons carried, and Dark
+      Pacts each adjust the warband Subtlety in specific ways. Needs
+      to slot into the #64 Subtlety pool.
+
+      ## Acceptance criteria
+
+      - [ ] Subtlety adjuster registry; each source contributes a typed
+            entry.
+
+  # ────────────────────────────────────────────────────────────────────
+  # Enemies Within — Chaos supplement
+  # ────────────────────────────────────────────────────────────────────
+
+  - id: within-minor-psychic-powers
+    title: "DH2 audit · P1 · Within · Minor psychic powers + non-discipline category"
+    labels: [dh2-audit, "audit:p1", "source:within", "area:psychic", enhancement]
+    body: |
+      ## Audit point
+
+      `within.md` p. 59-61 — 11 minor psychic powers (Aura of Fear,
+      Deja Vu, Foretelling, Ignite, Ill Omen, Impel, Luck, Suggestion,
+      Summon Vermin, Weapon Jinx, Word of Beasts) that are NOT part of
+      any discipline tree. The `discipline` field on `psychic-power.ts`
+      enums a fixed list and has no "minor" / unallocated category.
+
+      ## Acceptance criteria
+
+      - [ ] `discipline` enum gains `'minor'`.
+      - [ ] Compendium gets the 11 power entries (compendium task; the
+            schema change is the engine concern).
+
+  - id: within-radical-services-requisition
+    title: "DH2 audit · P1 · Within · Radical Services Requisition table"
+    labels: [dh2-audit, "audit:p1", "source:within", "area:narrative", enhancement]
+    body: |
+      ## Audit point
+
+      `within.md` p. 72 — Radical Services (Bounty Hunter, Dark Oracle,
+      Death Cult, Heretek, Hive Gang, Malefic Scholar, Mutant Mercenary,
+      Rogue Psyker, Recidivist) require a Requisition test against an
+      availability table; success = DoS vs threat level.
+
+      ## Acceptance criteria
+
+      - [ ] Service-item type or extension of acquisition-dialog flow.
+      - [ ] Table 2-10 codified.
+      - [ ] Peer/Enemy bonus-penalty stacking honoured.
+      - [ ] Homebrew/RAW gate via `WH40KSettings.getRuleset()`.
+
+  - id: within-inquests
+    title: "DH2 audit · P1 · Within · Inquests system + Investigation Points"
+    labels: [dh2-audit, "audit:p1", "source:within", "area:narrative", enhancement]
+    body: |
+      ## Audit point
+
+      `within.md` p. 62 — Inquest framework: targets, Requirements,
+      Lead Investigator role, Investigation Points across five
+      thresholds (200/400/600/900/1200) yielding revelations.
+
+      ## Acceptance criteria
+
+      - [ ] Inquest item type with target / requirements / IP tally.
+      - [ ] Revelation thresholds + chat-card hook.
+      - [ ] Integrates with the #74 Investigation Leads item type.
+
+  - id: within-mutant-background
+    title: "DH2 audit · P2 · Within · Mutant background + Twisted Flesh"
+    labels: [dh2-audit, "audit:p2", "source:within", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `within.md` p. 32 — Mutant background starts with +10 Corruption;
+      Twisted Flesh talent converts a failed Malignancy test into a
+      Mutation. Wires into #67 Malignancy test.
+
+      ## Acceptance criteria
+
+      - [ ] Origin-path entry; +10 Corruption initial.
+      - [ ] Twisted Flesh talent + malignancy→mutation conversion in
+            the test pipeline.
+
+  - id: within-adepta-sororitas-background
+    title: "DH2 audit · P2 · Within · Adepta Sororitas background + Incorruptible Devotion"
+    labels: [dh2-audit, "audit:p2", "source:within", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `within.md` p. 30 — Background grants Incorruptible Devotion
+      trait: Corruption → Insanity at a favourable trade. Power armour
+      already in compendium; rules layer is missing.
+
+      ## Acceptance criteria
+
+      - [ ] Trait with the Corruption-converts-to-Insanity hook on
+            corruption-event resolution.
+
+  - id: within-fanatic-role
+    title: "DH2 audit · P2 · Within · Fanatic role + Death-to-All-Who-Oppose-Me"
+    labels: [dh2-audit, "audit:p2", "source:within", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `within.md` p. 34 — Fanatic role; Fate-spend power "Death to All
+      Who Oppose Me" grants Hatred vs current foe for a duration.
+
+      ## Acceptance criteria
+
+      - [ ] Role entry; Fate-spend action surfaces on character sheet.
+
+  - id: within-penitent-role
+    title: "DH2 audit · P3 · Within · Penitent role + self-mortification"
+    labels: [dh2-audit, "audit:p3", "source:within", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `within.md` p. 36 — Penitent role; Mortification of the Flesh
+      talent self-inflicts Fatigue for test bonuses.
+
+      ## Acceptance criteria
+
+      - [ ] Role + talent that calls `applyFatigue(n)` and grants a
+            duration-limited modifier (use the AE pipeline).
+
+  - id: within-novel-talents-umbrella
+    title: "DH2 audit · P2 · Within · Novel-mechanic talents (umbrella)"
+    labels: [dh2-audit, "audit:p2", "source:within", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `within.md` introduces 8+ talents with mechanics not currently
+      modelled. Sub-items below are each their own follow-up; the
+      umbrella tracks completion.
+
+      ### Per-talent checklist
+
+      - [ ] Aegis of Contempt (Corruption-reduction aura).
+      - [ ] Divine Protection (Spray-quality friendly-fire filter).
+      - [ ] Flagellant (self-Fatigue Full Action for resolve bonus).
+      - [ ] Into the Jaws of Hell (Fellowship-subtract Pinning/Fear DoF).
+      - [ ] Indomitable Conviction (Insanity-reduction aura).
+      - [ ] Mounted Warrior (vehicle/mount attack-penalty reducer).
+      - [ ] Penitent Psyker (psychic-power reaction interception).
+      - [ ] Purity of Hatred (Vengeful quality on Hatred target).
+      - [ ] Tainted Psyker (Corruption-up-to-PR + Phenomena modifier).
+      - [ ] Witch Finder (non-psyker Psyniscience grant).
+
+  - id: within-profane-objects
+    title: "DH2 audit · P2 · Within · Profane Objects item type + conditional effects"
+    labels: [dh2-audit, "audit:p2", "source:within", "area:character", "area:psychic", enhancement]
+    body: |
+      ## Audit point
+
+      `within.md` p. 52-57 — Profane Objects (Eye of Tzeentch, Foundation
+      Stone of House Dane, Hammer of Saint Lucillius, Libris Maleficarum
+      ×4, Madani's Music Box) carry conditional auras and corruption-
+      per-action hooks not modelled by gear/weapon today.
+
+      ## Acceptance criteria
+
+      - [ ] `profane-object` item type or extension on existing types.
+      - [ ] Conditional aura logic (range + condition).
+      - [ ] Corruption-per-action accrual.
+
+  - id: within-tainted-psyker-phenomena
+    title: "DH2 audit · P3 · Within · Variable Phenomena modifier (Tainted Psyker)"
+    labels: [dh2-audit, "audit:p3", "source:within", "area:psychic", enhancement]
+    body: |
+      ## Audit point
+
+      `within.md` p. 58 Tainted Psyker — adds +5 to the Phenomena roll
+      per Corruption Point gained from focus-power voluntary push.
+      Requires phenomena-modifier scalar on the roll path.
+
+      ## Acceptance criteria
+
+      - [ ] `psychic-power.ts:phenomenaModifier` already exists; verify
+            it is consulted in `rollPsychicPhenomena()`.
+      - [ ] Talent emits the modifier when active.
+
+  # ────────────────────────────────────────────────────────────────────
+  # Enemies Without — Xenos supplement
+  # ────────────────────────────────────────────────────────────────────
+
+  - id: without-explication
+    title: "DH2 audit · P1 · Without · Explication research engine"
+    labels: [dh2-audit, "audit:p1", "source:without", "area:narrative", enhancement]
+    body: |
+      ## Audit point
+
+      `without.md` p. 65-69 — Long-term xenos research framework:
+      Objectives (Eradication / Aegis / Detection / Communication /
+      Comprehension); complexity scaling; Breakthrough milestones;
+      permanent bonuses on completion. Hooks into the Extended Test
+      ladder from #59.
+
+      ## Acceptance criteria
+
+      - [ ] Explication item or chat workflow tracking objective +
+            complexity + progress.
+      - [ ] Breakthrough hook (intermediate-success grant).
+      - [ ] Completion bonus application.
+
+  - id: without-flyer-altitude
+    title: "DH2 audit · P2 · Without · Flyer altitude + Aerial Manoeuvres"
+    labels: [dh2-audit, "audit:p2", "source:without", "area:vehicles", enhancement]
+    body: |
+      ## Audit point
+
+      `without.md` p. 54-55 — Flyer vehicle trait adds four altitude
+      tiers (Ground / Low / High / Orbital) with mandatory minimum
+      movement, descent/climb rules, targeting penalties at High+,
+      and new Aerial Manoeuvres (Lock On, Tight Turn).
+
+      ## Acceptance criteria
+
+      - [ ] Altitude field on vehicle stat block (constrained to four
+            values).
+      - [ ] Minimum-movement gate + scatter direction on Out of Control.
+      - [ ] Lock On / Tight Turn entries in vehicle action catalogue
+            (consumes #71 vehicle-actions.ts).
+
+  - id: without-ace-role
+    title: "DH2 audit · P2 · Without · Ace role + Right Stuff Fate spend"
+    labels: [dh2-audit, "audit:p2", "source:without", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `without.md` p. 48 — Ace role; Right Stuff Fate spend yields
+      auto-success on Operate / Survival with DoS = Ag bonus.
+
+      ## Acceptance criteria
+
+      - [ ] Role item with Fate-spend action.
+
+  - id: without-novel-talents-umbrella
+    title: "DH2 audit · P2 · Without · Novel-mechanic talents (umbrella)"
+    labels: [dh2-audit, "audit:p2", "source:without", "area:character", "area:combat", enhancement]
+    body: |
+      ## Audit point
+
+      `without.md` introduces five talents with mechanics not modelled.
+
+      ### Per-talent checklist
+
+      - [ ] Field Vivisection (Medicae instead of WS/BS for Called Shot
+            against studied xenos).
+      - [ ] Hotshot Pilot (trade Fatigue for +DoS / reduced failure on
+            Operate).
+      - [ ] Hull Down (vehicle Size treated as 1 lower for attack/cover
+            during Movement actions).
+      - [ ] Leaping Dodge (use Dodge skill against Spray-quality
+            avoidance).
+      - [ ] Push the Limit (+20 Operate once/round; 4+ DoF triggers
+            critical hit on motive systems).
+
+  - id: without-new-homeworld-traits
+    title: "DH2 audit · P2 · Without · New homeworld traits (Death/Garden/Research)"
+    labels: [dh2-audit, "audit:p2", "source:without", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `without.md` adds three homeworlds whose traits carry novel
+      effects beyond stat tweaks:
+      - **Death World** Survivor's Paranoia — negates +30 BS/WS from
+        Surprised attackers (existing surprise modifier needs an exclusion
+        hook).
+      - **Garden World** Serenity of the Green — halves Shock/Trauma
+        duration; Insanity recovery cost reduced.
+      - **Research Station** Scholarly Discipline — once-per-session
+        reroll on Scholastic Lore.
+
+      ## Acceptance criteria
+
+      - [ ] Each trait modelled (homeworld compendium item is data
+            only; the rules hooks are the audit concern).
+
+  - id: without-spray-dodge-avoidance
+    title: "DH2 audit · P3 · Without · Spray quality avoidance pathway (Ag vs Dodge)"
+    labels: [dh2-audit, "audit:p3", "source:without", "area:combat", enhancement]
+    body: |
+      ## Audit point
+
+      `without.md` p. 62 — Leaping Dodge talent presupposes Spray
+      avoidance is normally a raw Agility test; the talent upgrades it
+      to the Dodge skill. Clarify and codify in the Spray quality
+      handler (when it lands per #57 follow-up).
+
+      ## Acceptance criteria
+
+      - [ ] Spray quality handler emits a default Agility test; talents
+            can substitute Dodge.
+
+  # ────────────────────────────────────────────────────────────────────
+  # Errata
+  # ────────────────────────────────────────────────────────────────────
+
+  - id: errata-medicae-mechadendrite
+    title: "DH2 audit · P2 · Errata · Medicae Mechadendrite blood-loss stun Half Action"
+    labels: [dh2-audit, "audit:p2", "source:errata", "area:combat", enhancement]
+    body: |
+      ## Audit point
+
+      Errata p. 183 — Medicae Mechadendrite can stun Blood Loss as a
+      Half Action; the mechadendrite-as-melee-weapon usable once/round
+      rule is also restated. Engine has no Half-Action-cancel-Blood-Loss
+      hook.
+
+      ## Acceptance criteria
+
+      - [ ] Mechadendrite item action invoking `bloodloss` condition
+            removal.
+
+  - id: errata-manacles-penalty
+    title: "DH2 audit · P3 · Errata · Manacles −40 BS/WS as a tracked condition"
+    labels: [dh2-audit, "audit:p3", "source:errata", "area:combat", enhancement]
+    body: |
+      ## Audit point
+
+      Errata p. 176 — Wearing manacles imposes −40 to BS and WS tests.
+      Item exists in gear; the constraint isn't a tracked condition.
+
+      ## Acceptance criteria
+
+      - [ ] `manacled` condition in the AE registry; auto-applied when
+            the item is equipped or a GM flag is set.
+
+  - id: errata-twoweapon-ranged-wording
+    title: "DH2 audit · P3 · Errata · Two-Weapon Wielder ranged-mode wording"
+    labels: [dh2-audit, "audit:p3", "source:errata", "area:combat", enhancement]
+    body: |
+      ## Audit point
+
+      Errata p. 132 — Two-Weapon Wielder revised wording clarifies the
+      ranged-weapon application (single shot vs burst). The two-weapon
+      resolver from #52 should be re-checked against the errata for the
+      ranged path.
+
+      ## Acceptance criteria
+
+      - [ ] Verify `resolveTwoWeaponPenalties()` matches errata wording
+            for ranged Wielder. Update test names if so.
