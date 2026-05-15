@@ -147,6 +147,10 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 // Fate formula - supports conditional notation like "(1-5|=2),(6-10|=3)"
                 fateFormula: new fields.StringField({ required: false, blank: true, initial: '' }),
 
+                // Burn-fate threshold — added to creature.ts:fate.threshold when grants apply.
+                // Used by the cheat-death flow (core.md §"Fate Threshold").
+                fateThreshold: new fields.NumberField({ required: false, initial: 0, min: 0, integer: true }),
+
                 // Blessed by Emperor (fate points on critical success)
                 blessedByEmperor: new fields.BooleanField({ required: true, initial: false }),
 
