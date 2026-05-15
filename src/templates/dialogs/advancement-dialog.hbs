@@ -37,10 +37,11 @@
   {{else}}
 
   {{!-- Tab Navigation (sticky alongside the header so the tab bar stays anchored) --}}
-  <nav class="tw-sticky tw-top-[var(--wh40k-adv-header-h,4rem)] tw-z-10 tw-bg-[var(--color-bg-secondary)] tw-shrink-0">
+  <nav class="tw-sticky tw-top-[var(--wh40k-adv-header-h,4rem)] tw-z-10 tw-shrink-0 tw-flex tw-items-stretch tw-gap-0.5 tw-bg-[var(--color-bg-secondary)] tw-border-b tw-border-[var(--wh40k-border-color)] tw-px-1 tw-py-1 tw-overflow-x-auto">
     {{#each tabs}}
     <button
-      class="{{#if this.active}}active{{/if}}"
+      class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-1.5 tw-rounded tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-whitespace-nowrap tw-cursor-pointer tw-transition-all tw-shrink-0
+             {{#if this.active}}tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.25),rgba(139,112,21,0.35))] tw-border tw-border-[var(--wh40k-color-gold)] tw-text-[color:var(--wh40k-color-gold-light)]{{else}}tw-bg-transparent tw-border tw-border-transparent tw-text-[color:var(--color-text-secondary)] hover:tw-bg-[rgba(0,0,0,0.15)] hover:tw-text-[color:var(--wh40k-color-gold-light)]{{/if}}"
       data-action="switchTab"
       data-tab="{{this.id}}"
       type="button"
@@ -179,10 +180,11 @@
     </div>
     {{/if}}
 
-    {{!-- Talents Tab — grouped by tier; higher tiers locked until a lower-tier talent is owned --}}
+    {{!-- Talents Tab — grouped by tier (aptitude systems); falls back to flat list for career systems --}}
     {{#if (eq activeTab "talents")}}
     <div class="tw-animate-[fadeIn_250ms_ease]">
       {{#if talents.length}}
+      {{#if talentsByTier.length}}
       <div class="tw-flex tw-flex-col tw-gap-3">
         {{#each talentsByTier as |group|}}
         <section class="tw-pl-3 tw-border-l-2 {{#if group.unlocked}}tw-border-[var(--wh40k-color-gold)]{{else}}tw-border-[var(--wh40k-color-warning)] tw-opacity-80{{/if}}">
@@ -244,6 +246,51 @@
         </section>
         {{/each}}
       </div>
+      {{else}}
+      {{!-- Career-based systems: flat list (no tier grouping) --}}
+      <div class="tw-flex tw-flex-col tw-gap-1">
+        {{#each talents}}
+        <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-py-1 tw-px-2.5 tw-rounded-md {{#if this.owned}}tw-bg-[rgba(45,80,22,0.18)] tw-border tw-border-[rgba(124,179,66,0.4)]{{else if this.blocked}}tw-bg-[rgba(0,0,0,0.08)] tw-opacity-70{{else}}tw-bg-[var(--color-bg-option,rgba(0,0,0,0.03))] tw-border tw-border-[var(--wh40k-border-color-light)]{{/if}} {{#if this.recentlyPurchased}}tw-animate-purchasePulse{{/if}}">
+          <div class="tw-flex tw-items-center tw-gap-2 tw-min-w-0 tw-flex-1">
+            <span class="tw-font-semibold tw-truncate">{{this.displayName}}</span>
+            <a class="tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-color-gold)]"
+               data-action="openCompendiumItem"
+               data-name="{{this.name}}"
+               data-type="talent"
+               title="{{localize 'WH40K.Advancement.ViewInCompendium'}}">
+              <i class="fas fa-external-link-alt tw-text-[0.7rem]"></i>
+            </a>
+            {{#if this.owned}}
+            <span class="tw-text-[0.65rem] tw-py-[0.1rem] tw-px-[0.4rem] tw-rounded tw-inline-flex tw-items-center tw-gap-1 tw-bg-[rgba(45,80,22,0.3)] tw-text-[#7cb342]"><i class="fas fa-check"></i> Owned</span>
+            {{/if}}
+          </div>
+          {{#if this.blocked}}
+          <div class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-color-warning)] tw-text-[0.7rem] tw-cursor-help" title="{{#each this.prereqDisplay}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}">
+            <i class="fas fa-lock"></i>
+            <span>{{this.cost}} XP</span>
+          </div>
+          {{else if this.owned}}
+          <i class="fas fa-check-circle tw-text-[#7cb342]"></i>
+          {{else if this.canPurchase}}
+          <button
+            class="tw-inline-flex tw-items-center tw-gap-1.5 tw-py-[0.3rem] tw-px-[0.6rem] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.2),rgba(139,112,21,0.3))] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[color:var(--wh40k-color-gold-light)] tw-text-[0.72rem] tw-font-semibold tw-cursor-pointer hover:tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.35),rgba(139,112,21,0.45))] hover:tw-border-[var(--wh40k-color-gold)] hover:tw-scale-105 active:tw-scale-[0.98]"
+            data-action="purchaseAdvance"
+            data-index="{{this.index}}"
+            data-type="talent"
+            type="button"
+          >
+            <span>{{this.cost}} XP</span>
+          </button>
+          {{else if this.cantAfford}}
+          <div class="tw-inline-flex tw-items-center tw-gap-1 tw-text-[color:var(--color-text-tertiary)] tw-text-[0.7rem]" title="{{localize 'WH40K.Advancement.CannotAfford'}}">
+            <i class="fas fa-coins"></i>
+            <span>{{this.cost}} XP</span>
+          </div>
+          {{/if}}
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
       {{else}}
       <div class="tw-flex tw-flex-col tw-items-center tw-gap-2 tw-py-8 tw-px-4 tw-text-center tw-text-[color:var(--color-text-tertiary)]">
         <i class="fas fa-star tw-text-[1.5rem] tw-opacity-50"></i>
