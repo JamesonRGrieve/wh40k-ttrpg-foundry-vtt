@@ -56,6 +56,20 @@ export async function handleBleeding(actor: WH40KBaseActorDocument): Promise<voi
     await sendActiveEffectMessage(context);
 }
 
+/**
+ * Per-turn Blood Loss tick (core.md §"Blood Loss"). The character takes
+ * 1 wound at the start of their turn while Heavily Damaged. The Toughness
+ * test that mitigates the +1 fatigue tier is left to the GM; the wound
+ * tick is automated here. Reuses the bleeding chat card.
+ */
+export async function handleBloodLoss(actor: WH40KBaseActorDocument): Promise<void> {
+    const context: ActiveEffectChatContext = {
+        template: 'systems/wh40k-rpg/templates/chat/bleeding-chat.hbs',
+        actor: actor,
+    };
+    await sendActiveEffectMessage(context);
+}
+
 export async function handleOnFire(actor: WH40KBaseActorDocument): Promise<void> {
     const willpower = actor.characteristics['willpower'];
     const context: ActiveEffectChatContext = {
@@ -274,6 +288,70 @@ export async function createConditionEffect(actor: WH40KBaseActorDocument, condi
             icon: 'icons/svg/holy-shield.svg',
             changes: [{ key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 }],
             flags: { 'wh40k-rpg': { nature: 'beneficial' } },
+        },
+        pinned: {
+            // core.md §"Pinning": pinned characters can't move or attack with
+            // ranged weapons; melee attacks against them get +20 WS.
+            name: 'Pinned',
+            icon: 'icons/svg/net.svg',
+            changes: [{ key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
+            flags: { 'wh40k-rpg': { nature: 'harmful' } },
+        },
+        unconscious: {
+            // core.md §"Unconsciousness": helpless target until healed.
+            name: 'Unconscious',
+            icon: 'icons/svg/unconscious.svg',
+            changes: [
+                { key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
+                { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
+                { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
+                { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -60 },
+            ],
+            flags: { 'wh40k-rpg': { nature: 'harmful' } },
+        },
+        suffocating: {
+            // core.md §"Suffocation": no immediate stat hit, but the GM tracks
+            // ladder-state via the flag. Damage accrues outside the AE pipeline.
+            name: 'Suffocating',
+            icon: 'icons/svg/drowning.svg',
+            changes: [],
+            flags: { 'wh40k-rpg': { nature: 'harmful', suffocating: true } },
+        },
+        bloodloss: {
+            // core.md §"Blood Loss": persistent 1d10 per turn when Heavily
+            // Damaged, plus Toughness test or +1 fatigue. The per-turn tick
+            // hooks into `processActiveEffectsDuringCombat` (see settings).
+            name: 'Blood Loss',
+            icon: 'icons/svg/blood.svg',
+            changes: [],
+            flags: { 'wh40k-rpg': { nature: 'harmful', bloodloss: true } },
+        },
+        uselessLimb: {
+            // core.md §"Useless Limbs": loss of use of the limb until healed.
+            // The flag carries which limb; sheets / item enforcement consume it.
+            name: 'Useless Limb',
+            icon: 'icons/svg/sling.svg',
+            changes: [],
+            flags: { 'wh40k-rpg': { nature: 'harmful', uselessLimb: true } },
+        },
+        fatigued: {
+            // core.md §"Fatigue": each level adds -10 to all tests. The
+            // applicator should be `applyFatigue(n)` on the actor; this AE
+            // surfaces the impact in a player-readable way.
+            name: 'Fatigued',
+            icon: 'icons/svg/sleep.svg',
+            changes: [
+                { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+                { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+                { key: 'system.characteristics.strength.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+                { key: 'system.characteristics.toughness.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+                { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+                { key: 'system.characteristics.intelligence.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+                { key: 'system.characteristics.perception.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+                { key: 'system.characteristics.willpower.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+                { key: 'system.characteristics.fellowship.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -10 },
+            ],
+            flags: { 'wh40k-rpg': { nature: 'harmful' } },
         },
     };
 

@@ -1,4 +1,4 @@
-import { handleBleeding, handleOnFire } from '../rules/active-effects.ts';
+import { handleBleeding, handleBloodLoss, handleOnFire } from '../rules/active-effects.ts';
 
 /** Shape of the data payload delivered by the combatTurn / combatRound hooks. */
 interface CombatUpdateData {
@@ -69,6 +69,9 @@ export class CombatActionManager {
                 } else if (effect.name === 'Bleeding') {
                     // eslint-disable-next-line no-await-in-loop -- sequential: effects must resolve in order to avoid actor state races
                     await handleBleeding(currentCombatant.actor);
+                } else if (effect.name === 'Blood Loss') {
+                    // eslint-disable-next-line no-await-in-loop -- sequential: effects must resolve in order to avoid actor state races
+                    await handleBloodLoss(currentCombatant.actor);
                 }
             }
         }
