@@ -291,6 +291,13 @@ function allCombatActions(): CombatAction[] {
             },
         },
         {
+            name: 'Unjam',
+            type: ['Full'],
+            subtype: ['Miscellaneous', 'Ranged'],
+            description:
+                'Clear a jammed ranged weapon with a Full Action and a Ballistic Skill test. Success clears the jam, though any ammo loaded in the weapon is lost and the weapon must be reloaded. Failure leaves the jam in place; the character may attempt to clear it again next round.',
+        },
+        {
             name: 'Tactical Advance',
             type: ['Full'],
             subtype: ['Concentration', 'Movement'],

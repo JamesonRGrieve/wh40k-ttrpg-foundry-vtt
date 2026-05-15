@@ -2,6 +2,7 @@ import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
+import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
@@ -237,6 +238,9 @@ export class ActionData {
                     }
                 }
 
+                // Jam threshold check per core.md §"Weapon Jams" lives in
+                // `rules/weapon-jam.ts` so it can be unit-tested without
+                // standing up a full roll/actor graph.
                 if (craftsmanship === 'poor' && hasUnreliable && !this.rollData.success) {
                     if (!bestNeverJamsOrOverheats) {
                         this.effects.push('jam');
@@ -245,17 +249,23 @@ export class ActionData {
                             'The weapon is of such poor quality with its unreliable mechanism that it jams on this failed shot!',
                         );
                     }
-                } else {
-                    const shouldJam = (!hasReliable && rollTotal > 96) || rollTotal === 100;
-                    if (shouldJam) {
-                        if (bestNeverJamsOrOverheats) {
-                            this.rollData.success = false;
-                            this.addEffect('Near Jam', 'The weapon nearly jams, but its superior craftsmanship prevents it. Attack misses.');
-                        } else {
-                            this.effects.push('jam');
-                            this.rollData.success = false;
-                        }
+                } else if (!bestNeverJamsOrOverheats) {
+                    const jams = shouldJamRoll({
+                        action: this.rollData.action,
+                        rollTotal,
+                        success: this.rollData.success,
+                        hasReliable,
+                        hasUnreliable,
+                    });
+                    if (jams) {
+                        this.effects.push('jam');
+                        this.rollData.success = false;
                     }
+                } else if (rollTotal === 100 || (!hasReliable && rollTotal >= getJamFloor(this.rollData.action))) {
+                    // "best" craftsmanship still announces a near-jam for cosmetic purposes
+                    // but never actually jams.
+                    this.rollData.success = false;
+                    this.addEffect('Near Jam', 'The weapon nearly jams, but its superior craftsmanship prevents it. Attack misses.');
                 }
             }
         }
