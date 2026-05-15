@@ -373,14 +373,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             { id: 'talents', label: 'WH40K.Advancement.Tab.Talents', icon: 'fa-star', active: this.#activeTab === 'talents' },
         ];
         if (systemConfig?.usesAptitudes === true) {
-            // Psychic Powers tab is gated on the per-system psyker unlock
-            // (DH2: 'Psyker' elite advance; BC: 'Psyker' archetype; OW:
-            // 'Sanctioned Psyker' speciality). Players take that unlock via
-            // the Traits tab; once owned, the Psychic Powers tab appears on
-            // re-render.
-            if (systemConfig.isPsyker(this.actor)) {
-                tabs.push({ id: 'psychic', label: 'WH40K.Advancement.Tab.Psychic', icon: 'fa-brain', active: this.#activeTab === 'psychic' });
-            }
+            // Psychic Powers tab is always visible on aptitude systems so
+            // non-psykers can browse the catalogue. Its content gates on
+            // the per-system psyker unlock (DH2: 'Psyker' elite advance;
+            // BC: 'Psyker' archetype; OW: 'Sanctioned Psyker' speciality) —
+            // non-psykers see a locked-state message pointing them at the
+            // Traits tab.
+            tabs.push({ id: 'psychic', label: 'WH40K.Advancement.Tab.Psychic', icon: 'fa-brain', active: this.#activeTab === 'psychic' });
             tabs.push({ id: 'traits', label: 'WH40K.Advancement.Tab.Traits', icon: 'fa-dna', active: this.#activeTab === 'traits' });
         }
         context.tabs = tabs;
@@ -417,15 +416,46 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 }));
         }
 
-        // Psychic Powers tab — gated on the per-system psyker unlock item
-        // (see tabs block above for details). Falls back to false when no
-        // aptitude-based system is active so the template's "Take the Psyker
-        // elite advance to unlock" message stays correct.
+        // Psychic Powers tab — catalogue is always built on aptitude systems
+        // so non-psykers can browse the available powers. Purchase actions
+        // are blocked until the per-system psyker unlock is owned (DH2:
+        // 'Psyker' elite advance; BC: 'Psyker' archetype; OW: 'Sanctioned
+        // Psyker' speciality). The template branches on isPsyker to show a
+        // banner pointing players at the Traits tab when they don't yet
+        // qualify.
         if (systemConfig?.usesAptitudes === true) {
             const aptitudeConfig = this.#getAptitudeConfig(systemConfig);
-            context['isPsyker'] = systemConfig.isPsyker(this.actor);
-            if (context['isPsyker'] === true && aptitudeConfig !== null) {
-                context['psychic'] = await this.#preparePsychic(aptitudeConfig);
+            const isPsyker = systemConfig.isPsyker(this.actor);
+            context['isPsyker'] = isPsyker;
+            if (aptitudeConfig !== null) {
+                const psychic = await this.#preparePsychic(aptitudeConfig);
+                // Non-psykers see the catalogue read-only: everything blocked,
+                // PR advance disabled. Lower tier rows still render so the
+                // player can see what they'd unlock by becoming a psyker.
+                if (!isPsyker) {
+                    psychic.psyAdvance.canPurchase = false;
+                    psychic.psyAdvance.cantAfford = false;
+                    for (const d of psychic.disciplines) {
+                        for (const t of d.tiers) {
+                            t.accessible = false;
+                            for (const p of t.items) {
+                                if (!p.owned) {
+                                    p.blocked = true;
+                                    p.canPurchase = false;
+                                    p.cantAfford = false;
+                                }
+                            }
+                        }
+                        for (const p of d.items) {
+                            if (!p.owned) {
+                                p.blocked = true;
+                                p.canPurchase = false;
+                                p.cantAfford = false;
+                            }
+                        }
+                    }
+                }
+                context['psychic'] = psychic;
             }
             context['traits'] = await this.#prepareTraitPanel();
         }
