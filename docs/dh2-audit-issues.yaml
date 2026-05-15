@@ -1,0 +1,608 @@
+# DH2 gameplay-rules audit — issue inventory.
+#
+# Read by scripts/create-dh2-audit-issues.sh. Each entry creates one GitHub
+# issue. Existing issues with matching titles are skipped (idempotent).
+#
+# Plan reference: /home/jameson/.claude/plans/fizzy-dazzling-treehouse.md
+# Audit source: .pdf/dh/core/core.md
+
+issues:
+  # ────────────────────────────────────────────────────────────────────
+  # P0 — Combat completeness
+  # ────────────────────────────────────────────────────────────────────
+
+  - id: p0-combat-circumstance-modifiers
+    title: "DH2 audit · P0 · Combat circumstance modifiers"
+    labels: [dh2-audit, "audit:p0", "area:combat", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Combat Circumstances" enumerates 11+ situational modifiers
+      (Cover light −20 / heavy −30 + cover-AP, Darkness, Difficult Terrain,
+      Engaged-in-Melee-for-Ranged −20 BS, Fog/Mist/Shadow/Smoke −10..−30,
+      Ganging Up +10 per extra attacker capped +30, Helpless +30 + auto-head
+      on melee, Higher Ground +10 melee, Pinning −20 BS to act, Prone target
+      +10 melee / −10 ranged, Size per Size trait, Stunned target +20,
+      Unaware +30 + auto-head on melee). None are present in
+      `src/module/rules/attack-options.ts` or the roll dialog.
+
+      ## Acceptance criteria
+
+      - [ ] `attack-options.ts` exposes a circumstance registry
+            `{ id, label, modifier, appliesTo, requiresTarget? }`.
+      - [ ] Roll dialog (called from `prepareUnifiedRoll()` /
+            `documents/acolyte.ts:rollCharacteristicCheck`) surfaces a
+            multi-select Circumstances panel.
+      - [ ] Cover, Helpless, and Unaware cases that mutate damage call into
+            `src/module/rolls/assign-damage-data.ts` instead of only the
+            to-hit total.
+      - [ ] Unit tests in `tests/rules/` for each modifier shape.
+      - [ ] Storybook story for the panel inside the existing roll dialog.
+      - [ ] All seven systems compile and behave.
+      - [ ] `pnpm check` + ratchet pipeline pass.
+      - [ ] Player-facing strings under `WH40K.Combat.Circumstance.*`.
+
+      ## Out of scope
+
+      Compendium content. Two-weapon fighting, weapon jams, and unjam
+      action are separate issues.
+
+  - id: p0-two-weapon-fighting
+    title: "DH2 audit · P0 · Two-weapon fighting + Wielder/Master interaction"
+    labels: [dh2-audit, "audit:p0", "area:combat", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Two-Weapon Fighting" specifies −20/−20 baseline, with
+      Two-Weapon Wielder (drops to 0/−20) and Two-Weapon Master (0/0).
+      grep for `twoWeapon` / `dualWield` / `offHand` across `src/module/`
+      returns zero hits — no implementation at all.
+
+      ## Acceptance criteria
+
+      - [ ] `twoWeaponFighting` entry in `src/module/rules/combat-actions.ts`.
+      - [ ] Off-hand penalty profile reads talent state via the existing
+            talent registry (see `prerequisite-validator.ts` pattern).
+      - [ ] Roll dialog flags which weapon is main vs off-hand.
+      - [ ] Unit tests cover all three talent states (none / Wielder /
+            Master) plus the Ambidextrous interaction.
+      - [ ] Storybook coverage.
+      - [ ] i18n under `WH40K.Combat.TwoWeapon.*`.
+
+  - id: p0-weapon-jams-unjam
+    title: "DH2 audit · P0 · Weapon jams + Unjam action (Reliable/Unreliable)"
+    labels: [dh2-audit, "audit:p0", "area:combat", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Weapon Jams" defines: standard jam on 96–100, Unreliable
+      jams on 91+, Reliable jams only on natural 100. The Unjam action
+      clears it with a Full Action. None coded — `combat-actions.ts` has
+      no `unjam` entry and the attack pipeline in
+      `src/module/rolls/action-data.ts` never inspects the roll for jam.
+
+      ## Acceptance criteria
+
+      - [ ] `unjam` entry in `combat-actions.ts`.
+      - [ ] After `rollTotal` is computed in `action-data.ts`, check the
+            weapon's qualities (`reliable` / `unreliable`) against the
+            threshold and apply a `jammed` Active Effect on the weapon
+            item.
+      - [ ] Jammed weapon refuses to fire until Unjam clears it.
+      - [ ] Unit tests for all three jam profiles.
+      - [ ] Storybook for the Unjam action button.
+      - [ ] i18n under `WH40K.Combat.Jam.*`.
+
+  - id: p0-righteous-fury
+    title: "DH2 audit · P0 · Righteous Fury auto-roll on max damage"
+    labels: [dh2-audit, "audit:p0", "area:combat", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Righteous Fury" — max damage die triggers a confirm
+      roll on a critical-injury lookup. The threshold helper
+      `getRighteousFuryThreshold(weapon)` already exists at
+      `src/module/rules/weapon-quality-effects.ts:421` but is not called
+      by `src/module/rolls/damage-data.ts:_totalDamage()`. Vengeful (X)
+      and Gauss explicitly modify this threshold and are coded but unused.
+
+      ## Acceptance criteria
+
+      - [ ] `_totalDamage()` invokes `getRighteousFuryThreshold(weapon)`
+            after rolling damage; on a die showing ≥ threshold, push a
+            confirm RF entry to `Hit.righteousFury`.
+      - [ ] RF confirmation rolls a second critical-injury lookup at the
+            same hit location.
+      - [ ] Unit tests for: standard threshold 10, Vengeful 8/9, Gauss 9,
+            and the no-RF case.
+      - [ ] Story renders the chat card with the RF callout.
+
+  - id: p0-condition-automation
+    title: "DH2 audit · P0 · Condition automation (Stunned/Pinned/Prone/Unconscious/Blinded/Deafened/Useless Limb/Blood Loss/Suffocation/Fatigue)"
+    labels: [dh2-audit, "audit:p0", "area:combat", enhancement]
+    body: |
+      ## Audit point
+
+      Condition schema at `src/module/data/item/condition.ts` exists but
+      only Burning and Bleeding are auto-applied/ticked in
+      `src/module/rules/active-effects.ts:51-76`. The remaining
+      core-book conditions (`core.md` §"Conditions And Special Damage")
+      are absent.
+
+      ## Acceptance criteria
+
+      - [ ] Per-condition handlers in `active-effects.ts` for: Stunned,
+            Pinned, Prone, Unconscious, Blinded, Deafened, Useless Limb,
+            Blood Loss (Heavily Damaged tick), Suffocation,
+            Fatigue (accumulating).
+      - [ ] Knock-Down / Stun / Suppressing Fire actions in
+            `combat-actions.ts` apply the relevant AE on resolution.
+      - [ ] Per-condition unit tests covering apply / tick / removal.
+      - [ ] Storybook renders a token-HUD with each condition applied.
+      - [ ] i18n under `WH40K.Conditions.*`.
+
+  - id: p0-fatigue-characteristic-damage
+    title: "DH2 audit · P0 · Fatigue + characteristic damage tracking"
+    labels: [dh2-audit, "audit:p0", "area:combat", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `fatigue.value` exists at `creature.ts:159-162` but no code path
+      writes to it. No characteristic-damage tracking
+      (`system.characteristics[*].damage`) exists, so recoverable
+      injuries from `core.md` §"Characteristic Damage" cannot be modelled.
+
+      ## Acceptance criteria
+
+      - [ ] `applyFatigue(n)` on the actor document; consumes the
+            `fatigue.value` slot.
+      - [ ] `system.characteristics[*].damage` integer field; reduces
+            both bonus and effective value until rest restores it.
+      - [ ] Knock-Down / Forced March / Suppressing Fire wire to
+            `applyFatigue()`.
+      - [ ] Unit tests.
+
+  - id: p0-weapon-qualities-umbrella
+    title: "DH2 audit · P0 · Weapon-quality mechanical effects (umbrella, 28 qualities)"
+    labels: [dh2-audit, "audit:p0", "area:combat", enhancement]
+    body: |
+      ## Audit point
+
+      `weapon-quality-effects.ts` covers ~14 qualities (Phase 1 + 4). The
+      following 28 are **label-only** in the data model with no
+      mechanical effect:
+
+      Blast (X), Concussive (X), Corrosive, Crippling (X), Flame,
+      Flexible, Graviton, Hallucinogenic (X), Haywire (X), Inaccurate,
+      Indirect (X), Lance, Maximal, Overheats, Power Field,
+      Primitive (X), Proven (X), Razor Sharp, Recharge, Reliable,
+      Sanctified, Scatter, Shocking, Smoke (X), Snare (X), Spray, Storm,
+      Toxic (X), Twin-linked, Unreliable.
+
+      ## Acceptance criteria
+
+      - [ ] Mechanical effect implemented per quality, checked off below.
+      - [ ] Each non-trivial quality (Blast template, Hallucinogenic
+            table, Haywire jam, Spray template, Toxic toxin save) gets
+            its own child issue.
+      - [ ] Unit tests per quality.
+      - [ ] Stories for any chat-card output specific to a quality.
+
+      ### Per-quality checklist
+
+      - [ ] Blast (X)
+      - [ ] Concussive (X)
+      - [ ] Corrosive
+      - [ ] Crippling (X)
+      - [ ] Flame (auto-Burning on hit)
+      - [ ] Flexible (cannot be parried)
+      - [ ] Graviton (knockdown + Pinning)
+      - [ ] Hallucinogenic (X)
+      - [ ] Haywire (X)
+      - [ ] Inaccurate (cannot benefit from Aim)
+      - [ ] Indirect (X)
+      - [ ] Lance (Pen × DoS to 1)
+      - [ ] Maximal (Overheats + ×2 damage + Recharge interaction)
+      - [ ] Overheats (1–9 → self damage)
+      - [ ] Power Field (parry destroys non-Power weapons)
+      - [ ] Primitive (X) (vs non-Primitive armour halved)
+      - [ ] Proven (X) (damage die floor)
+      - [ ] Razor Sharp (Pen × 2 on 2+ DoS)
+      - [ ] Recharge (every other turn)
+      - [ ] Reliable (jam only on 100; linked to p0-weapon-jams-unjam)
+      - [ ] Sanctified (Daemons cannot ignore damage)
+      - [ ] Scatter (range-banded damage & Pen modifier)
+      - [ ] Shocking (Toughness vs Stun)
+      - [ ] Smoke (X)
+      - [ ] Snare (X)
+      - [ ] Spray (template, no BS test required)
+      - [ ] Storm (RoF doubled)
+      - [ ] Toxic (X)
+      - [ ] Twin-linked (+20 BS on single shot, +1 hit on burst)
+      - [ ] Unreliable (jam on 91+; linked to p0-weapon-jams-unjam)
+
+  # ────────────────────────────────────────────────────────────────────
+  # P1 — Test mechanics polish
+  # ────────────────────────────────────────────────────────────────────
+
+  - id: p1-difficulty-steps
+    title: "DH2 audit · P1 · Missing difficulty steps (Trivial / Elementary / Hellish)"
+    labels: [dh2-audit, "audit:p1", "area:tests", enhancement]
+    body: |
+      ## Audit point
+
+      `src/module/rules/difficulties.ts` is missing the three outermost
+      bands from `core.md` §"Test Difficulty":
+        Trivial (+60), Elementary (+50), Hellish (−60).
+
+      ## Acceptance criteria
+
+      - [ ] Three new entries in `difficulties.ts`.
+      - [ ] `WH40K.Difficulty.Trivial / Elementary / Hellish` in
+            `src/lang/en.json`.
+      - [ ] `pnpm i18n:gen` regenerated.
+      - [ ] Test that all 13 bands round-trip through the roll dialog.
+
+  - id: p1-extended-tests
+    title: "DH2 audit · P1 · Extended Tests (cumulative-DoS-to-threshold)"
+    labels: [dh2-audit, "audit:p1", "area:tests", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Extended Tests" defines a multi-attempt mechanic where
+      DoS accumulate until a threshold or a failure budget is met. Not
+      coded.
+
+      ## Acceptance criteria
+
+      - [ ] New `src/module/rolls/extended-test-data.ts` modelled on
+            `damage-data.ts`; tracks threshold, accumulated DoS, time
+            per attempt, fail counter.
+      - [ ] Chat-card partial summarising progress.
+      - [ ] Roll-dialog flag `extended: true` with threshold input.
+      - [ ] Unit + story coverage.
+      - [ ] i18n under `WH40K.ExtendedTest.*`.
+
+  - id: p1-assistance
+    title: "DH2 audit · P1 · Assistance modifier (+10 per assistant, capped)"
+    labels: [dh2-audit, "audit:p1", "area:tests", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Assistance" — +10 per assistant up to the table cap.
+      Not in the roll dialog.
+
+      ## Acceptance criteria
+
+      - [ ] Optional "Assistants" integer field on the roll dialog.
+      - [ ] Cap enforced per `core.md` table.
+      - [ ] Chat card annotates assistant names where GM selected actors.
+      - [ ] Unit tests.
+      - [ ] i18n.
+
+  - id: p1-untrained-and-alt-characteristic
+    title: "DH2 audit · P1 · Untrained-skill halving + alternate characteristic"
+    labels: [dh2-audit, "audit:p1", "area:tests", enhancement]
+    body: |
+      ## Audit point
+
+      Two related gaps from `core.md` §"Untrained Skill Use" and skill
+      descriptors' "Special Uses":
+
+      - Non-Basic skills used at advance 0 should halve the
+        characteristic. Not enforced.
+      - Per-skill "alternate characteristic" overrides should be
+        selectable in the test.
+
+      ## Acceptance criteria
+
+      - [ ] When `skill.advance === 0` and the skill descriptor flags
+            `untrained: false`, the test target is halved.
+      - [ ] Roll dialog dropdown defaults to `skill.characteristic` but
+            allows override to any listed alternate.
+      - [ ] Skill descriptor schema knows the alt characteristics.
+      - [ ] Tests cover Trained-vs-Untrained and at least one alt-char
+            skill (e.g. Athletics with Toughness).
+
+  - id: p1-trying-again
+    title: "DH2 audit · P1 · Trying Again — time/restriction gating"
+    labels: [dh2-audit, "audit:p1", "area:tests", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Trying Again" — some skills cannot retry until a
+      condition changes; others incur a penalty. Surface as a soft
+      warning, not a hard block.
+
+      ## Acceptance criteria
+
+      - [ ] Per (actor, skill) `triedAt` flag on chat cards.
+      - [ ] Roll dialog warns when retry-blocked skill is selected
+            within the same scene / day.
+      - [ ] Tests.
+
+  # ────────────────────────────────────────────────────────────────────
+  # P1 — Narrative-meta systems
+  # ────────────────────────────────────────────────────────────────────
+
+  - id: p1-fate-threshold
+    title: "DH2 audit · P1 · Fate threshold (separate from fate.max)"
+    labels: [dh2-audit, "audit:p1", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `origin-path.ts:29` declares `fateThreshold` as path-data only.
+      The actor schema in `creature.ts` has `fate.max` and `fate.value`
+      but no live `fate.threshold` — burn-fate-to-cheat-death lives
+      against a phantom threshold.
+
+      ## Acceptance criteria
+
+      - [ ] `fate.threshold` slot on `creature.ts`, computed from path
+            grant + Touched-By-The-Fates / talent modifiers.
+      - [ ] Surfaced in character-sheet header alongside `fate.value`.
+      - [ ] Burn-fate flow reads `fate.threshold` (not `fate.max`).
+      - [ ] Tests + story.
+
+  - id: p1-subtlety
+    title: "DH2 audit · P1 · Subtlety pool (DH2-only)"
+    labels: [dh2-audit, "audit:p1", "area:character", "area:narrative", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Influence And Subtlety" defines Subtlety as a per-cell
+      currency that shifts with actions. grep across `src/module/`
+      returns zero hits.
+
+      ## Acceptance criteria
+
+      - [ ] `subtlety: { value, max }` on `character.ts`, DH2-gated.
+      - [ ] `stat-adjustment-actions.ts` dialog action "Adjust Subtlety".
+      - [ ] Subtlety-modifier table from `core.md` p. 270 codified.
+      - [ ] Hidden on other six game systems via `_gameSystemId` gate.
+      - [ ] Tests + story.
+      - [ ] i18n.
+
+  - id: p1-fear-pinning
+    title: "DH2 audit · P1 · Fear (X) trait + Fear test + Pinning test"
+    labels: [dh2-audit, "audit:p1", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Fear" defines Fear (X) on creatures and triggers
+      Willpower tests with the shock table on p. 287. Neither `trait.ts`
+      nor `acolyte.ts` carry the rating; no Pinning test as a WP variant.
+
+      ## Acceptance criteria
+
+      - [ ] `fearRating: number` on `trait.ts` (default 0).
+      - [ ] `acolyte.rollFearTest(rating)` + shock table integration.
+      - [ ] `acolyte.pinningTest()` Willpower variant.
+      - [ ] Pinning condition (from p0-condition-automation) applied on
+            failure.
+      - [ ] Tests + story.
+      - [ ] i18n.
+
+  - id: p1-shock
+    title: "DH2 audit · P1 · Shock counter + Snap-Out-Of-It"
+    labels: [dh2-audit, "audit:p1", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Shock And Snapping Out Of It" — temporary point pool
+      driving the shock table; recovers per ladder. Not implemented.
+
+      ## Acceptance criteria
+
+      - [ ] `shock.value` on `character.ts`.
+      - [ ] Recovery ladder per `core.md` p. 287.
+      - [ ] Sheet UI for current shock + Snap-Out test button.
+      - [ ] Tests + story.
+
+  - id: p1-malignancy-test
+    title: "DH2 audit · P1 · Malignancy / Mutation test rolls"
+    labels: [dh2-audit, "audit:p1", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"The Malignancy Test" — percentile against
+      (Corruption ÷ 10), triggered at thresholds. Item types
+      (`malignancy.ts`, `mutation.ts`) exist; the test does not.
+
+      ## Acceptance criteria
+
+      - [ ] `acolyte.rollMalignancyTest()` percentile-vs-CP/10.
+      - [ ] On failure: roll malignancy table, create the embedded item.
+      - [ ] Hook the test to corruption-threshold crossings (10, 20, 30,
+            …).
+      - [ ] Tests + story.
+
+  - id: p1-influence-acquisition
+    title: "DH2 audit · P1 · Influence + Requisition Test wiring"
+    labels: [dh2-audit, "audit:p1", "area:narrative", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"The Requisition Test" — target = Influence + modifiers
+      from Availability (Ubiquitous +30 → Unique −30), Scarcity,
+      Craftsmanship. `acquisition-dialog.ts` exists but the math is not
+      wired; failed acquisitions with 3+ DoF drop Influence by 1.
+
+      ## Acceptance criteria
+
+      - [ ] `acquisition-dialog.ts` computes target from item
+            availability + craftsmanship + scarcity.
+      - [ ] On big-failure, Influence drops; flow updates
+            `character.ts:171`.
+      - [ ] Tests + story.
+
+  # ────────────────────────────────────────────────────────────────────
+  # P1 — Psychic
+  # ────────────────────────────────────────────────────────────────────
+
+  - id: p1-psychic-push
+    title: "DH2 audit · P1 · Psychic Push / Fettered / Unfettered selector"
+    labels: [dh2-audit, "audit:p1", "area:psychic", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Step 2: Make Focus Power Test" sets three difficulty
+      bands (Fettered halves PR / Unfettered baseline / Push raises PR
+      with automatic phenomena trigger). `psychic-power.ts` carries
+      `prCost` but no UI selector and no auto-phenomena.
+
+      ## Acceptance criteria
+
+      - [ ] Focus-power dialog presents the three steps.
+      - [ ] Push selection adds to PR + always rolls phenomena
+            (independent of the 9-of-the-same trigger).
+      - [ ] Fettered halves PR for damage etc. and removes phenomena
+            chance.
+      - [ ] Tests + story.
+
+  # ────────────────────────────────────────────────────────────────────
+  # P2 — Vehicle combat
+  # ────────────────────────────────────────────────────────────────────
+
+  - id: p2-vehicle-traits-application
+    title: "DH2 audit · P2 · Vehicle traits flow onto stat block"
+    labels: [dh2-audit, "audit:p2", "area:vehicles", enhancement]
+    body: |
+      ## Audit point
+
+      `vehicle-trait.ts` defines modifier blocks but they do not apply
+      to the parent vehicle in `data/actor/vehicle.ts`. Mirror the
+      pattern from `armour.ts:413-415` (modification slot → applied
+      stats).
+
+      ## Acceptance criteria
+
+      - [ ] Embedded vehicle-trait items flow modifiers onto
+            speed / manoeuvrability / armour / integrity.
+      - [ ] Vehicle sheet shows derived vs base values.
+      - [ ] Tests + story.
+
+  - id: p2-vehicle-combat-actions
+    title: "DH2 audit · P2 · Vehicle combat actions (Manoeuvre/Ram/Disengage/Hot-Wire/Pull Stunt)"
+    labels: [dh2-audit, "audit:p2", "area:vehicles", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Vehicle Combat Actions" defines a parallel action
+      catalogue for drivers/pilots. Not present.
+
+      ## Acceptance criteria
+
+      - [ ] New `src/module/rules/vehicle-actions.ts` with action
+            registry analogous to `combat-actions.ts`.
+      - [ ] Wired into vehicle-sheet action bar.
+      - [ ] Tests + story.
+
+  - id: p2-vehicle-crash-fire-repair
+    title: "DH2 audit · P2 · Out-of-control / Crashing / On-Fire / Repair"
+    labels: [dh2-audit, "audit:p2", "area:vehicles", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Out Of Control, Crashing, And Falling Over" plus
+      §"On Fire!" plus §"Repairing Vehicles" — all GM-adjudicated today.
+
+      ## Acceptance criteria
+
+      - [ ] Roll-table data + chat-card roller for OOC / Crash / Fire.
+      - [ ] Repair = Tech-Use test vs integrity-tier difficulty.
+      - [ ] Tests + story.
+
+  # ────────────────────────────────────────────────────────────────────
+  # P2 — Social / investigation / consumables
+  # ────────────────────────────────────────────────────────────────────
+
+  - id: p2-disposition
+    title: "DH2 audit · P2 · NPC disposition + Conversation Structure helpers"
+    labels: [dh2-audit, "audit:p2", "area:narrative", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Disposition" — Hostile → Helpful scale; NPC base file
+      references it in a comment only (`bases/npc-base.ts:8`). The vault
+      campaign instructions already establish a `dispositions[]` shape
+      on the **vault side**; the system needs a single live value on
+      the NPC plus an `adjustDisposition(±n, reason)` method.
+
+      ## Acceptance criteria
+
+      - [ ] `disposition: { value: -3..+3, label }` on `npc.ts`.
+      - [ ] `adjustDisposition()` logs an entry.
+      - [ ] Helper roll: Charm/Command/Intimidate vs disposition.
+      - [ ] Tests + story.
+
+  - id: p2-investigation-leads
+    title: "DH2 audit · P2 · Investigation Leads item type"
+    labels: [dh2-audit, "audit:p2", "area:narrative", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Investigation" — Leads framework. Purely narrative
+      today.
+
+      ## Acceptance criteria
+
+      - [ ] `lead` item type with status (active / pursued / dead-end),
+            source clue, owner.
+      - [ ] No automation beyond data shape + sheet.
+      - [ ] Tests + story.
+
+  - id: p2-drug-cybernetic-effects
+    title: "DH2 audit · P2 · Drug & Cybernetic Active Effects"
+    labels: [dh2-audit, "audit:p2", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `cybernetic.ts` / `gear.ts` carry narrative `effect` text only —
+      Stimm / Slaught / Spook / De-tox / Tranq, MIU / Mechadendrite /
+      Cerebral implant / Calculus Logi / Memorance do not apply Active
+      Effects.
+
+      ## Acceptance criteria
+
+      - [ ] `grants.activeEffects[]` on cybernetic + gear schemas
+            (reuse the `talent.ts:100-143` grants pattern).
+      - [ ] Compendium items can point at these.
+      - [ ] Tests for at least one drug + one cybernetic.
+
+  # ────────────────────────────────────────────────────────────────────
+  # P2 — Misc completion
+  # ────────────────────────────────────────────────────────────────────
+
+  - id: p2-healing-medicae
+    title: "DH2 audit · P2 · Healing rates + Medicae action"
+    labels: [dh2-audit, "audit:p2", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Healing" — Lightly vs Heavily Damaged thresholds
+      drive recovery rates; Medicae skill drives interventions. Neither
+      is automated.
+
+      ## Acceptance criteria
+
+      - [ ] Lightly/Heavily Damaged threshold derived from wounds.max.
+      - [ ] `acolyte.rollMedicaeAction()` covers first aid /
+            extended care / extract bullet etc.
+      - [ ] Tests + story.
+
+  - id: p2-reinforcement-characters
+    title: "DH2 audit · P2 · Reinforcement Characters (acolyte fallback NPCs)"
+    labels: [dh2-audit, "audit:p2", "area:character", enhancement]
+    body: |
+      ## Audit point
+
+      `core.md` §"Reinforcement Characters" — pre-made NPCs called in
+      via Influence to replace dead acolytes mid-mission. Today they're
+      indistinguishable from generic NPCs.
+
+      ## Acceptance criteria
+
+      - [ ] Flag on NPC actors marking them as reinforcement candidates.
+      - [ ] Influence-cost-to-call wired into the acquisition flow.
+      - [ ] Tests + story.
