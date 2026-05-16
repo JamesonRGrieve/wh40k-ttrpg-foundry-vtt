@@ -127,7 +127,12 @@ interface SkillEntry {
 type NormalizedOriginWithMeta = NormalizedOrigin & {
     _id?: string;
     _sourceUuid?: string | null;
+    _actorItemId?: string | null;
 };
+
+function hasToObject(item: WH40KItem | NormalizedOrigin): item is WH40KItem {
+    return 'toObject' in item && typeof item.toObject === 'function';
+}
 
 /**
  * Shape of a single card inside a step layout produced by OriginChartLayout.
@@ -666,15 +671,22 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object} - Plain data object for selection storage
      * @private
      */
-    _itemToSelectionData(item: WH40KItem): NormalizedOriginWithMeta {
-        const rawData = item.toObject();
-        const data = rawData as ItemDataLike & { uuid?: string };
-        // Store original uuid for reference to compendium item
-        const flagsCore = (item.flags as { core?: CoreFlags }).core;
-        const flagSourceId = typeof flagsCore?.sourceId === 'string' ? flagsCore.sourceId : undefined;
-        data._sourceUuid = (item.parent === this.actor ? flagSourceId ?? data._sourceUuid ?? item.uuid : item.uuid ?? data._sourceUuid) ?? null;
-        // Store actor item id if this is an existing actor item
-        data._actorItemId = item.parent === this.actor ? item.id : null;
+    _itemToSelectionData(item: WH40KItem | NormalizedOrigin): NormalizedOriginWithMeta {
+        const data = hasToObject(item)
+            ? (item.toObject() as ItemDataLike & { uuid?: string })
+            : (foundry.utils.deepClone(item) as ItemDataLike & { uuid?: string });
+
+        if (hasToObject(item)) {
+            // Store original uuid for reference to compendium item
+            const flagsCore = (item.flags as { core?: CoreFlags }).core;
+            const flagSourceId = typeof flagsCore?.sourceId === 'string' ? flagsCore.sourceId : undefined;
+            data._sourceUuid = (item.parent === this.actor ? flagSourceId ?? data._sourceUuid ?? item.uuid : item.uuid ?? data._sourceUuid) ?? null;
+            // Store actor item id if this is an existing actor item
+            data._actorItemId = item.parent === this.actor ? item.id : null;
+        } else {
+            data._sourceUuid = data._sourceUuid ?? data.uuid ?? null;
+            data._actorItemId = data._actorItemId ?? null;
+        }
 
         // Capture the previously-persisted choice + roll state BEFORE normalize
         // runs (normalize replaces the system object reference). Without this,
@@ -689,7 +701,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const persistedRolls = sourceSystem['rollResults'] as Record<string, unknown> | undefined;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw compendium document shape
-        const normalized = normalizeOrigin(data as unknown as Record<string, unknown>);
+        const normalized: NormalizedOriginWithMeta = normalizeOrigin(data as unknown as Record<string, unknown>);
         // Ensure choice and roll fields are available for builder state, and
         // explicitly seed them from the persisted snapshot if normalize dropped
         // the reference along the way.
@@ -701,6 +713,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             normalized.system['rollResults'] = persistedRolls !== undefined ? foundry.utils.deepClone(persistedRolls) : {};
         }
         /* eslint-enable no-restricted-syntax */
+        normalized._sourceUuid = data._sourceUuid ?? normalized._sourceUuid ?? null;
+        normalized._actorItemId = data._actorItemId ?? normalized._actorItemId ?? null;
         return normalized;
     }
 
@@ -2696,8 +2710,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 if (selected === undefined || coreStep === undefined) continue;
 
                 // Store as plain data object (not Item instance)
-                // eslint-disable-next-line no-restricted-syntax -- boundary: _itemToSelectionData accepts the structurally-compatible NormalizedOrigin shape
-                const originData = this._itemToSelectionData(selected.origin as unknown as WH40KItem);
+                const originData = this._itemToSelectionData(selected.origin);
                 this.selections.set(coreStep.step, originData);
             }
         }
@@ -2810,7 +2823,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                         const origin = await fromUuid(selData.uuid);
                         if (origin) {
                             // Store as plain data object (not Item instance)
-                            const originData = this._itemToSelectionData(origin as WH40KItem);
+                            const originData = this._itemToSelectionData(origin as WH40KItem | NormalizedOrigin);
                             if (selData.selectedChoices) originData.system['selectedChoices'] = selData.selectedChoices;
                             if (selData.rollResults) originData.system['rollResults'] = selData.rollResults;
                             this.selections.set(step, originData);
@@ -2966,8 +2979,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // selection data so previously made choices and rolls stay populated when the user
         // re-clicks the card. Otherwise the preview would load fresh compendium data.
         const confirmed = this._findConfirmedSelectionMatching(origin);
-        // eslint-disable-next-line no-restricted-syntax -- boundary: _itemToSelectionData accepts the structurally-compatible NormalizedOrigin shape
-        this.previewedOrigin = confirmed ?? this._itemToSelectionData(origin as unknown as WH40KItem);
+        this.previewedOrigin = confirmed ?? this._itemToSelectionData(origin);
 
         // Re-render to show in selection panel
         void this.render();
@@ -3543,15 +3555,21 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static async #rollDivination(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         const table = await OriginPathBuilder.#getDivinationTable();
         if (table !== null) {
-            const rollTable = table as { draw: (options: { displayChat: boolean }) => Promise<{ results?: Array<{ text?: string }> }> };
-            const draw = await rollTable.draw({ displayChat: true });
-            const result = draw.results?.[0];
-            this._divination = result?.text ?? '';
+            try {
+                const rollTable = table as RollTable;
+                const draw = await rollTable.draw({ displayChat: true });
+                const [result] = draw.results ?? [];
+                const resultText =
+                    result !== undefined && typeof (result as Record<string, unknown>)['text'] === 'string'
+                        ? ((result as Record<string, unknown>)['text'] as string)
+                        : null;
+                this._divination = resultText ?? 'This character likes to flip tables, especially rollable ones.';
+            } catch (error) {
+                console.error('[wh40k-rpg] Failed to draw Divination RollTable.', error);
+                this._divination = 'This character likes to flip tables, especially rollable ones.';
+            }
         } else {
-            const roll = await new Roll('1d100').evaluate();
-            // eslint-disable-next-line no-restricted-syntax -- i18n: divination fallback warning; key not yet in langpack
-            ui.notifications.warn('Divination RollTable not installed — recorded the d100 result only. Enter the maxim manually or install the content pack.');
-            this._divination = `Roll: ${roll.total}`;
+            this._divination = 'This character likes to flip tables, especially rollable ones.';
         }
         this._saveScrollPosition();
         void this.render();
@@ -3566,10 +3584,48 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // eslint-disable-next-line no-restricted-syntax -- boundary: game.tables.getName returns an untyped Foundry document; narrowed by caller
         const worldTable = (game.tables as { getName?: (name: string) => unknown } | undefined)?.getName?.('Divination');
         if (worldTable !== undefined && worldTable !== null) return worldTable;
-        const pack = game.packs.get('wh40k-rpg.dh2-core-rolltables');
-        if (!pack) return null;
-        const docs = await pack.getDocuments();
-        return docs.find((d) => d.name === 'Divination') ?? null;
+
+        const expectedPackId = 'wh40k-rpg.dh2-core-rolltables';
+        const pack =
+            game.packs.get(expectedPackId) ??
+            game.packs.find((candidate) => candidate.metadata.id === expectedPackId || candidate.metadata.name === 'dh2-core-rolltables');
+
+        if (!pack) {
+            const availableRollTablePacks = Array.from(game.packs)
+                .filter((candidate) => candidate.documentName === 'RollTable')
+                .map((candidate) => candidate.metadata.id)
+                .sort();
+            console.warn('[wh40k-rpg] Divination RollTable pack not found.', {
+                expectedPackId,
+                availableRollTablePacks,
+            });
+            return null;
+        }
+
+        const index = await pack.getIndex({ fields: ['name'] });
+        const entry = index.find((candidate) => candidate.name === 'Divination');
+        if (!entry?._id) {
+            const availableTableNames = index
+                .map((candidate) => candidate.name)
+                .filter((name): name is string => typeof name === 'string')
+                .sort();
+            console.warn('[wh40k-rpg] Divination RollTable entry not found in pack.', {
+                packId: pack.metadata.id,
+                availableTableNames,
+            });
+            return null;
+        }
+
+        const document = await pack.getDocument(entry._id);
+        if (document == null) {
+            console.warn('[wh40k-rpg] Divination RollTable document failed to load from pack.', {
+                packId: pack.metadata.id,
+                tableId: entry._id,
+            });
+            return null;
+        }
+
+        return document;
     }
 
     /**
