@@ -1,6 +1,7 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
+import { resolveSubtletyAdjusterDelta, type SubtletyAdjusterSource } from '../rules/subtlety-adjusters.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
 import type { WH40KItem } from './item.ts';
@@ -110,14 +111,49 @@ export class WH40KBaseActor extends Actor {
      * And Subtlety"). Positive amounts raise the warband's subtlety;
      * negative amounts (most common, since missions usually erode it)
      * lower it. Clamps at 0..max.
+     *
+     * @param source Optional attribution key (`SubtletyAdjusterSource`).
+     *   Forwarded onto the resulting update via `subtletyChangeSource`
+     *   flag so the activity-log layer can group entries by cause.
      */
-    async applySubtlety(amount: number): Promise<void> {
+    async applySubtlety(amount: number, source?: SubtletyAdjusterSource): Promise<void> {
         if (!Number.isFinite(amount) || amount === 0) return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: subtlety lives on character.ts only
         const subtlety = (this.system as { subtlety?: { value: number; max: number } }).subtlety;
         if (!subtlety) return;
         const next = Math.max(0, Math.min(subtlety.max, subtlety.value + Math.trunc(amount)));
-        await this.update({ 'system.subtlety.value': next });
+        const updateData: Record<string, unknown> = { 'system.subtlety.value': next };
+        if (source !== undefined) updateData['flags.wh40k-rpg.lastSubtletySource'] = source;
+        await this.update(updateData);
+    }
+
+    /**
+     * Apply a registered Subtlety adjuster (e.g. dark-pact discovery,
+     * daemon-weapon wielded, inquest pursued). Looks up the canonical delta
+     * from `SUBTLETY_ADJUSTERS`, scales it by `scale`, and clamps net losses
+     * to -1 when the actor is from a Quarantine World homeworld (Beyond p. 30).
+     *
+     * Quarantine-World detection: matches the actor's `originPath.homeWorld`
+     * display name and/or its `homeWorldUuid` pack-path against `quarantine`.
+     */
+    async applySubtletyAdjuster(source: SubtletyAdjusterSource, scale = 1): Promise<void> {
+        const delta = resolveSubtletyAdjusterDelta(source, scale, this._hasQuarantineWorldOrigin());
+        if (delta === 0) return;
+        await this.applySubtlety(delta, source);
+    }
+
+    /**
+     * True when the actor was generated from the Quarantine World
+     * homeworld (Beyond p. 30). Used by `applySubtletyAdjuster` to gate
+     * the -1 minimum-loss clamp.
+     */
+    protected _hasQuarantineWorldOrigin(): boolean {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: originPath shape varies by actor type; character.ts surfaces homeWorld/homeWorldUuid but other subclasses may omit
+        const originPath = (this.system as { originPath?: { homeWorld?: string; homeWorldUuid?: string } }).originPath;
+        if (!originPath) return false;
+        const homeWorld = originPath.homeWorld?.toLowerCase() ?? '';
+        const homeWorldUuid = originPath.homeWorldUuid?.toLowerCase() ?? '';
+        return homeWorld.includes('quarantine') || homeWorldUuid.includes('quarantine');
     }
 
     /**
