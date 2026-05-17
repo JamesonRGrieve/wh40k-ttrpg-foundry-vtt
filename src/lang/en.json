@@ -1033,13 +1033,8 @@
             "Notes": "Notes"
         },
         "Subtlety": {
-            "Source": {
-                "QuarantineWorld": "Quarantine World homeworld (resists subtlety loss)",
-                "DaemonWeaponWielded": "Daemon Weapon wielded",
-                "DarkPactDiscovered": "Dark Pact discovered",
-                "InquestPursued": "Inquest pursued openly",
-                "Manual": "GM adjustment"
-            }
+            "ManualAdjustment": "GM adjustment",
+            "Inquest": "Inquest pursued openly"
         },
         "Orders": {
             "Header": "Orders",

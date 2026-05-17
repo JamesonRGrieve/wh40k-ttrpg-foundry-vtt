@@ -10,6 +10,8 @@ import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
+import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
+import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 
 // Loose dictionary used as a structural shape for both pre-migration source data
 // and the data dictionaries passed to Foundry's update/create APIs.
@@ -81,12 +83,22 @@ interface AmmoActorLike {
  * @mixes EquippableTemplate
  * @mixes AttackTemplate
  * @mixes DamageTemplate
+ * @mixes SubtletyAdjusterTemplate
  */
-export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate, AttackTemplate, DamageTemplate) {
+export default class WeaponData extends ItemDataModel.mixin(
+    DescriptionTemplate,
+    PhysicalItemTemplate,
+    EquippableTemplate,
+    AttackTemplate,
+    DamageTemplate,
+    SubtletyAdjusterTemplate,
+) {
     // Narrow the foundry-typed `parent` to our concrete document for downstream access.
     declare parent: WH40KItem;
     // Typed property declarations matching defineSchema()
     declare identifier: string;
+    // From SubtletyAdjusterTemplate (mixin static type does not surface it).
+    declare subtletyAdjuster?: { kind: SubtletyAdjusterKind; delta: number; minAbsoluteDelta: number; requiresEquipped: boolean };
     declare class: string;
     declare type: string;
     declare twoHanded: boolean;
