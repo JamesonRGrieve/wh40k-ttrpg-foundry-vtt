@@ -1,15 +1,36 @@
 {
-  "passed": 11,
+  "passed": 17,
   "dimensions": {
-    "actor.type-system": 4.55,
-    "actor.sheet-render": 4.55,
-    "item.type": 85.37,
-    "item.sheet-render": 85.37
+    "actor.type-system": 100,
+    "actor.sheet-render": 100,
+    "item.type": 100,
+    "item.sheet-render": 100,
+    "condition.toggle": 100,
+    "compendium.pack-read": 100,
+    "actor.roll-method": 100,
+    "item.roll-method": 100,
+    "sheet.tab": 100,
+    "sheet.action": 100,
+    "sheet.form-submit": 100,
+    "hook.fired": 80,
+    "setting.toggle": 0,
+    "setting.read": 0,
+    "setting.accessor": 0,
+    "chat.card-render": 88.89,
+    "dialog.render": 0,
+    "active-effect.flow": 80,
+    "combat.flow": 0,
+    "combat.ui": 0,
+    "dh2.fate": 100,
+    "dh2.corruption": 100,
+    "dh2.insanity": 100,
+    "dh2.origin-path": 100,
+    "dh2.elite-advance": 100
   },
   "source": {
-    "lines": 53.91,
-    "statements": 53.91,
-    "functions": 24.19,
-    "branches": 63.89
+    "lines": 57.88,
+    "statements": 57.88,
+    "functions": 30.79,
+    "branches": 65.96
   }
 }
