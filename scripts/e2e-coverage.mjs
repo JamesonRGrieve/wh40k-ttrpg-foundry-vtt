@@ -147,6 +147,169 @@ const EXERCISED_HOOKS = [
     'getSceneControlButtons',
 ];
 
+// WH40K system settings registered by `WH40KSettings.registerSettings()`
+// in src/module/wh40k-rpg-settings.ts. Hand-enumerated here so the
+// settings.spec.ts denominator is independent of the inventory dump (the
+// inventory does not yet enumerate settings; if/when it does, we can
+// pivot to `inventory.settings ?? SYSTEM_SETTING_KEYS`). Adding a new
+// `game.settings.register(SYSTEM_ID, key, ...)` call means adding the
+// short key here so the dimension percentage stays honest.
+const SYSTEM_SETTING_KEYS = [
+    'world-version',
+    'simple-attack-rolls',
+    'simple-psychic-rolls',
+    'active-effects-during-combat',
+    'combat-presets',
+    'movement-automation',
+    'dh2-ruleset',
+    'characteristic-offset',
+    'resync-on-ready',
+    'multiple-fate-burn-per-roll',
+    'auto-psychic-phenomena',
+];
+
+// Static accessors on `WH40KSettings` exercised by settings.spec.ts.
+// These drive the read-site branches (`isHomebrew` / `getRuleset` /
+// `getCharacteristicOffset` / `getCharacteristicBase` /
+// `isMultipleFateBurnAllowed`) so source-code coverage on
+// src/module/wh40k-rpg-settings.ts reflects both register-site lines
+// and accessor branches. Keep in sync with SETTING_ACCESSORS in the spec.
+const SETTING_ACCESSORS = [
+    'isHomebrew',
+    'getRuleset',
+    'getCharacteristicOffset',
+    'getCharacteristicBase',
+    'isMultipleFateBurnAllowed',
+];
+
+// Chat-card templates exercised by tests/e2e/chat-cards.spec.ts. Hand-
+// enumerated for the same reason as ACTOR_ROLL_METHODS — these are
+// `.hbs` files under `src/templates/chat/`, not entries in any
+// `CONFIG.*` registry, so the inventory dump can't see them. Keep this
+// list in sync with `CHAT_TEMPLATES` in the spec (basenames, no `.hbs`).
+// Partials under `partial/` are intentionally excluded — they render
+// transitively via their parent cards and are not addressable as
+// standalone chat content.
+const CHAT_TEMPLATES = [
+    'acquisition-test',
+    'action-roll-chat',
+    'armour-card-chat',
+    'assign-damage-chat',
+    'bleeding-chat',
+    'burning-chat',
+    'combat-action-card',
+    'condition-card',
+    'critical-injury-card',
+    'damage-roll-chat',
+    'force-field-roll-chat',
+    'item-card-chat',
+    'item-vocalize-chat',
+    'movement-card',
+    'navigator-power-chat',
+    'order-roll-chat',
+    'origin-roll-card',
+    'psychic-action-chat',
+    'reload-action-chat',
+    'ritual-roll-chat',
+    'ship-weapon-chat',
+    'simple-roll-chat',
+    'skill-card',
+    'talent-card',
+    'talent-roll-chat',
+    'trait-card',
+    'weapon-card-chat',
+];
+
+// Dialog & prompt classes shipped under src/module/applications/dialogs/**
+// and src/module/applications/prompts/**, exercised by tests/e2e/dialogs.spec.ts.
+// Each entry corresponds to one `recordCoverage('dialog.render', <ClassName>)`
+// call in the spec; DIALOG_PROBES in the spec and this constant MUST stay in
+// sync. Hand-enumerated because these are class names exported from source
+// files, not Foundry config the inventory dump can see — adding a new dialog
+// means adding its class name to both DIALOG_PROBES (spec) and here.
+const DIALOG_AND_PROMPT_CLASSES = [
+    // dialogs/
+    'AcquisitionDialog',
+    'AdvancementDialog',
+    'AmmoPickerDialog',
+    'CharacteristicSetupDialog',
+    'ConfirmationDialog',
+    'ConvertActorSystemDialog',
+    'WH40KCreateActorDialog',
+    'FateUsesDialog',
+    'RollConfigurationDialog',
+    'TransactionRequestDialog',
+    // prompts/
+    'AddXPDialog',
+    'AssignDamageDialog',
+    'BaseRollDialog',
+    'DamageRollDialog',
+    'EffectCreationDialog',
+    'EnhancedSkillDialog',
+    'ForceFieldDialog',
+    'PsychicPowerDialog',
+    'RighteousFuryDialog',
+    'SimpleRollDialog',
+    'SpecialistSkillDialog',
+    'UnifiedRollDialog',
+    'WeaponAttackDialog',
+];
+
+// ActiveEffect direct-creation flows exercised by tests/e2e/active-effects.spec.ts.
+// Distinct from `condition.toggle` (which covers the status-icon toggle path
+// against `CONFIG.statusEffects`) — these flows create custom AE documents
+// directly on an actor (or on an embedded item, for the transfer probe) and
+// assert behavioural outcomes against `src/module/documents/active-effect.ts`:
+// each change-mode branch in `_applyChangeValue`, the transfer pipeline, the
+// `remainingDuration` getter under combat advance, the `disabled` gate, and
+// post-delete rollback of derived data. Keys MUST match the
+// recordCoverage('active-effect.flow', ...) calls in the spec.
+const ACTIVE_EFFECT_FLOWS = [
+    'add-mode',
+    'multiply-mode',
+    'override-mode',
+    'upgrade-mode',
+    'downgrade-mode',
+    'custom-mode',
+    'transfer',
+    'temporary-duration',
+    'disabled',
+    'delete-rollback',
+];
+
+// Combat tracker lifecycle flows exercised by tests/e2e/combat.spec.ts.
+// Each key is a step in the full encounter lifecycle (create → add
+// combatants → roll → activate → start → advance turns/rounds → mutate
+// initiative → drop a combatant → end). Pushes source-code coverage on
+// `src/module/actions/combat-action-manager.ts` (combatTurn / combatRound
+// hook handlers) and the V14 Combat document update pipeline. Keys MUST
+// match the recordCoverage('combat.flow', ...) calls in the spec.
+const COMBAT_FLOWS = [
+    'create',
+    'addCombatants',
+    'rollAll',
+    'activate',
+    'startCombat',
+    'nextTurn',
+    'nextRound',
+    'setInitiative',
+    'deleteCombatant',
+    'endCombat',
+];
+
+// Combat-adjacent ApplicationV2 classes exercised by tests/e2e/combat.spec.ts.
+// Each is constructed and rendered directly to push source-code coverage on
+// the application class file (constructor + _prepareContext + _onRender +
+// PARTS registration). Keys MUST match the recordCoverage('combat.ui', ...)
+// calls in the spec.
+const COMBAT_UI_CLASSES = [
+    'CombatQuickPanel',
+    'EncounterBuilder',
+    'CombatPresetDialog',
+    'DifficultyCalculatorDialog',
+    'NPCThreatScalerDialog',
+];
+
 if (inventory) {
     // validActorTypeSystemPairs is the per-system-prefixed enumeration —
     // `dh2-character::dh2e` counts, `dh2-character::bc` does not (would never
@@ -200,6 +363,43 @@ recordDimension(
 // presence of a probe for the surface, not to enumerate every possible
 // state. Add a key here AND a recordCoverage(...) call in the spec.
 recordDimension('hook.fired', covered['hook.fired'], EXERCISED_HOOKS);
+
+// Settings dimensions exercised by tests/e2e/settings.spec.ts. The union
+// of `setting.toggle` (writable booleans + choice strings) and
+// `setting.read` (requiresReload + non-flippable types) is the total
+// settings surface; we report them as separate dimensions so a regression
+// that silently demotes a toggleable setting to read-only is visible.
+recordDimension('setting.toggle', covered['setting.toggle'], SYSTEM_SETTING_KEYS);
+recordDimension('setting.read', covered['setting.read'], SYSTEM_SETTING_KEYS);
+recordDimension('setting.accessor', covered['setting.accessor'], SETTING_ACCESSORS);
+
+// Chat-card render dimension exercised by tests/e2e/chat-cards.spec.ts.
+// One key per non-partial template under src/templates/chat/. Pushes
+// source-code coverage on `src/templates/chat/**/*.hbs` and on the
+// `renderChatMessageHTML` hook in `src/module/actions/basic-action-manager.ts`.
+recordDimension('chat.card-render', covered['chat.card-render'], CHAT_TEMPLATES);
+
+// Dialog & prompt render dimension exercised by tests/e2e/dialogs.spec.ts.
+// One key per shipped class. Pushes source-code coverage on
+// src/module/applications/dialogs/**/*.ts and src/module/applications/prompts/**/*.ts
+// (constructor + _prepareContext + _renderHTML paths that no other spec hits).
+recordDimension('dialog.render', covered['dialog.render'], DIALOG_AND_PROMPT_CLASSES);
+
+// ActiveEffect flow dimension exercised by tests/e2e/active-effects.spec.ts.
+// Pushes source-code coverage on `src/module/documents/active-effect.ts` —
+// every branch of `_applyChangeValue`, the `apply()` key-prefix dispatcher,
+// the `isTemporary` / `remainingDuration` getters, and the transfer
+// pipeline that mounts an item's effects onto its parent actor.
+recordDimension('active-effect.flow', covered['active-effect.flow'], ACTIVE_EFFECT_FLOWS);
+
+// Combat tracker lifecycle dimensions exercised by tests/e2e/combat.spec.ts.
+// Drives source-code coverage on `src/module/actions/combat-action-manager.ts`
+// (combatTurn / combatRound handler bodies) and the combat-adjacent
+// ApplicationV2 surfaces under `src/module/applications/hud/combat-quick-panel.ts`
+// and `src/module/applications/npc/*` (encounter builder, combat preset
+// dialog, difficulty calculator dialog, NPC threat scaler dialog).
+recordDimension('combat.flow', covered['combat.flow'], COMBAT_FLOWS);
+recordDimension('combat.ui', covered['combat.ui'], COMBAT_UI_CLASSES);
 
 recordDimension('dh2.fate', covered['dh2.fate'], ['fate-track']);
 recordDimension('dh2.corruption', covered['dh2.corruption'], ['corruption-track']);
