@@ -860,6 +860,26 @@ const RULE_FLOWS = [
 ];
 recordDimension('rule.flow', covered['rule.flow'], RULE_FLOWS);
 
+// Roll-data plumbing flows exercised by tests/e2e/rolls-data.spec.ts. Drives
+// source-code coverage on `src/module/rolls/assign-damage-data.ts` (the
+// damage allocator's reduce-then-distribute branch matrix between wounds,
+// criticals, and fatigue), `src/module/rolls/force-field-data.ts` (every
+// `craftsmanshipToOverload` case + `finalize` roll+threshold path), and
+// the canonical `src/module/dice/d100-roll.ts` entry point. Keys MUST
+// match the recordCoverage('roll-data.flow', ...) calls in the spec.
+const ROLL_DATA_FLOWS = [
+    'assign-damage-constructor',
+    'assign-damage-update-armour-resolved',
+    'assign-damage-finalize-reduces-wounds',
+    'assign-damage-finalize-empty-wounds-criticals',
+    'assign-damage-finalize-fatigue',
+    'force-field-constructor',
+    'force-field-craftsmanship-overload',
+    'force-field-finalize',
+    'd100-roll-test',
+];
+recordDimension('roll-data.flow', covered['roll-data.flow'], ROLL_DATA_FLOWS);
+
 const total = passed + failed + skipped + timedOut;
 const dimensionWeights = Object.values(dimensions);
 const aggregatePercent = dimensionWeights.length ? Math.round((dimensionWeights.reduce((a, d) => a + d.percent, 0) / dimensionWeights.length) * 100) / 100 : 0;

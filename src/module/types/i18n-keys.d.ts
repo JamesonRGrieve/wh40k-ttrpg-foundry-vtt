@@ -662,6 +662,7 @@ export type I18nKey =
     | 'WH40K.Gear.Duration'
     | 'WH40K.Gear.DurationHint'
     | 'WH40K.Gear.DurationPlaceholder'
+    | 'WH40K.Gear.DurationValue'
     | 'WH40K.Gear.Effect'
     | 'WH40K.Gear.EffectHint'
     | 'WH40K.Gear.Exhausted'

@@ -1,0 +1,250 @@
+import type { Page } from '@playwright/test';
+
+import { recordCoverage } from './lib/coverage-tracker';
+import { joinAsGM } from './lib/join';
+import { expect, test } from './lib/test';
+
+/**
+ * Tier B coverage of the roll-data plumbing in `src/module/rolls/*` and
+ * the d100 roll dispatcher in `src/module/dice/d100-roll.ts`. These
+ * modules were largely uncovered before this spec because the
+ * weapon-attack / roll-methods specs route through Actor methods that
+ * never reach them in headless mode (no canvas, no token selection, no
+ * chat-card post-render).
+ *
+ * Modules exercised (pre-spec line / fn coverage):
+ *   - `assign-damage-data.ts` (25.4% / 0%) — `AssignDamageData`
+ *     constructor + `update()` (location-armour resolution branch) +
+ *     `finalize()` (full reduction → wounds/critical/fatigue allocator
+ *     branch matrix).
+ *   - `force-field-data.ts` (28.2% / 0%) — `ForceFieldData` constructor
+ *     + `craftsmanshipToOverload()` (every choice in the switch) +
+ *     `finalize()` (rolls 1d100, evaluates success/overload thresholds).
+ *   - `d100-roll.ts` (51.7% / 9.5%) — `D100Roll.test()` static entry
+ *     point with a known formula so the chat-template render branch is
+ *     exercised end-to-end.
+ *
+ * Each flow records under `roll-data.flow`. Keys MUST match the
+ * ROLL_DATA_FLOWS constant in scripts/e2e-coverage.mjs.
+ */
+
+const ROLL_DATA_FLOWS = [
+    'assign-damage-constructor',
+    'assign-damage-update-armour-resolved',
+    'assign-damage-finalize-reduces-wounds',
+    'assign-damage-finalize-empty-wounds-criticals',
+    'assign-damage-finalize-fatigue',
+    'force-field-constructor',
+    'force-field-craftsmanship-overload',
+    'force-field-finalize',
+    'd100-roll-test',
+] as const;
+
+type FlowName = (typeof ROLL_DATA_FLOWS)[number];
+
+interface FlowResult {
+    name: FlowName;
+    ok: boolean;
+    detail: string | null;
+}
+
+async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; pageErrors: string[] }> {
+    const pageErrors: string[] = [];
+    const listener = (err: Error): void => {
+        pageErrors.push(err.message);
+    };
+    page.on('pageerror', listener);
+    try {
+        const results = await page.evaluate(async (): Promise<FlowResult[]> => {
+            /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side probe: dynamic-imported modules are runtime-only */
+            const out: FlowResult[] = [];
+            const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
+                out.push({ name, ok, detail });
+            };
+
+            const base = `${'/systems/wh40k-rpg'}/module`;
+
+            // ---------- assign-damage-data ----------
+            let assignMod: any;
+            try {
+                assignMod = await import(`${base}/rolls/assign-damage-data.js`);
+            } catch (err) {
+                for (const f of ROLL_DATA_FLOWS.filter((k) => k.startsWith('assign-damage-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
+                assignMod = null;
+            }
+            if (assignMod) {
+                const { AssignDamageData } = assignMod;
+                const buildActor = (woundsValue: number): any => ({
+                    system: {
+                        armour: {
+                            BODY: { value: 5, toughnessBonus: 3 },
+                            HEAD: { value: 3, toughnessBonus: 3 },
+                        },
+                        wounds: { value: woundsValue, critical: 0 },
+                        fatigue: { value: 0 },
+                    },
+                    hasTalent: () => false,
+                    update: async () => undefined,
+                    createEmbeddedDocuments: async () => [],
+                });
+
+                // ctor
+                try {
+                    const ad = new AssignDamageData(buildActor(10), { location: 'BODY', damageType: 'impact', totalDamage: 0, totalPenetration: 0, totalFatigue: 0 });
+                    record('assign-damage-constructor', ad instanceof AssignDamageData, null);
+                } catch (err) {
+                    record('assign-damage-constructor', false, String((err as Error)?.message ?? err));
+                }
+
+                // update — drives the location-armour lookup loop branch.
+                try {
+                    const ad = new AssignDamageData(buildActor(10), { location: 'BODY', damageType: 'impact', totalDamage: 10, totalPenetration: 0, totalFatigue: 0 });
+                    ad.update();
+                    record('assign-damage-update-armour-resolved', ad.armour === 5 && ad.tb === 3, `armour=${ad.armour} tb=${ad.tb}`);
+                } catch (err) {
+                    record('assign-damage-update-armour-resolved', false, String((err as Error)?.message ?? err));
+                }
+
+                // finalize — wounds reduced when damage > armour+tb but ≤ wounds.
+                try {
+                    const ad = new AssignDamageData(buildActor(10), { location: 'BODY', damageType: 'impact', totalDamage: 12, totalPenetration: 0, totalFatigue: 0 });
+                    ad.update();
+                    await ad.finalize();
+                    // 12 damage - (5 armour + 3 tb) = 4 damage; actor has 10 wounds → all 4 to wounds.
+                    record('assign-damage-finalize-reduces-wounds', ad.hasDamage === true && ad.damageTaken === 4, `damageTaken=${ad.damageTaken} hasDamage=${ad.hasDamage}`);
+                } catch (err) {
+                    record('assign-damage-finalize-reduces-wounds', false, String((err as Error)?.message ?? err));
+                }
+
+                // finalize — wounds already 0 routes through the "critical"
+                // branch.
+                try {
+                    const ad = new AssignDamageData(buildActor(0), { location: 'BODY', damageType: 'impact', totalDamage: 12, totalPenetration: 0, totalFatigue: 0 });
+                    ad.update();
+                    await ad.finalize();
+                    record('assign-damage-finalize-empty-wounds-criticals', ad.hasCriticalDamage === true && ad.criticalDamageTaken === 4, `hasCrit=${ad.hasCriticalDamage} crit=${ad.criticalDamageTaken}`);
+                } catch (err) {
+                    record('assign-damage-finalize-empty-wounds-criticals', false, String((err as Error)?.message ?? err));
+                }
+
+                // finalize — fatigue accumulator path.
+                try {
+                    const ad = new AssignDamageData(buildActor(10), { location: 'BODY', damageType: 'impact', totalDamage: 5, totalPenetration: 0, totalFatigue: 3 });
+                    ad.update();
+                    await ad.finalize();
+                    record('assign-damage-finalize-fatigue', ad.hasFatigueDamage === true && ad.fatigueTaken === 3, `hasFatigue=${ad.hasFatigueDamage} fatigueTaken=${ad.fatigueTaken}`);
+                } catch (err) {
+                    record('assign-damage-finalize-fatigue', false, String((err as Error)?.message ?? err));
+                }
+            }
+
+            // ---------- force-field-data ----------
+            let ffMod: any;
+            try {
+                ffMod = await import(`${base}/rolls/force-field-data.js`);
+            } catch (err) {
+                for (const f of ROLL_DATA_FLOWS.filter((k) => k.startsWith('force-field-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
+                ffMod = null;
+            }
+            if (ffMod) {
+                const { ForceFieldData } = ffMod;
+
+                const fakeActor: any = { system: {}, update: async () => undefined };
+                const buildFF = (craftsmanship: string, rating: number): any => ({
+                    system: { protectionRating: rating, craftsmanship },
+                    update: async (data: any) => Object.assign({}, fakeFFShared, { system: { ...fakeFFShared.system, ...(data as any) } }),
+                });
+                const fakeFFShared = buildFF('Common', 40);
+
+                try {
+                    const ff = new ForceFieldData(fakeActor, fakeFFShared);
+                    record('force-field-constructor', ff instanceof ForceFieldData && ff.protectionRating === 40 && ff.overloadRating === 10, `pr=${ff.protectionRating} or=${ff.overloadRating}`);
+                } catch (err) {
+                    record('force-field-constructor', false, String((err as Error)?.message ?? err));
+                }
+
+                try {
+                    // Exercise every craftsmanship branch.
+                    const ff = new ForceFieldData(fakeActor, buildFF('Common', 30));
+                    const poor = ff.craftsmanshipToOverload('Poor');
+                    const common = ff.craftsmanshipToOverload('Common');
+                    const good = ff.craftsmanshipToOverload('Good');
+                    const dflt = ff.craftsmanshipToOverload('Best');
+                    const ok = poor === 15 && common === 10 && good === 5 && dflt === 1;
+                    record('force-field-craftsmanship-overload', ok, `poor=${poor} common=${common} good=${good} default=${dflt}`);
+                } catch (err) {
+                    record('force-field-craftsmanship-overload', false, String((err as Error)?.message ?? err));
+                }
+
+                try {
+                    const ff = new ForceFieldData(fakeActor, buildFF('Common', 100));
+                    await ff.finalize();
+                    // With protectionRating=100, success should be true (roll ≤ 100).
+                    record('force-field-finalize', ff.success === true && ff.roll !== null, `success=${ff.success} roll=${ff.roll?.total}`);
+                } catch (err) {
+                    record('force-field-finalize', false, String((err as Error)?.message ?? err));
+                }
+            }
+
+            // ---------- d100-roll ----------
+            let d100Mod: any;
+            try {
+                d100Mod = await import(`${base}/dice/d100-roll.js`);
+            } catch (err) {
+                record('d100-roll-test', false, `import: ${String((err as Error)?.message ?? err)}`);
+                d100Mod = null;
+            }
+            if (d100Mod) {
+                try {
+                    // D100Roll.test() runs a simple d100 check + posts to chat.
+                    // Suppress any dialog opening by passing fastForward.
+                    const D100Roll = d100Mod.default ?? d100Mod.D100Roll;
+                    if (typeof D100Roll?.test !== 'function') {
+                        record('d100-roll-test', false, `D100Roll.test missing (keys: ${Object.keys(d100Mod).join(',')})`);
+                    } else {
+                        const result = await D100Roll.test({ target: 50, flavor: 'rolls-data-probe', fastForward: true });
+                        // Accept any non-throwing result (null is fine — chat may
+                        // not post in headless). The coverage win is the path
+                        // executed up to the chat-create boundary.
+                        record('d100-roll-test', true, `result type=${typeof result}`);
+                    }
+                } catch (err) {
+                    record('d100-roll-test', false, String((err as Error)?.message ?? err));
+                }
+            }
+
+            return out;
+            /* eslint-enable @typescript-eslint/no-explicit-any */
+        });
+        return { results, pageErrors };
+    } finally {
+        page.off('pageerror', listener);
+    }
+}
+
+test.describe.serial('rolls / dice data classes (Tier B)', () => {
+    test('every rolls/* + d100-roll surface returns without throwing', async ({ page }) => {
+        const joined = await joinAsGM(page);
+        test.skip(!joined, 'GM join failed');
+
+        const probe = await probeRollsData(page);
+        const seen = new Set<string>();
+        const failures: string[] = [];
+        for (const r of probe.results) {
+            seen.add(r.name);
+            if (r.ok) {
+                recordCoverage('roll-data.flow', r.name);
+            } else {
+                failures.push(`${r.name}: ${r.detail ?? 'failed'}`);
+            }
+        }
+        for (const expected of ROLL_DATA_FLOWS) {
+            if (!seen.has(expected)) failures.push(`${expected}: flow did not run`);
+        }
+        if (probe.pageErrors.length > 0) {
+            failures.push(`page errors: ${probe.pageErrors.slice(0, 5).join(' | ')}`);
+        }
+
+        expect(failures, `${failures.length}/${ROLL_DATA_FLOWS.length} rolls-data flows failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
+    });
+});
