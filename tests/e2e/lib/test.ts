@@ -30,15 +30,10 @@ export const test = base.extend({
         await use(page);
         try {
             const entries = await page.coverage.stopJSCoverage();
-            const filtered = entries.filter(
-                (e) => e.url.includes('/systems/wh40k-rpg/module/') && e.url.endsWith('.js'),
-            );
+            const filtered = entries.filter((e) => e.url.includes('/systems/wh40k-rpg/module/') && e.url.endsWith('.js'));
             if (filtered.length === 0) return;
             const id = `${String(++runCounter).padStart(4, '0')}-${testInfo.title.replace(/[^a-z0-9]/gi, '_').slice(0, 60)}`;
-            writeFileSync(
-                resolve(RAW_DIR, `${id}.json`),
-                JSON.stringify(filtered),
-            );
+            writeFileSync(resolve(RAW_DIR, `${id}.json`), JSON.stringify(filtered));
         } catch {
             // ignore — coverage capture is best-effort
         }

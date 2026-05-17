@@ -26,19 +26,18 @@ interface PackResult {
 
 const BATCH_SIZE = 6;
 
-async function loadPackBatch(
-    page: import('@playwright/test').Page,
-    packIds: string[],
-): Promise<PackResult[]> {
+async function loadPackBatch(page: import('@playwright/test').Page, packIds: string[]): Promise<PackResult[]> {
     return page.evaluate(
         async ({ packIds, batchSize }) => {
             const game = (
                 globalThis as unknown as {
                     game?: {
                         packs?: {
-                            get: (id: string) => {
-                                getDocuments: () => Promise<Array<unknown>>;
-                            } | undefined;
+                            get: (id: string) =>
+                                | {
+                                      getDocuments: () => Promise<Array<unknown>>;
+                                  }
+                                | undefined;
                         };
                     };
                 }
@@ -131,10 +130,7 @@ test.describe.serial('compendium packs (Tier B)', () => {
                 }
                 recordCoverage('compendium.pack-read', r.id);
             }
-            expect(
-                failures,
-                `${failures.length}/${packIds.length} '${prefix}-*' packs failed to materialize:\n  - ${failures.join('\n  - ')}`,
-            ).toEqual([]);
+            expect(failures, `${failures.length}/${packIds.length} '${prefix}-*' packs failed to materialize:\n  - ${failures.join('\n  - ')}`).toEqual([]);
         });
     }
 });

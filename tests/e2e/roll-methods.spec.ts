@@ -54,15 +54,7 @@ const SYSTEM_PREFIX: Record<string, string> = {
  *   they no-op or open a prompt, both of which are valid dispatch
  *   coverage from our perspective (the method's body ran).
  */
-const ROLL_METHODS = [
-    'rollCharacteristic',
-    'rollCharacteristicCheck',
-    'rollSkill',
-    'rollCheck',
-    'rollItem',
-    'rollWeaponAction',
-    'rollPsychicPower',
-] as const;
+const ROLL_METHODS = ['rollCharacteristic', 'rollCharacteristicCheck', 'rollSkill', 'rollCheck', 'rollItem', 'rollWeaponAction', 'rollPsychicPower'] as const;
 
 type RollMethod = (typeof ROLL_METHODS)[number];
 
@@ -101,10 +93,7 @@ async function probeRollMethods(
                             rollItem?: (id: string) => Promise<unknown>;
                             rollWeaponAction?: (item: unknown) => Promise<unknown>;
                             rollPsychicPower?: (item: unknown) => Promise<unknown>;
-                            createEmbeddedDocuments?: (
-                                kind: string,
-                                data: object[],
-                            ) => Promise<Array<{ id: string }>>;
+                            createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<{ id: string }>>;
                             delete?: () => Promise<unknown>;
                         } | null>;
                     };
@@ -179,7 +168,11 @@ async function probeRollMethods(
                         // 'dialog'/'prompt' are roll-flow surfaces.
                         const id = w?.id ?? '';
                         if (id.includes('dialog') || id.includes('prompt') || id.includes('roll')) {
-                            try { await w?.close?.(); } catch { /* ignore */ }
+                            try {
+                                await w?.close?.();
+                            } catch {
+                                /* ignore */
+                            }
                         }
                     }
                 }
@@ -268,7 +261,11 @@ async function probeRollMethods(
                 }
 
                 // Best-effort cleanup so subsequent specs don't see this actor.
-                try { await actor.delete?.(); } catch { /* ignore */ }
+                try {
+                    await actor.delete?.();
+                } catch {
+                    /* ignore */
+                }
 
                 return { created: true, createError: null, results, diag: { ctorName } };
             },
@@ -294,10 +291,7 @@ test.describe.serial('actor roll methods × systems (Tier B)', () => {
             test.skip(!joined, 'GM join failed');
 
             const probe = await probeRollMethods(page, gameSystem);
-            test.skip(
-                !probe.created,
-                `could not create ${SYSTEM_PREFIX[gameSystem]}-character actor: ${probe.createError ?? 'unknown'}`,
-            );
+            test.skip(!probe.created, `could not create ${SYSTEM_PREFIX[gameSystem]}-character actor: ${probe.createError ?? 'unknown'}`);
 
             const failures: string[] = [];
             for (const r of probe.results) {

@@ -146,8 +146,7 @@ export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = 
          * source, so the Foundry-side auto-prepare is redundant. Return an
          * empty record to defuse the broken default path.
          */
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareTabs returns Record<string, ApplicationTab>
-        override _prepareTabs(_group: string): Record<string, unknown> {
+        override _prepareTabs(_group: string): ReturnType<BaseItemSheet['_prepareTabs']> {
             return {};
         }
 

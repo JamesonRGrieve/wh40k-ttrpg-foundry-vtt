@@ -55,11 +55,7 @@ interface ItemRollProbe {
     error: string | null;
 }
 
-async function probeItemRoll(
-    page: import('@playwright/test').Page,
-    actorId: string,
-    spec: ItemRollSpec,
-): Promise<ItemRollProbe> {
+async function probeItemRoll(page: import('@playwright/test').Page, actorId: string, spec: ItemRollSpec): Promise<ItemRollProbe> {
     const errors: string[] = [];
     const listener = (err: Error) => errors.push(err.message);
     page.on('pageerror', listener);
@@ -74,16 +70,17 @@ async function probeItemRoll(
                 };
                 const actor = g.game?.actors?.get?.(actorId) as
                     | {
-                          createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<{ id?: string; delete?: () => Promise<unknown> } | undefined>>;
+                          createEmbeddedDocuments?: (
+                              kind: string,
+                              data: object[],
+                          ) => Promise<Array<{ id?: string; delete?: () => Promise<unknown> } | undefined>>;
                           items?: { get?: (id: string) => unknown };
                       }
                     | undefined;
                 if (!actor?.createEmbeddedDocuments) {
                     return { chatDelta: 0, returned: 'falsy' as const, error: 'actor or createEmbeddedDocuments unavailable' };
                 }
-                const created = await actor.createEmbeddedDocuments('Item', [
-                    { name: `probe-${itemType}`, type: itemType, system: itemSystem },
-                ]);
+                const created = await actor.createEmbeddedDocuments('Item', [{ name: `probe-${itemType}`, type: itemType, system: itemSystem }]);
                 const item = created?.[0] as
                     | {
                           id?: string;
@@ -193,9 +190,6 @@ test.describe.serial('item roll methods (Tier B)', () => {
             }, actorId);
         }
 
-        expect(
-            failures,
-            `${failures.length}/${ITEM_ROLL_SPECS.length} item roll methods failed:\n  - ${failures.join('\n  - ')}`,
-        ).toEqual([]);
+        expect(failures, `${failures.length}/${ITEM_ROLL_SPECS.length} item roll methods failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 });

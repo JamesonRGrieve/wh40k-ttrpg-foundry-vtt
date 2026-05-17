@@ -32,13 +32,7 @@ import { expect, test } from './lib/test';
 
 const SYSTEM_ID = 'wh40k-rpg';
 
-const SETTING_ACCESSORS = [
-    'isHomebrew',
-    'getRuleset',
-    'getCharacteristicOffset',
-    'getCharacteristicBase',
-    'isMultipleFateBurnAllowed',
-] as const;
+const SETTING_ACCESSORS = ['isHomebrew', 'getRuleset', 'getCharacteristicOffset', 'getCharacteristicBase', 'isMultipleFateBurnAllowed'] as const;
 
 interface SettingProbe {
     key: string;
@@ -61,27 +55,25 @@ async function listSettingKeys(page: import('@playwright/test').Page): Promise<s
         };
         const settings = game?.settings?.settings;
         if (!settings || typeof settings.keys !== 'function') return [];
-        return Array.from(settings.keys()).filter(
-            (k): k is string => typeof k === 'string' && k.startsWith(`${systemId}.`),
-        );
+        return Array.from(settings.keys()).filter((k): k is string => typeof k === 'string' && k.startsWith(`${systemId}.`));
     }, SYSTEM_ID);
 }
 
-async function probeSetting(
-    page: import('@playwright/test').Page,
-    fullKey: string,
-): Promise<SettingProbe> {
+async function probeSetting(page: import('@playwright/test').Page, fullKey: string): Promise<SettingProbe> {
     const result = await page.evaluate(
         async ({ fullKey, systemId }) => {
             const { game } = globalThis as unknown as {
                 game?: {
                     settings?: {
-                        settings?: Map<string, {
-                            type?: unknown;
-                            choices?: Record<string, string>;
-                            requiresReload?: boolean;
-                            default?: unknown;
-                        }>;
+                        settings?: Map<
+                            string,
+                            {
+                                type?: unknown;
+                                choices?: Record<string, string>;
+                                requiresReload?: boolean;
+                                default?: unknown;
+                            }
+                        >;
                         get: (ns: string, k: string) => unknown;
                         set: (ns: string, k: string, v: unknown) => Promise<unknown>;
                     };
@@ -90,9 +82,7 @@ async function probeSetting(
             const settings = game?.settings;
             if (!settings) return { kind: 'read' as const, ok: false, error: 'game.settings unavailable' };
 
-            const namespacedKey = fullKey.startsWith(`${systemId}.`)
-                ? fullKey.slice(systemId.length + 1)
-                : fullKey;
+            const namespacedKey = fullKey.startsWith(`${systemId}.`) ? fullKey.slice(systemId.length + 1) : fullKey;
             const def = settings.settings?.get(fullKey);
             if (!def) return { kind: 'read' as const, ok: false, error: `definition missing for ${fullKey}` };
 
@@ -131,7 +121,11 @@ async function probeSetting(
                 const observed = settings.get(systemId, namespacedKey);
                 if (observed !== next) {
                     // restore best-effort before reporting failure
-                    try { await settings.set(systemId, namespacedKey, current); } catch { /* ignore */ }
+                    try {
+                        await settings.set(systemId, namespacedKey, current);
+                    } catch {
+                        /* ignore */
+                    }
                     return {
                         kind: 'toggle' as const,
                         ok: false,
@@ -168,7 +162,11 @@ async function probeSetting(
                 }
                 const observed = settings.get(systemId, namespacedKey);
                 if (observed !== next) {
-                    try { await settings.set(systemId, namespacedKey, current); } catch { /* ignore */ }
+                    try {
+                        await settings.set(systemId, namespacedKey, current);
+                    } catch {
+                        /* ignore */
+                    }
                     return {
                         kind: 'choice' as const,
                         ok: false,
@@ -200,10 +198,7 @@ async function probeSetting(
     };
 }
 
-async function probeAccessor(
-    page: import('@playwright/test').Page,
-    name: (typeof SETTING_ACCESSORS)[number],
-): Promise<AccessorProbe> {
+async function probeAccessor(page: import('@playwright/test').Page, name: (typeof SETTING_ACCESSORS)[number]): Promise<AccessorProbe> {
     const result = await page.evaluate((accessor: string) => {
         const { CONFIG, game } = globalThis as unknown as {
             CONFIG?: { WH40K?: { Settings?: Record<string, unknown> } };
@@ -212,11 +207,7 @@ async function probeAccessor(
         // The class is exposed in several places depending on init order:
         // - CONFIG.WH40K.Settings (preferred — set during system init)
         // - game.wh40k.settings / game.system.api.settings (fallback)
-        const candidates: Array<Record<string, unknown> | undefined> = [
-            CONFIG?.WH40K?.Settings,
-            game?.wh40k?.settings,
-            game?.system?.api?.settings,
-        ];
+        const candidates: Array<Record<string, unknown> | undefined> = [CONFIG?.WH40K?.Settings, game?.wh40k?.settings, game?.system?.api?.settings];
         const owner = candidates.find((c) => c && typeof (c as Record<string, unknown>)[accessor] === 'function');
         if (!owner) return { ok: false, error: `accessor ${accessor} not found on WH40KSettings surface` };
         try {
@@ -246,9 +237,7 @@ test.describe.serial('settings toggles (Tier B)', () => {
                 ok: false,
                 error: String((err as Error)?.message ?? err),
             }));
-            const shortKey = fullKey.startsWith(`${SYSTEM_ID}.`)
-                ? fullKey.slice(SYSTEM_ID.length + 1)
-                : fullKey;
+            const shortKey = fullKey.startsWith(`${SYSTEM_ID}.`) ? fullKey.slice(SYSTEM_ID.length + 1) : fullKey;
             if (probe.ok) {
                 if (probe.kind === 'toggle' || probe.kind === 'choice') {
                     recordCoverage('setting.toggle', shortKey);
@@ -280,9 +269,6 @@ test.describe.serial('settings toggles (Tier B)', () => {
             failures.push(`accessor ${probe.name}: ${probe.error ?? 'unknown error'}`);
         }
 
-        expect(
-            failures,
-            `${failures.length}/${keys.length + SETTING_ACCESSORS.length} setting probes failed:\n  - ${failures.join('\n  - ')}`,
-        ).toEqual([]);
+        expect(failures, `${failures.length}/${keys.length + SETTING_ACCESSORS.length} setting probes failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 });

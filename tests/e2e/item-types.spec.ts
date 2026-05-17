@@ -16,17 +16,22 @@ interface ItemTypeProbe {
     pageErrors: string[];
 }
 
-async function probeItemType(
-    page: import('@playwright/test').Page,
-    type: string,
-): Promise<ItemTypeProbe> {
+async function probeItemType(page: import('@playwright/test').Page, type: string): Promise<ItemTypeProbe> {
     const errors: string[] = [];
     const listener = (err: Error) => errors.push(err.message);
     page.on('pageerror', listener);
     try {
         const result = await page.evaluate(async (type: string) => {
             const { Item } = globalThis as unknown as {
-                Item?: { create?: (data: object) => Promise<{ id?: string; sheet?: { render?: (force?: boolean) => Promise<unknown>; close?: () => Promise<unknown> }; delete?: () => Promise<unknown> } | null> };
+                Item?: {
+                    create?: (
+                        data: object,
+                    ) => Promise<{
+                        id?: string;
+                        sheet?: { render?: (force?: boolean) => Promise<unknown>; close?: () => Promise<unknown> };
+                        delete?: () => Promise<unknown>;
+                    } | null>;
+                };
             };
             if (!Item?.create) return { docId: null, sheetRendered: false, createError: 'Item.create unavailable' };
             let item;

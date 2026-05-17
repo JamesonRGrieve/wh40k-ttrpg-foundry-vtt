@@ -37,10 +37,19 @@ function walk(suites) {
                 const last = test.results?.[test.results.length - 1];
                 const status = last?.status ?? 'unknown';
                 perSpec[file] ??= { passed: 0, failed: 0, skipped: 0, timedOut: 0 };
-                if (status === 'passed') { passed++; perSpec[file].passed++; }
-                else if (status === 'failed') { failed++; perSpec[file].failed++; }
-                else if (status === 'skipped') { skipped++; perSpec[file].skipped++; }
-                else if (status === 'timedOut') { timedOut++; perSpec[file].timedOut++; }
+                if (status === 'passed') {
+                    passed++;
+                    perSpec[file].passed++;
+                } else if (status === 'failed') {
+                    failed++;
+                    perSpec[file].failed++;
+                } else if (status === 'skipped') {
+                    skipped++;
+                    perSpec[file].skipped++;
+                } else if (status === 'timedOut') {
+                    timedOut++;
+                    perSpec[file].timedOut++;
+                }
             }
         }
         walk(suite.suites);
@@ -51,8 +60,11 @@ walk(report.suites);
 // --- per-dimension coverage % from inventory + runtime tracker ---
 let inventory = null;
 if (existsSync(INVENTORY)) {
-    try { inventory = JSON.parse(readFileSync(INVENTORY, 'utf8')); }
-    catch (err) { console.warn(`e2e:coverage — ignoring malformed ${INVENTORY}: ${err.message}`); }
+    try {
+        inventory = JSON.parse(readFileSync(INVENTORY, 'utf8'));
+    } catch (err) {
+        console.warn(`e2e:coverage — ignoring malformed ${INVENTORY}: ${err.message}`);
+    }
 }
 
 const covered = {}; // { dimension: Set<key> }
@@ -63,7 +75,9 @@ if (existsSync(RUNTIME)) {
             const { dimension, key } = JSON.parse(line);
             covered[dimension] ??= new Set();
             covered[dimension].add(key);
-        } catch { /* skip bad line */ }
+        } catch {
+            /* skip bad line */
+        }
     }
 }
 
@@ -88,26 +102,13 @@ function recordDimension(name, coveredSet, enumerableSet) {
 // Adding a new roll method to base-actor.ts / acolyte.ts means adding it
 // here AND to the ROLL_METHODS tuple in the spec — both must agree for
 // the coverage denominator to be honest.
-const ACTOR_ROLL_METHODS = [
-    'rollCharacteristic',
-    'rollCharacteristicCheck',
-    'rollSkill',
-    'rollCheck',
-    'rollItem',
-    'rollWeaponAction',
-    'rollPsychicPower',
-];
+const ACTOR_ROLL_METHODS = ['rollCharacteristic', 'rollCharacteristicCheck', 'rollSkill', 'rollCheck', 'rollItem', 'rollWeaponAction', 'rollPsychicPower'];
 
 // Public Item document roll methods exercised by tests/e2e/item-rolls.spec.ts.
 // Enumerated explicitly because they live on the Item document subclass, not
 // on `CONFIG.Item.*` data models. Adding a new roll method to item.ts means
 // adding it here AND in the ITEM_ROLL_SPECS table in the spec.
-const ITEM_ROLL_METHODS = [
-    'rollTalent',
-    'rollNavigatorPower',
-    'rollOrder',
-    'rollRitual',
-];
+const ITEM_ROLL_METHODS = ['rollTalent', 'rollNavigatorPower', 'rollOrder', 'rollRitual'];
 
 // im-character actor creation is currently broken in the build under test;
 // the spec skips it, so we subtract those pairs from the denominator rather
@@ -174,13 +175,7 @@ const SYSTEM_SETTING_KEYS = [
 // `isMultipleFateBurnAllowed`) so source-code coverage on
 // src/module/wh40k-rpg-settings.ts reflects both register-site lines
 // and accessor branches. Keep in sync with SETTING_ACCESSORS in the spec.
-const SETTING_ACCESSORS = [
-    'isHomebrew',
-    'getRuleset',
-    'getCharacteristicOffset',
-    'getCharacteristicBase',
-    'isMultipleFateBurnAllowed',
-];
+const SETTING_ACCESSORS = ['isHomebrew', 'getRuleset', 'getCharacteristicOffset', 'getCharacteristicBase', 'isMultipleFateBurnAllowed'];
 
 // Chat-card templates exercised by tests/e2e/chat-cards.spec.ts. Hand-
 // enumerated for the same reason as ACTOR_ROLL_METHODS — these are
@@ -302,13 +297,7 @@ const COMBAT_FLOWS = [
 // the application class file (constructor + _prepareContext + _onRender +
 // PARTS registration). Keys MUST match the recordCoverage('combat.ui', ...)
 // calls in the spec.
-const COMBAT_UI_CLASSES = [
-    'CombatQuickPanel',
-    'EncounterBuilder',
-    'CombatPresetDialog',
-    'DifficultyCalculatorDialog',
-    'NPCThreatScalerDialog',
-];
+const COMBAT_UI_CLASSES = ['CombatQuickPanel', 'EncounterBuilder', 'CombatPresetDialog', 'DifficultyCalculatorDialog', 'NPCThreatScalerDialog'];
 
 if (inventory) {
     // validActorTypeSystemPairs is the per-system-prefixed enumeration —
@@ -409,11 +398,7 @@ recordDimension('dh2.elite-advance', covered['dh2.elite-advance'], ['compendium-
 
 const total = passed + failed + skipped + timedOut;
 const dimensionWeights = Object.values(dimensions);
-const aggregatePercent = dimensionWeights.length
-    ? Math.round(
-          (dimensionWeights.reduce((a, d) => a + d.percent, 0) / dimensionWeights.length) * 100,
-      ) / 100
-    : 0;
+const aggregatePercent = dimensionWeights.length ? Math.round((dimensionWeights.reduce((a, d) => a + d.percent, 0) / dimensionWeights.length) * 100) / 100 : 0;
 
 // --- source-code coverage on src/module/**/*.ts (lines/statements/functions/branches) ---
 let source = null;
@@ -452,10 +437,12 @@ const coverage = {
 
 writeFileSync(OUTPUT, `${JSON.stringify(coverage, null, 2)}\n`);
 
-console.log(
-    `e2e:coverage — ${passed} passed / ${failed} failed / ${skipped} skipped / ${timedOut} timed out — aggregate ${aggregatePercent}%`,
-);
+console.log(`e2e:coverage — ${passed} passed / ${failed} failed / ${skipped} skipped / ${timedOut} timed out — aggregate ${aggregatePercent}%`);
 for (const [name, d] of Object.entries(dimensions)) {
-    console.log(`  ${name}: ${d.covered}/${d.total} (${d.percent}%)${d.missing.length ? ` — missing: ${d.missing.slice(0, 5).join(', ')}${d.missing.length > 5 ? `, +${d.missing.length - 5} more` : ''}` : ''}`);
+    console.log(
+        `  ${name}: ${d.covered}/${d.total} (${d.percent}%)${
+            d.missing.length ? ` — missing: ${d.missing.slice(0, 5).join(', ')}${d.missing.length > 5 ? `, +${d.missing.length - 5} more` : ''}` : ''
+        }`,
+    );
 }
 console.log(`  → ${OUTPUT}`);
