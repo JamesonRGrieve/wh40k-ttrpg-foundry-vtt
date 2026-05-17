@@ -890,6 +890,16 @@ recordDimension('roll-data.flow', covered['roll-data.flow'], ROLL_DATA_FLOWS);
 const CHARGEN_FLOWS = ['origin-roll-dialog-renders', 'origin-path-choice-dialog-renders', 'origin-detail-dialog-renders'];
 recordDimension('chargen.flow', covered['chargen.flow'], CHARGEN_FLOWS);
 
+// NPC-creation dialog render flows exercised by tests/e2e/npc-creation.spec.ts.
+// Drives source-code coverage on the three creation dialogs that
+// npc-tools.spec.ts never opens (it targets the parser / exporter /
+// scaler / encounter-builder):
+// `src/module/applications/npc/quick-create-dialog.ts`,
+// `batch-create-dialog.ts`, `template-selector.ts`. Each was below
+// 10% function coverage before this spec landed.
+const NPC_CREATE_FLOWS = ['quick-create-dialog-renders', 'batch-create-dialog-renders', 'template-selector-renders'];
+recordDimension('npc-create.flow', covered['npc-create.flow'], NPC_CREATE_FLOWS);
+
 const total = passed + failed + skipped + timedOut;
 const dimensionWeights = Object.values(dimensions);
 const aggregatePercent = dimensionWeights.length ? Math.round((dimensionWeights.reduce((a, d) => a + d.percent, 0) / dimensionWeights.length) * 100) / 100 : 0;
