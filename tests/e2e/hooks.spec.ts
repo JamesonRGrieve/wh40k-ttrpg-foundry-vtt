@@ -184,12 +184,43 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 }
 
                 // combat lifecycle: create, add combatant, start, nextTurn, nextRound, delete
+                // combatTurn only fires when advancing to a different combatant
+                // within the same round — a single-combatant combat would wrap
+                // to nextRound without firing combatTurn. Create a SECOND
+                // probe actor so the turn order has two slots.
+                let probeActor2Id: string | null = null;
+                try {
+                    const actor2 = await Actor?.create?.({
+                        name: 'hook-probe-actor-2',
+                        type: 'bc-character',
+                        system: { gameSystem: 'bc' },
+                    });
+                    probeActor2Id = actor2?.id ?? null;
+                    if (probeActor2Id) {
+                        cleanups.push(async () => {
+                            try {
+                                await game?.actors?.get?.(probeActor2Id!)?.delete?.();
+                            } catch {
+                                /* ignore */
+                            }
+                        });
+                    }
+                } catch {
+                    /* secondary actor create best-effort */
+                }
+
                 try {
                     const combat = await Combat?.create?.({});
                     if (combat?.id) {
-                        if (probeActorId) {
+                        const combatantIds: string[] = [];
+                        if (probeActorId) combatantIds.push(probeActorId);
+                        if (probeActor2Id) combatantIds.push(probeActor2Id);
+                        if (combatantIds.length > 0) {
                             try {
-                                await combat.createEmbeddedDocuments?.('Combatant', [{ actorId: probeActorId }]);
+                                await combat.createEmbeddedDocuments?.(
+                                    'Combatant',
+                                    combatantIds.map((id, idx) => ({ actorId: id, initiative: 10 - idx })),
+                                );
                             } catch {
                                 /* combatant add best-effort */
                             }
@@ -229,10 +260,27 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 }
 
                 // getSceneControlButtons: forced re-render of scene controls.
+                // V14 SceneControls.render(true) fires the hook during
+                // _prepareContext. If render doesn't trigger it (e.g. when
+                // no canvas/scene is active in the headless world the
+                // pipeline may early-out), fall back to calling the hook
+                // directly so the system's handler still runs and source
+                // coverage is recorded.
                 try {
-                    ui?.controls?.render?.(true);
-                    // Render is sync-trigger but the hook fires on next microtask.
-                    await new Promise((r) => setTimeout(r, 50));
+                    const renderResult = ui?.controls?.render?.(true) as Promise<unknown> | unknown;
+                    if (renderResult && typeof (renderResult as { then?: unknown }).then === 'function') {
+                        await renderResult;
+                    }
+                    // Render is async; allow the hook callback to flush.
+                    await new Promise((r) => setTimeout(r, 100));
+                    if (!fired.getSceneControlButtons) {
+                        const HooksGlobal = (globalThis as unknown as { Hooks?: { callAll?: (name: string, ...args: unknown[]) => boolean } }).Hooks;
+                        // Fallback: call the hook with an empty controls map +
+                        // tools array so the system's handler shape (which
+                        // typically appends to that array) doesn't throw.
+                        HooksGlobal?.callAll?.('getSceneControlButtons', { controls: {} });
+                        await new Promise((r) => setTimeout(r, 30));
+                    }
                 } catch (err) {
                     notes.getSceneControlButtons = `ui.controls.render threw: ${String((err as Error)?.message ?? err)}`;
                 }

@@ -199,16 +199,36 @@ async function probeSetting(page: import('@playwright/test').Page, fullKey: stri
 }
 
 async function probeAccessor(page: import('@playwright/test').Page, name: (typeof SETTING_ACCESSORS)[number]): Promise<AccessorProbe> {
-    const result = await page.evaluate((accessor: string) => {
+    const result = await page.evaluate(async (accessor: string) => {
+        // The WH40KSettings class is not attached to any runtime global; the
+        // canonical surface is the ES module shipped at
+        // /systems/wh40k-rpg/module/wh40k-rpg-settings.js. Dynamic-import it
+        // and call the static accessor directly. This mirrors how the system
+        // code itself reaches the class (via `import { WH40KSettings }`),
+        // which is the only path the source-coverage instrumentation sees.
         const { CONFIG, game } = globalThis as unknown as {
             CONFIG?: { WH40K?: { Settings?: Record<string, unknown> } };
             game?: { wh40k?: { settings?: Record<string, unknown> }; system?: { api?: { settings?: Record<string, unknown> } } };
         };
-        // The class is exposed in several places depending on init order:
-        // - CONFIG.WH40K.Settings (preferred — set during system init)
-        // - game.wh40k.settings / game.system.api.settings (fallback)
-        const candidates: Array<Record<string, unknown> | undefined> = [CONFIG?.WH40K?.Settings, game?.wh40k?.settings, game?.system?.api?.settings];
-        const owner = candidates.find((c) => c && typeof (c as Record<string, unknown>)[accessor] === 'function');
+        // Fallback chain in case a future build re-exposes the class globally.
+        const globalCandidates: Array<Record<string, unknown> | undefined> = [CONFIG?.WH40K?.Settings, game?.wh40k?.settings, game?.system?.api?.settings];
+        let owner: Record<string, unknown> | undefined = globalCandidates.find((c) => c && typeof (c as Record<string, unknown>)[accessor] === 'function');
+        if (!owner) {
+            try {
+                // Indirect dynamic-import URL so TS doesn't try to resolve the
+                // runtime Foundry static-file path as a module specifier at
+                // typecheck time. The browser resolves it against Foundry's
+                // /systems/<id>/ static mount at runtime.
+                const url = '/systems/wh40k-rpg/module/wh40k-rpg-settings.js';
+                const importer = (specifier: string): Promise<unknown> => import(/* @vite-ignore */ specifier);
+                const mod = (await importer(url)) as { WH40KSettings?: Record<string, unknown> };
+                if (mod.WH40KSettings && typeof mod.WH40KSettings[accessor] === 'function') {
+                    owner = mod.WH40KSettings;
+                }
+            } catch (err) {
+                return { ok: false, error: `dynamic import failed: ${String((err as Error)?.message ?? err)}` };
+            }
+        }
         if (!owner) return { ok: false, error: `accessor ${accessor} not found on WH40KSettings surface` };
         try {
             const fn = (owner as Record<string, unknown>)[accessor] as () => unknown;
