@@ -126,6 +126,27 @@ const CHARACTER_SHEET_TABS = ['overview', 'skills', 'combat', 'equipment', 'biog
 const CHARACTER_SHEET_ACTIONS = ['toggleEditMode', 'resetWindowSize'];
 const CHARACTER_SHEET_FORM_FIELDS = ['system.wounds.value'];
 
+// Sheet-mixin layer flows exercised by tests/e2e/sheet-mixins.spec.ts. Drives
+// source coverage on `src/module/applications/api/primary-sheet-mixin.ts`
+// (edit-mode toggle / changeTab routing / _activateTab DOM dispatch),
+// `src/module/applications/item/base-item-sheet.ts` (isCompendiumItem /
+// isOwnedByActor / canEdit / inEditMode getters + #toggleEditMode action),
+// and `src/module/applications/actor/base-actor-sheet.ts` (_onDropItem
+// drop-handler override + tabGroups round-trip). The ProseMirror gating
+// flow guards CLAUDE.md gotcha #5 by verifying compendium item sheets
+// short-circuit before instantiating a ProseMirror editor in read-only
+// context. Keys MUST match the recordCoverage('sheet-mixin.flow', ...)
+// calls in the spec.
+const SHEET_MIXIN_FLOWS = [
+    'edit-mode-toggle-actor',
+    'edit-mode-toggle-item',
+    'owned-item-sheet-canEdit',
+    'compendium-item-sheet-readonly',
+    'tab-switch-routes-via-mixin',
+    'drop-event-on-sheet',
+    'prosemirror-gated-in-readonly',
+];
+
 // Foundry hooks the wh40k-rpg system registers handlers for. Exercised by
 // tests/e2e/hooks.spec.ts — each entry has a trigger action in that spec
 // AND a recordCoverage('hook.fired', name) call. Keep this list in sync
@@ -366,6 +387,27 @@ const MODIFIER_FLOWS = [
     'modifier-condition-applied',
 ];
 
+// Dark-Heresy-flavoured item DataModel flows exercised by
+// tests/e2e/dh-special-items.spec.ts. Each key embeds one item type with
+// unique mechanics onto a dh2-character parent and drives the per-type
+// defineSchema + getters + prepareBaseData branches that the basic
+// item-types.spec.ts create+render sweep doesn't reach. Pushes source-code
+// coverage on `src/module/data/item/mutation.ts`, `mental-disorder.ts`,
+// `critical-injury.ts`, `malignancy.ts`, `gear.ts` (drug → GearData),
+// `peer-enemy.ts` (peer → PeerEnemyData), and `cybernetic.ts` (including
+// the `cybernetic && equipped` branch of CreatureTemplate._computeItemModifiers
+// at `src/module/data/actor/templates/creature.ts:1089`). Keys MUST match
+// the recordCoverage('dh-special-item.flow', ...) calls in the spec.
+const DH_SPECIAL_ITEM_FLOWS = [
+    'mutation-applies-to-actor',
+    'mental-disorder-tracks-severity',
+    'critical-injury-applies-impairment',
+    'malignancy-corruption-link',
+    'drug-temporary-effect',
+    'peer-grants-influence-test-bonus',
+    'cybernetic-grants-stat-modifier',
+];
+
 // Vehicle + starship gameplay flows exercised by
 // tests/e2e/vehicle-starship.spec.ts. Drives source-code coverage on
 // `src/module/data/actor/vehicle.ts` (integrity clamp / derived getters /
@@ -432,6 +474,13 @@ recordDimension(
     covered['sheet.form-submit'],
     CHARACTER_SHEET_FORM_FIELDS.map((f) => `character::${f}`),
 );
+
+// Sheet-mixin layer dimension exercised by tests/e2e/sheet-mixins.spec.ts.
+// Pushes source coverage on the primary-sheet-mixin + base-item-sheet +
+// base-actor-sheet trio (edit-mode getters / toggle action, mixin changeTab
+// routing, _onDropItem drop dispatch, compendium read-only / ProseMirror
+// gating). See SHEET_MIXIN_FLOWS above for the per-flow source-coverage map.
+recordDimension('sheet-mixin.flow', covered['sheet-mixin.flow'], SHEET_MIXIN_FLOWS);
 
 // DH2-specific gameplay surfaces exercised by tests/e2e/dh2-flows.spec.ts.
 // Each is a single-key dimension (0% or 100%) — the goal is to ratchet
@@ -505,6 +554,13 @@ recordDimension('damage.flow', covered['damage.flow'], DAMAGE_FLOWS);
 // the unequip rollback path that re-runs _computeItemModifiers on item
 // update).
 recordDimension('modifier.flow', covered['modifier.flow'], MODIFIER_FLOWS);
+
+// Dark-Heresy-flavoured item DataModel dimension exercised by
+// tests/e2e/dh-special-items.spec.ts. Pushes source-code coverage on the
+// per-type DataModels under src/module/data/item/ (mutation, mental-disorder,
+// critical-injury, malignancy, cybernetic, plus the drug→GearData and
+// peer→PeerEnemyData type-id aliases registered in hooks-manager.ts).
+recordDimension('dh-special-item.flow', covered['dh-special-item.flow'], DH_SPECIAL_ITEM_FLOWS);
 
 // Vehicle + starship gameplay dimension exercised by
 // tests/e2e/vehicle-starship.spec.ts. Pushes source-code coverage on
@@ -723,6 +779,49 @@ recordDimension('action-manager.flow', covered['action-manager.flow'], ACTION_MA
 // MUST match the recordCoverage('scene-hud.flow', ...) calls in the spec.
 const SCENE_HUD_FLOWS = ['scene-controls-button-registered', 'scene-controls-button-onclick', 'token-hud-renders', 'token-hud-system-buttons', 'token-effects-via-hud', 'scene-controls-per-category'];
 recordDimension('scene-hud.flow', covered['scene-hud.flow'], SCENE_HUD_FLOWS);
+
+// NPC tooling pipeline flows exercised by tests/e2e/npc-tools.spec.ts.
+// Pushes source-code coverage on `src/module/applications/npc/stat-block-parser.ts`
+// (parse / parseJSON / parseText + the _parseCharacteristics / _parseWounds /
+// _parseMovement / _parseArmour / _parseSkills / _parseWeapons branches that
+// fire on a sample DH2 stat block), `src/module/applications/npc/stat-block-exporter.ts`
+// (toJSON + toText against a real NPC actor), `src/module/applications/npc/threat-calculator.ts`
+// (scaleToThreat in both +1 and -1 directions, getTierInfo, _scaleDamage),
+// `src/module/applications/npc/threat-scaler-dialog.ts` (constructor +
+// #originalThreat capture + render path), `src/module/applications/npc/difficulty-calculator-dialog.ts`
+// (every branch of _getDifficultyRating across ratio buckets + _prepareContext),
+// `src/module/applications/npc/encounter-builder.ts` (singleton show + addNPC
+// programmatic path + clear + getData snapshot), and
+// `src/module/applications/npc/combat-preset-dialog.ts` (library-mode render +
+// createPresetFromNPC + addPreset + getPresets + getPreset + applyPresetToNPC
+// + deletePresetById round-trip via the static API surface). Keys MUST match
+// the recordCoverage('npc-tool.flow', ...) calls in the spec.
+const NPC_TOOL_FLOWS = ['stat-block-parser-imports-npc', 'stat-block-exporter-roundtrip', 'threat-scaler-up-and-down', 'difficulty-calculator-computes', 'encounter-builder-add-remove-NPCs', 'combat-preset-save-and-load-library'];
+recordDimension('npc-tool.flow', covered['npc-tool.flow'], NPC_TOOL_FLOWS);
+
+// Weapon-attack pipeline flows exercised by tests/e2e/weapon-attack.spec.ts.
+// Pushes source-code coverage on `src/module/data/item/weapon.ts` (defineSchema
+// getters: usesAmmo, isEmpty, isRangedWeapon, isMeleeWeapon; prepareDerivedData
+// / _computeModifiers paths; clip + rateOfFire schema fields round-tripping
+// through update writes), `src/module/applications/prompts/weapon-attack-dialog.ts`,
+// `src/module/applications/prompts/damage-roll-dialog.ts` (prepareDamageRoll +
+// _performRoll → Roll.evaluate + sendActionDataToChat), and
+// `src/module/applications/prompts/righteous-fury-dialog.ts` (constructor +
+// DEFAULT_OPTIONS + PARTS + render). Also covers
+// `src/module/applications/prompts/psychic-power-dialog.ts` and the
+// `src/module/documents/acolyte.ts` rollItem weapon / psychicPower branches +
+// `src/module/documents/npc.ts` applyDamage armour-reduction branch. Keys MUST
+// match the recordCoverage('weapon-attack.flow', ...) calls in the spec.
+const WEAPON_ATTACK_FLOWS = [
+    'weapon-attack-rolls-to-hit',
+    'weapon-attack-consumes-ammo',
+    'weapon-attack-out-of-ammo',
+    'damage-roll-with-fury',
+    'damage-roll-applies-armour',
+    'psychic-power-roll',
+    'weapon-modes',
+];
+recordDimension('weapon-attack.flow', covered['weapon-attack.flow'], WEAPON_ATTACK_FLOWS);
 
 const total = passed + failed + skipped + timedOut;
 const dimensionWeights = Object.values(dimensions);

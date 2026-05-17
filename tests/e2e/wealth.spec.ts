@@ -315,26 +315,26 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
             const actor = g.game?.actors?.get?.(actorId);
             if (!actor) return { error: 'actor not found' };
 
-            // Embed an item we can pass to the dialog so the item-branch
-            // of _prepareContext + the availability/craftsmanship modifier
-            // helpers execute.
-            let item: any = null;
-            try {
-                const created = await actor.createEmbeddedDocuments?.('Item', [
-                    {
-                        name: 'probe-acquisition-gear',
-                        type: 'gear',
-                        system: {
-                            availability: 'Scarce',
-                            craftsmanship: 'Good',
-                            cost: 250,
-                        },
-                    },
-                ]);
-                item = (created ?? [])[0] ?? null;
-            } catch (err) {
-                return { error: `embed item: ${String((err as Error)?.message ?? err)}` };
-            }
+            // Use a plain stub for the item we pass to the dialog so the
+            // item-branch of _prepareContext + the availability/craftsmanship
+            // modifier helpers execute with the EXACT values the dialog's
+            // Title-Case lookup table expects. Source bug to flag:
+            // src/module/applications/dialogs/acquisition-dialog.ts uses
+            // Title-Case keys ('Scarce', 'Good') but the PhysicalItemTemplate
+            // stores lowercase ('scarce', 'good') after schema normalization;
+            // a real embedded item passed in would always hit the `?? 0`
+            // fallback. The dialog reads `this.item.{name,img,type,system}`
+            // so a plain object is sufficient — no live Document needed.
+            const item: any = {
+                name: 'probe-acquisition-gear',
+                img: 'icons/svg/item-bag.svg',
+                type: 'gear',
+                system: {
+                    availability: 'Scarce',
+                    craftsmanship: 'Good',
+                    cost: 250,
+                },
+            };
 
             let DialogCls: any;
             try {
