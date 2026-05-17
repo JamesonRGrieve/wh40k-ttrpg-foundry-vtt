@@ -834,6 +834,32 @@ recordDimension('weapon-attack.flow', covered['weapon-attack.flow'], WEAPON_ATTA
 const MACRO_FLOWS = ['create-item-macro', 'create-skill-macro', 'create-characteristic-macro', 'roll-item-macro', 'roll-skill-macro', 'roll-characteristic-macro'];
 recordDimension('macro.flow', covered['macro.flow'], MACRO_FLOWS);
 
+// Rules-engine pure-logic flows exercised by tests/e2e/rules-engine.spec.ts.
+// Each key maps to a single dynamic-imported entry point on a rules/
+// module that no other Tier B spec drives directly. Pushes source-code
+// coverage on `src/module/rules/damage-type.ts`, `weapon-jam.ts`,
+// `weapon-quality-effects.ts`, `critical-damage.ts`, `config.ts`, and
+// the formatter side of `ammo.ts` (actor-bound ammo paths are covered
+// by weapon-attack / modifiers). Keys MUST match the
+// recordCoverage('rule.flow', ...) calls in the spec.
+const RULE_FLOWS = [
+    'damage-type-dropdown',
+    'damage-type-names',
+    'damage-type-array',
+    'weapon-jam-floor',
+    'weapon-jam-shouldRoll',
+    'quality-weaponHasQuality',
+    'quality-rollDataHasQuality',
+    'quality-getWeaponParryModifier',
+    'critical-damage-getFuzzy',
+    'critical-damage-loadTable',
+    'critical-damage-invalidateCache',
+    'config-fieldMatch',
+    'config-toggleUIExpanded',
+    'ammo-ammoText',
+];
+recordDimension('rule.flow', covered['rule.flow'], RULE_FLOWS);
+
 const total = passed + failed + skipped + timedOut;
 const dimensionWeights = Object.values(dimensions);
 const aggregatePercent = dimensionWeights.length ? Math.round((dimensionWeights.reduce((a, d) => a + d.percent, 0) / dimensionWeights.length) * 100) / 100 : 0;
