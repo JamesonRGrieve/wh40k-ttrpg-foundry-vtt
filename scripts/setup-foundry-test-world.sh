@@ -21,7 +21,9 @@ SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 : "${SEED_WORLD_NAME:=wh40k-e2e}"
 : "${FOUNDRY_TEST_PORT:=30001}"
 
-DATA_DIR="${FOUNDRY_RELEASE_DIR}/data-test"
+# Must live OUTSIDE .foundry-release/ — Foundry refuses dataPath located
+# inside the application root.
+DATA_DIR="${SCRIPT_DIR}/.foundry-test-data"
 DATA_DATA="${DATA_DIR}/Data"
 CONFIG_DIR="${DATA_DIR}/Config"
 SYSTEMS_DIR="${DATA_DATA}/systems"
@@ -80,5 +82,11 @@ if [[ -f "${FOUNDRY_RELEASE_DIR}/license.json" ]]; then
 else
     echo "[setup-foundry-test-world] WARNING: ${FOUNDRY_RELEASE_DIR}/license.json missing — Foundry may refuse to launch. Update pull-foundry.sh to mirror Config/license.json." >&2
 fi
+
+# NOTE: do NOT pre-seed users.db here. Foundry's World#setup() auto-creates a
+# Gamemaster user the first time the world launches if none exists; if we
+# write our own LevelDB at worlds/<id>/data/users.db, Foundry mistakes it
+# for a legacy NEDB file and crashes on its NEDB→LevelDB migration path.
+# Leave the dir empty; let Foundry populate it.
 
 echo "[setup-foundry-test-world] ready: ${DATA_DIR} (port ${FOUNDRY_TEST_PORT}, world ${SEED_WORLD_NAME})"

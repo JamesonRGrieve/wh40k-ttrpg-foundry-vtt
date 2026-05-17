@@ -60,7 +60,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
             // Prerequisites (text description or structured)
             prerequisites: new fields.SchemaField({
-                text: new fields.StringField({ required: false, blank: true }),
+                text: new fields.StringField({ required: true, blank: true, initial: '' }),
                 characteristics: new fields.ObjectField({ required: true, initial: {} }),
                 skills: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),
                 talents: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),

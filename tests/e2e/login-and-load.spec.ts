@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './lib/test';
 
 test.describe('Foundry server boot (Tier B)', () => {
     test('loads the join page', async ({ page }) => {
