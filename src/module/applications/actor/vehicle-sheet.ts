@@ -215,6 +215,27 @@ export default class VehicleSheet extends BaseActorSheet {
     /*  Context Preparation                         */
     /* -------------------------------------------- */
 
+    /**
+     * Vehicles extend `ActorDataModel` directly and have no `characteristics`
+     * field — the inherited `BaseActorSheet._prepareCharacteristicsHUD`
+     * blindly does `Object.entries(this.actor.system.characteristics)` which
+     * throws on the undefined value. Override to a no-op for vehicles so the
+     * shared base sheet stays simple while vehicle render proceeds.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: matches the mixin-erased base method signature
+    override _prepareCharacteristicsHUD(_context: Record<string, unknown>): void {
+        // Intentionally empty: vehicles have no characteristics block.
+    }
+
+    /**
+     * Vehicles have no actor-level skills schema either; the inherited
+     * `_prepareSkills` iterates `system.skills` which is undefined.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: matches the mixin-erased base method signature
+    override _prepareSkills(_context: Record<string, unknown>): void {
+        // Intentionally empty: vehicles have no skills block.
+    }
+
     /** @inheritDoc */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext return contract
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
@@ -249,8 +270,14 @@ export default class VehicleSheet extends BaseActorSheet {
     _prepareVehicleStats(_context: VehicleSheetContext): PreparedVehicleStats {
         const sys = this.actor.system;
         const speed = sys.speed ?? {};
-        const woundsValue = sys.wounds.value;
-        const woundsMax = sys.wounds.max;
+        // VehicleData carries structural state in `integrity`; NPC-as-vehicle
+        // (vehicle as the NPC document's primaryUse) carries it in `wounds`.
+        // Read either, prefer `integrity` when present.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: dual-schema vehicle/NPC actor; one source has integrity, the other wounds
+        const sysAsRecord = sys as unknown as { integrity?: { value: number; max: number }; wounds?: { value: number; max: number } };
+        const structure = sysAsRecord.integrity ?? sysAsRecord.wounds ?? { value: 0, max: 0 };
+        const woundsValue = structure.value;
+        const woundsMax = structure.max;
 
         return {
             size: sys.size,

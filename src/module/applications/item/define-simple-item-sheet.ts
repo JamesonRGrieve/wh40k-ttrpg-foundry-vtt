@@ -132,6 +132,25 @@ export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = 
 
         override tabGroups: Record<string, string> = hasTabs ? { primary: opts.defaultTab as string } : {};
 
+        /**
+         * Foundry V14 ApplicationV2._prepareContext auto-calls _prepareTabs
+         * when `Object.keys(this.constructor.TABS).length === 1`. Our `TABS`
+         * is a flat array (`[{tab, group, label}]`); for an array of length
+         * 1, `Object.keys` returns `['0']`, tripping the auto-prepare path.
+         * Foundry then calls `_getTabsConfig('0')` which returns the
+         * descriptor object (not `{tabs: [...]}`), and the destructure
+         * yields `tabs = undefined` → `.reduce` throws.
+         *
+         * `PrimarySheetMixin._prepareContext` already populates
+         * `context['tabs']` via `_getTabs()` using the same flat-array
+         * source, so the Foundry-side auto-prepare is redundant. Return an
+         * empty record to defuse the broken default path.
+         */
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareTabs returns Record<string, ApplicationTab>
+        override _prepareTabs(_group: string): Record<string, unknown> {
+            return {};
+        }
+
         // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext returns free-form template context; Record<string, unknown> is the required base shape
         override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
             /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, no-restricted-syntax -- boundary: super._prepareContext is not typed in the mixin chain */

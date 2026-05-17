@@ -80,10 +80,10 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
             // Roll configuration (if rollable)
             rollConfig: new fields.SchemaField({
-                characteristic: new fields.StringField({ required: false, blank: true }),
-                skill: new fields.StringField({ required: false, blank: true }),
+                characteristic: new fields.StringField({ required: false, blank: true, initial: '' }),
+                skill: new fields.StringField({ required: false, blank: true, initial: '' }),
                 modifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                description: new fields.StringField({ required: false, blank: true }),
+                description: new fields.StringField({ required: false, blank: true, initial: '' }),
             }),
 
             // Can this talent be taken multiple times?
