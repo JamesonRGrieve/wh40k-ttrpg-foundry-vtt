@@ -131,9 +131,26 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             }
 
             // ---- create scene-less combat ----
+            // Several combat methods (rollAll, nextTurn, etc.) can hang
+            // forever in headless mode when they wait for socket events that
+            // never arrive. Wrap each call with a 5s timeout so one hanging
+            // operation can't kill the Foundry server and take downstream
+            // specs (dialogs, settings, sheet-interactions) with it.
+            const withTimeout = async <T,>(p: Promise<T>, ms: number, label: string): Promise<T> => {
+                let timer: ReturnType<typeof setTimeout> | null = null;
+                const timeout = new Promise<T>((_, reject) => {
+                    timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+                });
+                try {
+                    return await Promise.race([p, timeout]);
+                } finally {
+                    if (timer) clearTimeout(timer);
+                }
+            };
+
             let combat: any = null;
             try {
-                combat = await Combat.create({});
+                combat = await withTimeout(Combat.create({}), 5_000, 'Combat.create');
                 if (combat?.id) {
                     fired['create'] = true;
                 } else {
@@ -160,9 +177,10 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             // ---- add combatants ----
             let combatantIds: string[] = [];
             try {
-                const created = await combat.createEmbeddedDocuments?.(
-                    'Combatant',
-                    npcIds.map((id) => ({ actorId: id })),
+                const created = await withTimeout(
+                    combat.createEmbeddedDocuments?.('Combatant', npcIds.map((id) => ({ actorId: id }))),
+                    5_000,
+                    'createEmbeddedDocuments',
                 );
                 if (Array.isArray(created) && created.length > 0) {
                     combatantIds = created.map((c: any) => c?.id).filter((id: unknown): id is string => typeof id === 'string');
@@ -177,7 +195,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             // ---- roll initiative for all ----
             try {
                 if (typeof combat.rollAll === 'function') {
-                    await combat.rollAll();
+                    await withTimeout(combat.rollAll(), 5_000, 'combat.rollAll');
                     fired['rollAll'] = true;
                 } else {
                     notes['rollAll'] = 'combat.rollAll is not a function';
@@ -189,7 +207,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             // ---- activate combat (scene-less combat is activatable in V14) ----
             try {
                 if (typeof combat.activate === 'function') {
-                    await combat.activate();
+                    await withTimeout(combat.activate(), 5_000, 'combat.activate');
                     fired['activate'] = true;
                 } else {
                     notes['activate'] = 'combat.activate is not a function';
@@ -201,7 +219,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             // ---- startCombat ----
             try {
                 if (typeof combat.startCombat === 'function') {
-                    await combat.startCombat();
+                    await withTimeout(combat.startCombat(), 5_000, 'combat.startCombat');
                     fired['startCombat'] = true;
                 } else {
                     notes['startCombat'] = 'combat.startCombat is not a function';
@@ -215,7 +233,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                 let turnOk = true;
                 for (let i = 0; i < 3; i++) {
                     if (typeof combat.nextTurn === 'function') {
-                        await combat.nextTurn();
+                        await withTimeout(combat.nextTurn(), 5_000, 'combat.nextTurn');
                     } else {
                         turnOk = false;
                         notes['nextTurn'] = 'combat.nextTurn is not a function';
@@ -232,7 +250,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                 let roundOk = true;
                 for (let i = 0; i < 2; i++) {
                     if (typeof combat.nextRound === 'function') {
-                        await combat.nextRound();
+                        await withTimeout(combat.nextRound(), 5_000, 'combat.nextRound');
                     } else {
                         roundOk = false;
                         notes['nextRound'] = 'combat.nextRound is not a function';
@@ -247,7 +265,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             // ---- setInitiative on a combatant ----
             try {
                 if (combatantIds.length > 0 && typeof combat.setInitiative === 'function') {
-                    await combat.setInitiative(combatantIds[0], 99);
+                    await withTimeout(combat.setInitiative(combatantIds[0], 99), 5_000, 'combat.setInitiative');
                     fired['setInitiative'] = true;
                 } else {
                     notes['setInitiative'] = combatantIds.length === 0
@@ -261,7 +279,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             // ---- delete a combatant ----
             try {
                 if (combatantIds.length > 1) {
-                    const removed = await combat.deleteEmbeddedDocuments?.('Combatant', [combatantIds[1]]);
+                    const removed = await withTimeout(combat.deleteEmbeddedDocuments?.('Combatant', [combatantIds[1]]), 5_000, 'deleteEmbeddedDocuments');
                     if (Array.isArray(removed)) {
                         fired['deleteCombatant'] = true;
                     } else {
@@ -277,10 +295,10 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             // ---- endCombat (falls back to combat.delete) ----
             try {
                 if (typeof combat.endCombat === 'function') {
-                    await combat.endCombat();
+                    await withTimeout(combat.endCombat(), 5_000, 'combat.endCombat');
                     fired['endCombat'] = true;
                 } else if (typeof combat.delete === 'function') {
-                    await combat.delete();
+                    await withTimeout(combat.delete(), 5_000, 'combat.delete');
                     fired['endCombat'] = true;
                 } else {
                     notes['endCombat'] = 'neither endCombat nor delete available';
@@ -288,7 +306,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             } catch (err) {
                 // endCombat may prompt; fall back to delete.
                 try {
-                    await combat.delete?.();
+                    await withTimeout(combat.delete?.(), 5_000, 'combat.delete fallback');
                     fired['endCombat'] = true;
                 } catch (err2) {
                     notes['endCombat'] = `endCombat/delete threw: ${String((err2 as Error)?.message ?? err2)}`;
@@ -452,6 +470,10 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
 }
 
 test.describe.serial('combat lifecycle (Tier B)', () => {
+    // Cap at 3 minutes total — internal per-call timeouts mean we should
+    // never come close, but a hung server would otherwise eat the global
+    // 10-minute test timeout and take downstream specs with it.
+    test.setTimeout(180_000);
     test('combat tracker drives full encounter lifecycle and renders combat UIs', async ({ page }) => {
         const joined = await joinAsGM(page);
         test.skip(!joined, 'GM join failed');
