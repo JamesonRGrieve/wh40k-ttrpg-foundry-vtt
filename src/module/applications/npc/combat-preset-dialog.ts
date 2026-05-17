@@ -1,4 +1,5 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
+import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -92,7 +93,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * Setting key for storing presets.
      * @type {string}
      */
-    static SETTING_KEY = 'combatPresets';
+    static SETTING_KEY = WH40KSettings.SETTINGS.combatPresets;
 
     /* -------------------------------------------- */
     /*  Constructor                                 */
