@@ -214,19 +214,21 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _getAvailabilityModifier(availability: string): number {
+        // PhysicalItemTemplate stores availability lowercased per its `choices`
+        // set. Normalize the key before lookup so the modifier matches.
         const modifiers: Record<string, number> = {
-            'Abundant': 30,
-            'Plentiful': 20,
-            'Common': 10,
-            'Average': 0,
-            'Scarce': -10,
-            'Rare': -20,
-            'Very Rare': -30,
-            'Extremely Rare': -40,
-            'Near Unique': -50,
-            'Unique': -60,
+            abundant: 30,
+            plentiful: 20,
+            common: 10,
+            average: 0,
+            scarce: -10,
+            rare: -20,
+            'very rare': -30,
+            'extremely rare': -40,
+            'near unique': -50,
+            unique: -60,
         };
-        return modifiers[availability] ?? 0;
+        return modifiers[(availability ?? '').toLowerCase()] ?? 0;
     }
 
     /* -------------------------------------------- */
@@ -238,13 +240,14 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _getCraftsmanshipModifier(craftsmanship: string): number {
+        // Schema stores craftsmanship lowercased; normalize the lookup key.
         const modifiers: Record<string, number> = {
-            Poor: 10,
-            Common: 0,
-            Good: -10,
-            Best: -20,
+            poor: 10,
+            common: 0,
+            good: -10,
+            best: -20,
         };
-        return modifiers[craftsmanship] ?? 0;
+        return modifiers[(craftsmanship ?? '').toLowerCase()] ?? 0;
     }
 
     /* -------------------------------------------- */

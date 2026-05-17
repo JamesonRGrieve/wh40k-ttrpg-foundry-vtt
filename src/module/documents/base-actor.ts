@@ -127,7 +127,12 @@ export class WH40KBaseActor extends Actor {
             const sys = item.system as { subtletyAdjuster?: RawSubtletyAdjuster; equipped?: boolean } | undefined;
             const effect = subtletyAdjusterEffectOf(sys?.subtletyAdjuster);
             if (effect === null) continue;
-            if (effect.kind === 'passive' && effect.requiresEquipped && sys?.equipped !== true) continue;
+            // If `requiresEquipped` is set, the carrier item must expose an
+            // explicit `equipped: true`. Items that don't declare an
+            // `equipped` field at all (e.g. talents) are treated as
+            // always-on, so they pass this gate when the adjuster does not
+            // require equipping.
+            if (effect.kind === 'passive' && effect.requiresEquipped && !('equipped' in (sys ?? {}) && sys?.equipped === true)) continue;
             const sourceUuid = WH40KBaseActor.#compendiumSourceUuidOf(item);
             out.push({
                 sourceUuid,

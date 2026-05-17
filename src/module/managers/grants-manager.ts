@@ -802,11 +802,50 @@ export class GrantsManager {
      * @private
      */
     static _extractGrants(item: WH40KItem): GrantConfig[] {
-        const system = item.system as { grantsV2?: GrantConfig[] };
+        // Preferred: explicit grantsV2 array (declared by the DataModel).
+        const system = item.system as {
+            grantsV2?: GrantConfig[];
+            grants?: {
+                skills?: Array<{ name?: string; specialization?: string; level?: string }>;
+                talents?: Array<{ name?: string; specialization?: string; uuid?: string }>;
+                traits?: Array<{ name?: string; level?: number; uuid?: string }>;
+            };
+        };
         if (Array.isArray(system.grantsV2)) {
             return system.grantsV2;
         }
-        return [];
+        // Bridge legacy `system.grants.{skills,talents,traits}` shape (which
+        // TalentData and OriginPathData still emit) into runtime GrantConfig
+        // objects so GrantsManager can apply them without requiring every
+        // DataModel to add a parallel grantsV2 field.
+        const legacy = system.grants;
+        if (!legacy) return [];
+        const out: GrantConfig[] = [];
+        if (Array.isArray(legacy.skills) && legacy.skills.length > 0) {
+            out.push({
+                type: 'skill',
+                skills: legacy.skills
+                    .filter((s) => typeof s?.name === 'string' && s.name.length > 0)
+                    .map((s) => ({ key: s.name!.toLowerCase().replace(/\s+/g, ''), level: s.level ?? 'trained', specialization: s.specialization })),
+            });
+        }
+        if (Array.isArray(legacy.talents) && legacy.talents.length > 0) {
+            out.push({
+                type: 'item',
+                items: legacy.talents
+                    .filter((t) => typeof t?.uuid === 'string' && t.uuid.length > 0)
+                    .map((t) => ({ uuid: t.uuid!, specialization: t.specialization })),
+            });
+        }
+        if (Array.isArray(legacy.traits) && legacy.traits.length > 0) {
+            out.push({
+                type: 'item',
+                items: legacy.traits
+                    .filter((t) => typeof t?.uuid === 'string' && t.uuid.length > 0)
+                    .map((t) => ({ uuid: t.uuid!, level: t.level })),
+            });
+        }
+        return out;
     }
 
     /**

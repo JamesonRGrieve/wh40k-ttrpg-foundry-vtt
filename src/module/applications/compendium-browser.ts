@@ -99,17 +99,16 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
     /* -------------------------------------------- */
 
-    /** @override */
-    static TABS = {
-        primary: {
-            tabs: {
-                /* eslint-disable no-restricted-syntax -- i18n: TABS static initializer runs before game.i18n; labels are resolved at render time by Handlebars {{localize}} */
-                items: { tab: 'items', group: 'primary', label: 'Items' },
-                actors: { tab: 'actors', group: 'primary', label: 'Actors' },
-                /* eslint-enable no-restricted-syntax */
-            },
-        },
-    };
+    /**
+     * PrimarySheetMixin expects TABS as a flat array of descriptors
+     * (V14), not the V13 nested `{ primary: { tabs: {...} } }` shape.
+     */
+    /* eslint-disable no-restricted-syntax -- i18n: TABS static initializer runs before game.i18n; labels are resolved at render time by Handlebars {{localize}} */
+    static TABS = [
+        { tab: 'items', group: 'primary', label: 'Items' },
+        { tab: 'actors', group: 'primary', label: 'Actors' },
+    ];
+    /* eslint-enable no-restricted-syntax */
 
     /* -------------------------------------------- */
 
@@ -326,7 +325,10 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     /* eslint-disable no-restricted-syntax -- boundary: system is a compendium payload; armourPoints/coverage/type are raw untyped values */
     _prepareArmourData(system: Record<string, unknown>): Record<string, unknown> {
         const ap = (system['armourPoints'] ?? {}) as Record<string, number>;
-        const coverage = (system['coverage'] ?? []) as string[];
+        // Schema stores coverage as Set<string>; normalize to array so the
+        // existing .includes/.length call sites keep working.
+        const rawCoverage = system['coverage'];
+        const coverage: string[] = rawCoverage instanceof Set ? [...rawCoverage] : ((rawCoverage as string[]) ?? []);
 
         // Calculate AP summary
         const locations: Array<'head' | 'body' | 'leftArm' | 'rightArm' | 'leftLeg' | 'rightLeg'> = [
