@@ -26,6 +26,9 @@
 #     templates/   Foundry's HTML templates (app-window.html, etc.)
 #     systems/     Other installed systems (excluding $EXCLUDE_SYSTEM)
 #     modules/     Installed modules (plugins)
+#     main.js      Foundry server Node entrypoint (needed by Tier B e2e tests)
+#     license.json License file mirrored from FOUNDRY_DATA_PATH/../Config/
+#                  (needed for Foundry to launch under headless e2e)
 
 set -euo pipefail
 
@@ -51,12 +54,10 @@ SSH_OPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=10 -o PubkeyAuthenticati
 
 mkdir -p "${RELEASE_DIR}"
 
-# One-time migration: clear legacy flat-layout files from earlier ad-hoc copies
-# of public/scripts. Anything in the new structured subdirs is preserved.
-find "${RELEASE_DIR}" -maxdepth 1 -mindepth 1 \
-    ! -name 'public' ! -name 'dist' ! -name 'templates' \
-    ! -name 'systems' ! -name 'modules' \
-    -exec rm -rf {} +
+# data-test/ is generated locally by scripts/setup-foundry-test-world.sh and
+# must survive between pulls. license.json is mirrored separately below. All
+# other root-level Foundry files (main.js, main.mjs, node_modules/, etc.) are
+# pulled by the server-bundle rsync at the bottom of this script.
 
 pull() {
     local label="$1"
@@ -94,6 +95,27 @@ pull "installed systems (excluding ${EXCLUDE_SYSTEM})" \
 pull "installed modules (plugins)" \
     "${FOUNDRY_DATA_PATH}/modules/" \
     "${RELEASE_DIR}/modules/"
+
+# Foundry's Node server bundle — main.js loader plus the real main.mjs entry,
+# node_modules/, and package.json. Needed by Tier B e2e tests to spawn a
+# headless server. Pulled with --exclude so we don't re-fetch what we
+# already mirrored above (public/, dist/, templates/).
+echo "=== Pulling Foundry server bundle (root files + node_modules) ==="
+sshpass -p "${FOUNDRY_PASS}" rsync -a --delete-after --info=stats2,progress2 \
+    -e "ssh ${SSH_OPTS}" \
+    --exclude="/public/" --exclude="/dist/" --exclude="/templates/" \
+    --exclude="/peek*.mjs" --exclude="/scan.mjs" --exclude="/migrate.mjs" \
+    "${FOUNDRY_USER}@${FOUNDRY_HOST}:${FOUNDRY_APP_PATH}/" \
+    "${RELEASE_DIR}/" || echo "  WARN: server bundle pull failed — Tier B will not boot" >&2
+
+# License file lives next to Data/, not inside it. Path resolves whether
+# FOUNDRY_DATA_PATH points at .../data/Data or .../data.
+echo "=== Pulling Foundry license.json ==="
+LICENSE_SRC="$(dirname "${FOUNDRY_DATA_PATH}")/Config/license.json"
+sshpass -p "${FOUNDRY_PASS}" rsync -a --info=stats1 \
+    -e "ssh ${SSH_OPTS}" \
+    "${FOUNDRY_USER}@${FOUNDRY_HOST}:${LICENSE_SRC}" \
+    "${RELEASE_DIR}/license.json" || echo "  WARN: license.json not present at ${LICENSE_SRC} — Tier B will refuse to launch" >&2
 
 echo ""
 echo "=== Done ==="

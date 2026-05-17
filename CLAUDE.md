@@ -38,6 +38,15 @@ These are not aspirational. Code without these is incomplete.
 
 When you add a component, the story and tests are part of the same PR. When you fix a component, also add the story/tests if they don't exist — leave the area better covered than you found it. The `coverage-symmetry` ratchet (pre-commit) blocks commits where missing-pair counts increase.
 
+### Integration tiers (opt-in to licensed Foundry)
+
+Two extra suites layer on top of the unit + storybook-playwright surfaces. Both are **opt-in** and key off the presence of `.foundry-release/` (gitignored, populated by `./pull-foundry.sh`). When the licensed install is absent, both suites print a skip banner and exit 0; set `FOUNDRY_INTEGRATION=required` to convert the skip into a hard error (use this in the licensed CI lane).
+
+- **Tier A — `pnpm test:integration`.** Vitest under jsdom that loads `.foundry-release/public/scripts/foundry.js`, stubs canvas / WebGL / IndexedDB, drives the init pipeline, then asserts against real Documents / DataModels / sheets. Catches V14 `cleanData(_state)` regressions, `registerSheet` anonymous-class collisions, and per-system DataModel registration breaks. Tests live in `tests/integration/*.test.ts`; the boot harness is `tests/integration/lib/boot.ts`. Boot is best-effort — if Foundry refuses to init under jsdom, the harness records the error and individual tests skip rather than fail the suite.
+- **Tier B — `pnpm test:e2e`.** Playwright spawns the real Foundry server (`node .foundry-release/main.js`) against an ephemeral data dir at `.foundry-release/data-test/` with the working tree's `dist/` symlinked in as the system. Tests drive the GM-only seed world, create actors per game system, and assert on chat-card DOM (catching the `.wh40k-rpg` ancestor regression noted under "Adaptation procedure" 3a). Config is `playwright.foundry.config.ts`; provisioning is `scripts/setup-foundry-test-world.sh`.
+
+Neither tier runs pre-commit (Tier A is 30s+ to boot, Tier B is minutes). They run only when invoked explicitly or by the licensed CI lane. The `integration:ratchet` (case count cannot fall) keeps Tier A coverage from being silently deleted; Tier B is intentionally not ratcheted (failures are binary "server didn't boot" signals, not coverage to drive down).
+
 ---
 
 ## Coverage metrics & ratchets
