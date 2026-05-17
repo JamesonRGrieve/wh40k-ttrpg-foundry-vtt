@@ -1,5 +1,5 @@
 {
-  "passed": 17,
+  "passed": 40,
   "dimensions": {
     "actor.type-system": 100,
     "actor.sheet-render": 100,
@@ -13,14 +13,14 @@
     "sheet.action": 100,
     "sheet.form-submit": 100,
     "hook.fired": 80,
-    "setting.toggle": 0,
-    "setting.read": 0,
+    "setting.toggle": 36.36,
+    "setting.read": 63.64,
     "setting.accessor": 0,
     "chat.card-render": 88.89,
-    "dialog.render": 0,
+    "dialog.render": 73.91,
     "active-effect.flow": 80,
-    "combat.flow": 0,
-    "combat.ui": 0,
+    "combat.flow": 100,
+    "combat.ui": 60,
     "dh2.fate": 100,
     "dh2.corruption": 100,
     "dh2.insanity": 100,
@@ -28,9 +28,9 @@
     "dh2.elite-advance": 100
   },
   "source": {
-    "lines": 57.88,
-    "statements": 57.88,
-    "functions": 30.79,
-    "branches": 65.96
+    "lines": 60.23,
+    "statements": 60.23,
+    "functions": 34.37,
+    "branches": 64.95
   }
 }
