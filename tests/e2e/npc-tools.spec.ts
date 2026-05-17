@@ -231,7 +231,10 @@ async function probeExporter(page: Page): Promise<FlowResult> {
                 if (typeof jsonOut !== 'string' || jsonOut === '') {
                     return { ok: false, error: 'toJSON produced empty output' };
                 }
-                const parsedExport = JSON.parse(jsonOut) as { name?: string; system?: { threatLevel?: number; characteristics?: Record<string, { base?: number }> } };
+                const parsedExport = JSON.parse(jsonOut) as {
+                    name?: string;
+                    system?: { threatLevel?: number; characteristics?: Record<string, { base?: number }> };
+                };
                 if (parsedExport.name !== 'probe-exporter-npc') {
                     return { ok: false, error: `exported name mismatch: ${parsedExport.name}` };
                 }
@@ -319,7 +322,9 @@ async function probeScaler(page: Page): Promise<FlowResult> {
             if (!npc) return { ok: false, error: 'npc create returned null' };
 
             try {
-                const dialogMod = (await import(scalerUrl)) as { default?: new (a: unknown) => { render: (f: boolean) => Promise<void>; close: () => Promise<void>; element?: HTMLElement } };
+                const dialogMod = (await import(scalerUrl)) as {
+                    default?: new (a: unknown) => { render: (f: boolean) => Promise<void>; close: () => Promise<void>; element?: HTMLElement };
+                };
                 const Dialog = dialogMod.default;
                 if (typeof Dialog !== 'function') {
                     return { ok: false, error: 'NPCThreatScalerDialog default export not a constructor' };
@@ -345,7 +350,7 @@ async function probeScaler(page: Page): Promise<FlowResult> {
                 }
 
                 // Scale up: 5 → 6.
-                const wsBefore = Number((g.game.actors.get(npc.id)?.system?.characteristics?.weaponSkill?.base) ?? 0);
+                const wsBefore = Number(g.game.actors.get(npc.id)?.system?.characteristics?.weaponSkill?.base ?? 0);
                 const upUpdates = Calc.scaleToThreat(npc.system, 5, 6, {
                     scaleCharacteristics: true,
                     scaleWounds: true,
@@ -358,11 +363,11 @@ async function probeScaler(page: Page): Promise<FlowResult> {
                     upPayload[`system.${k}`] = v;
                 }
                 await npc.update(upPayload);
-                const wsAfterUp = Number((g.game.actors.get(npc.id)?.system?.characteristics?.weaponSkill?.base) ?? 0);
+                const wsAfterUp = Number(g.game.actors.get(npc.id)?.system?.characteristics?.weaponSkill?.base ?? 0);
                 if (wsAfterUp <= wsBefore) {
                     return { ok: false, error: `scale-up did not raise WS base: before=${wsBefore}, after=${wsAfterUp}` };
                 }
-                const threatAfterUp = Number((g.game.actors.get(npc.id)?.system?.threatLevel) ?? 0);
+                const threatAfterUp = Number(g.game.actors.get(npc.id)?.system?.threatLevel ?? 0);
                 if (threatAfterUp !== 6) {
                     return { ok: false, error: `scale-up threatLevel mismatch: ${threatAfterUp}` };
                 }
@@ -381,7 +386,7 @@ async function probeScaler(page: Page): Promise<FlowResult> {
                     downPayload[`system.${k}`] = v;
                 }
                 await npc.update(downPayload);
-                const wsAfterDown = Number((g.game.actors.get(npc.id)?.system?.characteristics?.weaponSkill?.base) ?? 0);
+                const wsAfterDown = Number(g.game.actors.get(npc.id)?.system?.characteristics?.weaponSkill?.base ?? 0);
                 if (wsAfterDown >= wsAfterUp) {
                     return { ok: false, error: `scale-down did not lower WS base: after-up=${wsAfterUp}, after-down=${wsAfterDown}` };
                 }
@@ -437,7 +442,11 @@ async function probeDifficulty(page: Page): Promise<FlowResult> {
 
             try {
                 const mod = (await import(difficultyUrl)) as {
-                    default?: new (npc: unknown) => { render: (f: boolean) => Promise<void>; close: () => Promise<void>; _getDifficultyRating: (ratio: number) => { key: string; label: string; color: string } };
+                    default?: new (npc: unknown) => {
+                        render: (f: boolean) => Promise<void>;
+                        close: () => Promise<void>;
+                        _getDifficultyRating: (ratio: number) => { key: string; label: string; color: string };
+                    };
                 };
                 const Dialog = mod.default;
                 if (typeof Dialog !== 'function') {
@@ -529,7 +538,14 @@ async function probeBuilder(page: Page): Promise<FlowResult> {
 
             try {
                 const mod = (await import(builderUrl)) as {
-                    default?: { show: () => { addNPC: (u: unknown, c?: number) => Promise<void>; getData: () => { npcs: { count: number }[] }; clear: () => void; close: () => Promise<void> } };
+                    default?: {
+                        show: () => {
+                            addNPC: (u: unknown, c?: number) => Promise<void>;
+                            getData: () => { npcs: { count: number }[] };
+                            clear: () => void;
+                            close: () => Promise<void>;
+                        };
+                    };
                 };
                 const Builder = mod.default;
                 if (typeof Builder?.show !== 'function') {
@@ -624,7 +640,7 @@ async function probePreset(page: Page): Promise<FlowResult> {
                         characteristics: { weaponSkill: { base: 50, total: 50, short: 'WS' } },
                         wounds: { value: 20, max: 20 },
                         movement: { half: 3, full: 6, charge: 9, run: 18 },
-                        size: 'average',
+                        size: 4,
                         initiative: { value: 0 },
                         trainedSkills: {},
                         weapons: { simple: [] },
@@ -635,7 +651,22 @@ async function probePreset(page: Page): Promise<FlowResult> {
                 targetNPC = await Actor.create({
                     name: 'probe-preset-target',
                     type: 'bc-npc',
-                    system: { gameSystem: 'bc', threatLevel: 1 },
+                    system: {
+                        gameSystem: 'bc',
+                        faction: '',
+                        type: 'troop',
+                        role: 'support',
+                        threatLevel: 1,
+                        characteristics: { weaponSkill: { base: 25, total: 25, short: 'WS' } },
+                        wounds: { value: 10, max: 10 },
+                        movement: { half: 3, full: 6, charge: 9, run: 18 },
+                        size: 4,
+                        initiative: { value: 0 },
+                        trainedSkills: {},
+                        weapons: { simple: [] },
+                        armour: { mode: 'simple', total: 0, locations: { head: 0, body: 0, leftArm: 0, rightArm: 0, leftLeg: 0, rightLeg: 0 } },
+                        horde: { enabled: false },
+                    },
                 });
             } catch (err) {
                 return { ok: false, error: `npc create failed: ${String((err as Error)?.message ?? err)}` };
@@ -692,7 +723,7 @@ async function probePreset(page: Page): Promise<FlowResult> {
                 // Apply to target NPC — should mutate target.system.threatLevel
                 // from 1 → 9 (source's value).
                 await Dialog.applyPresetToNPC(targetNPC, fetched);
-                const targetThreat = Number((g.game.actors.get(targetNPC.id)?.system?.threatLevel) ?? 0);
+                const targetThreat = Number(g.game.actors.get(targetNPC.id)?.system?.threatLevel ?? 0);
                 if (targetThreat !== 9) {
                     return { ok: false, error: `applyPresetToNPC did not transfer threatLevel: ${targetThreat}` };
                 }
