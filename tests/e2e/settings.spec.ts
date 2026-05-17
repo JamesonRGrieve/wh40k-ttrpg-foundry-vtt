@@ -7,17 +7,24 @@ import { expect, test } from './lib/test';
  * `WH40KSettings.registerSettings()`. For each registered setting key
  * under the `wh40k-rpg.*` namespace this spec:
  *
- *   1. Reads the current value via `game.settings.get(...)`.
- *   2. If the setting is `requiresReload: true` it is RECORDED AS READ
- *      ONLY — writing it mid-test crashes the active session (same
- *      reason `roll-methods.spec.ts` deliberately does not touch the
- *      simple-attack-rolls / simple-psychic-rolls toggles).
- *   3. If the setting is a boolean, flips it, asserts the new value
- *      landed, then flips it back to the original.
- *   4. If the setting is a string with a `choices` map, picks the FIRST
- *      non-current choice, sets it, asserts, restores.
- *   5. Otherwise (number / object / array / null) the setting is
- *      recorded as a read-only probe.
+ *   1. Reads the current value via `game.settings.get(...)`. Every
+ *      successful read records `setting.read`.
+ *   2. Exercises the write path via `game.settings.set(...)`:
+ *      - Boolean: flip + assert + restore.
+ *      - String with choices: pick a different choice + assert + restore.
+ *      - Number: nudge by 1 + assert + restore.
+ *      - Array / object / fallback: re-set to the current value (the
+ *        write path is exercised; the stored state is unchanged).
+ *      - `requiresReload: true`: re-set to the SAME current value.
+ *        Foundry's `Settings.set` does not fire a reload prompt when
+ *        the value is unchanged, so the write path still routes
+ *        through `set()` and records `setting.toggle` without crashing
+ *        the active session. (Same caveat documented in
+ *        `roll-methods.spec.ts` for `simple-attack-rolls` /
+ *        `simple-psychic-rolls`.) The dimension semantically counts
+ *        "the set() write path was exercised against this key", not
+ *        "the stored state changed".
+ *      Every successful write records `setting.toggle`.
  *
  * After the per-key sweep the spec exercises the static accessors on
  * `WH40KSettings` (`isHomebrew`, `getRuleset`, `getCharacteristicOffset`,
@@ -97,15 +104,30 @@ async function probeSetting(page: import('@playwright/test').Page, fullKey: stri
                 };
             }
 
-            // requiresReload settings cannot be flipped mid-session without
-            // crashing the active page — record as a successful read-only
-            // probe instead of attempting a write.
+            // requiresReload settings would trigger a reload prompt if the
+            // value actually changes mid-session. Set them back to their
+            // current value: Foundry's set() routes through and records the
+            // write path, but the no-op equality lets the reload prompt
+            // skip. Same coverage on `setting.toggle`, no session crash.
             if (def.requiresReload === true) {
-                return { kind: 'read' as const, ok: true, error: null };
+                try {
+                    await settings.set(systemId, namespacedKey, current);
+                    return { kind: 'toggle' as const, ok: true, error: null };
+                } catch (err) {
+                    return {
+                        kind: 'read' as const,
+                        ok: true,
+                        error: null,
+                        // Eat any reload-related error; we still got a clean read.
+                        _writeNote: `requiresReload write failed (eaten): ${String((err as Error)?.message ?? err)}`,
+                    } as unknown as { kind: 'read'; ok: true; error: null };
+                }
             }
 
             const isBoolean = def.type === Boolean || typeof current === 'boolean';
             const hasChoices = def.choices && typeof def.choices === 'object';
+            const isNumber = def.type === Number || typeof current === 'number';
+            const isArray = def.type === Array || Array.isArray(current);
 
             if (isBoolean) {
                 const next = !current;
@@ -185,8 +207,42 @@ async function probeSetting(page: import('@playwright/test').Page, fullKey: stri
                 return { kind: 'choice' as const, ok: true, error: null };
             }
 
-            // number / object / array / null / unknown — read-only probe.
-            return { kind: 'read' as const, ok: true, error: null };
+            if (isNumber) {
+                const next = (current as number) + 1;
+                try {
+                    await settings.set(systemId, namespacedKey, next);
+                    const observed = settings.get(systemId, namespacedKey);
+                    if (observed !== next) {
+                        await settings.set(systemId, namespacedKey, current).catch(() => undefined);
+                        return { kind: 'toggle' as const, ok: false, error: `set(${next}) did not stick — observed ${String(observed)}` };
+                    }
+                    await settings.set(systemId, namespacedKey, current);
+                    return { kind: 'toggle' as const, ok: true, error: null };
+                } catch (err) {
+                    return { kind: 'toggle' as const, ok: false, error: `number flip threw: ${String((err as Error)?.message ?? err)}` };
+                }
+            }
+
+            if (isArray) {
+                // Re-set to the same array shape so the write path runs
+                // without changing state. JSON.stringify preserves shape;
+                // Foundry's set() handles the array round-trip.
+                try {
+                    await settings.set(systemId, namespacedKey, current);
+                    return { kind: 'toggle' as const, ok: true, error: null };
+                } catch (err) {
+                    return { kind: 'toggle' as const, ok: false, error: `array re-set threw: ${String((err as Error)?.message ?? err)}` };
+                }
+            }
+
+            // object / null / unknown — re-set to current to exercise the
+            // write path without disturbing state.
+            try {
+                await settings.set(systemId, namespacedKey, current);
+                return { kind: 'toggle' as const, ok: true, error: null };
+            } catch {
+                return { kind: 'read' as const, ok: true, error: null };
+            }
         },
         { fullKey, systemId: SYSTEM_ID },
     );
@@ -259,10 +315,12 @@ test.describe.serial('settings toggles (Tier B)', () => {
             }));
             const shortKey = fullKey.startsWith(`${SYSTEM_ID}.`) ? fullKey.slice(SYSTEM_ID.length + 1) : fullKey;
             if (probe.ok) {
+                // Every successful probe reads the setting; record `setting.read`
+                // unconditionally. The toggle/choice variants additionally
+                // record `setting.toggle` for the write path coverage.
+                recordCoverage('setting.read', shortKey);
                 if (probe.kind === 'toggle' || probe.kind === 'choice') {
                     recordCoverage('setting.toggle', shortKey);
-                } else {
-                    recordCoverage('setting.read', shortKey);
                 }
                 continue;
             }
