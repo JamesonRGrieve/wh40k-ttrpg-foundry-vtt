@@ -88,6 +88,15 @@
             "dw-vehicle": {
                 "htmlFields": ["details.biography"]
             },
+            "im-character": {
+                "htmlFields": ["details.biography"]
+            },
+            "im-npc": {
+                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+            },
+            "im-vehicle": {
+                "htmlFields": ["details.biography"]
+            },
             "character": {
                 "htmlFields": ["details.biography"]
             },
@@ -118,6 +127,9 @@
                 "htmlFields": ["description.value"]
             },
             "backpack": {
+                "htmlFields": ["description.value"]
+            },
+            "condition": {
                 "htmlFields": ["description.value"]
             },
             "consumable": {
@@ -158,6 +170,9 @@
             },
             "navigatorPower": {
                 "htmlFields": ["description.value"]
+            },
+            "npcTemplate": {
+                "htmlFields": ["description", "tactics", "specialAbilities"]
             },
             "order": {
                 "htmlFields": ["description.value"]

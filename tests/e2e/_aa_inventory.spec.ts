@@ -45,9 +45,15 @@ test('dump enumerable inventory + reset coverage tracker', async ({ page }) => {
                 game?: {
                     system?: { id?: string; version?: string };
                     release?: { version?: string; generation?: number };
+                    packs?: { keys: () => IterableIterator<string> };
                 };
             }
         ).CONFIG;
+        const gameRef = (
+            globalThis as unknown as {
+                game?: { packs?: { keys: () => IterableIterator<string> } };
+            }
+        ).game;
 
         const actorTypes = Object.keys(cfg?.Actor?.dataModels ?? {});
         const itemTypes = Object.keys(cfg?.Item?.dataModels ?? {});
@@ -60,7 +66,8 @@ test('dump enumerable inventory + reset coverage tracker', async ({ page }) => {
             itemSheets[type] = Object.keys(sheets ?? {});
         }
         const statusEffects = (cfg?.statusEffects ?? []).map((s) => s.id);
-        return { actorTypes, itemTypes, actorSheets, itemSheets, statusEffects };
+        const compendiumPacks = gameRef?.packs ? Array.from(gameRef.packs.keys()) : [];
+        return { actorTypes, itemTypes, actorSheets, itemSheets, statusEffects, compendiumPacks };
     });
 
     // Per-system actor types follow a `<systemPrefix>-<role>` convention.

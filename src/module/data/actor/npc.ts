@@ -152,6 +152,59 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     // From HordeTemplate mixin
     declare horde: HordeData;
 
+    /**
+     * NPCs do not carry the PC biography sub-schema, but the inherited
+     * `CharacterSheet._prepareBiographyPartContext` reads
+     * `this.actor.system.bio.notes`. Surface an empty bio object so that
+     * code path proceeds without a runtime error. NPC narrative content
+     * lives in `description`, `tactics`, and `quickNotes` instead.
+     */
+    get bio(): Record<string, string> {
+        return {
+            playerName: '',
+            gender: '',
+            age: '',
+            build: '',
+            complexion: '',
+            hair: '',
+            eyes: '',
+            quirks: '',
+            superstition: '',
+            mementos: '',
+            notes: '',
+        };
+    }
+
+    /**
+     * NPCs do not have an origin path (they're built from threat tier, not
+     * lifepath). The NPC sheet inherits from CharacterSheet, whose
+     * `_prepareContext` reads `system.originPath.{homeWorld,background,role}`
+     * to decide whether the origin-path widget is complete. Returning a
+     * fully-blank object here keeps the inherited code path working without
+     * baking origin-path schema fields the NPC never uses into the model.
+     */
+    get originPath(): Record<string, string> {
+        return {
+            homeWorld: '',
+            birthright: '',
+            lureOfTheVoid: '',
+            trialsAndTravails: '',
+            motivation: '',
+            career: '',
+            background: '',
+            role: '',
+            elite: '',
+            divination: '',
+            race: '',
+            archetype: '',
+            pride: '',
+            disgrace: '',
+            regiment: '',
+            speciality: '',
+            chapter: '',
+        };
+    }
+
     /* -------------------------------------------- */
     /*  Model Configuration                         */
     /* -------------------------------------------- */

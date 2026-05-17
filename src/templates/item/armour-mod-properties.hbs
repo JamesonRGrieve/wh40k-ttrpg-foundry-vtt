@@ -119,32 +119,17 @@
             {{/if}}
         </div>
     </div>
+    <script>
+    // Wire up the select dropdowns to the add buttons
+    document.querySelectorAll('.wh40k-property-select').forEach(select => {
+        select.addEventListener('change', (e) => {
+            const list = e.target.dataset.addList;
+            const button = e.target.parentElement.querySelector(`[data-list="${list}"]`);
+            if (button) {
+                button.dataset.property = e.target.value;
+                button.disabled = !e.target.value;
+            }
+        });
+    });
+    </script>
 </div>
-
-<script>
-// Wire up the select dropdowns to the add buttons
-document.querySelectorAll('.wh40k-property-select').forEach(select => {
-    select.addEventListener('change', (e) => {
-        const list = e.target.dataset.addList;
-        const button = e.target.parentElement.querySelector(`[data-list="${list}"]`);
-        if (button) {
-            button.dataset.property = e.target.value;
-            button.disabled = !e.target.value;
-        }
-    });
-});
-</script>
-
-<script>
-// Wire up the select dropdowns to the add buttons
-document.querySelectorAll('.wh40k-property-select').forEach(select => {
-    select.addEventListener('change', (e) => {
-        const list = e.target.dataset.addList;
-        const button = e.target.parentElement.querySelector(`[data-list="${list}"]`);
-        if (button) {
-            button.dataset.property = e.target.value;
-            button.disabled = !e.target.value;
-        }
-    });
-});
-</script>

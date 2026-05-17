@@ -82,6 +82,48 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
     }
 
     /* -------------------------------------------- */
+    /*  Data Cleaning                               */
+    /* -------------------------------------------- */
+
+    /**
+     * Convert SetField values to Arrays for storage. The schema initial
+     * for the `restrictions.weapon{Classes,Types}` / `addedQualities` /
+     * `removedQualities` fields is `new Set()` for in-memory ergonomics,
+     * but Foundry's persistence layer JSON-serializes the cleaned data and
+     * Sets are not JSON-serializable — they round-trip to `{}` on save,
+     * which then fails SetField validation on the next load, causing
+     * `Item.create` to silently return null.
+     *
+     * `ArmourModificationData` already handles this; mirror it here.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _cleanData receives raw untyped Foundry source data; Record<string,unknown> is the documented DataModel pattern
+    static override _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
+        super._cleanData(source, options);
+        if (!source) return;
+        const restrictions = source['restrictions'];
+        if (restrictions instanceof Object) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: restrictions is untyped Foundry migration data
+            const restrictionsRecord = restrictions as Record<string, unknown>;
+            if (restrictionsRecord['weaponClasses'] instanceof Set) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
+                restrictionsRecord['weaponClasses'] = Array.from(restrictionsRecord['weaponClasses'] as Set<unknown>);
+            }
+            if (restrictionsRecord['weaponTypes'] instanceof Set) {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
+                restrictionsRecord['weaponTypes'] = Array.from(restrictionsRecord['weaponTypes'] as Set<unknown>);
+            }
+        }
+        if (source['addedQualities'] instanceof Set) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
+            source['addedQualities'] = Array.from(source['addedQualities'] as Set<unknown>);
+        }
+        if (source['removedQualities'] instanceof Set) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Set<unknown> required for Array.from on untyped Foundry SetField data
+            source['removedQualities'] = Array.from(source['removedQualities'] as Set<unknown>);
+        }
+    }
+
+    /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
 
