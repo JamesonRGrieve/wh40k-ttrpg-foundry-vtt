@@ -192,7 +192,9 @@ async function probeSheetMixins(page: import('@playwright/test').Page): Promise<
                             record(
                                 'owned-item-sheet-canEdit',
                                 false,
-                                `isOwnedByActor=${String(sheet.isOwnedByActor)} isCompendiumItem=${String(sheet.isCompendiumItem)} canEdit=${String(sheet.canEdit)}`,
+                                `isOwnedByActor=${String(sheet.isOwnedByActor)} isCompendiumItem=${String(sheet.isCompendiumItem)} canEdit=${String(
+                                    sheet.canEdit,
+                                )}`,
                             );
                         }
                         try {
@@ -236,11 +238,7 @@ async function probeSheetMixins(page: import('@playwright/test').Page): Promise<
                             if (before === false && afterFirst === true && afterSecond === false) {
                                 record('edit-mode-toggle-item', true, null);
                             } else {
-                                record(
-                                    'edit-mode-toggle-item',
-                                    false,
-                                    `inEditMode trace: ${String(before)} → ${String(afterFirst)} → ${String(afterSecond)}`,
-                                );
+                                record('edit-mode-toggle-item', false, `inEditMode trace: ${String(before)} → ${String(afterFirst)} → ${String(afterSecond)}`);
                             }
                         }
                         try {
@@ -270,9 +268,17 @@ async function probeSheetMixins(page: import('@playwright/test').Page): Promise<
                     // synthetic path is preferred over a real DOM drag because
                     // playwright's drag plumbing doesn't traverse Foundry's
                     // DataTransfer payload contract.
+                    //
+                    // Drop a `gear` item rather than a `talent`: character-sheet.ts
+                    // intercepts unknown-talent drops and routes them through
+                    // AdvancementDialog (issue #17), returning `false` from
+                    // _onDropItem to block the direct embed. That branch is the
+                    // intended behaviour, not what the sheet-mixin drop flow
+                    // wants to exercise — we want the BaseActorSheet pass-through
+                    // path that creates the embedded item.
                     const transient = await Item.create({
                         name: 'sheet-mixin-drop-source',
-                        type: 'talent',
+                        type: 'gear',
                         system: { gameSystem: 'dh2e' },
                     });
                     if (!transient) {
