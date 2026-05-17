@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
     test: {
         include: ['tests/**/*.test.ts', 'src/**/*.test.ts'],
-        exclude: ['node_modules/**', 'dist/**'],
+        exclude: ['node_modules/**', 'dist/**', 'tests/integration/**', 'tests/e2e/**'],
         environment: 'happy-dom',
         globals: true,
         // Per-test timeout. The default 5s is too tight for tests that
