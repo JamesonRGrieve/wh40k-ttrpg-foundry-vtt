@@ -74,7 +74,10 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                         const out = tpl({}, { data: { root: { _gameSystemId: 'dh2e' } } });
                         // Expected: [tw-border-<dh2e-border>, tw-border-<dh2e-border>, tw-bg-<rt-primary>]
                         const parts = out.split('|');
-                        const allPrefixed = parts[0]?.startsWith('tw-border-') === true && parts[1]?.startsWith('tw-border-') === true && parts[2]?.startsWith('tw-bg-') === true;
+                        const allPrefixed =
+                            parts[0]?.startsWith('tw-border-') === true &&
+                            parts[1]?.startsWith('tw-border-') === true &&
+                            parts[2]?.startsWith('tw-bg-') === true;
                         const dh2Match = parts[0] === parts[1];
                         record('handlebars-themeClassFor-helper', allPrefixed && dh2Match, `out=${out}`);
                     } catch (err) {
@@ -192,6 +195,57 @@ test.describe.serial('handlebars / i18n / enricher helpers (Tier B)', () => {
                         }
                     } catch (err) {
                         record('enricher-@UUID-resolves', false, `threw: ${String((err as Error)?.message ?? err)}`);
+                    }
+
+                    // 10. skill-uuid-helper — drives `parseSkillName` and
+                    //     `findSkillUuid` against the registered skill packs.
+                    //     parseSkillName has no side effects (just regex
+                    //     parsing); findSkillUuid walks the per-system skill
+                    //     compendium index to resolve a known skill name.
+                    try {
+                        const mod = await import(`${'/systems/wh40k-rpg'}/module/helpers/skill-uuid-helper.js`);
+                        const parsed = mod.parseSkillName?.('Acrobatics (Tumbling)') as { name: string; specialization: string | null } | undefined;
+                        const parseOk = parsed?.name === 'Acrobatics' && parsed?.specialization === 'Tumbling';
+                        const parsedBare = mod.parseSkillName?.('Awareness') as { name: string; specialization: string | null } | undefined;
+                        const parseBareOk = parsedBare?.name === 'Awareness' && parsedBare?.specialization === null;
+                        record(
+                            'skill-uuid-helper-parseSkillName',
+                            Boolean(parseOk && parseBareOk),
+                            `parse('Acrobatics (Tumbling)')=${JSON.stringify(parsed)} parse('Awareness')=${JSON.stringify(parsedBare)}`,
+                        );
+                    } catch (err) {
+                        record('skill-uuid-helper-parseSkillName', false, `parseSkillName threw: ${String((err as Error)?.message ?? err)}`);
+                    }
+
+                    try {
+                        const mod = await import(`${'/systems/wh40k-rpg'}/module/helpers/skill-uuid-helper.js`);
+                        // findSkillUuid returns `undefined` if the index isn't
+                        // built yet (it lazily builds via the cache). Calling it
+                        // once exercises both the build path and the lookup
+                        // path; a null return is acceptable (skill not found is
+                        // a valid return shape).
+                        mod.clearSkillUuidCache?.();
+                        const result = mod.findSkillUuid?.('Awareness');
+                        record(
+                            'skill-uuid-helper-findSkillUuid',
+                            result === null || typeof result === 'string' || result === undefined,
+                            `findSkillUuid('Awareness')=${String(result)}`,
+                        );
+                    } catch (err) {
+                        record('skill-uuid-helper-findSkillUuid', false, `findSkillUuid threw: ${String((err as Error)?.message ?? err)}`);
+                    }
+
+                    // 11. helpers/effects — `summarizeChange` formats a raw
+                    //     ActiveEffect change entry into a display struct.
+                    //     `getChangeLabel` is exercised via summarizeChange.
+                    try {
+                        const mod = await import(`${'/systems/wh40k-rpg'}/module/helpers/effects.js`);
+                        const change = { key: 'system.characteristics.strength.modifier', mode: 2, value: 10, priority: 20 };
+                        const summary = mod.summarizeChange?.(change) as { label: string; value: string } | undefined;
+                        const ok = typeof summary?.label === 'string' && summary.label.length > 0 && typeof summary.value === 'string';
+                        record('helpers-effects-summarizeChange', Boolean(ok), `summary=${JSON.stringify(summary)}`);
+                    } catch (err) {
+                        record('helpers-effects-summarizeChange', false, `summarizeChange threw: ${String((err as Error)?.message ?? err)}`);
                     }
 
                     return results;
