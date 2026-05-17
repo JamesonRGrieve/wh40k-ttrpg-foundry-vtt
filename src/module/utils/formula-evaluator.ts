@@ -67,8 +67,14 @@ export function evaluateWoundsFormula(formula: string, actor: WH40KBaseActorDocu
             InfB: 'influence',
         };
 
-        // Replace each characteristic bonus reference
-        for (const [abbr, charName] of Object.entries(charMap)) {
+        // Replace each characteristic bonus reference. Iterate longest-first
+        // so multi-letter abbrs (`WSB`, `BSB`, `InfB`) substitute before
+        // shorter overlapping ones (`SB`, `IB`, `FB`) — otherwise `WSB` gets
+        // clobbered to `W<SB-value>`.
+        const sortedEntries = Object.entries(charMap).sort(
+            ([a], [b]) => b.length - a.length,
+        );
+        for (const [abbr, charName] of sortedEntries) {
             // Match patterns like "2xTB" or "TB" (with or without multiplier)
             const regex = new RegExp(`(\\d+)x${abbr}|${abbr}`, 'gi');
             evaluated = evaluated.replace(regex, (_match: string, multiplier?: string) => {

@@ -474,29 +474,19 @@ export default class SkillGrantData extends BaseGrantData {
      * @returns {object}
      * @private
      */
-    _getLevelUpdates(level: string): Record<string, boolean> {
-        const updates: Record<string, boolean> = {
-            trained: false,
-            plus10: false,
-            plus20: false,
+    _getLevelUpdates(level: string): Record<string, number | boolean> {
+        // CreatureTemplate._prepareSkills derives trained/plus10/plus20 from
+        // `min(originPathRank + advance, 4)` on every prepareDerivedData run,
+        // so writing the boolean flags directly is clobbered immediately.
+        // Persist the numeric `advance` instead, which is the field
+        // _prepareSkills reads from.
+        const advanceByLevel: Record<string, number> = {
+            trained: 1,
+            plus10: 2,
+            plus20: 3,
+            plus30: 4,
         };
-
-        switch (level) {
-            case 'plus20':
-                updates['plus20'] = true;
-                updates['plus10'] = true;
-                updates['trained'] = true;
-                break;
-            case 'plus10':
-                updates['plus10'] = true;
-                updates['trained'] = true;
-                break;
-            case 'trained':
-                updates['trained'] = true;
-                break;
-        }
-
-        return updates;
+        return { advance: advanceByLevel[level] ?? 0 };
     }
 
     /** @inheritDoc */

@@ -189,15 +189,39 @@ export class TransactionManager {
         const stockAvailable = profile.inventoryAccess === 'virtual' ? true : TransactionManager.#getAvailableQuantity(item) >= quantity;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
+        // PhysicalItemTemplate.cost is a per-system SchemaField; the slot
+        // varies by gameSystem (dh1.throneGelt, dh2.influence, rt.profitFactor,
+        // dw.requisition, ow.requisition, bc.infamy). Pick the active system's
+        // currency value; the legacy `cost: number` and `cost.value` shapes are
+        // kept as fallbacks for legacy world data.
         const itemSystem = item.system as Record<string, unknown> & {
-            cost?: { value?: number | string } | number | string;
+            cost?:
+                | number
+                | string
+                | {
+                      value?: number | string;
+                      dh1?: { throneGelt?: number | null };
+                      dh2?: { influence?: number | null; homebrew?: { throneGelt?: number | null; requisition?: number | null } };
+                      rt?: { profitFactor?: number | null };
+                      dw?: { requisition?: number | null };
+                      ow?: { requisition?: number | null };
+                      bc?: { infamy?: number | null };
+                  };
             influence?: number | string;
+            gameSystem?: string;
         };
-        const baseItemCost = normalizeInt(
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive null guard; schema does not include null but runtime data may
-            typeof itemSystem.cost === 'object' && itemSystem.cost !== null ? itemSystem.cost.value ?? 0 : itemSystem.cost ?? 0,
-            0,
-        );
+        const cost = itemSystem.cost;
+        let resolvedCost: number | string = 0;
+        if (typeof cost === 'number' || typeof cost === 'string') {
+            resolvedCost = cost;
+        } else if (cost) {
+            const sys = itemSystem.gameSystem;
+            resolvedCost =
+                (sys === 'dh1' ? cost.dh1?.throneGelt : sys === 'dh2' ? cost.dh2?.influence : sys === 'rt' ? cost.rt?.profitFactor : sys === 'dw' ? cost.dw?.requisition : sys === 'ow' ? cost.ow?.requisition : sys === 'bc' ? cost.bc?.infamy : null) ??
+                cost.value ??
+                0;
+        }
+        const baseItemCost = normalizeInt(resolvedCost, 0);
         const baseCost = Math.max(0, baseItemCost * quantity);
         const adjustments: AdjustmentEntry[] = [];
 
