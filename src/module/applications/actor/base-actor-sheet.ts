@@ -1669,15 +1669,19 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             this.animateXPGain(previous.experience ?? 0, currentExperienceTotal ?? 0);
         }
 
-        // Check characteristics
+        // Check characteristics — absent on actor types that don't define them
+        // (vehicles, starships). Guard the iterate so render doesn't blow up.
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- defensive: characteristics absent on vehicle/starship system schemas
         const characteristics = current.characteristics;
-        for (const [key, char] of Object.entries(characteristics)) {
-            const prevChar = previous.characteristics?.[key];
-            if (prevChar === undefined) continue;
+        if (characteristics !== undefined) {
+            for (const [key, char] of Object.entries(characteristics)) {
+                const prevChar = previous.characteristics?.[key];
+                if (prevChar === undefined) continue;
 
-            // Check total change
-            if (char.total !== prevChar.total) {
-                this.animateCharacteristicChange(key, prevChar.total ?? 0, char.total);
+                // Check total change
+                if (char.total !== prevChar.total) {
+                    this.animateCharacteristicChange(key, prevChar.total ?? 0, char.total);
+                }
             }
         }
     }
