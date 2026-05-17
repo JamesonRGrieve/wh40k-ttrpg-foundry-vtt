@@ -823,6 +823,17 @@ const WEAPON_ATTACK_FLOWS = [
 ];
 recordDimension('weapon-attack.flow', covered['weapon-attack.flow'], WEAPON_ATTACK_FLOWS);
 
+// Macro-manager flows exercised by tests/e2e/macros.spec.ts. Drives
+// source-code coverage on `src/module/macros/macro-manager.ts` —
+// the create-and-assign-to-hotbar paths (`createItemMacro`,
+// `createSkillMacro`, `createCharacteristicMacro`) and the
+// dispatch-from-hotbar paths (`rollItemMacro`, `rollSkillMacro`,
+// `rollCharacteristicMacro`) wired into `game.wh40k.*` by
+// `src/module/hooks-manager.ts`. Keys MUST match the
+// recordCoverage('macro.flow', ...) calls in the spec.
+const MACRO_FLOWS = ['create-item-macro', 'create-skill-macro', 'create-characteristic-macro', 'roll-item-macro', 'roll-skill-macro', 'roll-characteristic-macro'];
+recordDimension('macro.flow', covered['macro.flow'], MACRO_FLOWS);
+
 const total = passed + failed + skipped + timedOut;
 const dimensionWeights = Object.values(dimensions);
 const aggregatePercent = dimensionWeights.length ? Math.round((dimensionWeights.reduce((a, d) => a + d.percent, 0) / dimensionWeights.length) * 100) / 100 : 0;
