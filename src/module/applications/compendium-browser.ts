@@ -30,6 +30,27 @@ interface FoundryDocWithSheet {
 const { ApplicationV2 } = foundry.applications.api;
 
 /**
+ * Normalize an armour `system.coverage` payload to a string[]. The schema
+ * declares coverage as Set<string>, but the value can reach this module
+ * from three different surfaces: (1) live DataModel instances (Set), (2)
+ * compendium index entries deserialized from LevelDB (array), and (3)
+ * legacy / partially-migrated payloads where coverage is a `{ body: true,
+ * head: false, … }` map. `_prepareArmourData` runs against compendium
+ * index entries (path 2/3) and `_passesFilters` runs against the same —
+ * both must tolerate every shape or the browser crashes mid-render the
+ * moment it hits a non-Set entry. Mirrors the same normalization shape
+ * found inside `ArmourData.prepareDerivedData()`.
+ */
+function normalizeCoverage(raw: unknown): string[] {
+    if (raw instanceof Set) return [...raw] as string[];
+    if (Array.isArray(raw)) return raw as string[];
+    if (raw !== null && typeof raw === 'object') {
+        return Object.keys(raw).filter((k) => Boolean((raw as Record<string, unknown>)[k]));
+    }
+    return [];
+}
+
+/**
  * Compendium browser for browsing and filtering WH40K system compendiums.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 lacks typed constructor signature; cast required for mixin pattern
@@ -325,10 +346,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     /* eslint-disable no-restricted-syntax -- boundary: system is a compendium payload; armourPoints/coverage/type are raw untyped values */
     _prepareArmourData(system: Record<string, unknown>): Record<string, unknown> {
         const ap = (system['armourPoints'] ?? {}) as Record<string, number>;
-        // Schema stores coverage as Set<string>; normalize to array so the
-        // existing .includes/.length call sites keep working.
-        const rawCoverage = system['coverage'];
-        const coverage: string[] = rawCoverage instanceof Set ? [...rawCoverage] : ((rawCoverage as string[]) ?? []);
+        const coverage = normalizeCoverage(system['coverage']);
 
         // Calculate AP summary
         const locations: Array<'head' | 'body' | 'leftArm' | 'rightArm' | 'leftLeg' | 'rightLeg'> = [
@@ -647,7 +665,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
             // Coverage filter
             if (this._filters.coverage !== undefined && this._filters.coverage !== 'all') {
-                const coverage = (entry.system['coverage'] ?? []) as string[];
+                const coverage = normalizeCoverage(entry.system['coverage']);
                 if (this._filters.coverage === 'full') {
                     if (!coverage.includes('all')) return false;
                 } else if (this._filters.coverage === 'partial') {

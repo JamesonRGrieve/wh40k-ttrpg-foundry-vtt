@@ -151,12 +151,12 @@ test.describe.serial('item roll methods (Tier B)', () => {
         const failures: string[] = [];
         try {
             for (const spec of ITEM_ROLL_SPECS) {
-                const probe = await probeItemRoll(page, actorId, spec).catch((err) => ({
+                const probe = await probeItemRoll(page, actorId, spec).catch((err: unknown) => ({
                     method: spec.method,
                     chatDelta: 0,
                     returned: 'threw' as const,
-                    pageErrors: [String(err?.message ?? err)],
-                    error: String(err?.message ?? err),
+                    pageErrors: [String((err as Error)?.message ?? err)],
+                    error: String((err as Error)?.message ?? err),
                 }));
 
                 if (probe.returned === 'threw') {

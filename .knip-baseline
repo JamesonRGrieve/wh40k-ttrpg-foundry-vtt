@@ -9,18 +9,18 @@
     "unresolved"
   ],
   "totals": {
-    "total": 322
+    "total": 327
   },
   "counts": {
-    "files": 42,
+    "files": 44,
     "dependencies": 1,
     "devDependencies": 2,
     "optionalPeerDependencies": 0,
     "unlisted": 0,
     "unresolved": 0,
     "binaries": 0,
-    "exports": 207,
-    "types": 58,
+    "exports": 208,
+    "types": 60,
     "enumMembers": 0,
     "classMembers": 0,
     "duplicates": 12,

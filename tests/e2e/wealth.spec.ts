@@ -338,7 +338,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
 
             let DialogCls: any;
             try {
-                const mod = await import('/systems/wh40k-rpg/module/applications/dialogs/acquisition-dialog.js');
+                const mod = await import(`${'/systems/wh40k-rpg'}/module/applications/dialogs/acquisition-dialog.js`);
                 DialogCls = mod.default;
             } catch (err) {
                 return { error: `import dialog: ${String((err as Error)?.message ?? err)}` };
@@ -431,7 +431,8 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
             // Scarce → -10, Good → -10 per AcquisitionDialog._getAvailabilityModifier /
             // _getCraftsmanshipModifier tables.
             if (!result.elementOk) failures.push('dialog.element was not an HTMLElement after render');
-            if (result.itemContext !== 'probe-acquisition-gear') failures.push(`context.item.name was ${result.itemContext}, expected 'probe-acquisition-gear'`);
+            if (result.itemContext !== 'probe-acquisition-gear')
+                failures.push(`context.item.name was ${result.itemContext}, expected 'probe-acquisition-gear'`);
             if (result.availabilityModifier !== -10) failures.push(`availabilityModifier was ${result.availabilityModifier}, expected -10`);
             if (result.craftsmanshipModifier !== -10) failures.push(`craftsmanshipModifier was ${result.craftsmanshipModifier}, expected -10`);
             // haggling (+10) + rare (-10) = 0

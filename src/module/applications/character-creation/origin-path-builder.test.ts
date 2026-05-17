@@ -1,8 +1,8 @@
 import { afterAll, describe, expect, it, vi } from 'vitest';
 
-const ORIGINAL_GAME = (globalThis as Record<string, unknown>).game;
-const ORIGINAL_FOUNDRY = (globalThis as Record<string, unknown>).foundry;
-const ORIGINAL_UI = (globalThis as Record<string, unknown>).ui;
+const ORIGINAL_GAME = (globalThis as Record<string, unknown>)['game'];
+const ORIGINAL_FOUNDRY = (globalThis as Record<string, unknown>)['foundry'];
+const ORIGINAL_UI = (globalThis as Record<string, unknown>)['ui'];
 
 class FakeApplicationV2 {}
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: TS mixin class spec requires `any[]` rest, not `unknown[]`
@@ -73,7 +73,7 @@ vi.mock('./origin-roll-dialog.ts', () => ({
     default: class OriginRollDialog {},
 }));
 
-(globalThis as Record<string, unknown>).game = {
+(globalThis as Record<string, unknown>)['game'] = {
     i18n: {
         localize: (key: string) => key,
         format: (key: string) => key,
@@ -82,7 +82,7 @@ vi.mock('./origin-roll-dialog.ts', () => ({
     packs: new Map(),
 };
 
-(globalThis as Record<string, unknown>).foundry = {
+(globalThis as Record<string, unknown>)['foundry'] = {
     applications: {
         api: {
             ApplicationV2: FakeApplicationV2,
@@ -97,7 +97,7 @@ vi.mock('./origin-roll-dialog.ts', () => ({
     },
 };
 
-(globalThis as Record<string, unknown>).ui = {
+(globalThis as Record<string, unknown>)['ui'] = {
     notifications: {
         warn: vi.fn(),
         info: vi.fn(),
@@ -106,9 +106,9 @@ vi.mock('./origin-roll-dialog.ts', () => ({
 };
 
 afterAll(() => {
-    (globalThis as Record<string, unknown>).game = ORIGINAL_GAME;
-    (globalThis as Record<string, unknown>).foundry = ORIGINAL_FOUNDRY;
-    (globalThis as Record<string, unknown>).ui = ORIGINAL_UI;
+    (globalThis as Record<string, unknown>)['game'] = ORIGINAL_GAME;
+    (globalThis as Record<string, unknown>)['foundry'] = ORIGINAL_FOUNDRY;
+    (globalThis as Record<string, unknown>)['ui'] = ORIGINAL_UI;
 });
 
 const { default: OriginPathBuilder } = await import('./origin-path-builder.ts');
@@ -238,7 +238,11 @@ describe('OriginPathBuilder preview action', () => {
         const host = makeBuilderHost();
         host.allOrigins = [origin];
 
-        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(host as unknown as InstanceType<typeof OriginPathBuilder>, new Event('click'), makeTarget(origin));
+        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+            new Event('click'),
+            makeTarget(origin),
+        );
 
         expect(host.previewedOrigin?.name).toBe('Hive World');
         expect(host.previewedOrigin?.system['selectedChoices']).toEqual({
@@ -266,7 +270,11 @@ describe('OriginPathBuilder preview action', () => {
         host._findConfirmedSelectionMatching = vi.fn().mockReturnValue(confirmed);
         host._itemToSelectionData = vi.fn();
 
-        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(host as unknown as InstanceType<typeof OriginPathBuilder>, new Event('click'), makeTarget(origin));
+        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+            new Event('click'),
+            makeTarget(origin),
+        );
 
         expect(host.previewedOrigin).toBe(confirmed);
         expect(host._itemToSelectionData).not.toHaveBeenCalled();
@@ -278,7 +286,11 @@ describe('OriginPathBuilder preview action', () => {
         const host = makeBuilderHost();
         host.allOrigins = [origin];
 
-        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(host as unknown as InstanceType<typeof OriginPathBuilder>, new Event('click'), makeTarget(origin, true));
+        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+            new Event('click'),
+            makeTarget(origin, true),
+        );
 
         expect(host.previewedOrigin).toBeNull();
         expect(host.render).not.toHaveBeenCalled();

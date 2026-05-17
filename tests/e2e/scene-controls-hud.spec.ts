@@ -276,7 +276,9 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                             notes['token-effects-via-hud'] = `movement button click threw: ${String((err as Error)?.message ?? err)}`;
                         }
                     } else {
-                        notes['token-hud-system-buttons'] = `injection container missing — container=${container === null ? 'null' : 'present'} btns=${movementBtns.length}`;
+                        notes['token-hud-system-buttons'] = `injection container missing — container=${container === null ? 'null' : 'present'} btns=${
+                            movementBtns.length
+                        }`;
                         notes['token-effects-via-hud'] = 'cannot click — flow 4 did not inject buttons';
                     }
                 } catch (err) {
@@ -321,10 +323,11 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
                         } catch {
                             /* best-effort */
                         }
-                        const protoData = typeof actor.prototypeToken?.toObject === 'function' ? actor.prototypeToken.toObject() : { name: actor.name, actorId: actor.id };
+                        const protoData =
+                            typeof actor.prototypeToken?.toObject === 'function' ? actor.prototypeToken.toObject() : { name: actor.name, actorId: actor.id };
                         protoData.actorId = actor.id;
                         const created = await withTimeout(scene.createEmbeddedDocuments('Token', [protoData]), 5_000, 'createEmbeddedDocuments(Token)');
-                        const tokenDoc = Array.isArray(created) ? created[0] : null;
+                        const tokenDoc = (Array.isArray(created) ? created[0] : null) as { object?: unknown; id?: string } | null;
                         const placedToken = tokenDoc?.object ?? canvas?.tokens?.get?.(tokenDoc?.id);
                         if (placedToken != null && canvas?.tokens?.hud?.bind != null) {
                             try {
