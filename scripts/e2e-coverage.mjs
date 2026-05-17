@@ -584,6 +584,19 @@ recordDimension('origin-builder.flow', covered['origin-builder.flow'], ORIGIN_BU
 const PER_SYSTEM_FLOWS = ['bc-infamy', 'dh1-corruption-insanity', 'dw-renown-and-chapter', 'ow-comrades-and-regiment', 'rt-profit-factor-and-dynasty'];
 recordDimension('per-system.flow', covered['per-system.flow'], PER_SYSTEM_FLOWS);
 
+// Wealth / currency mechanic flows exercised by tests/e2e/wealth.spec.ts.
+// One key per system's signature currency track (Influence for DH1/DH2,
+// Requisition for DW/OW, throneGelt for BC, Profit Factor spending for RT)
+// plus the AcquisitionDialog construction + _prepareContext + _logAcquisition
+// + PF critical-failure decrement flow. Pushes source-code coverage on
+// src/module/data/actor/character.ts (the shared influence / requisition /
+// throneGelt / rogueTrader.profitFactor schema fields + their update paths)
+// and src/module/applications/dialogs/acquisition-dialog.ts (constructor +
+// availability/craftsmanship modifier tables + flag-backed history log).
+// Keys MUST match the recordCoverage('wealth.flow', ...) calls in the spec.
+const WEALTH_FLOWS = ['dh2-influence-track', 'dh1-influence-track', 'dw-requisition-track', 'ow-requisition-track', 'bc-gelt-track', 'rt-profit-factor-spending', 'acquisition-dialog-flow'];
+recordDimension('wealth.flow', covered['wealth.flow'], WEALTH_FLOWS);
+
 // CompendiumBrowser + uuid-name-cache flows exercised by
 // tests/e2e/compendium-browser.spec.ts. Pushes source-code coverage on
 // `src/module/applications/compendium-browser.ts` (constructor, render,
@@ -603,6 +616,113 @@ const COMPENDIUM_BROWSER_FLOWS = [
     'uuid-cache-warm',
 ];
 recordDimension('compendium-browser.flow', covered['compendium-browser.flow'], COMPENDIUM_BROWSER_FLOWS);
+
+// GrantsManager + TransactionManager flows exercised by
+// tests/e2e/managers.spec.ts. Pushes source-code coverage on
+// `src/module/managers/grants-manager.ts` (applyItemGrants /
+// reverseAppliedGrants / loadAppliedState / hasAppliedGrants paths via
+// talent items declaring `system.grantsV2` skill + item grants, plus the
+// legacy `system.grants.specialAbilities` round-trip on TalentData) and
+// `src/module/transactions/transaction-manager.ts` (setMode /
+// listSourcesForBuyer / listItemsForSource / prepareQuote /
+// commitTransaction / #transferItem against a buyer + source actor pair
+// in barter mode). Keys MUST match the recordCoverage('managers.flow', ...)
+// calls in the spec.
+const MANAGER_FLOWS = [
+    'grants-talent-grants-skill',
+    'grants-talent-grants-talent',
+    'grants-revoke-on-item-delete',
+    'grants-special-ability-on-actor',
+    'transaction-acquire-item-from-source',
+    'transaction-sell-item',
+    'transaction-list-sources-for-buyer',
+];
+recordDimension('managers.flow', covered['managers.flow'], MANAGER_FLOWS);
+
+// Handlebars helpers, typed i18n wrapper, uuid-name-cache helper paths,
+// and the @UUID enricher pipeline exercised by tests/e2e/helpers.spec.ts.
+// Pushes source-code coverage on src/module/handlebars/handlebars-helpers.ts
+// (themeClassFor / select-block / concat / dhlog / isPsychicAttack /
+// uuid-name / uuid-expand helper bodies), src/module/i18n/t.ts (the
+// `params === undefined` short-circuit + format path), src/module/utils/
+// uuid-name-cache.ts (getName + expandTemplates lookups), and the
+// CONFIG.TextEditor.enrichers @UUID resolution path that
+// src/module/enrichers.ts registers alongside its custom enrichers. Keys
+// MUST match the recordCoverage('helper.flow', ...) calls in the spec.
+const HELPER_FLOWS = [
+    'handlebars-themeClassFor-helper',
+    'handlebars-select-block-helper',
+    'handlebars-concat-helper',
+    'handlebars-dhlog-helper',
+    'handlebars-isPsychicAttack',
+    'handlebars-uuid-name',
+    'handlebars-uuid-expand',
+    'i18n-t-wrapper',
+    'enricher-@UUID-resolves',
+];
+recordDimension('helper.flow', covered['helper.flow'], HELPER_FLOWS);
+
+// Pure-logic calculator + utility flows exercised by tests/e2e/calculators.spec.ts.
+// Pushes v8 source-code coverage on `src/module/utils/armour-calculator.ts`
+// (computeArmour location aggregation + equipped-only filter),
+// `src/module/utils/range-calculator.ts` (calculateRangeBracket buckets,
+// applyQualityModifiers, isAtMeltaRange, calculateRangeModifier, isOutOfRange,
+// formatRangeDisplay), `src/module/utils/formula-evaluator.ts`
+// (evaluateWoundsFormula with characteristic refs + dice notation, parseTBMultiplier,
+// parseDiceRoll, describeWoundsFormula, describeFateFormula, evaluateFateFormula
+// early-returns), and `src/module/rules/subtlety-adjusters.ts` (clampSubtletyLoss
+// passthrough + active-clamp + truncation branches, isSubtletyPrimitive both arms).
+// Keys MUST match the recordCoverage('calculator.flow', ...) calls in the spec.
+const CALCULATOR_FLOWS = [
+    'armour-calculator-aggregates-locations',
+    'armour-calculator-equipped-only',
+    'range-calculator-band',
+    'range-calculator-extreme',
+    'formula-evaluator-evaluates-string',
+    'formula-evaluator-with-actor-data',
+    'subtlety-clamp-edge-cases',
+];
+recordDimension('calculator.flow', covered['calculator.flow'], CALCULATOR_FLOWS);
+
+// Action-manager dispatch dimension exercised by tests/e2e/action-managers.spec.ts.
+// Pushes source-code coverage on `src/module/actions/basic-action-manager.ts`
+// (renderChatMessageHTML hook + .roll-control__* click handlers + scene-control
+// assignDamage tool), `src/module/actions/combat-action-manager.ts`
+// (combatTurn / combatRound hook handlers), `src/module/actions/targeted-action-manager.ts`
+// (getSceneControlButtons hook handler + getSourceToken / getTargetToken /
+// createSourceAndTargetData early-return branches), and
+// `src/module/actions/reload-action-manager.ts` (static reloadWeapon entry
+// point + findSpareAmmunition / hasSpareAmmunition / getEffectiveReloadTime
+// helpers). Keys MUST match the recordCoverage('action-manager.flow', ...)
+// calls in the spec.
+const ACTION_MANAGER_FLOWS = [
+    'basic-action-dispatch',
+    'combat-action-on-turn',
+    'reload-action-dispatch',
+    'targeted-action-with-target',
+    'scene-control-buttons-registered',
+    'chat-card-button-click',
+];
+recordDimension('action-manager.flow', covered['action-manager.flow'], ACTION_MANAGER_FLOWS);
+
+// Scene-controls toolbar + Token HUD overlay flows exercised by
+// tests/e2e/scene-controls-hud.spec.ts. Drills into the
+// `getSceneControlButtons` and `renderTokenHUD` hook PAYLOADS — where
+// hooks.spec.ts only asserts firing, this dimension verifies the
+// system actually installs buttons under the expected category, the
+// registered onChange handlers dispatch, and the Token HUD
+// `.wh40k-token-movement` button container is injected with working
+// click handlers. Drives source coverage on
+// `src/module/actions/basic-action-manager.ts` (assignDamage tool
+// registration + assignDamageTool dispatch),
+// `src/module/actions/targeted-action-manager.ts` (Attack tool
+// registration + performWeaponAttack early-returns), and
+// `src/module/documents/token.ts` (onTokenHUDRender button-injection
+// loop + #setMovementAction click handler). `token-hud-renders` is
+// canvas-gated and may not exercise without an activated scene. Keys
+// MUST match the recordCoverage('scene-hud.flow', ...) calls in the spec.
+const SCENE_HUD_FLOWS = ['scene-controls-button-registered', 'scene-controls-button-onclick', 'token-hud-renders', 'token-hud-system-buttons', 'token-effects-via-hud', 'scene-controls-per-category'];
+recordDimension('scene-hud.flow', covered['scene-hud.flow'], SCENE_HUD_FLOWS);
 
 const total = passed + failed + skipped + timedOut;
 const dimensionWeights = Object.values(dimensions);
