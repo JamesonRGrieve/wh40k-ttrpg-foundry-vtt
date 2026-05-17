@@ -1702,6 +1702,7 @@
             "Effect": "Effect",
             "EffectHint": "Describe what this item does when used (rules text, mechanical effects, etc.)",
             "Duration": "Duration",
+            "DurationValue": "Duration: {duration}",
             "DurationPlaceholder": "e.g., 1d10 hours, 1 round, permanent",
             "DurationHint": "How long the effect lasts (for drugs, consumables, etc.)",
             "Uses": "Uses",

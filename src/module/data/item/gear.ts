@@ -303,7 +303,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         }
 
         if (this.duration) {
-            props.push(game.i18n.format('WH40K.Gear.Duration', { duration: this.duration }));
+            props.push(game.i18n.format('WH40K.Gear.DurationValue', { duration: this.duration }));
         }
 
         return props;
