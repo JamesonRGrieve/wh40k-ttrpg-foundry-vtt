@@ -900,6 +900,18 @@ recordDimension('chargen.flow', covered['chargen.flow'], CHARGEN_FLOWS);
 const NPC_CREATE_FLOWS = ['quick-create-dialog-renders', 'batch-create-dialog-renders', 'template-selector-renders'];
 recordDimension('npc-create.flow', covered['npc-create.flow'], NPC_CREATE_FLOWS);
 
+// Canvas/ruler module-shape flows exercised by tests/e2e/canvas-ruler.spec.ts.
+// Drives source-code coverage on `src/module/canvas/ruler.ts` (0% / 50.7%).
+// The TokenRulerWH40K override is a canvas-bound class — its method
+// overrides require a real PIXI WebGL context. The spec confirms the
+// module imports cleanly under a PIXI stub and the class extends
+// `foundry.canvas.placeables.tokens.TokenRuler`. Full method-level
+// coverage of `_getWaypointStyle` / `_getSegmentStyle` /
+// `_getGridHighlightStyle` requires either a placed-token canvas
+// scenario (out of scope here) or a future GL-mock layer.
+const CANVAS_FLOWS = ['ruler-module-imports', 'ruler-class-extends-token-ruler'];
+recordDimension('canvas.flow', covered['canvas.flow'], CANVAS_FLOWS);
+
 const total = passed + failed + skipped + timedOut;
 const dimensionWeights = Object.values(dimensions);
 const aggregatePercent = dimensionWeights.length ? Math.round((dimensionWeights.reduce((a, d) => a + d.percent, 0) / dimensionWeights.length) * 100) / 100 : 0;
