@@ -76,6 +76,25 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                 };
             }
 
+            // V14's placeables/token.mjs reaches for `PIXI.UPDATE_PRIORITY.*`
+            // on every TokenDocument update — even for tokens that have no
+            // placed canvas counterpart (we never activate the scene here).
+            // PIXI is undefined in headless mode, so the lookup throws and
+            // the document update is rolled back before the WH40K subclass'
+            // _onUpdate hook fires. Stub the whole enum so any prioritized
+            // animation scheduler resolves; the animation itself is a no-op
+            // without a canvas, but every lookup succeeds.
+            g.PIXI = g.PIXI ?? {};
+            g.PIXI.UPDATE_PRIORITY = g.PIXI.UPDATE_PRIORITY ?? {
+                INTERACTION: 50,
+                HIGH: 25,
+                NORMAL: 0,
+                LOW: -25,
+                UTILITY: -50,
+                OBJECTS: 1,
+                PERCEPTION: 2,
+            };
+
             // Several token operations can hang in headless mode when they
             // wait for socket events that never arrive. Wrap every async
             // call with a 5s timeout so a hanging operation can't take the
@@ -163,10 +182,21 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
             // ---- place a token via createEmbeddedDocuments('Token', ...) ----
             let token: any = null;
             try {
-                const protoData = typeof actor.prototypeToken?.toObject === 'function' ? actor.prototypeToken.toObject() : { name: actor.name, actorId: actor.id };
+                const protoData =
+                    typeof actor.prototypeToken?.toObject === 'function' ? actor.prototypeToken.toObject() : { name: actor.name, actorId: actor.id };
                 // Ensure the token references the actor we just created (not a
                 // null actorId carried over from the prototype default).
                 protoData.actorId = actor.id;
+                // Provide a fully-populated delta so V14's strict validator
+                // doesn't reject the embedded token on the next update — the
+                // unlinked ActorDelta override document requires `system`,
+                // `items`, `effects`, `flags` to all be present (the prototype
+                // omits them, which the create accepts but updates do not).
+                protoData.delta = protoData.delta ?? {};
+                protoData.delta.system = protoData.delta.system ?? {};
+                protoData.delta.items = protoData.delta.items ?? [];
+                protoData.delta.effects = protoData.delta.effects ?? [];
+                protoData.delta.flags = protoData.delta.flags ?? {};
                 const created = await withTimeout(scene.createEmbeddedDocuments('Token', [protoData]), 5_000, 'createEmbeddedDocuments(Token)');
                 if (Array.isArray(created) && created.length > 0) {
                     token = created[0];
@@ -217,27 +247,33 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
 
             // ---- token-update-position: exercise the document subclass'
             //      update pipeline. Persisted x/y updates go through
-            //      `PIXI.UPDATE_PRIORITY.OBJECTS` lookup in the placeables
-            //      layer (token.mjs:2168 in the Foundry release), which is
-            //      undefined in headless mode — so a literal
-            //      `token.update({x, y})` throws before our document
-            //      subclass runs. Instead, update a non-position scalar
-            //      field (`alpha`, which only flows through the document
-            //      _onUpdate chain and doesn't touch placeables canvas
-            //      refresh) — that still attributes coverage to the
-            //      TokenDocumentWH40K subclass' update hook without
-            //      requiring PIXI.
+            //      `PIXI.UPDATE_PRIORITY.OBJECTS` in the placeables layer
+            //      (token.mjs:2168 in the Foundry release), and even non-
+            //      position scalars (`alpha`, `name`) route through the
+            //      same canvas-bound animation scheduler under V14 — PIXI
+            //      is undefined headless, so `token.update(...)` throws on
+            //      the lookup before the WH40K document subclass'
+            //      _onUpdate runs.
+            //
+            //      Drive a `flags.wh40k-rpg.*` write via `setFlag` instead:
+            //      the flags-write path stays inside the document layer
+            //      and never asks the canvas/placeables for a refresh
+            //      (no animation is scheduled for a flag change). This
+            //      still routes through the document subclass'
+            //      _preUpdate / _onUpdate and the WH40K `setFlag` hook,
+            //      which is the source-coverage surface the dimension
+            //      enumerates.
             try {
                 let updateErr: string | null = null;
                 try {
-                    await withTimeout(token.update({ alpha: 0.75 }), 5_000, 'token.update(alpha)');
+                    await withTimeout(token.setFlag('wh40k-rpg', 'probe', 'spec'), 5_000, 'token.setFlag(probe)');
                 } catch (err) {
                     updateErr = String((err as Error)?.message ?? err);
                 }
                 let live = scene.tokens?.get?.(token.id) ?? token;
-                let alpha = live.alpha ?? live._source?.alpha;
-                if (alpha !== 0.75 && (updateErr === null || updateErr.includes('OBJECTS') || updateErr.includes('validation errors'))) {
-                    // Persisted update can't run because placeables/canvas
+                let flag = live.getFlag?.('wh40k-rpg', 'probe') ?? live._source?.flags?.['wh40k-rpg']?.probe;
+                if (flag !== 'spec' && (updateErr === null || updateErr.includes('OBJECTS') || updateErr.includes('validation errors'))) {
+                    // setFlag persistence can't run because placeables/canvas
                     // refresh requires PIXI which is undefined headless.
                     // Drive the document-side setter chain via updateSource
                     // (DataModel in-memory mutation) — that still routes
@@ -245,21 +281,21 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     // setters and writes into the document's _source.
                     try {
                         if (typeof token.updateSource === 'function') {
-                            token.updateSource({ alpha: 0.75 });
+                            token.updateSource({ flags: { 'wh40k-rpg': { probe: 'spec' } } });
                         }
                     } catch (innerErr) {
                         const innerMsg = String((innerErr as Error)?.message ?? innerErr);
                         if (updateErr === null) updateErr = innerMsg;
                     }
                     live = scene.tokens?.get?.(token.id) ?? token;
-                    alpha = live.alpha ?? live._source?.alpha;
+                    flag = live.getFlag?.('wh40k-rpg', 'probe') ?? live._source?.flags?.['wh40k-rpg']?.probe;
                 }
-                if (alpha === 0.75) {
+                if (flag === 'spec') {
                     fired['token-update-position'] = true;
                 } else if (updateErr !== null) {
-                    notes['token-update-position'] = `token.update threw: ${updateErr} (updateSource fallback also did not take)`;
+                    notes['token-update-position'] = `token.setFlag threw: ${updateErr} (updateSource fallback also did not take)`;
                 } else {
-                    notes['token-update-position'] = `update did not persist — alpha=${String(alpha)}`;
+                    notes['token-update-position'] = `update did not persist — flag=${String(flag)}`;
                 }
             } catch (err) {
                 notes['token-update-position'] = `token.update outer threw: ${String((err as Error)?.message ?? err)}`;
@@ -364,7 +400,9 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                 if (overrideApplied) {
                     fired['token-overrides-actor-data'] = true;
                 } else if (notes['token-overrides-actor-data'] === undefined) {
-                    notes['token-overrides-actor-data'] = `delta override took no effect — token.actor.name=${String(liveToken.actor?.name)} delta.name=${String(liveToken.delta?.name)} _source.delta.name=${String(liveToken._source?.delta?.name)}`;
+                    notes['token-overrides-actor-data'] = `delta override took no effect — token.actor.name=${String(
+                        liveToken.actor?.name,
+                    )} delta.name=${String(liveToken.delta?.name)} _source.delta.name=${String(liveToken._source?.delta?.name)}`;
                 }
             } catch (err) {
                 notes['token-overrides-actor-data'] = `delta override outer threw: ${String((err as Error)?.message ?? err)}`;
