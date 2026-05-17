@@ -61,6 +61,10 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
             const game = g.game;
             const out: FlowResult[] = [];
 
+            const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
+                out.push({ name, ok, detail });
+            };
+
             // Dynamic-import the macro-manager module so the v8 coverage
             // capture in `lib/test.ts` attributes the surface to its
             // canonical /systems/wh40k-rpg/module/ URL. Some functions
@@ -74,10 +78,6 @@ async function probeMacros(page: Page): Promise<{ results: FlowResult[]; pageErr
                 for (const f of MACRO_FLOWS) record(f, false, `macro-manager import failed: ${String((err as Error)?.message ?? err)}`);
                 return out;
             }
-
-            const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
-                out.push({ name, ok, detail });
-            };
 
             // Foundry's macro creation needs a hotbar slot. Pick a high
             // slot index so we don't disturb any other test's hotbar setup.
