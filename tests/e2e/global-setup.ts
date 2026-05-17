@@ -34,17 +34,7 @@ export default async function globalSetup(): Promise<void> {
 async function waitForWorldReady(): Promise<void> {
     const deadline = Date.now() + 180_000;
     const url = `http://127.0.0.1:${TEST_PORT}/systems/wh40k-rpg/system.json`;
-    const usersDbDir = resolve(
-        __dirname,
-        '..',
-        '..',
-        '.foundry-test-data',
-        'Data',
-        'worlds',
-        'wh40k-e2e',
-        'data',
-        'users',
-    );
+    const usersDbDir = resolve(__dirname, '..', '..', '.foundry-test-data', 'Data', 'worlds', 'wh40k-e2e', 'data', 'users');
     while (Date.now() < deadline) {
         let httpOk = false;
         try {

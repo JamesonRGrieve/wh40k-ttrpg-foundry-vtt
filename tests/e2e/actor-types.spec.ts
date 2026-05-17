@@ -19,11 +19,7 @@ interface ActorTypeProbe {
     pageErrors: string[];
 }
 
-async function probeActorType(
-    page: import('@playwright/test').Page,
-    type: string,
-    gameSystem: string,
-): Promise<ActorTypeProbe> {
+async function probeActorType(page: import('@playwright/test').Page, type: string, gameSystem: string): Promise<ActorTypeProbe> {
     const errors: string[] = [];
     const listener = (err: Error) => errors.push(err.message);
     page.on('pageerror', listener);
@@ -31,7 +27,15 @@ async function probeActorType(
         const result = await page.evaluate(
             async ({ type, gameSystem }) => {
                 const { Actor } = globalThis as unknown as {
-                    Actor?: { create?: (data: object) => Promise<{ id?: string; sheet?: { render?: (force?: boolean) => Promise<unknown>; close?: () => Promise<unknown> }; delete?: () => Promise<unknown> } | null> };
+                    Actor?: {
+                        create?: (
+                            data: object,
+                        ) => Promise<{
+                            id?: string;
+                            sheet?: { render?: (force?: boolean) => Promise<unknown>; close?: () => Promise<unknown> };
+                            delete?: () => Promise<unknown>;
+                        } | null>;
+                    };
                 };
                 if (!Actor?.create) return { docId: null, sheetRendered: false, createError: 'Actor.create unavailable' };
                 let actor;

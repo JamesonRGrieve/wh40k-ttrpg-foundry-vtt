@@ -44,28 +44,93 @@ const DIALOG_PROBES = [
     { className: 'AcquisitionDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/acquisition-dialog.js', kind: 'actorCtor', ctor: 'default' },
     { className: 'AdvancementDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/advancement-dialog.js', kind: 'actorCtor', ctor: 'default' },
     { className: 'AmmoPickerDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/ammo-picker-dialog.js', kind: 'ammoPicker', ctor: 'default' },
-    { className: 'CharacteristicSetupDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/characteristic-setup-dialog.js', kind: 'actorCtor', ctor: 'default' },
-    { className: 'ConfirmationDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/confirmation-dialog.js', kind: 'configCtor', ctor: 'default' },
-    { className: 'ConvertActorSystemDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/convert-actor-system-dialog.js', kind: 'staticOpenActor', ctor: 'ConvertActorSystemDialog' },
-    { className: 'WH40KCreateActorDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/create-actor-dialog.js', kind: 'staticOpenNone', ctor: 'WH40KCreateActorDialog' },
+    {
+        className: 'CharacteristicSetupDialog',
+        moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/characteristic-setup-dialog.js',
+        kind: 'actorCtor',
+        ctor: 'default',
+    },
+    {
+        className: 'ConfirmationDialog',
+        moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/confirmation-dialog.js',
+        kind: 'configCtor',
+        ctor: 'default',
+    },
+    {
+        className: 'ConvertActorSystemDialog',
+        moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/convert-actor-system-dialog.js',
+        kind: 'staticOpenActor',
+        ctor: 'ConvertActorSystemDialog',
+    },
+    {
+        className: 'WH40KCreateActorDialog',
+        moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/create-actor-dialog.js',
+        kind: 'staticOpenNone',
+        ctor: 'WH40KCreateActorDialog',
+    },
     { className: 'FateUsesDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/fate-uses-dialog.js', kind: 'configCtor', ctor: 'default' },
-    { className: 'RollConfigurationDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/roll-configuration-dialog.js', kind: 'configCtor', ctor: 'default' },
-    { className: 'TransactionRequestDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/transaction-request-dialog.js', kind: 'actorCtor', ctor: 'default' },
+    {
+        className: 'RollConfigurationDialog',
+        moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/roll-configuration-dialog.js',
+        kind: 'configCtor',
+        ctor: 'default',
+    },
+    {
+        className: 'TransactionRequestDialog',
+        moduleUrl: '/systems/wh40k-rpg/module/applications/dialogs/transaction-request-dialog.js',
+        kind: 'actorCtor',
+        ctor: 'default',
+    },
 
     // ── src/module/applications/prompts ──
     { className: 'AddXPDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/add-xp-dialog.js', kind: 'actorCtor', ctor: 'default' },
-    { className: 'AssignDamageDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/assign-damage-dialog.js', kind: 'rollDataCtor', ctor: 'default' },
+    {
+        className: 'AssignDamageDialog',
+        moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/assign-damage-dialog.js',
+        kind: 'rollDataCtor',
+        ctor: 'default',
+    },
     { className: 'BaseRollDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/base-roll-dialog.js', kind: 'rollDataCtor', ctor: 'default' },
     { className: 'DamageRollDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/damage-roll-dialog.js', kind: 'rollDataCtor', ctor: 'default' },
-    { className: 'EffectCreationDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/effect-creation-dialog.js', kind: 'effectCreation', ctor: 'default' },
-    { className: 'EnhancedSkillDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/enhanced-skill-dialog.js', kind: 'enhancedSkill', ctor: 'default' },
+    {
+        className: 'EffectCreationDialog',
+        moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/effect-creation-dialog.js',
+        kind: 'effectCreation',
+        ctor: 'default',
+    },
+    {
+        className: 'EnhancedSkillDialog',
+        moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/enhanced-skill-dialog.js',
+        kind: 'enhancedSkill',
+        ctor: 'default',
+    },
     { className: 'ForceFieldDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/force-field-dialog.js', kind: 'rollDataCtor', ctor: 'default' },
-    { className: 'PsychicPowerDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/psychic-power-dialog.js', kind: 'rollDataActionCtor', ctor: 'default' },
-    { className: 'RighteousFuryDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/righteous-fury-dialog.js', kind: 'optionsCtor', ctor: 'default' },
+    {
+        className: 'PsychicPowerDialog',
+        moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/psychic-power-dialog.js',
+        kind: 'rollDataActionCtor',
+        ctor: 'default',
+    },
+    {
+        className: 'RighteousFuryDialog',
+        moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/righteous-fury-dialog.js',
+        kind: 'optionsCtor',
+        ctor: 'default',
+    },
     { className: 'SimpleRollDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/simple-roll-dialog.js', kind: 'simpleRoll', ctor: 'default' },
-    { className: 'SpecialistSkillDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/specialist-skill-dialog.js', kind: 'actorCtor', ctor: 'default' },
+    {
+        className: 'SpecialistSkillDialog',
+        moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/specialist-skill-dialog.js',
+        kind: 'actorCtor',
+        ctor: 'default',
+    },
     { className: 'UnifiedRollDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js', kind: 'simpleRoll', ctor: 'default' },
-    { className: 'WeaponAttackDialog', moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/weapon-attack-dialog.js', kind: 'rollDataActionCtor', ctor: 'default' },
+    {
+        className: 'WeaponAttackDialog',
+        moduleUrl: '/systems/wh40k-rpg/module/applications/prompts/weapon-attack-dialog.js',
+        kind: 'rollDataActionCtor',
+        ctor: 'default',
+    },
 ] as const;
 
 interface DialogProbeResult {
@@ -74,9 +139,7 @@ interface DialogProbeResult {
     error: string | null;
 }
 
-async function probeDialogs(
-    page: import('@playwright/test').Page,
-): Promise<{
+async function probeDialogs(page: import('@playwright/test').Page): Promise<{
     created: boolean;
     createError: string | null;
     results: DialogProbeResult[];
@@ -143,9 +206,7 @@ async function probeDialogs(
                 } catch {
                     /* embed failure surfaces in dependent probes */
                 }
-                const ammoItems = (actor.items?.contents ?? []).filter(
-                    (i: any) => i.type === 'ammunition' || i.type === 'weapon',
-                );
+                const ammoItems = (actor.items?.contents ?? []).filter((i: any) => i.type === 'ammunition' || i.type === 'weapon');
 
                 /**
                  * Close any dialog/prompt window opened during a probe so
@@ -155,21 +216,42 @@ async function probeDialogs(
                     const windows = Object.values(g.ui?.windows ?? {});
                     for (const w of windows as any[]) {
                         const id = w?.id ?? '';
-                        if (id.includes('dialog') || id.includes('prompt') || id.includes('roll')
-                            || id.includes('confirmation') || id.includes('acquisition')
-                            || id.includes('advancement') || id.includes('ammo')
-                            || id.includes('characteristic') || id.includes('fate')
-                            || id.includes('transaction') || id.includes('add-xp')
-                            || id.includes('damage') || id.includes('effect')
-                            || id.includes('skill') || id.includes('psychic')
-                            || id.includes('righteous') || id.includes('weapon')
-                            || id.includes('force') || id.includes('specialist')) {
-                            try { await w?.close?.(); } catch { /* ignore */ }
+                        if (
+                            id.includes('dialog') ||
+                            id.includes('prompt') ||
+                            id.includes('roll') ||
+                            id.includes('confirmation') ||
+                            id.includes('acquisition') ||
+                            id.includes('advancement') ||
+                            id.includes('ammo') ||
+                            id.includes('characteristic') ||
+                            id.includes('fate') ||
+                            id.includes('transaction') ||
+                            id.includes('add-xp') ||
+                            id.includes('damage') ||
+                            id.includes('effect') ||
+                            id.includes('skill') ||
+                            id.includes('psychic') ||
+                            id.includes('righteous') ||
+                            id.includes('weapon') ||
+                            id.includes('force') ||
+                            id.includes('specialist')
+                        ) {
+                            try {
+                                await w?.close?.();
+                            } catch {
+                                /* ignore */
+                            }
                         }
                     }
                     // Also tear down any DialogV2 popup the static dialogs render.
                     document.querySelectorAll('dialog.application').forEach((el) => {
-                        try { (el as HTMLDialogElement).close(); el.remove(); } catch { /* ignore */ }
+                        try {
+                            (el as HTMLDialogElement).close();
+                            el.remove();
+                        } catch {
+                            /* ignore */
+                        }
                     });
                 }
 
@@ -190,12 +272,14 @@ async function probeDialogs(
                         case 'rollDataActionCtor':
                             return [{ rollData: {} }];
                         case 'ammoPicker':
-                            return [{
-                                ammoItems,
-                                currentAmmoUuid: '',
-                                weaponName: 'probe-weapon',
-                                clipMax: 6,
-                            }];
+                            return [
+                                {
+                                    ammoItems,
+                                    currentAmmoUuid: '',
+                                    weaponName: 'probe-weapon',
+                                    clipMax: 6,
+                                },
+                            ];
                         case 'simpleRoll': {
                             // SimpleRollDialog / UnifiedRollDialog need an
                             // ActionData-shaped first arg with rollData.modifiers.
@@ -203,26 +287,41 @@ async function probeDialogs(
                                 name: 'probe',
                                 baseTarget: 30,
                                 modifiers: {} as Record<string, number>,
-                                calculateTotalModifiers: async (): Promise<void> => { /* no-op */ },
+                                calculateTotalModifiers: async (): Promise<void> => {
+                                    /* no-op */
+                                },
                             };
-                            return [{
-                                name: 'probe',
-                                rollData,
-                                actor,
-                            }];
+                            return [
+                                {
+                                    name: 'probe',
+                                    rollData,
+                                    actor,
+                                },
+                            ];
                         }
                         case 'enhancedSkill':
-                            return [{
-                                name: 'probe',
-                                rollData: {
+                            return [
+                                {
                                     name: 'probe',
-                                    baseTarget: 30,
-                                    modifiers: {} as Record<string, number>,
-                                    calculateTotalModifiers: async (): Promise<void> => { /* no-op */ },
+                                    rollData: {
+                                        name: 'probe',
+                                        baseTarget: 30,
+                                        modifiers: {} as Record<string, number>,
+                                        calculateTotalModifiers: async (): Promise<void> => {
+                                            /* no-op */
+                                        },
+                                    },
                                 },
-                            }];
+                            ];
                         case 'effectCreation':
-                            return [{ actor, resolve: (): void => { /* fire-and-forget */ } }];
+                            return [
+                                {
+                                    actor,
+                                    resolve: (): void => {
+                                        /* fire-and-forget */
+                                    },
+                                },
+                            ];
                         default:
                             return null;
                     }
@@ -232,7 +331,12 @@ async function probeDialogs(
                  * Run a single probe. Returns the structured result for
                  * caller-side coverage recording.
                  */
-                async function runProbe(probe: { className: string; moduleUrl: string; kind: string; ctor: string }): Promise<{ className: string; rendered: boolean; error: string | null }> {
+                async function runProbe(probe: {
+                    className: string;
+                    moduleUrl: string;
+                    kind: string;
+                    ctor: string;
+                }): Promise<{ className: string; rendered: boolean; error: string | null }> {
                     let rendered = false;
                     let error: string | null = null;
                     try {
@@ -269,7 +373,11 @@ async function probeDialogs(
                             await inst.render(true);
                             await new Promise((r) => setTimeout(r, 30));
                             rendered = inst.element instanceof HTMLElement;
-                            try { await inst.close?.(); } catch { /* ignore */ }
+                            try {
+                                await inst.close?.();
+                            } catch {
+                                /* ignore */
+                            }
                         }
                     } catch (err) {
                         error = String((err as Error)?.message ?? err);
@@ -284,7 +392,11 @@ async function probeDialogs(
                 }
 
                 // Cleanup so subsequent specs don't see this actor.
-                try { await actor.delete?.(); } catch { /* ignore */ }
+                try {
+                    await actor.delete?.();
+                } catch {
+                    /* ignore */
+                }
                 void weapon;
 
                 return { created: true, createError: null, results };
@@ -309,10 +421,7 @@ test.describe.serial('dialog & prompt render coverage (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const probe = await probeDialogs(page);
-        test.skip(
-            !probe.created,
-            `could not create dialog-probe actor: ${probe.createError ?? 'unknown'}`,
-        );
+        test.skip(!probe.created, `could not create dialog-probe actor: ${probe.createError ?? 'unknown'}`);
 
         const failures: string[] = [];
         for (const r of probe.results) {
@@ -329,9 +438,6 @@ test.describe.serial('dialog & prompt render coverage (Tier B)', () => {
             failures.push(`page errors: ${probe.pageErrors.slice(0, 5).join(' | ')}`);
         }
 
-        expect(
-            failures,
-            `${failures.length}/${DIALOG_PROBES.length} dialog renders failed:\n  - ${failures.join('\n  - ')}`,
-        ).toEqual([]);
+        expect(failures, `${failures.length}/${DIALOG_PROBES.length} dialog renders failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 });

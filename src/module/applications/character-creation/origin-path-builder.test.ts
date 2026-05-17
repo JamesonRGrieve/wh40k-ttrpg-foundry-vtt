@@ -5,8 +5,12 @@ const ORIGINAL_FOUNDRY = (globalThis as Record<string, unknown>).foundry;
 const ORIGINAL_UI = (globalThis as Record<string, unknown>).ui;
 
 class FakeApplicationV2 {}
-type Constructor = abstract new (...args: unknown[]) => object;
-const fakeHandlebarsApplicationMixin = <T extends Constructor>(Base: T): T => class extends Base {} as T;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- boundary: TS mixin class spec requires `any[]` rest, not `unknown[]`
+type Constructor = abstract new (...args: any[]) => object;
+const fakeHandlebarsApplicationMixin = <T extends Constructor>(Base: T): T => {
+    abstract class Mixed extends Base {}
+    return Mixed as T;
+};
 
 vi.mock('../../config/game-systems/index.ts', () => ({
     SystemConfigRegistry: {
@@ -234,7 +238,7 @@ describe('OriginPathBuilder preview action', () => {
         const host = makeBuilderHost();
         host.allOrigins = [origin];
 
-        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(host, new Event('click'), makeTarget(origin));
+        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(host as unknown as InstanceType<typeof OriginPathBuilder>, new Event('click'), makeTarget(origin));
 
         expect(host.previewedOrigin?.name).toBe('Hive World');
         expect(host.previewedOrigin?.system['selectedChoices']).toEqual({
@@ -262,7 +266,7 @@ describe('OriginPathBuilder preview action', () => {
         host._findConfirmedSelectionMatching = vi.fn().mockReturnValue(confirmed);
         host._itemToSelectionData = vi.fn();
 
-        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(host, new Event('click'), makeTarget(origin));
+        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(host as unknown as InstanceType<typeof OriginPathBuilder>, new Event('click'), makeTarget(origin));
 
         expect(host.previewedOrigin).toBe(confirmed);
         expect(host._itemToSelectionData).not.toHaveBeenCalled();
@@ -274,7 +278,7 @@ describe('OriginPathBuilder preview action', () => {
         const host = makeBuilderHost();
         host.allOrigins = [origin];
 
-        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(host, new Event('click'), makeTarget(origin, true));
+        OriginPathBuilder.DEFAULT_OPTIONS.actions.selectOriginCard.call(host as unknown as InstanceType<typeof OriginPathBuilder>, new Event('click'), makeTarget(origin, true));
 
         expect(host.previewedOrigin).toBeNull();
         expect(host.render).not.toHaveBeenCalled();

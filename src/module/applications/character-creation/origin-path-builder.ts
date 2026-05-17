@@ -3560,8 +3560,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const draw = await rollTable.draw({ displayChat: true });
                 const [result] = draw.results ?? [];
                 const resultText =
-                    result !== undefined && typeof (result as Record<string, unknown>)['text'] === 'string'
-                        ? ((result as Record<string, unknown>)['text'] as string)
+                    result !== undefined && typeof (result as unknown as Record<string, unknown>)['text'] === 'string'
+                        ? ((result as unknown as Record<string, unknown>)['text'] as string)
                         : null;
                 this._divination = resultText ?? 'This character likes to flip tables, especially rollable ones.';
             } catch (error) {

@@ -76,7 +76,13 @@ test('dump enumerable inventory + reset coverage tracker', async ({ page }) => {
     // 'dh2-character' counts toward 'dh2e', not the cross-product of all 7
     // game systems.
     const SYSTEM_PREFIX: Record<string, string> = {
-        bc: 'bc', dh1e: 'dh1', dh2e: 'dh2', dw: 'dw', ow: 'ow', rt: 'rt', im: 'im',
+        bc: 'bc',
+        dh1e: 'dh1',
+        dh2e: 'dh2',
+        dw: 'dw',
+        ow: 'ow',
+        rt: 'rt',
+        im: 'im',
     };
     const validActorTypeSystemPairs: string[] = [];
     for (const gameSystem of GAME_SYSTEM_IDS) {

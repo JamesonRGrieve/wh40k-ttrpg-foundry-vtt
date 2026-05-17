@@ -362,10 +362,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         let html = '';
                         let renderError: string | null = null;
                         try {
-                            html = await renderTemplate(
-                                `systems/wh40k-rpg/templates/chat/${tpl}.hbs`,
-                                ctx,
-                            );
+                            html = await renderTemplate(`systems/wh40k-rpg/templates/chat/${tpl}.hbs`, ctx);
                         } catch (err) {
                             renderError = String((err as Error)?.message ?? err);
                         }
@@ -401,9 +398,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         // mounted (still counts as render success).
                         let hasAncestor: boolean | null = null;
                         if (createdId !== null) {
-                            const el = document.querySelector(
-                                `[data-message-id="${createdId}"]`,
-                            );
+                            const el = document.querySelector(`[data-message-id="${createdId}"]`);
                             if (el !== null) {
                                 hasAncestor = el.closest('.wh40k-rpg') !== null;
                             }
@@ -412,9 +407,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         // Clean up so the next probe starts from the same
                         // chat-log baseline.
                         if (createdId !== null) {
-                            const msg = g.game?.messages?.get?.(createdId) as
-                                | { delete?: () => Promise<unknown> }
-                                | undefined;
+                            const msg = g.game?.messages?.get?.(createdId) as { delete?: () => Promise<unknown> } | undefined;
                             await msg?.delete?.();
                         }
 
@@ -458,10 +451,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                 }
             }
 
-            expect(
-                failures,
-                `${failures.length}/${CHAT_TEMPLATES.length} chat templates failed:\n  - ${failures.join('\n  - ')}`,
-            ).toEqual([]);
+            expect(failures, `${failures.length}/${CHAT_TEMPLATES.length} chat templates failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
 
             // Soft assertion: if ANY messages were located in the DOM,
             // EVERY one of those should have a .wh40k-rpg ancestor (the

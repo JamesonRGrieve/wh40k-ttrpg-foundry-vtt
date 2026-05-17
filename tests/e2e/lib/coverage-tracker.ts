@@ -10,13 +10,7 @@ import { dirname, resolve } from 'node:path';
  * One JSONL file per run, truncated by `_aa_inventory.spec.ts` before any
  * specs record into it.
  */
-const TRACKER_PATH = resolve(
-    __dirname,
-    '..',
-    '..',
-    '..',
-    '.e2e-runtime-coverage.jsonl',
-);
+const TRACKER_PATH = resolve(__dirname, '..', '..', '..', '.e2e-runtime-coverage.jsonl');
 
 export function recordCoverage(dimension: string, key: string): void {
     mkdirSync(dirname(TRACKER_PATH), { recursive: true });

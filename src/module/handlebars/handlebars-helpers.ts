@@ -134,7 +134,7 @@ export function registerHandlebarsHelpers(): void {
      */
     Handlebars.registerHelper('select', function selectHelper(this: TplValue, selected: TplValue, options: { fn: (ctx: TplValue) => string }): string {
         const html = options.fn(this);
-        const target = String(selected ?? '');
+        const target = typeof selected === 'string' || typeof selected === 'number' || typeof selected === 'boolean' ? String(selected) : '';
         // Match `<option ... value="X"` and append `selected` if it matches the
         // target. Tolerates single/double quotes and incidental attributes.
         return html.replace(/<option([^>]*?)value=(["'])(.*?)\2([^>]*)>/g, (_match, before: string, q: string, value: string, after: string) => {

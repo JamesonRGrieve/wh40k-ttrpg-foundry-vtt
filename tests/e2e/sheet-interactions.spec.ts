@@ -58,9 +58,7 @@ interface SheetProbeResult {
     pageErrors: string[];
 }
 
-async function probeCharacterSheet(
-    page: import('@playwright/test').Page,
-): Promise<SheetProbeResult> {
+async function probeCharacterSheet(page: import('@playwright/test').Page): Promise<SheetProbeResult> {
     const pageErrors: string[] = [];
     const listener = (err: Error) => pageErrors.push(err.message);
     page.on('pageerror', listener);
@@ -107,7 +105,11 @@ async function probeCharacterSheet(
 
                 const sheet = actor.sheet;
                 if (!sheet) {
-                    try { await actor.delete?.(); } catch { /* ignore */ }
+                    try {
+                        await actor.delete?.();
+                    } catch {
+                        /* ignore */
+                    }
                     return {
                         created: false,
                         createError: 'actor.sheet undefined',
@@ -132,9 +134,7 @@ async function probeCharacterSheet(
                             await new Promise((r) => setTimeout(r, 30));
                             // Verify either tabGroups state OR a DOM element with .active
                             const groupActive = sheet.tabGroups?.primary === tabId;
-                            const navActive = sheet.element?.querySelector?.(
-                                `[data-tab="${tabId}"].active, [data-group="primary"][data-tab="${tabId}"]`,
-                            );
+                            const navActive = sheet.element?.querySelector?.(`[data-tab="${tabId}"].active, [data-group="primary"][data-tab="${tabId}"]`);
                             switched = groupActive || navActive !== null;
                         } else {
                             error = 'sheet.changeTab not a function';
@@ -173,7 +173,8 @@ async function probeCharacterSheet(
                 }
 
                 /* -------- form-submit round-trip -------- */
-                let formResult: { field: string; submitted: boolean; valueBefore: number | null; valueAfter: number | null; error: string | null } | null = null;
+                let formResult: { field: string; submitted: boolean; valueBefore: number | null; valueAfter: number | null; error: string | null } | null =
+                    null;
                 try {
                     const getPath = (obj: any, path: string): unknown => {
                         return path.split('.').reduce<any>((acc, k) => (acc == null ? acc : acc[k]), obj);
@@ -215,8 +216,16 @@ async function probeCharacterSheet(
                 }
 
                 /* -------- cleanup -------- */
-                try { await sheet.close?.(); } catch { /* ignore */ }
-                try { await actor.delete?.(); } catch { /* ignore */ }
+                try {
+                    await sheet.close?.();
+                } catch {
+                    /* ignore */
+                }
+                try {
+                    await actor.delete?.();
+                } catch {
+                    /* ignore */
+                }
 
                 return {
                     created: true,
@@ -248,10 +257,7 @@ test.describe.serial('sheet interactions (Tier B)', () => {
         test.skip(!joined, 'GM join failed');
 
         const probe = await probeCharacterSheet(page);
-        test.skip(
-            !probe.created,
-            `could not create dh2-character actor: ${probe.createError ?? 'unknown'}`,
-        );
+        test.skip(!probe.created, `could not create dh2-character actor: ${probe.createError ?? 'unknown'}`);
 
         const failures: string[] = [];
 
@@ -284,11 +290,7 @@ test.describe.serial('sheet interactions (Tier B)', () => {
             failures.push(`page errors: ${probe.pageErrors.slice(0, 3).join(' | ')}`);
         }
 
-        const totalAttempts =
-            probe.tabs.length + probe.actions.length + (probe.form ? 1 : 0);
-        expect(
-            failures,
-            `${failures.length}/${totalAttempts} sheet interactions failed:\n  - ${failures.join('\n  - ')}`,
-        ).toEqual([]);
+        const totalAttempts = probe.tabs.length + probe.actions.length + (probe.form ? 1 : 0);
+        expect(failures, `${failures.length}/${totalAttempts} sheet interactions failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 });

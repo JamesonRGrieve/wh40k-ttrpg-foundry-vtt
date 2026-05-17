@@ -11,21 +11,14 @@ export async function joinAsGM(page: Page): Promise<boolean> {
     await page.goto('/join');
     await page.waitForLoadState('networkidle');
     try {
-        await page
-            .locator('select[name="userid"] option', { hasText: /\S/ })
-            .first()
-            .waitFor({ state: 'attached', timeout: 30_000 });
+        await page.locator('select[name="userid"] option', { hasText: /\S/ }).first().waitFor({ state: 'attached', timeout: 30_000 });
     } catch {
         return false;
     }
     await page.selectOption('select[name="userid"]', { label: 'Gamemaster' });
     await page.click('button[name="join"]');
     await page.waitForURL(/\/game/, { timeout: 30_000 });
-    await page.waitForFunction(
-        () => (globalThis as unknown as { game?: { ready?: boolean } }).game?.ready === true,
-        undefined,
-        { timeout: 60_000 },
-    );
+    await page.waitForFunction(() => (globalThis as unknown as { game?: { ready?: boolean } }).game?.ready === true, undefined, { timeout: 60_000 });
     return true;
 }
 

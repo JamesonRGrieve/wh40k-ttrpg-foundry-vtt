@@ -79,13 +79,15 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
             interface GameApi {
                 ready?: boolean;
                 actors?: {
-                    get?: (id: string) => {
-                        id?: string;
-                        update?: (data: object) => Promise<unknown>;
-                        delete?: () => Promise<unknown>;
-                        createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
-                        items?: { get?: (id: string) => { id?: string; update?: (data: object) => Promise<unknown> } | undefined };
-                    } | undefined;
+                    get?: (id: string) =>
+                        | {
+                              id?: string;
+                              update?: (data: object) => Promise<unknown>;
+                              delete?: () => Promise<unknown>;
+                              createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+                              items?: { get?: (id: string) => { id?: string; update?: (data: object) => Promise<unknown> } | undefined };
+                          }
+                        | undefined;
                 };
             }
             interface UiApi {
@@ -161,9 +163,7 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                             notes.updateActor = `actor.update threw: ${String((err as Error)?.message ?? err)}`;
                         }
                         try {
-                            const created = await live?.createEmbeddedDocuments?.('Item', [
-                                { name: 'hook-probe-item', type: 'gear' },
-                            ]);
+                            const created = await live?.createEmbeddedDocuments?.('Item', [{ name: 'hook-probe-item', type: 'gear' }]);
                             const itemId = created?.[0]?.id ?? null;
                             if (itemId) {
                                 const item = live?.items?.get?.(itemId);
@@ -238,7 +238,11 @@ async function runHookProbes(page: Page, hooks: readonly HookName[]): Promise<Ho
                 }
             } finally {
                 for (const { name, id } of taps) {
-                    try { Hooks.off?.(name, id); } catch { /* ignore */ }
+                    try {
+                        Hooks.off?.(name, id);
+                    } catch {
+                        /* ignore */
+                    }
                 }
                 for (const fn of cleanups) {
                     await fn();
@@ -279,13 +283,8 @@ test.describe.serial('hook-fired coverage (Tier B)', () => {
         // should not in themselves fail the test — handlers occasionally log
         // benign warnings to the console. Surface them as part of the
         // failure message when at least one hook failed to fire.
-        const pageErrorTail = probe.pageErrors.length > 0
-            ? `\n  pageerrors: ${probe.pageErrors.slice(0, 3).join(' | ')}`
-            : '';
+        const pageErrorTail = probe.pageErrors.length > 0 ? `\n  pageerrors: ${probe.pageErrors.slice(0, 3).join(' | ')}` : '';
 
-        expect(
-            failures,
-            `${failures.length}/${EXERCISED_HOOKS.length} hooks failed to fire:\n  - ${failures.join('\n  - ')}${pageErrorTail}`,
-        ).toEqual([]);
+        expect(failures, `${failures.length}/${EXERCISED_HOOKS.length} hooks failed to fire:\n  - ${failures.join('\n  - ')}${pageErrorTail}`).toEqual([]);
     });
 });
