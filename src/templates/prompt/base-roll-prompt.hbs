@@ -1,0 +1,20 @@
+{{!--
+  Base Roll Prompt
+  Default template for BaseRollDialog. Concrete roll dialogs (SimpleRoll,
+  CharacteristicCheck, etc.) typically override PARTS with their own
+  template, but the base needs something renderable so an unspecialised
+  instantiation (e.g. integration test) does not throw.
+--}}
+<form class="standard-form framed" autocomplete="off">
+    {{#if rollData}}
+        {{#with rollData}}
+            <h3 class="divider">{{name}}</h3>
+            <p>Target: <strong>{{baseTarget}}</strong></p>
+        {{/with}}
+    {{else}}
+        <p>Configure roll…</p>
+    {{/if}}
+    <footer class="form-footer">
+        <button type="submit" class="bright"><i class="fa-solid fa-dice"></i> Roll</button>
+    </footer>
+</form>

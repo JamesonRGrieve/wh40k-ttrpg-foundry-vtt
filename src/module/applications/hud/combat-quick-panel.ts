@@ -18,7 +18,7 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { t } from '../../i18n/t.ts';
 
-const { ApplicationV2 } = foundry.applications.api;
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /** ApplicationV2 action handler bound to a `CombatQuickPanel` instance. */
 type ActionHandler = (this: CombatQuickPanel, event: Event, target: HTMLElement) => Promise<void> | void;
@@ -133,7 +133,7 @@ interface QuickAction {
     tooltip: string;
 }
 
-export default class CombatQuickPanel extends ApplicationV2 {
+export default class CombatQuickPanel extends HandlebarsApplicationMixin(ApplicationV2) {
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
