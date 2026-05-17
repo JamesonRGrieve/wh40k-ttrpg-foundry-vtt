@@ -880,6 +880,16 @@ const ROLL_DATA_FLOWS = [
 ];
 recordDimension('roll-data.flow', covered['roll-data.flow'], ROLL_DATA_FLOWS);
 
+// Character-creation dialog render flows exercised by
+// tests/e2e/character-creation-dialogs.spec.ts. Drives source-code
+// coverage on the three per-step dialogs that origin-path-builder.spec.ts
+// never opens (it drives only the outer builder shell):
+// `src/module/applications/character-creation/origin-roll-dialog.ts`,
+// `origin-path-choice-dialog.ts`, `origin-detail-dialog.ts`. Each was
+// below 10% function coverage before this spec landed.
+const CHARGEN_FLOWS = ['origin-roll-dialog-renders', 'origin-path-choice-dialog-renders', 'origin-detail-dialog-renders'];
+recordDimension('chargen.flow', covered['chargen.flow'], CHARGEN_FLOWS);
+
 const total = passed + failed + skipped + timedOut;
 const dimensionWeights = Object.values(dimensions);
 const aggregatePercent = dimensionWeights.length ? Math.round((dimensionWeights.reduce((a, d) => a + d.percent, 0) / dimensionWeights.length) * 100) / 100 : 0;
