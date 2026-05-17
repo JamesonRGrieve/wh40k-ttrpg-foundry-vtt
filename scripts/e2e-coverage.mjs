@@ -299,6 +299,24 @@ const COMBAT_FLOWS = [
 // calls in the spec.
 const COMBAT_UI_CLASSES = ['CombatQuickPanel', 'EncounterBuilder', 'CombatPresetDialog', 'DifficultyCalculatorDialog', 'NPCThreatScalerDialog'];
 
+// Token document + scene-embedded token lifecycle flows exercised by
+// tests/e2e/token.spec.ts. Each key is a step in the scene/token lifecycle
+// (create scene → place token → resolve artwork → move → override actor
+// delta → toggle actor link → delete). Pushes source-code coverage on
+// `src/module/documents/token.ts` (TokenDocumentWH40K — the class registered
+// as CONFIG.Token.documentClass that every embedded scene token instantiates)
+// and indirectly on the hooks-manager registration paths that wire the class
+// into Foundry. Keys MUST match the recordCoverage('token.flow', ...) calls
+// in the spec.
+const TOKEN_FLOWS = [
+    'scene-create-and-token-place',
+    'token-default-artwork',
+    'token-update-position',
+    'token-delete',
+    'token-overrides-actor-data',
+    'token-actor-link',
+];
+
 // Subtlety adjuster flows exercised by tests/e2e/subtlety.spec.ts. Pushes
 // source-code coverage on src/module/rules/subtlety-adjusters.ts
 // (`clampSubtletyLoss`, `isSubtletyPrimitive`, the primitive branches in
@@ -346,6 +364,25 @@ const MODIFIER_FLOWS = [
     'stackable-modifier-stacks',
     'modifier-on-skill',
     'modifier-condition-applied',
+];
+
+// Vehicle + starship gameplay flows exercised by
+// tests/e2e/vehicle-starship.spec.ts. Drives source-code coverage on
+// `src/module/data/actor/vehicle.ts` (integrity clamp / derived getters /
+// _applyVehicleTraitModifiers / altitude write-back),
+// `src/module/data/actor/starship.ts` (_prepareResources /
+// _prepareCombatStats / prepareEmbeddedData walk over shipComponent /
+// shipWeapon / shipUpgrade items), and the vehicle-sheet /
+// starship-sheet item-bucketing branches. Keys MUST match the
+// recordCoverage('vehicle-starship.flow', ...) calls in the spec.
+const VEHICLE_STARSHIP_FLOWS = [
+    'vehicle-hull-damage',
+    'vehicle-crew-management',
+    'vehicle-altitude-profile',
+    'starship-component-install',
+    'starship-crew-morale',
+    'starship-hull-and-shields',
+    'vehicle-weapon-fire',
 ];
 
 if (inventory) {
@@ -439,6 +476,15 @@ recordDimension('active-effect.flow', covered['active-effect.flow'], ACTIVE_EFFE
 recordDimension('combat.flow', covered['combat.flow'], COMBAT_FLOWS);
 recordDimension('combat.ui', covered['combat.ui'], COMBAT_UI_CLASSES);
 
+// Token + scene-embedded token document dimension exercised by
+// tests/e2e/token.spec.ts. Drives source-code coverage on
+// `src/module/documents/token.ts` (TokenDocumentWH40K, the registered
+// CONFIG.Token.documentClass) — each scene token instance is an instance
+// of this subclass, so its update / delete / actorLink toggle paths
+// exercise the subclass's _preUpdate / _onUpdate / delta-resolution
+// branches that no other spec hits.
+recordDimension('token.flow', covered['token.flow'], TOKEN_FLOWS);
+
 // Subtlety adjuster dimension exercised by tests/e2e/subtlety.spec.ts.
 // Direction #7: per-flow drive of the content-agnostic adjuster surface
 // (manual / inquest primitives, talent-borne event / passive / clamp
@@ -459,6 +505,16 @@ recordDimension('damage.flow', covered['damage.flow'], DAMAGE_FLOWS);
 // the unequip rollback path that re-runs _computeItemModifiers on item
 // update).
 recordDimension('modifier.flow', covered['modifier.flow'], MODIFIER_FLOWS);
+
+// Vehicle + starship gameplay dimension exercised by
+// tests/e2e/vehicle-starship.spec.ts. Pushes source-code coverage on
+// `src/module/data/actor/vehicle.ts` (integrity / altitude /
+// _applyVehicleTraitModifiers / derived getters),
+// `src/module/data/actor/starship.ts` (prepareEmbeddedData walk over
+// shipComponent / shipWeapon / shipUpgrade, _prepareResources +
+// _prepareCombatStats deriving hull / morale percentages), and the
+// item-bucketing branches in `src/module/applications/actor/{vehicle,starship}-sheet.ts`.
+recordDimension('vehicle-starship.flow', covered['vehicle-starship.flow'], VEHICLE_STARSHIP_FLOWS);
 
 // XP gain + advancement flows exercised by tests/e2e/xp-advancement.spec.ts.
 // Each key is a recordCoverage('xp.flow', ...) call in the spec. Pushes
@@ -498,6 +554,55 @@ recordDimension('dh2.corruption', covered['dh2.corruption'], ['corruption-track'
 recordDimension('dh2.insanity', covered['dh2.insanity'], ['insanity-track']);
 recordDimension('dh2.origin-path', covered['dh2.origin-path'], ['create-and-embed']);
 recordDimension('dh2.elite-advance', covered['dh2.elite-advance'], ['compendium-read']);
+
+// OriginPathBuilder dialog flows driven by tests/e2e/origin-path-builder.spec.ts.
+// Each flow drives a distinct cluster of actions in
+// src/module/applications/character-creation/origin-path-builder.ts: step
+// navigation (#goToStep, #goToLineage, #skipLineage), origin preview/confirm
+// (#previewOriginCard, #confirmSelection), reset of in-memory state, and a
+// multi-step walk through every DH2 core step. Keys MUST match the
+// recordCoverage('origin-builder.flow', ...) calls in the spec.
+const ORIGIN_BUILDER_FLOWS = [
+    'builder-renders-step-list',
+    'builder-advance-to-next-step',
+    'builder-back-to-previous-step',
+    'builder-select-origin-card',
+    'builder-confirm-origin-embeds-on-actor',
+    'builder-cancel-or-reset',
+    'builder-completes-full-path',
+];
+recordDimension('origin-builder.flow', covered['origin-builder.flow'], ORIGIN_BUILDER_FLOWS);
+
+// Per-system gameplay flows for the 5 non-DH2 FFG-family systems, exercised
+// by tests/e2e/per-system-flows.spec.ts. One key per system covers the
+// signature surface that is actually present on CharacterBaseData today
+// (chaosAlignment for BC, corruption+insanity for DH1, originPath.chapter
+// for DW, originPath.regiment for OW, rogueTrader.profitFactor+endeavour
+// for RT). Pushes source-code coverage on
+// src/module/data/actor/concrete/{bc,dh1,dw,ow,rt}-character.ts and the
+// per-system config dispatch in src/module/config/game-systems/.
+const PER_SYSTEM_FLOWS = ['bc-infamy', 'dh1-corruption-insanity', 'dw-renown-and-chapter', 'ow-comrades-and-regiment', 'rt-profit-factor-and-dynasty'];
+recordDimension('per-system.flow', covered['per-system.flow'], PER_SYSTEM_FLOWS);
+
+// CompendiumBrowser + uuid-name-cache flows exercised by
+// tests/e2e/compendium-browser.spec.ts. Pushes source-code coverage on
+// `src/module/applications/compendium-browser.ts` (constructor, render,
+// _prepareContext, _getFilteredResults, _passesFilters search + source +
+// pack-prefix branches, _onSearch, _onItemClick) and
+// `src/module/utils/uuid-name-cache.ts` (build, getName hit + miss/broken,
+// expandTemplates token + passthrough, isReady). Keys MUST match the
+// recordCoverage('compendium-browser.flow', ...) calls in the spec.
+const COMPENDIUM_BROWSER_FLOWS = [
+    'browser-renders',
+    'browser-filter-by-pack',
+    'browser-filter-by-system',
+    'browser-search-by-name',
+    'browser-select-result',
+    'uuid-cache-resolves-name',
+    'uuid-cache-expand-templates',
+    'uuid-cache-warm',
+];
+recordDimension('compendium-browser.flow', covered['compendium-browser.flow'], COMPENDIUM_BROWSER_FLOWS);
 
 const total = passed + failed + skipped + timedOut;
 const dimensionWeights = Object.values(dimensions);
