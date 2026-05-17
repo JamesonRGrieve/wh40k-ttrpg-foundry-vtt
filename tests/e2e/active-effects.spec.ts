@@ -46,9 +46,11 @@ interface FlowResult {
 
 async function createParentActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async () => {
-        const Actor = (globalThis as unknown as {
-            Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
-        }).Actor;
+        const Actor = (
+            globalThis as unknown as {
+                Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
+            }
+        ).Actor;
         if (!Actor?.create) return { id: null, error: 'Actor.create unavailable' };
         try {
             const actor = await Actor.create({
@@ -68,9 +70,11 @@ async function createParentActor(page: Page): Promise<ActorRef | { error: string
 
 async function deleteActor(page: Page, actorId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
-        const game = (globalThis as unknown as {
-            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
-        }).game;
+        const game = (
+            globalThis as unknown as {
+                game?: { actors?: { get?: (id: string) => { delete?: () => Promise<unknown> } | undefined } };
+            }
+        ).game;
         const actor = game?.actors?.get?.(id);
         await actor?.delete?.();
     }, actorId);
@@ -89,22 +93,28 @@ async function probeMode(
 ): Promise<FlowResult> {
     return page.evaluate(
         async ({ actorId, mode, value, expected, key, nameSuffix }) => {
-            const game = (globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) => {
-                            createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
-                            deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
-                            reset?: () => void;
-                            prepareData?: () => void;
-                        } | undefined;
+            const game = (
+                globalThis as unknown as {
+                    game?: {
+                        actors?: {
+                            get?: (id: string) =>
+                                | {
+                                      createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+                                      deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
+                                      reset?: () => void;
+                                      prepareData?: () => void;
+                                  }
+                                | undefined;
+                        };
                     };
-                };
-                foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
-            }).game;
-            const foundry = (globalThis as unknown as {
-                foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
-            }).foundry;
+                    foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
+                }
+            ).game;
+            const foundry = (
+                globalThis as unknown as {
+                    foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
+                }
+            ).foundry;
             const getProperty = foundry?.utils?.getProperty;
             if (!getProperty) return { ok: false, error: 'foundry.utils.getProperty unavailable' };
             const actor = game?.actors?.get?.(actorId);
@@ -148,20 +158,24 @@ async function probeMode(
  */
 async function probeTransfer(page: Page, actorId: string): Promise<FlowResult> {
     return page.evaluate(async (actorId) => {
-        const game = (globalThis as unknown as {
-            game?: {
-                actors?: {
-                    get?: (id: string) => {
-                        createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
-                        deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
-                        effects?: {
-                            find?: (cb: (e: { origin?: string }) => boolean) => unknown;
-                            contents?: unknown[];
-                        };
-                    } | undefined;
+        const game = (
+            globalThis as unknown as {
+                game?: {
+                    actors?: {
+                        get?: (id: string) =>
+                            | {
+                                  createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+                                  deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
+                                  effects?: {
+                                      find?: (cb: (e: { origin?: string }) => boolean) => unknown;
+                                      contents?: unknown[];
+                                  };
+                              }
+                            | undefined;
+                    };
                 };
-            };
-        }).game;
+            }
+        ).game;
         const actor = game?.actors?.get?.(actorId);
         if (!actor?.createEmbeddedDocuments) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
         try {
@@ -215,11 +229,13 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
         const root = globalThis as unknown as {
             game?: {
                 actors?: {
-                    get?: (id: string) => {
-                        createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
-                        deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
-                        effects?: { get?: (id: string) => { remainingDuration?: number; isTemporary?: boolean } | undefined };
-                    } | undefined;
+                    get?: (id: string) =>
+                        | {
+                              createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+                              deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
+                              effects?: { get?: (id: string) => { remainingDuration?: number; isTemporary?: boolean } | undefined };
+                          }
+                        | undefined;
                 };
             };
             Combat?: {
@@ -303,20 +319,26 @@ async function probeTemporary(page: Page, actorId: string): Promise<FlowResult> 
 async function probeDisabled(page: Page, actorId: string, key: string): Promise<FlowResult> {
     return page.evaluate(
         async ({ actorId, key }) => {
-            const game = (globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) => {
-                            createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
-                            deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
-                        } | undefined;
+            const game = (
+                globalThis as unknown as {
+                    game?: {
+                        actors?: {
+                            get?: (id: string) =>
+                                | {
+                                      createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+                                      deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
+                                  }
+                                | undefined;
+                        };
                     };
-                };
-                foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
-            }).game;
-            const getProperty = (globalThis as unknown as {
-                foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
-            }).foundry?.utils?.getProperty;
+                    foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
+                }
+            ).game;
+            const getProperty = (
+                globalThis as unknown as {
+                    foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
+                }
+            ).foundry?.utils?.getProperty;
             if (!getProperty) return { ok: false, error: 'foundry.utils.getProperty unavailable' };
             const actor = game?.actors?.get?.(actorId);
             if (!actor?.createEmbeddedDocuments) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
@@ -359,19 +381,25 @@ async function probeDisabled(page: Page, actorId: string, key: string): Promise<
 async function probeDeleteRollback(page: Page, actorId: string, key: string): Promise<FlowResult> {
     return page.evaluate(
         async ({ actorId, key }) => {
-            const game = (globalThis as unknown as {
-                game?: {
-                    actors?: {
-                        get?: (id: string) => {
-                            createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
-                            deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
-                        } | undefined;
+            const game = (
+                globalThis as unknown as {
+                    game?: {
+                        actors?: {
+                            get?: (id: string) =>
+                                | {
+                                      createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
+                                      deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
+                                  }
+                                | undefined;
+                        };
                     };
-                };
-            }).game;
-            const getProperty = (globalThis as unknown as {
-                foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
-            }).foundry?.utils?.getProperty;
+                }
+            ).game;
+            const getProperty = (
+                globalThis as unknown as {
+                    foundry?: { utils?: { getProperty?: (obj: unknown, path: string) => unknown } };
+                }
+            ).foundry?.utils?.getProperty;
             if (!getProperty) return { ok: false, error: 'foundry.utils.getProperty unavailable' };
             const actor = game?.actors?.get?.(actorId);
             if (!actor?.createEmbeddedDocuments) return { ok: false, error: 'actor missing createEmbeddedDocuments' };
@@ -471,9 +499,6 @@ test.describe.serial('active effects / direct AE creation (Tier B)', () => {
             await deleteActor(page, actorId).catch(() => undefined);
         }
 
-        expect(
-            failures,
-            `${failures.length} active-effect flow(s) failed:\n  - ${failures.join('\n  - ')}`,
-        ).toEqual([]);
+        expect(failures, `${failures.length} active-effect flow(s) failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 });

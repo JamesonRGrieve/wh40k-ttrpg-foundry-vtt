@@ -100,16 +100,8 @@ reports.create('lcovonly', { file: 'lcov.info' }).execute(context);
 const summary = JSON.parse(readFileSync(resolve(OUT_DIR, 'coverage-summary.json'), 'utf8'));
 const total = summary.total ?? {};
 console.log(`e2e-source-coverage — ${processed} v8 entries merged, ${skipped} skipped`);
-console.log(
-    `  lines:      ${total.lines?.pct ?? 0}% (${total.lines?.covered ?? 0}/${total.lines?.total ?? 0})`,
-);
-console.log(
-    `  statements: ${total.statements?.pct ?? 0}% (${total.statements?.covered ?? 0}/${total.statements?.total ?? 0})`,
-);
-console.log(
-    `  functions:  ${total.functions?.pct ?? 0}% (${total.functions?.covered ?? 0}/${total.functions?.total ?? 0})`,
-);
-console.log(
-    `  branches:   ${total.branches?.pct ?? 0}% (${total.branches?.covered ?? 0}/${total.branches?.total ?? 0})`,
-);
+console.log(`  lines:      ${total.lines?.pct ?? 0}% (${total.lines?.covered ?? 0}/${total.lines?.total ?? 0})`);
+console.log(`  statements: ${total.statements?.pct ?? 0}% (${total.statements?.covered ?? 0}/${total.statements?.total ?? 0})`);
+console.log(`  functions:  ${total.functions?.pct ?? 0}% (${total.functions?.covered ?? 0}/${total.functions?.total ?? 0})`);
+console.log(`  branches:   ${total.branches?.pct ?? 0}% (${total.branches?.covered ?? 0}/${total.branches?.total ?? 0})`);
 console.log(`  → ${OUT_DIR}/`);

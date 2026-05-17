@@ -63,17 +63,11 @@ async function deleteActor(page: import('@playwright/test').Page, actorId: strin
 async function listStatusEffectIds(page: import('@playwright/test').Page): Promise<string[]> {
     return page.evaluate(() => {
         const cfg = (globalThis as unknown as { CONFIG?: { statusEffects?: Array<{ id?: string }> } }).CONFIG;
-        return (cfg?.statusEffects ?? [])
-            .map((s) => s.id)
-            .filter((id): id is string => typeof id === 'string' && id.length > 0);
+        return (cfg?.statusEffects ?? []).map((s) => s.id).filter((id): id is string => typeof id === 'string' && id.length > 0);
     });
 }
 
-async function probeStatusEffect(
-    page: import('@playwright/test').Page,
-    actorId: string,
-    effectId: string,
-): Promise<ConditionProbe> {
+async function probeStatusEffect(page: import('@playwright/test').Page, actorId: string, effectId: string): Promise<ConditionProbe> {
     const errors: string[] = [];
     const listener = (err: Error) => errors.push(err.message);
     page.on('pageerror', listener);
@@ -83,11 +77,13 @@ async function probeStatusEffect(
                 const { game } = globalThis as unknown as {
                     game?: {
                         actors?: {
-                            get?: (id: string) => {
-                                toggleStatusEffect?: (id: string, opts?: { active?: boolean }) => Promise<unknown>;
-                                statuses?: Set<string>;
-                                effects?: { find: (cb: (e: { statuses?: Set<string>; name?: string }) => boolean) => unknown };
-                            } | undefined;
+                            get?: (id: string) =>
+                                | {
+                                      toggleStatusEffect?: (id: string, opts?: { active?: boolean }) => Promise<unknown>;
+                                      statuses?: Set<string>;
+                                      effects?: { find: (cb: (e: { statuses?: Set<string>; name?: string }) => boolean) => unknown };
+                                  }
+                                | undefined;
                         };
                     };
                 };
@@ -101,8 +97,7 @@ async function probeStatusEffect(
                 } catch (err) {
                     return { appliedOk: false, removedOk: false, error: `toggle-on threw: ${String((err as Error)?.message ?? err)}` };
                 }
-                const hasAfterOn = Boolean(actor.statuses?.has(effectId))
-                    || Boolean(actor.effects?.find((e) => e.statuses?.has(effectId) ?? false));
+                const hasAfterOn = Boolean(actor.statuses?.has(effectId)) || Boolean(actor.effects?.find((e) => e.statuses?.has(effectId) ?? false));
                 if (!hasAfterOn) {
                     return { appliedOk: false, removedOk: false, error: 'effect not present after toggle-on' };
                 }
@@ -111,8 +106,7 @@ async function probeStatusEffect(
                 } catch (err) {
                     return { appliedOk: true, removedOk: false, error: `toggle-off threw: ${String((err as Error)?.message ?? err)}` };
                 }
-                const hasAfterOff = Boolean(actor.statuses?.has(effectId))
-                    || Boolean(actor.effects?.find((e) => e.statuses?.has(effectId) ?? false));
+                const hasAfterOff = Boolean(actor.statuses?.has(effectId)) || Boolean(actor.effects?.find((e) => e.statuses?.has(effectId) ?? false));
                 if (hasAfterOff) {
                     return { appliedOk: true, removedOk: false, error: 'effect still present after toggle-off' };
                 }
@@ -141,7 +135,7 @@ test.describe.serial('conditions / status effects (Tier B)', () => {
         test.skip(effectIds.length === 0, 'no CONFIG.statusEffects discovered');
 
         const parent = await createParentActor(page);
-        expect('id' in parent, `parent actor create failed: ${('error' in parent) ? parent.error : 'unknown'}`).toBe(true);
+        expect('id' in parent, `parent actor create failed: ${'error' in parent ? parent.error : 'unknown'}`).toBe(true);
         const actorId = (parent as ActorRef).id;
 
         const failures: string[] = [];
@@ -169,9 +163,6 @@ test.describe.serial('conditions / status effects (Tier B)', () => {
             await deleteActor(page, actorId).catch(() => undefined);
         }
 
-        expect(
-            failures,
-            `${failures.length}/${effectIds.length} status effects failed:\n  - ${failures.join('\n  - ')}`,
-        ).toEqual([]);
+        expect(failures, `${failures.length}/${effectIds.length} status effects failed:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
 });

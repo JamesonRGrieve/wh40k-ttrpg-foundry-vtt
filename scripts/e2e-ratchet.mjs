@@ -24,20 +24,11 @@ if (regen.status !== 0) process.exit(regen.status ?? 1);
 
 const report = JSON.parse(readFileSync(COVERAGE, 'utf8'));
 const currentPassed = Number(report.passed ?? 0);
-const currentDimensions = Object.fromEntries(
-    Object.entries(report.dimensions ?? {}).map(([name, d]) => [name, d.percent]),
-);
+const currentDimensions = Object.fromEntries(Object.entries(report.dimensions ?? {}).map(([name, d]) => [name, d.percent]));
 const currentSource = pickSourceMetrics(report.source);
 
 if (UPDATE || !existsSync(BASELINE)) {
-    writeFileSync(
-        BASELINE,
-        `${JSON.stringify(
-            { passed: currentPassed, dimensions: currentDimensions, source: currentSource },
-            null,
-            2,
-        )}\n`,
-    );
+    writeFileSync(BASELINE, `${JSON.stringify({ passed: currentPassed, dimensions: currentDimensions, source: currentSource }, null, 2)}\n`);
     console.log(`e2e:ratchet — baseline ${UPDATE ? 'updated' : 'seeded'}:`);
     console.log(`  passed: ${currentPassed}`);
     for (const [name, pct] of Object.entries(currentDimensions)) {
@@ -90,9 +81,7 @@ if (baselineSource) {
 if (failures.length) {
     console.error('e2e:ratchet failed:');
     for (const f of failures) console.error(`  - ${f}`);
-    console.error(
-        '  Fix the regression, or run `pnpm e2e:ratchet:update` if the drop is intentional.',
-    );
+    console.error('  Fix the regression, or run `pnpm e2e:ratchet:update` if the drop is intentional.');
     process.exit(1);
 }
 

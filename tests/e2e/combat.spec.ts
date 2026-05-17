@@ -50,13 +50,7 @@ const COMBAT_FLOWS = [
     'endCombat',
 ] as const;
 
-const COMBAT_UI_CLASSES = [
-    'CombatQuickPanel',
-    'EncounterBuilder',
-    'CombatPresetDialog',
-    'DifficultyCalculatorDialog',
-    'NPCThreatScalerDialog',
-] as const;
+const COMBAT_UI_CLASSES = ['CombatQuickPanel', 'EncounterBuilder', 'CombatPresetDialog', 'DifficultyCalculatorDialog', 'NPCThreatScalerDialog'] as const;
 
 type FlowName = (typeof COMBAT_FLOWS)[number];
 type UIClassName = (typeof COMBAT_UI_CLASSES)[number];
@@ -136,7 +130,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             // never arrive. Wrap each call with a 5s timeout so one hanging
             // operation can't kill the Foundry server and take downstream
             // specs (dialogs, settings, sheet-interactions) with it.
-            const withTimeout = async <T,>(p: Promise<T>, ms: number, label: string): Promise<T> => {
+            const withTimeout = async <T>(p: Promise<T>, ms: number, label: string): Promise<T> => {
                 let timer: ReturnType<typeof setTimeout> | null = null;
                 const timeout = new Promise<T>((_, reject) => {
                     timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
@@ -163,7 +157,11 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             if (!combat?.id) {
                 // Cleanup actors before bailing.
                 for (const id of npcIds) {
-                    try { await game?.actors?.get?.(id)?.delete?.(); } catch { /* ignore */ }
+                    try {
+                        await game?.actors?.get?.(id)?.delete?.();
+                    } catch {
+                        /* ignore */
+                    }
                 }
                 return {
                     flowsFired: fired,
@@ -178,7 +176,10 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             let combatantIds: string[] = [];
             try {
                 const created = await withTimeout(
-                    combat.createEmbeddedDocuments?.('Combatant', npcIds.map((id) => ({ actorId: id }))),
+                    combat.createEmbeddedDocuments?.(
+                        'Combatant',
+                        npcIds.map((id) => ({ actorId: id })),
+                    ),
                     5_000,
                     'createEmbeddedDocuments',
                 );
@@ -268,9 +269,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
                     await withTimeout(combat.setInitiative(combatantIds[0], 99), 5_000, 'combat.setInitiative');
                     fired['setInitiative'] = true;
                 } else {
-                    notes['setInitiative'] = combatantIds.length === 0
-                        ? 'no combatants available'
-                        : 'combat.setInitiative is not a function';
+                    notes['setInitiative'] = combatantIds.length === 0 ? 'no combatants available' : 'combat.setInitiative is not a function';
                 }
             } catch (err) {
                 notes['setInitiative'] = `setInitiative threw: ${String((err as Error)?.message ?? err)}`;
@@ -315,7 +314,11 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
 
             // ---- cleanup actors ----
             for (const id of npcIds) {
-                try { await game?.actors?.get?.(id)?.delete?.(); } catch { /* ignore */ }
+                try {
+                    await game?.actors?.get?.(id)?.delete?.();
+                } catch {
+                    /* ignore */
+                }
             }
 
             return {
@@ -360,12 +363,7 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
             // is unavailable, fall back to dynamic ESM import.
             async function loadClass(name: string): Promise<any> {
                 // First, walk known surfaces.
-                const candidates: Array<any> = [
-                    g.game?.wh40k?.applications?.[name],
-                    g.game?.wh40k?.[name],
-                    g.wh40k?.[name],
-                    g[name],
-                ];
+                const candidates: Array<any> = [g.game?.wh40k?.applications?.[name], g.game?.wh40k?.[name], g.wh40k?.[name], g[name]];
                 for (const c of candidates) {
                     if (typeof c === 'function') return c;
                 }
@@ -417,19 +415,23 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
                             break;
                         case 'EncounterBuilder':
                             // Singleton pattern — prefer .instance/.show, fall through to ctor.
-                            instance = typeof Cls.instance !== 'undefined'
-                                ? Cls.instance
-                                : new Cls();
+                            instance = typeof Cls.instance !== 'undefined' ? Cls.instance : new Cls();
                             break;
                         case 'CombatPresetDialog':
                             instance = new Cls(null, 'library');
                             break;
                         case 'DifficultyCalculatorDialog':
-                            if (!npc) { notes[name] = 'NPC not available for dialog ctor'; continue; }
+                            if (!npc) {
+                                notes[name] = 'NPC not available for dialog ctor';
+                                continue;
+                            }
                             instance = new Cls(npc);
                             break;
                         case 'NPCThreatScalerDialog':
-                            if (!npc) { notes[name] = 'NPC not available for dialog ctor'; continue; }
+                            if (!npc) {
+                                notes[name] = 'NPC not available for dialog ctor';
+                                continue;
+                            }
                             instance = new Cls(npc);
                             break;
                         default:
@@ -442,7 +444,11 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
                         // Allow render microtasks to flush.
                         await new Promise((r) => setTimeout(r, 50));
                         rendered[name] = true;
-                        try { await instance.close?.(); } catch { /* ignore */ }
+                        try {
+                            await instance.close?.();
+                        } catch {
+                            /* ignore */
+                        }
                     } else {
                         notes[name] = 'instance has no render method';
                     }
@@ -452,7 +458,11 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
             }
 
             if (npcId) {
-                try { await g.game?.actors?.get?.(npcId)?.delete?.(); } catch { /* ignore */ }
+                try {
+                    await g.game?.actors?.get?.(npcId)?.delete?.();
+                } catch {
+                    /* ignore */
+                }
             }
 
             return { rendered, notes };
@@ -507,9 +517,6 @@ test.describe.serial('combat lifecycle (Tier B)', () => {
                 : '';
 
         const totalAttempts = COMBAT_FLOWS.length + COMBAT_UI_CLASSES.length;
-        expect(
-            failures,
-            `${failures.length}/${totalAttempts} combat probes failed:\n  - ${failures.join('\n  - ')}${pageErrorTail}`,
-        ).toEqual([]);
+        expect(failures, `${failures.length}/${totalAttempts} combat probes failed:\n  - ${failures.join('\n  - ')}${pageErrorTail}`).toEqual([]);
     });
 });
