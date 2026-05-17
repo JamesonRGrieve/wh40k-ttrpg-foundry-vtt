@@ -1,5 +1,5 @@
 {
-  "passed": 40,
+  "passed": 55,
   "dimensions": {
     "actor.type-system": 100,
     "actor.sheet-render": 100,
@@ -12,25 +12,35 @@
     "sheet.tab": 100,
     "sheet.action": 100,
     "sheet.form-submit": 100,
-    "hook.fired": 80,
+    "hook.fired": 100,
     "setting.toggle": 36.36,
     "setting.read": 63.64,
-    "setting.accessor": 0,
-    "chat.card-render": 88.89,
-    "dialog.render": 73.91,
-    "active-effect.flow": 80,
+    "setting.accessor": 100,
+    "chat.card-render": 100,
+    "dialog.render": 100,
+    "active-effect.flow": 100,
     "combat.flow": 100,
-    "combat.ui": 60,
+    "combat.ui": 100,
+    "token.flow": 0,
+    "subtlety.flow": 85.71,
+    "damage.flow": 100,
+    "modifier.flow": 85.71,
+    "vehicle-starship.flow": 0,
+    "xp.flow": 100,
+    "migration.flow": 16.67,
     "dh2.fate": 100,
     "dh2.corruption": 100,
     "dh2.insanity": 100,
     "dh2.origin-path": 100,
-    "dh2.elite-advance": 100
+    "dh2.elite-advance": 100,
+    "origin-builder.flow": 0,
+    "per-system.flow": 0,
+    "compendium-browser.flow": 0
   },
   "source": {
-    "lines": 60.23,
-    "statements": 60.23,
-    "functions": 34.37,
-    "branches": 64.95
+    "lines": 60.62,
+    "statements": 60.62,
+    "functions": 35.4,
+    "branches": 65.56
   }
 }
