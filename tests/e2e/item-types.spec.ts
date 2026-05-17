@@ -24,9 +24,7 @@ async function probeItemType(page: import('@playwright/test').Page, type: string
         const result = await page.evaluate(async (type: string) => {
             const { Item } = globalThis as unknown as {
                 Item?: {
-                    create?: (
-                        data: object,
-                    ) => Promise<{
+                    create?: (data: object) => Promise<{
                         id?: string;
                         sheet?: { render?: (force?: boolean) => Promise<unknown>; close?: () => Promise<unknown> };
                         delete?: () => Promise<unknown>;
@@ -73,11 +71,11 @@ test.describe.serial('item types (Tier B)', () => {
         test.skip(itemTypes.length === 0, 'no item types discovered from CONFIG.Item.dataModels');
         const failures: string[] = [];
         for (const type of itemTypes) {
-            const probe = await probeItemType(page, type).catch((err) => ({
+            const probe = await probeItemType(page, type).catch((err: unknown) => ({
                 type,
                 docId: null,
                 sheetRendered: false,
-                pageErrors: [String(err?.message ?? err)],
+                pageErrors: [String((err as Error)?.message ?? err)],
             }));
             if (probe.docId === null) {
                 const reason = probe.pageErrors[0] ?? 'Item.create returned null';
