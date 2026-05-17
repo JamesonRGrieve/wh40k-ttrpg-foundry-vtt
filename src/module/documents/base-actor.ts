@@ -1,7 +1,10 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
-import { resolveSubtletyAdjusterDelta, type SubtletyAdjusterSource } from '../rules/subtlety-adjusters.ts';
+import { t } from '../i18n/t.ts';
+import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type SubtletySourceRef } from '../rules/subtlety-adjusters.ts';
+import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shared/subtlety-adjuster.ts';
+import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
 import type { WH40KItem } from './item.ts';
@@ -107,53 +110,111 @@ export class WH40KBaseActor extends Actor {
     }
 
     /**
+     * Tree-walk the actor's owned items (origin-path steps are materialized as
+     * `originPath` items, so this covers homeworld clamps too) and collect
+     * every Subtlety adjuster declared on a governing compendium entry.
+     *
+     * Mechanic values come straight from each item's `system.subtletyAdjuster`
+     * (authored on the compendium document, kept current on owned items by the
+     * boot-time compendium→world resync). Nothing is hardcoded here per
+     * CLAUDE.md Direction #7. `passive` adjusters that require an equipped
+     * carrier (e.g. a Daemon Weapon) are only collected while wielded.
+     */
+    collectSubtletyAdjusters(): CollectedAdjuster[] {
+        const out: CollectedAdjuster[] = [];
+        for (const item of this.items) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: subtletyAdjuster/equipped live on specific item DataModels; the mixin static type is not surfaced through SystemDataModel.mixin
+            const sys = item.system as { subtletyAdjuster?: RawSubtletyAdjuster; equipped?: boolean } | undefined;
+            const effect = subtletyAdjusterEffectOf(sys?.subtletyAdjuster);
+            if (effect === null) continue;
+            if (effect.kind === 'passive' && effect.requiresEquipped && sys?.equipped !== true) continue;
+            const sourceUuid = WH40KBaseActor.#compendiumSourceUuidOf(item);
+            out.push({
+                sourceUuid,
+                primitive: null,
+                // Owned-item name mirrors the compendium document (resync keeps
+                // it synced); never a hardcoded string.
+                label: item.name ?? '',
+                kind: effect.kind,
+                delta: effect.delta,
+                minAbsoluteDelta: effect.minAbsoluteDelta,
+            });
+        }
+        return out;
+    }
+
+    /** Compendium-source UUID an owned item was created from, or `null`. */
+    static #compendiumSourceUuidOf(item: WH40KItem): string | null {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _stats is Foundry-managed document metadata not in our schema
+        const stats = (item as { _stats?: { compendiumSource?: string | null } })._stats;
+        const src = stats?.compendiumSource;
+        return typeof src === 'string' && src.length > 0 ? src : null;
+    }
+
+    /**
+     * Resolve a Subtlety attribution to a display label. Content sources
+     * resolve to the live compendium document name (single source of truth,
+     * via the owned item or `uuidNameCache`); non-content primitives resolve
+     * to their langpack string OUTSIDE the content namespace.
+     */
+    subtletySourceLabel(ref: SubtletySourceRef): string {
+        if (isSubtletyPrimitive(ref)) {
+            return ref === 'manual' ? t('WH40K.Subtlety.ManualAdjustment') : t('WH40K.Subtlety.Inquest');
+        }
+        const found = this.collectSubtletyAdjusters().find((a) => a.sourceUuid === ref);
+        return found?.label ?? uuidNameCache.getName(ref);
+    }
+
+    /**
      * Adjust the actor's Subtlety pool (DH2-only, core.md §"Influence
      * And Subtlety"). Positive amounts raise the warband's subtlety;
      * negative amounts (most common, since missions usually erode it)
      * lower it. Clamps at 0..max.
      *
-     * @param source Optional attribution key (`SubtletyAdjusterSource`).
-     *   Forwarded onto the resulting update via `subtletyChangeSource`
-     *   flag so the activity-log layer can group entries by cause.
+     * Any "resist Subtlety loss" clamp the actor carries (e.g. Quarantine
+     * World, Enemies Beyond p. 30) is applied to losses first — discovered by
+     * tree-walking owned items, with the minimum retained loss read from the
+     * governing compendium entry rather than hardcoded.
+     *
+     * @param source Optional attribution: a compendium UUID (label resolved
+     *   from the live document) or a non-content primitive. Stored on
+     *   `flags.wh40k-rpg.lastSubtletySource` so the activity-log layer can
+     *   group entries by cause.
      */
-    async applySubtlety(amount: number, source?: SubtletyAdjusterSource): Promise<void> {
+    async applySubtlety(amount: number, source?: SubtletySourceRef): Promise<void> {
         if (!Number.isFinite(amount) || amount === 0) return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: subtlety lives on character.ts only
         const subtlety = (this.system as { subtlety?: { value: number; max: number } }).subtlety;
         if (!subtlety) return;
-        const next = Math.max(0, Math.min(subtlety.max, subtlety.value + Math.trunc(amount)));
+        let delta = Math.trunc(amount);
+        if (delta < 0) {
+            for (const adj of this.collectSubtletyAdjusters()) {
+                if (adj.kind === 'clamp' && adj.minAbsoluteDelta > 0) {
+                    delta = clampSubtletyLoss(delta, adj.minAbsoluteDelta);
+                }
+            }
+        }
+        if (delta === 0) return;
+        const next = Math.max(0, Math.min(subtlety.max, subtlety.value + delta));
         const updateData: Record<string, unknown> = { 'system.subtlety.value': next };
         if (source !== undefined) updateData['flags.wh40k-rpg.lastSubtletySource'] = source;
         await this.update(updateData);
     }
 
     /**
-     * Apply a registered Subtlety adjuster (e.g. dark-pact discovery,
-     * daemon-weapon wielded, inquest pursued). Looks up the canonical delta
-     * from `SUBTLETY_ADJUSTERS`, scales it by `scale`, and clamps net losses
-     * to -1 when the actor is from a Quarantine World homeworld (Beyond p. 30).
-     *
-     * Quarantine-World detection: matches the actor's `originPath.homeWorld`
-     * display name and/or its `homeWorldUuid` pack-path against `quarantine`.
+     * Apply the one-shot Subtlety hit declared by a compendium-backed source
+     * the actor owns (e.g. a Dark Pact talent being discovered). The delta is
+     * read from that entry's `subtletyAdjuster` (`kind: 'event'`) and scaled
+     * by `scale`. `passive` and `clamp` adjusters are NOT applied here — they
+     * are standing effects surfaced by `collectSubtletyAdjusters()` for
+     * display/aggregation, applying them as one-shots would double-count.
      */
-    async applySubtletyAdjuster(source: SubtletyAdjusterSource, scale = 1): Promise<void> {
-        const delta = resolveSubtletyAdjusterDelta(source, scale, this._hasQuarantineWorldOrigin());
+    async applySubtletyFromSource(sourceUuid: string, scale = 1): Promise<void> {
+        const adj = this.collectSubtletyAdjusters().find((a) => a.sourceUuid === sourceUuid);
+        if (adj === undefined || adj.kind !== 'event') return;
+        const delta = Math.trunc(adj.delta * scale);
         if (delta === 0) return;
-        await this.applySubtlety(delta, source);
-    }
-
-    /**
-     * True when the actor was generated from the Quarantine World
-     * homeworld (Beyond p. 30). Used by `applySubtletyAdjuster` to gate
-     * the -1 minimum-loss clamp.
-     */
-    protected _hasQuarantineWorldOrigin(): boolean {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: originPath shape varies by actor type; character.ts surfaces homeWorld/homeWorldUuid but other subclasses may omit
-        const originPath = (this.system as { originPath?: { homeWorld?: string; homeWorldUuid?: string } }).originPath;
-        if (!originPath) return false;
-        const homeWorld = originPath.homeWorld?.toLowerCase() ?? '';
-        const homeWorldUuid = originPath.homeWorldUuid?.toLowerCase() ?? '';
-        return homeWorld.includes('quarantine') || homeWorldUuid.includes('quarantine');
+        await this.applySubtlety(delta, sourceUuid);
     }
 
     /**

@@ -3,16 +3,21 @@ import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
+import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
+import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 
 /**
  * Data model for Talent items.
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
+ * @mixes SubtletyAdjusterTemplate
  */
-export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
+export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate, SubtletyAdjusterTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
+    // From SubtletyAdjusterTemplate (mixin static type does not surface it).
+    declare subtletyAdjuster?: { kind: SubtletyAdjusterKind; delta: number; minAbsoluteDelta: number; requiresEquipped: boolean };
     declare category: string;
     declare tier: number;
     // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites.characteristics is a free-form record from migration source
