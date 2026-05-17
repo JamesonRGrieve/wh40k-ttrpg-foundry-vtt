@@ -454,6 +454,11 @@ export default class WeaponData extends ItemDataModel.mixin(
         return this.usesAmmo && this.clip.value <= 0;
     }
 
+    /** Alias of {@link isOutOfAmmo} — the conceptual name used by chat / sheet templates. */
+    get isEmpty(): boolean {
+        return this.isOutOfAmmo;
+    }
+
     /**
      * Get effective qualities (base + craftsmanship-derived + ammo).
      * Applies WH40K RPG craftsmanship rules for ranged weapons:
