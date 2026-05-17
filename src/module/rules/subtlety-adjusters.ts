@@ -1,79 +1,72 @@
 /**
- * Warband Subtlety conditional modifiers (beyond.md + within.md).
+ * Warband Subtlety adjuster plumbing (DH2 — core.md §"Influence And
+ * Subtlety", beyond.md / within.md supplement features).
  *
- * Several supplement features push the warband's Subtlety in specific
- * ways. This module exposes a typed registry of named adjusters so the
- * Subtlety pool consumer (`base-actor.applySubtlety()`) can attribute
- * each shift to a source.
+ * This module is deliberately **content-agnostic** (CLAUDE.md Direction #7):
+ * it holds only pure math and the enum of non-content adjustment kinds. The
+ * actual deltas, clamps, and source labels live on compendium documents via
+ * `SubtletyAdjusterTemplate` and are discovered at runtime by tree-walking the
+ * actor's owned items / origin path (see `base-actor.collectSubtletyAdjusters`).
+ * No content-specific value or name string is hardcoded here.
  */
 
-export type SubtletyAdjusterSource =
-    | 'quarantineWorld' // Beyond p. 30: -2 with min -1 on any decrease
-    | 'daemonWeaponWielded' // Beyond p. 50: passive while wielded
-    | 'darkPactDiscovered' // Beyond p. 72
-    | 'inquestPursued' // Within p. 62
-    | 'manual'; // GM ad-hoc
+/**
+ * Non-content adjustment kinds. These are mechanics primitives, not game
+ * content, so their labels live OUTSIDE the content i18n namespace
+ * (`WH40K.Subtlety.ManualAdjustment` / `WH40K.Subtlety.Inquest`), never under
+ * `WH40K.Subtlety.Source.*`.
+ *  - `manual`: a GM ad-hoc adjustment with no governing compendium entry.
+ *  - `inquest`: pursuing an Inquest openly (within.md p. 62) — a campaign
+ *    event with no owned item to walk to.
+ */
+export type SubtletyPrimitive = 'manual' | 'inquest';
 
-export interface SubtletyAdjuster {
-    source: SubtletyAdjusterSource;
-    /** i18n key for the GM-facing source label. */
-    labelKey: string;
-    /** Default delta; the caller may scale at the call site. */
+/**
+ * Attribution for a Subtlety change: either a compendium document UUID (the
+ * label is resolved from the live document name via `uuidNameCache`, so it is
+ * never a hardcoded string) or a non-content primitive.
+ */
+export type SubtletySourceRef = string | SubtletyPrimitive;
+
+/** True when `ref` is a non-content primitive rather than a compendium UUID. */
+export function isSubtletyPrimitive(ref: SubtletySourceRef): ref is SubtletyPrimitive {
+    return ref === 'manual' || ref === 'inquest';
+}
+
+/**
+ * A Subtlety adjuster discovered on an actor by tree-walking its owned items /
+ * origin path. Mechanic values (`kind` / `delta` / `minAbsoluteDelta`) come
+ * straight from the governing compendium document's `subtletyAdjuster` field;
+ * `label` is resolved from that document's live name.
+ */
+export interface CollectedAdjuster {
+    /** Source compendium UUID, or `null` for a non-content primitive. */
+    sourceUuid: string | null;
+    /** Set when this adjuster is a non-content primitive, else `null`. */
+    primitive: SubtletyPrimitive | null;
+    /** Display label (compendium document name, or primitive i18n string). */
+    label: string;
+    /** Effect discriminator copied from the compendium entry. */
+    kind: 'clamp' | 'passive' | 'event';
+    /** Signed integer delta for `passive` / `event`; 0 for `clamp`. */
     delta: number;
-    /** Hard cap on the delta in absolute value (e.g. Quarantine min -1). */
-    minAbsoluteDelta?: number;
-}
-
-export const SUBTLETY_ADJUSTERS: Record<SubtletyAdjusterSource, SubtletyAdjuster> = {
-    quarantineWorld: {
-        source: 'quarantineWorld',
-        labelKey: 'WH40K.Subtlety.Source.QuarantineWorld',
-        delta: 0,
-        minAbsoluteDelta: 1,
-    },
-    daemonWeaponWielded: {
-        source: 'daemonWeaponWielded',
-        labelKey: 'WH40K.Subtlety.Source.DaemonWeaponWielded',
-        delta: -1,
-    },
-    darkPactDiscovered: {
-        source: 'darkPactDiscovered',
-        labelKey: 'WH40K.Subtlety.Source.DarkPactDiscovered',
-        delta: -3,
-    },
-    inquestPursued: {
-        source: 'inquestPursued',
-        labelKey: 'WH40K.Subtlety.Source.InquestPursued',
-        delta: -1,
-    },
-    manual: { source: 'manual', labelKey: 'WH40K.Subtlety.Source.Manual', delta: 0 },
-};
-
-/** Look up a registered adjuster by source key. */
-export function getSubtletyAdjuster(source: SubtletyAdjusterSource): SubtletyAdjuster {
-    return SUBTLETY_ADJUSTERS[source];
+    /** Minimum retained loss magnitude for `clamp`; 0 otherwise. */
+    minAbsoluteDelta: number;
 }
 
 /**
- * Apply Quarantine World's "minimum -1 on any subtlety decrease" rule
- * to a raw delta. Returns the effective delta.
- */
-export function clampSubtletyLossForQuarantineWorld(rawDelta: number): number {
-    const delta = Math.trunc(rawDelta);
-    if (delta >= 0) return delta;
-    return Math.max(delta, -1);
-}
-
-/**
- * Resolve the effective delta to apply for a given adjuster, scaled by an
- * optional caller-supplied multiplier. When the actor is from a Quarantine
- * World, any net loss is clamped to -1 per Beyond p. 30.
+ * Apply a "resist Subtlety loss" clamp to a raw delta. A loss (negative
+ * delta) is pulled toward zero so its magnitude is at most `minAbsoluteDelta`
+ * (e.g. Quarantine World keeps any decrease to a minimum reduction of 1,
+ * Enemies Beyond p. 30). Gains and zero pass through untouched, as does any
+ * delta when `minAbsoluteDelta` is not positive.
  *
- * The function is pure — it does not touch the actor. `base-actor.applySubtletyAdjuster`
- * detects Quarantine World residency and forwards the resolved delta here.
+ * Pure and content-agnostic: the `minAbsoluteDelta` value is supplied by the
+ * caller from the governing compendium entry, not hardcoded here.
  */
-export function resolveSubtletyAdjusterDelta(source: SubtletyAdjusterSource, scale: number, hasQuarantineWorld: boolean): number {
-    const adjuster = SUBTLETY_ADJUSTERS[source];
-    const rawDelta = Math.trunc(adjuster.delta * scale);
-    return hasQuarantineWorld ? clampSubtletyLossForQuarantineWorld(rawDelta) : rawDelta;
+export function clampSubtletyLoss(rawDelta: number, minAbsoluteDelta: number): number {
+    const delta = Math.trunc(rawDelta);
+    const cap = Math.trunc(minAbsoluteDelta);
+    if (delta >= 0 || cap <= 0) return delta;
+    return Math.max(delta, -cap);
 }
