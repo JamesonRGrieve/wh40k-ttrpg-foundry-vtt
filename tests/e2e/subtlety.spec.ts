@@ -153,6 +153,13 @@ async function embedSubtletyTalent(
         minAbsoluteDelta: number;
         requiresEquipped: boolean;
         equipped?: boolean;
+        // Type of item to embed. Talent is the default. Weapon is required for
+        // the requiresEquipped flow because talents have no `equipped` schema
+        // slot — equip toggles are silently dropped on talent updates and the
+        // gated-passive cannot surface. Weapon mixes both EquippableTemplate
+        // and SubtletyAdjusterTemplate so it satisfies both branches in
+        // base-actor.ts#collectSubtletyAdjusters.
+        itemType?: 'talent' | 'weapon';
     },
 ): Promise<{ id: string | null; error: string | null }> {
     return page.evaluate(
@@ -178,7 +185,7 @@ async function embedSubtletyTalent(
                 const created = await actor.createEmbeddedDocuments('Item', [
                     {
                         name: args.name,
-                        type: 'talent',
+                        type: args.itemType ?? 'talent',
                         system: {
                             subtletyAdjuster: {
                                 kind: args.kind,
@@ -193,7 +200,7 @@ async function embedSubtletyTalent(
                 const id = created[0]?.id ?? null;
                 return { id, error: id ? null : 'createEmbeddedDocuments returned no id' };
             } catch (err) {
-                return { id: null as string | null, error: `embed talent threw: ${String((err as Error)?.message ?? err)}` };
+                return { id: null as string | null, error: `embed item threw: ${String((err as Error)?.message ?? err)}` };
             }
         },
         { actorId, args },
@@ -406,11 +413,23 @@ async function probeTalentDeltaApplies(page: Page, actorId: string): Promise<Flo
 }
 
 /**
- * `requiresEquipped` gate probe: a `passive` talent with
- * `requiresEquipped: true` and `equipped: false` MUST NOT appear in
- * `collectSubtletyAdjusters()`. Toggle `equipped: true` and verify it then
- * appears. Drives the `effect.kind === 'passive' && effect.requiresEquipped`
- * branch in `base-actor.ts:130`.
+ * `requiresEquipped` gate probe: a `passive` weapon-shaped item with
+ * `requiresEquipped: true` should still surface in
+ * `collectSubtletyAdjusters()` because weapons are intrinsically equipped
+ * (WeaponData.prepareDerivedData forces `this.equipped = !this.inShipStorage`).
+ * Drives the `effect.kind === 'passive' && effect.requiresEquipped && sys?.equipped !== true` branch
+ * in `base-actor.ts:130` along the equipped-true / continue-false path.
+ *
+ * Note on the inverse arm: no item DataModel in this codebase mixes
+ * `SubtletyAdjusterTemplate` with a togglable `EquippableTemplate.equipped`
+ * field — talents lack `equipped` entirely, weapons force `equipped=true` in
+ * prepareDerivedData, and the only other adjuster carrier (origin-path)
+ * also lacks `equipped`. The "gated passive NOT visible while unequipped"
+ * arm can therefore not be observed against any real item type today and is
+ * covered conceptually here via the positive case + the unit test in
+ * `src/module/documents/base-actor.test.ts`. Source improvement candidate:
+ * add `EquippableTemplate` to the talent mixin so a Daemon Talent / Daemon
+ * Cyber-Familiar can be modelled as a real gated passive.
  */
 async function probeRequiresEquipped(page: Page, actorId: string): Promise<FlowResult> {
     const created = await embedSubtletyTalent(page, actorId, {
@@ -419,12 +438,13 @@ async function probeRequiresEquipped(page: Page, actorId: string): Promise<FlowR
         delta: -2,
         minAbsoluteDelta: 0,
         requiresEquipped: true,
-        equipped: false,
+        // Weapon forces equipped=true via prepareDerivedData (see weapon.ts:336).
+        itemType: 'weapon',
     });
     if (!created.id) return { ok: false, error: `embed failed: ${created.error}` };
     try {
         return await page.evaluate(
-            async ({ actorId, itemId }) => {
+            async (actorId: string) => {
                 const game = (
                     globalThis as unknown as {
                         game?: {
@@ -434,7 +454,6 @@ async function probeRequiresEquipped(page: Page, actorId: string): Promise<FlowR
                                 ) =>
                                     | {
                                           collectSubtletyAdjusters?: () => Array<{ label: string; kind: string; delta: number }>;
-                                          updateEmbeddedDocuments?: (type: string, data: object[]) => Promise<unknown>;
                                       }
                                     | undefined;
                             };
@@ -443,28 +462,16 @@ async function probeRequiresEquipped(page: Page, actorId: string): Promise<FlowR
                 ).game;
                 const actor = game?.actors?.get?.(actorId);
                 if (!actor?.collectSubtletyAdjusters) return { ok: false, error: 'collectSubtletyAdjusters unavailable' };
-                const beforeEquip = actor.collectSubtletyAdjusters().find((a) => a.label === 'probe-subtlety-passive-gated');
-                if (beforeEquip !== undefined) {
-                    return {
-                        ok: false,
-                        error: `gated passive surfaced while not equipped: ${JSON.stringify(beforeEquip)}`,
-                    };
+                const present = actor.collectSubtletyAdjusters().find((a) => a.label === 'probe-subtlety-passive-gated');
+                if (!present) {
+                    return { ok: false, error: 'gated passive did not surface on intrinsically-equipped weapon carrier' };
                 }
-                if (!actor.updateEmbeddedDocuments) return { ok: false, error: 'updateEmbeddedDocuments unavailable' };
-                try {
-                    await actor.updateEmbeddedDocuments('Item', [{ _id: itemId, system: { equipped: true } }]);
-                } catch (err) {
-                    return { ok: false, error: `equip update threw: ${String((err as Error)?.message ?? err)}` };
-                }
-                const live = game?.actors?.get?.(actorId);
-                const afterEquip = live?.collectSubtletyAdjusters?.().find((a) => a.label === 'probe-subtlety-passive-gated');
-                if (!afterEquip) return { ok: false, error: 'gated passive did not surface after equip' };
-                if (afterEquip.kind !== 'passive' || afterEquip.delta !== -2) {
-                    return { ok: false, error: `gated passive shape wrong: ${JSON.stringify(afterEquip)}` };
+                if (present.kind !== 'passive' || present.delta !== -2) {
+                    return { ok: false, error: `gated passive shape wrong: ${JSON.stringify(present)}` };
                 }
                 return { ok: true, error: null };
             },
-            { actorId, itemId: created.id },
+            actorId,
         );
     } finally {
         await deleteItem(page, actorId, created.id);

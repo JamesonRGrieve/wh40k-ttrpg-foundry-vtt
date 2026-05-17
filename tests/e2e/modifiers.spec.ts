@@ -284,25 +284,28 @@ async function probeWeaponAE(page: Page, actorId: string): Promise<FlowResult> {
 }
 
 /**
- * Gear item flagged equipped with +2 toughness modifier; toggle equipped off
- * and verify the modifier drops away (covers
- * _computeItemModifiers' `item.system.equipped === true` branch).
+ * Cybernetic item flagged equipped with +2 toughness modifier; toggle equipped
+ * off and verify the modifier drops away (covers _computeItemModifiers'
+ * `item.system.equipped === true` branch). Cybernetic is used because it
+ * mixes both EquippableTemplate AND ModifiersTemplate — gear has Equippable
+ * but no Modifiers schema, so a `system.modifiers.*` field is dropped on
+ * create and the round-trip never observes a delta.
  */
 async function probeUnequipRollback(page: Page, actorId: string): Promise<FlowResult> {
     const baseline = (await readActorPath(page, actorId, 'system.characteristics.toughness.total')) ?? 0;
     const ids = await createItems(page, actorId, [
         {
-            name: 'probe-gear-tough-2',
-            type: 'gear',
+            name: 'probe-cybernetic-tough-2',
+            type: 'cybernetic',
             system: {
                 equipped: true,
                 modifiers: { characteristics: { toughness: 2 } },
             },
         },
     ]);
-    if (ids.length === 0) return { ok: false, error: 'gear item create failed' };
+    if (ids.length === 0) return { ok: false, error: 'cybernetic item create failed' };
     const itemId = ids[0];
-    if (itemId === undefined) return { ok: false, error: 'gear item id missing' };
+    if (itemId === undefined) return { ok: false, error: 'cybernetic item id missing' };
     try {
         const equipped = (await readActorPath(page, actorId, 'system.characteristics.toughness.total')) ?? 0;
         if (equipped !== baseline + 2) {

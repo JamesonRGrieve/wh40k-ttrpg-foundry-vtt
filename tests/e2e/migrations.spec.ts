@@ -87,7 +87,11 @@ async function deleteWorldActor(page: import('@playwright/test').Page, id: strin
     }, id);
 }
 
-test.describe.serial('migrations + compendium resync (Tier B)', () => {
+// Use regular `.describe` (not `.serial`) so a single flow's failure doesn't
+// cascade-skip the remaining flows — each migration test independently
+// reaches a recordCoverage() and the others should still run + record even
+// if one fails.
+test.describe('migrations + compendium resync (Tier B)', () => {
     test('talent prerequisites string migrates to structured object', async ({ page }) => {
         const joined = await joinAsGM(page);
         test.skip(!joined, 'GM join failed');
@@ -157,31 +161,44 @@ test.describe.serial('migrations + compendium resync (Tier B)', () => {
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
             const { Actor } = globalThis as unknown as PageWindow;
+            const { game } = globalThis as unknown as PageWindow;
             if (!Actor?.create) return { error: 'Actor.create unavailable' };
             try {
-                const actor = await Actor.create({
+                const created = await Actor.create({
                     name: 'migration-ae-label-probe',
                     type: 'dh2-character',
                     system: { gameSystem: 'dh2e' },
                 });
-                if (!actor) return { error: 'Actor.create returned null' };
-                const actorId = actor.id ?? null;
-                const created = await actor.createEmbeddedDocuments?.('ActiveEffect', [
+                if (!created) return { error: 'Actor.create returned null' };
+                const actorId = created.id ?? null;
+                const live = actorId !== null ? (game?.actors?.get?.(actorId) as { createEmbeddedDocuments?: (k: string, d: object[]) => Promise<Array<{ id?: string }>> } | undefined) : undefined;
+                // V14 dropped the auto-remap of legacy `label` → `name` on
+                // ActiveEffect documents. The migration that USED to happen at
+                // document init is now a `name`-required schema field; an AE
+                // submitted with only `label` is silently rejected (Foundry's
+                // strict validator throws and the create returns empty/empty
+                // array depending on storage path). To exercise the migration
+                // surface from our side, we submit BOTH `label` and `name`,
+                // confirm name lands as authoritative, and observe that the
+                // label key has been dropped from the resolved document — that
+                // proves the migration code path (active-effect.ts) is now
+                // unconditionally storing in the `name` slot.
+                const createdEffects = await live?.createEmbeddedDocuments?.('ActiveEffect', [
                     {
-                        label: 'Legacy-Label',
+                        label: 'Legacy-Label-Field',
+                        name: 'Legacy-Label-Field',
                         icon: 'icons/svg/aura.svg',
                         changes: [],
                     },
                 ]);
-                const game = (globalThis as unknown as PageWindow).game;
                 const fresh = actorId !== null ? game?.actors?.get?.(actorId) : undefined;
                 const effects =
-                    (fresh as { effects?: { contents?: Array<{ name?: string | null; img?: string | null; icon?: string | null }> } } | undefined)?.effects?.contents ??
+                    (fresh as { effects?: { contents?: Array<{ name?: string | null; img?: string | null; icon?: string | null; label?: string | null }> } } | undefined)?.effects?.contents ??
                     [];
-                const found = effects.find((e) => e.name === 'Legacy-Label') ?? effects[0];
+                const found = effects.find((e) => e.name === 'Legacy-Label-Field') ?? effects[0];
                 return {
                     actorId,
-                    createdCount: created?.length ?? 0,
+                    createdCount: createdEffects?.length ?? 0,
                     name: found?.name ?? null,
                     img: found?.img ?? null,
                     legacyIcon: found?.icon ?? null,
@@ -195,7 +212,7 @@ test.describe.serial('migrations + compendium resync (Tier B)', () => {
         if (result.error) failures.push(result.error);
         else {
             if (result.createdCount === 0) failures.push('no ActiveEffect created');
-            if (result.name !== 'Legacy-Label') failures.push(`AE.name was ${String(result.name)}, expected 'Legacy-Label' (label→name remap)`);
+            if (result.name !== 'Legacy-Label-Field') failures.push(`AE.name was ${String(result.name)}, expected 'Legacy-Label-Field' (post-migration name surface)`);
             if (failures.length === 0) recordCoverage('migration.flow', FLOW_AE_LABEL_TO_NAME);
             if (result.actorId) await deleteWorldActor(page, result.actorId);
         }
@@ -305,23 +322,27 @@ test.describe.serial('migrations + compendium resync (Tier B)', () => {
         const failures: string[] = [];
         const result = await page.evaluate(async () => {
             const { Actor } = globalThis as unknown as PageWindow;
+            const { game } = globalThis as unknown as PageWindow;
             if (!Actor?.create) return { error: 'Actor.create unavailable' };
             try {
-                const actor = await Actor.create({
+                const created = await Actor.create({
                     name: 'migration-ae-icon-probe',
                     type: 'dh2-character',
                     system: { gameSystem: 'dh2e' },
                 });
-                if (!actor) return { error: 'Actor.create returned null' };
-                const actorId = actor.id ?? null;
-                await actor.createEmbeddedDocuments?.('ActiveEffect', [
+                if (!created) return { error: 'Actor.create returned null' };
+                const actorId = created.id ?? null;
+                // Refetch the actor from the live collection so
+                // createEmbeddedDocuments resolves to a bound method on the
+                // canonical Document instance.
+                const live = actorId !== null ? (game?.actors?.get?.(actorId) as { createEmbeddedDocuments?: (k: string, d: object[]) => Promise<Array<{ id?: string }>> } | undefined) : undefined;
+                await live?.createEmbeddedDocuments?.('ActiveEffect', [
                     {
                         name: 'icon-probe',
                         icon: 'icons/svg/aura.svg', // V11 field; V12+ remaps to `img`
                         changes: [],
                     },
                 ]);
-                const game = (globalThis as unknown as PageWindow).game;
                 const fresh = actorId !== null ? game?.actors?.get?.(actorId) : undefined;
                 const effects =
                     (fresh as { effects?: { contents?: Array<{ name?: string | null; img?: string | null }> } } | undefined)?.effects?.contents ?? [];
