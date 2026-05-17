@@ -299,6 +299,55 @@ const COMBAT_FLOWS = [
 // calls in the spec.
 const COMBAT_UI_CLASSES = ['CombatQuickPanel', 'EncounterBuilder', 'CombatPresetDialog', 'DifficultyCalculatorDialog', 'NPCThreatScalerDialog'];
 
+// Subtlety adjuster flows exercised by tests/e2e/subtlety.spec.ts. Pushes
+// source-code coverage on src/module/rules/subtlety-adjusters.ts
+// (`clampSubtletyLoss`, `isSubtletyPrimitive`, the primitive branches in
+// `subtletySourceLabel`), src/module/data/shared/subtlety-adjuster.ts
+// (`subtletyAdjusterEffectOf` — `none` / `clamp` / `passive` / `event`
+// branches), and src/module/data/shared/subtlety-adjuster-template.ts
+// (`defineSchema()` + the `subtletyAdjusterEffect` getter). Indirectly drives
+// `applySubtlety` / `applySubtletyFromSource` / `collectSubtletyAdjusters`
+// on base-actor.ts. Keys MUST match the recordCoverage('subtlety.flow', ...)
+// calls in the spec.
+const SUBTLETY_FLOWS = ['subtlety-baseline', 'subtlety-manual-adjustment', 'subtlety-inquest-adjustment', 'talent-subtlety-delta-applies', 'talent-subtlety-requiresEquipped', 'subtlety-minAbsoluteDelta-floors', 'subtlety-clears-when-removed'];
+
+// Damage / health / fatigue / fate pipeline flows exercised by
+// tests/e2e/damage.spec.ts. Drives source-code coverage on
+// `src/module/documents/base-actor.ts` (applyFatigue, fate getters),
+// `src/module/documents/acolyte.ts` (spendFate override), and
+// `src/module/documents/npc.ts` (applyDamage + healWounds). Keys MUST
+// match the recordCoverage('damage.flow', ...) calls in the spec.
+const DAMAGE_FLOWS = [
+    'deal-damage-reduces-wounds',
+    'wounds-zero-marks-critical',
+    'fatigue-accumulation',
+    'fate-spend-decrements-value',
+    'fate-burn-decrements-max',
+    'wound-recovery',
+    'multi-step-damage-fatigue',
+];
+
+// Modifier / equipment-effect pipeline flows exercised by
+// tests/e2e/modifiers.spec.ts. Each key embeds an item (talent / armour /
+// weapon / gear) that contributes modifiers via ModifiersTemplate or a
+// transferred ActiveEffect, then reads the actor's prepared derived data to
+// confirm the change lands. Pushes source-code coverage on
+// `src/module/data/shared/modifiers-template.ts`,
+// `src/module/data/actor/templates/creature.ts` (_computeItemModifiers,
+// _applyItemModifiers, _applyModifiersToCharacteristics,
+// _applyModifiersToSkills, _computeArmour) and
+// `src/module/utils/armour-calculator.ts`. Keys MUST match the
+// recordCoverage('modifier.flow', ...) calls in the spec.
+const MODIFIER_FLOWS = [
+    'talent-modifier-applies',
+    'armour-equipped-grants-AP',
+    'weapon-equipped-active-effect',
+    'unequip-removes-modifier',
+    'stackable-modifier-stacks',
+    'modifier-on-skill',
+    'modifier-condition-applied',
+];
+
 if (inventory) {
     // validActorTypeSystemPairs is the per-system-prefixed enumeration —
     // `dh2-character::dh2e` counts, `dh2-character::bc` does not (would never
@@ -389,6 +438,60 @@ recordDimension('active-effect.flow', covered['active-effect.flow'], ACTIVE_EFFE
 // dialog, difficulty calculator dialog, NPC threat scaler dialog).
 recordDimension('combat.flow', covered['combat.flow'], COMBAT_FLOWS);
 recordDimension('combat.ui', covered['combat.ui'], COMBAT_UI_CLASSES);
+
+// Subtlety adjuster dimension exercised by tests/e2e/subtlety.spec.ts.
+// Direction #7: per-flow drive of the content-agnostic adjuster surface
+// (manual / inquest primitives, talent-borne event / passive / clamp
+// adjusters with the equip gate and loss floor, post-delete teardown).
+recordDimension('subtlety.flow', covered['subtlety.flow'], SUBTLETY_FLOWS);
+
+// Damage pipeline dimension exercised by tests/e2e/damage.spec.ts.
+// Drives source-code coverage on `src/module/documents/base-actor.ts`,
+// `src/module/documents/acolyte.ts`, and `src/module/documents/npc.ts`
+// (applyDamage / applyFatigue / spendFate / healWounds + the
+// `prepareDerivedData` paths re-run on every actor.update).
+recordDimension('damage.flow', covered['damage.flow'], DAMAGE_FLOWS);
+
+// Modifier / equipment-effect pipeline dimension exercised by
+// tests/e2e/modifiers.spec.ts. Pushes source-code coverage on the
+// modifier-template + creature.prepareEmbeddedData chain (talent/trait/
+// condition modifiers, equippable AP aggregation, transferred AEs, and
+// the unequip rollback path that re-runs _computeItemModifiers on item
+// update).
+recordDimension('modifier.flow', covered['modifier.flow'], MODIFIER_FLOWS);
+
+// XP gain + advancement flows exercised by tests/e2e/xp-advancement.spec.ts.
+// Each key is a recordCoverage('xp.flow', ...) call in the spec. Pushes
+// source-code coverage on character.ts experience schema / _prepareExperience
+// / _computeExperienceSpent, creature.ts skill schema + _prepareSkills, and
+// the AdvancementDialog + AddXPDialog application classes.
+const XP_FLOWS = [
+    'xp-earned-increments',
+    'xp-spent-tracks',
+    'xp-remaining-calculates',
+    'add-xp-prompt-render',
+    'advancement-dialog-render',
+    'purchase-talent-grants-modifier',
+    'purchase-skill-advance',
+];
+recordDimension('xp.flow', covered['xp.flow'], XP_FLOWS);
+
+// Data-migration and compendium-resync flows exercised by
+// tests/e2e/migrations.spec.ts. Pushes source-code coverage on
+// `src/module/wh40k-rpg-migrations.ts` (checkAndMigrateWorld baseline write),
+// `src/module/compendium-resync.ts` (resyncWorldFromCompendiums + name-index
+// build path via getNameIndexFor), and DataModel `_migrateData` overrides
+// (TalentData prerequisites/aptitudes/specialization migration). Keys MUST
+// match the recordCoverage('migration.flow', ...) calls in the spec.
+const MIGRATION_FLOWS = [
+    'talent-prerequisites-string-migrates-to-structured',
+    'active-effect-label-migrates-to-name',
+    'system-version-migration-runs',
+    'compendium-resync-runs',
+    'icon-deprecation-migrates-to-img',
+    'migration-doesnt-break-existing-records',
+];
+recordDimension('migration.flow', covered['migration.flow'], MIGRATION_FLOWS);
 
 recordDimension('dh2.fate', covered['dh2.fate'], ['fate-track']);
 recordDimension('dh2.corruption', covered['dh2.corruption'], ['corruption-track']);
