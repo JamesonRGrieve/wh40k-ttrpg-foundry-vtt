@@ -1304,12 +1304,21 @@ export default class CharacterSheet extends BaseActorSheet {
         loadoutContext.gearCount = loadoutContext.gearItems.length;
         loadoutContext.equippedCount = loadoutContext.equippedItems.length;
 
-        // Encumbrance percentage for bar
-        const enc = this.actor.encumbrance;
-        const encMax = enc.max || 1;
-        loadoutContext.encumbrancePercent = Math.min(100, Math.round((enc.value / encMax) * 100));
+        this._prepareEncumbrancePercents(loadoutContext);
+    }
 
-        // Backpack fill percentage
+    /**
+     * Compute encumbrance + backpack fill percentages for the loadout bar.
+     * Split out so NPCSheet (which inherits this whole loadout pipeline but
+     * whose underlying WH40KNPC document has no `encumbrance` getter) can
+     * skip it. The `'encumbrance' in this.actor` guard reflects the real
+     * domain: only PC-like actors (WH40KAcolyte) track encumbrance.
+     */
+    protected _prepareEncumbrancePercents(loadoutContext: { encumbrancePercent?: number; backpackPercent?: number }): void {
+        if (!('encumbrance' in this.actor)) return;
+        const enc = (this.actor as { encumbrance: { max?: number; value?: number; backpack_max?: number; backpack_value?: number } }).encumbrance;
+        const encMax = enc.max || 1;
+        loadoutContext.encumbrancePercent = Math.min(100, Math.round(((enc.value ?? 0) / encMax) * 100));
         const backpackMax = enc.backpack_max ?? 1;
         loadoutContext.backpackPercent = Math.min(100, Math.round(((enc.backpack_value ?? 0) / backpackMax) * 100));
     }
@@ -1333,6 +1342,9 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /** Calculate dodge and parry reaction targets from skills and characteristics. */
     #prepareCombatReactionTargets(sheetContext: CharacterSheetContext): void {
+        // NPCs don't carry the skills/characteristics shape that drives dodge
+        // and parry targets — bail rather than dereferencing undefined.
+        if (!('skills' in this.actor) || !('characteristics' in this.actor)) return;
         const skills = this.actor.skills;
         const chars = this.actor.characteristics;
 
@@ -1574,17 +1586,27 @@ export default class CharacterSheet extends BaseActorSheet {
             : [];
         prepared.acquisitions = acquisitions;
 
-        prepared.wounds = {
-            total: this.actor.wounds.max,
-            current: this.actor.wounds.value,
-            critical: this.actor.wounds.critical,
-            fatigue: this.actor.fatigue.value,
-        };
-        prepared.fate = {
-            total: this.actor.fate.max,
-            current: this.actor.fate.value,
-            threshold: this.actor.fate.threshold,
-        };
+        // Wounds/fatigue/fate live on Acolyte-shaped actors; NPCs (which
+        // share this sheet's prepare pipeline) don't define those getters.
+        // Skip the rollup for them rather than crashing the render.
+        if ('wounds' in this.actor && 'fate' in this.actor && 'fatigue' in this.actor) {
+            const a = this.actor as {
+                wounds: { max: number; value: number; critical: number };
+                fate: { max: number; value: number; threshold: number };
+                fatigue: { value: number };
+            };
+            prepared.wounds = {
+                total: a.wounds.max,
+                current: a.wounds.value,
+                critical: a.wounds.critical,
+                fatigue: a.fatigue.value,
+            };
+            prepared.fate = {
+                total: a.fate.max,
+                current: a.fate.value,
+                threshold: a.fate.threshold,
+            };
+        }
 
         return prepared;
     }
