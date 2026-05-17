@@ -715,6 +715,12 @@ const HELPER_FLOWS = [
     'handlebars-uuid-expand',
     'i18n-t-wrapper',
     'enricher-@UUID-resolves',
+    // Extended in round-8 to push helpers/* coverage on the two modules
+    // no other Tier B spec touched (skill-uuid-helper.ts at 0% / 40.9%,
+    // helpers/effects.ts at 0% / 50.8%).
+    'skill-uuid-helper-parseSkillName',
+    'skill-uuid-helper-findSkillUuid',
+    'helpers-effects-summarizeChange',
 ];
 recordDimension('helper.flow', covered['helper.flow'], HELPER_FLOWS);
 
