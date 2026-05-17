@@ -8,13 +8,18 @@
     "TS2353",
     "TS2416",
     "TS2417",
+    "TS2448",
+    "TS2454",
     "TS2510",
     "TS2545",
     "TS2749"
   ],
   "config": "tsconfig.test.json",
   "totals": {
-    "totalErrors": 0
+    "totalErrors": 4
   },
-  "byCode": {}
+  "byCode": {
+    "TS1117": 2,
+    "TS7016": 2
+  }
 }
