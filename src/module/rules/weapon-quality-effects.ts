@@ -76,6 +76,16 @@ type QualitySummaryContext = 'attack' | 'parry' | 'damage' | 'penetration' | 'ri
 /*  Quality Effect Constants                    */
 /* -------------------------------------------- */
 
+/** Save-and-effect shape used by qualities that trigger a defender save on hit (Concussive, Shocking, Snare, etc.). */
+export interface WeaponQualityHitEffect {
+    requiresSave: 'agility' | 'toughness' | 'willpower';
+    failEffect: 'stunned' | 'snared' | 'prone' | 'burning';
+    /** Static round count, OR true if the X parameter on the quality scales it. */
+    stunRoundsVariable?: boolean;
+    /** Static round count when not variable. */
+    stunRounds?: number;
+}
+
 /**
  * Phase 1 weapon quality definitions
  */
@@ -222,23 +232,50 @@ export const WEAPON_QUALITY_EFFECTS = {
     // tracked here so GMs see the canonical mechanic; the engine does not
     // automate them and they should be resolved narratively (or via a
     // future per-quality issue).
-    'blast': { type: 'description-only', description: 'Hits all targets within X metres of the impact point.' },
-    'concussive': { type: 'description-only', description: 'On a hit, target makes a Toughness test or is stunned for X rounds.' },
+    'blast': {
+        type: 'template',
+        description: 'Hits all targets within X metres of the impact point.',
+        template: 'sphere',
+        radiusVariable: true,
+    },
+    'concussive': {
+        type: 'hit-effect',
+        description: 'On a hit, the target makes a Toughness test or is Stunned for X rounds.',
+        hitEffect: { requiresSave: 'toughness', failEffect: 'stunned', stunRoundsVariable: true } satisfies WeaponQualityHitEffect,
+    },
     'corrosive': { type: 'description-only', description: 'Damage rolls a d10 against armour; armour loses that many points.' },
     'crippling': { type: 'description-only', description: 'If wounded, target gains the Crippled condition until healed.' },
     'flame': { type: 'description-only', description: 'On any failed Agility test against the attack, the target catches fire.' },
-    'flexible': { type: 'description-only', description: 'Cannot be parried.' },
+    'flexible': { type: 'parry', cannotBeParried: true, description: 'This weapon cannot be parried.' },
     'graviton': { type: 'description-only', description: 'On a hit, target makes a Strength test or falls Prone; vehicles must Agility test or skid.' },
     'hallucinogenic': { type: 'description-only', description: 'Toughness test or roll on the Hallucinogenic table for the duration listed.' },
     'haywire': { type: 'description-only', description: 'On a hit, technological items roll on the Haywire table for X rounds.' },
-    'indirect': { type: 'description-only', description: 'Can be fired without line of sight; +X BS penalty.' },
-    'lance': { type: 'description-only', description: 'Each DoS multiplies Penetration by 1.' },
+    'indirect': {
+        type: 'attack',
+        description: 'Can be fired without line of sight; suffers +X BS penalty.',
+        allowsIndirectFire: true,
+        indirectPenaltyVariable: true,
+    },
+    'lance': { type: 'penetration', description: 'Penetration is multiplied by DoS (minimum 1).' },
     'maximal': { type: 'description-only', description: 'Once per encounter, fire at +2 damage and +2 penetration; weapon Overheats and gains Recharge.' },
     'primitive': { type: 'description-only', description: 'Damage reduced against non-Primitive armour.' },
     'scatter': { type: 'description-only', description: 'Range-banded damage and Penetration: bonus at Point Blank/Short Range, penalty at Long/Extreme.' },
-    'shocking': { type: 'description-only', description: 'On a hit, target makes a Toughness test or is Stunned for 1 round.' },
-    'smoke': { type: 'description-only', description: 'On detonation, creates a smoke cloud X metres across that grants concealment.' },
-    'snare': { type: 'description-only', description: 'On a hit, target makes an Agility test or is Snared (immobilised) until cleared.' },
+    'shocking': {
+        type: 'hit-effect',
+        description: 'On a hit, the target makes a Toughness test or is Stunned for 1 round.',
+        hitEffect: { requiresSave: 'toughness', failEffect: 'stunned', stunRounds: 1 } satisfies WeaponQualityHitEffect,
+    },
+    'smoke': {
+        type: 'template',
+        description: 'On detonation, creates a smoke cloud X metres across that grants concealment.',
+        template: 'concealment-cloud',
+        radiusVariable: true,
+    },
+    'snare': {
+        type: 'hit-effect',
+        description: 'On a hit, the target makes an Agility test or is Snared (immobilised) until cleared.',
+        hitEffect: { requiresSave: 'agility', failEffect: 'snared' } satisfies WeaponQualityHitEffect,
+    },
     'spray': { type: 'description-only', description: 'No BS test required; all targets in a cone make an Agility test to avoid being hit.' },
     'toxic': { type: 'description-only', description: 'On a wound, target makes a Toughness test or takes additional damage; severity varies by X.' },
 };
@@ -395,6 +432,17 @@ export function canWeaponParry(weapon: QualityItem | null | undefined): boolean 
 }
 
 /**
+ * Check whether an attacker's weapon prevents the defender from parrying.
+ * Flexible weapons (e.g. whips, chains) cannot be parried by any defender
+ * regardless of the defender's own weapon. Mirrors the wielder-side
+ * `cannotParry` check on Unwieldy.
+ */
+export function attackerWeaponPreventsParry(attackerWeapon: QualityItem | null | undefined): boolean {
+    if (!attackerWeapon) return false;
+    return weaponHasQuality(attackerWeapon, 'flexible');
+}
+
+/**
  * Get parry penalty for the attacker's weapon (when being parried).
  * Some qualities (like Fast) impose penalties on enemies trying to parry.
  *
@@ -446,6 +494,15 @@ export function calculateQualityPenetrationModifiers(damageContext: PenetrationC
     // a separate line), guarding against missing DoS context.
     if (weaponHasQuality(weapon, 'razor-sharp') && (damageContext.dos ?? 0) >= 2) {
         modifiers['Razor Sharp'] = basePenetration;
+    }
+
+    // Lance: Penetration is multiplied by DoS (minimum 1). 1 DoS yields no
+    // bonus; 2 DoS doubles (×2); 3 DoS triples (×3); etc. We emit the
+    // additive delta (basePen × (dos - 1)) so the existing additive-modifier
+    // pipeline produces total = basePen + basePen*(dos-1) = basePen*dos.
+    const lanceDos = damageContext.dos ?? 0;
+    if (weaponHasQuality(weapon, 'lance') && lanceDos >= 2) {
+        modifiers['Lance'] = basePenetration * (lanceDos - 1);
     }
 
     return modifiers;
