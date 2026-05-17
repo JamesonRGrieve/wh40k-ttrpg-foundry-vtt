@@ -1,5 +1,5 @@
 {
-  "passed": 62,
+  "passed": 70,
   "dimensions": {
     "actor.type-system": 100,
     "actor.sheet-render": 100,
@@ -35,18 +35,18 @@
     "dh2.elite-advance": 100,
     "origin-builder.flow": 100,
     "per-system.flow": 100,
-    "wealth.flow": 0,
+    "wealth.flow": 85.71,
     "compendium-browser.flow": 62.5,
-    "managers.flow": 0,
-    "helper.flow": 0,
-    "calculator.flow": 0,
-    "action-manager.flow": 0,
-    "scene-hud.flow": 0
+    "managers.flow": 28.57,
+    "helper.flow": 100,
+    "calculator.flow": 71.43,
+    "action-manager.flow": 100,
+    "scene-hud.flow": 83.33
   },
   "source": {
-    "lines": 62.82,
-    "statements": 62.82,
-    "functions": 38.73,
-    "branches": 68.75
+    "lines": 63.81,
+    "statements": 63.81,
+    "functions": 40.34,
+    "branches": 68.22
   }
 }
