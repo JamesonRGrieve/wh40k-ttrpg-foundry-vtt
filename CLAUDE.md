@@ -77,12 +77,13 @@ Every direction in the previous section is backed by a coverage script and a rat
 | Dead `tailwind/*.js` rules (no live `wh40k-*` consumer) | `pnpm css:plugin-audit` | hard gate (no ratchet) | — |
 | i18n key codegen freshness | `pnpm i18n:check` | hard gate (auto-regen pre-commit) | — |
 | `pnpm-lock.yaml` resolution host allow-list | `pnpm lockfile:validate` | hard gate (no ratchet) | — |
+| Tier B e2e: `passed` count + per-dimension % + source coverage (lines / statements / functions / branches). Per-dimension **auto-flips to strict at 100%**. Not in pre-commit; runs in the licensed CI lane only. | `pnpm e2e:coverage` | `pnpm e2e:ratchet` | `.e2e-baseline` |
 
 The hard gates (preload-drift, plugin-audit, i18n, lockfile-validate) cannot be ratcheted because regression is a real bug, not a velocity tradeoff. Fix the underlying issue. The plugin-audit gate specifically guards against the addBase dedup trap: a rule that's "dead by class" is invisible at the source level but a rule that's "dead by cascade" silently shadows live rules — extending the audit to walk nested selectors keeps the lights-on selector inventory honest.
 
 #### Auto-flip semantics ("graduates to strict")
 
-Several ratchets (`ts:ratchet`, `strict:ratchet`, `test:typecheck:ratchet`, `knip:ratchet`, `deps:ratchet`, `type-coverage:ratchet`) implement the same auto-flip pattern: when a per-rule / per-code / per-category count reaches 0, the baseline file records it in `"strict": [...]` and any future occurrence is a **hard fail** with no `--update` escape hatch. The ratchet continues to function normally for everything still above 0.
+Several ratchets (`ts:ratchet`, `strict:ratchet`, `test:typecheck:ratchet`, `knip:ratchet`, `deps:ratchet`, `type-coverage:ratchet`, `e2e:ratchet`) implement the same auto-flip pattern: when a per-rule / per-code / per-category count reaches 0 (or, for `e2e:ratchet`, when a per-dimension percentage reaches 100), the baseline file records it in `"strict": [...]` and any future occurrence is a **hard fail** with no `--update` escape hatch. The ratchet continues to function normally for everything still above 0.
 
 This is the explicit shape of "ratchet → hard gate" promotion: a metric earns its way into hard-gate status by being driven to 0, and once there the invariant is enforced like any other hard gate. The promotion is automatic the next time the ratchet runs — no separate config change needed. To un-strict a metric you must manually edit the baseline file and explain why in the commit; it's an explicit demotion, not a quiet revert.
 
@@ -90,6 +91,7 @@ State at the time of writing:
   - `tsIgnore` (under `ts:ratchet`) has already graduated. `@ts-ignore` is forbidden — use `@ts-expect-error` with an inline reason.
   - `knip:ratchet` has graduated `binaries`, `classMembers`, `enumMembers`, `namespaceMembers`, `optionalPeerDependencies`, `unlisted`, `unresolved`.
   - `strict:ratchet`, `test:typecheck:ratchet`, `deps:ratchet`, `type-coverage:ratchet` have no graduations yet — they ratchet down from initial baselines.
+  - `e2e:ratchet` graduates each dimension that reaches 100%; the next `--update` records the graduation in `.e2e-baseline`'s `strict` list and locks the dimension at 100% thereafter.
 
 #### Strict-flag tsconfig (`tsconfig.strict.json`)
 
