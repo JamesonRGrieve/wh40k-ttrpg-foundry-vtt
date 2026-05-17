@@ -1,0 +1,15 @@
+{
+  "passed": 11,
+  "dimensions": {
+    "actor.type-system": 4.55,
+    "actor.sheet-render": 4.55,
+    "item.type": 85.37,
+    "item.sheet-render": 85.37
+  },
+  "source": {
+    "lines": 53.91,
+    "statements": 53.91,
+    "functions": 24.19,
+    "branches": 63.89
+  }
+}

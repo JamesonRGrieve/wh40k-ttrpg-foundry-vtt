@@ -7,6 +7,7 @@ Thumbs.db
 ## Libraries
 src/module/foundry-core
 .foundry-release/
+.foundry-test-data/
 
 ## Build Output
 node_modules
@@ -57,6 +58,12 @@ playwright-report/
 .compendium-uuid-index.json
 .compendium-uuid-migration.json
 .integration-coverage.json
+.e2e-coverage.json
+.e2e-results.json
+.e2e-inventory.json
+.e2e-runtime-coverage.jsonl
+.e2e-raw-coverage/
+.e2e-source-coverage/
 
 ## Stray TypeScript transpile output (source-of-truth is the .ts files)
 stories/**/*.js

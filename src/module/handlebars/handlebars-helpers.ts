@@ -122,6 +122,29 @@ export function registerHandlebarsHelpers(): void {
         return themeClassFor(systemId, role);
     });
 
+    /**
+     * Foundry V11-era `{{#select value}}…<option>…</option>…{{/select}}` block
+     * helper. Removed in V14 core but still referenced by several item
+     * templates here (cybernetic, etc.). Re-registers it as a shim so those
+     * templates render without re-authoring; new templates should prefer
+     * `{{selectOptions options selected=value}}` instead.
+     *
+     * Why: vault content + sheets that already use the block form would
+     * silently break under V14 with "Missing helper: select" otherwise.
+     */
+    Handlebars.registerHelper('select', function selectHelper(this: TplValue, selected: TplValue, options: { fn: (ctx: TplValue) => string }): string {
+        const html = options.fn(this);
+        const target = String(selected ?? '');
+        // Match `<option ... value="X"` and append `selected` if it matches the
+        // target. Tolerates single/double quotes and incidental attributes.
+        return html.replace(/<option([^>]*?)value=(["'])(.*?)\2([^>]*)>/g, (_match, before: string, q: string, value: string, after: string) => {
+            const alreadySelected = /\bselected\b/.test(before) || /\bselected\b/.test(after);
+            const isMatch = value === target;
+            const tail = alreadySelected || !isMatch ? '' : ' selected';
+            return `<option${before}value=${q}${value}${q}${after}${tail}>`;
+        });
+    });
+
     Handlebars.registerHelper('isPsychicAttack', (power: TplValue): boolean => {
         if (!isTplObject(power)) return false;
         const sys = power['system'];
