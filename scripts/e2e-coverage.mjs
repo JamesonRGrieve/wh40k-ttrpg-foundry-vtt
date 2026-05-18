@@ -1016,6 +1016,32 @@ const RULE_OCCULT_FLOWS = [
 ];
 recordDimension('rule-occult.flow', covered['rule-occult.flow'], RULE_OCCULT_FLOWS);
 
+// Fifth batch of pure-logic rules flows exercised by
+// tests/e2e/rules-tactical.spec.ts. Each key maps to a side-effect-free
+// tactical / registry resolver on a rules/ module that no other Tier B
+// spec drives directly. Several of these modules ship NO vitest unit
+// test, so they were at 0% on every coverage surface before this spec
+// landed. Pushes source-code coverage on
+// `src/module/rules/{aim,altitude,attack-specials,explication,
+// medicae-mechadendrite,combat-actions,daemon-weapon,daemonhost}.ts`.
+// Keys MUST match the recordCoverage('rule-tactical.flow', ...) calls
+// in the spec.
+const RULE_TACTICAL_FLOWS = [
+    'aim-modifiers',
+    'aim-calculateBonus',
+    'altitude-canChange',
+    'altitude-profiles',
+    'attack-specials-list',
+    'attack-specials-names',
+    'explication-breakthroughsCrossed',
+    'explication-isComplete',
+    'medicae-mechadendrite-data',
+    'combat-actions-all',
+    'daemon-weapon-profiles',
+    'daemonhost-tiers',
+];
+recordDimension('rule-tactical.flow', covered['rule-tactical.flow'], RULE_TACTICAL_FLOWS);
+
 // Roll-data plumbing flows exercised by tests/e2e/rolls-data.spec.ts. Drives
 // source-code coverage on `src/module/rolls/assign-damage-data.ts` (the
 // damage allocator's reduce-then-distribute branch matrix between wounds,
