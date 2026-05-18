@@ -245,6 +245,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/grenade-throw-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/radical-services-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/radical-services-chat.hbs',
+            'systems/wh40k-rpg/templates/prompt/beyond-homeworld-info-dialog.hbs',
 
             // Item sheet templates
             'systems/wh40k-rpg/templates/item/item-sheet.hbs',
