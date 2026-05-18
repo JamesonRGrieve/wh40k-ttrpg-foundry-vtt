@@ -95,7 +95,7 @@ export default class BeyondHomeworldInfoDialog extends ApplicationV2Mixin(Applic
         classes: ['wh40k-rpg', 'dialog', 'beyond-homeworld-info-dialog'],
         position: {
             width: 720,
-            height: 'auto',
+            height: 'auto' as unknown as number,
         },
         window: {
             title: 'WH40K.BeyondHomeworld.DialogTitle',

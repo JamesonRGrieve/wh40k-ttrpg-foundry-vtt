@@ -1021,6 +1021,40 @@
             "AppliedMessage": "The Mutant background has been applied to",
             "ConvertMalignancy": "Convert Failed Malignancy"
         },
+        "MutationRoll": {
+            "DialogTitle": "Roll Mutation",
+            "ChatTitle": "Mutation",
+            "MinorTrack": "Minor Mutation",
+            "MajorTrack": "Major Mutation",
+            "RollButton": "Roll Mutation",
+            "MutationLabel": "Mutation",
+            "EffectLabel": "Effect",
+            "NoMutation": "No mutation (re-roll)",
+            "VisibleFlag": "Visible",
+            "HiddenFlag": "Hidden"
+        },
+        "DisorderRoll": {
+            "DialogTitle": "Roll Mental Disorder",
+            "ChatTitle": "Mental Disorder",
+            "SeverityLabel": "Severity",
+            "Minor": "Minor",
+            "Severe": "Severe",
+            "Acute": "Acute",
+            "RollButton": "Roll Disorder",
+            "DisorderLabel": "Disorder",
+            "EffectLabel": "Effect"
+        },
+        "Grapple": {
+            "PanelTitle": "Grapple",
+            "StateNone": "Not Grappling",
+            "StateGrappling": "Grappling",
+            "StateControlled": "Controlled",
+            "DamageOpponent": "Damage Opponent",
+            "ThrowDownOpponent": "Throw Down Opponent",
+            "BreakFree": "Break Free",
+            "StandUp": "Stand Up",
+            "Move": "Move While Grappling"
+        },
         "IncorruptibleDevotion": {
             "DialogTitle": "Convert Corruption to Insanity (Adepta Sororitas)",
             "Description": "Your unwavering faith arms you against the Ruinous Powers. You may refuse this taint, taking the spiritual toll on your mind instead.",
