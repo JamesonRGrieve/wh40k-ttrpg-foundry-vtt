@@ -126,10 +126,10 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[]; page
                 const mod = await import(`${base}/config/advancements/index.js`);
 
                 try {
-                    const careers = mod.getAvailableCareers?.();
+                    const careers = mod.getAvailableCareers?.() as ReadonlyArray<{ key?: unknown }> | undefined;
                     record(
                         'advancements-getAvailableCareers',
-                        Array.isArray(careers) && careers.length > 0 && typeof careers[0]?.key === 'string',
+                        Array.isArray(careers) && careers.length > 0 && typeof (careers[0] as { key?: unknown } | undefined)?.key === 'string',
                         `count=${careers?.length}`,
                     );
                 } catch (err) {

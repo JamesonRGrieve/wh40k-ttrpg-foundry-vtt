@@ -239,7 +239,7 @@ export function allCombatActions(): CombatAction[] {
         },
         {
             name: 'Reload',
-            type: ['Half', 'Full', '2Full'],
+            type: ['Half', 'Full'],
             subtype: ['Miscellaneous'],
             description:
                 'Reload a ranged weapon - the time necessary depends on the specific weapon. If a reload action extends across multiple turns, it counts as being Extended, and is subject to additional tests or interruptions.',
@@ -248,9 +248,9 @@ export function allCombatActions(): CombatAction[] {
             name: 'Semi-Auto Burst',
             type: ['Half'],
             subtype: ['Attack', 'Ranged'],
-            description: 'Grants +10 BS, additional hit for every two additional DoS; jam on 94+; 2m spread.',
+            description: 'Grants +0 BS, additional hit for every two additional DoS; jam on 94+; 2m spread.',
             attack: {
-                modifier: 10,
+                modifier: 0,
             },
         },
         {
