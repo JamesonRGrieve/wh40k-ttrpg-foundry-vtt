@@ -20,6 +20,13 @@ const rng = seedRandom(0x7a1e47);
 
 function makeCtx(overrides: Record<string, unknown> = {}) {
     const id = randomId('talent', rng);
+    // The talent sheet template gates each tab panel on `(eq activeTab "<id>")`
+    // — `activeTab` is set at runtime from `this.tabGroups.primary` in
+    // `TalentSheet._prepareContext`. Without it the story renders every panel
+    // simultaneously (the issue-201 "duplicate Benefit" symptom). Stories that
+    // need a different active tab should pass `activeTab: '<tab-id>'` via the
+    // overrides argument.
+    const activeTab = (overrides as { activeTab?: string }).activeTab ?? 'overview';
     const item = mockItem({
         _id: id,
         id,
@@ -90,11 +97,12 @@ function makeCtx(overrides: Record<string, unknown> = {}) {
         isOwnedByActor: false,
         effects: [],
         tabs: {
-            overview: { id: 'overview', tab: 'overview', group: 'primary', active: true, cssClass: 'active' },
-            effects: { id: 'effects', tab: 'effects', group: 'primary', active: false, cssClass: '' },
-            properties: { id: 'properties', tab: 'properties', group: 'primary', active: false, cssClass: '' },
-            description: { id: 'description', tab: 'description', group: 'primary', active: false, cssClass: '' },
+            overview: { id: 'overview', tab: 'overview', group: 'primary', active: activeTab === 'overview', cssClass: activeTab === 'overview' ? 'active' : '' },
+            effects: { id: 'effects', tab: 'effects', group: 'primary', active: activeTab === 'effects', cssClass: activeTab === 'effects' ? 'active' : '' },
+            properties: { id: 'properties', tab: 'properties', group: 'primary', active: activeTab === 'properties', cssClass: activeTab === 'properties' ? 'active' : '' },
+            description: { id: 'description', tab: 'description', group: 'primary', active: activeTab === 'description', cssClass: activeTab === 'description' ? 'active' : '' },
         },
+        activeTab,
         ...overrides,
     };
 }

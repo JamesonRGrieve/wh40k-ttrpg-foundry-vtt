@@ -771,8 +771,23 @@ export function renderTemplate<T>(template: HandlebarsTemplateDelegate, context:
     // under the theme-dark scope so foundry2.css's variables, reset, and chrome cascade
     // through correctly. With Foundry's own CSS imported in preview.ts, no inline styling
     // is needed — the deployed look comes from the cascade layers in foundry2.css.
+    //
+    // `wh40k-rpg` on the wrapper is critical: `tailwind.config.js` sets
+    // `important: '.wh40k-rpg'`, which scopes EVERY generated `tw-*` utility to
+    // that ancestor (see CLAUDE.md "Adaptation procedure 3a"). Without it,
+    // templates that use Tailwind utilities (including `[&:not(.active)]:tw-hidden`
+    // for tab panel hiding, `tw-text-gold`, panel contrast classes, etc.) silently
+    // render unstyled — the root cause behind earlier #19 / #191 / #201 / #205
+    // screenshot regressions where all tab panels rendered simultaneously and
+    // text contrast collapsed.
+    //
+    // `data-wh40k-system="dh2e"` activates the per-system Tailwind variants
+    // (`dh2e:tw-text-bronze`, etc.) so stories that exercise system-aware
+    // theming render the active system's palette. Story-level overrides may
+    // re-assign this attribute (e.g. for Rogue Trader or Black Crusade).
     const wrap = document.createElement('div');
-    wrap.className = 'theme-dark wh40k-wrapper';
+    wrap.className = 'theme-dark wh40k-rpg wh40k-wrapper';
+    wrap.setAttribute('data-wh40k-system', 'dh2e');
     wrap.innerHTML = `
         <div class="app window-app sheet" data-appid="0">
             <section class="window-content">${template(context)}</section>
