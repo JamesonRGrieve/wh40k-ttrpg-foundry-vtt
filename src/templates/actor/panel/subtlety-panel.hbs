@@ -1,0 +1,93 @@
+{{!--
+    Warband Subtlety panel (DH2 — #87).
+
+    Surfaces `system.subtlety.{value,max}` plus the actor's currently-
+    collected Subtlety adjusters (from `actor.collectSubtletyAdjusters()`,
+    exposed on the sheet context as `subtletyAdjusters`). Each adjuster row
+    shows its label and either a signed delta (`passive` / `event`) or its
+    minimum-retained-loss clamp (`clamp`).
+
+    Above the list, a GM-only stepper (+1 / −1) drives
+    `WH40KBaseActor.applySubtlety(±N, 'manual')` via two sheet actions
+    declared on CharacterSheet:
+      - `adjustSubtletyManually` (reads data-delta)
+      - `viewSubtletyBreakdown`  (opens a popout breakdown — wired by
+        the sheet action; intentionally minimal here as a stretch
+        affordance attached to the header).
+
+    Rendered only for DH2 actors; the include in tab-status.hbs gates on
+    `actor._gameSystemId === 'dh2e'`.
+--}}
+<section class="wh40k-subtlety-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                dh2e:tw-border-bronze"
+         data-subtlety-value="{{system.subtlety.value}}">
+
+    {{!-- Header: title + value/max readout + breakdown affordance --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-user-secret dh2e:tw-text-bronze"></i>
+            <span>{{localize "WH40K.SubtletyPanel.Header"}}</span>
+        </h3>
+        <span class="wh40k-subtlety-readout tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
+              title="{{localize 'WH40K.SubtletyPanel.Value'}} / {{localize 'WH40K.SubtletyPanel.Max'}}">
+            <span class="wh40k-subtlety-value">{{system.subtlety.value}}</span>
+            <span class="tw-text-[color:var(--wh40k-text-muted)]"> / </span>
+            <span class="wh40k-subtlety-max">{{system.subtlety.max}}</span>
+        </span>
+        <button type="button"
+                class="wh40k-subtlety-breakdown-btn tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-p-0 tw-opacity-70 tw-cursor-pointer hover:tw-opacity-100"
+                data-action="viewSubtletyBreakdown"
+                title="{{localize 'WH40K.SubtletyPanel.BreakdownTitle'}}">
+            <i class="fas fa-circle-info"></i>
+        </button>
+    </header>
+
+    {{!-- GM-only manual stepper --}}
+    {{#if isGM}}
+        <div class="wh40k-subtlety-manual tw-flex tw-items-center tw-justify-center tw-gap-3 tw-py-1">
+            <button type="button"
+                    class="wh40k-subtlety-manual-minus tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100 hover:tw-scale-110 tw-transition-[opacity,transform] tw-duration-200"
+                    data-action="adjustSubtletyManually"
+                    data-delta="-1"
+                    title="{{localize 'WH40K.SubtletyPanel.ManualMinus'}}">
+                <span class="material-icons">remove_circle</span>
+            </button>
+            <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Subtlety.ManualAdjustment"}}</span>
+            <button type="button"
+                    class="wh40k-subtlety-manual-plus tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100 hover:tw-scale-110 tw-transition-[opacity,transform] tw-duration-200"
+                    data-action="adjustSubtletyManually"
+                    data-delta="1"
+                    title="{{localize 'WH40K.SubtletyPanel.ManualPlus'}}">
+                <span class="material-icons">add_circle</span>
+            </button>
+        </div>
+    {{/if}}
+
+    {{!-- Adjuster list --}}
+    <div class="wh40k-subtlety-adjusters tw-flex tw-flex-col tw-gap-1">
+        <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.SubtletyPanel.AdjusterList"}}</span>
+        {{#if subtletyAdjusters.length}}
+            {{#each subtletyAdjusters as |adj|}}
+                <div class="wh40k-subtlety-adjuster-row tw-grid tw-grid-cols-[1fr_auto] tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-bg-[rgba(0,0,0,0.18)] tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2e:tw-border-bronze"
+                     data-adjuster-kind="{{adj.kind}}">
+                    <span class="wh40k-subtlety-adjuster-label tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)] tw-truncate" title="{{adj.label}}">{{adj.label}}</span>
+                    {{#if (eq adj.kind 'clamp')}}
+                        <span class="wh40k-subtlety-adjuster-clamp tw-text-[0.72rem] tw-font-semibold tw-text-[color:var(--wh40k-text-medium)]" title="{{adj.label}}">
+                            <i class="fas fa-shield"></i> {{localize "WH40K.SubtletyPanel.Clamped" value=adj.minAbsoluteDelta}}
+                        </span>
+                    {{else}}
+                        <span class="wh40k-subtlety-adjuster-delta tw-text-[0.85rem] tw-font-bold {{#if (gt adj.delta 0)}}tw-text-success{{else}}tw-text-crimson dh2e:tw-text-crimson-light{{/if}}">
+                            {{#if (gt adj.delta 0)}}+{{/if}}{{adj.delta}}
+                        </span>
+                    {{/if}}
+                </div>
+            {{/each}}
+        {{else}}
+            <div class="wh40k-subtlety-adjusters-empty tw-px-2 tw-py-1 tw-text-[0.75rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
+                {{localize "WH40K.SubtletyPanel.EmptyAdjusters"}}
+            </div>
+        {{/if}}
+    </div>
+</section>

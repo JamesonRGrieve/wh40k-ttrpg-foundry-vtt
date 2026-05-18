@@ -32,6 +32,13 @@
             {{!-- Fate Panel --}}
             {{> systems/wh40k-rpg/templates/actor/panel/fate-panel.hbs}}
 
+            {{!-- Subtlety Panel (#87) — DH2-only warband subtlety pool.
+                 Gate matches `_gameSystemId === 'dh2e'` from CharacterSheet
+                 (`isDH2` is the context flag set in _prepareContext). --}}
+            {{#if isDH2}}
+                {{> systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs}}
+            {{/if}}
+
             {{!-- Movement & Physical Capacity (Full Version) --}}
             {{> systems/wh40k-rpg/templates/actor/panel/movement-panel-full.hbs}}
             

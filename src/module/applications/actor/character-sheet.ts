@@ -273,6 +273,10 @@ export default class CharacterSheet extends BaseActorSheet {
             // Penitent role: Mortification of the Flesh (#94 — within.md p.36)
             'applyMortification': CharacterSheet.#applyMortification,
 
+            // Subtlety panel (#87) — DH2 warband-subtlety stepper + breakdown popout.
+            'adjustSubtletyManually': CharacterSheet.#adjustSubtletyManually,
+            'viewSubtletyBreakdown': CharacterSheet.#viewSubtletyBreakdown,
+
             // Equipment actions
             'toggleEquip': CharacterSheet.#toggleEquip,
             'stowItem': CharacterSheet.#stowItem,
@@ -590,6 +594,15 @@ export default class CharacterSheet extends BaseActorSheet {
         const ruleset = WH40KSettings.getRuleset();
         context.ruleset = ruleset;
         context.isDH2 = isDH2;
+
+        // Subtlety adjusters (#87) — surfaced for the DH2 Subtlety panel template
+        // (`src/templates/actor/panel/subtlety-panel.hbs`). Collected on the
+        // active actor via `WH40KBaseActor.collectSubtletyAdjusters()`; safe to
+        // compute on every render because it's a thin tree-walk of owned items.
+        if (isDH2) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: sheet→template payload; the typed `CollectedAdjuster[]` is widened to fit the free-form CharacterSheetContext shape.
+            (context as Record<string, unknown>)['subtletyAdjusters'] = this.actor.collectSubtletyAdjusters();
+        }
         context.isHomebrew = isDH2 && ruleset === 'homebrew';
         const isRaw = isDH2 && ruleset === 'raw';
         context.isRaw = isRaw;
@@ -3451,6 +3464,49 @@ export default class CharacterSheet extends BaseActorSheet {
     static #viewFateUses(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
         FateUsesDialog.open({
             gameSystem: this._resolveGameSystemId(),
+        });
+    }
+
+    /**
+     * GM-only manual stepper for the Warband Subtlety pool (#87).
+     * Reads `data-delta` (±1) from the clicked button and routes the
+     * adjustment through `WH40KBaseActor.applySubtlety(delta, 'manual')`
+     * so the loss-clamp adjusters discovered by
+     * `collectSubtletyAdjusters()` are honoured uniformly.
+     */
+    static async #adjustSubtletyManually(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        if (!game.user?.isGM) return;
+        const deltaAttr = target.dataset['delta'];
+        if (deltaAttr === undefined || deltaAttr === '') return;
+        const delta = Number.parseInt(deltaAttr, 10);
+        if (!Number.isFinite(delta) || delta === 0) return;
+        await this.actor.applySubtlety(delta, 'manual');
+    }
+
+    /**
+     * Open a read-only popout listing every Subtlety adjuster currently
+     * collected on this actor (#87). Uses Foundry's DialogV2 directly to
+     * keep the surface minimal — the list is computed inline from
+     * `collectSubtletyAdjusters()`.
+     */
+    static #viewSubtletyBreakdown(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
+        const adjusters = this.actor.collectSubtletyAdjusters();
+        const rows = adjusters.length
+            ? adjusters
+                  .map((adj) => {
+                      const right =
+                          adj.kind === 'clamp'
+                              ? game.i18n.format('WH40K.SubtletyPanel.Clamped', { value: String(adj.minAbsoluteDelta) })
+                              : `${adj.delta > 0 ? '+' : ''}${adj.delta}`;
+                      return `<li><strong>${foundry.utils.escapeHTML(adj.label)}</strong> — <span>${foundry.utils.escapeHTML(right)}</span></li>`;
+                  })
+                  .join('')
+            : `<li><em>${game.i18n.localize('WH40K.SubtletyPanel.EmptyAdjusters')}</em></li>`;
+        const content = `<ul class="wh40k-subtlety-breakdown-list">${rows}</ul>`;
+        void dialogV2.prompt({
+            window: { title: game.i18n.localize('WH40K.SubtletyPanel.BreakdownTitle') },
+            content,
+            ok: { label: 'OK' },
         });
     }
 
