@@ -5,6 +5,7 @@
 
 import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
+import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
@@ -12,6 +13,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { summarizeChanges, type EffectChangeRaw } from '../../helpers/effects.ts';
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
+import { canUnleashDaemon, resetSessionUnleash, spendUnleashDaemon, type PossessionSlot } from '../../rules/possession.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/global.d.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
@@ -262,6 +264,10 @@ export default class CharacterSheet extends BaseActorSheet {
             'restoreFate': StatActions.restoreFate,
             'spendFate': StatActions.spendFate,
 
+            // Possession track (#82 — beyond.md p.69)
+            'unleashDaemon': CharacterSheet.#unleashDaemon,
+            'resetPossessionSession': CharacterSheet.#resetPossessionSession,
+
             // Equipment actions
             'toggleEquip': CharacterSheet.#toggleEquip,
             'stowItem': CharacterSheet.#stowItem,
@@ -309,6 +315,11 @@ export default class CharacterSheet extends BaseActorSheet {
             'removeAcquisition': CharacterSheet.#removeAcquisition,
             'openAcquisitionDialog': CharacterSheet.#openAcquisitionDialog,
             'openTransactionDialog': CharacterSheet.#openTransactionDialog,
+
+            // Dark Pact actions (Enemies Beyond p. 72, #84)
+            'adjustPactDisposition': CharacterSheet.#adjustPactDisposition,
+            'togglePactDiscovered': CharacterSheet.#togglePactDiscovered,
+            'togglePactPayment': CharacterSheet.#togglePactPayment,
 
             // Endeavour actions (Rogue Trader)
             'completeObjective': CharacterSheet.#completeObjective,
@@ -2984,6 +2995,83 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
+    /*  Event Handlers - Dark Pacts (#84)           */
+    /* -------------------------------------------- */
+
+    /**
+     * Shift the per-pact disposition by ±n, clamped to [-3..+3] via the
+     * canonical helper in `src/module/rules/dark-pact.ts`. The target button
+     * carries `data-pact-index` (numeric index into `system.pacts`) and
+     * `data-delta` (signed integer).
+     */
+    static async #adjustPactDisposition(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const index = parseInt(target.dataset['pactIndex'] ?? '-1', 10);
+        const delta = parseInt(target.dataset['delta'] ?? '0', 10);
+        if (Number.isNaN(index) || index < 0 || Number.isNaN(delta) || delta === 0) return;
+
+        const pacts = this.actor.system.pacts;
+        if (!Array.isArray(pacts) || index >= pacts.length) return;
+
+        const updated = structuredClone(pacts);
+        const entry = updated[index];
+        if (!entry) return;
+        const current = (entry.disposition ?? 0) as PactDisposition;
+        entry.disposition = adjustPactDisposition(current, delta);
+        await this.actor.update({ 'system.pacts': updated });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle the `discovered` flag for a pact. When flipping from
+     * `false → true`, fire the canonical Subtlety hit through the actor's
+     * `applySubtletyFromSource(pactUuid)` — this is the same path used by
+     * compendium-driven Subtlety adjusters and ensures the
+     * `lastSubtletySource` flag and discovery audit trail are populated
+     * consistently.
+     */
+    static async #togglePactDiscovered(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const index = parseInt(target.dataset['pactIndex'] ?? '-1', 10);
+        if (Number.isNaN(index) || index < 0) return;
+
+        const pacts = this.actor.system.pacts;
+        if (!Array.isArray(pacts) || index >= pacts.length) return;
+
+        const updated = structuredClone(pacts);
+        const entry = updated[index];
+        if (!entry) return;
+        const wasDiscovered = entry.discovered === true;
+        entry.discovered = !wasDiscovered;
+        await this.actor.update({ 'system.pacts': updated });
+
+        // Apply the canonical Subtlety hit only on the false → true edge.
+        if (!wasDiscovered && entry.pactUuid) {
+            await this.actor.applySubtletyFromSource(entry.pactUuid);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle the `paymentCurrent` flag for a pact. Disposition consequences
+     * of missed payments are GM-driven via the disposition stepper; this
+     * handler only flips the bookkeeping flag.
+     */
+    static async #togglePactPayment(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const index = parseInt(target.dataset['pactIndex'] ?? '-1', 10);
+        if (Number.isNaN(index) || index < 0) return;
+
+        const pacts = this.actor.system.pacts;
+        if (!Array.isArray(pacts) || index >= pacts.length) return;
+
+        const updated = structuredClone(pacts);
+        const entry = updated[index];
+        if (!entry) return;
+        entry.paymentCurrent = !(entry.paymentCurrent === true);
+        await this.actor.update({ 'system.pacts': updated });
+    }
+
+    /* -------------------------------------------- */
 
     /**
      * Toggle the `complete` flag on an Endeavour's Objective. Updates the
@@ -3171,6 +3259,74 @@ export default class CharacterSheet extends BaseActorSheet {
                 duration: 5000,
             });
             console.error('Bonus vocalize error:', error);
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Event Handlers - Possession Track (#82)     */
+    /* -------------------------------------------- */
+
+    /**
+     * Read the actor's possession slot, defaulting any missing field so the
+     * pure helpers in `module/rules/possession.ts` always see a complete
+     * shape. Centralized so both action methods stay tight.
+     * @returns {PossessionSlot}
+     * @private
+     */
+    _readPossessionSlot(): PossessionSlot {
+        const raw = (this.actor.system as { possession?: Partial<PossessionSlot> } | undefined)?.possession;
+        const state = raw?.state ?? 'none';
+        const unleashUsed = typeof raw?.unleashUsed === 'number' ? raw.unleashUsed : 0;
+        const unleashMax = typeof raw?.unleashMax === 'number' ? raw.unleashMax : 0;
+        return { state, unleashUsed, unleashMax };
+    }
+
+    /**
+     * Spend one Unleash Daemon charge for the current session. Routes
+     * through the pure `spendUnleashDaemon` helper to keep parity with the
+     * engine; no-ops with a warning when the actor is in the `none` state
+     * or has exhausted their per-session uses.
+     * @this {CharacterSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #unleashDaemon(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            const slot = this._readPossessionSlot();
+            if (!canUnleashDaemon(slot)) {
+                this._notify('warning', game.i18n.localize('WH40K.Possession.UnleashUnavailable'), { duration: 3000 });
+                return;
+            }
+            const next = spendUnleashDaemon(slot);
+            await this._updateSystemField('system.possession.unleashUsed', next.unleashUsed);
+            this._notify('info', game.i18n.localize('WH40K.Possession.UnleashSpent'), { duration: 2500 });
+        } catch (error) {
+            this._notify('error', `Failed to unleash daemon: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Unleash daemon error:', error);
+        }
+    }
+
+    /**
+     * Reset the per-session Unleash Daemon counter to zero. GM-only — the
+     * button only renders for GM users in the template, but we still gate
+     * server-side in case the action is dispatched via console.
+     * @this {CharacterSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #resetPossessionSession(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            if (!game.user?.isGM) {
+                this._notify('warning', game.i18n.localize('WH40K.Possession.ResetGmOnly'), { duration: 3000 });
+                return;
+            }
+            const slot = this._readPossessionSlot();
+            const next = resetSessionUnleash(slot);
+            await this._updateSystemField('system.possession.unleashUsed', next.unleashUsed);
+            this._notify('info', game.i18n.localize('WH40K.Possession.ResetDone'), { duration: 2500 });
+        } catch (error) {
+            this._notify('error', `Failed to reset possession session: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Reset possession session error:', error);
         }
     }
 
