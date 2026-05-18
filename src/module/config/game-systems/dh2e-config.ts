@@ -98,6 +98,7 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
         ];
     }
 
+    // TODO(dry): this + getSkillAptitudeTable are byte-identical in bc-config.ts and ow-config.ts. Promote to AptitudeBasedSystemConfig defaults; override only when a system diverges.
     /** DH2e characteristic aptitude pairs (Core Rulebook Table 2-3) */
     getCharacteristicAptitudes(charKey: string): [string, string] {
         const map: Record<string, [string, string]> = {
