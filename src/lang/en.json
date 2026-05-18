@@ -1172,7 +1172,21 @@
                 "Components": "Components",
                 "Weapons": "Weapons",
                 "Crew": "Crew",
-                "History": "History"
+                "History": "History",
+                "ExtendedActions": "Actions"
+            },
+            "ExtendedAction": {
+                "Header": "Extended Actions",
+                "Description": "Per the Rogue Trader Stars of Inequity and Battlefleet Koronus rules, the bridge crew may dispatch one Extended Action per turn. Click an action below to post its rules card to chat.",
+                "Empty": "No Extended Actions found in the active compendiums. Compendium content may not yet be loaded.",
+                "Dispatch": "Dispatch",
+                "DispatchTitle": "Post this Extended Action to chat",
+                "Skill": "Skill",
+                "Modifier": "Modifier",
+                "Duration": "Duration",
+                "Requirements": "Requirements",
+                "ChatSubtitle": "Ship Extended Action",
+                "ChatHeader": "Extended Action Dispatched"
             },
             "Combat": {
                 "Header": "Combat Statistics",
@@ -1252,6 +1266,24 @@
             },
             "Errors": {
                 "InvalidShipWeapon": "Invalid ship weapon"
+            },
+            "Build": {
+                "Header": "Ship Points & Build",
+                "SpentLabel": "SP Spent",
+                "BudgetLabel": "SP Budget",
+                "OverBudget": "Build exceeds the hull's Ship Points budget.",
+                "EssentialSlots": "Essential Components",
+                "SlotFilled": "Filled",
+                "SlotMissing": "Missing",
+                "Valid": "Build complete",
+                "Invalid": "Build incomplete",
+                "Validate": "Validate Build",
+                "Commit": "Save Build",
+                "NotifyValid": "Starship build is valid.",
+                "NotifyOverBudgetBy": "Over budget by {amount} SP",
+                "NotifyMissingSlots": "{count} essential slot(s) unfilled",
+                "NotifyCannotCommit": "Cannot save: starship build is invalid.",
+                "NotifyCommitted": "Starship build saved."
             }
         },
         "ShipComponent": {
