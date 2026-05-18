@@ -982,6 +982,40 @@ const RULE_AFFLICTION_FLOWS = [
 ];
 recordDimension('rule-affliction.flow', covered['rule-affliction.flow'], RULE_AFFLICTION_FLOWS);
 
+// Fourth batch of pure-logic rules flows exercised by
+// tests/e2e/rules-occult.spec.ts. Each key maps to a canonical occult /
+// chaos / progression resolver on a rules/ module that no other Tier B
+// spec drives directly. Pushes source-code coverage on
+// `src/module/rules/{daemonic-mastery,dark-pact,exorcism,
+// malefic-corruption,possession,psychic-push,summoning-ritual,
+// xenos-equipment,inquest,malignancy-test,chaos-backgrounds}.ts` —
+// each at 0% Tier B function coverage before this spec landed. Keys
+// MUST match the recordCoverage('rule-occult.flow', ...) calls in the
+// spec.
+const RULE_OCCULT_FLOWS = [
+    'daemonic-mastery-buildTest',
+    'dark-pact-adjustDisposition',
+    'dark-pact-discoverySubtletyHit',
+    'exorcism-threshold',
+    'exorcism-prepareAttempt',
+    'exorcism-hostSurvival',
+    'malefic-corruption-cost',
+    'possession-canUnleash',
+    'possession-spendUnleash',
+    'possession-resistTarget',
+    'psychic-push-resolveMode',
+    'summoning-prepareRitual',
+    'summoning-bindingDuration',
+    'xenos-equipment-condition',
+    'xenos-equipment-tickDegradation',
+    'inquest-revelationsCrossed',
+    'inquest-currentTier',
+    'malignancy-thresholdsCrossed',
+    'malignancy-testTarget',
+    'chaos-backgrounds-predicates',
+];
+recordDimension('rule-occult.flow', covered['rule-occult.flow'], RULE_OCCULT_FLOWS);
+
 // Roll-data plumbing flows exercised by tests/e2e/rolls-data.spec.ts. Drives
 // source-code coverage on `src/module/rolls/assign-damage-data.ts` (the
 // damage allocator's reduce-then-distribute branch matrix between wounds,
