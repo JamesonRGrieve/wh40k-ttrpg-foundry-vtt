@@ -16,7 +16,7 @@
  * from the actor's movement table at dispatch time.
  */
 
-import type { WH40KBaseActor } from '../types/global.d.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 
 /**
  * The post-attack Acrobatics test parameters per the errata. Locked
