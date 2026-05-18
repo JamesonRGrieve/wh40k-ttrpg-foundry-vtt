@@ -30,9 +30,54 @@
             ×{{system.quantity}}
           </span>
           {{/if}}
+          {{#if profaneObject}}
+          <span class="wh40k-gear-profane-badge tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-crimson/40 tw-text-crimson-light tw-px-2 tw-py-0.5 tw-text-xs tw-font-display dh2e:tw-bg-crimson/50 dh2e:tw-text-crimson-light bc:tw-bg-crimson/60" title="{{localize 'WH40K.ProfaneObject.Badge'}}">
+            <i class="fas fa-skull"></i>
+            {{profaneObject.label}}
+          </span>
+          {{/if}}
         </div>
       </div>
     </header>
+
+    {{#if profaneObject}}
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         PROFANE OBJECT PANEL: aura + per-action hook (within.md p. 52)
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <section class="wh40k-gear-profane-panel tw-flex tw-flex-col tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-crimson/60 tw-bg-crimson/10">
+      <div class="tw-flex tw-items-center tw-gap-2 tw-text-xs tw-font-display tw-uppercase tw-tracking-wider tw-text-crimson-light">
+        <i class="fas fa-skull"></i>
+        <span>{{localize "WH40K.ProfaneObject.Badge"}}</span>
+      </div>
+      {{#if profaneObject.aura}}
+      <div class="wh40k-gear-profane-aura tw-flex tw-items-start tw-gap-2 tw-text-xs">
+        <i class="fas fa-circle-dot tw-mt-0.5 tw-text-crimson-light"></i>
+        <div class="tw-flex tw-flex-col tw-gap-0.5 tw-flex-1">
+          <span class="tw-font-medium tw-text-crimson-light">
+            {{localize "WH40K.ProfaneObject.AuraLabel"}}
+            <span class="tw-opacity-80">— {{localize "WH40K.ProfaneObject.AuraRadius"}}: {{profaneObject.aura.radiusMetres}}m</span>
+          </span>
+          <span class="tw-opacity-90">{{profaneObject.aura.label}}</span>
+        </div>
+      </div>
+      {{/if}}
+      <div class="wh40k-gear-profane-hook tw-flex tw-items-start tw-gap-2 tw-text-xs">
+        <i class="fas fa-bolt tw-mt-0.5 tw-text-crimson-light"></i>
+        <div class="tw-flex tw-flex-col tw-gap-0.5 tw-flex-1">
+          <span class="tw-font-medium tw-text-crimson-light">{{localize "WH40K.ProfaneObject.HookLabel"}}</span>
+          {{#if profaneObject.hook}}
+          <span class="tw-opacity-90">
+            {{localize "WH40K.ProfaneObject.HookTrigger"}}: <strong>{{profaneObject.hook.trigger}}</strong>
+            · {{localize "WH40K.ProfaneObject.Corruption"}} +{{profaneObject.hook.corruptionPerTrigger}}
+            · {{localize "WH40K.ProfaneObject.Insanity"}} +{{profaneObject.hook.insanityPerTrigger}}
+          </span>
+          {{else}}
+          <span class="tw-opacity-70 tw-italic">{{localize "WH40K.ProfaneObject.EmptyHookText"}}</span>
+          {{/if}}
+        </div>
+      </div>
+    </section>
+    {{/if}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          STAT BAR: Key gear statistics with quick adjusters
