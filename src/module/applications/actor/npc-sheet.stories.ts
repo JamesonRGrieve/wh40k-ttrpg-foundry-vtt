@@ -5,14 +5,14 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
 import Handlebars from 'handlebars';
-import npcTabSrc from '../../../templates/actor/npc/tab-npc.hbs?raw';
+import { expect, within } from 'storybook/test';
 import { renderTemplate } from '../../../../stories/mocks';
-import { mockNpcSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { mockNpcSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction } from '../../../../stories/test-helpers';
+import npcTabSrc from '../../../templates/actor/npc/tab-npc.hbs?raw';
 
 initializeStoryHandlebars();
 

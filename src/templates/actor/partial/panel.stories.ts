@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 import templateSrc from './panel.hbs?raw';
 
 initializeStoryHandlebars();
@@ -22,16 +22,14 @@ interface Args {
 }
 
 const renderWithBody = (args: Args) => {
-    const body =
-        args.body ??
-        '<div class="tw-text-xs tw-text-[var(--wh40k-text-muted)]">Body content goes here.</div>';
+    const body = args.body ?? '<div class="tw-text-xs tw-text-[var(--wh40k-text-muted)]">Body content goes here.</div>';
     const wrapped = templateSrc.replace('{{> @partial-block}}', body);
     return renderSheet(wrapped, args as unknown as Record<string, unknown>);
 };
 
 const meta = {
     title: 'Actor/Partials/Panel',
-    render: (args) => renderWithBody(args as Args),
+    render: (args) => renderWithBody(args),
     args: {
         label: 'Armour',
         icon: 'fa-shield-alt',

@@ -840,9 +840,7 @@ export class GrantsManager {
         if (Array.isArray(legacy.traits) && legacy.traits.length > 0) {
             out.push({
                 type: 'item',
-                items: legacy.traits
-                    .filter((t) => typeof t?.uuid === 'string' && t.uuid.length > 0)
-                    .map((t) => ({ uuid: t.uuid!, level: t.level })),
+                items: legacy.traits.filter((t) => typeof t?.uuid === 'string' && t.uuid.length > 0).map((t) => ({ uuid: t.uuid!, level: t.level })),
             });
         }
         return out;

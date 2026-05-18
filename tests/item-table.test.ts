@@ -6,10 +6,9 @@
  */
 import Handlebars from 'handlebars';
 import { describe, expect, it } from 'vitest';
-import { initializeStoryHandlebars } from '../stories/template-support';
-
-import itemTableSrc from '../src/templates/actor/partial/item-table.hbs?raw';
 import itemTableRowSrc from '../src/templates/actor/partial/item-table-row.hbs?raw';
+import itemTableSrc from '../src/templates/actor/partial/item-table.hbs?raw';
+import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
@@ -40,7 +39,7 @@ describe('item-table.hbs', () => {
         const headRow = root.querySelector('[data-table-header]');
         expect(headRow).not.toBeNull();
         // 3 header cells + 1 trailing add cell
-        expect(headRow!.children.length).toBe(4);
+        expect(headRow!.children).toHaveLength(4);
         expect(headRow!.textContent).toMatch(/Name/);
         expect(headRow!.textContent).toMatch(/Class/);
         expect(headRow!.textContent).toMatch(/Type/);
@@ -102,7 +101,7 @@ describe('item-table-row.hbs', () => {
         const root = renderRow('item=item cells=(array (object value="A") (object value="B") (object value="C"))', '', ctx);
         // Value spans have no class attr; icon spans do — exclude them.
         const valueCells = Array.from(root.querySelectorAll('span:not([class])')).filter((s) => s.textContent !== ctx.item.name);
-        expect(valueCells.length).toBe(3);
+        expect(valueCells).toHaveLength(3);
         expect(valueCells[0].textContent).toBe('A');
         expect(valueCells[2].textContent).toBe('C');
     });
@@ -114,7 +113,7 @@ describe('item-table-row.hbs', () => {
             ctx,
         );
         const buttons = root.querySelectorAll('[data-action]:not(.item-edit)');
-        expect(buttons.length).toBe(2);
+        expect(buttons).toHaveLength(2);
         expect(buttons[0].getAttribute('data-action')).toBe('itemRoll');
         expect(buttons[1].getAttribute('data-action')).toBe('itemDelete');
         for (const btn of Array.from(buttons)) {

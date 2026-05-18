@@ -10,8 +10,8 @@ import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
-import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
+import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
 
 // Loose dictionary used as a structural shape for both pre-migration source data
 // and the data dictionaries passed to Foundry's update/create APIs.

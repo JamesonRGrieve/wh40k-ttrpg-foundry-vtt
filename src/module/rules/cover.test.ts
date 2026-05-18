@@ -6,16 +6,16 @@ describe('COVER_AP table (#110, Table 7-4 p.229)', () => {
         expect(COVER_AP['thin-metal']).toBe(4);
     });
     it('sandbags = 8', () => {
-        expect(COVER_AP['sandbags']).toBe(8);
+        expect(COVER_AP.sandbags).toBe(8);
     });
     it('barricade = 12', () => {
-        expect(COVER_AP['barricade']).toBe(12);
+        expect(COVER_AP.barricade).toBe(12);
     });
     it('rockcrete = 16', () => {
-        expect(COVER_AP['rockcrete']).toBe(16);
+        expect(COVER_AP.rockcrete).toBe(16);
     });
     it('plasteel = 32', () => {
-        expect(COVER_AP['plasteel']).toBe(32);
+        expect(COVER_AP.plasteel).toBe(32);
     });
 
     it('every type has a matching label', () => {

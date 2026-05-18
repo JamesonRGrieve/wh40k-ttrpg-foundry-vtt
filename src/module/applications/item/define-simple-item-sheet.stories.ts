@@ -7,10 +7,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect } from 'storybook/test';
-import templateSrc from '../../../templates/item/item-weapon-mod-sheet.hbs?raw';
 import { mockItem, renderTemplate } from '../../../../stories/mocks';
-import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import templateSrc from '../../../templates/item/item-weapon-mod-sheet.hbs?raw';
 
 initializeStoryHandlebars();
 const compiled = Handlebars.compile(templateSrc);

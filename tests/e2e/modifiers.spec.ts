@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -150,9 +149,7 @@ async function deleteItems(page: Page, actorId: string, itemIds: string[]): Prom
                 globalThis as unknown as {
                     game?: {
                         actors?: {
-                            get?: (id: string) =>
-                                | { deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown> }
-                                | undefined;
+                            get?: (id: string) => { deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown> } | undefined;
                         };
                     };
                 }
@@ -175,9 +172,7 @@ async function updateItem(page: Page, actorId: string, itemId: string, patch: ob
                 globalThis as unknown as {
                     game?: {
                         actors?: {
-                            get?: (id: string) =>
-                                | { items?: { get?: (id: string) => { update?: (data: object) => Promise<unknown> } | undefined } }
-                                | undefined;
+                            get?: (id: string) => { items?: { get?: (id: string) => { update?: (data: object) => Promise<unknown> } | undefined } } | undefined;
                         };
                     };
                 }
@@ -428,9 +423,7 @@ async function probeConditionMagnitude(page: Page, actorId: string): Promise<Flo
                         globalThis as unknown as {
                             game?: {
                                 actors?: {
-                                    get?: (id: string) =>
-                                        | { deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown> }
-                                        | undefined;
+                                    get?: (id: string) => { deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown> } | undefined;
                                 };
                             };
                         }
@@ -460,13 +453,13 @@ test.describe.serial('modifiers / equipment-effect pipeline (Tier B)', () => {
         const failures: string[] = [];
         try {
             const probes: Array<{ flow: string; run: () => Promise<FlowResult> }> = [
-                { flow: FLOW_TALENT, run: () => probeTalentModifier(page, actorId) },
-                { flow: FLOW_ARMOUR_AP, run: () => probeArmourAP(page, actorId) },
-                { flow: FLOW_WEAPON_AE, run: () => probeWeaponAE(page, actorId) },
-                { flow: FLOW_UNEQUIP, run: () => probeUnequipRollback(page, actorId) },
-                { flow: FLOW_STACK, run: () => probeStackable(page, actorId) },
-                { flow: FLOW_SKILL, run: () => probeSkillModifier(page, actorId) },
-                { flow: FLOW_CONDITION_MAG, run: () => probeConditionMagnitude(page, actorId) },
+                { flow: FLOW_TALENT, run: async () => probeTalentModifier(page, actorId) },
+                { flow: FLOW_ARMOUR_AP, run: async () => probeArmourAP(page, actorId) },
+                { flow: FLOW_WEAPON_AE, run: async () => probeWeaponAE(page, actorId) },
+                { flow: FLOW_UNEQUIP, run: async () => probeUnequipRollback(page, actorId) },
+                { flow: FLOW_STACK, run: async () => probeStackable(page, actorId) },
+                { flow: FLOW_SKILL, run: async () => probeSkillModifier(page, actorId) },
+                { flow: FLOW_CONDITION_MAG, run: async () => probeConditionMagnitude(page, actorId) },
             ];
             for (const probe of probes) {
                 const result = await probe.run();

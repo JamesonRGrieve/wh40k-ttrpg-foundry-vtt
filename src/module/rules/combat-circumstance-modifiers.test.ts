@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import {
-    COMBAT_CIRCUMSTANCE_MODIFIERS,
-    getCombatModifier,
-    getCombatModifiersForTarget,
-    sumSelectedCombatModifiers,
-} from './combat-circumstance-modifiers';
 import { clampModifierToCap } from '../rolls/roll-data';
+import { COMBAT_CIRCUMSTANCE_MODIFIERS, getCombatModifier, getCombatModifiersForTarget, sumSelectedCombatModifiers } from './combat-circumstance-modifiers';
 
 /**
  * Tests for the combat circumstance modifier registry (#121).

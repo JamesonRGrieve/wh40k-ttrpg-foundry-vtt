@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -773,12 +772,12 @@ test.describe.serial('npc tooling pipeline (Tier B)', () => {
         await ensurePresetSetting(page);
 
         const probes: { flow: string; run: () => Promise<FlowResult> }[] = [
-            { flow: FLOW_PARSER, run: () => probeParser(page) },
-            { flow: FLOW_EXPORTER, run: () => probeExporter(page) },
-            { flow: FLOW_SCALER, run: () => probeScaler(page) },
-            { flow: FLOW_DIFFICULTY, run: () => probeDifficulty(page) },
-            { flow: FLOW_BUILDER, run: () => probeBuilder(page) },
-            { flow: FLOW_PRESET, run: () => probePreset(page) },
+            { flow: FLOW_PARSER, run: async () => probeParser(page) },
+            { flow: FLOW_EXPORTER, run: async () => probeExporter(page) },
+            { flow: FLOW_SCALER, run: async () => probeScaler(page) },
+            { flow: FLOW_DIFFICULTY, run: async () => probeDifficulty(page) },
+            { flow: FLOW_BUILDER, run: async () => probeBuilder(page) },
+            { flow: FLOW_PRESET, run: async () => probePreset(page) },
         ];
 
         const failures: string[] = [];

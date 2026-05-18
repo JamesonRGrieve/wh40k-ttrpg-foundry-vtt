@@ -10,7 +10,7 @@ class FakeApplicationV2 {}
 type Constructor = abstract new (...args: any[]) => object;
 const fakeHandlebarsApplicationMixin = <T extends Constructor>(Base: T): T => {
     abstract class Mixed extends Base {}
-    return Mixed as T;
+    return Mixed;
 };
 
 vi.mock('../../config/game-systems/index.ts', () => ({

@@ -32,9 +32,7 @@ interface PageWindow {
     };
     game?: {
         packs?: {
-            get?: (
-                id: string,
-            ) =>
+            get?: (id: string) =>
                 | {
                       metadata?: { type?: string };
                       getDocuments?: () => Promise<Array<{ id?: string; name?: string; type?: string; system?: Record<string, unknown> }>>;
@@ -146,7 +144,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set corruption: ${String((err as Error)?.message ?? err)}` };
             }
-            const after = (game?.actors?.get?.(actorId) as { system?: { corruption?: number } } | undefined)?.system?.corruption ?? null;
+            const after = game?.actors?.get?.(actorId)?.system?.corruption ?? null;
             return { initial, after, error: null };
         }, created.id);
 
@@ -184,7 +182,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
             } catch (err) {
                 return { error: `set insanity: ${String((err as Error)?.message ?? err)}` };
             }
-            const after = (game?.actors?.get?.(actorId) as { system?: { insanity?: number } } | undefined)?.system?.insanity ?? null;
+            const after = game?.actors?.get?.(actorId)?.system?.insanity ?? null;
             return { initial, after, error: null };
         }, created.id);
 
@@ -214,9 +212,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
             const { game } = globalThis as unknown as {
                 game?: {
                     actors?: {
-                        get?: (
-                            id: string,
-                        ) =>
+                        get?: (id: string) =>
                             | {
                                   createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<Array<{ id: string }>>;
                                   items?: { contents: Array<{ id: string; type: string; system?: Record<string, unknown> }> };

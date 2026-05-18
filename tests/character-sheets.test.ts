@@ -1,14 +1,14 @@
 import Handlebars from 'handlebars';
 import { describe, expect, it } from 'vitest';
+import type { SidebarHeaderField } from '../src/module/config/game-systems/types';
+import npcTabSrc from '../src/templates/actor/npc/tab-npc.hbs?raw';
 import headerSrc from '../src/templates/actor/player/header-dh.hbs?raw';
 import headerRtSrc from '../src/templates/actor/player/header-rt.hbs?raw';
-import npcTabSrc from '../src/templates/actor/npc/tab-npc.hbs?raw';
 import biographyTabSrc from '../src/templates/actor/player/tab-biography.hbs?raw';
 import skillsTabSrc from '../src/templates/actor/player/tab-skills.hbs?raw';
 import tabsSrc from '../src/templates/actor/player/tabs.hbs?raw';
-import { initializeStoryHandlebars } from '../stories/template-support';
 import { mockNpcSheetContext, mockPlayerSheetContext } from '../stories/mocks/sheet-contexts';
-import type { SidebarHeaderField } from '../src/module/config/game-systems/types';
+import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 

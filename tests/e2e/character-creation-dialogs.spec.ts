@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -157,20 +156,18 @@ async function probeChargenDialogs(page: Page): Promise<{ results: FlowResult[];
                 const OriginDetailDialog = mod.default ?? mod.OriginDetailDialog;
                 if (typeof OriginDetailDialog !== 'function') {
                     record('origin-detail-dialog-renders', false, `default export missing (keys: ${Object.keys(mod).join(',')})`);
+                } else if (!originItem) {
+                    record('origin-detail-dialog-renders', false, 'origin item not created');
                 } else {
-                    if (!originItem) {
-                        record('origin-detail-dialog-renders', false, 'origin item not created');
-                    } else {
-                        // OriginDetailDialog constructor signature is
-                        // `(origin: WH40KItem, options)`. Pass the real
-                        // origin-path item we seeded on the actor so
-                        // _prepareContext can walk its `.system` shape.
-                        const dlg = new OriginDetailDialog(originItem, {});
-                        opened.push(dlg);
-                        await dlg.render({ force: true });
-                        await new Promise((r) => setTimeout(r, 50));
-                        record('origin-detail-dialog-renders', dlg.element instanceof HTMLElement, null);
-                    }
+                    // OriginDetailDialog constructor signature is
+                    // `(origin: WH40KItem, options)`. Pass the real
+                    // origin-path item we seeded on the actor so
+                    // _prepareContext can walk its `.system` shape.
+                    const dlg = new OriginDetailDialog(originItem, {});
+                    opened.push(dlg);
+                    await dlg.render({ force: true });
+                    await new Promise((r) => setTimeout(r, 50));
+                    record('origin-detail-dialog-renders', dlg.element instanceof HTMLElement, null);
                 }
             } catch (err) {
                 record('origin-detail-dialog-renders', false, String((err as Error)?.message ?? err));

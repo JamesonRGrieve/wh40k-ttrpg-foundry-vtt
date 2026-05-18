@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
 import Handlebars from 'handlebars';
-import headerSrc from '../src/templates/actor/player/header-dh.hbs?raw';
+import { expect, within } from 'storybook/test';
+import type { GameSystemId } from '../src/module/config/game-systems/types';
 import npcTabSrc from '../src/templates/actor/npc/tab-npc.hbs?raw';
+import headerSrc from '../src/templates/actor/player/header-dh.hbs?raw';
 import biographyTabSrc from '../src/templates/actor/player/tab-biography.hbs?raw';
 import tabsSrc from '../src/templates/actor/player/tabs.hbs?raw';
 import { renderTemplate, type MockItem } from './mocks';
 import { mockNpcSheetContext, mockPlayerSheetContext, type SheetContextLike } from './mocks/sheet-contexts';
-import type { GameSystemId } from '../src/module/config/game-systems/types';
 import { initializeStoryHandlebars } from './template-support';
 
 initializeStoryHandlebars();

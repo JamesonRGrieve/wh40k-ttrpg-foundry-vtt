@@ -1,12 +1,12 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
-import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
-import { SimpleSkillData } from '../rolls/action-data.ts';
-import { t } from '../i18n/t.ts';
-import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type SubtletySourceRef } from '../rules/subtlety-adjusters.ts';
 import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shared/subtlety-adjuster.ts';
-import { uuidNameCache } from '../utils/uuid-name-cache.ts';
+import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
+import { t } from '../i18n/t.ts';
+import { SimpleSkillData } from '../rolls/action-data.ts';
+import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type SubtletySourceRef } from '../rules/subtlety-adjusters.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
+import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import type { WH40KItem } from './item.ts';
 
 /* eslint-disable no-restricted-syntax -- boundary: these utility types intersect with Record<string, unknown> to allow index access on opaque roll/characteristic/skill data models */
@@ -216,7 +216,7 @@ export class WH40KBaseActor extends Actor {
      */
     async applySubtletyFromSource(sourceUuid: string, scale = 1): Promise<void> {
         const adj = this.collectSubtletyAdjusters().find((a) => a.sourceUuid === sourceUuid);
-        if (adj === undefined || adj.kind !== 'event') return;
+        if (adj?.kind !== 'event') return;
         const delta = Math.trunc(adj.delta * scale);
         if (delta === 0) return;
         await this.applySubtlety(delta, sourceUuid);

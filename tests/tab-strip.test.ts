@@ -9,8 +9,8 @@
 
 import Handlebars from 'handlebars';
 import { describe, expect, it } from 'vitest';
-import { initializeStoryHandlebars } from '../stories/template-support';
 import tabStripSrc from '../src/templates/actor/partial/tab-strip.hbs?raw';
+import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
@@ -35,7 +35,7 @@ describe('tab-strip partial', () => {
         });
         const root = dom(html);
         const items = root.querySelectorAll('a.wh40k-nav-item');
-        expect(items.length).toBe(3);
+        expect(items).toHaveLength(3);
         expect(items[0].getAttribute('data-tab')).toBe('overview');
         expect(items[0].className).toContain('active');
         expect(items[1].className).not.toContain('active');
@@ -69,7 +69,7 @@ describe('tab-strip partial', () => {
         });
         const root = dom(html);
         const labels = root.querySelectorAll('label.wh40k-navigation__item');
-        expect(labels.length).toBe(2);
+        expect(labels).toHaveLength(2);
         expect(labels[0].querySelector('.material-icons')?.textContent?.trim()).toBe('speed');
         expect(labels[1].querySelector('.material-icons')?.textContent?.trim()).toBe('gps_fixed');
     });

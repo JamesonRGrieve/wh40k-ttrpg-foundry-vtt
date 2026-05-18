@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -69,7 +68,8 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
             try {
                 assignMod = await import(`${base}/rolls/assign-damage-data.js`);
             } catch (err) {
-                for (const f of ROLL_DATA_FLOWS.filter((k) => k.startsWith('assign-damage-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
+                for (const f of ROLL_DATA_FLOWS.filter((k) => k.startsWith('assign-damage-')))
+                    record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
                 assignMod = null;
             }
             if (assignMod) {
@@ -90,7 +90,13 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
 
                 // ctor
                 try {
-                    const ad = new AssignDamageData(buildActor(10), { location: 'BODY', damageType: 'impact', totalDamage: 0, totalPenetration: 0, totalFatigue: 0 });
+                    const ad = new AssignDamageData(buildActor(10), {
+                        location: 'BODY',
+                        damageType: 'impact',
+                        totalDamage: 0,
+                        totalPenetration: 0,
+                        totalFatigue: 0,
+                    });
                     record('assign-damage-constructor', ad instanceof AssignDamageData, null);
                 } catch (err) {
                     record('assign-damage-constructor', false, String((err as Error)?.message ?? err));
@@ -98,7 +104,13 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
 
                 // update — drives the location-armour lookup loop branch.
                 try {
-                    const ad = new AssignDamageData(buildActor(10), { location: 'BODY', damageType: 'impact', totalDamage: 10, totalPenetration: 0, totalFatigue: 0 });
+                    const ad = new AssignDamageData(buildActor(10), {
+                        location: 'BODY',
+                        damageType: 'impact',
+                        totalDamage: 10,
+                        totalPenetration: 0,
+                        totalFatigue: 0,
+                    });
                     ad.update();
                     record('assign-damage-update-armour-resolved', ad.armour === 5 && ad.tb === 3, `armour=${ad.armour} tb=${ad.tb}`);
                 } catch (err) {
@@ -107,11 +119,21 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
 
                 // finalize — wounds reduced when damage > armour+tb but ≤ wounds.
                 try {
-                    const ad = new AssignDamageData(buildActor(10), { location: 'BODY', damageType: 'impact', totalDamage: 12, totalPenetration: 0, totalFatigue: 0 });
+                    const ad = new AssignDamageData(buildActor(10), {
+                        location: 'BODY',
+                        damageType: 'impact',
+                        totalDamage: 12,
+                        totalPenetration: 0,
+                        totalFatigue: 0,
+                    });
                     ad.update();
                     await ad.finalize();
                     // 12 damage - (5 armour + 3 tb) = 4 damage; actor has 10 wounds → all 4 to wounds.
-                    record('assign-damage-finalize-reduces-wounds', ad.hasDamage === true && ad.damageTaken === 4, `damageTaken=${ad.damageTaken} hasDamage=${ad.hasDamage}`);
+                    record(
+                        'assign-damage-finalize-reduces-wounds',
+                        ad.hasDamage === true && ad.damageTaken === 4,
+                        `damageTaken=${ad.damageTaken} hasDamage=${ad.hasDamage}`,
+                    );
                 } catch (err) {
                     record('assign-damage-finalize-reduces-wounds', false, String((err as Error)?.message ?? err));
                 }
@@ -119,20 +141,40 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                 // finalize — wounds already 0 routes through the "critical"
                 // branch.
                 try {
-                    const ad = new AssignDamageData(buildActor(0), { location: 'BODY', damageType: 'impact', totalDamage: 12, totalPenetration: 0, totalFatigue: 0 });
+                    const ad = new AssignDamageData(buildActor(0), {
+                        location: 'BODY',
+                        damageType: 'impact',
+                        totalDamage: 12,
+                        totalPenetration: 0,
+                        totalFatigue: 0,
+                    });
                     ad.update();
                     await ad.finalize();
-                    record('assign-damage-finalize-empty-wounds-criticals', ad.hasCriticalDamage === true && ad.criticalDamageTaken === 4, `hasCrit=${ad.hasCriticalDamage} crit=${ad.criticalDamageTaken}`);
+                    record(
+                        'assign-damage-finalize-empty-wounds-criticals',
+                        ad.hasCriticalDamage === true && ad.criticalDamageTaken === 4,
+                        `hasCrit=${ad.hasCriticalDamage} crit=${ad.criticalDamageTaken}`,
+                    );
                 } catch (err) {
                     record('assign-damage-finalize-empty-wounds-criticals', false, String((err as Error)?.message ?? err));
                 }
 
                 // finalize — fatigue accumulator path.
                 try {
-                    const ad = new AssignDamageData(buildActor(10), { location: 'BODY', damageType: 'impact', totalDamage: 5, totalPenetration: 0, totalFatigue: 3 });
+                    const ad = new AssignDamageData(buildActor(10), {
+                        location: 'BODY',
+                        damageType: 'impact',
+                        totalDamage: 5,
+                        totalPenetration: 0,
+                        totalFatigue: 3,
+                    });
                     ad.update();
                     await ad.finalize();
-                    record('assign-damage-finalize-fatigue', ad.hasFatigueDamage === true && ad.fatigueTaken === 3, `hasFatigue=${ad.hasFatigueDamage} fatigueTaken=${ad.fatigueTaken}`);
+                    record(
+                        'assign-damage-finalize-fatigue',
+                        ad.hasFatigueDamage === true && ad.fatigueTaken === 3,
+                        `hasFatigue=${ad.hasFatigueDamage} fatigueTaken=${ad.fatigueTaken}`,
+                    );
                 } catch (err) {
                     record('assign-damage-finalize-fatigue', false, String((err as Error)?.message ?? err));
                 }
@@ -143,7 +185,8 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
             try {
                 ffMod = await import(`${base}/rolls/force-field-data.js`);
             } catch (err) {
-                for (const f of ROLL_DATA_FLOWS.filter((k) => k.startsWith('force-field-'))) record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
+                for (const f of ROLL_DATA_FLOWS.filter((k) => k.startsWith('force-field-')))
+                    record(f, false, `import: ${String((err as Error)?.message ?? err)}`);
                 ffMod = null;
             }
             if (ffMod) {
@@ -152,13 +195,17 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[]; page
                 const fakeActor: any = { system: {}, update: async () => undefined };
                 const buildFF = (craftsmanship: string, rating: number): any => ({
                     system: { protectionRating: rating, craftsmanship },
-                    update: async (data: any) => Object.assign({}, fakeFFShared, { system: { ...fakeFFShared.system, ...(data as any) } }),
+                    update: async (data: any) => Object.assign({}, fakeFFShared, { system: { ...fakeFFShared.system, ...data } }),
                 });
                 const fakeFFShared = buildFF('Common', 40);
 
                 try {
                     const ff = new ForceFieldData(fakeActor, fakeFFShared);
-                    record('force-field-constructor', ff instanceof ForceFieldData && ff.protectionRating === 40 && ff.overloadRating === 10, `pr=${ff.protectionRating} or=${ff.overloadRating}`);
+                    record(
+                        'force-field-constructor',
+                        ff instanceof ForceFieldData && ff.protectionRating === 40 && ff.overloadRating === 10,
+                        `pr=${ff.protectionRating} or=${ff.overloadRating}`,
+                    );
                 } catch (err) {
                     record('force-field-constructor', false, String((err as Error)?.message ?? err));
                 }

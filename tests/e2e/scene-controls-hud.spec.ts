@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -119,7 +118,7 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
             // the source-coverage path we care about, not a failure.
             try {
                 const tokensTools = controls['tokens']?.tools ?? {};
-                const toolEntries = Object.entries(tokensTools) as Array<[string, any]>;
+                const toolEntries = Object.entries(tokensTools);
                 if (toolEntries.length === 0) {
                     notes['scene-controls-button-onclick'] = 'no tools to invoke (flow 1 failed)';
                 } else {
@@ -373,8 +372,8 @@ async function probeSceneHudFlows(page: Page): Promise<SceneHudProbeResult> {
         }, SCENE_HUD_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             canvasReady: result.canvasReady,
             pageErrors,
         };

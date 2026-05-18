@@ -19,11 +19,11 @@
  * `beforeEach` if you want pinned IDs.
  */
 
+import { SystemConfigRegistry } from '../../src/module/config/game-systems';
 import type { GameSystemId, SidebarHeaderField } from '../../src/module/config/game-systems/types';
 import type { WH40KBaseActor } from '../../src/module/documents/base-actor';
-import { SystemConfigRegistry } from '../../src/module/config/game-systems';
-import { mockActor, type MockActor, type MockItem } from './index';
 import { randomId, withSystem, type SystemId } from './extended';
+import { mockActor, type MockActor, type MockItem } from './index';
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -243,8 +243,8 @@ export function mockPlayerSheetContext(opts: PlayerSheetContextOptions = {}): Sh
 
     const context: SheetContextLike = {
         actor: actor as SheetContextLike['actor'],
-        system: actor.system as SheetContextLike['system'],
-        source: actor.system as SheetContextLike['source'],
+        system: actor.system,
+        source: actor.system,
         editable: true,
         inEditMode: false,
         isGM: true,
@@ -336,11 +336,11 @@ export function mockNpcSheetContext(opts: NpcSheetContextOptions = {}): SheetCon
     } as MockActor['system'] & Record<string, unknown>;
     baseActor.system = npcSystem;
 
-    const actor = withSystem(baseActor as MockActor, SYSTEM_ID_TO_WITH_SYSTEM[systemId], 'npc');
+    const actor = withSystem(baseActor, SYSTEM_ID_TO_WITH_SYSTEM[systemId], 'npc');
     actor.system = npcSystem;
 
     const context: SheetContextLike = {
-        actor: { ...actor, inCombat: false } as SheetContextLike['actor'],
+        actor: { ...actor, inCombat: false },
         system: npcSystem,
         source: npcSystem,
         editable: true,
@@ -388,8 +388,8 @@ export function mockVehicleSheetContext(opts: VehicleSheetContextOptions = {}): 
 
     const context: SheetContextLike = {
         actor: actor as SheetContextLike['actor'],
-        system: actor.system as SheetContextLike['system'],
-        source: actor.system as SheetContextLike['source'],
+        system: actor.system,
+        source: actor.system,
         editable: true,
         inEditMode: false,
         isGM: true,
@@ -434,8 +434,8 @@ export function mockStarshipSheetContext(opts: StarshipSheetContextOptions = {})
 
     const context: SheetContextLike = {
         actor: actor as SheetContextLike['actor'],
-        system: actor.system as SheetContextLike['system'],
-        source: actor.system as SheetContextLike['source'],
+        system: actor.system,
+        source: actor.system,
         editable: true,
         inEditMode: false,
         isGM: true,
@@ -478,7 +478,7 @@ function mergeActorInput(base: MockActorInput, override?: MockActorInput): MockA
     return {
         ...base,
         ...override,
-        system: mergedSystem as MockActorInput['system'],
+        system: mergedSystem,
     };
 }
 

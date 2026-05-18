@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect } from 'storybook/test';
-import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderTemplate } from '../../../../stories/mocks';
 import type { SystemId } from '../../../../stories/mocks/extended';
+import { initializeStoryHandlebars } from '../../../../stories/template-support';
 
 initializeStoryHandlebars();
 

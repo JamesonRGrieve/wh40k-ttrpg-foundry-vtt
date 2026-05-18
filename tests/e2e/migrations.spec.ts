@@ -146,7 +146,8 @@ test.describe('migrations + compendium resync (Tier B)', () => {
             if (!result.prereqTalentsIsArray) failures.push('prereq.talents not an array');
             if (!result.aptitudesIsArray) failures.push('aptitudes did not split from comma-string to array');
             if (result.aptitudesLen !== 2) failures.push(`aptitudes length was ${result.aptitudesLen}, expected 2`);
-            if (result.hasSpecialization !== true) failures.push(`hasSpecialization was ${result.hasSpecialization}, expected true (inferred from non-empty specialization)`);
+            if (result.hasSpecialization !== true)
+                failures.push(`hasSpecialization was ${result.hasSpecialization}, expected true (inferred from non-empty specialization)`);
             if (failures.length === 0) recordCoverage('migration.flow', FLOW_TALENT_PREREQS);
             if (result.id) await deleteWorldItem(page, result.id);
         }
@@ -171,7 +172,12 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                 });
                 if (!created) return { error: 'Actor.create returned null' };
                 const actorId = created.id ?? null;
-                const live = actorId !== null ? (game?.actors?.get?.(actorId) as { createEmbeddedDocuments?: (k: string, d: object[]) => Promise<Array<{ id?: string }>> } | undefined) : undefined;
+                const live =
+                    actorId !== null
+                        ? (game?.actors?.get?.(actorId) as
+                              | { createEmbeddedDocuments?: (k: string, d: object[]) => Promise<Array<{ id?: string }>> }
+                              | undefined)
+                        : undefined;
                 // V14 dropped the auto-remap of legacy `label` → `name` on
                 // ActiveEffect documents. The migration that USED to happen at
                 // document init is now a `name`-required schema field; an AE
@@ -193,8 +199,11 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                 ]);
                 const fresh = actorId !== null ? game?.actors?.get?.(actorId) : undefined;
                 const effects =
-                    (fresh as { effects?: { contents?: Array<{ name?: string | null; img?: string | null; icon?: string | null; label?: string | null }> } } | undefined)?.effects?.contents ??
-                    [];
+                    (
+                        fresh as
+                            | { effects?: { contents?: Array<{ name?: string | null; img?: string | null; icon?: string | null; label?: string | null }> } }
+                            | undefined
+                    )?.effects?.contents ?? [];
                 const found = effects.find((e) => e.name === 'Legacy-Label-Field') ?? effects[0];
                 return {
                     actorId,
@@ -212,7 +221,8 @@ test.describe('migrations + compendium resync (Tier B)', () => {
         if (result.error) failures.push(result.error);
         else {
             if (result.createdCount === 0) failures.push('no ActiveEffect created');
-            if (result.name !== 'Legacy-Label-Field') failures.push(`AE.name was ${String(result.name)}, expected 'Legacy-Label-Field' (post-migration name surface)`);
+            if (result.name !== 'Legacy-Label-Field')
+                failures.push(`AE.name was ${String(result.name)}, expected 'Legacy-Label-Field' (post-migration name surface)`);
             if (failures.length === 0) recordCoverage('migration.flow', FLOW_AE_LABEL_TO_NAME);
             if (result.actorId) await deleteWorldActor(page, result.actorId);
         }
@@ -247,7 +257,8 @@ test.describe('migrations + compendium resync (Tier B)', () => {
         else {
             if (result.systemId !== 'wh40k-rpg') failures.push(`system.id was ${String(result.systemId)}, expected 'wh40k-rpg'`);
             if (typeof result.systemVersion !== 'string' || result.systemVersion === '') failures.push('system.version not populated');
-            if (typeof result.worldVersion !== 'number') failures.push(`world-version setting type was ${typeof result.worldVersion}, expected number (set by checkAndMigrateWorld)`);
+            if (typeof result.worldVersion !== 'number')
+                failures.push(`world-version setting type was ${typeof result.worldVersion}, expected number (set by checkAndMigrateWorld)`);
             else if (result.worldVersion < 1) failures.push(`world-version was ${result.worldVersion}, expected >= 1 (baseline)`);
             if (failures.length === 0) recordCoverage('migration.flow', FLOW_SYSTEM_VERSION);
         }
@@ -335,7 +346,12 @@ test.describe('migrations + compendium resync (Tier B)', () => {
                 // Refetch the actor from the live collection so
                 // createEmbeddedDocuments resolves to a bound method on the
                 // canonical Document instance.
-                const live = actorId !== null ? (game?.actors?.get?.(actorId) as { createEmbeddedDocuments?: (k: string, d: object[]) => Promise<Array<{ id?: string }>> } | undefined) : undefined;
+                const live =
+                    actorId !== null
+                        ? (game?.actors?.get?.(actorId) as
+                              | { createEmbeddedDocuments?: (k: string, d: object[]) => Promise<Array<{ id?: string }>> }
+                              | undefined)
+                        : undefined;
                 await live?.createEmbeddedDocuments?.('ActiveEffect', [
                     {
                         name: 'icon-probe',
@@ -360,7 +376,8 @@ test.describe('migrations + compendium resync (Tier B)', () => {
 
         if (result.error) failures.push(result.error);
         else {
-            if (typeof result.img !== 'string' || result.img === '') failures.push(`AE.img was ${String(result.img)}, expected a populated string after icon→img remap`);
+            if (typeof result.img !== 'string' || result.img === '')
+                failures.push(`AE.img was ${String(result.img)}, expected a populated string after icon→img remap`);
             if (failures.length === 0) recordCoverage('migration.flow', FLOW_ICON_TO_IMG);
             if (result.actorId) await deleteWorldActor(page, result.actorId);
         }

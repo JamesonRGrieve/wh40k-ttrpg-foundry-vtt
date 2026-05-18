@@ -4,16 +4,16 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect } from 'storybook/test';
+import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheetParts } from '../../../../stories/test-helpers';
 import headerSrc from '../../../templates/item/npc-template/header.hbs?raw';
-import tabsSrc from '../../../templates/item/npc-template/tabs.hbs?raw';
+import abilitiesSrc from '../../../templates/item/npc-template/tab-abilities.hbs?raw';
 import basicsSrc from '../../../templates/item/npc-template/tab-basics.hbs?raw';
 import charsSrc from '../../../templates/item/npc-template/tab-characteristics.hbs?raw';
 import equipmentSrc from '../../../templates/item/npc-template/tab-equipment.hbs?raw';
-import abilitiesSrc from '../../../templates/item/npc-template/tab-abilities.hbs?raw';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
-import { renderSheetParts } from '../../../../stories/test-helpers';
-import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import tabsSrc from '../../../templates/item/npc-template/tabs.hbs?raw';
 
 initializeStoryHandlebars();
 const headerTpl = Handlebars.compile(headerSrc);

@@ -217,16 +217,16 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         // PhysicalItemTemplate stores availability lowercased per its `choices`
         // set. Normalize the key before lookup so the modifier matches.
         const modifiers: Record<string, number> = {
-            abundant: 30,
-            plentiful: 20,
-            common: 10,
-            average: 0,
-            scarce: -10,
-            rare: -20,
+            'abundant': 30,
+            'plentiful': 20,
+            'common': 10,
+            'average': 0,
+            'scarce': -10,
+            'rare': -20,
             'very rare': -30,
             'extremely rare': -40,
             'near unique': -50,
-            unique: -60,
+            'unique': -60,
         };
         return modifiers[(availability ?? '').toLowerCase()] ?? 0;
     }
