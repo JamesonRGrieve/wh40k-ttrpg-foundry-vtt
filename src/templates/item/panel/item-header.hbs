@@ -30,6 +30,25 @@
        - gameSystem          active system id; surfaces `data-wh40k-system`
                              on the wrapper so per-system variants on
                              inner elements fire.
+
+     Optional injection slot (block-partial form):
+
+       Call as a BLOCK partial to inject a full-width region rendered as
+       its own grid row at the bottom of the header — the slot for
+       integrated stat bars, subtitle rows, or inline select/input
+       control clusters that a dedicated item sheet needs inside the
+       header chrome:
+
+         {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs
+              variant="physical" badges=... }}
+             <div class="...">…sheet-specific stat bar / controls…</div>
+         {{/systems/wh40k-rpg/templates/item/panel/item-header.hbs}}
+
+       The injected block renders in the CALLER's data context (so
+       `system.*` / `item.*` resolve exactly as they did inline) and is
+       fully backward-compatible: the existing non-block callers
+       (`{{> … }}`) supply no block, `@partial-block` is absent, and the
+       slot emits zero DOM — output is byte-identical for them.
 --}}
 <header class="tw-grid {{#if (eq variant "physical")}}tw-grid-cols-[80px_minmax(0,1fr)_auto]{{else}}tw-grid-cols-[80px_minmax(0,1fr)]{{/if}} tw-gap-4 tw-border-b-2 tw-border-gold-dark bc:tw-border-crimson-dark/60 dh1e:tw-border-gold-raw/60 dh2e:tw-border-gold-dark/80 dw:tw-border-accent-combat/60 ow:tw-border-brass-l20/60 rt:tw-border-amber-900/60 im:tw-border-failure/60 tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-px-4 tw-py-3 tw-shrink-0"{{#if gameSystem}} data-wh40k-system="{{gameSystem}}"{{/if}}>
     {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name extraClass="wh40k-item-header__image"}}
@@ -122,5 +141,14 @@
             </label>
         </div>
         {{/if}}
+    {{/if}}
+
+    {{!-- Optional caller-injected full-width region (stat bars, subtitle
+         rows, inline control clusters). Absent for non-block callers, so
+         output stays byte-identical for the original consumers. --}}
+    {{#if @partial-block}}
+        <div class="tw-[grid-column:1/-1]">
+            {{> @partial-block}}
+        </div>
     {{/if}}
 </header>

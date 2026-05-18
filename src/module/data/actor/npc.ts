@@ -1006,6 +1006,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * Prepare characteristic totals and bonuses.
      * @protected
      */
+    // TODO(dry): this + _prepareMovement/getRollData/_toInt/#migrateSize/#migrateWounds duplicate data/actor/templates/creature.ts. Extract shared statics (parameterize the advance term and Math.max floors).
     _prepareCharacteristics(): void {
         for (const [, char] of Object.entries(this.characteristics)) {
             // Total = base + modifier

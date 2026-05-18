@@ -7,86 +7,82 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact cybernetic identity with inline badges
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0 tw-border-b tw-border-[var(--wh40k-border-color)]">
-      {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name sizeClass="tw-w-14 tw-h-14" frameClass="" overlayTextClass="" overlayIconClass="" extraClass="tw-shrink-0"}}
-      
-      <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
-        <input type="text" class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure" name="name" value="{{item.name}}" placeholder="Cybernetic Name" />
-        
-        <div class="tw-flex tw-flex-wrap tw-gap-1">
-          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Cybernetic Type">
-            <i class="fas fa-microchip"></i>
-            {{system.typeLabel}}
-          </span>
-          {{#if system.locations.size}}
-          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Body Locations">
-            <i class="fas fa-location-dot"></i>
-            {{system.locationsLabel}}
-          </span>
-          {{/if}}
-          {{#if (ne system.craftsmanship "common")}}
-          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Craftsmanship">
-            <i class="fas fa-hammer"></i>
-            {{system.craftsmanshipLabel}}
-          </span>
-          {{/if}}
-          {{#if system.hasArmourPoints}}
-          <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Provides Armour">
-            <i class="fas fa-shield-halved"></i>
-            Armoured
-          </span>
-          {{/if}}
-        </div>
-      </div>
-      
-      <div class="tw-flex tw-items-center tw-justify-end tw-shrink-0">
-        <label class="tw-flex tw-items-center tw-cursor-pointer tw-gap-1" title="Toggle Equipped">
-          <input type="checkbox" name="system.equipped" {{checked system.equipped}} class="tw-sr-only" />
-          <span class="tw-text-xl tw-transition-colors {{#if system.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-white/50{{/if}}">
-            <i class="fas {{#if system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
-          </span>
-          <span class="tw-text-xs {{#if system.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-[color:rgba(214,221,235,0.7)]{{/if}}">{{#if system.equipped}}Installed{{else}}Uninstalled{{/if}}</span>
-        </label>
-      </div>
-    </header>
+    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholder="Cybernetic Name" hideTypeBadge=true }}
+      <div class="tw-flex tw-flex-col tw-gap-2">
+        <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
+          <div class="tw-flex tw-flex-wrap tw-gap-1 tw-flex-1">
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Cybernetic Type">
+              <i class="fas fa-microchip"></i>
+              {{system.typeLabel}}
+            </span>
+            {{#if system.locations.size}}
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Body Locations">
+              <i class="fas fa-location-dot"></i>
+              {{system.locationsLabel}}
+            </span>
+            {{/if}}
+            {{#if (ne system.craftsmanship "common")}}
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Craftsmanship">
+              <i class="fas fa-hammer"></i>
+              {{system.craftsmanshipLabel}}
+            </span>
+            {{/if}}
+            {{#if system.hasArmourPoints}}
+            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-px-2 tw-py-0.5 tw-text-xs" title="Provides Armour">
+              <i class="fas fa-shield-halved"></i>
+              Armoured
+            </span>
+            {{/if}}
+          </div>
 
-    {{!-- ═══════════════════════════════════════════════════════════════════
-         STATS BAR: Key cybernetic info at a glance
-    ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)]">
-      {{!-- Type --}}
-      <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
-        <div class="tw-opacity-60">
-          <i class="fas fa-microchip"></i>
+          <div class="tw-flex tw-items-center tw-justify-end tw-shrink-0">
+            <label class="tw-flex tw-items-center tw-cursor-pointer tw-gap-1" title="Toggle Equipped">
+              <input type="checkbox" name="system.equipped" {{checked system.equipped}} class="tw-sr-only" />
+              <span class="tw-text-xl tw-transition-colors {{#if system.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-white/50{{/if}}">
+                <i class="fas {{#if system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
+              </span>
+              <span class="tw-text-xs {{#if system.equipped}}tw-text-[color:var(--wh40k-green-bright)]{{else}}tw-text-[color:rgba(214,221,235,0.7)]{{/if}}">{{#if system.equipped}}Installed{{else}}Uninstalled{{/if}}</span>
+            </label>
+          </div>
         </div>
-        <div>
-          <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Type</span>
-          <span class="tw-font-medium">{{system.typeLabel}}</span>
+
+        {{!-- STATS BAR: Key cybernetic info at a glance --}}
+        <div class="tw-flex tw-items-center tw-gap-2">
+          {{!-- Type --}}
+          <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
+            <div class="tw-opacity-60">
+              <i class="fas fa-microchip"></i>
+            </div>
+            <div>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Type</span>
+              <span class="tw-font-medium">{{system.typeLabel}}</span>
+            </div>
+          </div>
+
+          {{!-- Weight --}}
+          <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
+            <div class="tw-opacity-60">
+              <i class="fas fa-weight-hanging"></i>
+            </div>
+            <div>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Weight</span>
+              <span class="tw-font-medium">{{system.weight}}kg</span>
+            </div>
+          </div>
+
+          {{!-- Availability --}}
+          <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
+            <div class="tw-opacity-60">
+              <i class="fas fa-store"></i>
+            </div>
+            <div>
+              <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Availability</span>
+              <span class="tw-font-medium">{{system.availabilityLabel}}</span>
+            </div>
+          </div>
         </div>
       </div>
-      
-      {{!-- Weight --}}
-      <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
-        <div class="tw-opacity-60">
-          <i class="fas fa-weight-hanging"></i>
-        </div>
-        <div>
-          <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Weight</span>
-          <span class="tw-font-medium">{{system.weight}}kg</span>
-        </div>
-      </div>
-      
-      {{!-- Availability --}}
-      <div class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-justify-center">
-        <div class="tw-opacity-60">
-          <i class="fas fa-store"></i>
-        </div>
-        <div>
-          <span class="tw-text-xs tw-uppercase tw-tracking-wider tw-opacity-70">Availability</span>
-          <span class="tw-font-medium">{{system.availabilityLabel}}</span>
-        </div>
-      </div>
-    </div>
+    {{/systems/wh40k-rpg/templates/item/panel/item-header.hbs}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION

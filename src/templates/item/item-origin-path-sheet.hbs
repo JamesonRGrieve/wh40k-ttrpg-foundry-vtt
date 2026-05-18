@@ -8,12 +8,8 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact identity with step badge
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="tw-flex tw-items-start tw-gap-3 tw-p-3 tw-shrink-0">
-      {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name sizeClass="tw-w-16 tw-h-16" frameClass="" overlayBgClass="tw-bg-black/60" overlayTextClass="" overlayIconClass="" extraClass="tw-shrink-0"}}
-
-      <div class="tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
-        <input type="text" class="tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" value="{{item.name}}" placeholder="Origin Path Name" />
-
+    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholder="Origin Path Name" hideTypeBadge=true }}
+      <div class="tw-flex tw-flex-col tw-gap-1">
         <div class="tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
           {{!-- Step Badge --}}
           <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{item.system.stepLabel}}">
@@ -50,7 +46,7 @@
           </div>
         </div>
       </div>
-    </header>
+    {{/systems/wh40k-rpg/templates/item/panel/item-header.hbs}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION

@@ -96,6 +96,7 @@ export default class AmmoSheet extends BaseItemSheet {
     /**
      * Add a quality to added or removed list.
      */
+    // TODO(dry): this add/remove-to-Set handler triplet is duplicated in armour-sheet.ts and armour-mod-sheet.ts. Extract a SetFieldActionsMixin keyed off data-field.
     static async #addQuality(this: AmmoSheet, _event: Event, target: HTMLElement): Promise<void> {
         const type = target.dataset['type']; // 'added' or 'removed'
         const input = this.element.querySelector<HTMLInputElement>(`[name="new-${type}-quality"]`);

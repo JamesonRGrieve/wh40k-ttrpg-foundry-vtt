@@ -9,6 +9,7 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  */
+// TODO(dry): MalignancyData and SpecialAbilityData are identical bar one field name (effect vs benefit). Share a base or parameterize the differing field.
 export default class MalignancyData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
