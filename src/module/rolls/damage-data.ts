@@ -56,6 +56,54 @@ export interface AttackDataLike {
     damageData?: { targetActor?: unknown };
 }
 
+/** A single resolvable damage-die result from a Foundry Roll term. */
+export interface DamageDieResult {
+    result: number;
+    active?: boolean;
+    discarded?: boolean;
+}
+
+/**
+ * DH2 core (core.md L10398-10414): the attacker may replace ONE damage
+ * die with the attack roll's Degrees of Success. Mutates the chosen
+ * active die in place — the lowest by default, or the attacker-selected
+ * index into the active-die list — and reports the swapped-out value plus
+ * the delta so callers can adjust the running damage total without
+ * re-evaluating the Roll. Returns null when no eligible die exists or the
+ * supplied index is out of range.
+ */
+export function replaceDamageDieWithDoS(
+    dice: DamageDieResult[],
+    dos: number,
+    dieIndex?: number,
+): { replacedIndex: number; previous: number; delta: number } | null {
+    if (dos < 0) return null;
+    const active = dice.filter((d) => d.discarded !== true && d.active !== false);
+    if (active.length === 0) return null;
+
+    let target: DamageDieResult | undefined;
+    let replacedIndex: number;
+    if (dieIndex === undefined) {
+        target = active[0];
+        replacedIndex = 0;
+        for (let i = 1; i < active.length; i += 1) {
+            const candidate = active[i];
+            if (candidate !== undefined && (target === undefined || candidate.result < target.result)) {
+                target = candidate;
+                replacedIndex = i;
+            }
+        }
+    } else {
+        target = active[dieIndex];
+        replacedIndex = dieIndex;
+    }
+
+    if (target === undefined) return null;
+    const previous = target.result;
+    target.result = dos;
+    return { replacedIndex, previous, delta: dos - previous };
+}
+
 export class DamageData {
     template = '';
     // eslint-disable-next-line no-restricted-syntax -- boundary: actor types are opaque Foundry documents; kept unknown to avoid circular imports
@@ -148,6 +196,27 @@ export class Hit {
 
     _totalDamage(): void {
         this.totalDamage = this.damage + Object.values(this.modifiers).reduce((a, b) => a + b, 0);
+    }
+
+    /**
+     * Apply the DH2 "replace a damage die with Degrees of Success" option
+     * to this hit's damage roll (core.md L10398-10414). Adjusts the
+     * dice-sum base by the delta and recomputes the damage total. Returns
+     * true when a die was replaced. (#129)
+     */
+    replaceDamageDieWithDoS(dos: number, dieIndex?: number): boolean {
+        if (this.damageRoll === undefined) return false;
+        const dice: DamageDieResult[] = [];
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Roll.terms is untyped at runtime; narrowing term shape manually
+        for (const term of this.damageRoll.terms as unknown[]) {
+            const termResults = (term as { results?: DamageDieResult[] }).results;
+            if (Array.isArray(termResults)) dice.push(...termResults);
+        }
+        const outcome = replaceDamageDieWithDoS(dice, dos, dieIndex);
+        if (outcome === null) return false;
+        this.damage += outcome.delta;
+        this._totalDamage();
+        return true;
     }
 
     _totalPenetration(): void {
