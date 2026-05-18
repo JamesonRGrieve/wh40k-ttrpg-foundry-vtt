@@ -711,6 +711,16 @@
                 "Stacked": "{name} stacked on {target} (\u00d7{stacks})"
             }
         },
+        "ProfaneObject": {
+            "Badge": "Profane Object",
+            "AuraLabel": "Aura",
+            "AuraRadius": "Radius",
+            "HookLabel": "Per-Action Hook",
+            "HookTrigger": "Trigger",
+            "Corruption": "Corruption",
+            "Insanity": "Insanity",
+            "EmptyHookText": "No per-action hook — aura only."
+        },
         "Lead": {
             "Label": "Investigation Lead",
             "Type": {
@@ -878,6 +888,20 @@
             "Cancel": "Cancel",
             "ChatTitle": "Daemonhost Bound",
             "BoundAtTier": "Host bound at tier:"
+        },
+        "IncorruptibleDevotion": {
+            "DialogTitle": "Convert Corruption to Insanity (Adepta Sororitas)",
+            "Description": "Your unwavering faith arms you against the Ruinous Powers. You may refuse this taint, taking the spiritual toll on your mind instead.",
+            "IncomingCorruption": "Incoming Corruption",
+            "InsanityInstead": "Insanity Instead",
+            "TradeButton": "Trade for Insanity",
+            "DeclineButton": "Accept Corruption",
+            "ChatTitle": "Incorruptible Devotion",
+            "TradeMessage": "Faith holds against the warp. Corruption is averted; the cost is paid in sanity.",
+            "DeclinedMessage": "The trade is refused. Corruption takes hold.",
+            "CorruptionAverted": "Corruption averted",
+            "InsanityGained": "Insanity gained",
+            "CorruptionGained": "Corruption gained"
         },
         "TalentCategory": {
             "General": "General",
