@@ -229,6 +229,8 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/prompt/daemon-weapon-attribute-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/daemon-weapon-attribute-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/daemonhost-binding-dialog.hbs',
+            'systems/wh40k-rpg/templates/prompt/incorruptible-devotion-dialog.hbs',
+            'systems/wh40k-rpg/templates/chat/incorruptible-devotion-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/fear-test-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/fear-test-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/radical-services-dialog.hbs',

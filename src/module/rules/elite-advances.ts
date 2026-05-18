@@ -56,4 +56,15 @@ export const ELITE_ADVANCES: Record<string, EliteAdvanceDefinition> = {
         xpCost: 2000,
         prerequisites: [],
     },
+    'sister-of-battle': {
+        id: 'sister-of-battle',
+        label: 'Sister of Battle',
+        description:
+            "You are inducted into the Adepta Sororitas. Female applicants of proven Imperial faith only. Grants Faith of the Emperor (+10 WP vs psychic powers), Holy Aegis (ignore 1d10 daemonic-source damage once per round), and Sister's Resolve (+20 to Fear tests).",
+        xpCost: 750,
+        prerequisites: [
+            { type: 'characteristic', key: 'fellowship', minimum: 40 },
+            { type: 'characteristic', key: 'willpower', minimum: 35 },
+        ],
+    },
 };
