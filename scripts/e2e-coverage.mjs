@@ -1042,6 +1042,256 @@ const RULE_TACTICAL_FLOWS = [
 ];
 recordDimension('rule-tactical.flow', covered['rule-tactical.flow'], RULE_TACTICAL_FLOWS);
 
+// ─────────────────────────────────────────────────────────────────────────
+// Parallel-subagent expansion batch — ten new Tier B specs, each driving a
+// previously-uncovered source area in its own disjoint spec file. For each,
+// the *_FLOWS list below MUST stay in sync with the matching constant /
+// recordCoverage('<dimension>', ...) keys in the named spec (the spec is the
+// source of truth). The storybook story-render spec
+// (tests/storybook/extra-story-render.spec.ts) is intentionally absent here —
+// it runs under the separate playwright.storybook config, not Tier B.
+// ─────────────────────────────────────────────────────────────────────────
+
+// tests/e2e/rolls-builders.spec.ts — src/module/rolls/* pure builders
+// (roll-helpers, roll-data, action-data, extended-test-data, damage-data)
+// + dice/basic-roll, none driven by rolls-data.spec.ts.
+const ROLLS_BUILDER_FLOWS = [
+    'helpers-uuid-shape',
+    'helpers-get-degree',
+    'helpers-opposed-degrees-matrix',
+    'helpers-recursive-update-coerce',
+    'helpers-handle-dotnotation-delete',
+    'roll-data-clamp-modifier-cap',
+    'roll-data-constructor-defaults',
+    'roll-data-modified-target-getter',
+    'roll-data-active-modifiers-getter',
+    'roll-data-attack-special-lookup',
+    'roll-data-modifiers-to-rolldata',
+    'roll-data-calculate-total-modifiers',
+    'roll-data-weapon-subclass-template',
+    'roll-data-psychic-subclass-template',
+    'action-data-constructor',
+    'action-data-effect-switch',
+    'action-data-weapon-subclass',
+    'action-data-psychic-subclass',
+    'extended-test-threshold-and-ladder',
+    'extended-test-failure-budget',
+    'damage-replace-die-with-dos',
+    'damage-hit-totals-and-reset',
+    'damage-scatter-direction',
+    'basic-roll-construct-formula',
+];
+recordDimension('rolls-builder.flow', covered['rolls-builder.flow'], ROLLS_BUILDER_FLOWS);
+
+// tests/e2e/dice-engine.spec.ts — src/module/dice/* (barrel, BasicRollWH40K,
+// D100Roll subclass) deeper than rolls-data.spec.ts / d100-roll-extras.spec.ts.
+const DICE_ENGINE_FLOWS = [
+    'dice-module-barrel-exports',
+    'basic-roll-construct-formula-base',
+    'basic-roll-construct-formula-positive-mod',
+    'basic-roll-construct-formula-negative-mod',
+    'basic-roll-evaluate-static-no-chat',
+    'basic-roll-tojson-fromdata-roundtrip',
+    'd100-construct-formula-ignores-modifier',
+    'd100-target-getter',
+    'd100-success-degrees-of-success',
+    'd100-failure-degrees-of-failure',
+    'd100-degrees-signed-and-absolute',
+    'd100-critical-success',
+    'd100-critical-failure',
+    'd100-doubles-righteous-fury',
+    'd100-evaluate-static-no-dialog',
+    'd100-get-tooltip-enhances',
+];
+recordDimension('dice-engine.flow', covered['dice-engine.flow'], DICE_ENGINE_FLOWS);
+
+// tests/e2e/utils-extra.spec.ts — src/module/utils/* not owned by
+// calculators.spec.ts / utils-validators.spec.ts (9 distinct modules).
+const UTILS_EXTRA_FLOWS = [
+    'pack-prefix-dh-editions',
+    'pack-prefix-passthrough',
+    'encumbrance-carry-capacity',
+    'encumbrance-table-exported',
+    'origin-ui-characteristic-info',
+    'origin-ui-training-label',
+    'text-pattern-split-list',
+    'text-pattern-to-key',
+    'text-pattern-parse-range',
+    'text-pattern-parse-value-with-modifier',
+    'text-pattern-clean-entry',
+    'item-variant-normalize-line-key',
+    'item-variant-is-line-container',
+    'item-variant-resolve-variant',
+    'xp-calculate-total-cost',
+    'actor-converter-is-convertible-type',
+    'stat-block-validator-validate',
+    'origin-chart-layout-compute-full-chart',
+];
+recordDimension('utils-extra.flow', covered['utils-extra.flow'], UTILS_EXTRA_FLOWS);
+
+// tests/e2e/rules-progression.spec.ts — remaining uncovered src/module/rules/*
+// (chaos-talents, elite-advances, radical-services, xenos-features,
+// profane-objects, weapon-training, weapon-modifiers, range).
+const RULE_PROGRESSION_FLOWS = [
+    'chaos-talents-constants',
+    'elite-advances-registry',
+    'elite-advances-prerequisites',
+    'radical-services-registry',
+    'radical-services-availability',
+    'xenos-features-constants',
+    'profane-objects-module-shape',
+    'weapon-training-check-noTraining',
+    'weapon-training-check-untrained',
+    'weapon-training-modifier',
+    'weapon-training-description',
+    'weapon-modifiers-update',
+    'weapon-modifiers-attackBonuses',
+    'weapon-modifiers-attackSpecials',
+    'range-calculateWeaponRange-melee',
+    'range-calculateWeaponRange-noWeapon',
+];
+recordDimension('rule-progression.flow', covered['rule-progression.flow'], RULE_PROGRESSION_FLOWS);
+
+// tests/e2e/managers-extra.spec.ts — src/module/managers/{event-tracker,
+// item-drop-manager,inventory-generator-manager}.ts (managers.spec.ts owns
+// grants/transaction).
+const MANAGERS_EXTRA_FLOWS = [
+    'event-tracker-register-settings',
+    'event-tracker-set-and-get-resolved',
+    'event-tracker-is-available',
+    'event-tracker-blocking-reasons',
+    'event-tracker-compute-character-states',
+    'event-tracker-build-content-html',
+    'event-tracker-open-dialog',
+    'item-drop-non-droppable-returns-null',
+    'item-drop-no-token-returns-null',
+    'item-drop-creates-loot-pile',
+    'item-drop-pickup-loot',
+    'inventory-generator-collect-candidates',
+    'inventory-generator-apply-to-actor',
+    'inventory-generator-permission-denied',
+];
+recordDimension('managers-extra.flow', covered['managers-extra.flow'], MANAGERS_EXTRA_FLOWS);
+
+// tests/e2e/handlebars-helpers-extra.spec.ts — src/module/handlebars/* +
+// src/module/helpers/* not driven by helpers.spec.ts.
+const HANDLEBARS_EXTRA_FLOWS = [
+    'handlebars-number-formatters',
+    'handlebars-iteration-helpers',
+    'handlebars-logic-helpers',
+    'handlebars-collection-helpers',
+    'handlebars-string-helpers',
+    'handlebars-sanity-ladders',
+    'handlebars-weapon-display-helpers',
+    'handlebars-talent-trait-helpers',
+    'handlebars-option-object-helpers',
+    'handlebars-specialQualities',
+    'handlebars-standalone-exports',
+    'helpers-icon-lookups',
+    'helpers-skillkey-rt-family',
+    'helpers-skillkey-dh2-family',
+    'helpers-craftsmanship',
+    'helpers-game-icons',
+];
+recordDimension('handlebars-extra.flow', covered['handlebars-extra.flow'], HANDLEBARS_EXTRA_FLOWS);
+
+// tests/e2e/data-item-models.spec.ts — src/module/data/item/* derived math
+// not asserted by dh-special-items.spec.ts / item-types.spec.ts /
+// weapon-attack.spec.ts.
+const DATA_ITEM_MODEL_FLOWS = [
+    'armour-ap-aggregation',
+    'armour-craftsmanship-ap',
+    'armour-coverage-derivation',
+    'armour-stealth-penalty',
+    'gear-weight-math',
+    'gear-uses-exhausted',
+    'talent-prerequisites',
+    'talent-grants-summary',
+    'talent-specialization-fullname',
+    'ammunition-modifiers',
+    'force-field-overload',
+    'force-field-craftsmanship',
+    'trait-level-variable',
+    'skill-derived-labels',
+    'condition-duration',
+    'weapon-modification-restrictions',
+];
+recordDimension('data-item-model.flow', covered['data-item-model.flow'], DATA_ITEM_MODEL_FLOWS);
+
+// tests/e2e/data-actor-models.spec.ts — src/module/data/actor/templates +
+// concrete derived math (creature/character) across all 7 systems.
+const DATA_ACTOR_MODEL_FLOWS = [
+    'characteristic-total-and-bonus::dh2e',
+    'characteristic-total-and-bonus::im',
+    'characteristic-unnatural-multiplies-bonus::dh2e',
+    'characteristic-damage-subtracts::dh2e',
+    'skill-rank-flags::dh2e',
+    'skill-current-aptitude-untrained::dh2e',
+    'skill-current-aptitude-untrained::bc',
+    'skill-current-aptitude-untrained::ow',
+    'skill-current-aptitude-untrained::im',
+    'skill-current-career-untrained::rt',
+    'skill-current-career-untrained::dh1e',
+    'skill-current-career-untrained::dw',
+    'skill-trained-uses-full-characteristic::dh2e',
+    'movement-derives-from-ab-and-size::dh2e',
+    'lifting-and-leap-from-strength-bonus::dh2e',
+    'fatigue-max-from-toughness-bonus::dh2e',
+    'psy-current-rating-and-isPsyker::dh2e',
+    'experience-available-derived::dh2e',
+    'wounds-fate-resources-roundtrip::dh2e',
+    'corruption-level-and-insanity-degrees::dh1e',
+    'subtlety-and-influence-roundtrip::dh2e',
+    'influence-clamps-to-percentile-ceiling::dh2e',
+    'roll-data-exposes-characteristic-keys::dh2e',
+];
+recordDimension('data-actor-model.flow', covered['data-actor-model.flow'], DATA_ACTOR_MODEL_FLOWS);
+
+// tests/e2e/applications-tours-extra.spec.ts — src/module/tours/* + uncovered
+// src/module/applications/api|components (no overlap with dialogs/sheet-mixins/
+// sheet-action-handlers specs).
+const APP_TOURS_EXTRA_FLOWS = [
+    'tour-wh40k-base-class',
+    'tour-main-construct',
+    'tour-main-steps-shape',
+    'tour-registered-in-game',
+    'tooltip-mixin-prepare',
+    'dialog-wh40k-static-helpers',
+    'dialog-wh40k-instance-render',
+    'whatif-mixin-state',
+    'statbreakdown-mixin-action',
+    'collapsible-panel-mixin-toggle',
+    'enhanced-animations-counter',
+    'appv2-mixin-number-autoselect',
+    'contextmenu-trigger-event',
+    'effect-actions-crud',
+    'item-target-resolve',
+    'active-modifiers-panel-prepare',
+    'item-preview-card-toggle',
+    'talent-editor-dialog-render',
+];
+recordDimension('app-tours-extra.flow', covered['app-tours-extra.flow'], APP_TOURS_EXTRA_FLOWS);
+
+// tests/e2e/game-system-configs.spec.ts — src/module/config/game-systems/*.
+// 10 single-flow registry/base-helper keys + 7 per-system families × the 7
+// canonical GameSystemIds (bc,dh1e,dh2e,dw,ow,rt,im), `<family>::<id>` shape.
+const GAME_SYSTEM_CONFIG_SINGLE_FLOWS = [
+    'registry-get-all-systems',
+    'registry-getOrNull-and-has',
+    'aptitude-cost-tables-dh2e',
+    'aptitude-resolution-fallback',
+    'advance-match-info',
+    'career-cost-null-contract',
+    'bc-alignment-cost-modifier',
+    'skill-level-to-rank',
+    'starting-xp-divergence',
+    'step-short-labels',
+];
+const GAME_SYSTEM_CONFIG_FAMILIES = ['themeClassFor', 'config-identity', 'skill-rank-shape', 'characteristic-tier-shape', 'origin-step-config', 'fate-point-uses', 'visible-skills'];
+const GAME_SYSTEM_CONFIG_IDS = ['bc', 'dh1e', 'dh2e', 'dw', 'ow', 'rt', 'im'];
+const GAME_SYSTEM_CONFIG_FLOWS = [...GAME_SYSTEM_CONFIG_SINGLE_FLOWS, ...GAME_SYSTEM_CONFIG_FAMILIES.flatMap((fam) => GAME_SYSTEM_CONFIG_IDS.map((id) => `${fam}::${id}`))];
+recordDimension('game-system-config.flow', covered['game-system-config.flow'], GAME_SYSTEM_CONFIG_FLOWS);
+
 // Roll-data plumbing flows exercised by tests/e2e/rolls-data.spec.ts. Drives
 // source-code coverage on `src/module/rolls/assign-damage-data.ts` (the
 // damage allocator's reduce-then-distribute branch matrix between wounds,
