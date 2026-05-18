@@ -1,0 +1,49 @@
+{{!-- Adepta Sororitas — Incorruptible Devotion trade dialog (GitHub #92) --}}
+{{!-- Shown when the actor would gain Corruption and carries the trait. --}}
+{{!-- On confirm: skip the Corruption gain, apply the same amount of Insanity. --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2e">
+
+    <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-[#9a9a8a] tw-italic">
+        {{localize "WH40K.IncorruptibleDevotion.Description"}}
+    </div>
+
+    {{!-- Amount summary --}}
+    <div class="tw-flex tw-flex-col tw-gap-2 tw-p-4 tw-mb-5 tw-rounded-md tw-border-2 tw-border-[rgba(201,162,39,0.25)] dh2e:tw-border-gold tw-bg-[rgba(0,0,0,0.35)]">
+        <div class="tw-flex tw-justify-between tw-gap-3 tw-items-baseline">
+            <span class="tw-text-[0.85rem] tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
+                {{localize "WH40K.IncorruptibleDevotion.IncomingCorruption"}}
+            </span>
+            <span class="tw-text-[1.4rem] tw-font-bold tw-tabular-nums tw-text-gold dh2e:tw-text-gold">
+                {{corruptionAmount}}
+            </span>
+        </div>
+        <div class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-[#9a9a8a] tw-text-[0.85rem]">
+            <i class="fas fa-arrow-down"></i>
+            <span class="tw-uppercase tw-tracking-[0.08em]">1 : 1</span>
+            <i class="fas fa-arrow-down"></i>
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-3 tw-items-baseline">
+            <span class="tw-text-[0.85rem] tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">
+                {{localize "WH40K.IncorruptibleDevotion.InsanityInstead"}}
+            </span>
+            <span class="tw-text-[1.4rem] tw-font-bold tw-tabular-nums tw-text-gold dh2e:tw-text-gold">
+                {{insanityAmount}}
+            </span>
+        </div>
+    </div>
+
+    {{!-- Action buttons --}}
+    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(201,162,39,0.2)]">
+        <button type="button"
+                data-action="trade"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] dh2e:tw-from-gold tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)]">
+            <i class="fas fa-hand-holding-heart"></i> {{localize "WH40K.IncorruptibleDevotion.TradeButton"}}
+        </button>
+        <button type="button"
+                data-action="decline"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(255,255,255,0.15)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(255,255,255,0.05)] tw-text-[rgba(255,255,255,0.7)]">
+            <i class="fas fa-times"></i> {{localize "WH40K.IncorruptibleDevotion.DeclineButton"}}
+        </button>
+    </div>
+
+</div>
