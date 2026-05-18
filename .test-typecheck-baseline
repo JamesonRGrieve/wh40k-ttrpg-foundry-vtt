@@ -1,5 +1,6 @@
 {
   "strict": [
+    "TS1117",
     "TS18046",
     "TS2307",
     "TS2322",
@@ -13,14 +14,12 @@
     "TS2454",
     "TS2510",
     "TS2545",
-    "TS2749"
+    "TS2749",
+    "TS7016"
   ],
   "config": "tsconfig.test.json",
   "totals": {
-    "totalErrors": 4
+    "totalErrors": 0
   },
-  "byCode": {
-    "TS1117": 2,
-    "TS7016": 2
-  }
+  "byCode": {}
 }
