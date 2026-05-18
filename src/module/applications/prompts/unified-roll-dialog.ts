@@ -16,6 +16,7 @@ import { getDegree, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
 import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
+import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
 import {
     AIM_OPTIONS,
     aggregateSituationalDamageEffects,
@@ -96,6 +97,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _pushLevel: number;
     /** Number of assistants helping the active character (#60 — +10 per, capped by `DEFAULT_ASSISTANT_CAP`). */
     declare _assistantCount: number;
+    /** Extended-test toggle (#59) — when true, rolled DoS accumulate against `_extendedThreshold`. */
+    declare _extended: boolean;
+    /** Threshold of cumulative DoS the extended test must reach (#59). */
+    declare _extendedThreshold: number;
+    /** Alt-characteristic override for skill rolls (#61). `null` = use the skill's listed characteristic. */
+    declare _charOverride: string | null;
 
     /**
      * @param {ActionData} actionData  Any ActionData subclass (SimpleSkillData, WeaponActionData, etc.)
@@ -133,6 +140,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._psyMode = 'unfettered';
         this._pushLevel = 1;
         this._assistantCount = 0;
+        this._extended = false;
+        this._extendedThreshold = 5;
+        this._charOverride = null;
     }
 
     /* -------------------------------------------- */
@@ -171,6 +181,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             decrementPushLevel: UnifiedRollDialog.#onDecrementPushLevel,
             incrementAssistant: UnifiedRollDialog.#onIncrementAssistant,
             decrementAssistant: UnifiedRollDialog.#onDecrementAssistant,
+            setCharacteristicOverride: UnifiedRollDialog.#onSetCharacteristicOverride,
+            toggleExtended: UnifiedRollDialog.#onToggleExtended,
+            setExtendedThreshold: UnifiedRollDialog.#onSetExtendedThreshold,
             cancel: UnifiedRollDialog.#onCancel,
         },
         form: {
@@ -496,6 +509,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             assistantMax: DEFAULT_ASSISTANT_CAP,
             canIncrementAssistant: this._assistantCount < DEFAULT_ASSISTANT_CAP,
             canDecrementAssistant: this._assistantCount > 0,
+            extended: this._extended,
+            extendedThreshold: this._extendedThreshold,
             tryAgainAdvice,
             tryAgainPenalty,
             tryAgainPenaltyLabel: tryAgainPenalty < 0 ? `${tryAgainPenalty}` : tryAgainPenalty > 0 ? `+${tryAgainPenalty}` : '0',
@@ -1071,6 +1086,25 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (this._assistantCount <= 0) return;
         this._assistantCount -= 1;
         await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+    }
+
+    /* ---- Extended Test toggle (#59) ----                                                 */
+    /* When enabled, the rolled DoS feeds into an ExtendedTestData ladder on the chat card. */
+
+    static async #onToggleExtended(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
+        // Action may fire from either the checkbox itself or a wrapper label/button.
+        const checkbox = target instanceof HTMLInputElement ? target : target.querySelector<HTMLInputElement>('input[type="checkbox"]');
+        this._extended = checkbox?.checked ?? !this._extended;
+        await this.render(false, { parts: ['modifiers'] });
+    }
+
+    static async #onSetExtendedThreshold(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
+        const input = target instanceof HTMLInputElement ? target : target.querySelector<HTMLInputElement>('input[type="number"]');
+        const raw = input?.valueAsNumber;
+        const next = Number.isFinite(raw) ? Math.max(1, Math.trunc(raw as number)) : this._extendedThreshold;
+        if (next === this._extendedThreshold) return;
+        this._extendedThreshold = next;
+        await this.render(false, { parts: ['modifiers'] });
     }
 
     /* ---- Card-based Weapon Panel Handlers ---- */

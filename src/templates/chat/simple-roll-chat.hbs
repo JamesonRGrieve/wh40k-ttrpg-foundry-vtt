@@ -39,6 +39,11 @@
 
             {{/if}}{{!-- end isTargetOnly else --}}
 
+            {{!-- Extended Test ladder (#59) --}}
+            {{#if extendedTest}}
+                {{> systems/wh40k-rpg/templates/chat/partial/extended-test-progress.hbs extendedTest=extendedTest}}
+            {{/if}}
+
         {{!-- Hidden dice data for Foundry --}}
         {{#unless isManualRoll}}
         <div class="tw-hidden">
