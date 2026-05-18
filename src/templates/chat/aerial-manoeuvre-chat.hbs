@@ -1,0 +1,49 @@
+{{!-- Aerial Manoeuvre result chat card (#133 — without.md p. 54). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
+{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
+<div class="wh40k-rpg wh40k-aerial-card tw-p-4 tw-rounded-md tw-border tw-border-sky-500 tw-bg-[rgba(8,16,28,0.9)]"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-fighter-jet tw-text-[1.1rem] tw-text-sky-300"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-sky-200">
+            {{localize "WH40K.AerialManoeuvre.ChatTitle"}}
+        </div>
+    </div>
+
+    <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#e8e4d9]">
+        <strong class="tw-text-sky-200">{{localize manoeuvreNameKey}}</strong>
+        — {{#if success}}<span class="tw-text-emerald-300">{{localize "WH40K.AerialManoeuvre.Success"}}</span>{{else}}<span class="tw-text-rose-300">{{localize "WH40K.AerialManoeuvre.Failure"}}</span>{{/if}}
+    </div>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-sky-300">{{localize "WH40K.AerialManoeuvre.AltitudeLabel"}}</span>
+            <span class="tw-font-bold tw-text-sky-200">{{localize resultingAltitudeKey}}</span>
+        </li>
+        {{#if pilotBsBonus}}
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-sky-300">{{localize "WH40K.AerialManoeuvre.PilotBonusLabel"}}</span>
+            <span class="tw-font-bold tw-text-emerald-300">+{{pilotBsBonus}}</span>
+        </li>
+        {{/if}}
+        {{#if enemyBsBonus}}
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-sky-300">{{localize "WH40K.AerialManoeuvre.EnemyBonusLabel"}}</span>
+            <span class="tw-font-bold tw-text-rose-300">+{{enemyBsBonus}}</span>
+        </li>
+        {{/if}}
+    </ul>
+
+    {{#if freeAttack}}
+    <div class="tw-p-2 tw-mb-2 tw-rounded-sm tw-border tw-border-emerald-500/50 tw-bg-[rgba(16,90,60,0.25)] tw-text-[0.85rem] tw-text-emerald-200">
+        <i class="fas fa-crosshairs tw-mr-1"></i>{{localize "WH40K.AerialManoeuvre.FreeAttack"}}
+    </div>
+    {{/if}}
+
+    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(56,189,248,0.4)] tw-bg-[rgba(14,116,144,0.18)] tw-text-[0.85rem] tw-text-[#e0f2fe]">
+        <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-sky-300 tw-mb-1">
+            {{localize "WH40K.AerialManoeuvre.OutcomeLabel"}}
+        </div>
+        <div>{{localize outcomeKey}}</div>
+    </div>
+</div>
