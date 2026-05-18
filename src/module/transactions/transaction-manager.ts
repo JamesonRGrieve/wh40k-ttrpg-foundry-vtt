@@ -1,5 +1,9 @@
-import ConfirmationDialog from '../applications/dialogs/confirmation-dialog.ts';
+import TransactionApprovalDialog from '../applications/dialogs/transaction-approval-dialog.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import { t } from '../i18n/t.ts';
+import { EventTracker } from '../managers/event-tracker.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import type { TransactionMode, TransactionQuoteView } from './transaction-types.ts';
 
 const SOCKET_CHANNEL = `system.${SYSTEM_ID}`;
 const REQUEST_APPROVAL = 'transaction-approval-request';
@@ -7,8 +11,39 @@ const REQUEST_RESULT = 'transaction-request-result';
 const PROFILE_FLAG = 'transactionProfile';
 const HISTORY_FLAG = 'transactionHistory';
 
-type TransactionMode = 'none' | 'barter' | 'requisition';
-type ResourceType = 'throneGelt' | 'requisition';
+type ResourceType = 'throneGelt' | 'requisition' | 'influence';
+
+/**
+ * Disposition (from the campaign relationship tracker) → price modifier
+ * percent. Positive raises the price for an unfriendly source; negative is the
+ * friendly-source discount. Attitude strings match EventTracker's palette.
+ */
+const DISPOSITION_PRICE_PERCENT: Record<string, number> = {
+    'ally': -15,
+    'friendly': -15,
+    'helpful': -15,
+    'cautious-neutral': 5,
+    'neutral': 0,
+    'wary': 15,
+    'rival': 20,
+    'enemy': 35,
+    'hostile': 35,
+    'enraged': 60,
+    'missing': 0,
+};
+
+interface BuyerResourceView {
+    gameSystem?: string;
+    influence?: number;
+    requisition?: number;
+    throneGelt?: number;
+}
+
+interface ResolvedPayment {
+    resourceType: ResourceType;
+    resourceLabel: string;
+    allowInfluenceBurn: boolean;
+}
 
 interface TransactionProfile {
     mode: TransactionMode;
@@ -44,8 +79,11 @@ interface TransactionQuote {
     canAfford: boolean;
     stockAvailable: boolean;
     influenceBurn: number;
+    allowInfluenceBurn: boolean;
     remainingResource: number;
     remainingInfluence: number;
+    gmModifierPercent: number;
+    dispositionAttitude: string | null;
 }
 
 interface TransactionRequestPayload {
@@ -57,6 +95,7 @@ interface TransactionRequestPayload {
     itemId: string;
     quantity: number;
     influenceBurn: number;
+    gmModifierPercent: number;
 }
 
 interface SocketPayload {
@@ -76,6 +115,16 @@ function normalizeInt(value: unknown, fallback = 0): number {
     const str = strValue !== null ? String(strValue) : String(fallback);
     const parsed = Number.parseInt(str, 10);
     return Number.isNaN(parsed) ? fallback : parsed;
+}
+
+/**
+ * Read the buyer's currency fields. TransactionManager operates on the base
+ * Actor.Implementation; the concrete per-system character schema carries these
+ * fields, so this is the single typed boundary rather than scattered casts.
+ */
+function readBuyerResources(buyer: Actor.Implementation): BuyerResourceView {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: base Actor.Implementation system is a per-system union; currency fields live on the character schema
+    return buyer.system as unknown as BuyerResourceView;
 }
 
 // biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with private static state and socket integration
@@ -169,7 +218,164 @@ export class TransactionManager {
         );
     }
 
-    static prepareQuote(params: { buyerActorId: string; sourceActorId: string; itemId: string; quantity?: number; influenceBurn?: number }): TransactionQuote {
+    /**
+     * Resolve which currency the buyer pays in and whether influence may be
+     * burned for a preferential rate. Driven by the DH2e economy ruleset
+     * (`dh2-ruleset`): in homebrew DH2e (and DH1 / other gelt economies) barter
+     * spends Throne Gelt and Influence can be burned for a discount; in RAW
+     * DH2e there is no Throne Gelt, so barter spends Influence itself and there
+     * is nothing to burn. Requisition always spends Requisition.
+     */
+    static #resolvePayment(buyer: Actor.Implementation, mode: Exclude<TransactionMode, 'none'>): ResolvedPayment {
+        if (mode === 'requisition') {
+            return { resourceType: 'requisition', resourceLabel: t('WH40K.Trade.Resource.requisition'), allowInfluenceBurn: false };
+        }
+
+        const resources = readBuyerResources(buyer);
+        const isDh2 = resources.gameSystem === 'dh2e';
+        const homebrew = WH40KSettings.isHomebrew();
+        const hasInfluencePool = typeof resources.influence === 'number';
+
+        if (isDh2 && !homebrew) {
+            return { resourceType: 'influence', resourceLabel: t('WH40K.Trade.Resource.influence'), allowInfluenceBurn: false };
+        }
+
+        return {
+            resourceType: 'throneGelt',
+            resourceLabel: t('WH40K.Trade.Resource.throneGelt'),
+            allowInfluenceBurn: hasInfluencePool,
+        };
+    }
+
+    /**
+     * The source NPC's current attitude toward this buyer, from the campaign
+     * relationship tracker. Prefers a per-character disposition, falling back
+     * to the party-wide entry. Returns null when no tracker data exists.
+     */
+    static #getDispositionAttitude(buyer: Actor.Implementation, source: Actor.Implementation): string | null {
+        let states: ReturnType<typeof EventTracker.computeCharacterStates>;
+        try {
+            states = EventTracker.computeCharacterStates();
+        } catch {
+            return null;
+        }
+
+        const charState = states[source.name];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: index access may be undefined at runtime
+        if (charState === undefined) return null;
+        const dispositions = charState.dispositions;
+
+        const direct = Object.hasOwn(dispositions, buyer.name) ? dispositions[buyer.name] : undefined;
+        const party = Object.hasOwn(dispositions, 'party') ? dispositions['party'] : undefined;
+        const disposition = direct ?? party;
+        if (disposition === undefined) return null;
+
+        return disposition.attitude !== '' ? disposition.attitude : null;
+    }
+
+    /** Disposition-driven price adjustment + the resolved attitude (null when no tracker data). */
+    static #dispositionAdjustment(
+        buyer: Actor.Implementation,
+        source: Actor.Implementation,
+        subtotal: number,
+    ): { entry: AdjustmentEntry | null; attitude: string | null } {
+        const attitude = TransactionManager.#getDispositionAttitude(buyer, source);
+        if (attitude === null) return { entry: null, attitude: null };
+
+        const percent = DISPOSITION_PRICE_PERCENT[attitude] ?? 0;
+        if (percent === 0) return { entry: null, attitude };
+
+        return {
+            entry: { key: 'disposition', label: t('WH40K.Trade.Adjust.Disposition', { attitude }), value: Math.round((subtotal * percent) / 100) },
+            attitude,
+        };
+    }
+
+    /** Influence-burn discount: clamps the request to the profile max and the buyer's pool. */
+    static #influenceBurnAdjustment(
+        buyer: Actor.Implementation,
+        profile: TransactionProfile,
+        allowInfluenceBurn: boolean,
+        requested: number,
+        subtotal: number,
+    ): { influenceBurn: number; entry: AdjustmentEntry | null } {
+        if (profile.mode !== 'barter' || !allowInfluenceBurn || requested <= 0) return { influenceBurn: 0, entry: null };
+
+        const available = normalizeInt(readBuyerResources(buyer).influence ?? 0, 0);
+        const influenceBurn = Math.min(requested, profile.barter.maxInfluenceBurn, available);
+        if (influenceBurn <= 0) return { influenceBurn: 0, entry: null };
+
+        const discount = Math.round((subtotal * (profile.barter.influenceDiscountPercent * influenceBurn)) / 100) * -1;
+        return {
+            influenceBurn,
+            entry: { key: 'influence-burn', label: t('WH40K.Trade.Adjust.InfluenceBurn', { count: influenceBurn }), value: discount },
+        };
+    }
+
+    /** Project a live quote into a plain, serializable view for the approval dialog. */
+    static toQuoteView(quote: TransactionQuote): TransactionQuoteView {
+        return {
+            buyerName: quote.buyer.name,
+            sourceName: quote.source.name,
+            itemName: quote.item.name,
+            mode: quote.mode,
+            quantity: quote.quantity,
+            baseCost: quote.baseCost,
+            finalCost: quote.finalCost,
+            resourceLabel: quote.resourceLabel,
+            adjustments: quote.adjustments.map((adjustment) => ({ label: adjustment.label, value: adjustment.value })),
+            influenceBurn: quote.influenceBurn,
+            dispositionAttitude: quote.dispositionAttitude,
+        };
+    }
+
+    /**
+     * Resolve a source item's base cost. PhysicalItemTemplate.cost is a
+     * per-system SchemaField; the slot varies by gameSystem (dh1.throneGelt,
+     * dh2.influence, rt.profitFactor, dw/ow.requisition, bc.infamy). The legacy
+     * `cost: number` and `cost.value` shapes are kept as fallbacks for old data.
+     */
+    static #resolveBaseItemCost(item: Item.Implementation): number {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data; cost is a per-system SchemaField
+        const itemSystem = item.system as {
+            cost?:
+                | number
+                | string
+                | {
+                      value?: number | string;
+                      dh1?: { throneGelt?: number | null };
+                      dh2?: { influence?: number | null; homebrew?: { throneGelt?: number | null; requisition?: number | null } };
+                      rt?: { profitFactor?: number | null };
+                      dw?: { requisition?: number | null };
+                      ow?: { requisition?: number | null };
+                      bc?: { infamy?: number | null };
+                  };
+            gameSystem?: string;
+        };
+        const cost = itemSystem.cost;
+        if (typeof cost === 'number' || typeof cost === 'string') return normalizeInt(cost, 0);
+        if (!cost) return 0;
+
+        const perSystem: Record<string, number | null | undefined> = {
+            dh1: cost.dh1?.throneGelt,
+            dh2: cost.dh2?.influence,
+            rt: cost.rt?.profitFactor,
+            dw: cost.dw?.requisition,
+            ow: cost.ow?.requisition,
+            bc: cost.bc?.infamy,
+        };
+        const sys = itemSystem.gameSystem ?? '';
+        return normalizeInt(perSystem[sys] ?? cost.value ?? 0, 0);
+    }
+
+    static prepareQuote(params: {
+        buyerActorId: string;
+        sourceActorId: string;
+        itemId: string;
+        quantity?: number;
+        influenceBurn?: number;
+        gmModifierPercent?: number;
+    }): TransactionQuote {
         const buyer = game.actors.get(params.buyerActorId);
         const source = game.actors.get(params.sourceActorId);
 
@@ -186,83 +392,56 @@ export class TransactionManager {
 
         const quantity = Math.max(1, normalizeInt(params.quantity, 1));
         const influenceBurnRequested = Math.max(0, normalizeInt(params.influenceBurn, 0));
+        const gmModifierPercent = normalizeInt(params.gmModifierPercent, 0);
         const stockAvailable = profile.inventoryAccess === 'virtual' ? true : TransactionManager.#getAvailableQuantity(item) >= quantity;
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
-        // PhysicalItemTemplate.cost is a per-system SchemaField; the slot
-        // varies by gameSystem (dh1.throneGelt, dh2.influence, rt.profitFactor,
-        // dw.requisition, ow.requisition, bc.infamy). Pick the active system's
-        // currency value; the legacy `cost: number` and `cost.value` shapes are
-        // kept as fallbacks for legacy world data.
-        const itemSystem = item.system as Record<string, unknown> & {
-            cost?:
-                | number
-                | string
-                | {
-                      value?: number | string;
-                      dh1?: { throneGelt?: number | null };
-                      dh2?: { influence?: number | null; homebrew?: { throneGelt?: number | null; requisition?: number | null } };
-                      rt?: { profitFactor?: number | null };
-                      dw?: { requisition?: number | null };
-                      ow?: { requisition?: number | null };
-                      bc?: { infamy?: number | null };
-                  };
-            influence?: number | string;
-            gameSystem?: string;
-        };
-        const cost = itemSystem.cost;
-        let resolvedCost: number | string = 0;
-        if (typeof cost === 'number' || typeof cost === 'string') {
-            resolvedCost = cost;
-        } else if (cost) {
-            const sys = itemSystem.gameSystem;
-            resolvedCost =
-                (sys === 'dh1' ? cost.dh1?.throneGelt : sys === 'dh2' ? cost.dh2?.influence : sys === 'rt' ? cost.rt?.profitFactor : sys === 'dw' ? cost.dw?.requisition : sys === 'ow' ? cost.ow?.requisition : sys === 'bc' ? cost.bc?.infamy : null) ??
-                cost.value ??
-                0;
-        }
-        const baseItemCost = normalizeInt(resolvedCost, 0);
+        const baseItemCost = TransactionManager.#resolveBaseItemCost(item);
         const baseCost = Math.max(0, baseItemCost * quantity);
         const adjustments: AdjustmentEntry[] = [];
+        const subtotal = (): number => baseCost + adjustments.reduce((sum, adjustment) => sum + adjustment.value, 0);
+
+        const payment = TransactionManager.#resolvePayment(buyer, profile.mode);
 
         if (profile.priceModifierPercent !== 0 && profile.mode === 'barter') {
             const modifier = Math.round((baseCost * profile.priceModifierPercent) / 100);
             adjustments.push({
                 key: 'price-modifier',
-                label: `${profile.priceModifierPercent > 0 ? 'Merchant markup' : 'Merchant discount'} (${profile.priceModifierPercent}%)`,
+                label:
+                    profile.priceModifierPercent > 0
+                        ? t('WH40K.Trade.Adjust.MerchantMarkup', { percent: profile.priceModifierPercent })
+                        : t('WH40K.Trade.Adjust.MerchantDiscount', { percent: profile.priceModifierPercent }),
                 value: modifier,
             });
         }
 
-        let influenceBurn = 0;
-        if (profile.mode === 'barter' && influenceBurnRequested > 0) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: buyer.system is untyped Foundry data
-            const availableInfluence = normalizeInt((buyer.system as Record<string, unknown>)['influence'] ?? 0, 0);
-            influenceBurn = Math.min(influenceBurnRequested, profile.barter.maxInfluenceBurn, availableInfluence);
-            if (influenceBurn > 0) {
-                const subtotal = baseCost + adjustments.reduce((sum, adjustment) => sum + adjustment.value, 0);
-                const discount = Math.round((subtotal * (profile.barter.influenceDiscountPercent * influenceBurn)) / 100) * -1;
-                adjustments.push({
-                    key: 'influence-burn',
-                    label: `Influence burn (${influenceBurn} spent)`,
-                    value: discount,
-                });
-            }
+        const disposition = TransactionManager.#dispositionAdjustment(buyer, source, subtotal());
+        if (disposition.entry !== null) adjustments.push(disposition.entry);
+
+        if (gmModifierPercent !== 0) {
+            adjustments.push({
+                key: 'gm-modifier',
+                label: t('WH40K.Trade.Adjust.GMModifier', { percent: gmModifierPercent }),
+                value: Math.round((subtotal() * gmModifierPercent) / 100),
+            });
         }
+
+        const burn = TransactionManager.#influenceBurnAdjustment(buyer, profile, payment.allowInfluenceBurn, influenceBurnRequested, subtotal());
+        if (burn.entry !== null) adjustments.push(burn.entry);
+        const influenceBurn = burn.influenceBurn;
 
         if (profile.mode === 'requisition' && profile.requisition.costMultiplier !== 1) {
             const modifier = Math.round(baseCost * (profile.requisition.costMultiplier - 1));
             adjustments.push({
                 key: 'requisition-multiplier',
-                label: `Requisition multiplier (${profile.requisition.costMultiplier}x)`,
+                label: t('WH40K.Trade.Adjust.RequisitionMultiplier', { multiplier: profile.requisition.costMultiplier }),
                 value: modifier,
             });
         }
 
-        const finalCost = Math.max(0, baseCost + adjustments.reduce((sum, adjustment) => sum + adjustment.value, 0));
-        const resourceType: ResourceType = profile.mode === 'barter' ? 'throneGelt' : 'requisition';
-        // eslint-disable-next-line no-restricted-syntax -- boundary: buyer.system is untyped Foundry data
-        const availableResource = normalizeInt((buyer.system as Record<string, unknown>)[resourceType] ?? 0, 0);
+        const finalCost = Math.max(0, subtotal());
+        const resourceType = payment.resourceType;
+        const resources = readBuyerResources(buyer);
+        const availableResource = normalizeInt(resources[resourceType] ?? 0, 0);
 
         return {
             mode: profile.mode,
@@ -271,7 +450,7 @@ export class TransactionManager {
             item,
             quantity,
             resourceType,
-            resourceLabel: resourceType === 'throneGelt' ? 'Throne Gelt' : 'Requisition',
+            resourceLabel: payment.resourceLabel,
             baseCost,
             adjustments,
             finalCost,
@@ -279,9 +458,11 @@ export class TransactionManager {
             canAfford: availableResource >= finalCost,
             stockAvailable,
             influenceBurn,
+            allowInfluenceBurn: payment.allowInfluenceBurn,
             remainingResource: Math.max(0, availableResource - finalCost),
-            // eslint-disable-next-line no-restricted-syntax -- boundary: buyer.system is untyped Foundry actor system data
-            remainingInfluence: Math.max(0, normalizeInt((buyer.system as Record<string, unknown> | undefined)?.['influence'] ?? 0, 0) - influenceBurn),
+            remainingInfluence: Math.max(0, normalizeInt(resources.influence ?? 0, 0) - influenceBurn),
+            gmModifierPercent,
+            dispositionAttitude: disposition.attitude,
         };
     }
 
@@ -301,7 +482,7 @@ export class TransactionManager {
         }
 
         const targetGM = TransactionManager.#getTargetGM();
-        if (!targetGM) throw new Error('No active GM is available to approve the transaction.');
+        if (!targetGM) throw new Error(t('WH40K.Trade.NoGM'));
 
         const request: TransactionRequestPayload = {
             requestId: foundry.utils.randomID(),
@@ -312,6 +493,8 @@ export class TransactionManager {
             itemId: params.itemId,
             quantity: quote.quantity,
             influenceBurn: quote.influenceBurn,
+            // The buyer never sets a GM modifier; the GM applies it at approval.
+            gmModifierPercent: 0,
         };
 
         if (targetGM.id === game.user.id && game.user.isGM) {
@@ -390,22 +573,22 @@ export class TransactionManager {
             return;
         }
 
-        const content = TransactionManager.#buildApprovalContent(quote);
-        const approved = await ConfirmationDialog.confirm({
-            title: `${quote.mode === 'barter' ? 'Barter' : 'Requisition'} Approval`,
-            content,
-            confirmLabel: 'Approve',
-            cancelLabel: 'Reject',
-        });
+        const decision = await TransactionApprovalDialog.show(TransactionManager.toQuoteView(quote));
 
-        if (!approved) {
-            TransactionManager.#emitResult(request.requesterUserId, 'Transaction request rejected by the GM.', 'warning');
+        if (!decision.approved) {
+            TransactionManager.#emitResult(request.requesterUserId, t('WH40K.Trade.Result.Rejected'), 'warning');
             return;
         }
 
         try {
-            const result = await TransactionManager.commitTransaction(request);
-            const message = `${result.buyer.name} received ${result.quantity}x ${result.item.name} for ${result.finalCost} ${result.resourceLabel}.`;
+            const result = await TransactionManager.commitTransaction({ ...request, gmModifierPercent: decision.gmModifierPercent });
+            const message = t('WH40K.Trade.Result.Received', {
+                buyer: result.buyer.name,
+                quantity: result.quantity,
+                item: result.item.name,
+                cost: result.finalCost,
+                resource: result.resourceLabel,
+            });
             TransactionManager.#emitResult(request.requesterUserId, message, 'info');
             TransactionManager.notifyRequester(message, 'info');
         } catch (error) {
@@ -426,26 +609,6 @@ export class TransactionManager {
             message,
             resultType,
         });
-    }
-
-    static #buildApprovalContent(quote: TransactionQuote): string {
-        const adjustments = quote.adjustments.length
-            ? `<ul>${quote.adjustments
-                  .map((adjustment) => `<li>${adjustment.label}: ${adjustment.value >= 0 ? '+' : ''}${adjustment.value}</li>`)
-                  .join('')}</ul>`
-            : '<p>No adjustments.</p>';
-
-        return `
-            <div class="standard-form">
-                <p><strong>${quote.buyer.name}</strong> is requesting <strong>${quote.quantity}x ${quote.item.name}</strong> from <strong>${
-            quote.source.name
-        }</strong>.</p>
-                <p><strong>Mode:</strong> ${quote.mode === 'barter' ? 'Barter' : 'Requisition'}</p>
-                <p><strong>Cost:</strong> ${quote.finalCost} ${quote.resourceLabel}</p>
-                ${quote.influenceBurn > 0 ? `<p><strong>Influence burn on completion:</strong> ${quote.influenceBurn}</p>` : ''}
-                ${adjustments}
-            </div>
-        `;
     }
 
     static #getAvailableQuantity(item: Item.Implementation): number {
