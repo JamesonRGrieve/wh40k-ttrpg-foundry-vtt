@@ -125,6 +125,21 @@ export default class StarshipData extends ActorDataModel {
     };
     declare notes: string;
 
+    /**
+     * Active critical-hit statuses applied to the hull (issue #187).
+     * Each entry records the source roll-table draw and identifies the
+     * effect by a stable id (`vacuum` / `fire` / `bridge` / `drive` /
+     * `crew`) so localized labels and per-effect handlers can resolve at
+     * render / resolution time. Statuses persist until cleared by an
+     * Emergency Repair or Quick Repair Extended Action.
+     */
+    declare shipStatuses: Array<{
+        id: string;
+        rolled: number;
+        text: string;
+        appliedAt: number;
+    }>;
+
     /** Computed during _prepareCombatStats */
     declare detectionBonus: number;
     declare hullPercentage: number;
@@ -220,6 +235,22 @@ export default class StarshipData extends ActorDataModel {
 
             // Notes
             notes: new fields.StringField({ required: false, initial: '', blank: true }),
+
+            // Critical-hit statuses applied to the hull (issue #187).
+            // Each entry: { id: 'vacuum'|'fire'|'bridge'|'drive'|'crew', rolled: 1-5,
+            // text: <result text>, appliedAt: <epoch ms> }. Cleared by Emergency
+            // Repair / Quick Repair Extended Actions. Content-agnostic primitive
+            // (just a typed shape) per Direction #7 — the rolltable in the
+            // rt-core-rolltables-ship-combat compendium is the source of effect text.
+            shipStatuses: new fields.ArrayField(
+                new fields.SchemaField({
+                    id: new fields.StringField({ required: true, blank: false, initial: 'vacuum' }),
+                    rolled: new fields.NumberField({ required: true, initial: 1, min: 1, max: 5, integer: true }),
+                    text: new fields.StringField({ required: true, blank: true, initial: '' }),
+                    appliedAt: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                }),
+                { required: true, initial: [] },
+            ),
         };
     }
 

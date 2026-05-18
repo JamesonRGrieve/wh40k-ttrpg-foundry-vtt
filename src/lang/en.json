@@ -1192,7 +1192,8 @@
                 "Weapons": "Weapons",
                 "Crew": "Crew",
                 "History": "History",
-                "ExtendedActions": "Actions"
+                "ExtendedActions": "Actions",
+                "ManoeuvreActions": "Manoeuvres"
             },
             "ExtendedAction": {
                 "Header": "Extended Actions",
@@ -1206,6 +1207,19 @@
                 "Requirements": "Requirements",
                 "ChatSubtitle": "Ship Extended Action",
                 "ChatHeader": "Extended Action Dispatched"
+            },
+            "ManoeuvreAction": {
+                "Header": "Manoeuvre Actions",
+                "Description": "Manoeuvre Actions are the bridge pilot's turn-by-turn ship handling options. Click an action below to post its rules card to chat.",
+                "Empty": "No Manoeuvre Actions found in the active compendiums. Compendium content may not yet be loaded.",
+                "Dispatch": "Dispatch",
+                "DispatchTitle": "Post this Manoeuvre Action to chat",
+                "Skill": "Skill",
+                "Modifier": "Modifier",
+                "Duration": "Duration",
+                "Requirements": "Requirements",
+                "ChatSubtitle": "Ship Manoeuvre Action",
+                "ChatHeader": "Manoeuvre Action Dispatched"
             },
             "Combat": {
                 "Header": "Combat Statistics",
@@ -1328,6 +1342,23 @@
                 "NotifyMissingSlots": "{count} essential slot(s) unfilled",
                 "NotifyCannotCommit": "Cannot save: starship build is invalid.",
                 "NotifyCommitted": "Starship build saved."
+            },
+            "Critical": {
+                "Header": "Critical Hit",
+                "Roll": "Roll Critical Hit",
+                "RollTooltip": "Roll 1d5 on the Critical Hit chart (Battlefleet Koronus)",
+                "ChatSubtitle": "Ship Critical Hit",
+                "RollLabel": "Rolled {rolled} on 1d5",
+                "StatusApplied": "Status Applied",
+                "PersistsUntilRepaired": "Persists until cleared by Emergency Repair or Quick Repair.",
+                "TableUnavailable": "Critical Hit roll table unavailable — rolled {rolled} on 1d5. Apply the corresponding effect from Battlefleet Koronus by hand.",
+                "Effect": {
+                    "Vacuum": "Vacuum / Hull Breach",
+                    "Fire": "Fire",
+                    "Bridge": "Bridge Damage",
+                    "Drive": "Drive Damage",
+                    "Crew": "Crew Casualties"
+                }
             }
         },
         "ShipComponent": {

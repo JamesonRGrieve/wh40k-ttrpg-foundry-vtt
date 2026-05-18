@@ -39,6 +39,7 @@ export default class StarshipSheet extends BaseActorSheet {
             raiseVoidShield: StarshipSheet.#raiseVoidShield,
             lowerVoidShield: StarshipSheet.#lowerVoidShield,
             restoreVoidShields: StarshipSheet.#restoreVoidShields,
+            rollShipCriticalHit: StarshipSheet.#rollShipCriticalHit,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
         classes: ['starship'],
@@ -778,7 +779,7 @@ export default class StarshipSheet extends BaseActorSheet {
      * Pure helper: does not mutate the actor. The commit-button enabled state
      * is already wired against the same `buildValidation` in the template.
      */
-    static async #validateBuild(this: StarshipSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+    static #validateBuild(this: StarshipSheet, _event: PointerEvent, _target: HTMLElement): void {
         const validation = this.computeBuildValidation();
         const i18n = game.i18n;
         if (validation.isValid) {
@@ -813,7 +814,7 @@ export default class StarshipSheet extends BaseActorSheet {
      * that enforces the invariant. (Issue #190 explicitly requires that the
      * build cannot be saved with missing essentials or an over-budget total.)
      */
-    static async #commitBuild(this: StarshipSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+    static #commitBuild(this: StarshipSheet, _event: PointerEvent, _target: HTMLElement): void {
         const validation = this.computeBuildValidation();
         if (!validation.isValid) {
             ui.notifications?.error(game.i18n.localize('WH40K.Starship.Build.NotifyCannotCommit'));
@@ -838,7 +839,10 @@ export default class StarshipSheet extends BaseActorSheet {
         const budget = sys.shipPoints?.budget ?? 0;
         // eslint-disable-next-line no-restricted-syntax -- boundary: items collection iterates as untyped Foundry CollectionEntries
         const a = this.actor as unknown as { items: Iterable<{ type: string; system: unknown }> };
-        const itemViews = [...a.items].map((it) => ({ type: it.type, system: it.system as { componentType?: string; condition?: string; shipPoints?: number; essential?: boolean } }));
+        const itemViews = [...a.items].map((it) => ({
+            type: it.type,
+            system: it.system as { componentType?: string; condition?: string; shipPoints?: number; essential?: boolean },
+        }));
         return StarshipData.validateBuild(budget, itemViews);
     }
 
@@ -899,10 +903,145 @@ export default class StarshipSheet extends BaseActorSheet {
             gameSystem: (actor.system as { gameSystem?: string }).gameSystem ?? 'rt',
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/extended-action-chat.hbs',
-            cardData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/extended-action-chat.hbs', cardData);
+
+        const speaker = ChatMessage.getSpeaker({
+            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarship satisfies Actor.Implementation but typings widen
+            actor: actor as unknown as Actor.Implementation,
+        });
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
+        const payload = { user: game.user.id, speaker, content: html } as unknown as Parameters<typeof ChatMessage.create>[0];
+        void ChatMessage.create(payload);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Roll on the Rogue Trader Critical Hit chart (issue #187).
+     *
+     * Per RAW (Battlefleet Koronus), when hull integrity damage triggers a
+     * critical hit the ship rolls 1d5 on the Critical Hit chart. Each result
+     * (1–5) applies a persistent status that lasts until cleared by an
+     * Emergency Repair or Quick Repair extended action.
+     *
+     * Resolution order, mirroring the divination roll in issue #199:
+     *   1. world `RollTable.getName("Critical Hit")` — GM-imported copy;
+     *   2. `wh40k-rpg.rt-core-rolltables-ship-combat` compendium pack;
+     *   3. fallback to a bare 1d5 with the `WH40K.Starship.Critical.TableUnavailable`
+     *      message — the player still gets a result and the GM is told to
+     *      apply the corresponding effect by hand.
+     *
+     * The drawn result is appended to `system.shipStatuses` (a typed array
+     * on `StarshipData`) AND posted to chat via the
+     * `ship-critical-hit-chat.hbs` template.
+     */
+    static async #rollShipCriticalHit(this: StarshipSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KStarship for ship-specific access
+        const actor = this.actor as unknown as WH40KStarship;
+        const i18n = game.i18n;
+
+        // 1 + 2: try the world tables, then the compendium pack.
+        let rolled = 0;
+        let resultText = '';
+        let tableFound = false;
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.tables typing in fvtt-types is loose
+        const worldTables = (globalThis as unknown as { game?: { tables?: { getName?: (name: string) => unknown } } }).game?.tables;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: RollTable shape narrowed locally
+        const worldTable = worldTables?.getName?.('Critical Hit') as
+            | undefined
+            | { draw?: (opts?: { displayChat?: boolean }) => Promise<{ roll?: { total?: number }; results?: Array<{ text?: string }> }> };
+        if (worldTable?.draw !== undefined) {
+            try {
+                const draw = await worldTable.draw({ displayChat: false });
+                rolled = draw.roll?.total ?? 0;
+                resultText = draw.results?.[0]?.text ?? '';
+                tableFound = resultText !== '';
+            } catch {
+                tableFound = false;
+            }
+        }
+
+        if (!tableFound) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs typing in fvtt-types is loose
+            const packs = (globalThis as unknown as { game?: { packs?: { get?: (id: string) => unknown } } }).game?.packs;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry CompendiumCollection narrowed locally
+            const pack = packs?.get?.('wh40k-rpg.rt-core-rolltables-ship-combat') as
+                | undefined
+                | { getDocuments?: () => Promise<Array<{ name?: string; draw?: (opts?: { displayChat?: boolean }) => Promise<{ roll?: { total?: number }; results?: Array<{ text?: string }> }> }>> };
+            if (pack?.getDocuments !== undefined) {
+                try {
+                    const docs = await pack.getDocuments();
+                    const table = docs.find((d) => d.name === 'Critical Hit');
+                    if (table?.draw !== undefined) {
+                        const draw = await table.draw({ displayChat: false });
+                        rolled = draw.roll?.total ?? 0;
+                        resultText = draw.results?.[0]?.text ?? '';
+                        tableFound = resultText !== '';
+                    }
+                } catch {
+                    tableFound = false;
+                }
+            }
+        }
+
+        // 3: fallback — bare 1d5 with table-unavailable message.
+        if (!tableFound) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Roll typings vary between versions
+            const RollCtor = (globalThis as unknown as { Roll?: new (formula: string) => { evaluate: () => Promise<{ total: number }>; total?: number } }).Roll;
+            if (RollCtor !== undefined) {
+                try {
+                    const roll = new RollCtor('1d5');
+                    const result = await roll.evaluate();
+                    rolled = result.total;
+                } catch {
+                    rolled = Math.floor(Math.random() * 5) + 1;
+                }
+            } else {
+                rolled = Math.floor(Math.random() * 5) + 1;
+            }
+            resultText = i18n.format('WH40K.Starship.Critical.TableUnavailable', { rolled: String(rolled) });
+        }
+
+        // Map 1d5 result → stable status id + localized label.
+        const STATUS_IDS = ['vacuum', 'fire', 'bridge', 'drive', 'crew'] as const;
+        const STATUS_LABEL_KEYS = [
+            'WH40K.Starship.Critical.Effect.Vacuum',
+            'WH40K.Starship.Critical.Effect.Fire',
+            'WH40K.Starship.Critical.Effect.Bridge',
+            'WH40K.Starship.Critical.Effect.Drive',
+            'WH40K.Starship.Critical.Effect.Crew',
+        ] as const;
+        const idx = Math.min(Math.max(rolled, 1), 5) - 1;
+        const statusId = STATUS_IDS[idx] ?? 'vacuum';
+        const statusLabel = i18n.localize(STATUS_LABEL_KEYS[idx] ?? STATUS_LABEL_KEYS[0]);
+
+        // Append to system.shipStatuses (persistent until cleared by a repair action).
+        const sys = actor.system as { shipStatuses?: Array<{ id: string; rolled: number; text: string; appliedAt: number }> };
+        const existing = Array.isArray(sys.shipStatuses) ? sys.shipStatuses : [];
+        const next = [...existing, { id: statusId, rolled, text: resultText, appliedAt: Date.now() }];
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update payload is a Foundry framework boundary
+            await (actor as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
+                'system.shipStatuses': next,
+            });
+        } catch {
+            // Update may fail in test / mock contexts — chat card still posts.
+        }
+
+        // Render and post chat card.
+        const cardData = {
+            actorName: actor.name ?? '',
+            resultName: statusLabel,
+            resultText,
+            statusLabel,
+            rolled,
+            rollLabel: i18n.format('WH40K.Starship.Critical.RollLabel', { rolled: String(rolled) }),
+            image: 'icons/svg/explosion.svg',
+            gameSystem: (actor.system as { gameSystem?: string }).gameSystem ?? 'rt',
+        };
+
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-critical-hit-chat.hbs', cardData);
 
         const speaker = ChatMessage.getSpeaker({
             // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarship satisfies Actor.Implementation but typings widen
@@ -972,10 +1111,7 @@ export default class StarshipSheet extends BaseActorSheet {
             gameSystem: (actor.system as { gameSystem?: string }).gameSystem ?? 'rt',
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate(
-            'systems/wh40k-rpg/templates/chat/manoeuvre-action-chat.hbs',
-            cardData,
-        );
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/manoeuvre-action-chat.hbs', cardData);
 
         const speaker = ChatMessage.getSpeaker({
             // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KStarship satisfies Actor.Implementation but typings widen
