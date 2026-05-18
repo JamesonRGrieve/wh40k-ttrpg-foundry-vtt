@@ -1154,6 +1154,45 @@
             "PaymentCurrent": "Payment Current",
             "EmptyState": "No active Dark Pacts."
         },
+        "RadicalServices": {
+            "DialogTitle": "Radical Services — Requisition",
+            "ChatTitle": "Radical Services Requisition",
+            "ServiceLabel": "Service",
+            "AvailabilityLabel": "Availability",
+            "ThreatLabel": "Threat",
+            "SubtletyLabel": "Subtlety",
+            "TargetLabel": "Target",
+            "RollLabel": "Roll",
+            "InfluenceLabel": "Influence",
+            "AttemptButton": "Attempt Requisition",
+            "Cancel": "Cancel",
+            "Success": "Service Acquired",
+            "Failure": "Requisition Failed",
+            "Names": {
+                "bountyHunter": "Bounty Hunter",
+                "darkOracle": "Dark Oracle",
+                "deathCult": "Death Cult",
+                "heretek": "Heretek",
+                "hiveGang": "Hive Gang",
+                "maleficScholar": "Malefic Scholar",
+                "mutantMercenary": "Mutant Mercenary",
+                "roguePsyker": "Rogue Psyker",
+                "recidivist": "Recidivist"
+            },
+            "Availability": {
+                "ubiquitous": "Ubiquitous",
+                "abundant": "Abundant",
+                "plentiful": "Plentiful",
+                "common": "Common",
+                "average": "Average",
+                "scarce": "Scarce",
+                "rare": "Rare",
+                "veryRare": "Very Rare",
+                "extremelyRare": "Extremely Rare",
+                "nearUnique": "Near Unique",
+                "unique": "Unique"
+            }
+        },
         "Orders": {
             "Header": "Orders",
             "Name": "Order",
