@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -79,9 +78,7 @@ async function resetSubtlety(page: Page, actorId: string, value: number): Promis
                 globalThis as unknown as {
                     game?: {
                         actors?: {
-                            get?: (
-                                id: string,
-                            ) =>
+                            get?: (id: string) =>
                                 | {
                                       update?: (data: object) => Promise<unknown>;
                                       unsetFlag?: (scope: string, key: string) => Promise<unknown>;
@@ -168,9 +165,7 @@ async function embedSubtletyTalent(
                 globalThis as unknown as {
                     game?: {
                         actors?: {
-                            get?: (
-                                id: string,
-                            ) =>
+                            get?: (id: string) =>
                                 | {
                                       createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id?: string }>>;
                                   }
@@ -214,9 +209,7 @@ async function deleteItem(page: Page, actorId: string, itemId: string): Promise<
                 globalThis as unknown as {
                     game?: {
                         actors?: {
-                            get?: (
-                                id: string,
-                            ) =>
+                            get?: (id: string) =>
                                 | {
                                       deleteEmbeddedDocuments?: (type: string, ids: string[]) => Promise<unknown>;
                                   }
@@ -259,9 +252,7 @@ async function probeManualAdjustment(page: Page, actorId: string): Promise<FlowR
             globalThis as unknown as {
                 game?: {
                     actors?: {
-                        get?: (
-                            id: string,
-                        ) =>
+                        get?: (id: string) =>
                             | {
                                   applySubtlety?: (amount: number, source?: string) => Promise<unknown>;
                                   subtletySourceLabel?: (ref: string) => string;
@@ -305,9 +296,7 @@ async function probeInquestAdjustment(page: Page, actorId: string): Promise<Flow
             globalThis as unknown as {
                 game?: {
                     actors?: {
-                        get?: (
-                            id: string,
-                        ) =>
+                        get?: (id: string) =>
                             | {
                                   applySubtlety?: (amount: number, source?: string) => Promise<unknown>;
                                   subtletySourceLabel?: (ref: string) => string;
@@ -363,9 +352,7 @@ async function probeTalentDeltaApplies(page: Page, actorId: string): Promise<Flo
                     globalThis as unknown as {
                         game?: {
                             actors?: {
-                                get?: (
-                                    id: string,
-                                ) =>
+                                get?: (id: string) =>
                                     | {
                                           collectSubtletyAdjusters?: () => Array<{
                                               label: string;
@@ -443,36 +430,31 @@ async function probeRequiresEquipped(page: Page, actorId: string): Promise<FlowR
     });
     if (!created.id) return { ok: false, error: `embed failed: ${created.error}` };
     try {
-        return await page.evaluate(
-            async (actorId: string) => {
-                const game = (
-                    globalThis as unknown as {
-                        game?: {
-                            actors?: {
-                                get?: (
-                                    id: string,
-                                ) =>
-                                    | {
-                                          collectSubtletyAdjusters?: () => Array<{ label: string; kind: string; delta: number }>;
-                                      }
-                                    | undefined;
-                            };
+        return await page.evaluate(async (actorId: string) => {
+            const game = (
+                globalThis as unknown as {
+                    game?: {
+                        actors?: {
+                            get?: (id: string) =>
+                                | {
+                                      collectSubtletyAdjusters?: () => Array<{ label: string; kind: string; delta: number }>;
+                                  }
+                                | undefined;
                         };
-                    }
-                ).game;
-                const actor = game?.actors?.get?.(actorId);
-                if (!actor?.collectSubtletyAdjusters) return { ok: false, error: 'collectSubtletyAdjusters unavailable' };
-                const present = actor.collectSubtletyAdjusters().find((a) => a.label === 'probe-subtlety-passive-gated');
-                if (!present) {
-                    return { ok: false, error: 'gated passive did not surface on intrinsically-equipped weapon carrier' };
+                    };
                 }
-                if (present.kind !== 'passive' || present.delta !== -2) {
-                    return { ok: false, error: `gated passive shape wrong: ${JSON.stringify(present)}` };
-                }
-                return { ok: true, error: null };
-            },
-            actorId,
-        );
+            ).game;
+            const actor = game?.actors?.get?.(actorId);
+            if (!actor?.collectSubtletyAdjusters) return { ok: false, error: 'collectSubtletyAdjusters unavailable' };
+            const present = actor.collectSubtletyAdjusters().find((a) => a.label === 'probe-subtlety-passive-gated');
+            if (!present) {
+                return { ok: false, error: 'gated passive did not surface on intrinsically-equipped weapon carrier' };
+            }
+            if (present.kind !== 'passive' || present.delta !== -2) {
+                return { ok: false, error: `gated passive shape wrong: ${JSON.stringify(present)}` };
+            }
+            return { ok: true, error: null };
+        }, actorId);
     } finally {
         await deleteItem(page, actorId, created.id);
     }
@@ -500,9 +482,7 @@ async function probeMinAbsoluteDeltaFloors(page: Page, actorId: string): Promise
                 globalThis as unknown as {
                     game?: {
                         actors?: {
-                            get?: (
-                                id: string,
-                            ) =>
+                            get?: (id: string) =>
                                 | {
                                       applySubtlety?: (amount: number) => Promise<unknown>;
                                       system?: { subtlety?: { value?: number } };
@@ -548,49 +528,53 @@ async function probeClearsWhenRemoved(page: Page, actorId: string): Promise<Flow
         requiresEquipped: false,
     });
     if (!created.id) return { ok: false, error: `embed failed: ${created.error}` };
-    const presentBefore = await page.evaluate(
-        (actorId: string) => {
-            const game = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) =>
-                                | {
-                                      collectSubtletyAdjusters?: () => Array<{ label: string }>;
-                                  }
-                                | undefined;
-                        };
+    const presentBefore = await page.evaluate((actorId: string) => {
+        const game = (
+            globalThis as unknown as {
+                game?: {
+                    actors?: {
+                        get?: (id: string) =>
+                            | {
+                                  collectSubtletyAdjusters?: () => Array<{ label: string }>;
+                              }
+                            | undefined;
                     };
-                }
-            ).game;
-            return game?.actors?.get?.(actorId)?.collectSubtletyAdjusters?.().some((a) => a.label === 'probe-subtlety-removable') ?? false;
-        },
-        actorId,
-    );
+                };
+            }
+        ).game;
+        return (
+            game?.actors
+                ?.get?.(actorId)
+                ?.collectSubtletyAdjusters?.()
+                .some((a) => a.label === 'probe-subtlety-removable') ?? false
+        );
+    }, actorId);
     if (!presentBefore) {
         await deleteItem(page, actorId, created.id);
         return { ok: false, error: 'passive adjuster did not surface before removal' };
     }
     await deleteItem(page, actorId, created.id);
-    const presentAfter = await page.evaluate(
-        (actorId: string) => {
-            const game = (
-                globalThis as unknown as {
-                    game?: {
-                        actors?: {
-                            get?: (id: string) =>
-                                | {
-                                      collectSubtletyAdjusters?: () => Array<{ label: string }>;
-                                  }
-                                | undefined;
-                        };
+    const presentAfter = await page.evaluate((actorId: string) => {
+        const game = (
+            globalThis as unknown as {
+                game?: {
+                    actors?: {
+                        get?: (id: string) =>
+                            | {
+                                  collectSubtletyAdjusters?: () => Array<{ label: string }>;
+                              }
+                            | undefined;
                     };
-                }
-            ).game;
-            return game?.actors?.get?.(actorId)?.collectSubtletyAdjusters?.().some((a) => a.label === 'probe-subtlety-removable') ?? false;
-        },
-        actorId,
-    );
+                };
+            }
+        ).game;
+        return (
+            game?.actors
+                ?.get?.(actorId)
+                ?.collectSubtletyAdjusters?.()
+                .some((a) => a.label === 'probe-subtlety-removable') ?? false
+        );
+    }, actorId);
     if (presentAfter) return { ok: false, error: 'adjuster still present after item delete' };
     return { ok: true, error: null };
 }

@@ -20,7 +20,7 @@ const ORIGINAL_ACTOR = (globalThis as Record<string, unknown>).Actor;
 const ORIGINAL_CONST = (globalThis as Record<string, unknown>).CONST;
 
 class FakeApplicationV2 {}
-const fakeHandlebarsApplicationMixin = <T extends new (...args: any[]) => object>(Base: T): T => class extends Base {} as T;
+const fakeHandlebarsApplicationMixin = <T extends new (...args: any[]) => object>(Base: T): T => class extends Base {};
 class FakeActor {
     declare system: unknown;
     declare items: unknown;

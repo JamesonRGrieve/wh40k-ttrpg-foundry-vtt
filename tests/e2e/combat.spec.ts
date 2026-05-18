@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -87,7 +86,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             if (!Actor?.create || !Combat?.create) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { create: 'Actor.create or Combat.create unavailable' } as Record<string, string>,
+                    flowNotes: { create: 'Actor.create or Combat.create unavailable' },
                     npcActorIds: [] as string[],
                     combatId: null as string | null,
                     setupError: 'Actor.create or Combat.create unavailable',
@@ -117,7 +116,7 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
             if (npcIds.length === 0) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { ...notes, create: 'no NPC actors could be created' } as Record<string, string>,
+                    flowNotes: { ...notes, create: 'no NPC actors could be created' },
                     npcActorIds: npcIds,
                     combatId: null as string | null,
                     setupError: 'no NPC actors could be created',
@@ -332,8 +331,8 @@ async function probeCombatLifecycle(page: Page): Promise<FlowProbeResult & { pag
         }, COMBAT_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             npcActorIds: result.npcActorIds,
             combatId: result.combatId,
             setupError: result.setupError,
@@ -503,8 +502,8 @@ async function probeCombatUI(page: Page): Promise<UIProbeResult & { pageErrors: 
         }, COMBAT_UI_CLASSES);
 
         return {
-            rendered: result.rendered as Record<UIClassName, boolean>,
-            uiNotes: result.notes as Partial<Record<UIClassName, string>>,
+            rendered: result.rendered,
+            uiNotes: result.notes,
             pageErrors,
         };
     } finally {

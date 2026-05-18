@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
-import { initializeStoryHandlebars } from './template-support';
 import { listIcons } from '../src/module/icons/icon.ts';
+import { initializeStoryHandlebars } from './template-support';
 
 initializeStoryHandlebars();
 

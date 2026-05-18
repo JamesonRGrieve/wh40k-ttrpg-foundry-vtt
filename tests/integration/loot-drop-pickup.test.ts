@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import { ItemDropManager } from '../../src/module/managers/item-drop-manager';
 import { bootFoundryOnce } from './lib/boot';
 import { createActor } from './lib/fixtures';

@@ -69,7 +69,7 @@ Every direction in the previous section is backed by a coverage script and a rat
 | Inferred type-coverage % (`type-coverage --strict`; covered count cannot fall, **auto-flips to strict at 100%**) | `pnpm type-coverage` | `pnpm type-coverage:ratchet` | `.type-coverage-baseline` |
 | `knip` per-category unused detection (files, exports, types, deps, binaries, …) — **per-category, auto-flips to strict at 0** | `pnpm knip` | `pnpm knip:ratchet` | `.knip-baseline` |
 | Dependency-cruiser 3-layer + correctness rules (sheets ↛ data, docs ↛ apps, no-circular, no-test-into-prod, no-orphans, …) — **per-rule, auto-flips to strict at 0** | `pnpm deps:check` | `pnpm deps:ratchet` | `.depcruise-baseline` |
-| ESLint warnings | (built into ratchet) | `pnpm lint:ratchet` | `.eslint-warning-baseline` |
+| ESLint warnings (strong config over `src/module/ src/templates/ stories/ tests/` — app, story, and test code, same ruleset) | (built into ratchet) | `pnpm lint:ratchet` | `.eslint-warning-baseline` |
 | Biome diagnostics (errors + warnings) | (built into ratchet) | `pnpm biome:ratchet` | `.biome-warning-baseline` |
 | Sheet → story / data → test pairing | `pnpm symmetry` | `pnpm symmetry:ratchet` | `.symmetry-baseline` |
 | `!important` in `tailwind/*.js` | `pnpm important:coverage` | `pnpm important:ratchet` | `.important-baseline` |
@@ -83,15 +83,18 @@ The hard gates (preload-drift, plugin-audit, i18n, lockfile-validate) cannot be 
 
 #### Auto-flip semantics ("graduates to strict")
 
-Several ratchets (`ts:ratchet`, `strict:ratchet`, `test:typecheck:ratchet`, `knip:ratchet`, `deps:ratchet`, `type-coverage:ratchet`, `e2e:ratchet`) implement the same auto-flip pattern: when a per-rule / per-code / per-category count reaches 0 (or, for `e2e:ratchet`, when a per-dimension percentage reaches 100), the baseline file records it in `"strict": [...]` and any future occurrence is a **hard fail** with no `--update` escape hatch. The ratchet continues to function normally for everything still above 0.
+Several ratchets (`lint:ratchet`, `ts:ratchet`, `strict:ratchet`, `test:typecheck:ratchet`, `knip:ratchet`, `deps:ratchet`, `type-coverage:ratchet`, `e2e:ratchet`) implement the same auto-flip pattern: when a per-rule / per-code / per-category count reaches 0 (or, for `e2e:ratchet`, when a per-dimension percentage reaches 100), the baseline file records it in `"strict": [...]` and any future occurrence is a **hard fail** with no `--update` escape hatch. The ratchet continues to function normally for everything still above 0.
 
 This is the explicit shape of "ratchet → hard gate" promotion: a metric earns its way into hard-gate status by being driven to 0, and once there the invariant is enforced like any other hard gate. The promotion is automatic the next time the ratchet runs — no separate config change needed. To un-strict a metric you must manually edit the baseline file and explain why in the commit; it's an explicit demotion, not a quiet revert.
+
+**`lint:ratchet` is the ESLint instance of this pattern, with one extra move.** It tracks per-rule warning counts over the full surface (`src/module/ src/templates/ stories/ tests/`). When a rule *we configure as `warn`* in `.eslintrc.json` reaches 0 occurrences it graduates: the ratchet records it in `.eslint-warning-baseline`'s `strict` list **and rewrites `.eslintrc.json`, flipping that rule's severity `warn` → `error`** (preserving its options array), so ESLint itself enforces it from the next run onward — a graduated rule's reappearance is then a plain ESLint *error*, which the ratchet refuses to pass regardless. This flip happens automatically on **every** `lint:ratchet` run (the pre-commit hook calls it), not only under `--update`, exactly like `ts:ratchet` persisting graduations in check mode. Commit the modified `.eslintrc.json` and `.eslint-warning-baseline` together. Rules at `warn` only via an extended config (not literally in `.eslintrc.json`) are *not* auto-flipped — graduate them by adding an explicit entry. Non-strict rules ratchet per-rule (no rule may rise above its baseline) plus an aggregate-total guard; `pnpm lint:ratchet:update` rebaselines the non-strict rules and is the required step after a scope change or a genuine reduction. The `.eslint-warning-baseline` is JSON (`{ strict, total, byRule }`); a legacy bare-integer baseline is migrated automatically on first run.
 
 State at the time of writing:
   - `tsIgnore` (under `ts:ratchet`) has already graduated. `@ts-ignore` is forbidden — use `@ts-expect-error` with an inline reason.
   - `knip:ratchet` has graduated `binaries`, `classMembers`, `enumMembers`, `namespaceMembers`, `optionalPeerDependencies`, `unlisted`, `unresolved`.
   - `strict:ratchet`, `test:typecheck:ratchet`, `deps:ratchet`, `type-coverage:ratchet` have no graduations yet — they ratchet down from initial baselines.
   - `e2e:ratchet` graduates each dimension that reaches 100%; the next `--update` records the graduation in `.e2e-baseline`'s `strict` list and locks the dimension at 100% thereafter.
+  - `lint:ratchet` graduated ~80 ESLint rules to `error` the first run after test/story code entered the lint surface (the full set is the `strict` list in `.eslint-warning-baseline` — it is the source of truth, not this list). The rules still at `warn` are the ones with live occurrences (the `no-unsafe-*` family, `no-unnecessary-condition`, `no-restricted-syntax`, `@typescript-eslint/no-shadow`, `strict-boolean-expressions`, `prettier/prettier`, `import/order`, etc.); drive these down and they graduate the same way.
 
 #### Strict-flag tsconfig (`tsconfig.strict.json`)
 
@@ -127,7 +130,9 @@ Some codes (TS2322, TS2345) cross-bleed across flags; the ratchet's per-code acc
 
 #### Test/story typecheck (`tsconfig.test.json`)
 
-Tests and stories are outside the main tsconfig's `include` (they import `vitest/globals`, hand-author mock objects, etc.). `tsconfig.test.json` adds them to the include set so they participate in a typecheck. `pnpm test:typecheck:ratchet` ratchets the result down per TS code with the same auto-flip semantics.
+Tests and stories are outside the main tsconfig's `include` (they import `vitest/globals`, hand-author mock objects, etc.). `tsconfig.test.json` adds them to the include set so they participate in a typecheck. `pnpm test:typecheck:ratchet` ratchets the result down per TS code with the same auto-flip semantics. `pnpm typecheck:tests` runs the same pass as a plain gate and is part of `pnpm check`; the baseline is at zero with every TS code graduated to strict, so any test/story type error is a hard fail — fix the root cause, do not exclude the file.
+
+`tsconfig.test.json` is also the **single ESLint parser project** (`.eslintrc.json` → `parserOptions.project`). It is a superset of `tsconfig.json` (it `extends` it and adds the test/story globs), so type-checked ESLint rules resolve for `src/module/**`, `src/templates/**/*.stories.ts`, `stories/**`, and `tests/**` from one program. There is no separate weak lint config for tests/stories — test and story code is held to the **same strong ruleset as application code** (the old `.eslintrc.stories.json` / `lint:stories` path was removed). `*.test.ts` additionally gets the `@vitest/*` rules; `*.stories.ts` additionally gets `plugin:storybook/recommended`. `pnpm lint` and `pnpm lint:ratchet` both cover `src/module/ src/templates/ stories/ tests/`; the `.eslint-warning-baseline` count therefore spans that whole surface. Biome stays scoped to `src/module/` (its `useFilenamingConvention` kebab-case rule conflicts with Storybook's PascalCase story-file convention; do not broaden `biome.json` `includes` without resolving that first).
 
 #### `@total-typescript/ts-reset`
 
@@ -333,7 +338,7 @@ Per-file logs land in `.auto-fix/file-logs/<sanitized-path>.attempt<N>.<runner>-
 3. `i18n:gen` — regenerate `i18n-keys.d.ts` from the langpack.
 4. `icons:gen` — regenerate the icon registry and typed key union.
 5. `typecheck` — `tsc --noEmit` against the main tsconfig must pass with zero errors (hard gate).
-6. `lint:ratchet` — ESLint warning count cannot rise; errors are never allowed.
+6. `lint:ratchet` — ESLint warning count over `src/module/ src/templates/ stories/ tests/` (app + story + test code, one strong config) cannot rise; errors are never allowed.
 7. `css:ratchet` — `tailwind-only` cannot fall, `css-only` cannot rise.
 8. `important:ratchet` — count of `!important` declarations across `tailwind/*.js` cannot rise.
 9. `css:plugin-audit` — every `tailwind/*.js` rule must reference at least one `wh40k-*` class that appears in templates/modules/tests/stories (walks nested selectors). Hard gate.

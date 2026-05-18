@@ -113,7 +113,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
     Handlebars.registerHelper('multiply', (a: unknown, b: unknown) => Number(a ?? 0) * Number(b ?? 0));
     Handlebars.registerHelper('inc', (value: unknown) => Number(value) + 1);
     Handlebars.registerHelper('iff', (cond: unknown, ifTrue: unknown, ifFalse: unknown) => (cond ? ifTrue : ifFalse ?? ''));
-    Handlebars.registerHelper('object', function (options: { hash?: Record<string, unknown> }) {
+    Handlebars.registerHelper('object', (options: { hash?: Record<string, unknown> }) => {
         return options?.hash ?? {};
     });
     Handlebars.registerHelper('array', (...args: unknown[]) => args.slice(0, -1));
@@ -167,7 +167,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         );
     });
     Handlebars.registerHelper('localize', (key: string, options?: { hash?: Record<string, unknown> }) => {
-        const resolved = lookupLocalization(key, enLang as LocalizationDict);
+        const resolved = lookupLocalization(key, enLang);
         if (resolved === null) return key;
         if (options?.hash && Object.keys(options.hash).length > 0) {
             return applySubstitutions(resolved, options.hash);
@@ -175,7 +175,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
         return resolved;
     });
     Handlebars.registerHelper('format', (key: string, options?: { hash?: Record<string, unknown> }) => {
-        const resolved = lookupLocalization(key, enLang as LocalizationDict);
+        const resolved = lookupLocalization(key, enLang);
         const template = resolved ?? key;
         return applySubstitutions(template, options?.hash ?? {});
     });
@@ -200,7 +200,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
     // We don't import src/module/icons/helper.ts directly because it touches
     // the global Handlebars (Foundry-style) and not the bundled storybook copy.
     Handlebars.registerHelper('iconSvg', function iconStoryHelper(key: unknown, options: { hash?: Record<string, unknown> }) {
-        if (typeof key !== 'string' || !Object.prototype.hasOwnProperty.call(ICON_REGISTRY, key)) {
+        if (typeof key !== 'string' || !Object.hasOwn(ICON_REGISTRY, key)) {
             return new Handlebars.SafeString('');
         }
         const hash = options?.hash ?? {};

@@ -1,5 +1,4 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-
 import { TooltipsWH40K, prepareSkillTooltipData } from '../src/module/applications/components/wh40k-tooltip.ts';
 import type { WH40KBaseActor } from '../src/module/documents/base-actor.ts';
 import type { WH40KCharacteristic, WH40KSkill } from '../src/module/types/global.d.ts';
@@ -210,7 +209,7 @@ describe('skill tooltip regressions', () => {
 
         const tooltip = new TooltipsWH40K();
         // eslint-disable-next-line no-restricted-syntax -- boundary: SkillTooltipPayload shape is the JSON-parsed contract emitted by prepareSkillTooltipData; the cast is over the parsed payload.
-        const html = await tooltip._buildSkillTooltip(payload as Parameters<typeof tooltip._buildSkillTooltip>[0]);
+        const html = await tooltip._buildSkillTooltip(payload);
 
         expect(html).toContain('<span class="">Known</span>');
         expect(html).toContain('<span class="active">Trained</span>');

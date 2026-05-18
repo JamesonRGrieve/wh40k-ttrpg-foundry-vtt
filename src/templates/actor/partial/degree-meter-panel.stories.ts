@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect } from 'storybook/test';
-import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderTemplate, mockActor } from '../../../../stories/mocks';
 import { withSystem, type SystemId } from '../../../../stories/mocks/extended';
+import { initializeStoryHandlebars } from '../../../../stories/template-support';
 
 initializeStoryHandlebars();
 
@@ -32,9 +32,7 @@ function ensureHelpers() {
         });
     }
     if (!Handlebars.helpers.hideIfNot) {
-        Handlebars.registerHelper('hideIfNot', (check: unknown) =>
-            check ? '' : new Handlebars.SafeString('style="display:none"'),
-        );
+        Handlebars.registerHelper('hideIfNot', (check: unknown) => (check ? '' : new Handlebars.SafeString('style="display:none"')));
     }
 }
 

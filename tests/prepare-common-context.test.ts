@@ -25,10 +25,8 @@ afterEach(() => {
 
 describe('_prepareCommonContext (BaseActorSheet helper)', () => {
     it('writes isGM and dh into the context', () => {
-        const helper = (
-            instance: { _prepareCommonContext: (ctx: Record<string, unknown>) => void },
-            ctx: Record<string, unknown>,
-        ) => instance._prepareCommonContext(ctx);
+        const helper = (instance: { _prepareCommonContext: (ctx: Record<string, unknown>) => void }, ctx: Record<string, unknown>) =>
+            instance._prepareCommonContext(ctx);
 
         // Reproduce the helper inline to avoid pulling in the full BaseActorSheet
         // mixin chain. The shape is what the production helper uses verbatim.

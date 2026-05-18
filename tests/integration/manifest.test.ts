@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import { bootFoundryOnce } from './lib/boot';
 import { requireOrSkip } from './lib/has-foundry';
 
@@ -20,9 +19,7 @@ describe.skipIf(!ok)('system manifest (Tier A)', () => {
     it('exposes CONFIG.Actor and CONFIG.Item once booted', async () => {
         const result = await bootFoundryOnce();
         if (!result.booted) return;
-        const config = result.runtime?.CONFIG as
-            | { Actor?: object; Item?: object }
-            | undefined;
+        const config = result.runtime?.CONFIG as { Actor?: object; Item?: object } | undefined;
         expect(config?.Actor).toBeDefined();
         expect(config?.Item).toBeDefined();
     });

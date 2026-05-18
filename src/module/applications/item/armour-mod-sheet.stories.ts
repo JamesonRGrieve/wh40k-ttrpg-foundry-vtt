@@ -4,15 +4,15 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
+import { mockItem, renderTemplate } from '../../../../stories/mocks';
+import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheetParts } from '../../../../stories/test-helpers';
+import effectSrc from '../../../templates/item/armour-mod-effect.hbs?raw';
 import headerSrc from '../../../templates/item/armour-mod-header.hbs?raw';
-import restrictionsSrc from '../../../templates/item/armour-mod-restrictions.hbs?raw';
 import modifiersSrc from '../../../templates/item/armour-mod-modifiers.hbs?raw';
 import propertiesSrc from '../../../templates/item/armour-mod-properties.hbs?raw';
-import effectSrc from '../../../templates/item/armour-mod-effect.hbs?raw';
-import { mockItem, renderTemplate } from '../../../../stories/mocks';
-import { renderSheetParts } from '../../../../stories/test-helpers';
-import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import restrictionsSrc from '../../../templates/item/armour-mod-restrictions.hbs?raw';
 
 initializeStoryHandlebars();
 
