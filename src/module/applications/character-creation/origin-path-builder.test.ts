@@ -390,3 +390,35 @@ describe('OriginPathBuilder rollDivination (issue #199)', () => {
         expect(host._divination).toBe('Trust in your fear.');
     });
 });
+
+describe('OriginPathBuilder commit (issue #206)', () => {
+    it('blocks commit and routes to the Characteristics step when characteristics are unassigned', async () => {
+        const dialogPrompt = vi.fn();
+        const f = (globalThis as Record<string, unknown>)['foundry'] as {
+            applications: { api: Record<string, unknown> };
+        };
+        f.applications.api['DialogV2'] = { prompt: dialogPrompt };
+
+        const host = {
+            _calculateStatus: () => ({ canCommit: true, stepsComplete: true, choicesComplete: true }),
+            _hasAssignedCharacteristics: vi.fn().mockReturnValue(false),
+            _clearPreviewedOrigin: vi.fn(),
+            render: vi.fn().mockResolvedValue(undefined),
+            showLineage: true,
+            showCharacteristics: false,
+            showEquipment: true,
+        };
+
+        await OriginPathBuilder.DEFAULT_OPTIONS.actions.commit.call(
+            host as unknown as InstanceType<typeof OriginPathBuilder>,
+            new Event('click'),
+            document.createElement('button'),
+        );
+
+        expect(ui.notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.CharacteristicsRequiredBeforeCommit');
+        expect(host.showCharacteristics).toBe(true);
+        expect(host.showEquipment).toBe(false);
+        expect(host.showLineage).toBe(false);
+        expect(dialogPrompt).not.toHaveBeenCalled();
+    });
+});
