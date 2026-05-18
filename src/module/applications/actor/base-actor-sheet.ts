@@ -1692,6 +1692,21 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /* -------------------------------------------- */
 
     /**
+     * Toggle membership of `value` in a `wh40k-rpg` array flag and re-render
+     * the given sheet parts. Shared by every favourite-toggle action handler
+     * (favourite skills / specialist skills / talents) across PC + NPC sheets.
+     * @protected
+     */
+    async _toggleFavorite(flagKey: string, value: string, renderParts: string[]): Promise<void> {
+        const favorites = getFlag<string[]>(this.actor, flagKey) ?? [];
+        const next = favorites.includes(value) ? favorites.filter((v) => v !== value) : [...favorites, value];
+        await this.actor.setFlag('wh40k-rpg', flagKey, next);
+        await this.render({ parts: renderParts });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Handle panel toggle clicks.
      * Uses the data-toggle attribute to identify which section to expand/collapse.
      * @param {Event} event  The click event.

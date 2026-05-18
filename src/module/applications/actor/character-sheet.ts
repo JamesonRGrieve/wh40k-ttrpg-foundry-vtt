@@ -3330,24 +3330,7 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #toggleFavoriteSkill(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const skillKey = target.dataset['skill'];
         if (skillKey === undefined || skillKey === '') return;
-
-        // Get current favorite skills
-        const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
-        const index = favorites.indexOf(skillKey);
-
-        // Toggle. Storage order is irrelevant — _prepareFavoriteSkills sorts by display
-        // label at render time (#6), so add / remove / re-add is stable alphabetically.
-        if (index > -1) {
-            favorites.splice(index, 1);
-        } else {
-            favorites.push(skillKey);
-        }
-
-        // Save
-        await this.actor.setFlag('wh40k-rpg', 'favoriteSkills', favorites);
-
-        // Re-render skills tab and overview tab
-        await this.render({ parts: ['skills', 'overview'] });
+        await this._toggleFavorite('favoriteSkills', skillKey, ['skills', 'overview']);
     }
 
     /* -------------------------------------------- */
@@ -3365,23 +3348,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Create a unique key for this specialist skill entry
         const favoriteKey = `${skillKey}:${entryIndex}`;
-
-        // Get current favorite specialist skills
-        const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') as string[] | undefined) ?? [];
-        const index = favorites.indexOf(favoriteKey);
-
-        // Storage order is irrelevant — render-time sort is authoritative (#6).
-        if (index > -1) {
-            favorites.splice(index, 1);
-        } else {
-            favorites.push(favoriteKey);
-        }
-
-        // Save
-        await this.actor.setFlag('wh40k-rpg', 'favoriteSpecialistSkills', favorites);
-
-        // Re-render skills tab (specialist skills live here now)
-        await this.render({ parts: ['skills'] });
+        await this._toggleFavorite('favoriteSpecialistSkills', favoriteKey, ['skills']);
     }
 
     /* -------------------------------------------- */
@@ -3413,23 +3380,7 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #toggleFavoriteTalent(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset['itemId'];
         if (itemId === undefined || itemId === '') return;
-
-        // Get current favorite talents
-        const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | undefined) ?? [];
-        const index = favorites.indexOf(itemId);
-
-        // Storage order is irrelevant — render-time sort is authoritative (#6).
-        if (index > -1) {
-            favorites.splice(index, 1);
-        } else {
-            favorites.push(itemId);
-        }
-
-        // Save
-        await this.actor.setFlag('wh40k-rpg', 'favoriteTalents', favorites);
-
-        // Re-render overview (favourite talents) and skills (full talent panel)
-        await this.render({ parts: ['overview', 'skills'] });
+        await this._toggleFavorite('favoriteTalents', itemId, ['overview', 'skills']);
     }
 
     /* -------------------------------------------- */
