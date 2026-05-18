@@ -3796,6 +3796,17 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return;
         }
 
+        // Characteristics must be rolled/assigned before the path is applied —
+        // commit otherwise produced a character with no characteristics
+        // because the Characteristic Roll step was skippable. The equipment
+        // (Armory) step is intentionally optional (homebrew runs Influence in
+        // play; see _calculateStatus) so it is deliberately not gated here.
+        if (!this._hasAssignedCharacteristics()) {
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CharacteristicsRequiredBeforeCommit'));
+            OriginPathBuilder.#goToCharacteristics.call(this, _event, _target);
+            return;
+        }
+
         // Confirm — offer reset options. Base stats are always overridden.
         const resetChoices = (await foundry.applications.api.DialogV2.prompt({
             window: { title: game.i18n.localize('WH40K.OriginPath.CommitToCharacter') },
