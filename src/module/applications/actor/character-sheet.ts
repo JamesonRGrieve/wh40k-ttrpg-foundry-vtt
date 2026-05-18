@@ -24,7 +24,15 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { summarizeChanges, type EffectChangeRaw } from '../../helpers/effects.ts';
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
-import { canUnleashDaemon, resetSessionUnleash, spendUnleashDaemon, type PossessionSlot } from '../../rules/possession.ts';
+import {
+    applyMismanifest,
+    canUnleashDaemon,
+    resetSessionUnleash,
+    resolveFrenzyTest,
+    resolveMismanifestPossession,
+    spendUnleashDaemon,
+    type PossessionSlot,
+} from '../../rules/possession.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import type { WH40KActorSystemData, WH40KItemSystemData } from '../../types/global.d.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
@@ -281,6 +289,8 @@ export default class CharacterSheet extends BaseActorSheet {
             // Possession track (#82 — beyond.md p.69)
             'unleashDaemon': CharacterSheet.#unleashDaemon,
             'resetPossessionSession': CharacterSheet.#resetPossessionSession,
+            'possessionFrenzyTest': CharacterSheet.#possessionFrenzyTest,
+            'possessionMismanifest': CharacterSheet.#possessionMismanifest,
 
             // Penitent role: Mortification of the Flesh (#94 — within.md p.36)
             'applyMortification': CharacterSheet.#applyMortification,
@@ -3404,6 +3414,102 @@ export default class CharacterSheet extends BaseActorSheet {
         } catch (error) {
             this._notify('error', `Failed to reset possession session: ${(error as Error).message}`, { duration: 5000 });
             console.error('Reset possession session error:', error);
+        }
+    }
+
+    /**
+     * Post a possession Frenzy/Mismanifest chat card. Mirrors the
+     * disorder-roll-dialog render+create pattern (chat templates render
+     * outside the sheet root; the renderChatMessageHTML hook supplies the
+     * `.wh40k-rpg` ancestor).
+     */
+    async _postPossessionChat(data: Record<string, unknown>): Promise<void> {
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/possession-frenzy-chat.hbs', data);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload shape lives outside our shipped types
+        const payload = { user: game.user?.id, content: html, speaker: { alias: this.actor.name } } as unknown as Parameters<typeof ChatMessage.create>[0];
+        await ChatMessage.create(payload);
+    }
+
+    /**
+     * Per-round Challenging (+0) Willpower test while the Possession power
+     * is sustained (#132 — beyond.md L2095-2116). Failure inflicts Frenzy
+     * this round; the power must still be sustained.
+     * @this {CharacterSheet}
+     */
+    static async #possessionFrenzyTest(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            const slot = this._readPossessionSlot();
+            if (slot.state !== 'latent') {
+                this._notify('warning', game.i18n.localize('WH40K.Possession.FrenzyLoopUnavailable'), { duration: 3000 });
+                return;
+            }
+            const wp = Math.trunc(Number(this.actor.system.characteristics.willpower.total ?? 0));
+            const rollResult = await new Roll('1d100').evaluate();
+            const roll = Number(rollResult.total ?? 0);
+            const result = resolveFrenzyTest(roll, wp);
+            await this._postPossessionChat({
+                mode: 'frenzy',
+                actorName: this.actor.name,
+                roll,
+                target: result.target,
+                success: result.passed,
+                stateBefore: 'latent',
+                stateAfter: 'latent',
+            });
+            this._notify(
+                result.passed ? 'info' : 'warning',
+                game.i18n.localize(result.passed ? 'WH40K.Possession.FrenzyResistedNotify' : 'WH40K.Possession.FrenzyEnteredNotify'),
+                { duration: 3000 },
+            );
+        } catch (error) {
+            this._notify('error', `Frenzy test failed: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Possession frenzy test error:', error);
+        }
+    }
+
+    /**
+     * Opposed-Willpower Mismanifest contest following a Psychic Phenomena
+     * result on Possession (#132). A loss escalates to full possession.
+     * The daemon's Willpower mirrors the actor's until combat targeting is
+     * wired (same placeholder convention as the grapple opposed roller).
+     * @this {CharacterSheet}
+     */
+    static async #possessionMismanifest(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            const slot = this._readPossessionSlot();
+            if (slot.state !== 'latent') {
+                this._notify('warning', game.i18n.localize('WH40K.Possession.FrenzyLoopUnavailable'), { duration: 3000 });
+                return;
+            }
+            const wp = Math.trunc(Number(this.actor.system.characteristics.willpower.total ?? 0));
+            const psykerRollResult = await new Roll('1d100').evaluate();
+            const daemonRollResult = await new Roll('1d100').evaluate();
+            const psykerRoll = Number(psykerRollResult.total ?? 0);
+            const daemonRoll = Number(daemonRollResult.total ?? 0);
+            const resolution = resolveMismanifestPossession(psykerRoll, wp, daemonRoll, wp, slot.state);
+            const next = applyMismanifest(slot, resolution);
+            await this._updateSystemField('system.possession.state', next.state);
+            await this._postPossessionChat({
+                mode: 'mismanifest',
+                actorName: this.actor.name,
+                roll: psykerRoll,
+                target: wp,
+                daemonRoll,
+                daemonTarget: wp,
+                psykerDoS: resolution.psykerDoS,
+                daemonDoS: resolution.daemonDoS,
+                success: resolution.psykerWon,
+                stateBefore: slot.state,
+                stateAfter: next.state,
+            });
+            this._notify(
+                resolution.psykerWon ? 'info' : 'error',
+                game.i18n.localize(resolution.psykerWon ? 'WH40K.Possession.MismanifestHeldNotify' : 'WH40K.Possession.MismanifestEscalated'),
+                { duration: 3500 },
+            );
+        } catch (error) {
+            this._notify('error', `Mismanifest contest failed: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Possession mismanifest error:', error);
         }
     }
 

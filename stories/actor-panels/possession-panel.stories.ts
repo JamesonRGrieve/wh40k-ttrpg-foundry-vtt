@@ -1,17 +1,21 @@
 /**
- * Storybook stories for the Possession track panel (#82, beyond.md p.69).
+ * Storybook stories for the Possession track panel (#82, beyond.md p.69)
+ * + Possession-power Frenzy-test loop (#132, beyond.md L2095-2116).
  *
  * Renders the panel against a hand-crafted `system.possession` context. The
  * stories cover the visible states the panel must render correctly:
- *   1. Latent              — latent possession, no uses spent yet.
- *   2. LatentPartialSpend  — latent, some uses spent, GM view (reset visible).
- *   3. Possessed           — full possession, all uses exhausted (button disabled).
+ *   1. Latent              — contested possession, no uses spent yet; the
+ *                            #132 Frenzy-test / mismanifest controls show.
+ *   2. LatentPartialSpend  — contested, some uses spent, GM view (reset visible).
+ *   3. Possessed           — full possession, all uses exhausted; Frenzy
+ *                            loop controls are hidden (daemon already won).
  *
  * The companion e2e spec (`tests/e2e/possession-panel.spec.ts`) creates a
  * dh2-character with possession.state='latent' and snaps the panel against
  * a live Foundry instance.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import Handlebars from 'handlebars';
 import { renderTemplate } from '../mocks';
 import { initializeStoryHandlebars } from '../template-support';
@@ -43,7 +47,7 @@ export default meta;
 type Story = StoryObj<PossessionContext>;
 
 export const Latent: Story = {
-    name: 'Latent — no uses spent (player view)',
+    name: 'Latent — no uses spent (player view, #132 Frenzy loop visible)',
     args: {
         isGM: false,
         system: {
@@ -51,6 +55,15 @@ export const Latent: Story = {
         },
     },
     render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        // #132: while contested (latent) the Frenzy-test loop controls
+        // must be present so the per-round test / mismanifest contest
+        // can be rolled.
+        const frenzyBtn = canvasElement.querySelector('[data-action="possessionFrenzyTest"]');
+        const mismanifestBtn = canvasElement.querySelector('[data-action="possessionMismanifest"]');
+        expect(frenzyBtn).toBeTruthy();
+        expect(mismanifestBtn).toBeTruthy();
+    },
 };
 
 export const LatentPartialSpend: Story = {
@@ -65,7 +78,7 @@ export const LatentPartialSpend: Story = {
 };
 
 export const Possessed: Story = {
-    name: 'Possessed — all uses exhausted (Unleash disabled)',
+    name: 'Possessed — all uses exhausted (#132 Frenzy loop hidden)',
     args: {
         isGM: true,
         system: {
@@ -73,4 +86,15 @@ export const Possessed: Story = {
         },
     },
     render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        // #132: in the terminal possessed state the daemon already won
+        // the contest — the Frenzy-test loop controls must be gone.
+        const frenzyBtn = canvasElement.querySelector('[data-action="possessionFrenzyTest"]');
+        const mismanifestBtn = canvasElement.querySelector('[data-action="possessionMismanifest"]');
+        expect(frenzyBtn).toBeNull();
+        expect(mismanifestBtn).toBeNull();
+        // The disabled Unleash button is still rendered.
+        const unleash = canvasElement.querySelector('[data-action="unleashDaemon"]');
+        expect(unleash?.hasAttribute('disabled')).toBe(true);
+    },
 };

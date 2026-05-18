@@ -1,0 +1,75 @@
+{{!--
+    Chat card for the Possession Frenzy-test loop (#132 — beyond.md
+    L2095-2116).
+
+    Emitted by CharacterSheet.#possessionFrenzyTest (per-round Challenging
+    +0 Willpower test while the Possession power is sustained) and by
+    CharacterSheet.#possessionMismanifest (the opposed-Willpower contest
+    that follows a Psychic Phenomena result on Possession).
+
+    Root carries `data-wh40k-system="dh2e"` so the bronze theme variant
+    fires when the card renders into the chat log (chat messages render
+    outside the sheet root — see CLAUDE.md: chat templates need a
+    `.wh40k-rpg` ancestor, which basic-action-manager's
+    renderChatMessageHTML hook supplies).
+
+    Hash params:
+      mode          'frenzy' | 'mismanifest'
+      actorName     speaker name
+      roll          psyker d100 roll
+      target        psyker WP target
+      success       boolean — Frenzy test passed / psyker held control
+      daemonRoll    (mismanifest only) daemon d100 roll
+      daemonTarget  (mismanifest only) daemon WP target
+      psykerDoS     (mismanifest only) psyker degrees of success
+      daemonDoS     (mismanifest only) daemon degrees of success
+      stateBefore   possession state before resolution
+      stateAfter    possession state after resolution
+--}}
+<div data-wh40k-system="dh2e"
+     class="wh40k-possession-frenzy-chat tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded-md tw-border tw-border-solid {{#if success}}tw-border-emerald-900/70 tw-bg-emerald-900/[10%]{{else}}tw-border-red-900/70 tw-bg-red-900/[10%]{{/if}} dh2e:tw-border-bronze">
+    <header class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2e:tw-border-bronze">
+        <i class="fa-solid fa-ghost {{#if success}}tw-text-emerald-400{{else}}tw-text-red-400{{/if}} dh2e:tw-text-bronze" aria-hidden="true"></i>
+        <h3 class="tw-m-0 tw-font-display tw-uppercase tw-tracking-[0.1em] tw-text-[1rem] tw-text-white">
+            {{#if (eq mode 'mismanifest')}}{{localize "WH40K.Possession.MismanifestChatTitle"}}{{else}}{{localize "WH40K.Possession.FrenzyChatTitle"}}{{/if}}
+        </h3>
+    </header>
+    <p class="tw-m-0 tw-text-[0.9rem] tw-italic tw-text-[var(--wh40k-text-muted,#cccccc)]">
+        {{actorName}}
+    </p>
+    <dl class="tw-grid tw-grid-cols-2 tw-gap-x-3 tw-gap-y-1 tw-m-0 tw-text-[0.85rem]">
+        <dt class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-muted,#a0a0a0)]">
+            {{localize "WH40K.Possession.RollLabel"}}
+        </dt>
+        <dd class="tw-m-0 tw-text-white">{{roll}} / {{target}}</dd>
+        {{#if (eq mode 'mismanifest')}}
+            <dt class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-muted,#a0a0a0)]">
+                {{localize "WH40K.Possession.DaemonRollLabel"}}
+            </dt>
+            <dd class="tw-m-0 tw-text-white">{{daemonRoll}} / {{daemonTarget}}</dd>
+            <dt class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-muted,#a0a0a0)]">
+                {{localize "WH40K.Possession.DegreesLabel"}}
+            </dt>
+            <dd class="tw-m-0 tw-text-white">{{psykerDoS}} / {{daemonDoS}}</dd>
+        {{/if}}
+        <dt class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-text-muted,#a0a0a0)]">
+            {{localize "WH40K.Possession.StateLabel"}}
+        </dt>
+        <dd class="tw-m-0 tw-text-white">{{stateBefore}} → {{stateAfter}}</dd>
+    </dl>
+    <p class="tw-m-0 tw-text-[0.9rem] {{#if success}}tw-text-emerald-300{{else}}tw-text-red-300{{/if}}">
+        {{#if (eq mode 'mismanifest')}}
+            {{#if success}}
+                {{localize "WH40K.Possession.MismanifestHeld"}}
+            {{else}}
+                {{localize "WH40K.Possession.MismanifestLost"}}
+            {{/if}}
+        {{else}}
+            {{#if success}}
+                {{localize "WH40K.Possession.FrenzyResisted"}}
+            {{else}}
+                {{localize "WH40K.Possession.FrenzyEntered"}}
+            {{/if}}
+        {{/if}}
+    </p>
+</div>
