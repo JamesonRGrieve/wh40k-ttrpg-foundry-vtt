@@ -945,6 +945,43 @@ const RULE_PURE_FLOWS = [
 ];
 recordDimension('rule-pure.flow', covered['rule-pure.flow'], RULE_PURE_FLOWS);
 
+// Third batch of pure-logic rules flows exercised by
+// tests/e2e/rules-pure-logic-2.spec.ts. Each key maps to a canonical
+// affliction / social / vehicle resolver on a rules/ module that no
+// other Tier B spec drives directly. Pushes source-code coverage on
+// `src/module/rules/{addiction,assistance,characteristic-damage,
+// combat-circumstance-modifiers,disposition,disease,poison,hatred,
+// phenomena-modifier,reinforcement,requisition-test,spray-avoidance,
+// vehicle-actions,vehicle-hazards}.ts` — each at 0% Tier B function
+// coverage before this spec landed. Keys MUST match the
+// recordCoverage('rule-affliction.flow', ...) calls in the spec.
+const RULE_AFFLICTION_FLOWS = [
+    'addiction-resolveCheck',
+    'addiction-treatmentDays',
+    'assistance-bonus',
+    'characteristic-damage-atZero',
+    'characteristic-damage-effective',
+    'characteristic-damage-healed',
+    'combat-modifiers-registry',
+    'combat-modifiers-sumSelected',
+    'disposition-label',
+    'disposition-modifier',
+    'disease-exposure',
+    'disease-dailyTick',
+    'poison-exposure',
+    'poison-failurePayload',
+    'hatred-actorHasHatredFor',
+    'phenomena-modifier-compose',
+    'reinforcement-callTarget',
+    'requisition-test-target',
+    'requisition-test-influenceLoss',
+    'spray-avoidance-resolve',
+    'vehicle-actions-registry',
+    'vehicle-hazards-resolveRoll',
+    'vehicle-hazards-repairDifficulty',
+];
+recordDimension('rule-affliction.flow', covered['rule-affliction.flow'], RULE_AFFLICTION_FLOWS);
+
 // Roll-data plumbing flows exercised by tests/e2e/rolls-data.spec.ts. Drives
 // source-code coverage on `src/module/rolls/assign-damage-data.ts` (the
 // damage allocator's reduce-then-distribute branch matrix between wounds,
