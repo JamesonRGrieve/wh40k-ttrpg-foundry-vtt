@@ -1,9 +1,24 @@
+/**
+ * Reverse the digits of a d100 attack-roll result to derive the hit-
+ * location lookup index per core.md L10372-10390 (Table 7-3).
+ *
+ * Examples: 23 → 32 (Body), 47 → 74 (Right Leg), 100 → 001 → 1 (Head).
+ * Doubles / palindromes (33, 55) pass through unchanged.
+ *
+ * Pure — extracted from `getHitLocationForRoll` so the reversal math is
+ * unit-testable without the Foundry `game` runtime.
+ */
+export function reverseAttackRollDigits(roll: number): number {
+    const normalised = Number.isFinite(roll) ? Math.trunc(roll) : 0;
+    return parseInt(normalised.toString().split('').reverse().join(''), 10);
+}
+
 export function getHitLocationForRoll(roll: number): string | undefined {
-    game.wh40k.log('getHitLocationForRoll', roll);
-    const rollString = roll.toString().split('');
-    const reverseArray = rollString.reverse();
-    const joinArray = reverseArray.join('');
-    const reverseInt = parseInt(joinArray);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: game.wh40k may be undefined in pure-rules tests; guard is intentional
+    if (typeof game !== 'undefined' && game.wh40k !== undefined) {
+        game.wh40k.log('getHitLocationForRoll', roll);
+    }
+    const reverseInt = reverseAttackRollDigits(roll);
     return creatureHitLocations().find((i) => reverseInt >= i.min && reverseInt <= i.max)?.name;
 }
 
