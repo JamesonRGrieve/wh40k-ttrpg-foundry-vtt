@@ -1,6 +1,7 @@
 import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
 import WH40K from '../config.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
+import { TALENT_ICONS, TIER_COLORS, TRAIT_CATEGORY_COLORS, TRAIT_ICONS, lookupOr } from './icon-lookups.ts';
 
 /**
  * Template-supplied value. Handlebars helpers receive heterogeneous values from .hbs files
@@ -792,22 +793,7 @@ export function registerHandlebarsHelpers(): void {
      * @param {string} category - Talent category
      * @returns {string} Font Awesome icon class
      */
-    Handlebars.registerHelper('talentIcon', (category: string): string => {
-        const icons: Partial<Record<string, string>> = {
-            combat: 'fa-sword',
-            social: 'fa-users',
-            knowledge: 'fa-book',
-            leadership: 'fa-crown',
-            psychic: 'fa-brain',
-            technical: 'fa-cog',
-            defense: 'fa-shield-alt',
-            willpower: 'fa-fist-raised',
-            movement: 'fa-running',
-            unique: 'fa-star',
-            general: 'fa-circle',
-        };
-        return icons[category] ?? icons['general'] ?? 'fa-circle';
-    });
+    Handlebars.registerHelper('talentIcon', (category: string): string => lookupOr(TALENT_ICONS, category, 'fa-circle'));
 
     /**
      * Get CSS class for talent tier color.
@@ -815,16 +801,7 @@ export function registerHandlebarsHelpers(): void {
      * @param {number} tier - Talent tier (0-3)
      * @returns {string} CSS class name
      */
-    Handlebars.registerHelper('tierColor', (tier: TplValue): string => {
-        const colors: Partial<Record<number, string>> = {
-            1: 'tier-bronze',
-            2: 'tier-silver',
-            3: 'tier-gold',
-            0: 'tier-none',
-        };
-        const tierKey = Number(tier);
-        return colors[tierKey] ?? colors[0] ?? 'tier-none';
-    });
+    Handlebars.registerHelper('tierColor', (tier: TplValue): string => lookupOr(TIER_COLORS, Number(tier), 'tier-none'));
 
     /**
      * Format prerequisites object as readable string.
@@ -858,32 +835,12 @@ export function registerHandlebarsHelpers(): void {
     /**
      * Get icon for trait category.
      */
-    Handlebars.registerHelper('traitIcon', (category: string): string => {
-        const icons: Record<string, string> = {
-            creature: 'fa-paw',
-            character: 'fa-user-shield',
-            elite: 'fa-star',
-            unique: 'fa-gem',
-            origin: 'fa-route',
-            general: 'fa-shield-alt',
-        };
-        return icons[category] ?? 'fa-shield-alt';
-    });
+    Handlebars.registerHelper('traitIcon', (category: string): string => lookupOr(TRAIT_ICONS, category, 'fa-shield-alt'));
 
     /**
      * Get color class for trait category.
      */
-    Handlebars.registerHelper('traitCategoryColor', (category: string): string => {
-        const colors: Record<string, string> = {
-            creature: 'trait-creature',
-            character: 'trait-character',
-            elite: 'trait-elite',
-            unique: 'trait-unique',
-            origin: 'trait-origin',
-            general: 'trait-general',
-        };
-        return colors[category] ?? 'trait-general';
-    });
+    Handlebars.registerHelper('traitCategoryColor', (category: string): string => lookupOr(TRAIT_CATEGORY_COLORS, category, 'trait-general'));
 
     /**
      * Format trait name with level (if present).
