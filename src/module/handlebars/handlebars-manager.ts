@@ -202,6 +202,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs',
             'systems/wh40k-rpg/templates/chat/psychic-action-chat.hbs',
             'systems/wh40k-rpg/templates/chat/force-field-roll-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/daemonhost-binding-chat.hbs',
 
             // Unified roll dialog panels
             'systems/wh40k-rpg/templates/prompt/unified/panels/weapon-panel.hbs',
@@ -220,6 +221,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/prompt/assign-damage-prompt.hbs',
             'systems/wh40k-rpg/templates/prompt/daemon-weapon-attribute-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/daemon-weapon-attribute-chat.hbs',
+            'systems/wh40k-rpg/templates/prompt/daemonhost-binding-dialog.hbs',
 
             // Item sheet templates
             'systems/wh40k-rpg/templates/item/item-sheet.hbs',

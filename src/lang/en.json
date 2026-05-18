@@ -817,6 +817,22 @@
             "RollModifierTitle": "Roll Modifier",
             "AssignDamageTitle": "Assign Damage"
         },
+        "Daemonhost": {
+            "DialogTitle": "Bind Daemonhost",
+            "DialogIntro": "Select a Binding Strength tier for the host being summoned.",
+            "TierMinor": "Minor Daemonhost",
+            "TierLesser": "Lesser Daemonhost",
+            "TierNormal": "Daemonhost",
+            "TierGreater": "Greater Daemonhost",
+            "TierMajor": "Major Daemonhost",
+            "UnholyChanges": "Unholy Changes",
+            "MinInfluence": "Influence (min)",
+            "ReinforcementMod": "Reinforcement Mod",
+            "BindButton": "Bind",
+            "Cancel": "Cancel",
+            "ChatTitle": "Daemonhost Bound",
+            "BoundAtTier": "Host bound at tier:"
+        },
         "TalentCategory": {
             "General": "General",
             "Combat": "Combat",
