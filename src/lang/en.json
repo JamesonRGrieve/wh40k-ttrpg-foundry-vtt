@@ -877,6 +877,7 @@
             "OriginNotAvailable": "This origin is not available in guided mode",
             "CompleteAllSteps": "Complete all 6 steps before committing",
             "CompleteAllChoices": "Complete all required choices before committing",
+            "CharacteristicsRequiredBeforeCommit": "Roll or assign your characteristics before completing character creation.",
             "AllChoicesComplete": "All choices complete",
             "ChoicesPending": "choices pending",
             "RollsPending": "rolls pending",
