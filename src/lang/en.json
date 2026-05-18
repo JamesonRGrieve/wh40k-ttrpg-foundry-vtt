@@ -245,7 +245,9 @@
                 "ClickNameToRoll": "Use the die button to roll",
                 "RankWithBonus": "{rank} ({bonus})",
                 "UntrainedWithPenalty": "Untrained ({penalty})",
-                "UntrainedHalfBase": "Untrained (\u00f72)"
+                "UntrainedHalfBase": "Untrained (\u00f72)",
+                "CharacteristicLabel": "Characteristic: {name} ({value})",
+                "UntrainedTargetLabel": "Untrained target (characteristic \u00f7 2): {value}"
             }
         },
         "Favourites": {
