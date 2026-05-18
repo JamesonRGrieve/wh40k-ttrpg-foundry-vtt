@@ -204,7 +204,7 @@ export const WEAPON_QUALITY_EFFECTS = {
     },
     'unreliable': {
         type: 'reliability',
-        description: 'Weapon jams on any failed attack roll. (See `rules/weapon-jam.ts:shouldJamRoll`.)',
+        description: 'Weapon jams on a roll of 91 or higher, even on Semi- or Full Auto. (See `rules/weapon-jam.ts:shouldJamRoll`.)',
         unreliable: true,
     },
     'sanctified': {

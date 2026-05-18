@@ -918,6 +918,31 @@ recordDimension('npc-create.flow', covered['npc-create.flow'], NPC_CREATE_FLOWS)
 const CANVAS_FLOWS = ['ruler-module-imports', 'ruler-class-extends-token-ruler'];
 recordDimension('canvas.flow', covered['canvas.flow'], CANVAS_FLOWS);
 
+// Active-effects rule helpers exercised by tests/e2e/active-effects-rules.spec.ts.
+// Drives source-code coverage on `src/module/rules/active-effects.ts` (was
+// 0% fn / 34.7% line). active-effects.spec.ts covers Foundry's native
+// ActiveEffect application modes (add/multiply/override/etc.); this
+// dimension covers the WH40K-side factory + lifecycle helpers that
+// author effects from a higher-level intent (e.g. "characteristic +10
+// for 3 rounds", "create stunned condition"). Keys MUST match the
+// recordCoverage('active-effects-rule.flow', ...) calls in the spec.
+const ACTIVE_EFFECTS_RULES_FLOWS = [
+    'createEffect',
+    'createCharacteristicEffect',
+    'createSkillEffect',
+    'createCombatEffect',
+    'createConditionEffect',
+    'createTemporaryEffect',
+    'removeEffectByName',
+    'removeEffects',
+    'toggleEffect',
+    'handleBleeding',
+    'handleBloodLoss',
+    'handleOnFire',
+    'sendActiveEffectMessage',
+];
+recordDimension('active-effects-rule.flow', covered['active-effects-rule.flow'], ACTIVE_EFFECTS_RULES_FLOWS);
+
 // Loot drop/pickup feature dimension exercised by tests/e2e/loot.spec.ts.
 // Keys MUST match the recordCoverage('loot.flow', ...) calls in that spec.
 // Canvas/HUD placement is a runtime-render concern; the document-layer

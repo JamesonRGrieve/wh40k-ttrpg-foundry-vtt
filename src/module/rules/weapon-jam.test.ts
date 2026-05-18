@@ -47,13 +47,23 @@ describe('shouldJamRoll', () => {
         });
     });
 
-    describe('Unreliable weapon', () => {
-        it('jams on any failed roll', () => {
-            expect(shouldJamRoll({ action: 'Standard Attack', rollTotal: 50, success: false, hasReliable: false, hasUnreliable: true })).toBe(true);
-            expect(shouldJamRoll({ action: 'Standard Attack', rollTotal: 95, success: false, hasReliable: false, hasUnreliable: true })).toBe(true);
+    describe('Unreliable weapon (#128 — RAW core.md L6369)', () => {
+        const unreliable = { hasReliable: false, hasUnreliable: true };
+
+        it('does NOT jam on rolls below 91, regardless of success/failure or action', () => {
+            expect(shouldJamRoll({ action: 'Standard Attack', rollTotal: 30, success: true, ...unreliable })).toBe(false);
+            expect(shouldJamRoll({ action: 'Standard Attack', rollTotal: 50, success: false, ...unreliable })).toBe(false);
+            expect(shouldJamRoll({ action: 'Standard Attack', rollTotal: 90, success: false, ...unreliable })).toBe(false);
+            expect(shouldJamRoll({ action: 'Full Auto Burst', rollTotal: 89, success: false, ...unreliable })).toBe(false);
         });
-        it('does NOT jam on a successful low roll', () => {
-            expect(shouldJamRoll({ action: 'Standard Attack', rollTotal: 30, success: true, hasReliable: false, hasUnreliable: true })).toBe(false);
+        it('jams on 91+ regardless of success or action', () => {
+            expect(shouldJamRoll({ action: 'Standard Attack', rollTotal: 91, success: false, ...unreliable })).toBe(true);
+            expect(shouldJamRoll({ action: 'Standard Attack', rollTotal: 95, success: true, ...unreliable })).toBe(true);
+            expect(shouldJamRoll({ action: 'Standard Attack', rollTotal: 100, success: false, ...unreliable })).toBe(true);
+            // "even if fired on Semi- or Full Auto" — Unreliable lowers the
+            // normal 94+ burst floor to 91+.
+            expect(shouldJamRoll({ action: 'Semi-Auto Burst', rollTotal: 91, success: false, ...unreliable })).toBe(true);
+            expect(shouldJamRoll({ action: 'Full Auto Burst', rollTotal: 93, success: false, ...unreliable })).toBe(true);
         });
     });
 });
