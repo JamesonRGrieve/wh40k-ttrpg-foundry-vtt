@@ -8,6 +8,7 @@
 
 import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
+import { hasDaemonic } from '../../rules/daemonic-immunities.ts';
 import { getInteractionCap } from '../../rules/disposition.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import InventoryGeneratorDialog from '../dialogs/inventory-generator-dialog.ts';
@@ -345,6 +346,12 @@ export default class NPCSheet extends CharacterSheet {
         // Lift/Push, XP, Origin Path, Influence/Requisition/Gelt) with
         // {{#unless isNPC}}. isGM is now inherited from BaseActorSheet.
         context['isNPC'] = true;
+
+        // Daemonic immunities header badge (#143 — DH2 Errata L69-73).
+        // Surfaces a crimson skull pill above the sidebar-fields panel when
+        // the actor carries the Daemonic trait. Disease/poison auto-skip and
+        // the Undying revival rider both compose through the same predicate.
+        context['isDaemonic'] = hasDaemonic(this.actor);
 
         // Header + NPC-tab additions
         context['threatTier'] = this.npcActor.system.threatTier;

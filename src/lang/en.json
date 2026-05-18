@@ -405,6 +405,13 @@
             "ButtonTooltip": "DH2 core rules (p. 247): replace one damage die with the attack's Degrees of Success ({dos}).",
             "ReplacedDieMessage": "<strong>{weapon}</strong> replaced a damage die ({previous}) with {dos} DoS — new total: {total}."
         },
+        "AssassinsStrike": {
+            "ButtonLabel": "Assassin's Strike: Acrobatics + Half Move",
+            "ButtonTooltip": "DH2 errata (L75): after a successful melee attack, attempt a Challenging (+0) Acrobatics Test. On success, move up to a Half Move distance as a Free Action.",
+            "TestTitle": "Assassin's Strike — Acrobatics Test",
+            "SuccessChatLine": "<strong>Assassin's Strike</strong>: on a successful Acrobatics test, move up to a Half Move (Agility bonus metres) as a Free Action.",
+            "FailureChatLine": "<strong>Assassin's Strike</strong>: the Acrobatics test failed — no Free Action movement is granted."
+        },
         "Name": "Name",
         "Stat": "Stat",
         "Current": "Current",
