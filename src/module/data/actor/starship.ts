@@ -73,6 +73,17 @@ export default class StarshipData extends ActorDataModel {
     declare detection: number;
     declare armour: number;
     declare voidShields: number;
+    /**
+     * Combat-state tracking for void shields (issue #184). `voidShields` (above)
+     * is the hull's maximum shield count; this field tracks how many are
+     * currently raised (`active`) versus exhausted by absorbed hits this round
+     * (`exhausted`). Exhausted shields are reset each round by the GM via
+     * the "Restore Shields" action. Defaults to all shields up.
+     */
+    declare voidShieldsStatus: {
+        active: number;
+        exhausted: number;
+    };
     declare turretRating: number;
     declare hullIntegrity: {
         max: number;
@@ -149,6 +160,11 @@ export default class StarshipData extends ActorDataModel {
             detection: new fields.NumberField({ required: true, initial: 0, integer: true }),
             armour: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             voidShields: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            // Combat-state tracking for void shields (issue #184).
+            voidShieldsStatus: new fields.SchemaField({
+                active: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                exhausted: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            }),
             turretRating: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
             // Hull Integrity
@@ -257,6 +273,24 @@ export default class StarshipData extends ActorDataModel {
     _prepareCombatStats(): void {
         // Detection Bonus (tens digit) for initiative
         this.detectionBonus = Math.floor(this.detection / 10);
+
+        // Void shield combat-state initialization (issue #184). When the shield
+        // hull is configured but combat state has never been seeded (active = 0
+        // and exhausted = 0), treat the ship as fully shielded — otherwise a
+        // freshly imported / migrated actor would enter combat with no shields
+        // raised, which contradicts the RAW assumption that shields are on by
+        // default.
+        if (
+            this.voidShields > 0 &&
+            this.voidShieldsStatus.active === 0 &&
+            this.voidShieldsStatus.exhausted === 0
+        ) {
+            this.voidShieldsStatus.active = this.voidShields;
+        }
+        // Cap active + exhausted against the configured maximum.
+        if (this.voidShieldsStatus.active > this.voidShields) {
+            this.voidShieldsStatus.active = this.voidShields;
+        }
 
         // Hull percentage for status display
         if (this.hullIntegrity.max > 0) {
