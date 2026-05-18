@@ -17,7 +17,7 @@ test.describe('DaemonWeaponAttributeDialog (#142)', () => {
             /* eslint-disable @typescript-eslint/no-explicit-any -- browser-side dynamic import probe */
             try {
                 const mod = (await import(
-                    '/systems/wh40k-rpg/module/applications/prompts/daemon-weapon-attribute-dialog.js'
+                    /* @vite-ignore */ '/systems/wh40k-rpg/module/applications/prompts/daemon-weapon-attribute-dialog.js' as unknown as string
                 )) as any;
                 const DialogCtor = mod.default;
                 const dialog = new DialogCtor({ alignment: 'khorne', bindingStrength: 'normal' }) as any;
