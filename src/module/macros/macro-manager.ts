@@ -55,6 +55,26 @@ function checkExistingMacro(name: string, command: string): boolean {
     return false;
 }
 
+/**
+ * Shared script-macro create + hotbar-bind tail used by the item / skill /
+ * characteristic macro builders. They differed only by img, command, and the
+ * `flags.dh.<flag>` marker key.
+ */
+async function createBoundMacro(opts: { name: string; img: unknown; command: string; flag: string; slot: number }): Promise<void> {
+    if (checkExistingMacro(opts.name, opts.command)) return;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: flags.dh is a system-scoped namespace not declared in fvtt-types CoreFlags; cast is necessary
+    const macro = await (Macro.create as (data: Record<string, unknown>) => ReturnType<typeof Macro.create>)({
+        name: opts.name,
+        type: 'script',
+        img: opts.img,
+        command: opts.command,
+        flags: { dh: { [opts.flag]: true } },
+    });
+    const macroInstance = Array.isArray(macro) ? macro[0] : macro;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Macro.create can return null on failure
+    if (macroInstance !== null && macroInstance !== undefined) await game.user.assignHotbarMacro(macroInstance, opts.slot);
+}
+
 // eslint-disable-next-line no-restricted-syntax -- boundary: hotbarDrop data payload is an untyped Record from Foundry hook
 export async function createItemMacro(data: Record<string, unknown>, slot: number): Promise<void> {
     if (!checkMacroCanCreate()) return;
@@ -64,19 +84,7 @@ export async function createItemMacro(data: Record<string, unknown>, slot: numbe
     const macroName = `${data['actorName'] as string}: ${macroData['name'] as string}`;
     // Create the macro command
     const command = `game.wh40k.rollItemMacro("${data['actorId'] as string}", "${macroData['_id'] as string}");`;
-    if (checkExistingMacro(macroName, command)) return;
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: flags.dh is a system-scoped namespace not declared in fvtt-types CoreFlags; cast is necessary
-    const macro = await (Macro.create as (data: Record<string, unknown>) => ReturnType<typeof Macro.create>)({
-        name: macroName,
-        type: 'script',
-        img: macroData['img'],
-        command: command,
-        flags: { dh: { itemMacro: true } },
-    });
-    const macroInstance = Array.isArray(macro) ? macro[0] : macro;
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Macro.create can return null on failure
-    if (macroInstance !== null && macroInstance !== undefined) await game.user.assignHotbarMacro(macroInstance, slot);
+    await createBoundMacro({ name: macroName, img: macroData['img'], command, flag: 'itemMacro', slot });
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: return type unknown because rollItem result is opaque at this layer
@@ -112,19 +120,7 @@ export async function createSkillMacro(data: Record<string, unknown>, slot: numb
     if (speciality !== undefined && speciality !== '') {
         command = `game.wh40k.rollSkillMacro("${data['actorId'] as string}", "${skill}", "${speciality}");`;
     }
-    if (checkExistingMacro(macroName, command)) return;
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: flags.dh is a system-scoped namespace not declared in fvtt-types CoreFlags; cast is necessary
-    const macro = await (Macro.create as (data: Record<string, unknown>) => ReturnType<typeof Macro.create>)({
-        name: macroName,
-        img: 'systems/wh40k-rpg/icons/talents/red/r_36.png',
-        type: 'script',
-        command: command,
-        flags: { dh: { skillMacro: true } },
-    });
-    const macroInstance = Array.isArray(macro) ? macro[0] : macro;
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Macro.create can return null on failure
-    if (macroInstance !== null && macroInstance !== undefined) await game.user.assignHotbarMacro(macroInstance, slot);
+    await createBoundMacro({ name: macroName, img: 'systems/wh40k-rpg/icons/talents/red/r_36.png', command, flag: 'skillMacro', slot });
 }
 
 export async function rollSkillMacro(actorId: string, skillName: string, speciality?: string): Promise<void> {
@@ -158,19 +154,7 @@ export async function createCharacteristicMacro(data: Record<string, unknown>, s
 
     // Create the macro command
     const command = `game.wh40k.rollCharacteristicMacro("${data['actorId'] as string}","${characteristic}");`;
-    if (checkExistingMacro(macroName, command)) return;
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: flags.dh is a system-scoped namespace not declared in fvtt-types CoreFlags; cast is necessary
-    const macro = await (Macro.create as (data: Record<string, unknown>) => ReturnType<typeof Macro.create>)({
-        name: macroName,
-        img: 'systems/wh40k-rpg/icons/talents/violet/p_05.png',
-        type: 'script',
-        command: command,
-        flags: { dh: { characteristicMacro: true } },
-    });
-    const macroInstance = Array.isArray(macro) ? macro[0] : macro;
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Macro.create can return null on failure
-    if (macroInstance !== null && macroInstance !== undefined) await game.user.assignHotbarMacro(macroInstance, slot);
+    await createBoundMacro({ name: macroName, img: 'systems/wh40k-rpg/icons/talents/violet/p_05.png', command, flag: 'characteristicMacro', slot });
 }
 
 export async function rollCharacteristicMacro(actorId: string, characteristic: string): Promise<void> {
