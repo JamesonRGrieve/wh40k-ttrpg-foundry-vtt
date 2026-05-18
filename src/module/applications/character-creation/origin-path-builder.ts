@@ -131,7 +131,16 @@ type NormalizedOriginWithMeta = NormalizedOrigin & {
 };
 
 function hasToObject(item: WH40KItem | NormalizedOrigin): item is WH40KItem {
-    return 'toObject' in item && typeof item.toObject === 'function';
+    // Compendium index entries and normalized origin POJOs have no
+    // toObject(); calling it threw "item.toObject is not a function" on
+    // origin selection. Guard the type and the operand so neither a
+    // non-callable toObject nor a non-object item can reach .toObject().
+    return (
+        typeof item === 'object' &&
+        item !== null &&
+        'toObject' in item &&
+        typeof (item as { toObject?: unknown }).toObject === 'function'
+    );
 }
 
 /**
