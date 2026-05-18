@@ -2290,6 +2290,8 @@
             "FatigueCurrentLabel": "Current Fatigue",
             "FateMaxLabel": "Max Fate Points",
             "FateCurrentLabel": "Current Fate",
+            "FateThresholdLabel": "Burn Threshold",
+            "FateThresholdPlaceholder": "Threshold",
             "WoundsMaxLabel": "Max Wounds",
             "WoundsCurrentLabel": "Current Wounds",
             "ExperienceTotalLabel": "Total XP Earned",

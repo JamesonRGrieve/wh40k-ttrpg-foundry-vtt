@@ -1799,6 +1799,8 @@ export type I18nKey =
     | 'WH40K.VitalEditBody.ExperienceTotalLabel'
     | 'WH40K.VitalEditBody.FateCurrentLabel'
     | 'WH40K.VitalEditBody.FateMaxLabel'
+    | 'WH40K.VitalEditBody.FateThresholdLabel'
+    | 'WH40K.VitalEditBody.FateThresholdPlaceholder'
     | 'WH40K.VitalEditBody.FatigueCurrentLabel'
     | 'WH40K.VitalEditBody.FatigueThresholdLabel'
     | 'WH40K.VitalEditBody.MaxPlaceholder'
