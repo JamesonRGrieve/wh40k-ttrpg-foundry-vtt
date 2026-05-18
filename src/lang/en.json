@@ -287,6 +287,20 @@
             "CriticalLevel": "Critical Level",
             "DegreesOfSuccess": "{dos} Degrees of Success"
         },
+        "BeyondHomeworld": {
+            "DialogTitle": "Beyond — New Home Worlds (GM Reference)",
+            "DialogDescription": "Reference for the three new home worlds introduced in Enemies Beyond: Daemon World, Penal Colony, and Quarantine World.",
+            "DaemonWorld": "Daemon World",
+            "PenalColony": "Penal Colony",
+            "QuarantineWorld": "Quarantine World",
+            "Characteristics": "Characteristics",
+            "FateAdjust": "Fate Threshold",
+            "WoundsAdjust": "Starting Wounds",
+            "Aptitude": "Aptitude",
+            "KeyTalents": "Key Talents & Skills",
+            "RecommendedBackgrounds": "Recommended Backgrounds",
+            "MechanicalHook": "Mechanical Hook"
+        },
         "Characteristics": "Characteristics",
         "CharacteristicModifiers": "Characteristic Modifiers",
         "Skills": {
