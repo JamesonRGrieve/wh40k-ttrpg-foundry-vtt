@@ -462,10 +462,17 @@ export class TooltipsWH40K {
         const actorGameSystem = (actor?.system as { gameSystem?: string } | undefined)?.gameSystem;
         const gameSystem = actorGameSystem ?? null;
         const systemConfig = gameSystem !== null ? SystemConfigRegistry.getOrNull(gameSystem) : null;
+        // When the actor's game system can't be resolved the prior fallback
+        // showed a truncated, hardcoded-English "Trained(0) → +10 → +20"
+        // ladder (issue #26). Fall back to the localized DH2-family 4-tier
+        // ladder — DH2 is the canonical default of the FFG family — so the
+        // degraded path still shows the correct Known/Trained/Experienced/
+        // Veteran progression instead of a misleading one.
         const skillRanks: SkillRank[] = systemConfig?.getSkillRanks() ?? [
-            { level: 1, key: 'trained', tooltip: 'Trained', bonus: 0 },
-            { level: 2, key: 'plus10', tooltip: '+10', bonus: 10 },
-            { level: 3, key: 'plus20', tooltip: '+20', bonus: 20 },
+            { level: 1, key: 'trained', tooltip: localize('WH40K.Skills.Rank.Known'), bonus: 0 },
+            { level: 2, key: 'plus10', tooltip: localize('WH40K.Skills.Rank.Trained'), bonus: 10 },
+            { level: 3, key: 'plus20', tooltip: localize('WH40K.Skills.Rank.Experienced'), bonus: 20 },
+            { level: 4, key: 'plus30', tooltip: localize('WH40K.Skills.Rank.Veteran'), bonus: 30 },
         ];
         if (plus30 && !skillRanks.some((rank) => rank.level === 4)) {
             skillRanks.push({ level: 4, key: 'plus30', tooltip: 'Veteran', bonus: 30 });
