@@ -788,3 +788,50 @@ export const Issue205AptitudeDoubling: Story = {
         expect(pickBtn).toBeTruthy();
     },
 };
+
+/**
+ * Regression coverage for issue #215: opening the origin-path builder on a
+ * character that already has committed origin steps used to immediately show a
+ * "duplicate aptitude detected" banner for every aptitude — the actor's
+ * derived `system.aptitudes` collided with the builder's own re-loaded
+ * selections (the same single grant seen twice). Selecting replacements did
+ * not clear it; only Reset All did.
+ *
+ * After the fix `_getAptitudeCollisions` subtracts aptitudes attributable to
+ * the builder's own committed selections, so a freshly-opened, conflict-free
+ * builder reports NO collisions. This story stages that resolved state
+ * (aptitudes present on the preview, `aptitudeCollisions: []`) and asserts the
+ * collision banner is absent from the DOM.
+ */
+export const Issue215NoPhantomDuplicate: Story = {
+    args: makeArgs({
+        selectedOrigin: makeSelectedOrigin('Hive World', { isConfirmed: true }),
+        preview: {
+            characteristics: [],
+            skills: [],
+            talents: [],
+            aptitudes: ['Willpower', 'Tech', 'Finesse', 'Offence'],
+            wounds: null,
+            fate: null,
+            aptitudeCollisions: [],
+            hasUnresolvedAptitudeCollision: false,
+        },
+        status: {
+            stepsComplete: true,
+            stepsCount: 4,
+            totalSteps: 8,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            canCommit: false,
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        // The collision banner must NOT be present — no phantom #215 warning.
+        const banner = canvasElement.querySelector('[data-testid="aptitude-collision-banner"]');
+        expect(banner).toBeNull();
+        // The preview still lists the character's aptitudes normally.
+        const canvas = within(canvasElement);
+        expect(canvas.getByText('Willpower')).toBeTruthy();
+    },
+};
