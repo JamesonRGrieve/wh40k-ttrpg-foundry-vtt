@@ -2362,6 +2362,48 @@
             "InvalidAmmunition": "Invalid ammunition item",
             "NoAmmunitionLoaded": "No ammunition loaded",
             "UnknownCondition": "Unknown condition: {condition}"
+        },
+        "Trade": {
+            "HudButton": "Trade",
+            "HudTooltip": "Trade with a nearby source",
+            "DialogTitle": "Barter & Requisition",
+            "NoSourcesNearby": "No trade partner is within reach.",
+            "RequestSent": "Transaction request sent to the GM for approval.",
+            "NoGM": "No active GM is available to approve the transaction.",
+            "OutOfRange": "{source} is no longer within trading range.",
+            "Resource": {
+                "throneGelt": "Throne Gelt",
+                "requisition": "Requisition",
+                "influence": "Influence"
+            },
+            "Adjust": {
+                "MerchantMarkup": "Merchant markup ({percent}%)",
+                "MerchantDiscount": "Merchant discount ({percent}%)",
+                "InfluenceBurn": "Influence burn ({count} spent)",
+                "RequisitionMultiplier": "Requisition multiplier ({multiplier}x)",
+                "Disposition": "Disposition: {attitude}",
+                "GMModifier": "GM adjustment ({percent}%)"
+            },
+            "Approval": {
+                "Title": "Approve Transaction",
+                "Summary": "{buyer} requests {quantity}x {item} from {source}.",
+                "Mode": "Mode",
+                "ModeBarter": "Barter",
+                "ModeRequisition": "Requisition",
+                "BaseCost": "Base cost",
+                "FinalCost": "Final cost",
+                "Adjustments": "Adjustments",
+                "NoAdjustments": "No adjustments.",
+                "GMModifierLabel": "GM modifier (%)",
+                "GMModifierHint": "Negative lowers the price (a good haggle roll); positive raises it (conditions, scarcity).",
+                "InfluenceBurn": "Influence burned on completion: {count}",
+                "Approve": "Approve",
+                "Reject": "Reject"
+            },
+            "Result": {
+                "Received": "{buyer} received {quantity}x {item} for {cost} {resource}.",
+                "Rejected": "Transaction request rejected by the GM."
+            }
         }
     }
 }

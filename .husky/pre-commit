@@ -16,6 +16,11 @@
 # concurrently. On <16GB you may need to serialize the tsc passes; do that by
 # moving them out of Phase 3 into a Phase 2.5 with their own wait_all.
 
+# husky's _/h wrapper runs hooks via `sh -e`, ignoring the bash shebang. This
+# script uses bash arrays/process-management, so re-exec under bash when it was
+# started by a POSIX sh (dash). POSIX-safe test; no-op when already in bash.
+if [ -z "${BASH_VERSION:-}" ]; then exec bash "$0" "$@"; fi
+
 set -u
 
 ROOT="$(git rev-parse --show-toplevel)"
