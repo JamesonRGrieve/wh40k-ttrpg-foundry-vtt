@@ -12,6 +12,21 @@ import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '..
 import { getWeaponTrainingModifier } from '../rules/weapon-training.ts';
 import type { WH40KBaseActorDocument, WH40KPsy } from '../types/global.d.ts';
 
+/** Maximum total bonus / penalty allowed on a single test target.
+ *  Per DH2 core.md L1050: "no accumulated bonus exceeds +60 and no
+ *  accumulated penalty exceeds -60". */
+export const ROLL_MODIFIER_CAP = 60;
+
+/** Apply the ±ROLL_MODIFIER_CAP clamp to a raw modifier sum.
+ *  Returns the clamped value, the original raw value, and whether
+ *  the cap actually fired (useful for chat-card surfacing). */
+export function clampModifierToCap(rawTotal: number): { clamped: number; raw: number; capFired: boolean } {
+    const raw = Number.isFinite(rawTotal) ? rawTotal : 0;
+    if (raw > ROLL_MODIFIER_CAP) return { clamped: ROLL_MODIFIER_CAP, raw, capFired: true };
+    if (raw < -ROLL_MODIFIER_CAP) return { clamped: -ROLL_MODIFIER_CAP, raw, capFired: true };
+    return { clamped: raw, raw, capFired: false };
+}
+
 /**
  * Base class for all roll-related data
  */
@@ -61,6 +76,15 @@ export class RollData {
     };
     specialModifiers: Record<string, number> = {};
     modifierTotal: number = 0;
+    /** The un-clamped sum of modifiers (un-capped). Equals `modifierTotal`
+     *  except when the ±60 cap fired, in which case this exposes what the
+     *  raw accumulator would have been so chat cards can surface "cap
+     *  absorbed X" to the GM (DH2 core.md L1050). */
+    rawModifierTotal: number = 0;
+    /** True when the ±60 cap clamped `rawModifierTotal` down to
+     *  `modifierTotal`. The chat-card layer reads this to render a
+     *  visual indicator. */
+    modifierCapFired: boolean = false;
     hasEyeOfVengeanceAvailable: boolean = false;
     eyeOfVengeance: boolean = false;
 
@@ -186,18 +210,15 @@ export class RollData {
         try {
             const roll = new Roll(rollDetails.formula, rollDetails.params);
             await roll.evaluate();
-            const rollTotal = roll.total;
-            if (rollTotal === undefined) {
-                this.modifierTotal = 0;
-            } else if (rollTotal > 60) {
-                this.modifierTotal = 60;
-            } else if (rollTotal < -60) {
-                this.modifierTotal = -60;
-            } else {
-                this.modifierTotal = rollTotal;
-            }
+            const rollTotal = roll.total ?? 0;
+            const { clamped, raw, capFired } = clampModifierToCap(rollTotal);
+            this.modifierTotal = clamped;
+            this.rawModifierTotal = raw;
+            this.modifierCapFired = capFired;
         } catch {
             this.modifierTotal = 0;
+            this.rawModifierTotal = 0;
+            this.modifierCapFired = false;
         }
     }
 }
