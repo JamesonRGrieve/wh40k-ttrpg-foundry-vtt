@@ -8,13 +8,8 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Combat action identity
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="tw-grid tw-grid-cols-[80px_minmax(0,1fr)] tw-gap-4 tw-border-b-2 tw-border-[var(--wh40k-gold-dark)] tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-px-4 tw-py-3 tw-shrink-0">
-      {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name extraClass="wh40k-item-header__image"}}
-
-      <div class="tw-flex tw-min-w-0 tw-flex-col tw-justify-center tw-gap-1">
-        <input type="text" class="wh40k-item-header__name tw-w-full tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-font-display tw-text-xl tw-text-gold bc:tw-text-crimson-light dh1e:tw-text-gold-raw-l5 dh2e:tw-text-gold-raw dw:tw-text-accent-combat ow:tw-text-brass-l20 rt:tw-text-gold im:tw-text-failure tw-shadow-[0_1px_2px_var(--wh40k-text-shadow)] placeholder:tw-text-[var(--wh40k-text-muted)] focus:tw-rounded-sm focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-outline-none" name="name" value="{{item.name}}" placeholder="Action Name" />
-
-        <div class="tw-mt-1 tw-flex tw-flex-wrap tw-items-center tw-gap-1">
+    {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholder="Action Name" hideTypeBadge=true }}
+        <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1">
           {{!-- Action Type Badge --}}
           <span class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium">
             <i class="fas fa-clock"></i>
@@ -29,8 +24,7 @@
           </span>
           {{/if}}
         </div>
-      </div>
-    </header>
+    {{/systems/wh40k-rpg/templates/item/panel/item-header.hbs}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          PROPERTIES PANEL
