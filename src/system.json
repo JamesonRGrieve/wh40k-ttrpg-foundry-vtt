@@ -108,6 +108,9 @@
             },
             "starship": {
                 "htmlFields": ["details.biography"]
+            },
+            "loot": {
+                "htmlFields": ["description"]
             }
         },
         "Item": {

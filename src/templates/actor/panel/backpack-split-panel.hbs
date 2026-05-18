@@ -83,8 +83,11 @@
                                     <span class="tw-text-[color:var(--wh40k-text-muted)] tw-italic">—</span>
                                     {{/if}}
                                 </td>
-                                <td class="tw-p-1 tw-align-middle">
-                                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-0.5 tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-accent-combat" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
+                                <td class="tw-p-1 tw-align-middle tw-whitespace-nowrap tw-text-right">
+                                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-0.5 tw-mr-1 tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-gold" data-action="dropItem" data-item-id="{{item.id}}" title="{{localize 'WH40K.Loot.Drop'}}" aria-label="{{localize 'WH40K.Loot.Drop'}}">
+                                        <i class="fas fa-arrow-down tw-text-[0.75rem]"></i>
+                                    </button>
+                                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-0.5 tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-accent-combat" data-action="itemDelete" data-item-id="{{item.id}}" title="{{localize 'WH40K.Common.Delete'}}" aria-label="{{localize 'WH40K.Common.Delete'}}">
                                         <i class="fas fa-trash tw-text-[0.75rem]"></i>
                                     </button>
                                 </td>
@@ -164,8 +167,11 @@
                                     <span class="tw-text-[color:var(--wh40k-text-muted)] tw-italic">—</span>
                                     {{/if}}
                                 </td>
-                                <td class="tw-p-1 tw-align-middle">
-                                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-0.5 tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-accent-combat" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
+                                <td class="tw-p-1 tw-align-middle tw-whitespace-nowrap tw-text-right">
+                                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-0.5 tw-mr-1 tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-gold" data-action="dropItem" data-item-id="{{item.id}}" title="{{localize 'WH40K.Loot.Drop'}}" aria-label="{{localize 'WH40K.Loot.Drop'}}">
+                                        <i class="fas fa-arrow-down tw-text-[0.75rem]"></i>
+                                    </button>
+                                    <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-0.5 tw-text-[color:var(--wh40k-text-muted)] hover:tw-text-accent-combat" data-action="itemDelete" data-item-id="{{item.id}}" title="{{localize 'WH40K.Common.Delete'}}" aria-label="{{localize 'WH40K.Common.Delete'}}">
                                         <i class="fas fa-trash tw-text-[0.75rem]"></i>
                                     </button>
                                 </td>
