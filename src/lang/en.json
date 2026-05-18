@@ -889,6 +889,27 @@
             "ChatTitle": "Daemonhost Bound",
             "BoundAtTier": "Host bound at tier:"
         },
+        "SisterOfBattle": {
+            "DialogTitle": "Apply Sister of Battle Elite Advance",
+            "Description": "Confirm the Adepta Sororitas elite advance for the applicant. The three Sister of Battle talents below will be granted on apply.",
+            "Prerequisites": "Prerequisites",
+            "Prereqs": {
+                "Fellowship": "Fellowship 40",
+                "Willpower": "Willpower 35",
+                "Female": "Female applicant (canonical)",
+                "Faith": "Imperial faith confirmed by GM"
+            },
+            "GrantsHeader": "Talents Granted",
+            "FaithOfEmperor": "Faith of the Emperor",
+            "FaithOfEmperorSummary": "+10 Willpower vs psychic powers.",
+            "HolyAegis": "Holy Aegis",
+            "HolyAegisSummary": "Once per round, ignore 1d10 damage from a daemonic source.",
+            "SistersResolve": "Sister's Resolve",
+            "SistersResolveSummary": "+20 to all Fear tests.",
+            "ApplyButton": "Apply",
+            "Cancel": "Cancel",
+            "ChatTitle": "Sister of Battle Elite Advance"
+        },
         "IncorruptibleDevotion": {
             "DialogTitle": "Convert Corruption to Insanity (Adepta Sororitas)",
             "Description": "Your unwavering faith arms you against the Ruinous Powers. You may refuse this taint, taking the spiritual toll on your mind instead.",
