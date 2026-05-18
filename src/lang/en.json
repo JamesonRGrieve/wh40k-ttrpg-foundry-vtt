@@ -879,6 +879,22 @@
             "FailureText": "Failed",
             "ShockModifier": "Shock Table Roll"
         },
+        "WithinGrenade": {
+            "DialogTitle": "Throw Grenade",
+            "GrenadeLabel": "Grenade",
+            "BlastRadius": "Blast",
+            "Damage": "Damage",
+            "SaveLabel": "Save",
+            "FailEffectLabel": "On Failed Save",
+            "ThrowButton": "Throw",
+            "ChatTitle": "Grenade Thrown",
+            "Names": {
+                "photonFlash": "Photon Flash Grenade",
+                "psychotroke": "Psychotroke Grenade",
+                "tearsOfTheEmperor": "Tears of the Emperor",
+                "smoke": "Smoke Grenade"
+            }
+        },
         "Daemonhost": {
             "DialogTitle": "Bind Daemonhost",
             "DialogIntro": "Select a Binding Strength tier for the host being summoned.",

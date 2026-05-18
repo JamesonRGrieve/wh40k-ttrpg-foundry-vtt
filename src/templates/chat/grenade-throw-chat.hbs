@@ -1,0 +1,46 @@
+{{!-- Within-supplement grenade throw chat card (#135). --}}
+{{!-- data-wh40k-system anchors per-system Tailwind variants on the card. --}}
+<div class="wh40k-rpg wh40k-grenade-card tw-p-4 tw-rounded-md tw-border tw-bg-[rgba(15,12,8,0.85)] tw-border-[rgba(201,162,39,0.35)] dh2e:tw-border-bronze"
+     data-wh40k-system="{{gameSystem}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-bomb tw-text-[1.1rem] {{accentClass}}"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] {{accentClass}}">
+            {{localize "WH40K.WithinGrenade.ChatTitle"}}
+        </div>
+    </div>
+    <div class="tw-text-[0.95rem] tw-mb-3 tw-text-[#e8e4d9]">
+        <strong class="{{accentClass}}">{{label}}</strong>
+    </div>
+
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[#9a9a8a]">{{localize "WH40K.WithinGrenade.BlastRadius"}}</span>
+            <span class="tw-font-bold tw-tabular-nums">{{blastRadius}}m</span>
+        </li>
+        {{#if damage}}
+            <li class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.WithinGrenade.Damage"}}</span>
+                <span class="tw-font-bold tw-tabular-nums">{{damage}}</span>
+            </li>
+        {{/if}}
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[#9a9a8a]">{{localize "WH40K.WithinGrenade.SaveLabel"}}</span>
+            <span class="tw-font-bold tw-tabular-nums {{accentClass}}">{{saveLabel}}</span>
+        </li>
+    </ul>
+
+    {{#if specialQualities.length}}
+        <div class="tw-flex tw-flex-wrap tw-gap-1 tw-mb-3">
+            {{#each specialQualities}}
+                <span class="tw-text-[0.7rem] tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-border tw-border-[rgba(201,162,39,0.35)] tw-text-[#c4871d] dh2e:tw-text-bronze">{{this}}</span>
+            {{/each}}
+        </div>
+    {{/if}}
+
+    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(201,162,39,0.3)] tw-bg-[rgba(0,0,0,0.25)]">
+        <div class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a] tw-mb-1">
+            {{localize "WH40K.WithinGrenade.FailEffectLabel"}}
+        </div>
+        <div class="tw-text-[0.85rem] tw-text-[#e8e4d9]">{{failEffect}}</div>
+    </div>
+</div>
