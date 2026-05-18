@@ -3046,7 +3046,8 @@ export default class CharacterSheet extends BaseActorSheet {
         };
         if (!sys.isComplete) return;
         const award = Math.max(0, sys.reward.profitFactor);
-        const currentPF = this.actor.system.rogueTrader?.profitFactor?.current ?? 0;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rogueTrader.profitFactor.current is a per-system actor schema field not exposed on the abstract WH40KBaseActor system surface
+        const currentPF = ((this.actor.system as { rogueTrader?: { profitFactor?: { current?: number } } }).rogueTrader?.profitFactor?.current) ?? 0;
         if (award > 0) {
             await this.actor.update({ 'system.rogueTrader.profitFactor.current': currentPF + award });
         }
