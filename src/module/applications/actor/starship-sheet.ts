@@ -439,14 +439,14 @@ export default class StarshipSheet extends BaseActorSheet {
             if (validation.isOverBudget) {
                 parts.push(
                     i18n.format('WH40K.Starship.Build.NotifyOverBudgetBy', {
-                        amount: validation.spent - validation.budget,
+                        amount: String(validation.spent - validation.budget),
                     }),
                 );
             }
             if (validation.missingEssentialSlots.length > 0) {
                 parts.push(
                     i18n.format('WH40K.Starship.Build.NotifyMissingSlots', {
-                        count: validation.missingEssentialSlots.length,
+                        count: String(validation.missingEssentialSlots.length),
                     }),
                 );
             }
