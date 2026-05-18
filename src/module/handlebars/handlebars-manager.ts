@@ -108,6 +108,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/armour-display-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/combat-controls-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/combat-actions-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs',
             'systems/wh40k-rpg/templates/actor/panel/skills-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/skills-specialist-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/talent-panel.hbs',
