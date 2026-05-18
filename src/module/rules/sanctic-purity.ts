@@ -21,7 +21,7 @@
  * shipped under (compare `assassins-strike.ts`).
  */
 
-import type { WH40KBaseActor } from '../types/global.d.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 
 /** Fate cost paid when accepting the negation prompt. */
 export const SANCTIC_PURITY_FATE_COST = 1 as const;

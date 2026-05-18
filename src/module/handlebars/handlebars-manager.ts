@@ -131,6 +131,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/dark-pact-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/mortification-button.hbs',
             'systems/wh40k-rpg/templates/actor/panel/fanatic-button.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/grapple-controller-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/endeavour-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ship-role-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/journal-panel.hbs',
@@ -246,6 +247,10 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/prompt/radical-services-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/radical-services-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/beyond-homeworld-info-dialog.hbs',
+            'systems/wh40k-rpg/templates/prompt/mutation-roll-dialog.hbs',
+            'systems/wh40k-rpg/templates/chat/mutation-roll-chat.hbs',
+            'systems/wh40k-rpg/templates/prompt/disorder-roll-dialog.hbs',
+            'systems/wh40k-rpg/templates/chat/disorder-roll-chat.hbs',
 
             // Item sheet templates
             'systems/wh40k-rpg/templates/item/item-sheet.hbs',

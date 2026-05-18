@@ -22,7 +22,7 @@
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import { SANCTIC_PURITY_FATE_COST } from '../../rules/sanctic-purity.ts';
-import type { WH40KBaseActor } from '../../types/global.d.ts';
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
