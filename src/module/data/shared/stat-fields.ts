@@ -68,8 +68,7 @@ export function characteristicField(label: string, short: string, opts: Characte
 
 /** `wounds` sub-schema. `nullable: false` for the strict creature path. */
 export function woundsField(opts: { max: number; value: number; critical?: number; nullable: boolean }): DataField {
-    const n = (initial: number): DataField =>
-        new NumberField({ required: true, initial, min: 0, integer: true, nullable: opts.nullable });
+    const n = (initial: number): DataField => new NumberField({ required: true, initial, min: 0, integer: true, nullable: opts.nullable });
     return new SchemaField({
         max: n(opts.max),
         value: n(opts.value),

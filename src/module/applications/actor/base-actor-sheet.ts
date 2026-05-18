@@ -1708,20 +1708,16 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /* -------------------------------------------- */
 
     /**
-     * Resolve the owned item a clicked control refers to (via data-item-id).
-     * When `notFoundMsg` is given and the id resolves to no item, surface a
-     * warning notification (matches the prior per-handler behaviour). Shared
-     * by the actor-sheet item action handlers.
+     * Resolve the owned item a clicked control refers to (via data-item-id,
+     * closest ancestor then self). Shared by the actor-sheet item action
+     * handlers. Callers that need a not-found notification handle it
+     * themselves (notification helpers are sheet-specific, not on the base).
      * @protected
      */
-    _resolveItemFromTarget(target: HTMLElement, notFoundMsg?: string): WH40KItem | undefined {
+    _resolveItemFromTarget(target: HTMLElement): WH40KItem | undefined {
         const itemId = itemIdFromTarget(target);
         if (itemId === undefined) return undefined;
-        const item = this.actor.items.get(itemId);
-        if (item === undefined && notFoundMsg !== undefined && notFoundMsg !== '') {
-            this._notify('warning', notFoundMsg, { duration: 3000 });
-        }
-        return item;
+        return this.actor.items.get(itemId);
     }
 
     /* -------------------------------------------- */

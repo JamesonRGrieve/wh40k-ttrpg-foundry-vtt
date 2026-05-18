@@ -69,7 +69,11 @@ export function applyRollModeWhispers(chatData: Record<string, unknown>): void {
  * the `{ user: game.user.id, rollMode: …, content }` + applyRollModeWhispers
  * + ChatMessage.create boilerplate repeated across the action managers.
  */
-export async function postChatCard(content: string, opts: { rolls?: Roll[]; speaker?: unknown; rollMode?: string } = {}): Promise<void> {
+export async function postChatCard(
+    content: string,
+    // eslint-disable-next-line no-restricted-syntax -- boundary: speaker is an opaque Foundry ChatSpeaker bag passed straight through to ChatMessage.create
+    opts: { rolls?: Roll[] | undefined; speaker?: unknown; rollMode?: string | undefined } = {},
+): Promise<void> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts an untyped payload; Record<string, unknown> is the correct boundary type
     const chatData: Record<string, unknown> = {
         user: game.user.id,
@@ -86,7 +90,8 @@ export async function sendActionDataToChat(actionData: ActionData): Promise<void
     // eslint-disable-next-line no-restricted-syntax -- boundary: renderTemplate expects a plain record; ActionData is duck-typed to satisfy the shape
     const html = await foundry.applications.handlebars.renderTemplate(actionData.template, actionData as unknown as Record<string, unknown>);
     const rollData = actionData.rollData as typeof actionData.rollData & { isManualRoll?: boolean };
-    const rolls = rollData.roll != null && rollData.isManualRoll !== true ? [actionData.rollData.roll] : undefined;
+    const roll = rollData.roll;
+    const rolls = roll != null && rollData.isManualRoll !== true ? [roll] : undefined;
     await postChatCard(html, { rolls });
 }
 
