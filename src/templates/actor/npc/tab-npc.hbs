@@ -63,6 +63,10 @@
           <button type="button" class="tw-rounded-md tw-border tw-border-cyan-600 tw-px-3 tw-py-2 tw-text-xs tw-font-semibold tw-uppercase {{#if (eq transactionProfile.mode "requisition")}}tw-bg-cyan-700 tw-text-white{{else}}tw-bg-transparent tw-text-cyan-300{{/if}}" data-action="setTransactionMode" data-mode="requisition">Requisition</button>
         </div>
         <p class="tw-mt-3 tw-text-xs tw-text-slate-300">Configured sources appear in the player Barter dialog. Barter spends Throne Gelt, while requisition spends Requisition.</p>
+        <button type="button" class="tw-mt-3 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-w-full tw-py-2 tw-rounded-md tw-border tw-border-amber-600 tw-bg-amber-700/20 tw-text-amber-200 tw-text-xs tw-font-semibold tw-uppercase tw-cursor-pointer hover:tw-bg-amber-700/40 hover:tw-border-amber-500" data-action="generateInventory" data-tooltip="{{localize "WH40K.InventoryGenerator.OpenTooltip"}}">
+          <i class="fa-solid fa-boxes-stacked"></i>
+          <span>{{localize "WH40K.InventoryGenerator.OpenButton"}}</span>
+        </button>
       </div>
     </div>
     {{/if}}
