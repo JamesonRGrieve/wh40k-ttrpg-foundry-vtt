@@ -1000,6 +1000,34 @@ const UTILS_VALIDATORS_FLOWS = [
 ];
 recordDimension('utils-validators.flow', covered['utils-validators.flow'], UTILS_VALIDATORS_FLOWS);
 
+// Data-layer flows exercised by tests/e2e/data-layer.spec.ts. Drives
+// source-code coverage on three uncovered data modules:
+//   - data/fields/mapping-field.ts (was 0% / 38.8%) — construct,
+//     getInitialValue, _cleanType.
+//   - config/advancements/index.ts (was 0% / 60.8%) — all 7 pure
+//     career-registry getters.
+//   - data/grant/choice-grant.ts (was 11.1% / 32.6%) and
+//     data/grant/resource-grant.ts (was 11.1% / 35.2%) — the
+//     `_applyGrant` paths driven synthetically against a seeded actor.
+// Keys MUST match the recordCoverage('data-layer.flow', ...) calls
+// in the spec.
+const DATA_LAYER_FLOWS = [
+    'mapping-field-construct',
+    'mapping-field-getInitialValue',
+    'mapping-field-cleanType',
+    'advancements-getAvailableCareers',
+    'advancements-getCareerKeyFromName',
+    'advancements-hasCareer',
+    'advancements-getCareerAdvancements',
+    'advancements-getCharacteristicCosts',
+    'advancements-getRankAdvancements',
+    'advancements-getNextCharacteristicCost',
+    'choice-grant-applyEmpty',
+    'choice-grant-applyDuplicateRejected',
+    'resource-grant-applyEmpty',
+];
+recordDimension('data-layer.flow', covered['data-layer.flow'], DATA_LAYER_FLOWS);
+
 // Loot drop/pickup feature dimension exercised by tests/e2e/loot.spec.ts.
 // Keys MUST match the recordCoverage('loot.flow', ...) calls in that spec.
 // Canvas/HUD placement is a runtime-render concern; the document-layer
