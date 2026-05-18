@@ -81,7 +81,7 @@ function extractHatredSpecialization(item: { name: string; system?: { specializa
     }
     // Legacy: "Hatred (Daemons)" on the talent name itself.
     const match = /^hatred\s*\(([^)]+)\)\s*$/i.exec(item.name);
-    if (match !== null && match[1] !== undefined) return match[1].trim();
+    if (match?.[1] !== undefined) return match[1].trim();
     return null;
 }
 

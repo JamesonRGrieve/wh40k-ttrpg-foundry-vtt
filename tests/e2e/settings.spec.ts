@@ -268,7 +268,7 @@ async function probeAccessor(page: import('@playwright/test').Page, name: (typeo
         };
         // Fallback chain in case a future build re-exposes the class globally.
         const globalCandidates: Array<Record<string, unknown> | undefined> = [CONFIG?.WH40K?.Settings, game?.wh40k?.settings, game?.system?.api?.settings];
-        let owner: Record<string, unknown> | undefined = globalCandidates.find((c) => c && typeof (c as Record<string, unknown>)[accessor] === 'function');
+        let owner: Record<string, unknown> | undefined = globalCandidates.find((c) => c && typeof c[accessor] === 'function');
         if (!owner) {
             try {
                 // Indirect dynamic-import URL so TS doesn't try to resolve the
@@ -276,7 +276,7 @@ async function probeAccessor(page: import('@playwright/test').Page, name: (typeo
                 // typecheck time. The browser resolves it against Foundry's
                 // /systems/<id>/ static mount at runtime.
                 const url = '/systems/wh40k-rpg/module/wh40k-rpg-settings.js';
-                const importer = (specifier: string): Promise<unknown> => import(/* @vite-ignore */ specifier);
+                const importer = async (specifier: string): Promise<unknown> => import(/* @vite-ignore */ specifier);
                 const mod = (await importer(url)) as { WH40KSettings?: Record<string, unknown> };
                 if (mod.WH40KSettings && typeof mod.WH40KSettings[accessor] === 'function') {
                     owner = mod.WH40KSettings;
@@ -287,7 +287,7 @@ async function probeAccessor(page: import('@playwright/test').Page, name: (typeo
         }
         if (!owner) return { ok: false, error: `accessor ${accessor} not found on WH40KSettings surface` };
         try {
-            const fn = (owner as Record<string, unknown>)[accessor] as () => unknown;
+            const fn = owner[accessor] as () => unknown;
             const value = fn.call(owner);
             return { ok: value !== undefined, error: value === undefined ? 'accessor returned undefined' : null };
         } catch (err) {

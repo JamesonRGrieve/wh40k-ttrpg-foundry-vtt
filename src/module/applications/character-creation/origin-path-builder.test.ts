@@ -10,7 +10,7 @@ class FakeApplicationV2 {}
 type Constructor = abstract new (...args: any[]) => object;
 const fakeHandlebarsApplicationMixin = <T extends Constructor>(Base: T): T => {
     abstract class Mixed extends Base {}
-    return Mixed as T;
+    return Mixed;
 };
 
 vi.mock('../../config/game-systems/index.ts', () => ({
@@ -248,9 +248,7 @@ describe('OriginPathBuilder._itemToSelectionData', () => {
         const builder = { actor: { id: 'actor-1' } };
         const indexEntry = makeOrigin();
 
-        expect(() =>
-            OriginPathBuilder.prototype._itemToSelectionData.call(builder, indexEntry),
-        ).not.toThrow();
+        expect(() => OriginPathBuilder.prototype._itemToSelectionData.call(builder, indexEntry)).not.toThrow();
     });
 
     it('treats a non-callable toObject as plain data instead of invoking it (issue #198)', () => {
@@ -442,9 +440,7 @@ describe('OriginPathBuilder._collectAptitudeGrantCounts (issue #205)', () => {
             ['background', { system: { grants: { aptitudes: ['Willpower'] }, selectedChoices: {} } }],
         ]);
 
-        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(
-            host as unknown as InstanceType<typeof OriginPathBuilder>,
-        );
+        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(host as unknown as InstanceType<typeof OriginPathBuilder>);
 
         expect(counts.get('Willpower')).toBe(2);
         expect(counts.get('Offence')).toBe(1);
@@ -466,21 +462,15 @@ describe('OriginPathBuilder._collectAptitudeGrantCounts (issue #205)', () => {
             ],
         ]);
 
-        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(
-            host as unknown as InstanceType<typeof OriginPathBuilder>,
-        );
+        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(host as unknown as InstanceType<typeof OriginPathBuilder>);
 
         expect(counts.get('Tech')).toBe(2);
     });
 
     it('does not double-count an aptitude granted twice by a single origin', () => {
-        const host = makeCountHost([
-            ['homeWorld', { system: { grants: { aptitudes: ['Willpower', 'Willpower'] }, selectedChoices: {} } }],
-        ]);
+        const host = makeCountHost([['homeWorld', { system: { grants: { aptitudes: ['Willpower', 'Willpower'] }, selectedChoices: {} } }]]);
 
-        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(
-            host as unknown as InstanceType<typeof OriginPathBuilder>,
-        );
+        const counts = OriginPathBuilder.prototype._collectAptitudeGrantCounts.call(host as unknown as InstanceType<typeof OriginPathBuilder>);
 
         expect(counts.get('Willpower')).toBe(1);
     });

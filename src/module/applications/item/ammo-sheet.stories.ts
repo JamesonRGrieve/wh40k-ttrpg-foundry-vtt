@@ -2,16 +2,16 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-ammo-sheet.hbs?raw';
-import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderTemplate } from '../../../../stories/mocks';
+import { initializeStoryHandlebars } from '../../../../stories/template-support';
 
 initializeStoryHandlebars();
 // AmmoSheet exposes setIncludes / setToArray on its render context. The story
 // reproduces the same surface so the template can render without the sheet.
 if (!Handlebars.helpers.setIncludes) {
     Handlebars.registerHelper('setIncludes', (key: unknown, set: unknown) => {
-        if (set instanceof Set) return set.has(key as string);
-        if (Array.isArray(set)) return (set as unknown[]).includes(key);
+        if (set instanceof Set) return set.has(key);
+        if (Array.isArray(set)) return set.includes(key);
         return false;
     });
 }

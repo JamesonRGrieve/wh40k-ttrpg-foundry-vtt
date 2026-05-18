@@ -14,7 +14,7 @@ const ORIGINAL_GAME = (globalThis as Record<string, unknown>).game;
 const ORIGINAL_FOUNDRY = (globalThis as Record<string, unknown>).foundry;
 
 class FakeApplicationV2 {}
-const fakeHandlebarsApplicationMixin = <T extends new (...args: any[]) => object>(Base: T): T => class extends Base {} as T;
+const fakeHandlebarsApplicationMixin = <T extends new (...args: any[]) => object>(Base: T): T => class extends Base {};
 
 (globalThis as Record<string, unknown>).game = {
     i18n: { localize: (k: string) => k, format: (k: string) => k },
@@ -69,7 +69,7 @@ function makeHost(
             },
         },
         async _throttle(_key: string, _wait: number, fn: (...args: unknown[]) => unknown, ctx: unknown, args: unknown[]): Promise<unknown> {
-            return await (fn as (...a: unknown[]) => unknown).apply(ctx, args);
+            return await fn.apply(ctx, args);
         },
         _notify(type: 'info' | 'warning' | 'error', message: string) {
             host._notifies.push([type, message]);
@@ -78,7 +78,7 @@ function makeHost(
             host._updates.push({ [field]: value });
         },
     };
-    return host as unknown as StatAdjustmentHost & { _updates: Record<string, unknown>[]; _notifies: Array<[string, string]> };
+    return host;
 }
 
 function btn(dataset: Record<string, string>): HTMLElement {

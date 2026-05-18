@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { DAEMONHOST_TIERS } from './daemonhost';
 import type { BindingStrength } from './daemon-weapon';
+import { DAEMONHOST_TIERS } from './daemonhost';
 
 /**
  * Daemonhost creation + binding tiers (#85 — beyond.md p.66). Each

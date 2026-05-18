@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../../src/templates/item/item-attack-special-sheet.hbs?raw';
+import { renderSheet } from '../../../../stories/test-helpers';
 
 interface Args {
     item: {
@@ -52,7 +52,7 @@ export const Disabled: Story = {
 export const RendersAndAcceptsName: Story = {
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
-        const nameInput = canvas.getByDisplayValue('Lightning Arc') as HTMLInputElement;
+        const nameInput = canvas.getByDisplayValue('Lightning Arc');
         expect(nameInput).toBeTruthy();
         expect(nameInput.getAttribute('name')).toBe('name');
     },

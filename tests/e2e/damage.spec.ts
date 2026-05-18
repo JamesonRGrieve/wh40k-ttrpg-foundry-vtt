@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -70,7 +69,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             if (!Actor?.create) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { 'deal-damage-reduces-wounds': 'Actor.create unavailable' } as Record<string, string>,
+                    flowNotes: { 'deal-damage-reduces-wounds': 'Actor.create unavailable' },
                     pcActorId: null as string | null,
                     npcActorId: null as string | null,
                     setupError: 'Actor.create unavailable',
@@ -134,7 +133,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
             if (!pcActor?.id && !npcActor?.id) {
                 return {
                     flowsFired: fired,
-                    flowNotes: { ...notes, 'deal-damage-reduces-wounds': 'no actors could be created' } as Record<string, string>,
+                    flowNotes: { ...notes, 'deal-damage-reduces-wounds': 'no actors could be created' },
                     pcActorId: null,
                     npcActorId: null,
                     setupError: 'no actors could be created',
@@ -179,17 +178,9 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     notes['wounds-zero-marks-critical'] = 'npc.applyDamage missing';
                 } else {
                     // First reduce wounds to 0 (we're already at 7).
-                    await withTimeout(
-                        npc.update({ 'system.wounds.value': 0, 'system.wounds.critical': 0 }),
-                        5_000,
-                        'npc.update wounds=0',
-                    );
+                    await withTimeout(npc.update({ 'system.wounds.value': 0, 'system.wounds.critical': 0 }), 5_000, 'npc.update wounds=0');
                     // Now hit for 5 more; critical should rise.
-                    await withTimeout(
-                        npc.applyDamage(5, 'body', { ignoreArmour: true, ignoreToughness: true }),
-                        5_000,
-                        'npc.applyDamage critical',
-                    );
+                    await withTimeout(npc.applyDamage(5, 'body', { ignoreArmour: true, ignoreToughness: true }), 5_000, 'npc.applyDamage critical');
                     const post = getNpc();
                     const critical = post?.system?.wounds?.critical ?? -1;
                     // npc.ts adds (oldValue - newValue) to critical when newValue===0;
@@ -289,7 +280,7 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     const before = npc.system?.wounds?.value ?? 0;
                     await withTimeout(npc.healWounds(4), 5_000, 'healWounds');
                     const after = getNpc()?.system?.wounds?.value ?? before;
-                    if (after === Math.min((npc.system?.wounds?.max ?? 10), before + 4)) {
+                    if (after === Math.min(npc.system?.wounds?.max ?? 10, before + 4)) {
                         fired['wound-recovery'] = true;
                     } else {
                         notes['wound-recovery'] = `expected ${before + 4} (capped at max), got ${after}`;
@@ -309,18 +300,10 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
                     // Reset NPC to full wounds, then apply 3 sequential strikes
                     // while the PC accumulates 2 fatigue ticks. End-state asserts
                     // both tracks moved as expected.
-                    await withTimeout(
-                        npc.update({ 'system.wounds.value': 10, 'system.wounds.critical': 0 }),
-                        5_000,
-                        'reset npc wounds',
-                    );
+                    await withTimeout(npc.update({ 'system.wounds.value': 10, 'system.wounds.critical': 0 }), 5_000, 'reset npc wounds');
                     const pcFatigueStart = getPc()?.system?.fatigue?.value ?? 0;
                     for (let i = 0; i < 3; i++) {
-                        await withTimeout(
-                            getNpc()?.applyDamage?.(2, 'body', { ignoreArmour: true, ignoreToughness: true }),
-                            5_000,
-                            `seq applyDamage ${i}`,
-                        );
+                        await withTimeout(getNpc()?.applyDamage?.(2, 'body', { ignoreArmour: true, ignoreToughness: true }), 5_000, `seq applyDamage ${i}`);
                     }
                     await withTimeout(getPc()?.applyFatigue?.(1), 5_000, 'seq applyFatigue 1');
                     await withTimeout(getPc()?.applyFatigue?.(1), 5_000, 'seq applyFatigue 2');
@@ -359,8 +342,8 @@ async function probeDamageFlows(page: Page): Promise<ProbeResult & { pageErrors:
         }, DAMAGE_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             pcActorId: result.pcActorId,
             npcActorId: result.npcActorId,
             setupError: result.setupError,

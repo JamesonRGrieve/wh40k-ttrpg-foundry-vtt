@@ -1,6 +1,5 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
-
 import { hasFoundry, requireOrSkip, skipBanner } from './has-foundry';
 
 export const TEST_PORT = Number(process.env.FOUNDRY_TEST_PORT ?? 30001);

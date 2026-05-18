@@ -4,8 +4,8 @@ import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/character-creation/origin-path-builder.hbs?raw';
 import { renderTemplate } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
-import { clickAction } from '../../../../stories/test-helpers';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { clickAction } from '../../../../stories/test-helpers';
 
 initializeStoryHandlebars();
 
@@ -215,19 +215,8 @@ function makeArgs(overrides: Partial<BuilderStoryArgs> = {}): BuilderStoryArgs {
                 selection: null,
             },
         ],
-        currentStep: {
-            index: 0,
-            key: 'homeWorld',
-            label: 'Home World',
-            icon: 'fa-globe',
-            description: 'Choose the world that forged your character.',
-            origins: [hiveWorld, feralWorld],
-            isLineage: false,
-            isCharacteristics: false,
-        },
         charGen: null,
         equipment: null,
-        selectedOrigin: null,
         showSelectionPanel: true,
         hasLineageSelection: false,
         lineageSelection: null,

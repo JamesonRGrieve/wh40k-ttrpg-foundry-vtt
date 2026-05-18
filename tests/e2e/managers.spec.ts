@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -637,15 +636,15 @@ test.describe.serial('grants-manager + transaction-manager (Tier B)', () => {
         const failures: string[] = [];
         try {
             const probes: Array<{ flow: string; run: () => Promise<FlowResult> }> = [
-                { flow: FLOW_TALENT_SKILL, run: () => probeGrantsSkill(page, grantsActorId) },
-                { flow: FLOW_TALENT_TALENT, run: () => probeGrantsTalentGrantsTalent(page) },
-                { flow: FLOW_REVOKE, run: () => probeGrantsRevoke(page, grantsActorId) },
-                { flow: FLOW_SPECIAL_ABILITY, run: () => probeSpecialAbility(page, grantsActorId) },
-                { flow: FLOW_LIST_SOURCES, run: () => probeListSources(page, buyerId, sourceId) },
-                { flow: FLOW_ACQUIRE, run: () => probeAcquire(page, buyerId, sourceId) },
+                { flow: FLOW_TALENT_SKILL, run: async () => probeGrantsSkill(page, grantsActorId) },
+                { flow: FLOW_TALENT_TALENT, run: async () => probeGrantsTalentGrantsTalent(page) },
+                { flow: FLOW_REVOKE, run: async () => probeGrantsRevoke(page, grantsActorId) },
+                { flow: FLOW_SPECIAL_ABILITY, run: async () => probeSpecialAbility(page, grantsActorId) },
+                { flow: FLOW_LIST_SOURCES, run: async () => probeListSources(page, buyerId, sourceId) },
+                { flow: FLOW_ACQUIRE, run: async () => probeAcquire(page, buyerId, sourceId) },
                 // probeSell mutates buyer/source modes; run last so it
                 // doesn't affect FLOW_LIST_SOURCES / FLOW_ACQUIRE.
-                { flow: FLOW_SELL, run: () => probeSell(page, buyerId, sourceId) },
+                { flow: FLOW_SELL, run: async () => probeSell(page, buyerId, sourceId) },
             ];
             for (const probe of probes) {
                 const result = await probe.run();

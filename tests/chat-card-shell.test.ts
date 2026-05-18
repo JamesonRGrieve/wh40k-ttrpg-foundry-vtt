@@ -16,8 +16,8 @@
 
 import Handlebars from 'handlebars';
 import { describe, expect, it } from 'vitest';
-import { initializeStoryHandlebars } from '../stories/template-support';
 import shellSrc from '../src/templates/chat/partial/chat-card-shell.hbs?raw';
+import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
@@ -105,9 +105,7 @@ describe('chat-card-shell partial — basic structural contract', () => {
     });
 
     it('renders body content from {{> @partial-block}}', () => {
-        const tpl = Handlebars.compile(
-            '{{#> chat-card-shell cardClass="wh40k-x" title="X"}}<div class="custom-body">hello body</div>{{/chat-card-shell}}',
-        );
+        const tpl = Handlebars.compile('{{#> chat-card-shell cardClass="wh40k-x" title="X"}}<div class="custom-body">hello body</div>{{/chat-card-shell}}');
         const root = dom(tpl({}));
         const body = root.querySelector('.wh40k-card-body');
         expect(body).not.toBeNull();
@@ -116,9 +114,7 @@ describe('chat-card-shell partial — basic structural contract', () => {
     });
 
     it('omits legacy classes when legacyClasses=false (new-only chat messages)', () => {
-        const tpl = Handlebars.compile(
-            '{{#> chat-card-shell cardClass="wh40k-x" title="X" legacyClasses=false}}body{{/chat-card-shell}}',
-        );
+        const tpl = Handlebars.compile('{{#> chat-card-shell cardClass="wh40k-x" title="X" legacyClasses=false}}body{{/chat-card-shell}}');
         const root = dom(tpl({}));
         expect(root.querySelector('.wh40k-card-header')).toBeNull();
         expect(root.querySelector('.wh40k-card-body')).toBeNull();
@@ -205,13 +201,7 @@ describe('chat-card-shell — HTML equivalence with legacy templates', () => {
         const newDom = dom(newHtml);
 
         // Outer card div — legacy classes preserved.
-        for (const cls of [
-            'wh40k-chat-card',
-            'wh40k-condition-card',
-            'wh40k-condition-card--harmful',
-            'tw-overflow-hidden',
-            'tw-rounded-md',
-        ]) {
+        for (const cls of ['wh40k-chat-card', 'wh40k-condition-card', 'wh40k-condition-card--harmful', 'tw-overflow-hidden', 'tw-rounded-md']) {
             expect(newDom.firstElementChild?.classList.contains(cls)).toBe(true);
         }
 
@@ -232,7 +222,7 @@ describe('chat-card-shell — HTML equivalence with legacy templates', () => {
 
         // Badges.
         const newBadges = newDom.querySelectorAll('.wh40k-card-badges .wh40k-badge');
-        expect(newBadges.length).toBe(2);
+        expect(newBadges).toHaveLength(2);
         expect(newBadges[0].classList.contains(`wh40k-badge--${ctx.natureClass}`)).toBe(true);
         expect(newBadges[0].querySelector(`.${ctx.natureIcon}`)).not.toBeNull();
         expect(newBadges[1].classList.contains('wh40k-badge--stacks')).toBe(true);

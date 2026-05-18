@@ -44,7 +44,7 @@ function installGlobals(actors: ActorStub[]): void {
         actors: { get: (id: string) => byId.get(id) },
     };
     (globalThis as Record<string, unknown>).foundry = {
-        utils: { deepClone: (o: unknown) => JSON.parse(JSON.stringify(o)) as unknown },
+        utils: { deepClone: (o: unknown) => JSON.parse(JSON.stringify(o)) },
     };
 }
 

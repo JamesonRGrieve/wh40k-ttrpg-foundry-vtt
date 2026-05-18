@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-    ESCAPE_PINNING_FAVOURABLE_BONUS,
-    PINNED_ACTION_RESTRICTION,
-    PINNED_BS_PENALTY,
-    resolveEscapePinningTest,
-    resolvePinningTest,
-} from './pinning';
+import { ESCAPE_PINNING_FAVOURABLE_BONUS, PINNED_ACTION_RESTRICTION, PINNED_BS_PENALTY, resolveEscapePinningTest, resolvePinningTest } from './pinning';
 
 describe('resolvePinningTest (#111)', () => {
     it('target = WP (Challenging +0) by default', () => {

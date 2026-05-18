@@ -19,8 +19,8 @@
 
 import Handlebars from 'handlebars';
 import { describe, expect, it } from 'vitest';
-import { initializeStoryHandlebars } from '../stories/template-support';
 import itemHeaderSrc from '../src/templates/item/panel/item-header.hbs?raw';
+import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
@@ -154,4 +154,3 @@ describe('item-header partial — tier / category badges', () => {
         expect(dom(html).querySelector('.wh40k-badge--category')).toBeNull();
     });
 });
-

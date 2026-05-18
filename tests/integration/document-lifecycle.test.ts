@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import { bootFoundryOnce } from './lib/boot';
 import { createActor, createItem } from './lib/fixtures';
 import { requireOrSkip } from './lib/has-foundry';

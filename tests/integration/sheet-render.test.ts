@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import { bootFoundryOnce } from './lib/boot';
 import { createActor } from './lib/fixtures';
 import { requireOrSkip } from './lib/has-foundry';
@@ -22,9 +21,7 @@ describe.skipIf(!ok)('sheet render (Tier A)', () => {
     it('does not collide on registerSheet anonymous-class names (V14 gotcha #10)', async () => {
         const result = await bootFoundryOnce();
         if (!result.booted) return;
-        const cfg = result.runtime?.CONFIG as
-            | { Actor?: { sheetClasses?: Record<string, Record<string, unknown>> } }
-            | undefined;
+        const cfg = result.runtime?.CONFIG as { Actor?: { sheetClasses?: Record<string, Record<string, unknown>> } } | undefined;
         const classes = cfg?.Actor?.sheetClasses;
         if (!classes) return;
         const names = new Set<string>();

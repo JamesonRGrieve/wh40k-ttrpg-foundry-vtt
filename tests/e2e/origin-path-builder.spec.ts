@@ -242,7 +242,11 @@ async function probeOriginPathBuilder(page: import('@playwright/test').Page): Pr
                     builder.previewedOrigin = null;
                     const origin = pickOriginForStep(firstStepKey);
                     if (!origin) {
-                        record('builder-select-origin-card', false, `no origin available for step '${firstStepKey}' (allOrigins=${builder.allOrigins?.length ?? 0})`);
+                        record(
+                            'builder-select-origin-card',
+                            false,
+                            `no origin available for step '${firstStepKey}' (allOrigins=${builder.allOrigins?.length ?? 0})`,
+                        );
                     } else {
                         const err = await callAction('selectOriginCard', {
                             originId: String(origin.id ?? ''),
@@ -253,11 +257,7 @@ async function probeOriginPathBuilder(page: import('@playwright/test').Page): Pr
                         } else if (builder.previewedOrigin && builder.previewedOrigin.id === origin.id) {
                             record('builder-select-origin-card', true, null);
                         } else {
-                            record(
-                                'builder-select-origin-card',
-                                false,
-                                `previewedOrigin.id=${builder.previewedOrigin?.id ?? 'null'}, expected ${origin.id}`,
-                            );
+                            record('builder-select-origin-card', false, `previewedOrigin.id=${builder.previewedOrigin?.id ?? 'null'}, expected ${origin.id}`);
                         }
                     }
                 } catch (err) {
@@ -277,11 +277,7 @@ async function probeOriginPathBuilder(page: import('@playwright/test').Page): Pr
                     builder.previewedOrigin = null;
                     const origin = pickOriginForStep(firstStepKey);
                     if (!origin) {
-                        record(
-                            'builder-confirm-origin-embeds-on-actor',
-                            false,
-                            `no origin available for step '${firstStepKey}'`,
-                        );
+                        record('builder-confirm-origin-embeds-on-actor', false, `no origin available for step '${firstStepKey}'`);
                     } else {
                         const previewErr = await callAction('selectOriginCard', {
                             originId: String(origin.id ?? ''),

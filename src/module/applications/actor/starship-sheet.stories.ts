@@ -6,17 +6,16 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
 import Handlebars from 'handlebars';
-import headerSrc from '../../../templates/actor/starship/header.hbs?raw';
-import tabsSrc from '../../../templates/actor/starship/tabs.hbs?raw';
-import statsTabSrc from '../../../templates/actor/starship/tab-stats.hbs?raw';
-import { renderTemplate } from '../../../../stories/mocks';
-import { mockStarshipSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
+import { expect, within } from 'storybook/test';
+import { renderTemplate, mockActor } from '../../../../stories/mocks';
 import { seedRandom, randomId, withSystem } from '../../../../stories/mocks/extended';
-import { mockActor } from '../../../../stories/mocks';
+import { mockStarshipSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, assertField } from '../../../../stories/test-helpers';
+import headerSrc from '../../../templates/actor/starship/header.hbs?raw';
+import statsTabSrc from '../../../templates/actor/starship/tab-stats.hbs?raw';
+import tabsSrc from '../../../templates/actor/starship/tabs.hbs?raw';
 
 initializeStoryHandlebars();
 
@@ -128,7 +127,7 @@ export const BlackCruisadeVariant: Story = {
         return {
             ...defaultCtxWithSource,
             actor: bcActor as SheetContextLike['actor'],
-            system: bcActor.system as SheetContextLike['system'],
+            system: bcActor.system,
         };
     })(),
     render: (args) => renderStarshipSheet(args),

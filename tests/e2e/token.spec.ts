@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test';
-
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsGM } from './lib/join';
 import { expect, test } from './lib/test';
@@ -71,7 +70,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     flowsFired: fired,
                     flowNotes: {
                         'scene-create-and-token-place': 'Actor.create or Scene.create unavailable',
-                    } as Record<string, string>,
+                    },
                     setupError: 'Actor.create or Scene.create unavailable',
                 };
             }
@@ -136,7 +135,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     flowNotes: {
                         ...notes,
                         'scene-create-and-token-place': notes['scene-create-and-token-place'] ?? 'actor not created',
-                    } as Record<string, string>,
+                    },
                     setupError: 'actor not created',
                 };
             }
@@ -161,7 +160,7 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
                     flowNotes: {
                         ...notes,
                         'scene-create-and-token-place': notes['scene-create-and-token-place'] ?? 'scene not created',
-                    } as Record<string, string>,
+                    },
                     setupError: notes['scene-create-and-token-place'] ?? 'scene not created',
                 };
             }
@@ -467,8 +466,8 @@ async function probeTokenFlows(page: Page): Promise<TokenProbeResult & { pageErr
         }, TOKEN_FLOWS);
 
         return {
-            flowsFired: result.flowsFired as Record<FlowName, boolean>,
-            flowNotes: result.flowNotes as Partial<Record<FlowName, string>>,
+            flowsFired: result.flowsFired,
+            flowNotes: result.flowNotes,
             setupError: result.setupError,
             pageErrors,
         };

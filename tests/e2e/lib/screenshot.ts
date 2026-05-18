@@ -22,9 +22,9 @@
  * filesystem permission can't fail an otherwise-passing test.
  */
 
-import type { Page } from '@playwright/test';
 import { mkdirSync } from 'node:fs';
 import { basename, resolve } from 'node:path';
+import type { Page } from '@playwright/test';
 
 const SCREENSHOT_DIR = resolve(__dirname, '..', '..', '..', '.e2e-screenshots');
 

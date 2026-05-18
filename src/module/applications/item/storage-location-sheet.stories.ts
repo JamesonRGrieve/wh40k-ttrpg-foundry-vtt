@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../../src/templates/item/item-storage-location-sheet.hbs?raw';
+import { renderSheet } from '../../../../stories/test-helpers';
 
 interface EmbeddedItem {
     id: string;

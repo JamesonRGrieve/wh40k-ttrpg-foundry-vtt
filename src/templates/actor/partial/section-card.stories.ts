@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
+import { renderSheet, clickAction } from '../../../../stories/test-helpers';
 import templateSrc from './section-card.hbs?raw';
 
 initializeStoryHandlebars();
@@ -31,7 +31,7 @@ const renderWithBody = (args: Args) => {
 
 const meta = {
     title: 'Actor/Partials/SectionCard',
-    render: (args) => renderWithBody(args as Args),
+    render: (args) => renderWithBody(args),
     args: {
         title: 'Critical Injuries',
         icon: 'fa-notes-medical',

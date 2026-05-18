@@ -34,7 +34,7 @@ describe('transaction-request-dialog template', () => {
     it('renders the two-column transfer layout with selectable source stock', () => {
         const el = compile(requestSrc, baseRequestCtx);
         const rows = el.querySelectorAll('[data-action="selectItem"]');
-        expect(rows.length).toBe(2);
+        expect(rows).toHaveLength(2);
         expect(el.querySelector('[data-item-id="item-stub"]')).not.toBeNull();
         expect(el.querySelector('[name="sourceId"]')).not.toBeNull();
         // No item picked yet → purchase pane shows the prompt, not the request button.
