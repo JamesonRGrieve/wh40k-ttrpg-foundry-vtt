@@ -111,4 +111,16 @@ module.exports = {
             display: 'none',
         },
     },
+    // Runtime tab-content visibility. The previous mechanism used Tailwind's
+    // arbitrary variant `[&:not(.active)]:tw-hidden` inline in templates,
+    // but the JIT content scanner did not emit a matching rule for the
+    // bracket-heavy class string under the `important: '.wh40k-rpg'` scope
+    // — see the issue-201 regression where every tab panel rendered at once.
+    // A static `:not(.active)` rule (legacy gothic-theme had one but it was
+    // lost during the css→tailwind migration) is the reliable fix: works at
+    // runtime when Foundry's tab JS toggles `.active`, and at story-render
+    // time when only one panel carries the class.
+    '.wh40k-talent-panel:not(.active)': {
+        display: 'none',
+    },
 };
