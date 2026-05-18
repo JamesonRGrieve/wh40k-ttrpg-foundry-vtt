@@ -18,6 +18,11 @@
             {{!-- Insanity Panel --}}
             {{> systems/wh40k-rpg/templates/actor/panel/insanity-panel.hbs}}
 
+            {{!-- Shock Panel (#66) — DH2-only Shock counter + Snap-Out-Of-It. --}}
+            {{#if isDH2}}
+                {{> systems/wh40k-rpg/templates/actor/panel/shock-panel.hbs}}
+            {{/if}}
+
             {{!-- Possession Panel (#82) — only when the possession track is engaged --}}
             {{#if (neq system.possession.state 'none')}}
                 {{> systems/wh40k-rpg/templates/actor/panel/possession-panel.hbs}}
@@ -53,4 +58,8 @@
     {{!-- Penitent role: Mortification of the Flesh action (#94, within.md p.36). --}}
     {{!-- Hidden unless the actor has a Penitent role / Mortification talent (computed in CharacterSheet._prepareContext). --}}
     {{> systems/wh40k-rpg/templates/actor/panel/mortification-button.hbs hasPenitent=hasPenitent}}
+
+    {{!-- Fanatic role: Death to All Who Oppose Me action (#93, within.md p.34). --}}
+    {{!-- Hidden unless the actor has a Fanatic role/talent (computed in CharacterSheet._prepareContext). --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/fanatic-button.hbs hasFanatic=hasFanatic}}
 </section>

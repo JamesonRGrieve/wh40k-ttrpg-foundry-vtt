@@ -6,7 +6,7 @@
 import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
-import { MORTIFICATION_OF_THE_FLESH } from '../../rules/chaos-backgrounds.ts';
+import { DEATH_TO_OPPOSE_DURATION_ROUNDS, MORTIFICATION_OF_THE_FLESH } from '../../rules/chaos-backgrounds.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
@@ -128,6 +128,7 @@ type CharacterSheetContextDeclaredFields = {
     backpackPercent?: number;
     transactionSourceCount?: number;
     hasPenitent?: boolean;
+    hasFanatic?: boolean;
 };
 
 type OriginSummary = {
@@ -272,6 +273,12 @@ export default class CharacterSheet extends BaseActorSheet {
 
             // Penitent role: Mortification of the Flesh (#94 — within.md p.36)
             'applyMortification': CharacterSheet.#applyMortification,
+
+            // Shock / Snap-Out-Of-It (#66 — core.md §"Shock And Snapping Out Of It")
+            'snapOutOfShock': CharacterSheet.#snapOutOfShock,
+
+            // Fanatic role: Death to All Who Oppose Me (#93 — within.md p.34)
+            'deathToAllWhoOpposeMe': CharacterSheet.#deathToAllWhoOpposeMe,
 
             // Subtlety panel (#87) — DH2 warband-subtlety stepper + breakdown popout.
             'adjustSubtletyManually': CharacterSheet.#adjustSubtletyManually,
@@ -663,6 +670,16 @@ export default class CharacterSheet extends BaseActorSheet {
         context.hasPenitent = this.actor.items.some((item) => {
             const itemName = item.name?.toLowerCase() ?? '';
             return itemName.includes('penitent') || itemName.includes('mortification of the flesh');
+        });
+
+        // Fanatic role detection (#93 — within.md p.34).
+        // A Fanatic is identified by the presence of a talent/trait/role
+        // item whose name matches "Fanatic" or "Death to All Who Oppose Me"
+        // (case-insensitive). Name-based so it works for hand-authored /
+        // dropped-in talents in addition to compendium items.
+        context.hasFanatic = this.actor.items.some((item) => {
+            const itemName = item.name?.toLowerCase() ?? '';
+            return itemName.includes('fanatic') || itemName.includes('death to all who oppose me');
         });
 
         return context;
@@ -3410,6 +3427,140 @@ export default class CharacterSheet extends BaseActorSheet {
         } catch (error) {
             this._notify('error', `Failed to apply Mortification of the Flesh: ${(error as Error).message}`, { duration: 5000 });
             console.error('Mortification of the Flesh error:', error);
+        }
+    }
+
+    /**
+     * Fanatic role — Death to All Who Oppose Me (#93, within.md p.34/967).
+     *
+     * RAW: the Fanatic spends a Fate point to count as having Hatred against
+     * their current foe for the duration of the encounter. We model the
+     * encounter window as {@link DEATH_TO_OPPOSE_DURATION_ROUNDS} rounds and
+     * surface the Hatred bonus mechanically as +10 WS / +10 BS via an
+     * ActiveEffect on the actor's characteristic modifiers.
+     *
+     * Pipeline:
+     *   - refuse if `system.fate.value` is 0 (in-sheet notification)
+     *   - decrement `system.fate.value` by 1
+     *   - create a temporary ActiveEffect granting +10 to both WS and BS
+     *     `.modifier` for DEATH_TO_OPPOSE_DURATION_ROUNDS rounds
+     *   - emit a chat card narrating the spend
+     *
+     * Errors surface as in-sheet notifications.
+     * @this {CharacterSheet}
+     */
+    static async #deathToAllWhoOpposeMe(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            const fateValue = this.actor.system?.fate?.value ?? 0;
+            if (fateValue <= 0) {
+                this._notify('warning', game.i18n.localize('WH40K.Fanatic.NoFatePoints'), { duration: 3000 });
+                return;
+            }
+
+            await this._updateSystemField('system.fate.value', fateValue - 1);
+
+            const wsBonus = 10;
+            const bsBonus = 10;
+            const effectData = {
+                name: game.i18n.localize('WH40K.Fanatic.ChatTitle'),
+                icon: 'icons/svg/sword.svg',
+                changes: [
+                    {
+                        key: 'system.characteristics.weaponSkill.modifier',
+                        mode: 2,
+                        value: String(wsBonus),
+                        priority: 20,
+                    },
+                    {
+                        key: 'system.characteristics.ballisticSkill.modifier',
+                        mode: 2,
+                        value: String(bsBonus),
+                        priority: 20,
+                    },
+                ],
+                duration: { rounds: DEATH_TO_OPPOSE_DURATION_ROUNDS },
+                flags: { wh40k: { source: 'fanatic-death-to-oppose' } },
+            };
+            // @ts-expect-error -- boundary: Foundry V14 ActiveEffect CreateData type omits name/icon/changes/duration; the structure matches runtime
+            await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
+
+            const gameSystem = this._resolveGameSystemId() ?? '';
+            const content = await foundry.applications.handlebars.renderTemplate(
+                'systems/wh40k-rpg/templates/chat/fanatic-chat.hbs',
+                {
+                    actorName: this.actor.name,
+                    wsBonus,
+                    bsBonus,
+                    durationRounds: DEATH_TO_OPPOSE_DURATION_ROUNDS,
+                    gameSystem,
+                },
+            );
+            await ChatMessage.create({
+                user: game.user?.id,
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content,
+            });
+        } catch (error) {
+            this._notify('error', `Failed to apply Death to All Who Oppose Me: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Death to All Who Oppose Me error:', error);
+        }
+    }
+
+    /**
+     * Shock — Snap Out of It (#66, core.md §"Shock And Snapping Out Of It").
+     *
+     * Rolls a d100 Willpower test (Challenging +0 — target equals the
+     * actor's Willpower total). On success, decrements `system.shock.value`
+     * by 1 via `actor.applyShock(-1)`. Either outcome is narrated to chat
+     * via the shock-snap-chat template.
+     *
+     * Errors surface as in-sheet notifications.
+     * @this {CharacterSheet}
+     */
+    static async #snapOutOfShock(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: shock slot is optional on the typed system union; cast through unknown is necessary
+            const shock = (this.actor.system as { shock?: { value: number; max: number } }).shock;
+            const shockBefore = shock?.value ?? 0;
+            if (shockBefore <= 0) {
+                this._notify('info', game.i18n.localize('WH40K.Shock.Header'), { duration: 2500 });
+                return;
+            }
+
+            // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is keyed by characteristic slug
+            const characteristics = (this.actor.system as { characteristics?: Record<string, { total?: number } | undefined> }).characteristics;
+            const willpower = characteristics?.['willpower']?.total ?? 0;
+
+            // Challenging +0 — target equals the unmodified Willpower total.
+            const roll = await new Roll('1d100').evaluate();
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Roll.total is typed loosely; we know it's a number after evaluate()
+            const rollValue = Math.trunc(Number((roll as unknown as { total?: number }).total ?? 0));
+            const success = rollValue <= willpower;
+
+            if (success) {
+                await this.actor.applyShock(-1);
+            }
+            const shockAfter = Math.max(0, shockBefore - (success ? 1 : 0));
+
+            const content = await foundry.applications.handlebars.renderTemplate(
+                'systems/wh40k-rpg/templates/chat/shock-snap-chat.hbs',
+                {
+                    actorName: this.actor.name,
+                    willpower,
+                    roll: rollValue,
+                    success,
+                    shockBefore,
+                    shockAfter,
+                },
+            );
+            await ChatMessage.create({
+                user: game.user?.id,
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                content,
+            });
+        } catch (error) {
+            this._notify('error', `Failed to snap out of shock: ${(error as Error).message}`, { duration: 5000 });
+            console.error('Snap Out of It error:', error);
         }
     }
 
