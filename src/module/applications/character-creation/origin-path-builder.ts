@@ -131,7 +131,16 @@ type NormalizedOriginWithMeta = NormalizedOrigin & {
 };
 
 function hasToObject(item: WH40KItem | NormalizedOrigin): item is WH40KItem {
-    return 'toObject' in item && typeof item.toObject === 'function';
+    // Compendium index entries and normalized origin POJOs have no
+    // toObject(); calling it threw "item.toObject is not a function" on
+    // origin selection. Guard the type and the operand so neither a
+    // non-callable toObject nor a non-object item can reach .toObject().
+    return (
+        typeof item === 'object' &&
+        item !== null &&
+        'toObject' in item &&
+        typeof (item as { toObject?: unknown }).toObject === 'function'
+    );
 }
 
 /**
@@ -2458,6 +2467,44 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Count how many selected origins grant each aptitude (deduplicated
+     * within a single origin). An aptitude granted by more than one origin
+     * is "doubled" — under DH2 the second instance is wasted unless swapped
+     * for a characteristic aptitude, so the builder surfaces a soft warning
+     * at commit time rather than silently discarding it. (#205)
+     * @private
+     */
+    _collectAptitudeGrantCounts(): Map<string, number> {
+        const counts = new Map<string, number>();
+        for (const [, selection] of this.selections) {
+            const system = this._getSelectionSystem(selection);
+            const grants: NonNullable<OriginPathSystemData['grants']> = system.grants ?? {};
+            const selectedChoices: Record<string, string[]> = system.selectedChoices ?? {};
+            const perOrigin = new Set<string>();
+
+            const fixed = (grants as NonNullable<OriginPathSystemData['grants']> & { aptitudes?: string[] }).aptitudes;
+            if (Array.isArray(fixed)) {
+                for (const apt of fixed) if (apt !== '') perOrigin.add(apt);
+            }
+
+            if (grants.choices && grants.choices.length > 0) {
+                const labelCounts: Record<string, number> = {};
+                for (const choice of grants.choices) {
+                    const base = choice.label ?? choice.name ?? '';
+                    labelCounts[base] = (labelCounts[base] ?? 0) + 1;
+                    const suffix = labelCounts[base] > 1 ? ` (${labelCounts[base]})` : '';
+                    if (choice.type === 'aptitude') {
+                        this._collectAptitudeChoices(choice, selectedChoices[`${base}${suffix}`] ?? [], perOrigin);
+                    }
+                }
+            }
+
+            for (const apt of perOrigin) counts.set(apt, (counts.get(apt) ?? 0) + 1);
+        }
+        return counts;
+    }
+
+    /**
      * Fold one option.grants block into the preview accumulators. Extracted
      * from _calculatePreview so the nested choice loop stays under the
      * max-depth cap.
@@ -3563,14 +3610,26 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     result !== undefined && typeof (result as unknown as Record<string, unknown>)['text'] === 'string'
                         ? ((result as unknown as Record<string, unknown>)['text'] as string)
                         : null;
-                this._divination = resultText ?? 'This character likes to flip tables, especially rollable ones.';
+                if (resultText !== null) {
+                    this._divination = resultText;
+                    this._saveScrollPosition();
+                    void this.render();
+                    return;
+                }
             } catch (error) {
                 console.error('[wh40k-rpg] Failed to draw Divination RollTable.', error);
-                this._divination = 'This character likes to flip tables, especially rollable ones.';
             }
-        } else {
-            this._divination = 'This character likes to flip tables, especially rollable ones.';
         }
+        // The Divination table text lives in the private packs submodule
+        // (GW-copyrighted). When it is not installed #getDivinationTable
+        // returns null, so no draw() is attempted and Foundry never raises
+        // its "no available results" notification. Fall back to a bare 1d100
+        // so the player records a roll and fills the maxim in by hand.
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        this._divination = game.i18n.format('WH40K.OriginPath.DivinationTableUnavailable', {
+            roll: String(roll.total ?? 0),
+        });
         this._saveScrollPosition();
         void this.render();
     }
@@ -3581,9 +3640,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: RollTable is an untyped Foundry document; caller casts to structural type before use
     static async #getDivinationTable(): Promise<unknown> {
+        // A RollTable with zero results makes Foundry's draw() raise a
+        // user-facing "no available results" notification. Treat an
+        // empty/absent table as unavailable so the caller can fall back
+        // to a bare 1d100 instead.
+        const hasResults = (candidate: unknown): boolean => {
+            const size = (candidate as { results?: { size?: number } }).results?.size;
+            return typeof size === 'number' && size > 0;
+        };
+
         // eslint-disable-next-line no-restricted-syntax -- boundary: game.tables.getName returns an untyped Foundry document; narrowed by caller
         const worldTable = (game.tables as { getName?: (name: string) => unknown } | undefined)?.getName?.('Divination');
-        if (worldTable !== undefined && worldTable !== null) return worldTable;
+        if (worldTable !== undefined && worldTable !== null && hasResults(worldTable)) return worldTable;
 
         const expectedPackId = 'wh40k-rpg.dh2-core-rolltables';
         const pack =
@@ -3619,6 +3687,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const document = await pack.getDocument(entry._id);
         if (document == null) {
             console.warn('[wh40k-rpg] Divination RollTable document failed to load from pack.', {
+                packId: pack.metadata.id,
+                tableId: entry._id,
+            });
+            return null;
+        }
+
+        if (!hasResults(document)) {
+            console.warn('[wh40k-rpg] Divination RollTable has no results; using 1d100 fallback.', {
                 packId: pack.metadata.id,
                 tableId: entry._id,
             });
@@ -3756,6 +3832,29 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllChoices'));
             }
             return;
+        }
+
+        // Characteristics must be rolled/assigned before the path is applied —
+        // commit otherwise produced a character with no characteristics
+        // because the Characteristic Roll step was skippable. The equipment
+        // (Armory) step is intentionally optional (homebrew runs Influence in
+        // play; see _calculateStatus) so it is deliberately not gated here.
+        if (!this._hasAssignedCharacteristics()) {
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CharacteristicsRequiredBeforeCommit'));
+            OriginPathBuilder.#goToCharacteristics.call(this, _event, _target);
+            return;
+        }
+
+        // Soft-warn (do not block) when the path grants the same aptitude
+        // from more than one origin — the duplicate is wasted under DH2. (#205)
+        const duplicateAptitudes = Array.from(this._collectAptitudeGrantCounts().entries())
+            .filter(([, count]) => count > 1)
+            .map(([aptitude]) => aptitude)
+            .sort((a, b) => a.localeCompare(b));
+        if (duplicateAptitudes.length > 0) {
+            ui.notifications.warn(
+                game.i18n.format('WH40K.OriginPath.DuplicateAptitude', { aptitudes: duplicateAptitudes.join(', ') }),
+            );
         }
 
         // Confirm — offer reset options. Base stats are always overridden.
