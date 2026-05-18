@@ -1,0 +1,69 @@
+{{!--
+    Shock panel (DH2 — #66).
+
+    Surfaces `system.shock.{value,max}` and a "Snap Out of It" button.
+    The button dispatches the `snapOutOfShock` action declared on
+    CharacterSheet, which runs a Willpower test (Challenging +0) and,
+    on success, calls `actor.applyShock(-1)`. Result is narrated to chat
+    via the shock-snap-chat partial.
+
+    Render gate (parent template): only DH2 actors include this panel —
+    `actor._gameSystemId === 'dh2e'` (mirrors the Subtlety gate). The
+    `wh40k-shock-panel` root class pins a stable selector for e2e specs.
+
+    Mirrors fate-panel's shape: counter readout + action button. Increment
+    / decrement controls reuse the standard StatActions handlers so a GM
+    can adjust shock manually without leaving the sheet.
+--}}
+<section class="wh40k-shock-panel tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-rounded
+                tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
+                tw-bg-[color:var(--wh40k-panel-bg,rgba(0,0,0,0.18))]
+                dh2e:tw-border-bronze"
+         data-shock-value="{{system.shock.value}}">
+
+    {{!-- Header: title + value/max readout --}}
+    <header class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+        <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-m-0 tw-text-[0.85rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)]">
+            <i class="fas fa-bolt dh2e:tw-text-bronze"></i>
+            <span>{{localize "WH40K.Shock.Header"}}</span>
+        </h3>
+        <span class="wh40k-shock-readout tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
+              title="{{localize 'WH40K.Shock.Value'}}">
+            <span class="wh40k-shock-value">{{system.shock.value}}</span>
+            {{#if (gt system.shock.max 0)}}
+                <span class="tw-text-[color:var(--wh40k-text-muted)]"> / </span>
+                <span class="wh40k-shock-max">{{system.shock.max}}</span>
+            {{/if}}
+        </span>
+    </header>
+
+    {{!-- Quick stepper (mirrors fatigue-panel affordance) --}}
+    <div class="wh40k-shock-stepper tw-flex tw-items-center tw-justify-center tw-gap-3 tw-py-1">
+        <button type="button"
+                class="wh40k-shock-stepper-minus tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100 hover:tw-scale-110 tw-transition-[opacity,transform] tw-duration-200"
+                data-action="decrement"
+                data-field="system.shock.value"
+                data-min="0"
+                title="{{localize 'WH40K.Shock.Value'}} −1">
+            <span class="material-icons">remove_circle</span>
+        </button>
+        <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Shock.Value"}}</span>
+        <button type="button"
+                class="wh40k-shock-stepper-plus tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100 hover:tw-scale-110 tw-transition-[opacity,transform] tw-duration-200"
+                data-action="increment"
+                data-field="system.shock.value"
+                title="{{localize 'WH40K.Shock.Value'}} +1">
+            <span class="material-icons">add_circle</span>
+        </button>
+    </div>
+
+    {{!-- Snap Out of It — Willpower test (Challenging +0); success → −1 shock. --}}
+    <button type="button"
+            class="wh40k-shock-snap-btn tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded tw-cursor-pointer tw-bg-gray-700 tw-border-2 tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2e:tw-border-bronze tw-text-[0.78rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-bright)] hover:tw-opacity-90"
+            data-action="snapOutOfShock"
+            title="{{localize 'WH40K.Shock.SnapOutTooltip'}}"
+            {{#if (lte system.shock.value 0)}}disabled{{/if}}>
+        <i class="fas fa-brain dh2e:tw-text-bronze"></i>
+        <span>{{localize "WH40K.Shock.SnapOutLabel"}}</span>
+    </button>
+</section>
